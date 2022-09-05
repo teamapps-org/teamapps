@@ -24,9 +24,12 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiMobileLayout;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.toolbar.Toolbar;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class MobileLayout extends AbstractComponent implements Component {
 
 	protected Toolbar toolbar;
@@ -38,7 +41,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiMobileLayout uiMobileLayout = new UiMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (content != null) {

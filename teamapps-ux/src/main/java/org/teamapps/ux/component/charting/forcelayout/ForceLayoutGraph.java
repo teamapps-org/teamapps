@@ -70,7 +70,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		List<UiNetworkNode> nodes = createUiNodes(this.nodes);
 		List<UiNetworkLink> links = createUiLinks(this.links);
 		UiNetworkGraph ui = new UiNetworkGraph(nodes, links, Collections.emptyList());

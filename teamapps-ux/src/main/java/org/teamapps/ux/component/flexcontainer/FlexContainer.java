@@ -23,6 +23,8 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFlexContainer;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.css.CssAlignItems;
 import org.teamapps.ux.css.CssFlexDirection;
 import org.teamapps.ux.css.CssJustifyContent;
@@ -32,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class FlexContainer extends AbstractComponent {
 
 	private List<Component> components = new ArrayList<>();
@@ -40,7 +43,7 @@ public class FlexContainer extends AbstractComponent {
 	private CssJustifyContent justifyContent = CssJustifyContent.START;
 
 	@Override
-	public UiFlexContainer createUiComponent() {
+	public UiFlexContainer createUiClientObject() {
 		UiFlexContainer uiFlexContainer = new UiFlexContainer();
 		mapAbstractUiComponentProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()

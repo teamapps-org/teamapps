@@ -25,6 +25,8 @@ import org.teamapps.dto.UiLocalDate;
 import org.teamapps.dto.UiLocalDateField;
 import org.teamapps.dto.UiLocalDateFieldDropDownMode;
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
@@ -33,6 +35,7 @@ import org.teamapps.ux.session.DateTimeFormatDescriptor;
 import java.time.LocalDate;
 import java.util.Locale;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class LocalDateField extends AbstractField<LocalDate> implements TextInputHandlingField {
 
 	public enum DropDownMode {
@@ -60,7 +63,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	}
 
 	@Override
-	public UiLocalDateField createUiComponent() {
+	public UiLocalDateField createUiClientObject() {
 		UiLocalDateField dateField = new UiLocalDateField();
 		mapAbstractFieldAttributesToUiField(dateField);
 		dateField.setShowDropDownButton(showDropDownButton);
@@ -102,7 +105,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 
 	public boolean isFavorPastDates() {
@@ -111,7 +114,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setFavorPastDates(boolean favorPastDates) {
 		this.favorPastDates = favorPastDates;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 
 	public Locale getLocale() {
@@ -128,7 +131,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -137,7 +140,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 
 	public boolean isShowClearButton() {
@@ -146,7 +149,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 
 	@Override
@@ -165,7 +168,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDefaultSuggestionDate(LocalDate defaultSuggestionDate) {
 		this.defaultSuggestionDate = defaultSuggestionDate;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 
 	public boolean isShuffledFormatSuggestionsEnabled() {
@@ -174,7 +177,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShuffledFormatSuggestionsEnabled(boolean shuffledFormatSuggestionsEnabled) {
 		this.shuffledFormatSuggestionsEnabled = shuffledFormatSuggestionsEnabled;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 
 	public DropDownMode getDropDownMode() {
@@ -183,7 +186,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDropDownMode(DropDownMode dropDownMode) {
 		this.dropDownMode = dropDownMode;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 
 	public String getEmptyText() {
@@ -192,6 +195,6 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiComponent()));
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(this.createUiClientObject()));
 	}
 }

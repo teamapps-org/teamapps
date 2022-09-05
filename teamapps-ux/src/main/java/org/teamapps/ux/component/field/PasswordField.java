@@ -21,7 +21,10 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiPasswordField;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class PasswordField extends TextField {
 
 	private boolean sendValueAsMd5;
@@ -32,7 +35,7 @@ public class PasswordField extends TextField {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiPasswordField uiField = new UiPasswordField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());

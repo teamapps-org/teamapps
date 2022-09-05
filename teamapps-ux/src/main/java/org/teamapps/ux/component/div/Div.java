@@ -23,7 +23,10 @@ package org.teamapps.ux.component.div;
 import org.teamapps.dto.UiDiv;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Div extends AbstractComponent {
 
 	private Component content;
@@ -41,7 +44,7 @@ public class Div extends AbstractComponent {
 	}
 
 	@Override
-	public UiDiv createUiComponent() {
+	public UiDiv createUiClientObject() {
 		UiDiv ui = new UiDiv();
 		mapAbstractUiComponentProperties(ui);
 		ui.setContent(content != null ? content.createUiReference() : null);

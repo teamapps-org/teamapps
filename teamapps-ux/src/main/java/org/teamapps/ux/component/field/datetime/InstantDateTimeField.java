@@ -21,10 +21,13 @@ package org.teamapps.ux.component.field.datetime;
 
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiInstantDateTimeField;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
 import java.time.Instant;
 import java.time.ZoneId;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 
 	protected ZoneId timeZoneId;
@@ -35,7 +38,7 @@ public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiInstantDateTimeField uiField = new UiInstantDateTimeField();
 		mapAbstractDateTimeFieldUiValues(uiField);
 		uiField.setTimeZoneId(timeZoneId.getId());

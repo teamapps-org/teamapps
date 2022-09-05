@@ -19,6 +19,7 @@
  */
 package org.teamapps.server.jetty.embedded;
 
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.div.Div;
 import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.rootpanel.RootPanel;
@@ -43,6 +44,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, 8082);
+		System.out.println(jettyServer.getTeamAppsCore().getComponentLibraryRegistry().registerComponentLibrary(new CoreComponentLibrary()));
 		jettyServer.start();
 
 	}

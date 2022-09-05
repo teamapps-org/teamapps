@@ -20,8 +20,11 @@
 package org.teamapps.ux.component.flexcontainer;
 
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.css.CssFlexDirection;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class VerticalLayout extends FlexContainer {
 
 	public VerticalLayout() {

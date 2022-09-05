@@ -113,8 +113,8 @@ public class MediaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
-		return splitPane.createUiComponent();
+	public UiComponent createUiClientObject() {
+		return splitPane.createUiClientObject();
 	}
 
 	@Override

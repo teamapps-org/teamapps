@@ -22,10 +22,13 @@ package org.teamapps.ux.component.field;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiImageField;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.ImageSizing;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ImageField extends AbstractField<String> {
 
 	private Length width = Length.AUTO; 
@@ -39,7 +42,7 @@ public class ImageField extends AbstractField<String> {
 	}
 
 	@Override
-	public UiImageField createUiComponent() {
+	public UiImageField createUiClientObject() {
 		UiImageField uiImageField = new UiImageField();
 		mapAbstractFieldAttributesToUiField(uiImageField);
 		uiImageField.setWidth(width.toCssString());
@@ -56,7 +59,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setWidth(Length width) {
 		this.width = width;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -66,7 +69,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setHeight(Length height) {
 		this.height = height;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -76,7 +79,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setBorder(Border border) {
 		this.border = border;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -86,7 +89,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setImageSizing(ImageSizing imageSizing) {
 		this.imageSizing = imageSizing;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -96,6 +99,6 @@ public class ImageField extends AbstractField<String> {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
 	}
 }

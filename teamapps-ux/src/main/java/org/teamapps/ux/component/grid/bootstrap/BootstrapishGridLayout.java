@@ -68,7 +68,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiResponsiveGridLayout uiResponsiveGridLayout = new UiResponsiveGridLayout(createUiLayoutPolicies());
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);
 		uiResponsiveGridLayout.setFillHeight(this.fillHeight);

@@ -27,6 +27,8 @@ import org.teamapps.event.Event;
 import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.upload.FileFieldDisplayType;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public final Event<FileItem> onUploadInitiatedByUser = new Event<>();
@@ -104,7 +107,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiSimpleFileField field = new UiSimpleFileField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));

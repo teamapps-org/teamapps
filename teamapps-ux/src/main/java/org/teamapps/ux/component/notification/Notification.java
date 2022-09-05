@@ -26,11 +26,14 @@ import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Notification extends AbstractComponent {
 	public final Event<Void> onOpened = new Event<>();
 	public final Event<Boolean> onClosed = new Event<>();
@@ -68,7 +71,7 @@ public class Notification extends AbstractComponent {
 		return notification;
 	}
 
-	public UiNotification createUiComponent() {
+	public UiNotification createUiClientObject() {
 		UiNotification ui = new UiNotification();
 		mapAbstractUiComponentProperties(ui);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
@@ -101,7 +104,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -111,7 +114,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setPadding(Spacing padding) {
 		this.padding = padding;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -121,7 +124,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDisplayTimeInMillis(int displayTimeInMillis) {
 		this.displayTimeInMillis = displayTimeInMillis;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -131,7 +134,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDismissible(boolean dismissible) {
 		this.dismissible = dismissible;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -141,7 +144,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setShowProgressBar(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -151,7 +154,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setContent(Component content) {
 		this.content = content;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 

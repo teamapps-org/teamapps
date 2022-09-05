@@ -51,7 +51,7 @@ public class FloatingComponent extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiFloatingComponent ui = new UiFloatingComponent();
 		mapAbstractUiComponentProperties(ui);
 		ui.setContainerComponent(containerComponent.createUiReference());

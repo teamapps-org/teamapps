@@ -45,7 +45,7 @@ public class ElegantPanel extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiElegantPanel uiElegantPanel = new UiElegantPanel();
 		mapAbstractUiComponentProperties(uiElegantPanel);
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);

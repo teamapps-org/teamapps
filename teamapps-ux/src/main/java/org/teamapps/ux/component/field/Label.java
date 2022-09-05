@@ -25,7 +25,10 @@ import org.teamapps.dto.UiLabel;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Label extends AbstractField<String> {
 
 	public final Event<Void> onClicked = new Event<>();
@@ -45,7 +48,7 @@ public class Label extends AbstractField<String> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiLabel uiLabel = new UiLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));

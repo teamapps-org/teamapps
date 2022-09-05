@@ -39,6 +39,7 @@ import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.statistics.SessionStatsUpdatedEventData;
 import org.teamapps.uisession.statistics.UiSessionStats;
 import org.teamapps.util.threading.SequentialExecutorFactory;
+import org.teamapps.ux.component.ComponentLibraryRegistry;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.SessionConfiguration;
@@ -68,6 +69,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	private final ScheduledExecutorService houseKeepingScheduledExecutor;
 	private final ObjectMapper objectMapper;
 	private final TeamAppsConfiguration config;
+	private final ComponentLibraryRegistry componentLibraryRegistry;
 
 	private final Map<String, SessionPair> sessionsById = new ConcurrentHashMap<>();
 	private final Deque<UiSessionStats> closedSessionsStatistics = Queues.synchronizedDeque(new ArrayDeque<>());
@@ -81,8 +83,10 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 								  SequentialExecutorFactory sessionExecutorFactory,
 								  WebController webController,
 								  IconProvider iconProvider,
-								  TeamAppsUploadManager uploadManager) {
+								  TeamAppsUploadManager uploadManager,
+								  ComponentLibraryRegistry componentLibraryRegistry) {
 		this.config = config;
+		this.componentLibraryRegistry = componentLibraryRegistry;
 		if (config.getKeepaliveMessageIntervalMillis() >= config.getUiSessionInactivityTimeoutMillis() / 2) {
 			LOGGER.error("keepaliveMessageIntervalMillis should be less than uiSessionInactivityTimeoutMillis / 2!");
 		}
@@ -299,7 +303,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				sessionConfiguration,
 				httpSession,
 				uxServerContext,
-				new SessionIconProvider(iconProvider)
+				new SessionIconProvider(iconProvider),
+				componentLibraryRegistry
 		);
 	}
 

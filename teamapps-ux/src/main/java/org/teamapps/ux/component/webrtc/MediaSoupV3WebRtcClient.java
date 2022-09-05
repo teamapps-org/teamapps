@@ -77,7 +77,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	@Override
-	public UiMediaSoupV3WebRtcClient createUiComponent() {
+	public UiMediaSoupV3WebRtcClient createUiClientObject() {
 		UiMediaSoupV3WebRtcClient ui = new UiMediaSoupV3WebRtcClient();
 		mapAbstractUiComponentProperties(ui);
 		ui.setPublishingParameters(publishingParameters);
@@ -205,7 +205,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(createUiClientObject()));
 	}
 
 	public boolean isActivityLineVisible() {

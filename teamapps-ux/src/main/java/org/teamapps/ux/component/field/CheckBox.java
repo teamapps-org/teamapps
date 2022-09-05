@@ -23,7 +23,10 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiCheckBox;
 import org.teamapps.dto.UiField;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class CheckBox extends AbstractField<Boolean> {
 
 	private String caption;
@@ -43,7 +46,7 @@ public class CheckBox extends AbstractField<Boolean> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiCheckBox uiCheckBox = new UiCheckBox();
 		mapAbstractFieldAttributesToUiField(uiCheckBox);
 		uiCheckBox.setCaption(caption);

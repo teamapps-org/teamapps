@@ -24,6 +24,8 @@ import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NavigationBar<RECORD> extends AbstractComponent implements Component {
 
 	public Event<NavigationBarButton> onButtonClick = new Event<>();
@@ -51,7 +54,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiNavigationBar uiNavigationBar = new UiNavigationBar(buttonTemplate.createUiTemplate());
 		mapAbstractUiComponentProperties(uiNavigationBar);
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);

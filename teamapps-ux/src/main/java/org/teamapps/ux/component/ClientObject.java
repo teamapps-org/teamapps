@@ -19,9 +19,7 @@
  */
 package org.teamapps.ux.component;
 
-import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiQuery;
+import org.teamapps.dto.*;
 
 /**
  * A client object has a representation on the client.
@@ -37,6 +35,8 @@ public interface ClientObject {
 	void unrender();
 
 	boolean isRendered();
+
+	UiClientObject createUiClientObject();
 
 	/**
 	 * Creates a ui reference to a client object.

@@ -24,10 +24,13 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiNumberField;
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.Locale;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NumberField extends AbstractField<Number> implements TextInputHandlingField {
 
 	public final Event<String> onTextInput = new Event<>();
@@ -51,7 +54,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiNumberField field = new UiNumberField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setPrecision(precision);

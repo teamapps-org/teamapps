@@ -22,6 +22,8 @@ package org.teamapps.ux.component.dialogue;
 import org.teamapps.event.Event;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.combobox.ComboBox;
@@ -38,7 +40,7 @@ import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
 
-
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Dialogue extends Window {
 	public Event<Boolean> onResult = new Event<>();
 	private final ComboBox<BaseTemplateRecord<?>> comboBox;

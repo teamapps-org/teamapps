@@ -31,6 +31,8 @@ import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
@@ -46,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 
@@ -82,7 +85,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		Map uploadButtonData = uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getPropertyNames());
 		UiFileField uiField = new UiFileField(fileItemTemplate.createUiTemplate(), uploadButtonTemplate.createUiTemplate(), uploadButtonData);
 		mapAbstractFieldAttributesToUiField(uiField);

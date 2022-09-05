@@ -24,6 +24,8 @@ import org.teamapps.dto.UiProgressDisplay;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.task.ObservableProgress;
 import org.teamapps.ux.task.ProgressChangeEventData;
 import org.teamapps.ux.task.ProgressStatus;
@@ -36,6 +38,7 @@ import java.util.function.Consumer;
  * It is typically used to visualize the progress of an {@link ObservableProgress}.
  * However, it can also be used manually, without attaching a progress.
  */
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ProgressDisplay extends AbstractComponent {
 
 	public final Event<Void> onClicked = new Event<>();
@@ -73,7 +76,7 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public UiProgressDisplay createUiComponent() {
+	public UiProgressDisplay createUiClientObject() {
 		UiProgressDisplay ui = new UiProgressDisplay();
 		mapAbstractUiComponentProperties(ui);
 		ui.setIcon(getSessionContext().resolveIcon(icon));
@@ -86,7 +89,7 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	private void updateUi() {
-		queueCommandIfRendered(() -> new UiProgressDisplay.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiProgressDisplay.UpdateCommand(createUiClientObject()));
 	}
 
 	@Override

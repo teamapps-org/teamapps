@@ -26,7 +26,6 @@ import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
-import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
@@ -105,32 +104,22 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public final void render() {
-		if (renderingState == RenderingState.RENDERED) {
+		if (renderingState == RenderingState.RENDERED || renderingState == RenderingState.RENDERING) {
 			return; // already rendered!
 		}
-		if (!(this instanceof RootPanel) && this.getParent() == null) {
-			LOGGER.debug("Rendering component (" + getClass().getSimpleName() + ") that has no parent set. This is a temporary logging message to be able to find Containers that do not register "
-					+ "themselves as \"parent\" of their children.");
-		}
-		LOGGER.debug("render: " + getId());
-		sessionContext.registerClientObject(this);
 
 		this.renderingState = RenderingState.RENDERING;
-		UiComponent uiComponent = createUiComponent();
-		sessionContext.sendCommand(null, new UiRootPanel.CreateComponentCommand(uiComponent));
+		LOGGER.debug("rendering: " + getId());
+		sessionContext.renderClientObject(this);
 		this.renderingState = RenderingState.RENDERED; // NOTE: after queuing creation! otherwise commands might be queued for this component before it creation is queued!
 		onRendered.fire(null);
 	}
 
 	@Override
 	public final void unrender() {
-		sessionContext.sendCommand(null,
-				// unregister only after the ui destroyed the object!
-				new UiRootPanel.DestroyComponentCommand(), unused -> sessionContext.unregisterClientObject(this));
+		sessionContext.unrenderClientObject(this);
 		renderingState = RenderingState.NOT_RENDERED;
 	}
-
-	abstract public UiComponent createUiComponent();
 
 	@Override
 	public UiClientObjectReference createUiReference() {
@@ -143,7 +132,7 @@ public abstract class AbstractComponent implements Component {
 
 	public void reRenderIfRendered() {
 		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.sendCommand(null, new UiRootPanel.RefreshComponentCommand(createUiComponent()));
+			sessionContext.sendCommand(null, new UiRootPanel.RefreshComponentCommand(createUiClientObject()));
 		}
 	}
 

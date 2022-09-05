@@ -34,7 +34,7 @@ public class FieldGroup extends AbstractComponent {
 	private final List<AbstractField> fields = new ArrayList<>();
 
 	@Override
-	public UiFieldGroup createUiComponent() {
+	public UiFieldGroup createUiClientObject() {
 		UiFieldGroup uiFieldGroup = new UiFieldGroup();
 		mapAbstractUiComponentProperties(uiFieldGroup);
 		uiFieldGroup.setFields(createUiFieldReferences());

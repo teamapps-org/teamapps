@@ -24,6 +24,8 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiNotificationBar;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 import static org.teamapps.ux.component.notification.NotificationBarItemClosedEvent.ClosingReason.TIMEOUT;
 import static org.teamapps.ux.component.notification.NotificationBarItemClosedEvent.ClosingReason.USER;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NotificationBar extends AbstractComponent {
 
 	public final Event<NotificationBarItemClosedEvent> onItemClosed = new Event<>();
@@ -71,7 +74,7 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiNotificationBar ui = new UiNotificationBar();
 		mapAbstractUiComponentProperties(ui);
 		ui.setInitialItems(itemsByUiId.values().stream()

@@ -29,6 +29,8 @@ import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
@@ -37,6 +39,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Panel extends AbstractComponent implements Component {
 
 	public final Event<WindowButtonType> onWindowButtonClicked = new Event<>();
@@ -136,7 +139,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiPanel uiPanel = new UiPanel();
 		mapUiPanelProperties(uiPanel);
 		return uiPanel;

@@ -123,12 +123,17 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		}
 	}
 
-	public static createComponent(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
+	public static async registerComponentLibrary(mainJsUrl: string, context: TeamAppsUiContextInternalApi) {
+		let module = await import(mainJsUrl);
+		debugger;
+	}
+
+	public static render(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
 		let o = context.createClientObject(config);
 		context.registerClientObject(o, config.id, config._type);
 	}
 
-	public static destroyComponent(componentId: string, context: TeamAppsUiContextInternalApi) {
+	public static unrender(componentId: string, context: TeamAppsUiContextInternalApi) {
 		context.destroyClientObject(componentId);
 	}
 

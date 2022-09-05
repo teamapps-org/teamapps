@@ -33,7 +33,7 @@ public class QrCodeScanner extends AbstractComponent {
 	private boolean stopsScanningAtFirstResult;
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiQrCodeScanner ui = new UiQrCodeScanner();
 		mapAbstractUiComponentProperties(ui);
 		ui.setScanning(scanning);

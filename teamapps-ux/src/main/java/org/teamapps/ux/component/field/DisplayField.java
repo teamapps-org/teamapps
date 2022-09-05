@@ -21,7 +21,10 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.UiDisplayField;
 import org.teamapps.dto.UiField;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DisplayField extends AbstractField<String> {
 
 	private boolean showBorder;
@@ -39,7 +42,7 @@ public class DisplayField extends AbstractField<String> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiDisplayField uiDisplayField = new UiDisplayField();
 		mapAbstractFieldAttributesToUiField(uiDisplayField);
 		uiDisplayField.setShowBorder(showBorder);

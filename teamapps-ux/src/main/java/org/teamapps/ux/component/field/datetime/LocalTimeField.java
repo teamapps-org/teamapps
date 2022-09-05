@@ -21,10 +21,13 @@ package org.teamapps.ux.component.field.datetime;
 
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiLocalTimeField;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
 import java.time.LocalTime;
 import java.util.List;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class LocalTimeField extends AbstractTimeField<LocalTime> {
 
 	public LocalTimeField() {
@@ -32,7 +35,7 @@ public class LocalTimeField extends AbstractTimeField<LocalTime> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiLocalTimeField uiTimeField = new UiLocalTimeField();
 		mapAbstractTimeFieldUiValues(uiTimeField);
 		return uiTimeField;

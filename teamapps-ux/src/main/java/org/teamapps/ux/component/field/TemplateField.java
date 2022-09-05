@@ -26,8 +26,11 @@ import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTemplateField;
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.template.Template;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public final Event<Void> onClicked = new Event<>();
@@ -53,7 +56,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 	}
 
 	@Override
-	public UiTemplateField createUiComponent() {
+	public UiTemplateField createUiClientObject() {
 		UiTemplateField ui = new UiTemplateField();
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setTemplate(template.createUiTemplate());
@@ -88,7 +91,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setTemplate(Template template) {
 		this.template = template;
-		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -98,7 +101,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
-		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 

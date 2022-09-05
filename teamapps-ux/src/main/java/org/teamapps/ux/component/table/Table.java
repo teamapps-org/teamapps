@@ -199,7 +199,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		List<UiTableColumn> columns = this.columns.stream()
 				.map(TableColumn::createUiTableColumn)
 				.collect(Collectors.toList());

@@ -87,7 +87,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiMap uiMap = new UiMap(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 		mapAbstractUiComponentProperties(uiMap);

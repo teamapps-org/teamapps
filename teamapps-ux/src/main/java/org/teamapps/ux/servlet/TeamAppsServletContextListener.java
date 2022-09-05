@@ -70,7 +70,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProvider(teamAppsCore.getIconLibraryRegistry()))));
 		iconServletRegistration.addMapping("/icons/*");
 
-		Dynamic componentServletRegistration = context.addServlet("teamapps-components", new ComponentLibraryResourceServlet());
+		Dynamic componentServletRegistration = context.addServlet("teamapps-components", new ComponentLibraryResourceServlet(teamAppsCore.getComponentLibraryRegistry()));
 		componentServletRegistration.addMapping("/components/*");
 
 		Dynamic filesServletRegistration = context.addServlet("teamapps-files", new ResourceProviderServlet(new TeamAppsSessionResourceProvider(teamAppsCore.getSessionManager()::getSessionContextById)));

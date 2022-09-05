@@ -27,6 +27,8 @@ import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
@@ -41,6 +43,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
@@ -101,7 +104,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiWorkSpaceLayoutItem uiInitialLayout = getMainRootItem().createUiItem();
 		List<UiWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
 				.map(WorkSpaceLayoutView::createUiView)

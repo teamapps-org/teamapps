@@ -23,7 +23,10 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiLinkButton;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class LinkButton extends AbstractComponent {
 
 	public final Event<Void> onClicked = new Event<>();
@@ -43,7 +46,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	@Override
-	public UiLinkButton createUiComponent() {
+	public UiLinkButton createUiClientObject() {
 		UiLinkButton ui = new UiLinkButton();
 		mapAbstractUiComponentProperties(ui);
 		ui.setText(text);
@@ -61,7 +64,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiLinkButton.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiLinkButton.UpdateCommand(createUiClientObject()));
 	}
 
 	public String getText() {

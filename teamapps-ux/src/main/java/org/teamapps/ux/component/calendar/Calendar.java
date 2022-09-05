@@ -177,7 +177,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiCalendar uiCalendar = new UiCalendar();
 		mapAbstractUiComponentProperties(uiCalendar);
 		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());

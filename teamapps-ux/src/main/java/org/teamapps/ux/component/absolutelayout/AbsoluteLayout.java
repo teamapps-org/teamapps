@@ -25,13 +25,15 @@ import org.teamapps.dto.UiAbsolutePositioning;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class AbsoluteLayout extends AbstractComponent {
 
 	private Map<Component, AbsolutePosition> positionsByComponent = new HashMap<>();
@@ -82,7 +84,7 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	@Override
-	public UiAbsoluteLayout createUiComponent() {
+	public UiAbsoluteLayout createUiClientObject() {
 		UiAbsoluteLayout uiAbsoluteLayout = new UiAbsoluteLayout();
 		mapAbstractUiComponentProperties(uiAbsoluteLayout);
 		uiAbsoluteLayout.setComponents(createUiAbsolutePositionedComponents());

@@ -22,7 +22,10 @@ package org.teamapps.ux.component.field;
 import org.teamapps.dto.UiComponentField;
 import org.teamapps.dto.UiField;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ComponentField extends AbstractField<Void> {
 
     private Component component;
@@ -39,7 +42,7 @@ public class ComponentField extends AbstractField<Void> {
     }
 
     @Override
-    public UiField createUiComponent() {
+    public UiField createUiClientObject() {
         UiComponentField uiField = new UiComponentField();
         mapAbstractFieldAttributesToUiField(uiField);
         uiField.setComponent(Component.createUiClientObjectReference(component));

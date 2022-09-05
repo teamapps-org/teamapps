@@ -25,8 +25,11 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiWindow;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.panel.Panel;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Window extends Panel {
 
 	private boolean modal = false;
@@ -62,7 +65,7 @@ public class Window extends Panel {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiWindow window = new UiWindow();
 		mapUiPanelProperties(window);
 		window.setModal(modal);

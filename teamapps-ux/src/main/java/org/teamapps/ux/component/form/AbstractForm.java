@@ -83,7 +83,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		List<UiClientObjectReference> uiFields = logicalForm.getFields().values().stream()
 				.map(field -> field != null ? field.createUiReference() : null)
 				.collect(Collectors.toList());

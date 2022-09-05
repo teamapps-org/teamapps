@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.teamapps.ux.component.ComponentLibrary;
+import org.teamapps.ux.component.ComponentLibraryRegistry;
 import org.teamapps.ux.resource.Resource;
 
 import java.io.BufferedInputStream;
@@ -13,16 +14,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 public class ComponentLibraryResourceServlet extends HttpServlet {
 
-	private final Map<String, ComponentLibrary> componentLibraryById = new ConcurrentHashMap<>();
+	private static final String NOT_FOUND_HASH = "?NOT:FOUND";
+
+	private final ComponentLibraryRegistry componentLibraryRegistry;
 	private final Map<String, String> hashByPath = new ConcurrentHashMap<>();
 	private final Map<String, String> pathByResourceHash = new ConcurrentHashMap<>();
 
-
-	public void registerComponentLibrary(String libraryId, ComponentLibrary componentLibrary) {
-		componentLibraryById.put(libraryId, componentLibrary);
+	public ComponentLibraryResourceServlet(ComponentLibraryRegistry componentLibraryRegistry) {
+		this.componentLibraryRegistry = componentLibraryRegistry;
 	}
 
 	@Override
@@ -41,28 +44,47 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 			resourcePath = null;
 		}
 
-		ComponentLibrary componentLibrary = componentLibraryById.get(componentLibraryId);
+		ComponentLibrary componentLibrary = componentLibraryRegistry.getComponentLibraryById(componentLibraryId);
 		if (componentLibrary == null) {
 			resp.setStatus(404);
 			return;
 		}
 
+		String fullPath = req.getServletPath() + req.getPathInfo();
+
 		if (resourcePath == null) {
-			componentLibrary.getMainJsResource().getInputStream().transferTo(resp.getOutputStream());
+			streamUniqueResource(fullPath, componentLibrary::getMainJsResource, resp);
+			return;
 		}
 
-		String hash = hashByPath.computeIfAbsent(pathInfo, s -> {
-			Resource resource = componentLibrary.getResource(resourcePath);
+		streamUniqueResource(fullPath, () -> componentLibrary.getResource(resourcePath), resp);
+	}
+
+	private void streamUniqueResource(String fullPath, Supplier<Resource> inputStreamSupplier, HttpServletResponse resp) throws IOException {
+		String hash = hashByPath.computeIfAbsent(fullPath, s -> {
+			Resource resource = inputStreamSupplier.get();
 			if (resource == null) {
-				return null;
+				return NOT_FOUND_HASH;
 			} else {
 				return getResourceHash(resource);
 			}
 		});
 
-		pathByResourceHash.computeIfAbsent(hash, s -> {
-			return s;
-		})
+		if (hash.equals(NOT_FOUND_HASH)) {
+			resp.sendError(404);
+		}
+
+		String existingFullPath = pathByResourceHash.computeIfAbsent(hash, s -> fullPath);
+
+		if (!fullPath.equals(existingFullPath)) {
+			resp.sendRedirect(existingFullPath);
+		} else {
+			Resource resource = inputStreamSupplier.get();
+			try(BufferedInputStream bis = new BufferedInputStream(resource.getInputStream())) {
+				resp.setContentType("text/javascript");
+				bis.transferTo(resp.getOutputStream());
+			}
+		}
 	}
 
 	private static String getResourceHash(Resource resource) {

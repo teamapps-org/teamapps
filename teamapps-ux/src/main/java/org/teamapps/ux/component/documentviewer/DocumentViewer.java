@@ -48,7 +48,7 @@ public class DocumentViewer extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiDocumentViewer documentViewer = new UiDocumentViewer();
 		mapAbstractUiComponentProperties(documentViewer);
 		documentViewer.setPageUrls(pageUrls);

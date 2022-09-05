@@ -25,7 +25,10 @@ import org.teamapps.dto.UiSplitPane;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class SplitPane extends AbstractComponent {
 
 	public Event<Double> onResized = new Event<>();
@@ -60,7 +63,7 @@ public class SplitPane extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiSplitPane uiSplitPane = new UiSplitPane(splitDirection.toUiSplitDirection(), sizePolicy.toUiSplitSizePolicy());
 		mapAbstractUiComponentProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);

@@ -32,7 +32,7 @@ public class PageView extends AbstractComponent {
 	private List<AbstractPageViewBlock> blocks = new ArrayList<>();
 
 	@Override
-	public UiPageView createUiComponent() {
+	public UiPageView createUiClientObject() {
 		UiPageView uiPageView = new UiPageView();
 		mapAbstractUiComponentProperties(uiPageView);
 		uiPageView.setBlocks(blocks.stream()

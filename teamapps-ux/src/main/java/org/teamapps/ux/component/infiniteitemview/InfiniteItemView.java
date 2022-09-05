@@ -98,7 +98,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiInfiniteItemView ui = new UiInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
 		mapAbstractUiComponentProperties(ui);
 		int recordCount = model.getCount();

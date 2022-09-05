@@ -26,6 +26,8 @@ import org.teamapps.dto.UiComboBoxTreeRecord;
 import org.teamapps.dto.UiField;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
@@ -38,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ComboBox.class);
@@ -98,7 +101,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiComboBox comboBox = new UiComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		return comboBox;

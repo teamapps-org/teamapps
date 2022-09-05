@@ -33,6 +33,8 @@ import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ComponentLibrary;
+import org.teamapps.ux.component.ComponentLibraryRegistry;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.div.Div;
@@ -55,10 +57,7 @@ import org.teamapps.ux.resource.Resource;
 
 import java.io.File;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -168,13 +167,18 @@ public class SessionContext {
 		}
 	};
 
+	private final Set<ComponentLibrary> componentLibrariesLoaded = new HashSet<>();
+	private final Set<Class<? extends ClientObject>> clientObjectTypesKnownToClient = new HashSet<>();
+	private final ComponentLibraryRegistry componentLibraryRegistry;
+
 	public SessionContext(UiSession uiSession,
 						  ExecutorService sessionExecutor,
 						  ClientInfo clientInfo,
 						  SessionConfiguration sessionConfiguration,
 						  HttpSession httpSession,
 						  UxServerContext serverContext,
-						  SessionIconProvider iconProvider) {
+						  SessionIconProvider iconProvider,
+						  ComponentLibraryRegistry componentLibraryRegistry) {
 		this.sessionExecutor = sessionExecutor;
 		this.uiSession = uiSession;
 		this.httpSession = httpSession;
@@ -188,6 +192,7 @@ public class SessionContext {
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
+		this.componentLibraryRegistry = componentLibraryRegistry;
 	}
 
 
@@ -442,13 +447,31 @@ public class SessionContext {
 		return sessionConfiguration.getIconPath() + "/" + iconProvider.encodeIcon(icon, true);
 	}
 
-	public void registerClientObject(ClientObject clientObject) {
+	public void renderClientObject(ClientObject clientObject) {
 		CurrentSessionContext.throwIfNotSameAs(this);
+
+		if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
+
+			ComponentLibrary componentLibrary = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
+			if (!componentLibrariesLoaded.contains(componentLibrary)) {
+				String mainJsUrl = componentLibraryRegistry.getMainJsUrl(clientObject.getClass());
+				sendCommand(null, new UiRootPanel.RegisterComponentLibraryCommand(mainJsUrl));
+				componentLibrariesLoaded.add(componentLibrary);
+			}
+
+			sendCommand(null, new UiRootPanel.RegisterComponentType(mainJsUrl));
+			clientObjectTypesKnownToClient.add(clientObject.getClass());
+		}
+
 		clientObjectsById.put(clientObject.getId(), clientObject);
+		UiClientObject uiComponent = clientObject.createUiClientObject();
+		sendCommand(null, new UiRootPanel.RenderCommand(uiComponent));
 	}
 
-	public void unregisterClientObject(ClientObject clientObject) {
-		clientObjectsById.remove(clientObject.getId());
+	public void unrenderClientObject(ClientObject clientObject) {
+		sendCommand(null,
+				// unregister only after the ui destroyed the object!
+				new UiRootPanel.UnrenderCommand(clientObject.getId()), unused -> clientObjectsById.remove(clientObject.getId()));
 	}
 
 	public ClientObject getClientObject(String clientObjectId) {

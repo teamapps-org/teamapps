@@ -58,7 +58,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiRichTextEditor field = new UiRichTextEditor();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setToolbarVisibilityMode(this.toolbarVisibilityMode.toToolbarVisibilityMode());

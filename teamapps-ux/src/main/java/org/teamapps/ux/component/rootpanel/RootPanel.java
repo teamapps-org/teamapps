@@ -24,14 +24,17 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.animation.PageTransition;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class RootPanel extends AbstractComponent implements Component {
 
 	private Component content;
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiRootPanel uiRootPanel = new UiRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
 		uiRootPanel.setContent(content != null ? content.createUiReference() : null);

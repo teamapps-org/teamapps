@@ -22,6 +22,8 @@ package org.teamapps.ux.component.dialogue;
 import org.teamapps.event.Event;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldMessage;
@@ -43,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class FormDialogue extends Window {
 
 	public Event<Boolean> onResult = new Event<>();

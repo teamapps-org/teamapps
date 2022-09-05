@@ -35,7 +35,7 @@ public class ColorPicker extends AbstractField<Color> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiColorPicker uiColorPicker = new UiColorPicker();
 		mapAbstractFieldAttributesToUiField(uiColorPicker);
 		uiColorPicker.setDefaultColor(defaultColor != null ? defaultColor.toHtmlColorString() : null);

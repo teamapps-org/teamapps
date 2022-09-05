@@ -26,7 +26,10 @@ import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ToolButton extends AbstractComponent {
 
 	public final Event<Void> onDropDownOpened = new Event<>();
@@ -67,7 +70,7 @@ public class ToolButton extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		String icon = getSessionContext().resolveIcon(this.icon);
 		UiToolButton uiToolButton = new UiToolButton(icon, popoverText);
 		uiToolButton.setCaption(caption);

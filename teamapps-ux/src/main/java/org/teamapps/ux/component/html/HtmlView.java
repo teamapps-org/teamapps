@@ -22,9 +22,7 @@ package org.teamapps.ux.component.html;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiHtmlView;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.ClientObject;
-import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class HtmlView extends AbstractComponent {
 
 	private String html;
@@ -54,7 +53,7 @@ public class HtmlView extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiHtmlView ui = new UiHtmlView();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHtml(html);

@@ -25,6 +25,8 @@ import org.teamapps.dto.UiMultiProgressDisplay;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.DisplayField;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.format.Spacing;
@@ -42,6 +44,7 @@ import java.util.stream.Collectors;
 
 import static org.teamapps.ux.task.ProgressStatus.*;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DefaultMultiProgressDisplay extends AbstractComponent implements MultiProgressDisplay {
 
 	public final Event<Void> onClicked = new Event<>();
@@ -73,7 +76,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public UiDefaultMultiProgressDisplay createUiComponent() {
+	public UiDefaultMultiProgressDisplay createUiClientObject() {
 		UiDefaultMultiProgressDisplay ui = new UiDefaultMultiProgressDisplay();
 		mapAbstractUiComponentProperties(ui);
 		ui.setRunningCount(progresses.size());
@@ -139,7 +142,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiDefaultMultiProgressDisplay.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiDefaultMultiProgressDisplay.UpdateCommand(createUiClientObject()));
 	}
 
 	public boolean isShowNotificationOnProgressAdded() {

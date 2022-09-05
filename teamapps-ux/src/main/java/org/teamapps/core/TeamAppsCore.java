@@ -26,6 +26,7 @@ import org.teamapps.icons.IconProvider;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.TeamAppsSessionManager;
 import org.teamapps.util.threading.SequentialExecutorFactory;
+import org.teamapps.ux.component.ComponentLibraryRegistry;
 import org.teamapps.ux.servlet.WebSocketCommunicationEndpoint;
 import org.teamapps.webcontroller.WebController;
 
@@ -36,8 +37,9 @@ public class TeamAppsCore {
 	private final ObjectMapper objectMapper;
 	private final TeamAppsSessionManager sessionManager;
 	private final IconLibraryRegistry iconLibraryRegistry;
-	private final TeamAppsUploadManager uploadManager;
 	private final IconProvider iconProvider;
+	private final ComponentLibraryRegistry componentLibraryRegistry;
+	private final TeamAppsUploadManager uploadManager;
 	private final WebSocketCommunicationEndpoint webSocketCommunicationEndpoint;
 
 	public TeamAppsCore(TeamAppsConfiguration config, SequentialExecutorFactory sessionExecutorFactory, WebController webController) {
@@ -45,10 +47,11 @@ public class TeamAppsCore {
 		this.webController = webController;
 		this.objectMapper = TeamAppsObjectMapperFactory.create();
 		this.iconLibraryRegistry = new IconLibraryRegistry();
+		this.componentLibraryRegistry = new ComponentLibraryRegistry("/components/");
 		this.uploadManager = new TeamAppsUploadManager();
 
 		this.iconProvider = new IconProvider(iconLibraryRegistry);
-		this.sessionManager = new TeamAppsSessionManager(config, objectMapper, sessionExecutorFactory, webController, iconProvider, uploadManager);
+		this.sessionManager = new TeamAppsSessionManager(config, objectMapper, sessionExecutorFactory, webController, iconProvider, uploadManager, componentLibraryRegistry);
 		this.webSocketCommunicationEndpoint = new WebSocketCommunicationEndpoint(sessionManager, config);
 	}
 
@@ -82,5 +85,9 @@ public class TeamAppsCore {
 
 	public WebSocketCommunicationEndpoint getWebSocketCommunicationEndpoint() {
 		return webSocketCommunicationEndpoint;
+	}
+
+	public ComponentLibraryRegistry getComponentLibraryRegistry() {
+		return componentLibraryRegistry;
 	}
 }

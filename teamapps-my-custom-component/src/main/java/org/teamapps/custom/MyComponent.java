@@ -6,7 +6,7 @@ import org.teamapps.ux.component.AbstractComponent;
 
 public class MyComponent extends AbstractComponent {
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		return new UiMyComponent();
 	}
 }

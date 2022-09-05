@@ -23,7 +23,10 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIFrame;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class IFrame extends AbstractComponent {
 
 	private String url;
@@ -37,7 +40,7 @@ public class IFrame extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiIFrame uiIFrame = new UiIFrame().setUrl(url);
 		mapAbstractUiComponentProperties(uiIFrame);
 		return uiIFrame;

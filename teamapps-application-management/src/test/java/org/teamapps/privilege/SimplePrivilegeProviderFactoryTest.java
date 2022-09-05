@@ -26,6 +26,7 @@ import org.teamapps.privilege.preset.ApplicationRolePreset;
 import org.teamapps.privilege.preset.PrivilegeGroupPreset;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.UiSession;
+import org.teamapps.ux.component.ComponentLibraryRegistry;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.Location;
 import org.teamapps.ux.session.SessionConfiguration;
@@ -64,7 +65,8 @@ public class SimplePrivilegeProviderFactoryTest {
 				Executors.newSingleThreadExecutor(),
 				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
 				Mockito.mock(UxServerContext.class),
-				Mockito.mock(SessionIconProvider.class)
+				Mockito.mock(SessionIconProvider.class),
+				Mockito.mock(ComponentLibraryRegistry.class)
 		);
 	}
 }

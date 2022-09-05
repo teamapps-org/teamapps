@@ -82,7 +82,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiInfiniteItemView2 ui = new UiInfiniteItemView2(itemTemplate.createUiTemplate());
 		mapAbstractUiComponentProperties(ui);
 		ui.setItemWidth(itemWidth);

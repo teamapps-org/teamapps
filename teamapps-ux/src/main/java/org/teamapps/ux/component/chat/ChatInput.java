@@ -40,7 +40,7 @@ public class ChatInput extends AbstractComponent {
 	private boolean attachmentsEnabled = true;
 
 	@Override
-	public UiChatInput createUiComponent() {
+	public UiChatInput createUiClientObject() {
 		UiChatInput uiChatInput = new UiChatInput(getSessionContext().resolveIcon(defaultAttachmentIcon));
 		mapAbstractUiComponentProperties(uiChatInput);
 		uiChatInput.setMaxBytesPerUpload(maxBytesPerUpload);

@@ -21,7 +21,10 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiMultiLineTextField;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class MultiLineTextField extends TextField {
 
 	private boolean adjustHeightToContent = false;
@@ -31,7 +34,7 @@ public class MultiLineTextField extends TextField {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiMultiLineTextField uiField = new UiMultiLineTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());

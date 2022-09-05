@@ -22,10 +22,13 @@ package org.teamapps.ux.component.toolbar;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiToolbar;
 import org.teamapps.dto.UiToolbarButtonGroup;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Toolbar extends AbstractToolContainer {
 
 	private String logoImageUrl;
@@ -34,7 +37,7 @@ public class Toolbar extends AbstractToolContainer {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		List<UiToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
 				.filter(group -> !group.isRightSide())
 				.sorted()

@@ -29,10 +29,13 @@ import org.teamapps.dto.UiField;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Button<RECORD> extends AbstractField<Void> {
 
 	public final Event<Void> onClicked = new Event<>();
@@ -89,7 +92,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		Object uiRecord = createUiRecord();
 		UiButton ui = new UiButton(template != null ? template.createUiTemplate() : null, uiRecord);
 		mapAbstractFieldAttributesToUiField(ui);

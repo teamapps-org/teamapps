@@ -127,7 +127,7 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		List<UiTimeChartZoomLevel> uiZoomLevels = createUiZoomlevels();
 
 		Interval domainX = retrieveDomainX();

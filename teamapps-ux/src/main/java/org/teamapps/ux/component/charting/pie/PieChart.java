@@ -55,7 +55,7 @@ public class PieChart extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiPieChart uiPieChart = new UiPieChart();
 		mapAbstractUiComponentProperties(uiPieChart);
 		uiPieChart.setDataPointWeighting(dataPointWeighting.toUiDataPointWeighting());

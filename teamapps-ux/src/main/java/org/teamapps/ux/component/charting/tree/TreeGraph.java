@@ -57,7 +57,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiTreeGraph createUiComponent() {
+	public UiTreeGraph createUiClientObject() {
 		UiTreeGraph ui = new UiTreeGraph();
 		mapAbstractUiComponentProperties(ui);
 		ui.setNodes(createUiNodes(nodesById.values()));
@@ -189,7 +189,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(createUiComponent()));
+		queueCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(createUiClientObject()));
 	}
 
 	public void moveToRootNode() {

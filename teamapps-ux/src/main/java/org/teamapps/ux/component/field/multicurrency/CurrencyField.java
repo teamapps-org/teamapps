@@ -22,6 +22,8 @@ package org.teamapps.ux.component.field.multicurrency;
 import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
@@ -35,6 +37,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class CurrencyField extends AbstractField<CurrencyValue> implements TextInputHandlingField {
 
 	public final Event<String> onTextInput = new Event<>();
@@ -70,7 +73,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiCurrencyField field = new UiCurrencyField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setCurrencyUnits(currencies.stream()

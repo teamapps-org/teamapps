@@ -50,7 +50,7 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiVideoPlayer uiVideoPlayer = new UiVideoPlayer(url);
 		mapAbstractUiComponentProperties(uiVideoPlayer);
 		uiVideoPlayer.setAutoplay(autoplay);

@@ -63,7 +63,7 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiShakaPlayer ui = new UiShakaPlayer();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHlsUrl(hlsUrl);

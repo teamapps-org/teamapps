@@ -24,7 +24,10 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiTextField;
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TextField extends AbstractField<String> implements TextInputHandlingField {
 
 	public final Event<String> onTextInput = new Event<>();
@@ -78,7 +81,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiField createUiClientObject() {
 		UiTextField uiField = new UiTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(maxCharacters);

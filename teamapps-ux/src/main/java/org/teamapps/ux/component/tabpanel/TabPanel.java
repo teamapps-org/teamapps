@@ -26,6 +26,8 @@ import org.teamapps.dto.UiTabPanel;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TabPanel extends AbstractComponent implements Component {
 
 	public final Event<Tab> onTabSelected = new Event<>();
@@ -138,7 +141,7 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiComponent createUiClientObject() {
 		UiTabPanel uiTabPanel = new UiTabPanel();
 		mapAbstractUiComponentProperties(uiTabPanel);
 		List<UiTab> uiTabs = tabs.stream()
