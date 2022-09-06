@@ -46,6 +46,7 @@ import {releaseWakeLock, requestWakeLock} from "./util/WakeLock";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {KeyEventType} from "./generated/KeyEventType";
 
+// noinspection JSUnusedGlobalSymbols
 export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler, UiRootPanelEventSource {
 
 	public static readonly onGlobalKeyEventOccurred: TeamAppsEvent<UiRootPanel_GlobalKeyEventOccurredEvent> = new TeamAppsEvent();
@@ -123,33 +124,32 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		}
 	}
 
-	public static async registerComponentLibrary(mainJsUrl: string, context: TeamAppsUiContextInternalApi) {
-		let module = await import(mainJsUrl);
+	public static async registerComponentLibrary(uuid: string, mainJsUrl: string, context: TeamAppsUiContextInternalApi) {
+		context.registerComponentLibrary(uuid, mainJsUrl);
 	}
 
 	public static async registerClientObjectType(libraryUuid: string, clientObjectType: string, eventNames: string[], queryNames: string[], context: TeamAppsUiContextInternalApi) {
 		console.log("TODO registerClientObjectType:", libraryUuid, clientObjectType);
 	}
 
-	public static async toggleEventListening(clientObjectId: string, eventName: string, enabled: boolean, context: TeamAppsUiContextInternalApi) {
-		context.toggleEventListener(clientObjectId, eventName, enabled)
+	public static async toggleEventListening(libraryUuid: string, clientObjectId: string, eventName: string, enabled: boolean, context: TeamAppsUiContextInternalApi) {
+		context.toggleEventListener(libraryUuid, clientObjectId, eventName, enabled)
 	}
 
-	public static async toggleQueryListening(clientObject: unknown, queryName: string, listen: boolean, context: TeamAppsUiContextInternalApi) {
+	public static async toggleQueryListening(libraryUuid: string, clientObject: unknown, queryName: string, listen: boolean, context: TeamAppsUiContextInternalApi) {
 
 	}
 
-	public static render(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
-		let o = context.createClientObject(config);
-		context.registerClientObject(o, config.id, config._type, config.listeningEvents, config.listeningQueries);
+	public static async render(libraryUuid: string, config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
+		await context.renderClientObject(libraryUuid, config);
 	}
 
 	public static unrender(componentId: string, context: TeamAppsUiContextInternalApi) {
 		context.destroyClientObject(componentId);
 	}
 
-	public static refreshComponent(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
-		context.refreshComponent(config);
+	public static refreshComponent(libraryUuid: string, config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
+		context.refreshComponent(libraryUuid, config);
 	}
 
 	public static setConfig(config: UiConfigurationConfig, context: TeamAppsUiContext) {

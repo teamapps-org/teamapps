@@ -8,7 +8,7 @@ public class EventTest {
 
 	@Test
 	public void registrationListenerOnlyCalledWhenListenersChangeFromEmptyToNonEmptyAndViceVersa() {
-		EventListenerRegistrationListener registrationListener = mock(EventListenerRegistrationListener.class);
+		EventListenerRegistrationStatusListener registrationListener = mock(EventListenerRegistrationStatusListener.class);
 
 		verify(registrationListener, times(0)).listeningStatusChanged(anyBoolean());
 

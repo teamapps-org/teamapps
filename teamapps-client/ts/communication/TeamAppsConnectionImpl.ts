@@ -87,7 +87,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					for (let cmd of cmds) {
 						this.lastReceivedCommandId = cmd.id;
 						try {
-							let result = await commandHandler.executeCommand(cmd.cid, cmd.c);
+							let result = await commandHandler.executeCommand(cmd.lid, cmd.cid, cmd.c);
 							if (cmd.r) {
 								this.sendResult(cmd.id, result);
 							}

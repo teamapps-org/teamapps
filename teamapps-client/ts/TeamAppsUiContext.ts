@@ -35,22 +35,22 @@ export interface TeamAppsUiContext {
 	readonly config: UiConfigurationConfig;
 	readonly templateRegistry: TemplateRegistry;
 
-	getClientObjectById(id: string): UiClientObject;
+	getClientObjectById(id: string): Promise<UiClientObject>;
 }
 
 // TeamAppsUiContext implementations should implement this too. See usages.
 export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 	readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand>;
 
-	registerClientObject(component: UiClientObject, id: string, teamappsType: string, listeningEvents: string[], listeningQueries: string[]): void;
+	renderClientObject(libraryUuid: string, config: UiClientObjectConfig): Promise<UiClientObject>;
 
-	createClientObject(config: UiClientObjectConfig): UiClientObject;
+	refreshComponent(libraryUuid: string, config: UiComponentConfig): void;
 
-	refreshComponent(config: UiComponentConfig): void;
-
-	destroyClientObject(componentId: string): void;
+	destroyClientObject(componentId: string);
 
 	sendEvent(eventObject: UiEvent): void;
 
-	toggleEventListener(clientObjectId: string, qualifiedEventName: string, enabled: boolean): any;
+	toggleEventListener(libraryUuid: string | null, clientObjectId: string | null, qualifiedEventName: string, enabled: boolean): any;
+
+	registerComponentLibrary(uuid: string, mainJsUrl: string): void;
 }

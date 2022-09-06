@@ -156,7 +156,7 @@ public class UiSession {
 		try {
 			int cmdId = commandIdCounter.incrementAndGet();
 			boolean awaitsResponse = commandWithCallback.getResultCallback() != null;
-			cmd = new CMD(cmdId, commandWithCallback.getClientObjectId(), objectMapper.writeValueAsString(commandWithCallback.getUiCommand()), awaitsResponse);
+			cmd = new CMD(cmdId, commandWithCallback.getLibraryUuid(), commandWithCallback.getClientObjectId(), objectMapper.writeValueAsString(commandWithCallback.getUiCommand()), awaitsResponse);
 			if (awaitsResponse) {
 				resultCallbacksByCmdId.put(cmdId, new ResultCallbackWithCommandClass(commandWithCallback.getResultCallback(), commandWithCallback.getUiCommand().getClass()));
 			}

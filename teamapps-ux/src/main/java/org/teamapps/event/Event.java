@@ -42,14 +42,14 @@ public class Event<EVENT_DATA> {
 	private final String source; // for debugging
 
 	protected final List<Consumer<EVENT_DATA>> listeners = new CopyOnWriteArrayList<>();
-	private final EventListenerRegistrationListener registrationListener;
+	private final EventListenerRegistrationStatusListener registrationListener;
 	private EVENT_DATA lastEventData;
 
 	public Event() {
 		this(null);
 	}
 
-	public Event(EventListenerRegistrationListener registrationListener) {
+	public Event(EventListenerRegistrationStatusListener registrationListener) {
 		this.registrationListener = registrationListener;
 		StackTraceElement stackTraceElement = new Exception().getStackTrace()[1];
 		this.source = stackTraceElement.getFileName() + stackTraceElement.getLineNumber();

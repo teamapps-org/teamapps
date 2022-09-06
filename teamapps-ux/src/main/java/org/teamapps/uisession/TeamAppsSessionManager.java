@@ -218,7 +218,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			if (!hasTeamAppsRefreshParameter) {
 				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
 				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getSearch()) ? "&" : "?";
-				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, new UiRootPanel.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
+				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, null, new UiRootPanel.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
 			}
 			uiSession.close(UiSessionClosingReason.WRONG_TEAMAPPS_VERSION);
 			return;

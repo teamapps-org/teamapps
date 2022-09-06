@@ -20,7 +20,7 @@ public class ComponentLibraryRegistry {
 		return getComponentLibraryForClientObjectClass(clientObject.getClass());
 	}
 
-	private ComponentLibraryInfo getComponentLibraryForClientObjectClass(Class<? extends ClientObject> clientObjectClass) {
+	public ComponentLibraryInfo getComponentLibraryForClientObjectClass(Class<? extends ClientObject> clientObjectClass) {
 		return componentLibraryByClientObjectClass.computeIfAbsent(clientObjectClass, c -> {
 			TeamAppsComponent annotation = c.getAnnotation(TeamAppsComponent.class);
 			Class<? extends ComponentLibrary> componentLibraryClass = annotation.library();

@@ -26,6 +26,9 @@ public class CMD {
 
 	private final int id;
 
+	@JsonProperty("lid")
+	private final String libraryUuid;
+
 	@JsonProperty("cid")
 	private final String clientObjectId;
 
@@ -36,8 +39,9 @@ public class CMD {
 	@JsonProperty("r")
 	private final Boolean awaitsResponse; // nullable! (for message size reasons)
 
-	public CMD(int id, String clientObjectId, String uiCommand, boolean awaitsResponse) {
+	public CMD(int id, String libraryUuid, String clientObjectId, String uiCommand, boolean awaitsResponse) {
 		this.id = id;
+		this.libraryUuid = libraryUuid;
 		this.clientObjectId = clientObjectId;
 		this.uiCommand = uiCommand;
 		this.awaitsResponse = awaitsResponse ? true : null;
@@ -46,14 +50,20 @@ public class CMD {
 	@Override
 	public String toString() {
 		return "CMD{" +
-				"clientObjectId='" + clientObjectId + "', " +
-				"command='" + uiCommand.substring(0, Math.min(uiCommand.length(), 20)) + '\'' + ", " +
-				"awaitsResponse='" + (awaitsResponse == Boolean.TRUE) + '\'' + ", " +
-				"id=" + id + '}';
+				"id=" + id +
+				", libraryUuid='" + libraryUuid + '\'' +
+				", clientObjectId='" + clientObjectId + '\'' +
+				", uiCommand='" + uiCommand + '\'' +
+				", awaitsResponse=" + awaitsResponse +
+				'}';
 	}
 
 	public int getId() {
 		return id;
+	}
+
+	public String getLibraryUuid() {
+		return libraryUuid;
 	}
 
 	public String getClientObjectId() {

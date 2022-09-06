@@ -50,7 +50,7 @@ public class ProjectorEvent<EVENT_DATA> extends Event<EVENT_DATA> {
 		super();
 	}
 
-	public ProjectorEvent(EventListenerRegistrationListener listenerHandler) {
+	public ProjectorEvent(EventListenerRegistrationStatusListener listenerHandler) {
 		super(listenerHandler);
 	}
 

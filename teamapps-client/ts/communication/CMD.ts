@@ -21,6 +21,7 @@ import {UiCommand} from "../generated/UiCommand";
 
 export interface CMD {
 	id: number, // sequence number
+	lid: string|null, // library uuid
 	cid: string|null, // client object id
 	c: UiCommand, // uiCommand
 	r: boolean    // awaitsResult

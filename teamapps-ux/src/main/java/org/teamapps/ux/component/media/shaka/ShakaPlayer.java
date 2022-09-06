@@ -38,7 +38,7 @@ public class ShakaPlayer extends AbstractComponent {
 	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiShakaPlayer.EndedEvent.NAME);
 
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
-		SessionContext.current().sendCommand(null, new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
+		SessionContext.current().sendStaticCommand(ShakaPlayer.class, new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
 
 

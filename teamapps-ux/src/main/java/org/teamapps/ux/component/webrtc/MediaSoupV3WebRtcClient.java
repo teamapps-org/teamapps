@@ -315,7 +315,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	public static CompletableFuture<List<UiMediaDeviceInfo>> enumerateDevices() {
 		CompletableFuture<List<UiMediaDeviceInfo>> future = new CompletableFuture<>();
-		SessionContext.current().sendCommand(null, new UiMediaSoupV3WebRtcClient.EnumerateDevicesCommand(), value -> {
+		SessionContext.current().sendStaticCommand(MediaSoupV3WebRtcClient.class, new UiMediaSoupV3WebRtcClient.EnumerateDevicesCommand(), value -> {
 			future.complete(value);
 		});
 		return future;

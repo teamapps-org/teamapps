@@ -20,7 +20,7 @@
 "use strict";
 
 import {capitalizeFirstLetter, createUiLocation, generateUUID, logException} from "./Common";
-import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
+import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "./generated/UiConfigurationConfig";
 import {UiComponentConfig} from "./generated/UiComponentConfig";
 import {UiEvent} from "./generated/UiEvent";
@@ -44,12 +44,39 @@ import {UiWindow} from "./UiWindow";
 import {QueryFunctionAdder} from "./generated/QueryFunctionAdder";
 import {UiQuery} from "./generated/UiQuery";
 
+type ClientObjectClass<T extends UiClientObject = UiClientObject> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
+
 function isClassicComponent(o: UiClientObject): o is UiComponent {
 	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE !== 1;
 }
 
 function isWebComponent(o: UiClientObject): o is UiComponent {
 	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE === 1;
+}
+
+class ClientObjectClassWrapper {
+	clazz: ClientObjectClass;
+	eventListeners: { [qualifiedName: string]: (any) => void } = {};
+
+	constructor(clazz: ClientObjectClass) {
+		this.clazz = clazz;
+	}
+
+	toggleEventListener(qualifiedEventName: string, listener?: (x: UiEvent) => void) {
+		const eventName = capitalizeFirstLetter(qualifiedEventName.substring(qualifiedEventName.indexOf('.') + 1));
+		const event = this.clazz["on" + eventName];
+		const oldListener = this.eventListeners[qualifiedEventName];
+		if (oldListener) {
+			console.debug("Removing old listener", qualifiedEventName, this.eventListeners[qualifiedEventName])
+			event?.removeListener(oldListener);
+			delete this.eventListeners[qualifiedEventName];
+		}
+		if (listener != null) {
+			console.debug("Adding listener", qualifiedEventName, listener)
+			event?.addListener(listener);
+			this.eventListeners[qualifiedEventName] = listener;
+		}
+	}
 }
 
 class ClientObjectWrapper {
@@ -65,7 +92,7 @@ class ClientObjectWrapper {
 		return isRefreshableComponentProxyHandle(this.clientObject) ? this.clientObject.proxy : this.clientObject
 	}
 
-	toggleEventListener(clientObjectId: string, qualifiedEventName: string, listener?: (x: UiEvent) => void) {
+	toggleEventListener(qualifiedEventName: string, listener?: (x: UiEvent) => void) {
 		const eventName = capitalizeFirstLetter(qualifiedEventName.substring(qualifiedEventName.indexOf('.') + 1));
 		const event = this.getUnwrappedComponent()["on" + eventName];
 		const oldListener = this.eventListeners[qualifiedEventName];
@@ -83,7 +110,6 @@ class ClientObjectWrapper {
 }
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
-
 	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand> = new TeamAppsEvent();
 	public readonly sessionId: string;
 	public isHighDensityScreen: boolean;
@@ -95,7 +121,9 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	};
 	public readonly templateRegistry: TemplateRegistry = new TemplateRegistry(this);
 
-	private components: { [identifier: string]: ClientObjectWrapper } = {};
+	private libraryModules: Map<string, Promise<any>> = new Map();
+	private componentClasses: Map<string, Promise<ClientObjectClassWrapper>> = new Map();
+	private components: Map<string, Promise<ClientObjectWrapper>> = new Map();
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
@@ -156,7 +184,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 					}
 				}
 			},
-			executeCommand: (clientObjectId: string, uiCommand: UiCommand) => this.executeCommand(clientObjectId, uiCommand)
+			executeCommand: (libraryUuid: string, clientObjectId: string, uiCommand: UiCommand) => this.executeCommand(libraryUuid, clientObjectId, uiCommand)
 		};
 
 		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
@@ -186,51 +214,76 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	public async sendQuery(query: UiQuery): Promise<any> {
 		let result = await this.connection.sendQuery(query);
 		let resultWrapper = [result];
-		this.replaceComponentReferencesWithInstances(resultWrapper)
+		resultWrapper = await this.replaceComponentReferencesWithInstances(resultWrapper)
 		return resultWrapper[0];
 	}
 
-	public registerClientObject(clientObject: UiClientObject, id: string, teamappsType: string, listeningEvents: string[], listeningQueries: string[]): void {
+	private async registerClientObject(clientObjectPromise: Promise<UiClientObject>, id: string, teamappsType: string, listeningEvents: string[], listeningQueries: string[]) {
 		console.debug("registering ClientObject: ", id);
-		if (isClassicComponent(clientObject)) {
-			let existingComponentInfo = this.components[id];
-			if (existingComponentInfo != null) {
-				(existingComponentInfo.clientObject as RefreshableComponentProxyHandle).component = clientObject;
+
+		const getClientComponentWrapper = async (clientObjectPromise: Promise<UiClientObject>) => {
+			let clientObject = await clientObjectPromise;
+			if (isClassicComponent(clientObject)) {
+				return new ClientObjectWrapper(new RefreshableComponentProxyHandle(clientObject));
 			} else {
-				this.components[id] = new ClientObjectWrapper(new RefreshableComponentProxyHandle(clientObject));
+				return new ClientObjectWrapper(clientObject);
 			}
-		} else {
-			this.components[id] = new ClientObjectWrapper(clientObject);
 		}
+
+		let clientComponentWrapper = getClientComponentWrapper(clientObjectPromise);
+		this.components.set(id, clientComponentWrapper);
+
 		console.debug(`Listening on clientObject ${id} to events ${listeningEvents} and queries ${listeningQueries}`);
 		listeningEvents.forEach(qualifiedEventName => {
-			this.toggleEventListener(id, qualifiedEventName, true);
+			this.toggleEventListener(null, id, qualifiedEventName, true);
 		})
 	}
 
-	toggleEventListener(clientObjectId: string, qualifiedEventName: string, enabled: boolean) {
-		let componentInfo = this.components[clientObjectId];
-		let listener = enabled ? (eventObject) => {
-			const enhancedEventObject = {...eventObject, componentId: clientObjectId, _type: qualifiedEventName};
-			console.debug("Sending event to server: ", enhancedEventObject);
-			this.sendEvent(enhancedEventObject);
-		} : null;
-		componentInfo.toggleEventListener(clientObjectId, qualifiedEventName, listener);
+	async toggleEventListener(libraryUuid: string | null, clientObjectId: string | null, qualifiedEventName: string, enabled: boolean) {
+		if (clientObjectId != null) {
+			let listener = enabled ? (eventObject) => {
+				const enhancedEventObject = {...eventObject, componentId: clientObjectId, _type: qualifiedEventName};
+				console.debug("Sending event to server: ", enhancedEventObject);
+				this.sendEvent(enhancedEventObject);
+			} : null;
+			let componentWrapper = await this.components.get(clientObjectId);
+			componentWrapper.toggleEventListener(qualifiedEventName, listener);
+		} else {
+			// static event
+			let className = qualifiedEventName.substring(0, qualifiedEventName.indexOf('.'));
+			let module = await this.libraryModules.get(libraryUuid);
+			let clazzWrapper = await this.getClientObjectClass(libraryUuid, className);
+
+			let listener = enabled ? (eventObject) => {
+				const enhancedEventObject = {...eventObject, _type: qualifiedEventName};
+				console.debug("Sending static event to server: ", enhancedEventObject);
+				this.sendEvent(enhancedEventObject);
+			} : null;
+
+			clazzWrapper.toggleEventListener(qualifiedEventName, listener);
+		}
 	}
 
-	public createClientObject(config: UiClientObjectConfig): UiClientObject {
-		let componentClass = TeamAppsUiComponentRegistry.getComponentClassForName(config._type);
+	public async renderClientObject(libraryUuid: string, config: UiClientObjectConfig) {
+		console.debug("rendering ClientObject: ", config._type, config.id, libraryUuid, config);
+		let promise = this.createClientObject(libraryUuid, config);
+		await this.registerClientObject(promise, config.id, config._type, config.listeningEvents, config.listeningQueries);
+		return await promise;
+	}
+
+	public async createClientObject(libraryUuid: string, config: UiClientObjectConfig): Promise<UiClientObject> {
+		let componentClass = await this.getClientObjectClass(libraryUuid, config._type);
 		if (componentClass) {
 			QueryFunctionAdder.addQueryFunctionsToConfig(config, (componentId, queryTypeId, queryObject) => {
 				return this.sendQuery({...queryObject, _type: queryTypeId, componentId: componentId});
 			});
-			let isWebComponent = (componentClass as any).ELEMENT_NODE === 1;
+			let isWebComponent = (await componentClass.clazz as any).ELEMENT_NODE === 1;
 			if (isWebComponent) {
 				let webComponent = document.createElement('ui-div');
 				(webComponent as any).setConfig(config);
 				return webComponent as unknown as UiComponent;
 			} else {
-				return new componentClass(config, this);
+				return new (await componentClass).clazz(config, this);
 			}
 		} else {
 			console.error("Unknown component type: " + config._type);
@@ -238,17 +291,17 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	refreshComponent(config: UiComponentConfig): void {
-		let clientObject = this.createClientObject(config) as UiComponent;
+	async refreshComponent(libraryUuid: string, config: UiComponentConfig) {
+		let clientObject = (await this.createClientObject(libraryUuid, config)) as UiComponent;
 		if (this.components[config.id] != null) {
 			(this.components[config.id].clientObject as RefreshableComponentProxyHandle).component = clientObject;
 		} else {
-			this.registerClientObject(clientObject, config.id, config._type, config.listeningEvents, config.listeningQueries);
+			await this.registerClientObject(Promise.resolve(clientObject), config.id, config._type, config.listeningEvents, config.listeningQueries);
 		}
 	}
 
-	destroyClientObject(id: string): void {
-		let o: any = this.components[id].clientObject;
+	async destroyClientObject(id: string) {
+		let o: any = (await this.components.get(id)).clientObject;
 		if (o != null) {
 			if (isRefreshableComponentProxyHandle(o)) {
 				o = o.component;
@@ -257,61 +310,63 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 				o.getMainElement().remove();
 			}
 			o.destroy();
-			delete this.components[id];
+			this.components.delete(id);
 		} else {
 			console.warn("Could not find component to destroy: " + id);
 		}
 	}
 
-	public getClientObjectById(id: string): UiClientObject {
-		const clientObject = this.components[id].clientObject;
-		if (clientObject == null) {
+	public async getClientObjectById(id: string): Promise<UiClientObject> {
+		let promise = this.components.get(id);
+		if (promise == null) {
 			console.error(`Cannot find component with id ${id}`);
 			return null;
 		} else {
+			const clientObject = (await promise).clientObject;
 			return isRefreshableComponentProxyHandle(clientObject) ? clientObject.proxy : clientObject;
 		}
 	}
 
-	private replaceComponentReferencesWithInstances(o: any) {
-		let replaceOrRecur = (value: any) => {
+	private async replaceComponentReferencesWithInstances(o: any) {
+		let replaceOrRecur = async (value: any) => {
 			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("UiClientObjectReference") !== -1) {
-				const componentById = this.getClientObjectById(value.id);
+				const componentById = await this.getClientObjectById(value.id);
 				if (componentById != null) {
 					return componentById;
 				} else {
 					throw new Error("Could not find component with id " + value.id);
 				}
 			} else {
-				this.replaceComponentReferencesWithInstances(value);
+				value = await this.replaceComponentReferencesWithInstances(value);
 				return value;
 			}
 		};
 
 		if (o == null || typeof o === "string" || typeof o === "boolean" || typeof o === "function" || typeof o === "number" || typeof o === "symbol") {
-			return;
+			return o;
 		} else if (Array.isArray(o)) {
 			for (let i = 0; i < o.length; i++) {
 				let value = o[i];
-				const replacingValue = replaceOrRecur(value);
+				const replacingValue = await replaceOrRecur(value);
 				if (replacingValue !== value) {
 					o[i] = replacingValue;
 				}
 			}
 		} else if (typeof o === "object") {
-			Object.keys(o).forEach(key => {
+			for (const key of Object.keys(o)) {
 				let value = o[key];
-				const replacingValue = replaceOrRecur(value);
+				const replacingValue = await replaceOrRecur(value);
 				if (replacingValue !== value) {
 					o[key] = replacingValue;
 				}
-			})
+			}
 		}
+		return o;
 	}
 
-	private async executeCommand(clientObjectId: string, command: UiCommand): Promise<any> {
+	private async executeCommand(libraryUuid: string | null, clientObjectId: string | null, command: UiCommand): Promise<any> {
 		try {
-			this.replaceComponentReferencesWithInstances(command);
+			command = await this.replaceComponentReferencesWithInstances(command);
 			this._executingCommand = true;
 			const qualifiedMethodName = command[0];
 			const className = qualifiedMethodName.substring(0, qualifiedMethodName.indexOf('.'));
@@ -319,17 +374,19 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			const parameters = command[1];
 			if (clientObjectId != null) {
 				console.debug(`Trying to call ${clientObjectId}.${methodName}()`);
-				let component: any = this.getClientObjectById(clientObjectId);
-				if (!component) {
+				const componentPromise: any = this.getClientObjectById(clientObjectId);
+				if (!componentPromise) {
 					throw new Error("The component " + clientObjectId + " does not exist, so cannot call " + methodName + "() on it.");
-				} else if (typeof component[methodName] !== "function") {
+				}
+				const component = await componentPromise;
+				if (typeof component[methodName] !== "function") {
 					throw new Error(`The ${(<any>component.constructor).name || 'component'} ${clientObjectId} does not have a method ${methodName}()!`);
 				}
 				return await component[methodName].apply(component, parameters);
 			} else {
 				console.debug(`Trying to call static method ${qualifiedMethodName}()`);
-				const clazz = TeamAppsUiComponentRegistry.getComponentClassForName(className) as any;
-				const result = await clazz[methodName].apply(clazz, [...parameters, this]);
+				const classWrapper = await this.getClientObjectClass(libraryUuid, className);
+				const result = await (classWrapper.clazz[methodName].apply(classWrapper.clazz, [...parameters, this]));
 				await this.onStaticMethodCommandInvocation.fire(command);
 				return result;
 			}
@@ -338,6 +395,44 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		} finally {
 			this._executingCommand = false;
 		}
+	}
+
+	async registerComponentLibrary(uuid: string, mainJsUrl: string) {
+		let module = import(mainJsUrl);
+		this.libraryModules.set(uuid, module);
+	}
+
+	// TODO temporary hack
+	private coreLibraryUuid: string;
+
+	private async getClientObjectClass(libraryUuid: string, className: string): Promise<ClientObjectClassWrapper> {
+		let key = `${libraryUuid}#${className}`;
+		let clientObjectClassWrapperPromise = this.componentClasses.get(key);
+		if (clientObjectClassWrapperPromise == null) {
+			let promise = new Promise<ClientObjectClassWrapper>(async (resolve, reject) => {
+
+				if (this.coreLibraryUuid == null) {
+					this.coreLibraryUuid = libraryUuid;
+				}
+				let clazz: any;
+				if (libraryUuid === this.coreLibraryUuid || libraryUuid == null) {
+					clazz = TeamAppsUiComponentRegistry.getComponentClassForName(className); // TODO remove legacy case
+				} else {
+					let module = await this.libraryModules.get(libraryUuid);
+					clazz = module[className];
+				}
+
+				if (!clazz) {
+					console.error("Unknown client object type in module: " + className);
+					reject();
+				} else {
+					resolve(new ClientObjectClassWrapper(clazz))
+				}
+			});
+			this.componentClasses.set(key, promise);
+			clientObjectClassWrapperPromise = promise;
+		}
+		return clientObjectClassWrapperPromise;
 	}
 
 	public setSessionMessageWindows(expiredMessageWindow: UiWindow, errorMessageWindow: UiWindow, terminatedMessageWindow: UiWindow) {

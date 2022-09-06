@@ -77,8 +77,8 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
-	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>();
-	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>();
+	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiRootPanel.ToggleEventListeningCommand(null, null, UiRootPanel.GlobalKeyEventOccurredEvent.NAME, hasListeners)));
+	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiRootPanel.ToggleEventListeningCommand(null, null, UiRootPanel.NavigationStateChangeEvent.NAME, hasListeners)));
 	public final ProjectorEvent<UiSessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
 	public final Event<UiSessionClosingReason> onDestroyed = new Event<>();
 
@@ -204,7 +204,7 @@ public class SessionContext {
 
 
 	public void pushNavigationState(String relativeUrl) {
-		sendCommand(null, new UiRootPanel.PushHistoryStateCommand(relativeUrl));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.PushHistoryStateCommand(relativeUrl));
 	}
 
 	public void navigateBack(int steps) {
@@ -212,7 +212,7 @@ public class SessionContext {
 	}
 
 	public void navigateForward(int steps) {
-		sendCommand(null, new UiRootPanel.NavigateForwardCommand(steps));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.NavigateForwardCommand(steps));
 	}
 
 	public static SessionContext current() {
@@ -280,16 +280,26 @@ public class SessionContext {
 		uiSession.close(reason);
 	}
 
-	public <RESULT> void sendCommand(String clientObjectId, UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
-		if (CurrentSessionContext.get() != this) {
-			String errorMessage = "Trying to queue a command for foreign/null SessionContext (CurrentSessionContext.get() != this)."
-					+ " Please use SessionContext.runWithContext(Runnable). NOTE: The command will not get queued!";
-			LOGGER.error(errorMessage);
-			throw new IllegalStateException(errorMessage);
-		}
+	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
+		CurrentSessionContext.throwIfNotSameAs(this);
+
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
 
-		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(clientObjectId, command, wrappedCallback)));
+		ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObjectClass(clientObjectClass);
+
+		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(componentLibraryInfo.getUuid(), null, command, wrappedCallback)));
+	}
+
+	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, UiCommand<RESULT> command) {
+		sendStaticCommand(clientObjectClass, command, null);
+	}
+
+	public <RESULT> void sendCommand(String clientObjectId, UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
+		CurrentSessionContext.throwIfNotSameAs(this);
+
+		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
+
+		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(null, clientObjectId, command, wrappedCallback)));
 	}
 
 	public void sendCommand(String clientObjectId, UiCommand<?> command) {
@@ -326,13 +336,13 @@ public class SessionContext {
 
 	public TemplateReference registerTemplate(String id, Template template) {
 		registeredTemplates.put(id, template);
-		sendCommand(null, new UiRootPanel.RegisterTemplateCommand(id, template.createUiTemplate()));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.RegisterTemplateCommand(id, template.createUiTemplate()));
 		return new TemplateReference(template, id);
 	}
 
 	public void registerTemplates(Map<String, Template> templates) {
 		registeredTemplates.putAll(templates);
-		sendCommand(null, new UiRootPanel.RegisterTemplatesCommand(templates.entrySet().stream()
+		sendStaticCommand(RootPanel.class, new UiRootPanel.RegisterTemplatesCommand(templates.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().createUiTemplate()))));
 	}
 
@@ -429,7 +439,7 @@ public class SessionContext {
 
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
-		sendCommand(null, new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
 		updateSessionMessageWindows();
 	}
 
@@ -460,24 +470,27 @@ public class SessionContext {
 		clientObjectsById.put(clientObject.getId(), clientObject);
 		UiClientObject uiComponent = clientObject.createUiClientObject();
 
+		ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
+		loadComponentLibraryIfNecessary(clientObject, componentLibraryInfo);
+
 		if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
-
-			ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
-			if (!componentLibrariesLoaded.contains(componentLibraryInfo)) {
-				String mainJsUrl = componentLibraryRegistry.getMainJsUrl(clientObject.getClass());
-				sendCommand(null, new UiRootPanel.RegisterComponentLibraryCommand(mainJsUrl));
-				componentLibrariesLoaded.add(componentLibraryInfo.getComponentLibrary());
-			}
-
-			sendCommand(null, new UiRootPanel.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiComponent.getClass().getSimpleName(), List.of(), List.of()));
+			sendStaticCommand(RootPanel.class, new UiRootPanel.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiComponent.getClass().getSimpleName(), List.of(), List.of()));
 			clientObjectTypesKnownToClient.add(clientObject.getClass());
 		}
 
-		sendCommand(null, new UiRootPanel.RenderCommand(uiComponent));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.RenderCommand(componentLibraryInfo.getUuid(), uiComponent));
+	}
+
+	private void loadComponentLibraryIfNecessary(ClientObject clientObject, ComponentLibraryInfo componentLibraryInfo) {
+		if (!componentLibrariesLoaded.contains(componentLibraryInfo.getComponentLibrary())) {
+			String mainJsUrl = componentLibraryRegistry.getMainJsUrl(clientObject.getClass());
+			sendStaticCommand(RootPanel.class, new UiRootPanel.RegisterComponentLibraryCommand(componentLibraryInfo.getUuid(), mainJsUrl), null);
+			componentLibrariesLoaded.add(componentLibraryInfo.getComponentLibrary());
+		}
 	}
 
 	public void unrenderClientObject(ClientObject clientObject) {
-		sendCommand(null,
+		sendStaticCommand(RootPanel.class,
 				// unregister only after the ui destroyed the object!
 				new UiRootPanel.UnrenderCommand(clientObject.getId()), unused -> clientObjectsById.remove(clientObject.getId()));
 	}
@@ -503,15 +516,15 @@ public class SessionContext {
 	}
 
 	public void download(String url, String downloadFileName) {
-		runWithContext(() -> sendCommand(null, new UiRootPanel.DownloadFileCommand(url, downloadFileName)));
+		runWithContext(() -> sendStaticCommand(RootPanel.class, new UiRootPanel.DownloadFileCommand(url, downloadFileName)));
 	}
 
 	public void registerBackgroundImage(String id, String image, String blurredImage) {
-		sendCommand(null, new UiRootPanel.RegisterBackgroundImageCommand(id, image, blurredImage));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.RegisterBackgroundImageCommand(id, image, blurredImage));
 	}
 
 	public void setBackgroundImage(String id, int animationDuration) {
-		sendCommand(null, new UiRootPanel.SetBackgroundImageCommand(id, animationDuration));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.SetBackgroundImageCommand(id, animationDuration));
 	}
 
 	public void showDefaultBackground(int animationDuration) {
@@ -523,11 +536,11 @@ public class SessionContext {
 	}
 
 	public void setBackgroundColor(Color color, int animationDuration) {
-		sendCommand(null, new UiRootPanel.SetBackgroundColorCommand(color != null ? color.toHtmlColorString() : null, animationDuration));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.SetBackgroundColorCommand(color != null ? color.toHtmlColorString() : null, animationDuration));
 	}
 
 	public void exitFullScreen() {
-		sendCommand(null, new UiRootPanel.ExitFullScreenCommand());
+		sendStaticCommand(RootPanel.class, new UiRootPanel.ExitFullScreenCommand());
 	}
 
 	public void addRootComponent(String containerElementSelector, Component component) {
@@ -535,7 +548,7 @@ public class SessionContext {
 	}
 
 	public void addRootPanel(String containerElementSelector, Component rootPanel) {
-		sendCommand(null, new UiRootPanel.BuildRootPanelCommand(containerElementSelector, rootPanel.createUiReference()));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.BuildRootPanelCommand(containerElementSelector, rootPanel.createUiReference()));
 	}
 
 	public RootPanel addRootPanel(String containerElementSelector) {
@@ -550,22 +563,22 @@ public class SessionContext {
 
 	public void addClientToken(String token) {
 		getClientInfo().getClientTokens().add(token);
-		sendCommand(null, new UiRootPanel.AddClientTokenCommand(token));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.AddClientTokenCommand(token));
 	}
 
 	public void removeClientToken(String token) {
 		getClientInfo().getClientTokens().remove(token);
-		sendCommand(null, new UiRootPanel.RemoveClientTokenCommand(token));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.RemoveClientTokenCommand(token));
 	}
 
 	public void clearClientTokens() {
 		getClientInfo().getClientTokens().clear();
-		sendCommand(null, new UiRootPanel.ClearClientTokensCommand());
+		sendStaticCommand(RootPanel.class, new UiRootPanel.ClearClientTokensCommand());
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			sendCommand(null, new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+			sendStaticCommand(RootPanel.class, new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
 	}
@@ -668,9 +681,9 @@ public class SessionContext {
 		String uuid = UUID.randomUUID().toString();
 		CompletableFuture<WakeLock> completableFuture = new CompletableFuture<>();
 		runWithContext(() -> {
-			sendCommand(null, new UiRootPanel.RequestWakeLockCommand(uuid), successful -> {
+			sendStaticCommand(RootPanel.class, new UiRootPanel.RequestWakeLockCommand(uuid), successful -> {
 				if (successful) {
-					completableFuture.complete(() -> sendCommand(null, new UiRootPanel.ReleaseWakeLockCommand(uuid)));
+					completableFuture.complete(() -> sendStaticCommand(RootPanel.class, new UiRootPanel.ReleaseWakeLockCommand(uuid)));
 				} else {
 					completableFuture.completeExceptionally(new RuntimeException("Could not acquire WakeLock"));
 				}
@@ -680,7 +693,7 @@ public class SessionContext {
 	}
 
 	public void goToUrl(String url, boolean blankPage) {
-		sendCommand(null, new UiRootPanel.GoToUrlCommand(url, blankPage));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.GoToUrlCommand(url, blankPage));
 	}
 
 	public void setFavicon(Icon<?, ?> icon) {
@@ -692,15 +705,15 @@ public class SessionContext {
 	}
 
 	public void setFavicon(String url) {
-		sendCommand(null, new UiRootPanel.SetFaviconCommand(url));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.SetFaviconCommand(url));
 	}
 
 	public void setTitle(String title) {
-		sendCommand(null, new UiRootPanel.SetTitleCommand(title));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.SetTitleCommand(title));
 	}
 
 	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		sendCommand(null, new UiRootPanel.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
 	}
 
 	public String getSessionId() {

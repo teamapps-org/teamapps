@@ -32,5 +32,5 @@ export interface TeamAppsConnection {
 export interface TeamAppsConnectionListener {
 	onConnectionInitialized(): void;
 	onConnectionErrorOrBroken(reason: UiSessionClosingReason, message?: string): void;
-	executeCommand(clientObjectId: string, uiCommand: UiCommand): Promise<any>;
+	executeCommand(libraryUuid: string, clientObjectId: string, uiCommand: UiCommand): Promise<any>;
 }

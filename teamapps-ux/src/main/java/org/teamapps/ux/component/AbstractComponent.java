@@ -26,6 +26,7 @@ import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.ProjectorEvent;
+import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
@@ -76,7 +77,7 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	protected <T> ProjectorEvent<T> createProjectorEventBoundToUiEvent(String qualifiedEventName) {
-		return new ProjectorEvent<>(listenersRegistered -> toggleEventListening(qualifiedEventName, listenersRegistered));
+		return new ProjectorEvent<>(hasListeners -> toggleEventListening(qualifiedEventName, hasListeners));
 	}
 
 	protected void toggleEventListening(String name, boolean listen) {
@@ -87,7 +88,7 @@ public abstract class AbstractComponent implements Component {
 			changed = listeningEventNames.remove(name);
 		}
 		if (changed) {
-			sendCommandIfRendered(null, () -> new UiRootPanel.ToggleEventListeningCommand(getId(), name, listen));
+			sendCommandIfRendered(null, () -> new UiRootPanel.ToggleEventListeningCommand(null, getId(), name, listen));
 		}
 	}
 
@@ -99,7 +100,7 @@ public abstract class AbstractComponent implements Component {
 			changed = listeningQueryNames.remove(name);
 		}
 		if (changed) {
-			sendCommandIfRendered(null, () -> new UiRootPanel.ToggleQueryListeningCommand(getId(), name, listen));
+			sendCommandIfRendered(null, () -> new UiRootPanel.ToggleQueryListeningCommand(null, getId(), name, listen));
 		}
 	}
 
@@ -161,7 +162,7 @@ public abstract class AbstractComponent implements Component {
 
 	public void reRenderIfRendered() {
 		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.sendCommand(null, new UiRootPanel.RefreshComponentCommand(createUiClientObject()));
+			sessionContext.sendStaticCommand(RootPanel.class, new UiRootPanel.RefreshComponentCommand(createUiClientObject()));
 		}
 	}
 

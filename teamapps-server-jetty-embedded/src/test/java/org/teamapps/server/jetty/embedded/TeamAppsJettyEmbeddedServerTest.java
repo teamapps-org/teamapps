@@ -56,7 +56,21 @@ public class TeamAppsJettyEmbeddedServerTest {
 				});
 			});
 			div.addComponent(button);
+
+			Button<?> button2 = Button.create("change location");
+			button2.onClicked.addListener(() -> {
+				
+			});
+			div.addComponent(button2);
+
 			rootPanel.setContent(div);
+
+			sessionContext.onGlobalKeyEventOccurred.addListener((eventData, disposable) -> {
+				System.out.println(eventData);
+			});
+			sessionContext.onNavigationStateChange.addListener(navigationStateChangeEvent -> {
+				System.out.println(navigationStateChangeEvent);
+			});
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, 8082);

@@ -118,18 +118,18 @@ export class ChildWindowViewContainer implements ViewContainer {
 		} else if (e.data._type === 'REGISTER_COMPONENT') {
 			const componentId = e.data.componentId;
 			const teamappsType = e.data.teamappsType;
-			(this.context as TeamAppsUiContextInternalApi).registerClientObject(new Proxy({}, {
-				get: (target, property, receiver) => {
-					if (property === 'getId') {
-						return () => componentId;
-					} else {
-						let me = this;
-						return function () {
-							me.sendCommandToWindow(componentId, property.toString(), arguments);
-						}
-					}
-				}
-			}) as UiComponent<UiComponentConfig>, componentId, teamappsType, ["TODO"], ["TODO"]);
+			// (this.context as TeamAppsUiContextInternalApi).registerClientObject(new Proxy({}, {
+			// 	get: (target, property, receiver) => {
+			// 		if (property === 'getId') {
+			// 			return () => componentId;
+			// 		} else {
+			// 			let me = this;
+			// 			return function () {
+			// 				me.sendCommandToWindow(componentId, property.toString(), arguments);
+			// 			}
+			// 		}
+			// 	}
+			// }) as UiComponent<UiComponentConfig>, componentId, teamappsType, ["TODO"], ["TODO"]);
 		} else if (e.data._type === 'EVENT') {
 			this.listener.handleUiEvent(e.data.eventObject);
 		} else if (e.data._type === 'CHILD_WINDOW_CREATED') {
