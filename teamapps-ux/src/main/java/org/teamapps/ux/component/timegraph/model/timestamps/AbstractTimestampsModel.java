@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.timegraph.model.timestamps;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public abstract class AbstractTimestampsModel implements TimestampsModel {
 
-	public final Event<Void> onDataChanged = new Event<>();
+	public final ProjectorEvent<Void> onDataChanged = new ProjectorEvent<>();
 
 	@Override
-	public Event<Void> onDataChanged() {
+	public ProjectorEvent<Void> onDataChanged() {
 		return onDataChanged;
 	}
 

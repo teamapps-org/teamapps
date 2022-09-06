@@ -23,7 +23,6 @@ import {UiEvent} from "./generated/UiEvent";
 import {TemplateRegistry} from "./TemplateRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiCommand} from "./generated/UiCommand";
-import {UiComponent} from "./UiComponent";
 import {UiClientObject} from "./UiClientObject";
 import {UiClientObjectConfig} from "./generated/UiClientObjectConfig";
 
@@ -43,7 +42,7 @@ export interface TeamAppsUiContext {
 export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 	readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand>;
 
-	registerClientObject(component: UiClientObject, id: string, teamappsType: string): void;
+	registerClientObject(component: UiClientObject, id: string, teamappsType: string, listeningEvents: string[], listeningQueries: string[]): void;
 
 	createClientObject(config: UiClientObjectConfig): UiClientObject;
 
@@ -52,4 +51,6 @@ export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 	destroyClientObject(componentId: string): void;
 
 	sendEvent(eventObject: UiEvent): void;
+
+	toggleEventListener(clientObjectId: string, qualifiedEventName: string, enabled: boolean): any;
 }

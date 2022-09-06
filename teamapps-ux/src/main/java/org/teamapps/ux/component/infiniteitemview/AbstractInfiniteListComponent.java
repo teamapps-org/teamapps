@@ -23,9 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.databinding.ObservableValue;
 import org.teamapps.databinding.TwoWayBindableValueImpl;
+import org.teamapps.dto.AbstractUiInfiniteListComponent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiTableClientRecord;
-import org.teamapps.event.Event;
+import org.teamapps.event.Disposable;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.EqualsAndHashCode;
 import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.cache.record.RecordAndClientRecord;
@@ -35,18 +37,17 @@ import org.teamapps.ux.component.AbstractComponent;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends InfiniteListModel<RECORD>> extends AbstractComponent {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public final Event<ItemRange> onDisplayedRangeChanged = new Event<>();
+	public final ProjectorEvent<ItemRange> onDisplayedRangeChanged = createProjectorEventBoundToUiEvent(AbstractUiInfiniteListComponent.DisplayedRangeChangedEvent.NAME);
 
-	private final Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
-	private final Consumer<RecordsAddedEvent<RECORD>> modelOnRecordsAddedListener = this::handleModelRecordsAdded;
-	private final Consumer<RecordsChangedEvent<RECORD>> modelOnRecordsChangedListener = this::handleModelRecordsChanged;
-	private final Consumer<RecordsRemovedEvent<RECORD>> modelOnRecordsDeletedListener = this::handleModelRecordsRemoved;
+	private Disposable modelOnAllDataChangedListenerDisposable;
+	private Disposable modelOnRecordsAddedListenerDisposable;
+	private Disposable modelOnRecordsChangedListenerDisposable;
+	private Disposable modelOnRecordsDeletedListenerDisposable;
 
 	private final TwoWayBindableValueImpl<Integer> count = new TwoWayBindableValueImpl<>(0);
 
@@ -68,10 +69,10 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		this.model = model;
 		if (model != null) {
 			preRegisteringModel(model);
-			model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
-			model.onRecordsAdded().addListener(this.modelOnRecordsAddedListener);
-			model.onRecordsChanged().addListener(this.modelOnRecordsChangedListener);
-			model.onRecordsRemoved().addListener(this.modelOnRecordsDeletedListener);
+			this.modelOnAllDataChangedListenerDisposable = model.onAllDataChanged().addListener(aVoid -> this.refresh());
+			this.modelOnRecordsAddedListenerDisposable = model.onRecordsAdded().addListener(this::handleModelRecordsAdded);
+			this.modelOnRecordsChangedListenerDisposable = model.onRecordsChanged().addListener(this::handleModelRecordsChanged);
+			this.modelOnRecordsDeletedListenerDisposable = model.onRecordsRemoved().addListener(this::handleModelRecordsRemoved);
 		}
 		refresh();
 	}
@@ -81,10 +82,18 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 	}
 
 	private void unregisterModelListeners() {
-		this.model.onAllDataChanged().removeListener(this.modelOnAllDataChangedListener);
-		this.model.onRecordsAdded().removeListener(this.modelOnRecordsAddedListener);
-		this.model.onRecordsChanged().removeListener(this.modelOnRecordsChangedListener);
-		this.model.onRecordsRemoved().removeListener(this.modelOnRecordsDeletedListener);
+		if (this.modelOnAllDataChangedListenerDisposable != null) {
+			this.modelOnAllDataChangedListenerDisposable.dispose();
+		}
+		if (this.modelOnRecordsAddedListenerDisposable != null) {
+			this.modelOnRecordsAddedListenerDisposable.dispose();
+		}
+		if (this.modelOnRecordsChangedListenerDisposable != null) {
+			this.modelOnRecordsChangedListenerDisposable.dispose();
+		}
+		if (this.modelOnRecordsDeletedListenerDisposable != null) {
+			this.modelOnRecordsDeletedListenerDisposable.dispose();
+		}
 	}
 
 	public void refresh() {

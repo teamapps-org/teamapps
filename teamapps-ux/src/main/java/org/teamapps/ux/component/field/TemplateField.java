@@ -25,7 +25,7 @@ import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTemplateField;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.template.Template;
@@ -33,7 +33,7 @@ import org.teamapps.ux.component.template.Template;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
-	public final Event<Void> onClicked = new Event<>();
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiTemplateField.ClickedEvent.NAME);
 
 	private Template template;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
@@ -91,7 +91,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setTemplate(Template template) {
 		this.template = template;
-		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -101,7 +101,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
-		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 

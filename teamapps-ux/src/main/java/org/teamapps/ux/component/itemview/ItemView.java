@@ -26,7 +26,7 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiItemView;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
-	public Event<ItemClickedEventData<RECORD>> onItemClicked = new Event<>();
+	public ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiItemView.ItemClickedEvent.NAME);
 
 	private final List<ItemGroup<HEADERRECORD, RECORD>> itemGroups = new ArrayList<>();
 
@@ -129,10 +129,10 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 			@Override
 			public void handleRefreshRequired() {
-				queueCommandIfRendered(() -> new UiItemView.RefreshItemGroupCommand(group.createUiItemViewItemGroup()));
+				sendCommandIfRendered(() -> new UiItemView.RefreshItemGroupCommand(group.createUiItemViewItemGroup()));
 			}
 		});
-		queueCommandIfRendered(() -> new UiItemView.AddItemGroupCommand(group.createUiItemViewItemGroup()));
+		sendCommandIfRendered(() -> new UiItemView.AddItemGroupCommand(group.createUiItemViewItemGroup()));
 	}
 
 	public String getFilter() {
@@ -141,7 +141,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
-		queueCommandIfRendered(() -> new UiItemView.SetFilterCommand(filter));
+		sendCommandIfRendered(() -> new UiItemView.SetFilterCommand(filter));
 	}
 
 	public void removeAllGroups() {
@@ -150,7 +150,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void removeItemGroup(ItemGroup itemGroup) {
 		itemGroups.remove(itemGroup);
-		queueCommandIfRendered(() -> new UiItemView.RemoveItemGroupCommand(itemGroup.getClientId()));
+		sendCommandIfRendered(() -> new UiItemView.RemoveItemGroupCommand(itemGroup.getClientId()));
 	}
 
 	public int getHorizontalPadding() {

@@ -129,7 +129,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 						}
 					}
 				}
-			}) as UiComponent<UiComponentConfig>, componentId, teamappsType);
+			}) as UiComponent<UiComponentConfig>, componentId, teamappsType, ["TODO"], ["TODO"]);
 		} else if (e.data._type === 'EVENT') {
 			this.listener.handleUiEvent(e.data.eventObject);
 		} else if (e.data._type === 'CHILD_WINDOW_CREATED') {

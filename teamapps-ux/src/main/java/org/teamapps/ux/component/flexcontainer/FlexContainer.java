@@ -57,7 +57,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void addComponent(Component component) {
 		this.components.add(component);
-		queueCommandIfRendered(() -> new UiFlexContainer.AddComponentCommand(component.createUiReference()));
+		sendCommandIfRendered(() -> new UiFlexContainer.AddComponentCommand(component.createUiReference()));
 	}
 
 	public void addComponent(Component component, FlexSizingPolicy sizingPolicy) {
@@ -67,11 +67,11 @@ public class FlexContainer extends AbstractComponent {
 
 	public void removeComponent(Component component) {
 		this.components.remove(component);
-		queueCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(component.createUiReference()));
+		sendCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(component.createUiReference()));
 	}
 
 	public void removeAllComponents() {
-		this.components.forEach(c -> queueCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(c.createUiReference())));
+		this.components.forEach(c -> sendCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(c.createUiReference())));
 		this.components.clear();
 	}
 

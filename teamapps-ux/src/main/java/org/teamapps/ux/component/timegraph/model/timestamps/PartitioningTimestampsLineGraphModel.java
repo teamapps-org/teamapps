@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph.model.timestamps;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.timegraph.Interval;
 import org.teamapps.ux.component.timegraph.TimePartitioning;
 import org.teamapps.ux.component.timegraph.datapoints.LineGraphData;
@@ -41,7 +41,7 @@ public class PartitioningTimestampsLineGraphModel extends AbstractLineGraphModel
 	}
 
 	@Override
-	public Event<Void> onDataChanged() {
+	public ProjectorEvent<Void> onDataChanged() {
 		return onDataChanged;
 	}
 

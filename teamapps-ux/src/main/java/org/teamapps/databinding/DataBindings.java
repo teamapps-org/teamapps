@@ -19,18 +19,18 @@
  */
 package org.teamapps.databinding;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class DataBindings {
 
-	public static <T> ObservableValue<T> createObservableValueWithEmptyEvent(Event<?> changeEvent, Supplier<T> provider) {
+	public static <T> ObservableValue<T> createObservableValueWithEmptyEvent(ProjectorEvent<?> changeEvent, Supplier<T> provider) {
 		return new ObservableValue<T>() {
 			@Override
-			public Event<T> onChanged() {
-				Event<T> eventWithData = new Event<>();
+			public ProjectorEvent<T> onChanged() {
+				ProjectorEvent<T> eventWithData = new ProjectorEvent<>();
 				changeEvent.addListener(o -> eventWithData.fire(get()));
 				return eventWithData;
 			}
@@ -42,10 +42,10 @@ public final class DataBindings {
 		};
 	}
 
-	public static <T> ObservableValue<T> createObservableValue(Event<T> changeEvent, Supplier<T> provider) {
+	public static <T> ObservableValue<T> createObservableValue(ProjectorEvent<T> changeEvent, Supplier<T> provider) {
 		return new ObservableValue<T>() {
 			@Override
-			public Event<T> onChanged() {
+			public ProjectorEvent<T> onChanged() {
 				return changeEvent;
 			}
 
@@ -56,7 +56,7 @@ public final class DataBindings {
 		};
 	}
 
-	public static <T> ObservableValue<T> createObservableValue(Event<T> changeEvent) {
+	public static <T> ObservableValue<T> createObservableValue(ProjectorEvent<T> changeEvent) {
 		return new ObservableValue<T>() {
 
 			private T lastSeenValue;
@@ -66,7 +66,7 @@ public final class DataBindings {
 			}
 
 			@Override
-			public Event<T> onChanged() {
+			public ProjectorEvent<T> onChanged() {
 				return changeEvent;
 			}
 
@@ -81,10 +81,10 @@ public final class DataBindings {
 		return consumer::accept;
 	}
 
-	public static <T> TwoWayBindableValue<T> createTwoWayBindable(Event<T> changeEvent, Supplier<T> supplier, Consumer<T> consumer) {
+	public static <T> TwoWayBindableValue<T> createTwoWayBindable(ProjectorEvent<T> changeEvent, Supplier<T> supplier, Consumer<T> consumer) {
 		return new TwoWayBindableValue<T>() {
 			@Override
-			public Event<T> onChanged() {
+			public ProjectorEvent<T> onChanged() {
 				return changeEvent;
 			}
 
@@ -100,7 +100,7 @@ public final class DataBindings {
 		};
 	}
 
-	public static <T> TwoWayBindableValue<T> createTwoWayBindable(Event<T> changeEvent, Consumer<T> consumer) {
+	public static <T> TwoWayBindableValue<T> createTwoWayBindable(ProjectorEvent<T> changeEvent, Consumer<T> consumer) {
 		return new TwoWayBindableValue<T>() {
 
 			private T lastSeenValue;
@@ -110,7 +110,7 @@ public final class DataBindings {
 			}
 
 			@Override
-			public Event<T> onChanged() {
+			public ProjectorEvent<T> onChanged() {
 				return changeEvent;
 			}
 

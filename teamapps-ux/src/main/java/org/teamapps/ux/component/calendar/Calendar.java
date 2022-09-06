@@ -28,7 +28,8 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.Disposable;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
@@ -45,21 +46,20 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(Calendar.class);
 
-	public final Event<EventClickedEventData<CEVENT>> onEventClicked = new Event<>();
-	public final Event<EventMovedEventData<CEVENT>> onEventMoved = new Event<>();
-	public final Event<DayClickedEventData> onDayClicked = new Event<>();
-	public final Event<IntervalSelectedEventData> onIntervalSelected = new Event<>();
-	public final Event<ViewChangedEventData> onViewChanged = new Event<>();
-	public final Event<LocalDate> onMonthHeaderClicked = new Event<>();
-	public final Event<WeeHeaderClickedEventData> onWeekHeaderClicked = new Event<>();
-	public final Event<LocalDate> onDayHeaderClicked = new Event<>();
+	public final ProjectorEvent<EventClickedEventData<CEVENT>> onEventClicked = createProjectorEventBoundToUiEvent(UiCalendar.EventClickedEvent.NAME);
+	public final ProjectorEvent<EventMovedEventData<CEVENT>> onEventMoved = createProjectorEventBoundToUiEvent(UiCalendar.EventMovedEvent.NAME);
+	public final ProjectorEvent<DayClickedEventData> onDayClicked = createProjectorEventBoundToUiEvent(UiCalendar.DayClickedEvent.NAME);
+	public final ProjectorEvent<IntervalSelectedEventData> onIntervalSelected = createProjectorEventBoundToUiEvent(UiCalendar.IntervalSelectedEvent.NAME);
+	public final ProjectorEvent<ViewChangedEventData> onViewChanged = createProjectorEventBoundToUiEvent(UiCalendar.ViewChangedEvent.NAME);
+	public final ProjectorEvent<LocalDate> onMonthHeaderClicked = createProjectorEventBoundToUiEvent(UiCalendar.MonthHeaderClickedEvent.NAME);
+	public final ProjectorEvent<WeeHeaderClickedEventData> onWeekHeaderClicked = createProjectorEventBoundToUiEvent(UiCalendar.WeekHeaderClickedEvent.NAME);
+	public final ProjectorEvent<LocalDate> onDayHeaderClicked = createProjectorEventBoundToUiEvent(UiCalendar.DayHeaderClickedEvent.NAME);
 
 	private CalendarModel<CEVENT> model;
 	private PropertyProvider<CEVENT> propertyProvider = new BeanPropertyExtractor<>();
@@ -98,9 +98,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private boolean navigateOnHeaderClicks = true;
 
-	private final Consumer<Void> onCalendarDataChangedListener = (aVoid) -> {
-		refreshEvents();
-	};
+	private Disposable onCalendarDataChangedListener;
 
 	public Calendar() {
 		this(null);
@@ -156,7 +154,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String id = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, id);
-			queueCommandIfRendered(() -> new UiCalendar.RegisterTemplateCommand(id, template.createUiTemplate()));
+			sendCommandIfRendered(() -> new UiCalendar.RegisterTemplateCommand(id, template.createUiTemplate()));
 		}
 		return template;
 	}
@@ -167,13 +165,15 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		}
 		this.model = model;
 		if (model != null) {
-			model.onCalendarDataChanged().addListener(onCalendarDataChangedListener);
+			onCalendarDataChangedListener = model.onCalendarDataChanged().addListener((aVoid) -> refreshEvents());
 		}
 		refreshEvents();
 	}
 
 	private void unregisterModelEventListeners() {
-		this.model.onCalendarDataChanged().removeListener(onCalendarDataChangedListener);
+		if (onCalendarDataChangedListener != null) {
+			onCalendarDataChangedListener.dispose();
+		}
 	}
 
 	@Override
@@ -337,7 +337,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setActiveViewMode(CalendarViewMode activeViewMode) {
 		this.activeViewMode = activeViewMode;
-		queueCommandIfRendered(() -> new UiCalendar.SetViewModeCommand(activeViewMode.toUiCalendarViewMode()));
+		sendCommandIfRendered(() -> new UiCalendar.SetViewModeCommand(activeViewMode.toUiCalendarViewMode()));
 		refreshEvents();
 	}
 
@@ -347,7 +347,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
-		queueCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
+		sendCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
 	}
 
 	public void setDisplayDateOneUnitPrevious() {
@@ -536,7 +536,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setTimeZone(ZoneId timeZone) {
 		this.timeZone = timeZone;
-		queueCommandIfRendered(() -> new UiCalendar.SetTimeZoneIdCommand(timeZone.getId()));
+		sendCommandIfRendered(() -> new UiCalendar.SetTimeZoneIdCommand(timeZone.getId()));
 	}
 
 	public int getMinYearViewMonthTileWidth() {

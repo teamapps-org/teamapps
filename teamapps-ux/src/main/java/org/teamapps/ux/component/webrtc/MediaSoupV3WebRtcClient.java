@@ -21,7 +21,7 @@ package org.teamapps.ux.component.webrtc;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -36,19 +36,17 @@ import java.util.stream.Collectors;
 
 public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
-	public final Event<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = new Event<>();
-	public final Event<SourceMediaTrackType> onSourceMediaTrackEnded = new Event<>();
-	public final Event<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = new Event<>();
-	public final Event<TrackPublishingFailedEventData> onTrackPublishingFailed = new Event<>();
+	public final ProjectorEvent<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.NAME);
+	public final ProjectorEvent<SourceMediaTrackType> onSourceMediaTrackEnded = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.NAME);
+	public final ProjectorEvent<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.NAME);
+	public final ProjectorEvent<TrackPublishingFailedEventData> onTrackPublishingFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.NAME);
 
-	public final Event<WebRtcStreamType> onPublishedStreamEnded = new Event<>();
+	public final ProjectorEvent<Void> onSubscribingSuccessful = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.NAME);
+	public final ProjectorEvent<String> onSubscribingFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SubscribingFailedEvent.NAME);
 
-	public final Event<Void> onSubscribingSuccessful = new Event<>();
-	public final Event<String> onSubscribingFailed = new Event<>();
-
-	public final Event<Boolean> onConnectionStateChanged = new Event<>();
-	public final Event<Boolean> onVoiceActivityChanged = new Event<>();
-	public final Event<Void> onClicked = new Event<>();
+	public final ProjectorEvent<Boolean> onConnectionStateChanged = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.NAME);
+	public final ProjectorEvent<Boolean> onVoiceActivityChanged = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.NAME);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.ClickedEvent.NAME);
 
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;
@@ -139,9 +137,9 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			if (contextMenuProvider != null) {
 				Component contextMenuContent = contextMenuProvider.get();
 				if (contextMenuContent != null) {
-					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+					sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 				} else {
-					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+					sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 				}
 			} else {
 				closeContextMenu();
@@ -205,7 +203,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(createUiClientObject()));
 	}
 
 	public boolean isActivityLineVisible() {
@@ -242,7 +240,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	public void setActive(boolean active) {
 		if (active != this.active) {
 			this.active = active;
-			queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.SetActiveCommand(active));
+			sendCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.SetActiveCommand(active));
 		}
 	}
 
@@ -332,7 +330,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 	public void reconnect() {

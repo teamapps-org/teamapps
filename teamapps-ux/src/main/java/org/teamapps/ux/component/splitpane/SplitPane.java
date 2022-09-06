@@ -22,7 +22,7 @@ package org.teamapps.ux.component.splitpane;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiSplitPane;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -31,7 +31,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class SplitPane extends AbstractComponent {
 
-	public Event<Double> onResized = new Event<>();
+	public ProjectorEvent<Double> onResized = createProjectorEventBoundToUiEvent(UiSplitPane.SplitResizedEvent.NAME);
 
 	private SplitDirection splitDirection;
 	private SplitSizePolicy sizePolicy;
@@ -97,7 +97,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setFirstChild(Component firstChild) {
 		this.firstChild = firstChild;
-		queueCommandIfRendered(() -> new UiSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createUiReference() : null));
+		sendCommandIfRendered(() -> new UiSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createUiReference() : null));
 	}
 
 	public Component getLastChild() {
@@ -106,7 +106,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setLastChild(Component lastChild) {
 		this.lastChild = lastChild;
-		queueCommandIfRendered(() -> new UiSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createUiReference() : null));
+		sendCommandIfRendered(() -> new UiSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createUiReference() : null));
 	}
 
 	public void setSize(float referenceChildSize, SplitSizePolicy sizePolicy) {
@@ -115,7 +115,7 @@ public class SplitPane extends AbstractComponent {
 		}
 		this.referenceChildSize = referenceChildSize;
 		this.sizePolicy = sizePolicy;
-		queueCommandIfRendered(() -> new UiSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
+		sendCommandIfRendered(() -> new UiSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
 	}
 
 	public SplitDirection getSplitDirection() {
@@ -133,7 +133,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setSizePolicy(SplitSizePolicy sizePolicy) {
 		this.sizePolicy = sizePolicy;
-		queueCommandIfRendered(() -> new UiSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
+		sendCommandIfRendered(() -> new UiSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
 	}
 
 	public double getReferenceChildSize() {
@@ -142,7 +142,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setReferenceChildSize(float referenceChildSize) {
 		this.referenceChildSize = referenceChildSize;
-		queueCommandIfRendered(() -> new UiSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
+		sendCommandIfRendered(() -> new UiSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
 	}
 
 	public int getFirstChildMinSize() {
@@ -151,7 +151,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setFirstChildMinSize(int firstChildMinSize) {
 		this.firstChildMinSize = firstChildMinSize;
-		this.queueCommandIfRendered(() -> new UiSplitPane.SetFirstChildMinSizeCommand(firstChildMinSize));
+		this.sendCommandIfRendered(() -> new UiSplitPane.SetFirstChildMinSizeCommand(firstChildMinSize));
 	}
 
 	public int getLastChildMinSize() {
@@ -160,7 +160,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setLastChildMinSize(int lastChildMinSize) {
 		this.lastChildMinSize = lastChildMinSize;
-		this.queueCommandIfRendered(() -> new UiSplitPane.SetLastChildMinSizeCommand(lastChildMinSize));
+		this.sendCommandIfRendered(() -> new UiSplitPane.SetLastChildMinSizeCommand(lastChildMinSize));
 	}
 
 	public boolean isResizable() {

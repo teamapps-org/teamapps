@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiComboBoxTreeRecord;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiTagComboBox;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -41,8 +41,8 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TagComboBox.class);
 
-	public final Event<String> onFreeTextEntered = new Event<>();
-	public final Event<String> onFreeTextRemoved = new Event<>();
+	public final ProjectorEvent<String> onFreeTextEntered = new ProjectorEvent<>();
+	public final ProjectorEvent<String> onFreeTextRemoved = new ProjectorEvent<>();
 
 	private int maxEntries; // if 0, then the list is unbounded
 	private TagBoxWrappingMode wrappingMode = TagBoxWrappingMode.MULTI_LINE;

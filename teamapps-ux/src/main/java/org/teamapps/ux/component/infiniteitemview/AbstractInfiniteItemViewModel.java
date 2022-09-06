@@ -19,32 +19,32 @@
  */
 package org.teamapps.ux.component.infiniteitemview;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public abstract class AbstractInfiniteItemViewModel<RECORD> implements InfiniteItemViewModel<RECORD> {
 
-	public final Event<Void> onAllDataChanged = new Event<>();
-	public final Event<RecordsAddedEvent<RECORD>> onRecordsAdded = new Event<>();
-	public final Event<RecordsChangedEvent<RECORD>> onRecordsChanged = new Event<>();
-	public final Event<RecordsRemovedEvent<RECORD>> onRecordsDeleted = new Event<>();
+	public final ProjectorEvent<Void> onAllDataChanged = new ProjectorEvent<>();
+	public final ProjectorEvent<RecordsAddedEvent<RECORD>> onRecordsAdded = new ProjectorEvent<>();
+	public final ProjectorEvent<RecordsChangedEvent<RECORD>> onRecordsChanged = new ProjectorEvent<>();
+	public final ProjectorEvent<RecordsRemovedEvent<RECORD>> onRecordsDeleted = new ProjectorEvent<>();
 
 	@Override
-	public Event<Void> onAllDataChanged() {
+	public ProjectorEvent<Void> onAllDataChanged() {
 		return onAllDataChanged;
 	}
 
 	@Override
-	public Event<RecordsAddedEvent<RECORD>> onRecordsAdded() {
+	public ProjectorEvent<RecordsAddedEvent<RECORD>> onRecordsAdded() {
 		return onRecordsAdded;
 	}
 
 	@Override
-	public Event<RecordsChangedEvent<RECORD>> onRecordsChanged() {
+	public ProjectorEvent<RecordsChangedEvent<RECORD>> onRecordsChanged() {
 		return onRecordsChanged;
 	}
 
 	@Override
-	public Event<RecordsRemovedEvent<RECORD>> onRecordsRemoved() {
+	public ProjectorEvent<RecordsRemovedEvent<RECORD>> onRecordsRemoved() {
 		return onRecordsDeleted;
 	}
 }

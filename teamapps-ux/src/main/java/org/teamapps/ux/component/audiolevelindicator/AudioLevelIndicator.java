@@ -39,7 +39,7 @@ public class AudioLevelIndicator extends AbstractComponent {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
-		queueCommandIfRendered(() -> new UiAudioLevelIndicator.SetDeviceIdCommand(deviceId));
+		sendCommandIfRendered(() -> new UiAudioLevelIndicator.SetDeviceIdCommand(deviceId));
 	}
 
 	public void setBarWidth(int barWidth) {

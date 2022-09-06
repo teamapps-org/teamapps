@@ -22,7 +22,7 @@ package org.teamapps.ux.component.field;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiLabel;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -31,7 +31,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Label extends AbstractField<String> {
 
-	public final Event<Void> onClicked = new Event<>();
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiLabel.ClickedEvent.NAME);
 
 	private String caption;
 	private Icon icon;
@@ -70,7 +70,7 @@ public class Label extends AbstractField<String> {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
-		queueCommandIfRendered(() -> new UiLabel.SetCaptionCommand(caption));
+		sendCommandIfRendered(() -> new UiLabel.SetCaptionCommand(caption));
 	}
 
 	public Icon getIcon() {
@@ -79,7 +79,7 @@ public class Label extends AbstractField<String> {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-		queueCommandIfRendered(() -> new UiLabel.SetIconCommand(getSessionContext().resolveIcon(icon)));
+		sendCommandIfRendered(() -> new UiLabel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
 	public Component getTargetComponent() {
@@ -91,7 +91,7 @@ public class Label extends AbstractField<String> {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetComponent = targetComponent;
-		queueCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(Component.createUiClientObjectReference(targetComponent)));
+		sendCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(Component.createUiClientObjectReference(targetComponent)));
 		return this;
 	}
 }

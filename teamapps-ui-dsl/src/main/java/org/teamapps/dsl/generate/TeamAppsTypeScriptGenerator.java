@@ -100,7 +100,6 @@ public class TeamAppsTypeScriptGenerator {
         generateCommandBaseDefinition(new FileWriter(new File(parentDir, "UiCommand.ts")));
 
         generateEventBaseDefinition(new FileWriter(new File(parentDir, "UiEvent.ts")));
-        generateEventRegistrator(model.getAllClassesAndInterfacesWithEvents(), new FileWriter(new File(parentDir, "ComponentEventDescriptors.ts")));
 
         generateQueryBaseDefinition(new FileWriter(new File(parentDir, "UiQuery.ts")));
         generateQueryFunctionAdder(model.getAllClassesAndInterfacesWithQueries(), new FileWriter(new File(parentDir, "QueryFunctionAdder.ts")));
@@ -146,14 +145,6 @@ public class TeamAppsTypeScriptGenerator {
 
     public void generateQueryBaseDefinition(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("uiQueryBaseDefinition");
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    public void generateEventRegistrator(List<ParserRuleContext> classAndInterfaceContexts, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("componentEventDescriptors")
-		        .add("classesAndInterfacesWithEvents", classAndInterfaceContexts);
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();

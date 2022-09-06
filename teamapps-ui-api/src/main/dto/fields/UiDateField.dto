@@ -26,7 +26,7 @@ class UiLocalDate {
     required int day;
 }
 
-class UiLocalDateField extends UiField {
+class UiLocalDateField extends UiField implements UiTextInputHandlingField {
     boolean showDropDownButton = true;
 	boolean showClearButton;
 	boolean favorPastDates = false;

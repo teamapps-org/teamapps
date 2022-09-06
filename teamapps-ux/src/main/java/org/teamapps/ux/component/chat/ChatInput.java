@@ -21,7 +21,7 @@ package org.teamapps.ux.component.chat;
 
 import org.teamapps.dto.UiChatInput;
 import org.teamapps.dto.UiEvent;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class ChatInput extends AbstractComponent {
 
-	public final Event<NewChatMessageData> onMessageSent = new Event<>();
+	public final ProjectorEvent<NewChatMessageData> onMessageSent = createProjectorEventBoundToUiEvent(UiChatInput.MessageSentEvent.NAME);
 
 	private long maxBytesPerUpload = 5000000;
 	private String uploadUrl = "/upload";
@@ -112,7 +112,7 @@ public class ChatInput extends AbstractComponent {
 	public void setAttachmentsEnabled(boolean attachmentsEnabled) {
 		if (attachmentsEnabled != this.attachmentsEnabled) {
 			this.attachmentsEnabled = attachmentsEnabled;
-			queueCommandIfRendered(() -> new UiChatInput.SetAttachmentsEnabledCommand(attachmentsEnabled));
+			sendCommandIfRendered(() -> new UiChatInput.SetAttachmentsEnabledCommand(attachmentsEnabled));
 		}
 	}
 }

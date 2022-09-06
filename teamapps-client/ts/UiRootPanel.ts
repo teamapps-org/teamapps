@@ -125,12 +125,23 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static async registerComponentLibrary(mainJsUrl: string, context: TeamAppsUiContextInternalApi) {
 		let module = await import(mainJsUrl);
-		debugger;
+	}
+
+	public static async registerClientObjectType(libraryUuid: string, clientObjectType: string, eventNames: string[], queryNames: string[], context: TeamAppsUiContextInternalApi) {
+		console.log("TODO registerClientObjectType:", libraryUuid, clientObjectType);
+	}
+
+	public static async toggleEventListening(clientObjectId: string, eventName: string, enabled: boolean, context: TeamAppsUiContextInternalApi) {
+		context.toggleEventListener(clientObjectId, eventName, enabled)
+	}
+
+	public static async toggleQueryListening(clientObject: unknown, queryName: string, listen: boolean, context: TeamAppsUiContextInternalApi) {
+
 	}
 
 	public static render(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
 		let o = context.createClientObject(config);
-		context.registerClientObject(o, config.id, config._type);
+		context.registerClientObject(o, config.id, config._type, config.listeningEvents, config.listeningQueries);
 	}
 
 	public static unrender(componentId: string, context: TeamAppsUiContextInternalApi) {
@@ -382,7 +393,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	}
 
 	public static setFavicon(url: string) {
-		let link:HTMLLinkElement = document.querySelector("link[rel~='icon']");
+		let link: HTMLLinkElement = document.querySelector("link[rel~='icon']");
 		if (!link) {
 			link = document.createElement('link');
 			link.rel = 'icon';
@@ -395,6 +406,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		document.title = title;
 	}
 }
+
 TeamAppsUiComponentRegistry.registerComponentClass("UiRootPanel", UiRootPanel);
 
 // GLOBAL:

@@ -21,7 +21,7 @@ package org.teamapps.ux.component.field.multicurrency;
 
 import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
@@ -40,8 +40,8 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class CurrencyField extends AbstractField<CurrencyValue> implements TextInputHandlingField {
 
-	public final Event<String> onTextInput = new Event<>();
-	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiCurrencyField.TextInputEvent.NAME);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiCurrencyField.SpecialKeyPressedEvent.NAME);
 
 	private ULocale locale = SessionContext.current().getULocale();
 
@@ -99,7 +99,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencies(List<CurrencyUnit> currencies) {
 		this.currencies = currencies;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetCurrencyUnitsCommand(currencies != null ? currencies.stream()
+		sendCommandIfRendered(() -> new UiCurrencyField.SetCurrencyUnitsCommand(currencies != null ? currencies.stream()
 				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
 				.collect(Collectors.toList()) : null));
 		return this;
@@ -165,7 +165,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencyBeforeAmount(boolean currencyBeforeAmount) {
 		this.currencyBeforeAmount = currencyBeforeAmount;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencyBeforeAmountCommand(currencyBeforeAmount));
+		sendCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencyBeforeAmountCommand(currencyBeforeAmount));
 		return this;
 	}
 
@@ -175,7 +175,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencySymbolsEnabled(boolean currencySymbolsEnabled) {
 		this.currencySymbolsEnabled = currencySymbolsEnabled;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencySymbolCommand(currencySymbolsEnabled));
+		sendCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencySymbolCommand(currencySymbolsEnabled));
 		return this;
 	}
 
@@ -185,7 +185,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public void setFixedPrecision(int fixedPrecision) {
 		this.fixedPrecision = fixedPrecision;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetFixedPrecisionCommand(fixedPrecision));
+		sendCommandIfRendered(() -> new UiCurrencyField.SetFixedPrecisionCommand(fixedPrecision));
 	}
 
 	public void setAlphabeticKeysQueryEnabled(boolean alphabeticKeysQueryEnabled) {
@@ -208,16 +208,16 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		setCurrencies(currencies);
-		queueCommandIfRendered(() -> new UiCurrencyField.SetLocaleCommand(locale.toLanguageTag()));
+		sendCommandIfRendered(() -> new UiCurrencyField.SetLocaleCommand(locale.toLanguageTag()));
 	}
 
 	@Override
-	public Event<String> onTextInput() {
+	public ProjectorEvent<String> onTextInput() {
 		return onTextInput;
 	}
 
 	@Override
-	public Event<SpecialKey> onSpecialKeyPressed() {
+	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
 		return onSpecialKeyPressed;
 	}
 

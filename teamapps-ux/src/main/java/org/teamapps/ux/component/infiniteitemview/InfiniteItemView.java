@@ -23,7 +23,8 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.Disposable;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
@@ -35,7 +36,6 @@ import org.teamapps.ux.component.template.Template;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -44,7 +44,7 @@ import java.util.function.Function;
 @Deprecated
 public class InfiniteItemView<RECORD> extends AbstractComponent {
 
-	public final Event<ItemClickedEventData<RECORD>> onItemClicked = new Event<>();
+	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiInfiniteItemView.ItemClickedEvent.NAME);
 
 	private int numberOfInitialRecords = 100;
 	private Template itemTemplate;
@@ -59,10 +59,10 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private PropertyProvider<RECORD> itemPropertyProvider = new BeanPropertyExtractor<>();
 	protected final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
-	private final Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
-	private final Consumer<RecordsAddedEvent<RECORD>> modelOnRecordAddedListener = x -> this.refresh();
-	private final Consumer<RecordsChangedEvent<RECORD>> modelOnRecordChangedListener = x -> this.refresh();
-	private final Consumer<RecordsRemovedEvent<RECORD>> modelOnRecordDeletedListener = x -> this.refresh();
+	private Disposable modelOnAllDataChangedListener;
+	private Disposable modelOnRecordAddedListener;
+	private Disposable modelOnRecordChangedListener;
+	private Disposable modelOnRecordDeletedListener;
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
@@ -141,9 +141,9 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 			if (record != null && contextMenuProvider != null) {
 				Component contextMenuContent = contextMenuProvider.apply(record);
 				if (contextMenuContent != null) {
-					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+					sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 				} else {
-					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+					sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 				}
 			} else {
 				closeContextMenu();
@@ -180,7 +180,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new UiInfiniteItemView.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
 		return this;
 	}
 
@@ -190,7 +190,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemWidth(float itemWidth) {
 		this.itemWidth = itemWidth;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemWidthCommand(itemWidth));
+		sendCommandIfRendered(() -> new UiInfiniteItemView.SetItemWidthCommand(itemWidth));
 		return this;
 	}
 
@@ -209,7 +209,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public void setVerticalItemAlignment(ItemViewVerticalItemAlignment verticalItemAlignment) {
 		this.verticalItemAlignment = verticalItemAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetVerticalItemAlignmentCommand(verticalItemAlignment.toUiItemJustification()));
+		sendCommandIfRendered(() -> new UiInfiniteItemView.SetVerticalItemAlignmentCommand(verticalItemAlignment.toUiItemJustification()));
 	}
 
 	public int getHorizontalItemMargin() {
@@ -218,7 +218,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setHorizontalItemMargin(int horizontalItemMargin) {
 		this.horizontalItemMargin = horizontalItemMargin;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetHorizontalItemMarginCommand(horizontalItemMargin));
+		sendCommandIfRendered(() -> new UiInfiniteItemView.SetHorizontalItemMarginCommand(horizontalItemMargin));
 		return this;
 	}
 
@@ -228,7 +228,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemJustification(ItemViewRowJustification itemJustification) {
 		this.itemJustification = itemJustification;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemJustificationCommand(itemJustification.toUiItemJustification()));
+		sendCommandIfRendered(() -> new UiInfiniteItemView.SetItemJustificationCommand(itemJustification.toUiItemJustification()));
 		return this;
 	}
 
@@ -252,18 +252,26 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		unregisterModelListeners();
 		this.model = model;
 		refresh();
-		model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
-		model.onRecordsAdded().addListener(this.modelOnRecordAddedListener);
-		model.onRecordsChanged().addListener(this.modelOnRecordChangedListener);
-		model.onRecordsRemoved().addListener(this.modelOnRecordDeletedListener);
+		modelOnAllDataChangedListener = model.onAllDataChanged().addListener(aVoid -> this.refresh());
+		modelOnRecordAddedListener = model.onRecordsAdded().addListener(x -> this.refresh());
+		modelOnRecordChangedListener = model.onRecordsChanged().addListener(x -> this.refresh());
+		modelOnRecordDeletedListener = model.onRecordsRemoved().addListener(x -> this.refresh());
 		return this;
 	}
 
 	private void unregisterModelListeners() {
-		this.model.onAllDataChanged().removeListener(this.modelOnAllDataChangedListener);
-		this.model.onRecordsAdded().removeListener(this.modelOnRecordAddedListener);
-		this.model.onRecordsChanged().removeListener(this.modelOnRecordChangedListener);
-		this.model.onRecordsRemoved().removeListener(this.modelOnRecordDeletedListener);
+		if (modelOnAllDataChangedListener != null) {
+			modelOnAllDataChangedListener.dispose();
+		}
+		if (modelOnRecordAddedListener != null) {
+			modelOnRecordAddedListener.dispose();
+		}
+		if (modelOnRecordChangedListener != null) {
+			modelOnRecordChangedListener.dispose();
+		}
+		if (modelOnRecordDeletedListener != null) {
+			modelOnRecordDeletedListener.dispose();
+		}
 	}
 
 	public void refresh() {
@@ -297,7 +305,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 }

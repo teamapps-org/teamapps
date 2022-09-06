@@ -26,7 +26,7 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiFileField;
 import org.teamapps.dto.UiIdentifiableClientRecord;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
@@ -52,13 +52,13 @@ import java.util.stream.Collectors;
 public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 
-	public final Event<UploadTooLargeEventData> onUploadTooLarge = new Event<>();
-	public final Event<UploadStartedEventData> onUploadStarted = new Event<>();
-	public final Event<UploadCanceledEventData> onUploadCanceled = new Event<>();
-	public final Event<UploadFailedEventData> onUploadFailed = new Event<>();
-	public final Event<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = new Event<>();
-	public final Event<RECORD> onFileItemClicked = new Event<>();
-	public final Event<RECORD> onFileItemRemoved = new Event<>();
+	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiFileField.UploadTooLargeEvent.NAME);
+	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(UiFileField.UploadStartedEvent.NAME);
+	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(UiFileField.UploadCanceledEvent.NAME);
+	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(UiFileField.UploadFailedEvent.NAME);
+	public final ProjectorEvent<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiFileField.UploadSuccessfulEvent.NAME);
+	public final ProjectorEvent<RECORD> onFileItemClicked = createProjectorEventBoundToUiEvent(UiFileField.FileItemClickedEvent.NAME);
+	public final ProjectorEvent<RECORD> onFileItemRemoved = new ProjectorEvent<>();
 
 	private FileFieldDisplayType displayType = FileFieldDisplayType.FLOATING;
 	private boolean showEntriesAsButtonsOnHover = false;
@@ -115,7 +115,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	public void cancelUploads() {
-		this.queueCommandIfRendered(() -> new UiFileField.CancelAllUploadsCommand());
+		this.sendCommandIfRendered(() -> new UiFileField.CancelAllUploadsCommand());
 	}
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
@@ -157,7 +157,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 					uploadStartedEvent.getFileName(),
 					uploadStartedEvent.getMimeType(),
 					uploadStartedEvent.getSizeInBytes(),
-					() -> this.queueCommandIfRendered(() -> new UiFileField.CancelUploadCommand(uploadStartedEvent.getFileItemUuid()))
+					() -> this.sendCommandIfRendered(() -> new UiFileField.CancelUploadCommand(uploadStartedEvent.getFileItemUuid()))
 			));
 		} else if (event instanceof UiFileField.UploadCanceledEvent) {
 			UiFileField.UploadCanceledEvent canceledEvent = (UiFileField.UploadCanceledEvent) event;
@@ -215,7 +215,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setFileItemTemplate(Template fileItemTemplate) {
 		this.fileItemTemplate = fileItemTemplate;
-		queueCommandIfRendered(() -> new UiFileField.SetItemTemplateCommand(fileItemTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new UiFileField.SetItemTemplateCommand(fileItemTemplate.createUiTemplate()));
 	}
 
 	public long getMaxBytesPerFile() {
@@ -224,7 +224,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setMaxBytesPerFile(long maxBytesPerFile) {
 		this.maxBytesPerFile = maxBytesPerFile;
-		queueCommandIfRendered(() -> new UiFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
+		sendCommandIfRendered(() -> new UiFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
 	}
 
 	public String getUploadUrl() {
@@ -233,7 +233,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		queueCommandIfRendered(() -> new UiFileField.SetUploadUrlCommand(uploadUrl));
+		sendCommandIfRendered(() -> new UiFileField.SetUploadUrlCommand(uploadUrl));
 	}
 
 	public Template getUploadButtonTemplate() {
@@ -242,7 +242,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonTemplate(Template uploadButtonTemplate) {
 		this.uploadButtonTemplate = uploadButtonTemplate;
-		queueCommandIfRendered(() -> new UiFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new UiFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate.createUiTemplate()));
 	}
 
 	public Object getUploadButtonData() {
@@ -251,7 +251,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonData(Object uploadButtonData) {
 		this.uploadButtonData = uploadButtonData;
-		queueCommandIfRendered(() -> new UiFileField.SetUploadButtonDataCommand(uploadButtonData));
+		sendCommandIfRendered(() -> new UiFileField.SetUploadButtonDataCommand(uploadButtonData));
 	}
 
 	public boolean isShowEntriesAsButtonsOnHover() {
@@ -260,7 +260,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover) {
 		this.showEntriesAsButtonsOnHover = showEntriesAsButtonsOnHover;
-		queueCommandIfRendered(() -> new UiFileField.SetShowEntriesAsButtonsOnHoverCommand(showEntriesAsButtonsOnHover));
+		sendCommandIfRendered(() -> new UiFileField.SetShowEntriesAsButtonsOnHoverCommand(showEntriesAsButtonsOnHover));
 	}
 
 	public FileFieldDisplayType getDisplayType() {
@@ -269,7 +269,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setDisplayType(FileFieldDisplayType displayType) {
 		this.displayType = displayType;
-		queueCommandIfRendered(() -> new UiFileField.SetDisplayTypeCommand(displayType.toUiFileFieldDisplayType()));
+		sendCommandIfRendered(() -> new UiFileField.SetDisplayTypeCommand(displayType.toUiFileFieldDisplayType()));
 	}
 
 	public int getMaxFiles() {
@@ -278,7 +278,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setMaxFiles(int maxFiles) {
 		this.maxFiles = maxFiles;
-		queueCommandIfRendered(() -> new UiFileField.SetMaxFilesCommand(maxFiles));
+		sendCommandIfRendered(() -> new UiFileField.SetMaxFilesCommand(maxFiles));
 	}
 
 	public PropertyProvider getUploadButtonPropertyProvider() {

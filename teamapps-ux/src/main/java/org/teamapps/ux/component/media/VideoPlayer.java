@@ -24,14 +24,14 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiVideoPlayer;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class VideoPlayer extends AbstractComponent {
 
-	public final Event<Void> onErrorLoading = new Event<>();
-	public final Event<Integer> onProgress = new Event<>();
-	public final Event<Void> onEnded = new Event<>();
+	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(UiVideoPlayer.ErrorLoadingEvent.NAME);
+	public final ProjectorEvent<Integer> onProgress = createProjectorEventBoundToUiEvent(UiVideoPlayer.PlayerProgressEvent.NAME);
+	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiVideoPlayer.EndedEvent.NAME);
 
 	private String url; //the url of the video
 	private boolean autoplay; // if set...
@@ -76,15 +76,15 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void play() {
-		queueCommandIfRendered(() -> new UiVideoPlayer.PlayCommand());
+		sendCommandIfRendered(() -> new UiVideoPlayer.PlayCommand());
 	}
 
 	public void pause() {
-		queueCommandIfRendered(() -> new UiVideoPlayer.PauseCommand());
+		sendCommandIfRendered(() -> new UiVideoPlayer.PauseCommand());
 	}
 
 	public void setPosition(int timeInSeconds) {
-		queueCommandIfRendered(() -> new UiVideoPlayer.JumpToCommand(timeInSeconds));
+		sendCommandIfRendered(() -> new UiVideoPlayer.JumpToCommand(timeInSeconds));
 	}
 
 	public String getUrl() {
@@ -93,7 +93,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setUrl(String url) {
 		this.url = url;
-		queueCommandIfRendered(() -> new UiVideoPlayer.SetUrlCommand(url));
+		sendCommandIfRendered(() -> new UiVideoPlayer.SetUrlCommand(url));
 	}
 
 	public boolean isAutoplay() {
@@ -102,7 +102,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setAutoplay(boolean autoplay) {
 		this.autoplay = autoplay;
-		queueCommandIfRendered(() -> new UiVideoPlayer.SetAutoplayCommand(autoplay));
+		sendCommandIfRendered(() -> new UiVideoPlayer.SetAutoplayCommand(autoplay));
 	}
 
 	public boolean isShowControls() {
@@ -156,7 +156,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setPreloadMode(PreloadMode preloadMode) {
 		this.preloadMode = preloadMode;
-		queueCommandIfRendered(() -> new UiVideoPlayer.SetPreloadModeCommand(preloadMode.toUiPreloadMode()));
+		sendCommandIfRendered(() -> new UiVideoPlayer.SetPreloadModeCommand(preloadMode.toUiPreloadMode()));
 	}
 
 }

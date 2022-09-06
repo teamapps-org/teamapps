@@ -27,7 +27,7 @@ import org.teamapps.dto.AbstractUiToolContainer;
 import org.teamapps.dto.UiDropDownButtonClickInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiToolbar;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractToolContainer extends AbstractComponent {
-	public final Event<ToolbarButtonClickEventData> onButtonClick = new Event<>();
+	public final ProjectorEvent<ToolbarButtonClickEventData> onButtonClick = createProjectorEventBoundToUiEvent(AbstractUiToolContainer.ToolbarButtonClickEvent.NAME);
 	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 
 	private Template buttonTemplate = BaseTemplate.TOOLBAR_BUTTON;
@@ -85,7 +85,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	public ToolbarButtonGroup addButtonGroup(ToolbarButtonGroup buttonGroup) {
 		buttonGroups.add(buttonGroup);
 		buttonGroup.setToolContainer(this);
-		queueCommandIfRendered(() -> new UiToolbar.AddButtonGroupCommand(buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide()));
+		sendCommandIfRendered(() -> new UiToolbar.AddButtonGroupCommand(buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide()));
 		return buttonGroup;
 	}
 
@@ -95,32 +95,32 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 
 	public void removeToolbarButtonGroup(ToolbarButtonGroup group) {
 		buttonGroups.remove(group);
-		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonGroupCommand(group.getClientId()));
+		sendCommandIfRendered(() -> new UiToolbar.RemoveButtonGroupCommand(group.getClientId()));
 	}
 
 	protected void handleGroupVisibilityChange(String groupId, boolean visible) {
-		queueCommandIfRendered(() -> new UiToolbar.SetButtonGroupVisibleCommand(groupId, visible));
+		sendCommandIfRendered(() -> new UiToolbar.SetButtonGroupVisibleCommand(groupId, visible));
 	}
 
 	protected void handleButtonVisibilityChange(String groupClientId, String buttonClientId, boolean visible) {
-		queueCommandIfRendered(() -> new UiToolbar.SetButtonVisibleCommand(groupClientId, buttonClientId, visible));
+		sendCommandIfRendered(() -> new UiToolbar.SetButtonVisibleCommand(groupClientId, buttonClientId, visible));
 	}
 
 	protected void handleButtonColorChange(String groupClientId, String buttonClientId, Color backgroundColor, Color hoverBackgroundColor) {
-		queueCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(groupClientId, buttonClientId, backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
+		sendCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(groupClientId, buttonClientId, backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
 				hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null));
 	}
 
 	protected void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
-		queueCommandIfRendered(() -> new UiToolbar.AddButtonCommand(group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor));
+		sendCommandIfRendered(() -> new UiToolbar.AddButtonCommand(group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor));
 	}
 
 	protected void handleButtonRemoved(ToolbarButtonGroup group, ToolbarButton button) {
-		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonCommand(group.getClientId(), button.getClientId()));
+		sendCommandIfRendered(() -> new UiToolbar.RemoveButtonCommand(group.getClientId(), button.getClientId()));
 	}
 
 	protected void handleButtonSetDropDownComponent(ToolbarButtonGroup group, ToolbarButton button, Component component) {
-		queueCommandIfRendered(() -> new UiToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createUiReference()));
+		sendCommandIfRendered(() -> new UiToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createUiReference()));
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {

@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.workspacelayout;
 
 import org.teamapps.dto.UiWorkSpaceLayoutItem;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public abstract class WorkSpaceLayoutItem {
 
-	public final Event<Void> onRemoved = new Event<>();
+	public final ProjectorEvent<Void> onRemoved = new ProjectorEvent<>();
 
 	private final String id;
 	private final WorkSpaceLayout workSpaceLayout;

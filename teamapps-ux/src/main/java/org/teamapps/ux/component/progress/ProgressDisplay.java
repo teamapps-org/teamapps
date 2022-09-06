@@ -21,16 +21,14 @@ package org.teamapps.ux.component.progress;
 
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiProgressDisplay;
-import org.teamapps.event.Event;
+import org.teamapps.event.Disposable;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.task.ObservableProgress;
-import org.teamapps.ux.task.ProgressChangeEventData;
 import org.teamapps.ux.task.ProgressStatus;
-
-import java.util.function.Consumer;
 
 /**
  * This component displays progress information.
@@ -41,8 +39,8 @@ import java.util.function.Consumer;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ProgressDisplay extends AbstractComponent {
 
-	public final Event<Void> onClicked = new Event<>();
-	public final Event<Void> onCancelButtonClicked = new Event<>();
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiProgressDisplay.ClickedEvent.NAME);
+	public final ProjectorEvent<Void> onCancelButtonClicked = createProjectorEventBoundToUiEvent(UiProgressDisplay.ClickedEvent.NAME);
 
 	private Icon icon;
 	private String taskName;
@@ -53,13 +51,7 @@ public class ProgressDisplay extends AbstractComponent {
 
 	private ObservableProgress observedProgress;
 	
-	private final Consumer<ProgressChangeEventData> observedProgressChangeListener = data -> {
-		setStatus(data.getStatus());
-		setStatusMessage(data.getStatusMessage());
-		setProgress(data.getProgress());
-		setCancelable(data.isCancelable());
-		this.updateUi();
-	};
+	private Disposable observedProgressChangeListener;
 
 	public ProgressDisplay() {
 		this(null, null, null);
@@ -89,7 +81,7 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	private void updateUi() {
-		queueCommandIfRendered(() -> new UiProgressDisplay.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new UiProgressDisplay.UpdateCommand(createUiClientObject()));
 	}
 
 	@Override
@@ -109,13 +101,19 @@ public class ProgressDisplay extends AbstractComponent {
 
 	public void setObservedProgress(ObservableProgress observableProgress) {
 		if (this.observedProgress != null) {
-			this.observedProgress.onChanged().removeListener(this.observedProgressChangeListener);
+			observedProgressChangeListener.dispose();
 		}
 
 		this.observedProgress = observableProgress;
 
 		if (observableProgress != null) {
-			observableProgress.onChanged().addListener(this.observedProgressChangeListener);
+			observedProgressChangeListener = observableProgress.onChanged().addListener(data -> {
+				setStatus(data.getStatus());
+				setStatusMessage(data.getStatusMessage());
+				setProgress(data.getProgress());
+				setCancelable(data.isCancelable());
+				this.updateUi();
+			});
 			this.statusMessage = observableProgress.getStatusMessage();
 			this.progress = observableProgress.getProgress();
 			this.status = observableProgress.getStatus();

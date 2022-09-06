@@ -19,7 +19,7 @@
  */
 package org.teamapps.config;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.session.SessionContext;
 
 import java.io.File;
@@ -39,7 +39,7 @@ public class TeamAppsConfiguration {
 	 * and removed from the map of known {@link String}s.
 	 * <p>
 	 * The {@link SessionContext} will also fire its
-	 * {@link SessionContext#onDestroyed onDestroyed} event, which will detach any {@link Event SessionContext-bound event} listeners.
+	 * {@link SessionContext#onDestroyed() onDestroyed} event, which will detach any {@link ProjectorEvent SessionContext-bound event} listeners.
 	 * <p>
 	 * From a user's perspective, the session is expired and the user most likely needs to reload the page (unless the developer
 	 * has implemented an alternative handling on the client side).
@@ -216,29 +216,6 @@ public class TeamAppsConfiguration {
 	 */
 	public void setKeepaliveMessageIntervalMillis(long keepaliveMessageIntervalMillis) {
 		this.keepaliveMessageIntervalMillis = keepaliveMessageIntervalMillis;
-	}
-
-	/**
-	 * @see #httpSessionTimeoutSeconds
-	 * @deprecated TeamApps does not care about HTTP sessions anymore. Please set the http session timeout in a different way.
-	 * This will be removed in some future version.
-	 */
-	@Deprecated
-	public int getHttpSessionTimeoutSeconds() {
-		return httpSessionTimeoutSeconds;
-	}
-
-	/**
-	 * @see #httpSessionTimeoutSeconds
-	 * @deprecated TeamApps does not care about HTTP sessions anymore. Please set the http session timeout in a different way.
-	 * This will be removed in some future version.
-	 * The cleanest way to set {@link jakarta.servlet.http.HttpSession#setMaxInactiveInterval(int)} would be by registering a
-	 * {@link jakarta.servlet.http.HttpSessionListener}.
-	 * Also note that the {@link jakarta.servlet.http.HttpSession} is still available via {@link SessionContext#getHttpSession()}.
-	 */
-	@Deprecated
-	public void setHttpSessionTimeoutSeconds(int httpSessionTimeoutSeconds) {
-		this.httpSessionTimeoutSeconds = httpSessionTimeoutSeconds;
 	}
 
 	/**

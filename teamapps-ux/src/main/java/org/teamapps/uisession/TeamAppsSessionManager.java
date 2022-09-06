@@ -243,7 +243,6 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
-		se.getSession().setMaxInactiveInterval(config.getHttpSessionTimeoutSeconds());
 	}
 
 	public void updateSessionStates() {

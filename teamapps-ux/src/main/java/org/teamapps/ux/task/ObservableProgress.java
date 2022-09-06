@@ -19,11 +19,11 @@
  */
 package org.teamapps.ux.task;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public interface ObservableProgress {
 
-	Event<ProgressChangeEventData> onChanged();
+	ProjectorEvent<ProgressChangeEventData> onChanged();
 
 	ProgressStatus getStatus();
 

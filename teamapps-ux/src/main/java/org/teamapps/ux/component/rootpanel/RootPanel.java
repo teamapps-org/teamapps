@@ -62,7 +62,7 @@ public class RootPanel extends AbstractComponent implements Component {
 		if (component != null) {
 			component.setParent(this);
 		}
-		queueCommandIfRendered(() -> new UiRootPanel.SetContentCommand(component != null ? component.createUiReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
+		sendCommandIfRendered(() -> new UiRootPanel.SetContentCommand(component != null ? component.createUiReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
 	}
 
 	public Component getContent() {

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.dialogue;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -42,16 +42,16 @@ import org.teamapps.ux.i18n.TeamAppsDictionary;
 
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Dialogue extends Window {
-	public Event<Boolean> onResult = new Event<>();
+	public ProjectorEvent<Boolean> onResult = new ProjectorEvent<>();
 	private final ComboBox<BaseTemplateRecord<?>> comboBox;
 	private final Button<?> okButton;
 	private final Button<?> cancelButton;
 
-	public static Event<Boolean> showOkCancel(Icon icon, String title, String text) {
+	public static ProjectorEvent<Boolean> showOkCancel(Icon icon, String title, String text) {
 		return showOkCancel(new BaseTemplateRecord<>(icon, title, text));
 	}
 
-	public static Event<Boolean> showOkCancel(BaseTemplateRecord<?> record) {
+	public static ProjectorEvent<Boolean> showOkCancel(BaseTemplateRecord<?> record) {
 		Dialogue dialogue = new Dialogue();
 		dialogue.setValues(record);
 		dialogue.setIcon(record.getIcon());
@@ -74,11 +74,11 @@ public class Dialogue extends Window {
 		return dialogue;
 	}
 
-	public static Event<Boolean> showOk(Icon icon, String title) {
+	public static ProjectorEvent<Boolean> showOk(Icon icon, String title) {
 		return showOk(icon, title, title);
 	}
 
-	public static Event<Boolean> showOk(Icon icon, String title, String text) {
+	public static ProjectorEvent<Boolean> showOk(Icon icon, String title, String text) {
 		Dialogue dialogue = new Dialogue();
 		dialogue.getCancelButton().setVisible(false);
 		dialogue.setValues(icon, title, text);

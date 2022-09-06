@@ -19,13 +19,13 @@
  */
 package org.teamapps.ux.component.map;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 import java.util.List;
 
 public interface MapViewModel<RECORD> {
 
-	Event<Void> getOnMapViewDataChanged();
+	ProjectorEvent<Void> getOnMapViewDataChanged();
 
 	List<RECORD> getMapRecords();
 

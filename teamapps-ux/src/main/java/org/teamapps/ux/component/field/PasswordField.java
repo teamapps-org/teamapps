@@ -53,7 +53,7 @@ public class PasswordField extends TextField {
 
 	public void setSendValueAsMd5(boolean sendValueAsMd5) {
 		this.sendValueAsMd5 = sendValueAsMd5;
-		queueCommandIfRendered(() -> new UiPasswordField.SetSendValueAsMd5Command(sendValueAsMd5));
+		sendCommandIfRendered(() -> new UiPasswordField.SetSendValueAsMd5Command(sendValueAsMd5));
 	}
 
 	public String getSalt() {
@@ -62,6 +62,6 @@ public class PasswordField extends TextField {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
-		queueCommandIfRendered(() -> new UiPasswordField.SetSaltCommand(salt));
+		sendCommandIfRendered(() -> new UiPasswordField.SetSaltCommand(salt));
 	}
 }

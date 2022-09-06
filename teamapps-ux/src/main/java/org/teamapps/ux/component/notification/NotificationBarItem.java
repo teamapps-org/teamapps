@@ -21,7 +21,7 @@ package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiNotificationBarItem;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
@@ -33,9 +33,9 @@ import java.util.UUID;
 
 public class NotificationBarItem {
 
-	public final Event<Void> onClicked = new Event<>();
-	public final Event<Void> onActionLinkClicked = new Event<>();
-	public final Event<NotificationBarItemClosedEvent.ClosingReason> onClosed = new Event<>();
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>();
+	public final ProjectorEvent<Void> onActionLinkClicked = new ProjectorEvent<>();
+	public final ProjectorEvent<NotificationBarItemClosedEvent.ClosingReason> onClosed = new ProjectorEvent<>();
 
 	private final String uiId = UUID.randomUUID().toString();
 

@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.timegraph.model.timestamps;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.timegraph.Interval;
 
 public interface TimestampsModel {
 
-	Event<Void> onDataChanged();
+	ProjectorEvent<Void> onDataChanged();
 	
 	long[] getTimestamps(Interval neededIntervalX);
 

@@ -19,22 +19,20 @@
  */
 package org.teamapps.ux.model;
 
-import org.teamapps.event.Event;
-
-import java.util.List;
+import org.teamapps.event.ProjectorEvent;
 
 public abstract class AbstractTreeModel<RECORD> implements TreeModel<RECORD> {
 
-	public final Event<Void> onAllNodesChanged = new Event<>();
-	public final Event<TreeModelChangedEventData<RECORD>> onChanged = new Event<>();
+	public final ProjectorEvent<Void> onAllNodesChanged = new ProjectorEvent<>();
+	public final ProjectorEvent<TreeModelChangedEventData<RECORD>> onChanged = new ProjectorEvent<>();
 
 	@Override
-	public Event<Void> onAllNodesChanged() {
+	public ProjectorEvent<Void> onAllNodesChanged() {
 		return onAllNodesChanged;
 	}
 
 	@Override
-	public Event<TreeModelChangedEventData<RECORD>> onChanged() {
+	public ProjectorEvent<TreeModelChangedEventData<RECORD>> onChanged() {
 		return onChanged;
 	}
 }

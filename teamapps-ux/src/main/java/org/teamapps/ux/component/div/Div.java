@@ -58,7 +58,7 @@ public class Div extends AbstractComponent {
 
 	public void setContent(Component content) {
 		this.content = content;
-		queueCommandIfRendered(() -> new UiDiv.SetContentCommand(content != null ? content.createUiReference() : null));
+		sendCommandIfRendered(() -> new UiDiv.SetContentCommand(content != null ? content.createUiReference() : null));
 	}
 
 	public String getInnerHtml() {
@@ -67,6 +67,6 @@ public class Div extends AbstractComponent {
 
 	public void setInnerHtml(String innerHtml) {
 		this.innerHtml = innerHtml;
-		queueCommandIfRendered(() -> new UiDiv.SetInnerHtmlCommand(innerHtml));
+		sendCommandIfRendered(() -> new UiDiv.SetInnerHtmlCommand(innerHtml));
 	}
 }

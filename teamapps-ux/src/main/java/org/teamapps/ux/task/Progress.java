@@ -19,11 +19,11 @@
  */
 package org.teamapps.ux.task;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public class Progress implements ProgressMonitor, ObservableProgress {
 
-	public final Event<ProgressChangeEventData> onChanged = new Event<>();
+	public final ProjectorEvent<ProgressChangeEventData> onChanged = new ProjectorEvent<>();
 
 	private String statusMessage;
 	private double progress = -1;
@@ -31,7 +31,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	private ProgressStatus status = ProgressStatus.NOT_YET_STARTED;
 
 	@Override
-	public Event<ProgressChangeEventData> onChanged() {
+	public ProjectorEvent<ProgressChangeEventData> onChanged() {
 		return onChanged;
 	}
 

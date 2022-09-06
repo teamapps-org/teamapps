@@ -26,9 +26,7 @@ import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
-import sun.misc.Unsafe;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -187,7 +185,7 @@ public class MultiFieldValidatorTest {
         Method set = CurrentSessionContext.class.getDeclaredMethod("set", SessionContext.class);
         set.setAccessible(true);
         SessionContext sessionContextMock = Mockito.mock(SessionContext.class);
-        unsafelySetOnDestroyed(sessionContextMock, new Event<>());
+        Mockito.when(sessionContextMock.onDestroyed()).thenReturn(new Event<>());
         Mockito.when(sessionContextMock.runWithContext(Mockito.any(Runnable.class))).then(invocation -> {
             ((Runnable) invocation.getArguments()[0]).run();
             return CompletableFuture.completedFuture(null);
@@ -202,14 +200,6 @@ public class MultiFieldValidatorTest {
 
     public interface RunnableWithException {
         void run() throws Exception;
-    }
-
-    private static void unsafelySetOnDestroyed(Object object, Object value) throws NoSuchFieldException, IllegalAccessException {
-        final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-        unsafeField.setAccessible(true);
-        final Unsafe unsafe = (Unsafe) unsafeField.get(null);
-        Field f = object.getClass().getField("onDestroyed");
-        unsafe.putObject(object, unsafe.objectFieldOffset(f), value);
     }
 
 }

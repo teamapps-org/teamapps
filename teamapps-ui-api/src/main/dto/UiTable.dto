@@ -39,7 +39,7 @@ class UiTableColumn {
 	UiTextAlignment headerAlignment;
 }
 
-class UiTable extends UiComponent {
+class UiTable extends AbstractUiInfiniteListComponent {
 	required List<UiTableColumn> columns;
 
 	boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
@@ -98,7 +98,6 @@ class UiTable extends UiComponent {
 	event cellValueChanged(int recordId, String columnPropertyName, Object value);
 	event rowsSelected(List<Integer> recordIds);
 	event sortingChanged(String sortField, UiSortDirection sortDirection); // sent when the user clicks on a sortable header column
-	event displayedRangeChanged(int startIndex, int length);
 	event contextMenuRequested(int requestId, int recordId);
 
 	event fieldOrderChange(String columnPropertyName, int position); //zero based

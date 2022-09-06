@@ -23,7 +23,7 @@ import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiNumberField;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.session.SessionContext;
@@ -33,8 +33,8 @@ import java.util.Locale;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NumberField extends AbstractField<Number> implements TextInputHandlingField {
 
-	public final Event<String> onTextInput = new Event<>();
-	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiNumberField.TextInputEvent.NAME);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiNumberField.SpecialKeyPressedEvent.NAME);
 
 	private int precision; // if == 0: integer, if < 0: maximum available precision
 	private String emptyText;
@@ -81,7 +81,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setPrecision(int precision) {
 		this.precision = precision;
-		queueCommandIfRendered(() -> new UiNumberField.SetPrecisionCommand(precision));
+		sendCommandIfRendered(() -> new UiNumberField.SetPrecisionCommand(precision));
 		return this;
 	}
 
@@ -91,7 +91,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		queueCommandIfRendered(() -> new UiNumberField.SetPlaceholderTextCommand(emptyText));
+		sendCommandIfRendered(() -> new UiNumberField.SetPlaceholderTextCommand(emptyText));
 		return this;
 	}
 
@@ -101,7 +101,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		queueCommandIfRendered(() -> new UiNumberField.SetShowClearButtonCommand(showClearButton));
+		sendCommandIfRendered(() -> new UiNumberField.SetShowClearButtonCommand(showClearButton));
 		return this;
 	}
 
@@ -111,7 +111,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setMinValue(double minValue) {
 		this.minValue = minValue;
-		queueCommandIfRendered(() -> new UiNumberField.SetMinValueCommand(minValue));
+		sendCommandIfRendered(() -> new UiNumberField.SetMinValueCommand(minValue));
 		return this;
 	}
 
@@ -121,7 +121,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setMaxValue(double maxValue) {
 		this.maxValue = maxValue;
-		queueCommandIfRendered(() -> new UiNumberField.SetMaxValueCommand(maxValue));
+		sendCommandIfRendered(() -> new UiNumberField.SetMaxValueCommand(maxValue));
 		return this;
 	}
 
@@ -131,7 +131,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setSliderMode(NumberFieldSliderMode sliderMode) {
 		this.sliderMode = sliderMode;
-		queueCommandIfRendered(() -> new UiNumberField.SetSliderModeCommand(sliderMode.toUiNumberFieldSliderMode()));
+		sendCommandIfRendered(() -> new UiNumberField.SetSliderModeCommand(sliderMode.toUiNumberFieldSliderMode()));
 		return this;
 	}
 
@@ -141,7 +141,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setSliderStep(double sliderStep) {
 		this.sliderStep = sliderStep;
-		queueCommandIfRendered(() -> new UiNumberField.SetSliderStepCommand(sliderStep));
+		sendCommandIfRendered(() -> new UiNumberField.SetSliderStepCommand(sliderStep));
 		return this;
 	}
 
@@ -151,7 +151,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setCommitOnSliderChange(boolean commitOnSliderChange) {
 		this.commitOnSliderChange = commitOnSliderChange;
-		queueCommandIfRendered(() -> new UiNumberField.SetCommitOnSliderChangeCommand(commitOnSliderChange));
+		sendCommandIfRendered(() -> new UiNumberField.SetCommitOnSliderChangeCommand(commitOnSliderChange));
 		return this;
 	}
 
@@ -169,16 +169,16 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		queueCommandIfRendered(() -> new UiNumberField.SetLocaleCommand(locale.toLanguageTag()));
+		sendCommandIfRendered(() -> new UiNumberField.SetLocaleCommand(locale.toLanguageTag()));
 	}
 
 	@Override
-	public Event<String> onTextInput() {
+	public ProjectorEvent<String> onTextInput() {
 		return onTextInput;
 	}
 
 	@Override
-	public Event<SpecialKey> onSpecialKeyPressed() {
+	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
 		return onSpecialKeyPressed;
 	}
 }

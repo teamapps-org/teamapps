@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.model;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,9 +27,9 @@ import java.util.List;
 
 public interface TreeModel<RECORD> extends BaseTreeModel<RECORD> {
 
-	Event<Void> onAllNodesChanged();
+	ProjectorEvent<Void> onAllNodesChanged();
 
-	Event<TreeModelChangedEventData<RECORD>> onChanged();
+	ProjectorEvent<TreeModelChangedEventData<RECORD>> onChanged();
 
 	List<RECORD> getRecords();
 

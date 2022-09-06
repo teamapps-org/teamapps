@@ -24,7 +24,7 @@ import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiToolbar;
 import org.teamapps.dto.UiToolbarButton;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -37,7 +37,7 @@ import java.util.function.Supplier;
 
 public class ToolbarButton {
 
-	public final Event<UiToolbar.ToolbarButtonClickEvent> onClick = new Event<>();
+	public final ProjectorEvent<UiToolbar.ToolbarButtonClickEvent> onClick = new ProjectorEvent<>();
 
 	private ToolbarButtonGroup toolbarButtonGroup;
 	private final String clientId = UUID.randomUUID().toString();

@@ -85,16 +85,16 @@ public class HtmlView extends AbstractComponent {
 	public void addComponent(String containerSelector, Component component, boolean clearContainer) {
 		this.componentsByContainerElementSelector.computeIfAbsent(containerSelector, s -> new ArrayList<>())
 				.add(component);
-		this.queueCommandIfRendered(() -> new UiHtmlView.AddComponentCommand(containerSelector, component.createUiReference(), clearContainer));
+		this.sendCommandIfRendered(() -> new UiHtmlView.AddComponentCommand(containerSelector, component.createUiReference(), clearContainer));
 	}
 
 	public void removeComponent(Component component) {
 		componentsByContainerElementSelector.entrySet().removeIf(entry -> entry.getValue() == component);
-		this.queueCommandIfRendered(() -> new UiHtmlView.RemoveComponentCommand(component.createUiReference()));
+		this.sendCommandIfRendered(() -> new UiHtmlView.RemoveComponentCommand(component.createUiReference()));
 	}
 
 	public void setContentHtml(String containerElementSelector, String html) {
 		contentHtmlByContainerElementSelector.put(containerElementSelector, html);
-		this.queueCommandIfRendered(() -> new UiHtmlView.SetContentHtmlCommand(containerElementSelector, html));
+		this.sendCommandIfRendered(() -> new UiHtmlView.SetContentHtmlCommand(containerElementSelector, html));
 	}
 }

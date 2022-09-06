@@ -20,37 +20,37 @@
 package org.teamapps.ux.component.table;
 
 import org.teamapps.data.value.Sorting;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.infiniteitemview.RecordsAddedEvent;
 import org.teamapps.ux.component.infiniteitemview.RecordsChangedEvent;
 import org.teamapps.ux.component.infiniteitemview.RecordsRemovedEvent;
 
 public abstract class AbstractTableModel<RECORD> implements TableModel<RECORD> {
 
-	public final Event<Void> onAllDataChanged = new Event<>();
-	public final Event<RecordsAddedEvent<RECORD>> onRecordAdded = new Event<>();
-	public final Event<RecordsChangedEvent<RECORD>> onRecordUpdated = new Event<>();
-	public final Event<RecordsRemovedEvent<RECORD>> onRecordDeleted = new Event<>();
+	public final ProjectorEvent<Void> onAllDataChanged = new ProjectorEvent<>();
+	public final ProjectorEvent<RecordsAddedEvent<RECORD>> onRecordAdded = new ProjectorEvent<>();
+	public final ProjectorEvent<RecordsChangedEvent<RECORD>> onRecordUpdated = new ProjectorEvent<>();
+	public final ProjectorEvent<RecordsRemovedEvent<RECORD>> onRecordDeleted = new ProjectorEvent<>();
 
 	protected Sorting sorting;
 
 	@Override
-	public Event<Void> onAllDataChanged() {
+	public ProjectorEvent<Void> onAllDataChanged() {
 		return onAllDataChanged;
 	}
 
 	@Override
-	public Event<RecordsAddedEvent<RECORD>> onRecordsAdded() {
+	public ProjectorEvent<RecordsAddedEvent<RECORD>> onRecordsAdded() {
 		return onRecordAdded;
 	}
 
 	@Override
-	public Event<RecordsChangedEvent<RECORD>> onRecordsChanged() {
+	public ProjectorEvent<RecordsChangedEvent<RECORD>> onRecordsChanged() {
 		return onRecordUpdated;
 	}
 
 	@Override
-	public Event<RecordsRemovedEvent<RECORD>> onRecordsRemoved() {
+	public ProjectorEvent<RecordsRemovedEvent<RECORD>> onRecordsRemoved() {
 		return onRecordDeleted;
 	}
 

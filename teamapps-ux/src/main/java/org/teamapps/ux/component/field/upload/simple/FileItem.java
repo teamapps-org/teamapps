@@ -21,7 +21,7 @@
 package org.teamapps.ux.component.field.upload.simple;
 
 import org.teamapps.dto.UiFileItem;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
 
@@ -30,8 +30,8 @@ import java.util.UUID;
 
 public class FileItem {
 
-	public final Event<Void> onClicked = new Event<>();
-	public final Event<Void> onRemoved = new Event<>();
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>();
+	public final ProjectorEvent<Void> onRemoved = new ProjectorEvent<>();
 
 	private final String uuid;
 	private FileItemState state;

@@ -20,8 +20,9 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.div.Div;
 import org.teamapps.ux.component.dummy.DummyComponent;
+import org.teamapps.ux.component.field.Button;
+import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
@@ -33,13 +34,28 @@ public class TeamAppsJettyEmbeddedServerTest {
 		WebController controller = (SessionContext sessionContext) -> {
 			RootPanel rootPanel = sessionContext.addRootPanel();
 			rootPanel.setCssStyle("background-color", "blue");
-			rootPanel.setCssStyle("ui-div", "background-color", "green");
-			Div div = new Div(new DummyComponent());
+			rootPanel.setCssStyle(".UiDummyComponent", "background-color", "green");
+			DummyComponent content = new DummyComponent();
+			content.onClick.addListener((eventData, disposable) -> {
+				System.out.println("Clicked!");
+				disposable.dispose();
+			});
+			VerticalLayout div = new VerticalLayout();
 			div.setAttribute("blah", "blub");
 			div.toggleCssClass("xxxx", true);
 			div.toggleCssClass("slot", "asdflksjdf", true);
 			div.setCssStyle("font-size", "200%");
 			div.setCssStyle("slot", "color", "red");
+
+			div.addComponent(content);
+			Button<?> button = Button.create("re-register");
+			button.onClicked.addListener(() -> {
+				content.onClick.addListener((e, d) -> {
+					System.out.println("clicked2!");
+					d.dispose();
+				});
+			});
+			div.addComponent(button);
 			rootPanel.setContent(div);
 		};
 

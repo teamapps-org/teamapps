@@ -25,7 +25,7 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.ux.component.field.AbstractField;
@@ -43,8 +43,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractComboBox.class);
 
-	public final Event<String> onTextInput = new Event<>();
-	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.TextInputEvent.NAME);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.SpecialKeyPressedEvent.NAME);
 
 	protected final ClientRecordCache<RECORD, UiComboBoxTreeRecord> recordCache;
 
@@ -229,7 +229,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String uuid = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, uuid);
-			queueCommandIfRendered(() -> new UiComboBox.RegisterTemplateCommand(uuid, template.createUiTemplate()));
+			sendCommandIfRendered(() -> new UiComboBox.RegisterTemplateCommand(uuid, template.createUiTemplate()));
 		}
 		return template;
 	}
@@ -453,12 +453,12 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	@Override
-	public Event<String> onTextInput() {
+	public ProjectorEvent<String> onTextInput() {
 		return this.onTextInput;
 	}
 
 	@Override
-	public Event<SpecialKey> onSpecialKeyPressed() {
+	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
 		return this.onSpecialKeyPressed;
 	}
 

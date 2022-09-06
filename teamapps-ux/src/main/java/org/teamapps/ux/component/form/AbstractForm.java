@@ -25,7 +25,7 @@ import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
@@ -41,7 +41,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractForm.class);
 
-	public final Event<FieldChangeEventData> onFieldValueChanged = new Event<>();
+	public final ProjectorEvent<FieldChangeEventData> onFieldValueChanged = new ProjectorEvent<>();
 
 	private final LogicalForm<RECORD> logicalForm = new LogicalForm<>();
 	private final List<Component> children = new ArrayList<>();
@@ -77,7 +77,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	protected void addComponent(Component component) {
 		children.add(component);
 		component.setParent(this);
-		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(component.createUiReference()));
+		sendCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(component.createUiReference()));
 	}
 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
@@ -118,7 +118,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 
 	protected void updateLayoutPolicies() {
 		List<UiFormLayoutPolicy> uiFormLayoutPolicies = getUiFormLayoutPolicies();
-		queueCommandIfRendered(() -> new UiGridForm.UpdateLayoutPoliciesCommand(uiFormLayoutPolicies));
+		sendCommandIfRendered(() -> new UiGridForm.UpdateLayoutPoliciesCommand(uiFormLayoutPolicies));
 	}
 
 	public void applyRecordValuesToFields(RECORD record) {
@@ -172,7 +172,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	}
 
 	public void setSectionCollapsed(String sectionId, boolean collapsed) {
-		queueCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(sectionId, collapsed));
+		sendCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(sectionId, collapsed));
 	}
 
 	public void addMultiFieldValidator(MultiFieldValidator multiFieldValidator) {

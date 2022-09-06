@@ -23,15 +23,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiTextField;
-import org.teamapps.event.Event;
+import org.teamapps.dto.UiTextInputHandlingField;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TextField extends AbstractField<String> implements TextInputHandlingField {
 
-	public final Event<String> onTextInput = new Event<>();
-	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.TextInputEvent.NAME);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.SpecialKeyPressedEvent.NAME);
 
 	private int maxCharacters;
 	private boolean showClearButton;
@@ -48,7 +49,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setMaxCharacters(int maxCharacters) {
 		this.maxCharacters = maxCharacters;
-		queueCommandIfRendered(() -> new UiTextField.SetMaxCharactersCommand(maxCharacters));
+		sendCommandIfRendered(() -> new UiTextField.SetMaxCharactersCommand(maxCharacters));
 		return this;
 	}
 
@@ -58,7 +59,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		queueCommandIfRendered(() -> new UiTextField.SetShowClearButtonCommand(showClearButton));
+		sendCommandIfRendered(() -> new UiTextField.SetShowClearButtonCommand(showClearButton));
 		return this;
 	}
 
@@ -68,7 +69,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		queueCommandIfRendered(() -> new UiTextField.SetPlaceholderTextCommand(emptyText));
+		sendCommandIfRendered(() -> new UiTextField.SetPlaceholderTextCommand(emptyText));
 		return this;
 	}
 
@@ -103,12 +104,12 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	public Event<String> onTextInput() {
+	public ProjectorEvent<String> onTextInput() {
 		return onTextInput;
 	}
 
 	@Override
-	public Event<SpecialKey> onSpecialKeyPressed() {
+	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
 		return onSpecialKeyPressed;
 	}
 }

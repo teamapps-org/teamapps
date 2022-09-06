@@ -22,7 +22,7 @@ package org.teamapps.ux.component.progress;
 import org.teamapps.dto.UiDefaultMultiProgressDisplay;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiMultiProgressDisplay;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -47,7 +47,7 @@ import static org.teamapps.ux.task.ProgressStatus.*;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DefaultMultiProgressDisplay extends AbstractComponent implements MultiProgressDisplay {
 
-	public final Event<Void> onClicked = new Event<>();
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiDefaultMultiProgressDisplay.ClickedEvent.NAME);
 
 	private final List<ObservableProgress> progresses = new ArrayList<>();
 	private final Notification progressListNotification;
@@ -142,7 +142,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiDefaultMultiProgressDisplay.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new UiDefaultMultiProgressDisplay.UpdateCommand(createUiClientObject()));
 	}
 
 	public boolean isShowNotificationOnProgressAdded() {

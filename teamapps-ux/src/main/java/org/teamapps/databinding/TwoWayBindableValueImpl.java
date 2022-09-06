@@ -19,11 +19,11 @@
  */
 package org.teamapps.databinding;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public class TwoWayBindableValueImpl<T> implements TwoWayBindableValue<T> {
 
-	public final Event<T> onChanged = new Event<>();
+	public final ProjectorEvent<T> onChanged = new ProjectorEvent<>();
 
 	private T value;
 
@@ -35,7 +35,7 @@ public class TwoWayBindableValueImpl<T> implements TwoWayBindableValue<T> {
 	}
 
 	@Override
-	public Event<T> onChanged() {
+	public ProjectorEvent<T> onChanged() {
 		return onChanged;
 	}
 

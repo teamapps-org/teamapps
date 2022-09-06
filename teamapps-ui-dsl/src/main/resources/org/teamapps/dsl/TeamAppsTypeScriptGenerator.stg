@@ -151,18 +151,6 @@ export enum <e.Identifier> {
 }
 >>
 
-componentEventDescriptors(classesAndInterfacesWithEvents) ::= <<
-<typeScriptFilePrelude()>
-
-export var staticComponentEventDescriptors = [
-    <classesAndInterfacesWithEvents:eventNamesObject(true); separator=",\n">
-];
-
-export var componentEventDescriptors = [
-    <classesAndInterfacesWithEvents:eventNamesObject(false); separator=",\n">
-];
->>
-
 eventNamesObject(c, static) ::= <<
 <if(static)>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<else>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<endif>
 >>

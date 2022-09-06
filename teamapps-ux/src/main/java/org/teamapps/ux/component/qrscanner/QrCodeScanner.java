@@ -22,12 +22,12 @@ package org.teamapps.ux.component.qrscanner;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiQrCodeScanner;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class QrCodeScanner extends AbstractComponent {
 
-	public final Event<String> onQrCodeDetected = new Event<>();
+	public final ProjectorEvent<String> onQrCodeDetected = createProjectorEventBoundToUiEvent(UiQrCodeScanner.QrCodeDetectedEvent.NAME);
 
 	private boolean scanning;
 	private boolean stopsScanningAtFirstResult;
@@ -51,15 +51,15 @@ public class QrCodeScanner extends AbstractComponent {
 	public void startScanning(boolean stopScanningAtFirstResult) {
 		scanning = true;
 		this.stopsScanningAtFirstResult = stopScanningAtFirstResult;
-		queueCommandIfRendered(() -> new UiQrCodeScanner.StartScanningCommand(stopScanningAtFirstResult));
+		sendCommandIfRendered(() -> new UiQrCodeScanner.StartScanningCommand(stopScanningAtFirstResult));
 	}
 
 	public void stopScanning() {
 		scanning = false;
-		queueCommandIfRendered(() -> new UiQrCodeScanner.StopScanningCommand());
+		sendCommandIfRendered(() -> new UiQrCodeScanner.StopScanningCommand());
 	}
 
 	public void switchCamera() {
-		queueCommandIfRendered(() -> new UiQrCodeScanner.SwitchCameraCommand());
+		sendCommandIfRendered(() -> new UiQrCodeScanner.SwitchCameraCommand());
 	}
 }

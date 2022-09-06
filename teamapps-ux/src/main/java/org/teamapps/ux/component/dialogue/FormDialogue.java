@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.dialogue;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -48,9 +48,9 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class FormDialogue extends Window {
 
-	public Event<Boolean> onResult = new Event<>();
-	public Event<Void> onOk = new Event<>();
-	public Event<Void> onCancel = new Event<>();
+	public ProjectorEvent<Boolean> onResult = new ProjectorEvent<>();
+	public ProjectorEvent<Void> onOk = new ProjectorEvent<>();
+	public ProjectorEvent<Void> onCancel = new ProjectorEvent<>();
 
 	private final TemplateField<BaseTemplateRecord<?>> titleField;
 	private Integer buttonLineIndex;

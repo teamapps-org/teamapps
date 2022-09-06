@@ -21,4 +21,6 @@ package org.teamapps.dto;
 
 class UiClientObject {
 	@Referenceable String id;
+    List<String> listeningEvents;
+    List<String> listeningQueries;
 }

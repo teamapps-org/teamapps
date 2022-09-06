@@ -24,7 +24,7 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiShakaManifest;
 import org.teamapps.dto.UiShakaPlayer;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.media.PosterImageSize;
 import org.teamapps.ux.component.media.TrackLabelFormat;
@@ -32,10 +32,10 @@ import org.teamapps.ux.session.SessionContext;
 
 public class ShakaPlayer extends AbstractComponent {
 
-	public final Event<Void> onErrorLoading = new Event<>();
-	public final Event<UiShakaManifest> onManifestLoaded = new Event<>();
-	public final Event<Long> onTimeUpdate = new Event<>();
-	public final Event<Void> onEnded = new Event<>();
+	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(UiShakaPlayer.ErrorLoadingEvent.NAME);
+	public final ProjectorEvent<UiShakaManifest> onManifestLoaded = createProjectorEventBoundToUiEvent(UiShakaPlayer.ManifestLoadedEvent.NAME);
+	public final ProjectorEvent<Long> onTimeUpdate = createProjectorEventBoundToUiEvent(UiShakaPlayer.TimeUpdateEvent.NAME);
+	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiShakaPlayer.EndedEvent.NAME);
 
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
 		SessionContext.current().sendCommand(null, new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
@@ -97,7 +97,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setTime(long timeMillis) {
 		this.timeMillis = timeMillis;
-		queueCommandIfRendered(() -> new UiShakaPlayer.SetTimeCommand(timeMillis));
+		sendCommandIfRendered(() -> new UiShakaPlayer.SetTimeCommand(timeMillis));
 	}
 
 	public long getTime() {
@@ -108,7 +108,7 @@ public class ShakaPlayer extends AbstractComponent {
 		this.timeMillis = 0;
 		this.hlsUrl = hlsUrl;
 		this.dashUrl = dashUrl;
-		queueCommandIfRendered(() -> new UiShakaPlayer.SetUrlsCommand(hlsUrl, dashUrl));
+		sendCommandIfRendered(() -> new UiShakaPlayer.SetUrlsCommand(hlsUrl, dashUrl));
 	}
 
 	public String getHlsUrl() {
@@ -187,6 +187,6 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void selectAudioLanguage(String language, String role) {
 		this.audioLanguage = language;
-		queueCommandIfRendered(() -> new UiShakaPlayer.SelectAudioLanguageCommand(language, role));
+		sendCommandIfRendered(() -> new UiShakaPlayer.SelectAudioLanguageCommand(language, role));
 	}
 }

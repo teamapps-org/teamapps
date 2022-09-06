@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.login;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.field.*;
 import org.teamapps.ux.component.form.ResponsiveForm;
@@ -38,7 +38,7 @@ import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 
 public class LoginWindow {
-	public Event<LoginData> onLogin = new Event<>();
+	public ProjectorEvent<LoginData> onLogin = new ProjectorEvent<>();
 
 	private final SessionContext sessionContext = CurrentSessionContext.get();
 

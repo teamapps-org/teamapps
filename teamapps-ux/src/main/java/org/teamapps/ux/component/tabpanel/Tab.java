@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.tabpanel;
 
 import org.teamapps.dto.UiTab;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.toolbar.Toolbar;
@@ -31,9 +31,9 @@ import java.util.UUID;
 
 public class Tab {
 
-	public final Event<Void> onSelected = new Event<>();
-	public final Event<Void> onDeselected = new Event<>();
-	public final Event<Void> onClosed = new Event<>();
+	public final ProjectorEvent<Void> onSelected = new ProjectorEvent<>();
+	public final ProjectorEvent<Void> onDeselected = new ProjectorEvent<>();
+	public final ProjectorEvent<Void> onClosed = new ProjectorEvent<>();
 
 	private final String clientId = UUID.randomUUID().toString();
 	private TabPanel tabPanel;

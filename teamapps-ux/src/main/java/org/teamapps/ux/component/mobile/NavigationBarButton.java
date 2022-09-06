@@ -20,13 +20,13 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.dto.UiNavigationBarButton;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 
 public class NavigationBarButton<RECORD> {
 
-	public Event<Void> onClick = new Event<>();
+	public ProjectorEvent<Void> onClick = new ProjectorEvent<>();
 
 	private String clientId;
 	private RECORD data;

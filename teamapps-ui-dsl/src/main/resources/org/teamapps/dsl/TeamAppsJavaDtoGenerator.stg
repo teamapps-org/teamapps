@@ -233,6 +233,8 @@ enumConstant(ec, hasStringValues) ::= <<
 eventClass(ed) ::= <<
 public static class <ed.Identifier.text; format="cap">Event implements UiEvent {
 
+    public static final String NAME = "<ed.declaringClass.Identifier.text>.<ed.Identifier.text>";
+
 	<ed.allProperties:propertyDeclaration(); separator="\n">
 
 	<constructor(ed, "Event")>
@@ -252,6 +254,8 @@ public static class <ed.Identifier.text; format="cap">Event implements UiEvent {
 
 queryClass(qd) ::= <<
 public static class <qd.Identifier.text; format="cap">Query implements UiQuery {
+
+    public static final String NAME = "<qd.declaringClass.Identifier.text>.<qd.Identifier.text>";
 
 	<qd.allProperties:propertyDeclaration(); separator="\n">
 

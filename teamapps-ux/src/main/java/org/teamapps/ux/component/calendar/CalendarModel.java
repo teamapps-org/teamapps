@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.calendar;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 import java.time.Instant;
 import java.util.List;
 
 public interface CalendarModel<CEVENT extends CalendarEvent> {
 
-	Event<Void> onCalendarDataChanged();
+	ProjectorEvent<Void> onCalendarDataChanged();
 
 	List<CEVENT> getEventsForInterval(Instant start, Instant end);
 

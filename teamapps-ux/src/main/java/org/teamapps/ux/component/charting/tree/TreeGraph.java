@@ -23,7 +23,7 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.Template;
 
@@ -37,10 +37,10 @@ import java.util.stream.Collectors;
 
 public class TreeGraph<RECORD> extends AbstractComponent {
 
-	public final Event<TreeGraphNode<RECORD>> onNodeClicked = new Event<>();
-	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
-	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = new Event<>();
-	public final Event<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = new Event<>();
+	public final ProjectorEvent<TreeGraphNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(UiTreeGraph.NodeClickedEvent.NAME);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.NodeExpandedOrCollapsedEvent.NAME);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.ParentExpandedOrCollapsedEvent.NAME);
+	public final ProjectorEvent<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.SideListExpandedOrCollapsedEvent.NAME);
 
 	private float zoomFactor;
 	private boolean compact = false;
@@ -118,18 +118,18 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public void setZoomFactor(float zoomFactor) {
 		this.zoomFactor = zoomFactor;
-		queueCommandIfRendered(() -> new UiTreeGraph.SetZoomFactorCommand(zoomFactor));
+		sendCommandIfRendered(() -> new UiTreeGraph.SetZoomFactorCommand(zoomFactor));
 	}
 
 	public void setNodes(List<TreeGraphNode<RECORD>> nodes) {
 		this.nodesById.clear();
 		nodes.forEach(n -> nodesById.put(n.getId(), n));
-		queueCommandIfRendered(() -> new UiTreeGraph.SetNodesCommand(createUiNodes(nodes)));
+		sendCommandIfRendered(() -> new UiTreeGraph.SetNodesCommand(createUiNodes(nodes)));
 	}
 
 	public void addNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		queueCommandIfRendered(() -> new UiTreeGraph.AddNodeCommand(createUiNode(node)));
+		sendCommandIfRendered(() -> new UiTreeGraph.AddNodeCommand(createUiNode(node)));
 	}
 
 	public void addNodes(List<TreeGraphNode<RECORD>> nodes) {
@@ -139,12 +139,12 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public void removeNode(TreeGraphNode<RECORD> node) {
 		this.nodesById.remove(node.getId());
-		queueCommandIfRendered(() -> new UiTreeGraph.RemoveNodeCommand(node.getId()));
+		sendCommandIfRendered(() -> new UiTreeGraph.RemoveNodeCommand(node.getId()));
 	}
 
 	public void updateNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		queueCommandIfRendered(() -> new UiTreeGraph.UpdateNodeCommand(createUiNode(node)));
+		sendCommandIfRendered(() -> new UiTreeGraph.UpdateNodeCommand(createUiNode(node)));
 	}
 
 	@Override
@@ -189,15 +189,15 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(createUiClientObject()));
 	}
 
 	public void moveToRootNode() {
-		queueCommandIfRendered(() -> new UiTreeGraph.MoveToRootNodeCommand());
+		sendCommandIfRendered(() -> new UiTreeGraph.MoveToRootNodeCommand());
 	}
 
 	public void moveToNode(TreeGraphNode<RECORD> node) {
-		queueCommandIfRendered(() -> new UiTreeGraph.MoveToNodeCommand(node.getId()));
+		sendCommandIfRendered(() -> new UiTreeGraph.MoveToNodeCommand(node.getId()));
 	}
 
 	private Collection<TreeGraphNode<RECORD>> getAllDescendants(TreeGraphNode<RECORD> node, boolean includeSelf) {

@@ -19,32 +19,32 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public abstract class AbstractChatDisplayModel implements ChatDisplayModel {
 
-	public final Event<ChatMessageBatch> onMessagesAdded = new Event<>();
-	public final Event<Integer> onMessageDeleted = new Event<>();
-	public final Event<ChatMessage> onMessageChanged = new Event<>();
-	public final Event<Void> onAllDataChanged = new Event<>();
+	public final ProjectorEvent<ChatMessageBatch> onMessagesAdded = new ProjectorEvent<>();
+	public final ProjectorEvent<Integer> onMessageDeleted = new ProjectorEvent<>();
+	public final ProjectorEvent<ChatMessage> onMessageChanged = new ProjectorEvent<>();
+	public final ProjectorEvent<Void> onAllDataChanged = new ProjectorEvent<>();
 
 	@Override
-	public Event<ChatMessageBatch> onMessagesAdded() {
+	public ProjectorEvent<ChatMessageBatch> onMessagesAdded() {
 		return onMessagesAdded;
 	}
 
 	@Override
-	public Event<Integer> onMessageDeleted() {
+	public ProjectorEvent<Integer> onMessageDeleted() {
 		return onMessageDeleted;
 	}
 
 	@Override
-	public Event<ChatMessage> onMessageChanged() {
+	public ProjectorEvent<ChatMessage> onMessageChanged() {
 		return onMessageChanged;
 	}
 
 	@Override
-	public Event<Void> onAllDataChanged() {
+	public ProjectorEvent<Void> onAllDataChanged() {
 		return onAllDataChanged;
 	}
 }

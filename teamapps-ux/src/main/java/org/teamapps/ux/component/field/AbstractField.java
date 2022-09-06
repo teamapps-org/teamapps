@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
@@ -45,10 +45,10 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 							CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
-	public final Event<VALUE> onFocus = new Event<>();
-	public final Event<VALUE> onBlur = new Event<>();
-	public final Event<VALUE> onValueChanged = new Event<>();
-	public final Event<Boolean> onVisibilityChanged = new Event<>();
+	public final ProjectorEvent<VALUE> onFocus = createProjectorEventBoundToUiEvent(UiField.FocusEvent.NAME);
+	public final ProjectorEvent<VALUE> onBlur = createProjectorEventBoundToUiEvent(UiField.BlurEvent.NAME);
+	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(UiField.ValueChangedEvent.NAME);
+	public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
 
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
 
@@ -67,7 +67,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	public void setEditingMode(FieldEditingMode editingMode) {
 		this.editingMode = editingMode;
-		queueCommandIfRendered(() -> new UiField.SetEditingModeCommand(editingMode.toUiFieldEditingMode()));
+		sendCommandIfRendered(() -> new UiField.SetEditingModeCommand(editingMode.toUiFieldEditingMode()));
 	}
 
 	public void setVisible(boolean visible) {
@@ -76,7 +76,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void focus() {
-		queueCommandIfRendered(() -> new UiField.FocusCommand());
+		sendCommandIfRendered(() -> new UiField.FocusCommand());
 	}
 
 	protected void mapAbstractFieldAttributesToUiField(UiField uiField) {
@@ -254,7 +254,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	private void updateFieldMessages() {
-		queueCommandIfRendered(() -> new UiField.SetFieldMessagesCommand(getFieldMessages().stream()
+		sendCommandIfRendered(() -> new UiField.SetFieldMessagesCommand(getFieldMessages().stream()
 				.map(fieldMessage -> fieldMessage.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList())));
 	}

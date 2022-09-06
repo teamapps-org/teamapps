@@ -22,7 +22,7 @@ package org.teamapps.ux.component.dummy;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiDummyComponent;
 import org.teamapps.dto.UiEvent;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -30,7 +30,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DummyComponent extends AbstractComponent {
 
-	public final Event<Void> onClick = new Event<>();
+	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(UiDummyComponent.ClickedEvent.NAME);
 
 	private String text;
 
@@ -63,6 +63,6 @@ public class DummyComponent extends AbstractComponent {
 
 	public void setText(String text) {
 		this.text = text;
-		queueCommandIfRendered(() -> new UiDummyComponent.SetTextCommand(text));
+		sendCommandIfRendered(() -> new UiDummyComponent.SetTextCommand(text));
 	}
 }

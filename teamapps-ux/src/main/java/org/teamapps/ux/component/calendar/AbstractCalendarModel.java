@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.calendar;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public abstract class AbstractCalendarModel<CEVENT extends CalendarEvent> implements CalendarModel<CEVENT> {
 
-	public Event<Void> onCalendarDataChanged = new Event<>();
+	public ProjectorEvent<Void> onCalendarDataChanged = new ProjectorEvent<>();
 
 	@Override
-	public Event<Void> onCalendarDataChanged() {
+	public ProjectorEvent<Void> onCalendarDataChanged() {
 		return onCalendarDataChanged;
 	}
 	

@@ -19,17 +19,17 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public interface ChatDisplayModel {
 
-	Event<ChatMessageBatch> onMessagesAdded();
+	ProjectorEvent<ChatMessageBatch> onMessagesAdded();
 
-	Event<Integer> onMessageDeleted();
+	ProjectorEvent<Integer> onMessageDeleted();
 
-	Event<ChatMessage> onMessageChanged();
+	ProjectorEvent<ChatMessage> onMessageChanged();
 
-	Event<Void> onAllDataChanged();
+	ProjectorEvent<Void> onAllDataChanged();
 
 	ChatMessage getChatMessageById(int id);
 

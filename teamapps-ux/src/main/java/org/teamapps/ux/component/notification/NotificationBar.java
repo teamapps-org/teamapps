@@ -22,7 +22,7 @@ package org.teamapps.ux.component.notification;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiNotificationBar;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -37,9 +37,9 @@ import static org.teamapps.ux.component.notification.NotificationBarItemClosedEv
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NotificationBar extends AbstractComponent {
 
-	public final Event<NotificationBarItemClosedEvent> onItemClosed = new Event<>();
-	public final Event<NotificationBarItem> onItemClicked = new Event<>();
-	public final Event<NotificationBarItem> onItemActionLinkClicked = new Event<>();
+	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemClosedEvent.NAME);
+	public final ProjectorEvent<NotificationBarItem> onItemClicked = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemClickedEvent.NAME);
+	public final ProjectorEvent<NotificationBarItem> onItemActionLinkClicked = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemActionLinkClickedEvent.NAME);
 
 	private final Map<String, NotificationBarItem> itemsByUiId = new LinkedHashMap<>();
 
@@ -85,14 +85,14 @@ public class NotificationBar extends AbstractComponent {
 
 	public void addItem(NotificationBarItem item) {
 		itemsByUiId.put(item.getUiId(), item);
-		item.setListener(() -> queueCommandIfRendered(() -> new UiNotificationBar.UpdateItemCommand(item.toUiNotificationBarItem())));
-		queueCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(item.toUiNotificationBarItem()));
+		item.setListener(() -> sendCommandIfRendered(() -> new UiNotificationBar.UpdateItemCommand(item.toUiNotificationBarItem())));
+		sendCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(item.toUiNotificationBarItem()));
 	}
 
 	public void removeItem(NotificationBarItem item) {
 		itemsByUiId.remove(item.getUiId());
 		item.setListener(null);
-		queueCommandIfRendered(() -> new UiNotificationBar.RemoveItemCommand(item.getUiId(), null));
+		sendCommandIfRendered(() -> new UiNotificationBar.RemoveItemCommand(item.getUiId(), null));
 	}
 
 }

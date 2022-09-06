@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -49,11 +49,11 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSpaceLayout.class);
 
-	public final Event<ViewSelectedEventData> onViewSelected = new Event<>();
-	public final Event<WorkSpaceLayoutView> onChildWindowCreationFailed = new Event<>();
-	public final Event<ChildWindowClosedEventData> onChildWindowClosed = new Event<>();
-	public final Event<WorkSpaceLayoutView> onViewClosed = new Event<>();
-	public final Event<WorkSpaceLayoutViewGroup> onViewGroupPanelStateChanged = new Event<>();
+	public final ProjectorEvent<ViewSelectedEventData> onViewSelected = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewSelectedEvent.NAME);
+	public final ProjectorEvent<WorkSpaceLayoutView> onChildWindowCreationFailed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ChildWindowCreationFailedEvent.NAME);
+	public final ProjectorEvent<ChildWindowClosedEventData> onChildWindowClosed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ChildWindowClosedEvent.NAME);
+	public final ProjectorEvent<WorkSpaceLayoutView> onViewClosed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewClosedEvent.NAME);
+	public final ProjectorEvent<WorkSpaceLayoutViewGroup> onViewGroupPanelStateChanged = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent.NAME);
 
 	private final String childWindowPageTitle = "Application window";
 	private Toolbar toolbar;
@@ -93,7 +93,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	private void updateClientSideLayout(List<WorkSpaceLayoutView> newViews) {
-		queueCommandIfRendered(() -> {
+		sendCommandIfRendered(() -> {
 			Map<String, UiWorkSpaceLayoutItem> uiRootItemsByWindowId = rootItemsByWindowId.entrySet().stream()
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().createUiItem()));
 			List<UiWorkSpaceLayoutView> newUiViews = newViews.stream()
@@ -247,15 +247,15 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	// ============== Internal API ======================
 
 	/*package-private*/ void handleViewAddedToGroup(WorkSpaceLayoutViewGroup workSpaceLayoutViewGroup, WorkSpaceLayoutView view, boolean selected) {
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.AddViewAsTabCommand(view.createUiView(), workSpaceLayoutViewGroup.getId(), selected));
+		sendCommandIfRendered(() -> new UiWorkSpaceLayout.AddViewAsTabCommand(view.createUiView(), workSpaceLayoutViewGroup.getId(), selected));
 	}
 
 	/*package-private*/ void handleViewGroupPanelStateChangedViaApi(WorkSpaceLayoutViewGroup viewGroup, ViewGroupPanelState panelState) {
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetViewGroupPanelStateCommand(viewGroup.getId(), panelState.toUiViewGroupPanelState()));
+		sendCommandIfRendered(() -> new UiWorkSpaceLayout.SetViewGroupPanelStateCommand(viewGroup.getId(), panelState.toUiViewGroupPanelState()));
 	}
 
 	/*package-private*/ void handleViewSelectedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView workSpaceLayoutView) {
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SelectViewCommand(workSpaceLayoutView.getId()));
+		sendCommandIfRendered(() -> new UiWorkSpaceLayout.SelectViewCommand(workSpaceLayoutView.getId()));
 	}
 
 	/*package-private*/ void handleViewRemovedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView view) {
@@ -266,7 +266,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	/*package-private*/ void handleViewAttributeChangedViaApi(WorkSpaceLayoutView view) {
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.RefreshViewAttributesCommand(view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()));
+		sendCommandIfRendered(() -> new UiWorkSpaceLayout.RefreshViewAttributesCommand(view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()));
 	}
 
 	/*package-private*/ void handleSplitPaneSizingChanged(SplitSizePolicy sizePolicy, double referenceChildSize) {
@@ -319,7 +319,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
+		sendCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

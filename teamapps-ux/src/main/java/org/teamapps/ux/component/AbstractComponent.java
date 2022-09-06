@@ -25,14 +25,12 @@ import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiRootPanel;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
 
 public abstract class AbstractComponent implements Component {
@@ -47,7 +45,7 @@ public abstract class AbstractComponent implements Component {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(AbstractComponent.class);
 
-	public final Event<Void> onRendered = new Event<>();
+	public final ProjectorEvent<Void> onRendered = new ProjectorEvent<>();
 
 	private String debuggingId = "";
 	private final String id;
@@ -56,6 +54,8 @@ public abstract class AbstractComponent implements Component {
 	private Component parent;
 
 	private boolean visible = true;
+	private Set<String> listeningEventNames = new HashSet<>();
+	private Set<String> listeningQueryNames = new HashSet<>();
 	private final Map<String, Map<String, Boolean>> cssClassesBySelector = new HashMap<>(0);
 	private final Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
 	private final Map<String, Map<String, String>> attributesBySelector = new HashMap<>(0);
@@ -69,9 +69,38 @@ public abstract class AbstractComponent implements Component {
 		uiComponent.setId(id);
 		uiComponent.setDebuggingId(debuggingId);
 		uiComponent.setVisible(visible);
+		uiComponent.setListeningEvents(List.copyOf(listeningEventNames));
 		uiComponent.setStylesBySelector((Map) stylesBySelector);
 		uiComponent.setClassNamesBySelector(cssClassesBySelector);
 		uiComponent.setAttributesBySelector(attributesBySelector);
+	}
+
+	protected <T> ProjectorEvent<T> createProjectorEventBoundToUiEvent(String qualifiedEventName) {
+		return new ProjectorEvent<>(listenersRegistered -> toggleEventListening(qualifiedEventName, listenersRegistered));
+	}
+
+	protected void toggleEventListening(String name, boolean listen) {
+		boolean changed;
+		if (listen) {
+			changed = listeningEventNames.add(name);
+		} else {
+			changed = listeningEventNames.remove(name);
+		}
+		if (changed) {
+			sendCommandIfRendered(null, () -> new UiRootPanel.ToggleEventListeningCommand(getId(), name, listen));
+		}
+	}
+
+	protected void toggleQueryListening(String name, boolean listen) {
+		boolean changed;
+		if (listen) {
+			changed = listeningQueryNames.add(name);
+		} else {
+			changed = listeningQueryNames.remove(name);
+		}
+		if (changed) {
+			sendCommandIfRendered(null, () -> new UiRootPanel.ToggleQueryListeningCommand(getId(), name, listen));
+		}
 	}
 
 	@Override
@@ -98,7 +127,7 @@ public abstract class AbstractComponent implements Component {
 		boolean changed = visible != this.visible;
 		this.visible = visible;
 		if (changed) {
-			queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(visible));
+			sendCommandIfRendered(() -> new UiComponent.SetVisibleCommand(visible));
 		}
 	}
 
@@ -136,9 +165,13 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
-	protected void queueCommandIfRendered(Supplier<UiCommand<?>> commandSupplier) {
+	protected void sendCommandIfRendered(Supplier<UiCommand<?>> commandSupplier) {
+		this.sendCommandIfRendered(getId(), commandSupplier);
+	}
+
+	protected void sendCommandIfRendered(String clientObjectId, Supplier<UiCommand<?>> commandSupplier) {
 		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.sendCommand(getId(), commandSupplier.get());
+			sessionContext.sendCommand(clientObjectId, commandSupplier.get());
 		} else if (renderingState == RenderingState.RENDERING) {
 			/*
 			This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a thrown event. This change must be transported to the client
@@ -151,7 +184,7 @@ public abstract class AbstractComponent implements Component {
 			the panel was rendered (which is only after completing its createUiComponent() method).
 			 */
 			sessionContext.runWithContext(() -> {
-				sessionContext.sendCommand(getId(), commandSupplier.get());
+				sessionContext.sendCommand(clientObjectId, commandSupplier.get());
 			}, true);
 		}
 	}
@@ -165,7 +198,7 @@ public abstract class AbstractComponent implements Component {
 		styles.put(propertyName, value);
 
 		final String selector2 = selector;
-		queueCommandIfRendered(() -> new UiComponent.SetStyleCommand(selector2, styles));
+		sendCommandIfRendered(() -> new UiComponent.SetStyleCommand(selector2, styles));
 	}
 
 	@Override
@@ -177,7 +210,7 @@ public abstract class AbstractComponent implements Component {
 		classNames.put(className, enabled);
 
 		final String selector2 = selector;
-		queueCommandIfRendered(() -> new UiComponent.SetClassNamesCommand(selector2, classNames));
+		sendCommandIfRendered(() -> new UiComponent.SetClassNamesCommand(selector2, classNames));
 	}
 
 	@Override
@@ -193,7 +226,7 @@ public abstract class AbstractComponent implements Component {
 		}
 
 		final String selector2 = selector;
-		queueCommandIfRendered(() -> new UiComponent.SetAttributesCommand(selector2, attributes));
+		sendCommandIfRendered(() -> new UiComponent.SetAttributesCommand(selector2, attributes));
 	}
 
 	//	@Override

@@ -16,8 +16,8 @@ public class ComponentLibraryRegistry {
 		this.componentsUrlBasePath = componentsUrlBasePath;
 	}
 
-	public ComponentLibrary getComponentLibraryForClientObject(ClientObject clientObject) {
-		return getComponentLibraryForClientObjectClass(clientObject.getClass()).componentLibrary;
+	public ComponentLibraryInfo getComponentLibraryForClientObject(ClientObject clientObject) {
+		return getComponentLibraryForClientObjectClass(clientObject.getClass());
 	}
 
 	private ComponentLibraryInfo getComponentLibraryForClientObjectClass(Class<? extends ClientObject> clientObjectClass) {
@@ -66,13 +66,34 @@ public class ComponentLibraryRegistry {
 		return componentsUrlBasePath + getComponentLibraryForClientObjectClass(clientObjectClass).uuid;
 	}
 
-	private static class ComponentLibraryInfo {
-		final ComponentLibrary componentLibrary;
-		final String uuid;
+	public static class ComponentLibraryInfo {
+		private final ComponentLibrary componentLibrary;
+		private final String uuid;
 
 		public ComponentLibraryInfo(ComponentLibrary componentLibrary, String uuid) {
 			this.componentLibrary = componentLibrary;
 			this.uuid = uuid;
+		}
+
+		public ComponentLibrary getComponentLibrary() {
+			return componentLibrary;
+		}
+
+		public String getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			ComponentLibraryInfo that = (ComponentLibraryInfo) o;
+			return Objects.equals(componentLibrary, that.componentLibrary) && Objects.equals(uuid, that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(componentLibrary, uuid);
 		}
 	}
 }

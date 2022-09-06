@@ -19,13 +19,12 @@
  */
 "use strict";
 
-import {createUiLocation, generateUUID, logException} from "./Common";
+import {capitalizeFirstLetter, createUiLocation, generateUUID, logException} from "./Common";
 import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "./generated/UiConfigurationConfig";
 import {UiComponentConfig} from "./generated/UiComponentConfig";
 import {UiEvent} from "./generated/UiEvent";
 import {UiRootPanel} from "./UiRootPanel";
-import {ComponentEventSubscriptionManager} from "./util/ComponentEventSubscriptionManager";
 import {UiCommand} from './generated/UiCommand';
 import {TeamAppsConnection, TeamAppsConnectionListener} from "./communication/TeamAppsConnection";
 import * as jstz from "jstz";
@@ -44,13 +43,43 @@ import {UiClientObjectConfig} from "./generated/UiClientObjectConfig";
 import {UiWindow} from "./UiWindow";
 import {QueryFunctionAdder} from "./generated/QueryFunctionAdder";
 import {UiQuery} from "./generated/UiQuery";
-import {componentEventDescriptors, staticComponentEventDescriptors} from "./generated/ComponentEventDescriptors";
 
 function isClassicComponent(o: UiClientObject): o is UiComponent {
 	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE !== 1;
 }
+
 function isWebComponent(o: UiClientObject): o is UiComponent {
 	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE === 1;
+}
+
+class ClientObjectWrapper {
+	clientObject: UiClientObject | RefreshableComponentProxyHandle;
+	eventListeners: { [qualifiedName: string]: (any) => void } = {};
+	queryListeners: { [qualifiedName: string]: (any) => void } = {};
+
+	constructor(component: UiClientObject | RefreshableComponentProxyHandle) {
+		this.clientObject = component;
+	}
+
+	getUnwrappedComponent() {
+		return isRefreshableComponentProxyHandle(this.clientObject) ? this.clientObject.proxy : this.clientObject
+	}
+
+	toggleEventListener(clientObjectId: string, qualifiedEventName: string, listener?: (x: UiEvent) => void) {
+		const eventName = capitalizeFirstLetter(qualifiedEventName.substring(qualifiedEventName.indexOf('.') + 1));
+		const event = this.getUnwrappedComponent()["on" + eventName];
+		const oldListener = this.eventListeners[qualifiedEventName];
+		if (oldListener) {
+			console.debug("Removing old listener", qualifiedEventName, this.eventListeners[qualifiedEventName])
+			event?.removeListener(oldListener);
+			delete this.eventListeners[qualifiedEventName];
+		}
+		if (listener != null) {
+			console.debug("Adding listener", qualifiedEventName, listener)
+			event?.addListener(listener);
+			this.eventListeners[qualifiedEventName] = listener;
+		}
+	}
 }
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
@@ -66,7 +95,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	};
 	public readonly templateRegistry: TemplateRegistry = new TemplateRegistry(this);
 
-	private components: { [identifier: string]: UiClientObject | RefreshableComponentProxyHandle<UiComponent> } = {};
+	private components: { [identifier: string]: ClientObjectWrapper } = {};
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
@@ -74,12 +103,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private errorMessageWindow: UiWindow;
 	private terminatedMessageWindow: UiWindow;
 
-	private componentEventSubscriptionManager: ComponentEventSubscriptionManager;
-
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string | number } = {}) {
-		this.componentEventSubscriptionManager = new ComponentEventSubscriptionManager();
-		this.componentEventSubscriptionManager.registerComponentTypes(componentEventDescriptors, staticComponentEventDescriptors, this.sendEvent);
-
 		this.sessionId = generateUUID();
 
 		let clientInfo = createUiClientInfoConfig({
@@ -166,19 +190,32 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		return resultWrapper[0];
 	}
 
-	public registerClientObject(clientObject: UiClientObject, id: string, teamappsType: string): void {
+	public registerClientObject(clientObject: UiClientObject, id: string, teamappsType: string, listeningEvents: string[], listeningQueries: string[]): void {
 		console.debug("registering ClientObject: ", id);
 		if (isClassicComponent(clientObject)) {
-			let existingProxy = this.components[id];
-			if (existingProxy != null) {
-				(existingProxy as RefreshableComponentProxyHandle).component = clientObject;
+			let existingComponentInfo = this.components[id];
+			if (existingComponentInfo != null) {
+				(existingComponentInfo.clientObject as RefreshableComponentProxyHandle).component = clientObject;
 			} else {
-				this.components[id] = new RefreshableComponentProxyHandle(clientObject);
+				this.components[id] = new ClientObjectWrapper(new RefreshableComponentProxyHandle(clientObject));
 			}
 		} else {
-			this.components[id] = clientObject;
+			this.components[id] = new ClientObjectWrapper(clientObject);
 		}
-		this.componentEventSubscriptionManager.registerEventListener(clientObject, teamappsType, this.sendEvent, {componentId: id});
+		console.debug(`Listening on clientObject ${id} to events ${listeningEvents} and queries ${listeningQueries}`);
+		listeningEvents.forEach(qualifiedEventName => {
+			this.toggleEventListener(id, qualifiedEventName, true);
+		})
+	}
+
+	toggleEventListener(clientObjectId: string, qualifiedEventName: string, enabled: boolean) {
+		let componentInfo = this.components[clientObjectId];
+		let listener = enabled ? (eventObject) => {
+			const enhancedEventObject = {...eventObject, componentId: clientObjectId, _type: qualifiedEventName};
+			console.debug("Sending event to server: ", enhancedEventObject);
+			this.sendEvent(enhancedEventObject);
+		} : null;
+		componentInfo.toggleEventListener(clientObjectId, qualifiedEventName, listener);
 	}
 
 	public createClientObject(config: UiClientObjectConfig): UiClientObject {
@@ -204,14 +241,14 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	refreshComponent(config: UiComponentConfig): void {
 		let clientObject = this.createClientObject(config) as UiComponent;
 		if (this.components[config.id] != null) {
-			(this.components[config.id] as RefreshableComponentProxyHandle).component = clientObject;
+			(this.components[config.id].clientObject as RefreshableComponentProxyHandle).component = clientObject;
 		} else {
-			this.registerClientObject(clientObject, config.id, config._type);
+			this.registerClientObject(clientObject, config.id, config._type, config.listeningEvents, config.listeningQueries);
 		}
 	}
 
 	destroyClientObject(id: string): void {
-		let o = this.components[id];
+		let o: any = this.components[id].clientObject;
 		if (o != null) {
 			if (isRefreshableComponentProxyHandle(o)) {
 				o = o.component;
@@ -221,14 +258,13 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			}
 			o.destroy();
 			delete this.components[id];
-			this.componentEventSubscriptionManager.unregisterEventListener(o);
 		} else {
 			console.warn("Could not find component to destroy: " + id);
 		}
 	}
 
 	public getClientObjectById(id: string): UiClientObject {
-		const clientObject = this.components[id];
+		const clientObject = this.components[id].clientObject;
 		if (clientObject == null) {
 			console.error(`Cannot find component with id ${id}`);
 			return null;

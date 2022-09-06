@@ -25,19 +25,14 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.Disposable;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.TreeModel;
-import org.teamapps.ux.model.TreeModelChangedEventData;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -45,8 +40,8 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(Tree.class);
 
-	public final Event<RECORD> onNodeSelected = new Event<>();
-	public final Event<String> onTextInput = new Event<>();
+	public final ProjectorEvent<RECORD> onNodeSelected = createProjectorEventBoundToUiEvent(UiTree.NodeSelectedEvent.NAME);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTree.TextInputEvent.NAME);
 
 	private TreeModel<RECORD> model;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
@@ -67,23 +62,8 @@ public class Tree<RECORD> extends AbstractComponent {
 	private int clientRecordIdCounter = 0;
 	private final Map<RECORD, UiTreeRecord> uiRecordsByRecord = new HashMap<>();
 
-	private final Runnable modelAllNodesChangedListener = () -> {
-		if (isRendered()) {
-			uiRecordsByRecord.clear();
-			List<UiTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
-			getSessionContext().sendCommand(getId(), new UiTree.ReplaceDataCommand(uiRecords));
-		}
-	};
-
-	private final Consumer<TreeModelChangedEventData<RECORD>> modelChangedListener = (changedEventData) -> {
-		if (isRendered()) {
-			List<Integer> removedUiIds = changedEventData.getRemovedNodes().stream()
-					.map(key -> uiRecordsByRecord.remove(key).getId())
-					.collect(Collectors.toList());
-			List<UiTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
-			getSessionContext().sendCommand(getId(), new UiTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords));
-		}
-	};
+	private Disposable modelAllNodesChangedListener;
+	private Disposable modelChangedListener;
 
 	public Tree(TreeModel<RECORD> model) {
 		super();
@@ -92,13 +72,25 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	private void registerModelListeners() {
-		model.onAllNodesChanged().addListener(modelAllNodesChangedListener);
-		model.onChanged().addListener(modelChangedListener);
+		modelAllNodesChangedListener = model.onAllNodesChanged().addListener(this::refresh);
+		modelChangedListener = model.onChanged().addListener((changedEventData) -> {
+			if (isRendered()) {
+				List<Integer> removedUiIds = changedEventData.getRemovedNodes().stream()
+						.map(key -> uiRecordsByRecord.remove(key).getId())
+						.collect(Collectors.toList());
+				List<UiTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
+				getSessionContext().sendCommand(getId(), new UiTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords));
+			}
+		});
 	}
 
 	private void unregisterMutableTreeModelListeners() {
-		model.onAllNodesChanged().removeListener(modelAllNodesChangedListener);
-		model.onChanged().removeListener(modelChangedListener);
+		if (modelAllNodesChangedListener != null) {
+			modelAllNodesChangedListener.dispose();
+		}
+		if (modelChangedListener != null) {
+			modelChangedListener.dispose();
+		}
 	}
 
 	protected List<UiTreeRecord> createOrUpdateUiRecords(List<RECORD> records) {
@@ -165,7 +157,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String uuid = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, uuid);
-			queueCommandIfRendered(() -> new UiTree.RegisterTemplateCommand(uuid, template.createUiTemplate()));
+			sendCommandIfRendered(() -> new UiTree.RegisterTemplateCommand(uuid, template.createUiTemplate()));
 		}
 		return template;
 	}
@@ -225,7 +217,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	public void setSelectedNode(RECORD selectedNode) {
 		int uiRecordId = uiRecordsByRecord.get(selectedNode) != null ? uiRecordsByRecord.get(selectedNode).getId() : -1;
 		this.selectedNode = selectedNode;
-		queueCommandIfRendered(() -> new UiTree.SetSelectedNodeCommand(uiRecordId));
+		sendCommandIfRendered(() -> new UiTree.SetSelectedNodeCommand(uiRecordId));
 	}
 
 	public TreeModel<RECORD> getModel() {
@@ -240,7 +232,11 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	private void refresh() {
-		modelAllNodesChangedListener.run();
+		if (isRendered()) {
+			uiRecordsByRecord.clear();
+			List<UiTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
+			getSessionContext().sendCommand(getId(), new UiTree.ReplaceDataCommand(uiRecords));
+		}
 	}
 
 	public boolean isAnimated() {

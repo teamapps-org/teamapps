@@ -21,7 +21,7 @@ package org.teamapps.ux.component.field.datetime;
 
 import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
@@ -31,8 +31,8 @@ import java.util.Locale;
 
 public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
 
-	public final Event<String> onTextInput = new Event<>();
-	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.TextInputEvent.NAME);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.SpecialKeyPressedEvent.NAME);
 
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;
@@ -65,7 +65,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		queueCommandIfRendered(() -> new AbstractUiTimeField.SetShowDropDownButtonCommand(showDropDownButton));
+		sendCommandIfRendered(() -> new AbstractUiTimeField.SetShowDropDownButtonCommand(showDropDownButton));
 	}
 
 
@@ -83,7 +83,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		queueCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+		sendCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public DateTimeFormatDescriptor getTimeFormat() {
@@ -92,7 +92,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		queueCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+		sendCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public boolean isShowClearButton() {
@@ -101,16 +101,16 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		queueCommandIfRendered(() -> new AbstractUiTimeField.SetShowClearButtonCommand(showClearButton));
+		sendCommandIfRendered(() -> new AbstractUiTimeField.SetShowClearButtonCommand(showClearButton));
 	}
 
 	@Override
-	public Event<String> onTextInput() {
+	public ProjectorEvent<String> onTextInput() {
 		return onTextInput;
 	}
 
 	@Override
-	public Event<SpecialKey> onSpecialKeyPressed() {
+	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
 		return onSpecialKeyPressed;
 	}
 }

@@ -83,8 +83,6 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
             return model.superClassAndDirectlyImplementedInterfacesWithCommands(classContext);
         } else if ("superClassAndDirectlyImplementedInterfacesWithEvents".equals(propertyName)) {
             return model.superClassAndDirectlyImplementedInterfacesWithEvents(classContext);
-        } else if ("subEventBaseClassName".equals(propertyName)) {
-            return classContext.Identifier().getText() + "SubEvent";
         } else if ("allSubClasses".equals(propertyName)) {
             return model.findAllSubClasses(classContext);
         } else if ("hasSubTypes".equals(propertyName)) {

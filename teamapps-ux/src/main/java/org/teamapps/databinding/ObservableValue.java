@@ -19,14 +19,14 @@
  */
 package org.teamapps.databinding;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
 public interface ObservableValue<T> {
 
-	Event<T> onChanged();
+	ProjectorEvent<T> onChanged();
 
 	T get();
 
@@ -46,14 +46,14 @@ public interface ObservableValue<T> {
 
 	// === static ===
 
-	public static <T> ObservableValue<T> fromEmptyEvent(Event<?> changeEvent, Supplier<T> provider) {
+	public static <T> ObservableValue<T> fromEmptyEvent(ProjectorEvent<?> changeEvent, Supplier<T> provider) {
 		return DataBindings.createObservableValueWithEmptyEvent(changeEvent, provider);
 	}
 
-	public static <T> ObservableValue<T> fromEvent(Event<T> changeEvent, Supplier<T> provider) {
+	public static <T> ObservableValue<T> fromEvent(ProjectorEvent<T> changeEvent, Supplier<T> provider) {
 		return DataBindings.createObservableValue(changeEvent, provider);
 	}
-	public static <T> ObservableValue<T> fromCachedEventValues(Event<T> changeEvent) {
+	public static <T> ObservableValue<T> fromCachedEventValues(ProjectorEvent<T> changeEvent) {
 		return DataBindings.createObservableValue(changeEvent);
 	}
 

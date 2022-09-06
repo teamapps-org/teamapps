@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.*;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
@@ -35,6 +36,7 @@ import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.ComponentLibrary;
 import org.teamapps.ux.component.ComponentLibraryRegistry;
+import org.teamapps.ux.component.ComponentLibraryRegistry.ComponentLibraryInfo;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.div.Div;
@@ -75,10 +77,11 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
-	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
-	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();
-	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
+	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>();
+	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>();
+	public final ProjectorEvent<UiSessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
 	public final Event<UiSessionClosingReason> onDestroyed = new Event<>();
+
 	/**
 	 * Decorators around all executions inside this SessionContext. These will be invoked when the Thread is already bound to the SessionContext, so SessionContext.current() will
 	 * return this instance.
@@ -193,6 +196,10 @@ public class SessionContext {
 		runWithContext(this::updateSessionMessageWindows);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 		this.componentLibraryRegistry = componentLibraryRegistry;
+	}
+
+	public Event<UiSessionClosingReason> onDestroyed() {
+		return onDestroyed;
 	}
 
 
@@ -450,21 +457,22 @@ public class SessionContext {
 	public void renderClientObject(ClientObject clientObject) {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
+		clientObjectsById.put(clientObject.getId(), clientObject);
+		UiClientObject uiComponent = clientObject.createUiClientObject();
+
 		if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
 
-			ComponentLibrary componentLibrary = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
-			if (!componentLibrariesLoaded.contains(componentLibrary)) {
+			ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
+			if (!componentLibrariesLoaded.contains(componentLibraryInfo)) {
 				String mainJsUrl = componentLibraryRegistry.getMainJsUrl(clientObject.getClass());
 				sendCommand(null, new UiRootPanel.RegisterComponentLibraryCommand(mainJsUrl));
-				componentLibrariesLoaded.add(componentLibrary);
+				componentLibrariesLoaded.add(componentLibraryInfo.getComponentLibrary());
 			}
 
-			sendCommand(null, new UiRootPanel.RegisterComponentType(mainJsUrl));
+			sendCommand(null, new UiRootPanel.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiComponent.getClass().getSimpleName(), List.of(), List.of()));
 			clientObjectTypesKnownToClient.add(clientObject.getClass());
 		}
 
-		clientObjectsById.put(clientObject.getId(), clientObject);
-		UiClientObject uiComponent = clientObject.createUiClientObject();
 		sendCommand(null, new UiRootPanel.RenderCommand(uiComponent));
 	}
 

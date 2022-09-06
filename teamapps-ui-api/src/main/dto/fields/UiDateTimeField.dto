@@ -19,7 +19,7 @@
  */
 package org.teamapps.dto;
 
-abstract class AbstractUiDateTimeField extends UiField {
+abstract class AbstractUiDateTimeField extends UiField implements UiTextInputHandlingField {
 	boolean showDropDownButton = true;
 	boolean favorPastDates = false; // TODO!!!
 	String locale;

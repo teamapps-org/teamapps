@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiComboBox;
 import org.teamapps.dto.UiComboBoxTreeRecord;
 import org.teamapps.dto.UiField;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -45,7 +45,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ComboBox.class);
 
-	public final Event<String> onFreeTextEntered = new Event<>();
+	public final ProjectorEvent<String> onFreeTextEntered = new ProjectorEvent<>();
 
 	private String freeTextEntry;
 

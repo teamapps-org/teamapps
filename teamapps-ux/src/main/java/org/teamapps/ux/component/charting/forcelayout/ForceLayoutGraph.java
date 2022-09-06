@@ -23,7 +23,7 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.*;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.ArrayList;
@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 
 public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
-	public final Event<ForceLayoutNode<RECORD>> onNodeClicked = new Event<>();
-	public final Event<ForceLayoutNode<RECORD>> onNodeDoubleClicked = new Event<>();
-	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
+	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeClickedEvent.NAME);
+	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeDoubleClicked = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeDoubleClickedEvent.NAME);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeExpandedOrCollapsedEvent.NAME);
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
 	private final List<ForceLayoutLink<RECORD>> links;
@@ -147,7 +147,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	public void addNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink<RECORD>> links) {
 		this.nodes.addAll(nodes);
 		this.links.addAll(links);
-		queueCommandIfRendered(() -> new UiNetworkGraph.AddNodesAndLinksCommand(createUiNodes(nodes), createUiLinks(links)));
+		sendCommandIfRendered(() -> new UiNetworkGraph.AddNodesAndLinksCommand(createUiNodes(nodes), createUiLinks(links)));
 	}
 
 	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes) {
@@ -163,7 +163,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		List<String> nodeIds = nodes.stream().map(n -> n.getId()).collect(Collectors.toList());
 		Map<String, List<String>> linksBySourceNodeId = links.stream()
 				.collect(Collectors.groupingBy(l -> l.getSource().getId(), Collectors.mapping(l -> l.getTarget().getId(), Collectors.toList())));
-		queueCommandIfRendered(() -> new UiNetworkGraph.RemoveNodesAndLinksCommand(nodeIds, linksBySourceNodeId));
+		sendCommandIfRendered(() -> new UiNetworkGraph.RemoveNodesAndLinksCommand(nodeIds, linksBySourceNodeId));
 	}
 
 	public List<ForceLayoutNode<RECORD>> getNodes() {
@@ -187,6 +187,6 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	}
 
 	public void setDistance(float linkDistanceFactor, float nodeDistanceFactor) {
-		queueCommandIfRendered(() -> new UiNetworkGraph.SetDistanceCommand(linkDistanceFactor, nodeDistanceFactor));
+		sendCommandIfRendered(() -> new UiNetworkGraph.SetDistanceCommand(linkDistanceFactor, nodeDistanceFactor));
 	}
 }

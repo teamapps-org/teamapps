@@ -22,12 +22,12 @@ package org.teamapps.ux.component.media;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiMediaTrackGraph;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class MediaTrackGraph extends AbstractComponent {
 
-	public Event<TimeSelection> onTimeSelection = new Event<>();
+	public ProjectorEvent<TimeSelection> onTimeSelection = createProjectorEventBoundToUiEvent(UiMediaTrackGraph.HandleTimeSelectionEvent.NAME);
 
 	private MediaTrackData data;
 
@@ -56,7 +56,7 @@ public class MediaTrackGraph extends AbstractComponent {
 	}
 
 	public void setCursorPosition(long time) {
-		queueCommandIfRendered(() -> new UiMediaTrackGraph.SetCursorPositionCommand(time));
+		sendCommandIfRendered(() -> new UiMediaTrackGraph.SetCursorPositionCommand(time));
 	}
 
 	public static class TimeSelection {

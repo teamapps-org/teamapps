@@ -19,15 +19,15 @@
  */
 package org.teamapps.ux.component.charting.forcelayout;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ForceLayoutModel<RECORD> {
 
-	public Event<GraphChangeOperation<RECORD>> onNodesAdded = new Event<>();
-	public Event<GraphChangeOperation<RECORD>> onNodesRemoved = new Event<>();
+	public ProjectorEvent<GraphChangeOperation<RECORD>> onNodesAdded = new ProjectorEvent<>();
+	public ProjectorEvent<GraphChangeOperation<RECORD>> onNodesRemoved = new ProjectorEvent<>();
 
 	private final List<ForceLayoutNode<RECORD>> displayedNodes = new ArrayList<>();
 	private final List<ForceLayoutLink<RECORD>> displayedLinks = new ArrayList<>();

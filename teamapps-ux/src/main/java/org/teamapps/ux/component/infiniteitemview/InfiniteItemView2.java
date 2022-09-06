@@ -28,7 +28,7 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiInfiniteItemView2;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.component.Component;
@@ -46,7 +46,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public final Event<ItemClickedEventData<RECORD>> onItemClicked = new Event<>();
+	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiInfiniteItemView2.ItemClickedEvent.NAME);
 
 	private Template itemTemplate;
 	private float itemWidth;
@@ -125,9 +125,9 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 				if (record != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+						sendCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
-						queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(e.getRequestId()));
+						sendCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(e.getRequestId()));
 					}
 				}
 			}
@@ -146,7 +146,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	@Override
 	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<UiIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
-		queueCommandIfRendered(() -> {
+		sendCommandIfRendered(() -> {
 			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}",
 					start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
 			return new UiInfiniteItemView2.SetDataCommand(start,
@@ -174,7 +174,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	}
 
 	public void closeContextMenu() {
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		sendCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 	public Template getItemTemplate() {
@@ -183,7 +183,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new UiInfiniteItemView2.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
 		return this;
 	}
 
@@ -193,7 +193,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemWidth(float itemWidth) {
 		this.itemWidth = itemWidth;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemWidthCommand(itemWidth));
+		sendCommandIfRendered(() -> new UiInfiniteItemView2.SetItemWidthCommand(itemWidth));
 		return this;
 	}
 
@@ -203,7 +203,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemHeight(float itemHeight) {
 		this.itemHeight = itemHeight;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemHeightCommand(itemHeight));
+		sendCommandIfRendered(() -> new UiInfiniteItemView2.SetItemHeightCommand(itemHeight));
 		return this;
 	}
 
@@ -233,7 +233,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment) {
 		this.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentHorizontalAlignmentCommand(itemContentHorizontalAlignment.toUiHorizontalElementAlignment()));
+		sendCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentHorizontalAlignmentCommand(itemContentHorizontalAlignment.toUiHorizontalElementAlignment()));
 		return this;
 	}
 
@@ -243,7 +243,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment) {
 		this.itemContentVerticalAlignment = itemContentVerticalAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentVerticalAlignmentCommand(itemContentVerticalAlignment.toUiVerticalElementAlignment()));
+		sendCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentVerticalAlignmentCommand(itemContentVerticalAlignment.toUiVerticalElementAlignment()));
 		return this;
 	}
 
@@ -263,7 +263,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public void setItemPositionAnimationTime(int itemPositionAnimationTime) {
 		this.itemPositionAnimationTime = itemPositionAnimationTime;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemPositionAnimationTimeCommand(itemPositionAnimationTime));
+		sendCommandIfRendered(() -> new UiInfiniteItemView2.SetItemPositionAnimationTimeCommand(itemPositionAnimationTime));
 	}
 
 	public PropertyProvider<RECORD> getItemPropertyProvider() {

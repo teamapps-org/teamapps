@@ -21,7 +21,7 @@ package org.teamapps.ux.component.linkbutton;
 
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiLinkButton;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -29,7 +29,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class LinkButton extends AbstractComponent {
 
-	public final Event<Void> onClicked = new Event<>();
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiLinkButton.ClickedEvent.NAME);
 
 	private String text;
 	private String url;
@@ -64,7 +64,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiLinkButton.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new UiLinkButton.UpdateCommand(createUiClientObject()));
 	}
 
 	public String getText() {

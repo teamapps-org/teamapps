@@ -21,13 +21,13 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTextInputHandlingField;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 public interface TextInputHandlingField {
 
-	Event<String> onTextInput();
+	ProjectorEvent<String> onTextInput();
 
-	Event<SpecialKey> onSpecialKeyPressed();
+	ProjectorEvent<SpecialKey> onSpecialKeyPressed();
 
 	default boolean defaultHandleTextInputEvent(UiEvent event) {
 		if (event instanceof UiTextInputHandlingField.TextInputEvent) {

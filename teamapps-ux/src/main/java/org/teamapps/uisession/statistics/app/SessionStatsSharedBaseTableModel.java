@@ -19,7 +19,7 @@
  */
 package org.teamapps.uisession.statistics.app;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.uisession.TeamAppsSessionManager;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 public class SessionStatsSharedBaseTableModel {
 
-	public final Event<Void> onUpdated = new Event<>();
+	public final ProjectorEvent<Void> onUpdated = new ProjectorEvent<>();
 
 	private List<SessionStatsTableRecord> records = List.of();
 
@@ -41,7 +41,7 @@ public class SessionStatsSharedBaseTableModel {
 							.map(UiSessionStatsStatsTableRecord::new)
 			).collect(Collectors.toList());
 			onUpdated.fire();
-		}, false);
+		});
 	}
 
 	public List<SessionStatsTableRecord> getRecords() {

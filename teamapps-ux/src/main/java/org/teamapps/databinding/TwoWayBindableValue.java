@@ -19,7 +19,7 @@
  */
 package org.teamapps.databinding;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -42,11 +42,11 @@ public interface TwoWayBindableValue<T> extends ObservableValue<T>, MutableValue
 		return new TwoWayBindableValueImpl<>(initialValue);
 	}
 
-	static <T> TwoWayBindableValue<T> create(Event<T> changeEvent, Supplier<T> getter, Consumer<T> setter) {
+	static <T> TwoWayBindableValue<T> create(ProjectorEvent<T> changeEvent, Supplier<T> getter, Consumer<T> setter) {
 		return DataBindings.createTwoWayBindable(changeEvent, getter, setter);
 	}
 
-	static <T> TwoWayBindableValue<T> create(Event<T> changeEvent, Consumer<T> setter) {
+	static <T> TwoWayBindableValue<T> create(ProjectorEvent<T> changeEvent, Consumer<T> setter) {
 		return DataBindings.createTwoWayBindable(changeEvent, setter);
 	}
 }

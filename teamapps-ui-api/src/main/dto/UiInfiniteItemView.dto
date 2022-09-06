@@ -46,7 +46,7 @@ class UiInfiniteItemView extends UiComponent {
 	event contextMenuRequested(int requestId, int recordId);
 }
 
-class UiInfiniteItemView2 extends UiComponent {
+class UiInfiniteItemView2 extends AbstractUiInfiniteListComponent {
 	required UiTemplate itemTemplate;
 
 	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
@@ -76,7 +76,6 @@ class UiInfiniteItemView2 extends UiComponent {
     command setContextMenuContent(int requestId, UiComponent* component);
     command closeContextMenu(int requestId);
 
-	event displayedRangeChanged(int startIndex, int length);
 	event itemClicked(int recordId, boolean isDoubleClick);
 	event contextMenuRequested(int requestId, int recordId);
 }

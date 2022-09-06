@@ -41,6 +41,8 @@ public interface A extends UiObject {
 
 	public static class YEvent implements UiEvent {
 
+	    public static final String NAME = "A.y";
+
 		protected String componentId;
 		protected String y;
 
@@ -78,6 +80,8 @@ public interface A extends UiObject {
 	}
 
 	public static class QQuery implements UiQuery {
+
+	    public static final String NAME = "A.q";
 
 		protected String componentId;
 		protected String y;

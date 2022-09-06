@@ -19,15 +19,15 @@
  */
 package org.teamapps.ux.component.timegraph.model;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.timegraph.datapoints.GraphData;
 
 abstract class AbstractGraphModel<D extends GraphData> implements GraphModel<D> {
 
-	public final Event<Void> onDataChanged = new Event<>();
+	public final ProjectorEvent<Void> onDataChanged = new ProjectorEvent<>();
 
 	@Override
-	public Event<Void> onDataChanged() {
+	public ProjectorEvent<Void> onDataChanged() {
 		return onDataChanged;
 	}
 

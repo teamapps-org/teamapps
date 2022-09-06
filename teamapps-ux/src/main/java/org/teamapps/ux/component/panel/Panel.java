@@ -25,7 +25,8 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiPanel;
 import org.teamapps.dto.UiPanelHeaderField;
-import org.teamapps.event.Event;
+import org.teamapps.event.Disposable;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -36,13 +37,12 @@ import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Panel extends AbstractComponent implements Component {
 
-	public final Event<WindowButtonType> onWindowButtonClicked = new Event<>();
+	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(UiPanel.WindowButtonClickedEvent.NAME);
 
 	private String title;
 	private Icon icon;
@@ -67,14 +67,10 @@ public class Panel extends AbstractComponent implements Component {
 	private final List<ToolButton> toolButtons = new ArrayList<>();
 	private final Set<WindowButtonType> windowButtons = new HashSet<>();
 
-	private ObservableValue<Icon> observableIcon;
-	private final Consumer<Icon> iconChangeListener = this::setIcon;
-	private ObservableValue<String> observableTitle;
-	private final Consumer<String> titleChangeListener = this::setTitle;
-	private ObservableValue<AbstractField<?>> observableLeftHeaderField;
-	private final Consumer<AbstractField<?>> leftHeaderFieldChangeListener = this::setLeftHeaderField;
-	private ObservableValue<AbstractField<?>> observableRightHeaderField;
-	private final Consumer<AbstractField<?>> rightHeaderFieldChangeListener = this::setRightHeaderField;
+	private Disposable iconChangeListenerDisposable;
+	private Disposable titleChangeListenerDisposable;
+	private Disposable leftHeaderFieldChangeListenerDisposable;
+	private Disposable rightHeaderFieldChangeListenerDisposable;
 
 
 	public Panel() {
@@ -113,7 +109,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	private void updateToolButtons() {
-		queueCommandIfRendered(() -> new UiPanel.SetToolButtonsCommand(this.toolButtons.stream()
+		sendCommandIfRendered(() -> new UiPanel.SetToolButtonsCommand(this.toolButtons.stream()
 				.map(toolButton -> toolButton.createUiReference())
 				.collect(Collectors.toList())));
 	}
@@ -129,7 +125,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	private void updateWindowButtons() {
-		queueCommandIfRendered(() -> new UiPanel.SetWindowButtonsCommand(this.windowButtons.stream()
+		sendCommandIfRendered(() -> new UiPanel.SetWindowButtonsCommand(this.windowButtons.stream()
 				.map(b -> b.toUiWindowButtonType())
 				.collect(Collectors.toList())));
 	}
@@ -184,7 +180,7 @@ public class Panel extends AbstractComponent implements Component {
 		this.leftHeaderFieldIcon = icon;
 		this.leftHeaderFieldMinWidth = minWidth;
 		this.leftHeaderFieldMaxWidth = maxWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 		return this;
 	}
 
@@ -200,7 +196,7 @@ public class Panel extends AbstractComponent implements Component {
 		this.rightHeaderFieldIcon = icon;
 		this.rightHeaderFieldMinWidth = minWidth;
 		this.rightHeaderFieldMaxWidth = maxWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 		return this;
 	}
@@ -214,7 +210,7 @@ public class Panel extends AbstractComponent implements Component {
 		if (content != null) {
 			content.setParent(this);
 		}
-		queueCommandIfRendered(() -> new UiPanel.SetContentCommand(content != null ? content.createUiReference() : null));
+		sendCommandIfRendered(() -> new UiPanel.SetContentCommand(content != null ? content.createUiReference() : null));
 	}
 
 	@Override
@@ -231,7 +227,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setTitle(String title) {
 		this.title = title;
-		queueCommandIfRendered(() -> new UiPanel.SetTitleCommand(title));
+		sendCommandIfRendered(() -> new UiPanel.SetTitleCommand(title));
 	}
 
 	public Icon getIcon() {
@@ -240,7 +236,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-		queueCommandIfRendered(() -> new UiPanel.SetIconCommand(getSessionContext().resolveIcon(icon)));
+		sendCommandIfRendered(() -> new UiPanel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
 	public Component getContent() {
@@ -314,7 +310,7 @@ public class Panel extends AbstractComponent implements Component {
 		}
 		this.leftHeaderField = leftHeaderField;
 		leftHeaderField.setParent(this);
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public Icon getLeftHeaderFieldIcon() {
@@ -323,7 +319,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldIcon(Icon leftHeaderFieldIcon) {
 		this.leftHeaderFieldIcon = leftHeaderFieldIcon;
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public int getLeftHeaderFieldMinWidth() {
@@ -332,7 +328,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldMinWidth(int leftHeaderFieldMinWidth) {
 		this.leftHeaderFieldMinWidth = leftHeaderFieldMinWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public int getLeftHeaderFieldMaxWidth() {
@@ -341,7 +337,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldMaxWidth(int leftHeaderFieldMaxWidth) {
 		this.leftHeaderFieldMaxWidth = leftHeaderFieldMaxWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public void setRightHeaderField(AbstractField<?> rightHeaderField) {
@@ -350,7 +346,7 @@ public class Panel extends AbstractComponent implements Component {
 		}
 		this.rightHeaderField = rightHeaderField;
 		rightHeaderField.setParent(this);
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -360,7 +356,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldIcon(Icon rightHeaderFieldIcon) {
 		this.rightHeaderFieldIcon = rightHeaderFieldIcon;
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -370,7 +366,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldMinWidth(int rightHeaderFieldMinWidth) {
 		this.rightHeaderFieldMinWidth = rightHeaderFieldMinWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -380,7 +376,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldMaxWidth(int rightHeaderFieldMaxWidth) {
 		this.rightHeaderFieldMaxWidth = rightHeaderFieldMaxWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -399,51 +395,47 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setStretchContent(boolean stretchContent) {
 		this.stretchContent = stretchContent;
-		queueCommandIfRendered(() -> new UiPanel.SetStretchContentCommand(stretchContent));
+		sendCommandIfRendered(() -> new UiPanel.SetStretchContentCommand(stretchContent));
 	}
 
 
 	public void setIcon(ObservableValue<Icon> observableIcon) {
-		if (this.observableIcon != null)  {
-			this.observableIcon.onChanged().removeListener(iconChangeListener);
+		if (iconChangeListenerDisposable != null)  {
+			iconChangeListenerDisposable.dispose();
 		}
-		this.observableIcon = observableIcon;
-		if (this.observableIcon != null) {
+		if (observableIcon != null) {
 			this.setIcon(observableIcon.get());
-			this.observableIcon.onChanged().addListener(iconChangeListener);
+			this.iconChangeListenerDisposable = observableIcon.onChanged().addListener(this::setIcon);
 		}
 	}
 
 	public void setTitle(ObservableValue<String> observableTitle) {
-		if (this.observableTitle != null)  {
-			this.observableTitle.onChanged().removeListener(titleChangeListener);
+		if (titleChangeListenerDisposable != null)  {
+			titleChangeListenerDisposable.dispose();
 		}
-		this.observableTitle = observableTitle;
-		if (this.observableTitle != null) {
+		if (observableTitle != null) {
 			this.setTitle(observableTitle.get());
-			this.observableTitle.onChanged().addListener(titleChangeListener);
+			this.titleChangeListenerDisposable = observableTitle.onChanged().addListener(this::setTitle);
 		}
 	}
 
 	public void setLeftHeaderField(ObservableValue<AbstractField<?>> observableLeftHeaderField) {
-		if (this.observableLeftHeaderField != null)  {
-			this.observableLeftHeaderField.onChanged().removeListener(leftHeaderFieldChangeListener);
+		if (leftHeaderFieldChangeListenerDisposable != null)  {
+			leftHeaderFieldChangeListenerDisposable.dispose();
 		}
-		this.observableLeftHeaderField = observableLeftHeaderField;
-		if (this.observableLeftHeaderField != null) {
+		if (observableLeftHeaderField != null) {
 			this.setLeftHeaderField(observableLeftHeaderField.get());
-			this.observableLeftHeaderField.onChanged().addListener(leftHeaderFieldChangeListener);
+			this.leftHeaderFieldChangeListenerDisposable = observableLeftHeaderField.onChanged().addListener(this::setLeftHeaderField);
 		}
 	}
 
 	public void setRightHeaderField(ObservableValue<AbstractField<?>> observableRightHeaderField) {
-		if (this.observableRightHeaderField != null)  {
-			this.observableRightHeaderField.onChanged().removeListener(rightHeaderFieldChangeListener);
+		if (rightHeaderFieldChangeListenerDisposable != null)  {
+			rightHeaderFieldChangeListenerDisposable.dispose();
 		}
-		this.observableRightHeaderField = observableRightHeaderField;
-		if (this.observableRightHeaderField != null) {
+		if (observableRightHeaderField != null) {
 			this.setRightHeaderField(observableRightHeaderField.get());
-			this.observableRightHeaderField.onChanged().addListener(rightHeaderFieldChangeListener);
+			this.rightHeaderFieldChangeListenerDisposable = observableRightHeaderField.onChanged().addListener(this::setRightHeaderField);
 		}
 	}
 }

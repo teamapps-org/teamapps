@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiWorkSpaceLayoutView;
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
@@ -44,7 +44,7 @@ public class WorkSpaceLayoutView {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSpaceLayout.class);
 
 	private final WorkSpaceLayout workSpaceLayout;
-	private final Event<Void> onRemoved = new Event<>();
+	private final ProjectorEvent<Void> onRemoved = new ProjectorEvent<>();
 
 	private final String id = UUID.randomUUID().toString();
 	private final Panel panel;

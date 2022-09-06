@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.infiniteitemview;
 
-import org.teamapps.event.Event;
+import org.teamapps.event.ProjectorEvent;
 
 import java.util.List;
 
@@ -28,11 +28,11 @@ public interface InfiniteListModel<RECORD> {
 
 	List<RECORD> getRecords(int startIndex, int length);
 
-	Event<Void> onAllDataChanged();
+	ProjectorEvent<Void> onAllDataChanged();
 
-	Event<RecordsAddedEvent<RECORD>> onRecordsAdded();
+	ProjectorEvent<RecordsAddedEvent<RECORD>> onRecordsAdded();
 
-	Event<RecordsChangedEvent<RECORD>> onRecordsChanged();
+	ProjectorEvent<RecordsChangedEvent<RECORD>> onRecordsChanged();
 
-	Event<RecordsRemovedEvent<RECORD>> onRecordsRemoved();
+	ProjectorEvent<RecordsRemovedEvent<RECORD>> onRecordsRemoved();
 }
