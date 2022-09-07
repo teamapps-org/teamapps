@@ -28,9 +28,8 @@ class UiRootPanel extends UiComponent {
 	static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
 
 	static command registerComponentLibrary(String uuid, String mainJsUrl);
-	static command registerClientObjectType(String libraryUuid, String clientObjectType, List<String> eventNames, List<String> queryNames);
+	static command registerClientObjectType(String libraryUuid, String clientObjectType);
 	static command toggleEventListening(String libraryUuid, String clientObjectId, String eventName, boolean listen);
-	static command toggleQueryListening(String libraryUuid, String clientObjectId, String queryName, boolean listen);
 	static command render(String libraryUuid, UiClientObject component);
 	static command unrender(String id);
 	static command refreshComponent(UiClientObject component);

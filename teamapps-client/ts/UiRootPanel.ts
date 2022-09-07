@@ -136,10 +136,6 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		context.toggleEventListener(libraryUuid, clientObjectId, eventName, enabled)
 	}
 
-	public static async toggleQueryListening(libraryUuid: string, clientObject: unknown, queryName: string, listen: boolean, context: TeamAppsUiContextInternalApi) {
-
-	}
-
 	public static async render(libraryUuid: string, config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
 		await context.renderClientObject(libraryUuid, config);
 	}

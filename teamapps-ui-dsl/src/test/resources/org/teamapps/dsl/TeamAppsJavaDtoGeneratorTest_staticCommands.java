@@ -51,6 +51,7 @@ public abstract class A implements UiObject {
 
 
 
+
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"b"})
 	public static class ACommand implements UiCommand<Void> {

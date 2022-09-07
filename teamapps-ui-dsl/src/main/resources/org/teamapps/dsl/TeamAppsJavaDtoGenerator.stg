@@ -45,9 +45,22 @@ public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superC
 
 	<c.queryDeclaration:queryClass(); separator="\n\n">
 
+    <queryListGetter(c)>
+
 	<c.commandDeclaration:commandClass(); separator="\n\n">
 
 }>>
+
+queryListGetter(c) ::= <<
+<if(c.allQueries)>
+public static final List\<String\> QUERY_NAMES = List.of(<c.allQueries:{q|"<q.Identifier.text>"}; separator=", ">);
+
+@com.fasterxml.jackson.annotation.JsonGetter("_queries")
+public List\<String\> getQueryNames() {
+    return QUERY_NAMES;
+}
+<endif>
+>>
 
 typeRegistrations(c) ::= <<
     static {
@@ -284,27 +297,6 @@ public static class <cmd.Identifier.text; format="cap">Command implements UiComm
 
 }
 >>
-
-uiObjectTypeEnum(package, allClasses) ::= <<
-<javaFilePrelude(package)>
-
-public enum UiObjectType {
-
-	<allClasses:{e|<e.Identifier.text; format="javaConstant">(<e.Identifier.text; format="cap">.class)}; separator=",\n">;
-
-	private final Class\<?> apiClass;
-
-	UiObjectType(Class\<?> apiClass) {
-		this.apiClass = apiClass;
-	}
-
-	public Class\<?> getApiClass() {
-		return apiClass;
-	}
-
-}
->>
-
 
 uiEventBaseClass(package) ::= <<
 <javaFilePrelude(package)>

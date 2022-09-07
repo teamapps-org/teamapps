@@ -19,14 +19,12 @@
  */
 package org.teamapps.dsl.generate;
 
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.Test;
 import org.teamapps.dsl.TeamAppsDtoParser;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.List;
 
 public class TeamAppsTypeScriptDtoGeneratorTest {
 
@@ -189,19 +187,6 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 				"X",
 				"org/teamapps/dsl/TeamAppsTypeScriptDtoGeneratorTest_interfacesWithQueries.tsd"
 		);
-	}
-
-	@Test
-	public void queryFunctionAdder() throws Exception {
-		String dslString = "package org.teamapps.dto; interface X { query queryEntries(int x) returns List<String>; }";
-		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(dslString)).classCollection();
-		TeamAppsDtoModel model = new TeamAppsDtoModel(classCollectionContext);
-
-		StringWriter stringWriter = new StringWriter();
-		final List<ParserRuleContext> allClassesAndInterfacesWithQueries = model.getAllClassesAndInterfacesWithQueries();
-		new TeamAppsTypeScriptGenerator(model).generateQueryFunctionAdder(allClassesAndInterfacesWithQueries, stringWriter);
-
-		GeneratorTestUtil.compareCodeWithResource("org/teamapps/dsl/TeamAppsTypeScriptDtoGeneratorTest_queryFunctionAdder.tsd", stringWriter.toString());
 	}
 
 	private void executeClassTest(String dslString, String className, String expectedResultResourceName) throws IOException {

@@ -41,7 +41,6 @@ import {UiSessionClosingReason} from "./generated/UiSessionClosingReason";
 import {UiClientObject} from "./UiClientObject";
 import {UiClientObjectConfig} from "./generated/UiClientObjectConfig";
 import {UiWindow} from "./UiWindow";
-import {QueryFunctionAdder} from "./generated/QueryFunctionAdder";
 import {UiQuery} from "./generated/UiQuery";
 
 type ClientObjectClass<T extends UiClientObject = UiClientObject> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
@@ -274,9 +273,12 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	public async createClientObject(libraryUuid: string, config: UiClientObjectConfig): Promise<UiClientObject> {
 		let componentClass = await this.getClientObjectClass(libraryUuid, config._type);
 		if (componentClass) {
-			QueryFunctionAdder.addQueryFunctionsToConfig(config, (componentId, queryTypeId, queryObject) => {
-				return this.sendQuery({...queryObject, _type: queryTypeId, componentId: componentId});
+			
+			((config as any)._queries ?? []).forEach(queryName => {
+				(config as any)[queryName] = (queryObject: UiQuery) => this.sendQuery({...queryObject, _type: config._type + "." + queryName, componentId: config.id});
 			});
+			delete (config as any)._queries;
+
 			let isWebComponent = (await componentClass.clazz as any).ELEMENT_NODE === 1;
 			if (isWebComponent) {
 				let webComponent = document.createElement('ui-div');

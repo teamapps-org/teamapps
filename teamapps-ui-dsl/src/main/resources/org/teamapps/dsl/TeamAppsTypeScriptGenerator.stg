@@ -156,22 +156,6 @@ eventNamesObject(c, static) ::= <<
 >>
 
 
-queryFunctionAdder(classesAndInterfacesWithQueries) ::= <<
-<typeScriptFilePrelude()>
-
-import {UiClientObjectConfig} from "./UiClientObjectConfig";
-import {UiQuery} from "./UiQuery";
-<classesAndInterfacesWithQueries:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
-
-export class QueryFunctionAdder {
-	public static addQueryFunctionsToConfig(config: UiClientObjectConfig, queryCallback: (componentId: string, queryTypeId: string, queryObject: UiQuery) => Promise\<any>) {
-		switch (config._type) {
-		    <classesAndInterfacesWithQueries:queryConfigAdditions(); separator="\n">
-		}
-	}
-}
->>
-
 queryConfigAdditions(c) ::= <<
 case "<c.Identifier.text>":
 	<c.allQueries:queryConfigAddition(c); separator="\n">

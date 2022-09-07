@@ -92,18 +92,6 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
-	protected void toggleQueryListening(String name, boolean listen) {
-		boolean changed;
-		if (listen) {
-			changed = listeningQueryNames.add(name);
-		} else {
-			changed = listeningQueryNames.remove(name);
-		}
-		if (changed) {
-			sendCommandIfRendered(null, () -> new UiRootPanel.ToggleQueryListeningCommand(null, getId(), name, listen));
-		}
-	}
-
 	@Override
 	public String getId() {
 		return id;

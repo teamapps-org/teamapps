@@ -468,17 +468,17 @@ public class SessionContext {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		clientObjectsById.put(clientObject.getId(), clientObject);
-		UiClientObject uiComponent = clientObject.createUiClientObject();
+		UiClientObject uiClientObject = clientObject.createUiClientObject();
 
 		ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
 		loadComponentLibraryIfNecessary(clientObject, componentLibraryInfo);
 
 		if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
-			sendStaticCommand(RootPanel.class, new UiRootPanel.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiComponent.getClass().getSimpleName(), List.of(), List.of()));
+			sendStaticCommand(RootPanel.class, new UiRootPanel.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiClientObject.getClass().getSimpleName()));
 			clientObjectTypesKnownToClient.add(clientObject.getClass());
 		}
 
-		sendStaticCommand(RootPanel.class, new UiRootPanel.RenderCommand(componentLibraryInfo.getUuid(), uiComponent));
+		sendStaticCommand(RootPanel.class, new UiRootPanel.RenderCommand(componentLibraryInfo.getUuid(), uiClientObject));
 	}
 
 	private void loadComponentLibraryIfNecessary(ClientObject clientObject, ComponentLibraryInfo componentLibraryInfo) {

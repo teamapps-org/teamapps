@@ -19,7 +19,6 @@
  */
 package org.teamapps.dsl.generate;
 
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 public class TeamAppsTypeScriptGenerator {
@@ -102,7 +100,6 @@ public class TeamAppsTypeScriptGenerator {
         generateEventBaseDefinition(new FileWriter(new File(parentDir, "UiEvent.ts")));
 
         generateQueryBaseDefinition(new FileWriter(new File(parentDir, "UiQuery.ts")));
-        generateQueryFunctionAdder(model.getAllClassesAndInterfacesWithQueries(), new FileWriter(new File(parentDir, "QueryFunctionAdder.ts")));
     }
 
 	public void generateEnum(TeamAppsDtoParser.EnumDeclarationContext enumContext, Writer writer) throws IOException {
@@ -145,14 +142,6 @@ public class TeamAppsTypeScriptGenerator {
 
     public void generateQueryBaseDefinition(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("uiQueryBaseDefinition");
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    public void generateQueryFunctionAdder(List<ParserRuleContext> classAndInterfaceContexts, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("queryFunctionAdder")
-		        .add("classesAndInterfacesWithQueries", classAndInterfaceContexts);
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
