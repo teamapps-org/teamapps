@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TeamAppsDtoModel {
+public class TeamAppsIntermediateDtoModel {
 
 	public static final Set<String> IMPLICITELY_REFERENCEABLE_CLASSES = Sets.newHashSet("UiEvent", "UiCommand", "UiQuery");
 
@@ -51,11 +51,11 @@ public class TeamAppsDtoModel {
 	private final List<QueryDeclarationContext> ownQueryDeclarations;
 	private final List<CommandDeclarationContext> ownCommandDeclarations;
 
-	public TeamAppsDtoModel(ClassCollectionContext classCollectionContext) {
+	public TeamAppsIntermediateDtoModel(ClassCollectionContext classCollectionContext) {
 		this(Collections.singletonList(classCollectionContext));
 	}
 
-	public TeamAppsDtoModel(List<ClassCollectionContext> classCollectionContexts, TeamAppsDtoModel... delegates) {
+	public TeamAppsIntermediateDtoModel(List<ClassCollectionContext> classCollectionContexts, TeamAppsIntermediateDtoModel... delegates) {
 		classCollectionContexts.forEach(classCollectionContext -> {
 			List<TypeDeclarationContext> typeDeclarations = classCollectionContext.typeDeclaration();
 			classDeclarations.addAll(extractClassDeclarations(typeDeclarations));
@@ -73,7 +73,7 @@ public class TeamAppsDtoModel {
 		ownQueryDeclarations = List.copyOf(queryDeclarations);
 		ownCommandDeclarations = List.copyOf(commandDeclarations);
 
-		for (TeamAppsDtoModel delegate : delegates) {
+		for (TeamAppsIntermediateDtoModel delegate : delegates) {
 			classDeclarations.addAll(delegate.classDeclarations);
 			interfaceDeclarations.addAll(delegate.interfaceDeclarations);
 			enumDeclarations.addAll(delegate.enumDeclarations);
@@ -197,12 +197,16 @@ public class TeamAppsDtoModel {
 	}
 
 	private static String getQualifiedClassName(ClassDeclarationContext classDeclaration) {
-		String packageName = findAncestorOfType(classDeclaration, ClassCollectionContext.class).packageDeclaration().packageName().getText();
+		String packageName = getPackageName(classDeclaration);
 		return packageName + "." + classDeclaration.Identifier().getText();
 	}
 
+	public static String getPackageName(ParserRuleContext parserRuleContext) {
+		return findAncestorOfType(parserRuleContext, ClassCollectionContext.class).map(ccc -> ccc.packageDeclaration().packageName().getText()).orElse(null);
+	}
+
 	private static String getQualifiedInterfaceName(InterfaceDeclarationContext interfaceDeclaration) {
-		String packageName = findAncestorOfType(interfaceDeclaration, ClassCollectionContext.class).packageDeclaration().packageName().getText();
+		String packageName = getPackageName(interfaceDeclaration);
 		return packageName + "." + interfaceDeclaration.Identifier().getText();
 	}
 
@@ -210,17 +214,27 @@ public class TeamAppsDtoModel {
 		if (typeContext.primitiveType() != null) {
 			return typeReferenceContext.getText();
 		}
-		String fqTypename;
-		if (typeReferenceContext.typeName().packageName() != null) {
-			fqTypename = typeReferenceContext.typeName().getText();
-		} else {
-			ClassCollectionContext classCollection = findAncestorOfType(typeContext, ClassCollectionContext.class);
-			if (classCollection == null) { // this is an artificially added code fragment (e.g. UiComponentId)
-				return typeReferenceContext.getText();
-			}
-			fqTypename = classCollection.packageDeclaration().packageName().getText() + "." + typeContext.typeReference().typeName().getText();
-		}
-		return fqTypename;
+
+		String simpleTypeName = typeContext.typeReference().typeName().getText();
+
+		return findImport(typeContext, simpleTypeName)
+				.map(i -> i.packageName().getText() + "." + simpleTypeName)
+				.or(() -> findAncestorOfType(typeContext, ClassCollectionContext.class)
+						.map(ccc -> ccc.packageDeclaration().packageName().getText() + "." + typeContext.typeReference().typeName().getText()))
+				.orElse(typeReferenceContext.getText());
+	}
+
+	private static Optional<ImportDeclarationContext> findImport(ParserRuleContext parserRuleContext, String simpleTypeName) {
+		return findAncestorOfType(parserRuleContext, ClassCollectionContext.class).stream()
+				.flatMap(ccc -> ccc.importDeclaration().stream())
+				.filter(i -> i.Identifier().getText().equals(simpleTypeName))
+				.findFirst();
+	}
+
+	public List<ImportDeclarationContext> getAllImports(ParserRuleContext context) {
+		return findAncestorOfType(context, ClassCollectionContext.class).stream()
+				.flatMap(ccc -> ccc.importDeclaration().stream())
+				.collect(Collectors.toList());
 	}
 
 	public InterfaceDeclarationContext findReferencedInterface(TypeContext typeContext) {
@@ -279,14 +293,14 @@ public class TeamAppsDtoModel {
 				});
 	}
 
-	public static <T extends RuleContext> T findAncestorOfType(RuleContext ruleContext, Class<T> ancestorType) {
+	public static <T extends RuleContext> Optional<T> findAncestorOfType(RuleContext ruleContext, Class<? extends T> ancestorType) {
 		while (ruleContext != null) {
 			ruleContext = ruleContext.getParent();
 			if (ancestorType.isInstance(ruleContext)) {
-				return (T) ruleContext;
+				return Optional.of((T) ruleContext);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public List<ClassDeclarationContext> findAllSuperClasses(ClassDeclarationContext clazzContext) {
@@ -583,12 +597,9 @@ public class TeamAppsDtoModel {
 		if (element instanceof ClassDeclarationContext || element instanceof InterfaceDeclarationContext) {
 			return element;
 		}
-		ClassDeclarationContext clazz = findAncestorOfType(element, ClassDeclarationContext.class);
-		if (clazz != null) {
-			return clazz;
-		} else {
-			return findAncestorOfType(element, InterfaceDeclarationContext.class);
-		}
+		return TeamAppsIntermediateDtoModel.<ParserRuleContext>findAncestorOfType(element, ClassDeclarationContext.class)
+				.or(() -> findAncestorOfType(element, InterfaceDeclarationContext.class))
+				.orElse(null);
 	}
 
 	public static String getDeclaringClassOrInterfaceName(ParserRuleContext element) {

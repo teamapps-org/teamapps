@@ -30,6 +30,9 @@ import org.teamapps.dto.TeamAppsJacksonTypeIdResolver;
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
+
+import org.teamapps.dto.blah.UiComponent;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type", defaultImpl = A.class)
 public class A implements UiObject {
 
@@ -37,7 +40,7 @@ public class A implements UiObject {
             var x = UiObjectJacksonTypeIdMaps.class; // make sure the types are registered
         }
 
-	protected String a;
+	protected String aasdf;
 	protected String b;
 	protected List<Long> c;
 
@@ -49,22 +52,22 @@ public class A implements UiObject {
 		// default constructor for Jackson
 	}
 
-	public A(String a) {
-		this.a = a;
+	public A(String aasdf) {
+		this.aasdf = aasdf;
 	}
 
 	@SuppressWarnings("unchecked")
 	public String toString() {
 		return new StringBuilder(getClass().getSimpleName()).append(": ")
-				.append("a=" + a).append(", ")
+				.append("aasdf=" + aasdf).append(", ")
 				.append("b=" + b).append(", ")
 				.append("c=" + c)
 				.toString();
 	}
 
-	@com.fasterxml.jackson.annotation.JsonGetter("a")
-	public String getA() {
-		return a;
+	@com.fasterxml.jackson.annotation.JsonGetter("aasdf")
+	public String getAasdf() {
+		return aasdf;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonGetter("b")
@@ -77,9 +80,9 @@ public class A implements UiObject {
 		return c;
 	}
 
-	@com.fasterxml.jackson.annotation.JsonSetter("a")
-	public A setA(String a) {
-		this.a = a;
+	@com.fasterxml.jackson.annotation.JsonSetter("aasdf")
+	public A setAasdf(String aasdf) {
+		this.aasdf = aasdf;
 		return this;
 	}
 

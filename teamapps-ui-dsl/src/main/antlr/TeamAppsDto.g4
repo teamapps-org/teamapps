@@ -4,11 +4,13 @@ grammar TeamAppsDto;
 package org.teamapps.dsl;
 }
 
-classCollection : packageDeclaration typeDeclaration*;
+classCollection : packageDeclaration importDeclaration* typeDeclaration*;
 
 packageDeclaration : 'package' packageName ';' ;
 
 packageName : Identifier | packageName '.' Identifier;
+
+importDeclaration : 'import' Identifier 'from' StringLiteral ':' packageName ';';
 
 typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 
@@ -25,7 +27,7 @@ superClassDecl: 'extends' typeName;
 superInterfaceDecl: 'extends' classList;
 implementsDecl: 'implements' classList;
 classList: ((typeName ',')* typeName)?;
-propertyDeclaration : referenceableAnnotation? requiredModifier? type Identifier (defaultValueAssignment)? ';';
+propertyDeclaration : referenceableAnnotation? (requiredModifier|optionalModifier)? type Identifier (defaultValueAssignment)? ';';
 commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ('returns' type)? ';';
 eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
 queryDeclaration : 'query' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' 'returns' type ';';
@@ -39,7 +41,7 @@ type : typeReference | primitiveType ;
 typeReference : typeName referenceTypeModifier? typeArguments?;
 referenceTypeModifier : '*';
 
-typeName : (packageName '.')? Identifier ;
+typeName : Identifier ;
 
 typeArguments
     :   '<' typeArgument (',' typeArgument)* '>'
@@ -62,6 +64,7 @@ typescriptFactoryAnnotation : '@TypeScriptFactory';
 referenceableAnnotation: '@Referenceable';
 abstractModifier : 'abstract';
 requiredModifier : 'required';
+optionalModifier : 'optional';
 staticModifier : 'static';
 
 // EXPRESSIONS

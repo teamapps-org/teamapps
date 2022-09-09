@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Abcde from "blah":org.teamapps.dto.blah;
+
 
 class AbstractUiChart extends UiComponent {
 	long initialAnimationDuration = 200;

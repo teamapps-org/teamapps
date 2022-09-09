@@ -40,7 +40,7 @@ public class TeamAppsJavaDtoGenerator {
 
 	private final STGroupFile stGroup;
 	private final String packageName;
-	private final TeamAppsDtoModel model;
+	private final TeamAppsIntermediateDtoModel model;
 
 	public static void main(String[] args) throws IOException, ParseException {
 		Options options = new Options();
@@ -62,14 +62,14 @@ public class TeamAppsJavaDtoGenerator {
 
 		String packageName = cmd.getOptionValue('p');
 
-		TeamAppsDtoModel[] importedModels = Optional.ofNullable(cmd.getOptionValues('i')).stream().flatMap(Arrays::stream)
+		TeamAppsIntermediateDtoModel[] importedModels = Optional.ofNullable(cmd.getOptionValues('i')).stream().flatMap(Arrays::stream)
 				.map(dir -> {
 					try {
-						return new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(dir)));
+						return new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(dir)));
 					} catch (IOException e) {
 						throw new RuntimeException(e);
 					}
-				}).toArray(TeamAppsDtoModel[]::new);
+				}).toArray(TeamAppsIntermediateDtoModel[]::new);
 
 
 		if (cmd.getArgs().length < 2) {
@@ -84,17 +84,17 @@ public class TeamAppsJavaDtoGenerator {
 		System.out.println("Generating Java from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath() + " with package name " + packageName);
 
 
-		TeamAppsDtoModel model = new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModels);
+		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModels);
 		new TeamAppsDtoModelValidator(model).validate();
 		new TeamAppsJavaDtoGenerator(packageName, model)
 				.generate(targetDir);
 	}
 
-	public TeamAppsJavaDtoGenerator(TeamAppsDtoModel model) throws IOException {
+	public TeamAppsJavaDtoGenerator(TeamAppsIntermediateDtoModel model) throws IOException {
 		this("org.teamapps.dto", model);
 	}
 
-	public TeamAppsJavaDtoGenerator(String packageName, TeamAppsDtoModel model) throws IOException {
+	public TeamAppsJavaDtoGenerator(String packageName, TeamAppsIntermediateDtoModel model) throws IOException {
 		this.packageName = packageName;
 		this.model = model;
 		stGroup = StGroupFactory.createStGroup("/org/teamapps/dsl/TeamAppsJavaDtoGenerator.stg", this.model);
@@ -105,7 +105,7 @@ public class TeamAppsJavaDtoGenerator {
 		File parentDir = FileUtils.createDirectory(new File(targetDir, packageName.replace('.', '/')));
 
 		for (TeamAppsDtoParser.ClassDeclarationContext clazzContext : model.getOwnClassDeclarations()) {
-			logger.info("Generating class: " + clazzContext.Identifier());
+			System.out.println("Generating class: " + clazzContext.Identifier());
 			generateClass(clazzContext, new FileWriter(new File(parentDir, clazzContext.Identifier() + ".java")));
 			generateClassJsonWrapper(clazzContext, new FileWriter(new File(parentDir, clazzContext.Identifier() + "Wrapper.java")));
 			if (model.isReferenceableBaseClass(clazzContext)) {

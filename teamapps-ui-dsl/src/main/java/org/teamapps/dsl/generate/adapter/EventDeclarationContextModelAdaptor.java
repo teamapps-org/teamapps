@@ -24,7 +24,7 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.generate.ParserFactory;
-import org.teamapps.dsl.generate.TeamAppsDtoModel;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 import org.teamapps.dsl.TeamAppsDtoParser;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class EventDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.EventDeclarationContext> {
 
     private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
-    private final TeamAppsDtoModel astUtil;
+    private final TeamAppsIntermediateDtoModel astUtil;
 
     static {
         try {
@@ -47,7 +47,7 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
         }
     }
 
-    public EventDeclarationContextModelAdaptor(TeamAppsDtoModel astUtil) {
+    public EventDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
         this.astUtil = astUtil;
     }
 
@@ -55,7 +55,7 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
     public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
         TeamAppsDtoParser.EventDeclarationContext eventContext = (TeamAppsDtoParser.EventDeclarationContext) o;
         if ("declaringClass".equals(propertyName)) {
-            return TeamAppsDtoModel.getDeclaringClassOrInterface(eventContext);
+            return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterface(eventContext);
         } else if ("typeScriptInterfaceName".equals(propertyName)) {
             return astUtil.getDeclaringClassOrInterfaceName(eventContext) + "_" + StringUtils.capitalize(eventContext.Identifier().getText()) + "Event";
         } else if ("allProperties".equals(propertyName)) {
@@ -107,12 +107,12 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
 
     @Override
     protected String getJsonIdentifier(TeamAppsDtoParser.EventDeclarationContext node) {
-        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
+        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
     }
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.EventDeclarationContext node) {
-        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Event";
+        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Event";
     }
 
 	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.EventDeclarationContext eventContext) {

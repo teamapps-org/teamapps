@@ -19,6 +19,9 @@
  */
 class(c, package) ::= <<
 <javaFilePrelude(package)>
+
+<c.imports:importDecl()>
+
 <if(c.hasSubTypes)>
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
 @JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
@@ -38,7 +41,7 @@ public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superC
 
 	<c.propertiesNotImplementedBySuperClasses:getter(); separator="\n\n">
 
-	<c.propertiesNotImplementedBySuperClasses:setter(c); separator="\n\n">
+	<c.propertiesNotImplementedBySuperClasses:setter(c.Identifier.text); separator="\n\n">
 
 	<c.eventDeclaration:eventClass(); separator="\n\n">
 	<c.eventDeclaration:eventJsonWrapper(package); separator="\n\n">
@@ -50,6 +53,10 @@ public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superC
 	<c.commandDeclaration:commandClass(); separator="\n\n">
 
 }>>
+
+importDecl(i) ::= <<
+import <i.packageName.text>.<i.Identifier.text>;
+>>
 
 queryListGetter(c) ::= <<
 <if(c.allQueries)>
@@ -86,6 +93,9 @@ public class <c.Identifier>Reference {
 
 interface(i, package) ::= <<
 <javaFilePrelude(package)>
+
+<i.imports:importDecl()>
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
 @JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -204,9 +214,9 @@ public <propertyDeclaration.type.javaTypeString> get<propertyDeclaration.Identif
 }
 >>
 
-setter(propertyDeclaration, clazz) ::= <<
+setter(propertyDeclaration, clazzName) ::= <<
 @com.fasterxml.jackson.annotation.JsonSetter("<propertyDeclaration.Identifier.text>")
-public <clazz.Identifier> set<propertyDeclaration.Identifier.text; format="cap">(<propertyDeclaration.type.javaTypeString> <propertyDeclaration.Identifier>) {
+public <clazzName; format="cap"> set<propertyDeclaration.Identifier.text; format="cap">(<propertyDeclaration.type.javaTypeString> <propertyDeclaration.Identifier>) {
 	<propertyAssignment(propertyDeclaration)>
 	return this;
 }
@@ -256,9 +266,14 @@ public static class <ed.Identifier.text; format="cap">Event implements UiEvent {
 
 	<ed.allProperties:getter(); separator="\n\n">
 
+	<ed.allProperties:setter([ed.Identifier.text, "Event"]); separator="\n\n">
+
     <if(ed.staticModifier)>
     public String getComponentId() {
         return null;
+    }
+    public <ed.Identifier.text; format="cap">Event setComponentId(String ignored) {
+        return this;
     }
     <endif>
 
@@ -277,6 +292,8 @@ public static class <qd.Identifier.text; format="cap">Query implements UiQuery {
 	<toString(qd)>
 
 	<qd.allProperties:getter(); separator="\n\n">
+
+	<qd.allProperties:setter([qd.Identifier.text, "Query"]); separator="\n\n">
 
 }
 >>

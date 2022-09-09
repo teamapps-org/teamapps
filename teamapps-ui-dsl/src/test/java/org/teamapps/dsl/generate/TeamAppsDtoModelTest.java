@@ -26,9 +26,9 @@ import java.io.StringReader;
 
 public class TeamAppsDtoModelTest {
 
-	private static TeamAppsDtoModel createModel(String dslString) throws IOException {
+	private static TeamAppsIntermediateDtoModel createModel(String dslString) throws IOException {
 		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(dslString)).classCollection();
-		return new TeamAppsDtoModel(classCollectionContext);
+		return new TeamAppsIntermediateDtoModel(classCollectionContext);
 	}
 
 }

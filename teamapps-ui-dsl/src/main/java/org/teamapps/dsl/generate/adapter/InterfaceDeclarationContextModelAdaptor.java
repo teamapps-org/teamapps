@@ -23,23 +23,25 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
-import org.teamapps.dsl.generate.TeamAppsDtoModel;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 import org.teamapps.dsl.TeamAppsDtoParser;
 
 import java.util.stream.Collectors;
 
 public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.InterfaceDeclarationContext> {
 
-	private final TeamAppsDtoModel astUtil;
+	private final TeamAppsIntermediateDtoModel astUtil;
 
-	public InterfaceDeclarationContextModelAdaptor(TeamAppsDtoModel astUtil) {
+	public InterfaceDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
 		this.astUtil = astUtil;
 	}
 
 	@Override
 	public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
 		TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext = (TeamAppsDtoParser.InterfaceDeclarationContext) o;
-		if ("allProperties".equals(propertyName)) {
+		if ("imports".equals(propertyName)) {
+			return astUtil.getAllImports(interfaceContext);
+		} else if ("allProperties".equals(propertyName)) {
 			return astUtil.findAllProperties(interfaceContext);
 		} else if ("requiredProperties".equals(propertyName)) {
 			return astUtil.filterRequiredProperties(interfaceContext.propertyDeclaration(), true);
@@ -73,6 +75,8 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return !astUtil.getAllCommands(interfaceContext).isEmpty();
 		} else if ("hasEvents".equals(propertyName)) {
 			return !astUtil.getAllEvents(interfaceContext).isEmpty();
+		} else if ("hasQueries".equals(propertyName)) {
+			return !astUtil.getAllQueries(interfaceContext).isEmpty();
 		} else if ("allEvents".equals(propertyName)) {
 			return astUtil.getAllEvents(interfaceContext);
 		} else if ("allNonStaticEvents".equals(propertyName)) {

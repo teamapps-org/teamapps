@@ -4,9 +4,6 @@
  */
 export const typescriptDeclarationFixConstant = 1;
 
-import {UiCommand} from "./UiCommand";
-import {UiEvent} from "./UiEvent";
-import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {AConfig} from "./AConfig";
 import {BConfig} from "./BConfig";

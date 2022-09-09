@@ -38,7 +38,7 @@ public class TeamAppsTypeScriptGenerator {
 	private final static Logger logger = LoggerFactory.getLogger(TeamAppsTypeScriptGenerator.class);
 
     private final STGroupFile stGroup;
-    private final TeamAppsDtoModel model;
+    private final TeamAppsIntermediateDtoModel model;
 
     public static void main(String[] args) throws IOException, ParseException {
         Options options = new Options();
@@ -51,14 +51,14 @@ public class TeamAppsTypeScriptGenerator {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
 
-        TeamAppsDtoModel[] importedModels = Optional.ofNullable(cmd.getOptionValues('i')).stream().flatMap(Arrays::stream)
+        TeamAppsIntermediateDtoModel[] importedModels = Optional.ofNullable(cmd.getOptionValues('i')).stream().flatMap(Arrays::stream)
                 .map(dir -> {
                     try {
-                        return new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(dir)));
+                        return new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(dir)));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                }).toArray(TeamAppsDtoModel[]::new);
+                }).toArray(TeamAppsIntermediateDtoModel[]::new);
 
         if (cmd.getArgs().length < 2) {
             new HelpFormatter().printHelp("generator", options);
@@ -70,11 +70,11 @@ public class TeamAppsTypeScriptGenerator {
 
         System.out.println("Generating TypeScript from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath());
 
-        new TeamAppsTypeScriptGenerator(new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModels))
+        new TeamAppsTypeScriptGenerator(new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModels))
                 .generate(targetDir);
     }
 
-    public TeamAppsTypeScriptGenerator(TeamAppsDtoModel model) {
+    public TeamAppsTypeScriptGenerator(TeamAppsIntermediateDtoModel model) {
         this.model = model;
         stGroup = StGroupFactory.createStGroup("/org/teamapps/dsl/TeamAppsTypeScriptGenerator.stg", this.model);
     }
@@ -88,18 +88,13 @@ public class TeamAppsTypeScriptGenerator {
         }
         for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getOwnInterfaceDeclarations()) {
             logger.info("Generating typescript definitions for interface: " + interfaceContext.Identifier());
+            System.out.println("Generating typescript definitions for interface: " + interfaceContext.Identifier());
             generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, interfaceContext.Identifier() + "Config.ts")));
         }
         for (TeamAppsDtoParser.ClassDeclarationContext clazzContext : model.getOwnClassDeclarations()) {
             logger.info("Generating typescript definitions for class: " + clazzContext.Identifier());
             generateClassDefinition(clazzContext, new FileWriter(new File(parentDir, clazzContext.Identifier() + "Config.ts")));
         }
-
-        generateCommandBaseDefinition(new FileWriter(new File(parentDir, "UiCommand.ts")));
-
-        generateEventBaseDefinition(new FileWriter(new File(parentDir, "UiEvent.ts")));
-
-        generateQueryBaseDefinition(new FileWriter(new File(parentDir, "UiQuery.ts")));
     }
 
 	public void generateEnum(TeamAppsDtoParser.EnumDeclarationContext enumContext, Writer writer) throws IOException {
@@ -121,27 +116,6 @@ public class TeamAppsTypeScriptGenerator {
     public void generateInterfaceDefinition(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext, Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("interfaceConfigDefinition")
                 .add("c", interfaceContext);
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    public void generateCommandBaseDefinition(Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("uiCommandBaseDefinition");
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    public void generateEventBaseDefinition(Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("uiEventBaseDefinition");
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    public void generateQueryBaseDefinition(Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("uiQueryBaseDefinition");
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();

@@ -19,7 +19,7 @@
  */
 import {UiConfigurationConfig} from "./generated/UiConfigurationConfig";
 import {UiComponentConfig} from "./generated/UiComponentConfig";
-import {UiEvent} from "./generated/UiEvent";
+import {UiEventConfig as UiEvent} from "./generated/UiEventConfig";
 import {TemplateRegistry} from "./TemplateRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiCommand} from "./generated/UiCommand";

@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 
 public class TeamAppsDtoModelValidator {
 
-	private final TeamAppsDtoModel model;
+	private final TeamAppsIntermediateDtoModel model;
 
-	public TeamAppsDtoModelValidator(TeamAppsDtoModel model) {
+	public TeamAppsDtoModelValidator(TeamAppsIntermediateDtoModel model) {
 		this.model = model;
 	}
 

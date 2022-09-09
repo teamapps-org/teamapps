@@ -25,7 +25,7 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.generate.TeamAppsDtoModel;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -76,9 +76,9 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("double", "0");
 	}
 
-	private final TeamAppsDtoModel model;
+	private final TeamAppsIntermediateDtoModel model;
 
-	public TypeContextModelAdaptor(TeamAppsDtoModel model) {
+	public TypeContextModelAdaptor(TeamAppsIntermediateDtoModel model) {
 		this.model = model;
 	}
 
@@ -205,8 +205,6 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			return "{[name: string]: " + getTypeScriptType(getFirstTypeArgument(typeContext)) + "}";
 		} else if (isUiClientObjectReference(typeContext)) {
 			return "unknown";
-		} else if (TeamAppsDtoModel.IMPLICITELY_REFERENCEABLE_CLASSES.contains(typeContext.getText())) {
-			return typeContext.getText();
 		} else if (isTypeScriptConfigSuffixed(typeContext)) {
 			return typeContext.typeReference().typeName().getText() + "Config";
 		} else if (PRIMITIVE_TYPE_TO_TYPESCRIPT_TYPE.containsKey(typeContext.getText())) {

@@ -24,7 +24,7 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.generate.TeamAppsDtoModel;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +32,18 @@ import java.util.stream.Collectors;
 
 public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.ClassDeclarationContext> {
 
-    private final TeamAppsDtoModel model;
+    private final TeamAppsIntermediateDtoModel model;
 
-    public ClassDeclarationContextModelAdaptor(TeamAppsDtoModel model) {
+    public ClassDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel model) {
         this.model = model;
     }
 
     @Override
     public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
         TeamAppsDtoParser.ClassDeclarationContext classContext = (TeamAppsDtoParser.ClassDeclarationContext) o;
-        if ("allProperties".equals(propertyName)) {
+        if ("imports".equals(propertyName)) {
+            return model.getAllImports(classContext);
+        } else if ("allProperties".equals(propertyName)) {
             return model.findAllProperties(classContext);
         } else if ("allRequiredProperties".equals(propertyName)) {
             return model.filterRequiredProperties(model.findAllProperties(classContext), true);
@@ -67,6 +69,8 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
                     .collect(Collectors.toList());
         } else if ("hasEvents".equals(propertyName)) {
             return !model.getAllEvents(classContext).isEmpty();
+        } else if ("hasQueries".equals(propertyName)) {
+            return !model.getAllQueries(classContext).isEmpty();
         } else if ("allEvents".equals(propertyName)) {
             return model.getAllEvents(classContext);
         } else if ("allNonStaticEvents".equals(propertyName)) {

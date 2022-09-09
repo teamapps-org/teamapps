@@ -24,7 +24,7 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.generate.TeamAppsDtoModel;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -32,9 +32,9 @@ import java.util.stream.Collectors;
 
 public class CommandDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.CommandDeclarationContext> {
 
-    private final TeamAppsDtoModel astUtil;
+    private final TeamAppsIntermediateDtoModel astUtil;
 
-    public CommandDeclarationContextModelAdaptor(TeamAppsDtoModel astUtil) {
+    public CommandDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
         this.astUtil = astUtil;
     }
 
@@ -42,7 +42,7 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
     public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
         TeamAppsDtoParser.CommandDeclarationContext commandContext = (TeamAppsDtoParser.CommandDeclarationContext) o;
         if ("declaringClass".equals(propertyName)) {
-            return TeamAppsDtoModel.getDeclaringClassOrInterface(commandContext);
+            return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterface(commandContext);
         } else if ("allProperties".equals(propertyName)) {
             return new ArrayList<>(commandContext.formalParameterWithDefault());
         } else if ("allRequiredProperties".equals(propertyName)) {
@@ -94,11 +94,11 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
 
     @Override
     protected String getJsonIdentifier(TeamAppsDtoParser.CommandDeclarationContext node) {
-        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
+        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
     }
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.CommandDeclarationContext node) {
-        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Command";
+        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Command";
     }
 }

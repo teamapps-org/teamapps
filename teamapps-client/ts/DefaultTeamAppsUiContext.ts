@@ -23,9 +23,9 @@ import {capitalizeFirstLetter, createUiLocation, generateUUID, logException} fro
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "./generated/UiConfigurationConfig";
 import {UiComponentConfig} from "./generated/UiComponentConfig";
-import {UiEvent} from "./generated/UiEvent";
+import {UiEventConfig as UiEvent} from "./generated/UiEventConfig";
 import {UiRootPanel} from "./UiRootPanel";
-import {UiCommand} from './generated/UiCommand';
+import {UiCommandConfig as UiCommand} from './generated/UiCommand';
 import {TeamAppsConnection, TeamAppsConnectionListener} from "./communication/TeamAppsConnection";
 import * as jstz from "jstz";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -41,7 +41,7 @@ import {UiSessionClosingReason} from "./generated/UiSessionClosingReason";
 import {UiClientObject} from "./UiClientObject";
 import {UiClientObjectConfig} from "./generated/UiClientObjectConfig";
 import {UiWindow} from "./UiWindow";
-import {UiQuery} from "./generated/UiQuery";
+import {UiQueryConfig as UiQuery} from "./generated/UiQueryConfig";
 
 type ClientObjectClass<T extends UiClientObject = UiClientObject> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
 

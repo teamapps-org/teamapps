@@ -28,14 +28,14 @@ export const typescriptDeclarationFixConstant = 1;
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-import {UiCommand} from "./UiCommand";
-import {UiEvent} from "./UiEvent";
-import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 <c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
+<if(c.hasCommands)>import {UiCommand} from "./UiCommand";<endif>
+<if(c.hasEvents)>import {UiEventConfig} from "./UiEventConfig";<endif>
+<if(c.hasQueries)>import {UiQueryConfig} from "./UiQueryConfig";<endif>
 
 export interface <c.Identifier.text>Config <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.Identifier>Config};  separator=", "> <endif>{
 	_type?: string;
@@ -85,13 +85,13 @@ on<evt.Identifier.text; format="cap">: TeamAppsEvent\<<evt.typeScriptInterfaceNa
 >>
 
 eventInterface(evt) ::= <<
-export interface <evt.typeScriptInterfaceName> extends UiEvent {
+export interface <evt.typeScriptInterfaceName> extends UiEventConfig {
 	<evt.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
 queryInterface(q) ::= <<
-export interface <q.typeScriptInterfaceName> extends UiQuery {
+export interface <q.typeScriptInterfaceName> extends UiQueryConfig {
 	<q.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
@@ -101,13 +101,14 @@ parameter(p, optional) ::= "<p.Identifier><if(optional)>?<endif>: <p.type.typeSc
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-import {UiEvent} from "./UiEvent";
-import {UiCommand} from "./UiCommand";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 <c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
+<if(c.hasCommands)>import {UiCommandConfig} from "./UiCommandConfig";<endif>
+<if(c.hasEvents)>import {UiEventConfig} from "./UiEventConfig";<endif>
+<if(c.hasQueries)>import {UiQueryConfig} from "./UiQueryConfig";<endif>
 
 export interface <c.Identifier.text>Config <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|<superInterface.Identifier>Config}; separator=", "> <endif>{
 	_type?: string;
@@ -154,41 +155,3 @@ export enum <e.Identifier> {
 eventNamesObject(c, static) ::= <<
 <if(static)>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<else>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<endif>
 >>
-
-
-queryConfigAdditions(c) ::= <<
-case "<c.Identifier.text>":
-	<c.allQueries:queryConfigAddition(c); separator="\n">
-	break;
->>
-
-queryConfigAddition(q, c) ::= <<
-    (config as <c.Identifier.text>Config).<q.Identifier> = (queryObject: UiQuery) => queryCallback(config.id, "<q._type>", queryObject);
->>
-
-uiCommandBaseDefinition() ::= <<
-<typeScriptFilePrelude()>
-export interface UiCommand {
-	_type: string;
-	componentId?: string;
-	[key: string]: any;
-}
->>
-
-uiEventBaseDefinition() ::= <<
-<typeScriptFilePrelude()>
-export interface UiEvent {
-    _type?: string;
-    componentId?: string;
-}
->>
-
-uiQueryBaseDefinition() ::= <<
-<typeScriptFilePrelude()>
-export interface UiQuery {
-    _type?: string;
-    componentId?: string;
-}
->>
-
-

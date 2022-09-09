@@ -212,6 +212,10 @@ class MULTI_CMD extends AbstractServerMessage {
     required List<Object> cmds; // the CMD class does not get generated!
 }
 
+interface UiCommand {
+	String componentId;
+}
+
 class QUERY_RESULT extends AbstractServerMessage {
     required int queryId;
     required Object result;

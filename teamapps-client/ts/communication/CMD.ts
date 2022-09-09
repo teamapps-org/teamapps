@@ -17,12 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiCommand} from "../generated/UiCommand";
+import {UiCommandConfig} from "../generated/UiCommandConfig";
 
 export interface CMD {
 	id: number, // sequence number
 	lid: string|null, // library uuid
 	cid: string|null, // client object id
-	c: UiCommand, // uiCommand
+	c: UiCommandConfig, // uiCommand
 	r: boolean    // awaitsResult
 }

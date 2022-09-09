@@ -27,7 +27,7 @@ import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./U
 import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
 import {generateUUID} from "../Common";
 import {ViewContainer, ViewContainerListener} from "./ViewContainer";
-import {UiEvent} from "../generated/UiEvent";
+import {UiEventConfig as UiEvent} from "../generated/UiEventConfig";
 import {UiWorkSpaceLayoutItemConfig} from "../generated/UiWorkSpaceLayoutItemConfig";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";

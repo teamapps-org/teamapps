@@ -23,7 +23,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
-import org.teamapps.dsl.generate.TeamAppsDtoModel;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 import org.teamapps.dsl.TeamAppsDtoParser;
 
 public abstract class ReferencableEntityModelAdaptor<N extends ParserRuleContext> extends PojoModelAdaptor {
@@ -54,7 +54,7 @@ public abstract class ReferencableEntityModelAdaptor<N extends ParserRuleContext
 		if (node instanceof TeamAppsDtoParser.EnumDeclarationContext) {
 			return ((TeamAppsDtoParser.EnumDeclarationContext) node).Identifier().getText();
 		} else {
-			return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "Config";
+			return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "Config";
 		}
 	}
 

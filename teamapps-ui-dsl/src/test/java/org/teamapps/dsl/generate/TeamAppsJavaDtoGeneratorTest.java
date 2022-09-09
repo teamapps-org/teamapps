@@ -31,8 +31,10 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void classProperties() throws Exception {
 		executeClassTest(
-				"package org.teamapps.dto; class A { "
-						+ " required String a; "
+				"package org.teamapps.dto222; " +
+						"import UiComponent from \"blah\":org.teamapps.dto.blah; " +
+						"class A { "
+						+ " required String aasdf; "
 						+ " String b; "
 						+ " List<Long> c; "
 						+ "}",
@@ -142,7 +144,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(
 				dslString
 		)).classCollection();
-		TeamAppsDtoModel model = new TeamAppsDtoModel(classCollectionContext);
+		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(classCollectionContext);
 
 		StringWriter stringWriter = new StringWriter();
 		new TeamAppsJavaDtoGenerator(model).generateClass(model.findClassByName(className, false), stringWriter);
@@ -154,7 +156,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(
 				dslString
 		)).classCollection();
-		TeamAppsDtoModel model = new TeamAppsDtoModel(classCollectionContext);
+		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(classCollectionContext);
 
 		StringWriter stringWriter = new StringWriter();
 		new TeamAppsJavaDtoGenerator(model).generateInterface(model.findInterfaceByName(interfaceName, false), stringWriter);

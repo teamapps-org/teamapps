@@ -30,6 +30,8 @@ import org.teamapps.dto.TeamAppsJacksonTypeIdResolver;
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
+
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
 @JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -77,6 +79,18 @@ public interface A extends UiObject {
 			return y;
 		}
 
+		@com.fasterxml.jackson.annotation.JsonSetter("componentId")
+		public YEvent setComponentId(String componentId) {
+			this.componentId = componentId;
+			return this;
+		}
+
+		@com.fasterxml.jackson.annotation.JsonSetter("y")
+		public YEvent setY(String y) {
+			this.y = y;
+			return this;
+		}
+
 	}
 
 	public static class QQuery implements UiQuery {
@@ -115,6 +129,18 @@ public interface A extends UiObject {
 		@com.fasterxml.jackson.annotation.JsonGetter("y")
 		public String getY() {
 			return y;
+		}
+
+		@com.fasterxml.jackson.annotation.JsonSetter("componentId")
+		public QQuery setComponentId(String componentId) {
+			this.componentId = componentId;
+			return this;
+		}
+
+		@com.fasterxml.jackson.annotation.JsonSetter("y")
+		public QQuery setY(String y) {
+			this.y = y;
+			return this;
 		}
 
 	}

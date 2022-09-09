@@ -25,7 +25,7 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.generate.ParserFactory;
-import org.teamapps.dsl.generate.TeamAppsDtoModel;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.QueryDeclarationContext> {
 
     private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
-    private final TeamAppsDtoModel astUtil;
+    private final TeamAppsIntermediateDtoModel astUtil;
 
     static {
         try {
@@ -47,7 +47,7 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
         }
     }
 
-    public QueryDeclarationContextModelAdaptor(TeamAppsDtoModel astUtil) {
+    public QueryDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
         this.astUtil = astUtil;
     }
 
@@ -55,9 +55,9 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
     public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
         TeamAppsDtoParser.QueryDeclarationContext queryContext = (TeamAppsDtoParser.QueryDeclarationContext) o;
         if ("declaringClass".equals(propertyName)) {
-            return TeamAppsDtoModel.getDeclaringClassOrInterface(queryContext);
+            return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterface(queryContext);
         } else if ("typeScriptInterfaceName".equals(propertyName)) {
-            return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(queryContext) + "_" + StringUtils.capitalize(queryContext.Identifier().getText()) + "Query";
+            return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(queryContext) + "_" + StringUtils.capitalize(queryContext.Identifier().getText()) + "Query";
         } else if ("allProperties".equals(propertyName)) {
             return getAllParameters(queryContext);
         } else if ("allRequiredProperties".equals(propertyName)) {
@@ -97,12 +97,12 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
 
     @Override
     protected String getJsonIdentifier(TeamAppsDtoParser.QueryDeclarationContext node) {
-        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
+        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
     }
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.QueryDeclarationContext node) {
-        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Query";
+        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Query";
     }
 
 	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.QueryDeclarationContext commandContext) {

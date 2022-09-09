@@ -193,7 +193,7 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(
 				dslString
 		)).classCollection();
-		TeamAppsDtoModel model = new TeamAppsDtoModel(classCollectionContext);
+		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(classCollectionContext);
 
 		StringWriter stringWriter = new StringWriter();
 		new TeamAppsTypeScriptGenerator(model).generateClassDefinition(model.findClassByName(className, false), stringWriter);
@@ -205,7 +205,7 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(
 				dslString
 		)).classCollection();
-		TeamAppsDtoModel model = new TeamAppsDtoModel(classCollectionContext);
+		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(classCollectionContext);
 
 		StringWriter stringWriter = new StringWriter();
 		new TeamAppsTypeScriptGenerator(model).generateInterfaceDefinition(model.findInterfaceByName(interfaceName, false), stringWriter);

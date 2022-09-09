@@ -30,6 +30,8 @@ import org.teamapps.dto.TeamAppsJacksonTypeIdResolver;
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
+
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type", defaultImpl = D.class)
 public class D extends A implements B, C, UiObject {
 
