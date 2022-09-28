@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -158,8 +158,11 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	public void setHorizontalPadding(int horizontalPadding) {
+		boolean changed = horizontalPadding != this.horizontalPadding;
 		this.horizontalPadding = horizontalPadding;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getVerticalPadding() {
@@ -167,8 +170,11 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	public void setVerticalPadding(int verticalPadding) {
+		boolean changed = verticalPadding != this.verticalPadding;
 		this.verticalPadding = verticalPadding;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getGroupSpacing() {
@@ -176,8 +182,11 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	public void setGroupSpacing(int groupSpacing) {
+		boolean changed = groupSpacing != this.groupSpacing;
 		this.groupSpacing = groupSpacing;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public ItemViewItemBackgroundMode getItemBackgroundMode() {
@@ -185,16 +194,19 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	public void setItemBackgroundMode(ItemViewItemBackgroundMode itemBackgroundMode) {
+		boolean changed = itemBackgroundMode != this.itemBackgroundMode;
 		this.itemBackgroundMode = itemBackgroundMode;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public PropertyProvider<HEADERRECORD> getHeaderPropertyProvider() {
 		return headerPropertyProvider;
 	}
 
-	public void setHeaderPropertyProvider(PropertyProvider<HEADERRECORD> propertyProvider) {
-		this.headerPropertyProvider = propertyProvider;
+	public void setHeaderPropertyProvider(PropertyProvider<HEADERRECORD> headerPropertyProvider) {
+		this.headerPropertyProvider = headerPropertyProvider;
 		reRenderIfRendered();
 	}
 

@@ -210,8 +210,11 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	public void setMaxEntries(int maxEntries) {
+		boolean changed = maxEntries != this.maxEntries;
 		this.maxEntries = maxEntries;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public TagBoxWrappingMode getWrappingMode() {
@@ -219,8 +222,11 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	public void setWrappingMode(TagBoxWrappingMode wrappingMode) {
+		boolean changed = wrappingMode != this.wrappingMode;
 		this.wrappingMode = wrappingMode;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isDistinct() {
@@ -228,8 +234,11 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	public void setDistinct(boolean distinct) {
+		boolean changed = distinct != this.distinct;
 		this.distinct = distinct;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public List<String> getFreeTextEntries() {
@@ -245,7 +254,10 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	public void setTwoStepDeletion(boolean twoStepDeletion) {
+		boolean changed = twoStepDeletion != this.twoStepDeletion;
 		this.twoStepDeletion = twoStepDeletion;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,8 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiVideoPlayer;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+
+import java.util.Objects;
 
 public class VideoPlayer extends AbstractComponent {
 
@@ -58,7 +60,7 @@ public class VideoPlayer extends AbstractComponent {
 		uiVideoPlayer.setPosterImageUrl(posterImageUrl);
 		uiVideoPlayer.setPosterImageSize(posterImageSize.toUiPosterImageSize());
 		uiVideoPlayer.setSendPlayerProgressEventsEachXSeconds(sendPlayerProgressEventsEachXSeconds);
-		uiVideoPlayer.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
+		uiVideoPlayer.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiVideoPlayer.setPreloadMode(preloadMode.toUiPreloadMode());
 		return uiVideoPlayer;
 	}
@@ -117,8 +119,11 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void setShowControls(boolean showControls) {
+		boolean changed = showControls != this.showControls;
 		this.showControls = showControls;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public String getPosterImageUrl() {
@@ -126,8 +131,11 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void setPosterImageUrl(String posterImageUrl) {
+		boolean changed = !Objects.equals(posterImageUrl, this.posterImageUrl);
 		this.posterImageUrl = posterImageUrl;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public PosterImageSize getPosterImageSize() {
@@ -135,8 +143,11 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void setPosterImageSize(PosterImageSize posterImageSize) {
+		boolean changed = posterImageSize != this.posterImageSize;
 		this.posterImageSize = posterImageSize;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getSendPlayerProgressEventsEachXSeconds() {
@@ -144,8 +155,11 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void setSendPlayerProgressEventsEachXSeconds(int sendPlayerProgressEventsEachXSeconds) {
+		boolean changed = sendPlayerProgressEventsEachXSeconds != this.sendPlayerProgressEventsEachXSeconds;
 		this.sendPlayerProgressEventsEachXSeconds = sendPlayerProgressEventsEachXSeconds;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public Color getBackgroundColor() {
@@ -153,8 +167,11 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {
+		boolean changed = !Objects.equals(backgroundColor, this.backgroundColor);
 		this.backgroundColor = backgroundColor;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public PreloadMode getPreloadMode() {

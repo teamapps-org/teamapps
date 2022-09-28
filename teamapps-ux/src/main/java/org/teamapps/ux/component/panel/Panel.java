@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -261,7 +261,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setBodyBackgroundColor(Color bodyBackgroundColor) {
-		this.setCssStyle("> .panel-body", "background-color", bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString(): null);
+		this.setCssStyle("> .panel-body", "background-color", bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);
 	}
 
 	public HeaderComponentMinimizationPolicy getHeaderComponentMinimizationPolicy() {
@@ -269,8 +269,11 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setHeaderComponentMinimizationPolicy(HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy) {
+		boolean changed = headerComponentMinimizationPolicy != this.headerComponentMinimizationPolicy;
 		this.headerComponentMinimizationPolicy = headerComponentMinimizationPolicy;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isHideTitleBar() {
@@ -278,8 +281,11 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setHideTitleBar(boolean hideTitleBar) {
+		boolean changed = hideTitleBar != this.hideTitleBar;
 		this.hideTitleBar = hideTitleBar;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public Toolbar getToolbar() {
@@ -296,8 +302,11 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setPadding(int padding) {
+		boolean changed = padding != this.padding;
 		this.padding = padding;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isMaximizable() {
@@ -394,8 +403,11 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setAlwaysShowHeaderFieldIcons(boolean alwaysShowHeaderFieldIcons) {
+		boolean changed = alwaysShowHeaderFieldIcons != this.alwaysShowHeaderFieldIcons;
 		this.alwaysShowHeaderFieldIcons = alwaysShowHeaderFieldIcons;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isStretchContent() {
@@ -409,7 +421,7 @@ public class Panel extends AbstractComponent implements Component {
 
 
 	public void setIcon(ObservableValue<Icon> observableIcon) {
-		if (this.observableIcon != null)  {
+		if (this.observableIcon != null) {
 			this.observableIcon.onChanged().removeListener(iconChangeListener);
 		}
 		this.observableIcon = observableIcon;
@@ -420,7 +432,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setTitle(ObservableValue<String> observableTitle) {
-		if (this.observableTitle != null)  {
+		if (this.observableTitle != null) {
 			this.observableTitle.onChanged().removeListener(titleChangeListener);
 		}
 		this.observableTitle = observableTitle;
@@ -431,7 +443,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setLeftHeaderField(ObservableValue<AbstractField<?>> observableLeftHeaderField) {
-		if (this.observableLeftHeaderField != null)  {
+		if (this.observableLeftHeaderField != null) {
 			this.observableLeftHeaderField.onChanged().removeListener(leftHeaderFieldChangeListener);
 		}
 		this.observableLeftHeaderField = observableLeftHeaderField;
@@ -442,7 +454,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setRightHeaderField(ObservableValue<AbstractField<?>> observableRightHeaderField) {
-		if (this.observableRightHeaderField != null)  {
+		if (this.observableRightHeaderField != null) {
 			this.observableRightHeaderField.onChanged().removeListener(rightHeaderFieldChangeListener);
 		}
 		this.observableRightHeaderField = observableRightHeaderField;

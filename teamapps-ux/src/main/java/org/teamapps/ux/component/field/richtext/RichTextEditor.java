@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,6 +33,7 @@ import org.teamapps.ux.component.field.upload.UploadedFileAccessException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Locale;
+import java.util.Objects;
 
 public class RichTextEditor extends AbstractField<String> implements TextInputHandlingField {
 
@@ -194,8 +195,11 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	}
 
 	public void setULocale(ULocale locale) {
+		boolean changed = !Objects.equals(locale, this.locale);
 		this.locale = locale;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isImageUploadEnabled() {
@@ -203,7 +207,10 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	}
 
 	public void setImageUploadEnabled(boolean imageUploadEnabled) {
+		boolean changed = imageUploadEnabled != this.imageUploadEnabled;
 		this.imageUploadEnabled = imageUploadEnabled;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 }

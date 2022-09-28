@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -291,43 +291,67 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	public void setDropDownButtonVisible(boolean dropDownButtonVisible) {
+		boolean changed = dropDownButtonVisible != this.dropDownButtonVisible;
 		this.dropDownButtonVisible = dropDownButtonVisible;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setShowDropDownAfterResultsArrive(boolean showDropDownAfterResultsArrive) {
+		boolean changed = showDropDownAfterResultsArrive != this.showDropDownAfterResultsArrive;
 		this.showDropDownAfterResultsArrive = showDropDownAfterResultsArrive;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setHighlightFirstResultEntry(boolean highlightFirstResultEntry) {
+		boolean changed = highlightFirstResultEntry != this.highlightFirstResultEntry;
 		this.highlightFirstResultEntry = highlightFirstResultEntry;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setAutoComplete(boolean autoComplete) {
+		boolean changed = autoComplete != this.autoComplete;
 		this.autoComplete = autoComplete;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setShowHighlighting(boolean showHighlighting) {
+		boolean changed = showHighlighting != this.showHighlighting;
 		this.showHighlighting = showHighlighting;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setAllowFreeText(boolean allowFreeText) {
+		boolean changed = allowFreeText != this.allowFreeText;
 		this.allowFreeText = allowFreeText;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setShowClearButton(boolean showClearButton) {
+		boolean changed = showClearButton != this.showClearButton;
 		this.showClearButton = showClearButton;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setAnimate(boolean animate) {
+		boolean changed = animate != this.animate;
 		this.animate = animate;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isShowExpanders() {
@@ -335,8 +359,11 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	public void setShowExpanders(boolean showExpanders) {
+		boolean changed = showExpanders != this.showExpanders;
 		this.showExpanders = showExpanders;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setSelectedEntryTemplate(Template selectedEntryTemplate) {
@@ -361,8 +388,11 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	public void setTextHighlightingEntryLimit(int textHighlightingEntryLimit) {
+		boolean changed = textHighlightingEntryLimit != this.textHighlightingEntryLimit;
 		this.textHighlightingEntryLimit = textHighlightingEntryLimit;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public Template getSelectedEntryTemplate() {
@@ -429,8 +459,11 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	public void setEmptyText(String emptyText) {
+		boolean changed = !Objects.equals(emptyText, this.emptyText);
 		this.emptyText = emptyText;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isDistinctModelResultFiltering() {
@@ -446,8 +479,11 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	public void setDropDownMinWidth(Integer dropDownMinWidth) {
+		boolean changed = !Objects.equals(dropDownMinWidth, this.dropDownMinWidth);
 		this.dropDownMinWidth = dropDownMinWidth;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public Integer getDropDownMaxHeight() {
@@ -455,8 +491,11 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	public void setDropDownMaxHeight(Integer dropDownMaxHeight) {
+		boolean changed = !Objects.equals(dropDownMaxHeight, this.dropDownMaxHeight);
 		this.dropDownMaxHeight = dropDownMaxHeight;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	@Override

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -408,8 +408,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setShowHeader(boolean showHeader) {
+		boolean changed = showHeader != this.showHeader;
 		this.showHeader = showHeader;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isTableBorder() {
@@ -417,8 +420,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setTableBorder(boolean tableBorder) {
+		boolean changed = tableBorder != this.tableBorder;
 		this.tableBorder = tableBorder;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isShowWeekNumbers() {
@@ -426,8 +432,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setShowWeekNumbers(boolean showWeekNumbers) {
+		boolean changed = showWeekNumbers != this.showWeekNumbers;
 		this.showWeekNumbers = showWeekNumbers;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getBusinessHoursStart() {
@@ -435,8 +444,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setBusinessHoursStart(int businessHoursStart) {
+		boolean changed = businessHoursStart != this.businessHoursStart;
 		this.businessHoursStart = businessHoursStart;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getBusinessHoursEnd() {
@@ -444,8 +456,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setBusinessHoursEnd(int businessHoursEnd) {
+		boolean changed = businessHoursEnd != this.businessHoursEnd;
 		this.businessHoursEnd = businessHoursEnd;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public DayOfWeek getFirstDayOfWeek() {
@@ -453,8 +468,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setFirstDayOfWeek(DayOfWeek firstDayOfWeek) {
+		boolean changed = firstDayOfWeek != this.firstDayOfWeek;
 		this.firstDayOfWeek = firstDayOfWeek;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public List<DayOfWeek> getWorkingDays() {
@@ -462,8 +480,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setWorkingDays(List<DayOfWeek> workingDays) {
+		boolean changed = !Objects.equals(workingDays, this.workingDays);
 		this.workingDays = workingDays;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public Color getTableHeaderBackgroundColor() {
@@ -471,8 +492,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setTableHeaderBackgroundColor(Color tableHeaderBackgroundColor) {
+		boolean changed = !Objects.equals(tableHeaderBackgroundColor, this.tableHeaderBackgroundColor);
 		this.tableHeaderBackgroundColor = tableHeaderBackgroundColor;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public Color getDefaultBackgroundColor() {
@@ -545,8 +569,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setULocale(ULocale locale) {
+		boolean changed = !Objects.equals(locale, this.locale);
 		this.locale = locale;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public ZoneId getTimeZone() {
@@ -563,8 +590,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setMinYearViewMonthTileWidth(int minYearViewMonthTileWidth) {
+		boolean changed = minYearViewMonthTileWidth != this.minYearViewMonthTileWidth;
 		this.minYearViewMonthTileWidth = minYearViewMonthTileWidth;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getMaxYearViewMonthTileWidth() {
@@ -572,8 +602,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public void setMaxYearViewMonthTileWidth(int maxYearViewMonthTileWidth) {
+		boolean changed = maxYearViewMonthTileWidth != this.maxYearViewMonthTileWidth;
 		this.maxYearViewMonthTileWidth = maxYearViewMonthTileWidth;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isNavigateOnHeaderClicks() {

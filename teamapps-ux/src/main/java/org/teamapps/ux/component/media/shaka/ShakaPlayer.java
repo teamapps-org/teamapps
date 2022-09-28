@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,12 +30,15 @@ import org.teamapps.ux.component.media.PosterImageSize;
 import org.teamapps.ux.component.media.TrackLabelFormat;
 import org.teamapps.ux.session.SessionContext;
 
+import java.util.Objects;
+
 public class ShakaPlayer extends AbstractComponent {
 
 	public final Event<Void> onErrorLoading = new Event<>();
 	public final Event<UiShakaManifest> onManifestLoaded = new Event<>();
 	public final Event<Long> onTimeUpdate = new Event<>();
 	public final Event<Void> onEnded = new Event<>();
+
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
 		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
@@ -70,7 +73,7 @@ public class ShakaPlayer extends AbstractComponent {
 		ui.setPosterImageUrl(posterImageUrl);
 		ui.setPosterImageSize(posterImageSize.toUiPosterImageSize());
 		ui.setTimeUpdateEventThrottleMillis(timeUpdateEventThrottleMillis);
-		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
+		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setTrackLabelFormat(trackLabelFormat.toUiTrackLabelFormat());
 		ui.setVideoDisabled(videoDisabled);
 		ui.setTimeMillis(timeMillis);
@@ -140,8 +143,11 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setPosterImageUrl(String posterImageUrl) {
+		boolean changed = !Objects.equals(posterImageUrl, this.posterImageUrl);
 		this.posterImageUrl = posterImageUrl;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public PosterImageSize getPosterImageSize() {
@@ -149,8 +155,11 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setPosterImageSize(PosterImageSize posterImageSize) {
+		boolean changed = posterImageSize != this.posterImageSize;
 		this.posterImageSize = posterImageSize;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getTimeUpdateEventThrottleMillis() {
@@ -158,8 +167,11 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setTimeUpdateEventThrottleMillis(int timeUpdateEventThrottleMillis) {
+		boolean changed = timeUpdateEventThrottleMillis != this.timeUpdateEventThrottleMillis;
 		this.timeUpdateEventThrottleMillis = timeUpdateEventThrottleMillis;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public Color getBackgroundColor() {
@@ -167,8 +179,11 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {
+		boolean changed = !Objects.equals(backgroundColor, this.backgroundColor);
 		this.backgroundColor = backgroundColor;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public TrackLabelFormat getTrackLabelFormat() {
@@ -176,8 +191,11 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setTrackLabelFormat(TrackLabelFormat trackLabelFormat) {
+		boolean changed = trackLabelFormat != this.trackLabelFormat;
 		this.trackLabelFormat = trackLabelFormat;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isVideoDisabled() {
@@ -185,8 +203,11 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setVideoDisabled(boolean videoDisabled) {
+		boolean changed = videoDisabled != this.videoDisabled;
 		this.videoDisabled = videoDisabled;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void selectAudioLanguage(String language) {
