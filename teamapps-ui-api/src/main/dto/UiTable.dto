@@ -69,6 +69,7 @@ class UiTable extends UiComponent {
 
 	boolean contextMenuEnabled = false;
 
+    command updateRefreshableConfig(UiRefreshableTableConfigUpdate config);
 	command clearTable();
 	command updateData(int startIndex, List<Integer> recordIds, List<UiTableClientRecord> newRecords, int totalNumberOfRecords);
 	command setSorting(String sortField, UiSortDirection sortDirection);
@@ -116,6 +117,19 @@ class UiTable extends UiComponent {
     int footerRowHeight = 28;
     String footerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
     Dictionary<UiField*> footerRowFields;
+}
+
+class UiRefreshableTableConfigUpdate {
+    boolean forceFitWidth;
+    int rowHeight;
+    boolean allowMultiRowSelection;
+    int rowBorderWidth;
+    boolean textSelectionEnabled;
+    boolean editable;
+    boolean showHeaderRow;
+    int headerRowHeight;
+    boolean showFooterRow;
+    int footerRowHeight;
 }
 
 @TypeScriptFactory

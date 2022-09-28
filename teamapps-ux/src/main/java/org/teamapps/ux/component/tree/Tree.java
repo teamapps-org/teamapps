@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -255,8 +255,11 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	public void setAnimated(boolean animated) {
+		boolean changed = animated != this.animated;
 		this.animated = animated;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isShowExpanders() {
@@ -264,8 +267,11 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	public void setShowExpanders(boolean showExpanders) {
+		boolean changed = showExpanders != this.showExpanders;
 		this.showExpanders = showExpanders;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isOpenOnSelection() {
@@ -273,8 +279,11 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	public void setOpenOnSelection(boolean openOnSelection) {
+		boolean changed = openOnSelection != this.openOnSelection;
 		this.openOnSelection = openOnSelection;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isEnforceSingleExpandedPath() {
@@ -282,8 +291,11 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	public void setEnforceSingleExpandedPath(boolean enforceSingleExpandedPath) {
+		boolean changed = enforceSingleExpandedPath != this.enforceSingleExpandedPath;
 		this.enforceSingleExpandedPath = enforceSingleExpandedPath;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getIndentation() {
@@ -291,8 +303,11 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	public void setIndentation(int indentation) {
+		boolean changed = indentation != this.indentation;
 		this.indentation = indentation;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public PropertyProvider<RECORD> getPropertyProvider() {

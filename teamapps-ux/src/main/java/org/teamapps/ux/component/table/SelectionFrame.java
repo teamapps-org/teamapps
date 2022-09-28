@@ -23,6 +23,8 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiSelectionFrame;
 
+import java.util.Objects;
+
 public class SelectionFrame {
 
 	private Color color = new RgbaColor(102, 174, 232);
@@ -89,5 +91,22 @@ public class SelectionFrame {
 
 	public void setFullRow(boolean fullRow) {
 		this.fullRow = fullRow;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		SelectionFrame that = (SelectionFrame) o;
+		return borderWidth == that.borderWidth && animationDuration == that.animationDuration && glowingWidth == that.glowingWidth && shadowWidth == that.shadowWidth && fullRow == that.fullRow && Objects.equals(color, that.color);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(color, borderWidth, animationDuration, glowingWidth, shadowWidth, fullRow);
 	}
 }

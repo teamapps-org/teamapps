@@ -120,7 +120,7 @@ public class UiSession {
 
 	public int sendCommand(UiCommandWithResultCallback commandWithCallback) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Sending command ({}): {}", sessionId.toString().substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
+			LOGGER.debug("Sending command ({}): {} to {}", sessionId.toString().substring(0, 8), commandWithCallback.getUiCommand().toString(), commandWithCallback.getUiCommand().getComponentId());
 		}
 		statistics.commandSent(commandWithCallback.getUiCommand());
 		CMD cmd = createCMD(commandWithCallback);

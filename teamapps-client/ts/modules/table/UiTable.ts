@@ -65,6 +65,7 @@ import {ContextMenu} from "../micro-components/ContextMenu";
 import {UiComponent} from "../UiComponent";
 import EventData = Slick.EventData;
 import {UiTextAlignment} from "../../generated/UiTextAlignment";
+import {UiRefreshableTableConfigUpdateConfig} from "../../generated/UiRefreshableTableConfigUpdateConfig";
 
 interface Column extends Slick.Column<any> {
 	id: string;
@@ -899,6 +900,22 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	public destroy(): void {
 		super.destroy();
 		this.fieldMessagePopper.destroy();
+	}
+
+	public updateRefreshableConfig(config:UiRefreshableTableConfigUpdateConfig) {
+		let options = {
+			...this._grid.getOptions(),
+			forceFitColumns: config.forceFitWidth,
+			rowHeight: config.rowHeight + config.rowBorderWidth,
+			multiSelect: config.allowMultiRowSelection,
+			enableTextSelectionOnCells: config.textSelectionEnabled,
+			editable: config.editable,
+			showHeaderRow: config.showHeaderRow,
+			headerRowHeight: config.headerRowHeight,
+			showFooterRow: config.showFooterRow,
+			footerRowHeight: config.footerRowHeight,
+		};
+		this._grid.setOptions(options);
 	}
 
 	private updateSelectionFramePosition(animate: boolean = false) {

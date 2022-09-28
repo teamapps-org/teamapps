@@ -159,8 +159,11 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	public void setMessagesFetchSize(int messagesFetchSize) {
+		boolean changed = messagesFetchSize != this.messagesFetchSize;
 		this.messagesFetchSize = messagesFetchSize;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public Function<ChatMessage, Component> getContextMenuProvider() {

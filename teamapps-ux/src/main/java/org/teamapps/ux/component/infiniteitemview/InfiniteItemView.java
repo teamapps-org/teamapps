@@ -209,8 +209,11 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	public void setRowHeight(int rowHeight) {
+		boolean changed = rowHeight != this.rowHeight;
 		this.rowHeight = rowHeight;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public ItemViewVerticalItemAlignment getVerticalItemAlignment() {

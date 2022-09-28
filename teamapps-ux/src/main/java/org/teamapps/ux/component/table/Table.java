@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -121,6 +121,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
+	private int rowBorderWidth;
 
 	public Table() {
 		this(new ArrayList<>());
@@ -822,8 +823,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setDisplayAsList(boolean displayAsList) {
+		boolean changed = this.displayAsList != displayAsList;
 		this.displayAsList = displayAsList;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isForceFitWidth() {
@@ -831,8 +835,25 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setForceFitWidth(boolean forceFitWidth) {
+		boolean changed = forceFitWidth != this.forceFitWidth;
 		this.forceFitWidth = forceFitWidth;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
+	}
+
+	private UiRefreshableTableConfigUpdate createUiRefreshableTableConfigUpdate() {
+		UiRefreshableTableConfigUpdate ui = new UiRefreshableTableConfigUpdate();
+		ui.setForceFitWidth(forceFitWidth);
+		ui.setRowHeight(rowHeight);
+		ui.setAllowMultiRowSelection(allowMultiRowSelection);
+		ui.setTextSelectionEnabled(textSelectionEnabled);
+		ui.setEditable(editable);
+		ui.setShowHeaderRow(showHeaderRow);
+		ui.setHeaderRowHeight(headerRowHeight);
+		ui.setShowFooterRow(showFooterRow);
+		ui.setFooterRowHeight(footerRowHeight);
+		return ui;
 	}
 
 	public int getRowHeight() {
@@ -840,8 +861,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setRowHeight(int rowHeight) {
+		boolean changed = rowHeight != this.rowHeight;
 		this.rowHeight = rowHeight;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	public boolean isStripedRows() {
@@ -849,8 +873,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setStripedRows(boolean stripedRows) {
+		boolean changed = stripedRows != this.stripedRows;
 		this.stripedRows = stripedRows;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public void setStripedRowColorEven(Color stripedRowColorEven) {
@@ -866,8 +893,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setHideHeaders(boolean hideHeaders) {
+		boolean changed = hideHeaders != this.hideHeaders;
 		this.hideHeaders = hideHeaders;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isAllowMultiRowSelection() {
@@ -875,8 +905,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setAllowMultiRowSelection(boolean allowMultiRowSelection) {
+		boolean changed = allowMultiRowSelection != this.allowMultiRowSelection;
 		this.allowMultiRowSelection = allowMultiRowSelection;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	public void setSelectionColor(Color selectionColor) {
@@ -884,6 +917,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setRowBorderWidth(int rowBorderWidth) {
+		boolean changed = rowBorderWidth != this.rowBorderWidth;
+		this.rowBorderWidth = rowBorderWidth;
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 		this.setCssStyle(".slick-cell", "border-bottom-width", rowBorderWidth + "px");
 	}
 
@@ -896,8 +934,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setShowRowCheckBoxes(boolean showRowCheckBoxes) {
+		boolean changed = showRowCheckBoxes != this.showRowCheckBoxes;
 		this.showRowCheckBoxes = showRowCheckBoxes;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isShowNumbering() {
@@ -905,8 +946,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setShowNumbering(boolean showNumbering) {
+		boolean changed = showNumbering != this.showNumbering;
 		this.showNumbering = showNumbering;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isTextSelectionEnabled() {
@@ -914,8 +958,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setTextSelectionEnabled(boolean textSelectionEnabled) {
+		boolean changed = textSelectionEnabled != this.textSelectionEnabled;
 		this.textSelectionEnabled = textSelectionEnabled;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	public Sorting getSorting() {
@@ -939,8 +986,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setEditable(boolean editable) {
+		boolean changed = editable != this.editable;
 		this.editable = editable;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	public boolean isEnsureEmptyLastRow() {
@@ -948,8 +998,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setEnsureEmptyLastRow(boolean ensureEmptyLastRow) {
+		boolean changed = ensureEmptyLastRow != this.ensureEmptyLastRow;
 		this.ensureEmptyLastRow = ensureEmptyLastRow;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isTreeMode() {
@@ -957,8 +1010,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setTreeMode(boolean treeMode) {
+		boolean changed = treeMode != this.treeMode;
 		this.treeMode = treeMode;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public String getIndentedColumnName() {
@@ -966,8 +1022,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setIndentedColumnName(String indentedColumnName) {
+		boolean changed = !Objects.equals(indentedColumnName, this.indentedColumnName);
 		this.indentedColumnName = indentedColumnName;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public int getIndentation() {
@@ -975,8 +1034,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setIndentation(int indentation) {
+		boolean changed = indentation != this.indentation;
 		this.indentation = indentation;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public SelectionFrame getSelectionFrame() {
@@ -984,8 +1046,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setSelectionFrame(SelectionFrame selectionFrame) {
+		boolean changed = !Objects.equals(selectionFrame, this.selectionFrame);
 		this.selectionFrame = selectionFrame;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 
 	public boolean isShowHeaderRow() {
@@ -993,8 +1058,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setShowHeaderRow(boolean showHeaderRow) {
+		boolean changed = showHeaderRow != this.showHeaderRow;
 		this.showHeaderRow = showHeaderRow;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	public void setHeaderRowBorderWidth(int headerRowBorderWidth) {
@@ -1010,8 +1078,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setHeaderRowHeight(int headerRowHeight) {
+		boolean changed = headerRowHeight != this.headerRowHeight;
 		this.headerRowHeight = headerRowHeight;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	public void setHeaderRowBackgroundColor(Color headerRowBackgroundColor) {
@@ -1038,8 +1109,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setShowFooterRow(boolean showFooterRow) {
+		boolean changed = showFooterRow != this.showFooterRow;
 		this.showFooterRow = showFooterRow;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	public void setFooterRowBorderWidth(int footerRowBorderWidth) {
@@ -1055,8 +1129,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setFooterRowHeight(int footerRowHeight) {
+		boolean changed = footerRowHeight != this.footerRowHeight;
 		this.footerRowHeight = footerRowHeight;
-		reRenderIfRendered();
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	public void setFooterRowBackgroundColor(Color footerRowBackgroundColor) {

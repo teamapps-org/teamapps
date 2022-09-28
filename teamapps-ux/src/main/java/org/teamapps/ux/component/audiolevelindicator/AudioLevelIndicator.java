@@ -43,7 +43,10 @@ public class AudioLevelIndicator extends AbstractComponent {
 	}
 
 	public void setBarWidth(int barWidth) {
+		boolean changed = barWidth != this.barWidth;
 		this.barWidth = barWidth;
-		reRenderIfRendered();
+		if (changed) {
+			reRenderIfRendered();
+		}
 	}
 }
