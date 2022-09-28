@@ -192,9 +192,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		newColumns.forEach(column -> {
 			column.setTable(this);
 		});
-			clientObjectChannel.addColumns(newColumns.stream()
-					.map(TableColumn::createDtoTableColumn)
-					.collect(Collectors.toList()), index);
+		clientObjectChannel.addColumns(newColumns.stream()
+				.map(TableColumn::createDtoTableColumn)
+				.collect(Collectors.toList()), index);
+		refreshData();
 	}
 
 	public void removeColumn(String propertyName) {
