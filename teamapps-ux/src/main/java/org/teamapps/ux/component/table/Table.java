@@ -171,7 +171,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 							.map(TableColumn::createUiTableColumn)
 							.collect(Collectors.toList()), index)
 			);
-			// TODO #table resend data
+			refreshData();
 		}
 	}
 
