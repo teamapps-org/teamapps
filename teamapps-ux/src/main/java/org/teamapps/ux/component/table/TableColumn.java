@@ -237,6 +237,9 @@ public class TableColumn<RECORD, VALUE> {
 
 	public TableColumn<RECORD, VALUE> setValueExtractor(ValueExtractor<RECORD, VALUE> valueExtractor) {
 		this.valueExtractor = valueExtractor;
+		if (table != null) {
+			table.refreshData();
+		}
 		return this;
 	}
 
