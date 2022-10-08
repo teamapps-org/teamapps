@@ -275,15 +275,14 @@ class MediasoupSocketApi {
     get client() {
         if (!this._client) {
             this._client = (0,external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_.io)(this.url, {
-                // path:"",
-                // transports:['websocket'],
+                transports: ['websocket'],
                 query: {
                     mediasoup_worker: this.worker
                 },
                 auth: {
                     token: this.token
-                }
-                // forceNew: true
+                },
+                forceNew: true
             });
         }
         return this._client;

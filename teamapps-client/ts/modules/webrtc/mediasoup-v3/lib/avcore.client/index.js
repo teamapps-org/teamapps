@@ -286,15 +286,14 @@ class MediasoupSocketApi {
     get client() {
         if (!this._client) {
             this._client = (0,external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_.io)(this.url, {
-                // path:"",
-                // transports:['websocket'],
+                transports: ['websocket'],
                 query: {
                     mediasoup_worker: this.worker
                 },
                 auth: {
                     token: this.token
-                }
-                // forceNew: true
+                },
+                forceNew: true
             });
         }
         return this._client;
@@ -2504,14 +2503,6 @@ const EnhancedEventEmitter_1 = __webpack_require__(493);
 const errors_1 = __webpack_require__(992);
 const logger = new Logger_1.Logger('Consumer');
 class Consumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
-    /**
-     * @emits transportclose
-     * @emits trackended
-     * @emits @getstats
-     * @emits @close
-     * @emits @pause
-     * @emits @resume
-     */
     constructor({ id, localId, producerId, rtpReceiver, track, rtpParameters, appData }) {
         super();
         // Closed flag.
@@ -2597,14 +2588,6 @@ class Consumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
     set appData(appData) {
         throw new Error('cannot override appData object');
     }
-    /**
-     * Observer.
-     *
-     * @emits close
-     * @emits pause
-     * @emits resume
-     * @emits trackended
-     */
     get observer() {
         return this._observer;
     }
@@ -2640,7 +2623,9 @@ class Consumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
     async getStats() {
         if (this._closed)
             throw new errors_1.InvalidStateError('closed');
-        return this.safeEmitAsPromise('@getstats');
+        return new Promise((resolve, reject) => {
+            this.safeEmit('@getstats', resolve, reject);
+        });
     }
     /**
      * Pauses receiving media.
@@ -2649,6 +2634,10 @@ class Consumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
         logger.debug('pause()');
         if (this._closed) {
             logger.error('pause() | Consumer closed');
+            return;
+        }
+        if (this._paused) {
+            logger.debug('pause() | Consumer is already paused');
             return;
         }
         this._paused = true;
@@ -2664,6 +2653,10 @@ class Consumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
         logger.debug('resume()');
         if (this._closed) {
             logger.error('resume() | Consumer closed');
+            return;
+        }
+        if (!this._paused) {
+            logger.debug('resume() | Consumer is already resumed');
             return;
         }
         this._paused = false;
@@ -2705,14 +2698,6 @@ const Logger_1 = __webpack_require__(562);
 const EnhancedEventEmitter_1 = __webpack_require__(493);
 const logger = new Logger_1.Logger('DataConsumer');
 class DataConsumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
-    /**
-     * @emits transportclose
-     * @emits open
-     * @emits error - (error: Error)
-     * @emits close
-     * @emits message - (message: any)
-     * @emits @close
-     */
     constructor({ id, dataProducerId, dataChannel, sctpStreamParameters, appData }) {
         super();
         // Closed flag.
@@ -2794,11 +2779,6 @@ class DataConsumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
     set appData(appData) {
         throw new Error('cannot override appData object');
     }
-    /**
-     * Observer.
-     *
-     * @emits close
-     */
     get observer() {
         return this._observer;
     }
@@ -2881,14 +2861,6 @@ const EnhancedEventEmitter_1 = __webpack_require__(493);
 const errors_1 = __webpack_require__(992);
 const logger = new Logger_1.Logger('DataProducer');
 class DataProducer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
-    /**
-     * @emits transportclose
-     * @emits open
-     * @emits error - (error: Error)
-     * @emits close
-     * @emits bufferedamountlow
-     * @emits @close
-     */
     constructor({ id, dataChannel, sctpStreamParameters, appData }) {
         super();
         // Closed flag.
@@ -2969,11 +2941,6 @@ class DataProducer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
     set appData(appData) {
         throw new Error('cannot override appData object');
     }
-    /**
-     * Observer.
-     *
-     * @emits close
-     */
     get observer() {
         return this._observer;
     }
@@ -3312,11 +3279,6 @@ class Device {
             throw new errors_1.InvalidStateError('not loaded');
         return this._sctpCapabilities;
     }
-    /**
-     * Observer.
-     *
-     * @emits newtransport - (transport: Transport)
-     */
     get observer() {
         return this._observer;
     }
@@ -3481,26 +3443,62 @@ class EnhancedEventEmitter extends events_1.EventEmitter {
         super();
         this.setMaxListeners(Infinity);
     }
-    safeEmit(event, ...args) {
-        const numListeners = this.listenerCount(event);
+    emit(eventName, ...args) {
+        return super.emit(eventName, ...args);
+    }
+    /**
+     * Special addition to the EventEmitter API.
+     */
+    safeEmit(eventName, ...args) {
+        const numListeners = super.listenerCount(eventName);
         try {
-            return this.emit(event, ...args);
+            return super.emit(eventName, ...args);
         }
         catch (error) {
-            logger.error('safeEmit() | event listener threw an error [event:%s]:%o', event, error);
+            logger.error('safeEmit() | event listener threw an error [eventName:%s]:%o', eventName, error);
             return Boolean(numListeners);
         }
     }
-    async safeEmitAsPromise(event, ...args) {
-        return new Promise((resolve, reject) => {
-            try {
-                this.emit(event, ...args, resolve, reject);
-            }
-            catch (error) {
-                logger.error('safeEmitAsPromise() | event listener threw an error [event:%s]:%o', event, error);
-                reject(error);
-            }
-        });
+    on(eventName, listener) {
+        super.on(eventName, listener);
+        return this;
+    }
+    off(eventName, listener) {
+        super.off(eventName, listener);
+        return this;
+    }
+    addListener(eventName, listener) {
+        super.on(eventName, listener);
+        return this;
+    }
+    prependListener(eventName, listener) {
+        super.prependListener(eventName, listener);
+        return this;
+    }
+    once(eventName, listener) {
+        super.once(eventName, listener);
+        return this;
+    }
+    prependOnceListener(eventName, listener) {
+        super.prependOnceListener(eventName, listener);
+        return this;
+    }
+    removeListener(eventName, listener) {
+        super.off(eventName, listener);
+        return this;
+    }
+    removeAllListeners(eventName) {
+        super.removeAllListeners(eventName);
+        return this;
+    }
+    listenerCount(eventName) {
+        return super.listenerCount(eventName);
+    }
+    listeners(eventName) {
+        return super.listeners(eventName);
+    }
+    rawListeners(eventName) {
+        return super.rawListeners(eventName);
     }
 }
 exports.EnhancedEventEmitter = EnhancedEventEmitter;
@@ -3565,15 +3563,6 @@ const EnhancedEventEmitter_1 = __webpack_require__(493);
 const errors_1 = __webpack_require__(992);
 const logger = new Logger_1.Logger('Producer');
 class Producer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
-    /**
-     * @emits transportclose
-     * @emits trackended
-     * @emits @replacetrack - (track: MediaStreamTrack | null)
-     * @emits @setmaxspatiallayer - (spatialLayer: string)
-     * @emits @setrtpencodingparameters - (params: any)
-     * @emits @getstats
-     * @emits @close
-     */
     constructor({ id, localId, rtpSender, track, rtpParameters, stopTracks, disableTrackOnPause, zeroRtpOnPause, appData }) {
         super();
         // Closed flag.
@@ -3667,14 +3656,6 @@ class Producer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
     set appData(appData) {
         throw new Error('cannot override appData object');
     }
-    /**
-     * Observer.
-     *
-     * @emits close
-     * @emits pause
-     * @emits resume
-     * @emits trackended
-     */
     get observer() {
         return this._observer;
     }
@@ -3710,7 +3691,9 @@ class Producer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
     async getStats() {
         if (this._closed)
             throw new errors_1.InvalidStateError('closed');
-        return this.safeEmitAsPromise('@getstats');
+        return new Promise((resolve, reject) => {
+            this.safeEmit('@getstats', resolve, reject);
+        });
     }
     /**
      * Pauses sending media.
@@ -3726,8 +3709,9 @@ class Producer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             this._track.enabled = false;
         }
         if (this._zeroRtpOnPause) {
-            this.safeEmitAsPromise('@replacetrack', null)
-                .catch(() => { });
+            new Promise((resolve, reject) => {
+                this.safeEmit('@pause', resolve, reject);
+            }).catch(() => { });
         }
         // Emit observer event.
         this._observer.safeEmit('pause');
@@ -3746,8 +3730,9 @@ class Producer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             this._track.enabled = true;
         }
         if (this._zeroRtpOnPause) {
-            this.safeEmitAsPromise('@replacetrack', this._track)
-                .catch(() => { });
+            new Promise((resolve, reject) => {
+                this.safeEmit('@resume', resolve, reject);
+            }).catch(() => { });
         }
         // Emit observer event.
         this._observer.safeEmit('resume');
@@ -3776,9 +3761,9 @@ class Producer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             logger.debug('replaceTrack() | same track, ignored');
             return;
         }
-        if (!this._zeroRtpOnPause || !this._paused) {
-            await this.safeEmitAsPromise('@replacetrack', track);
-        }
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@replacetrack', track, resolve, reject);
+        });
         // Destroy the previous track.
         this._destroyTrack();
         // Set the new track.
@@ -3806,18 +3791,19 @@ class Producer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             throw new TypeError('invalid spatialLayer');
         if (spatialLayer === this._maxSpatialLayer)
             return;
-        await this.safeEmitAsPromise('@setmaxspatiallayer', spatialLayer);
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@setmaxspatiallayer', spatialLayer, resolve, reject);
+        }).catch(() => { });
         this._maxSpatialLayer = spatialLayer;
     }
-    /**
-     * Sets the DSCP value.
-     */
     async setRtpEncodingParameters(params) {
         if (this._closed)
             throw new errors_1.InvalidStateError('closed');
         else if (typeof params !== 'object')
             throw new TypeError('invalid params');
-        await this.safeEmitAsPromise('@setrtpencodingparameters', params);
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@setrtpencodingparameters', params, resolve, reject);
+        });
     }
     _onTrackEnded() {
         logger.debug('track "ended" event');
@@ -3911,6 +3897,7 @@ const Producer_1 = __webpack_require__(569);
 const Consumer_1 = __webpack_require__(514);
 const DataProducer_1 = __webpack_require__(504);
 const DataConsumer_1 = __webpack_require__(623);
+const logger = new Logger_1.Logger('Transport');
 class ConsumerCreationTask {
     constructor(consumerOptions) {
         this.consumerOptions = consumerOptions;
@@ -3920,14 +3907,7 @@ class ConsumerCreationTask {
         });
     }
 }
-const logger = new Logger_1.Logger('Transport');
 class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
-    /**
-     * @emits connect - (transportLocalParameters: any, callback: Function, errback: Function)
-     * @emits connectionstatechange - (connectionState: ConnectionState)
-     * @emits produce - (producerLocalParameters: any, callback: Function, errback: Function)
-     * @emits producedata - (dataProducerLocalParameters: any, callback: Function, errback: Function)
-     */
     constructor({ direction, id, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, appData, handlerFactory, extendedRtpCapabilities, canProduceByKind }) {
         super();
         // Closed flag.
@@ -3958,6 +3938,10 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
         this._pendingResumeConsumers = new Map();
         // Consumer resume in progress flag.
         this._consumerResumeInProgress = false;
+        // Consumers pending to be closed.
+        this._pendingCloseConsumers = new Map();
+        // Consumer close in progress flag.
+        this._consumerCloseInProgress = false;
         // Observer instance.
         this._observer = new EnhancedEventEmitter_1.EnhancedEventEmitter();
         logger.debug('constructor() [id:%s, direction:%s]', id, direction);
@@ -4033,15 +4017,6 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
     set appData(appData) {
         throw new Error('cannot override appData object');
     }
-    /**
-     * Observer.
-     *
-     * @emits close
-     * @emits newproducer - (producer: Producer)
-     * @emits newconsumer - (producer: Producer)
-     * @emits newdataproducer - (dataProducer: DataProducer)
-     * @emits newdataconsumer - (dataProducer: DataProducer)
-     */
     get observer() {
         return this._observer;
     }
@@ -4176,10 +4151,12 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             try {
                 // This will fill rtpParameters's missing fields with default values.
                 ortc.validateRtpParameters(rtpParameters);
-                const { id } = await this.safeEmitAsPromise('produce', {
-                    kind: track.kind,
-                    rtpParameters,
-                    appData
+                const { id } = await new Promise((resolve, reject) => {
+                    this.safeEmit('produce', {
+                        kind: track.kind,
+                        rtpParameters,
+                        appData
+                    }, resolve, reject);
                 });
                 const producer = new Producer_1.Producer({
                     id,
@@ -4283,11 +4260,13 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             });
             // This will fill sctpStreamParameters's missing fields with default values.
             ortc.validateSctpStreamParameters(sctpStreamParameters);
-            const { id } = await this.safeEmitAsPromise('producedata', {
-                sctpStreamParameters,
-                label,
-                protocol,
-                appData
+            const { id } = await new Promise((resolve, reject) => {
+                this.safeEmit('producedata', {
+                    sctpStreamParameters,
+                    label,
+                    protocol,
+                    appData
+                }, resolve, reject);
             });
             const dataProducer = new DataProducer_1.DataProducer({ id, dataChannel, sctpStreamParameters, appData });
             this._dataProducers.set(dataProducer.id, dataProducer);
@@ -4342,8 +4321,12 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
     }
     // This method is guaranteed to never throw.
     async _createPendingConsumers() {
+        this._consumerCreationInProgress = true;
         this._awaitQueue.push(async () => {
-            this._consumerCreationInProgress = true;
+            if (this._pendingConsumerTasks.length === 0) {
+                logger.debug('_createPendingConsumers() | there is no Consumer to be created');
+                return;
+            }
             const pendingConsumerTasks = [...this._pendingConsumerTasks];
             // Clear pending Consumer tasks.
             this._pendingConsumerTasks = [];
@@ -4408,9 +4391,9 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
                     logger.error('_createPendingConsumers() | failed to create Consumer for RTP probation:%o', error);
                 }
             }
-            this._consumerCreationInProgress = false;
         }, 'transport._createPendingConsumers()')
             .then(() => {
+            this._consumerCreationInProgress = false;
             // There are pending Consumer tasks, enqueue their creation.
             if (this._pendingConsumerTasks.length > 0) {
                 this._createPendingConsumers();
@@ -4420,20 +4403,26 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             .catch(() => { });
     }
     _pausePendingConsumers() {
+        this._consumerPauseInProgress = true;
         this._awaitQueue.push(async () => {
-            this._consumerPauseInProgress = true;
+            if (this._pendingPauseConsumers.size === 0) {
+                logger.debug('_pausePendingConsumers() | there is no Consumer to be paused');
+                return;
+            }
             const pendingPauseConsumers = Array.from(this._pendingPauseConsumers.values());
             // Clear pending pause Consumer map.
             this._pendingPauseConsumers.clear();
             try {
-                await this._handler.pauseReceiving(pendingPauseConsumers.map((consumer) => consumer.localId));
+                const localIds = pendingPauseConsumers
+                    .map((consumer) => consumer.localId);
+                await this._handler.pauseReceiving(localIds);
             }
             catch (error) {
                 logger.error('_pausePendingConsumers() | failed to pause Consumers:', error);
             }
-            this._consumerPauseInProgress = false;
-        }, 'consumer @pause event')
+        }, 'transport._pausePendingConsumers')
             .then(() => {
+            this._consumerPauseInProgress = false;
             // There are pending Consumers to be paused, do it.
             if (this._pendingPauseConsumers.size > 0) {
                 this._pausePendingConsumers();
@@ -4443,23 +4432,56 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             .catch(() => { });
     }
     _resumePendingConsumers() {
+        this._consumerResumeInProgress = true;
         this._awaitQueue.push(async () => {
-            this._consumerResumeInProgress = true;
+            if (this._pendingResumeConsumers.size === 0) {
+                logger.debug('_resumePendingConsumers() | there is no Consumer to be resumed');
+                return;
+            }
             const pendingResumeConsumers = Array.from(this._pendingResumeConsumers.values());
             // Clear pending resume Consumer map.
             this._pendingResumeConsumers.clear();
             try {
-                await this._handler.resumeReceiving(pendingResumeConsumers.map((consumer) => consumer.localId));
+                const localIds = pendingResumeConsumers
+                    .map((consumer) => consumer.localId);
+                await this._handler.resumeReceiving(localIds);
             }
             catch (error) {
                 logger.error('_resumePendingConsumers() | failed to resume Consumers:', error);
             }
-        }, 'consumer @resume event')
+        }, 'transport._resumePendingConsumers')
             .then(() => {
             this._consumerResumeInProgress = false;
             // There are pending Consumer to be resumed, do it.
             if (this._pendingResumeConsumers.size > 0) {
                 this._resumePendingConsumers();
+            }
+        })
+            // NOTE: We only get here when the await queue is closed.
+            .catch(() => { });
+    }
+    _closePendingConsumers() {
+        this._consumerCloseInProgress = true;
+        this._awaitQueue.push(async () => {
+            if (this._pendingCloseConsumers.size === 0) {
+                logger.debug('_closePendingConsumers() | there is no Consumer to be closed');
+                return;
+            }
+            const pendingCloseConsumers = Array.from(this._pendingCloseConsumers.values());
+            // Clear pending close Consumer map.
+            this._pendingCloseConsumers.clear();
+            try {
+                await this._handler.stopReceiving(pendingCloseConsumers.map((consumer) => consumer.localId));
+            }
+            catch (error) {
+                logger.error('_closePendingConsumers() | failed to close Consumers:', error);
+            }
+        }, 'transport._closePendingConsumers')
+            .then(() => {
+            this._consumerCloseInProgress = false;
+            // There are pending Consumer to be resumed, do it.
+            if (this._pendingCloseConsumers.size > 0) {
+                this._closePendingConsumers();
             }
         })
             // NOTE: We only get here when the await queue is closed.
@@ -4491,6 +4513,16 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             this._awaitQueue.push(async () => this._handler.stopSending(producer.localId), 'producer @close event')
                 .catch((error) => logger.warn('producer.close() failed:%o', error));
         });
+        producer.on('@pause', (callback, errback) => {
+            this._awaitQueue.push(async () => this._handler.pauseSending(producer.localId), 'producer @pause event')
+                .then(callback)
+                .catch(errback);
+        });
+        producer.on('@resume', (callback, errback) => {
+            this._awaitQueue.push(async () => this._handler.resumeSending(producer.localId), 'producer @resume event')
+                .then(callback)
+                .catch(errback);
+        });
         producer.on('@replacetrack', (track, callback, errback) => {
             this._awaitQueue.push(async () => this._handler.replaceTrack(producer.localId, track), 'producer @replacetrack event')
                 .then(callback)
@@ -4521,8 +4553,12 @@ class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
             this._pendingResumeConsumers.delete(consumer.id);
             if (this._closed)
                 return;
-            this._awaitQueue.push(async () => this._handler.stopReceiving(consumer.localId), 'consumer @close event')
-                .catch(() => { });
+            // Store the Consumer into the close list.
+            this._pendingCloseConsumers.set(consumer.id, consumer);
+            // There is no Consumer close in progress, do it now.
+            if (this._consumerCloseInProgress === false) {
+                this._closePendingConsumers();
+            }
         });
         consumer.on('@pause', () => {
             // If Consumer is pending to be resumed, remove from pending resume list.
@@ -4697,6 +4733,7 @@ class Chrome55 extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -4929,6 +4966,14 @@ class Chrome55 extends HandlerInterface_1.HandlerInterface {
         logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
         await this._pc.setRemoteDescription(answer);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async pauseSending(localId) {
+        // Unimplemented.
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async resumeSending(localId) {
+        // Unimplemented.
+    }
     async replaceTrack(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     localId, track) {
@@ -5051,13 +5096,15 @@ class Chrome55 extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
+    async stopReceiving(localIds) {
         this._assertRecvDirection();
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
-        // Remove from the map.
-        this._mapRecvLocalIdInfo.delete(localId);
-        this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
+            // Remove from the map.
+            this._mapRecvLocalIdInfo.delete(localId);
+            this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        }
         const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
         logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
         await this._pc.setRemoteDescription(offer);
@@ -5125,7 +5172,9 @@ class Chrome55 extends HandlerInterface_1.HandlerInterface {
         // Update the remote DTLS role in the SDP.
         this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         this._transportReady = true;
     }
     _assertSendDirection() {
@@ -5221,6 +5270,7 @@ class Chrome67 extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -5458,6 +5508,14 @@ class Chrome67 extends HandlerInterface_1.HandlerInterface {
         logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
         await this._pc.setRemoteDescription(answer);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async pauseSending(localId) {
+        // Unimplemented.
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async resumeSending(localId) {
+        // Unimplemented.
+    }
     async replaceTrack(localId, track) {
         this._assertSendDirection();
         if (track) {
@@ -5620,13 +5678,15 @@ class Chrome67 extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
+    async stopReceiving(localIds) {
         this._assertRecvDirection();
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
-        // Remove from the map.
-        this._mapRecvLocalIdInfo.delete(localId);
-        this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
+            // Remove from the map.
+            this._mapRecvLocalIdInfo.delete(localId);
+            this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        }
         const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
         logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
         await this._pc.setRemoteDescription(offer);
@@ -5697,7 +5757,9 @@ class Chrome67 extends HandlerInterface_1.HandlerInterface {
         // Update the remote DTLS role in the SDP.
         this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         this._transportReady = true;
     }
     _assertSendDirection() {
@@ -5789,6 +5851,7 @@ class Chrome70 extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -6044,6 +6107,14 @@ class Chrome70 extends HandlerInterface_1.HandlerInterface {
         await this._pc.setRemoteDescription(answer);
         this._mapMidTransceiver.delete(localId);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async pauseSending(localId) {
+        // Unimplemented.
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async resumeSending(localId) {
+        // Unimplemented.
+    }
     async replaceTrack(localId, track) {
         this._assertSendDirection();
         if (track) {
@@ -6198,20 +6269,24 @@ class Chrome70 extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
+    async stopReceiving(localIds) {
         this._assertRecvDirection();
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const transceiver = this._mapMidTransceiver.get(localId);
-        if (!transceiver)
-            throw new Error('associated RTCRtpTransceiver not found');
-        this._remoteSdp.closeMediaSection(transceiver.mid);
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            this._remoteSdp.closeMediaSection(transceiver.mid);
+        }
         const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
         logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
         await this._pc.setRemoteDescription(offer);
         const answer = await this._pc.createAnswer();
         logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
         await this._pc.setLocalDescription(answer);
-        this._mapMidTransceiver.delete(localId);
+        for (const localId of localIds) {
+            this._mapMidTransceiver.delete(localId);
+        }
     }
     async pauseReceiving(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -6276,7 +6351,9 @@ class Chrome70 extends HandlerInterface_1.HandlerInterface {
         // Update the remote DTLS role in the SDP.
         this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         this._transportReady = true;
     }
     _assertSendDirection() {
@@ -6368,6 +6445,7 @@ class Chrome74 extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -6614,6 +6692,34 @@ class Chrome74 extends HandlerInterface_1.HandlerInterface {
         await this._pc.setRemoteDescription(answer);
         this._mapMidTransceiver.delete(localId);
     }
+    async pauseSending(localId) {
+        this._assertSendDirection();
+        logger.debug('pauseSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.direction = 'inactive';
+        const offer = await this._pc.createOffer();
+        logger.debug('pauseSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('pauseSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
+    async resumeSending(localId) {
+        this._assertSendDirection();
+        logger.debug('resumeSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.direction = 'sendonly';
+        const offer = await this._pc.createOffer();
+        logger.debug('resumeSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('resumeSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
     async replaceTrack(localId, track) {
         this._assertSendDirection();
         if (track) {
@@ -6770,20 +6876,24 @@ class Chrome74 extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
+    async stopReceiving(localIds) {
         this._assertRecvDirection();
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const transceiver = this._mapMidTransceiver.get(localId);
-        if (!transceiver)
-            throw new Error('associated RTCRtpTransceiver not found');
-        this._remoteSdp.closeMediaSection(transceiver.mid);
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            this._remoteSdp.closeMediaSection(transceiver.mid);
+        }
         const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
         logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
         await this._pc.setRemoteDescription(offer);
         const answer = await this._pc.createAnswer();
         logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
         await this._pc.setLocalDescription(answer);
-        this._mapMidTransceiver.delete(localId);
+        for (const localId of localIds) {
+            this._mapMidTransceiver.delete(localId);
+        }
     }
     async pauseReceiving(localIds) {
         this._assertRecvDirection();
@@ -6869,7 +6979,9 @@ class Chrome74 extends HandlerInterface_1.HandlerInterface {
         // Update the remote DTLS role in the SDP.
         this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         this._transportReady = true;
     }
     _assertSendDirection() {
@@ -6978,6 +7090,7 @@ class Edge11 extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -7081,6 +7194,14 @@ class Edge11 extends HandlerInterface_1.HandlerInterface {
             throw error;
         }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async pauseSending(localId) {
+        // Unimplemented.
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async resumeSending(localId) {
+        // Unimplemented.
+    }
     async replaceTrack(localId, track) {
         if (track) {
             logger.debug('replaceTrack() [localId:%s, track.id:%s]', localId, track.id);
@@ -7161,18 +7282,20 @@ class Edge11 extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const rtpReceiver = this._rtpReceivers.get(localId);
-        if (!rtpReceiver)
-            throw new Error('RTCRtpReceiver not found');
-        this._rtpReceivers.delete(localId);
-        try {
-            logger.debug('stopReceiving() | calling rtpReceiver.stop()');
-            rtpReceiver.stop();
-        }
-        catch (error) {
-            logger.warn('stopReceiving() | rtpReceiver.stop() failed:%o', error);
+    async stopReceiving(localIds) {
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const rtpReceiver = this._rtpReceivers.get(localId);
+            if (!rtpReceiver)
+                throw new Error('RTCRtpReceiver not found');
+            this._rtpReceivers.delete(localId);
+            try {
+                logger.debug('stopReceiving() | calling rtpReceiver.stop()');
+                rtpReceiver.stop();
+            }
+            catch (error) {
+                logger.warn('stopReceiving() | rtpReceiver.stop() failed:%o', error);
+            }
         }
     }
     async pauseReceiving(
@@ -7286,7 +7409,9 @@ class Edge11 extends HandlerInterface_1.HandlerInterface {
         const dtlsParameters = this._dtlsTransport.getLocalParameters();
         dtlsParameters.role = localDtlsRole;
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         // Start the RTCIceTransport.
         this._iceTransport.start(this._iceGatherer, this._remoteIceParameters, 'controlling');
         // Add remote ICE candidates.
@@ -7388,6 +7513,7 @@ class Firefox60 extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -7646,6 +7772,36 @@ class Firefox60 extends HandlerInterface_1.HandlerInterface {
         await this._pc.setRemoteDescription(answer);
         this._mapMidTransceiver.delete(localId);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async pauseSending(localId) {
+        this._assertSendDirection();
+        logger.debug('pauseSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.direction = 'inactive';
+        const offer = await this._pc.createOffer();
+        logger.debug('pauseSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('pauseSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async resumeSending(localId) {
+        this._assertSendDirection();
+        logger.debug('resumeSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.direction = 'sendonly';
+        const offer = await this._pc.createOffer();
+        logger.debug('resumeSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('resumeSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
     async replaceTrack(localId, track) {
         this._assertSendDirection();
         if (track) {
@@ -7794,20 +7950,24 @@ class Firefox60 extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
+    async stopReceiving(localIds) {
         this._assertRecvDirection();
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const transceiver = this._mapMidTransceiver.get(localId);
-        if (!transceiver)
-            throw new Error('associated RTCRtpTransceiver not found');
-        this._remoteSdp.closeMediaSection(transceiver.mid);
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            this._remoteSdp.closeMediaSection(transceiver.mid);
+        }
         const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
         logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
         await this._pc.setRemoteDescription(offer);
         const answer = await this._pc.createAnswer();
         logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
         await this._pc.setLocalDescription(answer);
-        this._mapMidTransceiver.delete(localId);
+        for (const localId of localIds) {
+            this._mapMidTransceiver.delete(localId);
+        }
     }
     async pauseReceiving(localIds) {
         this._assertRecvDirection();
@@ -7889,7 +8049,9 @@ class Firefox60 extends HandlerInterface_1.HandlerInterface {
         // Update the remote DTLS role in the SDP.
         this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         this._transportReady = true;
     }
     _assertSendDirection() {
@@ -7917,14 +8079,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HandlerInterface = void 0;
 const EnhancedEventEmitter_1 = __webpack_require__(493);
 class HandlerInterface extends EnhancedEventEmitter_1.EnhancedEventEmitter {
-    /**
-     * @emits @connect - (
-     *     { dtlsParameters: DtlsParameters },
-     *     callback: Function,
-     *     errback: Function
-     *   )
-     * @emits @connectionstatechange - (connectionState: ConnectionState)
-     */
     constructor() {
         super();
     }
@@ -8016,6 +8170,7 @@ class ReactNative extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -8250,6 +8405,14 @@ class ReactNative extends HandlerInterface_1.HandlerInterface {
         logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
         await this._pc.setRemoteDescription(answer);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async pauseSending(localId) {
+        // Unimplemented.
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async resumeSending(localId) {
+        // Unimplemented.
+    }
     async replaceTrack(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     localId, track) {
@@ -8380,13 +8543,15 @@ class ReactNative extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
+    async stopReceiving(localIds) {
         this._assertRecvDirection();
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
-        // Remove from the map.
-        this._mapRecvLocalIdInfo.delete(localId);
-        this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
+            // Remove from the map.
+            this._mapRecvLocalIdInfo.delete(localId);
+            this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        }
         const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
         logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
         await this._pc.setRemoteDescription(offer);
@@ -8454,7 +8619,9 @@ class ReactNative extends HandlerInterface_1.HandlerInterface {
         // Update the remote DTLS role in the SDP.
         this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         this._transportReady = true;
     }
     _assertSendDirection() {
@@ -8550,6 +8717,7 @@ class Safari11 extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -8783,6 +8951,14 @@ class Safari11 extends HandlerInterface_1.HandlerInterface {
         logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
         await this._pc.setRemoteDescription(answer);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async pauseSending(localId) {
+        // Unimplemented.
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async resumeSending(localId) {
+        // Unimplemented.
+    }
     async replaceTrack(localId, track) {
         this._assertSendDirection();
         if (track) {
@@ -8942,13 +9118,15 @@ class Safari11 extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
+    async stopReceiving(localIds) {
         this._assertRecvDirection();
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
-        // Remove from the map.
-        this._mapRecvLocalIdInfo.delete(localId);
-        this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
+            // Remove from the map.
+            this._mapRecvLocalIdInfo.delete(localId);
+            this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        }
         const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
         logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
         await this._pc.setRemoteDescription(offer);
@@ -9018,7 +9196,9 @@ class Safari11 extends HandlerInterface_1.HandlerInterface {
         // Update the remote DTLS role in the SDP.
         this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         this._transportReady = true;
     }
     _assertSendDirection() {
@@ -9109,6 +9289,7 @@ class Safari12 extends HandlerInterface_1.HandlerInterface {
             }
             catch (error) { }
         }
+        this.emit('@close');
     }
     async getNativeRtpCapabilities() {
         logger.debug('getNativeRtpCapabilities()');
@@ -9327,6 +9508,36 @@ class Safari12 extends HandlerInterface_1.HandlerInterface {
         await this._pc.setRemoteDescription(answer);
         this._mapMidTransceiver.delete(localId);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async pauseSending(localId) {
+        this._assertSendDirection();
+        logger.debug('pauseSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.direction = 'inactive';
+        const offer = await this._pc.createOffer();
+        logger.debug('pauseSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('pauseSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async resumeSending(localId) {
+        this._assertSendDirection();
+        logger.debug('resumeSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.direction = 'sendonly';
+        const offer = await this._pc.createOffer();
+        logger.debug('resumeSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('resumeSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
     async replaceTrack(localId, track) {
         this._assertSendDirection();
         if (track) {
@@ -9480,20 +9691,24 @@ class Safari12 extends HandlerInterface_1.HandlerInterface {
         }
         return results;
     }
-    async stopReceiving(localId) {
+    async stopReceiving(localIds) {
         this._assertRecvDirection();
-        logger.debug('stopReceiving() [localId:%s]', localId);
-        const transceiver = this._mapMidTransceiver.get(localId);
-        if (!transceiver)
-            throw new Error('associated RTCRtpTransceiver not found');
-        this._remoteSdp.closeMediaSection(transceiver.mid);
+        for (const localId of localIds) {
+            logger.debug('stopReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            this._remoteSdp.closeMediaSection(transceiver.mid);
+        }
         const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
         logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
         await this._pc.setRemoteDescription(offer);
         const answer = await this._pc.createAnswer();
         logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
         await this._pc.setLocalDescription(answer);
-        this._mapMidTransceiver.delete(localId);
+        for (const localId of localIds) {
+            this._mapMidTransceiver.delete(localId);
+        }
     }
     async pauseReceiving(localIds) {
         this._assertRecvDirection();
@@ -9579,7 +9794,9 @@ class Safari12 extends HandlerInterface_1.HandlerInterface {
         // Update the remote DTLS role in the SDP.
         this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
         // Need to tell the remote transport about our parameters.
-        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        await new Promise((resolve, reject) => {
+            this.safeEmit('@connect', { dtlsParameters }, resolve, reject);
+        });
         this._transportReady = true;
     }
     _assertSendDirection() {
@@ -11043,7 +11260,7 @@ exports.types = types;
 /**
  * Expose mediasoup-client version.
  */
-exports.version = '3.6.52';
+exports.version = '3.6.57';
 /**
  * Expose parseScalabilityMode() function.
  */
@@ -12927,7 +13144,6 @@ class ConferenceApi extends events.EventEmitter {
                 const producer = this.connectors.get(track.kind);
                 if (producer && typeof producer !== 'number') {
                     producer.close();
-                    producer.emit('close');
                 }
             }
         });
@@ -13051,7 +13267,6 @@ class ConferenceApi extends events.EventEmitter {
         if (connector) {
             if (typeof connector !== 'number') {
                 connector.close();
-                connector.emit('close');
             }
             else {
                 this.connectors.delete(kind);
@@ -13080,7 +13295,7 @@ class ConferenceApi extends events.EventEmitter {
                     catch (e) { }
                 }
                 const consumer = yield this.transport.consume(data);
-                consumer.on('close', () => __awaiter(this, void 0, void 0, function* () {
+                consumer.observer.on('close', () => __awaiter(this, void 0, void 0, function* () {
                     if (this.mediaStream) {
                         consumer.track.stop();
                         this.mediaStream.removeTrack(consumer.track);
@@ -13143,7 +13358,7 @@ class ConferenceApi extends events.EventEmitter {
                     }
                 }
                 const producer = yield this.transport.produce(params);
-                producer.on('close', () => __awaiter(this, void 0, void 0, function* () {
+                producer.observer.on('close', () => __awaiter(this, void 0, void 0, function* () {
                     const producer = this.connectors.get(kind);
                     if (producer && typeof producer !== 'number') {
                         this.connectors.delete(kind);
@@ -13163,7 +13378,7 @@ class ConferenceApi extends events.EventEmitter {
         let lastBytes = 0;
         let lastBytesTime = Date.now();
         const bytesField = type === 'inbound-rtp' ? 'bytesReceived' : 'bytesSent';
-        target.on('close', () => {
+        target.observer.on('close', () => {
             this.emit('bitRate', { bitRate: 0, kind: target.kind });
         });
         const getStats = () => {
@@ -13228,7 +13443,6 @@ class ConferenceApi extends events.EventEmitter {
                         try {
                             if (connector && typeof connector !== 'number') {
                                 connector.close();
-                                connector.emit('close');
                             }
                         }
                         catch (e) { }
