@@ -3,7 +3,7 @@
     <parent>
         <artifactId>teamapps</artifactId>
         <groupId>org.teamapps</groupId>
-        <version>0.9.157</version>
+        <version>0.9.158-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
