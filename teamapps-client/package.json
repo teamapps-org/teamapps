@@ -1,6 +1,6 @@
 {
   "name": "teamapps-client",
-  "version": "0.9.157-SNAPSHOT",
+  "version": "0.9.158-SNAPSHOT",
   "description": "teamapps",
   "author": "TeamApps.org",
   "main": "dist/js/main.js",
@@ -80,12 +80,12 @@
     "worker-loader": "2.0.0"
   },
   "dependencies": {
-    "@fullcalendar/core": "^4.2.0",
-    "@fullcalendar/daygrid": "^4.2.0",
-    "@fullcalendar/interaction": "^4.2.0",
-    "@fullcalendar/moment": "^4.2.0",
-    "@fullcalendar/moment-timezone": "^4.2.0",
-    "@fullcalendar/timegrid": "^4.2.0",
+    "@fullcalendar/core": "4.4.2",
+    "@fullcalendar/daygrid": "4.4.2",
+    "@fullcalendar/interaction": "4.4.2",
+    "@fullcalendar/moment": "4.4.2",
+    "@fullcalendar/moment-timezone": "4.4.2",
+    "@fullcalendar/timegrid": "4.4.2",
     "@popperjs/core": "^2.6.0",
     "@types/jest": "^26.0.22",
     "@types/luxon": "^1.25.0",
