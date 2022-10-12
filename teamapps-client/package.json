@@ -120,7 +120,7 @@
     "mediasoup-client": "^3.6.28",
     "minimatch": "^3.0.4",
     "moment": "^2.21.0",
-    "moment-timezone": "^0.5.26",
+    "moment-timezone": "^0.5.35",
     "mustache": "^3.0.1",
     "nosleep.js": "^0.12.0",
     "pickr-widget": "0.3.1",
