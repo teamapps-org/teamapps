@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -188,4 +188,14 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	public FieldMessage.Severity validate() {
 		return this.logicalForm.validate();
 	}
+
+	/**
+     * Checks whether any of the form fields have been mutated by the client.
+     *
+     * @return true if any of the form fields' values have been changed, false otherwise
+     */
+    public boolean isChangedByClient() {
+        //calling #getFields() here instead of iterating over logicalForm directly, since that method is overridable. (shouldn't it be final though? 🤔)
+        return getFields().stream().anyMatch(AbstractField::isValueChangedByClient);
+    }
 }
