@@ -141,6 +141,16 @@ public abstract class AbstractComponent implements Component {
 		return new UiClientObjectReference(getId());
 	}
 
+	/**
+	 * Completely removes and rerenders the component on the client side, loosing any state that is not reflected on the server side.
+	 * This method should be regarded as dangerous, since many components depend on state (data caches, user interaction state) that is
+	 * not controlled by the server and will get lost when invoking this method.
+	 * <p>
+	 * Historically, this method was used as a lazy implementation of changing a configuration option, when this change was not implemented
+	 * on the client side.
+	 * @deprecated Use explicit ui commands instead.
+	 */
+	@Deprecated
 	public void reRenderIfRendered() {
 		if (renderingState == RenderingState.RENDERED) {
 			sessionContext.queueCommand(new UiRootPanel.RefreshComponentCommand(createUiComponent()));
