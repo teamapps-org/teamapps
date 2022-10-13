@@ -112,7 +112,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 	}
 
 	@bind
-	private closeDropDown() {
+	public closeDropDown() {
 		this.dropDown.close();
 	}
 

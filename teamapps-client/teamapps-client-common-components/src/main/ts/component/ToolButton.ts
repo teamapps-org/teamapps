@@ -113,7 +113,7 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 	}
 
 	@bind
-	private closeDropDown() {
+	public closeDropDown() {
 		this.dropDown.close();
 	}
 

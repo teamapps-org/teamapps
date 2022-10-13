@@ -213,6 +213,10 @@ public class Button<RECORD> extends AbstractField<Void> {
 		return this;
 	}
 
+	public void closeDropDown() {
+		sendCommandIfRendered(DtoButton.CloseDropDownCommand::new);
+	}
+
 	public String getOnClickJavaScript() {
 		return onClickJavaScript;
 	}

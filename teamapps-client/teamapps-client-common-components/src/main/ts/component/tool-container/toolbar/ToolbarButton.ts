@@ -158,4 +158,8 @@ export class ToolbarButton {
 			background-color: ${(this.config.hoverBackgroundColor ?? '')} !important;            
         }`;
 	}
+
+	closeDropDown() {
+		this.dropDown.close();
+	}
 }

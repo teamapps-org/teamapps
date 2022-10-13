@@ -78,6 +78,10 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 		this.buttonGroupsById.getValue(groupId).setDropDownComponent(buttonId, component);
 	}
 
+	public closeDropDown(groupId: string, buttonId: string) {
+		this.buttonGroupsById.getValue(groupId).closeDropDown(buttonId);
+	}
+
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
 		this.buttonGroupsById.getValue(groupId).setButtonVisible(buttonId, visible);
 		this.refreshEnforcedButtonWidth();
@@ -209,7 +213,7 @@ class DtoButtonGroup {
 					this.showDropDown(button);
 					doOnceOnClickOutsideElement(button.getMainDomElement(), e => $(button.$dropDown).slideUp(200))
 				} else {
-					$(button.$dropDown).slideUp(200);
+					this.hideDropDown(button)
 				}
 			}
 
@@ -271,6 +275,10 @@ class DtoButtonGroup {
 		});
 	}
 
+	private hideDropDown(button: ToolAccordionButton) {
+		$(button.$dropDown).slideUp(200);
+	}
+
 	private insertDropdownUnderButtonRow(button: ToolAccordionButton) {
 		let $row = this.$buttonRows.filter($row => $.contains($row, button.getMainDomElement()))[0];
 		insertAfter(button.$dropDown, $row);
@@ -303,6 +311,11 @@ class DtoButtonGroup {
 				}
 			}
 		}
+	}
+
+	closeDropDown(buttonId: string) {
+		let button = this.buttonsById[buttonId];
+		this.hideDropDown(button);
 	}
 
 	public getMaxOptimizedButtonWidth(): number {

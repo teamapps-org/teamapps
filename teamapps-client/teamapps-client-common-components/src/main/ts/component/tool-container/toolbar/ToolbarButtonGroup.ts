@@ -195,4 +195,8 @@ export class ToolbarButtonGroup {
 	public getConfig() {
 		return this.config;
 	}
+
+	closeDropDown(buttonId: string) {
+		this.buttons.getValue(buttonId)?.closeDropDown();
+	}
 }

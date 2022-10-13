@@ -140,6 +140,10 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 		this.buttonGroupsById[groupId].setButtonHasDropDown(buttonId, hasDropDown);
 	}
 
+	public closeDropDown(groupId: string, buttonId: string) {
+		this.buttonGroupsById[groupId].closeDropDown(buttonId);
+	}
+
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
 		Object.values(this.buttonGroupsById).forEach(buttonGroup => buttonGroup.setButtonVisible(buttonId, visible));
 		if (this.overflowToolAccordion) {

@@ -171,4 +171,8 @@ public class ToolButton extends AbstractComponent {
 		sendCommandIfRendered(() -> new DtoToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
 	}
 
+	public void closeDropDown() {
+		sendCommandIfRendered(DtoToolButton.CloseDropDownCommand::new);
+	}
+
 }

@@ -42,6 +42,7 @@ class ToolButton extends Component {
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
 	command setDropDownComponent(Component* dropDownComponent);
+	command closeDropDown();
 
 	event clicked();
 	event dropDownOpened();
