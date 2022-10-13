@@ -50,7 +50,7 @@ public abstract class AbstractComponent implements Component {
 
 	public final Event<Void> onRendered = new Event<>();
 
-	private String debuggingId = "";
+	private String debuggingId;
 	private final String id;
 	private final SessionContext sessionContext;
 	private RenderingState renderingState = RenderingState.NOT_RENDERED;
@@ -243,7 +243,7 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	public String getDebuggingId() {
-		return debuggingId;
+		return debuggingId != null ? debuggingId : id;
 	}
 
 	public void setDebuggingId(String debuggingId) {

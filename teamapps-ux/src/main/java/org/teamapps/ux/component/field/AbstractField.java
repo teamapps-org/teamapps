@@ -131,8 +131,12 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
 			case UI_FIELD_VALUE_CHANGED:
-				applyValueFromUi(((UiField.ValueChangedEvent) event).getValue());
-				validate();
+				if (editingMode.isEditable()) {
+					applyValueFromUi(((UiField.ValueChangedEvent) event).getValue());
+					validate();
+				} else {
+					LOGGER.warn("Got valueChanged event from non-editable field {} {}", this.getClass().getSimpleName(), getDebuggingId());
+				}
 				break;
 			case UI_FIELD_FOCUS:
 				onFocus.fire();
