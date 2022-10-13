@@ -41,6 +41,8 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 	public readonly onDropDownOpened: TeamAppsEvent<UiToolButton_DropDownOpenedEvent> = new TeamAppsEvent();
 
 	private $button: HTMLElement;
+	private $icon: HTMLElement;
+	private $caption: HTMLElement;
 
 	private _dropDown: UiDropDown; // lazy-init!
 	private dropDownComponent: UiComponent;
@@ -56,9 +58,11 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
 
 		this.$button = parseHtml(`<div class="UiToolButton">
-	<div class="img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url('${config.icon}');"></div>
+	<div class="img ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url('${config.icon}');"></div>
 	<div class="caption">${config.caption ?? ""}</div>
 </div>`);
+		this.$icon = this.$button.querySelector(":scope .img");
+		this.$caption = this.$button.querySelector(":scope .caption");
 		this.$button.addEventListener('click', () => {
 			if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
 				if (!this.dropDown.isOpen) {
@@ -128,7 +132,23 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 	}
 
 	setIcon(icon: string): void {
-		this.$button.style.backgroundImage = `url('${icon}')`;
+		this.$icon.style.backgroundImage = `url('${icon}')`;
+	}
+
+	setIconSize(iconSize: number | null): any {
+		if (iconSize != null) {
+			this.$icon.style.width = `${iconSize}px`;
+			this.$icon.style.height = `${iconSize}px`;
+			this.$icon.style.backgroundSize = `${iconSize}px`;
+		} else {
+			this.$icon.style.width = null;
+			this.$icon.style.height = null;
+			this.$icon.style.backgroundSize = null;
+		}
+	}
+
+	setCaption(caption: string) {
+		this.$caption.innerText = caption;
 	}
 
 	setPopoverText(popoverText: string): void {
