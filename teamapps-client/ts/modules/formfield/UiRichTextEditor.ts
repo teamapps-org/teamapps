@@ -134,6 +134,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	private runningImageUploadsCount: number = 0;
 	private $spinnerWrapper: HTMLElement;
 	private destroying: boolean;
+	private blurCausedByClickInsideComponent: boolean = false;
 
 	protected initialize(config: UiRichTextEditorConfig, context: TeamAppsUiContext) {
 		this._config.toolbarVisibilityMode = config.toolbarVisibilityMode;
@@ -145,7 +146,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		this.$main = parseHtml(`<div class="UiRichTextEditor default-min-field-width teamapps-input-wrapper field-border field-border-glow" id="${this.uuid}">
 			<div class="toolbar-container"></div>
 			<div class="inline-editor field-background"></div>
-			<input type="file" class="file-upload-button"></input>
+			<input type="file" class="file-upload-button" tabindex="-1"></input>
 			<div class="spinner-wrapper hidden"></div>
 		</div>`);
 		this.$toolbarContainer = this.$main.querySelector<HTMLElement>(':scope .toolbar-container');
@@ -334,7 +335,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					});
 				}
 				this.onResize();
-				
+
 				this.editor = editor;
 				this.mceReadyExecutor.ready = true;
 			},
@@ -356,22 +357,27 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 				editor.on('undo redo', (e) => {
 					this.editor.uploadImages(() => undefined);
 				});
-				editor.on('focus', (e) => {
+				editor.on('focusin', (e) => {
+					let hadFocus = this._hasFocus;
 					this._hasFocus = true;
 					this.getMainElement().classList.add('focus');
-					this.onFocus.fire(null);
-					this.updateToolbar();
+					if (!hadFocus) {
+						this.onFocus.fire(null);
+						this.updateToolbar();
+					}
 				});
 				editor.on('focusout', (e) => {
-					// NOTE that it is important to do this on focusout instead of blur, since blur is called asynchronously only (setTimeout).
+					// NOTE that it is important to do this on focusout instead of blur, since for some tinymce reason blur is called asynchronously only (setTimeout).
 					// Being synchronous is important, in order to make sure that the changes are commited before processing a, say, button event that will save the form...
-					this._hasFocus = false;
-					this.getMainElement().classList.remove('focus');
-					if (this.mayFireChangeEvents()) {
-						this.commit();
+					if (!this.blurCausedByClickInsideComponent) { // we are only interested in completely leaving this field. without this, when clicking the toolbar, this would be called.
+						this._hasFocus = false;
+						this.getMainElement().classList.remove('focus');
+						if (this.mayFireChangeEvents()) {
+							this.commit();
+						}
+						this.onBlur.fire(null);
+						this.updateToolbar();
 					}
-					this.onBlur.fire(null);
-					this.updateToolbar();
 				});
 			},
 			images_upload_handler: (blobInfo: { base64: () => string, blob: () => Blob, blobUri: () => string, filename: () => string, id: () => string, name: () => string, uri: () => string }, success, failure) => {
@@ -440,6 +446,16 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 				upload(true);
 			}
 		});
+
+		this.getMainElement().addEventListener("mousedown", () => {
+			this.blurCausedByClickInsideComponent = true;
+		}, true);
+		this.getMainElement().addEventListener("mouseup", () => {
+			this.blurCausedByClickInsideComponent = false;
+		});
+		this.getMainElement().addEventListener("mouseout", () => {
+			this.blurCausedByClickInsideComponent = false;
+		});
 	}
 
 	protected initFocusHandling() {
@@ -473,6 +489,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
+
 	protected displayCommittedValue(): void {
 		const value = removeTags(this.getCommittedValue(), "style");
 		this.mceReadyExecutor.invokeWhenReady(() => {
