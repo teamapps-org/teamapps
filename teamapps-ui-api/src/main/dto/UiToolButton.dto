@@ -20,6 +20,7 @@
 @TypeScriptFactory
 class UiToolButton extends UiComponent {
 	required String icon;
+	Integer iconSize; // if null, default (defined by css)
     String caption;
 	required String popoverText;
 	boolean grayOutIfNotHovered = true;
@@ -30,6 +31,8 @@ class UiToolButton extends UiComponent {
 	UiComponent* dropDownComponent;
 
     command setIcon(String icon);
+    command setIconSize(Integer iconSize);
+    command setCaption(String caption);
     command setPopoverText(String popoverText);
     command setGrayOutIfNotHovered(boolean grayOutIfNotHovered);
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
