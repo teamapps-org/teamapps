@@ -196,7 +196,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			branding: false,
 			menubar: false,
 			inline: true,
-			toolbar: `undo redo | styleselect | bold italic underline forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | ${this._config.imageUploadEnabled ? 'insertimage' : ''} table | overflowbutton`,
+			toolbar: `undo redo | styleselect | bold italic underline forecolor backcolor removeformat | ${this._config.imageUploadEnabled ? 'insertimagefromdisk |' : ' |'} alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | table | overflowbutton`,
 			plugins: `lists table link autolink contextmenu searchreplace textcolor ${this._config.imageUploadEnabled ? 'image imagetools' : ''}`,
 			contextmenu: "openlink link unlink searchreplace",
 			language_url: translationFileName != null ? "/runtime-resources/tinymce/langs/" + translationFileName : undefined,
@@ -214,6 +214,12 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 				}, {
 					title: 'Heading 2',
 					format: 'h2'
+				}, {
+					title: 'Heading 3',
+					format: 'h3'
+				}, {
+					title: 'Heading 4',
+					format: 'h4'
 				}, {
 					title: 'Paragraph',
 					format: 'p'
@@ -311,34 +317,22 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					editor.destroy();
 					return;
 				}
-				editor.ui.registry.addMenuItem('bullist', {
-					text: 'Bullet list',
-					icon: 'bullist',
-					onAction: () => editor.execCommand('InsertUnorderedList')
-				});
-				editor.ui.registry.addMenuItem('numlist', {
-					text: 'Numbered list',
-					icon: 'numlist',
-					onAction: () => editor.execCommand('InsertOrderedList')
-				});
+				this.editor = editor;
+				this.mceReadyExecutor.ready = true;
+			},
+			setup: (editor) => {
 				if (this._config.imageUploadEnabled) {
-					editor.ui.registry.addMenuItem('insertimage', {
+					editor.ui.registry.addMenuItem('insertimagefromdisk', {
 						icon: 'image',
 						text: 'Insert image',
 						onAction: () => this.$fileField.click()
 					});
-					editor.ui.registry.addButton('insertimage', {
+					editor.ui.registry.addButton('insertimagefromdisk', {
 						icon: 'image',
 						tooltip: 'Insert image',
 						onAction: () => this.$fileField.click()
 					});
 				}
-				this.onResize();
-
-				this.editor = editor;
-				this.mceReadyExecutor.ready = true;
-			},
-			setup: (editor) => {
 				editor.on('change undo redo keypress', (e) => {
 					this.fireTextInputEvent();
 				});
