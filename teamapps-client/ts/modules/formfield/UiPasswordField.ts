@@ -29,7 +29,6 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 	private salt: string;
 	private sendValueAsMd5: boolean;
 
-
 	protected initialize(config: UiPasswordFieldConfig, context: TeamAppsUiContext): void {
 		this.salt = config.salt;
 		this.sendValueAsMd5 = config.sendValueAsMd5;
@@ -42,6 +41,7 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 			this.$field.setAttribute("autocapitalize", "off");
 			this.$field.setAttribute("spellcheck", "off");
 		}
+		this.getMainElement().classList.add("UiPasswordField")
 	}
 
 	setSalt(salt: string): void {

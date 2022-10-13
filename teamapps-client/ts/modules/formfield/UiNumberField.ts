@@ -68,7 +68,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		});
 		this.numberParser = new NumberParser(config.locale);
 
-		this.$wrapper = parseHtml(`<div class="UiNumberField form-control field-border field-border-glow field-background">
+		this.$wrapper = parseHtml(`<div class="UiNumberField default-min-field-width form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
 		<input autocomplete="${getAutoCompleteOffValue()}" type="text"></input>
 		<div class="clear-button tr-remove-button"></div> 

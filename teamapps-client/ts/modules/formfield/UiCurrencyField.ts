@@ -74,7 +74,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 			editingMode: this.convertToTrivialComponentsEditingMode(config.editingMode),
 			queryFunction: (queryString) => this.queryFunction(queryString)
 		});
-		this.trivialUnitBox.getMainDomElement().classList.add("UiCurrencyField");
+		this.trivialUnitBox.getMainDomElement().classList.add("UiCurrencyField", "default-min-field-width");
 		this.trivialUnitBox.onChange.addListener((value: TrivialUnitBoxChangeEvent<any>) => {
 			this.commit();
 		});

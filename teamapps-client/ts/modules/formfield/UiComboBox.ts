@@ -99,7 +99,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			selectOnHover: true,
 			animationDuration: this._config.animate ? 120 : 0
 		})));
-		this.trivialComboBox.getMainDomElement().classList.add("UiComboBox");
+		this.trivialComboBox.getMainDomElement().classList.add("UiComboBox", "default-min-field-width");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {

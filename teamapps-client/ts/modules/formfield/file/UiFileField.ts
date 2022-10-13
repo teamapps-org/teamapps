@@ -333,7 +333,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		} else {
 			content = "";
 		}
-		return `<div class="static-readonly-UiFileField">${content}</div>`
+		return `<div class="static-readonly-UiFileField default-min-field-width">${content}</div>`
 	}
 
 	getDefaultValue(): UiIdentifiableClientRecordConfig[] {

@@ -142,7 +142,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 		this.mceReadyExecutor = new DeferredExecutor();
 		this.uuid = "c-" + generateUUID();
-		this.$main = parseHtml(`<div class="UiRichTextEditor teamapps-input-wrapper field-border field-border-glow" id="${this.uuid}">
+		this.$main = parseHtml(`<div class="UiRichTextEditor default-min-field-width teamapps-input-wrapper field-border field-border-glow" id="${this.uuid}">
 			<div class="toolbar-container"></div>
 			<div class="inline-editor field-background"></div>
 			<input type="file" class="file-upload-button"></input>
