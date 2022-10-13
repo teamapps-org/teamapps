@@ -165,20 +165,20 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.$dateEditor.focus(() => {
 			this.$activeEditor = this.$dateEditor;
 			this.setDropDownMode(Mode.MODE_CALENDAR);
-			if (!this.blurCausedByClickInsideComponent) {
+			// if (!this.blurCausedByClickInsideComponent) {
 				selectElementContents(this.$dateEditor[0], 0, this.$dateEditor.text().length);
 				this.queryDate(0);
 				this.openDropDown();
-			}
+			// }
 		});
 		this.$timeEditor.focus(() => {
 			this.$activeEditor = this.$timeEditor;
 			this.setDropDownMode(Mode.MODE_TIME_LIST);
-			if (!this.blurCausedByClickInsideComponent) {
+			// if (!this.blurCausedByClickInsideComponent) {
 				selectElementContents(this.$timeEditor[0], 0, this.$timeEditor.text().length);
 				this.queryTime(0);
 				this.openDropDown();
-			}
+			// }
 		});
 
 
@@ -197,7 +197,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		});
 
 		this.$dropDownTargetElement = $("body");
-		this.$dropDown = $(`<div class="tr-dropdown">
+		this.$dropDown = $(`<div class="tr-dropdown" style="display: none">
             <div class="date-listbox"></div>
             <div class="time-listbox"></div>
             <div class="calendarbox"></div>
