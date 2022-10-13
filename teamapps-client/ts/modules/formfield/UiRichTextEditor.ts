@@ -134,7 +134,6 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	private runningImageUploadsCount: number = 0;
 	private $spinnerWrapper: HTMLElement;
 	private destroying: boolean;
-	private blurCausedByClickInsideComponent: boolean = false;
 
 	protected initialize(config: UiRichTextEditorConfig, context: TeamAppsUiContext) {
 		this._config.toolbarVisibilityMode = config.toolbarVisibilityMode;
@@ -357,28 +356,6 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 				editor.on('undo redo', (e) => {
 					this.editor.uploadImages(() => undefined);
 				});
-				editor.on('focusin', (e) => {
-					let hadFocus = this._hasFocus;
-					this._hasFocus = true;
-					this.getMainElement().classList.add('focus');
-					if (!hadFocus) {
-						this.onFocus.fire(null);
-						this.updateToolbar();
-					}
-				});
-				editor.on('focusout', (e) => {
-					// NOTE that it is important to do this on focusout instead of blur, since for some tinymce reason blur is called asynchronously only (setTimeout).
-					// Being synchronous is important, in order to make sure that the changes are commited before processing a, say, button event that will save the form...
-					if (!this.blurCausedByClickInsideComponent) { // we are only interested in completely leaving this field. without this, when clicking the toolbar, this would be called.
-						this._hasFocus = false;
-						this.getMainElement().classList.remove('focus');
-						if (this.mayFireChangeEvents()) {
-							this.commit();
-						}
-						this.onBlur.fire(null);
-						this.updateToolbar();
-					}
-				});
 			},
 			images_upload_handler: (blobInfo: { base64: () => string, blob: () => Blob, blobUri: () => string, filename: () => string, id: () => string, name: () => string, uri: () => string }, success, failure) => {
 				this.runningImageUploadsCount++;
@@ -447,14 +424,26 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			}
 		});
 
-		this.getMainElement().addEventListener("mousedown", () => {
-			this.blurCausedByClickInsideComponent = true;
-		}, true);
-		this.getMainElement().addEventListener("mouseup", () => {
-			this.blurCausedByClickInsideComponent = false;
+		this.getMainElement().addEventListener('focusin', (e) => {
+			if (!this.getMainElement().contains(e.relatedTarget as Node)) { // make sure we REALLY lost the focus
+				this._hasFocus = true;
+				this.getMainElement().classList.add('focus');
+				this.onFocus.fire(null);
+				this.updateToolbarVisiblity();
+			}
 		});
-		this.getMainElement().addEventListener("mouseout", () => {
-			this.blurCausedByClickInsideComponent = false;
+		this.getMainElement().addEventListener('focusout', (e) => {
+			// NOTE that it is important to do this on focusout instead of blur, since for some tinymce reason blur is called asynchronously only (setTimeout).
+			// Being synchronous is important, in order to make sure that the changes are commited before processing a, say, button event that will save the form...
+			if (!this.getMainElement().contains(e.relatedTarget as Node)) { // make sure we REALLY lost the focus
+				this._hasFocus = false;
+				this.getMainElement().classList.remove('focus');
+				if (this.mayFireChangeEvents()) {
+					this.commit();
+				}
+				this.onBlur.fire(null);
+				this.updateToolbarVisiblity();
+			}
 		});
 	}
 
@@ -517,7 +506,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 	@executeWhenFirstDisplayed(true)
 	onResize(): void {
-		this.updateToolbar();
+		this.rerenderToolbar();
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode: UiFieldEditingMode): void {
@@ -525,21 +514,26 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			// this MUST be done after initializing! Don't skip it when the editor is null,
 			// since the editor might just be initializing and thereby setting the readonly value to an old value! (actually happened!)
 			this.editor.setMode(this.isEditable() ? 'design' : 'readonly');
-			this.updateToolbar();
+			this.updateToolbarVisiblity();
+			this.rerenderToolbar();
 		})
 		let wasEditable = !(oldEditingMode === UiFieldEditingMode.DISABLED || oldEditingMode === UiFieldEditingMode.READONLY);
 		UiField.defaultOnEditingModeChangedImpl(this, () => this.editor != null ? this.editor.getBody() : null);
 	}
 
-	private updateToolbar() { // both visibility and content (+overflow) are updated on show()
+	private updateToolbarVisiblity() { // both visibility and content (+overflow) are updated on show()
+		this.$toolbarContainer.classList.toggle("hidden", !this.toolbarShouldBeShown());
+	}
+
+	private rerenderToolbar() { // both visibility and content (+overflow) are updated on show()
 		if (this.editor != null) {
-			if (this.isEditable() &&
-				(this._config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE || (this._config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED && this.hasFocus()))) {
-				this.editor.ui.show();
-			} else {
-				this.editor.ui.hide();
-			}
+			this.editor.ui.show(); // effectively rerenders the toolbar
 		}
+	}
+
+	private toolbarShouldBeShown() {
+		return this.isEditable() &&
+			(this._config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE || (this._config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED && this.hasFocus()));
 	}
 
 	getDefaultValue(): string {
@@ -548,7 +542,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 	setToolbarVisibilityMode(toolbarVisibilityMode: UiToolbarVisibilityMode): void {
 		this._config.toolbarVisibilityMode = toolbarVisibilityMode;
-		this.updateToolbar();
+		this.updateToolbarVisiblity();
 	}
 
 	setMaxImageFileSizeInBytes(maxImageFileSizeInBytes: number): void {
