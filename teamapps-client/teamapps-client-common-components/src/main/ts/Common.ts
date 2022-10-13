@@ -333,42 +333,7 @@ export function formatDecimalNumber(integerNumber: number, precision: number, de
 	return (integerNumber < 0 ? '-' : '') + formattedIntegerPart + decimalSeparator + fractionalPart;
 }
 
-export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displayMode: DtoPageDisplayMode | any, options?: {
-	innerPreferredDimensions?: { // only needed for ORIGINAL_SIZE!
-		width: number,
-		height: number,
-	},
-	zoomFactor?: number,
-	padding?: number,
-	considerScrollbars?: boolean
-}) {
-	options = $.extend({}, options); // copy the options as we are potentially making changes to the object...
-	if (options.innerPreferredDimensions == null || !options.innerPreferredDimensions.width || !options.innerPreferredDimensions.height) {
-		if ($inner instanceof HTMLImageElement && $inner.naturalHeight > 0) {
-			let imgElement = <HTMLImageElement>$($inner)[0];
-			options.innerPreferredDimensions = {
-				width: imgElement.naturalWidth,
-				height: imgElement.naturalHeight
-			}
-		} else {
-			$inner.style.width = "100%";
-			$inner.style.height = "100%";
-			return;
-		}
-	}
-	if (options.padding == null) {
-		options.padding = parseInt($outer.style.paddingLeft) || 0;
-	}
-	let availableWidth = $outer.offsetWidth - 2 * options.padding;
-	let availableHeight = $outer.offsetHeight - 2 * options.padding;
 
-	let size = calculateDisplayModeInnerSize({
-		width: availableWidth,
-		height: availableHeight
-	}, options.innerPreferredDimensions, displayMode, options.zoomFactor, options.considerScrollbars);
-	$inner.style.width = size.width + "px";
-	$inner.style.height = size.height + "px";
-}
 
 export function calculateDisplayModeInnerSize(containerDimensions: { width: number, height: number },
 											  innerPreferredDimensions: { width: number, height: number },
@@ -646,53 +611,51 @@ export function arraysEqual(a: any[], b: any[]) {
 	}
 }
 
-export function maximizeComponent(component: Component, maximizeAnimationCallback?: () => void) {
+export function maximizeComponent(component: Component, animationDuration: number = 300, callback?: () => void) {
 	const $parentDomElement = component.getMainElement().parentElement;
 	const scrollTop = window.scrollY;
 	const scrollLeft = window.scrollX;
 	const offset = component.getMainElement().getBoundingClientRect();
 
-	const changingCssProperties: ["position", "top", "left", "width", "height", "zIndex"] = ["position", "top", "left", "width", "height", "zIndex"];
-	const style = component.getMainElement().style as CSSStyleDeclaration;
-	const originalCssValues = changingCssProperties.reduce((properties, cssPropertyName) => {
-		properties[cssPropertyName] = style[cssPropertyName];
+	const originalCssValues = ["top", "left", "width", "height"].reduce((properties, cssPropertyName) => {
+		properties[cssPropertyName] = (component.getMainElement().style as CSSStyleDeclaration)[cssPropertyName];
 		return properties;
 	}, {} as { [x: string]: string });
 
 	const animationStartCssValues = {
 		top: (offset.top - scrollTop) + "px",
 		left: (offset.left - scrollLeft) + "px",
-		width: offset.width,
-		height: offset.height,
+		width: offset.width + "px",
+		height: offset.height + "px",
 	};
 	Object.assign(component.getMainElement().style, {
 		...animationStartCssValues
 	});
+
 	document.body.appendChild(component.getMainElement());
 	component.getMainElement().classList.add("teamapps-component-maximized");
-	$(component.getMainElement()).animate({
+
+	transition(component.getMainElement(), {
 		top: "5px",
 		left: "5px",
-		width: (window.innerWidth - 10),
-		height: (window.innerHeight - 10)
-	}, 100, 'swing', () => {
+		width: (window.innerWidth - 10) + "px",
+		height: (window.innerHeight - 10) + "px"
+	}, animationDuration, () => {
 		css(component.getMainElement(), {
 			width: "calc(100% - 10px)",
 			height: "calc(100% - 10px)"
 		});
-		maximizeAnimationCallback && maximizeAnimationCallback();
+		callback && callback();
 	});
 
-	let restore = (restoreAnimationCallback?: () => void) => {
-		$(component.getMainElement()).animate(animationStartCssValues, 100, 'swing', () => {
+	return (restoreAnimationCallback?: () => void) => {
+		transition(component.getMainElement(), animationStartCssValues, animationDuration, () => {
 			Object.assign(component.getMainElement().style, originalCssValues);
 			component.getMainElement().classList.remove("teamapps-component-maximized");
 			$parentDomElement.appendChild(component.getMainElement());
 			restoreAnimationCallback && restoreAnimationCallback();
 		});
 	};
-
-	return restore;
 }
 
 export function removeTags(value: string, ...tagNames: string[]) {
@@ -867,6 +830,26 @@ export function findClassesByFunction(classList: DOMTokenList, matcher: (classNa
 		}
 	});
 	return matches;
+}
+
+function transition(el: HTMLElement, targetValues: {[style: string]: string}, animationDuration: number = 300, callback?: () => any) {
+		const changingCssProperties = Object.keys(targetValues) as (keyof CSSStyleDeclaration)[];
+		const originalCssValues = ["transition", ...changingCssProperties].reduce((properties, cssPropertyName) => {
+			properties[cssPropertyName] = (el.style)[cssPropertyName] as string;
+			return properties;
+		}, {} as { [x: string]: string });
+		el.style.setProperty("transition", changingCssProperties.map(p => `${p} ${animationDuration}ms`).join(','), "important");
+		el.offsetWidth; // force applying style!
+
+		const fallbackTimeout = window.setTimeout(transitionEndHandler, animationDuration + 500);
+		function transitionEndHandler() {
+			window.clearTimeout(fallbackTimeout);
+			el.style.transition = originalCssValues.transition;
+			callback && callback();
+		}
+		el.addEventListener("transitionend", () => transitionEndHandler(), {once: true});
+
+		Object.assign(el.style, targetValues);
 }
 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {

@@ -21,7 +21,7 @@
 // @ts-ignore
 import x from "bootstrap-icons/icons/x-lg.svg";
 // @ts-ignore
-import square from "bootstrap-icons/icons/square.svg";
+import square from "bootstrap-icons/icons/window-fullscreen.svg";
 // @ts-ignore
 import dash from "bootstrap-icons/icons/dash-lg.svg";
 // @ts-ignore
@@ -29,7 +29,7 @@ import windowStack from "bootstrap-icons/icons/window-stack.svg";
 
 export const StaticIcons = {
 	CLOSE: x as string,
-	MAXIMIZE: square as string,
+	MAXIMIZE: square as string,      
 	MINIMIZE: dash as string,
 	RESTORE: windowStack as string
 }

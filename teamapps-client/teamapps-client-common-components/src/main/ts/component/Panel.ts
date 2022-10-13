@@ -53,9 +53,9 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize", visible: true}), this._context),
-		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize", visible: true}), this._context),
-		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close", visible: true}), this._context),
+		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize", visible: true, iconSize: 16}), this._context),
+		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize", visible: true, iconSize: 16}), this._context),
+		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close", visible: true, iconSize: 16}), this._context),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		DtoWindowButtonType.MINIMIZE,

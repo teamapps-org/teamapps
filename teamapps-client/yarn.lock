@@ -2016,6 +2016,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"animate.css@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "animate.css@npm:4.1.1"
+  checksum: c7eb91540423532c549725a6dedea993735a05eadaa49ed4d1965ce166a6db36459adcc9667c1dfe13657fab92a2875bbee34ad0d942444a731badab69f762c8
+  languageName: node
+  linkType: hard
+
 "ansi-colors@npm:^3.0.0":
   version: 3.2.4
   resolution: "ansi-colors@npm:3.2.4"
@@ -14083,6 +14090,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "teamapps-client-common-components@workspace:teamapps-client-common-components"
   dependencies:
+    animate.css: ^4.1.1
     bootstrap-icons: ^1.10.2
     concurrently: ^7.6.0
     cross-var: ^1.1.0

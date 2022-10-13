@@ -34,7 +34,8 @@ public class ToolButton extends AbstractComponent {
 
 	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(DtoToolButton.DropDownOpenedEvent.TYPE_ID);
 
-	private Icon icon;
+	private Icon<?, ?> icon;
+	private Integer iconSize = null; // null = default defined by CSS
 	private String caption;
 	private String popoverText;
 	private boolean grayOutIfNotHovered;
@@ -46,15 +47,15 @@ public class ToolButton extends AbstractComponent {
 
 	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(DtoToolButton.ClickedEvent.TYPE_ID);
 
-	public ToolButton(Icon icon) {
+	public ToolButton(Icon<?, ?> icon) {
 		this(icon, null, null);
 	}
 
-	public ToolButton(Icon icon, String popoverText) {
+	public ToolButton(Icon<?, ?> icon, String popoverText) {
 		this(icon, popoverText, null);
 	}
 
-	public ToolButton(Icon icon, String popoverText, Component dropDownComponent) {
+	public ToolButton(Icon<?, ?> icon, String popoverText, Component dropDownComponent) {
 		super();
 		this.icon = icon;
 		this.popoverText = popoverText;
@@ -73,6 +74,7 @@ public class ToolButton extends AbstractComponent {
 	public DtoComponent createUiClientObject() {
 		String icon = getSessionContext().resolveIcon(this.icon);
 		DtoToolButton uiToolButton = new DtoToolButton(icon, popoverText);
+		uiToolButton.setIconSize(iconSize);
 		uiToolButton.setCaption(caption);
 		mapAbstractUiComponentProperties(uiToolButton);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
@@ -97,13 +99,22 @@ public class ToolButton extends AbstractComponent {
 		}
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		sendCommandIfRendered(() -> new DtoToolButton.SetIconCommand(getSessionContext().resolveIcon(icon)));
+	}
+
+	public Integer getIconSize() {
+		return iconSize;
+	}
+
+	public void setIconSize(Integer iconSize) {
+		this.iconSize = iconSize;
+		sendCommandIfRendered(() -> new DtoToolButton.SetIconSizeCommand(iconSize));
 	}
 
 	public String getCaption() {
@@ -112,7 +123,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
-		// TODO handle change after rendered...
+		sendCommandIfRendered(() -> new DtoToolButton.SetCaptionCommand(caption));
 	}
 
 	public String getPopoverText() {
