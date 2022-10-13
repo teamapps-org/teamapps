@@ -253,12 +253,11 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		this.headerFields.forEach(headerField => {
 			if (!headerField.minimizedWidth || !headerField.minExpandedWidth || !headerField.minExpandedWidthWithIcon) {
 				headerField.$fieldWrapper.style.transition = "none";
-				this.setMinimizedFields(headerField);
-				this.$heading.classList.add("has-minimized-header-component");
+				this.setHeaderFieldDisplayMode(headerField, true, true);
 				headerField.minimizedWidth = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper);
-				this.setMinimizedFields();
+				this.setHeaderFieldDisplayMode(headerField, false, true);
 				headerField.minExpandedWidthWithIcon = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper) - headerField.$fieldWrapper.offsetWidth + headerField.config.minWidth;
-				this.$heading.classList.remove("has-minimized-header-component");
+				this.setHeaderFieldDisplayMode(headerField, false, false);
 				headerField.minExpandedWidth = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper) - headerField.$fieldWrapper.offsetWidth + headerField.config.minWidth;
 				headerField.$fieldWrapper.style.transition = "";
 			}
@@ -271,9 +270,15 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 
 	private setMinimizedFields(...minimizedHeaderFields: HeaderField[]) {
 		this.headerFields.forEach(headerField => {
-			headerField.$wrapper.classList.toggle("minimized", minimizedHeaderFields.indexOf(headerField) != -1);
-			headerField.$wrapper.classList.toggle("display-icon", minimizedHeaderFields.length > 0 || this.alwaysShowHeaderFieldIcons);
+			let shouldBeMinimized = minimizedHeaderFields.indexOf(headerField) != -1;
+			let shouldDisplayIcon = minimizedHeaderFields.length > 0 || this.alwaysShowHeaderFieldIcons;
+			this.setHeaderFieldDisplayMode(headerField, shouldBeMinimized, shouldDisplayIcon);
 		});
+	}
+
+	private setHeaderFieldDisplayMode(headerField: HeaderField, minimized: boolean, displayIcon: boolean) {
+		headerField.$wrapper.classList.toggle("minimized", minimized);
+		headerField.$wrapper.classList.toggle("display-icon", displayIcon);
 	}
 
 	public setLeftHeaderField(headerFieldConfig: UiPanelHeaderFieldConfig) {
@@ -390,16 +395,15 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		if (this.title && this.titleNaturalWidth == 0) this.recalculateTitleNaturalWidth();
 		if (this.headerFields.some(headerField => !headerField.minimizedWidth)) this.calculateFieldWrapperSizes();
 
-		let titleWidth = Math.floor(this.title ? this.titleNaturalWidth : 0);
-		let iconWidth = (this.icon ? this.$icon.offsetWidth + parseInt(getComputedStyle(this.$icon).marginRight) : 0);
+		let titleWidth = Math.ceil(this.title ? this.titleNaturalWidth : 0);
+		let iconComputedStyle = getComputedStyle(this.$icon);
+		let iconWidth = (this.icon ? this.$icon.offsetWidth + parseInt(iconComputedStyle.marginLeft) + parseInt(iconComputedStyle.marginRight) : 0);
 		let minSpacerWidth = parseInt(getComputedStyle(this.$headingSpacer).flexBasis);
-		let buttonContainerWidth = this.$buttonContainer.offsetWidth;
+		let buttonContainerWidth = this.$buttonContainer.offsetWidth; // TODO 8px???
 		let windowButtonContainerWidth = this.$windowButtonContainer.offsetWidth;
 
 		let minAllExpandedWidth =
-			// 1 // the width of the title may be no integer
-			-1
-			+ iconWidth
+			iconWidth
 			+ titleWidth
 			+ minSpacerWidth
 			+ buttonContainerWidth
@@ -412,7 +416,6 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 			let firstFieldToGetMinified = this.leftComponentFirstMinimized ? this.leftHeaderField : this.rightHeaderField;
 			let alwaysMaximizedField = this.leftComponentFirstMinimized ? this.rightHeaderField : this.leftHeaderField;
 			let minFirstMinimizedWidth =
-				1 // the width of the title may be no integer
 				+ iconWidth
 				+ titleWidth
 				+ minSpacerWidth

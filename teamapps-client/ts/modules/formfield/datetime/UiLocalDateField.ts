@@ -113,7 +113,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 				this.trivialComboBox.setDropDownComponent(treeBoxDropdown);
 			}
 		}));
-		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiDateField");
+		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiDateField", "default-min-field-width");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {

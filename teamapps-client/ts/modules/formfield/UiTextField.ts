@@ -41,7 +41,7 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 	private showClearButton: boolean;
 
 	protected initialize(config: C, context: TeamAppsUiContext) {
-		this.$wrapper = parseHtml(`<div class="UiTextField field-border field-border-glow field-background clearable-field-wrapper form-control">
+		this.$wrapper = parseHtml(`<div class="UiTextField default-min-field-width field-border field-border-glow field-background clearable-field-wrapper form-control">
     <input type="text"></input>
     <div class="clear-button tr-remove-button"></div>  
 </div>`);

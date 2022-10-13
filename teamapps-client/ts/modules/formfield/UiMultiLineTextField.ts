@@ -53,7 +53,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	private showClearButton: boolean;
 
 	protected initialize(config: UiMultiLineTextFieldConfig, context: TeamAppsUiContext) {
-		this.$wrapper = parseHtml(`<div class="UiMultiLineTextField teamapps-input-wrapper field-border field-border-glow field-background">
+		this.$wrapper = parseHtml(`<div class="UiMultiLineTextField default-min-field-width teamapps-input-wrapper field-border field-border-glow field-background">
 	<textarea></textarea>
 	<div class="clear-button tr-remove-button"></div>
 </div>`);
