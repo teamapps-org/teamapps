@@ -126,6 +126,10 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiToolbar.SetDropDownComponentCommand(getId(), group.getClientId(), button.getClientId(), component.createUiReference()));
 	}
 
+	protected void handleCloseDropdown(ToolbarButtonGroup group, ToolbarButton button) {
+		queueCommandIfRendered(() -> new UiToolbar.CloseDropDownCommand(getId(), group.getClientId(), button.getClientId()));
+	}
+
 	public void setBackgroundColor(Color backgroundColor) {
 		this.setCssStyle("> .background-color-div", "background-color", backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 	}

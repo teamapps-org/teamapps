@@ -38,6 +38,7 @@ class UiToolButton extends UiComponent {
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
 	command setDropDownComponent(UiComponent* dropDownComponent);
+	command closeDropDown();
 
 	event clicked();
 	event dropDownOpened();

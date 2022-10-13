@@ -155,4 +155,8 @@ export class UiToolbarButton {
 			background-color: ${(this.config.hoverBackgroundColor ?? '')} !important;            
         }`;
 	}
+
+	closeDropDown() {
+		this.dropDown.close();
+	}
 }

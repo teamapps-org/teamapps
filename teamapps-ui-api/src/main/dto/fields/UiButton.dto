@@ -32,6 +32,7 @@ class UiButton extends UiField {
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
 	command setDropDownComponent(UiComponent* dropDownComponent);
+	command closeDropDown();
 	command setOnClickJavaScript(String onClickJavaScript);
 
 	event clicked();

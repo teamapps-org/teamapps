@@ -119,7 +119,7 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 	}
 
 	@bind
-	private closeDropDown() {
+	public closeDropDown() {
 		this.dropDown.close();
 	}
 
