@@ -117,7 +117,7 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 	}
 
 	@bind
-	private closeDropDown() {
+	public closeDropDown() {
 		this.dropDown.close();
 	}
 

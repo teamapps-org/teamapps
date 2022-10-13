@@ -151,9 +151,15 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 		}
 	}
 
-	void handleDropDownComponentUpdate(ToolbarButton button, Component component) {
+	/*package-private*/ void handleDropDownComponentUpdate(ToolbarButton button, Component component) {
 		if (this.toolContainer != null) {
 			this.toolContainer.handleButtonSetDropDownComponent(this, button, component);
+		}
+	}
+
+	/*package-private*/ void handleCloseDropdown(ToolbarButton button) {
+		if (this.toolContainer != null) {
+			this.toolContainer.handleCloseDropdown(this, button);
 		}
 	}
 

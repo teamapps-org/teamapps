@@ -287,6 +287,10 @@ public class ToolbarButton {
 		return this;
 	}
 
+	public void closeDropDown() {
+		toolbarButtonGroup.handleCloseDropdown(this);
+	}
+
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}

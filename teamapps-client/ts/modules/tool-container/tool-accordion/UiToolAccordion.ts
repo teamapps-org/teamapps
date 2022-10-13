@@ -79,6 +79,10 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 		this.buttonGroupsById.getValue(groupId).setDropDownComponent(buttonId, component);
 	}
 
+	public closeDropDown(groupId: string, buttonId: string) {
+		this.buttonGroupsById.getValue(groupId).closeDropDown(buttonId);
+	}
+
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
 		this.buttonGroupsById.getValue(groupId).setButtonVisible(buttonId, visible);
 		this.refreshEnforcedButtonWidth();
@@ -212,7 +216,7 @@ class UiButtonGroup {
 					this.showDropDown(button);
 					doOnceOnClickOutsideElement(button.getMainDomElement(), e => $(button.$dropDown).slideUp(200))
 				} else {
-					$(button.$dropDown).slideUp(200);
+					this.hideDropDown(button)
 				}
 			}
 
@@ -274,6 +278,10 @@ class UiButtonGroup {
 		});
 	}
 
+	private hideDropDown(button: UiToolAccordionButton) {
+		$(button.$dropDown).slideUp(200);
+	}
+
 	private insertDropdownUnderButtonRow(button: UiToolAccordionButton) {
 		let $row = this.$buttonRows.filter($row => $.contains($row, button.getMainDomElement()))[0];
 		insertAfter(button.$dropDown, $row);
@@ -306,6 +314,11 @@ class UiButtonGroup {
 				}
 			}
 		}
+	}
+
+	closeDropDown(buttonId: string) {
+		let button = this.buttonsById[buttonId];
+		this.hideDropDown(button);
 	}
 
 	public getMaxOptimizedButtonWidth(): number {
