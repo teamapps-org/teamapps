@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {EventSubscription, TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiToolbarCommandHandler, UiToolbarConfig, UiToolbarEventSource} from "../../../generated/UiToolbarConfig";
 import {UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroupConfig";
 import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
@@ -51,7 +51,8 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
-	private buttonGroupsById: {[id:string]: UiToolbarButtonGroup} = {};
+	private buttonGroupsById: Map<string, UiToolbarButtonGroup> = new Map();
+	private buttonGroupEmptyEventSubscriptions: Map<string, EventSubscription> = new Map();
 	private leftButtonGroups: UiToolbarButtonGroup[] = [];
 	private rightButtonGroups: UiToolbarButtonGroup[] = [];
 
@@ -131,20 +132,20 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public setDropDownComponent(groupId: string, buttonId: string, component: UiComponent): void {
-		this.buttonGroupsById[groupId].setDropDownComponent(buttonId, component);
+		this.buttonGroupsById.get(groupId).setDropDownComponent(buttonId, component);
 		this.overflowToolAccordion.setDropDownComponent(groupId, buttonId, component);
 	}
 
 	public setButtonHasDropDown(groupId: string, buttonId: string, hasDropDown: boolean): void {
-		this.buttonGroupsById[groupId].setButtonHasDropDown(buttonId, hasDropDown);
+		this.buttonGroupsById.get(groupId).setButtonHasDropDown(buttonId, hasDropDown);
 	}
 
 	public closeDropDown(groupId: string, buttonId: string) {
-		this.buttonGroupsById[groupId].closeDropDown(buttonId);
+		this.buttonGroupsById.get(groupId).closeDropDown(buttonId);
 	}
 
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
-		Object.values(this.buttonGroupsById).forEach(buttonGroup => buttonGroup.setButtonVisible(buttonId, visible));
+		this.buttonGroupsById.forEach(buttonGroup => buttonGroup.setButtonVisible(buttonId, visible));
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.setButtonVisible(groupId, buttonId, visible);
 		}
@@ -152,7 +153,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public setButtonGroupVisible(groupId: string, visible: boolean) {
-		this.buttonGroupsById[groupId] && this.buttonGroupsById[groupId].setVisible(visible);
+		this.buttonGroupsById.get(groupId)?.setVisible(visible);
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.setButtonGroupVisible(groupId, visible);
 		}
@@ -160,11 +161,10 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public addButtonGroup(groupConfig: UiToolbarButtonGroupConfig, rightSide: boolean) {
-		const existingButtonGroup = this.buttonGroupsById[groupConfig.groupId];
+		const existingButtonGroup = this.buttonGroupsById.get(groupConfig.groupId);
 		if (existingButtonGroup) {
 			this.removeButtonGroup(groupConfig.groupId);
 		}
-		let emptyStateChanges = this.empty;
 
 		const buttonGroup = new UiToolbarButtonGroup(groupConfig, this, this._context);
 		buttonGroup.getMainDomElement().classList.toggle("right-side", rightSide);
@@ -175,7 +175,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 				dropDownClickInfo: e.dropDownButtonClickInfo
 			});
 		});
-		this.buttonGroupsById[groupConfig.groupId] = buttonGroup;
+		this.buttonGroupsById.set(groupConfig.groupId, buttonGroup);
 		if (rightSide) {
 			this.rightButtonGroups.push(buttonGroup);
 		} else {
@@ -189,9 +189,9 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 		}
 		this.updateButtonOverflow();
 
-		if (emptyStateChanges) {
-			this.onEmptyStateChanged.fire(false);
-		}
+		this.buttonGroupEmptyEventSubscriptions.set(buttonGroup.getId(),
+			buttonGroup.onEmptyStateChanged.addListener(eventObject => this.updateEmptyState()));
+		this.updateEmptyState();
 	}
 
 	private insertGroupAtCorrectSortingPosition(buttonGroup: UiToolbarButtonGroup, position: UiToolbarButtonGroupPosition, rightSide: boolean) {
@@ -214,12 +214,10 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public removeButtonGroup(groupId: string): void {
-		let wasAlreadyEmpty = this.empty;
-
-		const buttonGroup = this.buttonGroupsById[groupId];
+		const buttonGroup = this.buttonGroupsById.get(groupId);
 
 		if (buttonGroup) {
-			delete this.buttonGroupsById[groupId];
+			this.buttonGroupsById.delete(groupId);
 			this.leftButtonGroups = this.leftButtonGroups.filter(g => g.getId() !== groupId);
 			this.rightButtonGroups = this.rightButtonGroups.filter(g => g.getId() !== groupId);
 			buttonGroup.getMainDomElement().remove();
@@ -230,13 +228,16 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 		}
 		this.updateButtonOverflow();
 
-		if (this.empty && !wasAlreadyEmpty) {
-			this.onEmptyStateChanged.fire(true);
-		}
+		this.buttonGroupEmptyEventSubscriptions.get(buttonGroup.getId())?.unsubscribe();
+		this.updateEmptyState();
+	}
+
+	private updateEmptyState() {
+		this.onEmptyStateChanged.fireIfChanged(this.empty);
 	}
 
 	public addButton(groupId: string, buttonConfig: UiToolbarButtonConfig, neighborButtonId: string, beforeNeighbor: boolean) {
-		this.buttonGroupsById[groupId] && this.buttonGroupsById[groupId].addButton(buttonConfig, neighborButtonId, beforeNeighbor);
+		this.buttonGroupsById.get(groupId)?.addButton(buttonConfig, neighborButtonId, beforeNeighbor);
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.addButton(groupId, buttonConfig, neighborButtonId, beforeNeighbor);
 		}
@@ -244,7 +245,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public removeButton(groupId: string, buttonId: string): void {
-		Object.values(this.buttonGroupsById).forEach(group => group.removeButton(buttonId));
+		this.buttonGroupsById.forEach(group => group.removeButton(buttonId));
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.removeButton(groupId, buttonId);
 		}
@@ -294,7 +295,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public get empty() {
-		return this.leftButtonGroups.length === 0 && this.rightButtonGroups.length === 0;
+		return ![...this.buttonGroupsById.values()].some(group => !group.empty);
 	}
 
 	public destroy(): void {
@@ -303,7 +304,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	setButtonColors(groupId: string, buttonId: string, backgroundColor: string, hoverBackgroundColor: string): void {
-		this.buttonGroupsById[groupId].setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
+		this.buttonGroupsById.get(groupId)?.setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
 	}
 
 }
