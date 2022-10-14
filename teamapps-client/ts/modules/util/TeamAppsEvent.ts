@@ -24,7 +24,7 @@ import {deepEquals} from "../Common";
 export type TeamAppsEventListener<EO> = (eventObject?: EO) => void;
 
 export interface EventSubscription {
-	unsubscribe: () => void
+	unsubscribe(): void
 }
 
 /**
