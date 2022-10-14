@@ -108,7 +108,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 			selectOnHover: true,
 			animationDuration: this._config.animate ? 120 : 0
 		})));
-		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox default-min-field-width");
+		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox", "default-min-field-width");
 		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_LINE);
 		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-tag-per-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_TAG_PER_LINE);
 		this.trivialTagComboBox.onValueChanged.addListener(() => this.commit());
