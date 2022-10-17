@@ -20,6 +20,7 @@
 package org.teamapps.ux.session;
 
 import org.teamapps.dto.UiClientInfo;
+import org.teamapps.ux.session.navigation.Location;
 
 import java.util.HashSet;
 import java.util.List;

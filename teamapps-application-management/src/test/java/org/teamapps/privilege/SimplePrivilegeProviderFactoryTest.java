@@ -27,7 +27,7 @@ import org.teamapps.privilege.preset.PrivilegeGroupPreset;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.UiSession;
 import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.Location;
+import org.teamapps.ux.session.navigation.Location;
 import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 

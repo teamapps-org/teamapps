@@ -20,6 +20,7 @@
 package org.teamapps.ux.session;
 
 import com.ibm.icu.util.ULocale;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
@@ -52,8 +53,8 @@ import org.teamapps.ux.icon.IconBundle;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
-
-import jakarta.servlet.http.HttpSession;
+import org.teamapps.ux.session.navigation.Location;
+import org.teamapps.ux.session.navigation.Router;
 
 import java.io.File;
 import java.time.ZoneId;
@@ -76,7 +77,7 @@ public class SessionContext {
 	private final ExecutorService sessionExecutor;
 
 	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
-	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();
+
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<UiSessionClosingReason> onDestroyed = new Event<>();
 	/**
@@ -111,6 +112,8 @@ public class SessionContext {
 	private Window sessionExpiredWindow;
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
+
+	private List<Router> routers = new ArrayList<>();
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
@@ -190,6 +193,12 @@ public class SessionContext {
 	}
 
 
+	public Location getCurrentLocation() {
+		return currentLocation;
+	}
+
+	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();  //  /apps/session/dongles/238742384/sessions/234978
+
 	public void pushNavigationState(String relativeUrl) {
 		queueCommand(new UiRootPanel.PushHistoryStateCommand(relativeUrl));
 	}
@@ -200,6 +209,10 @@ public class SessionContext {
 
 	public void navigateForward(int steps) {
 		queueCommand(new UiRootPanel.NavigateForwardCommand(steps));
+	}
+
+	public void addRouter(Router router) {
+		this.routers.add(router);
 	}
 
 	public static SessionContext current() {
@@ -712,6 +725,12 @@ public class SessionContext {
 				Location location = Location.fromUiLocation(e.getLocation());
 				this.currentLocation = location;
 				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
+				for (Router router : routers) {
+					boolean match = router.route(location);
+					if (match) {
+						break;
+					}
+				}
 				break;
 			}
 			default:
@@ -719,9 +738,7 @@ public class SessionContext {
 		}
 	}
 
-	public Location getCurrentLocation() {
-		return currentLocation;
-	}
+
 
 	public UiSessionListener getAsUiSessionListenerInternal() {
 		return uiSessionListener;
