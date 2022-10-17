@@ -17,10 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.session;
+package org.teamapps.ux.session.navigation;
 
+import org.apache.commons.lang3.StringUtils;
 import org.teamapps.dto.UiLocation;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Objects;
 
 public class Location {
@@ -104,6 +107,21 @@ public class Location {
 		this.pathname = pathname;
 		this.search = search;
 		this.hash = hash;
+	}
+
+	public static Location parse(String urlString) throws MalformedURLException {
+		URL url = new URL(urlString);
+		return new Location(
+				url.toString(),
+				url.getProtocol() + "://" + url.getHost() + (url.getPort() > 0 ? ":" + url.getPort() : ""),
+				url.getProtocol(),
+				url.getHost() + (url.getPort() > 0 ? ":" + url.getPort() : ""),
+				url.getHost(),
+				url.getPort() > 0 ? url.getPort() : null,
+				StringUtils.isNotBlank(url.getPath()) ? url.getPath() : "/",
+				StringUtils.isNotBlank(url.getQuery()) ? "?" + url.getQuery() : "",
+				StringUtils.isNotBlank(url.getRef()) ? "#" + url.getRef() : ""
+		);
 	}
 
 	public static Location fromUiLocation(UiLocation uiLocation) {

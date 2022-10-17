@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.session;
 
+import org.teamapps.ux.session.navigation.Location;
+
 public class NavigationStateChangeEvent {
 
 	private final Location location;
