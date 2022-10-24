@@ -19,16 +19,18 @@
  */
 package org.teamapps.testutil;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.mockito.Mockito;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.UiSession;
 import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.navigation.Location;
+import org.teamapps.ux.session.CurrentSessionContextTestUtil;
 import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
+import org.teamapps.ux.session.navigation.Location;
 
-import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -49,8 +51,18 @@ public class UxTestUtil {
 				Executors.newSingleThreadExecutor(),
 				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
 				Mockito.mock(UxServerContext.class),
-				Mockito.mock(SessionIconProvider.class)
+				Mockito.mock(SessionIconProvider.class),
+				"",
+				Mockito.mock(ParamConverterProvider.class)
 		);
 	}
 
+	public static void runWithSessionContext(SessionContext sessionContext, Runnable runnable) {
+		CurrentSessionContextTestUtil.set(sessionContext);
+		try {
+			runnable.run();
+		} finally {
+			CurrentSessionContextTestUtil.unset();
+		}
+	}
 }

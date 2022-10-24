@@ -19,7 +19,10 @@
  */
 package org.teamapps.config;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionListener;
 import org.teamapps.event.Event;
+import org.teamapps.util.threading.SequentialExecutorFactory;
 import org.teamapps.ux.session.SessionContext;
 
 import java.io.File;
@@ -99,9 +102,9 @@ public class TeamAppsConfiguration {
 	 *
 	 * @deprecated TeamApps does not care about HTTP sessions anymore. Please set the http session timeout in a different way.
 	 * This will be removed in some future version.
-	 * The cleanest way to set {@link jakarta.servlet.http.HttpSession#setMaxInactiveInterval(int)} would be by registering a
-	 * {@link jakarta.servlet.http.HttpSessionListener}.
-	 * Also note that the {@link jakarta.servlet.http.HttpSession} is still available via {@link SessionContext#getHttpSession()}.
+	 * The cleanest way to set {@link HttpSession#setMaxInactiveInterval(int)} would be by registering a
+	 * {@link HttpSessionListener}.
+	 * Also note that the {@link HttpSession} is still available via {@link SessionContext#getHttpSession()}.
 	 */
 	@Deprecated
 	private int httpSessionTimeoutSeconds = 24 * 3600;
@@ -152,12 +155,19 @@ public class TeamAppsConfiguration {
 
 	/**
 	 * Max number of threads that should be used for changing session state.
-	 * Note that you can also choose to write an own {@link org.teamapps.util.threading.SequentialExecutorFactory},
+	 * Note that you can also choose to write an own {@link SequentialExecutorFactory},
 	 * in which case this
 	 *
-	 * @see org.teamapps.core.TeamAppsUxSessionManager#sessionExecutorFactory
+	 * @see org.teamapps.uisession.TeamAppsSessionManager#sessionExecutorFactory
 	 */
 	private int maxNumberOfSessionExecutorThreads = Runtime.getRuntime().availableProcessors() * 2;
+
+	/**
+	 * Path prefix to be ignored when routing and added when creating URLs.
+	 *
+	 * @see org.teamapps.ux.session.navigation.Router
+	 */
+	private String navigationPathPrefix = "";
 
 	public TeamAppsConfiguration() {
 	}
@@ -232,9 +242,9 @@ public class TeamAppsConfiguration {
 	 * @see #httpSessionTimeoutSeconds
 	 * @deprecated TeamApps does not care about HTTP sessions anymore. Please set the http session timeout in a different way.
 	 * This will be removed in some future version.
-	 * The cleanest way to set {@link jakarta.servlet.http.HttpSession#setMaxInactiveInterval(int)} would be by registering a
-	 * {@link jakarta.servlet.http.HttpSessionListener}.
-	 * Also note that the {@link jakarta.servlet.http.HttpSession} is still available via {@link SessionContext#getHttpSession()}.
+	 * The cleanest way to set {@link HttpSession#setMaxInactiveInterval(int)} would be by registering a
+	 * {@link HttpSessionListener}.
+	 * Also note that the {@link HttpSession} is still available via {@link SessionContext#getHttpSession()}.
 	 */
 	@Deprecated
 	public void setHttpSessionTimeoutSeconds(int httpSessionTimeoutSeconds) {
@@ -351,5 +361,13 @@ public class TeamAppsConfiguration {
 	 */
 	public void setMaxNumberOfSessionExecutorThreads(int maxNumberOfSessionExecutorThreads) {
 		this.maxNumberOfSessionExecutorThreads = maxNumberOfSessionExecutorThreads;
+	}
+
+	public String getNavigationPathPrefix() {
+		return navigationPathPrefix;
+	}
+
+	public void setNavigationPathPrefix(String navigationPathPrefix) {
+		this.navigationPathPrefix = navigationPathPrefix;
 	}
 }

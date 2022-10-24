@@ -1,39 +1,13 @@
 package org.teamapps.ux.session.navigation;
 
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.uri.UriTemplate;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RoutingUtil {
-
-	public static MatchingResult match(UriTemplate uriTemplate, String path) {
-		HashMap<String, String> pathParams = new HashMap<>();
-		boolean matches = uriTemplate.match(path, pathParams);
-		return new MatchingResult(matches, pathParams);
-	}
-
-	public static class MatchingResult {
-		private final boolean match;
-		private final HashMap<String, String> pathParams;
-
-		public MatchingResult(boolean match, HashMap<String, String> pathParams) {
-			this.match = match;
-			this.pathParams = pathParams;
-		}
-
-		public boolean isMatch() {
-			return match;
-		}
-
-		public HashMap<String, String> getPathParams() {
-			return pathParams;
-		}
-	}
 
 	public static Map<String, String> parseQueryParams(String query) {
 		if (StringUtils.isBlank(query)) {
@@ -41,6 +15,9 @@ public class RoutingUtil {
 		}
 		if (query.startsWith("?")) {
 			query = query.substring(1);
+		}
+		if (StringUtils.isBlank(query)) {
+			return Map.of();
 		}
 		Map<String, String> queryParams = new LinkedHashMap<>();
 		String[] assignments = query.split("&");
@@ -52,6 +29,36 @@ public class RoutingUtil {
 			);
 		}
 		return queryParams;
+	}
+
+	public static String normalizePathPrefix(String prefix) {
+		if (StringUtils.isBlank(prefix)) {
+			return "/";
+		}
+		prefix = withSingleLeadingSlash(prefix);
+		if (prefix.length() > 1 && prefix.endsWith("/")) {
+			prefix = prefix.substring(0, prefix.length() - 1);
+		}
+		return prefix;
+	}
+
+	public static String withSingleLeadingSlash(String path) {
+		if (StringUtils.isBlank(path)) {
+			return "/";
+		}
+		while (path.startsWith("//")) {
+			path = path.substring(1);
+		}
+		if (!path.startsWith("/")) {
+			path = "/" + path;
+		}
+		return path;
+	}
+
+	public static String concatenatePaths(String prefix, String suffix) {
+		prefix = normalizePathPrefix(prefix);
+		suffix = withSingleLeadingSlash(suffix);
+		return withSingleLeadingSlash(prefix + suffix);
 	}
 
 }

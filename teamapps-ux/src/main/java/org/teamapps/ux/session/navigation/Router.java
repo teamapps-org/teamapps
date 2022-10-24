@@ -4,10 +4,11 @@ import java.util.Map;
 
 public interface Router {
 
-	boolean route(String path, Map<String, String> queryParams);
-
-	default boolean route(Location location) {
-		return route(location.getPathname(), RoutingUtil.parseQueryParams(location.getSearch()));
-	}
+	/**
+	 * @param path full path
+	 * @param pathParams all path parameters of the whole path template
+	 * @param queryParams all query parameters
+	 */
+	void route(String path, Map<String, String> pathParams, Map<String, String> queryParams);
 
 }
