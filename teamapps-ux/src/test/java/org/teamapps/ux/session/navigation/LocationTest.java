@@ -1,11 +1,11 @@
 package org.teamapps.ux.session.navigation;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LocationTest {
 
@@ -13,29 +13,36 @@ public class LocationTest {
 	public void parse() throws MalformedURLException {
 		Location location = Location.parse("http://teamapps.org:8080/my/path?q=123#ref");
 
-		Assertions.assertThat(location.getHref()).isEqualTo("http://teamapps.org:8080/my/path?q=123#ref");
-		Assertions.assertThat(location.getOrigin()).isEqualTo("http://teamapps.org:8080");
-		Assertions.assertThat(location.getProtocol()).isEqualTo("http");
-		Assertions.assertThat(location.getHost()).isEqualTo("teamapps.org:8080");
-		Assertions.assertThat(location.getHostname()).isEqualTo("teamapps.org");
-		Assertions.assertThat(location.getPort()).isEqualTo(8080);
-		Assertions.assertThat(location.getPathname()).isEqualTo("/my/path");
-		Assertions.assertThat(location.getSearch()).isEqualTo("?q=123");
-		Assertions.assertThat(location.getHash()).isEqualTo("#ref");
+		assertThat(location.getHref()).isEqualTo("http://teamapps.org:8080/my/path?q=123#ref");
+		assertThat(location.getOrigin()).isEqualTo("http://teamapps.org:8080");
+		assertThat(location.getProtocol()).isEqualTo("http");
+		assertThat(location.getHost()).isEqualTo("teamapps.org:8080");
+		assertThat(location.getHostname()).isEqualTo("teamapps.org");
+		assertThat(location.getPort()).isEqualTo(8080);
+		assertThat(location.getPathname()).isEqualTo("/my/path");
+		assertThat(location.getSearch()).isEqualTo("?q=123");
+		assertThat(location.getHash()).isEqualTo("#ref");
 	}
 
 	@Test
 	public void parseMinimal() throws MalformedURLException {
 		Location location = Location.parse("http://teamapps.org");
 
-		Assertions.assertThat(location.getHref()).isEqualTo("http://teamapps.org");
-		Assertions.assertThat(location.getOrigin()).isEqualTo("http://teamapps.org");
-		Assertions.assertThat(location.getProtocol()).isEqualTo("http");
-		Assertions.assertThat(location.getHost()).isEqualTo("teamapps.org");
-		Assertions.assertThat(location.getHostname()).isEqualTo("teamapps.org");
-		Assertions.assertThat(location.getPort()).isNull();
-		Assertions.assertThat(location.getPathname()).isEqualTo("/");
-		Assertions.assertThat(location.getSearch()).isEqualTo("");
-		Assertions.assertThat(location.getHash()).isEqualTo("");
+		assertThat(location.getHref()).isEqualTo("http://teamapps.org");
+		assertThat(location.getOrigin()).isEqualTo("http://teamapps.org");
+		assertThat(location.getProtocol()).isEqualTo("http");
+		assertThat(location.getHost()).isEqualTo("teamapps.org");
+		assertThat(location.getHostname()).isEqualTo("teamapps.org");
+		assertThat(location.getPort()).isNull();
+		assertThat(location.getPathname()).isEqualTo("/");
+		assertThat(location.getSearch()).isEqualTo("");
+		assertThat(location.getHash()).isEqualTo("");
+	}
+
+	@Test
+	public void toNavigationState() throws MalformedURLException {
+		assertThat(Location.parse("http://foo.com?bar=baz").toNavigationState()).isEqualTo(new NavigationState("/", Map.of("bar", "baz")));
+		assertThat(Location.parse("http://foo.com/x?bar=baz").toNavigationState()).isEqualTo(new NavigationState("/x", Map.of("bar", "baz")));
+
 	}
 }

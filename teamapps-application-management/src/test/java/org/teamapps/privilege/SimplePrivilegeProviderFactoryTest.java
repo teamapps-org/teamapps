@@ -21,29 +21,19 @@ package org.teamapps.privilege;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.privilege.preset.ApplicationRolePreset;
 import org.teamapps.privilege.preset.PrivilegeGroupPreset;
-import org.teamapps.server.UxServerContext;
-import org.teamapps.uisession.UiSession;
-import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.navigation.Location;
-import org.teamapps.ux.session.SessionConfiguration;
+import org.teamapps.testutil.UxTestUtil;
 import org.teamapps.ux.session.SessionContext;
-
-import jakarta.servlet.http.HttpSession;
-import java.util.Collections;
-import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
 
 public class SimplePrivilegeProviderFactoryTest {
 
 	@Test
 	public void getPrivilegeController() {
-		createDummySessionContext().runWithContext(() -> {
+		UxTestUtil.runWithSessionContext(Mockito.mock(SessionContext.class), () -> {
 			ApplicationPrivilegesInfo privilegesInfo = new ApplicationPrivilegesInfo("org.test");
 			privilegesInfo.addPrivilegeGroup(new PrivilegeGroup("test", new Privilege("read"), new Privilege("write")));
 			privilegesInfo.addApplicationRolePreset(new ApplicationRolePreset("admin", new PrivilegeGroupPreset(new PrivilegeGroup("test"), new Privilege("read"), new Privilege("write"))));
@@ -57,14 +47,4 @@ public class SimplePrivilegeProviderFactoryTest {
 		});
 	}
 
-	public static SessionContext createDummySessionContext() {
-		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", Mockito.mock(Location.class), Collections.emptyMap(), TEAMAPPS_VERSION);
-		return new SessionContext(
-				Mockito.mock(UiSession.class),
-				Executors.newSingleThreadExecutor(),
-				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
-				Mockito.mock(UxServerContext.class),
-				Mockito.mock(SessionIconProvider.class)
-		);
-	}
 }

@@ -21,6 +21,7 @@ package org.teamapps.ux.session;
 
 import com.ibm.icu.util.ULocale;
 import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
@@ -53,12 +54,14 @@ import org.teamapps.ux.icon.IconBundle;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
-import org.teamapps.ux.session.navigation.Location;
-import org.teamapps.ux.session.navigation.Router;
+import org.teamapps.ux.session.navigation.*;
 
 import java.io.File;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,7 +71,7 @@ import java.util.stream.Collectors;
 
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
-public class SessionContext {
+public class SessionContext implements RouterRegistrationPoint {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
 	private static final String DEFAULT_BACKGROUND_NAME = "defaultBackground";
@@ -113,7 +116,7 @@ public class SessionContext {
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
 
-	private List<Router> routers = new ArrayList<>();
+	private final BaseRouting baseRouting;
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
@@ -176,7 +179,10 @@ public class SessionContext {
 						  SessionConfiguration sessionConfiguration,
 						  HttpSession httpSession,
 						  UxServerContext serverContext,
-						  SessionIconProvider iconProvider) {
+						  SessionIconProvider iconProvider,
+						  String navigationPathPrefix,
+						  ParamConverterProvider navigationParamConverterProvider // TODO #ownInterfaces
+	) {
 		this.sessionExecutor = sessionExecutor;
 		this.uiSession = uiSession;
 		this.httpSession = httpSession;
@@ -190,6 +196,7 @@ public class SessionContext {
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
+		this.baseRouting = new BaseRouting(navigationPathPrefix, navigationParamConverterProvider);
 	}
 
 
@@ -197,10 +204,25 @@ public class SessionContext {
 		return currentLocation;
 	}
 
+	public NavigationState getCurrentNavigationState() {
+		return currentLocation.toNavigationState();
+	}
+
 	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();  //  /apps/session/dongles/238742384/sessions/234978
 
 	public void pushNavigationState(String relativeUrl) {
 		queueCommand(new UiRootPanel.PushHistoryStateCommand(relativeUrl));
+	}
+	
+	public void pushNavigationState(NavigationState navigationState) {
+		queueCommand(new UiRootPanel.PushHistoryStateCommand(navigationState.toString()));
+	}
+
+	/**
+	 * Replaces the current entry in the navigation history with the specified one. So the history size is not changed.
+	 */
+	public void replaceNavigationState(NavigationState navigationState) {
+//		queueCommand(new UiRootPanel.ReplaceHistoryStateCommand(relativeUrl)); TODO
 	}
 
 	public void navigateBack(int steps) {
@@ -211,8 +233,14 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.NavigateForwardCommand(steps));
 	}
 
-	public void addRouter(Router router) {
-		this.routers.add(router);
+	@Override
+	public RouterRegistration registerRouter(String pathTemplate, Router router, boolean applyImmediately) {
+		return baseRouting.registerRouter(pathTemplate, router, applyImmediately);
+	}
+
+	@Override
+	public RouterRegistrationPoint createSubRouterRegistrationPoint(String relativePath) {
+		return baseRouting.createSubRouterRegistrationPoint(relativePath);
 	}
 
 	public static SessionContext current() {
@@ -725,12 +753,7 @@ public class SessionContext {
 				Location location = Location.fromUiLocation(e.getLocation());
 				this.currentLocation = location;
 				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
-				for (Router router : routers) {
-					boolean match = router.route(location);
-					if (match) {
-						break;
-					}
-				}
+				baseRouting.route(location);
 				break;
 			}
 			default:
@@ -738,6 +761,9 @@ public class SessionContext {
 		}
 	}
 
+	public void reApplyRouters() {
+		baseRouting.route(getCurrentLocation());
+	}
 
 
 	public UiSessionListener getAsUiSessionListenerInternal() {
@@ -750,5 +776,9 @@ public class SessionContext {
 
 	public String getName() {
 		return uiSession.getName();
+	}
+
+	public ParamConverterProvider getRoutingParamConverterProvider() {
+		return baseRouting.getParamConverterProvider();
 	}
 }

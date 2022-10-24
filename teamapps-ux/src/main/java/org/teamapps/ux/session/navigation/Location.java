@@ -176,4 +176,25 @@ public class Location {
 	public String getHash() {
 		return hash;
 	}
+
+	public NavigationState toNavigationState() {
+		return NavigationState.parse(getPathname() + search);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Location location = (Location) o;
+		return Objects.equals(href, location.href) && Objects.equals(origin, location.origin) && Objects.equals(protocol, location.protocol) && Objects.equals(host, location.host) && Objects.equals(hostname, location.hostname) && Objects.equals(port, location.port) && Objects.equals(pathname, location.pathname) && Objects.equals(search, location.search) && Objects.equals(hash, location.hash);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(href, origin, protocol, host, hostname, port, pathname, search, hash);
+	}
 }

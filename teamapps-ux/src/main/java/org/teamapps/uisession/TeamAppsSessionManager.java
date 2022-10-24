@@ -43,6 +43,7 @@ import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
+import org.teamapps.ux.session.navigation.ParameterConverterProvider;
 import org.teamapps.webcontroller.WebController;
 
 import java.util.*;
@@ -201,7 +202,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				}
 			}
 		});
-		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession);
+		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession, config.getNavigationPathPrefix());
 		uiSession.addSessionListener(sessionContext.getAsUiSessionListenerInternal());
 
 		uiSession.handleCommandRequest(maxRequestedCommandId, null);
@@ -288,18 +289,19 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		houseKeepingScheduledExecutor.shutdown();
 	}
 
-	public SessionContext createSessionContext(UiSession uiSession, UiClientInfo uiClientInfo, HttpSession httpSession) {
+	public SessionContext createSessionContext(UiSession uiSession, UiClientInfo uiClientInfo, HttpSession httpSession, String navigationPathPrefix) {
 		ClientInfo clientInfo = ClientInfo.fromUiClientInfo(uiClientInfo);
 		SessionConfiguration sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
 
 		return new SessionContext(
 				uiSession,
-				sessionExecutorFactory.createExecutor(uiSession.getSessionId().toString()),
+				sessionExecutorFactory.createExecutor(uiSession.getSessionId()),
 				clientInfo,
 				sessionConfiguration,
 				httpSession,
 				uxServerContext,
-				new SessionIconProvider(iconProvider)
+				new SessionIconProvider(iconProvider),
+				navigationPathPrefix, new ParameterConverterProvider()
 		);
 	}
 
