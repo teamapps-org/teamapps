@@ -19,13 +19,11 @@
  */
 package org.teamapps.ux.cache.record;
 
-import it.unimi.dsi.fastutil.objects.Object2IntFunction;
-
 import java.util.function.BiPredicate;
 
 public class EqualsAndHashCode<T> {
 	private final BiPredicate<T, Object> equals;
-	private final Object2IntFunction<T> hashCode;
+	private final HashCodeFunction<T> hashCode;
 
 	public static <T> EqualsAndHashCode<T> bypass() {
 		return new EqualsAndHashCode<>(Object::equals, Object::hashCode);
@@ -35,7 +33,7 @@ public class EqualsAndHashCode<T> {
 		return new EqualsAndHashCode<>((t, o) -> t == o, System::identityHashCode);
 	}
 
-	public EqualsAndHashCode(BiPredicate<T, Object> equals, Object2IntFunction<T> hashCode) {
+	public EqualsAndHashCode(BiPredicate<T, Object> equals, HashCodeFunction<T> hashCode) {
 		this.equals = equals;
 		this.hashCode = hashCode;
 	}
@@ -44,7 +42,11 @@ public class EqualsAndHashCode<T> {
 		return equals;
 	}
 
-	public Object2IntFunction<T> getHashCode() {
+	public HashCodeFunction<T> getHashCode() {
 		return hashCode;
+	}
+
+	public interface HashCodeFunction<T> {
+		int hashCode(T o);
 	}
 }

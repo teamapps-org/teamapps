@@ -2,42 +2,40 @@ package org.teamapps.ux.session;
 
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.uri.UriTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.teamapps.ux.session.navigation.*;
 
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.teamapps.ux.session.navigation.RoutingUtil.concatenatePaths;
-import static org.teamapps.ux.session.navigation.RoutingUtil.normalizePathPrefix;
+import static org.teamapps.ux.session.navigation.RoutingUtil.*;
 
-class BaseRouting implements RouterRegistrationPoint {
+class BaseRouting implements Router {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	static final String PATH_REMAINDER_VARNAME = "_remainder";
+	static final String PATH_REMAINDER_SUFFIX = "{" + PATH_REMAINDER_VARNAME + ":(/.*)?}";
 
 	private final String pathPrefix;
 	private final ParamConverterProvider paramConverterProvider;
-	private final List<UriTemplateAndRouter> routers = new ArrayList<>();
+	private final List<UriTemplateAndHandler> handlers = new ArrayList<>();
 	private Location currentLocation;
 
-	public BaseRouting(String pathPrefix, ParamConverterProvider paramConverterProvider) {
-		this.pathPrefix = normalizePathPrefix(pathPrefix);
+	public BaseRouting(String pathPrefix, ParamConverterProvider paramConverterProvider, Location location) {
+		this.pathPrefix = normalizePath(pathPrefix);
 		this.paramConverterProvider = paramConverterProvider;
+		this.currentLocation = location;
 	}
 
 	@Override
-	public RouterRegistration registerRouter(String pathTemplate, Router router, boolean applyImmediately) {
-		var uriTemplate = new UriTemplate(pathTemplate);
-		UriTemplateAndRouter templateAndRouter = new UriTemplateAndRouter(uriTemplate, router);
-		routers.add(templateAndRouter);
+	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, RoutingHandler handler, boolean applyImmediately) {
+		var uriTemplate = new UriTemplate(concatenatePaths(pathPrefix, pathTemplate) + PATH_REMAINDER_SUFFIX);
+		UriTemplateAndHandler templateAndRouter = new UriTemplateAndHandler(uriTemplate, handler);
+		handlers.add(templateAndRouter);
 		if (applyImmediately) {
-			applyRoutersIfMatching(currentLocation, List.of(templateAndRouter));
+			routeInternal(currentLocation, List.of(templateAndRouter));
 		}
-		return new RouterRegistration() {
+		return new RoutingHandlerRegistration() {
 			@Override
 			public String createPath(Map<String, String> params) {
 				return uriTemplate.createURI(params);
@@ -45,34 +43,30 @@ class BaseRouting implements RouterRegistrationPoint {
 
 			@Override
 			public void dispose() {
-				routers.remove(templateAndRouter);
+				handlers.remove(templateAndRouter);
 			}
 		};
 	}
 
 	@Override
-	public RouterRegistrationPoint createSubRouterRegistrationPoint(String relativePath) {
-		return new RelativeRouterRegistrationPoint(concatenatePaths(pathPrefix, relativePath));
+	public Router createSubRouter(String relativePath) {
+		return new SubRouter(concatenatePaths(pathPrefix, relativePath));
 	}
 
 	public void route(Location location) {
-		this.currentLocation = location;
-		applyRoutersIfMatching(location, routers);
+		currentLocation = location;
+		routeInternal(location, handlers);
 	}
 
-	private void applyRoutersIfMatching(Location location, List<UriTemplateAndRouter> routers) {
-		String path = location.getPathname();
-		if (!path.startsWith(pathPrefix)) {
-			LOGGER.warn("path does not start with prefix '{}'. Will not route!", pathPrefix);
-		}
-		String relativePath = pathPrefix.equals("/") ? path : path.substring(pathPrefix.length());
-
+	private void routeInternal(Location location, List<UriTemplateAndHandler> handlers) {
+		String relativePath = normalizePath(location.getPathname());
 		Map<String, String> queryParams = RoutingUtil.parseQueryParams(location.getSearch());
-		for (UriTemplateAndRouter uriTemplateAndRouter : routers) {
+
+		for (UriTemplateAndHandler uriTemplateAndHandler : handlers) {
 			HashMap<String, String> pathParams = new HashMap<>();
-			boolean matches = uriTemplateAndRouter.getUriTemplate().match(relativePath, pathParams);
+			boolean matches = uriTemplateAndHandler.getUriTemplate().match(relativePath, pathParams);
 			if (matches) {
-				uriTemplateAndRouter.getRouter().route(relativePath, pathParams, queryParams);
+				uriTemplateAndHandler.getHandler().handle(relativePath, pathParams, queryParams);
 			}
 		}
 	}
@@ -81,21 +75,21 @@ class BaseRouting implements RouterRegistrationPoint {
 		return paramConverterProvider;
 	}
 
-	private static class UriTemplateAndRouter {
+	private static class UriTemplateAndHandler {
 		private final UriTemplate uriTemplate;
-		private final Router router;
+		private final RoutingHandler handler;
 
-		public UriTemplateAndRouter(UriTemplate uriTemplate, Router router) {
+		public UriTemplateAndHandler(UriTemplate uriTemplate, RoutingHandler handler) {
 			this.uriTemplate = uriTemplate;
-			this.router = router;
+			this.handler = handler;
 		}
 
 		public UriTemplate getUriTemplate() {
 			return uriTemplate;
 		}
 
-		public Router getRouter() {
-			return router;
+		public RoutingHandler getHandler() {
+			return handler;
 		}
 	}
 }

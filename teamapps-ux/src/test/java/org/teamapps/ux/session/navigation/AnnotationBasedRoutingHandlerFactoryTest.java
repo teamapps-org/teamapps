@@ -11,14 +11,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AnnotationBasedRouterFactoryTest {
+public class AnnotationBasedRoutingHandlerFactoryTest {
 
 	@Test
 	public void annotatedMethod() {
 		AtomicBoolean wasInvoked = new AtomicBoolean();
-		AnnotationBasedRouterFactory factory = new AnnotationBasedRouterFactory(new ParameterConverterProvider());
+		AnnotationBasedRoutingHandlerFactory factory = new AnnotationBasedRoutingHandlerFactory(new ParameterConverterProvider());
 
-		List<AnnotationBasedRouterFactory.AnnotationBasedRouter> routers = factory.createRouters(new Object() {
+		List<AnnotationBasedRoutingHandlerFactory.AnnotationBasedRoutingHandler> routers = factory.createRouters(new Object() {
 
 			@Path("/apps/{appName}/item/{itemId}")
 			public void myMethod(
@@ -34,21 +34,21 @@ public class AnnotationBasedRouterFactoryTest {
 
 		assertThat(routers).extracting(r -> r.getPathTemplate()).containsExactlyInAnyOrder("/apps/{appName}/item/{itemId}");
 
-		routers.get(0).route("/apps/myApp/item/123", Map.of("appName", "myApp", "itemId", "123"), Map.of("flag", "true"));
+		routers.get(0).handle("/apps/myApp/item/123", Map.of("appName", "myApp", "itemId", "123"), Map.of("flag", "true"));
 
 		assertThat(wasInvoked).isTrue();
 	}
 
 	@Test
 	public void classLevelPathAnnotation() {
-		AnnotationBasedRouterFactory factory = new AnnotationBasedRouterFactory(new ParameterConverterProvider());
+		AnnotationBasedRoutingHandlerFactory factory = new AnnotationBasedRoutingHandlerFactory(new ParameterConverterProvider());
 
 		MyRouter router = new MyRouter();
-		List<AnnotationBasedRouterFactory.AnnotationBasedRouter> routers = factory.createRouters(router);
+		List<AnnotationBasedRoutingHandlerFactory.AnnotationBasedRoutingHandler> routers = factory.createRouters(router);
 
 		assertThat(routers).extracting(r -> r.getPathTemplate()).containsExactlyInAnyOrder("/foo/{x}/bar/{y}");
 
-		routers.get(0).route("/foo/111/bar/yyy", Map.of("x", "111", "y", "yyy"), Map.of());
+		routers.get(0).handle("/foo/111/bar/yyy", Map.of("x", "111", "y", "yyy"), Map.of());
 
 		assertThat(router.wasInvoked).isTrue();
 	}

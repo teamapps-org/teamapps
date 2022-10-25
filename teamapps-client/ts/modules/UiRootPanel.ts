@@ -378,9 +378,18 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		}
 	}
 
-	public static async pushHistoryState(relativeUrl: string) {
+	public static async pushNavigationHistoryState(relativeUrl: string, fireEvent: boolean) {
 		window.history.pushState({}, "", relativeUrl);
-		UiRootPanel.onNavigationStateChange.fire({location: createUiLocation(), triggeredByUser: false});
+		if (fireEvent) {
+			UiRootPanel.onNavigationStateChange.fire({location: createUiLocation(), triggeredBrowserNavigation: false});
+		}
+	}
+
+	public static async replaceNavigationHistoryState(relativeUrl: string, fireEvent: boolean) {
+		window.history.replaceState({}, "", relativeUrl);
+		if (fireEvent) {
+			UiRootPanel.onNavigationStateChange.fire({location: createUiLocation(), triggeredBrowserNavigation: false});
+		}
 	}
 
 	public static async navigateForward(steps: number) {
@@ -468,6 +477,6 @@ function setGlobalKeyEventsEnabled(unmodified: boolean, modifiedWithAltKey: bool
 window.addEventListener('popstate', (event) => {
 	UiRootPanel.onNavigationStateChange.fire({
 		location: createUiLocation(),
-		triggeredByUser: true
+		triggeredBrowserNavigation: true
 	});
 });

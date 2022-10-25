@@ -5,6 +5,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.ext.ParamConverter;
 import jakarta.ws.rs.ext.ParamConverterProvider;
+import org.apache.commons.lang3.StringUtils;
 import org.teamapps.util.ReflectionUtil;
 
 import java.lang.reflect.Method;
@@ -15,25 +16,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AnnotationBasedRouterFactory {
+public class AnnotationBasedRoutingHandlerFactory {
 
 	private final ParamConverterProvider converterProvider;
 
-	public AnnotationBasedRouterFactory() {
+	public AnnotationBasedRoutingHandlerFactory() {
 		this(new ParameterConverterProvider());
 	}
 
-	public AnnotationBasedRouterFactory(ParamConverterProvider converterProvider) {
+	public AnnotationBasedRoutingHandlerFactory(ParamConverterProvider converterProvider) {
 		this.converterProvider = converterProvider;
 	}
 
-	public List<AnnotationBasedRouter> createRouters(Object annotatedClassInstance) {
+	public List<AnnotationBasedRoutingHandler> createRouters(Object annotatedClassInstance) {
 		Path classLevelPathAnnotation = annotatedClassInstance.getClass().getAnnotation(Path.class);
 		String pathPrefix = classLevelPathAnnotation != null ? classLevelPathAnnotation.value() : "";
 		List<Method> routingMethods = ReflectionUtil.findMethods(annotatedClassInstance.getClass(), method -> method.isAnnotationPresent(Path.class));
 		return routingMethods.stream()
 				.map(m -> createRoutingMethodInfo(m, pathPrefix))
-				.map(routingMethodInfo -> new AnnotationBasedRouter(routingMethodInfo, annotatedClassInstance))
+				.map(routingMethodInfo -> new AnnotationBasedRoutingHandler(routingMethodInfo, annotatedClassInstance))
 				.collect(Collectors.toList());
 	}
 
@@ -54,7 +55,10 @@ public class AnnotationBasedRouterFactory {
 			if (pathParam != null) {
 				methodParameterExtractors[i] = (path, pathParams, queryParams) -> converter.fromString(pathParams.get(pathParam.value()));
 			} else if (queryParam != null) {
-				methodParameterExtractors[i] = (path, pathParams, queryParams) -> converter.fromString(queryParams.get(queryParam.value()));
+				methodParameterExtractors[i] = (path, pathParams, queryParams) -> {
+					String paramValue = queryParams.get(queryParam.value());
+					return StringUtils.isNotBlank(paramValue) ? converter.fromString(paramValue) : null;
+				};
 			} else {
 				methodParameterExtractors[i] = (path, pathParams, queryParams) -> null;
 			}
@@ -90,17 +94,17 @@ public class AnnotationBasedRouterFactory {
 		}
 	}
 
-	public static class AnnotationBasedRouter implements Router {
+	public static class AnnotationBasedRoutingHandler implements RoutingHandler {
 		private final RoutingMethodInfo routingMethodInfo;
 		private final Object annotatedClassInstance;
 
-		public AnnotationBasedRouter(RoutingMethodInfo routingMethodInfo, Object annotatedClassInstance) {
+		public AnnotationBasedRoutingHandler(RoutingMethodInfo routingMethodInfo, Object annotatedClassInstance) {
 			this.routingMethodInfo = routingMethodInfo;
 			this.annotatedClassInstance = annotatedClassInstance;
 		}
 
 		@Override
-		public void route(String path, Map<String, String> pathParams, Map<String, String> queryParams) {
+		public void handle(String path, Map<String, String> pathParams, Map<String, String> queryParams) {
 			Object[] argumentValues = Arrays.stream(routingMethodInfo.getMethodParameterExtractors())
 					.map(extractor -> extractor.extract(path, pathParams, queryParams))
 					.toArray();

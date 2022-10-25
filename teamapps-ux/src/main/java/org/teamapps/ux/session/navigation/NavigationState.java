@@ -11,10 +11,16 @@ import java.util.stream.Collectors;
 
 public class NavigationState {
 
+	private static final NavigationState EMPTY = new NavigationState("/", Map.of());
+
 	private static final Pattern RELATIVE_URL_PATTERN = Pattern.compile("(.*?)?(\\?.*?)?(#.*)?");
 
-	private final String path;
+	private final String relativePath;
 	private final Map<String, String> queryParams;
+
+	public static NavigationState create() {
+		return EMPTY;
+	}
 
 	public static NavigationState parse(String relativeUrl) {
 		if (StringUtils.isBlank(relativeUrl)) {
@@ -23,7 +29,7 @@ public class NavigationState {
 		Matcher matcher = RELATIVE_URL_PATTERN.matcher(relativeUrl);
 		if (matcher.matches()) {
 			String path = matcher.group(1);
-			path = RoutingUtil.withSingleLeadingSlash(path);
+			path = RoutingUtil.normalizePath(path);
 			Map<String, String> queryParams = RoutingUtil.parseQueryParams(matcher.group(2));
 			return new NavigationState(path, queryParams);
 		} else {
@@ -31,8 +37,8 @@ public class NavigationState {
 		}
 	}
 
-	public NavigationState(String path, Map<String, String> queryParams) {
-		this.path = path;
+	public NavigationState(String relativePath, Map<String, String> queryParams) {
+		this.relativePath = relativePath;
 		this.queryParams = queryParams;
 	}
 
@@ -40,19 +46,30 @@ public class NavigationState {
 		return new NavigationState(path, queryParams);
 	}
 
-	public NavigationState setQueryParam(String key, String value) {
+	public NavigationState withQueryParam(String key, String value) {
+		if (StringUtils.isBlank(key)) {
+			return this;
+		}
 		HashMap<String, String> newQueryParams = new HashMap<>(this.queryParams);
-		newQueryParams.put(key, value);
-		return new NavigationState(path, newQueryParams);
+		if (StringUtils.isNotBlank(value)) {
+			newQueryParams.put(key, value);
+		} else {
+			newQueryParams.remove(key);
+		}
+		return new NavigationState(relativePath, newQueryParams);
 	}
 
-	public NavigationState withoutQueryParams() {
-		return new NavigationState(path, Map.of());
+	public String getRelativePath() {
+		return relativePath;
+	}
+
+	public Map<String, String> getQueryParams() {
+		return queryParams;
 	}
 
 	@Override
 	public String toString() {
-		return path + (!queryParams.isEmpty() ? "?" + queryParams.entrySet().stream()
+		return relativePath + (!queryParams.isEmpty() ? "?" + queryParams.entrySet().stream()
 				.map(e -> e.getKey()  + "=" + e.getValue())
 				.collect(Collectors.joining("&")): "");
 	}
@@ -66,11 +83,11 @@ public class NavigationState {
 			return false;
 		}
 		NavigationState that = (NavigationState) o;
-		return Objects.equals(path, that.path) && Objects.equals(queryParams, that.queryParams);
+		return Objects.equals(relativePath, that.relativePath) && Objects.equals(queryParams, that.queryParams);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(path, queryParams);
+		return Objects.hash(relativePath, queryParams);
 	}
 }
