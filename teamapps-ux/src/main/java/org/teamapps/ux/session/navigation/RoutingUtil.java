@@ -64,8 +64,8 @@ public class RoutingUtil {
 
 	public static String concatenatePaths(String prefix, String suffix) {
 		prefix = normalizePath(prefix);
-		suffix = normalizePath(suffix);
-		return withSingleLeadingSlash(prefix + suffix);
+		suffix = withSingleLeadingSlash(suffix);
+		return normalizePath(prefix + suffix);
 	}
 
 	private static String concatenatePathAndParams(String absolutePath, Map<String, String> queryParams) {

@@ -1,12 +1,12 @@
 package org.teamapps.ux.session.navigation;
 
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.ext.ParamConverter;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.teamapps.util.ReflectionUtil;
+import org.teamapps.ux.session.navigation.annotation.PathParameter;
+import org.teamapps.ux.session.navigation.annotation.QueryParameter;
+import org.teamapps.ux.session.navigation.annotation.RoutingPath;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -29,9 +29,9 @@ public class AnnotationBasedRoutingHandlerFactory {
 	}
 
 	public List<AnnotationBasedRoutingHandler> createRouters(Object annotatedClassInstance) {
-		Path classLevelPathAnnotation = annotatedClassInstance.getClass().getAnnotation(Path.class);
+		RoutingPath classLevelPathAnnotation = annotatedClassInstance.getClass().getAnnotation(RoutingPath.class);
 		String pathPrefix = classLevelPathAnnotation != null ? classLevelPathAnnotation.value() : "";
-		List<Method> routingMethods = ReflectionUtil.findMethods(annotatedClassInstance.getClass(), method -> method.isAnnotationPresent(Path.class));
+		List<Method> routingMethods = ReflectionUtil.findMethods(annotatedClassInstance.getClass(), method -> method.isAnnotationPresent(RoutingPath.class));
 		return routingMethods.stream()
 				.map(m -> createRoutingMethodInfo(m, pathPrefix))
 				.map(routingMethodInfo -> new AnnotationBasedRoutingHandler(routingMethodInfo, annotatedClassInstance))
@@ -39,7 +39,7 @@ public class AnnotationBasedRoutingHandlerFactory {
 	}
 
 	private RoutingMethodInfo createRoutingMethodInfo(Method m, String pathPrefix) {
-		Path pathAnnotation = m.getAnnotation(Path.class);
+		RoutingPath pathAnnotation = m.getAnnotation(RoutingPath.class);
 		String pathTemplate = RoutingUtil.concatenatePaths(pathPrefix, pathAnnotation.value());
 
 		Class<?>[] parameterTypes = m.getParameterTypes();
@@ -48,8 +48,8 @@ public class AnnotationBasedRoutingHandlerFactory {
 		ParameterValueExtractor[] methodParameterExtractors = new ParameterValueExtractor[methodParameters.length];
 		for (int i = 0; i < methodParameters.length; i++) {
 			Parameter parameter = methodParameters[i];
-			PathParam pathParam = parameter.getAnnotation(PathParam.class);
-			QueryParam queryParam = parameter.getAnnotation(QueryParam.class);
+			PathParameter pathParam = parameter.getAnnotation(PathParameter.class);
+			QueryParameter queryParam = parameter.getAnnotation(QueryParameter.class);
 			ParamConverter<?> converter = converterProvider.getConverter(parameterTypes[i], genericParameterTypes[i], parameter.getAnnotations());
 
 			if (pathParam != null) {
@@ -63,7 +63,7 @@ public class AnnotationBasedRoutingHandlerFactory {
 				methodParameterExtractors[i] = (path, pathParams, queryParams) -> null;
 			}
 		}
-		return new RoutingMethodInfo(pathTemplate, m, methodParameterExtractors);
+		return new RoutingMethodInfo(pathTemplate, pathAnnotation.exact(), m, methodParameterExtractors);
 	}
 
 	interface ParameterValueExtractor {
@@ -72,17 +72,23 @@ public class AnnotationBasedRoutingHandlerFactory {
 
 	private static class RoutingMethodInfo {
 		private final String pathTemplate;
+		private final boolean exact;
 		private final Method method;
 		private final ParameterValueExtractor[] methodParameterExtractors;
 
-		public RoutingMethodInfo(String pathTemplate, Method method, ParameterValueExtractor[] methodParameterExtractors) {
+		public RoutingMethodInfo(String pathTemplate, boolean exact, Method method, ParameterValueExtractor[] methodParameterExtractors) {
 			this.pathTemplate = pathTemplate;
+			this.exact = exact;
 			this.method = method;
 			this.methodParameterExtractors = methodParameterExtractors;
 		}
 
 		public String getPathTemplate() {
 			return pathTemplate;
+		}
+
+		public boolean isExact() {
+			return exact;
 		}
 
 		public Method getMethod() {
@@ -117,6 +123,10 @@ public class AnnotationBasedRoutingHandlerFactory {
 
 		public String getPathTemplate() {
 			return routingMethodInfo.getPathTemplate();
+		}
+
+		public boolean isExact() {
+			return routingMethodInfo.isExact();
 		}
 	}
 }

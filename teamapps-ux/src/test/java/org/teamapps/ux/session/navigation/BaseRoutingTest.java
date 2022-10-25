@@ -1,4 +1,4 @@
-package org.teamapps.ux.session;
+package org.teamapps.ux.session.navigation;
 
 import org.assertj.core.data.MapEntry;
 import org.glassfish.jersey.uri.UriTemplate;
@@ -8,8 +8,8 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.teamapps.ux.session.BaseRouting.PATH_REMAINDER_SUFFIX;
-import static org.teamapps.ux.session.BaseRouting.PATH_REMAINDER_VARNAME;
+import static org.teamapps.ux.session.navigation.BaseRouting.PATH_REMAINDER_SUFFIX;
+import static org.teamapps.ux.session.navigation.BaseRouting.PATH_REMAINDER_VARNAME;
 
 public class BaseRoutingTest {
 

@@ -1,9 +1,9 @@
 package org.teamapps.ux.session.navigation;
 
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
 import org.junit.Test;
+import org.teamapps.ux.session.navigation.annotation.PathParameter;
+import org.teamapps.ux.session.navigation.annotation.QueryParameter;
+import org.teamapps.ux.session.navigation.annotation.RoutingPath;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +20,11 @@ public class AnnotationBasedRoutingHandlerFactoryTest {
 
 		List<AnnotationBasedRoutingHandlerFactory.AnnotationBasedRoutingHandler> routers = factory.createRouters(new Object() {
 
-			@Path("/apps/{appName}/item/{itemId}")
+			@RoutingPath("/apps/{appName}/item/{itemId}")
 			public void myMethod(
-					@PathParam("appName") String appName,
-					@PathParam("itemId") Integer id,
-					@QueryParam("flag") Boolean flag) {
+					@PathParameter("appName") String appName,
+					@PathParameter("itemId") Integer id,
+					@QueryParameter("flag") Boolean flag) {
 				wasInvoked.set(true);
 				assertThat(appName).isEqualTo("myApp");
 				assertThat(id).isEqualTo(123);
@@ -53,12 +53,12 @@ public class AnnotationBasedRoutingHandlerFactoryTest {
 		assertThat(router.wasInvoked).isTrue();
 	}
 
-	@Path("foo/{x}")
+	@RoutingPath("foo/{x}")
 	public static class MyRouter {
 		volatile boolean wasInvoked = false;
 
-		@Path("bar/{y}")
-		public void myMethod(@PathParam("x") Integer x, @PathParam("y") String y) {
+		@RoutingPath("bar/{y}")
+		public void myMethod(@PathParameter("x") Integer x, @PathParameter("y") String y) {
 			wasInvoked = true;
 			assertThat(x).isEqualTo(111);
 			assertThat(y).isEqualTo("yyy");

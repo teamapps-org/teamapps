@@ -20,8 +20,8 @@ public class SubRouter implements Router {
 	}
 
 	@Override
-	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, RoutingHandler handler, boolean applyImmediately) {
-		return sessionContext.registerRoutingHandler(concatenatePaths(pathPrefix, pathTemplate), handler, applyImmediately);
+	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, boolean exact, RoutingHandler handler, boolean applyImmediately) {
+		return sessionContext.registerRoutingHandler(concatenatePaths(pathPrefix, pathTemplate), false, handler, applyImmediately);
 	}
 
 	@Override

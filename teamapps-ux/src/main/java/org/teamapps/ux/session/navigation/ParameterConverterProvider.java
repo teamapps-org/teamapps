@@ -34,9 +34,6 @@ public class ParameterConverterProvider implements ParamConverterProvider {
 											  final Type genericType,
 											  final Annotation[] annotations) {
 		for (final ParamConverterProvider p : providers) {
-			// This iteration trough providers is important. It can't be replaced by just registering all the internal
-			// providers of this class. Using iteration trough array the correct ordering of providers is ensured (see
-			// javadoc of PathParam, HeaderParam, ... - there is defined a fixed order of constructing objects form Strings).
 			final ParamConverter<T> reader = p.getConverter(rawType, genericType, annotations);
 			if (reader != null) {
 				return reader;

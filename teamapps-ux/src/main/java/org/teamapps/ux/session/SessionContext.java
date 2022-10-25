@@ -58,10 +58,7 @@ import org.teamapps.ux.session.navigation.*;
 
 import java.io.File;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -214,8 +211,8 @@ public class SessionContext implements Router {
 	}
 
 	@Override
-	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, RoutingHandler handler, boolean applyImmediately) {
-		return baseRouting.registerRoutingHandler(pathTemplate, handler, applyImmediately);
+	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, boolean exact, RoutingHandler handler, boolean applyImmediately) {
+		return baseRouting.registerRoutingHandler(pathTemplate, false, handler, applyImmediately);
 	}
 
 	@Override
@@ -245,7 +242,7 @@ public class SessionContext implements Router {
 	 * @param fireEvent Indicates whether an onNavigationStateChange event should be fired as a reaction of this invocation.
 	 */
 	public void pushNavigationHistoryState(String pathWithQueryParams, boolean fireEvent) {
-		queueCommand(new UiRootPanel.PushNavigationHistoryStateCommand(pathWithQueryParams, fireEvent));
+		changeNavigationHistoryState(pathWithQueryParams, fireEvent, NavigationHistoryOperation.PUSH);
 	}
 
 	/**
@@ -255,7 +252,23 @@ public class SessionContext implements Router {
 	 * @see #pushNavigationHistoryState(String, boolean)
 	 */
 	public void replaceNavigationHistoryState(String pathWithQueryParams, boolean fireEvent) {
-		queueCommand(new UiRootPanel.ReplaceNavigationHistoryStateCommand(pathWithQueryParams, fireEvent));
+		changeNavigationHistoryState(pathWithQueryParams, fireEvent, NavigationHistoryOperation.REPLACE);
+	}
+
+	/**
+	 * @see #pushNavigationHistoryState(String, boolean)
+	 */
+	public void changeNavigationHistoryState(String pathWithQueryParams, boolean fireEvent, NavigationHistoryOperation operation) {
+		if (Objects.equals(currentLocation.getPathname() + currentLocation.getSearch(), pathWithQueryParams)) {
+			LOGGER.debug("Not sending same navigation history state as previous one to client.");
+			return; // nothing to do here...
+		}
+		Location newLocation = currentLocation.withPathNameAndQueryParams(pathWithQueryParams);
+		currentLocation = newLocation;
+		queueCommand(new UiRootPanel.ChangeNavigationHistoryStateCommand(pathWithQueryParams, fireEvent, operation == NavigationHistoryOperation.PUSH), unused -> {
+			// make sure this is the location after the browser applied it. The user might have clicked on the back button in the meantime.
+			currentLocation = newLocation;
+		});
 	}
 
 	public static SessionContext current() {
@@ -795,5 +808,10 @@ public class SessionContext implements Router {
 
 	public ParamConverterProvider getRoutingParamConverterProvider() {
 		return baseRouting.getParamConverterProvider();
+	}
+
+	@Override
+	public String toString() {
+		return "SessionContext: " + getName();
 	}
 }

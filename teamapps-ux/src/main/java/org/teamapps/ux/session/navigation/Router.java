@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 
 public interface Router {
 	
-	RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, RoutingHandler handler, boolean applyImmediately);
+	RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, boolean exact, RoutingHandler handler, boolean applyImmediately);
 
 	default Map<String, RoutingHandlerRegistration> registerRoutingHandlers(Object annotatedClassInstance, boolean applyImmediately) {
 		return new AnnotationBasedRoutingHandlerFactory(SessionContext.current().getRoutingParamConverterProvider())
 				.createRouters(annotatedClassInstance).stream()
 				.collect(Collectors.toMap(
-						r -> r.getPathTemplate(),
-						r -> registerRoutingHandler(r.getPathTemplate(), r, applyImmediately))
+						handler -> handler.getPathTemplate(),
+						handler -> registerRoutingHandler(handler.getPathTemplate(), handler.isExact(), handler, applyImmediately))
 				);
 	}
 

@@ -97,6 +97,21 @@ public class Location {
 	 */
 	private final String hash;
 
+	public Location(String protocol, String hostname, Integer port, String pathname, String search, String hash) {
+		if(!protocol.endsWith(":")) {
+			protocol = protocol + ":";
+		}
+		this.href = protocol + "//" + hostname + ":" + port + RoutingUtil.withSingleLeadingSlash(pathname) + search + hash;
+		this.origin = protocol + "//" + hostname + ":" + port;
+		this.protocol = protocol;
+		this.host = hostname + ":" + port;
+		this.hostname = hostname;
+		this.port = port;
+		this.pathname = pathname;
+		this.search = search;
+		this.hash = hash;
+	}
+
 	public Location(String href, String origin, String protocol, String host, String hostname, Integer port, String pathname, String search, String hash) {
 		this.href = href;
 		this.origin = origin;
@@ -177,8 +192,18 @@ public class Location {
 		return hash;
 	}
 
-	public NavigationState toNavigationState() {
-		return NavigationState.parse(getPathname() + search);
+	public Location withPathNameAndQueryParams(String pathNameAndQueryParams) {
+		int questionMarkIndex = pathNameAndQueryParams.indexOf("?");
+		String pathName;
+		String search;
+		if (questionMarkIndex >= 0) {
+			pathName = pathNameAndQueryParams.substring(0, questionMarkIndex);
+			search = pathNameAndQueryParams.substring(questionMarkIndex + 1);
+		} else {
+			pathName = pathNameAndQueryParams;
+			search = "";
+		}
+		return new Location(protocol, hostname, port, pathName, search, hash);
 	}
 
 	@Override

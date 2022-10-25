@@ -378,15 +378,15 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		}
 	}
 
-	public static async pushNavigationHistoryState(relativeUrl: string, fireEvent: boolean) {
-		window.history.pushState({}, "", relativeUrl);
-		if (fireEvent) {
-			UiRootPanel.onNavigationStateChange.fire({location: createUiLocation(), triggeredBrowserNavigation: false});
+	public static async changeNavigationHistoryState(relativeUrl: string, fireEvent: boolean, push: boolean) {
+		if (window.location.pathname + window.location.search === relativeUrl) {
+			return; // nothing to do here...
 		}
-	}
-
-	public static async replaceNavigationHistoryState(relativeUrl: string, fireEvent: boolean) {
-		window.history.replaceState({}, "", relativeUrl);
+		if (push) {
+			window.history.pushState({}, "", relativeUrl);
+		} else {
+			window.history.replaceState({}, "", relativeUrl);
+		}
 		if (fireEvent) {
 			UiRootPanel.onNavigationStateChange.fire({location: createUiLocation(), triggeredBrowserNavigation: false});
 		}
