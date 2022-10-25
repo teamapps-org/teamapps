@@ -59,13 +59,14 @@ class UiRootPanel extends UiComponent {
 
 	static command goToUrl(String url, boolean blankPage);
 
-	static command pushHistoryState(String relativeUrl);
+	static command pushNavigationHistoryState(String pathOrUrl, boolean fireEvent);
+	static command replaceNavigationHistoryState(String pathOrUrl, boolean fireEvent);
 	static command navigateForward(int steps);
 
 	static command setFavicon(String url);
 	static command setTitle(String title);
 
-    static event navigationStateChange(UiLocation location, boolean triggeredByUser);
+    static event navigationStateChange(UiLocation location, boolean triggeredBrowserNavigation);
 }
 
 enum KeyEventType {
@@ -74,4 +75,8 @@ enum KeyEventType {
 
 enum UiGenericErrorMessageOption {
 	OK, RELOAD
+}
+
+enum UiNavigationStateChangeType {
+	PUSH, REPLACE
 }

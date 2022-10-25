@@ -71,7 +71,7 @@ import java.util.stream.Collectors;
 
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
-public class SessionContext implements RouterRegistrationPoint {
+public class SessionContext implements Router {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
 	private static final String DEFAULT_BACKGROUND_NAME = "defaultBackground";
@@ -88,6 +88,7 @@ public class SessionContext implements RouterRegistrationPoint {
 	 * return this instance.
 	 */
 	public final ExecutionDecoratorStack executionDecorators = new ExecutionDecoratorStack();
+	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();
 
 	private UiSessionState state = UiSessionState.ACTIVE;
 
@@ -196,33 +197,12 @@ public class SessionContext implements RouterRegistrationPoint {
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
-		this.baseRouting = new BaseRouting(navigationPathPrefix, navigationParamConverterProvider);
+		this.baseRouting = new BaseRouting(navigationPathPrefix, navigationParamConverterProvider, currentLocation);
 	}
 
 
 	public Location getCurrentLocation() {
 		return currentLocation;
-	}
-
-	public NavigationState getCurrentNavigationState() {
-		return currentLocation.toNavigationState();
-	}
-
-	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();  //  /apps/session/dongles/238742384/sessions/234978
-
-	public void pushNavigationState(String relativeUrl) {
-		queueCommand(new UiRootPanel.PushHistoryStateCommand(relativeUrl));
-	}
-	
-	public void pushNavigationState(NavigationState navigationState) {
-		queueCommand(new UiRootPanel.PushHistoryStateCommand(navigationState.toString()));
-	}
-
-	/**
-	 * Replaces the current entry in the navigation history with the specified one. So the history size is not changed.
-	 */
-	public void replaceNavigationState(NavigationState navigationState) {
-//		queueCommand(new UiRootPanel.ReplaceHistoryStateCommand(relativeUrl)); TODO
 	}
 
 	public void navigateBack(int steps) {
@@ -234,13 +214,48 @@ public class SessionContext implements RouterRegistrationPoint {
 	}
 
 	@Override
-	public RouterRegistration registerRouter(String pathTemplate, Router router, boolean applyImmediately) {
-		return baseRouting.registerRouter(pathTemplate, router, applyImmediately);
+	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, RoutingHandler handler, boolean applyImmediately) {
+		return baseRouting.registerRoutingHandler(pathTemplate, handler, applyImmediately);
 	}
 
 	@Override
-	public RouterRegistrationPoint createSubRouterRegistrationPoint(String relativePath) {
-		return baseRouting.createSubRouterRegistrationPoint(relativePath);
+	public Router createSubRouter(String relativePath) {
+		return baseRouting.createSubRouter(relativePath);
+	}
+
+	/**
+	 * Pushes a new entry (URL) to the browser's navigation history without reloading the site.
+	 * See <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/pushState">JavaScript API</a>.
+	 * <p>
+	 * This method may or may not fire an {@link #onNavigationStateChange} event, depending on the value of the <code>fireEvent</code> parameter.
+	 * Both cases are useful:
+	 * <ul>
+	 *     <li>When the user does some action that changes the state of the UI that needs to be reflected in the URL
+	 *     (say changing a table filter parameter) the corresponding change will most likely already have been applied to the UI. So in such
+	 *     a case it does not make sense to fire the event.</li>
+	 *     <li>In the case that the user clicks on a LinkButton (or similar action) which will navigate to some completely different parts of the UI, it makes sense
+	 *     that the event is triggered, so the routing to that UI can happen.</li>
+	 * </ul>
+	 * <p>
+	 * Note that the {@link #onNavigationStateChange} event will not be fired asynchronously since it will be triggered
+	 * by the client (browser!) in order to guarantee the correct sequence of events. For example, if the user presses a navigation
+	 * button at the same time as this method is invoked, which one was first needs to be consistent on the client and server side.
+	 *
+	 * @param pathWithQueryParams May also be a complete URL, but this is not recommended, since the origin needs to stay the same.
+	 * @param fireEvent Indicates whether an onNavigationStateChange event should be fired as a reaction of this invocation.
+	 */
+	public void pushNavigationHistoryState(String pathWithQueryParams, boolean fireEvent) {
+		queueCommand(new UiRootPanel.PushNavigationHistoryStateCommand(pathWithQueryParams, fireEvent));
+	}
+
+	/**
+	 * Same as {@link #pushNavigationHistoryState(String, boolean)}, except that it replaces the current browser history entry (URL).
+	 * See <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">JavaScript API</a>.
+	 *
+	 * @see #pushNavigationHistoryState(String, boolean)
+	 */
+	public void replaceNavigationHistoryState(String pathWithQueryParams, boolean fireEvent) {
+		queueCommand(new UiRootPanel.ReplaceNavigationHistoryStateCommand(pathWithQueryParams, fireEvent));
 	}
 
 	public static SessionContext current() {
@@ -752,7 +767,7 @@ public class SessionContext implements RouterRegistrationPoint {
 				UiRootPanel.NavigationStateChangeEvent e = (UiRootPanel.NavigationStateChangeEvent) event;
 				Location location = Location.fromUiLocation(e.getLocation());
 				this.currentLocation = location;
-				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
+				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredBrowserNavigation()));
 				baseRouting.route(location);
 				break;
 			}

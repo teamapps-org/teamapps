@@ -24,18 +24,18 @@ import org.teamapps.ux.session.navigation.Location;
 public class NavigationStateChangeEvent {
 
 	private final Location location;
-	private final boolean triggeredByUser;
+	private final boolean triggeredBrowserNavigation;
 
-	public NavigationStateChangeEvent(Location location, boolean triggeredByUser) {
+	public NavigationStateChangeEvent(Location location, boolean triggeredBrowserNavigation) {
 		this.location = location;
-		this.triggeredByUser = triggeredByUser;
+		this.triggeredBrowserNavigation = triggeredBrowserNavigation;
 	}
 
 	public Location getLocation() {
 		return location;
 	}
 
-	public boolean isTriggeredByUser() {
-		return triggeredByUser;
+	public boolean istriggeredBrowserNavigation() {
+		return triggeredBrowserNavigation;
 	}
 }

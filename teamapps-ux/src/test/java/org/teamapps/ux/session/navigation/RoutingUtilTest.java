@@ -9,27 +9,27 @@ public class RoutingUtilTest {
 
 	@Test
 	public void normalizePathPrefix() {
-		assertThat(RoutingUtil.normalizePathPrefix(null)).isEqualTo("/");
-		assertThat(RoutingUtil.normalizePathPrefix("")).isEqualTo("/");
-		assertThat(RoutingUtil.normalizePathPrefix("/")).isEqualTo("/");
-		assertThat(RoutingUtil.normalizePathPrefix("foo")).isEqualTo("/foo");
-		assertThat(RoutingUtil.normalizePathPrefix("/foo")).isEqualTo("/foo");
-		assertThat(RoutingUtil.normalizePathPrefix("foo/bar")).isEqualTo("/foo/bar");
-		assertThat(RoutingUtil.normalizePathPrefix("/foo/bar")).isEqualTo("/foo/bar");
-		assertThat(RoutingUtil.normalizePathPrefix("foo/bar/")).isEqualTo("/foo/bar");
-		assertThat(RoutingUtil.normalizePathPrefix("/foo/bar/")).isEqualTo("/foo/bar");
+		assertThat(RoutingUtil.normalizePath(null)).isEqualTo("/");
+		assertThat(RoutingUtil.normalizePath("")).isEqualTo("/");
+		assertThat(RoutingUtil.normalizePath("/")).isEqualTo("/");
+		assertThat(RoutingUtil.normalizePath("foo")).isEqualTo("/foo");
+		assertThat(RoutingUtil.normalizePath("/foo")).isEqualTo("/foo");
+		assertThat(RoutingUtil.normalizePath("foo/bar")).isEqualTo("/foo/bar");
+		assertThat(RoutingUtil.normalizePath("/foo/bar")).isEqualTo("/foo/bar");
+		assertThat(RoutingUtil.normalizePath("foo/bar/")).isEqualTo("/foo/bar");
+		assertThat(RoutingUtil.normalizePath("/foo/bar/")).isEqualTo("/foo/bar");
 	}
 
 	@Test
 	public void withSingleLeadingSlash() {
-		assertThat(RoutingUtil.normalizePathPrefix(null)).isEqualTo("/");
-		assertThat(RoutingUtil.normalizePathPrefix("/")).isEqualTo("/");
-		assertThat(RoutingUtil.normalizePathPrefix("foo")).isEqualTo("/foo");
-		assertThat(RoutingUtil.normalizePathPrefix("/foo")).isEqualTo("/foo");
-		assertThat(RoutingUtil.normalizePathPrefix("//foo")).isEqualTo("/foo");
-		assertThat(RoutingUtil.normalizePathPrefix("foo/bar")).isEqualTo("/foo/bar");
-		assertThat(RoutingUtil.normalizePathPrefix("/foo/bar")).isEqualTo("/foo/bar");
-		assertThat(RoutingUtil.normalizePathPrefix("//foo/bar/")).isEqualTo("/foo/bar");
+		assertThat(RoutingUtil.normalizePath(null)).isEqualTo("/");
+		assertThat(RoutingUtil.normalizePath("/")).isEqualTo("/");
+		assertThat(RoutingUtil.normalizePath("foo")).isEqualTo("/foo");
+		assertThat(RoutingUtil.normalizePath("/foo")).isEqualTo("/foo");
+		assertThat(RoutingUtil.normalizePath("//foo")).isEqualTo("/foo");
+		assertThat(RoutingUtil.normalizePath("foo/bar")).isEqualTo("/foo/bar");
+		assertThat(RoutingUtil.normalizePath("/foo/bar")).isEqualTo("/foo/bar");
+		assertThat(RoutingUtil.normalizePath("//foo/bar/")).isEqualTo("/foo/bar");
 	}
 
 	@Test

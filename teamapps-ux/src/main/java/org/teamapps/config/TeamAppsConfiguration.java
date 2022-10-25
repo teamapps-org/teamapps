@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpSessionListener;
 import org.teamapps.event.Event;
 import org.teamapps.util.threading.SequentialExecutorFactory;
 import org.teamapps.ux.session.SessionContext;
+import org.teamapps.ux.session.navigation.RoutingHandler;
 
 import java.io.File;
 
@@ -165,7 +166,7 @@ public class TeamAppsConfiguration {
 	/**
 	 * Path prefix to be ignored when routing and added when creating URLs.
 	 *
-	 * @see org.teamapps.ux.session.navigation.Router
+	 * @see RoutingHandler
 	 */
 	private String navigationPathPrefix = "";
 

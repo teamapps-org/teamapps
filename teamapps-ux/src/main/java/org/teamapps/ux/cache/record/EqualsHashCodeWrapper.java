@@ -46,7 +46,7 @@ public class EqualsHashCodeWrapper<T> {
 		if (equalsAndHashCode == null) {
 			return t.hashCode();
 		} else {
-			return equalsAndHashCode.getHashCode().applyAsInt(t);
+			return equalsAndHashCode.getHashCode().hashCode(t);
 		}
 	}
 }
