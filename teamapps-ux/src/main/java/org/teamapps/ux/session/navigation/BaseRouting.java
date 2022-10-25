@@ -1,17 +1,17 @@
-package org.teamapps.ux.session;
+package org.teamapps.ux.session.navigation;
 
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.uri.UriTemplate;
-import org.teamapps.ux.session.navigation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.teamapps.ux.session.navigation.RoutingUtil.*;
+import static org.teamapps.ux.session.navigation.RoutingUtil.concatenatePaths;
+import static org.teamapps.ux.session.navigation.RoutingUtil.normalizePath;
 
-class BaseRouting implements Router {
+public class BaseRouting implements Router {
 
 	static final String PATH_REMAINDER_VARNAME = "_remainder";
 	static final String PATH_REMAINDER_SUFFIX = "{" + PATH_REMAINDER_VARNAME + ":(/.*)?}";
@@ -28,8 +28,8 @@ class BaseRouting implements Router {
 	}
 
 	@Override
-	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, RoutingHandler handler, boolean applyImmediately) {
-		var uriTemplate = new UriTemplate(concatenatePaths(pathPrefix, pathTemplate) + PATH_REMAINDER_SUFFIX);
+	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, boolean exact, RoutingHandler handler, boolean applyImmediately) {
+		var uriTemplate = new UriTemplate(concatenatePaths(pathPrefix, pathTemplate) + (exact ? "" : PATH_REMAINDER_SUFFIX));
 		UriTemplateAndHandler templateAndRouter = new UriTemplateAndHandler(uriTemplate, handler);
 		handlers.add(templateAndRouter);
 		if (applyImmediately) {

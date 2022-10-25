@@ -12,15 +12,15 @@ public class RelativeRoutingHandlerRegistrationPointTest {
 	public void registerRouter() {
 		RoutingHandler handlerMock = mock(RoutingHandler.class);
 		SessionContext sessionContextMock = mock(SessionContext.class);
-		when(sessionContextMock.registerRoutingHandler("my/{path}/x", handlerMock, false))
+		when(sessionContextMock.registerRoutingHandler("my/{path}/x", false, handlerMock, false))
 				.thenReturn(mock(RoutingHandlerRegistration.class));
 
 		SubRouter rrrp = new SubRouter("my-prefix", sessionContextMock);
 
 		UxTestUtil.runWithSessionContext(sessionContextMock, () -> {
-			rrrp.registerRoutingHandler("my/{path}/x", handlerMock, false);
+			rrrp.registerRoutingHandler("my/{path}/x", false, handlerMock, false);
 		});
 
-		verify(sessionContextMock, times(1)).registerRoutingHandler("/my-prefix/my/{path}/x", handlerMock, false);
+		verify(sessionContextMock, times(1)).registerRoutingHandler("/my-prefix/my/{path}/x", false, handlerMock, false);
 	}
 }

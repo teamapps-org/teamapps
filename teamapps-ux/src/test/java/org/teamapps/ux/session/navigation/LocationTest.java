@@ -3,7 +3,6 @@ package org.teamapps.ux.session.navigation;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,10 +38,4 @@ public class LocationTest {
 		assertThat(location.getHash()).isEqualTo("");
 	}
 
-	@Test
-	public void toNavigationState() throws MalformedURLException {
-		assertThat(Location.parse("http://foo.com?bar=baz").toNavigationState()).isEqualTo(new NavigationState("/", Map.of("bar", "baz")));
-		assertThat(Location.parse("http://foo.com/x?bar=baz").toNavigationState()).isEqualTo(new NavigationState("/x", Map.of("bar", "baz")));
-
-	}
 }
