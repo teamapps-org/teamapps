@@ -17,25 +17,33 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-class UiComboBox extends UiField implements UiTextInputHandlingField {
-	Dictionary<UiTemplate> templates;
-	boolean showDropDownButton = true;
-	boolean showDropDownAfterResultsArrive = false;
-	boolean highlightFirstResultEntry = true;
-	boolean showHighlighting; // TODO highlight any line of the template, but only corresponding to the textMatchingMode
-	boolean autoComplete = true; // if true, by typing any letter, the first matching will be selected (keeping all not yet entered letters int the text box selected)
-	int textHighlightingEntryLimit = 100;
-	boolean allowAnyText;
-	boolean showClearButton;
-	boolean animate;
-	boolean showExpanders = true;
-	String placeholderText;
-	Integer dropDownMinWidth;
-	Integer dropDownMaxHeight;
 
-	query lazyChildren(int parentId) returns List<UiComboBoxTreeRecord>;
-	query retrieveDropdownEntries(String queryString) returns List<UiComboBoxTreeRecord>;
+abstract class AbstractUiComboBox extends UiField implements UiTextInputHandlingField {
+    Dictionary<UiTemplate> templates;
+    boolean showDropDownButton = true;
+    boolean showDropDownAfterResultsArrive = false;
+    boolean highlightFirstResultEntry = true;
+    boolean showHighlighting; // TODO highlight any line of the template, but only corresponding to the textMatchingMode
+    boolean autoComplete = true; // if true, by typing any letter, the first matching will be selected (keeping all not yet entered letters int the text box selected)
+    int textHighlightingEntryLimit = 100;
+    boolean allowAnyText;
+    boolean showClearButton;
+    boolean animate;
+    boolean showExpanders = true;
+    String placeholderText;
+    Integer dropDownMinWidth;
+    Integer dropDownMaxHeight;
 
-	command registerTemplate(String id, UiTemplate template);
-	command replaceFreeTextEntry(String freeText, UiComboBoxTreeRecord newEntry);
+    query lazyChildren(int parentId) returns List<UiComboBoxTreeRecord>;
+    query retrieveDropdownEntries(String queryString) returns List<UiComboBoxTreeRecord>;
+
+    command registerTemplate(String id, UiTemplate template);
+    command replaceFreeTextEntry(String freeText, UiComboBoxTreeRecord newEntry);
+}
+
+
+class UiComboBox extends AbstractUiComboBox {
+	List<UiToolButton*> toolButtons;
+
+    command setToolButtons(List<UiToolButton*> toolButtons);
 }
