@@ -94,7 +94,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		this(query -> Collections.emptyList());
 	}
 
-	protected void mapCommonUiComboBoxProperties(UiComboBox ui) {
+	protected void mapCommonUiComboBoxProperties(AbstractUiComboBox ui) {
 		mapAbstractFieldAttributesToUiField(ui);
 
 		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
@@ -135,7 +135,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	@Override
 	public Object handleUiQuery(UiQuery query) {
 		switch (query.getUiQueryType()) {
-			case UI_COMBO_BOX_RETRIEVE_DROPDOWN_ENTRIES: {
+			case ABSTRACT_UI_COMBO_BOX_RETRIEVE_DROPDOWN_ENTRIES: {
 				final UiComboBox.RetrieveDropdownEntriesQuery q = (UiComboBox.RetrieveDropdownEntriesQuery) query;
 				String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
 				if (model != null) {
@@ -150,7 +150,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 					return List.of();
 				}
 			}
-			case UI_COMBO_BOX_LAZY_CHILDREN: {
+			case ABSTRACT_UI_COMBO_BOX_LAZY_CHILDREN: {
 				UiComboBox.LazyChildrenQuery lazyChildrenQuery = (UiComboBox.LazyChildrenQuery) query;
 				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
 				if (parentRecord != null) {
