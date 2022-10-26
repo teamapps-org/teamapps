@@ -31,6 +31,7 @@ import {getAutoCompleteOffValue, parseHtml} from "../Common";
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {createComboBoxPopper} from "./ComboBoxPopper";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiToolButton} from "../micro-components/UiToolButton";
 
 export interface TrivialComboBoxConfig<E> {
 	/**
@@ -104,8 +105,8 @@ export interface TrivialComboBoxConfig<E> {
 	 */
 	placeholderText?: string,
 
-	dropDownMinWidth? : number,
-	dropDownMaxHeight? : number
+	dropDownMinWidth?: number,
+	dropDownMaxHeight?: number
 }
 
 export class TrivialComboBox<E> implements TrivialComponent {
@@ -124,6 +125,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	private $selectedEntryWrapper: HTMLElement;
 	private $trigger: HTMLElement;
 	private $clearButton: HTMLElement;
+	private $toolButtonsWrapper: HTMLElement;
 
 	private popper: Popper;
 	private dropDownComponent: DropDownComponent<E>;
@@ -161,10 +163,13 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				<input type="text" class="tr-combobox-editor tr-editor" autocomplete="${getAutoCompleteOffValue()}"></input>
 				<div class="tr-combobox-selected-entry-wrapper"></div>			
 			</div>
-            <div class="tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
+			<div class="tr-tool-buttons">
+			  <div class="tr-tool-button tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
+			</div>
             <div class="tr-trigger ${this.config.showTrigger ? '' : 'hidden'}"><span class="tr-trigger-icon"></span></div>
         </div>`);
 		this.$selectedEntryWrapper = this.$comboBox.querySelector(':scope .tr-combobox-selected-entry-wrapper');
+		this.$toolButtonsWrapper = this.$comboBox.querySelector(':scope .tr-tool-buttons');
 		this.$clearButton = this.$comboBox.querySelector(':scope .tr-remove-button');
 		this.$clearButton.addEventListener("mousedown", (e) => {
 			this.$editor.value = "";
@@ -402,9 +407,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		if (changing && fireEventIfChanged) {
 			this.fireChangeEvents(entry, originalEvent);
 		}
-		if (this.$clearButton) {
-			this.$clearButton.classList.toggle("hidden", !this.config.showClearButton || entry == null);
-		}
+		this.$toolButtonsWrapper.classList.toggle("hidden", entry == null);
 		if (this.isEditorVisible) {
 			this.showEditor(); // reposition editor
 		}
@@ -428,6 +431,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	private parentElement: Element;
+
 	public openDropDown() {
 		if (this.isDropDownNeeded()) {
 			if (this.getMainDomElement().parentElement !== this.parentElement) {
@@ -516,7 +520,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	public setShowClearButton(showClearButton: boolean) {
 		this.config.showClearButton = showClearButton;
-		this.$clearButton.classList.toggle('hidden', !this.config.showClearButton || this.selectedEntry == null);
+		this.$clearButton.classList.toggle('hidden', !this.config.showClearButton);
 	}
 
 	public setShowTrigger(showTrigger: boolean) {
@@ -524,6 +528,12 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$trigger.classList.toggle('hidden', !showTrigger);
 	}
 
+	public setToolButtons(buttons: UiToolButton[]) {
+		Array.from(this.$toolButtonsWrapper.children)
+			.filter(e => e != this.$clearButton)
+			.forEach(e => e.remove());
+		buttons.forEach(b => this.$toolButtonsWrapper.insertBefore(b.getMainElement(), this.$clearButton));
+	}
 
 	public isDropDownOpen(): boolean {
 		return this.dropDownOpen;
