@@ -3,10 +3,10 @@ package org.teamapps.ux.session.navigation;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.uri.UriTemplate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.teamapps.ux.session.navigation.RoutingUtil.concatenatePaths;
 import static org.teamapps.ux.session.navigation.RoutingUtil.normalizePath;
@@ -18,7 +18,7 @@ public class BaseRouting implements Router {
 
 	private final String pathPrefix;
 	private final ParamConverterProvider paramConverterProvider;
-	private final List<UriTemplateAndHandler> handlers = new ArrayList<>();
+	private final List<UriTemplateAndHandler> handlers = new CopyOnWriteArrayList<>(); // handler execution might add more handlers => prevent ConcurrentModificationException
 	private Location currentLocation;
 
 	public BaseRouting(String pathPrefix, ParamConverterProvider paramConverterProvider, Location location) {
