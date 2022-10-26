@@ -28,14 +28,12 @@ import org.teamapps.event.Event;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.component.toolbutton.ToolButton;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.component.tree.TreeNodeInfoExtractor;
 import org.teamapps.ux.model.ComboBoxModel;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implements TextInputHandlingField {
@@ -45,6 +43,8 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 	public final Event<String> onFreeTextEntered = new Event<>();
 
 	private String freeTextEntry;
+
+	private final List<ToolButton> toolButtons = new ArrayList<>();
 
 	public ComboBox() {
 	}
@@ -101,6 +101,9 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 	public UiField createUiComponent() {
 		UiComboBox comboBox = new UiComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
+		comboBox.setToolButtons(this.toolButtons.stream()
+				.map(tb -> tb.createUiReference())
+				.collect(Collectors.toList()));
 		return comboBox;
 	}
 
@@ -148,6 +151,22 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 
 	public String getFreeText() {
 		return freeTextEntry;
+	}
+
+	public void addToolButton(ToolButton toolButton) {
+		toolButtons.add(toolButton);
+		updateToolButtons();
+	}
+
+	public void removeToolButton(ToolButton toolButton) {
+		toolButtons.remove(toolButton);
+		updateToolButtons();
+	}
+
+	private void updateToolButtons() {
+		queueCommandIfRendered(() -> new UiComboBox.SetToolButtonsCommand(getId(), this.toolButtons.stream()
+				.map(tb -> tb.createUiReference())
+				.collect(Collectors.toList())));
 	}
 
 }

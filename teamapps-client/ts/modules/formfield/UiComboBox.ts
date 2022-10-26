@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,6 +35,7 @@ import {UiComboBoxTreeRecordConfig} from "../../generated/UiComboBoxTreeRecordCo
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {buildObjectTree, NodeWithChildren, Renderer} from "../Common";
 import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
+import {UiToolButton} from "../micro-components/UiToolButton";
 
 export function isFreeTextEntry(o: UiComboBoxTreeRecordConfig): boolean {
 	return o != null && o.id < 0;
@@ -117,6 +118,13 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
+		if (config.toolButtons != null) {
+			this.trivialComboBox.setToolButtons(config.toolButtons as UiToolButton[]);
+		}
+	}
+
+	setToolButtons(toolButtons: unknown[]): any {
+		this.trivialComboBox.setToolButtons((toolButtons as UiToolButton[]) ?? []);
 	}
 
 	protected initFocusHandling() {
