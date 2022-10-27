@@ -6,7 +6,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public interface Router {
-	
+
+	default RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, RoutingHandler handler) {
+		return registerRoutingHandler(pathTemplate, false, handler, true);
+	}
+
 	RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, boolean exact, RoutingHandler handler, boolean applyImmediately);
 
 	default Map<String, RoutingHandlerRegistration> registerRoutingHandlers(Object annotatedClassInstance, boolean applyImmediately) {
@@ -18,6 +22,6 @@ public interface Router {
 				);
 	}
 
-	Router createSubRouter(String relativePath);
+	Router createSubRouter(String pathPrefix);
 
 }
