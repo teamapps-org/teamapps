@@ -128,7 +128,9 @@ public class NotificationBarItem {
 	}
 
 	private void fireChangeEvent() {
-		if (listener != null) listener.handleChagned();
+		if (listener != null) {
+			listener.handleChagned();
+		}
 	}
 
 	public Icon<?, ?> getIcon() {

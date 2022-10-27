@@ -98,7 +98,7 @@ public class Location {
 	private final String hash;
 
 	public Location(String protocol, String hostname, Integer port, String pathname, String search, String hash) {
-		if(!protocol.endsWith(":")) {
+		if (!protocol.endsWith(":")) {
 			protocol = protocol + ":";
 		}
 		this.href = protocol + "//" + hostname + ":" + port + RoutingUtil.withSingleLeadingSlash(pathname) + search + hash;
