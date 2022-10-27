@@ -41,6 +41,10 @@ public class NavigationState {
 		this.relativePath = relativePath;
 		this.queryParams = queryParams;
 	}
+	
+	public NavigationState withPrefix(String pathPrefix) {
+		return new NavigationState(RoutingUtil.concatenatePaths(pathPrefix, relativePath), queryParams);
+	}
 
 	public NavigationState withPath(String path) {
 		return new NavigationState(path, queryParams);
