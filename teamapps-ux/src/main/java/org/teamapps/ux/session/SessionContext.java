@@ -239,7 +239,7 @@ public class SessionContext implements Router {
 	 * button at the same time as this method is invoked, which one was first needs to be consistent on the client and server side.
 	 *
 	 * @param pathWithQueryParams May also be a complete URL, but this is not recommended, since the origin needs to stay the same.
-	 * @param fireEvent Indicates whether an onNavigationStateChange event should be fired as a reaction of this invocation.
+	 * @param fireEvent           Indicates whether an onNavigationStateChange event should be fired as a reaction of this invocation.
 	 */
 	public void pushNavigationHistoryState(String pathWithQueryParams, boolean fireEvent) {
 		changeNavigationHistoryState(pathWithQueryParams, fireEvent, NavigationHistoryOperation.PUSH);
