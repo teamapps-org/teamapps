@@ -28,7 +28,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RoutingUtil {
@@ -92,18 +91,6 @@ public class RoutingUtil {
 		return absolutePath + (queryParams.isEmpty() ? "" : "?" + queryParams.entrySet().stream()
 				.map(e -> e.getKey() + "=" + e.getValue())
 				.collect(Collectors.joining("&")));
-	}
-
-	public static Optional<NavigationState> locationToNavigationState(Location location, String pathPrefix) {
-		String path = location.getPathname();
-		if (!path.startsWith(pathPrefix)) {
-			LOGGER.warn("path does not start with prefix '{}'. Will return null!", pathPrefix);
-			return Optional.empty();
-		}
-		String relativePath = pathPrefix.equals("/") ? path : path.substring(pathPrefix.length());
-
-		Map<String, String> queryParams = RoutingUtil.parseQueryParams(location.getSearch());
-		return Optional.of(new NavigationState(relativePath, queryParams));
 	}
 
 }
