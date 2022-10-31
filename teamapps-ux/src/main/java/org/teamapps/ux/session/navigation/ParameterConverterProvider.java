@@ -25,9 +25,12 @@ import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.internal.inject.ParamConverters;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ParameterConverterProvider implements ParamConverterProvider {
 
@@ -44,7 +47,8 @@ public class ParameterConverterProvider implements ParamConverterProvider {
 				new ParamConverters.CharacterProvider(),
 				new ParamConverters.TypeFromString(),
 				new ParamConverters.StringConstructor(),
-				new ParamConverters.OptionalProvider()
+				new ParamConverters.OptionalProvider(),
+				new ListParamConverterProvider()
 		));
 	}
 
@@ -76,5 +80,51 @@ public class ParameterConverterProvider implements ParamConverterProvider {
 				}
 			}
 		});
+	}
+
+	private class ListParamConverterProvider implements ParamConverterProvider {
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+			if (!List.class.isAssignableFrom(rawType)) {
+				return null;
+			}
+			Type parameterType;
+			if (genericType instanceof ParameterizedType) {
+				parameterType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+				return (ParamConverter<T>) new ListValuedParamConverter(parameterType);
+			} else {
+				return null;
+			}
+		}
+	}
+
+	private class ListValuedParamConverter implements ParamConverter<List<?>> {
+
+		private final ParamConverter<?> itemConverter;
+
+		public ListValuedParamConverter(Type parameterType) {
+			itemConverter = ParameterConverterProvider.this.getConverter((Class<?>) parameterType, parameterType, null);
+		}
+
+		@Override
+		public List<?> fromString(String param) {
+			if (param == null || param.trim().isEmpty()) {
+				return null;
+			}
+			return Arrays.stream(param.split(","))
+					.map(s -> (itemConverter).fromString(s))
+					.collect(Collectors.toList());
+		}
+
+		@Override
+		public String toString(List<?> list) {
+			if (list == null || list.isEmpty()) {
+				return null;
+			}
+			return list.stream()
+					.map(item -> (((ParamConverter) itemConverter)).toString(item))
+					.collect(Collectors.joining(","));
+		}
 	}
 }
