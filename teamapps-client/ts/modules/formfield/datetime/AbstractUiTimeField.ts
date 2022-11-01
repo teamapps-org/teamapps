@@ -66,7 +66,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		})));
 
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
-		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiTimeField default-min-field-width");
+		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiTimeField", "default-min-field-width");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
