@@ -222,12 +222,12 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this._grid = new Slick.Grid($table, this.dataProvider, this.getVisibleColumns(), options);
 
 		if (config.headerRowFields) {
-			this.configureOuterFields(config.headerRowFields as FieldsByName, true);
 			this.headerRowFields = config.headerRowFields as FieldsByName;
+			this.configureOuterFields(config.headerRowFields as FieldsByName, true);
 		}
 		if (config.footerRowFields) {
-			this.configureOuterFields(config.footerRowFields as FieldsByName, false);
 			this.footerRowFields = config.footerRowFields as FieldsByName;
+			this.configureOuterFields(config.footerRowFields as FieldsByName, false);
 		}
 
 		if (config.hideHeaders) {
@@ -994,6 +994,20 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	closeContextMenu(requestId: number): void {
 		this.contextMenu.close(requestId);
+	}
+
+	setHeaderRowFields(headerRowFields: { [p: string]: unknown }): any {
+		this.configureOuterFields(headerRowFields as FieldsByName, true);
+		if (this._grid != null) {
+			this._grid.setColumns(this._grid.getColumns());
+		}
+	}
+
+	setFooterRowFields(footerRowFields: { [p: string]: unknown }): any {
+		this.configureOuterFields(footerRowFields as FieldsByName, false);
+		if (this._grid != null) {
+			this._grid.setColumns(this._grid.getColumns());
+		}
 	}
 
 }

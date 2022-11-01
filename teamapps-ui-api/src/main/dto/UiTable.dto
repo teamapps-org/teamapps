@@ -110,6 +110,7 @@ class UiTable extends UiComponent {
     int headerRowHeight = 28;
     String headerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
     Dictionary<UiField*> headerRowFields;
+    command setHeaderRowFields(Dictionary<UiField*> headerRowFields);
 
 	boolean showFooterRow = false;
     int footerRowBorderWidth = 1; // even in list mode! the border will be there but transparent!
@@ -117,6 +118,7 @@ class UiTable extends UiComponent {
     int footerRowHeight = 28;
     String footerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
     Dictionary<UiField*> footerRowFields;
+    command setFooterRowFields(Dictionary<UiField*> footerRowFields);
 }
 
 class UiRefreshableTableConfigUpdate {
