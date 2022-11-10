@@ -1,0 +1,19 @@
+### JavaScript stuff
+node/
+node_modules/
+npm-debug.log
+ts/**/*.map
+ts/generated/
+dist/
+stats.json
+
+### yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+yarn-error.log

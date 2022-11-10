@@ -60,7 +60,7 @@
                 <version>1.6</version>
                 <configuration>
                     <nodeVersion>v14.17.3</nodeVersion>
-                    <yarnVersion>v1.22.5</yarnVersion>
+                    <yarnVersion>v1.22.59</yarnVersion>
                 </configuration>
                 <executions>
                     <execution>

@@ -104,17 +104,6 @@ tmp/
 */LICENSE.txt
 
 
-### JavaScript stuff
-yarn-error.log
-teamapps-client/node/
-teamapps-client/node_modules/
-teamapps-client/npm-debug.log
-#teamapps-client/ts/**/*.js
-teamapps-client/ts/**/*.map
-teamapps-client/ts/generated/
-teamapps-client/dist/
-teamapps-client/stats.json
-
 ### MicrosoftOffice template
 *.tmp
 ~$*.doc*
