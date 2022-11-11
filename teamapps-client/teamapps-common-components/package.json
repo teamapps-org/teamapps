@@ -1,0 +1,7 @@
+{
+  "name": "teamapps-common-components",
+  "version": "1.0.0",
+  "dependencies": {
+    "teamapps-client-communication": "workspace:*"
+  }
+}

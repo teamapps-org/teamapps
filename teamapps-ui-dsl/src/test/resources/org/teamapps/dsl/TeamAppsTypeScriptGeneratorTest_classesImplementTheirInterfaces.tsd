@@ -8,6 +8,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {AConfig} from "./AConfig";
 import {BConfig} from "./BConfig";
 import {CConfig} from "./CConfig";
+import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
 
 export interface DConfig extends AConfig, BConfig, CConfig {
 	_type?: string;

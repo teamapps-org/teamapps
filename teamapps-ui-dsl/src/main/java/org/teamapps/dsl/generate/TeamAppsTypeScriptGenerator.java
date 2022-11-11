@@ -84,14 +84,26 @@ public class TeamAppsTypeScriptGenerator {
         File parentDir = FileUtils.createDirectory(targetDir);
 
         for (TeamAppsDtoParser.EnumDeclarationContext enumContext : model.getOwnEnumDeclarations()) {
+            if (enumContext.notGeneratedAnnotation() != null) {
+                System.out.println("Skipping @NotGenerated enum: " + enumContext.Identifier());
+                continue;
+            }
             generateEnum(enumContext, new FileWriter(new File(parentDir, enumContext.Identifier() + ".ts")));
         }
         for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getOwnInterfaceDeclarations()) {
+            if (interfaceContext.notGeneratedAnnotation() != null) {
+                System.out.println("Skipping @NotGenerated interface: " + interfaceContext.Identifier());
+                continue;
+            }
             logger.info("Generating typescript definitions for interface: " + interfaceContext.Identifier());
             System.out.println("Generating typescript definitions for interface: " + interfaceContext.Identifier());
             generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, interfaceContext.Identifier() + "Config.ts")));
         }
         for (TeamAppsDtoParser.ClassDeclarationContext clazzContext : model.getOwnClassDeclarations()) {
+            if (clazzContext.notGeneratedAnnotation() != null) {
+                System.out.println("Skipping @NotGenerated class: " + clazzContext.Identifier());
+                continue;
+            }
             logger.info("Generating typescript definitions for class: " + clazzContext.Identifier());
             generateClassDefinition(clazzContext, new FileWriter(new File(parentDir, clazzContext.Identifier() + "Config.ts")));
         }

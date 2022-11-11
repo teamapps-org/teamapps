@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import org.junit.Test;
-import org.teamapps.dto.UiCommand;
 
 import java.io.IOException;
 import java.net.URL;

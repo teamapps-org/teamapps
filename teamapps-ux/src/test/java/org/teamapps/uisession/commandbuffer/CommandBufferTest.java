@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.teamapps.uisession.CMD;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

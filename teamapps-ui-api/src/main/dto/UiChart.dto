@@ -19,7 +19,7 @@
  */
 package org.teamapps.dto;
 
-import Abcde from "blah":org.teamapps.dto.blah;
+//import Abcde from "blah":org.teamapps.dto;
 
 
 class AbstractUiChart extends UiComponent {

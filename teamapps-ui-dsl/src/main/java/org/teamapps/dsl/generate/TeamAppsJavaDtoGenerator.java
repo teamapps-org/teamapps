@@ -39,7 +39,6 @@ public class TeamAppsJavaDtoGenerator {
 	private final static Logger logger = LoggerFactory.getLogger(TeamAppsJavaDtoGenerator.class);
 
 	private final STGroupFile stGroup;
-	private final String packageName;
 	private final TeamAppsIntermediateDtoModel model;
 
 	public static void main(String[] args) throws IOException, ParseException {
@@ -60,8 +59,6 @@ public class TeamAppsJavaDtoGenerator {
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
 
-		String packageName = cmd.getOptionValue('p');
-
 		TeamAppsIntermediateDtoModel[] importedModels = Optional.ofNullable(cmd.getOptionValues('i')).stream().flatMap(Arrays::stream)
 				.map(dir -> {
 					try {
@@ -81,51 +78,59 @@ public class TeamAppsJavaDtoGenerator {
 		File targetDir = new File(cmd.getArgs()[1]);
 
 
-		System.out.println("Generating Java from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath() + " with package name " + packageName);
+		System.out.println("Generating Java from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath());
 
 
 		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModels);
 		new TeamAppsDtoModelValidator(model).validate();
-		new TeamAppsJavaDtoGenerator(packageName, model)
-				.generate(targetDir);
+		new TeamAppsJavaDtoGenerator(model).generate(targetDir);
 	}
 
 	public TeamAppsJavaDtoGenerator(TeamAppsIntermediateDtoModel model) throws IOException {
-		this("org.teamapps.dto", model);
-	}
-
-	public TeamAppsJavaDtoGenerator(String packageName, TeamAppsIntermediateDtoModel model) throws IOException {
-		this.packageName = packageName;
 		this.model = model;
 		stGroup = StGroupFactory.createStGroup("/org/teamapps/dsl/TeamAppsJavaDtoGenerator.stg", this.model);
 	}
 
 	public void generate(File targetDir) throws IOException {
 		FileUtils.deleteDirectory(targetDir);
-		File parentDir = FileUtils.createDirectory(new File(targetDir, packageName.replace('.', '/')));
-
 		for (TeamAppsDtoParser.ClassDeclarationContext clazzContext : model.getOwnClassDeclarations()) {
+			String packageName = TeamAppsIntermediateDtoModel.getPackageName(clazzContext);
+			File packageDir = FileUtils.createDirectory(new File(targetDir, packageName.replace('.', '/')));
+			if (clazzContext.notGeneratedAnnotation() != null) {
+				System.out.println("Skipping @NotGenerated class: " + clazzContext.Identifier());
+				continue;
+			}
 			System.out.println("Generating class: " + clazzContext.Identifier());
-			generateClass(clazzContext, new FileWriter(new File(parentDir, clazzContext.Identifier() + ".java")));
-			generateClassJsonWrapper(clazzContext, new FileWriter(new File(parentDir, clazzContext.Identifier() + "Wrapper.java")));
+			generateClass(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + ".java")));
+			generateClassJsonWrapper(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + "Wrapper.java")));
 			if (model.isReferenceableBaseClass(clazzContext)) {
-				generateClassReference(clazzContext, new FileWriter(new File(parentDir, clazzContext.Identifier() + "Reference.java")));
+				generateClassReference(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + "Reference.java")));
 			}
 		}
 		for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getOwnInterfaceDeclarations()) {
+			String packageName = TeamAppsIntermediateDtoModel.getPackageName(interfaceContext);
+			File packageDir = FileUtils.createDirectory(new File(targetDir, packageName.replace('.', '/')));
+			if (interfaceContext.notGeneratedAnnotation() != null) {
+				System.out.println("Skipping @NotGenerated interface: " + interfaceContext.Identifier());
+				continue;
+			}
 			logger.info("Generating interface: " + interfaceContext.Identifier());
-			generateInterface(interfaceContext, new FileWriter(new File(parentDir, interfaceContext.Identifier() + ".java")));
-			generateInterfaceJsonWrapper(interfaceContext, new FileWriter(new File(parentDir, interfaceContext.Identifier() + "Wrapper.java")));
+			generateInterface(interfaceContext, new FileWriter(new File(packageDir, interfaceContext.Identifier() + ".java")));
+			generateInterfaceJsonWrapper(interfaceContext, new FileWriter(new File(packageDir, interfaceContext.Identifier() + "Wrapper.java")));
 		}
 		for (TeamAppsDtoParser.EnumDeclarationContext enumContext : model.getOwnEnumDeclarations()) {
-			generateEnum(enumContext, new FileWriter(new File(parentDir, enumContext.Identifier() + ".java")));
+			String packageName = TeamAppsIntermediateDtoModel.getPackageName(enumContext);
+			File packageDir = FileUtils.createDirectory(new File(targetDir, packageName.replace('.', '/')));
+			if (enumContext.notGeneratedAnnotation() != null) {
+				System.out.println("Skipping @NotGenerated enum: " + enumContext.Identifier());
+				continue;
+			}
+			generateEnum(enumContext, new FileWriter(new File(packageDir, enumContext.Identifier() + ".java")));
 		}
-		generateJacksonTypeIdMaps(new FileWriter(new File(parentDir, "UiObjectJacksonTypeIdMaps.java")));
 	}
 
 	private void generateClassJsonWrapper(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("jsonWrapper")
-				.add("package", packageName)
 				.add("c", clazzContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());
@@ -134,7 +139,6 @@ public class TeamAppsJavaDtoGenerator {
 
 	private void generateInterfaceJsonWrapper(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("jsonWrapper")
-				.add("package", packageName)
 				.add("c", interfaceContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());
@@ -143,7 +147,6 @@ public class TeamAppsJavaDtoGenerator {
 
 	private void generateEventJsonWrapper(TeamAppsDtoParser.EventDeclarationContext interfaceContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("jsonWrapper")
-				.add("package", packageName)
 				.add("c", interfaceContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());
@@ -152,7 +155,6 @@ public class TeamAppsJavaDtoGenerator {
 
 	void generateClass(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("class")
-				.add("package", packageName)
 				.add("c", clazzContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());
@@ -161,7 +163,6 @@ public class TeamAppsJavaDtoGenerator {
 
 	void generateClassReference(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("classReference")
-				.add("package", packageName)
 				.add("c", clazzContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());
@@ -170,7 +171,6 @@ public class TeamAppsJavaDtoGenerator {
 
 	void generateInterface(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("interface")
-				.add("package", packageName)
 				.add("i", interfaceContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());
@@ -179,7 +179,6 @@ public class TeamAppsJavaDtoGenerator {
 
 	void generateEnum(TeamAppsDtoParser.EnumDeclarationContext enumContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("enumClass")
-				.add("package", packageName)
 				.add("e", enumContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());
@@ -194,7 +193,6 @@ public class TeamAppsJavaDtoGenerator {
 		allJsonSerializableClasses.addAll(model.getOwnEventDeclarations());
 		allJsonSerializableClasses.addAll(model.getOwnQueryDeclarations());
 		ST template = stGroup.getInstanceOf("jacksonTypeIdMaps")
-				.add("package", packageName)
 				.add("allJsonSerializableClasses", allJsonSerializableClasses);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());

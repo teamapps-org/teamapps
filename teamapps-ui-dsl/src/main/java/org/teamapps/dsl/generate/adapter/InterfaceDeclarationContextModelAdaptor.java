@@ -39,7 +39,9 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 	@Override
 	public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
 		TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext = (TeamAppsDtoParser.InterfaceDeclarationContext) o;
-		if ("imports".equals(propertyName)) {
+		if ("packageName".equals(propertyName)) {
+			return TeamAppsIntermediateDtoModel.getPackageName(interfaceContext);
+		} else if ("imports".equals(propertyName)) {
 			return astUtil.getAllImports(interfaceContext);
 		} else if ("allProperties".equals(propertyName)) {
 			return astUtil.findAllProperties(interfaceContext);

@@ -3,7 +3,7 @@ node/
 node_modules/
 npm-debug.log
 ts/**/*.map
-ts/generated/
+generated/
 dist/
 stats.json
 

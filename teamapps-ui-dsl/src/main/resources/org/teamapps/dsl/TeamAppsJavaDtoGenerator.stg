@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-class(c, package) ::= <<
-<javaFilePrelude(package)>
+class(c) ::= <<
+<javaFilePrelude(c.packageName)>
 
 <c.imports:importDecl()>
 
@@ -44,7 +44,7 @@ public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superC
 	<c.propertiesNotImplementedBySuperClasses:setter(c.Identifier.text); separator="\n\n">
 
 	<c.eventDeclaration:eventClass(); separator="\n\n">
-	<c.eventDeclaration:eventJsonWrapper(package); separator="\n\n">
+	<c.eventDeclaration:eventJsonWrapper(); separator="\n\n">
 
 	<c.queryDeclaration:queryClass(); separator="\n\n">
 
@@ -75,8 +75,8 @@ typeRegistrations(c) ::= <<
     }
 >>
 
-classReference(c, package) ::= <<
-<javaFilePrelude(package)>
+classReference(c) ::= <<
+<javaFilePrelude(c.packageName)>
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
 @JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -91,15 +91,15 @@ public class <c.Identifier>Reference {
 
 }>>
 
-interface(i, package) ::= <<
-<javaFilePrelude(package)>
+interface(i) ::= <<
+<javaFilePrelude(i.packageName)>
 
 <i.imports:importDecl()>
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
 @JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface <i.Identifier> extends <if(i.superInterfaceDecl)><i.superInterfaces:{si|<si.Identifier>}; separator=", ">, <endif>UiObject {
+public interface <i.Identifier><if(i.typeArguments)><i.typeArguments.text><endif> extends <if(i.superInterfaceDecl)><i.superInterfaces:{si|<si.Identifier>}; separator=", ">, <endif>UiObject {
 
 	<i.propertyDeclaration:getterStub(); separator="\n">
 	<i.nonRequiredProperties:setterStub(i); separator="\n">
@@ -112,8 +112,8 @@ public interface <i.Identifier> extends <if(i.superInterfaceDecl)><i.superInterf
 
 }>>
 
-javaFilePrelude(package) ::= <<
-package <package>;
+javaFilePrelude(packageName) ::= <<
+package <packageName>;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -224,8 +224,8 @@ public <clazzName; format="cap"> set<propertyDeclaration.Identifier.text; format
 
 propertyAssignment(p) ::= "this.<p.Identifier> = <p.Identifier>;"
 
-enumClass(e, package) ::= <<
-<javaFilePrelude(package)>
+enumClass(e) ::= <<
+<javaFilePrelude(e.packageName)>
 public enum <e.Identifier> {
 	<e.enumConstant:enumConstant(e.hasStringValues); separator=",\n">;
 
@@ -315,82 +315,8 @@ public static class <cmd.Identifier.text; format="cap">Command implements UiComm
 }
 >>
 
-uiEventBaseClass(package) ::= <<
-<javaFilePrelude(package)>
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
-@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public interface UiEvent {
-
-	String getComponentId();
-
-}
->>
-
-jacksonTypeIdMaps(package, allJsonSerializableClasses) ::= <<
-<javaFilePrelude(package)>
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-public class UiObjectJacksonTypeIdMaps {
-	public static final Map\<Class, String> ID_BY_CLASS = Collections.unmodifiableMap(new HashMap\<Class, String>() {{
-		<allJsonSerializableClasses:{c|this.put(<c.javaClassName>.class, "<c._type>");}; separator=";\n">
-	}});
-	public static final Map\<String, Class> CLASS_BY_ID = Collections.unmodifiableMap(new HashMap\<String, Class>() {{
-		<allJsonSerializableClasses:{c|this.put("<c._type>", <c.javaClassName>.class);}; separator=";\n">
-	}});
-
-	static {
-        TeamAppsJacksonTypeIdResolver.registerAll(ID_BY_CLASS);
-    }
-}
->>
-
-cmd(package) ::= <<
-<javaFilePrelude(package)>
-import com.fasterxml.jackson.annotation.JsonRawValue;
-
-public class CMD {
-
-	protected long id;
-
-	@JsonRawValue
-	protected String uiCommand;
-
-	/**
-	 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-	 */
-	@Deprecated
-	public CMD() {
-		// default constructor for Jackson
-	}
-
-	public CMD(long id, String uiCommand) {
-		this.id = id;
-		this.uiCommand = uiCommand;
-	}
-
-	@Override
-	public String toString() {
-		return "CMD{uiCommand='" + uiCommand.substring(0, 20) + '\'' + ", id=" + id + '}';
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public String getUiCommand() {
-		return uiCommand;
-	}
-
-}
->>
-
-jsonWrapper(c, package) ::= <<
-<javaFilePrelude(package)>
+jsonWrapper(c) ::= <<
+<javaFilePrelude(c.packageName)>
 
 public class <c.Identifier.text>Wrapper extends <if(c.superClassDecl)><c.superClassDecl.typeName.text>Wrapper<else>JsonWrapper<endif> {
 
@@ -402,7 +328,7 @@ public class <c.Identifier.text>Wrapper extends <if(c.superClassDecl)><c.superCl
 }
 >>
 
-eventJsonWrapper(c, package) ::= <<
+eventJsonWrapper(c) ::= <<
 public static class <c.Identifier.text; format="cap">EventWrapper extends JsonWrapper {
 
     public <c.Identifier.text; format="cap">EventWrapper(JsonNode jsonNode) {

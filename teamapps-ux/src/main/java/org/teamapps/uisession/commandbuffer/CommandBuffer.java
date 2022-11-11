@@ -21,7 +21,7 @@ package org.teamapps.uisession.commandbuffer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.uisession.CMD;
+import org.teamapps.dto.CMD;
 
 /**
  * NOT THREAD-SAFE! Synchronization must be provided by client code.
@@ -61,14 +61,14 @@ public class CommandBuffer {
 		int size = 0;
 		for (int i = 0; i < buffer.length; i++) {
 			if (buffer[i] != null) {
-				size += buffer[i].getUiCommand().length();
+				size += buffer[i].getC().length();
 			}
 		}
 		return size;
 	}
 
 	public void addCommand(CMD command) throws CommandBufferException {
-		while (totalSize + command.getUiCommand().length() > maxTotalSize) {
+		while (totalSize + command.getC().length() > maxTotalSize) {
 			if (!tryPurgingNextCommandFromTail()) {
 				throw new CommandBufferSizeOverflowException("Command buffer SIZE overflow. Max total size: " + maxTotalSize + " characters");
 			}
@@ -83,7 +83,7 @@ public class CommandBuffer {
 			bufferFlippedAtLeastOnce = true;
 		}
 		head = (head + 1) % buffer.length;
-		totalSize += command.getUiCommand().length();
+		totalSize += command.getC().length();
 	}
 
 	public CMD consumeCommand() {
@@ -112,7 +112,7 @@ public class CommandBuffer {
 		CMD cmd = buffer[tail];
 		buffer[tail] = null;
 		tail = (tail + 1) % buffer.length;
-		totalSize -= cmd.getUiCommand().length();
+		totalSize -= cmd.getC().length();
 		return true;
 	}
 

@@ -5,7 +5,7 @@
 export const typescriptDeclarationFixConstant = 1;
 
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiCommand} from "./UiCommand";
+import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
 
 export interface AConfig {
 	_type?: string;

@@ -11,8 +11,7 @@ import {BCommandHandler} from "./BConfig";
 import {ACommandHandler} from "./AConfig";
 import {BEventSource} from "./BConfig";
 import {AEventSource} from "./AConfig";
-import {UiCommand} from "./UiCommand";
-import {UiEventConfig} from "./UiEventConfig";
+import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
 
 export interface CConfig extends BConfig, AConfig {
 	_type?: string;

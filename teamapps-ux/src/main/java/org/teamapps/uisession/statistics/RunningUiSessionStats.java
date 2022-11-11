@@ -21,7 +21,6 @@ package org.teamapps.uisession.statistics;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiQuery;
 import org.teamapps.uisession.UiSessionState;

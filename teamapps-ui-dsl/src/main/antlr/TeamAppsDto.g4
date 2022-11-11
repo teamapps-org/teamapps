@@ -14,13 +14,13 @@ importDeclaration : 'import' Identifier 'from' StringLiteral ':' packageName ';'
 
 typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 
-enumDeclaration : 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? ';'? '}' ;
+enumDeclaration : notGeneratedAnnotation? 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? ';'? '}' ;
 enumConstant : Identifier ('=' StringLiteral)?;
 
-classDeclaration  : typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
+classDeclaration  : notGeneratedAnnotation? typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
-interfaceDeclaration  : 'interface' Identifier superInterfaceDecl? '{'
+interfaceDeclaration : notGeneratedAnnotation? 'interface' Identifier typeArguments? superInterfaceDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
 superClassDecl: 'extends' typeName;
@@ -61,6 +61,7 @@ primitiveType
     ;
 
 typescriptFactoryAnnotation : '@TypeScriptFactory';
+notGeneratedAnnotation : '@NotGenerated';
 referenceableAnnotation: '@Referenceable';
 abstractModifier : 'abstract';
 requiredModifier : 'required';

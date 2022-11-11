@@ -41,7 +41,9 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
     @Override
     public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
         TeamAppsDtoParser.ClassDeclarationContext classContext = (TeamAppsDtoParser.ClassDeclarationContext) o;
-        if ("imports".equals(propertyName)) {
+        if ("packageName".equals(propertyName)) {
+            return TeamAppsIntermediateDtoModel.getPackageName(classContext);
+        } else if ("imports".equals(propertyName)) {
             return model.getAllImports(classContext);
         } else if ("allProperties".equals(propertyName)) {
             return model.findAllProperties(classContext);

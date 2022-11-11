@@ -24,6 +24,7 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 public class EnumDeclarationContextModelAdapter extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.EnumDeclarationContext> {
 
@@ -31,6 +32,8 @@ public class EnumDeclarationContextModelAdapter extends ReferencableEntityModelA
 	public Object getProperty(Interpreter interpreter, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
 		TeamAppsDtoParser.EnumDeclarationContext enumContext = (TeamAppsDtoParser.EnumDeclarationContext) o;
 		switch (propertyName) {
+			case "packageName":
+				return TeamAppsIntermediateDtoModel.getPackageName(enumContext);
 			case "hasStringValues":
 				return enumContext.enumConstant().stream().allMatch(ec -> ec.StringLiteral() != null);
 			default:

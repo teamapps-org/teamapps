@@ -33,9 +33,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
-<if(c.hasCommands)>import {UiCommand} from "./UiCommand";<endif>
-<if(c.hasEvents)>import {UiEventConfig} from "./UiEventConfig";<endif>
-<if(c.hasQueries)>import {UiQueryConfig} from "./UiQueryConfig";<endif>
+import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
 
 export interface <c.Identifier.text>Config <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.Identifier>Config};  separator=", "> <endif>{
 	_type?: string;
@@ -106,9 +104,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
-<if(c.hasCommands)>import {UiCommandConfig} from "./UiCommandConfig";<endif>
-<if(c.hasEvents)>import {UiEventConfig} from "./UiEventConfig";<endif>
-<if(c.hasQueries)>import {UiQueryConfig} from "./UiQueryConfig";<endif>
+import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
 
 export interface <c.Identifier.text>Config <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|<superInterface.Identifier>Config}; separator=", "> <endif>{
 	_type?: string;

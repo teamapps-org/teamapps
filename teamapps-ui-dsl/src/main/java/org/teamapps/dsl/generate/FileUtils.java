@@ -21,13 +21,15 @@ package org.teamapps.dsl.generate;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class FileUtils {
 
     public static File createDirectory(File parentDir) {
-        boolean successfullyCreatedParentDirs = parentDir.mkdirs();
-        if (!successfullyCreatedParentDirs) {
-            throw new IllegalStateException("Could not create directories to " + parentDir.getAbsolutePath());
+        try {
+            Files.createDirectories(parentDir.toPath());
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not create directories to " + parentDir.getAbsolutePath(), e);
         }
         return parentDir;
     }
