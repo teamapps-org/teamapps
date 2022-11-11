@@ -135,7 +135,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if ("defaultValue".equals(propertyName)) {
 			return PRIMITIVE_TYPE_TO_DEFAULT_VALUE.getOrDefault(typeContext.getText(), "null");
 		} else if ("typeScriptType".equals(propertyName)) {
-			return getTypeScriptType(typeContext);
+			return getTypeScriptTypeName(typeContext);
 		} else if ("isObjectReference".equals(propertyName)) {
 			if (isObject(typeContext)) {
 				return true;
@@ -194,15 +194,15 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		return false;
 	}
 
-	private String getTypeScriptType(TeamAppsDtoParser.TypeContext typeContext) {
+	private String getTypeScriptTypeName(TeamAppsDtoParser.TypeContext typeContext) {
 		if (isObject(typeContext)) {
 			return "any";
 		} else if ("String".equals(typeContext.getText())) {
 			return "string";
 		} else if (isList(typeContext)) {
-			return getTypeScriptType(getFirstTypeArgument(typeContext)) + "[]";
+			return getTypeScriptTypeName(getFirstTypeArgument(typeContext)) + "[]";
 		} else if (isDictionary(typeContext)) {
-			return "{[name: string]: " + getTypeScriptType(getFirstTypeArgument(typeContext)) + "}";
+			return "{[name: string]: " + getTypeScriptTypeName(getFirstTypeArgument(typeContext)) + "}";
 		} else if (isUiClientObjectReference(typeContext)) {
 			return "unknown";
 		} else if (isTypeScriptConfigSuffixed(typeContext)) {
@@ -219,7 +219,10 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 	}
 
 	private boolean isTypeScriptConfigSuffixed(TeamAppsDtoParser.TypeContext typeContext) {
-		return model.findReferencedClass(typeContext) != null || model.findReferencedInterface(typeContext) != null;
+		TeamAppsDtoParser.ClassDeclarationContext referencedClass = model.findReferencedClass(typeContext);
+		TeamAppsDtoParser.InterfaceDeclarationContext referencedInterface = model.findReferencedInterface(typeContext);
+		return referencedClass != null && referencedClass.managedModifier() != null
+				|| referencedInterface != null && referencedInterface.managedModifier() != null;
 	}
 
 	private boolean isList(TeamAppsDtoParser.TypeContext typeContext) {

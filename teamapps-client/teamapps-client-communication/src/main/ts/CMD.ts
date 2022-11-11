@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiCommand} from "./UiCommand";
+import {UiCommand} from "./generated";
 
 export interface CMD {
 	id: number, // sequence number

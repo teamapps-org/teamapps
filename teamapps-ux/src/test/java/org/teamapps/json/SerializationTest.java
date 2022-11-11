@@ -20,12 +20,19 @@
 package org.teamapps.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.teamapps.dto.*;
 
 public class SerializationTest {
 
-	private ObjectMapper teamAppsObjectMapper = TeamAppsObjectMapperFactory.create();
+	private ObjectMapper teamAppsObjectMapper;
+
+	@Before
+	public void setUp() throws Exception {
+		teamAppsObjectMapper = TeamAppsObjectMapperFactory.create();
+		teamAppsObjectMapper.registerSubtypes(INIT_NOK.class);
+	}
 
 	@Test
 	public void serializeViaJsonSimple() throws Exception {
@@ -48,12 +55,6 @@ public class SerializationTest {
 	@Test
 	public void deserializeViaJackson() throws Exception {
 		UiObject uiObject = teamAppsObjectMapper.readValue("{\"_type\": \"INIT_NOK\", \"reason\":0}", UiObject.class);
-		System.out.println(uiObject);
-	}
-
-	@Test
-	public void deserializeEvents() throws Exception {
-		UiEvent uiObject = teamAppsObjectMapper.readValue("{\"componentId\":\"componentId\",\"_type\":\"UiGridForm.sectionCollapsedStateChanged\"}", UiEvent.class);
 		System.out.println(uiObject);
 	}
 

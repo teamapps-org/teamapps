@@ -19,16 +19,16 @@
  */
 
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
-import {UiComponentConfig} from "./generated/UiComponentConfig";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiTabConfig} from "./generated/UiTabConfig";
-import {bind} from "./util/Bind";
-import {Emptyable, isEmptyable} from "./util/Emptyable";
-import {UiToolButton} from "./micro-components/UiToolButton";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiTab as UiTabConfig} from "../generated/UiTab";
+import {bind} from "../util/Bind";
+import {Emptyable, isEmptyable} from "../util/Emptyable";
+import {UiToolButton} from "./UiToolButton";
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {UiDropDown} from "./micro-components/UiDropDown";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {UiDropDown} from "../micro-components/UiDropDown";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {
 	UiTabPanel_TabClosedEvent,
 	UiTabPanel_TabNeedsRefreshEvent,
@@ -37,13 +37,13 @@ import {
 	UiTabPanelCommandHandler,
 	UiTabPanelConfig,
 	UiTabPanelEventSource
-} from "./generated/UiTabPanelConfig";
-import {createUiToolButtonConfig} from "./generated/UiToolButtonConfig";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiTabPanelTabStyle} from "./generated/UiTabPanelTabStyle";
-import {insertAtIndex, insertBefore, maximizeComponent, parseHtml, prependChild} from "./Common";
-import {UiWindowButtonType} from "./generated/UiWindowButtonType";
-import {StaticIcons} from "./util/StaticIcons";
+} from "../generated/UiTabPanelConfig";
+import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {UiTabPanelTabStyle} from "../generated/UiTabPanelTabStyle";
+import {insertAtIndex, insertBefore, maximizeComponent, parseHtml, prependChild} from "../Common";
+import {UiWindowButtonType} from "../generated/UiWindowButtonType";
+import {StaticIcons} from "../util/StaticIcons";
 import {UiComponent} from "./UiComponent";
 
 

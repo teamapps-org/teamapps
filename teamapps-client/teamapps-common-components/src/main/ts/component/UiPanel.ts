@@ -18,24 +18,24 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiPanelHeaderFieldConfig} from "./generated/UiPanelHeaderFieldConfig";
+import {UiPanelHeaderField} from "../generated/UiPanelHeaderField";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
-import {UiToolButton} from "./micro-components/UiToolButton";
+import {UiToolButton} from "./UiToolButton";
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
-import {UiPanel_WindowButtonClickedEvent, UiPanelCommandHandler, UiPanelConfig, UiPanelEventSource,} from "./generated/UiPanelConfig";
-import {createUiToolButtonConfig} from "./generated/UiToolButtonConfig";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {StaticIcons} from "./util/StaticIcons";
-import {UiWindowButtonType} from "./generated/UiWindowButtonType";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {insertBefore, maximizeComponent, outerWidthIncludingMargins, parseHtml, prependChild} from "./Common";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
+import {UiPanel_WindowButtonClickedEvent, UiPanelCommandHandler, UiPanelConfig, UiPanelEventSource,} from "../generated/UiPanelConfig";
+import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {StaticIcons} from "../util/StaticIcons";
+import {UiWindowButtonType} from "../generated/UiWindowButtonType";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {insertBefore, maximizeComponent, outerWidthIncludingMargins, parseHtml, prependChild} from "../Common";
 import {UiComponent} from "./UiComponent";
-import {UiPanelHeaderComponentMinimizationPolicy} from "./generated/UiPanelHeaderComponentMinimizationPolicy";
+import {UiPanelHeaderComponentMinimizationPolicy} from "../generated/UiPanelHeaderComponentMinimizationPolicy";
 
 interface HeaderField {
-	config: UiPanelHeaderFieldConfig;
+	config: UiPanelHeaderField;
 	field: UiComponent;
 	$wrapper: HTMLElement;
 	$iconAndFieldWrapper: HTMLElement;
@@ -274,19 +274,19 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		});
 	}
 
-	public setLeftHeaderField(headerFieldConfig: UiPanelHeaderFieldConfig) {
+	public setLeftHeaderField(headerFieldConfig: UiPanelHeaderField) {
 		this.leftHeaderField = this.setHeaderField(headerFieldConfig, this.$leftComponentWrapper, true);
 		this.calculateFieldWrapperSizes();
 		this.relayoutHeader();
 	}
 
-	public setRightHeaderField(headerFieldConfig: UiPanelHeaderFieldConfig) {
+	public setRightHeaderField(headerFieldConfig: UiPanelHeaderField) {
 		this.rightHeaderField = this.setHeaderField(headerFieldConfig, this.$rightComponentWrapper, false);
 		this.calculateFieldWrapperSizes();
 		this.relayoutHeader();
 	}
 
-	private setHeaderField(headerFieldConfig: UiPanelHeaderFieldConfig, $componentWrapper: HTMLElement, isLeft: boolean): HeaderField {
+	private setHeaderField(headerFieldConfig: UiPanelHeaderField, $componentWrapper: HTMLElement, isLeft: boolean): HeaderField {
 		if (isLeft && this.leftHeaderField) {
 			this.leftHeaderField.$iconAndFieldWrapper.remove();
 		} else if (!isLeft && this.rightHeaderField) {

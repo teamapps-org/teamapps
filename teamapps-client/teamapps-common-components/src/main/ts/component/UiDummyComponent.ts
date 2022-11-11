@@ -18,12 +18,12 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiDummyComponent_ClickedEvent, UiDummyComponentCommandHandler, UiDummyComponentConfig, UiDummyComponentEventSource} from "./generated/UiDummyComponentConfig";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiDummyComponent_ClickedEvent, UiDummyComponentCommandHandler, UiDummyComponentConfig, UiDummyComponentEventSource} from "../generated/UiDummyComponentConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {parseHtml} from "./Common";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {parseHtml} from "../Common";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export class UiDummyComponent extends AbstractUiComponent<UiDummyComponentConfig> implements UiDummyComponentCommandHandler, UiDummyComponentEventSource {

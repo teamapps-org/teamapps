@@ -17,8 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponentCommandHandler, UiComponentConfig} from "./generated/UiComponentConfig";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiClientObjectConfig} from "./generated/UiClientObjectConfig";
 
 export interface UiClientObject<C extends UiClientObjectConfig = UiClientObjectConfig> {

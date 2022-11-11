@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {animateCSS, Constants, parseHtml, removeClassesByFunction} from "./Common";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {animateCSS, Constants, parseHtml, removeClassesByFunction} from "../Common";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {
 	UiNotificationBar_ItemActionLinkClickedEvent,
 	UiNotificationBar_ItemClickedEvent,
@@ -29,11 +29,11 @@ import {
 	UiNotificationBarCommandHandler,
 	UiNotificationBarConfig,
 	UiNotificationBarEventSource
-} from "./generated/UiNotificationBarConfig";
-import {UiNotificationBarItemConfig} from "./generated/UiNotificationBarItemConfig";
-import {createUiSpacingValueCssString} from "./util/CssFormatUtil";
-import {ProgressBar} from "./micro-components/ProgressBar";
-import {UiExitAnimation} from "./generated/UiExitAnimation";
+} from "../generated/UiNotificationBarConfig";
+import {UiNotificationBarItem as UiNotificationBarItemConfig} from "../generated/UiNotificationBarItem";
+import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
+import {ProgressBar} from "../micro-components/ProgressBar";
+import {UiExitAnimation} from "../generated/UiExitAnimation";
 
 export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConfig> implements UiNotificationBarCommandHandler, UiNotificationBarEventSource {
 

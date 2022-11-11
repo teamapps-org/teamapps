@@ -40,6 +40,9 @@ public class TeamAppsDtoModelValidator {
 //		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
 //			validateRequiredPropertiesHaveNoDefaultValue(classDeclaration);
 //		}
+ 		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
+			validateManagedClass(classDeclaration);
+		}
 
 		List<TeamAppsDtoParser.EnumDeclarationContext> enumDeclarations = model.getEnumDeclarations();
 
@@ -74,6 +77,13 @@ public class TeamAppsDtoModelValidator {
 				.collect(Collectors.joining(";\n"));
 		if (errorMessage.length() > 0) {
 			throw new IllegalArgumentException(errorMessage);
+		}
+	}
+
+	private void validateManagedClass(TeamAppsDtoParser.ClassDeclarationContext classDeclaration) {
+		boolean hasCommandOrEvent = !model.getAllCommands(classDeclaration).isEmpty() || !model.getAllEvents(classDeclaration).isEmpty();
+		if (hasCommandOrEvent && classDeclaration.managedModifier() == null) {
+			throw new ModelValidationException("Class " + classDeclaration.Identifier().getText() + " declares a command or event but is not managed!");
 		}
 	}
 }

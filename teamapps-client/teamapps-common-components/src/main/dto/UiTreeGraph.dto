@@ -1,0 +1,104 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+managed class UiTreeGraph extends UiComponent {
+    List<UiTreeGraphNode> nodes;
+
+	String backgroundColor = "rgba(0, 0, 0, 0)";
+    double zoomFactor = 1;
+    boolean compact;
+
+    int verticalLayerGap;
+    int sideListIndent;
+    int sideListVerticalGap;
+    int horizontalSiblingGap;
+    int horizontalNonSignlingGap;
+
+    command update(UiTreeGraph config);
+
+    command setZoomFactor(double zoomFactor); // > 0
+    command setNodes(List<UiTreeGraphNode> nodes);
+    command addNode(UiTreeGraphNode node);
+    command removeNode(String nodeId);
+    command setNodeExpanded(String nodeId, boolean expanded);
+    command updateNode(UiTreeGraphNode node);
+
+    command moveToRootNode();
+    command moveToNode(String nodeId);
+
+    event nodeClicked(String nodeId);
+    event nodeExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
+    event parentExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
+    event sideListExpandedOrCollapsed(String nodeId, boolean expanded);
+}
+
+class UiBaseTreeGraphNode {
+	required String id;
+    required int width;
+    required int height;
+    String backgroundColor = "rgb(255, 255, 255)";
+    String borderColor = "rgb(100, 100, 100)";
+    double borderWidth = 1;
+    double borderRadius = 0;
+
+    UiTreeGraphNodeImage image;
+    UiTreeGraphNodeIcon icon;
+
+    UiTemplate template;     // will get embedded using foreignObject
+    UiClientRecord record;   // will get embedded using foreignObject
+
+    String connectorLineColor = "rgb(100, 100, 100)"; // line to parent node
+    int connectorLineWidth;
+    String dashArray;
+}
+
+class UiTreeGraphNode extends UiBaseTreeGraphNode{
+    String parentId;
+    boolean parentExpandable = false;
+    boolean parentExpanded = true;
+
+    boolean expanded;
+    boolean hasLazyChildren = false;
+
+    List<UiBaseTreeGraphNode> sideListNodes;
+    boolean sideListExpanded;
+}
+
+class UiTreeGraphNodeImage {
+    required String url;
+    required int width;
+    required int height;
+    int centerTopDistance; //top distance of image center from top-left corner of node, e.g. -10 and height 30 means image will be 25 pixels above the top line of the node
+    int centerLeftDistance; //left distance of image center from top-left corner of node
+    UiTreeGraphNodeImageCornerShape cornerShape = UiTreeGraphNodeImageCornerShape.ROUNDED;
+    boolean shadow = false;
+    double borderWidth = 0;
+    String borderColor = "rgb(100, 100, 100)";
+}
+
+enum UiTreeGraphNodeImageCornerShape {
+    ORIGINAL, ROUNDED, CIRCLE;
+}
+
+class UiTreeGraphNodeIcon {
+    required String icon;
+    required int size; //width = height
+}

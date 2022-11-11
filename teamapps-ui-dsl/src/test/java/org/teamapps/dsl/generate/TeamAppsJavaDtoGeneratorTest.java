@@ -110,7 +110,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 
 	@Test
 	public void staticCommands() throws Exception {
-		String dslString = "package org.teamapps.dto; abstract class A { static command a(String b); }";
+		String dslString = "package org.teamapps.dto; abstract managed class A { static command a(String b); }";
 		executeClassTest(
 				dslString,
 				"A",

@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.teamapps.dsl.generate.adapter.ModelUtil.getDeclaringTypeScriptFileBaseName;
+
 public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.QueryDeclarationContext> {
 
     private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
@@ -48,6 +50,7 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
     }
 
     public QueryDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
+        super();
         this.astUtil = astUtil;
     }
 

@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiHtmlViewCommandHandler, UiHtmlViewConfig} from "./generated/UiHtmlViewConfig";
-import {parseHtml} from "./Common";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {UiHtmlViewCommandHandler, UiHtmlViewConfig} from "../generated/UiHtmlViewConfig";
+import {parseHtml} from "../Common";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
 
 export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements UiHtmlViewCommandHandler {

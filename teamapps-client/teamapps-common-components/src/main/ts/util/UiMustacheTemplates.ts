@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import {Renderer} from "../Common";
-import {UiMustacheTemplateConfig} from "../generated/UiMustacheTemplateConfig";
+import {UiMustacheTemplate} from "../generated/UiMustacheTemplate";
 import {default as mustache} from "mustache";
 
-export function createMustacheTemplateRenderer(template: UiMustacheTemplateConfig, idPropertyName: string): Renderer {
+export function createMustacheTemplateRenderer(template: UiMustacheTemplate, idPropertyName: string): Renderer {
 	mustache.parse(template.templateString);
 
 	return {

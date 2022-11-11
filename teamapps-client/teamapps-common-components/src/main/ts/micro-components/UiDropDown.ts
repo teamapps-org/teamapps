@@ -20,7 +20,7 @@
 
 import {ClickOutsideHandle, doOnceOnClickOutsideElement, parseHtml, positionDropDown} from "../Common";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "../component/UiComponent";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiSpinner} from "./UiSpinner";
 

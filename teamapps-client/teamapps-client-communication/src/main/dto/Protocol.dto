@@ -212,6 +212,7 @@ class MULTI_CMD extends AbstractServerMessage {
     required List<Object> cmds; // the CMD class does not get generated!
 }
 
+@NotGenerated
 class CMD {
     required int id;      // the (sequential) id of this command
     required String lid;  // libraryUuid

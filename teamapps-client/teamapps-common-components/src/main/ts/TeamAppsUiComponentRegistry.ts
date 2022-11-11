@@ -17,10 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {UiComponentConfig} from "./generated/UiComponentConfig";
+import {UiComponentConfig} from "./generated";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiComponent} from "./UiComponent";
+import {UiComponent} from "./component/UiComponent";
 
 type ComponentClass<T extends UiComponent> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
 

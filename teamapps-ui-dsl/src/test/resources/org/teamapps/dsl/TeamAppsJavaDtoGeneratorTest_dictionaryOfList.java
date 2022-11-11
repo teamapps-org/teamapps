@@ -12,7 +12,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.teamapps.dto.UiObject;
-import org.teamapps.dto.TeamAppsJacksonTypeIdResolver;
 
 /**
  * THIS IS GENERATED CODE!
@@ -32,12 +31,9 @@ import org.teamapps.dto.TeamAppsJacksonTypeIdResolver;
  */
 
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type", defaultImpl = A.class)
+@JsonTypeName("A")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class A implements UiObject {
-
-        static {
-            var x = UiObjectJacksonTypeIdMaps.class; // make sure the types are registered
-        }
 
 	protected Map<String, List<X>> x;
 

@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.teamapps.dsl.generate.adapter.ModelUtil.getDeclaringTypeScriptFileBaseName;
+
 public class CommandDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.CommandDeclarationContext> {
 
     private final TeamAppsIntermediateDtoModel astUtil;

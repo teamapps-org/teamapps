@@ -1,0 +1,86 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+import UiLocation from "teamapps-client-communication":org.teamapps.dto;
+
+managed class UiRootPanel extends UiComponent {
+	UiComponent* content;
+
+	command setContent(UiComponent* content, UiPageTransition transition, long animationDuration);
+
+
+    static command setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp);
+    static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
+
+    static command registerComponentLibrary(String uuid, String mainJsUrl);
+    static command registerClientObjectType(String libraryUuid, String clientObjectType);
+    static command toggleEventListening(String libraryUuid, String clientObjectId, String eventName, boolean listen);
+    static command render(String libraryUuid, UiClientObject component);
+    static command unrender(String id);
+    static command refreshComponent(UiClientObject component);
+
+    static command setConfig(UiConfiguration config);
+    static command setThemeClassName(String theme);
+    static command setSessionMessageWindows(UiWindow* expiredMessageWindow, UiWindow* errorMessageWindow, UiWindow* terminatedMessageWindow);
+
+    static command setPageTitle(String pageTitle);
+    static command buildRootPanel(String containerElementId, UiRootPanel* uiRootPanel); // containerDomSelector == null --> body
+    static command registerTemplate(String id, UiTemplate template);
+    static command registerTemplates(Dictionary<UiTemplate> templates);
+
+    static command addClientToken(String token);
+    static command removeClientToken(String token);
+    static command clearClientTokens();
+
+    static command downloadFile(String fileUrl, String downloadFileName);
+    static command registerBackgroundImage(String id, String image, String blurredImage); // downloads the image without displaying it.
+    static command setBackgroundImage(String id, int animationDuration = 1000); // cross-fading to some pre-registered background image
+    static command setBackgroundColor(String color, int animationDuration = 1000);
+    static command exitFullScreen();
+    static command showNotification(UiNotification* notification, UiNotificationPosition position, UiEntranceAnimation entranceAnimation, UiExitAnimation exitAnimation);
+    static command showDialogMessage(String icon, String title, String message, List<UiGenericErrorMessageOption> options);
+
+    static command showPopup(UiPopup* popup);
+    static command showPopupAtCurrentMousePosition(UiPopup* popup);
+
+    // uuid is a server-generated id for this particular lock. Multiple locks are possible!
+    static command requestWakeLock(String uuid) returns boolean;
+    static command releaseWakeLock(String uuid);
+
+    static command goToUrl(String url, boolean blankPage);
+
+    static command pushHistoryState(String relativeUrl);
+    static command navigateForward(int steps);
+
+    static command setFavicon(String url);
+    static command setTitle(String title);
+
+    static event navigationStateChange(UiLocation location, boolean triggeredByUser);
+
+}
+
+enum KeyEventType {
+    KEY_DOWN, KEY_UP
+}
+
+enum UiGenericErrorMessageOption {
+	OK, RELOAD
+}

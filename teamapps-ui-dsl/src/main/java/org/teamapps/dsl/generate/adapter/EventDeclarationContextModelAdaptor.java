@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.teamapps.dsl.generate.adapter.ModelUtil.getDeclaringTypeScriptFileBaseName;
+
 public class EventDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.EventDeclarationContext> {
 
     private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
@@ -48,7 +50,8 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
     }
 
     public EventDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
-        this.astUtil = astUtil;
+		super();
+		this.astUtil = astUtil;
     }
 
     @Override

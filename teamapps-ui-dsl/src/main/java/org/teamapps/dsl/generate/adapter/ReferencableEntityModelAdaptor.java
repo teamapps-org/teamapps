@@ -23,8 +23,9 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 import org.teamapps.dsl.TeamAppsDtoParser;
+
+import static org.teamapps.dsl.generate.adapter.ModelUtil.getDeclaringTypeScriptFileBaseName;
 
 public abstract class ReferencableEntityModelAdaptor<N extends ParserRuleContext> extends PojoModelAdaptor {
 
@@ -47,14 +48,6 @@ public abstract class ReferencableEntityModelAdaptor<N extends ParserRuleContext
 			return o instanceof TeamAppsDtoParser.EnumDeclarationContext;
 		} else {
 			return super.getProperty(interpreter, self, o, property, propertyName);
-		}
-	}
-
-	protected String getDeclaringTypeScriptFileBaseName(N node) {
-		if (node instanceof TeamAppsDtoParser.EnumDeclarationContext) {
-			return ((TeamAppsDtoParser.EnumDeclarationContext) node).Identifier().getText();
-		} else {
-			return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "Config";
 		}
 	}
 

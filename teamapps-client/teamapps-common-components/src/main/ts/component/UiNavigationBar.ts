@@ -18,20 +18,19 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiComponentConfig} from "./generated/UiComponentConfig";
-import {UiNavigationBarButtonConfig} from "./generated/UiNavigationBarButtonConfig";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiComponentConfig, UiNavigationBarButton} from "../generated";
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml, Renderer} from "./Common";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml, Renderer} from "../Common";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {
 	UiNavigationBar_ButtonClickedEvent,
 	UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent,
 	UiNavigationBarCommandHandler,
 	UiNavigationBarConfig,
 	UiNavigationBarEventSource
-} from "./generated/UiNavigationBarConfig";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+} from "../generated/UiNavigationBarConfig";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
 import {UiMultiProgressDisplay} from "./UiMultiProgressDisplay";
 
@@ -98,13 +97,13 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 		return this.$bar;
 	}
 
-	setButtons(buttons: UiNavigationBarButtonConfig[]): void {
+	setButtons(buttons: UiNavigationBarButton[]): void {
 		this.$buttonsContainer.innerHTML = '';
 		this.buttons = {};
 		buttons.forEach(button => this.addButton(button));
 	}
 
-	private addButton(button: UiNavigationBarButtonConfig) {
+	private addButton(button: UiNavigationBarButton) {
 		let $button = parseHtml(`<div class="nav-button-wrapper"><div class="nav-button-inner-wrapper"></div></div>`);
 		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper");
 		$innerWrapper.appendChild(parseHtml(this.buttonTemplateRenderer.render(button.data)));

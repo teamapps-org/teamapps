@@ -2,18 +2,18 @@
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
-export const typescriptDeclarationFixConstant = 1;
 
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {AConfig} from "./AConfig";
-import {IConfig} from "./IConfig";
+import {I} from "./I";
 import {ACommandHandler} from "./AConfig";
-import {ICommandHandler} from "./IConfig";
+import {ICommandHandler} from "./I";
 import {AEventSource} from "./AConfig";
-import {IEventSource} from "./IConfig";
-import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
+import {IEventSource} from "./I";
+import {UiCommand} from "teamapps-client-communication";
+import {UiEvent} from "teamapps-client-communication";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export interface BConfig extends AConfig, IConfig {
+export interface BConfig extends AConfig, I {
 	_type?: string;
 }
 

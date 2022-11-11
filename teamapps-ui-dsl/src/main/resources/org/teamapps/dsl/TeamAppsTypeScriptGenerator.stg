@@ -22,20 +22,22 @@ typeScriptFilePrelude() ::= <<
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
-export const typescriptDeclarationFixConstant = 1;
 >>
 
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-<c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
+<c.allReferencedClassesAndInterfaces:{c|import {<c.typeScriptIdentifier>\} from "./<c.typeScriptIdentifier>";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
-import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
+<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.typeScriptIdentifier>";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.typeScriptIdentifier>";}; separator="\n">
+<if(c.hasCommands)>import {UiCommand} from "teamapps-client-communication";<endif>
+<if(c.hasEvents)>import {UiEvent} from "teamapps-client-communication";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
+<if(c.hasQueries)>import {UiQuery} from "teamapps-client-communication";<endif>
+<c.imports:{imp|import {<imp.Identifier>\} from <imp.StringLiteral>;}; separator="\n">
 
-export interface <c.Identifier.text>Config <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.Identifier>Config};  separator=", "> <endif>{
+export interface <c.typeScriptIdentifier> <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.typeScriptIdentifier>};  separator=", "> <endif>{
 	_type?: string;
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
 	<c.queryDeclaration:queryDeclaration(); separator=";\n">
@@ -48,7 +50,7 @@ export interface <c.Identifier>Reference {
 <endif>
 
 <if(c.typescriptFactoryAnnotation)>
-export function create<c.Identifier.text; format="cap">Config(<c.allRequiredProperties:parameter(false); separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>, <endif><if(c.allNonRequiredProperties)>nonRequiredProperties?: {<c.allNonRequiredProperties:parameter(true); separator=", ">}<endif>): <c.Identifier.text>Config {
+export function create<c.typeScriptIdentifier; format="cap">(<c.allRequiredProperties:parameter(false); separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>, <endif><if(c.allNonRequiredProperties)>nonRequiredProperties?: {<c.allNonRequiredProperties:parameter(true); separator=", ">}<endif>): <c.typeScriptIdentifier> {
 	return {
 		_type: "<c.Identifier.text>"<if(c.allProperties)>,<endif>
 		<c.allRequiredProperties:{p|<p.Identifier>}; separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>,<endif>
@@ -83,13 +85,13 @@ on<evt.Identifier.text; format="cap">: TeamAppsEvent\<<evt.typeScriptInterfaceNa
 >>
 
 eventInterface(evt) ::= <<
-export interface <evt.typeScriptInterfaceName> extends UiEventConfig {
+export interface <evt.typeScriptInterfaceName> extends UiEvent {
 	<evt.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
 queryInterface(q) ::= <<
-export interface <q.typeScriptInterfaceName> extends UiQueryConfig {
+export interface <q.typeScriptInterfaceName> extends UiQuery {
 	<q.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
@@ -99,14 +101,16 @@ parameter(p, optional) ::= "<p.Identifier><if(optional)>?<endif>: <p.type.typeSc
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-<c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
+<c.allReferencedClassesAndInterfaces:{c|import {<c.typeScriptIdentifier>\} from "./<c.typeScriptIdentifier>";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
-import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
+<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.typeScriptIdentifier>";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.typeScriptIdentifier>";}; separator="\n">
+<if(c.hasCommands)>import {UiCommand} from "teamapps-client-communication";<endif>
+<if(c.hasEvents)>import {UiEvent} from "teamapps-client-communication";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
+<if(c.hasQueries)>import {UiQuery} from "teamapps-client-communication";<endif>
 
-export interface <c.Identifier.text>Config <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|<superInterface.Identifier>Config}; separator=", "> <endif>{
+export interface <c.typeScriptIdentifier> <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
 	_type?: string;
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
 	<c.queryDeclaration:queryDeclaration(); separator=";\n">
@@ -150,4 +154,10 @@ export enum <e.Identifier> {
 
 eventNamesObject(c, static) ::= <<
 <if(static)>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<else>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<endif>
+>>
+
+indexTs(classes, interfaces, enums) ::= <<
+<interfaces:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
+<classes:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
+<enums:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
 >>

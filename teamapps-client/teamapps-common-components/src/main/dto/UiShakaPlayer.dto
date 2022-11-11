@@ -1,0 +1,86 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+managed class UiShakaPlayer extends UiComponent {
+    String hlsUrl;
+    String dashUrl;
+    String posterImageUrl;
+    UiPosterImageSize posterImageSize = UiPosterImageSize.CONTAIN;
+    int timeUpdateEventThrottleMillis;
+    String backgroundColor;
+    boolean autoplay;
+    UiTrackLabelFormat trackLabelFormat;
+    boolean videoDisabled;
+    long timeMillis;
+    String preferredAudioLanguage;
+
+	command setUrls(String hlsUrl, String dashUrl);
+	command setTime(long timeMillis);
+	command selectAudioLanguage(String language, String role);
+
+	event errorLoading();
+	event manifestLoaded(UiShakaManifest manifest);
+	event timeUpdate(long timeMillis);
+	event ended();
+
+	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
+}
+
+enum UiTrackLabelFormat {
+	LABEL,
+	LANGUAGE,
+	LANGUAGE_ROLE,
+	ROLE;
+}
+
+class UiShakaManifest {
+    required List<UiShakaManifestVariant> variants;
+}
+
+class UiShakaManifestVariant {
+	int id;
+	UiShakaAudioStream audio;
+	UiShakaVideoStream video;
+	int bandwidth;
+}
+
+abstract class UiAbstractShakaStream {
+	int id;
+	String originalId;
+	String mimeType;
+	String codecs;
+	int bandwidth;
+	String label;
+	List<String> roles;
+}
+
+class UiShakaAudioStream extends UiAbstractShakaStream {
+    String language;
+    int channelsCount;
+    int audioSamplingRate;
+}
+
+class UiShakaVideoStream extends UiAbstractShakaStream {
+    int frameRate;
+    String pixelAspectRatio;
+    int width;
+    int height;
+}

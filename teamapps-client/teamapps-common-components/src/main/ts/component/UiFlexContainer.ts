@@ -19,10 +19,10 @@
  */
 
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {parseHtml} from "./Common";
-import {UiFlexContainerCommandHandler, UiFlexContainerConfig} from "./generated/UiFlexContainerConfig";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {parseHtml} from "../Common";
+import {UiFlexContainerCommandHandler, UiFlexContainerConfig} from "../generated/UiFlexContainerConfig";
 import {UiComponent} from "./UiComponent";
 
 export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> implements UiFlexContainerCommandHandler {

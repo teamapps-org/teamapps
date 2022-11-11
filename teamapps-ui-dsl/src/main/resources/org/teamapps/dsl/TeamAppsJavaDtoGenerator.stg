@@ -22,16 +22,9 @@ class(c) ::= <<
 
 <c.imports:importDecl()>
 
-<if(c.hasSubTypes)>
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
-@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonTypeName("<c.Identifier>")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-<else>
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type", defaultImpl = <c.Identifier>.class)
-<endif>
 public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superClassDecl)>extends <c.superClassDecl.typeName.text> <endif>implements <if(c.implementsDecl)><c.implementsDecl.classList.typeName:{id|<id.text>}; separator=", ">, <endif>UiObject {
-
-    <typeRegistrations(c)>
 
 	<c.propertiesNotImplementedBySuperClasses:propertyDeclaration(); separator="\n">
 
@@ -69,16 +62,9 @@ public List\<String\> getQueryNames() {
 <endif>
 >>
 
-typeRegistrations(c) ::= <<
-    static {
-        var x = UiObjectJacksonTypeIdMaps.class; // make sure the types are registered
-    }
->>
-
 classReference(c) ::= <<
 <javaFilePrelude(c.packageName)>
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
-@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonTypeName("<c.Identifier>Reference")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class <c.Identifier>Reference {
 	<c.referenceableProperties:propertyDeclaration(); separator="\n">
@@ -96,8 +82,7 @@ interface(i) ::= <<
 
 <i.imports:importDecl()>
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
-@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonTypeName("<i.Identifier>")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface <i.Identifier><if(i.typeArguments)><i.typeArguments.text><endif> extends <if(i.superInterfaceDecl)><i.superInterfaces:{si|<si.Identifier>}; separator=", ">, <endif>UiObject {
 
@@ -127,7 +112,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -139,7 +124,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.teamapps.dto.UiObject;
-import org.teamapps.dto.TeamAppsJacksonTypeIdResolver;
 
 /**
  * THIS IS GENERATED CODE!
@@ -149,8 +133,6 @@ import org.teamapps.dto.TeamAppsJacksonTypeIdResolver;
 
 propertyDeclaration(p) ::= <<
 <if(p.type.isObjectReference)>
-@JsonSerialize(using = ObjectSerializer.class)
-@JsonDeserialize(using = ObjectDeserializer.class)
 <endif>
 protected <p.type.javaTypeString> <p.Identifier><if(p.defaultValueAssignment)> = <defaultValue(p)><endif>;
 >>

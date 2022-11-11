@@ -21,8 +21,8 @@ import {UiComponentConfig} from "./generated/UiComponentConfig";
 import {UiEntranceAnimation} from "./generated/UiEntranceAnimation";
 import {UiExitAnimation} from "./generated/UiExitAnimation";
 import {UiPageDisplayMode} from "./generated/UiPageDisplayMode";
-import {UiTemplateConfig} from "./generated/UiTemplateConfig";
-import {UiComponent} from "./UiComponent";
+import {UiTemplate} from "./generated/UiTemplate";
+import {UiComponent} from "./component/UiComponent";
 import {UiPageTransition} from "./generated/UiPageTransition";
 import {UiRepeatableAnimation} from "./generated/UiRepeatableAnimation";
 import rgba from "color-rgba";
@@ -33,7 +33,7 @@ export type RenderingFunction = (data: any) => string;
 
 export type Renderer = {
 	render: RenderingFunction,
-	template: UiTemplateConfig
+	template: UiTemplate
 };
 
 export class Constants {
@@ -726,20 +726,6 @@ export function arraysEqual(a: any[], b: any[]) {
 			if (a[i] !== b[i]) return false;
 		}
 		return true;
-	}
-}
-
-export function deepEquals(x: any, y: any): boolean {
-	if (x != null && y != null && typeof x === 'object' && typeof x === typeof y) {
-		if (Array.isArray(x)) {
-			return x.length === y.length && x.every((xi, i) => deepEquals(x[i], y[i]));
-		} else {
-			return Object.keys(x).length === Object.keys(y).length &&
-				Object.keys(x).every(key => deepEquals(x[key], y[key]));
-		}
-	} else {
-		return x === y
-			|| ((x == null) && (y == null)); // make no difference between undefined and null!
 	}
 }
 

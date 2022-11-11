@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiLinkButton_ClickedEvent, UiLinkButtonCommandHandler, UiLinkButtonConfig, UiLinkButtonEventSource} from "./generated/UiLinkButtonConfig";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {UiLinkButton_ClickedEvent, UiLinkButtonCommandHandler, UiLinkButtonConfig, UiLinkButtonEventSource} from "../generated/UiLinkButtonConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {parseHtml} from "./Common";
-import {UiLinkTarget} from "./generated/UiLinkTarget";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {parseHtml} from "../Common";
+import {UiLinkTarget} from "../generated/UiLinkTarget";
 
 export class UiLinkButton extends AbstractUiComponent<UiLinkButtonConfig> implements UiLinkButtonEventSource, UiLinkButtonCommandHandler {
 

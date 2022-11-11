@@ -61,14 +61,14 @@ public class CommandBuffer {
 		int size = 0;
 		for (int i = 0; i < buffer.length; i++) {
 			if (buffer[i] != null) {
-				size += buffer[i].getC().length();
+				size += buffer[i].getUiCommand().length();
 			}
 		}
 		return size;
 	}
 
 	public void addCommand(CMD command) throws CommandBufferException {
-		while (totalSize + command.getC().length() > maxTotalSize) {
+		while (totalSize + command.getUiCommand().length() > maxTotalSize) {
 			if (!tryPurgingNextCommandFromTail()) {
 				throw new CommandBufferSizeOverflowException("Command buffer SIZE overflow. Max total size: " + maxTotalSize + " characters");
 			}
@@ -83,7 +83,7 @@ public class CommandBuffer {
 			bufferFlippedAtLeastOnce = true;
 		}
 		head = (head + 1) % buffer.length;
-		totalSize += command.getC().length();
+		totalSize += command.getUiCommand().length();
 	}
 
 	public CMD consumeCommand() {
@@ -112,7 +112,7 @@ public class CommandBuffer {
 		CMD cmd = buffer[tail];
 		buffer[tail] = null;
 		tail = (tail + 1) % buffer.length;
-		totalSize -= cmd.getC().length();
+		totalSize -= cmd.getUiCommand().length();
 		return true;
 	}
 

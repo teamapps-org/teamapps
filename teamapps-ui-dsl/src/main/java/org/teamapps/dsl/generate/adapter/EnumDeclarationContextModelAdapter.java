@@ -28,6 +28,10 @@ import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 public class EnumDeclarationContextModelAdapter extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.EnumDeclarationContext> {
 
+	public EnumDeclarationContextModelAdapter() {
+		super();
+	}
+
 	@Override
 	public Object getProperty(Interpreter interpreter, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
 		TeamAppsDtoParser.EnumDeclarationContext enumContext = (TeamAppsDtoParser.EnumDeclarationContext) o;

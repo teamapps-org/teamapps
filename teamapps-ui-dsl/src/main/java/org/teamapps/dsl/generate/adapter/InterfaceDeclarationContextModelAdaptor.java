@@ -33,6 +33,7 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 	private final TeamAppsIntermediateDtoModel astUtil;
 
 	public InterfaceDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
+		super();
 		this.astUtil = astUtil;
 	}
 
@@ -108,7 +109,7 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 
 	@Override
 	protected String getTypeScriptIdentifier(TeamAppsDtoParser.InterfaceDeclarationContext node) {
-		return node.Identifier().getText() + "Config";
+		return ModelUtil.getInterfaceTypeScriptIdentifier(node);
 	}
 
 	@Override

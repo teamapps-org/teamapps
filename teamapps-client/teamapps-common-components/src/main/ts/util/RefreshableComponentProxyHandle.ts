@@ -20,7 +20,7 @@
 import {insertAtIndex} from "../Common";
 import {TeamAppsEvent} from "./TeamAppsEvent";
 import {SimpleObjectProxy} from "./SimpleObjectProxy";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "../component/UiComponent";
 
 export class RefreshableComponentProxyHandle<T extends UiComponent = UiComponent> {
 	public proxy: T;

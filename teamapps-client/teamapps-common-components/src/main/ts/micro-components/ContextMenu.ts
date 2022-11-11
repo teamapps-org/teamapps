@@ -19,7 +19,7 @@
  */
 
 
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "../component/UiComponent";
 import {doOnceOnClickOutsideElement, parseHtml} from "../Common";
 
 export class ContextMenu {

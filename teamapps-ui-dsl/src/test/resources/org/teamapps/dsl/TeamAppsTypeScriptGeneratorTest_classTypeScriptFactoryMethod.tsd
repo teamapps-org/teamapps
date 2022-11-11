@@ -2,12 +2,9 @@
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
-export const typescriptDeclarationFixConstant = 1;
 
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
 
-export interface AConfig {
+export interface A {
 	_type?: string;
 	nonReq1?: string;
 	req1: string;
@@ -15,7 +12,7 @@ export interface AConfig {
 	req2: number
 }
 
-export function createAConfig(req1: string, req2: number, nonRequiredProperties?: {nonReq1?: string, nonReq2?: number}): AConfig {
+export function createA(req1: string, req2: number, nonRequiredProperties?: {nonReq1?: string, nonReq2?: number}): A {
 	return {
 		_type: "A",
 		req1, req2,

@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiTemplateConfig} from "./generated/UiTemplateConfig";
+import {UiTemplate} from "./generated/UiTemplate";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiGridTemplateConfig} from "./generated/UiGridTemplateConfig";
+import {UiGridTemplate} from "./generated/UiGridTemplate";
 import {createGridTemplateRenderer} from "./util/UiGridTemplates";
-import {UiTemplateReferenceConfig} from "./generated/UiTemplateReferenceConfig";
+import {UiTemplateReference} from "./generated/UiTemplateReference";
 import {Renderer} from "./Common";
 import {createHtmlTemplateRenderer} from "./util/UiHtmlTemplates";
-import {UiHtmlTemplateConfig} from "./generated/UiHtmlTemplateConfig";
+import {UiHtmlTemplate} from "./generated/UiHtmlTemplate";
 import {createMustacheTemplateRenderer} from "./util/UiMustacheTemplates";
-import {UiMustacheTemplateConfig} from "./generated/UiMustacheTemplateConfig";
+import {UiMustacheTemplate} from "./generated/UiMustacheTemplate";
 
 export class TemplateRegistry {
 
@@ -45,7 +45,7 @@ export class TemplateRegistry {
 	constructor(private context: TeamAppsUiContext) {
 	}
 
-	public registerTemplate(name: string, template: UiTemplateConfig): void {
+	public registerTemplate(name: string, template: UiTemplate): void {
 		let oldRenderer = this.renderersByName[name];
 		if (oldRenderer != null) {
 			console.warn(`Template with name ${name} is already registered. Overwriting!`)
@@ -65,15 +65,15 @@ export class TemplateRegistry {
 		return renderer;
 	}
 
-	public getRegisteredTemplateConfigs(): { [name: string]: UiTemplateConfig } {
+	public getRegisteredTemplates(): { [name: string]: UiTemplate } {
 		return Object.keys(this.renderersByName)
 			.reduce((templatesByName, name) => {
 				templatesByName[name] = this.renderersByName[name].template;
 				return templatesByName;
-			}, {} as { [name: string]: UiTemplateConfig });
+			}, {} as { [name: string]: UiTemplate });
 	}
 
-	public createTemplateRenderer(template: UiTemplateConfig, idPropertyName?: string): Renderer {
+	public createTemplateRenderer(template: UiTemplate, idPropertyName?: string): Renderer {
 		if (isTemplateReference(template)) {
 			return this.getTemplateRendererByName(template.templateId);
 		} else if (isGridTemplate(template)) {
@@ -85,7 +85,7 @@ export class TemplateRegistry {
 		}
 	}
 
-	public createTemplateRenderers(templates: { [name: string]: UiTemplateConfig }, idPropertyName?: string): { [name: string]: Renderer } {
+	public createTemplateRenderers(templates: { [name: string]: UiTemplate }, idPropertyName?: string): { [name: string]: Renderer } {
 		return Object.keys(templates).reduce((templateStringMapObject, templateName) => {
 			templateStringMapObject[templateName] = this.createTemplateRenderer(templates[templateName], idPropertyName);
 			return templateStringMapObject;
@@ -94,18 +94,18 @@ export class TemplateRegistry {
 
 }
 
-export function isTemplateReference(template: UiTemplateConfig): template is UiTemplateReferenceConfig {
+export function isTemplateReference(template: UiTemplate): template is UiTemplateReference {
 	return template._type === "UiTemplateReference";
 }
 
-export function isGridTemplate(template: UiTemplateConfig): template is UiGridTemplateConfig {
+export function isGridTemplate(template: UiTemplate): template is UiGridTemplate {
 	return template._type === "UiGridTemplate";
 }
 
-export function isHtmlTemplate(template: UiTemplateConfig): template is UiHtmlTemplateConfig {
+export function isHtmlTemplate(template: UiTemplate): template is UiHtmlTemplate {
 	return template._type === "UiHtmlTemplate";
 }
 
-export function isMustacheTemplate(template: UiTemplateConfig): template is UiMustacheTemplateConfig {
+export function isMustacheTemplate(template: UiTemplate): template is UiMustacheTemplate {
 	return template._type === "UiMustacheTemplate";
 }

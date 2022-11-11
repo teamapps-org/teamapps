@@ -37,8 +37,9 @@
         <module>teamapps-material-icon-provider</module>
         <module>teamapps-ui-dsl</module>
         <module>teamapps-ui-api</module>
+        <module>teamapps-client/teamapps-client-communication</module>
+        <module>teamapps-client/teamapps-common-components</module>
         <module>teamapps-ux</module>
-        <module>teamapps-client</module>
         <module>teamapps-my-custom-component</module>
         <module>teamapps-application-management</module>
         <module>teamapps-server-jetty-embedded</module>
@@ -46,8 +47,8 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <slf4j-version>1.7.36</slf4j-version>
@@ -90,6 +91,12 @@
             <version>4.5.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j-version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -122,6 +129,12 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-ui-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>teamapps-client-communication</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -175,12 +188,6 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${apache-commons-io}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j-version}</version>
             </dependency>
 
             <dependency>

@@ -30,16 +30,16 @@ import {
 	cssObjectToString,
 	cssVerticalAlignmentByUiVerticalAlignment
 } from "./CssFormatUtil";
-import {UiTextElementConfig} from "../generated/UiTextElementConfig";
-import {UiBadgeElementConfig} from "../generated/UiBadgeElementConfig";
-import {UiFloatingElementConfig} from "../generated/UiFloatingElementConfig";
-import {UiImageElementConfig} from "../generated/UiImageElementConfig";
-import {UiIconElementConfig} from "../generated/UiIconElementConfig";
-import {UiGlyphIconElementConfig} from "../generated/UiGlyphIconElementConfig";
-import {AbstractUiTemplateElementConfig} from "../generated/AbstractUiTemplateElementConfig";
-import {UiGridTemplateConfig} from "../generated/UiGridTemplateConfig";
+import {UiTextElement} from "../generated/UiTextElement";
+import {UiBadgeElement} from "../generated/UiBadgeElement";
+import {UiFloatingElement} from "../generated/UiFloatingElement";
+import {UiImageElement} from "../generated/UiImageElement";
+import {UiIconElement} from "../generated/UiIconElement";
+import {UiGlyphIconElement} from "../generated/UiGlyphIconElement";
+import {AbstractUiTemplateElement} from "../generated/AbstractUiTemplateElement";
+import {UiGridTemplate} from "../generated/UiGridTemplate";
 
-function createTextElementRenderer(element: UiTextElementConfig, additionalCssClass?: string, additionalStyles?: string): RenderingFunction {
+function createTextElementRenderer(element: UiTextElement, additionalCssClass?: string, additionalStyles?: string): RenderingFunction {
 	const fontStyleCssString = createUiFontStyleCssString(element.fontStyle);
 	const elementStyleCssString = (element.lineHeight ? ('line-height:' + element.lineHeight + ';') : '')
 		+ (`white-space:${element.wrapLines ? 'normal' : 'nowrap'};`)
@@ -60,12 +60,12 @@ function createTextElementRenderer(element: UiTextElementConfig, additionalCssCl
 	};
 }
 
-function createBadgeElementRenderer(element: UiBadgeElementConfig, additionalCss: string): RenderingFunction {
+function createBadgeElementRenderer(element: UiBadgeElement, additionalCss: string): RenderingFunction {
 	const borderStyle = `border: 1px solid ${element.borderColor ? element.borderColor ?? '' : 'transparent'};`;
 	return createTextElementRenderer(element, 'UiBadgeElement', borderStyle + additionalCss);
 }
 
-function createFloatingElementRenderer(element: UiFloatingElementConfig, additionalCss: string): RenderingFunction {
+function createFloatingElementRenderer(element: UiFloatingElement, additionalCss: string): RenderingFunction {
 	const elementRenderers = element.elements.map(subElement => createElementRenderer(subElement));
 	const wrapCss = `flex-wrap: ${element.wrap ? 'wrap' : 'nowrap'};`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
@@ -76,7 +76,7 @@ function createFloatingElementRenderer(element: UiFloatingElementConfig, additio
 	};
 }
 
-function createImageElementRenderer(element: UiImageElementConfig, additionalCss: string): RenderingFunction {
+function createImageElementRenderer(element: UiImageElement, additionalCss: string): RenderingFunction {
 	let style = (element.width ? ('width:' + element.width + 'px;') : '')
 		+ (element.height ? ('height:' + element.height + 'px;') : '')
 		+ createUiBorderCssString(element.border)
@@ -95,7 +95,7 @@ function createImageElementRenderer(element: UiImageElementConfig, additionalCss
 	};
 }
 
-function createIconElementRenderer(element: UiIconElementConfig, additionalCss: string): RenderingFunction {
+function createIconElementRenderer(element: UiIconElement, additionalCss: string): RenderingFunction {
 	const style = `width:${element.size}px; height:${element.size}px; background-size:${element.size}px;`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
@@ -109,7 +109,7 @@ function createIconElementRenderer(element: UiIconElementConfig, additionalCss: 
 	};
 }
 
-function createGlyphIconElementRenderer(element: UiGlyphIconElementConfig, additionalCss: string): RenderingFunction {
+function createGlyphIconElementRenderer(element: UiGlyphIconElement, additionalCss: string): RenderingFunction {
 	const style = `font-size:${element.size}px; text-align: center;`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
@@ -122,7 +122,7 @@ function createGlyphIconElementRenderer(element: UiGlyphIconElementConfig, addit
 	};
 }
 
-function createElementRenderer(element: AbstractUiTemplateElementConfig, additionalCss = ""): RenderingFunction {
+function createElementRenderer(element: AbstractUiTemplateElement, additionalCss = ""): RenderingFunction {
 	const column = `grid-column: ${element.column + 1} / ${element.column + element.colSpan + 1};`;
 	const row = `grid-row: ${element.row + 1} / ${element.row + element.rowSpan + 1};`;
 	const horizontalAlignmentCss = `justify-self: ${cssHorizontalAlignmentByUiVerticalAlignment[element.horizontalAlignment]};`;
@@ -154,31 +154,31 @@ function createElementRenderer(element: AbstractUiTemplateElementConfig, additio
 	}
 }
 
-export function isUiTextElement(element: AbstractUiTemplateElementConfig): element is UiTextElementConfig {
+export function isUiTextElement(element: AbstractUiTemplateElement): element is UiTextElement {
 	return element._type === "UiTextElement";
 }
 
-export function isUiBadgeElement(element: AbstractUiTemplateElementConfig): element is UiBadgeElementConfig {
+export function isUiBadgeElement(element: AbstractUiTemplateElement): element is UiBadgeElement {
 	return element._type === "UiBadgeElement";
 }
 
-export function isUiFloatingElement(element: AbstractUiTemplateElementConfig): element is UiFloatingElementConfig {
+export function isUiFloatingElement(element: AbstractUiTemplateElement): element is UiFloatingElement {
 	return element._type === "UiFloatingElement";
 }
 
-export function isUiImageElement(element: AbstractUiTemplateElementConfig): element is UiImageElementConfig {
+export function isUiImageElement(element: AbstractUiTemplateElement): element is UiImageElement {
 	return element._type === "UiImageElement";
 }
 
-export function isUiIconElement(element: AbstractUiTemplateElementConfig): element is UiIconElementConfig {
+export function isUiIconElement(element: AbstractUiTemplateElement): element is UiIconElement {
 	return element._type === "UiIconElement";
 }
 
-export function isUiGlyphIconElement(element: AbstractUiTemplateElementConfig): element is UiGlyphIconElementConfig {
+export function isUiGlyphIconElement(element: AbstractUiTemplateElement): element is UiGlyphIconElement {
 	return element._type === "UiGlyphIconElement";
 }
 
-export function createGridTemplateRenderer(template: UiGridTemplateConfig, idPropertyName: string): Renderer {
+export function createGridTemplateRenderer(template: UiGridTemplate, idPropertyName: string): Renderer {
 	const renderers = template.elements.map(element => {
 
 		let startColumn = template.columns[element.column];

@@ -17,22 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiConfigurationConfig} from "./generated/UiConfigurationConfig";
-import {UiComponentConfig} from "./generated/UiComponentConfig";
-import {UiEventConfig as UiEvent} from "./generated/UiEventConfig";
+import {UiClientObjectConfig, UiComponentConfig, UiConfiguration} from "./generated";
+import {UiCommand, UiEvent} from "teamapps-client-communication";
 import {TemplateRegistry} from "./TemplateRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiCommand} from "./generated/UiCommand";
 import {UiClientObject} from "./UiClientObject";
-import {UiClientObjectConfig} from "./generated/UiClientObjectConfig";
-
-export const typescriptDeclarationFixConstant = 1;
 
 export interface TeamAppsUiContext {
 	readonly sessionId: string;
 	readonly isHighDensityScreen: boolean;
 	readonly executingCommand: boolean;
-	readonly config: UiConfigurationConfig;
+	readonly config: UiConfiguration;
 	readonly templateRegistry: TemplateRegistry;
 
 	getClientObjectById(id: string): Promise<UiClientObject>;

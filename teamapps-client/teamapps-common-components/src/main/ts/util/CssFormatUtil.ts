@@ -21,13 +21,13 @@ import {UiTextAlignment} from "../generated/UiTextAlignment";
 import {UiVerticalElementAlignment} from "../generated/UiVerticalElementAlignment";
 import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
 import {UiSizeType} from "../generated/UiSizeType";
-import {UiFontStyleConfig} from "../generated/UiFontStyleConfig";
-import {UiLineConfig} from "../generated/UiLineConfig";
+import {UiFontStyle} from "../generated/UiFontStyle";
+import {UiLine} from "../generated/UiLine";
 import {UiLineType} from "../generated/UiLineType";
-import {UiBorderConfig} from "../generated/UiBorderConfig";
-import {UiShadowConfig} from "../generated/UiShadowConfig";
-import {UiSpacingConfig} from "../generated/UiSpacingConfig";
-import {UiSizingPolicyConfig} from "../generated/UiSizingPolicyConfig";
+import {UiBorder} from "../generated/UiBorder";
+import {UiShadow} from "../generated/UiShadow";
+import {UiSpacing} from "../generated/UiSpacing";
+import {UiSizingPolicy} from "../generated/UiSizingPolicy";
 import {UiImageSizing} from "../generated/UiImageSizing";
 
 export type CssPropertyObject = { [cssProperty: string]: string };
@@ -66,7 +66,7 @@ export function createTextAlignmentCssString(alignment: UiTextAlignment) {
 	return alignment == null ? '' : 'text-align:' + UiTextAlignment[alignment].toLowerCase() + ';';
 }
 
-export function createUiFontStyleCssString(fontStyle: UiFontStyleConfig) {
+export function createUiFontStyleCssString(fontStyle: UiFontStyle) {
 	if (fontStyle == null) {
 		return '';
 	} else {
@@ -79,11 +79,11 @@ export function createUiFontStyleCssString(fontStyle: UiFontStyleConfig) {
 	}
 }
 
-export function createUiLineCssString(lineConfig: UiLineConfig) {
+export function createUiLineCssString(lineConfig: UiLine) {
 	return lineConfig != null ? `${lineConfig.thickness}px ${UiLineType[lineConfig.type]} ${(lineConfig.color ?? '')}` : '';
 }
 
-export function createUiBorderCssObject(borderConfig: UiBorderConfig): CssPropertyObject {
+export function createUiBorderCssObject(borderConfig: UiBorder): CssPropertyObject {
 	if (borderConfig == null) {
 		return {};
 	} else {
@@ -107,7 +107,7 @@ export function createUiBorderCssObject(borderConfig: UiBorderConfig): CssProper
 	}
 }
 
-export function createUiBorderCssString(borderConfig: UiBorderConfig) {
+export function createUiBorderCssString(borderConfig: UiBorder) {
 	if (borderConfig == null) {
 		return '';
 	} else {
@@ -116,7 +116,7 @@ export function createUiBorderCssString(borderConfig: UiBorderConfig) {
 	}
 }
 
-export function createUiShadowCssObject(shadowConfig: UiShadowConfig): CssPropertyObject {
+export function createUiShadowCssObject(shadowConfig: UiShadow): CssPropertyObject {
 	if (shadowConfig == null) {
 		return {};
 	} else {
@@ -126,7 +126,7 @@ export function createUiShadowCssObject(shadowConfig: UiShadowConfig): CssProper
 	}
 }
 
-export function createUiShadowCssString(shadowConfig: UiShadowConfig): string {
+export function createUiShadowCssString(shadowConfig: UiShadow): string {
 	return cssObjectToString(createUiShadowCssObject(shadowConfig));
 }
 
@@ -150,11 +150,11 @@ export function createImageSizingCssObject(imageSizing: UiImageSizing): CssPrope
 	}
 }
 
-export function createUiSpacingValueCssString(spacingConfig: UiSpacingConfig) {
+export function createUiSpacingValueCssString(spacingConfig: UiSpacing) {
 	return spacingConfig != null ? `${spacingConfig.top}px ${spacingConfig.right}px ${spacingConfig.bottom}px ${spacingConfig.left}px` : null;
 }
 
-export function createUiSpacingCssObject(cssProperty: string, spacingConfig: UiSpacingConfig) {
+export function createUiSpacingCssObject(cssProperty: string, spacingConfig: UiSpacing) {
 	if (spacingConfig == null) {
 		return {};
 	} else {
@@ -164,7 +164,7 @@ export function createUiSpacingCssObject(cssProperty: string, spacingConfig: UiS
 	}
 }
 
-export function createUiSpacingCssString(cssProperty: string, spacingConfig: UiSpacingConfig): string {
+export function createUiSpacingCssString(cssProperty: string, spacingConfig: UiSpacing): string {
 	if (spacingConfig == null) {
 		return '';
 	} else {
@@ -172,7 +172,7 @@ export function createUiSpacingCssString(cssProperty: string, spacingConfig: UiS
 	}
 }
 
-export function createCssGridRowOrColumnString(sizePolicy: UiSizingPolicyConfig) {
+export function createCssGridRowOrColumnString(sizePolicy: UiSizingPolicy) {
 	let maxSizeString: string;
 	if (sizePolicy.type === UiSizeType.AUTO) {
 		maxSizeString = 'auto';

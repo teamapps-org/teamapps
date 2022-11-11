@@ -18,13 +18,13 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiAbsoluteLayoutCommandHandler, UiAbsoluteLayoutConfig} from "./generated/UiAbsoluteLayoutConfig";
-import {UiAbsolutePositionedComponentConfig} from "./generated/UiAbsolutePositionedComponentConfig";
-import {UiAnimationEasing} from "./generated/UiAnimationEasing";
-import {parseHtml} from "./Common";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {bind} from "./util/Bind";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {UiAbsoluteLayoutCommandHandler, UiAbsoluteLayoutConfig} from "../generated/UiAbsoluteLayoutConfig";
+import {UiAbsolutePositionedComponent} from "../generated/UiAbsolutePositionedComponent";
+import {UiAnimationEasing} from "../generated/UiAnimationEasing";
+import {parseHtml} from "../Common";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {bind} from "../util/Bind";
 import {UiComponent} from "./UiComponent";
 
 const animationEasingCssValues = {
@@ -40,7 +40,7 @@ const animationEasingCssValues = {
 export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig> implements UiAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 	private $style: HTMLStyleElement;
-	private components: UiAbsolutePositionedComponentConfig[];
+	private components: UiAbsolutePositionedComponent[];
 
 	constructor(config: UiAbsoluteLayoutConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -62,7 +62,7 @@ export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig
 		this.onResize();
 	};
 
-	update(components: UiAbsolutePositionedComponentConfig[], animationDuration: number, easing: UiAnimationEasing): void {
+	update(components: UiAbsolutePositionedComponent[], animationDuration: number, easing: UiAnimationEasing): void {
 		Array.from(this.$main.querySelectorAll(":scope > :not(style)")).forEach(c => c.remove());
 
 		this.components = components;

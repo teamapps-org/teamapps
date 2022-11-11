@@ -13892,6 +13892,7 @@ __metadata:
     cross-var: ^1.1.0
     esbuild: ^0.15.13
     replace-in-file: ^6.3.5
+    sync-pom-version-to-package: ^1.6.1
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
@@ -14024,7 +14025,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "teamapps-common-components@workspace:teamapps-common-components"
   dependencies:
+    cross-var: ^1.1.0
+    esbuild: ^0.15.13
+    replace-in-file: ^6.3.5
+    sync-pom-version-to-package: ^1.6.1
     teamapps-client-communication: "workspace:*"
+    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 

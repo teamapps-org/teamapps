@@ -18,11 +18,11 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiIFrameCommandHandler, UiIFrameConfig} from "./generated/UiIFrameConfig";
-import {parseHtml} from "./Common";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {UiIFrameCommandHandler, UiIFrameConfig} from "../generated/UiIFrameConfig";
+import {parseHtml} from "../Common";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 
 export class UiIFrame extends AbstractUiComponent<UiIFrameConfig> implements UiIFrameCommandHandler {
 

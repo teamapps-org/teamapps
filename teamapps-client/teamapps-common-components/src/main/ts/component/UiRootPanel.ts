@@ -19,32 +19,32 @@
  */
 import * as moment from "moment-timezone";
 
-import {UiComponentConfig} from "./generated/UiComponentConfig";
-import {UiWindow} from "./UiWindow";
-import {UiConfigurationConfig} from "./generated/UiConfigurationConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {createUiLocation, exitFullScreen, pageTransition, parseHtml} from "./Common";
 import {
+	KeyEventType,
+	UiComponentConfig,
+	UiConfiguration,
+	UiEntranceAnimation,
+	UiExitAnimation,
+	UiGenericErrorMessageOption,
+	UiNotificationPosition,
+	UiPageTransition,
 	UiRootPanel_GlobalKeyEventOccurredEvent,
 	UiRootPanel_NavigationStateChangeEvent,
 	UiRootPanelCommandHandler,
 	UiRootPanelConfig,
-	UiRootPanelEventSource
-} from "./generated/UiRootPanelConfig";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiTemplateConfig} from "./generated/UiTemplateConfig";
-import {ElementUiComponentAdapter} from "./micro-components/ElementUiComponentAdapter";
-import {UiGenericErrorMessageOption} from "./generated/UiGenericErrorMessageOption";
+	UiRootPanelEventSource,
+	UiTemplate
+} from "../generated";
+import {UiWindow} from "./UiWindow";
+import {AbstractUiComponent} from "./AbstractUiComponent";
+import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
+import {createUiLocation, exitFullScreen, pageTransition, parseHtml} from "../Common";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {ElementUiComponentAdapter} from "../micro-components/ElementUiComponentAdapter";
 import {UiComponent} from "./UiComponent";
-import {UiPageTransition} from "./generated/UiPageTransition";
 import {showNotification, UiNotification} from "./UiNotification";
-import {UiNotificationPosition} from "./generated/UiNotificationPosition";
-import {UiEntranceAnimation} from "./generated/UiEntranceAnimation";
-import {UiExitAnimation} from "./generated/UiExitAnimation";
-import {releaseWakeLock, requestWakeLock} from "./util/WakeLock";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {KeyEventType} from "./generated/KeyEventType";
+import {releaseWakeLock, requestWakeLock} from "../util/WakeLock";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 // noinspection JSUnusedGlobalSymbols
 export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler, UiRootPanelEventSource {
@@ -148,7 +148,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		context.refreshComponent(libraryUuid, config);
 	}
 
-	public static setConfig(config: UiConfigurationConfig, context: TeamAppsUiContext) {
+	public static setConfig(config: UiConfiguration, context: TeamAppsUiContext) {
 		let oldConfig = context.config;
 		if ((!oldConfig || oldConfig.locale !== config.locale) && config.locale !== 'en') {
 			$.getScript("runtime-resources/moment-locales/" + config.locale + ".js");
@@ -283,11 +283,11 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		}
 	}
 
-	public static registerTemplate(name: string, template: UiTemplateConfig, context: TeamAppsUiContext) {
+	public static registerTemplate(name: string, template: UiTemplate, context: TeamAppsUiContext) {
 		context.templateRegistry.registerTemplate(name, template);
 	}
 
-	public static registerTemplates(templates: { [name: string]: UiTemplateConfig }, context: TeamAppsUiContext) {
+	public static registerTemplates(templates: { [name: string]: UiTemplate }, context: TeamAppsUiContext) {
 		Object.keys(templates).forEach(templateName => {
 			this.registerTemplate(templateName, templates[templateName], context);
 		});

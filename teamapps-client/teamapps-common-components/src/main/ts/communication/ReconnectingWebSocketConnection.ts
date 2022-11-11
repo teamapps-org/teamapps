@@ -17,13 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractServerMessageConfig} from "../generated/AbstractServerMessageConfig";
-import {AbstractClientMessageConfig} from "../generated/AbstractClientMessageConfig";
+import {AbstractServerMessage, AbstractClientMessage} from "teamapps-client-communication";
 import stringify from "json-stable-stringify";
 
 export interface ReconnectingCompressingWebSocketConnectionListener {
 	onConnected: () => void;
-	onMessage: (messageObject: AbstractServerMessageConfig) => void;
+	onMessage: (messageObject: AbstractServerMessage) => void;
 	onConnectionLost: () => void;
 	onReconnected: () => void;
 }
@@ -44,7 +43,7 @@ export class ReconnectingCompressingWebSocketConnection {
 		return this.connection != null && this.connection.readyState === WebSocket.OPEN;
 	};
 
-	public send(object: AbstractClientMessageConfig) {
+	public send(object: AbstractClientMessage) {
 		let jsonString = stringify(object, {
 			cmp: (a, b) => {
 				let aIsUnderscore = a.key[0] === '_';

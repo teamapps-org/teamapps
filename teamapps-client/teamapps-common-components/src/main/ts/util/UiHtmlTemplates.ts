@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 import {Renderer} from "../Common";
-import {UiHtmlTemplateConfig} from "../generated/UiHtmlTemplateConfig";
+import {UiHtmlTemplate} from "../generated/UiHtmlTemplate";
 
-export function createHtmlTemplateRenderer(template: UiHtmlTemplateConfig, idPropertyName: string): Renderer {
+export function createHtmlTemplateRenderer(template: UiHtmlTemplate, idPropertyName: string): Renderer {
 	return {
 		render: (data: any) => {
 			if (data == null) {

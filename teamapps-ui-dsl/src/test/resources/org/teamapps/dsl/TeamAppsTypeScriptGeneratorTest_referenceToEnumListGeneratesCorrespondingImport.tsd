@@ -2,13 +2,10 @@
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
-export const typescriptDeclarationFixConstant = 1;
 
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiWeekDay} from "./UiWeekDay";
-import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
 
-export interface UiCalendarConfig {
+export interface UiCalendar {
 	_type?: string;
 	workingDays?: UiWeekDay[]
 }

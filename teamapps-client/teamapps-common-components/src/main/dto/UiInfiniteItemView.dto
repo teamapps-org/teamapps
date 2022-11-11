@@ -1,0 +1,87 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+managed class UiInfiniteItemView extends UiComponent {
+	required UiTemplate itemTemplate;
+	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	required int rowHeight;
+	List<UiIdentifiableClientRecord> data;
+	int totalNumberOfRecords = 0;
+	int horizontalItemMargin = 0;
+	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+	UiItemJustification itemJustification = UiItemJustification.LEFT;
+	UiVerticalItemAlignment verticalItemAlignment = UiVerticalItemAlignment.STRETCH;
+	boolean contextMenuEnabled = false;
+
+	command addData(int startIndex, List<UiIdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
+	command removeData(List<Integer> ids);
+	command setItemTemplate(UiTemplate itemTemplate);
+    command setItemWidth(double itemWidth);
+    command setHorizontalItemMargin(int horizontalItemMargin);
+    command setItemJustification(UiItemJustification itemJustification);
+    command setVerticalItemAlignment(UiVerticalItemAlignment verticalItemAlignment);
+    command setContextMenuContent(int requestId, UiComponent* component);
+    command closeContextMenu(int requestId);
+
+	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiInfiniteItemViewDataRequest dataRequest);
+	event itemClicked(int recordId, boolean isDoubleClick);
+	event contextMenuRequested(int requestId, int recordId);
+}
+
+managed class UiInfiniteItemView2 extends AbstractUiInfiniteListComponent {
+	required UiTemplate itemTemplate;
+
+	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	double itemHeight = 100;
+	double horizontalSpacing;
+	double verticalSpacing;
+	double itemPositionAnimationTime; // ms
+	UiHorizontalElementAlignment itemContentHorizontalAlignment = UiHorizontalElementAlignment.CENTER;
+	UiVerticalElementAlignment itemContentVerticalAlignment = UiVerticalElementAlignment.STRETCH;
+	UiItemJustification rowHorizontalAlignment = UiItemJustification.SPACE_AROUND;
+//	boolean autoHeight = false; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+
+	boolean contextMenuEnabled = false;
+	
+	command setData(int startIndex, List<Integer> recordIds, List<UiIdentifiableClientRecord> newRecords, int totalNumberOfRecords);
+
+	command setItemTemplate(UiTemplate itemTemplate);
+    command setItemWidth(double itemWidth);
+    command setItemHeight(double itemHeight);
+    command setHorizontalSpacing(double horizontalSpacing);
+    command setVerticalSpacing(double verticalSpacing);
+    command setItemContentHorizontalAlignment(UiHorizontalElementAlignment itemContentHorizontalAlignment);
+    command setItemContentVerticalAlignment(UiVerticalElementAlignment itemContentVerticalAlignment);
+    command setRowHorizontalAlignment(UiItemJustification rowHorizontalAlignment);
+    command setItemPositionAnimationTime(int animationMillis);
+
+    command setContextMenuContent(int requestId, UiComponent* component);
+    command closeContextMenu(int requestId);
+
+	event itemClicked(int recordId, boolean isDoubleClick);
+	event contextMenuRequested(int requestId, int recordId);
+}
+
+@TypeScriptFactory
+class UiInfiniteItemViewDataRequest {
+	required int startIndex;
+	required int length;
+}

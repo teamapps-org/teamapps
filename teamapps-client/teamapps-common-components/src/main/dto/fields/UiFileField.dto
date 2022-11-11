@@ -1,0 +1,134 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+
+
+/**
+TODO:
+FORM
+  uploaded files section:
+	- custom items (UiTextCell) with remove button ("x")
+	- floating or list style
+	- on click (server side handling)
+		a) download file
+		b) render dropdown underneath the file // how??
+  files to be uploaded section:
+	- same as currently implemented
+  add files button:
+	- same as currently implemented
+	- set color, icon, text, height
+	- hide when max number of files reached
+LIST
+  uploaded files section:
+	- custom items (UiTextCell)
+	- always floating
+	- on click (server side handling)
+		a) download file
+		b) render dropdown underneath the file
+TABLE (editable mode)
+  uploaded files section:
+	- same as list
+	- on click open UiWindow (non-modal?) with a form containing only the UiFileField.
+  DnD:
+	- only if not performance breaking --> opens window
+ */
+managed class UiFileField extends UiField {
+	required UiTemplate itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
+	long maxBytesPerFile = 5000000;
+	String uploadUrl = "/upload"; // May point anywhere.
+	String fileTooLargeMessage = "File too large!";
+	String uploadErrorMessage = "Error while transmitting file...";
+	UiFileFieldDisplayType displayType = UiFileFieldDisplayType.LIST;
+	int maxFiles; // the max number of files to be uploaded in total for this field
+	required UiTemplate uploadButtonTemplate;
+	required Object uploadButtonData;
+	boolean showEntriesAsButtonsOnHover = false;
+
+    event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
+	event uploadStarted(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadCanceled(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadFailed(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadSuccessful(String fileItemUuid, String uploadedFileUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event fileItemClicked(int clientId);
+	event fileItemRemoveButtonClicked(int clientId);
+
+	command replaceFileItem(String fileItemUuid, UiIdentifiableClientRecord data);
+	command setItemTemplate(UiTemplate itemTemplate);
+	command setMaxBytesPerFile(long maxBytesPerFile);
+	command setUploadUrl(String uploadUrl);
+	command setDisplayType (UiFileFieldDisplayType displayType);
+	command setMaxFiles(int maxFiles);
+	command setUploadButtonTemplate(UiTemplate uploadButtonTemplate);
+    command setUploadButtonData(Object uploadButtonData);
+    command setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover);
+    command cancelAllUploads();
+    command cancelUpload(String fileItemUuid);
+}
+
+enum UiFileFieldDisplayType {
+	LIST, FLOATING
+}
+
+managed class UiSimpleFileField extends UiField {
+	String browseButtonIcon;
+	String browseButtonCaption = "Select";
+	String uploadUrl = "/upload"; // May point anywhere.
+	long maxBytesPerFile = 5000000;
+	String fileTooLargeMessage = "File too large!";
+	String uploadErrorMessage = "Error while transmitting file...";
+	int maxFiles = 0; // the max number of files to be uploaded in total for this field
+	UiFileFieldDisplayType displayMode = UiFileFieldDisplayType.LIST;
+
+	List<UiFileItem> fileItems;
+
+	event uploadInitiatedByUser(String uuid, String fileName, String mimeType, long sizeInBytes);
+    event uploadTooLarge(String fileItemUuid);
+	event uploadStarted(String fileItemUuid);
+	event uploadCanceled(String fileItemUuid);
+	event uploadFailed(String fileItemUuid);
+	event uploadSuccessful(String fileItemUuid, String uploadedFileUuid);
+	event fileItemClicked(String fileItemUuid);
+	event fileItemRemoved(String fileItemUuid);
+
+	command addFileItem(UiFileItem item);
+	command updateFileItem(UiFileItem item);
+	command removeFileItem(String itemUuid);
+
+	command setBrowseButtonIcon(String browseButtonIcon);
+	command setBrowseButtonCaption(String browseButtonCaption);
+	command setUploadUrl(String uploadUrl);
+	command setMaxBytesPerFile(long maxBytesPerFile);
+	command setFileTooLargeMessage(String fileTooLargeMessage);
+	command setUploadErrorMessage(String uploadErrorMessage);
+	command setMaxFiles(int maxFiles);
+	command setDisplayMode(UiFileFieldDisplayType displayType);
+}
+
+@TypeScriptFactory
+class UiFileItem {
+	String uuid;
+	String icon;
+	String thumbnail;
+	String fileName;
+	String description;
+	long size;
+	String linkUrl; // If not null, the click triggers a new tab/window to open with the url. If null, nothing happens on click, except the fileItemClicked event being triggered.
+}

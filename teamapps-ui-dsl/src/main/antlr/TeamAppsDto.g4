@@ -17,10 +17,10 @@ typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 enumDeclaration : notGeneratedAnnotation? 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? ';'? '}' ;
 enumConstant : Identifier ('=' StringLiteral)?;
 
-classDeclaration  : notGeneratedAnnotation? typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
+classDeclaration : notGeneratedAnnotation? typescriptFactoryAnnotation? abstractModifier? managedModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
-interfaceDeclaration : notGeneratedAnnotation? 'interface' Identifier typeArguments? superInterfaceDecl? '{'
+interfaceDeclaration : notGeneratedAnnotation? managedModifier? 'interface' Identifier typeArguments? superInterfaceDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
 superClassDecl: 'extends' typeName;
@@ -67,6 +67,7 @@ abstractModifier : 'abstract';
 requiredModifier : 'required';
 optionalModifier : 'optional';
 staticModifier : 'static';
+managedModifier : 'managed';
 
 // EXPRESSIONS
 

@@ -19,18 +19,18 @@
  */
 
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {parseHtml, removeClassesByFunction} from "./Common";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {parseHtml, removeClassesByFunction} from "../Common";
 import {
 	UiProgressDisplay_CancelButtonClickedEvent,
 	UiProgressDisplay_ClickedEvent,
 	UiProgressDisplayCommandHandler,
 	UiProgressDisplayConfig,
 	UiProgressDisplayEventSource
-} from "./generated/UiProgressDisplayConfig";
-import {ProgressBar} from "./micro-components/ProgressBar";
+} from "../generated/UiProgressDisplayConfig";
+import {ProgressBar} from "../micro-components/ProgressBar";
 
 
 export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConfig> implements UiProgressDisplayCommandHandler, UiProgressDisplayEventSource {

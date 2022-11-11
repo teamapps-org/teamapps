@@ -17,8 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiSessionClosingReason} from "../generated/UiSessionClosingReason";
-import {UiEvent, UiQuery, UiCommand} from "teamapps-client-communication";
+import {UiCommand, UiEvent, UiQuery, UiSessionClosingReason} from "teamapps-client-communication";
 
 export const typescriptDeclarationFixConstant = 1;
 

@@ -1,7 +1,29 @@
 {
   "name": "teamapps-common-components",
-  "version": "1.0.0",
+  "version": "0.9.155-SNAPSHOT",
+  "scripts": {
+    "sync-pom-version": "node build/sync-pom-version.js",
+    "del_dist": "rm -rf dist/*",
+    "clean": "yarn run del_dist",
+    "tsc": "tsc",
+    "build:insert-version": "cross-var replace-in-file \"__TEAMAPPS_VERSION__\" \"$npm_package_version\" \"dist/**/*.js\"",
+    "bundle": "node esbuild.mjs",
+    "build": "yarn run del_dist && yarn run tsc && yarn run build:insert-version && yarn run bundle",
+    "build-prod": "NODE_ENV=production yarn run build",
+    "start": "yarn run watch-build",
+    "watch-build": "concurrently \"npm:watch-tsc\" \"npm:watch-bundle\" \"npm:serve\"",
+    "watch-bundle": "yarn run bundle -- --watch",
+    "watch-tsc": "yarn run del_dist && tsc --watch",
+    "serve": "web-dev-server"
+  },
   "dependencies": {
     "teamapps-client-communication": "workspace:*"
+  },
+  "devDependencies": {
+    "cross-var": "^1.1.0",
+    "esbuild": "^0.15.13",
+    "replace-in-file": "^6.3.5",
+    "sync-pom-version-to-package": "^1.6.1",
+    "typescript": "^4.8.4"
   }
 }

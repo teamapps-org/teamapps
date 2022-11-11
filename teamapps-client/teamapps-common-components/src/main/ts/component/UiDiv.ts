@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiDivCommandHandler, UiDivConfig} from "./generated/UiDivConfig";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {UiDivCommandHandler, UiDivConfig} from "../generated/UiDivConfig";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
 import {AbstractUiWebComponent} from "./AbstractUiWebComponent";
 

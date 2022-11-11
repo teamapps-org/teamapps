@@ -19,26 +19,26 @@
  */
 
 import {UiPanel} from "./UiPanel";
-import {UiPanelHeaderFieldConfig} from "./generated/UiPanelHeaderFieldConfig";
+import {UiPanelHeaderField} from "../generated/UiPanelHeaderField";
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "./generated/UiWindowConfig";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
-import {UiToolButton} from "./micro-components/UiToolButton";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiPanel_WindowButtonClickedEvent} from "./generated/UiPanelConfig";
-import {UiWindowButtonType} from "./generated/UiWindowButtonType";
-import {animateCSS, Constants, css, parseHtml} from "./Common";
+import {UiToolButton} from "./UiToolButton";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
+import {UiWindowButtonType} from "../generated/UiWindowButtonType";
+import {animateCSS, Constants, css, parseHtml} from "../Common";
 import {UiComponent} from "./UiComponent";
-import {UiExitAnimation} from "./generated/UiExitAnimation";
-import {UiEntranceAnimation} from "./generated/UiEntranceAnimation";
+import {UiExitAnimation} from "../generated/UiExitAnimation";
+import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 
 export interface UiWindowListener {
 	onWindowClosed: (window: UiWindow, animationDuration: number) => void;
 }
 
-export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiWindowCommandHandler, UiWindowEventSource, Showable {
+export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiWindowCommandHandler, UiWindowEventSource {
 
 	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
@@ -132,11 +132,11 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		this.panel.setContent(content);
 	}
 
-	public setLeftHeaderField(field: UiPanelHeaderFieldConfig) {
+	public setLeftHeaderField(field: UiPanelHeaderField) {
 		this.panel.setLeftHeaderField(field);
 	}
 
-	public setRightHeaderField(field: UiPanelHeaderFieldConfig) {
+	public setRightHeaderField(field: UiPanelHeaderField) {
 		this.panel.setRightHeaderField(field);
 	}
 

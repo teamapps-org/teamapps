@@ -21,25 +21,20 @@
 
 import {capitalizeFirstLetter, createUiLocation, generateUUID, logException} from "./Common";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {UiConfigurationConfig} from "./generated/UiConfigurationConfig";
-import {UiComponentConfig} from "./generated/UiComponentConfig";
-import {UiEventConfig as UiEvent} from "./generated/UiEventConfig";
-import {UiCommand} from './communication/UiCommand';
+import {UiComponentConfig, UiConfiguration, UiGenericErrorMessageOption, UiClientObjectConfig} from "./generated";
+import {createUiClientInfo, UiCommand, UiEvent, UiQuery, UiSessionClosingReason} from "teamapps-client-communication";
 import {TeamAppsConnection, TeamAppsConnectionListener} from "./communication/TeamAppsConnection";
 import * as jstz from "jstz";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TemplateRegistry} from "./TemplateRegistry";
-import {createUiClientInfoConfig} from "./generated/UiClientInfoConfig";
-import {UiGenericErrorMessageOption} from "./generated/UiGenericErrorMessageOption";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {bind} from "./util/Bind";
 import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from "./util/RefreshableComponentProxyHandle";
 import {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
-import {UiComponent} from "./UiComponent";
-import {UiSessionClosingReason} from "./generated/UiSessionClosingReason";
+import {UiComponent} from "./component/UiComponent";
 import {UiClientObject} from "./UiClientObject";
-import {UiClientObjectConfig} from "./generated/UiClientObjectConfig";
-import {UiQueryConfig as UiQuery} from "./generated/UiQueryConfig";
+import {UiWindow} from "./component/UiWindow";
+import {UiRootPanel} from "./component/UiRootPanel";
 
 type ClientObjectClass<T extends UiClientObject = UiClientObject> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
 
@@ -112,8 +107,8 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand> = new TeamAppsEvent();
 	public readonly sessionId: string;
 	public isHighDensityScreen: boolean;
-	public config: UiConfigurationConfig = {
-		_type: "UiConfigurationConfig",
+	public config: UiConfiguration = {
+		_type: "UiConfiguration",
 		locale: "en",
 		themeClassName: null,
 		optimizedForTouch: false
@@ -126,14 +121,14 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
-	private expiredMessageWindow: Showable;
-	private errorMessageWindow: Showable;
-	private terminatedMessageWindow: Showable;
+	private expiredMessageWindow: UiWindow;
+	private errorMessageWindow: UiWindow;
+	private terminatedMessageWindow: UiWindow;
 
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string | number } = {}) {
 		this.sessionId = generateUUID();
 
-		let clientInfo = createUiClientInfoConfig({
+		let clientInfo = createUiClientInfo({
 			viewPortWidth: window.innerWidth,
 			viewPortHeight: window.innerHeight,
 			screenWidth: window.screen.width,
@@ -437,7 +432,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		return clientObjectClassWrapperPromise;
 	}
 
-	public setSessionMessageWindows(expiredMessageWindow: Showable, errorMessageWindow: Showable, terminatedMessageWindow: Showable) {
+	public setSessionMessageWindows(expiredMessageWindow: UiWindow, errorMessageWindow: UiWindow, terminatedMessageWindow: UiWindow) {
 		this.expiredMessageWindow = expiredMessageWindow;
 		this.errorMessageWindow = errorMessageWindow;
 		this.terminatedMessageWindow = terminatedMessageWindow;

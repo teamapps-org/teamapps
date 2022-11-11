@@ -35,6 +35,7 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
     private final TeamAppsIntermediateDtoModel model;
 
     public ClassDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel model) {
+        super();
         this.model = model;
     }
 
@@ -122,7 +123,7 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
 
 	@Override
 	protected String getTypeScriptIdentifier(TeamAppsDtoParser.ClassDeclarationContext node) {
-		return node.Identifier().getText() + "Config";
+        return ModelUtil.getClassTypeScriptIdentifier(node);
 	}
 
     @Override
