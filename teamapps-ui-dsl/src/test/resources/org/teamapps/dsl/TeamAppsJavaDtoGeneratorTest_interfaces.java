@@ -41,7 +41,7 @@ public interface A extends UiObject {
 
 	public static class YEvent implements UiEvent {
 
-	    public static final String NAME = "A.y";
+	    public static final String TYPE_ID = "A.y";
 
 		protected String componentId;
 		protected String y;
@@ -90,10 +90,42 @@ public interface A extends UiObject {
 		}
 
 	}
+    public static class YEventWrapper extends JsonWrapper {
+
+        public static final String TYPE_ID = "y";
+
+        public YEventWrapper(JsonNode jsonNode) {
+            super(jsonNode);
+        }
+
+        public Class<? extends YEvent> getUiClass() {
+            return YEvent.class;
+        }
+
+        public String getComponentId() {
+            var node = jsonNode.get("componentId");
+            if (node == null || node.isNull()) {
+                return null;
+            }
+            return node.textValue();
+
+        }
+
+
+        public String getY() {
+            var node = jsonNode.get("y");
+            if (node == null || node.isNull()) {
+                return null;
+            }
+            return node.textValue();
+
+        }
+
+    }
 
 	public static class QQuery implements UiQuery {
 
-	    public static final String NAME = "A.q";
+	    public static final String TYPE_ID = "A.q";
 
 		protected String componentId;
 		protected String y;
@@ -140,6 +172,38 @@ public interface A extends UiObject {
 			this.y = y;
 			return this;
 		}
+
+	}
+	public static class QQueryWrapper extends JsonWrapper {
+
+	    public static final String TYPE_ID = "q";
+
+	    public QQueryWrapper(JsonNode jsonNode) {
+	        super(jsonNode);
+	    }
+
+	    public Class<? extends QQuery> getUiClass() {
+	        return QQuery.class;
+	    }
+
+	    public String getComponentId() {
+	        var node = jsonNode.get("componentId");
+	        if (node == null || node.isNull()) {
+	            return null;
+	        }
+	        return node.textValue();
+
+	    }
+
+
+	    public String getY() {
+	        var node = jsonNode.get("y");
+	        if (node == null || node.isNull()) {
+	            return null;
+	        }
+	        return node.textValue();
+
+	    }
 
 	}
 

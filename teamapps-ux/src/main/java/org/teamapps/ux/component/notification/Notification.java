@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiNotification;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -35,8 +35,8 @@ import org.teamapps.ux.component.template.BaseTemplateRecord;
 
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Notification extends AbstractComponent {
-	public final ProjectorEvent<Void> onOpened = createProjectorEventBoundToUiEvent(UiNotification.OpenedEvent.NAME);
-	public final ProjectorEvent<Boolean> onClosed = createProjectorEventBoundToUiEvent(UiNotification.ClosedEvent.NAME);
+	public final ProjectorEvent<Void> onOpened = createProjectorEventBoundToUiEvent(UiNotification.OpenedEvent.TYPE_ID);
+	public final ProjectorEvent<Boolean> onClosed = createProjectorEventBoundToUiEvent(UiNotification.ClosedEvent.TYPE_ID);
 
 	private boolean showing;
 
@@ -84,13 +84,17 @@ public class Notification extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiNotification.OpenedEvent) {
-			this.showing = true;
-			onOpened.fire(null);
-		} else if (event instanceof UiNotification.ClosedEvent) {
-			this.showing = false;
-			onClosed.fire(((UiNotification.ClosedEvent) event).getByUser());
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiNotification.OpenedEvent.TYPE_ID -> {
+				this.showing = true;
+				onOpened.fire(null);
+			}
+			case UiNotification.ClosedEvent.TYPE_ID -> {
+				var e = event.as(UiNotification.ClosedEventWrapper.class);
+				this.showing = false;
+				onClosed.fire(e.getByUser());
+			}
 		}
 	}
 

@@ -20,6 +20,7 @@
 package org.teamapps.ux.component.map;
 
 import org.teamapps.dto.UiMapLocation;
+import org.teamapps.dto.UiMapLocationWrapper;
 
 public class Location {
 
@@ -32,6 +33,10 @@ public class Location {
 	}
 
 	public static Location fromUiMapLocation(UiMapLocation uiMapLocation) {
+		return new Location(uiMapLocation.getLatitude(), uiMapLocation.getLongitude());
+	}
+
+	public static Location fromUiMapLocationWrapper(UiMapLocationWrapper uiMapLocation) {
 		return new Location(uiMapLocation.getLatitude(), uiMapLocation.getLongitude());
 	}
 

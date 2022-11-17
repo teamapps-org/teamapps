@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiMobileLayout;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -55,7 +55,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 	}
 
 	public void preloadView(Component component) {

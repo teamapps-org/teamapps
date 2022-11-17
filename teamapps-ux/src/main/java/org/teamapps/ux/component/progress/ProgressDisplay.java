@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.progress;
 
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiProgressDisplay;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
@@ -39,8 +39,8 @@ import org.teamapps.ux.task.ProgressStatus;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ProgressDisplay extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiProgressDisplay.ClickedEvent.NAME);
-	public final ProjectorEvent<Void> onCancelButtonClicked = createProjectorEventBoundToUiEvent(UiProgressDisplay.ClickedEvent.NAME);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiProgressDisplay.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onCancelButtonClicked = createProjectorEventBoundToUiEvent(UiProgressDisplay.ClickedEvent.TYPE_ID);
 
 	private Icon icon;
 	private String taskName;
@@ -50,7 +50,7 @@ public class ProgressDisplay extends AbstractComponent {
 	private boolean cancelable;
 
 	private ObservableProgress observedProgress;
-	
+
 	private Disposable observedProgressChangeListener;
 
 	public ProgressDisplay() {
@@ -85,17 +85,20 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiProgressDisplay.ClickedEvent) {
-			UiProgressDisplay.ClickedEvent clickedEvent = (UiProgressDisplay.ClickedEvent) event;
-			this.onClicked.fire(null);
-		} else if (event instanceof UiProgressDisplay.CancelButtonClickedEvent) {
-			UiProgressDisplay.CancelButtonClickedEvent cancelButtonClickedEvent = (UiProgressDisplay.CancelButtonClickedEvent) event;
-			if (this.observedProgress != null) {
-				this.observedProgress.requestCancellation();
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiProgressDisplay.ClickedEvent.TYPE_ID -> {
+				var clickedEvent = event.as(UiProgressDisplay.ClickedEventWrapper.class);
+				this.onClicked.fire(null);
 			}
-			this.onCancelButtonClicked.fire(null);
+			case UiProgressDisplay.CancelButtonClickedEvent.TYPE_ID -> {
+				var cancelButtonClickedEvent = event.as(UiProgressDisplay.CancelButtonClickedEventWrapper.class);
+				if (this.observedProgress != null) {
+					this.observedProgress.requestCancellation();
+				}
+				this.onCancelButtonClicked.fire(null);
 
+			}
 		}
 	}
 

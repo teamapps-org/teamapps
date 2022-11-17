@@ -21,9 +21,7 @@ package org.teamapps.ux.component.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiWorkSpaceLayoutItem;
-import org.teamapps.dto.UiWorkSpaceLayoutSplitItem;
-import org.teamapps.dto.UiWorkSpaceLayoutViewGroupItem;
+import org.teamapps.dto.*;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.ux.component.workspacelayout.definition.SplitPaneDefinition;
@@ -49,7 +47,7 @@ class LayoutApplyer {
 
 	public Map<String, WorkSpaceLayoutItem> applyFromUiLayoutDescriptor(
 			Map<String, WorkSpaceLayoutItem> currentRootItemsByWindowId,
-			Map<String, UiWorkSpaceLayoutItem> newRootDescriptorsByWindowId
+			Map<String, UiWorkSpaceLayoutItemWrapper> newRootDescriptorsByWindowId
 	) {
 		Map<String, LayoutItemWrapper> wrappedDescriptors = newRootDescriptorsByWindowId.entrySet().stream()
 				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> createWrapperFromUi(entry.getValue())));
@@ -241,13 +239,15 @@ class LayoutApplyer {
 		}
 	}
 
-	private static LayoutItemWrapper createWrapperFromUi(UiWorkSpaceLayoutItem child) {
-		if (child instanceof UiWorkSpaceLayoutSplitItem) {
-			return new UiWorkSpaceLayoutSplitItemWrapper(((UiWorkSpaceLayoutSplitItem) child));
-		} else if (child instanceof UiWorkSpaceLayoutViewGroupItem) {
-			return new UiWorkSpaceLayoutViewGroupItemWrapper(((UiWorkSpaceLayoutViewGroupItem) child));
-		} else {
-			throw new IllegalArgumentException("Unknown layout item type " + child.getClass().getCanonicalName());
+	private static LayoutItemWrapper createWrapperFromUi(UiWorkSpaceLayoutItemWrapper child) {
+		switch (child.getTypeId()) {
+			case  UiWorkSpaceLayoutSplitItem.TYPE_ID -> {
+				return new UiWorkSpaceLayoutSplitItemWrapper(child.as(org.teamapps.dto.UiWorkSpaceLayoutSplitItemWrapper.class));
+			}
+			case  UiWorkSpaceLayoutViewGroupItem.TYPE_ID -> {
+				return new UiWorkSpaceLayoutViewGroupItemWrapper(child.as(org.teamapps.dto.UiWorkSpaceLayoutViewGroupItemWrapper.class));
+			}
+			default -> throw new IllegalArgumentException("Unknown layout item type " + child.getClass().getCanonicalName());
 		}
 	}
 
@@ -288,9 +288,9 @@ class LayoutApplyer {
 	}
 
 	private static class UiWorkSpaceLayoutSplitItemWrapper implements SplitPaneWrapper {
-		private final UiWorkSpaceLayoutSplitItem item;
+		private final org.teamapps.dto.UiWorkSpaceLayoutSplitItemWrapper item;
 
-		public UiWorkSpaceLayoutSplitItemWrapper(UiWorkSpaceLayoutSplitItem item) {
+		public UiWorkSpaceLayoutSplitItemWrapper(org.teamapps.dto.UiWorkSpaceLayoutSplitItemWrapper item) {
 			this.item = item;
 		}
 
@@ -327,9 +327,9 @@ class LayoutApplyer {
 	}
 
 	private static class UiWorkSpaceLayoutViewGroupItemWrapper implements ViewGroupWrapper {
-		private final UiWorkSpaceLayoutViewGroupItem item;
+		private final org.teamapps.dto.UiWorkSpaceLayoutViewGroupItemWrapper item;
 
-		public UiWorkSpaceLayoutViewGroupItemWrapper(UiWorkSpaceLayoutViewGroupItem item) {
+		public UiWorkSpaceLayoutViewGroupItemWrapper(org.teamapps.dto.UiWorkSpaceLayoutViewGroupItemWrapper item) {
 			this.item = item;
 		}
 

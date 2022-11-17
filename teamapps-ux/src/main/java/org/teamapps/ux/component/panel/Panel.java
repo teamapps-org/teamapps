@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,10 +21,7 @@ package org.teamapps.ux.component.panel;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.databinding.ObservableValue;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiPanel;
-import org.teamapps.dto.UiPanelHeaderField;
+import org.teamapps.dto.*;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -42,7 +39,7 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Panel extends AbstractComponent implements Component {
 
-	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(UiPanel.WindowButtonClickedEvent.NAME);
+	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(UiPanel.WindowButtonClickedEvent.TYPE_ID);
 
 	private String title;
 	private Icon icon;
@@ -214,10 +211,12 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiPanel.WindowButtonClickedEvent) {
-			UiPanel.WindowButtonClickedEvent clickedEvent = (UiPanel.WindowButtonClickedEvent) event;
-			this.onWindowButtonClicked.fire(WindowButtonType.fromUiWindowButtonType(clickedEvent.getWindowButton()));
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiPanel.WindowButtonClickedEvent.TYPE_ID -> {
+				var clickedEvent = event.as(UiPanel.WindowButtonClickedEventWrapper.class);
+				this.onWindowButtonClicked.fire(WindowButtonType.fromUiWindowButtonType(clickedEvent.getWindowButton()));
+			}
 		}
 	}
 
@@ -252,7 +251,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setBodyBackgroundColor(Color bodyBackgroundColor) {
-		this.setCssStyle("> .panel-body", "background-color", bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString(): null);
+		this.setCssStyle("> .panel-body", "background-color", bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);
 	}
 
 	public HeaderComponentMinimizationPolicy getHeaderComponentMinimizationPolicy() {
@@ -400,7 +399,7 @@ public class Panel extends AbstractComponent implements Component {
 
 
 	public void setIcon(ObservableValue<Icon> observableIcon) {
-		if (iconChangeListenerDisposable != null)  {
+		if (iconChangeListenerDisposable != null) {
 			iconChangeListenerDisposable.dispose();
 		}
 		if (observableIcon != null) {
@@ -410,7 +409,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setTitle(ObservableValue<String> observableTitle) {
-		if (titleChangeListenerDisposable != null)  {
+		if (titleChangeListenerDisposable != null) {
 			titleChangeListenerDisposable.dispose();
 		}
 		if (observableTitle != null) {
@@ -420,7 +419,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setLeftHeaderField(ObservableValue<AbstractField<?>> observableLeftHeaderField) {
-		if (leftHeaderFieldChangeListenerDisposable != null)  {
+		if (leftHeaderFieldChangeListenerDisposable != null) {
 			leftHeaderFieldChangeListenerDisposable.dispose();
 		}
 		if (observableLeftHeaderField != null) {
@@ -430,7 +429,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setRightHeaderField(ObservableValue<AbstractField<?>> observableRightHeaderField) {
-		if (rightHeaderFieldChangeListenerDisposable != null)  {
+		if (rightHeaderFieldChangeListenerDisposable != null) {
 			rightHeaderFieldChangeListenerDisposable.dispose();
 		}
 		if (observableRightHeaderField != null) {

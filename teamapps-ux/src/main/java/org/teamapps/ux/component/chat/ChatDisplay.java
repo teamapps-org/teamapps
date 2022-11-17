@@ -86,17 +86,21 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public Object handleUiQuery(UiQuery query) {
-		if (query instanceof UiChatDisplay.RequestPreviousMessagesQuery) {
-			ChatMessageBatch response = model.getPreviousMessages(earliestKnownMessageId, messagesFetchSize);
-			updateEarliestKnownMessageId(response);
-			return createUiChatMessageBatch(response);
-		} else if (query instanceof UiChatDisplay.RequestContextMenuQuery) {
-			UiChatDisplay.RequestContextMenuQuery q = (UiChatDisplay.RequestContextMenuQuery) query;
-			ChatMessage chatMessage = model.getChatMessageById(q.getChatMessageId());
-			if (chatMessage != null) {
-				Component component = contextMenuProvider.apply(chatMessage);
-				return component != null ? component.createUiReference() : null;
+	public Object handleUiQuery(UiQueryWrapper query) {
+		switch (query.getTypeId()) {
+			case UiChatDisplay.RequestPreviousMessagesQuery.TYPE_ID -> {
+				var e = query.as(UiChatDisplay.RequestPreviousMessagesQueryWrapper.class);
+				ChatMessageBatch response = model.getPreviousMessages(earliestKnownMessageId, messagesFetchSize);
+				updateEarliestKnownMessageId(response);
+				return createUiChatMessageBatch(response);
+			}
+			case UiChatDisplay.RequestContextMenuQuery.TYPE_ID -> {
+				var q = query.as(UiChatDisplay.RequestContextMenuQueryWrapper.class);
+				ChatMessage chatMessage = model.getChatMessageById(q.getChatMessageId());
+				if (chatMessage != null) {
+					Component component = contextMenuProvider.apply(chatMessage);
+					return component != null ? component.createUiReference() : null;
+				}
 			}
 		}
 		return super.handleUiQuery(query);

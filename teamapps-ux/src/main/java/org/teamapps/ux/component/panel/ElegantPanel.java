@@ -19,11 +19,11 @@
  */
 package org.teamapps.ux.component.panel;
 
-import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiElegantPanel;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.Spacing;
@@ -57,7 +57,7 @@ public class ElegantPanel extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 
 	}
 

@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.teamapps.data.extract.ValueExtractor;
-import org.teamapps.data.extract.ValueInjector;
+import org.teamapps.ux.data.extraction.ValueExtractor;
+import org.teamapps.ux.data.extraction.ValueInjector;
 import org.teamapps.dto.UiTableColumn;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.AbstractField;

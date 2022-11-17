@@ -49,11 +49,11 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSpaceLayout.class);
 
-	public final ProjectorEvent<ViewSelectedEventData> onViewSelected = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewSelectedEvent.NAME);
-	public final ProjectorEvent<WorkSpaceLayoutView> onChildWindowCreationFailed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ChildWindowCreationFailedEvent.NAME);
-	public final ProjectorEvent<ChildWindowClosedEventData> onChildWindowClosed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ChildWindowClosedEvent.NAME);
-	public final ProjectorEvent<WorkSpaceLayoutView> onViewClosed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewClosedEvent.NAME);
-	public final ProjectorEvent<WorkSpaceLayoutViewGroup> onViewGroupPanelStateChanged = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent.NAME);
+	public final ProjectorEvent<ViewSelectedEventData> onViewSelected = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<WorkSpaceLayoutView> onChildWindowCreationFailed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID);
+	public final ProjectorEvent<ChildWindowClosedEventData> onChildWindowClosed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ChildWindowClosedEvent.TYPE_ID);
+	public final ProjectorEvent<WorkSpaceLayoutView> onViewClosed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewClosedEvent.TYPE_ID);
+	public final ProjectorEvent<WorkSpaceLayoutViewGroup> onViewGroupPanelStateChanged = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent.TYPE_ID);
 
 	private final String childWindowPageTitle = "Application window";
 	private Toolbar toolbar;
@@ -121,64 +121,74 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiWorkSpaceLayout.LayoutChangedEvent) {
-			UiWorkSpaceLayout.LayoutChangedEvent layoutChangedEvent = (UiWorkSpaceLayout.LayoutChangedEvent) event;
-			this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, layoutChangedEvent.getLayoutsByWindowId());
-			printLayoutSyncTraceMessage(layoutChangedEvent.getLayoutsByWindowId());
-		} else if (event instanceof UiWorkSpaceLayout.ViewDraggedToNewWindowEvent) {
-			UiWorkSpaceLayout.ViewDraggedToNewWindowEvent newWindowEvent = (UiWorkSpaceLayout.ViewDraggedToNewWindowEvent) event;
-			Map<String, UiWorkSpaceLayoutItem> newLayoutsByWindowId = newWindowEvent.getLayoutsByWindowId();
-			this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, newLayoutsByWindowId);
-			printLayoutSyncTraceMessage(newWindowEvent.getLayoutsByWindowId());
-		} else if (event instanceof UiWorkSpaceLayout.ViewNeedsRefreshEvent) {
-			UiWorkSpaceLayout.ViewNeedsRefreshEvent needsRefreshEvent = (UiWorkSpaceLayout.ViewNeedsRefreshEvent) event;
-			String viewName = needsRefreshEvent.getViewName();
-			WorkSpaceLayoutView view = getViewById(viewName);
-			getSessionContext().sendCommand(getId(), new UiWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()));
-		} else if (event instanceof UiWorkSpaceLayout.ChildWindowCreationFailedEvent) {
-			UiWorkSpaceLayout.ChildWindowCreationFailedEvent windowCreationFailedEvent = (UiWorkSpaceLayout.ChildWindowCreationFailedEvent) event;
-			WorkSpaceLayoutView view = getViewById(windowCreationFailedEvent.getViewName());
-			if (view != null) {
-				this.onChildWindowCreationFailed.fire(view);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiWorkSpaceLayout.LayoutChangedEvent.TYPE_ID -> {
+				var layoutChangedEvent = event.as(UiWorkSpaceLayout.LayoutChangedEventWrapper.class);
+				this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, layoutChangedEvent.getLayoutsByWindowId());
+				printLayoutSyncTraceMessage(layoutChangedEvent.getLayoutsByWindowId());
 			}
-		} else if (event instanceof UiWorkSpaceLayout.ChildWindowClosedEvent) {
-			UiWorkSpaceLayout.ChildWindowClosedEvent windowClosedEvent = (UiWorkSpaceLayout.ChildWindowClosedEvent) event;
-			WorkSpaceLayoutItem windowRootItem = this.rootItemsByWindowId.remove(windowClosedEvent.getWindowId());
-			if (windowRootItem != null) {
-				getMainRootItem().getSelfAndAncestors().stream()
-						.filter(item -> item instanceof WorkSpaceLayoutViewGroup)
-						.map(item -> ((WorkSpaceLayoutViewGroup) item))
-						.findFirst().ifPresent(viewGroup -> {
-							windowRootItem.getAllViews().forEach(viewGroup::addView);
-						});
+			case UiWorkSpaceLayout.ViewDraggedToNewWindowEvent.TYPE_ID -> {
+				var newWindowEvent = event.as(UiWorkSpaceLayout.ViewDraggedToNewWindowEventWrapper.class);
+				Map<String, UiWorkSpaceLayoutItemWrapper> newLayoutsByWindowId = newWindowEvent.getLayoutsByWindowId();
+				this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, newLayoutsByWindowId);
+				printLayoutSyncTraceMessage(newWindowEvent.getLayoutsByWindowId());
 			}
-			this.onChildWindowClosed.fire(new ChildWindowClosedEventData(windowClosedEvent.getWindowId(), windowRootItem));
-		} else if (event instanceof UiWorkSpaceLayout.ViewSelectedEvent) {
-			UiWorkSpaceLayout.ViewSelectedEvent tabSelectedEvent = (UiWorkSpaceLayout.ViewSelectedEvent) event;
-			WorkSpaceLayoutViewGroup viewGroup = this.getViewGroupById(tabSelectedEvent.getViewGroupId());
-			if (viewGroup != null) {
-				viewGroup.handleViewSelectedByClient(tabSelectedEvent.getViewName());
-				WorkSpaceLayoutView view = getViewById(tabSelectedEvent.getViewName());
-				this.onViewSelected.fire(new ViewSelectedEventData(viewGroup, view));
+			case UiWorkSpaceLayout.ViewNeedsRefreshEvent.TYPE_ID -> {
+				var needsRefreshEvent = event.as(UiWorkSpaceLayout.ViewNeedsRefreshEventWrapper.class);
+				String viewName = needsRefreshEvent.getViewName();
+				WorkSpaceLayoutView view = getViewById(viewName);
+				getSessionContext().sendCommand(getId(), new UiWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()));
 			}
-		} else if (event instanceof UiWorkSpaceLayout.ViewClosedEvent) {
-			UiWorkSpaceLayout.ViewClosedEvent viewClosedEvent = (UiWorkSpaceLayout.ViewClosedEvent) event;
-			WorkSpaceLayoutView view = getViewById(viewClosedEvent.getViewName());
-			if (view != null) {
-				WorkSpaceLayoutViewGroup viewGroup = getViewGroupForViewName(viewClosedEvent.getViewName());
-				if (viewGroup != null) {
-					viewGroup.removeViewSilently(view);
+			case UiWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID -> {
+				var windowCreationFailedEvent = event.as(UiWorkSpaceLayout.ChildWindowCreationFailedEventWrapper.class);
+				WorkSpaceLayoutView view = getViewById(windowCreationFailedEvent.getViewName());
+				if (view != null) {
+					this.onChildWindowCreationFailed.fire(view);
 				}
-				this.onViewClosed.fire(view);
 			}
-		} else if (event instanceof UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent) {
-			UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent stateChangedEvent = (UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent) event;
-			WorkSpaceLayoutViewGroup viewGroup = getViewGroupById(stateChangedEvent.getViewGroupId());
-			if (viewGroup != null) {
-				viewGroup.setPanelStateSilently(ViewGroupPanelState.valueOf(stateChangedEvent.getPanelState().name()));
-				this.onViewGroupPanelStateChanged.fire(viewGroup);
+			case UiWorkSpaceLayout.ChildWindowClosedEvent.TYPE_ID -> {
+				var windowClosedEvent = event.as(UiWorkSpaceLayout.ChildWindowClosedEventWrapper.class);
+				WorkSpaceLayoutItem windowRootItem = this.rootItemsByWindowId.remove(windowClosedEvent.getWindowId());
+				if (windowRootItem != null) {
+					getMainRootItem().getSelfAndAncestors().stream()
+							.filter(item -> item instanceof WorkSpaceLayoutViewGroup)
+							.map(item -> ((WorkSpaceLayoutViewGroup) item))
+							.findFirst().ifPresent(viewGroup -> {
+								windowRootItem.getAllViews().forEach(viewGroup::addView);
+							});
+				}
+				this.onChildWindowClosed.fire(new ChildWindowClosedEventData(windowClosedEvent.getWindowId(), windowRootItem));
 			}
+			case UiWorkSpaceLayout.ViewSelectedEvent.TYPE_ID -> {
+				var tabSelectedEvent = event.as(UiWorkSpaceLayout.ViewSelectedEventWrapper.class);
+				WorkSpaceLayoutViewGroup viewGroup = this.getViewGroupById(tabSelectedEvent.getViewGroupId());
+				if (viewGroup != null) {
+					viewGroup.handleViewSelectedByClient(tabSelectedEvent.getViewName());
+					WorkSpaceLayoutView view = getViewById(tabSelectedEvent.getViewName());
+					this.onViewSelected.fire(new ViewSelectedEventData(viewGroup, view));
+				}
+			}
+			case UiWorkSpaceLayout.ViewClosedEvent.TYPE_ID -> {
+				var viewClosedEvent = event.as(UiWorkSpaceLayout.ViewClosedEventWrapper.class);
+				WorkSpaceLayoutView view = getViewById(viewClosedEvent.getViewName());
+				if (view != null) {
+					WorkSpaceLayoutViewGroup viewGroup = getViewGroupForViewName(viewClosedEvent.getViewName());
+					if (viewGroup != null) {
+						viewGroup.removeViewSilently(view);
+					}
+					this.onViewClosed.fire(view);
+				}
+			}
+			case UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent.TYPE_ID -> {
+				var stateChangedEvent = event.as(UiWorkSpaceLayout.ViewGroupPanelStateChangedEventWrapper.class);
+				WorkSpaceLayoutViewGroup viewGroup = getViewGroupById(stateChangedEvent.getViewGroupId());
+				if (viewGroup != null) {
+					viewGroup.setPanelStateSilently(ViewGroupPanelState.valueOf(stateChangedEvent.getPanelState().name()));
+					this.onViewGroupPanelStateChanged.fire(viewGroup);
+				}
+			}
+
 		}
 	}
 
@@ -201,7 +211,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 				.findAny().orElse(null);
 	}
 
-	private void printLayoutSyncTraceMessage(Map<String, UiWorkSpaceLayoutItem> layoutsByWindowId) {
+	private void printLayoutSyncTraceMessage(Map<String, UiWorkSpaceLayoutItemWrapper> layoutsByWindowId) {
 		if (LOGGER.isTraceEnabled()) {
 			try {
 				LOGGER.trace("---------------------");

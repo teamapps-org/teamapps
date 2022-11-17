@@ -12,7 +12,8 @@
   },
   "workspaces": [
     "teamapps-client-communication",
-    "teamapps-common-components"
+    "teamapps-client-core",
+    "teamapps-client-common-components"
   ],
   "scripts": {
     "sync-pom-version": "node build/sync-pom-version.js",

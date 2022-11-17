@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.charting.tree;
 
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.*;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -37,10 +37,10 @@ import java.util.stream.Collectors;
 
 public class TreeGraph<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<TreeGraphNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(UiTreeGraph.NodeClickedEvent.NAME);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.NodeExpandedOrCollapsedEvent.NAME);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.ParentExpandedOrCollapsedEvent.NAME);
-	public final ProjectorEvent<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.SideListExpandedOrCollapsedEvent.NAME);
+	public final ProjectorEvent<TreeGraphNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(UiTreeGraph.NodeClickedEvent.TYPE_ID);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.NodeExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.ParentExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.SideListExpandedOrCollapsedEvent.TYPE_ID);
 
 	private float zoomFactor;
 	private boolean compact = false;
@@ -148,34 +148,40 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiTreeGraph.NodeClickedEvent) {
-			UiTreeGraph.NodeClickedEvent e = (UiTreeGraph.NodeClickedEvent) event;
-			TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
-			if (node != null) {
-				onNodeClicked.fire(node);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiTreeGraph.NodeClickedEvent.TYPE_ID -> {
+				var e = event.as(UiTreeGraph.NodeClickedEventWrapper.class);
+				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+				if (node != null) {
+					onNodeClicked.fire(node);
+				}
 			}
-		} else if (event instanceof UiTreeGraph.NodeExpandedOrCollapsedEvent) {
-			UiTreeGraph.NodeExpandedOrCollapsedEvent e = (UiTreeGraph.NodeExpandedOrCollapsedEvent) event;
-			TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
-			if (node != null) {
-				node.setExpanded(e.getExpanded());
-				onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
+			case UiTreeGraph.NodeExpandedOrCollapsedEvent.TYPE_ID -> {
+				var e = event.as(UiTreeGraph.NodeExpandedOrCollapsedEventWrapper.class);
+				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+				if (node != null) {
+					node.setExpanded(e.getExpanded());
+					onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
+				}
 			}
-		} else if (event instanceof UiTreeGraph.ParentExpandedOrCollapsedEvent) {
-			UiTreeGraph.ParentExpandedOrCollapsedEvent e = (UiTreeGraph.ParentExpandedOrCollapsedEvent) event;
-			TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
-			if (node != null) {
-				node.setParentExpanded(e.getExpanded());
-				onParentExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
+			case UiTreeGraph.ParentExpandedOrCollapsedEvent.TYPE_ID -> {
+				var e = event.as(UiTreeGraph.ParentExpandedOrCollapsedEventWrapper.class);
+				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+				if (node != null) {
+					node.setParentExpanded(e.getExpanded());
+					onParentExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
+				}
 			}
-		} else if (event instanceof UiTreeGraph.SideListExpandedOrCollapsedEvent) {
-			UiTreeGraph.SideListExpandedOrCollapsedEvent e = (UiTreeGraph.SideListExpandedOrCollapsedEvent) event;
-			TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
-			if (node != null) {
-				node.setSideListExpanded(e.getExpanded());
-				onSideListExpandedOrCollapsed.fire(new SideListExpandedOrCollapsedEvent<>(node, e.getExpanded()));
+			case UiTreeGraph.SideListExpandedOrCollapsedEvent.TYPE_ID -> {
+				var e = event.as(UiTreeGraph.SideListExpandedOrCollapsedEventWrapper.class);
+				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+				if (node != null) {
+					node.setSideListExpanded(e.getExpanded());
+					onSideListExpandedOrCollapsed.fire(new SideListExpandedOrCollapsedEvent<>(node, e.getExpanded()));
+				}
 			}
+
 		}
 	}
 

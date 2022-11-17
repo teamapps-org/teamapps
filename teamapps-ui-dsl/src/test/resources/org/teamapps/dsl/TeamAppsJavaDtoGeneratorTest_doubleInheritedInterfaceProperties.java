@@ -35,6 +35,8 @@ import org.teamapps.dto.UiObject;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class D extends A implements B, C, UiObject {
 
+    public static final String TYPE_ID = "D";
+
 	protected List<Integer> cProperty;
 
 	/**

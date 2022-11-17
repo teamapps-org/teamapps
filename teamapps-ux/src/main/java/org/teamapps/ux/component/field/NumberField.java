@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiNumberField;
 import org.teamapps.event.ProjectorEvent;
@@ -33,8 +33,8 @@ import java.util.Locale;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NumberField extends AbstractField<Number> implements TextInputHandlingField {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiNumberField.TextInputEvent.NAME);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiNumberField.SpecialKeyPressedEvent.NAME);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiNumberField.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiNumberField.SpecialKeyPressedEvent.TYPE_ID);
 
 	private int precision; // if == 0: integer, if < 0: maximum available precision
 	private String emptyText;
@@ -70,7 +70,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
 		defaultHandleTextInputEvent(event);
 	}

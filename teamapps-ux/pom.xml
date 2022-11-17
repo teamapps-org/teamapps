@@ -65,7 +65,7 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-communication</artifactId>
+            <artifactId>teamapps-client-common-components</artifactId>
         </dependency>
 
         <dependency>

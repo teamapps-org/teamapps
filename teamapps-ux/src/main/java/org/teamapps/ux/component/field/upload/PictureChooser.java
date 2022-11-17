@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field.upload;
 
 import net.coobird.thumbnailator.Thumbnails;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiPictureChooser;
 import org.teamapps.event.ProjectorEvent;
@@ -45,11 +45,11 @@ import java.nio.file.Files;
 
 public class PictureChooser extends AbstractField<Resource> {
 
-	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadTooLargeEvent.NAME);
-	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadStartedEvent.NAME);
-	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadCanceledEvent.NAME);
-	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadFailedEvent.NAME);
-	public final ProjectorEvent<UploadedFile> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadSuccessfulEvent.NAME);
+	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadTooLargeEvent.TYPE_ID);
+	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadStartedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadCanceledEvent.TYPE_ID);
+	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadFailedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadedFile> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadSuccessfulEvent.TYPE_ID);
 
 	private long maxFileSize = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
@@ -165,37 +165,42 @@ public class PictureChooser extends AbstractField<Resource> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
-		if (event instanceof UiPictureChooser.UploadTooLargeEvent) {
-			UiPictureChooser.UploadTooLargeEvent tooLargeEvent = (UiPictureChooser.UploadTooLargeEvent) event;
-			this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
-		} else if (event instanceof UiPictureChooser.UploadStartedEvent) {
-			UiPictureChooser.UploadStartedEvent uploadStartedEvent = (UiPictureChooser.UploadStartedEvent) event;
-			this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(), null /*TODO*/));
+		switch (event.getTypeId()) {
+			case UiPictureChooser.UploadTooLargeEvent.TYPE_ID -> {
+				var tooLargeEvent = event.as(UiPictureChooser.UploadTooLargeEventWrapper.class);
+				this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
+			}
+			case UiPictureChooser.UploadStartedEvent.TYPE_ID -> {
+				var uploadStartedEvent = event.as(UiPictureChooser.UploadStartedEventWrapper.class);
+				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(), null /*TODO*/));
 
-		} else if (event instanceof UiPictureChooser.UploadCanceledEvent) {
-			UiPictureChooser.UploadCanceledEvent canceledEvent = (UiPictureChooser.UploadCanceledEvent) event;
-			this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()));
-		} else if (event instanceof UiPictureChooser.UploadFailedEvent) {
-			UiPictureChooser.UploadFailedEvent failedEvent = (UiPictureChooser.UploadFailedEvent) event;
-			this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()));
+			}
+			case UiPictureChooser.UploadCanceledEvent.TYPE_ID -> {
+				var canceledEvent = event.as(UiPictureChooser.UploadCanceledEventWrapper.class);
+				this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()));
+			}
+			case UiPictureChooser.UploadFailedEvent.TYPE_ID -> {
+				var failedEvent = event.as(UiPictureChooser.UploadFailedEventWrapper.class);
+				this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()));
 
-		} else if (event instanceof UiPictureChooser.UploadSuccessfulEvent) {
-			UiPictureChooser.UploadSuccessfulEvent uploadedEvent = (UiPictureChooser.UploadSuccessfulEvent) event;
-			this.uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
-					() -> {
-						try {
-							return new FileInputStream(getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid()));
-						} catch (FileNotFoundException e) {
-							throw new UploadedFileAccessException(e);
-						}
-					},
-					() -> getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid())
-			);
-			onUploadSuccessful.fire(uploadedFile);
-			showImageCropperWindow();
-
+			}
+			case UiPictureChooser.UploadSuccessfulEvent.TYPE_ID -> {
+				var uploadedEvent = event.as(UiPictureChooser.UploadSuccessfulEventWrapper.class);
+				this.uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
+						() -> {
+							try {
+								return new FileInputStream(getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid()));
+							} catch (FileNotFoundException e) {
+								throw new UploadedFileAccessException(e);
+							}
+						},
+						() -> getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid())
+				);
+				onUploadSuccessful.fire(uploadedFile);
+				showImageCropperWindow();
+			}
 		}
 	}
 

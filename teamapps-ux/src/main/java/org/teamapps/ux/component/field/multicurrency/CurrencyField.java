@@ -40,8 +40,8 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class CurrencyField extends AbstractField<CurrencyValue> implements TextInputHandlingField {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiCurrencyField.TextInputEvent.NAME);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiCurrencyField.SpecialKeyPressedEvent.NAME);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiCurrencyField.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiCurrencyField.SpecialKeyPressedEvent.TYPE_ID);
 
 	private ULocale locale = SessionContext.current().getULocale();
 
@@ -88,7 +88,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
 		defaultHandleTextInputEvent(event);
 	}

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,7 @@ package org.teamapps.ux.component.charting.pie;
 
 import org.teamapps.dto.UiChartNamedDataPoint;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiPieChart;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 public class PieChart extends AbstractComponent {
 
-	public final ProjectorEvent<ChartNamedDataPoint> onDataPointClicked = createProjectorEventBoundToUiEvent(UiPieChart.DataPointClickedEvent.NAME);
+	public final ProjectorEvent<ChartNamedDataPoint> onDataPointClicked = createProjectorEventBoundToUiEvent(UiPieChart.DataPointClickedEvent.TYPE_ID);
 
 	private long animationDuration = 500;
 	private ChartLegendStyle legendStyle;
@@ -68,13 +68,15 @@ public class PieChart extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiPieChart.DataPointClickedEvent) {
-			UiPieChart.DataPointClickedEvent clickEvent = (UiPieChart.DataPointClickedEvent) event;
-			dataPoints.stream()
-					.filter(p -> Objects.equals(p.getName(), clickEvent.getDataPointName()))
-					.findFirst()
-					.ifPresent(onDataPointClicked::fire);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiPieChart.DataPointClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(UiPieChart.DataPointClickedEventWrapper.class);
+				dataPoints.stream()
+						.filter(p -> Objects.equals(p.getName(), clickEvent.getDataPointName()))
+						.findFirst()
+						.ifPresent(onDataPointClicked::fire);
+			}
 		}
 	}
 

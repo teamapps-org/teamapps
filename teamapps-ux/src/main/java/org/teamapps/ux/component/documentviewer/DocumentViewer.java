@@ -21,7 +21,7 @@ package org.teamapps.ux.component.documentviewer;
 
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiDocumentViewer;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.Shadow;
@@ -62,7 +62,7 @@ public class DocumentViewer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		// no events so far...
 	}
 

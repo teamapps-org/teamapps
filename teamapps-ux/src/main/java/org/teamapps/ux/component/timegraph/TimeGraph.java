@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 
 public class TimeGraph extends AbstractComponent {
 
-	public final ProjectorEvent<ZoomEventData> onZoomed = createProjectorEventBoundToUiEvent(UiTimeGraph.ZoomedEvent.NAME);
-	public final ProjectorEvent<Interval> onIntervalSelected = createProjectorEventBoundToUiEvent(UiTimeGraph.IntervalSelectedEvent.NAME);
+	public final ProjectorEvent<ZoomEventData> onZoomed = createProjectorEventBoundToUiEvent(UiTimeGraph.ZoomedEvent.TYPE_ID);
+	public final ProjectorEvent<Interval> onIntervalSelected = createProjectorEventBoundToUiEvent(UiTimeGraph.IntervalSelectedEvent.TYPE_ID);
 	private final List<GraphListenInfo> graphsAndListeners = new ArrayList<>();
 
 	private static class GraphListenInfo {
@@ -154,28 +154,31 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiTimeGraph.ZoomedEvent) {
-			UiTimeGraph.ZoomedEvent zoomedEvent = (UiTimeGraph.ZoomedEvent) event;
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiTimeGraph.ZoomedEvent.TYPE_ID -> {
+				var zoomedEvent = event.as(UiTimeGraph.ZoomedEventWrapper.class);
+				Interval displayedInterval = new Interval(zoomedEvent.getDisplayedInterval().getMin(), zoomedEvent.getDisplayedInterval().getMax());
+				TimePartitioning timePartitioning = zoomLevels.get(zoomedEvent.getZoomLevelIndex());
 
-			Interval displayedInterval = new Interval(zoomedEvent.getDisplayedInterval().getMin(), zoomedEvent.getDisplayedInterval().getMax());
-			TimePartitioning timePartitioning = zoomLevels.get(zoomedEvent.getZoomLevelIndex());
+				if (zoomedEvent.getNeededIntervalsByGraphId() != null) {
+					final Map<String, List<Interval>> neededIntervalsByGraphId = zoomedEvent.getNeededIntervalsByGraphId().entrySet().stream()
+							.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(i -> new Interval(i.getMin(), i.getMax())).collect(Collectors.toList())));
+					Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededIntervalsByGraphId);
+					sendCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(zoomedEvent.getZoomLevelIndex(), convertToUiData(data)));
+				}
 
-			if (zoomedEvent.getNeededIntervalsByGraphId() != null) {
-				final Map<String, List<Interval>> neededIntervalsByGraphId = zoomedEvent.getNeededIntervalsByGraphId().entrySet().stream()
-						.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(i -> new Interval(i.getMin(), i.getMax())).collect(Collectors.toList())));
-				Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededIntervalsByGraphId);
-				sendCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(zoomedEvent.getZoomLevelIndex(), convertToUiData(data)));
+				this.displayedInterval = displayedInterval;
+				this.millisecondsPerPixel = zoomedEvent.getMillisecondsPerPixel();
+				this.onZoomed.fire(new ZoomEventData(displayedInterval, zoomedEvent.getMillisecondsPerPixel(), timePartitioning));
+			}
+			case UiTimeGraph.IntervalSelectedEvent.TYPE_ID -> {
+				var selectedEvent = event.as(UiTimeGraph.IntervalSelectedEventWrapper.class);
+				Interval interval = selectedEvent.getIntervalX() != null ? new Interval(selectedEvent.getIntervalX().getMin(), selectedEvent.getIntervalX().getMax()) : null;
+				this.selectedInterval = interval;
+				this.onIntervalSelected.fire(interval);
 			}
 
-			this.displayedInterval = displayedInterval;
-			this.millisecondsPerPixel = zoomedEvent.getMillisecondsPerPixel();
-			this.onZoomed.fire(new ZoomEventData(displayedInterval, zoomedEvent.getMillisecondsPerPixel(), timePartitioning));
-		} else if (event instanceof UiTimeGraph.IntervalSelectedEvent) {
-			UiTimeGraph.IntervalSelectedEvent selectedEvent = (UiTimeGraph.IntervalSelectedEvent) event;
-			Interval interval = selectedEvent.getIntervalX() != null ? new Interval(selectedEvent.getIntervalX().getMin(), selectedEvent.getIntervalX().getMax()) : null;
-			this.selectedInterval = interval;
-			this.onIntervalSelected.fire(interval);
 		}
 	}
 

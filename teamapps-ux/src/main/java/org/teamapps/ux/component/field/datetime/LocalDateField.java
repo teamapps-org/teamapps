@@ -41,8 +41,8 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 		SUGGESTION_LIST
 	}
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiLocalDateField.TextInputEvent.NAME);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiLocalDateField.SpecialKeyPressedEvent.NAME);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiLocalDateField.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiLocalDateField.SpecialKeyPressedEvent.TYPE_ID);
 
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;
@@ -91,7 +91,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
 		defaultHandleTextInputEvent(event);
 	}

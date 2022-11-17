@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,14 +20,14 @@
 package org.teamapps.ux.component.media;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiMediaTrackGraph;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class MediaTrackGraph extends AbstractComponent {
 
-	public ProjectorEvent<TimeSelection> onTimeSelection = createProjectorEventBoundToUiEvent(UiMediaTrackGraph.HandleTimeSelectionEvent.NAME);
+	public ProjectorEvent<TimeSelection> onTimeSelection = createProjectorEventBoundToUiEvent(UiMediaTrackGraph.HandleTimeSelectionEvent.TYPE_ID);
 
 	private MediaTrackData data;
 
@@ -46,12 +46,14 @@ public class MediaTrackGraph extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiMediaTrackGraph.HandleTimeSelectionEvent) {
-			UiMediaTrackGraph.HandleTimeSelectionEvent timeSelectionEvent = (UiMediaTrackGraph.HandleTimeSelectionEvent) event;
-			long start = timeSelectionEvent.getStart();
-			long end = timeSelectionEvent.getEnd();
-			onTimeSelection.fire(new TimeSelection(start, end));
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiMediaTrackGraph.HandleTimeSelectionEvent.TYPE_ID -> {
+				var timeSelectionEvent = event.as(UiMediaTrackGraph.HandleTimeSelectionEventWrapper.class);
+				long start = timeSelectionEvent.getStart();
+				long end = timeSelectionEvent.getEnd();
+				onTimeSelection.fire(new TimeSelection(start, end));
+			}
 		}
 	}
 

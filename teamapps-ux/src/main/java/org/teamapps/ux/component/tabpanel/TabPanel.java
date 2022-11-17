@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.tabpanel;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiTab;
 import org.teamapps.dto.UiTabPanel;
 import org.teamapps.event.ProjectorEvent;
@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TabPanel extends AbstractComponent implements Component {
 
-	public final ProjectorEvent<Tab> onTabSelected = createProjectorEventBoundToUiEvent(UiTabPanel.TabSelectedEvent.NAME);
-	public final ProjectorEvent<Tab> onTabClosed = createProjectorEventBoundToUiEvent(UiTabPanel.TabClosedEvent.NAME);
+	public final ProjectorEvent<Tab> onTabSelected = createProjectorEventBoundToUiEvent(UiTabPanel.TabSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<Tab> onTabClosed = createProjectorEventBoundToUiEvent(UiTabPanel.TabClosedEvent.TYPE_ID);
 
 	private final List<Tab> tabs = new ArrayList<>();
 	private Tab selectedTab;
@@ -164,35 +164,39 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiTabPanel.TabSelectedEvent) {
-			UiTabPanel.TabSelectedEvent tabSelectedEvent = (UiTabPanel.TabSelectedEvent) event;
-			if (tabSelectedEvent.getTabId() == null) {
-				this.selectedTab = null;
-			} else {
-				Tab oldSelectedTab = this.selectedTab;
-				Tab selectedTab = this.getTabByClientId(tabSelectedEvent.getTabId());
-				this.selectedTab = selectedTab;
-				if (oldSelectedTab != null) {
-					oldSelectedTab.onDeselected.fire(null);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiTabPanel.TabSelectedEvent.TYPE_ID -> {
+				var tabSelectedEvent = event.as(UiTabPanel.TabSelectedEventWrapper.class);
+				if (tabSelectedEvent.getTabId() == null) {
+					this.selectedTab = null;
+				} else {
+					Tab oldSelectedTab = this.selectedTab;
+					Tab selectedTab = this.getTabByClientId(tabSelectedEvent.getTabId());
+					this.selectedTab = selectedTab;
+					if (oldSelectedTab != null) {
+						oldSelectedTab.onDeselected.fire(null);
+					}
+					if (selectedTab != null) {
+						selectedTab.onSelected.fire(null);
+					}
 				}
-				if (selectedTab != null) {
-					selectedTab.onSelected.fire(null);
-				}
+				onTabSelected.fire(selectedTab);
 			}
-			onTabSelected.fire(selectedTab);
-		} else if (event instanceof UiTabPanel.TabNeedsRefreshEvent) {
-			UiTabPanel.TabNeedsRefreshEvent tabNeedsRefreshEvent = (UiTabPanel.TabNeedsRefreshEvent) event;
-			Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
-			sendCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
-		} else if (event instanceof UiTabPanel.TabClosedEvent) {
-			UiTabPanel.TabClosedEvent tabClosedEvent = (UiTabPanel.TabClosedEvent) event;
-			String tabId = tabClosedEvent.getTabId();
-			Tab closedTab = this.getTabByClientId(tabId);
-			if (closedTab != null) {
-				tabs.remove(closedTab);
-				closedTab.onClosed.fire(null);
-				onTabClosed.fire(closedTab);
+			case UiTabPanel.TabNeedsRefreshEvent.TYPE_ID -> {
+				var tabNeedsRefreshEvent = event.as(UiTabPanel.TabNeedsRefreshEventWrapper.class);
+				Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
+				sendCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
+			}
+			case UiTabPanel.TabClosedEvent.TYPE_ID -> {
+				var tabClosedEvent = event.as(UiTabPanel.TabClosedEventWrapper.class);
+				String tabId = tabClosedEvent.getTabId();
+				Tab closedTab = this.getTabByClientId(tabId);
+				if (closedTab != null) {
+					tabs.remove(closedTab);
+					closedTab.onClosed.fire(null);
+					onTabClosed.fire(closedTab);
+				}
 			}
 		}
 	}

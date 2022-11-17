@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,8 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.dto.*;
-import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.*;
+import org.teamapps.ux.session.ClientInfo;
+import org.teamapps.ux.session.Location;
 
 import java.io.IOException;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 	 * TODO: remove once the ticket is fixed.
 	 */
 	private final Executor jettyWorkaroundCloseExecutor = Executors.newFixedThreadPool(5);
-	private final ObjectMapper mapper = TeamAppsObjectMapperFactory.create();
+	private final ObjectMapper mapper;
 
 	private final AtomicLong totalSendCount = new AtomicLong();
 	private final AtomicLong totalReceiveCount = new AtomicLong();
@@ -54,9 +55,10 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 	private final TeamAppsSessionManager sessionManager;
 	private final TeamAppsConfiguration teamAppsConfig;
 
-	public WebSocketCommunicationEndpoint(TeamAppsSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig) {
+	public WebSocketCommunicationEndpoint(TeamAppsSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig, ObjectMapper mapper) {
 		this.sessionManager = sessionManager;
 		this.teamAppsConfig = teamAppsConfig;
+		this.mapper = mapper;
 	}
 
 	@Override
@@ -125,48 +127,73 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 			totalReceiveCount.addAndGet(payload.length());
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
-				AbstractClientMessage clientMessage = mapper.readValue(payload, AbstractClientMessage.class);
+				AbstractClientMessageWrapper clientMessage = new AbstractClientMessageWrapper(mapper.readTree(payload));
 
 				String uiSessionId = clientMessage.getSessionId();
-				if (clientMessage instanceof INIT) {
-					ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
-					INIT init = (INIT) clientMessage;
-					init.getClientInfo().setIp(serverSideClientInfo.getIp());
-					init.getClientInfo().setUserAgentString(serverSideClientInfo.getUserAgentString());
-					init.getClientInfo().setPreferredLanguageIso(serverSideClientInfo.getPreferredLanguageIso());
-					sessionManager.initSession(
-							uiSessionId,
-							init.getClientInfo(),
-							httpSession,
-							init.getMaxRequestedCommandId(),
-							new MessageSenderImpl()
-					);
-				} else if (clientMessage instanceof REINIT) {
-					REINIT reinit = (REINIT) clientMessage;
-					getUiSession(uiSessionId).ifPresentOrElse(uiSession -> {
-						uiSession.reinit(reinit.getLastReceivedCommandId(), reinit.getMaxRequestedCommandId(), new MessageSenderImpl());
-					}, () -> {
-						LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + uiSessionId);
-						send(new REINIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null, null);
-					});
-				} else if (clientMessage instanceof TERMINATE) {
-					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.close(UiSessionClosingReason.TERMINATED_BY_CLIENT));
-				} else if (clientMessage instanceof EVENT) {
-					EVENT eventMessage = (EVENT) clientMessage;
-					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent()));
-				} else if (clientMessage instanceof QUERY) {
-					QUERY queryMessage = (QUERY) clientMessage;
-					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery()));
-				} else if (clientMessage instanceof CMD_RESULT) {
-					CMD_RESULT cmdResult = (CMD_RESULT) clientMessage;
-					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult()));
-				} else if (clientMessage instanceof CMD_REQUEST) {
-					CMD_REQUEST cmdRequest = (CMD_REQUEST) clientMessage;
-					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId()));
-				} else if (clientMessage instanceof KEEPALIVE) {
-					getUiSession(uiSessionId).ifPresent(UiSession::handleKeepAlive);
-				} else {
-					throw new TeamAppsCommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
+
+				switch (clientMessage.getTypeId()) {
+					case INIT.TYPE_ID -> {
+						ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
+						INITWrapper init = clientMessage.as(INITWrapper.class);
+
+						UiClientInfoWrapper uiClientInfo = init.getClientInfo();
+						var clientInfo = new ClientInfo(
+								serverSideClientInfo.getIp(),
+								uiClientInfo.getScreenWidth(),
+								uiClientInfo.getScreenHeight(),
+								uiClientInfo.getViewPortWidth(),
+								uiClientInfo.getViewPortHeight(),
+								serverSideClientInfo.getPreferredLanguageIso(),
+								uiClientInfo.getHighDensityScreen(),
+								uiClientInfo.getTimezoneIana(),
+								uiClientInfo.getTimezoneOffsetMinutes(),
+								uiClientInfo.getClientTokens(),
+								serverSideClientInfo.getUserAgentString(),
+								Location.fromUiLocationWrapper(uiClientInfo.getLocation()),
+								uiClientInfo.getClientParameters(),
+								uiClientInfo.getTeamAppsVersion()
+						);
+
+						sessionManager.initSession(
+								uiSessionId,
+								clientInfo,
+								httpSession,
+								init.getMaxRequestedCommandId(),
+								new MessageSenderImpl()
+						);
+					}
+					case REINIT.TYPE_ID -> {
+						REINITWrapper reinit = clientMessage.as(REINITWrapper.class);
+						getUiSession(uiSessionId).ifPresentOrElse(uiSession -> {
+							uiSession.reinit(reinit.getLastReceivedCommandId(), reinit.getMaxRequestedCommandId(), new MessageSenderImpl());
+						}, () -> {
+							LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + uiSessionId);
+							send(new REINIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null, null);
+						});
+					}
+					case TERMINATE.TYPE_ID -> {
+						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.close(UiSessionClosingReason.TERMINATED_BY_CLIENT));
+					}
+					case EVENT.TYPE_ID -> {
+						EVENTWrapper eventMessage = clientMessage.as(EVENTWrapper.class);
+						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent()));
+					}
+					case QUERY.TYPE_ID -> {
+						QUERYWrapper queryMessage = clientMessage.as(QUERYWrapper.class);
+						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery()));
+					}
+					case CMD_RESULT.TYPE_ID -> {
+						CMD_RESULTWrapper cmdResult = clientMessage.as(CMD_RESULTWrapper.class);
+						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult()));
+					}
+					case CMD_REQUEST.TYPE_ID -> {
+						CMD_REQUESTWrapper cmdRequest = clientMessage.as(CMD_REQUESTWrapper.class);
+						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId()));
+					}
+					case KEEPALIVE.TYPE_ID -> {
+						getUiSession(uiSessionId).ifPresent(UiSession::handleKeepAlive);
+					}
+					default -> throw new TeamAppsCommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
 				}
 			} catch (TeamAppsSessionNotFoundException e) {
 				LOGGER.warn("TeamApps session not found: " + e.getSessionId());

@@ -21,11 +21,8 @@ package org.teamapps.ux.component.infiniteitemview;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiInfiniteItemView2;
 import org.teamapps.event.ProjectorEvent;
@@ -36,6 +33,9 @@ import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
@@ -46,7 +46,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiInfiniteItemView2.ItemClickedEvent.NAME);
+	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiInfiniteItemView2.ItemClickedEvent.TYPE_ID);
 
 	private Template itemTemplate;
 	private float itemWidth;
@@ -98,36 +98,40 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiInfiniteItemView2.DisplayedRangeChangedEvent) {
-			UiInfiniteItemView2.DisplayedRangeChangedEvent d = (UiInfiniteItemView2.DisplayedRangeChangedEvent) event;
-			try {
-				handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
-			} catch (DuplicateEntriesException e) {
-				// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
-				// So try to refresh the whole data instead.
-				LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
-				refresh();
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiInfiniteItemView2.DisplayedRangeChangedEvent.TYPE_ID -> {
+				var d = event.as(UiInfiniteItemView2.DisplayedRangeChangedEventWrapper.class);
+				try {
+					handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
+				} catch (DuplicateEntriesException e) {
+					// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
+					// So try to refresh the whole data instead.
+					LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
+					refresh();
+				}
 			}
-		} else if (event instanceof UiInfiniteItemView2.ItemClickedEvent) {
-			UiInfiniteItemView2.ItemClickedEvent e = (UiInfiniteItemView2.ItemClickedEvent) event;
-			RECORD record = renderedRecords.getRecord(e.getRecordId());
-			if (record != null) {
-				onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick()));
-			}
-		} else if (event instanceof UiInfiniteItemView2.ContextMenuRequestedEvent) {
-			UiInfiniteItemView2.ContextMenuRequestedEvent e = (UiInfiniteItemView2.ContextMenuRequestedEvent) event;
-			lastSeenContextMenuRequestId = e.getRequestId();
-			if (contextMenuProvider == null) {
-				closeContextMenu();
-			} else {
+			case UiInfiniteItemView2.ItemClickedEvent.TYPE_ID -> {
+				var e = event.as(UiInfiniteItemView2.ItemClickedEventWrapper.class);
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null) {
-					Component contextMenuContent = contextMenuProvider.apply(record);
-					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
-					} else {
-						sendCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(e.getRequestId()));
+					onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick()));
+				}
+			}
+			case UiInfiniteItemView2.ContextMenuRequestedEvent.TYPE_ID -> {
+				var e = event.as(UiInfiniteItemView2.ContextMenuRequestedEventWrapper.class);
+				lastSeenContextMenuRequestId = e.getRequestId();
+				if (contextMenuProvider == null) {
+					closeContextMenu();
+				} else {
+					RECORD record = renderedRecords.getRecord(e.getRecordId());
+					if (record != null) {
+						Component contextMenuContent = contextMenuProvider.apply(record);
+						if (contextMenuContent != null) {
+							sendCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+						} else {
+							sendCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(e.getRequestId()));
+						}
 					}
 				}
 			}

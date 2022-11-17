@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.chat;
 
 import org.teamapps.dto.UiChatInput;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class ChatInput extends AbstractComponent {
 
-	public final ProjectorEvent<NewChatMessageData> onMessageSent = createProjectorEventBoundToUiEvent(UiChatInput.MessageSentEvent.NAME);
+	public final ProjectorEvent<NewChatMessageData> onMessageSent = createProjectorEventBoundToUiEvent(UiChatInput.MessageSentEvent.TYPE_ID);
 
 	private long maxBytesPerUpload = 5000000;
 	private String uploadUrl = "/upload";
@@ -51,18 +51,20 @@ public class ChatInput extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiChatInput.MessageSentEvent) {
-			UiChatInput.MessageSentEvent messageSentEvent = (UiChatInput.MessageSentEvent) event;
-			String text = messageSentEvent.getMessage().getText();
-			if (messageLengthLimit > 0 && text.length() > messageLengthLimit) {
-				text = text.substring(0, messageLengthLimit);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiChatInput.MessageSentEvent.TYPE_ID -> {
+				var messageSentEvent = event.as(UiChatInput.MessageSentEventWrapper.class);
+				String text = messageSentEvent.getMessage().getText();
+				if (messageLengthLimit > 0 && text.length() > messageLengthLimit) {
+					text = text.substring(0, messageLengthLimit);
+				}
+				List<NewChatMessageData.UploadedFile> uploadedFiles = messageSentEvent.getMessage().getUploadedFiles().stream()
+						.map(uiFile -> new NewChatMessageData.UploadedFile(uiFile.getUploadedFileUuid(), uiFile.getFileName()))
+						.collect(Collectors.toList());
+				NewChatMessageData newChatMessageData = new NewChatMessageData(text, uploadedFiles);
+				onMessageSent.fire(newChatMessageData);
 			}
-			List<NewChatMessageData.UploadedFile> uploadedFiles = messageSentEvent.getMessage().getUploadedFiles().stream()
-					.map(uiFile -> new NewChatMessageData.UploadedFile(uiFile.getUploadedFileUuid(), uiFile.getFileName()))
-					.collect(Collectors.toList());
-			NewChatMessageData newChatMessageData = new NewChatMessageData(text, uploadedFiles);
-			onMessageSent.fire(newChatMessageData);
 		}
 		// TODO case UI_CHAT_INPUT_UPLOAD_TOO_LARGE:
 		// TODO case UI_CHAT_INPUT_UPLOAD_STARTED:

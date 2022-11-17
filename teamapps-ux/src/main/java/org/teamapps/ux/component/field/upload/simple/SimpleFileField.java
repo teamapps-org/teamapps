@@ -21,7 +21,7 @@
 package org.teamapps.ux.component.field.upload.simple;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiSimpleFileField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.formatter.FileSizeFormatter;
@@ -44,14 +44,14 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class SimpleFileField extends AbstractField<List<FileItem>> {
 
-	public final ProjectorEvent<FileItem> onUploadInitiatedByUser = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadInitiatedByUserEvent.NAME);
-	public final ProjectorEvent<FileItem> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadTooLargeEvent.NAME);
-	public final ProjectorEvent<FileItem> onUploadStarted = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadStartedEvent.NAME);
-	public final ProjectorEvent<FileItem> onUploadCanceledByUser = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadCanceledEvent.NAME);
-	public final ProjectorEvent<FileItem> onUploadFailed = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadFailedEvent.NAME);
-	public final ProjectorEvent<FileItem> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadSuccessfulEvent.NAME);
-	public final ProjectorEvent<FileItem> onFileItemClicked = createProjectorEventBoundToUiEvent(UiSimpleFileField.FileItemClickedEvent.NAME);
-	public final ProjectorEvent<FileItem> onFileItemRemoved = createProjectorEventBoundToUiEvent(UiSimpleFileField.FileItemRemovedEvent.NAME);
+	public final ProjectorEvent<FileItem> onUploadInitiatedByUser = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadInitiatedByUserEvent.TYPE_ID);
+	public final ProjectorEvent<FileItem> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadTooLargeEvent.TYPE_ID);
+	public final ProjectorEvent<FileItem> onUploadStarted = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadStartedEvent.TYPE_ID);
+	public final ProjectorEvent<FileItem> onUploadCanceledByUser = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadCanceledEvent.TYPE_ID);
+	public final ProjectorEvent<FileItem> onUploadFailed = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadFailedEvent.TYPE_ID);
+	public final ProjectorEvent<FileItem> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiSimpleFileField.UploadSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<FileItem> onFileItemClicked = createProjectorEventBoundToUiEvent(UiSimpleFileField.FileItemClickedEvent.TYPE_ID);
+	public final ProjectorEvent<FileItem> onFileItemRemoved = createProjectorEventBoundToUiEvent(UiSimpleFileField.FileItemRemovedEvent.TYPE_ID);
 
 	private final List<FileItem> fileItems = new ArrayList<>();
 
@@ -125,68 +125,77 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
-		if (event instanceof UiSimpleFileField.UploadInitiatedByUserEvent) {
-			UiSimpleFileField.UploadInitiatedByUserEvent initEvent = (UiSimpleFileField.UploadInitiatedByUserEvent) event;
-			FileItem fileItem = new FileItem(initEvent.getUuid(), initEvent.getFileName(), FileItemState.INITIATING, initEvent.getMimeType(), initEvent.getSizeInBytes());
-			fileItem.setFileField(this);
-			this.fileItems.add(fileItem);
-			onUploadInitiatedByUser.fire(fileItem);
-		} else if (event instanceof UiSimpleFileField.UploadTooLargeEvent) {
-			UiSimpleFileField.UploadTooLargeEvent tooLargeEvent = (UiSimpleFileField.UploadTooLargeEvent) event;
-			FileItem fileItem = getFileItemByUuid(tooLargeEvent.getFileItemUuid());
-			if (fileItem != null) {
-				fileItem.setState(FileItemState.TOO_LARGE);
-				onUploadTooLarge.fire(fileItem);
+		switch (event.getTypeId()) {
+			case UiSimpleFileField.UploadInitiatedByUserEvent.TYPE_ID -> {
+				var initEvent = event.as(UiSimpleFileField.UploadInitiatedByUserEventWrapper.class);
+				FileItem fileItem = new FileItem(initEvent.getUuid(), initEvent.getFileName(), FileItemState.INITIATING, initEvent.getMimeType(), initEvent.getSizeInBytes());
+				fileItem.setFileField(this);
+				this.fileItems.add(fileItem);
+				onUploadInitiatedByUser.fire(fileItem);
 			}
-		} else if (event instanceof UiSimpleFileField.UploadStartedEvent) {
-			UiSimpleFileField.UploadStartedEvent startedEvent = (UiSimpleFileField.UploadStartedEvent) event;
-			FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
-			if (fileItem != null) {
-				fileItem.setState(FileItemState.UPLOADING);
-				onUploadStarted.fire(fileItem);
-			}
-		} else if (event instanceof UiSimpleFileField.UploadCanceledEvent) {
-			UiSimpleFileField.UploadCanceledEvent canceledEvent = (UiSimpleFileField.UploadCanceledEvent) event;
-			FileItem fileItem = getFileItemByUuid(canceledEvent.getFileItemUuid());
-			if (fileItem != null) {
-				fileItem.setState(FileItemState.CANCELED);
-				onUploadCanceledByUser.fire(fileItem);
-			}
-		} else if (event instanceof UiSimpleFileField.UploadFailedEvent) {
-			UiSimpleFileField.UploadFailedEvent startedEvent = (UiSimpleFileField.UploadFailedEvent) event;
-			FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
-			if (fileItem != null) {
-				fileItem.setState(FileItemState.FAILED);
-				onUploadFailed.fire(fileItem);
-			}
-		} else if (event instanceof UiSimpleFileField.UploadSuccessfulEvent) {
-			UiSimpleFileField.UploadSuccessfulEvent successEvent = (UiSimpleFileField.UploadSuccessfulEvent) event;
-			FileItem fileItem = getFileItemByUuid(successEvent.getFileItemUuid());
-			if (fileItem != null) {
-				fileItem.setState(FileItemState.DONE);
-				fileItem.setIcon(this.defaultItemIcon);
-				File uploadedFile = getSessionContext().getUploadedFileByUuid(successEvent.getUploadedFileUuid());
-				if (uploadedFile != null) {
-					fileItem.setLinkUrl(getSessionContext().createFileLink(uploadedFile));
-					fileItem.setFile(uploadedFile);
+			case UiSimpleFileField.UploadTooLargeEvent.TYPE_ID -> {
+				var tooLargeEvent = event.as(UiSimpleFileField.UploadTooLargeEventWrapper.class);
+				FileItem fileItem = getFileItemByUuid(tooLargeEvent.getFileItemUuid());
+				if (fileItem != null) {
+					fileItem.setState(FileItemState.TOO_LARGE);
+					onUploadTooLarge.fire(fileItem);
 				}
-				onUploadSuccessful.fire(fileItem);
-				onValueChanged.fire(getValue());
 			}
-		} else if (event instanceof UiSimpleFileField.FileItemClickedEvent) {
-			UiSimpleFileField.FileItemClickedEvent clickEvent = (UiSimpleFileField.FileItemClickedEvent) event;
-			FileItem fileItem = getFileItemByUuid(clickEvent.getFileItemUuid());
-			if (fileItem != null) {
-				onFileItemClicked.fire(fileItem);
+			case UiSimpleFileField.UploadStartedEvent.TYPE_ID -> {
+				var startedEvent = event.as(UiSimpleFileField.UploadStartedEventWrapper.class);
+				FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
+				if (fileItem != null) {
+					fileItem.setState(FileItemState.UPLOADING);
+					onUploadStarted.fire(fileItem);
+				}
 			}
-		} else if (event instanceof UiSimpleFileField.FileItemRemovedEvent) {
-			UiSimpleFileField.FileItemRemovedEvent removedEvent = (UiSimpleFileField.FileItemRemovedEvent) event;
-			FileItem fileItem = getFileItemByUuid(removedEvent.getFileItemUuid());
-			if (fileItem != null) {
-				removeFileItemInternal(fileItem);
-				onFileItemRemoved.fire(fileItem);
+			case UiSimpleFileField.UploadCanceledEvent.TYPE_ID -> {
+				var canceledEvent = event.as(UiSimpleFileField.UploadCanceledEventWrapper.class);
+				FileItem fileItem = getFileItemByUuid(canceledEvent.getFileItemUuid());
+				if (fileItem != null) {
+					fileItem.setState(FileItemState.CANCELED);
+					onUploadCanceledByUser.fire(fileItem);
+				}
+			}
+			case UiSimpleFileField.UploadFailedEvent.TYPE_ID -> {
+				var startedEvent = event.as(UiSimpleFileField.UploadFailedEventWrapper.class);
+				FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
+				if (fileItem != null) {
+					fileItem.setState(FileItemState.FAILED);
+					onUploadFailed.fire(fileItem);
+				}
+			}
+			case UiSimpleFileField.UploadSuccessfulEvent.TYPE_ID -> {
+				var successEvent = event.as(UiSimpleFileField.UploadSuccessfulEventWrapper.class);
+				FileItem fileItem = getFileItemByUuid(successEvent.getFileItemUuid());
+				if (fileItem != null) {
+					fileItem.setState(FileItemState.DONE);
+					fileItem.setIcon(this.defaultItemIcon);
+					File uploadedFile = getSessionContext().getUploadedFileByUuid(successEvent.getUploadedFileUuid());
+					if (uploadedFile != null) {
+						fileItem.setLinkUrl(getSessionContext().createFileLink(uploadedFile));
+						fileItem.setFile(uploadedFile);
+					}
+					onUploadSuccessful.fire(fileItem);
+					onValueChanged.fire(getValue());
+				}
+			}
+			case UiSimpleFileField.FileItemClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(UiSimpleFileField.FileItemClickedEventWrapper.class);
+				FileItem fileItem = getFileItemByUuid(clickEvent.getFileItemUuid());
+				if (fileItem != null) {
+					onFileItemClicked.fire(fileItem);
+				}
+			}
+			case UiSimpleFileField.FileItemRemovedEvent.TYPE_ID -> {
+				var removedEvent = event.as(UiSimpleFileField.FileItemRemovedEventWrapper.class);
+				FileItem fileItem = getFileItemByUuid(removedEvent.getFileItemUuid());
+				if (fileItem != null) {
+					removeFileItemInternal(fileItem);
+					onFileItemRemoved.fire(fileItem);
+				}
 			}
 		}
 	}

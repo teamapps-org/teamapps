@@ -30,11 +30,11 @@ import java.util.stream.Collectors;
 
 public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.InterfaceDeclarationContext> {
 
-	private final TeamAppsIntermediateDtoModel astUtil;
+	private final TeamAppsIntermediateDtoModel model;
 
-	public InterfaceDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
+	public InterfaceDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel model) {
 		super();
-		this.astUtil = astUtil;
+		this.model = model;
 	}
 
 	@Override
@@ -43,29 +43,29 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 		if ("packageName".equals(propertyName)) {
 			return TeamAppsIntermediateDtoModel.getPackageName(interfaceContext);
 		} else if ("imports".equals(propertyName)) {
-			return astUtil.getAllImports(interfaceContext);
+			return model.getAllImports(interfaceContext);
 		} else if ("allProperties".equals(propertyName)) {
-			return astUtil.findAllProperties(interfaceContext);
+			return model.findAllProperties(interfaceContext);
 		} else if ("requiredProperties".equals(propertyName)) {
-			return astUtil.filterRequiredProperties(interfaceContext.propertyDeclaration(), true);
+			return model.filterRequiredProperties(interfaceContext.propertyDeclaration(), true);
 		} else if ("allRequiredProperties".equals(propertyName)) {
-			return astUtil.filterRequiredProperties(astUtil.findAllProperties(interfaceContext), true);
+			return model.filterRequiredProperties(model.findAllProperties(interfaceContext), true);
 		} else if ("nonRequiredProperties".equals(propertyName)) {
 			return interfaceContext.propertyDeclaration().stream().filter(p -> p.requiredModifier() == null).collect(Collectors.toList());
 		} else if ("allNonRequiredProperties".equals(propertyName)) {
-			return astUtil.filterRequiredProperties(astUtil.findAllProperties(interfaceContext), false);
+			return model.filterRequiredProperties(model.findAllProperties(interfaceContext), false);
 		} else if ("superInterfaces".equals(propertyName)) {
-			return astUtil.findSuperInterfaces(interfaceContext);
+			return model.findSuperInterfaces(interfaceContext);
 		} else if ("superClassAndDirectlyImplementedInterfaces".equals(propertyName)) {
-			return astUtil.findSuperInterfaces(interfaceContext);
+			return model.findSuperInterfaces(interfaceContext);
 		} else if ("allSubClasses".equals(propertyName)) {
-			return astUtil.findAllSubClasses(interfaceContext);
+			return model.findAllSubClasses(interfaceContext);
 		} else if ("allSuperInterfaces".equals(propertyName)) {
-			return astUtil.findAllSuperInterfaces(interfaceContext);
+			return model.findAllSuperInterfaces(interfaceContext);
 		} else if ("subEventBaseClassName".equals(propertyName)) {
 			return interfaceContext.Identifier().getText() + "SubEvent";
 		} else if ("allImplementingClasses".equals(propertyName)) {
-			return astUtil.findAllImplementingClasses(interfaceContext);
+			return model.findAllImplementingClasses(interfaceContext);
 		} else if ("nonStaticCommandDeclarations".equals(propertyName)) {
 			return interfaceContext.commandDeclaration().stream()
 					.filter(cmd -> cmd.staticModifier() == null)
@@ -75,33 +75,35 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 					.filter(cmd -> cmd.staticModifier() == null)
 					.collect(Collectors.toList());
 		} else if ("hasCommands".equals(propertyName)) {
-			return !astUtil.getAllCommands(interfaceContext).isEmpty();
+			return !model.getAllCommands(interfaceContext).isEmpty();
 		} else if ("hasEvents".equals(propertyName)) {
-			return !astUtil.getAllEvents(interfaceContext).isEmpty();
+			return !model.getAllEvents(interfaceContext).isEmpty();
 		} else if ("hasQueries".equals(propertyName)) {
-			return !astUtil.getAllQueries(interfaceContext).isEmpty();
+			return !model.getAllQueries(interfaceContext).isEmpty();
 		} else if ("allEvents".equals(propertyName)) {
-			return astUtil.getAllEvents(interfaceContext);
+			return model.getAllEvents(interfaceContext);
 		} else if ("allNonStaticEvents".equals(propertyName)) {
-			return astUtil.getAllEvents(interfaceContext).stream()
+			return model.getAllEvents(interfaceContext).stream()
 					.filter(eventDeclarationContext -> eventDeclarationContext.staticModifier() == null)
 					.collect(Collectors.toList());
 		} else if ("allStaticEvents".equals(propertyName)) {
-			return astUtil.getAllEvents(interfaceContext).stream()
+			return model.getAllEvents(interfaceContext).stream()
 					.filter(eventDeclarationContext -> eventDeclarationContext.staticModifier() != null)
 					.collect(Collectors.toList());
 		} else if ("allQueries".equals(propertyName)) {
-			return astUtil.getAllQueries(interfaceContext);
+			return model.getAllQueries(interfaceContext);
 		} else if ("superInterfacesWithCommands".equals(propertyName)) {
-			return astUtil.getSuperInterfacesWithCommands(interfaceContext);
+			return model.getSuperInterfacesWithCommands(interfaceContext);
 		} else if ("superInterfacesWithEvents".equals(propertyName)) {
-			return astUtil.getSuperInterfacesWithEvents(interfaceContext);
+			return model.getSuperInterfacesWithEvents(interfaceContext);
 		} else if ("allReferencedClassesAndInterfaces".equals(propertyName)) {
-			return astUtil.findAllReferencedClassesAndInterfaces(interfaceContext);
+			return model.findAllReferencedClassesAndInterfaces(interfaceContext);
 		} else if ("allReferencedEnums".equals(propertyName)) {
-			return astUtil.findAllReferencedEnums(interfaceContext);
+			return model.findAllReferencedEnums(interfaceContext);
 		} else if ("simplePropertiesByRelevance".equals(propertyName)) {
-			return astUtil.getSimplePropertiesSortedByRelevance(astUtil.findAllProperties(interfaceContext));
+			return model.getSimplePropertiesSortedByRelevance(model.findAllProperties(interfaceContext));
+		} else if ("propertiesNotImplementedBySuperClasses".equals(propertyName)) {
+			return interfaceContext.propertyDeclaration();
 		} else {
 			return super.getProperty(interpreter, seld, o, property, propertyName);
 		}

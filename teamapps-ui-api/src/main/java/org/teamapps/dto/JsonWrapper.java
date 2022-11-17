@@ -2,7 +2,7 @@ package org.teamapps.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-class JsonWrapper {
+public class JsonWrapper {
 	protected JsonNode jsonNode;
 
 	public JsonWrapper(JsonNode jsonNode) {
@@ -11,6 +11,10 @@ class JsonWrapper {
 
 	public JsonNode getJsonNode() {
 		return jsonNode;
+	}
+
+	public String getTypeId() {
+		return jsonNode.get("_type").textValue();
 	}
 
 	public <W extends JsonWrapper> W as(Class<W> clazz) {

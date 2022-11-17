@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.UiToolbarButton;
 import org.teamapps.dto.UiToolbarButtonGroup;
 import org.teamapps.ux.component.Component;

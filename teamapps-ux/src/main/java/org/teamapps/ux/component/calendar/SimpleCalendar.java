@@ -21,7 +21,7 @@ package org.teamapps.ux.component.calendar;
 
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.util.TimeZone;
-import org.teamapps.data.extract.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 
 import java.util.Date;
 import java.util.List;

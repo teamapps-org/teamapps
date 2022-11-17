@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsUploadManager;
-import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
@@ -184,7 +183,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 
 	public void initSession(
 			String sessionId,
-			UiClientInfo clientInfo,
+			ClientInfo clientInfo,
 			HttpSession httpSession,
 			int maxRequestedCommandId,
 			MessageSender messageSender
@@ -291,8 +290,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		houseKeepingScheduledExecutor.shutdown();
 	}
 
-	public SessionContext createSessionContext(UiSession uiSession, UiClientInfo uiClientInfo, HttpSession httpSession) {
-		ClientInfo clientInfo = ClientInfo.fromUiClientInfo(uiClientInfo);
+	public SessionContext createSessionContext(UiSession uiSession, ClientInfo clientInfo, HttpSession httpSession) {
 		SessionConfiguration sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
 
 		return new SessionContext(

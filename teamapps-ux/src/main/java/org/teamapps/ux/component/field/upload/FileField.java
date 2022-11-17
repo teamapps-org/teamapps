@@ -19,10 +19,7 @@
  */
 package org.teamapps.ux.component.field.upload;
 
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiFileField;
 import org.teamapps.dto.UiIdentifiableClientRecord;
@@ -37,6 +34,9 @@ import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
 
@@ -52,12 +52,12 @@ import java.util.stream.Collectors;
 public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 
-	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiFileField.UploadTooLargeEvent.NAME);
-	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(UiFileField.UploadStartedEvent.NAME);
-	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(UiFileField.UploadCanceledEvent.NAME);
-	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(UiFileField.UploadFailedEvent.NAME);
-	public final ProjectorEvent<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiFileField.UploadSuccessfulEvent.NAME);
-	public final ProjectorEvent<RECORD> onFileItemClicked = createProjectorEventBoundToUiEvent(UiFileField.FileItemClickedEvent.NAME);
+	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiFileField.UploadTooLargeEvent.TYPE_ID);
+	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(UiFileField.UploadStartedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(UiFileField.UploadCanceledEvent.TYPE_ID);
+	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(UiFileField.UploadFailedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiFileField.UploadSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<RECORD> onFileItemClicked = createProjectorEventBoundToUiEvent(UiFileField.FileItemClickedEvent.TYPE_ID);
 	public final ProjectorEvent<RECORD> onFileItemRemoved = new ProjectorEvent<>();
 
 	private FileFieldDisplayType displayType = FileFieldDisplayType.FLOATING;
@@ -146,51 +146,59 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
-		if (event instanceof UiFileField.UploadTooLargeEvent) {
-			UiFileField.UploadTooLargeEvent tooLargeEvent = (UiFileField.UploadTooLargeEvent) event;
-			this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
-		} else if (event instanceof UiFileField.UploadStartedEvent) {
-			UiFileField.UploadStartedEvent uploadStartedEvent = (UiFileField.UploadStartedEvent) event;
-			this.onUploadStarted.fire(new UploadStartedEventData(
-					uploadStartedEvent.getFileName(),
-					uploadStartedEvent.getMimeType(),
-					uploadStartedEvent.getSizeInBytes(),
-					() -> this.sendCommandIfRendered(() -> new UiFileField.CancelUploadCommand(uploadStartedEvent.getFileItemUuid()))
-			));
-		} else if (event instanceof UiFileField.UploadCanceledEvent) {
-			UiFileField.UploadCanceledEvent canceledEvent = (UiFileField.UploadCanceledEvent) event;
-			this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()
-			));
-		} else if (event instanceof UiFileField.UploadFailedEvent) {
-			UiFileField.UploadFailedEvent failedEvent = (UiFileField.UploadFailedEvent) event;
-			this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()
-			));
-		} else if (event instanceof UiFileField.UploadSuccessfulEvent) {
-			UiFileField.UploadSuccessfulEvent uploadedEvent = (UiFileField.UploadSuccessfulEvent) event;
-			UploadedFile uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
-					() -> {
-						try {
-							return new FileInputStream(getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid()));
-						} catch (FileNotFoundException e) {
-							throw new UploadedFileAccessException(e);
-						}
-					},
-					() -> getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid())
-			);
-			RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
-			CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
-			if (isRendered()) {
-				getSessionContext().sendCommand(getId(), new UiFileField.ReplaceFileItemCommand(uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
-			} else {
-				cacheResponse.commit();
+		switch (event.getTypeId()) {
+			case UiFileField.UploadTooLargeEvent.TYPE_ID -> {
+				var tooLargeEvent = event.as(UiFileField.UploadTooLargeEventWrapper.class);
+				this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
 			}
-			onUploadSuccessful.fire(new UploadSuccessfulEventData<>(uploadedFile, record));
-		} else if (event instanceof UiFileField.FileItemClickedEvent) {
-			UiFileField.FileItemClickedEvent fileClickedEvent = (UiFileField.FileItemClickedEvent) event;
-			RECORD record = recordCache.getRecordByClientId(fileClickedEvent.getClientId());
-			onFileItemClicked.fire(record);
+			case UiFileField.UploadStartedEvent.TYPE_ID -> {
+				var uploadStartedEvent = event.as(UiFileField.UploadStartedEventWrapper.class);
+				this.onUploadStarted.fire(new UploadStartedEventData(
+						uploadStartedEvent.getFileName(),
+						uploadStartedEvent.getMimeType(),
+						uploadStartedEvent.getSizeInBytes(),
+						() -> this.sendCommandIfRendered(() -> new UiFileField.CancelUploadCommand(uploadStartedEvent.getFileItemUuid()))
+				));
+			}
+			case UiFileField.UploadCanceledEvent.TYPE_ID -> {
+				var canceledEvent = event.as(UiFileField.UploadCanceledEventWrapper.class);
+				this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()
+				));
+			}
+			case UiFileField.UploadFailedEvent.TYPE_ID -> {
+				var failedEvent = event.as(UiFileField.UploadFailedEventWrapper.class);
+				this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()
+				));
+			}
+			case UiFileField.UploadSuccessfulEvent.TYPE_ID -> {
+				var uploadedEvent = event.as(UiFileField.UploadSuccessfulEventWrapper.class);
+				UploadedFile uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
+						() -> {
+							try {
+								return new FileInputStream(getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid()));
+							} catch (FileNotFoundException e) {
+								throw new UploadedFileAccessException(e);
+							}
+						},
+						() -> getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid())
+				);
+				RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
+				CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
+				if (isRendered()) {
+					getSessionContext().sendCommand(getId(), new UiFileField.ReplaceFileItemCommand(uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+				} else {
+					cacheResponse.commit();
+				}
+				onUploadSuccessful.fire(new UploadSuccessfulEventData<>(uploadedFile, record));
+			}
+			case UiFileField.FileItemClickedEvent.TYPE_ID -> {
+				var fileClickedEvent = event.as(UiFileField.FileItemClickedEventWrapper.class);
+				RECORD record = recordCache.getRecordByClientId(fileClickedEvent.getClientId());
+				onFileItemClicked.fire(record);
+			}
+
 		}
 	}
 

@@ -19,18 +19,18 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiQuery;
+import org.teamapps.dto.UiEventWrapper;
+import org.teamapps.dto.UiQueryWrapper;
 import org.teamapps.dto.UiSessionClosingReason;
 
 import java.util.function.Consumer;
 
 public interface UiSessionListener {
 
-	default void onUiEvent(String sessionId, UiEvent event) {
+	default void onUiEvent(String sessionId, UiEventWrapper event) {
 	}
 
-	default void onUiQuery(String sessionId, UiQuery query, Consumer<Object> resultCallback) {
+	default void onUiQuery(String sessionId, UiQueryWrapper query, Consumer<Object> resultCallback) {
 	}
 
 	default void onStateChanged(String sessionId, UiSessionState state) {

@@ -72,9 +72,6 @@ class TERMINATE extends AbstractClientMessage {
 
 @TypeScriptFactory
 class UiClientInfo {
-	String ip;
-	String userAgentString;
-	String preferredLanguageIso;
 	int screenWidth;
 	int screenHeight;
 	int viewPortWidth;
@@ -84,7 +81,7 @@ class UiClientInfo {
 	int timezoneOffsetMinutes;
 	List<String> clientTokens;
 	UiLocation location;
-	Dictionary<Object> clientParameters;
+	Dictionary<String> clientParameters;
 	String teamAppsVersion;
 }
 

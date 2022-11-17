@@ -21,7 +21,6 @@ package org.teamapps.uisession.statistics.app;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.data.value.SortDirection;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.composite.CompositeIcon;
@@ -36,6 +35,7 @@ import org.teamapps.ux.component.flexcontainer.FlexSizeUnit;
 import org.teamapps.ux.component.flexcontainer.FlexSizingPolicy;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.table.AbstractTableModel;
+import org.teamapps.ux.component.table.SortDirection;
 import org.teamapps.ux.component.table.Table;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;

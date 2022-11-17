@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,11 +20,8 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiButton;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -34,12 +31,15 @@ import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Button<RECORD> extends AbstractField<Void> {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiButton.ClickedEvent.NAME);
-	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(UiButton.DropDownOpenedEvent.NAME);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiButton.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(UiButton.DropDownOpenedEvent.TYPE_ID);
 
 	private Template template; // null: toString!
 	private RECORD templateRecord;
@@ -115,12 +115,17 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
-		if (event instanceof UiButton.ClickedEvent) {
-			this.onClicked.fire();
-		} else if (event instanceof UiButton.DropDownOpenedEvent) {
-			this.onDropDownOpened.fire();
+		switch (event.getTypeId()) {
+			case UiButton.ClickedEvent.TYPE_ID -> {
+				var e = event.as(UiButton.ClickedEventWrapper.class);
+				this.onClicked.fire();
+			}
+			case UiButton.DropDownOpenedEvent.TYPE_ID -> {
+				var e = event.as(UiButton.DropDownOpenedEventWrapper.class);
+				this.onDropDownOpened.fire();
+			}
 		}
 	}
 

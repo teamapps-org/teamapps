@@ -122,7 +122,7 @@ public class UiSession {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Sending command ({}): {}", sessionId.substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
 		}
-		statistics.commandSent(commandWithCallback.getUiCommand());
+		statistics.commandSent(commandWithCallback.getUiCommand().getClass());
 		CMD cmd = createCMD(commandWithCallback);
 		synchronized (this) {
 			try {
@@ -245,8 +245,8 @@ public class UiSession {
 		});
 	}
 
-	public void handleEvent(int clientMessageId, UiEvent event) {
-		statistics.eventReceived(event);
+	public void handleEvent(int clientMessageId, UiEventWrapper event) {
+		statistics.eventReceived(event.getUiClass());
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Recieved event ({}): {}", sessionId.substring(0, 8), event.getClass());
@@ -256,8 +256,8 @@ public class UiSession {
 		failsafeInvokeSessionListeners(sl -> sl.onUiEvent(sessionId, event));
 	}
 
-	public void handleQuery(int clientMessageId, UiQuery query) {
-		statistics.queryReceived(query);
+	public void handleQuery(int clientMessageId, UiQueryWrapper query) {
+		statistics.queryReceived(query.getUiClass());
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Recieved query ({}): {}", sessionId.substring(0, 8), query.getClass());
@@ -269,7 +269,7 @@ public class UiSession {
 				query,
 				result -> {
 					sendAsyncWithErrorHandler(new QUERY_RESULT(clientMessageId, result));
-					statistics.queryResultSentFor(query);
+					statistics.queryResultSentFor(query.getUiClass());
 				}
 		));
 	}

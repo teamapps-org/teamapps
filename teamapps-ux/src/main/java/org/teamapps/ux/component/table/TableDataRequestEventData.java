@@ -19,8 +19,6 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.teamapps.data.value.SortDirection;
-
 public class TableDataRequestEventData {
 	private final int startIndex;
 	private final int length;

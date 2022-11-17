@@ -52,7 +52,7 @@ public class TeamAppsCore {
 
 		this.iconProvider = new IconProvider(iconLibraryRegistry);
 		this.sessionManager = new TeamAppsSessionManager(config, objectMapper, sessionExecutorFactory, webController, iconProvider, uploadManager, componentLibraryRegistry);
-		this.webSocketCommunicationEndpoint = new WebSocketCommunicationEndpoint(sessionManager, config);
+		this.webSocketCommunicationEndpoint = new WebSocketCommunicationEndpoint(sessionManager, config, objectMapper);
 	}
 
 	public TeamAppsConfiguration getConfig() {

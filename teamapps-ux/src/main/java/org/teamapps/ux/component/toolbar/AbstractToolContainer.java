@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,52 +20,53 @@
 package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.AbstractUiToolContainer;
-import org.teamapps.dto.UiDropDownButtonClickInfo;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiToolbar;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractToolContainer extends AbstractComponent {
-	public final ProjectorEvent<ToolbarButtonClickEventData> onButtonClick = createProjectorEventBoundToUiEvent(AbstractUiToolContainer.ToolbarButtonClickEvent.NAME);
+	public final ProjectorEvent<ToolbarButtonClickEventData> onButtonClick = createProjectorEventBoundToUiEvent(AbstractUiToolContainer.ToolbarButtonClickEvent.TYPE_ID);
 	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 
 	private Template buttonTemplate = BaseTemplate.TOOLBAR_BUTTON;
-	private PropertyProvider propertyProvider = new BeanPropertyExtractor<>();
+	private PropertyProvider<?> propertyProvider = new BeanPropertyExtractor<>();
 
 	public AbstractToolContainer() {
 		super();
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof AbstractUiToolContainer.ToolbarButtonClickEvent) {
-			AbstractUiToolContainer.ToolbarButtonClickEvent clickEvent = (AbstractUiToolContainer.ToolbarButtonClickEvent) event;
-			ToolbarButton button = getButtonByClientId(clickEvent.getGroupId(), clickEvent.getButtonId());
-			if (button != null) {
-				UiDropDownButtonClickInfo uiDropDownButtonClickInfo = clickEvent.getDropDownClickInfo();
-				if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
-					Component dropdownComponent = button.getDropDownComponent();
-					if (dropdownComponent != null) {
-						getSessionContext().sendCommand(getId(), new UiToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
-								((AbstractUiToolContainer.ToolbarButtonClickEvent) event).getButtonId(), dropdownComponent.createUiReference()));
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case AbstractUiToolContainer.ToolbarButtonClickEvent.TYPE_ID -> {
+				var clickEvent = event.as(AbstractUiToolContainer.ToolbarButtonClickEventWrapper.class);
+				ToolbarButton button = getButtonByClientId(clickEvent.getGroupId(), clickEvent.getButtonId());
+				if (button != null) {
+					var uiDropDownButtonClickInfo = clickEvent.getDropDownClickInfo();
+					if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
+						Component dropdownComponent = button.getDropDownComponent();
+						if (dropdownComponent != null) {
+							getSessionContext().sendCommand(getId(), new UiToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
+									clickEvent.getButtonId(), dropdownComponent.createUiReference()));
+						}
 					}
+					button.onClick.fire(new ToolbarButtonClickEvent(clickEvent.getDropDownClickInfo().getIsOpening(), clickEvent.getDropDownClickInfo().getIsContentSet()));
+					DropDownButtonClickInfo dropDownButtonClickInfo = uiDropDownButtonClickInfo != null ? new DropDownButtonClickInfo(uiDropDownButtonClickInfo.getIsOpening(),
+							uiDropDownButtonClickInfo.getIsContentSet()) : null;
+					onButtonClick.fire(new ToolbarButtonClickEventData(button, dropDownButtonClickInfo));
 				}
-				button.onClick.fire(clickEvent);
-				DropDownButtonClickInfo dropDownButtonClickInfo = uiDropDownButtonClickInfo != null ? new DropDownButtonClickInfo(uiDropDownButtonClickInfo.getIsOpening(),
-						uiDropDownButtonClickInfo.getIsContentSet()) : null;
-				onButtonClick.fire(new ToolbarButtonClickEventData(button, dropDownButtonClickInfo));
 			}
 		}
 	}

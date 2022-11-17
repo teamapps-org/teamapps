@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.UiToolbar;
 import org.teamapps.dto.UiToolbarButton;
 import org.teamapps.event.ProjectorEvent;
@@ -37,7 +37,7 @@ import java.util.function.Supplier;
 
 public class ToolbarButton {
 
-	public final ProjectorEvent<UiToolbar.ToolbarButtonClickEvent> onClick = new ProjectorEvent<>();
+	public final ProjectorEvent<ToolbarButtonClickEvent> onClick = new ProjectorEvent<>();
 
 	private ToolbarButtonGroup toolbarButtonGroup;
 	private final String clientId = UUID.randomUUID().toString();

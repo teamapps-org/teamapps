@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiNotificationBar;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -37,9 +37,9 @@ import static org.teamapps.ux.component.notification.NotificationBarItemClosedEv
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NotificationBar extends AbstractComponent {
 
-	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemClosedEvent.NAME);
-	public final ProjectorEvent<NotificationBarItem> onItemClicked = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemClickedEvent.NAME);
-	public final ProjectorEvent<NotificationBarItem> onItemActionLinkClicked = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemActionLinkClickedEvent.NAME);
+	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemClosedEvent.TYPE_ID);
+	public final ProjectorEvent<NotificationBarItem> onItemClicked = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemClickedEvent.TYPE_ID);
+	public final ProjectorEvent<NotificationBarItem> onItemActionLinkClicked = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemActionLinkClickedEvent.TYPE_ID);
 
 	private final Map<String, NotificationBarItem> itemsByUiId = new LinkedHashMap<>();
 
@@ -47,30 +47,35 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiNotificationBar.ItemClickedEvent) {
-			UiNotificationBar.ItemClickedEvent e = (UiNotificationBar.ItemClickedEvent) event;
-			NotificationBarItem item = itemsByUiId.get(e.getId());
-			if (item != null) {
-				item.onClicked.fire();
-				onItemClicked.fire(item);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiNotificationBar.ItemClickedEvent.TYPE_ID -> {
+				var e = event.as(UiNotificationBar.ItemClickedEventWrapper.class);
+				NotificationBarItem item = itemsByUiId.get(e.getId());
+				if (item != null) {
+					item.onClicked.fire();
+					onItemClicked.fire(item);
+				}
 			}
-		} else if (event instanceof UiNotificationBar.ItemActionLinkClickedEvent) {
-			UiNotificationBar.ItemActionLinkClickedEvent e = (UiNotificationBar.ItemActionLinkClickedEvent) event;
-			NotificationBarItem item = itemsByUiId.get(e.getId());
-			if (item != null) {
-				item.onActionLinkClicked.fire();
-				onItemActionLinkClicked.fire(item);
+			case UiNotificationBar.ItemActionLinkClickedEvent.TYPE_ID -> {
+				var e = event.as(UiNotificationBar.ItemActionLinkClickedEventWrapper.class);
+				NotificationBarItem item = itemsByUiId.get(e.getId());
+				if (item != null) {
+					item.onActionLinkClicked.fire();
+					onItemActionLinkClicked.fire(item);
+				}
 			}
-		} else if (event instanceof UiNotificationBar.ItemClosedEvent) {
-			UiNotificationBar.ItemClosedEvent e = (UiNotificationBar.ItemClosedEvent) event;
-			NotificationBarItem item = itemsByUiId.get(e.getId());
-			if (item != null) {
-				NotificationBarItemClosedEvent.ClosingReason reason = e.getWasTimeout() ? TIMEOUT : USER;
-				item.onClosed.fire(reason);
-				onItemClosed.fire(new NotificationBarItemClosedEvent(item, reason));
+			case UiNotificationBar.ItemClosedEvent.TYPE_ID -> {
+				var e = event.as(UiNotificationBar.ItemClosedEventWrapper.class);
+				NotificationBarItem item = itemsByUiId.get(e.getId());
+				if (item != null) {
+					NotificationBarItemClosedEvent.ClosingReason reason = e.getWasTimeout() ? TIMEOUT : USER;
+					item.onClosed.fire(reason);
+					onItemClosed.fire(new NotificationBarItemClosedEvent(item, reason));
+				}
 			}
 		}
+
 	}
 
 	@Override

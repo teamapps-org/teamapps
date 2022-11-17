@@ -42,7 +42,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public final ProjectorEvent<ItemRange> onDisplayedRangeChanged = createProjectorEventBoundToUiEvent(AbstractUiInfiniteListComponent.DisplayedRangeChangedEvent.NAME);
+	public final ProjectorEvent<ItemRange> onDisplayedRangeChanged = createProjectorEventBoundToUiEvent(AbstractUiInfiniteListComponent.DisplayedRangeChangedEvent.TYPE_ID);
 
 	private Disposable modelOnAllDataChangedListenerDisposable;
 	private Disposable modelOnRecordsAddedListenerDisposable;

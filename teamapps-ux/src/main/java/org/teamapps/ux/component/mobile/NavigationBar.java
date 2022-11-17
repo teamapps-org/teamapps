@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NavigationBar<RECORD> extends AbstractComponent implements Component {
 
-	public ProjectorEvent<NavigationBarButton> onButtonClick = createProjectorEventBoundToUiEvent(UiNavigationBar.ButtonClickedEvent.NAME);
+	public ProjectorEvent<NavigationBarButton> onButtonClick = createProjectorEventBoundToUiEvent(UiNavigationBar.ButtonClickedEvent.TYPE_ID);
 
 	private Template buttonTemplate = BaseTemplate.NAVIGATION_BAR_ICON_ONLY;
 	private List<NavigationBarButton<RECORD>> buttons = new ArrayList<>();
@@ -80,18 +80,22 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiNavigationBar.ButtonClickedEvent) {
-			UiNavigationBar.ButtonClickedEvent clickedEvent = (UiNavigationBar.ButtonClickedEvent) event;
-			String buttonId = clickedEvent.getButtonId();
-			buttons.stream()
-					.filter(btn -> btn.getClientId().equals(buttonId))
-					.forEach(button -> {
-						onButtonClick.fire(button);
-						button.onClick.fire(null);
-					});
-		} else if (event instanceof UiNavigationBar.FanoutClosedDueToClickOutsideFanoutEvent) {
-			this.activeFanOutComponent = null;
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiNavigationBar.ButtonClickedEvent.TYPE_ID -> {
+				var clickedEvent = event.as(UiNavigationBar.ButtonClickedEventWrapper.class);
+				String buttonId = clickedEvent.getButtonId();
+				buttons.stream()
+						.filter(btn -> btn.getClientId().equals(buttonId))
+						.forEach(button -> {
+							onButtonClick.fire(button);
+							button.onClick.fire(null);
+						});
+			}
+			case UiNavigationBar.FanoutClosedDueToClickOutsideFanoutEvent.TYPE_ID -> {
+				var e = event.as(UiNavigationBar.FanoutClosedDueToClickOutsideFanoutEventWrapper.class);
+				this.activeFanOutComponent = null;
+			}
 		}
 	}
 

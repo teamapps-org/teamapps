@@ -21,7 +21,7 @@ package org.teamapps.ux.component.field;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -45,9 +45,9 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 							CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
-	public final ProjectorEvent<VALUE> onFocus = createProjectorEventBoundToUiEvent(UiField.FocusEvent.NAME);
-	public final ProjectorEvent<VALUE> onBlur = createProjectorEventBoundToUiEvent(UiField.BlurEvent.NAME);
-	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(UiField.ValueChangedEvent.NAME);
+	public final ProjectorEvent<VALUE> onFocus = createProjectorEventBoundToUiEvent(UiField.FocusEvent.TYPE_ID);
+	public final ProjectorEvent<VALUE> onBlur = createProjectorEventBoundToUiEvent(UiField.BlurEvent.TYPE_ID);
+	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(UiField.ValueChangedEvent.TYPE_ID);
 	public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
 
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
@@ -119,14 +119,15 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiField.ValueChangedEvent) {
-			applyValueFromUi(((UiField.ValueChangedEvent) event).getValue());
-			validate();
-		} else if (event instanceof UiField.FocusEvent) {
-			onFocus.fire();
-		} else if (event instanceof UiField.BlurEvent) {
-			onBlur.fire();
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiField.ValueChangedEvent.TYPE_ID -> {
+		 var e = event.as(UiField.ValueChangedEventWrapper.class);
+				applyValueFromUi(e.getValue());
+				validate();
+			}
+			case UiField.FocusEvent.TYPE_ID -> onFocus.fire();
+			case UiField.BlurEvent.TYPE_ID -> onBlur.fire();
 		}
 	}
 

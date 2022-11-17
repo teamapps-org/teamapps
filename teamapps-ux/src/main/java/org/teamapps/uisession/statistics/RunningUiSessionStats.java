@@ -204,24 +204,24 @@ public class RunningUiSessionStats implements UiSessionStats {
 		this.name = name;
 	}
 
-	public void commandSent(UiCommand command) {
-		commandStats.add(command.getClass());
+	public void commandSent(Class<? extends UiCommand> commandClass) {
+		commandStats.add(commandClass);
 	}
 
 	public void commandResultReceivedFor(Class<?> commandClass) {
 		commandResultStats.add(commandClass);
 	}
 
-	public void eventReceived(UiEvent event) {
-		eventStats.add(event.getClass());
+	public void eventReceived(Class<? extends UiEvent> eventClass) {
+		eventStats.add(eventClass);
 	}
 
-	public void queryReceived(UiQuery query) {
-		queryStats.add(query.getClass());
+	public void queryReceived(Class<? extends UiQuery> queryClass) {
+		queryStats.add(queryClass);
 	}
 
-	public void queryResultSentFor(UiQuery query) {
-		queryResultStats.add(query.getClass());
+	public void queryResultSentFor(Class<? extends UiQuery> queryClass) {
+		queryResultStats.add(queryClass);
 	}
 
 

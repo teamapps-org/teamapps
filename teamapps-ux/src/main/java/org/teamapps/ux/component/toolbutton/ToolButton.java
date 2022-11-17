@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.toolbutton;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiToolButton;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -32,7 +32,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ToolButton extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(UiToolButton.DropDownOpenedEvent.NAME);
+	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(UiToolButton.DropDownOpenedEvent.TYPE_ID);
 
 	private Icon icon;
 	private String caption;
@@ -44,7 +44,7 @@ public class ToolButton extends AbstractComponent {
 	private Integer minDropDownWidth = 300;
 	private Integer minDropDownHeight = 300;
 
-	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(UiToolButton.ClickedEvent.NAME);
+	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(UiToolButton.ClickedEvent.TYPE_ID);
 
 	public ToolButton(Icon icon) {
 		this(icon, null, null);
@@ -84,11 +84,16 @@ public class ToolButton extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiToolButton.ClickedEvent) {
-			this.onClick.fire(null);
-		} else if (event instanceof UiToolButton.DropDownOpenedEvent) {
-			this.onDropDownOpened.fire(null);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiToolButton.ClickedEvent.TYPE_ID -> {
+				var e = event.as(UiToolButton.ClickedEventWrapper.class);
+				this.onClick.fire(null);
+			}
+			case UiToolButton.DropDownOpenedEvent.TYPE_ID -> {
+				var e = event.as(UiToolButton.DropDownOpenedEventWrapper.class);
+				this.onDropDownOpened.fire(null);
+			}
 		}
 	}
 

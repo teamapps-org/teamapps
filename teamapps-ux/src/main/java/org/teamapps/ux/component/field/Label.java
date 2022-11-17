@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiLabel;
 import org.teamapps.event.ProjectorEvent;
@@ -31,7 +31,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Label extends AbstractField<String> {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiLabel.ClickedEvent.NAME);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiLabel.ClickedEvent.TYPE_ID);
 
 	private String caption;
 	private Icon icon;
@@ -57,10 +57,12 @@ public class Label extends AbstractField<String> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
-		if (event instanceof UiLabel.ClickedEvent) {
-			this.onClicked.fire();
+		switch (event.getTypeId()) {
+			case UiLabel.ClickedEvent.TYPE_ID -> {
+				this.onClicked.fire();
+			}
 		}
 	}
 

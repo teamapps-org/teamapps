@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiTextInputHandlingField;
 import org.teamapps.event.ProjectorEvent;
 
@@ -29,18 +29,20 @@ public interface TextInputHandlingField {
 
 	ProjectorEvent<SpecialKey> onSpecialKeyPressed();
 
-	default boolean defaultHandleTextInputEvent(UiEvent event) {
-		if (event instanceof UiTextInputHandlingField.TextInputEvent) {
-			UiTextInputHandlingField.TextInputEvent textInputEvent = (UiTextInputHandlingField.TextInputEvent) event;
-			this.onTextInput().fire(textInputEvent.getEnteredString());
-			return true;
-		} else if (event instanceof UiTextInputHandlingField.SpecialKeyPressedEvent) {
-			UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
-			this.onSpecialKeyPressed().fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
-			return true;
-		} else {
-			return false;
-		}
+	default boolean defaultHandleTextInputEvent(UiEventWrapper event) {
+		return switch (event.getTypeId()) {
+			case UiTextInputHandlingField.TextInputEvent.TYPE_ID -> {
+				var textInputEvent = event.as(UiTextInputHandlingField.TextInputEventWrapper.class);
+				this.onTextInput().fire(textInputEvent.getEnteredString());
+				yield true;
+			}
+			case UiTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID -> {
+				var specialKeyPressedEvent = event.as(UiTextInputHandlingField.SpecialKeyPressedEventWrapper.class);
+				this.onSpecialKeyPressed().fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 }

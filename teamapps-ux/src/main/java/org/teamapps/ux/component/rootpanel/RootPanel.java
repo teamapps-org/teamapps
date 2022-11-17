@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.rootpanel;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -42,7 +42,7 @@ public class RootPanel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		// no ui events for this component
 	}
 

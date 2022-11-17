@@ -21,9 +21,9 @@ package org.teamapps.ux.component.form;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyInjector;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyInjector;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.*;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -151,7 +151,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 	}
 
 	private List<String> getPropertyNames() {

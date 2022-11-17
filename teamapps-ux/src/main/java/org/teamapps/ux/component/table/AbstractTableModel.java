@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.teamapps.data.value.Sorting;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.infiniteitemview.RecordsAddedEvent;
 import org.teamapps.ux.component.infiniteitemview.RecordsChangedEvent;

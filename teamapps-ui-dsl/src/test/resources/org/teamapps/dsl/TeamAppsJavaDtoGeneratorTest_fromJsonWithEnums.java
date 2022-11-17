@@ -35,6 +35,8 @@ import org.teamapps.dto.UiObject;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class C implements UiObject {
 
+    public static final String TYPE_ID = "C";
+
 	protected E e = E.A;
 
 	public C() {

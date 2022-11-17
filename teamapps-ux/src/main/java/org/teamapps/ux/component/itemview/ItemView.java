@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,17 +19,17 @@
  */
 package org.teamapps.ux.component.itemview;
 
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiItemView;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
-	public ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiItemView.ItemClickedEvent.NAME);
+	public ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiItemView.ItemClickedEvent.TYPE_ID);
 
 	private final List<ItemGroup<HEADERRECORD, RECORD>> itemGroups = new ArrayList<>();
 
@@ -219,13 +219,15 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiItemView.ItemClickedEvent) {
-			UiItemView.ItemClickedEvent itemClickedEvent = (UiItemView.ItemClickedEvent) event;
-			ItemGroup<HEADERRECORD, RECORD> itemGroup = getItemGroupByClientId(itemClickedEvent.getGroupId());
-			if (itemGroup != null) {
-				RECORD item = itemGroup.getItemByClientId(itemClickedEvent.getItemId());
-				this.onItemClicked.fire(new ItemClickedEventData<>(itemGroup, item));
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiItemView.ItemClickedEvent.TYPE_ID -> {
+				var itemClickedEvent = event.as(UiItemView.ItemClickedEventWrapper.class);
+				ItemGroup<HEADERRECORD, RECORD> itemGroup = getItemGroupByClientId(itemClickedEvent.getGroupId());
+				if (itemGroup != null) {
+					RECORD item = itemGroup.getItemByClientId(itemClickedEvent.getItemId());
+					this.onItemClicked.fire(new ItemClickedEventData<>(itemGroup, item));
+				}
 			}
 		}
 	}

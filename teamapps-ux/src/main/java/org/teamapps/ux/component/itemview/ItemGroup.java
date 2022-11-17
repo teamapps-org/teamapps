@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.itemview;
 
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiItemViewItemGroup;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;

@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.progress;
 
 import org.teamapps.dto.UiDefaultMultiProgressDisplay;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiMultiProgressDisplay;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -47,7 +47,7 @@ import static org.teamapps.ux.task.ProgressStatus.*;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DefaultMultiProgressDisplay extends AbstractComponent implements MultiProgressDisplay {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiDefaultMultiProgressDisplay.ClickedEvent.NAME);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiDefaultMultiProgressDisplay.ClickedEvent.TYPE_ID);
 
 	private final List<ObservableProgress> progresses = new ArrayList<>();
 	private final Notification progressListNotification;
@@ -85,20 +85,22 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiMultiProgressDisplay.ClickedEvent) {
-			this.onClicked.fire(null);
-			if (showingNotificationWithoutTimeout) {
-				this.showingNotificationWithoutTimeout = false;
-				progressListNotification.close();
-			} else {
-				this.showingNotificationWithoutTimeout = true;
-				if (progresses.size() > 0) {
-					progressListNotification.setDisplayTimeInMillis(-1);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiMultiProgressDisplay.ClickedEvent.TYPE_ID -> {
+				this.onClicked.fire(null);
+				if (showingNotificationWithoutTimeout) {
+					this.showingNotificationWithoutTimeout = false;
+					progressListNotification.close();
 				} else {
-					progressListNotification.setDisplayTimeInMillis(2000);
+					this.showingNotificationWithoutTimeout = true;
+					if (progresses.size() > 0) {
+						progressListNotification.setDisplayTimeInMillis(-1);
+					} else {
+						progressListNotification.setDisplayTimeInMillis(2000);
+					}
+					getSessionContext().showNotification(progressListNotification, notificationPosition);
 				}
-				getSessionContext().showNotification(progressListNotification, notificationPosition);
 			}
 		}
 	}

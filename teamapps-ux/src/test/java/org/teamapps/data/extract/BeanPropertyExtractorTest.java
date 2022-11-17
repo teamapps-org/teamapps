@@ -20,6 +20,7 @@
 package org.teamapps.data.extract;
 
 import org.junit.Test;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 
 import static org.junit.Assert.*;
 

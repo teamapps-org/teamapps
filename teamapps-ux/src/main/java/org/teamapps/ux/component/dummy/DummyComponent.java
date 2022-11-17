@@ -21,7 +21,7 @@ package org.teamapps.ux.component.dummy;
 
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiDummyComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -30,7 +30,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DummyComponent extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(UiDummyComponent.ClickedEvent.NAME);
+	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(UiDummyComponent.ClickedEvent.TYPE_ID);
 
 	private String text;
 
@@ -51,9 +51,11 @@ public class DummyComponent extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiDummyComponent.ClickedEvent) {
-			onClick.fire(null);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiDummyComponent.ClickedEvent.TYPE_ID -> {
+				onClick.fire(null);
+			}
 		}
 	}
 

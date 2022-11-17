@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.media;
 
-import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -123,7 +123,7 @@ public class MediaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 
 	}
 

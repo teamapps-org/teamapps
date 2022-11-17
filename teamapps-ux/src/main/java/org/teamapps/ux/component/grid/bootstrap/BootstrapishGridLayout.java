@@ -137,7 +137,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		// none
 	}
 

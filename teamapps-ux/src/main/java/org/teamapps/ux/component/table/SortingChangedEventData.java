@@ -19,8 +19,6 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.teamapps.data.value.SortDirection;
-
 public class SortingChangedEventData {
 
 	private final String sortField;

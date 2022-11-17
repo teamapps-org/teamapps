@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.charting.forcelayout;
 
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.*;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 
 public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeClickedEvent.NAME);
-	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeDoubleClicked = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeDoubleClickedEvent.NAME);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeExpandedOrCollapsedEvent.NAME);
+	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeClickedEvent.TYPE_ID);
+	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeDoubleClicked = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeDoubleClickedEvent.TYPE_ID);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeExpandedOrCollapsedEvent.TYPE_ID);
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
 	private final List<ForceLayoutLink<RECORD>> links;
@@ -113,26 +113,29 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiNetworkGraph.NodeClickedEvent) {
-			UiNetworkGraph.NodeClickedEvent clickEvent = (UiNetworkGraph.NodeClickedEvent) event;
-			nodes.stream()
-					.filter(n -> n.getId().equals(clickEvent.getNodeId()))
-					.findFirst()
-					.ifPresent(onNodeClicked::fire);
-		}    else if (event instanceof UiNetworkGraph.NodeDoubleClickedEvent) {
-			UiNetworkGraph.NodeDoubleClickedEvent clickEvent = (UiNetworkGraph.NodeDoubleClickedEvent) event;
-			nodes.stream()
-					.filter(n -> n.getId().equals(clickEvent.getNodeId()))
-					.findFirst()
-					.ifPresent(onNodeDoubleClicked::fire);
-		}
-		if (event instanceof UiNetworkGraph.NodeExpandedOrCollapsedEvent) {
-			UiNetworkGraph.NodeExpandedOrCollapsedEvent clickEvent = (UiNetworkGraph.NodeExpandedOrCollapsedEvent) event;
-			nodes.stream()
-					.filter(n -> n.getId().equals(clickEvent.getNodeId()))
-					.findFirst()
-					.ifPresent(n -> onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<RECORD>(n, clickEvent.getExpanded())));
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiNetworkGraph.NodeClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(UiNetworkGraph.NodeClickedEventWrapper.class);
+				nodes.stream()
+						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
+						.findFirst()
+						.ifPresent(onNodeClicked::fire);
+			}
+			case UiNetworkGraph.NodeDoubleClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(UiNetworkGraph.NodeDoubleClickedEventWrapper.class);
+				nodes.stream()
+						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
+						.findFirst()
+						.ifPresent(onNodeDoubleClicked::fire);
+			}
+			case UiNetworkGraph.NodeExpandedOrCollapsedEvent.TYPE_ID -> {
+				var clickEvent = event.as(UiNetworkGraph.NodeExpandedOrCollapsedEventWrapper.class);
+				nodes.stream()
+						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
+						.findFirst()
+						.ifPresent(n -> onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<RECORD>(n, clickEvent.getExpanded())));
+			}
 		}
 	}
 

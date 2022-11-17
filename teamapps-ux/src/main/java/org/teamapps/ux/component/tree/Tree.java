@@ -21,9 +21,9 @@ package org.teamapps.ux.component.tree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.*;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
@@ -40,8 +40,8 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(Tree.class);
 
-	public final ProjectorEvent<RECORD> onNodeSelected = createProjectorEventBoundToUiEvent(UiTree.NodeSelectedEvent.NAME);
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTree.TextInputEvent.NAME);
+	public final ProjectorEvent<RECORD> onNodeSelected = createProjectorEventBoundToUiEvent(UiTree.NodeSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTree.TextInputEvent.TYPE_ID);
 
 	private TreeModel<RECORD> model;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
@@ -189,22 +189,25 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiTree.NodeSelectedEvent) {
-			UiTree.NodeSelectedEvent nodeSelectedEvent = (UiTree.NodeSelectedEvent) event;
-			RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
-			selectedNode = record;
-			if (record != null) {
-				onNodeSelected.fire(record);
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiTree.NodeSelectedEvent.TYPE_ID -> {
+				var nodeSelectedEvent = event.as(UiTree.NodeSelectedEventWrapper.class);
+				RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
+				selectedNode = record;
+				if (record != null) {
+					onNodeSelected.fire(record);
+				}
 			}
-		} else if (event instanceof UiTree.RequestTreeDataEvent) {
-			UiTree.RequestTreeDataEvent requestTreeDataEvent = (UiTree.RequestTreeDataEvent) event;
-			RECORD parentNode = getRecordByUiId(requestTreeDataEvent.getParentNodeId());
-			if (parentNode != null) {
-				List<RECORD> children = model.getChildRecords(parentNode);
-				List<UiTreeRecord> uiChildren = createOrUpdateUiRecords(children);
-				if (isRendered()) {
-					getSessionContext().sendCommand(getId(), new UiTree.BulkUpdateCommand(Collections.emptyList(), uiChildren));
+			case UiTree.RequestTreeDataEvent.TYPE_ID -> {
+				var requestTreeDataEvent = event.as(UiTree.RequestTreeDataEventWrapper.class);
+				RECORD parentNode = getRecordByUiId(requestTreeDataEvent.getParentNodeId());
+				if (parentNode != null) {
+					List<RECORD> children = model.getChildRecords(parentNode);
+					List<UiTreeRecord> uiChildren = createOrUpdateUiRecords(children);
+					if (isRendered()) {
+						getSessionContext().sendCommand(getId(), new UiTree.BulkUpdateCommand(Collections.emptyList(), uiChildren));
+					}
 				}
 			}
 		}

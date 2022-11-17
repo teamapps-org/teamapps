@@ -99,7 +99,7 @@
 <!--                        </goals>-->
 <!--                        <configuration>-->
 <!--                            <mainClass>org.teamapps.dsl.generate.TeamAppsTypeScriptGenerator</mainClass>-->
-<!--                            <commandlineArgs>"${project.basedir}/src/main/dto" "${project.basedir}/../teamapps-client/teamapps-common-components/src/main/ts/generated"</commandlineArgs>-->
+<!--                            <commandlineArgs>"${project.basedir}/src/main/dto" "${project.basedir}/../teamapps-client/teamapps-client-common-components/src/main/ts/generated"</commandlineArgs>-->
 <!--                            <classpathScope>test</classpathScope>-->
 <!--                        </configuration>-->
 <!--                    </execution>-->

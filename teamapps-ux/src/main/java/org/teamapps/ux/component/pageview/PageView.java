@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiPageView;
 import org.teamapps.ux.component.AbstractComponent;
 
@@ -52,7 +52,7 @@ public class PageView extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		// none
 	}
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,7 @@ package org.teamapps.ux.component.floating;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiFloatingComponent;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -29,7 +29,7 @@ import org.teamapps.ux.component.Component;
 
 public class FloatingComponent extends AbstractComponent {
 
-	public final ProjectorEvent<Boolean> onExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiFloatingComponent.ExpandedOrCollapsedEvent.NAME);
+	public final ProjectorEvent<Boolean> onExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiFloatingComponent.ExpandedOrCollapsedEvent.TYPE_ID);
 
 	private final Component containerComponent;
 	private Component contentComponent;
@@ -158,9 +158,12 @@ public class FloatingComponent extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiFloatingComponent.ExpandedOrCollapsedEvent) {
-			onExpandedOrCollapsed.fire(((UiFloatingComponent.ExpandedOrCollapsedEvent) event).getExpanded());
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiFloatingComponent.ExpandedOrCollapsedEvent.TYPE_ID -> {
+				var e = event.as(UiFloatingComponent.ExpandedOrCollapsedEventWrapper.class);
+				onExpandedOrCollapsed.fire(e.getExpanded());
+			}
 		}
 	}
 }

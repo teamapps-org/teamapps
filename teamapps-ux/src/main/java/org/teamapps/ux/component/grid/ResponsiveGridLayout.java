@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.grid;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiResponsiveGridLayout;
 import org.teamapps.dto.UiResponsiveGridLayoutPolicy;
 import org.teamapps.ux.component.AbstractComponent;
@@ -63,7 +63,7 @@ public class ResponsiveGridLayout extends AbstractComponent {
 
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		// none
 	}
 

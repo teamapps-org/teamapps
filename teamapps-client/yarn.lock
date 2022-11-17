@@ -13885,6 +13885,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"teamapps-client-common-components@workspace:teamapps-client-common-components":
+  version: 0.0.0-use.local
+  resolution: "teamapps-client-common-components@workspace:teamapps-client-common-components"
+  dependencies:
+    cross-var: ^1.1.0
+    esbuild: ^0.15.13
+    replace-in-file: ^6.3.5
+    sync-pom-version-to-package: ^1.6.1
+    teamapps-client-communication: "workspace:*"
+    typescript: ^4.8.4
+  languageName: unknown
+  linkType: soft
+
 "teamapps-client-communication@workspace:*, teamapps-client-communication@workspace:teamapps-client-communication":
   version: 0.0.0-use.local
   resolution: "teamapps-client-communication@workspace:teamapps-client-communication"
@@ -14018,19 +14031,6 @@ __metadata:
     webpack-merge: ^4.1.4
     wnumb: ^1.1.0
     worker-loader: 2.0.0
-  languageName: unknown
-  linkType: soft
-
-"teamapps-common-components@workspace:teamapps-common-components":
-  version: 0.0.0-use.local
-  resolution: "teamapps-common-components@workspace:teamapps-common-components"
-  dependencies:
-    cross-var: ^1.1.0
-    esbuild: ^0.15.13
-    replace-in-file: ^6.3.5
-    sync-pom-version-to-package: ^1.6.1
-    teamapps-client-communication: "workspace:*"
-    typescript: ^4.8.4
   languageName: unknown
   linkType: soft
 

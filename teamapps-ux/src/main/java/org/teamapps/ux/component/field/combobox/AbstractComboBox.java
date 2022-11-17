@@ -21,9 +21,9 @@ package org.teamapps.ux.component.field.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.*;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
@@ -43,8 +43,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractComboBox.class);
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.TextInputEvent.NAME);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.SpecialKeyPressedEvent.NAME);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
 
 	protected final ClientRecordCache<RECORD, UiComboBoxTreeRecord> recordCache;
 
@@ -117,50 +117,57 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
-		if (event instanceof UiTextInputHandlingField.TextInputEvent) {
-			UiTextInputHandlingField.TextInputEvent textInputEvent = (UiTextInputHandlingField.TextInputEvent) event;
-			String string = textInputEvent.getEnteredString() != null ? textInputEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
-			this.onTextInput.fire(string);
-		} else if (event instanceof UiTextInputHandlingField.SpecialKeyPressedEvent) {
-			UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
-			this.onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
+		switch (event.getTypeId()) {
+			case UiTextInputHandlingField.TextInputEvent.TYPE_ID -> {
+				var textInputEvent = event.as(UiTextInputHandlingField.TextInputEventWrapper.class);
+				String string = textInputEvent.getEnteredString() != null ? textInputEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
+				this.onTextInput.fire(string);
+			}
+			case UiTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID -> {
+				var specialKeyPressedEvent = event.as(UiTextInputHandlingField.SpecialKeyPressedEventWrapper.class);
+				this.onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
+			}
 		}
 	}
 
 	@Override
-	public Object handleUiQuery(UiQuery query) {
-		if (query instanceof UiComboBox.RetrieveDropdownEntriesQuery) {
-			final UiComboBox.RetrieveDropdownEntriesQuery q = (UiComboBox.RetrieveDropdownEntriesQuery) query;
-			String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
-			if (model != null) {
-				List<RECORD> resultRecords = model.getRecords(string);
-				if (distinctModelResultFiltering) {
-					resultRecords = filterOutSelected(resultRecords);
-				}
-				CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
-				cacheResponse.commit();
-				return cacheResponse.getAndClearResult();
-			} else {
-				return List.of();
-			}
-		} else if (query instanceof UiComboBox.LazyChildrenQuery) {
-			UiComboBox.LazyChildrenQuery lazyChildrenQuery = (UiComboBox.LazyChildrenQuery) query;
-			RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
-			if (parentRecord != null) {
+	public Object handleUiQuery(UiQueryWrapper query) {
+		switch (query.getTypeId()) {
+			case UiComboBox.RetrieveDropdownEntriesQuery.TYPE_ID -> {
+				var q = query.as(UiComboBox.RetrieveDropdownEntriesQueryWrapper.class);
+				String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
 				if (model != null) {
-					List<RECORD> childRecords = model.getChildRecords(parentRecord);
+					List<RECORD> resultRecords = model.getRecords(string);
 					if (distinctModelResultFiltering) {
-						childRecords = filterOutSelected(childRecords);
+						resultRecords = filterOutSelected(resultRecords);
 					}
-					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
+					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
 					cacheResponse.commit();
 					return cacheResponse.getAndClearResult();
+				} else {
+					return List.of();
 				}
-			} else {
-				return Collections.emptyList();
 			}
+			case UiComboBox.LazyChildrenQuery.TYPE_ID -> {
+				var lazyChildrenQuery = query.as(UiComboBox.LazyChildrenQueryWrapper.class);
+				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
+				if (parentRecord != null) {
+					if (model != null) {
+						List<RECORD> childRecords = model.getChildRecords(parentRecord);
+						if (distinctModelResultFiltering) {
+							childRecords = filterOutSelected(childRecords);
+						}
+						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
+						cacheResponse.commit();
+						return cacheResponse.getAndClearResult();
+					}
+				} else {
+					return Collections.emptyList();
+				}
+			}
+
 		}
 		return super.handleUiQuery(query);
 	}

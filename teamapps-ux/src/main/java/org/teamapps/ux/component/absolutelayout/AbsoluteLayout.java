@@ -22,7 +22,7 @@ package org.teamapps.ux.component.absolutelayout;
 import org.teamapps.dto.UiAbsoluteLayout;
 import org.teamapps.dto.UiAbsolutePositionedComponent;
 import org.teamapps.dto.UiAbsolutePositioning;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -92,7 +92,7 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		// none
 	}
 

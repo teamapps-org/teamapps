@@ -109,17 +109,17 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if ("isTypeScriptConfig".equals(propertyName)) {
 			return isTypeScriptConfigSuffixed(typeContext);
 		} else if ("isPrimitiveType".equals(propertyName)) {
-			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText());
+			return isPrimitiveType(typeContext);
 		} else if ("isPrimitiveOrWrapperType".equals(propertyName)) {
-			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText()) || PRIMITIVE_TYPE_TO_WRAPPER_TYPE.values().contains(typeContext.getText());
+			return isPrimitiveType(typeContext) || isPrimitiveWrapperType(typeContext);
 		} else if ("isPrimitiveNumberOrNumberWrapperType".equals(propertyName)) {
 			return Arrays.asList("byte", "Byte", "short", "Short", "int", "Integer", "long", "Long", "float", "Float", "double", "Double").contains(typeContext.getText());
 		} else if ("isBoolean".equals(propertyName)) {
 			return "boolean".equals(typeContext.getText());
 		} else if ("primitiveType".equals(propertyName)) {
-			if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText())) {
+			if (isPrimitiveType(typeContext)) {
 				return typeContext.getText();
-			} else if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.values().contains(typeContext.getText())) {
+			} else if (isPrimitiveWrapperType(typeContext)) {
 				return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(typeContext.getText());
 			} else {
 				throw new IllegalArgumentException(typeContext.getText() + " is not a primitive type!");
@@ -127,7 +127,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if ("isUiClientObjectReferenceOrCollectionOfThese".equals(propertyName)) {
 			return isUiClientObjectReferenceOrCollectionOfThese(typeContext);
 		} else if ("objectType".equals(propertyName)) {
-			if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText())) {
+			if (isPrimitiveType(typeContext)) {
 				return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(typeContext.getText());
 			} else {
 				return typeContext.getText();
@@ -146,6 +146,14 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else {
 			return super.getProperty(interpreter, self, o, property, propertyName);
 		}
+	}
+
+	private static boolean isPrimitiveType(TeamAppsDtoParser.TypeContext typeContext) {
+		return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText());
+	}
+
+	private static boolean isPrimitiveWrapperType(TeamAppsDtoParser.TypeContext typeContext) {
+		return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.values().contains(typeContext.getText());
 	}
 
 	private String getJavaTypeString(TeamAppsDtoParser.TypeContext typeContext) {

@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiMessagePageViewBlock;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;

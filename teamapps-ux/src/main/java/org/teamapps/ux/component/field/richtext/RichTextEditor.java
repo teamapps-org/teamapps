@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field.richtext;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiRichTextEditor;
 import org.teamapps.event.ProjectorEvent;
@@ -36,12 +36,12 @@ import java.util.Locale;
 
 public class RichTextEditor extends AbstractField<String> implements TextInputHandlingField {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiRichTextEditor.TextInputEvent.NAME);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiRichTextEditor.SpecialKeyPressedEvent.NAME);
-	public final ProjectorEvent<ImageUploadTooLargeEventData> onImageUploadTooLarge = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadTooLargeEvent.NAME);
-	public final ProjectorEvent<ImageUploadStartedEventData> onImageUploadStarted = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadStartedEvent.NAME);
-	public final ProjectorEvent<ImageUploadSuccessfulEventData> onImageUploadSuccessful = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadSuccessfulEvent.NAME);
-	public final ProjectorEvent<ImageUploadFailedEventData> onImageUploadFailed = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadFailedEvent.NAME);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiRichTextEditor.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiRichTextEditor.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<ImageUploadTooLargeEventData> onImageUploadTooLarge = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadTooLargeEvent.TYPE_ID);
+	public final ProjectorEvent<ImageUploadStartedEventData> onImageUploadStarted = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadStartedEvent.TYPE_ID);
+	public final ProjectorEvent<ImageUploadSuccessfulEventData> onImageUploadSuccessful = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<ImageUploadFailedEventData> onImageUploadFailed = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadFailedEvent.TYPE_ID);
 
 	private ToolbarVisibilityMode toolbarVisibilityMode = ToolbarVisibilityMode.VISIBLE;
 	private int minHeight = 150;
@@ -72,35 +72,40 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
+	public void handleUiEvent(UiEventWrapper event) {
 		super.handleUiEvent(event);
-		if (event instanceof UiRichTextEditor.ImageUploadTooLargeEvent) {
-			UiRichTextEditor.ImageUploadTooLargeEvent tooLargeEvent = (UiRichTextEditor.ImageUploadTooLargeEvent) event;
-			onImageUploadTooLarge.fire(new ImageUploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
-		} else if (event instanceof UiRichTextEditor.ImageUploadStartedEvent) {
-			UiRichTextEditor.ImageUploadStartedEvent uploadStartedEvent = (UiRichTextEditor.ImageUploadStartedEvent) event;
-			onImageUploadStarted.fire(new ImageUploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(),
-					uploadStartedEvent.getIncompleteUploadsCount()));
-		} else if (event instanceof UiRichTextEditor.ImageUploadSuccessfulEvent) {
-			UiRichTextEditor.ImageUploadSuccessfulEvent imageUploadedEvent = (UiRichTextEditor.ImageUploadSuccessfulEvent) event;
-			onImageUploadSuccessful.fire(new ImageUploadSuccessfulEventData(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getMimeType(),
-					imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getIncompleteUploadsCount()));
-			String fileUuid = imageUploadedEvent.getFileUuid();
-			UploadedFile uploadedFile = new UploadedFile(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getMimeType(),
-					() -> {
-						try {
-							return new FileInputStream(getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid()));
-						} catch (FileNotFoundException e) {
-							throw new UploadedFileAccessException(e);
-						}
-					},
-					() -> getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid())
-			);
-			sendCommandIfRendered(() -> new UiRichTextEditor.SetUploadedImageUrlCommand(fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
-		} else if (event instanceof UiRichTextEditor.ImageUploadFailedEvent) {
-			UiRichTextEditor.ImageUploadFailedEvent uploadFailedEvent = (UiRichTextEditor.ImageUploadFailedEvent) event;
-			onImageUploadFailed.fire(new ImageUploadFailedEventData(uploadFailedEvent.getName(), uploadFailedEvent.getMimeType(), uploadFailedEvent.getSizeInBytes(), uploadFailedEvent
-					.getIncompleteUploadsCount()));
+		switch (event.getTypeId()) {
+			case UiRichTextEditor.ImageUploadTooLargeEvent.TYPE_ID -> {
+				var tooLargeEvent = event.as(UiRichTextEditor.ImageUploadTooLargeEventWrapper.class);
+				onImageUploadTooLarge.fire(new ImageUploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
+			}
+			case UiRichTextEditor.ImageUploadStartedEvent.TYPE_ID -> {
+				var uploadStartedEvent = event.as(UiRichTextEditor.ImageUploadStartedEventWrapper.class);
+				onImageUploadStarted.fire(new ImageUploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(),
+						uploadStartedEvent.getIncompleteUploadsCount()));
+			}
+			case UiRichTextEditor.ImageUploadSuccessfulEvent.TYPE_ID -> {
+				var imageUploadedEvent = event.as(UiRichTextEditor.ImageUploadSuccessfulEventWrapper.class);
+				onImageUploadSuccessful.fire(new ImageUploadSuccessfulEventData(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getMimeType(),
+						imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getIncompleteUploadsCount()));
+				String fileUuid = imageUploadedEvent.getFileUuid();
+				UploadedFile uploadedFile = new UploadedFile(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getMimeType(),
+						() -> {
+							try {
+								return new FileInputStream(getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid()));
+							} catch (FileNotFoundException e) {
+								throw new UploadedFileAccessException(e);
+							}
+						},
+						() -> getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid())
+				);
+				sendCommandIfRendered(() -> new UiRichTextEditor.SetUploadedImageUrlCommand(fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
+			}
+			case UiRichTextEditor.ImageUploadFailedEvent.TYPE_ID -> {
+				var uploadFailedEvent = event.as(UiRichTextEditor.ImageUploadFailedEventWrapper.class);
+				onImageUploadFailed.fire(new ImageUploadFailedEventData(uploadFailedEvent.getName(), uploadFailedEvent.getMimeType(), uploadFailedEvent.getSizeInBytes(), uploadFailedEvent
+						.getIncompleteUploadsCount()));
+			}
 		}
 	}
 

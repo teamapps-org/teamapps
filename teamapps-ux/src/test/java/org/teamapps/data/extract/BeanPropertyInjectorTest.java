@@ -21,6 +21,7 @@ package org.teamapps.data.extract;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.teamapps.ux.data.extraction.BeanPropertyInjector;
 
 import static org.junit.Assert.assertEquals;
 

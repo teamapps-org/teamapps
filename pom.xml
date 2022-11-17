@@ -38,10 +38,8 @@
         <module>teamapps-ui-dsl</module>
         <module>teamapps-ui-api</module>
         <module>teamapps-client/teamapps-client-communication</module>
-        <module>teamapps-client/teamapps-common-components</module>
+        <module>teamapps-client/teamapps-client-common-components</module>
         <module>teamapps-ux</module>
-        <module>teamapps-my-custom-component</module>
-        <module>teamapps-application-management</module>
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
     </modules>
@@ -140,13 +138,13 @@
 
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-ux</artifactId>
+                <artifactId>teamapps-client-common-components</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-client</artifactId>
+                <artifactId>teamapps-ux</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

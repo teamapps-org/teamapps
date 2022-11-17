@@ -19,19 +19,19 @@
  */
 package org.teamapps.ux.component.media;
 
-import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiVideoPlayer;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class VideoPlayer extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(UiVideoPlayer.ErrorLoadingEvent.NAME);
-	public final ProjectorEvent<Integer> onProgress = createProjectorEventBoundToUiEvent(UiVideoPlayer.PlayerProgressEvent.NAME);
-	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiVideoPlayer.EndedEvent.NAME);
+	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(UiVideoPlayer.ErrorLoadingEvent.TYPE_ID);
+	public final ProjectorEvent<Integer> onProgress = createProjectorEventBoundToUiEvent(UiVideoPlayer.PlayerProgressEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiVideoPlayer.EndedEvent.TYPE_ID);
 
 	private String url; //the url of the video
 	private boolean autoplay; // if set...
@@ -64,14 +64,20 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiVideoPlayer.ErrorLoadingEvent) {
-			onErrorLoading.fire(null);
-		} else if (event instanceof UiVideoPlayer.PlayerProgressEvent) {
-			UiVideoPlayer.PlayerProgressEvent e = (UiVideoPlayer.PlayerProgressEvent) event;
-			onProgress.fire(e.getPositionInSeconds());
-		} else if (event instanceof UiVideoPlayer.EndedEvent) {
-			onEnded.fire();
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiVideoPlayer.ErrorLoadingEvent.TYPE_ID -> {
+				var e = event.as(UiVideoPlayer.ErrorLoadingEventWrapper.class);
+				onErrorLoading.fire(null);
+			}
+			case UiVideoPlayer.PlayerProgressEvent.TYPE_ID -> {
+				var e = event.as(UiVideoPlayer.PlayerProgressEventWrapper.class);
+				onProgress.fire(e.getPositionInSeconds());
+			}
+			case UiVideoPlayer.EndedEvent.TYPE_ID -> {
+				var e = event.as(UiVideoPlayer.EndedEventWrapper.class);
+				onEnded.fire();
+			}
 		}
 	}
 

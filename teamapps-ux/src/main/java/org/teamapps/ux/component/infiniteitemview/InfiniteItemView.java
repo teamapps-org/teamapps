@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.infiniteitemview;
 
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.dto.*;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
@@ -44,7 +44,7 @@ import java.util.function.Function;
 @Deprecated
 public class InfiniteItemView<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiInfiniteItemView.ItemClickedEvent.NAME);
+	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiInfiniteItemView.ItemClickedEvent.TYPE_ID);
 
 	private int numberOfInitialRecords = 100;
 	private Template itemTemplate;
@@ -116,37 +116,41 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiInfiniteItemView.DisplayedRangeChangedEvent) {
-			UiInfiniteItemView.DisplayedRangeChangedEvent rangeChangedEvent = (UiInfiniteItemView.DisplayedRangeChangedEvent) event;
-			viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
-			displayedRangeStart = rangeChangedEvent.getStartIndex();
-			displayedRangeLength = rangeChangedEvent.getLength();
-			if (rangeChangedEvent.getDataRequest() != null) {
-				UiInfiniteItemViewDataRequest dataRequest = rangeChangedEvent.getDataRequest();
-				int startIndex = dataRequest.getStartIndex();
-				int length = dataRequest.getLength();
-				this.sendRecords(startIndex, length, false);
-			}
-		} else if (event instanceof UiInfiniteItemView.ItemClickedEvent) {
-			UiInfiniteItemView.ItemClickedEvent itemClickedEvent = (UiInfiniteItemView.ItemClickedEvent) event;
-			RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());
-			if (record != null) {
-				onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick()));
-			}
-		} else if (event instanceof UiInfiniteItemView.ContextMenuRequestedEvent) {
-			UiInfiniteItemView.ContextMenuRequestedEvent e = (UiInfiniteItemView.ContextMenuRequestedEvent) event;
-			lastSeenContextMenuRequestId = e.getRequestId();
-			RECORD record = itemCache.getRecordByClientId(e.getRecordId());
-			if (record != null && contextMenuProvider != null) {
-				Component contextMenuContent = contextMenuProvider.apply(record);
-				if (contextMenuContent != null) {
-					sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
-				} else {
-					sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiInfiniteItemView.DisplayedRangeChangedEvent.TYPE_ID -> {
+				var rangeChangedEvent = event.as(UiInfiniteItemView.DisplayedRangeChangedEventWrapper.class);
+				viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
+				displayedRangeStart = rangeChangedEvent.getStartIndex();
+				displayedRangeLength = rangeChangedEvent.getLength();
+				if (rangeChangedEvent.getDataRequest() != null) {
+					UiInfiniteItemViewDataRequestWrapper dataRequest = rangeChangedEvent.getDataRequest();
+					int startIndex = dataRequest.getStartIndex();
+					int length = dataRequest.getLength();
+					this.sendRecords(startIndex, length, false);
 				}
-			} else {
-				closeContextMenu();
+			}
+			case UiInfiniteItemView.ItemClickedEvent.TYPE_ID -> {
+				var itemClickedEvent = event.as(UiInfiniteItemView.ItemClickedEventWrapper.class);
+				RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());
+				if (record != null) {
+					onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick()));
+				}
+			}
+			case UiInfiniteItemView.ContextMenuRequestedEvent.TYPE_ID -> {
+				var e = event.as(UiInfiniteItemView.ContextMenuRequestedEventWrapper.class);
+				lastSeenContextMenuRequestId = e.getRequestId();
+				RECORD record = itemCache.getRecordByClientId(e.getRecordId());
+				if (record != null && contextMenuProvider != null) {
+					Component contextMenuContent = contextMenuProvider.apply(record);
+					if (contextMenuContent != null) {
+						sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+					} else {
+						sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+					}
+				} else {
+					closeContextMenu();
+				}
 			}
 		}
 	}

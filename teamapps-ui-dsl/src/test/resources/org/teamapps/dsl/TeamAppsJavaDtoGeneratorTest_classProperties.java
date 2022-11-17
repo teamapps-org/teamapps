@@ -36,6 +36,8 @@ import org.teamapps.dto.blah.UiComponent;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class A implements UiObject {
 
+    public static final String TYPE_ID = "A";
+
 	protected String aasdf;
 	protected String b;
 	protected List<Long> c;

@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.form;
 
-import org.teamapps.data.extract.*;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.validator.MultiFieldValidator;
+import org.teamapps.ux.data.extraction.*;
 
 import java.util.*;
 import java.util.stream.Stream;

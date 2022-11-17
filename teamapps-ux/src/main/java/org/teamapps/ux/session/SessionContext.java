@@ -77,8 +77,8 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
-	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiRootPanel.ToggleEventListeningCommand(null, null, UiRootPanel.GlobalKeyEventOccurredEvent.NAME, hasListeners)));
-	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiRootPanel.ToggleEventListeningCommand(null, null, UiRootPanel.NavigationStateChangeEvent.NAME, hasListeners)));
+	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiRootPanel.ToggleEventListeningCommand(null, null, UiRootPanel.GlobalKeyEventOccurredEvent.TYPE_ID, hasListeners)));
+	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiRootPanel.ToggleEventListeningCommand(null, null, UiRootPanel.NavigationStateChangeEvent.TYPE_ID, hasListeners)));
 	public final ProjectorEvent<UiSessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
 	public final Event<UiSessionClosingReason> onDestroyed = new Event<>();
 
@@ -117,7 +117,7 @@ public class SessionContext {
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
-		public void onUiEvent(String sessionId, UiEvent event) {
+		public void onUiEvent(String sessionId, UiEventWrapper event) {
 			runWithContext(() -> {
 				String uiComponentId = event.getComponentId();
 				if (uiComponentId != null) {
@@ -134,7 +134,7 @@ public class SessionContext {
 		}
 
 		@Override
-		public void onUiQuery(String sessionId, UiQuery query, Consumer<Object> resultCallback) {
+		public void onUiQuery(String sessionId, UiQueryWrapper query, Consumer<Object> resultCallback) {
 			runWithContext(() -> {
 				String uiComponentId = query.getComponentId();
 				ClientObject clientObject = getClientObject(uiComponentId);
@@ -720,32 +720,34 @@ public class SessionContext {
 		return uiSession.getSessionId();
 	}
 
-	public void handleStaticEvent(UiEvent event) {
-		if (event instanceof UiRootPanel.GlobalKeyEventOccurredEvent) {
-			UiRootPanel.GlobalKeyEventOccurredEvent e = (UiRootPanel.GlobalKeyEventOccurredEvent) event;
-			onGlobalKeyEventOccurred.fire(new KeyboardEvent(
-					e.getEventType(),
-					(e.getSourceComponentId() != null ? (Component) getClientObject(e.getSourceComponentId()) : null),
-					e.getCode(),
-					e.getIsComposing(),
-					e.getKey(),
-					e.getCharCode(),
-					e.getKeyCode(),
-					e.getLocale(),
-					e.getLocation(),
-					e.getRepeat(),
-					e.getAltKey(),
-					e.getCtrlKey(),
-					e.getShiftKey(),
-					e.getMetaKey()
-			));
-		} else if (event instanceof UiRootPanel.NavigationStateChangeEvent) {
-			UiRootPanel.NavigationStateChangeEvent e = (UiRootPanel.NavigationStateChangeEvent) event;
-			Location location = Location.fromUiLocation(e.getLocation());
-			this.currentLocation = location;
-			onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
-		} else {
-			throw new TeamAppsUiApiException(getSessionId(), event.getClass().getName());
+	public void handleStaticEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiRootPanel.GlobalKeyEventOccurredEvent.TYPE_ID -> {
+				UiRootPanel.GlobalKeyEventOccurredEventWrapper e = event.as(UiRootPanel.GlobalKeyEventOccurredEventWrapper.class);
+				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
+						e.getEventType(),
+						(e.getSourceComponentId() != null ? (Component) getClientObject(e.getSourceComponentId()) : null),
+						e.getCode(),
+						e.getIsComposing(),
+						e.getKey(),
+						e.getCharCode(),
+						e.getKeyCode(),
+						e.getLocale(),
+						e.getLocation(),
+						e.getRepeat(),
+						e.getAltKey(),
+						e.getCtrlKey(),
+						e.getShiftKey(),
+						e.getMetaKey()
+				));
+			}
+			case UiRootPanel.NavigationStateChangeEvent.TYPE_ID -> {
+				UiRootPanel.NavigationStateChangeEventWrapper e = event.as(UiRootPanel.NavigationStateChangeEventWrapper.class);
+				Location location = Location.fromUiLocationWrapper(e.getLocation());
+				this.currentLocation = location;
+				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
+			}
+			default -> throw new TeamAppsUiApiException(getSessionId(), event.getClass().getName());
 		}
 	}
 

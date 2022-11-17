@@ -36,17 +36,17 @@ import java.util.stream.Collectors;
 
 public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
-	public final ProjectorEvent<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.NAME);
-	public final ProjectorEvent<SourceMediaTrackType> onSourceMediaTrackEnded = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.NAME);
-	public final ProjectorEvent<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.NAME);
-	public final ProjectorEvent<TrackPublishingFailedEventData> onTrackPublishingFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.NAME);
+	public final ProjectorEvent<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.TYPE_ID);
+	public final ProjectorEvent<SourceMediaTrackType> onSourceMediaTrackEnded = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.TYPE_ID);
+	public final ProjectorEvent<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<TrackPublishingFailedEventData> onTrackPublishingFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.TYPE_ID);
 
-	public final ProjectorEvent<Void> onSubscribingSuccessful = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.NAME);
-	public final ProjectorEvent<String> onSubscribingFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SubscribingFailedEvent.NAME);
+	public final ProjectorEvent<Void> onSubscribingSuccessful = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<String> onSubscribingFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SubscribingFailedEvent.TYPE_ID);
 
-	public final ProjectorEvent<Boolean> onConnectionStateChanged = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.NAME);
-	public final ProjectorEvent<Boolean> onVoiceActivityChanged = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.NAME);
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.ClickedEvent.NAME);
+	public final ProjectorEvent<Boolean> onConnectionStateChanged = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.TYPE_ID);
+	public final ProjectorEvent<Boolean> onVoiceActivityChanged = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.ClickedEvent.TYPE_ID);
 
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;
@@ -95,54 +95,67 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent) {
-			UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent e = (UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent) event;
-			this.onVoiceActivityChanged.fire(e.getActive());
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.VoiceActivityChangedEventWrapper.class);
+				this.onVoiceActivityChanged.fire(e.getActive());
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.ClickedEvent) {
-			UiMediaSoupV3WebRtcClient.ClickedEvent e = (UiMediaSoupV3WebRtcClient.ClickedEvent) event;
-			this.onClicked.fire();
+			}
+			case UiMediaSoupV3WebRtcClient.ClickedEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.ClickedEventWrapper.class);
+				this.onClicked.fire();
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent) {
-			UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent e = (UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent) event;
-			this.onSourceMediaTrackRetrievalFailed.fire(MediaRetrievalFailureReason.valueOf(e.getReason().name()));
+			}
+			case UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEventWrapper.class);
+				this.onSourceMediaTrackRetrievalFailed.fire(MediaRetrievalFailureReason.valueOf(e.getReason().name()));
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent) {
-			UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent e = (UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent) event;
-			this.onSourceMediaTrackEnded.fire(SourceMediaTrackType.valueOf(e.getTrackType().name()));
+			}
+			case UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEventWrapper.class);
+				this.onSourceMediaTrackEnded.fire(SourceMediaTrackType.valueOf(e.getTrackType().name()));
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent) {
-			UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent) event;
-			this.onTrackPublishingSuccessful.fire(new TrackPublishingSuccessfulEventData(e.getAudio(), e.getVideo()));
+			}
+			case UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEventWrapper.class);
+				this.onTrackPublishingSuccessful.fire(new TrackPublishingSuccessfulEventData(e.getAudio(), e.getVideo()));
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent) {
-			UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent) event;
-			this.onTrackPublishingFailed.fire(new TrackPublishingFailedEventData(e.getAudio(), e.getVideo(), e.getErrorMessage()));
+			}
+			case UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.TrackPublishingFailedEventWrapper.class);
+				this.onTrackPublishingFailed.fire(new TrackPublishingFailedEventData(e.getAudio(), e.getVideo(), e.getErrorMessage()));
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent) {
-			UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent) event;
-			this.onSubscribingSuccessful.fire();
+			}
+			case UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEventWrapper.class);
+				this.onSubscribingSuccessful.fire();
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.SubscribingFailedEvent) {
-			UiMediaSoupV3WebRtcClient.SubscribingFailedEvent e = (UiMediaSoupV3WebRtcClient.SubscribingFailedEvent) event;
-			this.onSubscribingFailed.fire(e.getErrorMessage());
+			}
+			case UiMediaSoupV3WebRtcClient.SubscribingFailedEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.SubscribingFailedEventWrapper.class);
+				this.onSubscribingFailed.fire(e.getErrorMessage());
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent) {
-			this.onConnectionStateChanged.fire(((UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent) event).getConnected());
+			}
+			case UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.ConnectionStateChangedEventWrapper.class);
+				this.onConnectionStateChanged.fire(e.getConnected());
 
-		} else if (event instanceof UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent) {
-			UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent e = (UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent) event;
-			lastSeenContextMenuRequestId = e.getRequestId();
-			if (contextMenuProvider != null) {
-				Component contextMenuContent = contextMenuProvider.get();
-				if (contextMenuContent != null) {
-					sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+			}
+			case UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent.TYPE_ID -> {
+				var e = event.as(UiMediaSoupV3WebRtcClient.ContextMenuRequestedEventWrapper.class);
+				lastSeenContextMenuRequestId = e.getRequestId();
+				if (contextMenuProvider != null) {
+					Component contextMenuContent = contextMenuProvider.get();
+					if (contextMenuContent != null) {
+						sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+					} else {
+						sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+					}
 				} else {
-					sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+					closeContextMenu();
 				}
-			} else {
-				closeContextMenu();
+
 			}
 
 		}

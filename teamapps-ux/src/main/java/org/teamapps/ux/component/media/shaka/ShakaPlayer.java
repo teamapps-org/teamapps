@@ -19,9 +19,11 @@
  */
 package org.teamapps.ux.component.media.shaka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.teamapps.common.format.Color;
+import org.teamapps.common.util.ExceptionUtil;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiEventWrapper;
 import org.teamapps.dto.UiShakaManifest;
 import org.teamapps.dto.UiShakaPlayer;
 import org.teamapps.event.ProjectorEvent;
@@ -32,10 +34,10 @@ import org.teamapps.ux.session.SessionContext;
 
 public class ShakaPlayer extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(UiShakaPlayer.ErrorLoadingEvent.NAME);
-	public final ProjectorEvent<UiShakaManifest> onManifestLoaded = createProjectorEventBoundToUiEvent(UiShakaPlayer.ManifestLoadedEvent.NAME);
-	public final ProjectorEvent<Long> onTimeUpdate = createProjectorEventBoundToUiEvent(UiShakaPlayer.TimeUpdateEvent.NAME);
-	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiShakaPlayer.EndedEvent.NAME);
+	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(UiShakaPlayer.ErrorLoadingEvent.TYPE_ID);
+	public final ProjectorEvent<UiShakaManifest> onManifestLoaded = createProjectorEventBoundToUiEvent(UiShakaPlayer.ManifestLoadedEvent.TYPE_ID);
+	public final ProjectorEvent<Long> onTimeUpdate = createProjectorEventBoundToUiEvent(UiShakaPlayer.TimeUpdateEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiShakaPlayer.EndedEvent.TYPE_ID);
 
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
 		SessionContext.current().sendStaticCommand(ShakaPlayer.class, new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
@@ -80,18 +82,26 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEvent event) {
-		if (event instanceof UiShakaPlayer.ErrorLoadingEvent) {
-			onErrorLoading.fire(null);
-		} else if (event instanceof UiShakaPlayer.ManifestLoadedEvent) {
-			UiShakaPlayer.ManifestLoadedEvent e = (UiShakaPlayer.ManifestLoadedEvent) event;
-			onManifestLoaded.fire(e.getManifest());
-		} else if (event instanceof UiShakaPlayer.TimeUpdateEvent) {
-			UiShakaPlayer.TimeUpdateEvent e = (UiShakaPlayer.TimeUpdateEvent) event;
-			onTimeUpdate.fire(e.getTimeMillis());
-			this.timeMillis = e.getTimeMillis();
-		} else if (event instanceof UiShakaPlayer.EndedEvent) {
-			onEnded.fire();
+	public void handleUiEvent(UiEventWrapper event) {
+		switch (event.getTypeId()) {
+			case UiShakaPlayer.ErrorLoadingEvent.TYPE_ID -> {
+				var e = event.as(UiShakaPlayer.ErrorLoadingEventWrapper.class);
+				onErrorLoading.fire(null);
+			}
+			case UiShakaPlayer.ManifestLoadedEvent.TYPE_ID -> {
+				var e = event.as(UiShakaPlayer.ManifestLoadedEventWrapper.class);
+				UiShakaManifest manifest = ExceptionUtil.softenExceptions(() -> new ObjectMapper().treeToValue(e.getManifest().getJsonNode(), UiShakaManifest.class));
+				onManifestLoaded.fire(manifest);
+			}
+			case UiShakaPlayer.TimeUpdateEvent.TYPE_ID -> {
+				var e = event.as(UiShakaPlayer.TimeUpdateEventWrapper.class);
+				onTimeUpdate.fire(e.getTimeMillis());
+				this.timeMillis = e.getTimeMillis();
+			}
+			case UiShakaPlayer.EndedEvent.TYPE_ID -> {
+				var e = event.as(UiShakaPlayer.EndedEventWrapper.class);
+				onEnded.fire();
+			}
 		}
 	}
 
