@@ -1,7 +1,8 @@
 {
   "name": "teamapps-client-communication",
   "version": "0.9.155-SNAPSHOT",
-  "main": "dist/js/main.js",
+  "type": "module",
+  "exports": "./dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "sync-pom-version": "node build/sync-pom-version.js",

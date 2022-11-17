@@ -16,14 +16,14 @@
     "watch-tsc": "yarn run del_dist && tsc --watch",
     "serve": "web-dev-server"
   },
-  "dependencies": {
-    "teamapps-client-communication": "workspace:*"
-  },
   "devDependencies": {
     "cross-var": "^1.1.0",
     "esbuild": "^0.15.13",
     "replace-in-file": "^6.3.5",
     "sync-pom-version-to-package": "^1.6.1",
     "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "teamapps-client-communication": "workspace:*"
   }
 }

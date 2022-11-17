@@ -16,7 +16,7 @@ esbuild.build({
     bundle: true,
     outfile: 'dist/teamapps-core.js',
     format: 'esm',
-    platform: "neutral",
+    platform: "node",
     mainFields: ["browser", "module", "main"],
     sourcemap: true,
     loader: {
@@ -30,7 +30,7 @@ esbuild.build({
     assetNames: "assets/[name]-[hash]",
     plugins: [
         alias({
-            '@less/teamapps.less': path.resolve(__dirname, `less/teamapps.less`),
+            '@less/teamapps.less': path.resolve(__dirname, `src/main/less/teamapps.less`),
         }),
         lessLoader(),
     ],
@@ -39,7 +39,7 @@ esbuild.build({
     .then(async (result, x, y) => {
         console.log("Compressing result files...");
         await compressFile("dist/teamapps-core.js");
-        await compressFile("dist/teamapps-core.css");
+        // await compressFile("dist/teamapps-core.css");
         console.log("⚡ esbuild complete! ⚡")
     })
     .catch(() => process.exit(1));
