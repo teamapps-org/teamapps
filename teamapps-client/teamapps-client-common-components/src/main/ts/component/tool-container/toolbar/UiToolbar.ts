@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "../../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "../teamapps-client-core";
 import {UiToolbarCommandHandler, UiToolbarConfig, UiToolbarEventSource} from "../../../generated/UiToolbarConfig";
 import {UiToolbarButtonGroup as UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroup";
 import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
@@ -27,12 +27,12 @@ import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
 import {UiDropDown} from "../../../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
-import {TeamAppsUiComponentRegistry} from "../../../TeamAppsUiComponentRegistry";
+import {TeamAppsUiComponentRegistry} from "../teamapps-client-core";
 import {Emptyable} from "../../../util/Emptyable";
 import {UiToolbarButton} from "./UiToolbarButton";
 import {UiToolbarButtonGroup} from "./UiToolbarButtonGroup";
 import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../../Common";
-import {UiComponent} from "../../UiComponent";
+import {UiComponent} from "../teamapps-client-core";
 import {UiToolbarButtonGroupPosition} from "../../../generated/UiToolbarButtonGroupPosition";
 
 interface FQButtonId {

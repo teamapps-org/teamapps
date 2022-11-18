@@ -19,7 +19,7 @@
  */
 
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {

@@ -24,7 +24,7 @@ import {createUiCurrencyValueConfig, UiCurrencyValueConfig} from "../../generate
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiCurrencyFieldCommandHandler, UiCurrencyFieldConfig, UiCurrencyFieldEventSource} from "../../generated/UiCurrencyFieldConfig";
 import {UiField} from "./UiField";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {deepEquals, selectElementContents} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {

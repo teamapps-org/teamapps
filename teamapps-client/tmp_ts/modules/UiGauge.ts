@@ -20,7 +20,7 @@
 
 import {UiGaugeCommandHandler, UiGaugeConfig} from "../generated/UiGaugeConfig";
 import {UiGaugeOptionsConfig} from "../generated/UiGaugeOptionsConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";

@@ -26,9 +26,9 @@ import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./U
 import {generateUUID} from "../../Common";
 import {ViewContainer, ViewContainerListener} from "./ViewContainer";
 import {UiEvent as UiEvent} from "teamapps-client-communication";
-import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "teamapps-client-core";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "teamapps-client-core";
 
 export interface ChildWindowViewContainerListener extends ViewContainerListener {
 	handleInitialized(windowId: string, initialViewInfo: ViewInfo): void;

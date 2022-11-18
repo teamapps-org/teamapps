@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "../../AbstractUiComponent";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {AbstractUiComponent} from "../teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {
 	UiMediaSoupV3WebRtcClient_ClickedEvent,
 	UiMediaSoupV3WebRtcClient_ConnectionStateChangedEvent,
@@ -37,7 +37,7 @@ import {
 	UiMediaSoupV3WebRtcClientConfig,
 	UiMediaSoupV3WebRtcClientEventSource
 } from "../../../generated/UiMediaSoupV3WebRtcClientConfig";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
 import {arraysEqual, calculateDisplayModeInnerSize, deepEquals, findClassesByFunction, parseHtml} from "../../Common";
 import {ContextMenu} from "../../micro-components/ContextMenu";

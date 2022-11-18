@@ -19,16 +19,16 @@
  */
 import {TeamAppsConnection, TeamAppsConnectionListener} from "./TeamAppsConnection";
 import {ReconnectingCompressingWebSocketConnection} from "./ReconnectingWebSocketConnection";
-import {logException} from "../Common";
 import {
 	AbstractClientPayloadMessage,
-	CMD, CMD_REQUEST, CMD_RESULT, EVENT,
+	CMD_REQUEST, CMD_RESULT, EVENT,
 	INIT, INIT_NOK, INIT_OK, MULTI_CMD, QUERY, QUERY_RESULT,
 	REINIT, REINIT_NOK, REINIT_OK, SESSION_CLOSED,
 	UiClientInfo, UiEvent,
 	UiQuery,
 	UiSessionClosingReason
-} from "teamapps-client-communication";
+} from "../generated";
+import {CMD} from "../dto/CMD";
 
 
 enum TeamAppsProtocolStatus {
@@ -82,7 +82,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 								this.sendResult(cmd.id, result);
 							}
 						} catch (reason) {
-							logException(reason);
+							this.logException(reason);
 						} finally {
 							this.ensureEnoughCommandsRequested();
 						}
@@ -258,7 +258,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 			try {
 				this.sendPayloadMessage(this.payloadMessagesQueue[i]);
 			} catch (e) {
-				logException(e);
+				this.logException(e);
 				break;
 			}
 		}
@@ -276,5 +276,10 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 
 	private log(...message: string[]) {
 		console.log("TeamAppsConnection: " + message);
+	}
+
+
+	private logException(e: any, additionalString?: string) {
+		console.error(e, e.stack, additionalString);
 	}
 }

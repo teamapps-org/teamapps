@@ -21,7 +21,7 @@
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiNavigationBarButtonConfig} from "../generated/UiNavigationBarButtonConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {

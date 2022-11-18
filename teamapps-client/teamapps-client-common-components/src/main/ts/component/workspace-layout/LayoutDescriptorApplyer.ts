@@ -30,9 +30,9 @@ import {SplitPaneItem} from "./SplitPaneItem";
 import {TabPanelItem} from "./TabPanelItem";
 import {LocalViewContainer} from "./LocalViewContainer";
 import * as log from "loglevel";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./UiWorkSpaceLayout";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "teamapps-client-core";
 
 export class LayoutDescriptorApplyer {
 

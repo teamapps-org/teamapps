@@ -19,10 +19,10 @@
  */
 import {UiComponentConfig, UiSplitDirection, UiSplitSizePolicy} from "../../generated";
 import {UiSplitPane} from "../UiSplitPane";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {ItemTreeItem} from "./ItemTree";
 import {generateUUID} from "../../Common";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "teamapps-client-core";
 
 export class SplitPaneItem implements ItemTreeItem<UiSplitPane> {
 	id: string;

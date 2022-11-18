@@ -20,7 +20,7 @@
 import {TrivialDateTimeField} from "../../trivial-components/TrivialDateTimeField";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	AbstractUiDateTimeFieldCommandHandler,
 	AbstractUiDateTimeFieldConfig,

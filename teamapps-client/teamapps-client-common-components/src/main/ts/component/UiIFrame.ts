@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiIFrameCommandHandler, UiIFrameConfig} from "../generated/UiIFrameConfig";
 import {parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";

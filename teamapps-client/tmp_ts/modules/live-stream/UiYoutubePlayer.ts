@@ -21,8 +21,8 @@
 
 
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
-import {AbstractUiComponent} from "../AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {generateUUID, parseHtml} from "../Common";
 import {UiYoutubePlayerConfig} from "../../generated/UiYoutubePlayerConfig";
 

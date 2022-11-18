@@ -19,7 +19,7 @@
  */
 
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
-import {TeamAppsEvent} from "../../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "../teamapps-client-core";
 import {UiToolbarButtonGroup as UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroup";
 import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
 import {createUiDropDownButtonClickInfo, UiDropDownButtonClickInfo} from "../../../generated/UiDropDownButtonClickInfo";
@@ -27,9 +27,9 @@ import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
 import {defaultSpinnerTemplate, doOnceOnClickOutsideElement, getScrollParent, insertAfter, parseHtml} from "../../../Common";
 import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
-import {TeamAppsUiComponentRegistry} from "../../../TeamAppsUiComponentRegistry";
+import {TeamAppsUiComponentRegistry} from "../teamapps-client-core";
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
-import {UiComponent} from "../../UiComponent";
+import {UiComponent} from "../teamapps-client-core";
 import {UiToolAccordionButton} from "./UiToolAccordionButton";
 
 export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConfig> implements UiToolAccordionCommandHandler, UiToolAccordionEventSource {

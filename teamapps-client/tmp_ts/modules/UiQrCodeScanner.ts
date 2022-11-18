@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {UiQrCodeScanner_QrCodeDetectedEvent, UiQrCodeScannerCommandHandler, UiQrCodeScannerConfig, UiQrCodeScannerEventSource} from "../generated/UiQrCodeScannerConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";

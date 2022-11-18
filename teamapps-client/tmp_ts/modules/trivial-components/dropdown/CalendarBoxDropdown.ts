@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {TrivialCalendarBox} from "../TrivialCalendarBox";
 import {NavigationDirection} from "../TrivialCore";
 import {LocalDateTime} from "../../datetime/LocalDateTime";

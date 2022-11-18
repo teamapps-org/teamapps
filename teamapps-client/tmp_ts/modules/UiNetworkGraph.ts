@@ -22,7 +22,7 @@
 
 import * as d3 from "d3";
 import {ForceLink, Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
 	UiNetworkGraph_NodeClickedEvent,

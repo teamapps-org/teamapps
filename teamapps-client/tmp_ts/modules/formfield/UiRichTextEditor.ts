@@ -19,7 +19,7 @@
  */
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {
 	UiRichTextEditor_ImageUploadFailedEvent,

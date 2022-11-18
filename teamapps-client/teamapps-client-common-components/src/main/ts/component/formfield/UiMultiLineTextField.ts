@@ -27,10 +27,10 @@ import {
 	UiTextInputHandlingField_TextInputEvent
 } from "../../generated";
 import {Constants, escapeHtml, hasVerticalScrollBar, parseHtml} from "../../Common";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {AbstractUiField} from "./AbstractUiField";
 
 export class UiMultiLineTextField extends AbstractUiField<UiMultiLineTextFieldConfig, string> implements UiMultiLineTextFieldEventSource, UiMultiLineTextFieldCommandHandler {

@@ -22,8 +22,8 @@ import {
 	UiLocalTimeFieldConfig,
 	UiLocalTimeFieldEventSource
 } from "../../../generated/UiLocalTimeFieldConfig";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {AbstractUiTimeField} from "./AbstractUiTimeField";
 import {arraysEqual} from "../../Common";
 import {LocalDateTime} from "../../datetime/LocalDateTime";

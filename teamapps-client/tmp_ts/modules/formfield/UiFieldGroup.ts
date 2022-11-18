@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {UiFieldGroupCommandHandler, UiFieldGroupConfig} from "../../generated/UiFieldGroupConfig";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {parseHtml} from "../Common";
 import {UiField} from "./UiField";
 

@@ -27,10 +27,9 @@ import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {escapeHtml, getAutoCompleteOffValue, parseHtml} from "../../Common";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {TeamAppsEvent} from "teamapps-client-core";
 
 export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends AbstractUiField<C, string> implements UiTextFieldEventSource, UiTextFieldCommandHandler {
 
@@ -48,7 +47,7 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 </div>`);
 		this.$field = this.$wrapper.querySelector(":scope input");
 		if (!config.autofill) {
-			this.$field.autocomplete = getAutoCompleteOffValue();
+			this.$field.autocomplete = "no";
 		}
 		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
 		$clearButton.addEventListener('click',() => {

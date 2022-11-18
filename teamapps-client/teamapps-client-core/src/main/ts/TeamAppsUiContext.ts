@@ -19,7 +19,6 @@
  */
 import {UiClientObjectConfig, UiComponentConfig, UiConfiguration} from "./generated";
 import {UiCommand, UiEvent} from "teamapps-client-communication";
-import {TemplateRegistry} from "./TemplateRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiClientObject} from "./UiClientObject";
 
@@ -27,7 +26,6 @@ export interface TeamAppsUiContext {
 	readonly sessionId: string;
 	readonly isHighDensityScreen: boolean;
 	readonly config: UiConfiguration;
-	readonly templateRegistry: TemplateRegistry;
 
 	getClientObjectById(id: string): Promise<UiClientObject>;
 }

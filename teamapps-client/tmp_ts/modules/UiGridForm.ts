@@ -26,7 +26,7 @@ import {
 } from "../generated/UiGridFormConfig";
 import {UiFormLayoutPolicyConfig} from "../generated/UiFormLayoutPolicyConfig";
 import {UiFormSectionConfig} from "../generated/UiFormSectionConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {

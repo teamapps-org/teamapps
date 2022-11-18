@@ -43,9 +43,9 @@ export interface <c.typeScriptIdentifier> <if(c.superClassAndDirectlyImplemented
 	<c.queryDeclaration:queryDeclaration(); separator=";\n">
 }
 
-<if(c.referenceableBaseClass)>
+<if(c.referencableBaseClass)>
 export interface <c.Identifier>Reference {
-	<c.referenceableProperties:typeScriptPropertyDeclaration(true); separator="\n">
+	<c.referencableProperties:typeScriptPropertyDeclaration(true); separator="\n">
 }
 <endif>
 
@@ -115,6 +115,12 @@ export interface <c.typeScriptIdentifier> <if(c.superInterfaces)>extends <c.supe
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
 	<c.queryDeclaration:queryDeclaration(); separator=";\n">
 }
+
+<if(c.referencableBaseClass)>
+export interface <c.Identifier>Reference {
+	<c.referencableProperties:typeScriptPropertyDeclaration(true); separator="\n">
+}
+<endif>
 
 <if(c.hasCommands)>
 export interface <c.Identifier.text>CommandHandler <if(c.superInterfacesWithCommands)>extends <c.superInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{

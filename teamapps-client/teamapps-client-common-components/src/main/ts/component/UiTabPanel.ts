@@ -25,9 +25,9 @@ import {UiTab as UiTabConfig} from "../generated/UiTab";
 import {bind} from "../util/Bind";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {UiToolButton} from "./UiToolButton";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {UiDropDown} from "../micro-components/UiDropDown";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {
 	UiTabPanel_TabClosedEvent,

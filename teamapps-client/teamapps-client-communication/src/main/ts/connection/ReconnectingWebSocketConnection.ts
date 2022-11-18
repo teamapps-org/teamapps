@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractServerMessage, AbstractClientMessage} from "teamapps-client-communication";
 import stringify from "json-stable-stringify";
+import {AbstractClientMessage, AbstractServerMessage} from "../generated";
 
 export interface ReconnectingCompressingWebSocketConnectionListener {
 	onConnected: () => void;

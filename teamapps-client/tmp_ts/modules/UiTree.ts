@@ -28,7 +28,7 @@ import {
 } from "../generated/UiTreeConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TrivialTree} from "./trivial-components/TrivialTree";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";

@@ -21,12 +21,12 @@ import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {TrivialComboBox} from "../../trivial-components/TrivialComboBox";
 import {TimeSuggestionEngine} from "./TimeSuggestionEngine";
 import {UiField} from "./../UiField";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
 } from "../../../generated/UiTextInputHandlingFieldConfig";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
 import {
 	AbstractUiTimeFieldCommandHandler,

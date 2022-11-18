@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiToolButton_ClickedEvent,
 	UiToolButton_DropDownOpenedEvent,
@@ -26,7 +26,7 @@ import {
 	UiToolButtonConfig,
 	UiToolButtonEventSource
 } from "../generated/UiToolButtonConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {bind} from "../util/Bind";

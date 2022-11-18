@@ -19,11 +19,11 @@
  */
 import {UiPanel} from "../UiPanel";
 import {UiComponentConfig, UiPanel_WindowButtonClickedEvent, UiWindowButtonType} from "../../generated";
-import {bind} from "../../util/Bind";
+import {bind} from "teamapps-client-core";
 import {TabPanelItem} from "./TabPanelItem";
 import {ViewInfo} from "./ViewInfo";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {UiComponent} from "../UiComponent";
+import {TeamAppsEvent} from "teamapps-client-core";
+import {UiComponent} from "teamapps-client-core";
 
 export class View implements ViewInfo {
 

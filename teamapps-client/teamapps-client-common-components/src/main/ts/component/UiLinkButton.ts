@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiLinkButton_ClickedEvent, UiLinkButtonCommandHandler, UiLinkButtonConfig, UiLinkButtonEventSource} from "../generated/UiLinkButtonConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {parseHtml} from "../Common";
 import {UiLinkTarget} from "../generated/UiLinkTarget";

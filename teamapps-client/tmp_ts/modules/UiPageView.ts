@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiPageViewBlock_Alignment, UiPageViewBlockConfig} from "../generated/UiPageViewBlockConfig";
 import {UiMessagePageViewBlockConfig} from "../generated/UiMessagePageViewBlockConfig";

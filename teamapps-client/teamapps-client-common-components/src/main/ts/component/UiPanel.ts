@@ -21,8 +21,8 @@
 import {UiPanelHeaderField} from "../generated/UiPanelHeaderField";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiToolButton} from "./UiToolButton";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {UiPanel_WindowButtonClickedEvent, UiPanelCommandHandler, UiPanelConfig, UiPanelEventSource,} from "../generated/UiPanelConfig";
 import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";

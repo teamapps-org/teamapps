@@ -17,17 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
 
-managed class UiComponent extends UiClientObject {
-	String debuggingId;
-	boolean visible = true;
-	Dictionary<Dictionary<String>> stylesBySelector;
-	Dictionary<Dictionary<Boolean>> classNamesBySelector;
-	Dictionary<Dictionary<String>> attributesBySelector; // "__ta-deleted-attribute__" for removing attributes
+import {UiCommand, UiEvent, UiQuery, UiSessionClosingReason} from "../generated";
 
-	command setVisible(boolean visible);
-	command setStyle(String selector, Dictionary<String> styles);
-	command setClassNames(String selector, Dictionary<Boolean> classNames);
-	command setAttributes(String selector, Dictionary<String> attributes);
+export const typescriptDeclarationFixConstant = 1;
+
+export interface TeamAppsConnection {
+	sendEvent(event: UiEvent): void;
+	sendQuery(query: UiQuery): Promise<any>;
+}
+
+export interface TeamAppsConnectionListener {
+	onConnectionInitialized(): void;
+	onConnectionErrorOrBroken(reason: UiSessionClosingReason, message?: string): void;
+	executeCommand(libraryUuid: string, clientObjectId: string, uiCommand: UiCommand): Promise<any>;
 }

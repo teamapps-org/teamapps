@@ -28,7 +28,7 @@ import {
 } from "../../generated/UiTagComboBoxConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiField} from "./UiField";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {

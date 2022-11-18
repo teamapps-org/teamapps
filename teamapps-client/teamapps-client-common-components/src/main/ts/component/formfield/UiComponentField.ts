@@ -25,10 +25,10 @@ import {
 	UiFieldEditingMode
 } from "../../generated";
 import {AbstractUiField} from "./AbstractUiField";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {parseHtml} from "../../Common";
-import {UiComponent} from "../UiComponent";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {parseHtml} from "teamapps-client-core";
+import {UiComponent} from "teamapps-client-core";
 
 
 export class UiComponentField extends AbstractUiField<UiComponentFieldConfig, void> implements UiComponentFieldEventSource, UiComponentFieldCommandHandler {

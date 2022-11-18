@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {
 	UiConfiguration,
 	UiRelativeWorkSpaceViewPosition,
@@ -40,9 +40,9 @@ import {
 	UiWorkSpaceLayoutView,
 	UiWorkSpaceLayoutViewGroupItem
 } from "../../generated";
-import {AbstractUiComponent} from "../AbstractUiComponent";
-import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../../TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {ViewInfo} from "./ViewInfo";
 import {ViewContainer} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
@@ -50,7 +50,7 @@ import {LocalViewContainer} from "./LocalViewContainer";
 import {ChildWindowViewContainer} from "./ChildWindowViewContainer";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "teamapps-client-core";
 import {UiProgressDisplay} from "../UiProgressDisplay";
 import {UiMultiProgressDisplay} from "../UiMultiProgressDisplay";
 

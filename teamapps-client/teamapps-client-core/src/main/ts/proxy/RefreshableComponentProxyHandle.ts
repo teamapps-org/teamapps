@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {insertAtIndex} from "../Common";
-import {TeamAppsEvent} from "./TeamAppsEvent";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {SimpleObjectProxy} from "./SimpleObjectProxy";
 import {UiComponent} from "../component/UiComponent";
+import {insertAtIndex} from "../util/domUtil";
 
 export class RefreshableComponentProxyHandle<T extends UiComponent = UiComponent> {
 	public proxy: T;

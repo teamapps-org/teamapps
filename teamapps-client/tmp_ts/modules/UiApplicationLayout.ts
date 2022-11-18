@@ -22,7 +22,7 @@ import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiToolbarConfig} from "../generated/UiToolbarConfig";
 import {UiSplitPaneConfig} from "../generated/UiSplitPaneConfig";
 import {UiSplitPane} from "./UiSplitPane";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {UiApplicationLayoutConfig} from "../generated/UiApplicationLayoutConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";

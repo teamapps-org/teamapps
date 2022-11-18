@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {QueryFunction} from "../TrivialCore";
 import {TrivialTreeBox} from "../TrivialTreeBox";
 

@@ -19,7 +19,7 @@
  */
 import {UiField} from "./UiField";
 import {UiColorPickerConfig, UiColorPickerEventSource} from "../../generated/UiColorPickerConfig";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";

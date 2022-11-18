@@ -24,7 +24,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiHttpLiveStreamPlayer} from "./live-stream/UiHttpLiveStreamPlayer";
 import {UiYoutubePlayer} from "./live-stream/UiYoutubePlayer";
 import {UiLiveStreamComPlayer} from "./live-stream/UiLiveStreamComPlayer";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {applyDisplayMode, css, fadeIn, fadeOut, generateUUID, parseHtml} from "./Common";
 import {LiveStreamPlayer} from "./live-stream/LiveStreamPlayer";

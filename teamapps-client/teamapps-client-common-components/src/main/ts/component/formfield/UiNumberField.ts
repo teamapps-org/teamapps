@@ -28,10 +28,9 @@ import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {getAutoCompleteOffValue, parseHtml} from "../../Common";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {NumberParser} from "../../util/NumberParser";
 
 export class UiNumberField extends AbstractUiField<UiNumberFieldConfig, number> implements UiNumberFieldEventSource, UiNumberFieldCommandHandler {
@@ -71,7 +70,7 @@ export class UiNumberField extends AbstractUiField<UiNumberFieldConfig, number> 
 
 		this.$wrapper = parseHtml(`<div class="UiNumberField form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
-		<input autocomplete="${getAutoCompleteOffValue()}" type="text"></input>
+		<input autocomplete="no" type="text"></input>
 		<div class="clear-button tr-remove-button"></div> 
 	</div>             
     <div class="slider field-readonly-invisible field-border-visibility">

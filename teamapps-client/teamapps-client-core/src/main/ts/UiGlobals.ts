@@ -4,17 +4,16 @@ import {
 	UiComponentConfig,
 	UiConfiguration,
 	UiGenericErrorMessageOption, UiGlobals_GlobalKeyEventOccurredEvent, UiGlobals_NavigationStateChangeEvent,
-	UiTemplate
 } from "./generated";
 import * as moment from "moment-timezone";
-import {createUiLocation, parseHtml} from "./Common";
-import {releaseWakeLock, requestWakeLock} from "./util/WakeLock";
+import {releaseWakeLock, requestWakeLock} from "./util/wakeLock";
 import {exitFullScreen} from "./util/fullscreen";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiComponent} from "./component/UiComponent";
 import {Showable} from "./util/Showable";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiRootPanel} from "./component/UiRootPanel";
+import {parseHtml} from "./util/parseHtml";
+import {createUiLocation} from "./util/location";
 
 export class UiGlobals {
 
@@ -109,16 +108,6 @@ export class UiGlobals {
 			link.dispatchEvent(e);
 			return true;
 		}
-	}
-
-	public static registerTemplate(name: string, template: UiTemplate, context: TeamAppsUiContext) {
-		context.templateRegistry.registerTemplate(name, template);
-	}
-
-	public static registerTemplates(templates: { [name: string]: UiTemplate }, context: TeamAppsUiContext) {
-		Object.keys(templates).forEach(templateName => {
-			this.registerTemplate(templateName, templates[templateName], context);
-		});
 	}
 
 	public static addClientToken(token: string) {

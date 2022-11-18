@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiElegantPanelCommandHandler, UiElegantPanelConfig} from "../generated/UiElegantPanelConfig";

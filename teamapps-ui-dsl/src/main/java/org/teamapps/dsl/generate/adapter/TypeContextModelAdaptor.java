@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.generate.TeamAppsGeneratorException;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 import java.util.Arrays;
@@ -167,7 +168,16 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if (isDictionary(typeContext)) {
 			return "Map<String, " + getJavaTypeString(typeContext.typeReference().typeArguments().typeArgument(0).type()) + ">";
 		} else if (isUiClientObjectReference(typeContext)) {
-			return model.findSelfNearestAncestorClassWithReferenceableAttribute(model.findReferencedClass(typeContext)).Identifier().getText() + "Reference";
+			TeamAppsDtoParser.ClassDeclarationContext referencedClass = model.findReferencedClass(typeContext);
+			TeamAppsDtoParser.InterfaceDeclarationContext referencedInterface = model.findReferencedInterface(typeContext);
+			if (referencedClass != null) {
+				return model.findReferencableBaseClassName(referencedClass) + "Reference";
+			} else if (referencedInterface != null) {
+				return model.findReferencableBaseInterfaceName(referencedInterface) + "Reference";
+			} else {
+				throw new TeamAppsGeneratorException("Cannot find referencable class or interface for type " + typeContext.getText() + ". Are you sure it is a referencable class or interface (has @Referencable properties)?");
+			}
+
 		} else {
 			return typeContext.getText();
 		}

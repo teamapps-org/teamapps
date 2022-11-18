@@ -27,7 +27,7 @@ import {
 import {ViewInfo} from "./ViewInfo";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "teamapps-client-core";
 
 export interface ViewContainer {
 	windowId: string;

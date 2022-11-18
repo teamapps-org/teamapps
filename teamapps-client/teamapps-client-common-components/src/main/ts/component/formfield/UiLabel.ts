@@ -18,12 +18,12 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractUiField} from "./AbstractUiField";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiFieldEditingMode, UiLabel_ClickedEvent, UiLabelCommandHandler, UiLabelConfig, UiLabelEventSource} from "../../generated";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {parseHtml} from "../../Common";
-import {UiComponent} from "../UiComponent";
+import {TeamAppsEvent} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {parseHtml} from "teamapps-client-core";
+import {UiComponent} from "teamapps-client-core";
 
 export class UiLabel extends AbstractUiField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
 	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>();

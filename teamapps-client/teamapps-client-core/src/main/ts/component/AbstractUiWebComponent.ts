@@ -1,7 +1,7 @@
 import {UiComponent} from "./UiComponent";
 import {CustomElement} from "../custom-declarations/web-components";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {UiComponentConfig} from "../generated";
 import {debounce, DebounceMode} from "../util/debounce";
 import {StyleManager} from "../util/StyleManager";
 

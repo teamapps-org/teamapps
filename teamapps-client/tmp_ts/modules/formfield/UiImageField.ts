@@ -20,7 +20,7 @@
 import {UiField} from "./UiField";
 import {UiImageFieldCommandHandler, UiImageFieldConfig, UiImageFieldEventSource} from "../../generated/UiImageFieldConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiBorderConfig} from "../../generated/UiBorderConfig";
 import {UiShadowConfig} from "../../generated/UiShadowConfig";

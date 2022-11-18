@@ -34,7 +34,7 @@ import {
 	UiCalendarConfig,
 	UiCalendarEventSource
 } from "../generated/UiCalendarConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiCalendarViewMode} from "../generated/UiCalendarViewMode";
 import {UiCalendarEventRenderingStyle} from "../generated/UiCalendarEventRenderingStyle";

@@ -18,8 +18,8 @@
  * =========================LICENSE_END==================================
  */
 import {UiPageTransition, UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {pageTransition, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";

@@ -22,7 +22,7 @@ import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiField} from "./UiField";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiComboBoxCommandHandler, UiComboBoxConfig, UiComboBoxEventSource} from "../../generated/UiComboBoxConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";

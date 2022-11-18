@@ -19,22 +19,30 @@
  */
 "use strict";
 
-import {capitalizeFirstLetter, createUiLocation, generateUUID, logException} from "./Common";
+import {capitalizeFirstLetter, generateUUID} from "./util/string-util";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {UiComponentConfig, UiConfiguration, UiGenericErrorMessageOption, UiClientObjectConfig} from "./generated";
-import {createUiClientInfo, UiCommand, UiEvent, UiQuery, UiSessionClosingReason} from "teamapps-client-communication";
-import {TeamAppsConnection, TeamAppsConnectionListener} from "./communication/TeamAppsConnection";
+import {UiClientObjectConfig, UiComponentConfig, UiConfiguration, UiGenericErrorMessageOption} from "./generated";
+import {
+	createUiClientInfo,
+	TeamAppsConnection,
+	TeamAppsConnectionImpl,
+	TeamAppsConnectionListener,
+	UiCommand,
+	UiEvent,
+	UiQuery,
+	UiSessionClosingReason
+} from "teamapps-client-communication";
 import * as jstz from "jstz";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {TemplateRegistry} from "./TemplateRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {bind} from "./util/Bind";
-import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from "./util/RefreshableComponentProxyHandle";
-import {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
+import {bind} from "./util/bind";
+import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from "./proxy/RefreshableComponentProxyHandle";
 import {UiComponent} from "./component/UiComponent";
 import {UiClientObject} from "./UiClientObject";
 import {Showable} from "./util/Showable";
 import {UiGlobals} from "./UiGlobals";
+import {logException} from "./util/exception-util";
+import {createUiLocation} from "./util/location";
 
 type ClientObjectClass<T extends UiClientObject = UiClientObject> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
 
@@ -113,7 +121,6 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		themeClassName: null,
 		optimizedForTouch: false
 	};
-	public readonly templateRegistry: TemplateRegistry = new TemplateRegistry(this);
 
 	private libraryModules: Map<string, Promise<any>> = new Map();
 	private componentClasses: Map<string, Promise<ClientObjectClassWrapper>> = new Map();

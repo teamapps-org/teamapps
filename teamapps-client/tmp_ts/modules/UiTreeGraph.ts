@@ -20,7 +20,7 @@
 
 import * as d3 from "d3";
 import {BaseType, HierarchyNode, HierarchyPointLink, HierarchyPointNode, Selection, ZoomBehavior} from "d3";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {
 	UiTreeGraph_NodeClickedEvent,
 	UiTreeGraph_NodeExpandedOrCollapsedEvent,

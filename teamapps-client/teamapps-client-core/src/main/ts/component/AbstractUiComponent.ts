@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {generateUUID} from "../Common";
+import {generateUUID} from "../util/string-util";
 import {debounce, DebounceMode} from "../util/debounce";
 import {DeferredExecutor} from "../util/DeferredExecutor";
 import {UiComponent} from "./UiComponent";

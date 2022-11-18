@@ -18,12 +18,10 @@ managed class UiGlobals {
 
     static command setConfig(UiConfiguration config);
     static command setThemeClassName(String theme);
-    static command setSessionMessageWindows(UiWindow* expiredMessageWindow, UiWindow* errorMessageWindow, UiWindow* terminatedMessageWindow);
+    static command setSessionMessageWindows(UiShowable* expiredMessageWindow, UiShowable* errorMessageWindow, UiShowable* terminatedMessageWindow);
 
     static command setPageTitle(String pageTitle);
     static command addRootComponent(String containerElementId, UiComponent* component); // containerDomSelector == null --> body
-    static command registerTemplate(String id, UiTemplate template);
-    static command registerTemplates(Dictionary<UiTemplate> templates);
 
     static command addClientToken(String token);
     static command removeClientToken(String token);
@@ -33,9 +31,6 @@ managed class UiGlobals {
     static command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, int animationDuration = 1000);
     static command exitFullScreen();
     static command showDialogMessage(String icon, String title, String message, List<UiGenericErrorMessageOption> options);
-
-    static command showPopup(UiPopup* popup);
-    static command showPopupAtCurrentMousePosition(UiPopup* popup);
 
     // uuid is a server-generated id for this particular lock. Multiple locks are possible!
     static command requestWakeLock(String uuid) returns boolean;
@@ -49,4 +44,12 @@ managed class UiGlobals {
     static command setFavicon(String url);
     static command setTitle(String title);
 
+}
+
+enum KeyEventType {
+    KEY_DOWN, KEY_UP
+}
+
+enum UiGenericErrorMessageOption {
+	OK, RELOAD
 }

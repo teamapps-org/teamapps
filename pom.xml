@@ -37,6 +37,7 @@
         <module>teamapps-material-icon-provider</module>
         <module>teamapps-ui-dsl</module>
         <module>teamapps-client/teamapps-client-communication</module>
+        <module>teamapps-client/teamapps-client-core</module>
         <module>teamapps-client/teamapps-client-common-components</module>
         <module>teamapps-ux</module>
         <module>teamapps-server-jetty-embedded</module>

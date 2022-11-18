@@ -22,7 +22,7 @@ import "shaka-player/dist/controls.css"
 import "@less/components/UiShakaPlayer.less"
 
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {

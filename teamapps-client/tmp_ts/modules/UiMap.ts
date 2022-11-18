@@ -20,7 +20,7 @@
 ///<reference types="leaflet.heat"/>
 
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {createUiMapPolylineConfig, UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";

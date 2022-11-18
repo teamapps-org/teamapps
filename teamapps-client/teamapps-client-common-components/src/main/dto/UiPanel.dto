@@ -60,7 +60,7 @@ class UiPanelHeaderField {
 	int maxWidth = 200;
 }
 
-managed class UiWindow extends UiPanel {
+managed class UiWindow extends UiPanel implements UiShowable {
 	boolean modal = true;
 	int width = 0; // 0 = full width
 	int height = 0; // 0 = full height, -1 = auto

@@ -19,8 +19,8 @@
  */
 package org.teamapps.dto;
 
-managed class UiClientObject {
-	@Referenceable String id;
+managed interface UiClientObject {
+	@Referencable String id;
     List<String> listeningEvents;
     List<String> listeningQueries;
 }

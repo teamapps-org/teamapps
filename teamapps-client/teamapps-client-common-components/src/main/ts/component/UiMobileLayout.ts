@@ -20,8 +20,8 @@
 
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiNavigationBar} from "./UiNavigationBar";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiMobileLayoutCommandHandler, UiMobileLayoutConfig} from "../generated/UiMobileLayoutConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {pageTransition, pageTransitionAnimationPairs, parseHtml} from "../Common";

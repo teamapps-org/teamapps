@@ -22,7 +22,7 @@ import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
 import {TabPanelItem} from "./TabPanelItem";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "teamapps-client-core";
 
 
 export interface ItemTreeItem<C extends UiComponent<UiComponentConfig> = UiComponent<UiComponentConfig>> {

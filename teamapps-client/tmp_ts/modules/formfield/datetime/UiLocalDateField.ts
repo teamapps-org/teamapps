@@ -21,18 +21,18 @@ import {TrivialComboBox} from "../../trivial-components/TrivialComboBox";
 import {DateSuggestionEngine} from "./DateSuggestionEngine";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
 } from "../../../generated/UiTextInputHandlingFieldConfig";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
 import {deepEquals} from "../../Common";
 import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFormatDescriptorConfig";
 import {LocalDateTime} from "../../datetime/LocalDateTime";
 import {createDateRenderer} from "./datetime-rendering";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {
 	UiLocalDateField_DropDownMode,
 	UiLocalDateFieldCommandHandler,

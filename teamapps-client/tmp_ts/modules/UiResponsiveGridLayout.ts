@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiGridLayout} from "./micro-components/UiGridLayout";
 import {UiResponsiveGridLayoutCommandHandler, UiResponsiveGridLayoutConfig} from "../generated/UiResponsiveGridLayoutConfig";

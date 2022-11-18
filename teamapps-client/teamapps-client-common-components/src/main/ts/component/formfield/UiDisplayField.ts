@@ -19,9 +19,9 @@
  */
 import {UiDisplayFieldCommandHandler, UiDisplayFieldConfig, UiDisplayFieldEventSource, UiFieldEditingMode} from "../../generated";
 import {AbstractUiField} from "./AbstractUiField";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {escapeHtml, parseHtml, removeTags} from "../../Common";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 
 
 export class UiDisplayField extends AbstractUiField<UiDisplayFieldConfig, string> implements UiDisplayFieldEventSource, UiDisplayFieldCommandHandler {

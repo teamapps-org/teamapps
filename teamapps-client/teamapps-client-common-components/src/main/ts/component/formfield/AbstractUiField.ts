@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiField_BlurEvent,
 	UiField_FocusEvent,
@@ -32,11 +32,12 @@ import {
 	UiFieldMessageSeverity,
 	UiFieldMessageVisibilityMode
 } from "../../generated";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {TeamAppsEvent} from "teamapps-client-core";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {createPopper, Instance as Popper} from '@popperjs/core';
-import {bind} from "../../util/Bind";
-import {parseHtml, prependChild} from "../../Common";
+import {bind} from "teamapps-client-core";
+import {prependChild} from "../../Common";
+import {parseHtml} from "teamapps-client-core";
 import Logger = log.Logger;
 
 

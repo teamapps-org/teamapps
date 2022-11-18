@@ -26,10 +26,10 @@ import {
 	UiTemplateFieldConfig,
 	UiTemplateFieldEventSource
 } from "../../generated";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {parseHtml, Renderer} from "../../Common";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 
 export class UiTemplateField extends AbstractUiField<UiTemplateFieldConfig, UiClientRecord> implements UiTemplateFieldCommandHandler, UiTemplateFieldEventSource {
 

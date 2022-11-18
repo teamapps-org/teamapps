@@ -20,10 +20,10 @@
 
 import {UiField} from "../UiField";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {humanReadableFileSize, parseHtml} from "../../Common";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsEvent} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {keyCodes} from "../../trivial-components/TrivialCore";
 import {
 	UiPictureChooser_UploadCanceledEvent,

@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 
 public class TeamAppsIntermediateDtoModel {
 
-	public static final Set<String> IMPLICITELY_REFERENCEABLE_CLASSES = Sets.newHashSet("UiEvent", "UiCommand", "UiQuery");
+	public static final Set<String> IMPLICITELY_REFERENCABLE_CLASSES = Sets.newHashSet("UiEvent", "UiCommand", "UiQuery");
 
 	private final List<ClassDeclarationContext> classDeclarations = new ArrayList<>();
 	private final List<InterfaceDeclarationContext> interfaceDeclarations = new ArrayList<>();
@@ -268,7 +268,7 @@ public class TeamAppsIntermediateDtoModel {
 				})
 				.findFirst().orElseGet(() -> {
 					if (throwExceptionIfNotFound) {
-						throw new IllegalArgumentException("Could not find interface " + className);
+						throw new IllegalArgumentException("Could not find class " + className);
 					} else {
 						return null;
 					}
@@ -353,7 +353,7 @@ public class TeamAppsIntermediateDtoModel {
 	}
 
 	public List<PropertyDeclarationContext> findAllProperties(InterfaceDeclarationContext interfaceContext) {
-		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
+		return findSelfAndAllSuperInterfaces(interfaceContext).stream()
 				.flatMap(interf -> interf.propertyDeclaration().stream())
 				.filter(distinctByKey(property -> property.Identifier().getText()))
 				.collect(Collectors.toList());
@@ -408,7 +408,7 @@ public class TeamAppsIntermediateDtoModel {
 		return findSelfAndAllSuperClasses(classContext).stream()
 				.flatMap(clazz -> clazz.implementsDecl() != null ? clazz.implementsDecl().classList().typeName().stream()
 						.map(typeName -> findInterfaceByName(typeName.getText(), true))
-						.flatMap(interfaceContext -> findAllSuperInterfacesAndSelf(interfaceContext).stream()) : Stream.empty())
+						.flatMap(interfaceContext -> findSelfAndAllSuperInterfaces(interfaceContext).stream()) : Stream.empty())
 				.collect(Collectors.toList());
 	}
 
@@ -439,7 +439,7 @@ public class TeamAppsIntermediateDtoModel {
 				.filter(clazz -> findAllImplementedInterfaces(clazz).contains(interfaceContext)).collect(Collectors.toList());
 	}
 
-	public List<InterfaceDeclarationContext> findAllSuperInterfacesAndSelf(InterfaceDeclarationContext interfaceContext) {
+	public List<InterfaceDeclarationContext> findSelfAndAllSuperInterfaces(InterfaceDeclarationContext interfaceContext) {
 		List<InterfaceDeclarationContext> superInterfacesAndSelf = findAllSuperInterfaces(interfaceContext);
 		superInterfacesAndSelf.add(0, interfaceContext);
 		return superInterfacesAndSelf;
@@ -504,7 +504,7 @@ public class TeamAppsIntermediateDtoModel {
 	}
 
 	public List<CommandDeclarationContext> getAllCommands(InterfaceDeclarationContext interfaceContext) {
-		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
+		return findSelfAndAllSuperInterfaces(interfaceContext).stream()
 				.flatMap(interf -> interf.commandDeclaration().stream())
 				.filter(distinctByKey(command -> command.Identifier().getText()))
 				.collect(Collectors.toList());
@@ -525,7 +525,7 @@ public class TeamAppsIntermediateDtoModel {
 	}
 
 	public List<EventDeclarationContext> getAllEvents(InterfaceDeclarationContext interfaceContext) {
-		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
+		return findSelfAndAllSuperInterfaces(interfaceContext).stream()
 				.flatMap(interf -> interf.eventDeclaration().stream())
 				.filter(distinctByKey(event -> event.Identifier().getText()))
 				.collect(Collectors.toList());
@@ -546,7 +546,7 @@ public class TeamAppsIntermediateDtoModel {
 	}
 
 	public List<QueryDeclarationContext> getAllQueries(InterfaceDeclarationContext interfaceContext) {
-		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
+		return findSelfAndAllSuperInterfaces(interfaceContext).stream()
 				.flatMap(interf -> interf.queryDeclaration().stream())
 				.filter(distinctByKey(query -> query.Identifier().getText()))
 				.collect(Collectors.toList());
@@ -749,29 +749,50 @@ public class TeamAppsIntermediateDtoModel {
 		return type.typeReference() != null && type.typeReference().referenceTypeModifier() != null;
 	}
 
-	public boolean isReferenceableClass(ClassDeclarationContext clazz) {
-		return findSelfNearestAncestorClassWithReferenceableAttribute(clazz) != null;
+	public boolean isReferencableBaseClass(ClassDeclarationContext clazz) {
+		return Objects.equals(findReferencableBaseClassName(clazz), clazz.Identifier().getText());
 	}
 
-	public boolean isReferenceableBaseClass(ClassDeclarationContext clazz) {
-		return findSelfNearestAncestorClassWithReferenceableAttribute(clazz) == clazz;
+	public boolean isReferencableBaseInterface(InterfaceDeclarationContext clazz) {
+		return Objects.equals(findReferencableBaseInterfaceName(clazz), clazz.Identifier().getText());
 	}
 
-	public ClassDeclarationContext findSelfNearestAncestorClassWithReferenceableAttribute(ClassDeclarationContext clazz) {
-		return findSelfAndAllSuperClasses(clazz).stream()
-				.filter(c -> c.propertyDeclaration().stream().anyMatch(p -> p.referenceableAnnotation() != null))
+	public String findReferencableBaseClassName(ClassDeclarationContext clazz) {
+		return Streams.concat(
+						findSelfAndAllSuperClasses(clazz).stream()
+								.filter(c -> c.propertyDeclaration().stream().anyMatch(p -> p.referencableAnnotation() != null))
+								.map(c -> c.Identifier().getText()),
+						findAllImplementedInterfaces(clazz).stream()
+								.filter(i -> i.propertyDeclaration().stream().anyMatch(p -> p.referencableAnnotation() != null))
+								.map(i -> i.Identifier().getText())
+				)
 				.findFirst().orElse(null);
 	}
 
-	public Object getReferenceableProperties(ClassDeclarationContext classContext) {
+	public String findReferencableBaseInterfaceName(InterfaceDeclarationContext interf) {
+		return Streams.concat(
+						findSelfAndAllSuperInterfaces(interf).stream()
+								.filter(i -> i.propertyDeclaration().stream().anyMatch(p -> p.referencableAnnotation() != null))
+								.map(i -> i.Identifier().getText())
+				)
+				.findFirst().orElse(null);
+	}
+
+	public Object getReferencableProperties(ClassDeclarationContext classContext) {
 		return findAllProperties(classContext).stream()
-				.filter(p -> p.referenceableAnnotation() != null)
+				.filter(p -> p.referencableAnnotation() != null)
+				.collect(Collectors.toList());
+	}
+
+	public Object getReferencableProperties(InterfaceDeclarationContext interfaceContext) {
+		return findAllProperties(interfaceContext).stream()
+				.filter(p -> p.referencableAnnotation() != null)
 				.collect(Collectors.toList());
 	}
 
 	public boolean isReferenceToJsonAware(TeamAppsDtoParser.TypeContext typeContext) {
 		return findReferencedClass(typeContext) != null
 				|| findReferencedInterface(typeContext) != null
-				|| IMPLICITELY_REFERENCEABLE_CLASSES.contains(typeContext.getText());
+				|| IMPLICITELY_REFERENCABLE_CLASSES.contains(typeContext.getText());
 	}
 }

@@ -27,8 +27,8 @@ import {
 	UiNotificationEventSource,
 	UiNotificationPosition
 } from "../generated";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {animateCSS, Constants, parseHtml} from "../Common";
 import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";

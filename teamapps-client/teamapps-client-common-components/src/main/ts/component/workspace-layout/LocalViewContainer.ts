@@ -33,9 +33,9 @@ import {
 import {UiPanel} from "../UiPanel";
 import {UiWorkSpaceLayout, UiWorkspaceLayoutDndDataTransfer} from "./UiWorkSpaceLayout";
 import {css, generateUUID, getMicrosoftBrowserVersion, parseHtml} from "../../Common";
-import {bind} from "../../util/Bind";
+import {bind} from "teamapps-client-core";
 import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
 import {ItemTree, ItemTreeItem} from "./ItemTree";
@@ -44,7 +44,7 @@ import {ViewContainer, ViewContainerListener} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "teamapps-client-core";
 import {UiMultiProgressDisplay} from "../UiMultiProgressDisplay";
 
 export class LocalViewContainer implements ViewContainer {

@@ -22,8 +22,3 @@ package org.teamapps.dto;
 interface UiTemplate {
 
 }
-
-class UiTemplateReference implements UiTemplate {
-	required String templateId;
-}
-

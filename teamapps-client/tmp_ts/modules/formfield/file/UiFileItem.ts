@@ -19,12 +19,12 @@
  */
 import * as log from "loglevel";
 import {Logger} from "loglevel";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {ProgressIndicator} from "../../micro-components/ProgressIndicator";
 import {FileUploader} from "../../util/FileUploader";
 import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
 import {UiFileItemConfig} from "../../../generated/UiFileItemConfig";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {humanReadableFileSize, parseHtml, removeClassesByFunction} from "../../Common";
 import {StaticIcons} from "../../util/StaticIcons";
 import {ProgressBar} from "../../micro-components/ProgressBar";

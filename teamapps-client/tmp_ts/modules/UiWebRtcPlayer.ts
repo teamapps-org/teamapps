@@ -20,7 +20,7 @@
 
 import {UiWebRtcPlayerCommandHandler, UiWebRtcPlayerConfig} from "../generated/UiWebRtcPlayerConfig";
 import {UiSpinner} from "./micro-components/UiSpinner";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {applyDisplayMode, parseHtml} from "./Common";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";

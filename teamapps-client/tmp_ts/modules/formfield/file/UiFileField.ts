@@ -20,7 +20,7 @@
 import {UiField} from "../UiField";
 import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {generateUUID, humanReadableFileSize, parseHtml, prependChild, removeClassesByFunction, Renderer} from "../../Common";
 import {
 	UiFileField_FileItemClickedEvent,
@@ -34,8 +34,8 @@ import {
 	UiFileFieldConfig,
 	UiFileFieldEventSource
 } from "../../../generated/UiFileFieldConfig";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsEvent} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {UiTemplateConfig} from "../../../generated/UiTemplateConfig";
 import {StaticIcons} from "../../util/StaticIcons";
 import {ProgressIndicator} from "../../micro-components/ProgressIndicator";

@@ -70,13 +70,13 @@ classReference(c) ::= <<
 @JsonTypeName("<c.Identifier>Reference")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class <c.Identifier>Reference {
-	<c.referenceableProperties:propertyDeclaration(); separator="\n">
+	<c.referencableProperties:propertyDeclaration(); separator="\n">
 
-	public <c.Identifier.text; format="cap">Reference(<c.referenceableProperties:parameter(); separator=", ">) {
-    	<c.referenceableProperties:propertyAssignment(); separator="\n">
+	public <c.Identifier.text; format="cap">Reference(<c.referencableProperties:parameter(); separator=", ">) {
+    	<c.referencableProperties:propertyAssignment(); separator="\n">
     }
 
-	<c.referenceableProperties:getter(); separator="\n\n">
+	<c.referencableProperties:getter(); separator="\n\n">
 
 }>>
 

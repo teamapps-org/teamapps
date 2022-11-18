@@ -20,8 +20,8 @@
 
 import {UiPanel} from "./UiPanel";
 import {UiPanelHeaderField} from "../generated/UiPanelHeaderField";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";

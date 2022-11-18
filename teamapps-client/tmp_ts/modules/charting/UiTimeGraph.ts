@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import * as d3 from "d3";

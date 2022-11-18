@@ -103,7 +103,7 @@ public class TeamAppsJavaDtoGenerator {
 			System.out.println("Generating class: " + clazzContext.Identifier());
 			generateClass(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + ".java")));
 			generateClassJsonWrapper(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + "Wrapper.java")));
-			if (model.isReferenceableBaseClass(clazzContext)) {
+			if (model.isReferencableBaseClass(clazzContext)) {
 				generateClassReference(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + "Reference.java")));
 			}
 		}
@@ -117,6 +117,9 @@ public class TeamAppsJavaDtoGenerator {
 			logger.info("Generating interface: " + interfaceContext.Identifier());
 			generateInterface(interfaceContext, new FileWriter(new File(packageDir, interfaceContext.Identifier() + ".java")));
 			generateInterfaceJsonWrapper(interfaceContext, new FileWriter(new File(packageDir, interfaceContext.Identifier() + "Wrapper.java")));
+			if (model.isReferencableBaseInterface(interfaceContext)) {
+				generateInterfaceReference(interfaceContext, new FileWriter(new File(packageDir, interfaceContext.Identifier() + "Reference.java")));
+			}
 		}
 		for (TeamAppsDtoParser.EnumDeclarationContext enumContext : model.getOwnEnumDeclarations()) {
 			String packageName = TeamAppsIntermediateDtoModel.getPackageName(enumContext);
@@ -162,6 +165,14 @@ public class TeamAppsJavaDtoGenerator {
 	}
 
 	void generateClassReference(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
+		ST template = stGroup.getInstanceOf("classReference")
+				.add("c", clazzContext);
+		AutoIndentWriter out = new AutoIndentWriter(writer);
+		template.write(out, new StringTemplatesErrorListener());
+		writer.close();
+	}
+
+	void generateInterfaceReference(TeamAppsDtoParser.InterfaceDeclarationContext clazzContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("classReference")
 				.add("c", clazzContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);

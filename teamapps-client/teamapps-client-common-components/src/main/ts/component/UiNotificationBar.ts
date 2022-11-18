@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {animateCSS, Constants, parseHtml, removeClassesByFunction} from "../Common";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";

@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "../AbstractUiComponent";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {AbstractUiToolContainerConfig} from "../../generated/AbstractUiToolContainerConfig";
-import {parseHtml} from "../../Common";
+import {parseHtml} from "teamapps-client-core";
 
 
 interface Button {

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {keyCodes} from "./trivial-components/TrivialCore";

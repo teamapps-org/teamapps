@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {addDelegatedEventListener, humanReadableFileSize, parseHtml, prependChild, removeDangerousTags} from "./Common";
 import {UiChatMessageConfig} from "../generated/UiChatMessageConfig";

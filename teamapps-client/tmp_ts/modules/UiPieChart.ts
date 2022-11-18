@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPieChart_DataPointClickedEvent, UiPieChartCommandHandler, UiPieChartConfig, UiPieChartEventSource} from "../generated/UiPieChartConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";

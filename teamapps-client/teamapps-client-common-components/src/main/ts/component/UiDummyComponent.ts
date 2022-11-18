@@ -20,8 +20,8 @@
 
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiDummyComponent_ClickedEvent, UiDummyComponentCommandHandler, UiDummyComponentConfig, UiDummyComponentEventSource} from "../generated/UiDummyComponentConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {parseHtml} from "../Common";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;

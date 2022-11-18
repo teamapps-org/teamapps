@@ -29,7 +29,7 @@ import {
 } from "../util/CssFormatUtil";
 import {UiFormSectionPlacementConfig} from "../../generated/UiFormSectionPlacementConfig";
 import {UiGridPlacementConfig} from "../../generated/UiGridPlacementConfig";
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {generateUUID, parseHtml} from "../Common";
 import {UiComponentGridPlacementConfig} from "../../generated/UiComponentGridPlacementConfig";
 import {UiFloatingComponentGridPlacementConfig} from "../../generated/UiFloatingComponentGridPlacementConfig";

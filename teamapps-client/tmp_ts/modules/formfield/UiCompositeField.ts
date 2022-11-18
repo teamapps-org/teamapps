@@ -20,7 +20,7 @@
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiField, ValueChangeEventData} from "./UiField";
 import * as log from "loglevel";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiCompositeSubFieldConfig} from "../../generated/UiCompositeSubFieldConfig";
 import {UiCompositeFieldConfig} from "../../generated/UiCompositeFieldConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";

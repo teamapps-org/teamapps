@@ -17,15 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiAbsoluteLayoutCommandHandler, UiAbsoluteLayoutConfig} from "../generated/UiAbsoluteLayoutConfig";
 import {UiAbsolutePositionedComponent} from "../generated/UiAbsolutePositionedComponent";
 import {UiAnimationEasing} from "../generated/UiAnimationEasing";
-import {parseHtml} from "../Common";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {bind} from "../util/Bind";
-import {UiComponent} from "./UiComponent";
+import {parseHtml} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {bind} from "teamapps-client-core";
+import {UiComponent} from "teamapps-client-core";
 
 const animationEasingCssValues = {
 	[UiAnimationEasing.EASE]: "ease",

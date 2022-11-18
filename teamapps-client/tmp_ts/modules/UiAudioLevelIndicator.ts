@@ -19,7 +19,7 @@
  */
 
 import {parseHtml} from "./Common";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {UiAudioLevelIndicatorCommandHandler, UiAudioLevelIndicatorConfig} from "../generated/UiAudioLevelIndicatorConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";

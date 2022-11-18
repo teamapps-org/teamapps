@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {AbstractUiDateTimeField} from "./AbstractUiDateTimeField";
 import {
 	UiLocalDateTimeFieldCommandHandler,

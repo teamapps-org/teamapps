@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {UiDropDown} from "../../micro-components/UiDropDown";
 import {
 	UiButton_ClickedEvent,
@@ -31,10 +31,10 @@ import {
 	UiTemplate
 } from "../../generated";
 import {AbstractUiField} from "./AbstractUiField";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {bind} from "../../util/Bind";
-import {parseHtml} from "../../Common";
-import {UiComponent} from "../UiComponent";
+import {TeamAppsEvent} from "teamapps-client-core";
+import {bind} from "teamapps-client-core";
+import {parseHtml} from "teamapps-client-core";
+import {UiComponent} from "teamapps-client-core";
 
 export class UiButton extends AbstractUiField<UiButtonConfig, void> implements UiButtonEventSource, UiButtonCommandHandler {
 

@@ -18,15 +18,15 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {UiComponentConfig, UiTabPanelTabStyle, UiViewGroupPanelState, UiWindowButtonType} from "../../generated";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiTabPanel} from "../UiTabPanel";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {generateUUID, parseHtml} from "../../Common";
-import {UiComponent} from "../UiComponent";
+import {UiComponent} from "teamapps-client-core";
 
 class MinimizableTabPanel extends UiTabPanel {
 

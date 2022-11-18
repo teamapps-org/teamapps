@@ -26,9 +26,10 @@ import {
 	UiFieldMessageSeverity
 } from "../../generated";
 import {AbstractUiField, getHighestSeverity} from "./AbstractUiField";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {generateUUID, parseHtml} from "../../Common";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {parseHtml} from "teamapps-client-core";
+import {generateUUID} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 
 
 export class UiCheckBox extends AbstractUiField<UiCheckBoxConfig, boolean> implements UiCheckBoxEventSource, UiCheckBoxCommandHandler {

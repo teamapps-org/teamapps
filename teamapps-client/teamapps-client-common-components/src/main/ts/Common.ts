@@ -17,14 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponentConfig} from "./generated/UiComponentConfig";
-import {UiEntranceAnimation} from "./generated/UiEntranceAnimation";
-import {UiExitAnimation} from "./generated/UiExitAnimation";
-import {UiPageDisplayMode} from "./generated/UiPageDisplayMode";
-import {UiTemplate} from "./generated/UiTemplate";
-import {UiComponent} from "./component/UiComponent";
-import {UiPageTransition} from "./generated/UiPageTransition";
-import {UiRepeatableAnimation} from "./generated/UiRepeatableAnimation";
+import {UiEntranceAnimation, UiExitAnimation, UiPageDisplayMode, UiPageTransition, UiRepeatableAnimation, UiTemplate} from "./generated";
 import rgba from "color-rgba";
 
 export const defaultSpinnerTemplate = `<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`;
@@ -187,10 +180,6 @@ export class Constants {
 	}
 }
 
-export function getAutoCompleteOffValue(): string {
-	return "no";
-}
-
 export function hasVerticalScrollBar(element: HTMLElement): boolean {
 	return element.scrollWidth < element.offsetWidth;
 }
@@ -310,14 +299,6 @@ export function humanReadableFileSize(bytes: number, decimalK = true) {
 		++u;
 	} while (Math.abs(bytes) >= thresh && u < units.length - 1);
 	return bytes.toFixed(1) + ' ' + units[u];
-}
-
-export function generateUUID(startingWithCharacter?: boolean) {
-	return (startingWithCharacter ? 'u-' : '') + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-		const randomHex = Math.random() * 16 | 0;
-		const v = c == 'x' ? randomHex : (randomHex & 0x3 | 0x8);
-		return v.toString(16);
-	});
 }
 
 export function formatNumber(number: number, precision: number, decimalSeparator: string, thousandsSeparator: string) {
@@ -589,14 +570,6 @@ export function escapeHtml(string: string): string {
 	});
 }
 
-export function capitalizeFirstLetter(string: string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-export function logException(e: any, additionalString?: string) {
-	console.error(e, e.stack, additionalString);
-}
-
 export function stableSort<T>(arr: T[], cmpFunc: (a: T, b: T) => number) {
 	let arrOfWrapper = arr.map(function (elem, idx) {
 		return {elem: elem, idx: idx};
@@ -672,17 +645,6 @@ export function arraysEqual(a: any[], b: any[]) {
 			if (a[i] !== b[i]) return false;
 		}
 		return true;
-	}
-}
-
-export function insertAtIndex($parent: Element, $child: Element, index: number) {
-	let effectiveIndex = Math.min($parent.childElementCount, index);
-	if (effectiveIndex === 0) {
-		$parent.prepend($child);
-	} else if (effectiveIndex === $parent.childElementCount) {
-		$parent.insertAdjacentElement('beforeend', $child);
-	} else {
-		$parent.children[effectiveIndex].insertAdjacentElement('beforebegin', $child);
 	}
 }
 
@@ -771,11 +733,7 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 	sel.addRange(range);
 }
 
-export function parseHtml<E extends HTMLElement>(htmlString: string): E {
-	let tmpl = document.createElement('template');
-	tmpl.innerHTML = htmlString;
-	return tmpl.content.cloneNode(true).firstChild as E;
-}
+
 
 export function parseSvg<E extends Element>(htmlString: string): E {
 	// let tagStartCount = (htmlString.match(/<\w+/g) || []).length;
@@ -1313,20 +1271,6 @@ export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaEle
 
 export function isVisibleColor(c: string) {
 	return c != null && rgba(c)[3] > 0;
-}
-
-export function createUiLocation() {
-	return {
-		href: location.href,
-		origin: location.origin,
-		protocol: location.protocol,
-		host: location.host,
-		hostname: location.hostname,
-		port: location.port && Number(location.port),
-		pathname: location.pathname ?? '',
-		search: location.search ?? '',
-		hash: location.hash ?? ''
-	};
 }
 
 export function getScrollParent(element, includeHidden) {

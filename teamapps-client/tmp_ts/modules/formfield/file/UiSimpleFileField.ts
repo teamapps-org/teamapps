@@ -21,10 +21,10 @@
 import {UiField} from "../UiField";
 import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {arraysEqual, generateUUID, parseHtml} from "../../Common";
-import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {TeamAppsEvent} from "teamapps-client-core";
+import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {keyCodes} from "../../trivial-components/TrivialCore";
 import {createUiFileItemConfig, UiFileItemConfig} from "../../../generated/UiFileItemConfig";
 import {

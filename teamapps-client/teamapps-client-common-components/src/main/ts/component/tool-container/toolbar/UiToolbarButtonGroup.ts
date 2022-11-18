@@ -25,9 +25,9 @@ import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
 import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
 import {ButtonVisibilities, UiToolbar} from "./UiToolbar";
 import {UiDropDownButtonClickInfo} from "../../../generated/UiDropDownButtonClickInfo";
-import {TeamAppsEvent} from "../../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "../teamapps-client-core";
 import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../../Common";
-import {UiComponent} from "../../UiComponent";
+import {UiComponent} from "../teamapps-client-core";
 
 export class UiToolbarButtonGroup {
 	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: UiDropDownButtonClickInfo}> = new TeamAppsEvent();

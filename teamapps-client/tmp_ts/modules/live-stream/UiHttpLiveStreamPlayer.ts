@@ -20,8 +20,8 @@
 
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
 import {UiSpinner} from "../micro-components/UiSpinner";
-import {AbstractUiComponent} from "../AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {AbstractUiComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiHttpLiveStreamPlayerConfig} from "../../generated/UiHttpLiveStreamPlayerConfig";
 import {parseHtml} from "../Common";
 

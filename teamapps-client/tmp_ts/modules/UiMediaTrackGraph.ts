@@ -21,7 +21,7 @@
 
 
 import * as d3 from "d3v3";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMediaTrackGraph_HandleTimeSelectionEvent, UiMediaTrackGraphCommandHandler, UiMediaTrackGraphConfig, UiMediaTrackGraphEventSource} from "../generated/UiMediaTrackGraphConfig";

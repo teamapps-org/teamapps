@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiCommand, UiEvent, UiQuery, UiSessionClosingReason} from "teamapps-client-communication";
+package org.teamapps.dto;
 
-export const typescriptDeclarationFixConstant = 1;
+abstract managed class UiComponent implements UiClientObject {
+	String debuggingId;
+	boolean visible = true;
+	Dictionary<Dictionary<String>> stylesBySelector;
+	Dictionary<Dictionary<Boolean>> classNamesBySelector;
+	Dictionary<Dictionary<String>> attributesBySelector; // "__ta-deleted-attribute__" for removing attributes
 
-export interface TeamAppsConnection {
-	sendEvent(event: UiEvent): void;
-	sendQuery(query: UiQuery): Promise<any>;
-}
-
-export interface TeamAppsConnectionListener {
-	onConnectionInitialized(): void;
-	onConnectionErrorOrBroken(reason: UiSessionClosingReason, message?: string): void;
-	executeCommand(libraryUuid: string, clientObjectId: string, uiCommand: UiCommand): Promise<any>;
+	command setVisible(boolean visible);
+	command setStyle(String selector, Dictionary<String> styles);
+	command setClassNames(String selector, Dictionary<Boolean> classNames);
+	command setAttributes(String selector, Dictionary<String> attributes);
 }

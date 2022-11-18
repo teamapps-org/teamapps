@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {addDelegatedEventListener, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";

@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import UiComponent from "teamapps-client-core":org.teamapps.dto;
+
 enum UiFieldEditingMode {
 	EDITABLE,
 	EDITABLE_IF_FOCUSED, // UiGridForm and UiCompositeField only!!

@@ -24,10 +24,4 @@ managed class UiRootPanel extends UiComponent {
 	command setContent(UiComponent* content, UiPageTransition transition, long animationDuration);
 }
 
-enum KeyEventType {
-    KEY_DOWN, KEY_UP
-}
 
-enum UiGenericErrorMessageOption {
-	OK, RELOAD
-}

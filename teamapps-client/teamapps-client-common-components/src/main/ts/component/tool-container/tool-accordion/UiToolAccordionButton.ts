@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponent} from "../../UiComponent";
+import {UiComponent} from "../teamapps-client-core";
 import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
 import {generateUUID, parseHtml} from "../../../Common";
 import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
 import {UiGridTemplate} from "../../../generated/UiGridTemplate";
 import {UiToolAccordion} from "./UiToolAccordion";
-import {TeamAppsEvent} from "../../../util/TeamAppsEvent";
+import {TeamAppsEvent} from "../teamapps-client-core";
 import {enterFullScreen, exitFullScreen, isFullScreen} from "../../../util/fullscreen";
 
 export class UiToolAccordionButton {

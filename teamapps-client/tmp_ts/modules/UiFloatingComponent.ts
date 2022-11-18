@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiFloatingComponent_ExpandedOrCollapsedEvent, UiFloatingComponentCommandHandler, UiFloatingComponentConfig, UiFloatingComponentEventSource} from "../generated/UiFloatingComponentConfig";
 import {UiComponent} from "./UiComponent";
