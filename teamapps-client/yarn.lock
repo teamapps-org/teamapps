@@ -13910,6 +13910,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"teamapps-client-core@workspace:teamapps-client-core":
+  version: 0.0.0-use.local
+  resolution: "teamapps-client-core@workspace:teamapps-client-core"
+  dependencies:
+    cross-var: ^1.1.0
+    esbuild: ^0.15.13
+    replace-in-file: ^6.3.5
+    sync-pom-version-to-package: ^1.6.1
+    teamapps-client-communication: "workspace:*"
+    typescript: ^4.8.4
+  languageName: unknown
+  linkType: soft
+
 "teamapps-client@workspace:.":
   version: 0.0.0-use.local
   resolution: "teamapps-client@workspace:."

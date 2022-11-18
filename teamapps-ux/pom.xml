@@ -60,11 +60,6 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ui-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.teamapps</groupId>
             <artifactId>teamapps-client-common-components</artifactId>
         </dependency>
 

@@ -20,11 +20,19 @@
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ui-api</artifactId>   <!-- only needed for CopyOnWriteLeakyCache JsonWrapper ObjectDeserializer ObjectSerializer TeamAppsJacksonTypeIdResolver UiObject -->
+            <artifactId>teamapps-ui-dsl</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ui-dsl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
         </dependency>
     </dependencies>
 

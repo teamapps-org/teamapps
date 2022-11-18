@@ -37,7 +37,7 @@
                         </goals>
                         <configuration>
                             <mainClass>org.teamapps.dsl.generate.TeamAppsJavaDtoGenerator</mainClass>
-                            <commandlineArgs>-p "org.teamapps.custom.dto" -i "${project.basedir}/../teamapps-ui-api/src/main/dto" "${project.basedir}/src/main/dto" "${project.basedir}/target/generated-sources/dto"</commandlineArgs>
+                            <commandlineArgs>-p "org.teamapps.custom.dto" -i "${project.basedir}/../???/src/main/dto" "${project.basedir}/src/main/dto" "${project.basedir}/target/generated-sources/dto"</commandlineArgs>
                             <classpathScope>test</classpathScope>
                         </configuration>
                     </execution>
@@ -49,7 +49,7 @@
                         </goals>
                         <configuration>
                             <mainClass>org.teamapps.dsl.generate.TeamAppsTypeScriptGenerator</mainClass>
-                            <commandlineArgs>-i "${project.basedir}/../teamapps-ui-api/src/main/dto" "${project.basedir}/src/main/dto" "${project.basedir}/src/main/ts/generated"</commandlineArgs>
+                            <commandlineArgs>-i "${project.basedir}/../???/src/main/dto" "${project.basedir}/src/main/dto" "${project.basedir}/src/main/ts/generated"</commandlineArgs>
                             <classpathScope>test</classpathScope>
                         </configuration>
                     </execution>

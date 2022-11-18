@@ -36,7 +36,6 @@
         <module>teamapps-icon</module>
         <module>teamapps-material-icon-provider</module>
         <module>teamapps-ui-dsl</module>
-        <module>teamapps-ui-api</module>
         <module>teamapps-client/teamapps-client-communication</module>
         <module>teamapps-client/teamapps-client-common-components</module>
         <module>teamapps-ux</module>
@@ -121,12 +120,6 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-ui-dsl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-ui-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

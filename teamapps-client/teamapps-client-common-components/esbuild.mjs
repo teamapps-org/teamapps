@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 esbuild.build({
     entryPoints: ['dist/index.js'],
     bundle: true,
-    outfile: 'dist/teamapps-core.js',
+    outfile: 'dist/teamapps-common-components.js',
     format: 'esm',
     platform: "node",
     mainFields: ["browser", "module", "main"],
@@ -38,7 +38,7 @@ esbuild.build({
 })
     .then(async (result, x, y) => {
         console.log("Compressing result files...");
-        await compressFile("dist/teamapps-core.js");
+        await compressFile("dist/teamapps-common-components.js");
         // await compressFile("dist/teamapps-core.css");
         console.log("⚡ esbuild complete! ⚡")
     })

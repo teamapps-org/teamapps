@@ -1,3 +1,3 @@
 export * from "./generated"
 
-export {CMD} from "./CMD";
+export {CMD} from "./dto/CMD";
