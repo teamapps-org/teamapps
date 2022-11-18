@@ -203,6 +203,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	}
 
 	public destroy(): void {
+		this.close(0);
 		super.destroy();
 		this.removeBodyClickAndEscapeListeners();
 	}

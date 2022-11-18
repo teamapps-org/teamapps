@@ -34,6 +34,8 @@ managed class UiNotification extends UiComponent {
 	UiComponent* content;
 	int contentHeight = 0; // <= 0: auto
 
+    static command showNotification(UiNotification* notification, UiNotificationPosition position, UiEntranceAnimation entranceAnimation, UiExitAnimation exitAnimation);
+
 	command close();
 	command update(UiNotification config);
 

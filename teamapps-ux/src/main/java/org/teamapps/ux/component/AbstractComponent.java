@@ -21,10 +21,7 @@ package org.teamapps.ux.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiCommand;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiRootPanel;
+import org.teamapps.dto.*;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.css.CssStyles;
@@ -88,7 +85,7 @@ public abstract class AbstractComponent implements Component {
 			changed = listeningEventNames.remove(name);
 		}
 		if (changed) {
-			sendCommandIfRendered(null, () -> new UiRootPanel.ToggleEventListeningCommand(null, getId(), name, listen));
+			sendCommandIfRendered(null, () -> new UiGlobals.ToggleEventListeningCommand(null, getId(), name, listen));
 		}
 	}
 
@@ -150,7 +147,7 @@ public abstract class AbstractComponent implements Component {
 
 	public void reRenderIfRendered() {
 		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.sendStaticCommand(RootPanel.class, new UiRootPanel.RefreshComponentCommand(createUiClientObject()));
+			sessionContext.sendStaticCommand(RootPanel.class, new UiGlobals.RefreshComponentCommand(createUiClientObject()));
 		}
 	}
 

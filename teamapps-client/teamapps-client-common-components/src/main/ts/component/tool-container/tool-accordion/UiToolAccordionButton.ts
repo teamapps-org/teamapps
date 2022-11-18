@@ -19,12 +19,13 @@
  */
 import {UiComponent} from "../../UiComponent";
 import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
-import {enterFullScreen, exitFullScreen, generateUUID, isFullScreen, parseHtml} from "../../../Common";
+import {generateUUID, parseHtml} from "../../../Common";
 import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
 import {UiGridTemplate} from "../../../generated/UiGridTemplate";
 import {UiToolAccordion} from "./UiToolAccordion";
 import {TeamAppsEvent} from "../../../util/TeamAppsEvent";
+import {enterFullScreen, exitFullScreen, isFullScreen} from "../../../util/fullscreen";
 
 export class UiToolAccordionButton {
 
@@ -69,7 +70,7 @@ export class UiToolAccordionButton {
 				if (isFullScreen()) {
 					exitFullScreen();
 				} else {
-					enterFullScreen(this.config.togglesFullScreenOnComponent as UiComponent);
+					enterFullScreen((this.config.togglesFullScreenOnComponent as UiComponent).getMainElement());
 				}
 			}
 			if (this.config.startPlaybackComponent) {

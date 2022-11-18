@@ -1,12 +1,13 @@
 export class StyleManager {
 
 	private sheet: CSSStyleSheet;
+	private styleElement: HTMLStyleElement;
 
 	constructor(private parentElementSupplier: ()=>Node&ParentNode, private selectorPrefix, private fallbackSelector: string) {
-		const tmpStyleElement = document.createElement("style");
-		document.head.appendChild(tmpStyleElement);
-		this.sheet = tmpStyleElement.sheet;
-		tmpStyleElement.remove();
+		this.styleElement = document.createElement("style");
+		document.head.appendChild(this.styleElement);
+		this.sheet = this.styleElement.sheet;
+		this.styleElement.remove();
 	}
 
 	public setStyle(selector: string, style: { [property: string]: string }, replace?: boolean) {
@@ -39,14 +40,10 @@ export class StyleManager {
 
 	public apply() {
 		let parentElement = this.parentElementSupplier();
-		let customStylesElement: HTMLStyleElement = parentElement.querySelector(":scope > .ta-custom-component-styles");
-		if (customStylesElement == null) {
-			customStylesElement = document.createElement("style");
-			customStylesElement.classList.add("ta-custom-component-styles");
-			parentElement.appendChild(customStylesElement);
+		if (this.styleElement.parentElement != parentElement) {
+			parentElement.appendChild(this.styleElement);
 		}
-
-		customStylesElement.innerHTML = styleSheetToString(this.sheet);
+		this.styleElement.innerHTML = styleSheetToString(this.sheet);
 	}
 
 }

@@ -175,6 +175,10 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 		}
 	}
 
+	public static showNotification(notification: UiNotification, position: UiNotificationPosition, entranceAnimation: UiEntranceAnimation, exitAnimation: UiExitAnimation, context: TeamAppsUiContext) {
+		showNotification(notification, position, entranceAnimation, exitAnimation);
+	}
+
 	private closeTimeout: number;
 
 	@executeWhenFirstDisplayed(true)

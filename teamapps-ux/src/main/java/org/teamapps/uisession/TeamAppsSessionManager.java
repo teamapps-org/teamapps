@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsUploadManager;
-import org.teamapps.dto.UiRootPanel;
+import org.teamapps.dto.UiGlobals;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.IconProvider;
@@ -217,7 +217,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			if (!hasTeamAppsRefreshParameter) {
 				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
 				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getSearch()) ? "&" : "?";
-				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, null, new UiRootPanel.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
+				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, null, new UiGlobals.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
 			}
 			uiSession.close(UiSessionClosingReason.WRONG_TEAMAPPS_VERSION);
 			return;

@@ -22,12 +22,13 @@ import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToo
 import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
 import {UiToolbar} from "./UiToolbar";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
-import {enterFullScreen, exitFullScreen, generateUUID, isFullScreen, parseHtml, prependChild} from "../../../Common";
+import {generateUUID, parseHtml, prependChild} from "../../../Common";
 import {createUiDropDownButtonClickInfo, UiDropDownButtonClickInfo} from "../../../generated/UiDropDownButtonClickInfo";
 import {TeamAppsEvent} from "../../../util/TeamAppsEvent";
 
 import {UiGridTemplate} from "../../../generated/UiGridTemplate";
 import {UiComponent} from "../../UiComponent";
+import {enterFullScreen, exitFullScreen, isFullScreen} from "../../../util/fullscreen";
 
 export class UiToolbarButton {
 
@@ -72,7 +73,7 @@ export class UiToolbarButton {
 				if (isFullScreen()) {
 					exitFullScreen();
 				} else {
-					enterFullScreen(this.config.togglesFullScreenOnComponent as UiComponent);
+					enterFullScreen((this.config.togglesFullScreenOnComponent as UiComponent).getMainElement());
 				}
 			}
 			if (this.config.startPlaybackComponent) {

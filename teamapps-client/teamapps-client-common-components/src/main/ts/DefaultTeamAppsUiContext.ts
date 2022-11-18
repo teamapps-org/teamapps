@@ -33,8 +33,8 @@ import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from
 import {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
 import {UiComponent} from "./component/UiComponent";
 import {UiClientObject} from "./UiClientObject";
-import {UiWindow} from "./component/UiWindow";
-import {UiRootPanel} from "./component/UiRootPanel";
+import {Showable} from "./util/Showable";
+import {UiGlobals} from "./UiGlobals";
 
 type ClientObjectClass<T extends UiClientObject = UiClientObject> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
 
@@ -121,9 +121,9 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
-	private expiredMessageWindow: UiWindow;
-	private errorMessageWindow: UiWindow;
-	private terminatedMessageWindow: UiWindow;
+	private expiredMessageWindow: Showable;
+	private errorMessageWindow: Showable;
+	private terminatedMessageWindow: Showable;
 
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string } = {}) {
 		this.sessionId = generateUUID();
@@ -136,7 +136,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			highDensityScreen: this.isHighDensityScreen,
 			timezoneOffsetMinutes: new Date().getTimezoneOffset(),
 			timezoneIana: jstz.determine().name(),
-			clientTokens: UiRootPanel.getClientTokens(),
+			clientTokens: UiGlobals.getClientTokens(),
 			location: createUiLocation(),
 			clientParameters: clientParameters,
 			teamAppsVersion: '__TEAMAPPS_VERSION__'
@@ -159,21 +159,21 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 					if (this.expiredMessageWindow != null) {
 						this.expiredMessageWindow.show(500);
 					} else {
-						UiRootPanel.createGenericErrorMessageWindow("Session Expired", "<p>Your session has expired.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+						UiGlobals.createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
 							false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
 					}
 				} else if (reason == UiSessionClosingReason.TERMINATED_BY_APPLICATION) {
 					if (this.terminatedMessageWindow != null) {
 						this.terminatedMessageWindow.show(500);
 					} else {
-						UiRootPanel.createGenericErrorMessageWindow("Session Terminated", "<p>Your session has been terminated.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+						UiGlobals.createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
 							true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
 					}
 				} else {
 					if (this.errorMessageWindow != null) {
 						this.errorMessageWindow.show(500);
 					} else {
-						UiRootPanel.createGenericErrorMessageWindow("Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+						UiGlobals.createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
 							true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
 					}
 				}
@@ -428,7 +428,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		return clientObjectClassWrapperPromise;
 	}
 
-	public setSessionMessageWindows(expiredMessageWindow: UiWindow, errorMessageWindow: UiWindow, terminatedMessageWindow: UiWindow) {
+	public setSessionMessageWindows(expiredMessageWindow: Showable, errorMessageWindow: Showable, terminatedMessageWindow: Showable) {
 		this.expiredMessageWindow = expiredMessageWindow;
 		this.errorMessageWindow = errorMessageWindow;
 		this.terminatedMessageWindow = terminatedMessageWindow;
