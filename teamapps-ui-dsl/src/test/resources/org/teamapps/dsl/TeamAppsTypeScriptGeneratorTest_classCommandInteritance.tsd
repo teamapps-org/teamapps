@@ -18,11 +18,11 @@ export interface DtoC extends DtoB, DtoA {
 	c?: string
 }
 
-export interface DtoCCommandHandler extends BCommandHandler, ACommandHandler {
+export interface DtoCCommandHandler extends DtoBCommandHandler, DtoACommandHandler {
 	x3(y3: string): any;
 }
 
-export interface DtoCEventSource extends BEventSource, AEventSource {
+export interface DtoCEventSource extends DtoBEventSource, DtoAEventSource {
 	onZ3: TeamAppsEvent<DtoC_Z3Event>;
 }
 

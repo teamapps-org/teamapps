@@ -19,8 +19,9 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+managed class RootPanel extends Component {
+	Component* content;
+	command setContent(Component* content, PageTransition transition, long animationDuration);
 }
+
 

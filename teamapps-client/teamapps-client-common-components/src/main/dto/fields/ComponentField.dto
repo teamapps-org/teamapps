@@ -19,8 +19,12 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class ComponentField extends Field {
+	Component* component;
+	int height; // 0 = the height will be determined by the component's content and context
+	boolean bordered;
 
+	command setComponent(Component* component);
+	command setHeight(int height);
+	command setBordered(boolean bordered);
+}

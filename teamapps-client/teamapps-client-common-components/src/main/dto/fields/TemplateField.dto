@@ -19,8 +19,10 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class TemplateField extends Field {
+	Template template;
 
+	command update(TemplateField config);
+
+	event clicked();
+}

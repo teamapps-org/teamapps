@@ -19,8 +19,9 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+managed class AudioLevelIndicator extends Component {
+    String deviceId;
+    int barWidth;
+    
+    command setDeviceId(String deviceId);
 }
-

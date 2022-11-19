@@ -1,0 +1,77 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+managed class MediaTrackGraph extends Component {
+	int trackCount;
+	List<MediaTrackData> trackData;
+	List<MediaTrackMarker> markers;
+
+	command setCursorPosition(long time);
+
+	event handleTimeSelection(long start, long end);
+}
+
+class MediaTrackData {
+	long time;
+	List<Integer> values;
+}
+
+class MediaTrackMarker {
+	int track;
+	long start;
+	long end;
+	String color;
+	String backgroundColor;
+}
+
+
+/**
+ * May also be used as audio player...
+ */
+managed class VideoPlayer extends Component {
+	required String url; //the url of the video
+	boolean autoplay;
+	boolean showControls;
+	String posterImageUrl;
+	PosterImageSize posterImageSize = PosterImageSize.CONTAIN;
+	int sendPlayerProgressEventsEachXSeconds = 1; // if 0, then send NO events
+	String backgroundColor = "rgb(68, 68, 68)";
+	MediaPreloadMode preloadMode;
+
+	command setUrl(String url);
+	command setPreloadMode(MediaPreloadMode preloadMode);
+	command setAutoplay(boolean autoplay);
+	command play();
+	command pause();
+	command jumpTo(int timeInSeconds);
+
+	event errorLoading();
+	event playerProgress(int positionInSeconds);
+	event ended();
+}
+
+enum PosterImageSize {
+    CONTAIN, COVER, FILL
+}
+
+enum MediaPreloadMode {
+	NONE, METADATA, AUTO
+}

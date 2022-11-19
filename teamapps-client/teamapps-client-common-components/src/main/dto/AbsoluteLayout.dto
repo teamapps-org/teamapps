@@ -19,8 +19,33 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+managed class AbsoluteLayout extends Component {
+	List<AbsolutePositionedComponent> components;
+
+	command update(List<AbsolutePositionedComponent> components, int animationDuration, AnimationEasing easing);
 }
 
+class AbsolutePositionedComponent {
+	required Component* component;
+	required AbsolutePositioning position;
+}
+
+class AbsolutePositioning {
+	required String topCss;
+	required String rightCss;
+	required String bottomCss;
+	required String leftCss;
+	required String widthCss;
+	required String heightCss;
+	required int zIndex;
+}
+
+enum AnimationEasing {
+	EASE,
+	LINEAR,
+	EASE_IN,
+	EASE_OUT,
+	EASE_IN_OUT,
+	STEP_START,
+	STEP_END
+}

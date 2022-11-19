@@ -1,0 +1,49 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+managed class NavigationBar extends Component {
+	required Template buttonTemplate;
+	List<NavigationBarButton> buttons;
+	String backgroundColor = "rgba(255, 255, 255, 0.84)";
+	String borderColor;
+	List<Component*> fanOutComponents;
+	MultiProgressDisplay* multiProgressDisplay;
+
+	command setButtons(List<NavigationBarButton> buttons);
+	command setButtonVisible(String buttonId, boolean visible);
+	command setBackgroundColor(String backgroundColor);
+	command setBorderColor(String borderColor);
+
+	command addFanOutComponent(Component* fanOutComponent); // TODO #componentRef No more necessary?
+	command removeFanOutComponent(Component* fanOutComponent); // TODO #componentRef No more necessary?
+	command showFanOutComponent(Component* fanOutComponent);
+	command hideFanOutComponent();
+	command setMultiProgressDisplay(MultiProgressDisplay* multiProgressDisplay);
+
+	event buttonClicked(String buttonId, String visibleFanOutComponentId);
+	event fanoutClosedDueToClickOutsideFanout();
+}
+
+class NavigationBarButton {
+	required String id;
+	required Object data;
+	boolean visible;
+}

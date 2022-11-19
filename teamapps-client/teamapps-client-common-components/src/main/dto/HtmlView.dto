@@ -19,8 +19,13 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class HtmlView extends Component {
+	String html;
 
+	Dictionary<List<Component*>> componentsByContainerElementSelector;
+	Dictionary<String> contentHtmlByContainerElementSelector;
+
+	command addComponent(String containerElementSelector, Component* component, boolean clearContainer);
+	command removeComponent(Component* component);
+	command setContentHtml(String containerElementSelector, String html);
+}

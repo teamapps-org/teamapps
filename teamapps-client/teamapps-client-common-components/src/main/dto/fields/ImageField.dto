@@ -19,8 +19,13 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class ImageField extends Field {
+	String width; // css
+	String height; // css
+    Border border;
+    Shadow shadow;
+	ImageSizing imageSizing = ImageSizing.CONTAIN;
+	String backgroundColor = "transparent";
 
+	command update(ImageField config);
+}

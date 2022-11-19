@@ -19,8 +19,6 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+class MustacheTemplate implements Template {
+	required String templateString;
 }
-

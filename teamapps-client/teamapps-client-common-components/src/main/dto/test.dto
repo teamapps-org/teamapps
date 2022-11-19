@@ -25,15 +25,15 @@ package org.teamapps.dto;
 *
 ***********************************************************************************************************************/
 
-managed class UiFormDesignerFieldChooser extends UiComponent {
+managed class FormDesignerFieldChooser extends Component {
 
 }
 
-managed class UiFormDesigner extends UiComponent {
+managed class FormDesigner extends Component {
 
 }
 
-managed class UiPropertyEditor extends UiComponent {
+managed class PropertyEditor extends Component {
 
 }
 
@@ -43,27 +43,27 @@ managed class UiPropertyEditor extends UiComponent {
 *
 ***********************************************************************************************************************/
 
-managed class UiDummyComponent extends UiComponent {
+managed class DummyComponent extends Component {
 	String text = "This is a dummy component.";
 	event clicked(int clickCount);
 	command setText(String text);
 }
 
-managed class UiDummyField extends UiField {
+managed class DummyField extends Field {
 	String text = "This is a dummy field.";
 }
 
 
-managed class UiVerticalLayout extends UiComponent {
-	List<UiComponent*> components;
+managed class VerticalLayout extends Component {
+	List<Component*> components;
 	Integer fixedChildHeight = null; // deprecated. only for testing!
 
-	command addComponent(UiComponent* component);
-	command removeComponent(UiComponent* component);
+	command addComponent(Component* component);
+	command removeComponent(Component* component);
 }
 
-managed class UiTemplateTestContainer extends UiComponent {
-	required UiGridTemplate template;
+managed class TemplateTestContainer extends Component {
+	required GridTemplate template;
 	required Object data;
 
 	int minContainerWidth = 0;
@@ -80,6 +80,6 @@ managed class UiTemplateTestContainer extends UiComponent {
 *
 ***********************************************************************************************************************/
 
-//managed class UiReactTestComponent extends UiComponent {
+//managed class ReactTestComponent extends Component {
 //
 //}

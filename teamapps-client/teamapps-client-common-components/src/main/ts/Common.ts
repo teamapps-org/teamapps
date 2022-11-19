@@ -19,6 +19,7 @@
  */
 import {UiEntranceAnimation, UiExitAnimation, UiPageDisplayMode, UiPageTransition, UiRepeatableAnimation, UiTemplate} from "./generated";
 import rgba from "color-rgba";
+import {parseHtml} from "teamapps-client-core";
 
 export const defaultSpinnerTemplate = `<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`;
 

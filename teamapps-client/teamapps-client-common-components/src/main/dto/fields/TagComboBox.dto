@@ -19,8 +19,13 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+managed class TagComboBox extends ComboBox {
+	int maxEntries; // if 0, then the list is unbounded
+	TagComboBoxWrappingMode wrappingMode = TagComboBoxWrappingMode.MULTI_LINE;
+	boolean distinct = true; // if true, do not allow the same entry to be selected multiple times!
+	boolean twoStepDeletion; // This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
 }
 
+enum TagComboBoxWrappingMode {
+    SINGLE_LINE, MULTI_LINE, SINGLE_TAG_PER_LINE
+}

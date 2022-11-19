@@ -19,8 +19,23 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class Button extends Field {
+	required Template template;
+	required Object templateRecord;
 
+	int minDropDownWidth = 450;
+	int minDropDownHeight = 200;
+	boolean openDropDownIfNotSet = false;
+	Component* dropDownComponent;
+	String onClickJavaScript;
+
+	command setTemplate(Template template, Object templateRecord);
+	command setTemplateRecord(Object templateRecord);
+	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
+	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
+	command setDropDownComponent(Component* dropDownComponent);
+	command setOnClickJavaScript(String onClickJavaScript);
+
+	event clicked();
+	event dropDownOpened();
+}

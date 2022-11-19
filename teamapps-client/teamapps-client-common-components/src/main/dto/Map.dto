@@ -1,0 +1,190 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+managed class Map extends Component {
+	required Dictionary<Template> markerTemplates;
+	String accessToken;
+	MapConfig mapConfig;
+
+	MapType mapType = MapType.MAP_BOX_STREETS;
+	int zoomLevel = 5;
+	MapLocation mapPosition;
+	Dictionary<AbstractUiMapShape> shapes;
+	List<MapMarkerClientRecord> markers;
+	MapMarkerCluster markerCluster;
+
+	command registerTemplate(String id, Template template);
+	command addMarker(MapMarkerClientRecord marker);
+	command removeMarker(int id);
+	command setMapMarkerCluster(MapMarkerCluster cluster);
+
+	command addShape(String shapeId, AbstractUiMapShape shape);
+	command updateShape(String shapeId, AbstractUiMapShape shape);
+	command removeShape(String shapeId);
+	command clearShapes();
+	command clearMarkers();
+	command clearMarkerCluster();
+	command clearHeatMap();
+
+	command startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties);
+	command stopDrawingShape();
+	
+	command setZoomLevel(int zoom);
+	command setLocation(MapLocation location);
+	command setMapType(MapType mapType);
+	command setHeatMap(HeatMapData data);
+	command fitBounds(MapLocation southWest, MapLocation northEast);
+
+	event zoomLevelChanged(int zoomLevel);
+	event locationChanged(MapLocation center, MapArea displayedArea);
+	event mapClicked(MapLocation location);
+	event markerClicked(int markerId);
+	event shapeDrawn(String shapeId, AbstractUiMapShape shape);
+}
+
+class MapConfig {
+	String urlTemplate;
+	String id = "";
+	int minZoom = 1;
+	int maxZoom = 18;
+	String attribution = "";
+}
+
+enum MapType {
+	INTERNAL,
+	INTERNAL_DARK,
+	INTERNAL_DARK_HIGH_RES,
+	MAP_BOX_STREETS,
+	MAP_BOX_STREETS_BASIC,
+	MAP_BOX_STREETS_SATELLITE,
+	MAP_BOX_SATELLITE,
+	MAP_BOX_RUN_BIKE_HIKE,
+	MAP_BOX_DARK,
+	MAP_BOX_EMERALD,
+	MAP_BOX_OUTDOORS,
+	MAP_QUEST_OSM, MAP_QUEST_SATELLITE,
+	OSM_TOPO_MAP,
+	NASA_EARTH_AT_NIGHT,
+	INFO_WEATHER_TEMPERATURE,
+	THUNDERFOREST_DARK,
+	THUNDERFOREST_TRANSPORT,
+	WIKIMEDIA
+}
+
+@TypeScriptFactory
+class MapLocation {
+	required double latitude;
+	required double longitude;
+}
+
+@TypeScriptFactory
+class MapArea {
+	required double minLatitude;
+	required double maxLatitude;
+	required double minLongitude;
+	required double maxLongitude;
+}
+
+class MapMarkerClientRecord extends IdentifiableClientRecord {
+	MapLocation location;
+    String templateId; // null == use asString
+    MapMarkerAnchor anchor;
+    int offsetPixelsX;
+    int offsetPixelsY;
+}
+
+enum MapMarkerAnchor {
+	CENTER = "center",
+	TOP = "top",
+	BOTTOM = "bottom",
+	LEFT = "left",
+	RIGHT = "right",
+	TOP_LEFT = "top-left",
+	TOP_RIGHT = "top-right",
+	BOTTOM_LEFT = "bottom-left",
+	BOTTOM_RIGHT = "bottom-right";
+}
+
+class MapMarkerCluster {
+	required List<MapMarkerClientRecord> markers;
+}
+
+class HeatMapData {
+	required List<HeatMapDataElement> elements;
+	int maxCount = 10;
+	int radius = 25;
+	int blur = 15;
+}
+
+class HeatMapDataElement {
+	required double latitude;
+	required double longitude;
+	required int count;
+}
+
+enum MapShapeType {
+	CIRCLE,
+    POLYGON,
+    POLYLINE,
+    RECTANGLE;
+}
+
+abstract class AbstractUiMapShape {
+	ShapeProperties shapeProperties;
+}
+
+
+abstract class AbstractUiMapShapeChange {
+}
+
+@TypeScriptFactory
+class MapCircle extends AbstractUiMapShape {
+	MapLocation center;
+	int radius; // meters
+}
+
+@TypeScriptFactory
+class MapPolygon extends AbstractUiMapShape {
+	List<MapLocation> path;
+}
+
+@TypeScriptFactory
+class MapPolyline extends AbstractUiMapShape {
+	List<MapLocation> path;
+}
+
+
+class PolylineAppend extends AbstractUiMapShapeChange {
+    required List<MapLocation> appendedPath;
+}
+
+@TypeScriptFactory
+class MapRectangle extends AbstractUiMapShape {
+	MapLocation l1;
+	MapLocation l2;
+}
+
+class ShapeProperties {
+  String strokeColor;
+  double strokeWeight;
+  List<Double> strokeDashArray;
+  String fillColor;
+}

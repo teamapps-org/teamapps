@@ -19,8 +19,25 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+@TypeScriptFactory
+managed class ToolButton extends Component {
+	required String icon;
+    String caption;
+	required String popoverText;
+	boolean grayOutIfNotHovered = true;
 
+	int minDropDownWidth = 450;
+	int minDropDownHeight = 200;
+	boolean openDropDownIfNotSet = false;
+	Component* dropDownComponent;
+
+    command setIcon(String icon);
+    command setPopoverText(String popoverText);
+    command setGrayOutIfNotHovered(boolean grayOutIfNotHovered);
+	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
+	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
+	command setDropDownComponent(Component* dropDownComponent);
+
+	event clicked();
+	event dropDownOpened();
+}

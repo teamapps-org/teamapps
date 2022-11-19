@@ -19,8 +19,28 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+managed class ImageCropper extends Component {
+	required String imageUrl;
+	required ImageCropperSelectionMode selectionMode;
+	required double aspectRatio = 1; // width/height; 0 = no aspect ratio constraint!
+	ImageCropperSelection selection;
+
+	command setImageUrl(String imageUrl);
+	command setSelectionMode(ImageCropperSelectionMode selectionMode);
+	command setAspectRatio(double aspectRatio);
+	command setSelection(ImageCropperSelection selection);
+
+	event selectionChanged(ImageCropperSelection selection);
 }
 
+enum ImageCropperSelectionMode {
+	RECTANGLE, ROUND
+}
+
+@TypeScriptFactory
+class ImageCropperSelection {
+	required int left;
+	required int top;
+	required int width;
+	required int height;
+}

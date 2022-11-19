@@ -1,0 +1,87 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+managed class InfiniteItemView extends Component {
+	required Template itemTemplate;
+	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	required int rowHeight;
+	List<IdentifiableClientRecord> data;
+	int totalNumberOfRecords = 0;
+	int horizontalItemMargin = 0;
+	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+	ItemJustification itemJustification = ItemJustification.LEFT;
+	VerticalItemAlignment verticalItemAlignment = VerticalItemAlignment.STRETCH;
+	boolean contextMenuEnabled = false;
+
+	command addData(int startIndex, List<IdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
+	command removeData(List<Integer> ids);
+	command setItemTemplate(Template itemTemplate);
+    command setItemWidth(double itemWidth);
+    command setHorizontalItemMargin(int horizontalItemMargin);
+    command setItemJustification(ItemJustification itemJustification);
+    command setVerticalItemAlignment(VerticalItemAlignment verticalItemAlignment);
+    command setContextMenuContent(int requestId, Component* component);
+    command closeContextMenu(int requestId);
+
+	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, InfiniteItemViewDataRequest dataRequest);
+	event itemClicked(int recordId, boolean isDoubleClick);
+	event contextMenuRequested(int requestId, int recordId);
+}
+
+managed class InfiniteItemView2 extends AbstractUiInfiniteListComponent {
+	required Template itemTemplate;
+
+	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	double itemHeight = 100;
+	double horizontalSpacing;
+	double verticalSpacing;
+	double itemPositionAnimationTime; // ms
+	HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.CENTER;
+	VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
+	ItemJustification rowHorizontalAlignment = ItemJustification.SPACE_AROUND;
+//	boolean autoHeight = false; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+
+	boolean contextMenuEnabled = false;
+	
+	command setData(int startIndex, List<Integer> recordIds, List<IdentifiableClientRecord> newRecords, int totalNumberOfRecords);
+
+	command setItemTemplate(Template itemTemplate);
+    command setItemWidth(double itemWidth);
+    command setItemHeight(double itemHeight);
+    command setHorizontalSpacing(double horizontalSpacing);
+    command setVerticalSpacing(double verticalSpacing);
+    command setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment);
+    command setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment);
+    command setRowHorizontalAlignment(ItemJustification rowHorizontalAlignment);
+    command setItemPositionAnimationTime(int animationMillis);
+
+    command setContextMenuContent(int requestId, Component* component);
+    command closeContextMenu(int requestId);
+
+	event itemClicked(int recordId, boolean isDoubleClick);
+	event contextMenuRequested(int requestId, int recordId);
+}
+
+@TypeScriptFactory
+class InfiniteItemViewDataRequest {
+	required int startIndex;
+	required int length;
+}

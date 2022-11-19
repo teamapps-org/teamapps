@@ -19,8 +19,28 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+class FieldMessage {
+	required FieldMessageSeverity severity;
+	required String message;
+	required FieldMessagePosition position;
+	required FieldMessageVisibilityMode visibilityMode;
 }
 
+enum FieldMessageSeverity {
+	INFO,
+	SUCCESS,
+	WARNING,
+	ERROR
+}
+
+enum FieldMessagePosition {
+	ABOVE,
+	BELOW,
+	POPOVER
+}
+
+enum FieldMessageVisibilityMode {
+	ON_FOCUS,
+	ON_HOVER_OR_FOCUS,
+	ALWAYS_VISIBLE
+}

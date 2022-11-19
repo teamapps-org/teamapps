@@ -19,8 +19,18 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+// TODO IMHO, this should be removed. It is not touch-friendly and very strange to implement the way we initially designed it.
+
+managed class ContextMenu extends Component {
+	required List<ContextMenuEntry> entries;
+
+	command hide();
+	event contextMenuSelection(String entryId);
 }
 
+class ContextMenuEntry {
+	required String entryId;
+	required String icon;
+	required String caption;
+	List<ContextMenuEntry> subEntries;
+}

@@ -1,0 +1,76 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+enum NotificationPosition {
+	TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
+}
+
+managed class Notification extends Component {
+	String backgroundColor;
+	Spacing padding;
+
+	boolean dismissible = true;
+	int displayTimeInMillis = 3000; // 0 = display until user closes it actively
+	boolean progressBarVisible = false;
+
+	Component* content;
+	int contentHeight = 0; // <= 0: auto
+
+    static command showNotification(Notification* notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation);
+
+	command close();
+	command update(Notification config);
+
+	event opened();
+	event closed(boolean byUser);
+}
+
+managed class NotificationBar extends Component {
+	List<NotificationBarItem> initialItems;
+
+	command addItem(NotificationBarItem item);
+	command updateItem(NotificationBarItem item);
+	command removeItem(String id, ExitAnimation exitAnimation);
+
+	event itemClicked(String id);
+	event itemActionLinkClicked(String id);
+	event itemClosed(String id, boolean wasTimeout);
+}
+
+class NotificationBarItem {
+	String id;
+
+	String icon;
+	RepeatableAnimation iconAnimation;
+	String text;
+	String actionLinkText;
+	String backgroundColor;
+	String borderColor;
+	String textColor;
+	String actionLinkColor;
+	Spacing padding;
+	EntranceAnimation entranceAnimation;
+	ExitAnimation exitAnimation;
+
+	boolean dismissible = true;
+	int displayTimeInMillis = 3000; // 0 <= display until user closes it actively
+	boolean progressBarVisible = false;
+}

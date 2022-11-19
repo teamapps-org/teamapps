@@ -19,8 +19,26 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+import Component from "teamapps-client-core":org.teamapps.dto;
+
+enum FieldEditingMode {
+	EDITABLE,
+	EDITABLE_IF_FOCUSED, // GridForm and CompositeField only!!
+	DISABLED,
+	READONLY
 }
 
+abstract managed class Field extends Component {
+	FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
+	Object value;
+	List<FieldMessage> fieldMessages;
+
+	event valueChanged(Object value);
+	event focus();
+	event blur();
+
+	command setEditingMode(FieldEditingMode editingMode);
+	command setValue(Object value);
+    command focus();
+	command setFieldMessages(List<FieldMessage> fieldMessages);
+}

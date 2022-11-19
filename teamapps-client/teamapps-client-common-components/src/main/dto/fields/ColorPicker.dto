@@ -19,8 +19,8 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+managed class ColorPicker extends Field {
+	String defaultColor = "rgb(0, 0, 0)";
+	String saveButtonCaption = "Save";
+    String clearButtonCaption = "Clear";
 }
-

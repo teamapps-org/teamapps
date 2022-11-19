@@ -53,13 +53,13 @@ export function createDto<c.typeScriptIdentifier; format="cap">(<c.allRequiredPr
 <endif>
 
 <if(c.hasCommands)>
-export interface Dto<c.Identifier.text>CommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
+export interface Dto<c.Identifier.text>CommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|Dto<c.Identifier.text>CommandHandler}; separator=", "> <endif>{
 	<c.nonStaticCommandDeclarations:commandMethodStub(); separator="\n">
 }
 <endif>
 
 <if(c.hasEvents)>
-export interface Dto<c.Identifier>EventSource <if(c.superClassAndDirectlyImplementedInterfacesWithEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
+export interface Dto<c.Identifier>EventSource <if(c.superClassAndDirectlyImplementedInterfacesWithEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|Dto<c.Identifier>EventSource}; separator=", "> <endif>{
 	<c.nonStaticEventDeclarations:teamAppsEventDeclaration(); separator="\n">
 }
 <endif>

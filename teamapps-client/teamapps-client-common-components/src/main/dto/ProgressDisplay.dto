@@ -19,8 +19,39 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+
+enum ProgressStatus {
+	NOT_YET_STARTED = "not-yet-started",
+	RUNNING = "running",
+	CANCELLATION_REQUESTED = "cancellation-requested",
+	CANCELED = "canceled",
+	COMPLETE = "complete",
+	FAILED = "failed"
 }
 
+managed class ProgressDisplay extends Component {
+	String icon;
+	String taskName;
+	String statusMessage;
+	double progress;
+	ProgressStatus status;
+	boolean cancelable;
+
+    command update(ProgressDisplay config);
+
+    event clicked();
+    event cancelButtonClicked();
+}
+
+managed class MultiProgressDisplay extends Component {
+	int runningCount;
+	List<String> statusMessages;
+
+	command update(DefaultMultiProgressDisplay config);
+
+	event clicked();
+}
+
+managed class DefaultMultiProgressDisplay extends MultiProgressDisplay {
+
+}

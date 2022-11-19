@@ -19,8 +19,27 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
+@TypeScriptFactory
+class LocalDate {
+    required int year;
+    required int month;
+    required int day;
 }
 
+managed class LocalDateField extends Field implements TextInputHandlingField {
+    boolean showDropDownButton = true;
+	boolean showClearButton;
+	boolean favorPastDates = false;
+	String locale;
+	DateTimeFormatDescriptor dateFormat = null; // if null, Configuration.dateFormat applies
+	LocalDate defaultSuggestionDate; // null == today
+	boolean shuffledFormatSuggestionsEnabled;
+	LocalDateFieldDropDownMode dropDownMode = LocalDateFieldDropDownMode.CALENDAR_SUGGESTION_LIST;
+	String placeholderText;
+
+    command update(LocalDateField config);
+}
+
+enum LocalDateFieldDropDownMode {
+    CALENDAR, CALENDAR_SUGGESTION_LIST, SUGGESTION_LIST;
+}

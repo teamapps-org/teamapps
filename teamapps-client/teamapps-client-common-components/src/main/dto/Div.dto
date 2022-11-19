@@ -19,8 +19,10 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class Div extends Component {
+    Component* content;
+    String innerHtml;
 
+    command setContent(Component* content);
+    command setInnerHtml(String innerHtml);
+}

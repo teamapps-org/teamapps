@@ -1,0 +1,85 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+abstract managed class AbstractUiToolContainer extends Component {
+	required List<ToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
+	required List<ToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
+	String backgroundColor = "rgba(255, 255, 255, 0.84)";
+
+	command setButtonVisible(String groupId, String buttonId, boolean visible);
+	command setButtonColors(String groupId, String buttonId, String backgroundColor, String hoverBackgroundColor);
+	command setButtonGroupVisible(String groupId, boolean visible);
+	command addButton(String groupId, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor); //if neighborButtonId is empty, add at last position
+	command removeButton(String groupId, String buttonId);
+	command addButtonGroup(ToolbarButtonGroup group, boolean rightSide);
+	command removeButtonGroup(String groupId);
+	
+	command setButtonHasDropDown(String groupId, String buttonId, boolean hasDropDown);
+	command setDropDownComponent(String groupId, String buttonId, Component* component);
+
+	event toolbarButtonClick(String groupId, String buttonId, DropDownButtonClickInfo dropDownClickInfo); // dropDownInfo is null for non-dropdown buttons!
+}
+
+enum ToolbarButtonGroupPosition {
+	FIRST, RATHER_FIRST, CENTER, RATHER_LAST, LAST
+}
+
+managed class Toolbar extends AbstractUiToolContainer {
+	String logoImage;
+
+	command setLogoImage(String logoImage);
+}
+
+managed class ToolAccordion extends AbstractUiToolContainer {
+	// no added funcionality...
+}
+
+class ToolbarButtonGroup {
+	required String groupId;
+	required List<ToolbarButton> buttons;
+	ToolbarButtonGroupPosition position = ToolbarButtonGroupPosition.CENTER;
+	boolean visible = true;
+	boolean showGroupSeparator; // separator on the RIGHT side!!
+	ToolbarButton collapsedButton;  //displayed if group is inside a drop down list or toolbar is too small an group is condensed to a single button
+}
+
+class ToolbarButton {
+	required String buttonId;
+	String debuggingId;
+	required Template template;
+	boolean visible = true;
+	required Object recordData;
+	String openNewTabWithUrl; // If this is set, when the user clicks this button, the specified URL is navigated to in a new tab. The button still sends events to the server.
+	Component* togglesFullScreenOnComponent; // If this is set, this button makes the specified component will enter fullscreen. The button still sends events to the server.
+	Component* startPlaybackComponent; // If this is set, when the user clicks this button, the play() method of the specified component will be called (if it has such a method).
+	boolean hasDropDown;
+	Component* dropDownComponent;
+	int dropDownPanelWidth = 450;
+
+	String backgroundColor;
+	String hoverBackgroundColor;
+}
+
+@TypeScriptFactory
+class DropDownButtonClickInfo {
+	required boolean isOpening;
+	required boolean isContentSet;
+}

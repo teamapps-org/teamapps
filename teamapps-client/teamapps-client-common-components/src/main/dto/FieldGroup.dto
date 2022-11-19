@@ -19,8 +19,8 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class FieldGroup extends Component {
+	List<Field*> fields;
 
+	command setFields(List<Field*> fields);
+}

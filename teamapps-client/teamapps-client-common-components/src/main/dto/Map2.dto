@@ -1,0 +1,66 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.dto;
+
+managed class Map2 extends Component {
+	required Dictionary<Template> markerTemplates;
+	String baseApiUrl;
+	String accessToken;
+	String styleUrl;
+	boolean displayAttributionControl;
+
+	double zoomLevel = 5;
+	MapLocation mapPosition;
+	Dictionary<AbstractUiMapShape> shapes;
+	List<MapMarkerClientRecord> markers;
+	MapMarkerCluster markerCluster;
+
+	command registerTemplate(String id, Template template);
+	command addMarker(MapMarkerClientRecord marker);
+	command removeMarker(int id);
+	command clearMarkers();
+
+	command setMapMarkerCluster(MapMarkerCluster cluster);
+
+	command setHeatMap(HeatMapData data);
+
+	command addShape(String shapeId, AbstractUiMapShape shape);
+	command updateShape(String shapeId, AbstractUiMapShape shape);
+	command changeShape(String shapeId, AbstractUiMapShapeChange change);
+	command removeShape(String shapeId);
+	command clearShapes();
+
+	command startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties);
+	command stopDrawingShape();
+	
+	command setZoomLevel(double zoom);
+	command setLocation(MapLocation location, long animationDurationMillis, double targetZoomLevel);
+	command setStyleUrl(String styleUrl);
+
+	command fitBounds(MapLocation southWest, MapLocation northEast);
+
+	event zoomLevelChanged(double zoomLevel);
+	event locationChanged(MapLocation center, MapArea displayedArea);
+	event mapClicked(MapLocation location);
+	event markerClicked(int markerId);
+	event shapeDrawn(String shapeId, AbstractUiMapShape shape);
+}
+
+

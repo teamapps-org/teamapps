@@ -19,8 +19,22 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class Popup extends Component {
+	Component* contentComponent;
+	int width; // 0 = full width, -1 = auto
+	int height; // 0 = full height, -1 = auto
+	int x; 
+	int y; 
+    String backgroundColor;
+	boolean modal = false;
+	String dimmingColor = "rgba(0, 0, 0, .2)";
+    boolean closeOnEscape; // close if the user presses escape
+    boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
 
+	command setBackgroundColor(String backgroundColor);
+	command setDimmingColor(String backgroundColor);
+	command setPosition(int x, int y);
+	command setDimensions(int width, int height);
+
+	command close();
+}

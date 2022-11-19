@@ -17,10 +17,10 @@ export interface DtoB extends DtoA, DtoI {
 	_type?: string;
 }
 
-export interface DtoBCommandHandler extends ACommandHandler, ICommandHandler {
+export interface DtoBCommandHandler extends DtoACommandHandler, DtoICommandHandler {
 }
 
-export interface DtoBEventSource extends AEventSource, IEventSource {
+export interface DtoBEventSource extends DtoAEventSource, DtoIEventSource {
 }
 
 

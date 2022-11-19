@@ -19,8 +19,13 @@
  */
 package org.teamapps.dto;
 
-class StyleManipulation {
-	String selector;
-	Dictionary<String> styles;
-}
+managed class QrCodeScanner extends Component {
+	boolean scanning;
+	boolean stopsScanningAtFirstResult;
 
+	command startScanning(boolean stopScanningAtFirstResult);
+	command stopScanning();
+	command switchCamera();
+
+	event qrCodeDetected(String code);
+}
