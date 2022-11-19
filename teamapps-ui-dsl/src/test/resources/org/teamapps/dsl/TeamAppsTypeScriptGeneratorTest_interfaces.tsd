@@ -3,9 +3,10 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
+import {DtoQuery} from "teamapps-client-communication";
 import {DtoCommand} from "teamapps-client-communication";
 import {DtoEvent} from "teamapps-client-communication";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";import {DtoQuery} from "teamapps-client-communication";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 export interface DtoA {
 	_type?: string;

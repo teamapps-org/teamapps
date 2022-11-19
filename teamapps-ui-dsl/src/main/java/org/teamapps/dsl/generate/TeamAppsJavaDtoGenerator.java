@@ -182,7 +182,7 @@ public class TeamAppsJavaDtoGenerator {
 
 	void generateInterface(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("interface")
-				.add("i", interfaceContext);
+				.add("c", interfaceContext);
 		AutoIndentWriter out = new AutoIndentWriter(writer);
 		template.write(out, new StringTemplatesErrorListener());
 		writer.close();

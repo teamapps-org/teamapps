@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import org.teamapps.dto.DtoJsonWrapper;
 import org.teamapps.dto.DtoObject;
 
 /**
@@ -30,6 +31,9 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
+import org.teamapps.dto.protocol.DtoQuery;
+import org.teamapps.dto.protocol.DtoCommand;
+import org.teamapps.dto.protocol.DtoEvent;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -78,23 +82,23 @@ public interface DtoA extends DtoObject {
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("componentId")
-		public DtoYEvent setComponentId(String componentId) {
+		public YEvent setComponentId(String componentId) {
 			this.componentId = componentId;
 			return this;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("y")
-		public DtoYEvent setY(String y) {
+		public YEvent setY(String y) {
 			this.y = y;
 			return this;
 		}
 
 	}
-    public static class DtoYEventWrapper extends DtoJsonWrapper {
+    public static class YEventEventWrapper extends DtoJsonWrapper {
 
         public static final String TYPE_ID = "y";
 
-        public YEventWrapper(JsonNode jsonNode) {
+        public YEventEventWrapper(JsonNode jsonNode) {
             super(jsonNode);
         }
 
@@ -162,23 +166,23 @@ public interface DtoA extends DtoObject {
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("componentId")
-		public DtoQQuery setComponentId(String componentId) {
+		public QQuery setComponentId(String componentId) {
 			this.componentId = componentId;
 			return this;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("y")
-		public DtoQQuery setY(String y) {
+		public QQuery setY(String y) {
 			this.y = y;
 			return this;
 		}
 
 	}
-	public static class DtoQQueryWrapper extends DtoJsonWrapper {
+	public static class A.QQueryQueryWrapper extends DtoJsonWrapper {
 
 	    public static final String TYPE_ID = "q";
 
-	    public QQueryWrapper(JsonNode jsonNode) {
+	    public A.QQueryQueryWrapper(JsonNode jsonNode) {
 	        super(jsonNode);
 	    }
 

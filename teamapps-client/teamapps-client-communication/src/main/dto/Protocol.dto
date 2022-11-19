@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
+package org.teamapps.dto.protocol;
 
 abstract class AbstractClientMessage {
 	 required String sessionId;

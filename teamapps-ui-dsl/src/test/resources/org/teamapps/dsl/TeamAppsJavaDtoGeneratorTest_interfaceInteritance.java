@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import org.teamapps.dto.DtoJsonWrapper;
 import org.teamapps.dto.DtoObject;
 
 /**
@@ -30,6 +31,8 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
+import org.teamapps.dto.DtoA;
+import org.teamapps.dto.DtoAWrapper;
 
 @JsonTypeName("B")
 @JsonInclude(JsonInclude.Include.NON_NULL)

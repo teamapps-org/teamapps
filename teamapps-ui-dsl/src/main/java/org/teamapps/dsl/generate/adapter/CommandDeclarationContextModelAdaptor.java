@@ -101,6 +101,6 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.CommandDeclarationContext node) {
-        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Command";
+        return StringUtils.capitalize(node.Identifier().getText()) + "Command";
     }
 }

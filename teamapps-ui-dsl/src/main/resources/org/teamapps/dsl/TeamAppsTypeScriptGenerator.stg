@@ -27,15 +27,8 @@ typeScriptFilePrelude() ::= <<
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.allReferencedClassesAndInterfaces:{c|import {Dto<c.typeScriptIdentifier>\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
-<c.allReferencedEnums:{e|import {Dto<e.Identifier>\} from "./Dto<e.Identifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {Dto<c.Identifier>CommandHandler\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {Dto<c.Identifier>EventSource\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
-<if(c.hasCommands)>import {DtoCommand} from "teamapps-client-communication";<endif>
-<if(c.hasEvents)>import {DtoEvent} from "teamapps-client-communication";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
-<if(c.hasQueries)>import {DtoQuery} from "teamapps-client-communication";<endif>
-<c.imports:{imp|import {Dto<imp.Identifier>\} from <imp.StringLiteral>;}; separator="\n">
+<c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsModuleName>";}; separator="\n">
+<if(c.hasEvents)>import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
 
 export interface Dto<c.typeScriptIdentifier> <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|Dto<c.typeScriptIdentifier>};  separator=", "> <endif>{
 	_type?: string;
@@ -101,14 +94,8 @@ parameter(p, optional) ::= "<p.Identifier><if(optional)>?<endif>: <p.type.typeSc
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.allReferencedClassesAndInterfaces:{c|import {Dto<c.typeScriptIdentifier>\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
-<c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import Dto{<c.Identifier>CommandHandler\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import Dto{<c.Identifier>EventSource\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
-<if(c.hasCommands)>import {DtoCommand} from "teamapps-client-communication";<endif>
-<if(c.hasEvents)>import {DtoEvent} from "teamapps-client-communication";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
-<if(c.hasQueries)>import {DtoQuery} from "teamapps-client-communication";<endif>
+<c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsModuleName>";}; separator="\n">
+<if(c.hasEvents)>import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
 
 export interface Dto<c.typeScriptIdentifier> <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|Dto<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
 	_type?: string;

@@ -569,13 +569,13 @@ public class TeamAppsIntermediateDtoModel {
 		).collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> getSuperInterfacesWithCommands(InterfaceDeclarationContext interfaceContext) {
+	public List<InterfaceDeclarationContext> getSuperInterfacesWithCommands(InterfaceDeclarationContext interfaceContext) {
 		return findSuperInterfaces(interfaceContext).stream()
 				.filter(itf -> !getAllCommands(itf).isEmpty())
 				.collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> getSuperInterfacesWithEvents(InterfaceDeclarationContext interfaceContext) {
+	public List<InterfaceDeclarationContext> getSuperInterfacesWithEvents(InterfaceDeclarationContext interfaceContext) {
 		return findSuperInterfaces(interfaceContext).stream()
 				.filter(itf -> !getAllEvents(itf).isEmpty())
 				.collect(Collectors.toList());
@@ -656,6 +656,19 @@ public class TeamAppsIntermediateDtoModel {
 				.collect(Collectors.toList());
 	}
 
+	public List<ClassDeclarationContext> findAllReferencedClasses(ClassDeclarationContext classContext) {
+		return findAllReferencedClassesAndInterfaces(classContext).stream()
+				.filter(c -> c instanceof ClassDeclarationContext)
+				.map(c -> ((ClassDeclarationContext) c))
+				.collect(Collectors.toList());
+	}
+	public List<InterfaceDeclarationContext> findAllReferencedInterfaces(ClassDeclarationContext classContext) {
+		return findAllReferencedClassesAndInterfaces(classContext).stream()
+				.filter(c -> c instanceof InterfaceDeclarationContext)
+				.map(c -> ((InterfaceDeclarationContext) c))
+				.collect(Collectors.toList());
+	}
+
 	public List<EnumDeclarationContext> findAllReferencedEnums(ClassDeclarationContext classContext) {
 		return Stream.of(
 						classContext.propertyDeclaration().stream()
@@ -689,6 +702,19 @@ public class TeamAppsIntermediateDtoModel {
 				.filter(Objects::nonNull)
 				.filter(c -> c != interfaceContext)
 				.distinct()
+				.collect(Collectors.toList());
+	}
+
+	public List<ClassDeclarationContext> findAllReferencedClasses(InterfaceDeclarationContext interfaceContext) {
+		return findAllReferencedClassesAndInterfaces(interfaceContext).stream()
+				.filter(c -> c instanceof ClassDeclarationContext)
+				.map(c -> ((ClassDeclarationContext) c))
+				.collect(Collectors.toList());
+	}
+	public List<InterfaceDeclarationContext> findAllReferencedInterfaces(InterfaceDeclarationContext interfaceContext) {
+		return findAllReferencedClassesAndInterfaces(interfaceContext).stream()
+				.filter(c -> c instanceof InterfaceDeclarationContext)
+				.map(c -> ((InterfaceDeclarationContext) c))
 				.collect(Collectors.toList());
 	}
 

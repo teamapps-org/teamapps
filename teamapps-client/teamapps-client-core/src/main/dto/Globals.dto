@@ -1,6 +1,6 @@
 package org.teamapps.dto;
 
-import Location from "teamapps-client-communication":org.teamapps.dto;
+import Location from "teamapps-client-communication":org.teamapps.dto.protocol;
 
 managed class Globals {
 

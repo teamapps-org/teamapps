@@ -57,7 +57,6 @@ public class EnumDeclarationContextModelAdapter extends ReferencableEntityModelA
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.EnumDeclarationContext node) {
-		return StringUtils.capitalize(node.Identifier().getText());
-
+		return "Dto" + StringUtils.capitalize(node.Identifier().getText());
 	}
 }

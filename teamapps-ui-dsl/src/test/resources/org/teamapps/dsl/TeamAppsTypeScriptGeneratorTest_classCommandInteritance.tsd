@@ -3,14 +3,14 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoB} from "./DtoB";
+import {DtoDtoACommandHandler} from "./DtoACommandHandler";
 import {DtoA} from "./DtoA";
-import {DtoBCommandHandler} from "./DtoB";
-import {DtoACommandHandler} from "./DtoA";
-import {DtoBEventSource} from "./DtoB";
-import {DtoAEventSource} from "./DtoA";
+import {DtoB} from "./DtoB";
 import {DtoCommand} from "teamapps-client-communication";
 import {DtoEvent} from "teamapps-client-communication";
+import {DtoDtoBEventSource} from "./DtoBEventSource";
+import {DtoDtoAEventSource} from "./DtoAEventSource";
+import {DtoDtoBCommandHandler} from "./DtoBCommandHandler";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 export interface DtoC extends DtoB, DtoA {

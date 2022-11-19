@@ -115,7 +115,7 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.EventDeclarationContext node) {
-        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Event";
+        return StringUtils.capitalize(node.Identifier().getText()) + "Event";
     }
 
 	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.EventDeclarationContext eventContext) {

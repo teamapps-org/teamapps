@@ -23,9 +23,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.InterfaceDeclarationContext> {
@@ -75,11 +78,11 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 					.filter(cmd -> cmd.staticModifier() == null)
 					.collect(Collectors.toList());
 		} else if ("hasCommands".equals(propertyName)) {
-			return !model.getAllCommands(interfaceContext).isEmpty();
+			return hasCommands(interfaceContext);
 		} else if ("hasEvents".equals(propertyName)) {
-			return !model.getAllEvents(interfaceContext).isEmpty();
+			return hasEvents(interfaceContext);
 		} else if ("hasQueries".equals(propertyName)) {
-			return !model.getAllQueries(interfaceContext).isEmpty();
+			return hasQueries(interfaceContext);
 		} else if ("allEvents".equals(propertyName)) {
 			return model.getAllEvents(interfaceContext);
 		} else if ("allNonStaticEvents".equals(propertyName)) {
@@ -108,9 +111,73 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return model.getReferencableProperties(interfaceContext);
 		} else if ("referencableBaseClass".equals(propertyName)) {
 			return model.isReferencableBaseInterface(interfaceContext);
+		} else if ("effectiveTypeScriptImports".equals(propertyName)) {
+			return getEffectiveImports(interfaceContext, true);
+		} else if ("effectiveJavaImports".equals(propertyName)) {
+			return getEffectiveImports(interfaceContext, false);
 		} else {
 			return super.getProperty(interpreter, seld, o, property, propertyName);
 		}
+	}
+
+	private boolean hasQueries(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+		return !model.getAllQueries(interfaceContext).isEmpty();
+	}
+
+	private boolean hasEvents(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+		return !model.getAllEvents(interfaceContext).isEmpty();
+	}
+
+	private boolean hasCommands(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+		return !model.getAllCommands(interfaceContext).isEmpty();
+	}
+
+	private Collection<Import> getEffectiveImports(TeamAppsDtoParser.InterfaceDeclarationContext classContext, boolean typescript) {
+		Map<String, Import> explicitImports = model.getAllImports(classContext).stream()
+				.map(i -> new Import(i.Identifier().getText(), i.StringLiteral().getText().substring(1, i.StringLiteral().getText().length() - 1), i.packageName().getText()))
+				.collect(Collectors.toMap(Import::name, i -> i));
+
+		Imports imports = new Imports();
+
+		if (hasCommands(classContext)) {
+			imports.add("Command", "teamapps-client-communication", "org.teamapps.dto.protocol");
+		}
+		if (hasEvents(classContext)) {
+			imports.add("Event", "teamapps-client-communication", "org.teamapps.dto.protocol");
+		}
+		if (hasQueries(classContext)) {
+			imports.add("Query", "teamapps-client-communication", "org.teamapps.dto.protocol");
+		}
+
+		model.findAllReferencedClasses(classContext).stream()
+				.forEach(c -> {
+					String className = c.Identifier().getText();
+					Import explicitImport = explicitImports.get(className);
+					imports.add(className, explicitImport != null ? explicitImport.jsModuleName() : "./Dto" + className, TeamAppsIntermediateDtoModel.getPackageName(c));
+					if (!typescript) {
+						imports.add(className + "Wrapper", explicitImport != null ? explicitImport.jsModuleName() : "./Dto" + className, TeamAppsIntermediateDtoModel.getPackageName(c));
+					}
+				});
+		model.findAllReferencedInterfaces(classContext).stream()
+				.forEach(i -> {
+					String className = i.Identifier().getText();
+					Import explicitImport = explicitImports.get(className);
+					imports.add(className, explicitImport != null ? explicitImport.jsModuleName() : "./Dto" + className, TeamAppsIntermediateDtoModel.getPackageName(i));
+					if (!typescript) {
+						imports.add(className + "Wrapper", explicitImport != null ? explicitImport.jsModuleName() : "./Dto" + className, TeamAppsIntermediateDtoModel.getPackageName(i));
+					}
+				});
+		model.findAllReferencedEnums(classContext).stream()
+				.forEach(c -> imports.add(c.Identifier().getText(), "./Dto" + c.Identifier(), TeamAppsIntermediateDtoModel.getPackageName(c)));
+
+		if (typescript) {
+			model.getSuperInterfacesWithCommands(classContext).stream()
+					.forEach(c -> imports.add("Dto" + c.Identifier().getText() + "CommandHandler", "./Dto" + c.Identifier() + "CommandHandler", null));
+			model.getSuperInterfacesWithEvents(classContext).stream()
+					.forEach(c -> imports.add("Dto" + c.Identifier().getText() + "EventSource", "./Dto" + c.Identifier() + "EventSource", null));
+		}
+
+		return imports.getAll();
 	}
 
 	@Override
@@ -125,6 +192,6 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.InterfaceDeclarationContext node) {
-		return StringUtils.capitalize(node.Identifier().getText());
+		return "Dto" + StringUtils.capitalize(node.Identifier().getText());
 	}
 }
