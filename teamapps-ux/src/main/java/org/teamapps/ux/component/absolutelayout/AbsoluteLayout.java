@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.absolutelayout;
 
-import org.teamapps.dto.UiAbsoluteLayout;
-import org.teamapps.dto.UiAbsolutePositionedComponent;
-import org.teamapps.dto.UiAbsolutePositioning;
-import org.teamapps.dto.UiEventWrapper;
+import org.teamapps.dto.DtoAbsoluteLayout;
+import org.teamapps.dto.DtoAbsolutePositionedComponent;
+import org.teamapps.dto.DtoAbsolutePositioning;
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -62,15 +62,15 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	private void updateUiLayout() {
-		sendCommandIfRendered(() -> new UiAbsoluteLayout.UpdateCommand(createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing()));
+		sendCommandIfRendered(() -> new DtoAbsoluteLayout.UpdateCommand(createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing()));
 	}
 
-	private List<UiAbsolutePositionedComponent> createUiAbsolutePositionedComponents() {
+	private List<DtoAbsolutePositionedComponent> createUiAbsolutePositionedComponents() {
 		return positionsByComponent.entrySet().stream()
 				.map(entry -> {
 					Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
-					return new UiAbsolutePositionedComponent(component.createUiReference(), new UiAbsolutePositioning(
+					return new DtoAbsolutePositionedComponent(component.createUiReference(), new DtoAbsolutePositioning(
 							position.getTop() != null ? position.getTop().toCssString(): null,
 							position.getRight() != null ? position.getRight().toCssString(): null,
 							position.getBottom() != null ? position.getBottom().toCssString(): null,
@@ -84,15 +84,15 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	@Override
-	public UiAbsoluteLayout createUiClientObject() {
-		UiAbsoluteLayout uiAbsoluteLayout = new UiAbsoluteLayout();
+	public DtoAbsoluteLayout createUiClientObject() {
+		DtoAbsoluteLayout uiAbsoluteLayout = new DtoAbsoluteLayout();
 		mapAbstractUiComponentProperties(uiAbsoluteLayout);
 		uiAbsoluteLayout.setComponents(createUiAbsolutePositionedComponents());
 		return uiAbsoluteLayout;
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		// none
 	}
 

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.charting.common;
 
-import org.teamapps.dto.UiTreeGraphNodeIcon;
+import org.teamapps.dto.DtoTreeGraphNodeIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
 
@@ -33,8 +33,8 @@ public class GraphNodeIcon {
 		this.size = size;
 	}
 
-	public UiTreeGraphNodeIcon createUiTreeGraphNodeIcon() {
-		return new UiTreeGraphNodeIcon(CurrentSessionContext.get().resolveIcon(icon), size);
+	public DtoTreeGraphNodeIcon createUiTreeGraphNodeIcon() {
+		return new DtoTreeGraphNodeIcon(CurrentSessionContext.get().resolveIcon(icon), size);
 	}
 
 	public Icon getIcon() {

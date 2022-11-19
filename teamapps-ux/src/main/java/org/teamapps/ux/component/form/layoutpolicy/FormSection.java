@@ -20,10 +20,10 @@
 package org.teamapps.ux.component.form.layoutpolicy;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiFormSection;
-import org.teamapps.dto.UiFormSectionPlacement;
-import org.teamapps.dto.UiGridColumn;
-import org.teamapps.dto.UiGridRow;
+import org.teamapps.dto.DtoFormSection;
+import org.teamapps.dto.DtoFormSectionPlacement;
+import org.teamapps.dto.DtoGridColumn;
+import org.teamapps.dto.DtoGridRow;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.Shadow;
 import org.teamapps.ux.component.format.Spacing;
@@ -264,17 +264,17 @@ public class FormSection {
 		return this;
 	}
 
-	public UiFormSection createUiFormSection() {
-		List<UiGridColumn> uiColumns = this.columns.stream()
+	public DtoFormSection createUiFormSection() {
+		List<DtoGridColumn> uiColumns = this.columns.stream()
 				.map(column -> column != null ? column.createUiGridColumn() : null)
 				.collect(Collectors.toList());
-		List<UiGridRow> rows = this.rows.stream()
+		List<DtoGridRow> rows = this.rows.stream()
 				.map(row -> row != null ? row.createUiGridRow() : null)
 				.collect(Collectors.toList());
-		List<UiFormSectionPlacement> uiFieldPlacements = fieldPlacements.stream()
+		List<DtoFormSectionPlacement> uiFieldPlacements = fieldPlacements.stream()
 				.map(fieldPlacement -> fieldPlacement != null ? fieldPlacement.createUiFormSectionPlacement() : null)
 				.collect(Collectors.toList());
-		UiFormSection uiSection = new UiFormSection(id, uiColumns, rows, uiFieldPlacements);
+		DtoFormSection uiSection = new DtoFormSection(id, uiColumns, rows, uiFieldPlacements);
 		uiSection.setMargin(this.margin != null ? this.margin.createUiSpacing() : null);
 		uiSection.setPadding(this.padding != null ? this.padding.createUiSpacing() : null);
 		uiSection.setBorder(this.border != null ? this.border.createUiBorder() : null);

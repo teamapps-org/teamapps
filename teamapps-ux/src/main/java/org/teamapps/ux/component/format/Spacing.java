@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.format;
 
-import org.teamapps.dto.UiSpacing;
+import org.teamapps.dto.DtoSpacing;
 import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.absolutelayout.SizeUnit;
 
@@ -73,14 +73,14 @@ public class Spacing {
 		return left;
 	}
 
-	public UiSpacing createUiSpacing() {
+	public DtoSpacing createUiSpacing() {
 		if (top.getUnit() != SizeUnit.PIXEL
 				|| left.getUnit() != SizeUnit.PIXEL
 				|| bottom.getUnit() != SizeUnit.PIXEL
 				|| right.getUnit() != SizeUnit.PIXEL) {
-			throw new IllegalArgumentException("UiSpacing currently only supports pixel values!");
+			throw new IllegalArgumentException("DtoSpacing currently only supports pixel values!");
 		}
-		UiSpacing uiSpacing = new UiSpacing();
+		DtoSpacing uiSpacing = new DtoSpacing();
 		uiSpacing.setTop(top.getSize());
 		uiSpacing.setRight(right.getSize());
 		uiSpacing.setBottom(bottom.getSize());

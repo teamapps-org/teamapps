@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.rootpanel;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiRootPanel;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoRootPanel;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -35,14 +35,14 @@ public class RootPanel extends AbstractComponent implements Component {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiRootPanel uiRootPanel = new UiRootPanel();
+		DtoRootPanel uiRootPanel = new DtoRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
 		uiRootPanel.setContent(content != null ? content.createUiReference() : null);
 		return uiRootPanel;
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		// no ui events for this component
 	}
 
@@ -62,7 +62,7 @@ public class RootPanel extends AbstractComponent implements Component {
 		if (component != null) {
 			component.setParent(this);
 		}
-		sendCommandIfRendered(() -> new UiRootPanel.SetContentCommand(component != null ? component.createUiReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
+		sendCommandIfRendered(() -> new DtoRootPanel.SetContentCommand(component != null ? component.createUiReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
 	}
 
 	public Component getContent() {

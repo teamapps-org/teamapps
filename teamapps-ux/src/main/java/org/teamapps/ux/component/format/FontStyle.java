@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.format;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiFontStyle;
+import org.teamapps.dto.DtoFontStyle;
 
 public class FontStyle {
 
@@ -106,8 +106,8 @@ public class FontStyle {
 		return relativeFontSize;
 	}
 
-	public UiFontStyle createUiFontStyle() {
-		UiFontStyle uiFontStyle = new UiFontStyle();
+	public DtoFontStyle createUiFontStyle() {
+		DtoFontStyle uiFontStyle = new DtoFontStyle();
 		uiFontStyle.setFontColor(fontColor != null ? fontColor.toHtmlColorString() : null);
 		uiFontStyle.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiFontStyle.setBold(bold);

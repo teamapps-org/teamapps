@@ -52,19 +52,19 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(Calendar.class);
 
-	public final ProjectorEvent<EventClickedEventData<CEVENT>> onEventClicked = createProjectorEventBoundToUiEvent(UiCalendar.EventClickedEvent.TYPE_ID);
-	public final ProjectorEvent<EventMovedEventData<CEVENT>> onEventMoved = createProjectorEventBoundToUiEvent(UiCalendar.EventMovedEvent.TYPE_ID);
-	public final ProjectorEvent<DayClickedEventData> onDayClicked = createProjectorEventBoundToUiEvent(UiCalendar.DayClickedEvent.TYPE_ID);
-	public final ProjectorEvent<IntervalSelectedEventData> onIntervalSelected = createProjectorEventBoundToUiEvent(UiCalendar.IntervalSelectedEvent.TYPE_ID);
-	public final ProjectorEvent<ViewChangedEventData> onViewChanged = createProjectorEventBoundToUiEvent(UiCalendar.ViewChangedEvent.TYPE_ID);
-	public final ProjectorEvent<LocalDate> onMonthHeaderClicked = createProjectorEventBoundToUiEvent(UiCalendar.MonthHeaderClickedEvent.TYPE_ID);
-	public final ProjectorEvent<WeeHeaderClickedEventData> onWeekHeaderClicked = createProjectorEventBoundToUiEvent(UiCalendar.WeekHeaderClickedEvent.TYPE_ID);
-	public final ProjectorEvent<LocalDate> onDayHeaderClicked = createProjectorEventBoundToUiEvent(UiCalendar.DayHeaderClickedEvent.TYPE_ID);
+	public final ProjectorEvent<EventClickedEventData<CEVENT>> onEventClicked = createProjectorEventBoundToUiEvent(DtoCalendar.EventClickedEvent.TYPE_ID);
+	public final ProjectorEvent<EventMovedEventData<CEVENT>> onEventMoved = createProjectorEventBoundToUiEvent(DtoCalendar.EventMovedEvent.TYPE_ID);
+	public final ProjectorEvent<DayClickedEventData> onDayClicked = createProjectorEventBoundToUiEvent(DtoCalendar.DayClickedEvent.TYPE_ID);
+	public final ProjectorEvent<IntervalSelectedEventData> onIntervalSelected = createProjectorEventBoundToUiEvent(DtoCalendar.IntervalSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<ViewChangedEventData> onViewChanged = createProjectorEventBoundToUiEvent(DtoCalendar.ViewChangedEvent.TYPE_ID);
+	public final ProjectorEvent<LocalDate> onMonthHeaderClicked = createProjectorEventBoundToUiEvent(DtoCalendar.MonthHeaderClickedEvent.TYPE_ID);
+	public final ProjectorEvent<WeeHeaderClickedEventData> onWeekHeaderClicked = createProjectorEventBoundToUiEvent(DtoCalendar.WeekHeaderClickedEvent.TYPE_ID);
+	public final ProjectorEvent<LocalDate> onDayHeaderClicked = createProjectorEventBoundToUiEvent(DtoCalendar.DayHeaderClickedEvent.TYPE_ID);
 
 	private CalendarModel<CEVENT> model;
 	private PropertyProvider<CEVENT> propertyProvider = new BeanPropertyExtractor<>();
 
-	private final ClientRecordCache<CEVENT, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
+	private final ClientRecordCache<CEVENT, DtoCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
 
 	private CalendarEventTemplateDecider<CEVENT> templateDecider = //(calendarEvent, viewMode) -> null;
 			createStaticTemplateDecider(
@@ -110,7 +110,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		}
 	}
 
-	private UiCalendarEventClientRecord createUiCalendarEventClientRecord(CEVENT calendarEvent) {
+	private DtoCalendarEventClientRecord createUiCalendarEventClientRecord(CEVENT calendarEvent) {
 		Template timeGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.WEEK);
 		Template dayGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.MONTH);
 		Template monthGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.YEAR);
@@ -127,7 +127,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		}
 
 		Map<String, Object> values = propertyProvider.getValues(calendarEvent, propertyNames);
-		UiCalendarEventClientRecord uiRecord = new UiCalendarEventClientRecord();
+		DtoCalendarEventClientRecord uiRecord = new DtoCalendarEventClientRecord();
 		uiRecord.setValues(values);
 
 		uiRecord.setTimeGridTemplateId(templateIdsByTemplate.get(timeGridTemplate));
@@ -144,7 +144,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		uiRecord.setAllowDragOperations(calendarEvent.isAllowDragOperations());
 		uiRecord.setBackgroundColor(calendarEvent.getBackgroundColor() != null ? calendarEvent.getBackgroundColor().toHtmlColorString() : null);
 		uiRecord.setBorderColor(calendarEvent.getBorderColor() != null ? calendarEvent.getBorderColor().toHtmlColorString() : null);
-		uiRecord.setRendering(calendarEvent.getRendering() != null ? calendarEvent.getRendering().toUiCalendarEventRenderingStyle() : UiCalendarEventRenderingStyle.DEFAULT);
+		uiRecord.setRendering(calendarEvent.getRendering() != null ? calendarEvent.getRendering().toUiCalendarEventRenderingStyle() : DtoCalendarEventRenderingStyle.DEFAULT);
 
 		return uiRecord;
 	}
@@ -154,7 +154,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String id = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, id);
-			sendCommandIfRendered(() -> new UiCalendar.RegisterTemplateCommand(id, template.createUiTemplate()));
+			sendCommandIfRendered(() -> new DtoCalendar.RegisterTemplateCommand(id, template.createUiTemplate()));
 		}
 		return template;
 	}
@@ -178,7 +178,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiCalendar uiCalendar = new UiCalendar();
+		DtoCalendar uiCalendar = new DtoCalendar();
 		mapAbstractUiComponentProperties(uiCalendar);
 		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());
 		uiCalendar.setDisplayedDate(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli());
@@ -187,8 +187,8 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		uiCalendar.setShowWeekNumbers(showWeekNumbers);
 		uiCalendar.setBusinessHoursStart(businessHoursStart);
 		uiCalendar.setBusinessHoursEnd(businessHoursEnd);
-		uiCalendar.setFirstDayOfWeek(UiWeekDay.valueOf(firstDayOfWeek.name()));
-		uiCalendar.setWorkingDays(workingDays.stream().map(workingDay -> UiWeekDay.valueOf(workingDay.name())).collect(Collectors.toList()));
+		uiCalendar.setFirstDayOfWeek(DtoWeekDay.valueOf(firstDayOfWeek.name()));
+		uiCalendar.setWorkingDays(workingDays.stream().map(workingDay -> DtoWeekDay.valueOf(workingDay.name())).collect(Collectors.toList()));
 		uiCalendar.setTableHeaderBackgroundColor(tableHeaderBackgroundColor != null ? tableHeaderBackgroundColor.toHtmlColorString() : null);
 		uiCalendar.setNavigateOnHeaderClicks(navigateOnHeaderClicks);
 		uiCalendar.setLocale(locale.toLanguageTag());
@@ -199,7 +199,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
 		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
 		List<CEVENT> initialCalendarEvents = query(queryStart, queryEnd);
-		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(initialCalendarEvents);
+		CacheManipulationHandle<List<DtoCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(initialCalendarEvents);
 		cacheResponse.commit();
 		uiCalendar.setInitialData(cacheResponse.getAndClearResult());
 
@@ -221,34 +221,34 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiCalendar.EventClickedEvent.TYPE_ID -> {
-				var clickEvent = event.as(UiCalendar.EventClickedEventWrapper.class);
+			case DtoCalendar.EventClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoCalendar.EventClickedEventWrapper.class);
 				CEVENT calendarEvent = recordCache.getRecordByClientId(clickEvent.getEventId());
 				if (calendarEvent != null) {
 					onEventClicked.fire(new EventClickedEventData<>(calendarEvent, clickEvent.getIsDoubleClick()));
 				}
 			}
-			case UiCalendar.EventMovedEvent.TYPE_ID -> {
-				var eventMovedEvent = event.as(UiCalendar.EventMovedEventWrapper.class);
+			case DtoCalendar.EventMovedEvent.TYPE_ID -> {
+				var eventMovedEvent = event.as(DtoCalendar.EventMovedEventWrapper.class);
 				CEVENT calendarEvent = recordCache.getRecordByClientId(eventMovedEvent.getEventId());
 				if (calendarEvent != null) {
 					onEventMoved.fire(new EventMovedEventData<>(calendarEvent, Instant.ofEpochMilli(eventMovedEvent.getNewStart()), Instant.ofEpochMilli(eventMovedEvent.getNewEnd())));
 				}
 			}
-			case UiCalendar.DayClickedEvent.TYPE_ID -> {
-				var dayClickedEvent = event.as(UiCalendar.DayClickedEventWrapper.class);
+			case DtoCalendar.DayClickedEvent.TYPE_ID -> {
+				var dayClickedEvent = event.as(DtoCalendar.DayClickedEventWrapper.class);
 				onDayClicked.fire(new DayClickedEventData(timeZone, Instant.ofEpochMilli(dayClickedEvent.getDate()), dayClickedEvent.getIsDoubleClick()));
 
 			}
-			case UiCalendar.IntervalSelectedEvent.TYPE_ID -> {
-				var selectionEvent = event.as(UiCalendar.IntervalSelectedEventWrapper.class);
+			case DtoCalendar.IntervalSelectedEvent.TYPE_ID -> {
+				var selectionEvent = event.as(DtoCalendar.IntervalSelectedEventWrapper.class);
 				onIntervalSelected.fire(new IntervalSelectedEventData(timeZone, Instant.ofEpochMilli(selectionEvent.getStart()), Instant.ofEpochMilli(selectionEvent.getEnd()),
 						selectionEvent.getAllDay()));
 			}
-			case UiCalendar.ViewChangedEvent.TYPE_ID -> {
-				var viewChangedEvent = event.as(UiCalendar.ViewChangedEventWrapper.class);
+			case DtoCalendar.ViewChangedEvent.TYPE_ID -> {
+				var viewChangedEvent = event.as(DtoCalendar.ViewChangedEventWrapper.class);
 				this.displayedDate = Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()).atZone(timeZone).toLocalDate();
 				this.activeViewMode = CalendarViewMode.valueOf(viewChangedEvent.getViewMode().name());
 				onViewChanged.fire(new ViewChangedEventData(
@@ -260,24 +260,24 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 						Instant.ofEpochMilli(viewChangedEvent.getDisplayedIntervalEnd())
 				));
 			}
-			case UiCalendar.DataNeededEvent.TYPE_ID -> {
-				var dataNeededEvent = event.as(UiCalendar.DataNeededEventWrapper.class);
+			case DtoCalendar.DataNeededEvent.TYPE_ID -> {
+				var dataNeededEvent = event.as(DtoCalendar.DataNeededEventWrapper.class);
 				Instant queryStart = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalStart());
 				Instant queryEnd = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalEnd());
 				queryAndSendCalendarData(queryStart, queryEnd);
 			}
-			case UiCalendar.MonthHeaderClickedEvent.TYPE_ID -> {
-				var clickEvent = event.as(UiCalendar.MonthHeaderClickedEventWrapper.class);
+			case DtoCalendar.MonthHeaderClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoCalendar.MonthHeaderClickedEventWrapper.class);
 				LocalDate startOfMonth = Instant.ofEpochMilli(clickEvent.getMonthStartDate()).atZone(timeZone).toLocalDate();
 				onMonthHeaderClicked.fire(startOfMonth);
 			}
-			case UiCalendar.WeekHeaderClickedEvent.TYPE_ID -> {
-				var clickEvent = event.as(UiCalendar.WeekHeaderClickedEventWrapper.class);
+			case DtoCalendar.WeekHeaderClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoCalendar.WeekHeaderClickedEventWrapper.class);
 				LocalDate startOfWeek = Instant.ofEpochMilli(clickEvent.getWeekStartDate()).atZone(timeZone).toLocalDate();
 				onWeekHeaderClicked.fire(new WeeHeaderClickedEventData(timeZone, clickEvent.getYear(), clickEvent.getWeek(), startOfWeek));
 			}
-			case UiCalendar.DayHeaderClickedEvent.TYPE_ID -> {
-				var clickEvent = event.as(UiCalendar.DayHeaderClickedEventWrapper.class);
+			case DtoCalendar.DayHeaderClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoCalendar.DayHeaderClickedEventWrapper.class);
 				LocalDate date = Instant.ofEpochMilli(clickEvent.getDate()).atZone(timeZone).toLocalDate();
 				onDayHeaderClicked.fire(date);
 			}
@@ -286,9 +286,9 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private void queryAndSendCalendarData(Instant queryStart, Instant queryEnd) {
 		List<CEVENT> calendarEvents = query(queryStart, queryEnd);
-		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
+		CacheManipulationHandle<List<DtoCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new UiCalendar.SetCalendarDataCommand(cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+			getSessionContext().sendCommand(getId(), new DtoCalendar.SetCalendarDataCommand(cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 		} else {
 			cacheResponse.commit();
 		}
@@ -347,7 +347,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setActiveViewMode(CalendarViewMode activeViewMode) {
 		this.activeViewMode = activeViewMode;
-		sendCommandIfRendered(() -> new UiCalendar.SetViewModeCommand(activeViewMode.toUiCalendarViewMode()));
+		sendCommandIfRendered(() -> new DtoCalendar.SetViewModeCommand(activeViewMode.toUiCalendarViewMode()));
 		refreshEvents();
 	}
 
@@ -357,7 +357,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
-		sendCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
+		sendCommandIfRendered(() -> new DtoCalendar.SetDisplayedDateCommand(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
 	}
 
 	public void setDisplayDateOneUnitPrevious() {
@@ -546,7 +546,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setTimeZone(ZoneId timeZone) {
 		this.timeZone = timeZone;
-		sendCommandIfRendered(() -> new UiCalendar.SetTimeZoneIdCommand(timeZone.getId()));
+		sendCommandIfRendered(() -> new DtoCalendar.SetTimeZoneIdCommand(timeZone.getId()));
 	}
 
 	public int getMinYearViewMonthTileWidth() {

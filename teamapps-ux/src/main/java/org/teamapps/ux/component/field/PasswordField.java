@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiPasswordField;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoPasswordField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
@@ -35,8 +35,8 @@ public class PasswordField extends TextField {
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiPasswordField uiField = new UiPasswordField();
+	public DtoField createUiClientObject() {
+		DtoPasswordField uiField = new DtoPasswordField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
 		uiField.setShowClearButton(isShowClearButton());
@@ -53,7 +53,7 @@ public class PasswordField extends TextField {
 
 	public void setSendValueAsMd5(boolean sendValueAsMd5) {
 		this.sendValueAsMd5 = sendValueAsMd5;
-		sendCommandIfRendered(() -> new UiPasswordField.SetSendValueAsMd5Command(sendValueAsMd5));
+		sendCommandIfRendered(() -> new DtoPasswordField.SetSendValueAsMd5Command(sendValueAsMd5));
 	}
 
 	public String getSalt() {
@@ -62,6 +62,6 @@ public class PasswordField extends TextField {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
-		sendCommandIfRendered(() -> new UiPasswordField.SetSaltCommand(salt));
+		sendCommandIfRendered(() -> new DtoPasswordField.SetSaltCommand(salt));
 	}
 }

@@ -40,8 +40,8 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class CurrencyField extends AbstractField<CurrencyValue> implements TextInputHandlingField {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiCurrencyField.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiCurrencyField.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoCurrencyField.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoCurrencyField.SpecialKeyPressedEvent.TYPE_ID);
 
 	private ULocale locale = SessionContext.current().getULocale();
 
@@ -73,8 +73,8 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiCurrencyField field = new UiCurrencyField();
+	public DtoField createUiClientObject() {
+		DtoCurrencyField field = new DtoCurrencyField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setCurrencyUnits(currencies.stream()
 				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
@@ -88,7 +88,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		defaultHandleTextInputEvent(event);
 	}
@@ -99,7 +99,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencies(List<CurrencyUnit> currencies) {
 		this.currencies = currencies;
-		sendCommandIfRendered(() -> new UiCurrencyField.SetCurrencyUnitsCommand(currencies != null ? currencies.stream()
+		sendCommandIfRendered(() -> new DtoCurrencyField.SetCurrencyUnitsCommand(currencies != null ? currencies.stream()
 				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
 				.collect(Collectors.toList()) : null));
 		return this;
@@ -114,12 +114,12 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	public CurrencyValue convertUiValueToUxValue(Object value) {
 		if (value == null) {
 			return null;
-		} else if (value instanceof UiCurrencyValue) {
-			UiCurrencyValue uiCurrencyValue = (UiCurrencyValue) value;
+		} else if (value instanceof DtoCurrencyValue) {
+			DtoCurrencyValue uiCurrencyValue = (DtoCurrencyValue) value;
 			String uiAmount = uiCurrencyValue.getAmount();
 			BigDecimal uxAmount = uiAmount != null ? new BigDecimal(uiAmount) : null;
 
-			UiCurrencyUnit uiCurrencyUnit = uiCurrencyValue.getCurrencyUnit();
+			DtoCurrencyUnit uiCurrencyUnit = uiCurrencyValue.getCurrencyUnit();
 			CurrencyUnit uxCurrencyUnit;
 			if (uiCurrencyUnit != null) {
 				uxCurrencyUnit = currencies.stream()
@@ -165,7 +165,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencyBeforeAmount(boolean currencyBeforeAmount) {
 		this.currencyBeforeAmount = currencyBeforeAmount;
-		sendCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencyBeforeAmountCommand(currencyBeforeAmount));
+		sendCommandIfRendered(() -> new DtoCurrencyField.SetShowCurrencyBeforeAmountCommand(currencyBeforeAmount));
 		return this;
 	}
 
@@ -175,7 +175,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencySymbolsEnabled(boolean currencySymbolsEnabled) {
 		this.currencySymbolsEnabled = currencySymbolsEnabled;
-		sendCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencySymbolCommand(currencySymbolsEnabled));
+		sendCommandIfRendered(() -> new DtoCurrencyField.SetShowCurrencySymbolCommand(currencySymbolsEnabled));
 		return this;
 	}
 
@@ -185,7 +185,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public void setFixedPrecision(int fixedPrecision) {
 		this.fixedPrecision = fixedPrecision;
-		sendCommandIfRendered(() -> new UiCurrencyField.SetFixedPrecisionCommand(fixedPrecision));
+		sendCommandIfRendered(() -> new DtoCurrencyField.SetFixedPrecisionCommand(fixedPrecision));
 	}
 
 	public void setAlphabeticKeysQueryEnabled(boolean alphabeticKeysQueryEnabled) {
@@ -208,7 +208,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		setCurrencies(currencies);
-		sendCommandIfRendered(() -> new UiCurrencyField.SetLocaleCommand(locale.toLanguageTag()));
+		sendCommandIfRendered(() -> new DtoCurrencyField.SetLocaleCommand(locale.toLanguageTag()));
 	}
 
 	@Override

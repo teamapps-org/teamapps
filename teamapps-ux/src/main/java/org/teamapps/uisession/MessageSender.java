@@ -19,14 +19,14 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.AbstractServerMessage;
-import org.teamapps.dto.UiSessionClosingReason;
+import org.teamapps.dto.DtoAbstractServerMessage;
+import org.teamapps.dto.DtoSessionClosingReason;
 
 public interface MessageSender {
 
-	void sendMessageAsynchronously(AbstractServerMessage message, SendingErrorHandler sendingErrorHandler);
+	void sendMessageAsynchronously(DtoAbstractServerMessage message, SendingErrorHandler sendingErrorHandler);
 
-	void close(UiSessionClosingReason closingReason, String message);
+	void close(DtoSessionClosingReason closingReason, String message);
 
 	long getDataReceived();
 	

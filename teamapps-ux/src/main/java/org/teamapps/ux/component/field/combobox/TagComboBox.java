@@ -21,9 +21,9 @@ package org.teamapps.ux.component.field.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiComboBoxTreeRecord;
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiTagComboBox;
+import org.teamapps.dto.DtoComboBoxTreeRecord;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoTagComboBox;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -112,8 +112,8 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiTagComboBox comboBox = new UiTagComboBox();
+	public DtoField createUiClientObject() {
+		DtoTagComboBox comboBox = new DtoTagComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		comboBox.setMaxEntries(maxEntries);
 		comboBox.setWrappingMode(this.wrappingMode.toUiWrappingMode());
@@ -161,11 +161,11 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 			newFreeTextEntries.forEach(newFreeText -> {
 				if (freeTextRecordFactory != null) {
 					RECORD record = freeTextRecordFactory.apply(newFreeText);
-					CacheManipulationHandle<UiComboBoxTreeRecord> cacheResponse = recordCache.addRecord(record);
+					CacheManipulationHandle<DtoComboBoxTreeRecord> cacheResponse = recordCache.addRecord(record);
 					records.add(record);
 
 					if (isRendered()) {
-						getSessionContext().sendCommand(getId(), new UiTagComboBox.ReplaceFreeTextEntryCommand(newFreeText, cacheResponse.getAndClearResult()),
+						getSessionContext().sendCommand(getId(), new DtoTagComboBox.ReplaceFreeTextEntryCommand(newFreeText, cacheResponse.getAndClearResult()),
 								aVoid -> {
 									cacheResponse.commit();
 								});
@@ -201,7 +201,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 		if (uxValue == null) {
 			return null;
 		}
-		CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(uxValue);
+		CacheManipulationHandle<List<DtoComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(uxValue);
 		cacheResponse.commit();
 		return cacheResponse.getAndClearResult();
 	}

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.webrtc;
 
-import org.teamapps.dto.UiAudioTrackConstraints;
+import org.teamapps.dto.DtoAudioTrackConstraints;
 
 import java.util.Objects;
 
@@ -47,8 +47,8 @@ public class AudioTrackConstraints {
 		this.noiseSuppression = noiseSuppression;
 	}
 
-	public UiAudioTrackConstraints createUiAudioTrackConstraints() {
-		UiAudioTrackConstraints ui = new UiAudioTrackConstraints();
+	public DtoAudioTrackConstraints createUiAudioTrackConstraints() {
+		DtoAudioTrackConstraints ui = new DtoAudioTrackConstraints();
 		ui.setChannelCount(channelCount);
 		ui.setAutoGainControl(autoGainControl);
 		ui.setEchoCancellation(echoCancellation);

@@ -22,7 +22,7 @@ import {UiRelativeWorkSpaceViewPosition, UiSplitSizePolicy, UiWorkSpaceLayoutIte
 import {DeferredExecutor} from "../../util/DeferredExecutor";
 import {UiWorkSpaceLayoutView as UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutView";
 import {ViewInfo} from "./ViewInfo";
-import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./UiWorkSpaceLayout";
+import {WorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./UiWorkSpaceLayout";
 import {generateUUID} from "../../Common";
 import {ViewContainer, ViewContainerListener} from "./ViewContainer";
 import {UiEvent as UiEvent} from "teamapps-client-communication";
@@ -56,7 +56,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 	            public readonly windowId: string,
 	            private port: MessagePort,
 	            private initialViewInfo: ViewInfo,
-	            private owner: UiWorkSpaceLayout,
+	            private owner: WorkSpaceLayout,
 	            private context: TeamAppsUiContext,
 	            private newWindowBackgroundImage: string,
 	            private newWindowBlurredBackgroundImage: string,

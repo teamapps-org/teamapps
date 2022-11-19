@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.field.upload;
 
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiFileField;
-import org.teamapps.dto.UiIdentifiableClientRecord;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoFileField;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
@@ -52,12 +52,12 @@ import java.util.stream.Collectors;
 public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 
-	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiFileField.UploadTooLargeEvent.TYPE_ID);
-	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(UiFileField.UploadStartedEvent.TYPE_ID);
-	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(UiFileField.UploadCanceledEvent.TYPE_ID);
-	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(UiFileField.UploadFailedEvent.TYPE_ID);
-	public final ProjectorEvent<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiFileField.UploadSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<RECORD> onFileItemClicked = createProjectorEventBoundToUiEvent(UiFileField.FileItemClickedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(DtoFileField.UploadTooLargeEvent.TYPE_ID);
+	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(DtoFileField.UploadStartedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(DtoFileField.UploadCanceledEvent.TYPE_ID);
+	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(DtoFileField.UploadFailedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = createProjectorEventBoundToUiEvent(DtoFileField.UploadSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<RECORD> onFileItemClicked = createProjectorEventBoundToUiEvent(DtoFileField.FileItemClickedEvent.TYPE_ID);
 	public final ProjectorEvent<RECORD> onFileItemRemoved = new ProjectorEvent<>();
 
 	private FileFieldDisplayType displayType = FileFieldDisplayType.FLOATING;
@@ -73,7 +73,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;
 	private Template fileItemTemplate = BaseTemplate.FILE_ITEM_FLOATING;
 	private PropertyProvider<RECORD> fileItemPropertyProvider = new BeanPropertyExtractor<>();
-	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> recordCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
+	private final ClientRecordCache<RECORD, DtoIdentifiableClientRecord> recordCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
 
 	public FileField(UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter) {
 		super();
@@ -85,9 +85,9 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
-	public UiField createUiClientObject() {
+	public DtoField createUiClientObject() {
 		Map uploadButtonData = uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getPropertyNames());
-		UiFileField uiField = new UiFileField(fileItemTemplate.createUiTemplate(), uploadButtonTemplate.createUiTemplate(), uploadButtonData);
+		DtoFileField uiField = new DtoFileField(fileItemTemplate.createUiTemplate(), uploadButtonTemplate.createUiTemplate(), uploadButtonData);
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
 		uiField.setUploadUrl(uploadUrl);
@@ -115,11 +115,11 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	public void cancelUploads() {
-		this.sendCommandIfRendered(() -> new UiFileField.CancelAllUploadsCommand());
+		this.sendCommandIfRendered(() -> new DtoFileField.CancelAllUploadsCommand());
 	}
 
-	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
-		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
+	private DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+		DtoIdentifiableClientRecord clientRecord = new DtoIdentifiableClientRecord();
 		clientRecord.setValues(fileItemPropertyProvider.getValues(record, fileItemTemplate.getPropertyNames()));
 		return clientRecord;
 	}
@@ -129,7 +129,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		if (uxValue == null) {
 			return null;
 		}
-		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = recordCache.replaceRecords(uxValue);
+		CacheManipulationHandle<List<DtoIdentifiableClientRecord>> cacheResponse = recordCache.replaceRecords(uxValue);
 		cacheResponse.commit(); // this is only valid here, because updates from the ui are blocked during transmission of ux values
 		return cacheResponse.getAndClearResult();
 	}
@@ -146,34 +146,34 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		switch (event.getTypeId()) {
-			case UiFileField.UploadTooLargeEvent.TYPE_ID -> {
-				var tooLargeEvent = event.as(UiFileField.UploadTooLargeEventWrapper.class);
+			case DtoFileField.UploadTooLargeEvent.TYPE_ID -> {
+				var tooLargeEvent = event.as(DtoFileField.UploadTooLargeEventWrapper.class);
 				this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
 			}
-			case UiFileField.UploadStartedEvent.TYPE_ID -> {
-				var uploadStartedEvent = event.as(UiFileField.UploadStartedEventWrapper.class);
+			case DtoFileField.UploadStartedEvent.TYPE_ID -> {
+				var uploadStartedEvent = event.as(DtoFileField.UploadStartedEventWrapper.class);
 				this.onUploadStarted.fire(new UploadStartedEventData(
 						uploadStartedEvent.getFileName(),
 						uploadStartedEvent.getMimeType(),
 						uploadStartedEvent.getSizeInBytes(),
-						() -> this.sendCommandIfRendered(() -> new UiFileField.CancelUploadCommand(uploadStartedEvent.getFileItemUuid()))
+						() -> this.sendCommandIfRendered(() -> new DtoFileField.CancelUploadCommand(uploadStartedEvent.getFileItemUuid()))
 				));
 			}
-			case UiFileField.UploadCanceledEvent.TYPE_ID -> {
-				var canceledEvent = event.as(UiFileField.UploadCanceledEventWrapper.class);
+			case DtoFileField.UploadCanceledEvent.TYPE_ID -> {
+				var canceledEvent = event.as(DtoFileField.UploadCanceledEventWrapper.class);
 				this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()
 				));
 			}
-			case UiFileField.UploadFailedEvent.TYPE_ID -> {
-				var failedEvent = event.as(UiFileField.UploadFailedEventWrapper.class);
+			case DtoFileField.UploadFailedEvent.TYPE_ID -> {
+				var failedEvent = event.as(DtoFileField.UploadFailedEventWrapper.class);
 				this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()
 				));
 			}
-			case UiFileField.UploadSuccessfulEvent.TYPE_ID -> {
-				var uploadedEvent = event.as(UiFileField.UploadSuccessfulEventWrapper.class);
+			case DtoFileField.UploadSuccessfulEvent.TYPE_ID -> {
+				var uploadedEvent = event.as(DtoFileField.UploadSuccessfulEventWrapper.class);
 				UploadedFile uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
 						() -> {
 							try {
@@ -185,16 +185,16 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 						() -> getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid())
 				);
 				RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
-				CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
+				CacheManipulationHandle<DtoIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
 				if (isRendered()) {
-					getSessionContext().sendCommand(getId(), new UiFileField.ReplaceFileItemCommand(uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+					getSessionContext().sendCommand(getId(), new DtoFileField.ReplaceFileItemCommand(uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 				} else {
 					cacheResponse.commit();
 				}
 				onUploadSuccessful.fire(new UploadSuccessfulEventData<>(uploadedFile, record));
 			}
-			case UiFileField.FileItemClickedEvent.TYPE_ID -> {
-				var fileClickedEvent = event.as(UiFileField.FileItemClickedEventWrapper.class);
+			case DtoFileField.FileItemClickedEvent.TYPE_ID -> {
+				var fileClickedEvent = event.as(DtoFileField.FileItemClickedEventWrapper.class);
 				RECORD record = recordCache.getRecordByClientId(fileClickedEvent.getClientId());
 				onFileItemClicked.fire(record);
 			}
@@ -223,7 +223,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setFileItemTemplate(Template fileItemTemplate) {
 		this.fileItemTemplate = fileItemTemplate;
-		sendCommandIfRendered(() -> new UiFileField.SetItemTemplateCommand(fileItemTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new DtoFileField.SetItemTemplateCommand(fileItemTemplate.createUiTemplate()));
 	}
 
 	public long getMaxBytesPerFile() {
@@ -232,7 +232,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setMaxBytesPerFile(long maxBytesPerFile) {
 		this.maxBytesPerFile = maxBytesPerFile;
-		sendCommandIfRendered(() -> new UiFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
+		sendCommandIfRendered(() -> new DtoFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
 	}
 
 	public String getUploadUrl() {
@@ -241,7 +241,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		sendCommandIfRendered(() -> new UiFileField.SetUploadUrlCommand(uploadUrl));
+		sendCommandIfRendered(() -> new DtoFileField.SetUploadUrlCommand(uploadUrl));
 	}
 
 	public Template getUploadButtonTemplate() {
@@ -250,7 +250,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonTemplate(Template uploadButtonTemplate) {
 		this.uploadButtonTemplate = uploadButtonTemplate;
-		sendCommandIfRendered(() -> new UiFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new DtoFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate.createUiTemplate()));
 	}
 
 	public Object getUploadButtonData() {
@@ -259,7 +259,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonData(Object uploadButtonData) {
 		this.uploadButtonData = uploadButtonData;
-		sendCommandIfRendered(() -> new UiFileField.SetUploadButtonDataCommand(uploadButtonData));
+		sendCommandIfRendered(() -> new DtoFileField.SetUploadButtonDataCommand(uploadButtonData));
 	}
 
 	public boolean isShowEntriesAsButtonsOnHover() {
@@ -268,7 +268,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover) {
 		this.showEntriesAsButtonsOnHover = showEntriesAsButtonsOnHover;
-		sendCommandIfRendered(() -> new UiFileField.SetShowEntriesAsButtonsOnHoverCommand(showEntriesAsButtonsOnHover));
+		sendCommandIfRendered(() -> new DtoFileField.SetShowEntriesAsButtonsOnHoverCommand(showEntriesAsButtonsOnHover));
 	}
 
 	public FileFieldDisplayType getDisplayType() {
@@ -277,7 +277,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setDisplayType(FileFieldDisplayType displayType) {
 		this.displayType = displayType;
-		sendCommandIfRendered(() -> new UiFileField.SetDisplayTypeCommand(displayType.toUiFileFieldDisplayType()));
+		sendCommandIfRendered(() -> new DtoFileField.SetDisplayTypeCommand(displayType.toUiFileFieldDisplayType()));
 	}
 
 	public int getMaxFiles() {
@@ -286,7 +286,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setMaxFiles(int maxFiles) {
 		this.maxFiles = maxFiles;
-		sendCommandIfRendered(() -> new UiFileField.SetMaxFilesCommand(maxFiles));
+		sendCommandIfRendered(() -> new DtoFileField.SetMaxFilesCommand(maxFiles));
 	}
 
 	public PropertyProvider getUploadButtonPropertyProvider() {

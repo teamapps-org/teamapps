@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.dto.UiPageViewBlockCreatorImageAlignment;
+import org.teamapps.dto.DtoPageViewBlockCreatorImageAlignment;
 
 public enum CreatorImageAlignment {
 	LEFT, RIGHT;
 
-	public UiPageViewBlockCreatorImageAlignment toUiImageAligment() {
-		return UiPageViewBlockCreatorImageAlignment.valueOf(name());
+	public DtoPageViewBlockCreatorImageAlignment toUiImageAligment() {
+		return DtoPageViewBlockCreatorImageAlignment.valueOf(name());
 	}
 }

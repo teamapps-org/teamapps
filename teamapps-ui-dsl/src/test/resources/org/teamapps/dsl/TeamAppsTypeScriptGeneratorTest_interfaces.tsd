@@ -3,30 +3,30 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {UiCommand} from "teamapps-client-communication";
-import {UiEvent} from "teamapps-client-communication";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";import {UiQuery} from "teamapps-client-communication";
+import {DtoCommand} from "teamapps-client-communication";
+import {DtoEvent} from "teamapps-client-communication";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";import {DtoQuery} from "teamapps-client-communication";
 
-export interface A {
+export interface DtoA {
 	_type?: string;
 	a: string;
 	b?: string
-	z: (query: A_ZQuery) => Promise<string[]>
+	z: (query: DtoA_ZQuery) => Promise<string[]>
 }
 
-export interface ACommandHandler {
+export interface DtoACommandHandler {
 	x1(x: string): any;
 	x2(x: string): Promise<number[]>|number[];
 }
 
-export interface AEventSource {
-	onY: TeamAppsEvent<A_YEvent>;
+export interface DtoAEventSource {
+	onY: TeamAppsEvent<DtoA_YEvent>;
 }
 
-export interface A_YEvent extends UiEvent {
+export interface DtoA_YEvent extends DtoEvent {
 	y: string
 }
 
-export interface A_ZQuery extends UiQuery {
+export interface DtoA_ZQuery extends DtoQuery {
 	s: string
 }

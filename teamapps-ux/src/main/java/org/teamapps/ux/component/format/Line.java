@@ -21,7 +21,7 @@ package org.teamapps.ux.component.format;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiLine;
+import org.teamapps.dto.DtoLine;
 
 public class Line {
 
@@ -51,7 +51,7 @@ public class Line {
 		return color;
 	}
 
-	public UiLine createUiLine() {
-		return new UiLine(thickness, color != null ? color.toHtmlColorString() : null).setType(type != null ? type.createUiLineType() : null);
+	public DtoLine createUiLine() {
+		return new DtoLine(thickness, color != null ? color.toHtmlColorString() : null).setType(type != null ? type.createUiLineType() : null);
 	}
 }

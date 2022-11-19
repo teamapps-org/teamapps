@@ -1,17 +1,17 @@
-import {UiComponent} from "./UiComponent";
+import {Component} from "./Component";
 import {CustomElement} from "../custom-declarations/web-components";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiComponentConfig} from "../generated";
+import {DtoComponent as DtoComponentConfig} from "../generated";
 import {debounce, DebounceMode} from "../util/debounce";
 import {StyleManager} from "../util/StyleManager";
 
-export abstract class AbstractUiWebComponent<C extends UiComponentConfig = UiComponentConfig> extends HTMLElement implements UiComponent<C>, CustomElement {
+export abstract class AbstractUiWebComponent<C extends DtoComponentConfig = DtoComponentConfig> extends HTMLElement implements Component<C>, CustomElement {
 
 	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
 	readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 	readonly onResized: TeamAppsEvent<{ width: number; height: number }> = new TeamAppsEvent();
 
-	private config: UiComponentConfig;
+	private config: DtoComponentConfig;
 	private width: number = 0;
 	private height: number = 0;
 	protected styleManager: StyleManager;

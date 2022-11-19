@@ -19,7 +19,7 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.UiCommand;
+import org.teamapps.dto.DtoCommand;
 
 import java.util.function.Consumer;
 
@@ -27,17 +27,17 @@ public class UiCommandWithResultCallback<RESULT> {
 
 	private final String libraryUuid;
 	private final String clientObjectId;
-	private final UiCommand<RESULT> uiCommand;
+	private final DtoCommand<RESULT> uiCommand;
 	private final Consumer<RESULT> resultCallback;
 
-	public UiCommandWithResultCallback(String libraryUuid, String clientObjectId, UiCommand<RESULT> uiCommand, Consumer<RESULT> resultCallback) {
+	public UiCommandWithResultCallback(String libraryUuid, String clientObjectId, DtoCommand<RESULT> uiCommand, Consumer<RESULT> resultCallback) {
 		this.libraryUuid = libraryUuid;
 		this.clientObjectId = clientObjectId;
 		this.uiCommand = uiCommand;
 		this.resultCallback = resultCallback;
 	}
 
-	public UiCommandWithResultCallback(String libraryUuid, String clientObjectId, UiCommand<RESULT> uiCommand) {
+	public UiCommandWithResultCallback(String libraryUuid, String clientObjectId, DtoCommand<RESULT> uiCommand) {
 		this(libraryUuid, clientObjectId, uiCommand, null);
 	}
 
@@ -49,7 +49,7 @@ public class UiCommandWithResultCallback<RESULT> {
 		return clientObjectId;
 	}
 
-	public UiCommand<RESULT> getUiCommand() {
+	public DtoCommand<RESULT> getUiCommand() {
 		return uiCommand;
 	}
 

@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.template.gridtemplate;
 
-import org.teamapps.dto.AbstractUiTemplateElement;
-import org.teamapps.dto.UiImageElement;
+import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoImageElement;
 import org.teamapps.ux.component.format.*;
 
 public class ImageElement extends AbstractTemplateElement {
@@ -124,8 +124,8 @@ public class ImageElement extends AbstractTemplateElement {
 	}
 
 	@Override
-	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiImageElement uiImageElement = new UiImageElement(propertyName, row, column, width, height);
+	public DtoAbstractTemplateElement createUiTemplateElement() {
+		DtoImageElement uiImageElement = new DtoImageElement(propertyName, row, column, width, height);
 		mapAbstractTemplateElementAttributesToUiElement(uiImageElement);
 		uiImageElement.setBorder(border != null ? border.createUiBorder() : null);
 		uiImageElement.setPadding(padding != null ? padding.createUiSpacing() : null);

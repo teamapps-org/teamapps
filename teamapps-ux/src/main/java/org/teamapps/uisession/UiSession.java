@@ -129,7 +129,7 @@ public class UiSession {
 				commandBuffer.addCommand(cmd);
 			} catch (CommandBufferException e) {
 				LOGGER.error("Exception while adding command to CommandBuffer!", e);
-				close(UiSessionClosingReason.COMMANDS_OVERFLOW);
+				close(DtoSessionClosingReason.COMMANDS_OVERFLOW);
 				return -1;
 			}
 			sendAllQueuedCommandsIfPossible();
@@ -198,7 +198,7 @@ public class UiSession {
 				}
 			}
 			if (!cmdsToSend.isEmpty()) {
-				sendAsyncWithErrorHandler(new MULTI_CMD(cmdsToSend));
+				sendAsyncWithErrorHandler(new DtoMULTI_CMD(cmdsToSend));
 			}
 		}
 	}
@@ -224,7 +224,7 @@ public class UiSession {
 
 	public void sendInitOk() {
 		LOGGER.debug("Sending INIT_OK for {}", sessionId);
-		sendAsyncWithErrorHandler(new INIT_OK(
+		sendAsyncWithErrorHandler(new DtoINIT_OK(
 				config.getClientMinRequestedCommands(),
 				config.getClientMaxRequestedCommands(),
 				config.getClientEventsBufferSize(),
@@ -245,7 +245,7 @@ public class UiSession {
 		});
 	}
 
-	public void handleEvent(int clientMessageId, UiEventWrapper event) {
+	public void handleEvent(int clientMessageId, DtoEventWrapper event) {
 		statistics.eventReceived(event.getUiClass());
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
@@ -256,7 +256,7 @@ public class UiSession {
 		failsafeInvokeSessionListeners(sl -> sl.onUiEvent(sessionId, event));
 	}
 
-	public void handleQuery(int clientMessageId, UiQueryWrapper query) {
+	public void handleQuery(int clientMessageId, DtoQueryWrapper query) {
 		statistics.queryReceived(query.getUiClass());
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
@@ -268,7 +268,7 @@ public class UiSession {
 				sessionId,
 				query,
 				result -> {
-					sendAsyncWithErrorHandler(new QUERY_RESULT(clientMessageId, result));
+					sendAsyncWithErrorHandler(new DtoQUERY_RESULT(clientMessageId, result));
 					statistics.queryResultSentFor(query.getUiClass());
 				}
 		));
@@ -305,15 +305,15 @@ public class UiSession {
 			synchronized (this) {
 				this.maxRequestedCommandId = Math.max(maxRequestedCommandId, this.maxRequestedCommandId);
 			}
-			sendAsyncWithErrorHandler(new REINIT_OK(lastReceivedClientMessageId));
+			sendAsyncWithErrorHandler(new DtoREINIT_OK(lastReceivedClientMessageId));
 			reviveConnection();
 		} else {
 			LOGGER.warn("Could not reinit. Command with id " + lastReceivedCommandId + "not found in command buffer.");
-			sendAsyncWithErrorHandler(new REINIT_NOK(UiSessionClosingReason.REINIT_COMMAND_ID_NOT_FOUND));
+			sendAsyncWithErrorHandler(new DtoREINIT_NOK(DtoSessionClosingReason.REINIT_COMMAND_ID_NOT_FOUND));
 		}
 	}
 
-	public void sendAsyncWithErrorHandler(AbstractServerMessage message) {
+	public void sendAsyncWithErrorHandler(DtoAbstractServerMessage message) {
 		final long sendTime = System.currentTimeMillis();
 		this.messageSender.sendMessageAsynchronously(message, (exception) -> {
 			if (timestampOfLastMessageFromClient.get() <= sendTime) {
@@ -328,7 +328,7 @@ public class UiSession {
 	}
 
 	public void ping() {
-		sendAsyncWithErrorHandler(new PING());
+		sendAsyncWithErrorHandler(new DtoPING());
 	}
 
 	public void setActive() {
@@ -343,7 +343,7 @@ public class UiSession {
 		setState(UiSessionState.INACTIVE);
 	}
 
-	public void close(UiSessionClosingReason reason) {
+	public void close(DtoSessionClosingReason reason) {
 		if (this.state == UiSessionState.CLOSED) {
 			return; // already closed. nothing to do
 		}

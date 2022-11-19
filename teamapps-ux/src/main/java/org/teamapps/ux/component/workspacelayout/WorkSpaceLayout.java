@@ -49,11 +49,11 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSpaceLayout.class);
 
-	public final ProjectorEvent<ViewSelectedEventData> onViewSelected = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewSelectedEvent.TYPE_ID);
-	public final ProjectorEvent<WorkSpaceLayoutView> onChildWindowCreationFailed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID);
-	public final ProjectorEvent<ChildWindowClosedEventData> onChildWindowClosed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ChildWindowClosedEvent.TYPE_ID);
-	public final ProjectorEvent<WorkSpaceLayoutView> onViewClosed = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewClosedEvent.TYPE_ID);
-	public final ProjectorEvent<WorkSpaceLayoutViewGroup> onViewGroupPanelStateChanged = createProjectorEventBoundToUiEvent(UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent.TYPE_ID);
+	public final ProjectorEvent<ViewSelectedEventData> onViewSelected = createProjectorEventBoundToUiEvent(DtoWorkSpaceLayout.ViewSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<WorkSpaceLayoutView> onChildWindowCreationFailed = createProjectorEventBoundToUiEvent(DtoWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID);
+	public final ProjectorEvent<ChildWindowClosedEventData> onChildWindowClosed = createProjectorEventBoundToUiEvent(DtoWorkSpaceLayout.ChildWindowClosedEvent.TYPE_ID);
+	public final ProjectorEvent<WorkSpaceLayoutView> onViewClosed = createProjectorEventBoundToUiEvent(DtoWorkSpaceLayout.ViewClosedEvent.TYPE_ID);
+	public final ProjectorEvent<WorkSpaceLayoutViewGroup> onViewGroupPanelStateChanged = createProjectorEventBoundToUiEvent(DtoWorkSpaceLayout.ViewGroupPanelStateChangedEvent.TYPE_ID);
 
 	private final String childWindowPageTitle = "Application window";
 	private Toolbar toolbar;
@@ -94,22 +94,22 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	private void updateClientSideLayout(List<WorkSpaceLayoutView> newViews) {
 		sendCommandIfRendered(() -> {
-			Map<String, UiWorkSpaceLayoutItem> uiRootItemsByWindowId = rootItemsByWindowId.entrySet().stream()
+			Map<String, DtoWorkSpaceLayoutItem> uiRootItemsByWindowId = rootItemsByWindowId.entrySet().stream()
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().createUiItem()));
-			List<UiWorkSpaceLayoutView> newUiViews = newViews.stream()
+			List<DtoWorkSpaceLayoutView> newUiViews = newViews.stream()
 					.map(WorkSpaceLayoutView::createUiView)
 					.collect(Collectors.toList());
-			return new UiWorkSpaceLayout.RedefineLayoutCommand(uiRootItemsByWindowId, newUiViews);
+			return new DtoWorkSpaceLayout.RedefineLayoutCommand(uiRootItemsByWindowId, newUiViews);
 		});
 	}
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiWorkSpaceLayoutItem uiInitialLayout = getMainRootItem().createUiItem();
-		List<UiWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
+		DtoWorkSpaceLayoutItem uiInitialLayout = getMainRootItem().createUiItem();
+		List<DtoWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
 				.map(WorkSpaceLayoutView::createUiView)
 				.collect(Collectors.toList());
-		UiWorkSpaceLayout uiLayout = new UiWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
+		DtoWorkSpaceLayout uiLayout = new DtoWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
 		mapAbstractUiComponentProperties(uiLayout);
 		if (toolbar != null) {
 			uiLayout.setToolbar(toolbar.createUiReference());
@@ -121,34 +121,34 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiWorkSpaceLayout.LayoutChangedEvent.TYPE_ID -> {
-				var layoutChangedEvent = event.as(UiWorkSpaceLayout.LayoutChangedEventWrapper.class);
+			case DtoWorkSpaceLayout.LayoutChangedEvent.TYPE_ID -> {
+				var layoutChangedEvent = event.as(DtoWorkSpaceLayout.LayoutChangedEventWrapper.class);
 				this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, layoutChangedEvent.getLayoutsByWindowId());
 				printLayoutSyncTraceMessage(layoutChangedEvent.getLayoutsByWindowId());
 			}
-			case UiWorkSpaceLayout.ViewDraggedToNewWindowEvent.TYPE_ID -> {
-				var newWindowEvent = event.as(UiWorkSpaceLayout.ViewDraggedToNewWindowEventWrapper.class);
-				Map<String, UiWorkSpaceLayoutItemWrapper> newLayoutsByWindowId = newWindowEvent.getLayoutsByWindowId();
+			case DtoWorkSpaceLayout.ViewDraggedToNewWindowEvent.TYPE_ID -> {
+				var newWindowEvent = event.as(DtoWorkSpaceLayout.ViewDraggedToNewWindowEventWrapper.class);
+				Map<String, DtoWorkSpaceLayoutItemWrapper> newLayoutsByWindowId = newWindowEvent.getLayoutsByWindowId();
 				this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, newLayoutsByWindowId);
 				printLayoutSyncTraceMessage(newWindowEvent.getLayoutsByWindowId());
 			}
-			case UiWorkSpaceLayout.ViewNeedsRefreshEvent.TYPE_ID -> {
-				var needsRefreshEvent = event.as(UiWorkSpaceLayout.ViewNeedsRefreshEventWrapper.class);
+			case DtoWorkSpaceLayout.ViewNeedsRefreshEvent.TYPE_ID -> {
+				var needsRefreshEvent = event.as(DtoWorkSpaceLayout.ViewNeedsRefreshEventWrapper.class);
 				String viewName = needsRefreshEvent.getViewName();
 				WorkSpaceLayoutView view = getViewById(viewName);
-				getSessionContext().sendCommand(getId(), new UiWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()));
+				getSessionContext().sendCommand(getId(), new DtoWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()));
 			}
-			case UiWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID -> {
-				var windowCreationFailedEvent = event.as(UiWorkSpaceLayout.ChildWindowCreationFailedEventWrapper.class);
+			case DtoWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID -> {
+				var windowCreationFailedEvent = event.as(DtoWorkSpaceLayout.ChildWindowCreationFailedEventWrapper.class);
 				WorkSpaceLayoutView view = getViewById(windowCreationFailedEvent.getViewName());
 				if (view != null) {
 					this.onChildWindowCreationFailed.fire(view);
 				}
 			}
-			case UiWorkSpaceLayout.ChildWindowClosedEvent.TYPE_ID -> {
-				var windowClosedEvent = event.as(UiWorkSpaceLayout.ChildWindowClosedEventWrapper.class);
+			case DtoWorkSpaceLayout.ChildWindowClosedEvent.TYPE_ID -> {
+				var windowClosedEvent = event.as(DtoWorkSpaceLayout.ChildWindowClosedEventWrapper.class);
 				WorkSpaceLayoutItem windowRootItem = this.rootItemsByWindowId.remove(windowClosedEvent.getWindowId());
 				if (windowRootItem != null) {
 					getMainRootItem().getSelfAndAncestors().stream()
@@ -160,8 +160,8 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 				}
 				this.onChildWindowClosed.fire(new ChildWindowClosedEventData(windowClosedEvent.getWindowId(), windowRootItem));
 			}
-			case UiWorkSpaceLayout.ViewSelectedEvent.TYPE_ID -> {
-				var tabSelectedEvent = event.as(UiWorkSpaceLayout.ViewSelectedEventWrapper.class);
+			case DtoWorkSpaceLayout.ViewSelectedEvent.TYPE_ID -> {
+				var tabSelectedEvent = event.as(DtoWorkSpaceLayout.ViewSelectedEventWrapper.class);
 				WorkSpaceLayoutViewGroup viewGroup = this.getViewGroupById(tabSelectedEvent.getViewGroupId());
 				if (viewGroup != null) {
 					viewGroup.handleViewSelectedByClient(tabSelectedEvent.getViewName());
@@ -169,8 +169,8 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 					this.onViewSelected.fire(new ViewSelectedEventData(viewGroup, view));
 				}
 			}
-			case UiWorkSpaceLayout.ViewClosedEvent.TYPE_ID -> {
-				var viewClosedEvent = event.as(UiWorkSpaceLayout.ViewClosedEventWrapper.class);
+			case DtoWorkSpaceLayout.ViewClosedEvent.TYPE_ID -> {
+				var viewClosedEvent = event.as(DtoWorkSpaceLayout.ViewClosedEventWrapper.class);
 				WorkSpaceLayoutView view = getViewById(viewClosedEvent.getViewName());
 				if (view != null) {
 					WorkSpaceLayoutViewGroup viewGroup = getViewGroupForViewName(viewClosedEvent.getViewName());
@@ -180,8 +180,8 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 					this.onViewClosed.fire(view);
 				}
 			}
-			case UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent.TYPE_ID -> {
-				var stateChangedEvent = event.as(UiWorkSpaceLayout.ViewGroupPanelStateChangedEventWrapper.class);
+			case DtoWorkSpaceLayout.ViewGroupPanelStateChangedEvent.TYPE_ID -> {
+				var stateChangedEvent = event.as(DtoWorkSpaceLayout.ViewGroupPanelStateChangedEventWrapper.class);
 				WorkSpaceLayoutViewGroup viewGroup = getViewGroupById(stateChangedEvent.getViewGroupId());
 				if (viewGroup != null) {
 					viewGroup.setPanelStateSilently(ViewGroupPanelState.valueOf(stateChangedEvent.getPanelState().name()));
@@ -211,7 +211,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 				.findAny().orElse(null);
 	}
 
-	private void printLayoutSyncTraceMessage(Map<String, UiWorkSpaceLayoutItemWrapper> layoutsByWindowId) {
+	private void printLayoutSyncTraceMessage(Map<String, DtoWorkSpaceLayoutItemWrapper> layoutsByWindowId) {
 		if (LOGGER.isTraceEnabled()) {
 			try {
 				LOGGER.trace("---------------------");
@@ -257,15 +257,15 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	// ============== Internal API ======================
 
 	/*package-private*/ void handleViewAddedToGroup(WorkSpaceLayoutViewGroup workSpaceLayoutViewGroup, WorkSpaceLayoutView view, boolean selected) {
-		sendCommandIfRendered(() -> new UiWorkSpaceLayout.AddViewAsTabCommand(view.createUiView(), workSpaceLayoutViewGroup.getId(), selected));
+		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.AddViewAsTabCommand(view.createUiView(), workSpaceLayoutViewGroup.getId(), selected));
 	}
 
 	/*package-private*/ void handleViewGroupPanelStateChangedViaApi(WorkSpaceLayoutViewGroup viewGroup, ViewGroupPanelState panelState) {
-		sendCommandIfRendered(() -> new UiWorkSpaceLayout.SetViewGroupPanelStateCommand(viewGroup.getId(), panelState.toUiViewGroupPanelState()));
+		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SetViewGroupPanelStateCommand(viewGroup.getId(), panelState.toUiViewGroupPanelState()));
 	}
 
 	/*package-private*/ void handleViewSelectedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView workSpaceLayoutView) {
-		sendCommandIfRendered(() -> new UiWorkSpaceLayout.SelectViewCommand(workSpaceLayoutView.getId()));
+		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SelectViewCommand(workSpaceLayoutView.getId()));
 	}
 
 	/*package-private*/ void handleViewRemovedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView view) {
@@ -276,7 +276,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	/*package-private*/ void handleViewAttributeChangedViaApi(WorkSpaceLayoutView view) {
-		sendCommandIfRendered(() -> new UiWorkSpaceLayout.RefreshViewAttributesCommand(view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()));
+		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.RefreshViewAttributesCommand(view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()));
 	}
 
 	/*package-private*/ void handleSplitPaneSizingChanged(SplitSizePolicy sizePolicy, double referenceChildSize) {
@@ -329,7 +329,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		sendCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
+		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

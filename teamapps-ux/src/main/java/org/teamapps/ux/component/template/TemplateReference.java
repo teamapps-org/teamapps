@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.template;
 
-import org.teamapps.dto.UiTemplate;
+import org.teamapps.dto.DtoTemplate;
 import org.teamapps.dto.UiTemplateReference;
 
 import java.util.List;
@@ -52,7 +52,7 @@ public class TemplateReference implements Template {
 	}
 
 	@Override
-	public UiTemplate createUiTemplate() {
+	public DtoTemplate createUiTemplate() {
 		return new UiTemplateReference(templateId);
 	}
 }

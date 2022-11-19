@@ -1,6 +1,3 @@
-import {UiComponent} from "../component/UiComponent";
-import {UiComponentConfig} from "../generated";
-
 document.addEventListener("fullscreenchange", fullScreenChangeHandler);
 document.addEventListener("webkitfullscreenchange", fullScreenChangeHandler);
 document.addEventListener("mozfullscreenchange", fullScreenChangeHandler);

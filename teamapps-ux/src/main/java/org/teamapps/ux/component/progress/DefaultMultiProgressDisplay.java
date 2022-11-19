@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.progress;
 
-import org.teamapps.dto.UiDefaultMultiProgressDisplay;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiMultiProgressDisplay;
+import org.teamapps.dto.DtoDefaultMultiProgressDisplay;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoMultiProgressDisplay;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -47,7 +47,7 @@ import static org.teamapps.ux.task.ProgressStatus.*;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DefaultMultiProgressDisplay extends AbstractComponent implements MultiProgressDisplay {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiDefaultMultiProgressDisplay.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoDefaultMultiProgressDisplay.ClickedEvent.TYPE_ID);
 
 	private final List<ObservableProgress> progresses = new ArrayList<>();
 	private final Notification progressListNotification;
@@ -76,8 +76,8 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public UiDefaultMultiProgressDisplay createUiClientObject() {
-		UiDefaultMultiProgressDisplay ui = new UiDefaultMultiProgressDisplay();
+	public DtoDefaultMultiProgressDisplay createUiClientObject() {
+		DtoDefaultMultiProgressDisplay ui = new DtoDefaultMultiProgressDisplay();
 		mapAbstractUiComponentProperties(ui);
 		ui.setRunningCount(progresses.size());
 		ui.setStatusMessages(progresses.stream().map(p -> p.getStatusMessage()).collect(Collectors.toList()));
@@ -85,9 +85,9 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiMultiProgressDisplay.ClickedEvent.TYPE_ID -> {
+			case DtoMultiProgressDisplay.ClickedEvent.TYPE_ID -> {
 				this.onClicked.fire(null);
 				if (showingNotificationWithoutTimeout) {
 					this.showingNotificationWithoutTimeout = false;
@@ -144,7 +144,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new UiDefaultMultiProgressDisplay.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoDefaultMultiProgressDisplay.UpdateCommand(createUiClientObject()));
 	}
 
 	public boolean isShowNotificationOnProgressAdded() {

@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiToolAccordion;
-import org.teamapps.dto.UiToolbarButtonGroup;
+import org.teamapps.dto.DtoToolAccordion;
+import org.teamapps.dto.DtoToolbarButtonGroup;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
@@ -36,17 +36,17 @@ public class ToolAccordion extends AbstractToolContainer {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		List<UiToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
+		List<DtoToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
 				.filter(group -> !group.isRightSide())
 				.sorted()
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
-		List<UiToolbarButtonGroup> rightUiButtonGroups = buttonGroups.stream()
+		List<DtoToolbarButtonGroup> rightUiButtonGroups = buttonGroups.stream()
 				.filter(group -> group.isRightSide())
 				.sorted()
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
-		UiToolAccordion uiToolAccordion = new UiToolAccordion(leftUiButtonGroups, rightUiButtonGroups);
+		DtoToolAccordion uiToolAccordion = new DtoToolAccordion(leftUiButtonGroups, rightUiButtonGroups);
 		mapAbstractUiComponentProperties(uiToolAccordion);
 		return uiToolAccordion;
 	}

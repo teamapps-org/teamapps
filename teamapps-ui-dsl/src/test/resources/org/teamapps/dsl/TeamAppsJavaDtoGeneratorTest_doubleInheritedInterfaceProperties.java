@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.UiObject;
+import org.teamapps.dto.DtoObject;
 
 /**
  * THIS IS GENERATED CODE!
@@ -33,7 +33,7 @@ import org.teamapps.dto.UiObject;
 
 @JsonTypeName("D")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class D extends A implements B, C, UiObject {
+public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
 
     public static final String TYPE_ID = "D";
 
@@ -43,11 +43,11 @@ public class D extends A implements B, C, UiObject {
 	 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
 	 */
 	@Deprecated
-	public D() {
+	public DtoD() {
 		// default constructor for Jackson
 	}
 
-	public D(List<Integer> cProperty) {
+	public DtoD(List<Integer> cProperty) {
 		super();
 		this.cProperty = cProperty;
 	}
@@ -66,7 +66,7 @@ public class D extends A implements B, C, UiObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("cProperty")
-	public D setCProperty(List<Integer> cProperty) {
+	public DtoD setCProperty(List<Integer> cProperty) {
 		this.cProperty = cProperty;
 		return this;
 	}

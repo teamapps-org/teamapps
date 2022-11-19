@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.UiObject;
+import org.teamapps.dto.DtoObject;
 
 /**
  * THIS IS GENERATED CODE!
@@ -33,7 +33,7 @@ import org.teamapps.dto.UiObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class A implements UiObject {
+public class DtoA implements DtoObject {
 
     public static final String TYPE_ID = "A";
 
@@ -43,7 +43,7 @@ public class A implements UiObject {
 
 	protected Map<String, Object> z;
 
-	public A() {
+	public DtoA() {
 	}
 
 	@SuppressWarnings("unchecked")
@@ -71,19 +71,19 @@ public class A implements UiObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("x")
-	public A setX(Object x) {
+	public DtoA setX(Object x) {
 		this.x = x;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("y")
-	public A setY(List y) {
+	public DtoA setY(List y) {
 		this.y = y;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("z")
-	public A setZ(Map<String, Object> z) {
+	public DtoA setZ(Map<String, Object> z) {
 		this.z = z;
 		return this;
 	}

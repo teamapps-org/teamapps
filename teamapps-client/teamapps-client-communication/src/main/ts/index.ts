@@ -1,6 +1,6 @@
 export * from "./generated"
 
-export {CMD} from "./dto/CMD";
+export {DtoCMD} from "./dto/DtoCMD";
 
 export * from "./connection/ReconnectingWebSocketConnection";
 export * from "./connection/TeamAppsConnection";

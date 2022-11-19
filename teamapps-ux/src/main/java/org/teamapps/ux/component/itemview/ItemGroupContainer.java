@@ -19,15 +19,15 @@
  */
 package org.teamapps.ux.component.itemview;
 
-import org.teamapps.dto.UiIdentifiableClientRecord;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
 
 import java.util.function.Consumer;
 
 public interface ItemGroupContainer<HEADERRECORD, RECORD> {
 
-	UiIdentifiableClientRecord createHeaderClientRecord(HEADERRECORD headerRecord);
+	DtoIdentifiableClientRecord createHeaderClientRecord(HEADERRECORD headerRecord);
 
-	void handleAddItem(UiIdentifiableClientRecord clientRecord, Consumer<Void> uiCommandCallback);
+	void handleAddItem(DtoIdentifiableClientRecord clientRecord, Consumer<Void> uiCommandCallback);
 	void handleRemoveItem(int itemClientRecordId, Consumer<Void> uiCommandCallback);
 	void handleRefreshRequired();
 }

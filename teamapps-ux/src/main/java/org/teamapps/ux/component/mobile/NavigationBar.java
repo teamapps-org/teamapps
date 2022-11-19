@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NavigationBar<RECORD> extends AbstractComponent implements Component {
 
-	public ProjectorEvent<NavigationBarButton> onButtonClick = createProjectorEventBoundToUiEvent(UiNavigationBar.ButtonClickedEvent.TYPE_ID);
+	public ProjectorEvent<NavigationBarButton> onButtonClick = createProjectorEventBoundToUiEvent(DtoNavigationBar.ButtonClickedEvent.TYPE_ID);
 
 	private Template buttonTemplate = BaseTemplate.NAVIGATION_BAR_ICON_ONLY;
 	private List<NavigationBarButton<RECORD>> buttons = new ArrayList<>();
@@ -55,12 +55,12 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiNavigationBar uiNavigationBar = new UiNavigationBar(buttonTemplate.createUiTemplate());
+		DtoNavigationBar uiNavigationBar = new DtoNavigationBar(buttonTemplate.createUiTemplate());
 		mapAbstractUiComponentProperties(uiNavigationBar);
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiNavigationBar.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
 		if (buttons != null) {
-			List<UiNavigationBarButton> uiNavigationBarButtons = createUiButtons();
+			List<DtoNavigationBarButton> uiNavigationBarButtons = createUiButtons();
 			uiNavigationBar.setButtons(uiNavigationBarButtons);
 		}
 		if (fanOutComponents != null) {
@@ -73,17 +73,17 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		return uiNavigationBar;
 	}
 
-	private List<UiNavigationBarButton> createUiButtons() {
+	private List<DtoNavigationBarButton> createUiButtons() {
 		return buttons.stream()
 				.map(navigationBarButton -> navigationBarButton.createUiNavigationBarButton())
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiNavigationBar.ButtonClickedEvent.TYPE_ID -> {
-				var clickedEvent = event.as(UiNavigationBar.ButtonClickedEventWrapper.class);
+			case DtoNavigationBar.ButtonClickedEvent.TYPE_ID -> {
+				var clickedEvent = event.as(DtoNavigationBar.ButtonClickedEventWrapper.class);
 				String buttonId = clickedEvent.getButtonId();
 				buttons.stream()
 						.filter(btn -> btn.getClientId().equals(buttonId))
@@ -92,8 +92,8 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 							button.onClick.fire(null);
 						});
 			}
-			case UiNavigationBar.FanoutClosedDueToClickOutsideFanoutEvent.TYPE_ID -> {
-				var e = event.as(UiNavigationBar.FanoutClosedDueToClickOutsideFanoutEventWrapper.class);
+			case DtoNavigationBar.FanoutClosedDueToClickOutsideFanoutEvent.TYPE_ID -> {
+				var e = event.as(DtoNavigationBar.FanoutClosedDueToClickOutsideFanoutEventWrapper.class);
 				this.activeFanOutComponent = null;
 			}
 		}
@@ -111,17 +111,17 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		} else {
 			buttons.add(button);
 		}
-		sendCommandIfRendered(() -> new UiNavigationBar.SetButtonsCommand(createUiButtons()));
+		sendCommandIfRendered(() -> new DtoNavigationBar.SetButtonsCommand(createUiButtons()));
 		return this;
 	}
 
 	/*package-private*/ void handleButtonVisibilityChanged(NavigationBarButton<RECORD> button) {
-		sendCommandIfRendered(() -> new UiNavigationBar.SetButtonVisibleCommand(button.getClientId(), button.isVisible()));
+		sendCommandIfRendered(() -> new DtoNavigationBar.SetButtonVisibleCommand(button.getClientId(), button.isVisible()));
 	}
 
 	public void removeButton(NavigationBarButton<RECORD> button) {
 		buttons.remove(button);
-		sendCommandIfRendered(() -> new UiNavigationBar.SetButtonsCommand(createUiButtons()));
+		sendCommandIfRendered(() -> new DtoNavigationBar.SetButtonsCommand(createUiButtons()));
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		if (component != null) {
 			component.setParent(this);
 		}
-		sendCommandIfRendered(() -> new UiNavigationBar.AddFanOutComponentCommand(component != null ? component.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoNavigationBar.AddFanOutComponentCommand(component != null ? component.createUiReference() : null));
 	}
 
 	public void showFanOutComponent(Component component) {
@@ -141,7 +141,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 			preloadFanOutComponent(component);
 		}
 		activeFanOutComponent = component;
-		sendCommandIfRendered(() -> new UiNavigationBar.ShowFanOutComponentCommand(component != null ? component.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoNavigationBar.ShowFanOutComponentCommand(component != null ? component.createUiReference() : null));
 	}
 
 	public void hideFanOutComponent() {
@@ -149,7 +149,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 			return;
 		}
 		activeFanOutComponent = null;
-		sendCommandIfRendered(() -> new UiNavigationBar.HideFanOutComponentCommand());
+		sendCommandIfRendered(() -> new DtoNavigationBar.HideFanOutComponentCommand());
 	}
 
 	public void showOrHideFanoutComponent(Component component) {
@@ -183,7 +183,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new UiNavigationBar.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		sendCommandIfRendered(() -> new DtoNavigationBar.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 
 	public Color getBorderColor() {
@@ -192,7 +192,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	public void setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
-		sendCommandIfRendered(() -> new UiNavigationBar.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null));
+		sendCommandIfRendered(() -> new DtoNavigationBar.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null));
 	}
 
 	public List<Component> getFanOutComponents() {
@@ -205,7 +205,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		sendCommandIfRendered(() -> new UiNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
+		sendCommandIfRendered(() -> new DtoNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

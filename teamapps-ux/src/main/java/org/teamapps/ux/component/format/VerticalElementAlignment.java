@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.format;
 
-import org.teamapps.dto.UiVerticalElementAlignment;
+import org.teamapps.dto.DtoVerticalElementAlignment;
 
 public enum VerticalElementAlignment {
 
@@ -28,8 +28,8 @@ public enum VerticalElementAlignment {
 	BOTTOM,
 	STRETCH;
 
-	public UiVerticalElementAlignment toUiVerticalElementAlignment() {
-		return UiVerticalElementAlignment.valueOf(this.toString());
+	public DtoVerticalElementAlignment toUiVerticalElementAlignment() {
+		return DtoVerticalElementAlignment.valueOf(this.toString());
 	}
 
 }

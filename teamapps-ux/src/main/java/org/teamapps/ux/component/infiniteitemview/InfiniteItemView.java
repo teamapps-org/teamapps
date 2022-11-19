@@ -44,7 +44,7 @@ import java.util.function.Function;
 @Deprecated
 public class InfiniteItemView<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiInfiniteItemView.ItemClickedEvent.TYPE_ID);
+	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(DtoInfiniteItemView.ItemClickedEvent.TYPE_ID);
 
 	private int numberOfInitialRecords = 100;
 	private Template itemTemplate;
@@ -57,7 +57,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
 	private PropertyProvider<RECORD> itemPropertyProvider = new BeanPropertyExtractor<>();
-	protected final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
+	protected final ClientRecordCache<RECORD, DtoIdentifiableClientRecord> itemCache;
 
 	private Disposable modelOnAllDataChangedListener;
 	private Disposable modelOnRecordAddedListener;
@@ -82,7 +82,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		itemCache.setPurgeListener(operationHandle -> {
 			if (isRendered()) {
 				List<Integer> removedItemIds = operationHandle.getAndClearResult();
-				getSessionContext().sendCommand(getId(), new UiInfiniteItemView.RemoveDataCommand(removedItemIds), aVoid -> operationHandle.commit());
+				getSessionContext().sendCommand(getId(), new DtoInfiniteItemView.RemoveDataCommand(removedItemIds), aVoid -> operationHandle.commit());
 			} else {
 				operationHandle.commit();
 			}
@@ -99,10 +99,10 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiInfiniteItemView ui = new UiInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
+		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
 		mapAbstractUiComponentProperties(ui);
 		int recordCount = model.getCount();
-		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(model.getRecords(0, Math.min(recordCount, numberOfInitialRecords)));
+		CacheManipulationHandle<List<DtoIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(model.getRecords(0, Math.min(recordCount, numberOfInitialRecords)));
 		cacheResponse.commit();
 		ui.setData(cacheResponse.getAndClearResult());
 		ui.setTotalNumberOfRecords(recordCount);
@@ -116,37 +116,37 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiInfiniteItemView.DisplayedRangeChangedEvent.TYPE_ID -> {
-				var rangeChangedEvent = event.as(UiInfiniteItemView.DisplayedRangeChangedEventWrapper.class);
+			case DtoInfiniteItemView.DisplayedRangeChangedEvent.TYPE_ID -> {
+				var rangeChangedEvent = event.as(DtoInfiniteItemView.DisplayedRangeChangedEventWrapper.class);
 				viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
 				displayedRangeStart = rangeChangedEvent.getStartIndex();
 				displayedRangeLength = rangeChangedEvent.getLength();
 				if (rangeChangedEvent.getDataRequest() != null) {
-					UiInfiniteItemViewDataRequestWrapper dataRequest = rangeChangedEvent.getDataRequest();
+					DtoInfiniteItemViewDataRequestWrapper dataRequest = rangeChangedEvent.getDataRequest();
 					int startIndex = dataRequest.getStartIndex();
 					int length = dataRequest.getLength();
 					this.sendRecords(startIndex, length, false);
 				}
 			}
-			case UiInfiniteItemView.ItemClickedEvent.TYPE_ID -> {
-				var itemClickedEvent = event.as(UiInfiniteItemView.ItemClickedEventWrapper.class);
+			case DtoInfiniteItemView.ItemClickedEvent.TYPE_ID -> {
+				var itemClickedEvent = event.as(DtoInfiniteItemView.ItemClickedEventWrapper.class);
 				RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());
 				if (record != null) {
 					onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick()));
 				}
 			}
-			case UiInfiniteItemView.ContextMenuRequestedEvent.TYPE_ID -> {
-				var e = event.as(UiInfiniteItemView.ContextMenuRequestedEventWrapper.class);
+			case DtoInfiniteItemView.ContextMenuRequestedEvent.TYPE_ID -> {
+				var e = event.as(DtoInfiniteItemView.ContextMenuRequestedEventWrapper.class);
 				lastSeenContextMenuRequestId = e.getRequestId();
 				RECORD record = itemCache.getRecordByClientId(e.getRecordId());
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
-						sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 					}
 				} else {
 					closeContextMenu();
@@ -163,8 +163,8 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		this.autoHeight = autoHeight;
 	}
 
-	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
-		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
+	private DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+		DtoIdentifiableClientRecord clientRecord = new DtoIdentifiableClientRecord();
 		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));
 		return clientRecord;
 	}
@@ -184,7 +184,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		sendCommandIfRendered(() -> new UiInfiniteItemView.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
 		return this;
 	}
 
@@ -194,7 +194,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemWidth(float itemWidth) {
 		this.itemWidth = itemWidth;
-		sendCommandIfRendered(() -> new UiInfiniteItemView.SetItemWidthCommand(itemWidth));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemWidthCommand(itemWidth));
 		return this;
 	}
 
@@ -213,7 +213,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public void setVerticalItemAlignment(ItemViewVerticalItemAlignment verticalItemAlignment) {
 		this.verticalItemAlignment = verticalItemAlignment;
-		sendCommandIfRendered(() -> new UiInfiniteItemView.SetVerticalItemAlignmentCommand(verticalItemAlignment.toUiItemJustification()));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetVerticalItemAlignmentCommand(verticalItemAlignment.toUiItemJustification()));
 	}
 
 	public int getHorizontalItemMargin() {
@@ -222,7 +222,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setHorizontalItemMargin(int horizontalItemMargin) {
 		this.horizontalItemMargin = horizontalItemMargin;
-		sendCommandIfRendered(() -> new UiInfiniteItemView.SetHorizontalItemMarginCommand(horizontalItemMargin));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetHorizontalItemMarginCommand(horizontalItemMargin));
 		return this;
 	}
 
@@ -232,7 +232,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemJustification(ItemViewRowJustification itemJustification) {
 		this.itemJustification = itemJustification;
-		sendCommandIfRendered(() -> new UiInfiniteItemView.SetItemJustificationCommand(itemJustification.toUiItemJustification()));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemJustificationCommand(itemJustification.toUiItemJustification()));
 		return this;
 	}
 
@@ -286,13 +286,13 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		if (isRendered()) {
 			int totalCount = model.getCount();
 			List<RECORD> records = model.getRecords(startIndex, Math.max(0, Math.min(totalCount - startIndex, length)));
-			CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse;
+			CacheManipulationHandle<List<DtoIdentifiableClientRecord>> cacheResponse;
 			if (clear) {
 				cacheResponse = itemCache.replaceRecords(records);
 			} else {
 				cacheResponse = itemCache.addRecords(records);
 			}
-			getSessionContext().sendCommand(getId(), new UiInfiniteItemView.AddDataCommand(startIndex, cacheResponse.getAndClearResult(), totalCount, clear), aVoid -> cacheResponse.commit());
+			getSessionContext().sendCommand(getId(), new DtoInfiniteItemView.AddDataCommand(startIndex, cacheResponse.getAndClearResult(), totalCount, clear), aVoid -> cacheResponse.commit());
 		}
 	}
 
@@ -309,7 +309,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 }

@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.itemview;
 
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiIdentifiableClientRecord;
-import org.teamapps.dto.UiItemView;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.dto.DtoItemView;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
-	public ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(UiItemView.ItemClickedEvent.TYPE_ID);
+	public ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(DtoItemView.ItemClickedEvent.TYPE_ID);
 
 	private final List<ItemGroup<HEADERRECORD, RECORD>> itemGroups = new ArrayList<>();
 
@@ -105,16 +105,16 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 		itemGroups.add(group);
 		group.setContainer(new ItemGroupContainer<>() {
 			@Override
-			public UiIdentifiableClientRecord createHeaderClientRecord(HEADERRECORD headerRecord) {
-				UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
+			public DtoIdentifiableClientRecord createHeaderClientRecord(HEADERRECORD headerRecord) {
+				DtoIdentifiableClientRecord clientRecord = new DtoIdentifiableClientRecord();
 				clientRecord.setValues(headerPropertyProvider.getValues(headerRecord, groupHeaderTemplate.getPropertyNames()));
 				return clientRecord;
 			}
 
 			@Override
-			public void handleAddItem(UiIdentifiableClientRecord itemClientRecord, Consumer<Void> uiCommandCallback) {
+			public void handleAddItem(DtoIdentifiableClientRecord itemClientRecord, Consumer<Void> uiCommandCallback) {
 				if (isRendered()) {
-					getSessionContext().sendCommand(getId(), new UiItemView.AddItemCommand(group.getClientId(), itemClientRecord), uiCommandCallback);
+					getSessionContext().sendCommand(getId(), new DtoItemView.AddItemCommand(group.getClientId(), itemClientRecord), uiCommandCallback);
 				} else {
 					uiCommandCallback.accept(null);
 				}
@@ -123,16 +123,16 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			@Override
 			public void handleRemoveItem(int itemClientRecordId, Consumer<Void> uiCommandCallback) {
 				if (isRendered()) {
-					getSessionContext().sendCommand(getId(), new UiItemView.RemoveItemCommand(group.getClientId(), itemClientRecordId), uiCommandCallback);
+					getSessionContext().sendCommand(getId(), new DtoItemView.RemoveItemCommand(group.getClientId(), itemClientRecordId), uiCommandCallback);
 				}
 			}
 
 			@Override
 			public void handleRefreshRequired() {
-				sendCommandIfRendered(() -> new UiItemView.RefreshItemGroupCommand(group.createUiItemViewItemGroup()));
+				sendCommandIfRendered(() -> new DtoItemView.RefreshItemGroupCommand(group.createUiItemViewItemGroup()));
 			}
 		});
-		sendCommandIfRendered(() -> new UiItemView.AddItemGroupCommand(group.createUiItemViewItemGroup()));
+		sendCommandIfRendered(() -> new DtoItemView.AddItemGroupCommand(group.createUiItemViewItemGroup()));
 	}
 
 	public String getFilter() {
@@ -141,7 +141,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
-		sendCommandIfRendered(() -> new UiItemView.SetFilterCommand(filter));
+		sendCommandIfRendered(() -> new DtoItemView.SetFilterCommand(filter));
 	}
 
 	public void removeAllGroups() {
@@ -150,7 +150,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void removeItemGroup(ItemGroup itemGroup) {
 		itemGroups.remove(itemGroup);
-		sendCommandIfRendered(() -> new UiItemView.RemoveItemGroupCommand(itemGroup.getClientId()));
+		sendCommandIfRendered(() -> new DtoItemView.RemoveItemGroupCommand(itemGroup.getClientId()));
 	}
 
 	public int getHorizontalPadding() {
@@ -204,7 +204,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiItemView uiItemView = new UiItemView();
+		DtoItemView uiItemView = new DtoItemView();
 		mapAbstractUiComponentProperties(uiItemView);
 		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate.createUiTemplate() : null);
 		uiItemView.setItemGroups(this.itemGroups.stream()
@@ -219,10 +219,10 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiItemView.ItemClickedEvent.TYPE_ID -> {
-				var itemClickedEvent = event.as(UiItemView.ItemClickedEventWrapper.class);
+			case DtoItemView.ItemClickedEvent.TYPE_ID -> {
+				var itemClickedEvent = event.as(DtoItemView.ItemClickedEventWrapper.class);
 				ItemGroup<HEADERRECORD, RECORD> itemGroup = getItemGroupByClientId(itemClickedEvent.getGroupId());
 				if (itemGroup != null) {
 					RECORD item = itemGroup.getItemByClientId(itemClickedEvent.getItemId());

@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiComponentField;
-import org.teamapps.dto.UiField;
+import org.teamapps.dto.DtoComponentField;
+import org.teamapps.dto.DtoField;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -42,8 +42,8 @@ public class ComponentField extends AbstractField<Void> {
     }
 
     @Override
-    public UiField createUiClientObject() {
-        UiComponentField uiField = new UiComponentField();
+    public DtoField createUiClientObject() {
+        DtoComponentField uiField = new DtoComponentField();
         mapAbstractFieldAttributesToUiField(uiField);
         uiField.setComponent(Component.createUiClientObjectReference(component));
         uiField.setHeight(height);
@@ -57,7 +57,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setComponent(Component component) {
         this.component = component;
-        sendCommandIfRendered(() -> new UiComponentField.SetComponentCommand(Component.createUiClientObjectReference(component)));
+        sendCommandIfRendered(() -> new DtoComponentField.SetComponentCommand(Component.createUiClientObjectReference(component)));
     }
 
     public int getHeight() {
@@ -66,7 +66,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setHeight(int height) {
         this.height = height;
-        sendCommandIfRendered(() -> new UiComponentField.SetHeightCommand(height));
+        sendCommandIfRendered(() -> new DtoComponentField.SetHeightCommand(height));
     }
 
     public boolean isBordered() {
@@ -75,7 +75,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setBordered(boolean bordered) {
         this.bordered = bordered;
-        sendCommandIfRendered(() -> new UiComponentField.SetBorderedCommand(bordered));
+        sendCommandIfRendered(() -> new DtoComponentField.SetBorderedCommand(bordered));
     }
 
 }

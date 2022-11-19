@@ -24,7 +24,7 @@ abstract class AbstractClientMessage {
 }
 
 class INIT extends AbstractClientMessage {
-    required UiClientInfo clientInfo;
+    required ClientInfo clientInfo;
     required int maxRequestedCommandId;
 }
 
@@ -37,28 +37,28 @@ abstract class AbstractClientPayloadMessage extends AbstractClientMessage {
 	required int id;
 }
 
-class EVENT extends AbstractClientPayloadMessage {
-    required UiEvent uiEvent;
+class EVT extends AbstractClientPayloadMessage {
+    required Event uiEvent;
 }
 
-interface UiEvent {
+interface Event {
     String componentId;
 }
 
-class QUERY extends AbstractClientPayloadMessage {
-    required UiQuery uiQuery;
+class QRY extends AbstractClientPayloadMessage {
+    required Query uiQuery;
 }
 
-interface UiQuery {
+interface Query {
    String componentId;
 }
 
-class CMD_RESULT extends AbstractClientPayloadMessage {
+class CMD_RES extends AbstractClientPayloadMessage {
 	required int cmdId;
 	required Object result;
 }
 
-class CMD_REQUEST extends AbstractClientMessage {
+class CMD_REQ extends AbstractClientMessage {
 	required int lastReceivedCommandId;
 	required int maxRequestedCommandId;
 }
@@ -71,7 +71,7 @@ class TERMINATE extends AbstractClientMessage {
 }
 
 @TypeScriptFactory
-class UiClientInfo {
+class ClientInfo {
 	int screenWidth;
 	int screenHeight;
 	int viewPortWidth;
@@ -80,13 +80,13 @@ class UiClientInfo {
 	String timezoneIana;
 	int timezoneOffsetMinutes;
 	List<String> clientTokens;
-	UiLocation location;
+	Location location;
 	Dictionary<String> clientParameters;
 	String teamAppsVersion;
 }
 
 @TypeScriptFactory
-class UiLocation {
+class Location {
 
 	/**
 	 * Returns the complete URL.
@@ -169,7 +169,7 @@ class INIT_OK extends AbstractServerMessage {
 }
 
 class INIT_NOK extends AbstractServerMessage {
-	required UiSessionClosingReason reason;
+	required SessionClosingReason reason;
 }
 
 class REINIT_OK extends AbstractServerMessage {
@@ -177,18 +177,18 @@ class REINIT_OK extends AbstractServerMessage {
 }
 
 class REINIT_NOK extends AbstractServerMessage {
-    required UiSessionClosingReason reason;
+    required SessionClosingReason reason;
 }
 
 class PING extends AbstractServerMessage { // Actively request a keepalive message from the client.
 }
 
 class SESSION_CLOSED extends AbstractServerMessage {
-    required UiSessionClosingReason reason;
+    required SessionClosingReason reason;
     String message;
 }
 
-enum UiSessionClosingReason {
+enum SessionClosingReason {
 	// EXPIRED
 	SESSION_NOT_FOUND,    			// reacting to unknown client
 	SESSION_TIMEOUT,      			// actively sent by server
@@ -218,10 +218,10 @@ class CMD {
     required Boolean r;   // awaitsResponse
 }
 
-interface UiCommand<RESULT> {
+interface Command<RESULT> {
 }
 
-class QUERY_RESULT extends AbstractServerMessage {
+class QRY_RES extends AbstractServerMessage {
     required int queryId;
     required Object result;
 }

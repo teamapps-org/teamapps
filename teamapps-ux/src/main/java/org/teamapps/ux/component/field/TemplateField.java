@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiClientRecord;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiTemplateField;
+import org.teamapps.dto.DtoClientRecord;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoTemplateField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -33,7 +33,7 @@ import org.teamapps.ux.data.extraction.PropertyProvider;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiTemplateField.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoTemplateField.ClickedEvent.TYPE_ID);
 
 	private Template template;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
@@ -48,19 +48,19 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		switch (event.getTypeId()) {
-			case UiTemplateField.ClickedEvent.TYPE_ID -> {
-				var e = event.as(UiTemplateField.ClickedEventWrapper.class);
+			case DtoTemplateField.ClickedEvent.TYPE_ID -> {
+				var e = event.as(DtoTemplateField.ClickedEventWrapper.class);
 				onClicked.fire();
 			}
 		}
 	}
 
 	@Override
-	public UiTemplateField createUiClientObject() {
-		UiTemplateField ui = new UiTemplateField();
+	public DtoTemplateField createUiClientObject() {
+		DtoTemplateField ui = new DtoTemplateField();
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setTemplate(template.createUiTemplate());
 		ui.setValue(createUiRecord(getValue()));
@@ -79,11 +79,11 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 		}
 	}
 
-	private UiClientRecord createUiRecord(RECORD record) {
+	private DtoClientRecord createUiRecord(RECORD record) {
 		if (record == null) {
 			return null;
 		}
-		UiClientRecord uiClientRecord = new UiClientRecord();
+		DtoClientRecord uiClientRecord = new DtoClientRecord();
 		uiClientRecord.setValues(propertyProvider.getValues(record, template.getPropertyNames()));
 		return uiClientRecord;
 	}
@@ -94,7 +94,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setTemplate(Template template) {
 		this.template = template;
-		sendCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -104,7 +104,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
-		sendCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 

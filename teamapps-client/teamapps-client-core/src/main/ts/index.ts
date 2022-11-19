@@ -2,13 +2,13 @@ export * from "./generated";
 
 export * from "./component/AbstractUiComponent";
 export * from "./component/AbstractUiWebComponent";
-export * from "./component/UiComponent";
+export * from "./component/Component";
 
 export * from "./DefaultTeamAppsUiContext";
 export * from "./TeamAppsUiComponentRegistry";
 export * from "./TeamAppsUiContext";
-export * from "./UiClientObject";
-export * from "./UiGlobals";
+export * from "./ClientObject";
+export * from "./Globals";
 
 export * from "./util/bind";
 export * from "./util/debounce";

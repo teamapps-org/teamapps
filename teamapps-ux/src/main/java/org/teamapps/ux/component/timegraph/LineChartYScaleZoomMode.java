@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph;
 
-import org.teamapps.dto.UiLineChartYScaleZoomMode;
+import org.teamapps.dto.DtoLineChartYScaleZoomMode;
 
 public enum LineChartYScaleZoomMode {
 
@@ -27,8 +27,8 @@ public enum LineChartYScaleZoomMode {
 	DYNAMIC,
 	DYNAMIC_INCLUDING_ZERO;
 
-	public UiLineChartYScaleZoomMode toUiLineChartYScaleZoomMode() {
-		return UiLineChartYScaleZoomMode.valueOf(this.name());
+	public DtoLineChartYScaleZoomMode toUiLineChartYScaleZoomMode() {
+		return DtoLineChartYScaleZoomMode.valueOf(this.name());
 	}
 
 }

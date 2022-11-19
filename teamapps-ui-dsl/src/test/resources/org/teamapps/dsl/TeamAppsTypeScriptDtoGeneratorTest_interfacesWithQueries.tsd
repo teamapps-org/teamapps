@@ -3,14 +3,14 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {UiQuery} from "teamapps-client-communication";
+import {DtoQuery} from "teamapps-client-communication";
 
-export interface X {
+export interface DtoX {
 	_type?: string;
-	queryEntries: (query: X_QueryEntriesQuery) => Promise<string[]>
+	queryEntries: (query: DtoX_QueryEntriesQuery) => Promise<string[]>
 }
 
 
-export interface X_QueryEntriesQuery extends UiQuery {
+export interface DtoX_QueryEntriesQuery extends DtoQuery {
 	x: number
 }

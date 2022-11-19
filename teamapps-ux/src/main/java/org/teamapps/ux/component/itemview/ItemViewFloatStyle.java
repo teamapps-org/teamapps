@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.itemview;
 
-import org.teamapps.dto.UiItemViewFloatStyle;
+import org.teamapps.dto.DtoItemViewFloatStyle;
 
 public enum ItemViewFloatStyle {
 
 	VERTICAL_LIST, HORIZONTAL_FLOAT;
 
-	public UiItemViewFloatStyle toUiItemViewFloatStyle() {
-		return UiItemViewFloatStyle.valueOf(this.name());
+	public DtoItemViewFloatStyle toUiItemViewFloatStyle() {
+		return DtoItemViewFloatStyle.valueOf(this.name());
 	}
 
 }

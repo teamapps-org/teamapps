@@ -19,13 +19,13 @@
  */
 package org.teamapps.ux.component.splitpane;
 
-import org.teamapps.dto.UiSplitSizePolicy;
+import org.teamapps.dto.DtoSplitSizePolicy;
 
 public enum SplitSizePolicy {
 
 	FIRST_FIXED, LAST_FIXED, RELATIVE;
 
-	public UiSplitSizePolicy toUiSplitSizePolicy() {
-		return UiSplitSizePolicy.valueOf(this.name());
+	public DtoSplitSizePolicy toUiSplitSizePolicy() {
+		return DtoSplitSizePolicy.valueOf(this.name());
 	}
 }

@@ -49,29 +49,29 @@ public class ChatDisplay extends AbstractComponent {
 		this.model = model;
 		model.onMessagesAdded().addListener(chatMessages -> {
 			updateEarliestKnownMessageId(chatMessages);
-			sendCommandIfRendered(() -> new UiChatDisplay.AddMessagesCommand(createUiChatMessageBatch(chatMessages)));
+			sendCommandIfRendered(() -> new DtoChatDisplay.AddMessagesCommand(createUiChatMessageBatch(chatMessages)));
 		});
 		model.onMessageChanged().addListener((chatMessage) -> {
 			if (earliestKnownMessageId <= chatMessage.getId()) {
-				sendCommandIfRendered(() -> new UiChatDisplay.UpdateMessageCommand(createUiChatMessage(chatMessage)));
+				sendCommandIfRendered(() -> new DtoChatDisplay.UpdateMessageCommand(createUiChatMessage(chatMessage)));
 			}
 		});
 		model.onMessageDeleted().addListener((messageId) -> {
 			if (earliestKnownMessageId <= messageId) {
-				sendCommandIfRendered(() -> new UiChatDisplay.DeleteMessageCommand(messageId));
+				sendCommandIfRendered(() -> new DtoChatDisplay.DeleteMessageCommand(messageId));
 			}
 		});
 		model.onAllDataChanged().addListener(aVoid -> {
 			ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);
 			this.earliestKnownMessageId = Integer.MAX_VALUE;
 			updateEarliestKnownMessageId(messageBatch);
-			sendCommandIfRendered(() -> new UiChatDisplay.ClearMessagesCommand(createUiChatMessageBatch(messageBatch)));
+			sendCommandIfRendered(() -> new DtoChatDisplay.ClearMessagesCommand(createUiChatMessageBatch(messageBatch)));
 		});
 	}
 
 	@Override
-	public UiChatDisplay createUiClientObject() {
-		UiChatDisplay uiChatDisplay = new UiChatDisplay();
+	public DtoChatDisplay createUiClientObject() {
+		DtoChatDisplay uiChatDisplay = new DtoChatDisplay();
 		mapAbstractUiComponentProperties(uiChatDisplay);
 		ChatMessageBatch modelResponse = model.getLastChatMessages(messagesFetchSize);
 		updateEarliestKnownMessageId(modelResponse);
@@ -86,16 +86,16 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public Object handleUiQuery(UiQueryWrapper query) {
+	public Object handleUiQuery(DtoQueryWrapper query) {
 		switch (query.getTypeId()) {
-			case UiChatDisplay.RequestPreviousMessagesQuery.TYPE_ID -> {
-				var e = query.as(UiChatDisplay.RequestPreviousMessagesQueryWrapper.class);
+			case DtoChatDisplay.RequestPreviousMessagesQuery.TYPE_ID -> {
+				var e = query.as(DtoChatDisplay.RequestPreviousMessagesQueryWrapper.class);
 				ChatMessageBatch response = model.getPreviousMessages(earliestKnownMessageId, messagesFetchSize);
 				updateEarliestKnownMessageId(response);
 				return createUiChatMessageBatch(response);
 			}
-			case UiChatDisplay.RequestContextMenuQuery.TYPE_ID -> {
-				var q = query.as(UiChatDisplay.RequestContextMenuQueryWrapper.class);
+			case DtoChatDisplay.RequestContextMenuQuery.TYPE_ID -> {
+				var q = query.as(DtoChatDisplay.RequestContextMenuQueryWrapper.class);
 				ChatMessage chatMessage = model.getChatMessageById(q.getChatMessageId());
 				if (chatMessage != null) {
 					Component component = contextMenuProvider.apply(chatMessage);
@@ -106,19 +106,19 @@ public class ChatDisplay extends AbstractComponent {
 		return super.handleUiQuery(query);
 	}
 
-	private List<UiChatMessage> createUiChatMessages(List<ChatMessage> chatMessages) {
+	private List<DtoChatMessage> createUiChatMessages(List<ChatMessage> chatMessages) {
 		return chatMessages.stream()
 				.map(message -> createUiChatMessage(message))
 				.collect(Collectors.toList());
 	}
 
-	private UiChatMessageBatch createUiChatMessageBatch(ChatMessageBatch batch) {
-		List<UiChatMessage> uiMessages = batch.getMessages().stream().map(this::createUiChatMessage).collect(Collectors.toList());
-		return new UiChatMessageBatch(uiMessages, batch.isContainsFirstMessage());
+	private DtoChatMessageBatch createUiChatMessageBatch(ChatMessageBatch batch) {
+		List<DtoChatMessage> uiMessages = batch.getMessages().stream().map(this::createUiChatMessage).collect(Collectors.toList());
+		return new DtoChatMessageBatch(uiMessages, batch.isContainsFirstMessage());
 	}
 
-	private UiChatMessage createUiChatMessage(ChatMessage message) {
-		UiChatMessage uiChatMessage = new UiChatMessage();
+	private DtoChatMessage createUiChatMessage(ChatMessage message) {
+		DtoChatMessage uiChatMessage = new DtoChatMessage();
 		uiChatMessage.setId(message.getId());
 		uiChatMessage.setUserNickname(message.getUserNickname());
 		uiChatMessage.setUserImageUrl(message.getUserImage().getUrl(getSessionContext()));
@@ -133,15 +133,15 @@ public class ChatDisplay extends AbstractComponent {
 		return uiChatMessage;
 	}
 
-	private UiChatPhoto createUiChatPhoto(ChatPhoto photo) {
-		UiChatPhoto uiChatPhoto = new UiChatPhoto();
+	private DtoChatPhoto createUiChatPhoto(ChatPhoto photo) {
+		DtoChatPhoto uiChatPhoto = new DtoChatPhoto();
 		uiChatPhoto.setThumbnailUrl(photo.getThumbnail() != null ? photo.getThumbnail().getUrl(getSessionContext()) : null);
 		uiChatPhoto.setImageUrl(photo.getImage().getUrl(getSessionContext()));
 		return uiChatPhoto;
 	}
 
-	private UiChatFile createUiChatFile(ChatFile file) {
-		UiChatFile uiChatFile = new UiChatFile();
+	private DtoChatFile createUiChatFile(ChatFile file) {
+		DtoChatFile uiChatFile = new DtoChatFile();
 		uiChatFile.setName(file.getName());
 		uiChatFile.setIcon(getSessionContext().resolveIcon(file.getIcon()));
 		uiChatFile.setLength(file.getLength());
@@ -172,7 +172,7 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		sendCommandIfRendered(() -> new UiChatDisplay.CloseContextMenuCommand());
+		sendCommandIfRendered(() -> new DtoChatDisplay.CloseContextMenuCommand());
 	}
 
 	public Icon<?, ?> getDeletedMessageIcon() {

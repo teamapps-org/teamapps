@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.documentviewer;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiDocumentViewer;
-import org.teamapps.dto.UiEventWrapper;
+import org.teamapps.dto.DtoDocumentViewer;
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.Shadow;
@@ -49,7 +49,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiDocumentViewer documentViewer = new UiDocumentViewer();
+		DtoDocumentViewer documentViewer = new DtoDocumentViewer();
 		mapAbstractUiComponentProperties(documentViewer);
 		documentViewer.setPageUrls(pageUrls);
 		documentViewer.setDisplayMode(displayMode.toUiPageDisplayMode());
@@ -62,7 +62,7 @@ public class DocumentViewer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		// no events so far...
 	}
 
@@ -73,7 +73,7 @@ public class DocumentViewer extends AbstractComponent {
 	public void setPageUrls(List<String> pageUrls) {
 		this.pageUrls.clear();
 		this.pageUrls.addAll(pageUrls);
-		sendCommandIfRendered(() -> new UiDocumentViewer.SetPageUrlsCommand(this.pageUrls));
+		sendCommandIfRendered(() -> new DtoDocumentViewer.SetPageUrlsCommand(this.pageUrls));
 	}
 
 	public void setPageUrls(String... pageUrls) {
@@ -82,7 +82,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	public void addPageUrl(String pageUrl) {
 		this.pageUrls.add(pageUrl);
-		sendCommandIfRendered(() -> new UiDocumentViewer.SetPageUrlsCommand(this.pageUrls));
+		sendCommandIfRendered(() -> new DtoDocumentViewer.SetPageUrlsCommand(this.pageUrls));
 	}
 
 	public PageDisplayMode getDisplayMode() {
@@ -91,7 +91,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	public void setDisplayMode(PageDisplayMode displayMode) {
 		this.displayMode = displayMode;
-		sendCommandIfRendered(() -> new UiDocumentViewer.SetDisplayModeCommand(displayMode.toUiPageDisplayMode(), zoomFactor));
+		sendCommandIfRendered(() -> new DtoDocumentViewer.SetDisplayModeCommand(displayMode.toUiPageDisplayMode(), zoomFactor));
 	}
 
 	public float getZoomFactor() {
@@ -100,7 +100,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	public void setZoomFactor(float zoomFactor) {
 		this.zoomFactor = zoomFactor;
-		sendCommandIfRendered(() -> new UiDocumentViewer.SetZoomFactorCommand(zoomFactor));
+		sendCommandIfRendered(() -> new DtoDocumentViewer.SetZoomFactorCommand(zoomFactor));
 	}
 
 	public Border getPageBorder() {
@@ -109,7 +109,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	public void setPageBorder(Border pageBorder) {
 		this.pageBorder = pageBorder;
-		sendCommandIfRendered(() -> new UiDocumentViewer.SetPageBorderCommand(pageBorder != null ? pageBorder.createUiBorder(): null));
+		sendCommandIfRendered(() -> new DtoDocumentViewer.SetPageBorderCommand(pageBorder != null ? pageBorder.createUiBorder(): null));
 	}
 
 	public Shadow getPageShadow() {
@@ -118,7 +118,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	public void setPageShadow(Shadow pageShadow) {
 		this.pageShadow = pageShadow;
-		sendCommandIfRendered(() -> new UiDocumentViewer.SetPageShadowCommand(pageShadow != null ? pageShadow.createUiShadow(): null));
+		sendCommandIfRendered(() -> new DtoDocumentViewer.SetPageShadowCommand(pageShadow != null ? pageShadow.createUiShadow(): null));
 	}
 
 	public int getPadding() {
@@ -127,7 +127,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	public void setPadding(int padding) {
 		this.padding = padding;
-		sendCommandIfRendered(() -> new UiDocumentViewer.SetPadddingCommand(padding));
+		sendCommandIfRendered(() -> new DtoDocumentViewer.SetPadddingCommand(padding));
 	}
 
 	public int getPageSpacing() {
@@ -136,7 +136,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	public void setPageSpacing(int pageSpacing) {
 		this.pageSpacing = pageSpacing;
-		sendCommandIfRendered(() -> new UiDocumentViewer.SetPageSpacingCommand(pageSpacing));
+		sendCommandIfRendered(() -> new DtoDocumentViewer.SetPageSpacingCommand(pageSpacing));
 	}
 
 }

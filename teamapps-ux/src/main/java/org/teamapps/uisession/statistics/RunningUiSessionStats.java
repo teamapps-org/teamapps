@@ -21,9 +21,9 @@ package org.teamapps.uisession.statistics;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import org.teamapps.dto.UiCommand;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiQuery;
+import org.teamapps.dto.DtoCommand;
+import org.teamapps.dto.DtoEvent;
+import org.teamapps.dto.DtoQuery;
 import org.teamapps.uisession.UiSessionState;
 
 import java.util.ArrayDeque;
@@ -204,7 +204,7 @@ public class RunningUiSessionStats implements UiSessionStats {
 		this.name = name;
 	}
 
-	public void commandSent(Class<? extends UiCommand> commandClass) {
+	public void commandSent(Class<? extends DtoCommand> commandClass) {
 		commandStats.add(commandClass);
 	}
 
@@ -212,15 +212,15 @@ public class RunningUiSessionStats implements UiSessionStats {
 		commandResultStats.add(commandClass);
 	}
 
-	public void eventReceived(Class<? extends UiEvent> eventClass) {
+	public void eventReceived(Class<? extends DtoEvent> eventClass) {
 		eventStats.add(eventClass);
 	}
 
-	public void queryReceived(Class<? extends UiQuery> queryClass) {
+	public void queryReceived(Class<? extends DtoQuery> queryClass) {
 		queryStats.add(queryClass);
 	}
 
-	public void queryResultSentFor(Class<? extends UiQuery> queryClass) {
+	public void queryResultSentFor(Class<? extends DtoQuery> queryClass) {
 		queryResultStats.add(queryClass);
 	}
 

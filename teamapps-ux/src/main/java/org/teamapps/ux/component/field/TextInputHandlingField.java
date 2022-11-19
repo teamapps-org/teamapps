@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiTextInputHandlingField;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoTextInputHandlingField;
 import org.teamapps.event.ProjectorEvent;
 
 public interface TextInputHandlingField {
@@ -29,15 +29,15 @@ public interface TextInputHandlingField {
 
 	ProjectorEvent<SpecialKey> onSpecialKeyPressed();
 
-	default boolean defaultHandleTextInputEvent(UiEventWrapper event) {
+	default boolean defaultHandleTextInputEvent(DtoEventWrapper event) {
 		return switch (event.getTypeId()) {
-			case UiTextInputHandlingField.TextInputEvent.TYPE_ID -> {
-				var textInputEvent = event.as(UiTextInputHandlingField.TextInputEventWrapper.class);
+			case DtoTextInputHandlingField.TextInputEvent.TYPE_ID -> {
+				var textInputEvent = event.as(DtoTextInputHandlingField.TextInputEventWrapper.class);
 				this.onTextInput().fire(textInputEvent.getEnteredString());
 				yield true;
 			}
-			case UiTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID -> {
-				var specialKeyPressedEvent = event.as(UiTextInputHandlingField.SpecialKeyPressedEventWrapper.class);
+			case DtoTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID -> {
+				var specialKeyPressedEvent = event.as(DtoTextInputHandlingField.SpecialKeyPressedEventWrapper.class);
 				this.onSpecialKeyPressed().fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
 				yield true;
 			}

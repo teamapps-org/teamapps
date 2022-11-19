@@ -23,18 +23,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.UiObject;
+import org.teamapps.dto.DtoObject;
 
 /**
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.dto.blah.UiComponent;
+import org.teamapps.dto.blah.DtoUiComponent;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class A implements UiObject {
+public class DtoA implements DtoObject {
 
     public static final String TYPE_ID = "A";
 
@@ -46,11 +46,11 @@ public class A implements UiObject {
 	 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
 	 */
 	@Deprecated
-	public A() {
+	public DtoA() {
 		// default constructor for Jackson
 	}
 
-	public A(String aasdf) {
+	public DtoA(String aasdf) {
 		this.aasdf = aasdf;
 	}
 
@@ -79,19 +79,19 @@ public class A implements UiObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("aasdf")
-	public A setAasdf(String aasdf) {
+	public DtoA setAasdf(String aasdf) {
 		this.aasdf = aasdf;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("b")
-	public A setB(String b) {
+	public DtoA setB(String b) {
 		this.b = b;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("c")
-	public A setC(List<Long> c) {
+	public DtoA setC(List<Long> c) {
 		this.c = c;
 		return this;
 	}

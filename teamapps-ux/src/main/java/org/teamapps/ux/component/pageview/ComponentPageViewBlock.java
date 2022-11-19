@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.dto.UiComponentPageViewBlock;
+import org.teamapps.dto.DtoComponentPageViewBlock;
 import org.teamapps.ux.component.Component;
 
 public class ComponentPageViewBlock extends AbstractPageViewBlock {
@@ -32,8 +32,8 @@ public class ComponentPageViewBlock extends AbstractPageViewBlock {
 		this.height = height;
 	}
 
-	public UiComponentPageViewBlock createUiBlock() {
-		UiComponentPageViewBlock uiBlock = new UiComponentPageViewBlock();
+	public DtoComponentPageViewBlock createUiBlock() {
+		DtoComponentPageViewBlock uiBlock = new DtoComponentPageViewBlock();
 		mapAbstractPageViewBlockAttributes(uiBlock);
 		uiBlock.setComponent(component != null ? component.createUiReference() : null);
 		uiBlock.setHeight(height);

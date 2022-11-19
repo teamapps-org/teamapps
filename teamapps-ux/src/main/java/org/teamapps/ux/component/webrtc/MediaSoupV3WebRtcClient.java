@@ -36,17 +36,17 @@ import java.util.stream.Collectors;
 
 public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
-	public final ProjectorEvent<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.TYPE_ID);
-	public final ProjectorEvent<SourceMediaTrackType> onSourceMediaTrackEnded = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.TYPE_ID);
-	public final ProjectorEvent<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<TrackPublishingFailedEventData> onTrackPublishingFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.TYPE_ID);
+	public final ProjectorEvent<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.TYPE_ID);
+	public final ProjectorEvent<SourceMediaTrackType> onSourceMediaTrackEnded = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.TYPE_ID);
+	public final ProjectorEvent<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<TrackPublishingFailedEventData> onTrackPublishingFailed = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.TYPE_ID);
 
-	public final ProjectorEvent<Void> onSubscribingSuccessful = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<String> onSubscribingFailed = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.SubscribingFailedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onSubscribingSuccessful = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<String> onSubscribingFailed = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.SubscribingFailedEvent.TYPE_ID);
 
-	public final ProjectorEvent<Boolean> onConnectionStateChanged = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Boolean> onVoiceActivityChanged = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiMediaSoupV3WebRtcClient.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Boolean> onConnectionStateChanged = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.TYPE_ID);
+	public final ProjectorEvent<Boolean> onVoiceActivityChanged = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.ClickedEvent.TYPE_ID);
 
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;
@@ -61,8 +61,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	private double playbackVolume = 1;
 
-	private UiMediaSoupPublishingParameters publishingParameters;
-	private UiMediaSoupPlaybackParameters playbackParameters;
+	private DtoMediaSoupPublishingParameters publishingParameters;
+	private DtoMediaSoupPlaybackParameters playbackParameters;
 
 	private Supplier<Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
@@ -75,8 +75,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	@Override
-	public UiMediaSoupV3WebRtcClient createUiClientObject() {
-		UiMediaSoupV3WebRtcClient ui = new UiMediaSoupV3WebRtcClient();
+	public DtoMediaSoupV3WebRtcClient createUiClientObject() {
+		DtoMediaSoupV3WebRtcClient ui = new DtoMediaSoupV3WebRtcClient();
 		mapAbstractUiComponentProperties(ui);
 		ui.setPublishingParameters(publishingParameters);
 		ui.setPlaybackParameters(playbackParameters);
@@ -95,62 +95,62 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.VoiceActivityChangedEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.VoiceActivityChangedEventWrapper.class);
 				this.onVoiceActivityChanged.fire(e.getActive());
 
 			}
-			case UiMediaSoupV3WebRtcClient.ClickedEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.ClickedEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.ClickedEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.ClickedEventWrapper.class);
 				this.onClicked.fire();
 
 			}
-			case UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEventWrapper.class);
 				this.onSourceMediaTrackRetrievalFailed.fire(MediaRetrievalFailureReason.valueOf(e.getReason().name()));
 
 			}
-			case UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.SourceMediaTrackEndedEventWrapper.class);
 				this.onSourceMediaTrackEnded.fire(SourceMediaTrackType.valueOf(e.getTrackType().name()));
 
 			}
-			case UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEventWrapper.class);
 				this.onTrackPublishingSuccessful.fire(new TrackPublishingSuccessfulEventData(e.getAudio(), e.getVideo()));
 
 			}
-			case UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.TrackPublishingFailedEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.TrackPublishingFailedEventWrapper.class);
 				this.onTrackPublishingFailed.fire(new TrackPublishingFailedEventData(e.getAudio(), e.getVideo(), e.getErrorMessage()));
 
 			}
-			case UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.SubscribingSuccessfulEventWrapper.class);
 				this.onSubscribingSuccessful.fire();
 
 			}
-			case UiMediaSoupV3WebRtcClient.SubscribingFailedEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.SubscribingFailedEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.SubscribingFailedEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.SubscribingFailedEventWrapper.class);
 				this.onSubscribingFailed.fire(e.getErrorMessage());
 
 			}
-			case UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.ConnectionStateChangedEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.ConnectionStateChangedEventWrapper.class);
 				this.onConnectionStateChanged.fire(e.getConnected());
 
 			}
-			case UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent.TYPE_ID -> {
-				var e = event.as(UiMediaSoupV3WebRtcClient.ContextMenuRequestedEventWrapper.class);
+			case DtoMediaSoupV3WebRtcClient.ContextMenuRequestedEvent.TYPE_ID -> {
+				var e = event.as(DtoMediaSoupV3WebRtcClient.ContextMenuRequestedEventWrapper.class);
 				lastSeenContextMenuRequestId = e.getRequestId();
 				if (contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.get();
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
-						sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 					}
 				} else {
 					closeContextMenu();
@@ -168,8 +168,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			ScreenSharingConstraints screenSharingConstraints,
 			long maxBitrate, boolean simulcast,
 			long keyFrameRequestDelayMillis) {
-		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
-		params.setServer(new UiMediaServerUrlAndToken(serverUrl, worker, token));
+		DtoMediaSoupPublishingParameters params = new DtoMediaSoupPublishingParameters();
+		params.setServer(new DtoMediaServerUrlAndToken(serverUrl, worker, token));
 		params.setStreamUuid(streamUuid);
 		params.setAudioConstraints(audioConstraints != null ? audioConstraints.createUiAudioTrackConstraints() : null);
 		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createUiVideoTrackConstraints() : null);
@@ -197,10 +197,10 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			boolean audio, boolean video,
 			long minBitrate, long maxBitrate
 	) {
-		UiMediaSoupPlaybackParameters params = new UiMediaSoupPlaybackParameters();
+		DtoMediaSoupPlaybackParameters params = new DtoMediaSoupPlaybackParameters();
 		params.setStreamUuid(streamUuid);
-		params.setServer(new UiMediaServerUrlAndToken(server.getServerUrl(), server.getWorker(), server.getToken()));
-		params.setOrigin(origin != null ? new UiMediaServerUrlAndToken(origin.getServerUrl(), origin.getWorker(), origin.getToken()) : null);
+		params.setServer(new DtoMediaServerUrlAndToken(server.getServerUrl(), server.getWorker(), server.getToken()));
+		params.setOrigin(origin != null ? new DtoMediaServerUrlAndToken(origin.getServerUrl(), origin.getWorker(), origin.getToken()) : null);
 		params.setAudio(audio);
 		params.setVideo(video);
 		params.setMinBitrate(minBitrate);
@@ -216,7 +216,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoMediaSoupV3WebRtcClient.UpdateCommand(createUiClientObject()));
 	}
 
 	public boolean isActivityLineVisible() {
@@ -253,7 +253,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	public void setActive(boolean active) {
 		if (active != this.active) {
 			this.active = active;
-			sendCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.SetActiveCommand(active));
+			sendCommandIfRendered(() -> new DtoMediaSoupV3WebRtcClient.SetActiveCommand(active));
 		}
 	}
 
@@ -326,9 +326,9 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		}
 	}
 
-	public static CompletableFuture<List<UiMediaDeviceInfo>> enumerateDevices() {
-		CompletableFuture<List<UiMediaDeviceInfo>> future = new CompletableFuture<>();
-		SessionContext.current().sendStaticCommand(MediaSoupV3WebRtcClient.class, new UiMediaSoupV3WebRtcClient.EnumerateDevicesCommand(), value -> {
+	public static CompletableFuture<List<DtoMediaDeviceInfo>> enumerateDevices() {
+		CompletableFuture<List<DtoMediaDeviceInfo>> future = new CompletableFuture<>();
+		SessionContext.current().sendStaticCommand(MediaSoupV3WebRtcClient.class, new DtoMediaSoupV3WebRtcClient.EnumerateDevicesCommand(), value -> {
 			future.complete(value);
 		});
 		return future;
@@ -343,7 +343,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 	public void reconnect() {
@@ -351,11 +351,11 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		update();
 	}
 
-	public UiMediaSoupPublishingParameters getPublishingParameters() {
+	public DtoMediaSoupPublishingParameters getPublishingParameters() {
 		return publishingParameters;
 	}
 
-	public UiMediaSoupPlaybackParameters getPlaybackParameters() {
+	public DtoMediaSoupPlaybackParameters getPlaybackParameters() {
 		return playbackParameters;
 	}
 }

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph;
 
-import org.teamapps.dto.UiLongInterval;
+import org.teamapps.dto.DtoLongInterval;
 
 import java.util.Objects;
 
@@ -60,8 +60,8 @@ public class Interval {
 		return max;
 	}
 
-	public UiLongInterval toUiLongInterval() {
-		return new UiLongInterval(min, max);
+	public DtoLongInterval toUiLongInterval() {
+		return new DtoLongInterval(min, max);
 	}
 
 	@Override

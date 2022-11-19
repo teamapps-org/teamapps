@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.grid.layout;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiGridLayout;
+import org.teamapps.dto.DtoGridLayout;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.Shadow;
 import org.teamapps.ux.component.format.Spacing;
@@ -66,8 +66,8 @@ public class GridLayoutDefinition {
 		return this;
 	}
 
-	public UiGridLayout createUiGridLayout() {
-		UiGridLayout uiGridLayout = new UiGridLayout(
+	public DtoGridLayout createUiGridLayout() {
+		DtoGridLayout uiGridLayout = new DtoGridLayout(
 				columns.stream().map(c -> c.createUiGridColumn()).collect(Collectors.toList()),
 				rows.stream().map(r -> r.createUiGridRow()).collect(Collectors.toList()),
 				placements.stream().map(p -> p.createUiGridPlacement()).collect(Collectors.toList())

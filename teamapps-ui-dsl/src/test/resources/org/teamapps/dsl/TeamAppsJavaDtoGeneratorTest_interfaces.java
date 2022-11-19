@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.UiObject;
+import org.teamapps.dto.DtoObject;
 
 /**
  * THIS IS GENERATED CODE!
@@ -33,13 +33,13 @@ import org.teamapps.dto.UiObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface A extends UiObject {
+public interface DtoA extends DtoObject {
 
 	public String getA();
 	public String getB();
-	public A setB(String b);
+	public DtoA setB(String b);
 
-	public static class YEvent implements UiEvent {
+	public static class YEvent implements DtoEvent {
 
 	    public static final String TYPE_ID = "A.y";
 
@@ -78,19 +78,19 @@ public interface A extends UiObject {
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("componentId")
-		public YEvent setComponentId(String componentId) {
+		public DtoYEvent setComponentId(String componentId) {
 			this.componentId = componentId;
 			return this;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("y")
-		public YEvent setY(String y) {
+		public DtoYEvent setY(String y) {
 			this.y = y;
 			return this;
 		}
 
 	}
-    public static class YEventWrapper extends JsonWrapper {
+    public static class DtoYEventWrapper extends DtoJsonWrapper {
 
         public static final String TYPE_ID = "y";
 
@@ -98,7 +98,7 @@ public interface A extends UiObject {
             super(jsonNode);
         }
 
-        public Class<? extends YEvent> getUiClass() {
+        public Class<? extends YEvent> getDtoClass() {
             return YEvent.class;
         }
 
@@ -123,7 +123,7 @@ public interface A extends UiObject {
 
     }
 
-	public static class QQuery implements UiQuery {
+	public static class QQuery implements DtoQuery {
 
 	    public static final String TYPE_ID = "A.q";
 
@@ -162,19 +162,19 @@ public interface A extends UiObject {
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("componentId")
-		public QQuery setComponentId(String componentId) {
+		public DtoQQuery setComponentId(String componentId) {
 			this.componentId = componentId;
 			return this;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("y")
-		public QQuery setY(String y) {
+		public DtoQQuery setY(String y) {
 			this.y = y;
 			return this;
 		}
 
 	}
-	public static class QQueryWrapper extends JsonWrapper {
+	public static class DtoQQueryWrapper extends DtoJsonWrapper {
 
 	    public static final String TYPE_ID = "q";
 
@@ -182,7 +182,7 @@ public interface A extends UiObject {
 	        super(jsonNode);
 	    }
 
-	    public Class<? extends QQuery> getUiClass() {
+	    public Class<? extends QQuery> getDtoClass() {
 	        return QQuery.class;
 	    }
 
@@ -209,7 +209,7 @@ public interface A extends UiObject {
 
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"x"})
-	public static class XCommand implements UiCommand<Void> {
+	public static class XCommand implements DtoCommand<Void> {
 
 		protected String x;
 
@@ -241,7 +241,7 @@ public interface A extends UiObject {
 
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"x2"})
-	public static class X2Command implements UiCommand<Boolean> {
+	public static class X2Command implements DtoCommand<Boolean> {
 
 		protected String x2;
 

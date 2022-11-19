@@ -19,16 +19,16 @@
  */
 package org.teamapps.ux.component.panel;
 
-import org.teamapps.dto.UiWindowButtonType;
+import org.teamapps.dto.DtoWindowButtonType;
 
 public enum WindowButtonType {
 	MINIMIZE, MAXIMIZE_RESTORE, CLOSE;
 
-	public UiWindowButtonType toUiWindowButtonType() {
-		return UiWindowButtonType.valueOf(this.name());
+	public DtoWindowButtonType toUiWindowButtonType() {
+		return DtoWindowButtonType.valueOf(this.name());
 	}
 
-	public static WindowButtonType fromUiWindowButtonType(UiWindowButtonType uiWindowButtonType) {
+	public static WindowButtonType fromUiWindowButtonType(DtoWindowButtonType uiWindowButtonType) {
 		return uiWindowButtonType != null ? WindowButtonType.valueOf(uiWindowButtonType.name()) : null;
 	}
 }

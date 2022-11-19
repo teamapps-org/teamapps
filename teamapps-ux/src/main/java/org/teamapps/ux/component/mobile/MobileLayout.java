@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiMobileLayout;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoMobileLayout;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -42,7 +42,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiMobileLayout uiMobileLayout = new UiMobileLayout();
+		DtoMobileLayout uiMobileLayout = new DtoMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (content != null) {
 			uiMobileLayout.setInitialView(content.createUiReference());
@@ -55,7 +55,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 	}
 
 	public void preloadView(Component component) {
@@ -70,7 +70,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 		if (this.content != component) {
 			content = component;
 			component.setParent(this);
-			sendCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
+			sendCommandIfRendered(() -> new DtoMobileLayout.ShowViewCommand(component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
 					animationDuration));
 		}
 	}
@@ -96,7 +96,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 		if (navigationBar != null) {
 			navigationBar.setParent(this);
 		}
-		sendCommandIfRendered(() -> new UiMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createUiReference() : null));
 	}
 
 }

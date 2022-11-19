@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field.multicurrency.value;
 
-import org.teamapps.dto.UiCurrencyValue;
+import org.teamapps.dto.DtoCurrencyValue;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -64,8 +64,8 @@ public class CurrencyValue {
 		return new CurrencyValue(currencyUnit, amount);
 	}
 
-	public UiCurrencyValue toUiCurrencyValue(Locale locale) {
-		return new UiCurrencyValue(currency != null ? currency.toUiCurrencyUnit(locale) : null, amount != null ? amount.toString() : null);
+	public DtoCurrencyValue toUiCurrencyValue(Locale locale) {
+		return new DtoCurrencyValue(currency != null ? currency.toUiCurrencyUnit(locale) : null, amount != null ? amount.toString() : null);
 	}
 
 	@Override

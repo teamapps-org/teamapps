@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiNotificationBar;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoNotificationBar;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -37,9 +37,9 @@ import static org.teamapps.ux.component.notification.NotificationBarItemClosedEv
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class NotificationBar extends AbstractComponent {
 
-	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemClosedEvent.TYPE_ID);
-	public final ProjectorEvent<NotificationBarItem> onItemClicked = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemClickedEvent.TYPE_ID);
-	public final ProjectorEvent<NotificationBarItem> onItemActionLinkClicked = createProjectorEventBoundToUiEvent(UiNotificationBar.ItemActionLinkClickedEvent.TYPE_ID);
+	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = createProjectorEventBoundToUiEvent(DtoNotificationBar.ItemClosedEvent.TYPE_ID);
+	public final ProjectorEvent<NotificationBarItem> onItemClicked = createProjectorEventBoundToUiEvent(DtoNotificationBar.ItemClickedEvent.TYPE_ID);
+	public final ProjectorEvent<NotificationBarItem> onItemActionLinkClicked = createProjectorEventBoundToUiEvent(DtoNotificationBar.ItemActionLinkClickedEvent.TYPE_ID);
 
 	private final Map<String, NotificationBarItem> itemsByUiId = new LinkedHashMap<>();
 
@@ -47,26 +47,26 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiNotificationBar.ItemClickedEvent.TYPE_ID -> {
-				var e = event.as(UiNotificationBar.ItemClickedEventWrapper.class);
+			case DtoNotificationBar.ItemClickedEvent.TYPE_ID -> {
+				var e = event.as(DtoNotificationBar.ItemClickedEventWrapper.class);
 				NotificationBarItem item = itemsByUiId.get(e.getId());
 				if (item != null) {
 					item.onClicked.fire();
 					onItemClicked.fire(item);
 				}
 			}
-			case UiNotificationBar.ItemActionLinkClickedEvent.TYPE_ID -> {
-				var e = event.as(UiNotificationBar.ItemActionLinkClickedEventWrapper.class);
+			case DtoNotificationBar.ItemActionLinkClickedEvent.TYPE_ID -> {
+				var e = event.as(DtoNotificationBar.ItemActionLinkClickedEventWrapper.class);
 				NotificationBarItem item = itemsByUiId.get(e.getId());
 				if (item != null) {
 					item.onActionLinkClicked.fire();
 					onItemActionLinkClicked.fire(item);
 				}
 			}
-			case UiNotificationBar.ItemClosedEvent.TYPE_ID -> {
-				var e = event.as(UiNotificationBar.ItemClosedEventWrapper.class);
+			case DtoNotificationBar.ItemClosedEvent.TYPE_ID -> {
+				var e = event.as(DtoNotificationBar.ItemClosedEventWrapper.class);
 				NotificationBarItem item = itemsByUiId.get(e.getId());
 				if (item != null) {
 					NotificationBarItemClosedEvent.ClosingReason reason = e.getWasTimeout() ? TIMEOUT : USER;
@@ -80,7 +80,7 @@ public class NotificationBar extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiNotificationBar ui = new UiNotificationBar();
+		DtoNotificationBar ui = new DtoNotificationBar();
 		mapAbstractUiComponentProperties(ui);
 		ui.setInitialItems(itemsByUiId.values().stream()
 				.map(NotificationBarItem::toUiNotificationBarItem)
@@ -90,14 +90,14 @@ public class NotificationBar extends AbstractComponent {
 
 	public void addItem(NotificationBarItem item) {
 		itemsByUiId.put(item.getUiId(), item);
-		item.setListener(() -> sendCommandIfRendered(() -> new UiNotificationBar.UpdateItemCommand(item.toUiNotificationBarItem())));
-		sendCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(item.toUiNotificationBarItem()));
+		item.setListener(() -> sendCommandIfRendered(() -> new DtoNotificationBar.UpdateItemCommand(item.toUiNotificationBarItem())));
+		sendCommandIfRendered(() -> new DtoNotificationBar.AddItemCommand(item.toUiNotificationBarItem()));
 	}
 
 	public void removeItem(NotificationBarItem item) {
 		itemsByUiId.remove(item.getUiId());
 		item.setListener(null);
-		sendCommandIfRendered(() -> new UiNotificationBar.RemoveItemCommand(item.getUiId(), null));
+		sendCommandIfRendered(() -> new DtoNotificationBar.RemoveItemCommand(item.getUiId(), null));
 	}
 
 }

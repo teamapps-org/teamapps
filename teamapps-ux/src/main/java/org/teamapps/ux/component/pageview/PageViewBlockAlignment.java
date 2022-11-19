@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.dto.UiMessagePageViewBlock;
-import org.teamapps.dto.UiPageViewBlockAlignment;
+import org.teamapps.dto.DtoMessagePageViewBlock;
+import org.teamapps.dto.DtoPageViewBlockAlignment;
 
 public enum PageViewBlockAlignment {
 
 	LEFT, RIGHT, FULL;
 
-	public UiPageViewBlockAlignment toUiAlignment() {
-		return UiPageViewBlockAlignment.valueOf(this.name());
+	public DtoPageViewBlockAlignment toUiAlignment() {
+		return DtoPageViewBlockAlignment.valueOf(this.name());
 	}
 }

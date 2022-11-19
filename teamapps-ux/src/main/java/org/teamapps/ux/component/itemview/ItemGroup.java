@@ -22,8 +22,8 @@ package org.teamapps.ux.component.itemview;
 import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.UiIdentifiableClientRecord;
-import org.teamapps.dto.UiItemViewItemGroup;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.dto.DtoItemViewItemGroup;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -53,7 +53,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 
 	private ItemGroupContainer<HEADERRECORD, RECORD> container;
 	private PropertyProvider<RECORD> itemPropertyProvider = new BeanPropertyExtractor<>();
-	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
+	private final ClientRecordCache<RECORD, DtoIdentifiableClientRecord> itemCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
 
 	public ItemGroup() {
 		this(null);
@@ -73,14 +73,14 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		this.items.addAll(items != null ? items : Collections.emptyList());
 	}
 
-	public UiItemViewItemGroup createUiItemViewItemGroup() {
-		UiItemViewItemGroup itemGroup = new UiItemViewItemGroup(itemTemplate.createUiTemplate());
+	public DtoItemViewItemGroup createUiItemViewItemGroup() {
+		DtoItemViewItemGroup itemGroup = new DtoItemViewItemGroup(itemTemplate.createUiTemplate());
 		itemGroup.setId(clientId);
 		if (headerRecord != null) {
 			itemGroup.setHeaderData(container.createHeaderClientRecord(headerRecord));
 		}
 
-		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(this.items);
+		CacheManipulationHandle<List<DtoIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(this.items);
 		cacheResponse.commit();
 		itemGroup.setItems(cacheResponse.getAndClearResult());
 		itemGroup.setHeaderVisible(headerVisible);
@@ -94,8 +94,8 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		return itemGroup;
 	}
 
-	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
-		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
+	private DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+		DtoIdentifiableClientRecord clientRecord = new DtoIdentifiableClientRecord();
 		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));
 		return clientRecord;
 	}
@@ -110,7 +110,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		}
 		items.add(item);
 		if (container != null) {
-			CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = itemCache.addRecord(item);
+			CacheManipulationHandle<DtoIdentifiableClientRecord> cacheResponse = itemCache.addRecord(item);
 			container.handleAddItem(cacheResponse.getAndClearResult(), aVoid -> cacheResponse.commit());
 		}
 	}

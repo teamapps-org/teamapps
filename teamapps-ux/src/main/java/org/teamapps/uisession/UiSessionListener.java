@@ -19,18 +19,18 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiQueryWrapper;
-import org.teamapps.dto.UiSessionClosingReason;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoQueryWrapper;
+import org.teamapps.dto.DtoSessionClosingReason;
 
 import java.util.function.Consumer;
 
 public interface UiSessionListener {
 
-	default void onUiEvent(String sessionId, UiEventWrapper event) {
+	default void onUiEvent(String sessionId, DtoEventWrapper event) {
 	}
 
-	default void onUiQuery(String sessionId, UiQueryWrapper query, Consumer<Object> resultCallback) {
+	default void onUiQuery(String sessionId, DtoQueryWrapper query, Consumer<Object> resultCallback) {
 	}
 
 	default void onStateChanged(String sessionId, UiSessionState state) {
@@ -40,6 +40,6 @@ public interface UiSessionListener {
 	 * Additional state change callback method for sessions that got closed, but with a reason code.
 	 * Note that this will be executed AFTER {@link #onStateChanged(String, UiSessionState)}.
 	 */
-	default void onClosed(String sessionId, UiSessionClosingReason reason) {
+	default void onClosed(String sessionId, DtoSessionClosingReason reason) {
 	}
 }

@@ -60,7 +60,7 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
         if ("declaringClass".equals(propertyName)) {
             return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterface(eventContext);
         } else if ("typeScriptInterfaceName".equals(propertyName)) {
-            return astUtil.getDeclaringClassOrInterfaceName(eventContext) + "_" + StringUtils.capitalize(eventContext.Identifier().getText()) + "Event";
+            return "Dto" + TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(eventContext) + "_" + StringUtils.capitalize(eventContext.Identifier().getText()) + "Event";
         } else if ("allProperties".equals(propertyName)) {
             return getAllParameters(eventContext);
         } else if ("allRequiredProperties".equals(propertyName)) {

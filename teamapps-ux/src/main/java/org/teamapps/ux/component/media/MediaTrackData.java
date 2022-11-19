@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.media;
 
-import org.teamapps.dto.UiMediaTrackData;
-import org.teamapps.dto.UiMediaTrackMarker;
+import org.teamapps.dto.DtoMediaTrackData;
+import org.teamapps.dto.DtoMediaTrackMarker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,18 +35,18 @@ public class MediaTrackData {
 	public MediaTrackData() {
 	}
 
-	public List<UiMediaTrackMarker> getMarkers() {
-		List<UiMediaTrackMarker> markers = new ArrayList<>();
+	public List<DtoMediaTrackMarker> getMarkers() {
+		List<DtoMediaTrackMarker> markers = new ArrayList<>();
 		for (TrackMarkerData marker : markerData) {
 			markers.add(marker.createMarker());
 		}
 		return markers;
 	}
 
-	public List<UiMediaTrackData> getTrackData() {
-		List<UiMediaTrackData> result = new ArrayList<>();
+	public List<DtoMediaTrackData> getTrackData() {
+		List<DtoMediaTrackData> result = new ArrayList<>();
 		for (TrackData trackData : data) {
-			UiMediaTrackData td = new UiMediaTrackData();
+			DtoMediaTrackData td = new DtoMediaTrackData();
 			td.setTime(trackData.getTime());
 			td.setValues(trackData.getValues());
 			result.add(td);

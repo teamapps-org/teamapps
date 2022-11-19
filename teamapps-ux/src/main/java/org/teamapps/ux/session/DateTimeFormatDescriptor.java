@@ -76,8 +76,8 @@ public class DateTimeFormatDescriptor {
 		this.second = second;
 	}
 
-	public UiDateTimeFormatDescriptor toDateTimeFormatDescriptor() {
-		UiDateTimeFormatDescriptor ui = new UiDateTimeFormatDescriptor();
+	public DtoDateTimeFormatDescriptor toDateTimeFormatDescriptor() {
+		DtoDateTimeFormatDescriptor ui = new DtoDateTimeFormatDescriptor();
 		ui.setDateStyle(dateStyle != null ? dateStyle.toUiValue() : null);
 		ui.setTimeStyle(timeStyle != null ? timeStyle.toUiValue() : null);
 		ui.setFractionalSecondDigits(fractionalSecondDigits == null || fractionalSecondDigits == 0 ? null : fractionalSecondDigits); // 0 not accepted by Chrome!
@@ -246,8 +246,8 @@ public class DateTimeFormatDescriptor {
 		SHORT,
 		LONG;
 
-		public UiDayPeriodType toUiValue() {
-			return UiDayPeriodType.valueOf(this.name());
+		public DtoDayPeriodType toUiValue() {
+			return DtoDayPeriodType.valueOf(this.name());
 		}
 	}
 
@@ -272,8 +272,8 @@ public class DateTimeFormatDescriptor {
 		 */
 		H24;
 
-		public UiHourCycleType toUiValue() {
-			return UiHourCycleType.valueOf(name());
+		public DtoHourCycleType toUiValue() {
+			return DtoHourCycleType.valueOf(name());
 		}
 	}
 
@@ -283,8 +283,8 @@ public class DateTimeFormatDescriptor {
 		MEDIUM,
 		SHORT;
 
-		public UiFullLongMediumShortType toUiValue() {
-			return UiFullLongMediumShortType.valueOf(name());
+		public DtoFullLongMediumShortType toUiValue() {
+			return DtoFullLongMediumShortType.valueOf(name());
 		}
 	}
 
@@ -293,8 +293,8 @@ public class DateTimeFormatDescriptor {
 		SHORT,
 		NARROW;
 
-		public UiLongShortNarrowType toUiValue() {
-			return UiLongShortNarrowType.valueOf(name());
+		public DtoLongShortNarrowType toUiValue() {
+			return DtoLongShortNarrowType.valueOf(name());
 		}
 	}
 
@@ -302,8 +302,8 @@ public class DateTimeFormatDescriptor {
 		NUMERIC(),
 		TWO_DIGIT();
 
-		public UiNumericType toUiValue() {
-			return UiNumericType.valueOf(name());
+		public DtoNumericType toUiValue() {
+			return DtoNumericType.valueOf(name());
 		}
 	}
 
@@ -314,8 +314,8 @@ public class DateTimeFormatDescriptor {
 		SHORT,
 		NARROW;
 
-		public UiNumericOrLongShortNarrowType toUiValue() {
-			return UiNumericOrLongShortNarrowType.valueOf(name());
+		public DtoNumericOrLongShortNarrowType toUiValue() {
+			return DtoNumericOrLongShortNarrowType.valueOf(name());
 		}
 	}
 

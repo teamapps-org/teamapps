@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.notification;
 
-import org.teamapps.dto.UiNotificationPosition;
+import org.teamapps.dto.DtoNotificationPosition;
 
 public enum NotificationPosition {
 	TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT;
 
-	public UiNotificationPosition toUiNotificationPosition() {
-		return UiNotificationPosition.valueOf(this.name());
+	public DtoNotificationPosition toUiNotificationPosition() {
+		return DtoNotificationPosition.valueOf(this.name());
 	}
 }

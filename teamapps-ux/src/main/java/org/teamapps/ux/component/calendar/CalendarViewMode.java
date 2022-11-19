@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.calendar;
 
-import org.teamapps.dto.UiCalendarViewMode;
+import org.teamapps.dto.DtoCalendarViewMode;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -122,8 +122,8 @@ public enum CalendarViewMode {
 	 */
 	abstract LocalDate getDisplayEnd(LocalDate localDate, DayOfWeek firstDayOfWeek);
 
-	public UiCalendarViewMode toUiCalendarViewMode() {
-		return UiCalendarViewMode.valueOf(this.name());
+	public DtoCalendarViewMode toUiCalendarViewMode() {
+		return DtoCalendarViewMode.valueOf(this.name());
 	}
 
 	public abstract LocalDate decrement(LocalDate displayedDate);

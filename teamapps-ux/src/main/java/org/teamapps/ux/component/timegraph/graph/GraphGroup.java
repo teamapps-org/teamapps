@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph.graph;
 
-import org.teamapps.dto.UiGraphGroup;
+import org.teamapps.dto.DtoGraphGroup;
 import org.teamapps.event.Disposable;
 import org.teamapps.ux.component.timegraph.Interval;
 import org.teamapps.ux.component.timegraph.TimePartitioning;
@@ -49,8 +49,8 @@ public class GraphGroup extends AbstractGraph<GraphGroupData, GraphGroupModel> {
 	}
 
 	@Override
-	public UiGraphGroup createUiFormat() {
-		UiGraphGroup ui = new UiGraphGroup();
+	public DtoGraphGroup createUiFormat() {
+		DtoGraphGroup ui = new DtoGraphGroup();
 		mapAbstractLineChartDataDisplayProperties(ui);
 		ui.setGraphs(graphs.stream().map(AbstractGraph::createUiFormat).collect(Collectors.toList()));
 		return ui;

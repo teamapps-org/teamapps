@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.AbstractUiToolContainer;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiToolbar;
+import org.teamapps.dto.DtoAbstractToolContainer;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoToolbar;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractToolContainer extends AbstractComponent {
-	public final ProjectorEvent<ToolbarButtonClickEventData> onButtonClick = createProjectorEventBoundToUiEvent(AbstractUiToolContainer.ToolbarButtonClickEvent.TYPE_ID);
+	public final ProjectorEvent<ToolbarButtonClickEventData> onButtonClick = createProjectorEventBoundToUiEvent(DtoAbstractToolContainer.ToolbarButtonClickEvent.TYPE_ID);
 	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 
 	private Template buttonTemplate = BaseTemplate.TOOLBAR_BUTTON;
@@ -48,17 +48,17 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case AbstractUiToolContainer.ToolbarButtonClickEvent.TYPE_ID -> {
-				var clickEvent = event.as(AbstractUiToolContainer.ToolbarButtonClickEventWrapper.class);
+			case DtoAbstractToolContainer.ToolbarButtonClickEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoAbstractToolContainer.ToolbarButtonClickEventWrapper.class);
 				ToolbarButton button = getButtonByClientId(clickEvent.getGroupId(), clickEvent.getButtonId());
 				if (button != null) {
 					var uiDropDownButtonClickInfo = clickEvent.getDropDownClickInfo();
 					if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
 						Component dropdownComponent = button.getDropDownComponent();
 						if (dropdownComponent != null) {
-							getSessionContext().sendCommand(getId(), new UiToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
+							getSessionContext().sendCommand(getId(), new DtoToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
 									clickEvent.getButtonId(), dropdownComponent.createUiReference()));
 						}
 					}
@@ -86,7 +86,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	public ToolbarButtonGroup addButtonGroup(ToolbarButtonGroup buttonGroup) {
 		buttonGroups.add(buttonGroup);
 		buttonGroup.setToolContainer(this);
-		sendCommandIfRendered(() -> new UiToolbar.AddButtonGroupCommand(buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide()));
+		sendCommandIfRendered(() -> new DtoToolbar.AddButtonGroupCommand(buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide()));
 		return buttonGroup;
 	}
 
@@ -96,32 +96,32 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 
 	public void removeToolbarButtonGroup(ToolbarButtonGroup group) {
 		buttonGroups.remove(group);
-		sendCommandIfRendered(() -> new UiToolbar.RemoveButtonGroupCommand(group.getClientId()));
+		sendCommandIfRendered(() -> new DtoToolbar.RemoveButtonGroupCommand(group.getClientId()));
 	}
 
 	protected void handleGroupVisibilityChange(String groupId, boolean visible) {
-		sendCommandIfRendered(() -> new UiToolbar.SetButtonGroupVisibleCommand(groupId, visible));
+		sendCommandIfRendered(() -> new DtoToolbar.SetButtonGroupVisibleCommand(groupId, visible));
 	}
 
 	protected void handleButtonVisibilityChange(String groupClientId, String buttonClientId, boolean visible) {
-		sendCommandIfRendered(() -> new UiToolbar.SetButtonVisibleCommand(groupClientId, buttonClientId, visible));
+		sendCommandIfRendered(() -> new DtoToolbar.SetButtonVisibleCommand(groupClientId, buttonClientId, visible));
 	}
 
 	protected void handleButtonColorChange(String groupClientId, String buttonClientId, Color backgroundColor, Color hoverBackgroundColor) {
-		sendCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(groupClientId, buttonClientId, backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
+		sendCommandIfRendered(() -> new DtoToolbar.SetButtonColorsCommand(groupClientId, buttonClientId, backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
 				hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null));
 	}
 
 	protected void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
-		sendCommandIfRendered(() -> new UiToolbar.AddButtonCommand(group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor));
+		sendCommandIfRendered(() -> new DtoToolbar.AddButtonCommand(group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor));
 	}
 
 	protected void handleButtonRemoved(ToolbarButtonGroup group, ToolbarButton button) {
-		sendCommandIfRendered(() -> new UiToolbar.RemoveButtonCommand(group.getClientId(), button.getClientId()));
+		sendCommandIfRendered(() -> new DtoToolbar.RemoveButtonCommand(group.getClientId(), button.getClientId()));
 	}
 
 	protected void handleButtonSetDropDownComponent(ToolbarButtonGroup group, ToolbarButton button, Component component) {
-		sendCommandIfRendered(() -> new UiToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createUiReference()));
+		sendCommandIfRendered(() -> new DtoToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createUiReference()));
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {

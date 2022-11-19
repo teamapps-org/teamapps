@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.form.layoutpolicy;
 
-import org.teamapps.dto.UiFormSectionFieldPlacement;
-import org.teamapps.dto.UiFormSectionPlacement;
+import org.teamapps.dto.DtoFormSectionFieldPlacement;
+import org.teamapps.dto.DtoFormSectionPlacement;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
@@ -156,8 +156,8 @@ public class FormSectionFieldPlacement implements FormSectionPlacement {
 	}
 
 	@Override
-	public UiFormSectionPlacement createUiFormSectionPlacement() {
-		return new UiFormSectionFieldPlacement(field.createUiReference())
+	public DtoFormSectionPlacement createUiFormSectionPlacement() {
+		return new DtoFormSectionFieldPlacement(field.createUiReference())
 				.setRow(row)
 				.setColumn(column)
 				.setRowSpan(rowSpan)

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph.graph;
 
-import org.teamapps.dto.UiIncidentGraph;
+import org.teamapps.dto.DtoIncidentGraph;
 import org.teamapps.ux.component.timegraph.datapoints.IncidentGraphData;
 import org.teamapps.ux.component.timegraph.model.IncidentGraphModel;
 
@@ -30,8 +30,8 @@ public class IncidentGraph extends AbstractGraph<IncidentGraphData, IncidentGrap
 	}
 
 	@Override
-	public UiIncidentGraph createUiFormat() {
-		final UiIncidentGraph ui = new UiIncidentGraph();
+	public DtoIncidentGraph createUiFormat() {
+		final DtoIncidentGraph ui = new DtoIncidentGraph();
 		mapAbstractLineChartDataDisplayProperties(ui);
 		return ui;
 	}

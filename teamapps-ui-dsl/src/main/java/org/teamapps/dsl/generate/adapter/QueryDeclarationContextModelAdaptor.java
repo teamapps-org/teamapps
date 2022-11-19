@@ -60,7 +60,7 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
         if ("declaringClass".equals(propertyName)) {
             return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterface(queryContext);
         } else if ("typeScriptInterfaceName".equals(propertyName)) {
-            return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(queryContext) + "_" + StringUtils.capitalize(queryContext.Identifier().getText()) + "Query";
+            return "Dto" + TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(queryContext) + "_" + StringUtils.capitalize(queryContext.Identifier().getText()) + "Query";
         } else if ("allProperties".equals(propertyName)) {
             return getAllParameters(queryContext);
         } else if ("allRequiredProperties".equals(propertyName)) {

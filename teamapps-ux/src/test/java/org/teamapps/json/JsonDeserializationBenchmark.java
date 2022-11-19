@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import org.junit.Test;
-import org.teamapps.dto.UiCommand;
+import org.teamapps.dto.DtoCommand;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,7 +40,7 @@ public class JsonDeserializationBenchmark {
 
 		long startTime;
 		JsonNode[] jsonNodes = new JsonNode[1024];
-		UiCommand[] uiCommands = new UiCommand[1024];
+		DtoCommand[] uiCommands = new DtoCommand[1024];
 
 		for (int j = 0; j < 5; j++) {
 			startTime = System.currentTimeMillis();
@@ -51,7 +51,7 @@ public class JsonDeserializationBenchmark {
 
 			startTime = System.currentTimeMillis();
 			for (int i = 0; i < 1_000; i++) {
-				uiCommands[i % 1024] = teamAppsObjectMapper.readValue(json, UiCommand.class);
+				uiCommands[i % 1024] = teamAppsObjectMapper.readValue(json, DtoCommand.class);
 			}
 			System.out.println("Jackson data binding (directly to Java objects!): " + (System.currentTimeMillis() - startTime + "ms"));
 

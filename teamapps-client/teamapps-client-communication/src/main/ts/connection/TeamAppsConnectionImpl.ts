@@ -20,15 +20,15 @@
 import {TeamAppsConnection, TeamAppsConnectionListener} from "./TeamAppsConnection";
 import {ReconnectingCompressingWebSocketConnection} from "./ReconnectingWebSocketConnection";
 import {
-	AbstractClientPayloadMessage,
-	CMD_REQUEST, CMD_RESULT, EVENT,
-	INIT, INIT_NOK, INIT_OK, MULTI_CMD, QUERY, QUERY_RESULT,
-	REINIT, REINIT_NOK, REINIT_OK, SESSION_CLOSED,
-	UiClientInfo, UiEvent,
-	UiQuery,
-	UiSessionClosingReason
+	DtoAbstractClientPayloadMessage,
+	DtoCMD_REQ, DtoCMD_RES, DtoEVT,
+	DtoINIT, DtoINIT_NOK, DtoINIT_OK, DtoMULTI_CMD, DtoQRY, DtoQRY_RES,
+	DtoREINIT, DtoREINIT_NOK, DtoREINIT_OK, DtoSESSION_CLOSED,
+	DtoClientInfo, DtoEvent,
+	DtoQuery,
+	DtoSessionClosingReason, DtoPING
 } from "../generated";
-import {CMD} from "../dto/CMD";
+import {DtoCMD} from "../dto/DtoCMD";
 
 
 enum TeamAppsProtocolStatus {
@@ -48,8 +48,8 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 
 	private connection: ReconnectingCompressingWebSocketConnection;
 
-	private payloadMessagesQueue: AbstractClientPayloadMessage[] = [];
-	private sentEventsBuffer: AbstractClientPayloadMessage[] = [];
+	private payloadMessagesQueue: DtoAbstractClientPayloadMessage[] = [];
+	private sentEventsBuffer: DtoAbstractClientPayloadMessage[] = [];
 
 	private clientMessageIdCounter = 1;
 	private queryResultHandlerByMessageId: Map<number, (result: any) => any> = new Map();
@@ -57,7 +57,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 	private maxRequestedCommandId = 0;
 	private lastReceivedCommandId: number;
 
-	constructor(url: string, private sessionId: string, clientInfo: UiClientInfo, commandHandler: TeamAppsConnectionListener) {
+	constructor(url: string, private sessionId: string, clientInfo: DtoClientInfo, commandHandler: TeamAppsConnectionListener) {
 		if (sessionId == null) {
 			throw "sessionId may not be null!!";
 		}
@@ -69,11 +69,11 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					sessionId,
 					clientInfo,
 					maxRequestedCommandId: this.maxRequestedCommands
-				} as INIT)
+				} as DtoINIT)
 			},
 			onMessage: async (message) => {
 				if (TeamAppsConnectionImpl.isMULTI_CMD(message)) {
-					let cmds = message.cmds as CMD[];
+					let cmds = message.cmds as DtoCMD[];
 					for (let cmd of cmds) {
 						this.lastReceivedCommandId = cmd.id;
 						try {
@@ -116,12 +116,12 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					this.flushPayloadMessages();
 				} else if (TeamAppsConnectionImpl.isINIT_NOK(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Connection refused. Reason: " + UiSessionClosingReason[message.reason]);
+					this.log("Connection refused. Reason: " + DtoSessionClosingReason[message.reason]);
 					commandHandler.onConnectionErrorOrBroken(message.reason);
 					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
 				} else if (TeamAppsConnectionImpl.isREINIT_NOK(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Reconnect refused. Reason: " + UiSessionClosingReason[message.reason]);
+					this.log("Reconnect refused. Reason: " + DtoSessionClosingReason[message.reason]);
 					commandHandler.onConnectionErrorOrBroken(message.reason);
 					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
 				} else if (TeamAppsConnectionImpl.isPING(message)) {
@@ -129,7 +129,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					this.connection.send({_type: "KEEPALIVE", sessionId: this.sessionId});
 				} else if (TeamAppsConnectionImpl.isSESSION_CLOSED(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Error reported by server: " + UiSessionClosingReason[message.reason] + ": " + message.message);
+					this.log("Error reported by server: " + DtoSessionClosingReason[message.reason] + ": " + message.message);
 					commandHandler.onConnectionErrorOrBroken(message.reason, message.message);
 					this.connection.stopReconnecting();
 				} else {
@@ -146,7 +146,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					sessionId,
 					lastReceivedCommandId: this.lastReceivedCommandId || -1,
 					maxRequestedCommandId: this.lastReceivedCommandId + this.maxRequestedCommands
-				} as REINIT)
+				} as DtoREINIT)
 			}
 		});
 	}
@@ -164,47 +164,47 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 			try {
 				let maxRequestedCommandId = this.lastReceivedCommandId + this.maxRequestedCommands;
 				this.connection.send({
-					_type: "CMD_REQUEST",
+					_type: "CMD_REQ",
 					sessionId: this.sessionId,
 					lastReceivedCommandId: this.lastReceivedCommandId,
 					maxRequestedCommandId: maxRequestedCommandId
-				} as CMD_REQUEST);
+				} as DtoCMD_REQ);
 				this.maxRequestedCommandId = maxRequestedCommandId;
 			} catch (e) {
-				this.log(`Could not send CMD_REQUEST: ${e}.`);
+				this.log(`Could not send CMD_REQ: ${e}.`);
 			}
 		}
 	}
 
-	private static isINIT_OK(message: any): message is INIT_OK & { tscompilerbugworkaround: number } {
+	private static isINIT_OK(message: any): message is DtoINIT_OK {
 		return message._type === 'INIT_OK';
 	}
 
-	private static isINIT_NOK(message: any): message is INIT_NOK {
+	private static isINIT_NOK(message: any): message is DtoINIT_NOK {
 		return message._type === 'INIT_NOK';
 	}
 
-	private static isREINIT_OK(message: any): message is REINIT_OK {
+	private static isREINIT_OK(message: any): message is DtoREINIT_OK {
 		return message._type === 'REINIT_OK';
 	}
 
-	private static isREINIT_NOK(message: any): message is REINIT_NOK {
+	private static isREINIT_NOK(message: any): message is DtoREINIT_NOK {
 		return message._type === 'REINIT_NOK';
 	}
 
-	private static isPING(message: any): message is REINIT_NOK {
+	private static isPING(message: any): message is DtoPING & { tsCompilerTooIntelligentWorkaround: number } {
 		return message._type === 'PING';
 	}
 
-	private static isMULTI_CMD(message: any): message is MULTI_CMD {
+	private static isMULTI_CMD(message: any): message is DtoMULTI_CMD {
 		return message._type === 'MULTI_CMD';
 	}
 
-	private static isQUERY_RESULT(message: any): message is QUERY_RESULT {
-		return message._type === 'QUERY_RESULT';
+	private static isQUERY_RESULT(message: any): message is DtoQRY_RES {
+		return message._type === 'QUERY_RES';
 	}
 
-	private static isSESSION_CLOSED(message: any): message is SESSION_CLOSED {
+	private static isSESSION_CLOSED(message: any): message is DtoSESSION_CLOSED {
 		return message._type === 'SESSION_CLOSED';
 	}
 
@@ -212,9 +212,9 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		return this.connection.isConnected() && this.protocolStatus === TeamAppsProtocolStatus.ESTABLISHED;
 	}
 
-	public sendEvent(event: UiEvent) {
-		let protocolEvent: EVENT = {
-			_type: "EVENT",
+	public sendEvent(event: DtoEvent) {
+		let protocolEvent: DtoEVT = {
+			_type: "EVT",
 			sessionId: this.sessionId,
 			id: this.clientMessageIdCounter++,
 			uiEvent: event
@@ -222,10 +222,10 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		this.sendClientPayloadMessage(protocolEvent);
 	}
 
-	sendQuery(query: UiQuery): Promise<any> {
+	sendQuery(query: DtoQuery): Promise<any> {
 		let clientMessageId = this.clientMessageIdCounter++;
-		let protocolQuery: QUERY = {
-			_type: "QUERY",
+		let protocolQuery: DtoQRY = {
+			_type: "QRY",
 			sessionId: this.sessionId,
 			id: clientMessageId,
 			uiQuery: query
@@ -235,8 +235,8 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 	}
 
 	private sendResult(cmdId: number, result: any) {
-		let cmdResult: CMD_RESULT = {
-			_type: "CMD_RESULT",
+		let cmdResult: DtoCMD_RES = {
+			_type: "CMD_RES",
 			sessionId: this.sessionId,
 			id: this.clientMessageIdCounter++,
 			cmdId: cmdId,
@@ -245,7 +245,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		this.sendClientPayloadMessage(cmdResult);
 	}
 
-	private sendClientPayloadMessage(cmdResult: AbstractClientPayloadMessage) {
+	private sendClientPayloadMessage(cmdResult: DtoAbstractClientPayloadMessage) {
 		this.payloadMessagesQueue.push(cmdResult);
 		if (this.isConnected()) {
 			this.flushPayloadMessages();
@@ -265,7 +265,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		this.payloadMessagesQueue.splice(0, i);
 	}
 
-	private sendPayloadMessage(payloadMessage: AbstractClientPayloadMessage) {
+	private sendPayloadMessage(payloadMessage: DtoAbstractClientPayloadMessage) {
 		this.sentEventsBuffer.push(payloadMessage);
 		let sentEventsMaxBufferSize = this.sentEventsMinBufferSize * 2;
 		if (this.sentEventsBuffer.length > sentEventsMaxBufferSize) {

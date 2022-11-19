@@ -24,13 +24,13 @@ class(c) ::= <<
 
 @JsonTypeName("<c.Identifier>")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superClassDecl)>extends <c.superClassDecl.typeName.text> <endif>implements <if(c.implementsDecl)><c.implementsDecl.classList.typeName:{id|<id.text>}; separator=", ">, <endif>UiObject {
+public <if(c.abstractModifier)>abstract <endif>class Dto<c.Identifier> <if(c.superClassDecl)>extends Dto<c.superClassDecl.typeName.text> <endif>implements <if(c.implementsDecl)><c.implementsDecl.classList.typeName:{id|Dto<id.text>}; separator=", ">, <endif>DtoObject {
 
     public static final String TYPE_ID = "<c.Identifier>";
 
 	<c.propertiesNotImplementedBySuperClasses:propertyDeclaration(); separator="\n">
 
-	<constructor(c, "")>
+	<constructor(c, "Dto", "")>
 
 	<toString(c)>
 
@@ -51,7 +51,7 @@ public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superC
 }>>
 
 importDecl(i) ::= <<
-import <i.packageName.text>.<i.Identifier.text>;
+import <i.packageName.text>.Dto<i.Identifier.text>;
 >>
 
 queryListGetter(c) ::= <<
@@ -69,10 +69,10 @@ classReference(c) ::= <<
 <javaFilePrelude(c.packageName)>
 @JsonTypeName("<c.Identifier>Reference")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class <c.Identifier>Reference {
+public class Dto<c.Identifier>Reference {
 	<c.referencableProperties:propertyDeclaration(); separator="\n">
 
-	public <c.Identifier.text; format="cap">Reference(<c.referencableProperties:parameter(); separator=", ">) {
+	public Dto<c.Identifier.text; format="cap">Reference(<c.referencableProperties:parameter(); separator=", ">) {
     	<c.referencableProperties:propertyAssignment(); separator="\n">
     }
 
@@ -87,7 +87,7 @@ interface(i) ::= <<
 
 @JsonTypeName("<i.Identifier>")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface <i.Identifier><if(i.typeArguments)><i.typeArguments.text><endif> extends <if(i.superInterfaceDecl)><i.superInterfaces:{si|<si.Identifier>}; separator=", ">, <endif>UiObject {
+public interface Dto<i.Identifier><if(i.typeArguments)><i.typeArguments.text><endif> extends <if(i.superInterfaceDecl)><i.superInterfaces:{si|Dto<si.Identifier>}; separator=", ">, <endif>DtoObject {
 
 	<i.propertyDeclaration:getterStub(); separator="\n">
 	<i.nonRequiredProperties:setterStub(i); separator="\n">
@@ -128,7 +128,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.UiObject;
+import org.teamapps.dto.DtoObject;
 
 /**
  * THIS IS GENERATED CODE!
@@ -147,21 +147,21 @@ public <p.type.javaTypeString> get<p.Identifier.text; format="cap">();
 >>
 
 setterStub(p, c) ::= <<
-public <c.Identifier> set<p.Identifier.text; format="cap">(<p.type.javaTypeString> <p.Identifier>);
+public Dto<c.Identifier> set<p.Identifier.text; format="cap">(<p.type.javaTypeString> <p.Identifier>);
 >>
 
-constructor(c, classNameSuffix) ::= <<
+constructor(c, classNamePrefix, classNameSuffix) ::= <<
 <if(c.allRequiredProperties)>
 /**
  * @deprecated Only for Jackson deserialization. Use the other constructor instead.
  */
 @Deprecated
-public <c.Identifier.text; format="cap"><classNameSuffix>() {
+public <classNamePrefix><c.Identifier.text; format="cap"><classNameSuffix>() {
 	// default constructor for Jackson
 }
 <endif>
 
-public <c.Identifier.text; format="cap"><classNameSuffix>(<c.allRequiredProperties:parameter(); separator=", ">) {
+public <classNamePrefix><c.Identifier.text; format="cap"><classNameSuffix>(<c.allRequiredProperties:parameter(); separator=", ">) {
 	<if(c.superClassDecl)>super(<c.superClass.allRequiredProperties:{p|<p.Identifier>}; separator=", ">);<endif>
 	<c.requiredPropertiesNotImplementedBySuperClasses:propertyAssignment(); separator="\n">
 }
@@ -177,7 +177,7 @@ public String toString() {
 >>
 
 propertyToString(p) ::= <<
-.append(<if(!p.type.isReferenceToJsonAware)>"<p.Identifier>=" + <p.Identifier><else><p.Identifier> != null ? "<p.Identifier>={" + <p.Identifier>.toString() + "}" : ""<endif>)
+.append(<if(!p.type.isDtoClassOrInterface)>"<p.Identifier>=" + <p.Identifier><else><p.Identifier> != null ? "<p.Identifier>={" + <p.Identifier>.toString() + "}" : ""<endif>)
 >>
 
 jsonSetter(p) ::= <<
@@ -203,7 +203,7 @@ public <propertyDeclaration.type.javaTypeString> get<propertyDeclaration.Identif
 
 setter(propertyDeclaration, clazzName) ::= <<
 @com.fasterxml.jackson.annotation.JsonSetter("<propertyDeclaration.Identifier.text>")
-public <clazzName; format="cap"> set<propertyDeclaration.Identifier.text; format="cap">(<propertyDeclaration.type.javaTypeString> <propertyDeclaration.Identifier>) {
+public Dto<clazzName; format="cap"> set<propertyDeclaration.Identifier.text; format="cap">(<propertyDeclaration.type.javaTypeString> <propertyDeclaration.Identifier>) {
 	<propertyAssignment(propertyDeclaration)>
 	return this;
 }
@@ -213,7 +213,7 @@ propertyAssignment(p) ::= "this.<p.Identifier> = <p.Identifier>;"
 
 enumClass(e) ::= <<
 <javaFilePrelude(e.packageName)>
-public enum <e.Identifier> {
+public enum Dto<e.Identifier> {
 	<e.enumConstant:enumConstant(e.hasStringValues); separator=",\n">;
 
 	<if(e.hasStringValues)>
@@ -241,13 +241,13 @@ enumConstant(ec, hasStringValues) ::= <<
 >>
 
 eventClass(ed) ::= <<
-public static class <ed.Identifier.text; format="cap">Event implements UiEvent {
+public static class <ed.Identifier.text; format="cap">Event implements DtoEvent {
 
     public static final String TYPE_ID = "<ed.declaringClass.Identifier.text>.<ed.Identifier.text>";
 
 	<ed.allProperties:propertyDeclaration(); separator="\n">
 
-	<constructor(ed, "Event")>
+	<constructor(ed, "", "Event")>
 
 	<toString(ed)>
 
@@ -268,13 +268,13 @@ public static class <ed.Identifier.text; format="cap">Event implements UiEvent {
 >>
 
 queryClass(qd) ::= <<
-public static class <qd.Identifier.text; format="cap">Query implements UiQuery {
+public static class <qd.Identifier.text; format="cap">Query implements DtoQuery {
 
     public static final String TYPE_ID = "<qd.declaringClass.Identifier.text>.<qd.Identifier.text>";
 
 	<qd.allProperties:propertyDeclaration(); separator="\n">
 
-	<constructor(qd, "Query")>
+	<constructor(qd, "", "Query")>
 
 	<toString(qd)>
 
@@ -289,11 +289,11 @@ public static class <qd.Identifier.text; format="cap">Query implements UiQuery {
 commandClass(cmd) ::= <<
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
 @JsonPropertyOrder({<cmd.allProperties:{p|"<p.Identifier>"}; separator=", ">})
-public static class <cmd.Identifier.text; format="cap">Command implements UiCommand\<<cmd.returnType>\> {
+public static class <cmd.Identifier.text; format="cap">Command implements DtoCommand\<<cmd.returnType>\> {
 
 	<cmd.allProperties:propertyDeclaration(); separator="\n">
 
-	<constructor(cmd, "Command")>
+	<constructor(cmd, "", "Command")>
 
 	<toString(cmd)>
 
@@ -305,16 +305,16 @@ public static class <cmd.Identifier.text; format="cap">Command implements UiComm
 jsonWrapper(c) ::= <<
 <javaFilePrelude(c.packageName)>
 
-public class <c.Identifier.text>Wrapper extends <if(c.superClassDecl)><c.superClassDecl.typeName.text>Wrapper<else>JsonWrapper<endif> {
+public class Dto<c.Identifier.text>Wrapper extends <if(c.superClassDecl)>Dto<c.superClassDecl.typeName.text>Wrapper<else>DtoJsonWrapper<endif> {
 
     public static final String TYPE_ID = "<c.Identifier>";
 
-    public <c.Identifier.text>Wrapper(JsonNode jsonNode) {
+    public Dto<c.Identifier.text>Wrapper(JsonNode jsonNode) {
         super(jsonNode);
     }
 
-    public Class\<? extends <c.Identifier.text>\> getUiClass() {
-        return <c.Identifier.text>.class;
+    public Class\<? extends Dto<c.Identifier.text>\> getDtoClass() {
+        return Dto<c.Identifier.text>.class;
     }
 
     <c.propertiesNotImplementedBySuperClasses:jsonWrapperGetter(); separator="\n\n">
@@ -322,7 +322,7 @@ public class <c.Identifier.text>Wrapper extends <if(c.superClassDecl)><c.superCl
 >>
 
 eventJsonWrapper(c, suffix) ::= <<
-public static class <c.Identifier.text; format="cap"><suffix>Wrapper extends JsonWrapper {
+public static class Dto<c.Identifier.text; format="cap"><suffix>Wrapper extends DtoJsonWrapper {
 
     public static final String TYPE_ID = "<c.Identifier>";
 
@@ -330,7 +330,7 @@ public static class <c.Identifier.text; format="cap"><suffix>Wrapper extends Jso
         super(jsonNode);
     }
 
-    public Class\<? extends <c.Identifier.text; format="cap"><suffix>\> getUiClass() {
+    public Class\<? extends <c.Identifier.text; format="cap"><suffix>\> getDtoClass() {
         return <c.Identifier.text; format="cap"><suffix>.class;
     }
 
@@ -371,7 +371,7 @@ return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.fie
             JsonNode <variableName>X = <variableName>Field.getValue();
             <wrapperPropertyValueExtractor(type.firstTypeArgument, [variableName,"X"])>
         }));
-<elseif (type.isReferenceToJsonAware)>
+<elseif (type.isDtoClassOrInterface)>
 if (!<variableName>.isObject()) {
     throw new IllegalArgumentException("<variableName> must be an object!");
 }
@@ -389,7 +389,7 @@ return <variableName>.textValue();
 <elseif (type.isPrimitiveOrWrapperType)>
 return <variableName>.as<type.primitiveTypeName; format="cap">();
 <elseif (type.isObjectReference)>
-return new JsonWrapper(node);
+return new DtoJsonWrapper(node);
 <else>
 if (!<variableName>.isObject()) {
     throw new IllegalArgumentException("<variableName> must be an object!");

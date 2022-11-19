@@ -3,29 +3,29 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {BConfig} from "./BConfig";
-import {A} from "./A";
-import {BCommandHandler} from "./BConfig";
-import {ACommandHandler} from "./A";
-import {BEventSource} from "./BConfig";
-import {AEventSource} from "./A";
-import {UiCommand} from "teamapps-client-communication";
-import {UiEvent} from "teamapps-client-communication";
+import {DtoB} from "./DtoB";
+import {DtoA} from "./DtoA";
+import {DtoBCommandHandler} from "./DtoB";
+import {DtoACommandHandler} from "./DtoA";
+import {DtoBEventSource} from "./DtoB";
+import {DtoAEventSource} from "./DtoA";
+import {DtoCommand} from "teamapps-client-communication";
+import {DtoEvent} from "teamapps-client-communication";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export interface CConfig extends BConfig, A {
+export interface DtoC extends DtoB, DtoA {
 	_type?: string;
 	c?: string
 }
 
-export interface CCommandHandler extends BCommandHandler, ACommandHandler {
+export interface DtoCCommandHandler extends BCommandHandler, ACommandHandler {
 	x3(y3: string): any;
 }
 
-export interface CEventSource extends BEventSource, AEventSource {
-	onZ3: TeamAppsEvent<C_Z3Event>;
+export interface DtoCEventSource extends BEventSource, AEventSource {
+	onZ3: TeamAppsEvent<DtoC_Z3Event>;
 }
 
-export interface C_Z3Event extends UiEvent {
+export interface DtoC_Z3Event extends DtoEvent {
 }
 

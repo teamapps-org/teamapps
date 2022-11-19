@@ -21,7 +21,7 @@ package org.teamapps.ux.component.table;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiSelectionFrame;
+import org.teamapps.dto.DtoSelectionFrame;
 
 public class SelectionFrame {
 
@@ -32,8 +32,8 @@ public class SelectionFrame {
 	private int shadowWidth = 0;
 	private boolean fullRow = false;
 
-	public UiSelectionFrame createUiSelectionFrame() {
-		UiSelectionFrame uiSelectionFrame = new UiSelectionFrame();
+	public DtoSelectionFrame createUiSelectionFrame() {
+		DtoSelectionFrame uiSelectionFrame = new DtoSelectionFrame();
 		uiSelectionFrame.setColor(color != null ? color.toHtmlColorString() : null);
 		uiSelectionFrame.setBorderWidth(borderWidth);
 		uiSelectionFrame.setAnimationDuration(animationDuration);

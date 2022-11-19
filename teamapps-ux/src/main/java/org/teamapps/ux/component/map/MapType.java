@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.map;
 
-import org.teamapps.dto.UiMapType;
+import org.teamapps.dto.DtoMapType;
 
 public enum MapType {
 	INTERNAL,
@@ -42,7 +42,7 @@ public enum MapType {
 	THUNDERFOREST_TRANSPORT,
 	WIKIMEDIA;
 
-	public UiMapType toUiMapType() {
-		return UiMapType.valueOf(this.name());
+	public DtoMapType toUiMapType() {
+		return DtoMapType.valueOf(this.name());
 	}
 }

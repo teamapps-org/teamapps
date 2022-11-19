@@ -4,7 +4,7 @@
  */
 
 
-export interface A {
+export interface DtoA {
 	_type?: string;
 	nonReq1?: string;
 	req1: string;
@@ -12,7 +12,7 @@ export interface A {
 	req2: number
 }
 
-export function createA(req1: string, req2: number, nonRequiredProperties?: {nonReq1?: string, nonReq2?: number}): A {
+export function createDtoA(req1: string, req2: number, nonRequiredProperties?: {nonReq1?: string, nonReq2?: number}): DtoA {
 	return {
 		_type: "A",
 		req1, req2,

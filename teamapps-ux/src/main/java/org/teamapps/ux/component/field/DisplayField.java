@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiDisplayField;
-import org.teamapps.dto.UiField;
+import org.teamapps.dto.DtoDisplayField;
+import org.teamapps.dto.DtoField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
@@ -42,8 +42,8 @@ public class DisplayField extends AbstractField<String> {
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiDisplayField uiDisplayField = new UiDisplayField();
+	public DtoField createUiClientObject() {
+		DtoDisplayField uiDisplayField = new DtoDisplayField();
 		mapAbstractFieldAttributesToUiField(uiDisplayField);
 		uiDisplayField.setShowBorder(showBorder);
 		uiDisplayField.setShowHtml(showHtml);
@@ -57,7 +57,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setShowBorder(boolean showBorder) {
 		this.showBorder = showBorder;
-		sendCommandIfRendered(() -> new UiDisplayField.SetShowBorderCommand(showBorder));
+		sendCommandIfRendered(() -> new DtoDisplayField.SetShowBorderCommand(showBorder));
 		return this;
 	}
 
@@ -67,7 +67,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setShowHtml(boolean showHtml) {
 		this.showHtml = showHtml;
-		sendCommandIfRendered(() -> new UiDisplayField.SetShowHtmlCommand(showHtml));
+		sendCommandIfRendered(() -> new DtoDisplayField.SetShowHtmlCommand(showHtml));
 		return this;
 	}
 
@@ -77,7 +77,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setRemoveStyleTags(boolean removeStyleTags) {
 		this.removeStyleTags = removeStyleTags;
-		sendCommandIfRendered(() -> new UiDisplayField.SetRemoveStyleTagsCommand(removeStyleTags));
+		sendCommandIfRendered(() -> new DtoDisplayField.SetRemoveStyleTagsCommand(removeStyleTags));
 		return this;
 	}
 }

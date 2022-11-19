@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.dto.UiPageViewBlock;
+import org.teamapps.dto.DtoPageViewBlock;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.ArrayList;
@@ -40,9 +40,9 @@ public abstract class AbstractPageViewBlock {
 		this.alignment = alignment;
 	}
 
-	public abstract UiPageViewBlock createUiBlock();
+	public abstract DtoPageViewBlock createUiBlock();
 
-	protected void mapAbstractPageViewBlockAttributes(UiPageViewBlock uiBlock) {
+	protected void mapAbstractPageViewBlockAttributes(DtoPageViewBlock uiBlock) {
 		uiBlock.setId(clientId);
 		uiBlock.setAlignment(alignment.toUiAlignment());
 		uiBlock.setToolButtons(toolButtons.stream()

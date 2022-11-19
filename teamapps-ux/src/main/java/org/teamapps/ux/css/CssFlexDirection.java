@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.css;
 
-import org.teamapps.dto.UiCssFlexDirection;
+import org.teamapps.dto.DtoCssFlexDirection;
 
 public enum CssFlexDirection {
 
 	ROW, ROW_REVERSE, COLUMN, COLUMN_REVERSE;
 
-	public UiCssFlexDirection toUiCssFlexDirection() {
-		return UiCssFlexDirection.valueOf(this.name());
+	public DtoCssFlexDirection toUiCssFlexDirection() {
+		return DtoCssFlexDirection.valueOf(this.name());
 	}
 
 }

@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.dto.UiWorkSpaceLayoutItem;
-import org.teamapps.dto.UiWorkSpaceLayoutSplitItem;
+import org.teamapps.dto.DtoWorkSpaceLayoutItem;
+import org.teamapps.dto.DtoWorkSpaceLayoutSplitItem;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.workspacelayout.definition.SplitPaneDefinition;
 
@@ -98,8 +98,8 @@ public class WorkSpaceLayoutSplitPane extends WorkSpaceLayoutItem {
 	}
 
 	@Override
-	public UiWorkSpaceLayoutItem createUiItem() {
-		UiWorkSpaceLayoutSplitItem item = new UiWorkSpaceLayoutSplitItem(
+	public DtoWorkSpaceLayoutItem createUiItem() {
+		DtoWorkSpaceLayoutSplitItem item = new DtoWorkSpaceLayoutSplitItem(
 				getId(),
 				splitDirection.toUiSplitDirection(),
 				firstChild != null ? firstChild.createUiItem() : null,

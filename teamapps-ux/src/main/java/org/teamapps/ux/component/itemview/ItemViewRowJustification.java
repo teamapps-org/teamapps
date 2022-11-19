@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.itemview;
 
-import org.teamapps.dto.UiItemJustification;
+import org.teamapps.dto.DtoItemJustification;
 
 public enum ItemViewRowJustification {
 
 	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN;
 
-	public UiItemJustification toUiItemJustification() {
-		return UiItemJustification.valueOf(this.name());
+	public DtoItemJustification toUiItemJustification() {
+		return DtoItemJustification.valueOf(this.name());
 	}
 
 }

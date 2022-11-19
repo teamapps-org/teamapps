@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.form.layoutpolicy;
 
-import org.teamapps.dto.UiFormSectionPlacement;
+import org.teamapps.dto.DtoFormSectionPlacement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 
@@ -41,6 +41,6 @@ public interface FormSectionPlacement {
 
 	HorizontalElementAlignment getHorizontalAlignment();
 
-	UiFormSectionPlacement createUiFormSectionPlacement();
+	DtoFormSectionPlacement createUiFormSectionPlacement();
 
 }

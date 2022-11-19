@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.grid.layout;
 
-import org.teamapps.dto.UiFloatingComponentGridPlacement;
-import org.teamapps.dto.UiFloatingComponentGridPlacementItem;
+import org.teamapps.dto.DtoFloatingComponentGridPlacement;
+import org.teamapps.dto.DtoFloatingComponentGridPlacementItem;
 import org.teamapps.ux.component.Component;
 
 import java.util.ArrayList;
@@ -43,11 +43,11 @@ public class FloatingComponentGridPlacement extends AbstractGridPlacement {
 	}
 
 	@Override
-	public UiFloatingComponentGridPlacement createUiGridPlacement() {
-		List<UiFloatingComponentGridPlacementItem> items = this.items.stream()
+	public DtoFloatingComponentGridPlacement createUiGridPlacement() {
+		List<DtoFloatingComponentGridPlacementItem> items = this.items.stream()
 				.map(floatingField -> floatingField.createUiFloatingComponentGridPlacementItem())
 				.collect(Collectors.toList());
-		UiFloatingComponentGridPlacement uiPlacement = new UiFloatingComponentGridPlacement(items)
+		DtoFloatingComponentGridPlacement uiPlacement = new DtoFloatingComponentGridPlacement(items)
 				.setWrap(wrap)
 				.setVerticalSpacing(verticalSpacing)
 				.setHorizontalSpacing(horizontalSpacing);

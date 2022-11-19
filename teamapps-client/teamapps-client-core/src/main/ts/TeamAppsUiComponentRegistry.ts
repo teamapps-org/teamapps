@@ -17,21 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponentConfig} from "./generated";
+import {DtoComponent as DtoComponentConfig} from "./generated";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiComponent} from "./component/UiComponent";
+import {Component} from "./component/Component";
 
-type ComponentClass<T extends UiComponent> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
+type ComponentClass<T extends Component> = { new(config: DtoComponentConfig, context: TeamAppsUiContext): T };
 
 export class TeamAppsUiComponentRegistry {
 
-	private static componentClasses: { [componentName: string]: ComponentClass<UiComponent> } = {};
+	private static componentClasses: { [componentName: string]: ComponentClass<Component> } = {};
 
-	public static registerComponentClass<F extends UiComponent>(componentName: string, componentClass: any): void {
+	public static registerComponentClass<F extends Component>(componentName: string, componentClass: any): void {
 		this.componentClasses[componentName] = componentClass;
 	}
 
-	public static getComponentClassForName(componentName: string, logErrorIfNotFound = true): ComponentClass<UiComponent> {
+	public static getComponentClassForName(componentName: string, logErrorIfNotFound = true): ComponentClass<Component> {
 		let componentClass = this.componentClasses[componentName];
 		if (!componentClass && logErrorIfNotFound) {
 			console.error("There is no registered component type with name: " + componentName);

@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.field.upload;
 
 import net.coobird.thumbnailator.Thumbnails;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiPictureChooser;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoPictureChooser;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
@@ -45,11 +45,11 @@ import java.nio.file.Files;
 
 public class PictureChooser extends AbstractField<Resource> {
 
-	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadTooLargeEvent.TYPE_ID);
-	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadStartedEvent.TYPE_ID);
-	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadCanceledEvent.TYPE_ID);
-	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadFailedEvent.TYPE_ID);
-	public final ProjectorEvent<UploadedFile> onUploadSuccessful = createProjectorEventBoundToUiEvent(UiPictureChooser.UploadSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadTooLargeEvent.TYPE_ID);
+	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadStartedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadCanceledEvent.TYPE_ID);
+	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadFailedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadedFile> onUploadSuccessful = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadSuccessfulEvent.TYPE_ID);
 
 	private long maxFileSize = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
@@ -150,8 +150,8 @@ public class PictureChooser extends AbstractField<Resource> {
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiPictureChooser uiField = new UiPictureChooser();
+	public DtoField createUiClientObject() {
+		DtoPictureChooser uiField = new DtoPictureChooser();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setUploadUrl(uploadUrl);
 		uiField.setMaxFileSize(maxFileSize);
@@ -165,29 +165,29 @@ public class PictureChooser extends AbstractField<Resource> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		switch (event.getTypeId()) {
-			case UiPictureChooser.UploadTooLargeEvent.TYPE_ID -> {
-				var tooLargeEvent = event.as(UiPictureChooser.UploadTooLargeEventWrapper.class);
+			case DtoPictureChooser.UploadTooLargeEvent.TYPE_ID -> {
+				var tooLargeEvent = event.as(DtoPictureChooser.UploadTooLargeEventWrapper.class);
 				this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
 			}
-			case UiPictureChooser.UploadStartedEvent.TYPE_ID -> {
-				var uploadStartedEvent = event.as(UiPictureChooser.UploadStartedEventWrapper.class);
+			case DtoPictureChooser.UploadStartedEvent.TYPE_ID -> {
+				var uploadStartedEvent = event.as(DtoPictureChooser.UploadStartedEventWrapper.class);
 				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(), null /*TODO*/));
 
 			}
-			case UiPictureChooser.UploadCanceledEvent.TYPE_ID -> {
-				var canceledEvent = event.as(UiPictureChooser.UploadCanceledEventWrapper.class);
+			case DtoPictureChooser.UploadCanceledEvent.TYPE_ID -> {
+				var canceledEvent = event.as(DtoPictureChooser.UploadCanceledEventWrapper.class);
 				this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()));
 			}
-			case UiPictureChooser.UploadFailedEvent.TYPE_ID -> {
-				var failedEvent = event.as(UiPictureChooser.UploadFailedEventWrapper.class);
+			case DtoPictureChooser.UploadFailedEvent.TYPE_ID -> {
+				var failedEvent = event.as(DtoPictureChooser.UploadFailedEventWrapper.class);
 				this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()));
 
 			}
-			case UiPictureChooser.UploadSuccessfulEvent.TYPE_ID -> {
-				var uploadedEvent = event.as(UiPictureChooser.UploadSuccessfulEventWrapper.class);
+			case DtoPictureChooser.UploadSuccessfulEvent.TYPE_ID -> {
+				var uploadedEvent = event.as(DtoPictureChooser.UploadSuccessfulEventWrapper.class);
 				this.uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
 						() -> {
 							try {
@@ -219,7 +219,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setMaxFileSize(long maxFileSize) {
 		this.maxFileSize = maxFileSize;
-		sendCommandIfRendered(() -> new UiPictureChooser.SetMaxFileSizeCommand(maxFileSize));
+		sendCommandIfRendered(() -> new DtoPictureChooser.SetMaxFileSizeCommand(maxFileSize));
 	}
 
 	public String getUploadUrl() {
@@ -228,7 +228,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		sendCommandIfRendered(() -> new UiPictureChooser.SetUploadUrlCommand(uploadUrl));
+		sendCommandIfRendered(() -> new DtoPictureChooser.SetUploadUrlCommand(uploadUrl));
 	}
 
 	public String getFileTooLargeMessage() {
@@ -237,7 +237,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setFileTooLargeMessage(String fileTooLargeMessage) {
 		this.fileTooLargeMessage = fileTooLargeMessage;
-		sendCommandIfRendered(() -> new UiPictureChooser.SetFileTooLargeMessageCommand(fileTooLargeMessage));
+		sendCommandIfRendered(() -> new DtoPictureChooser.SetFileTooLargeMessageCommand(fileTooLargeMessage));
 	}
 
 	public String getUploadErrorMessage() {
@@ -246,7 +246,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setUploadErrorMessage(String uploadErrorMessage) {
 		this.uploadErrorMessage = uploadErrorMessage;
-		sendCommandIfRendered(() -> new UiPictureChooser.SetUploadErrorMessageCommand(uploadErrorMessage));
+		sendCommandIfRendered(() -> new DtoPictureChooser.SetUploadErrorMessageCommand(uploadErrorMessage));
 	}
 
 	public Icon getBrowseButtonIcon() {

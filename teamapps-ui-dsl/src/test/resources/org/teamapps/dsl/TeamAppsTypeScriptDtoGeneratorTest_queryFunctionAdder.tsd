@@ -4,9 +4,9 @@
  */
 export const typescriptDeclarationFixConstant = 1;
 
-import {UiClientObjectConfig} from "./UiClientObjectConfig";
+import {UiClientObject as UiClientObjectConfig} from "./UiClientObject";;
 import {UiQuery} from "./UiQuery";
-import {XConfig} from "./XConfig";
+import {X as XConfig} from "./X";;
 
 export class QueryFunctionAdder {
 	public static addQueryFunctionsToConfig(config: UiClientObjectConfig, queryCallback: (componentId: string, queryTypeId: string, queryObject: UiQuery) => Promise<any>) {

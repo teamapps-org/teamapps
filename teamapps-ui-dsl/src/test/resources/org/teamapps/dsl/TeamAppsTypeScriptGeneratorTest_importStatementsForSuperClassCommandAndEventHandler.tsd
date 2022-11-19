@@ -3,24 +3,24 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {AConfig} from "./AConfig";
-import {I} from "./I";
-import {ACommandHandler} from "./AConfig";
-import {ICommandHandler} from "./I";
-import {AEventSource} from "./AConfig";
-import {IEventSource} from "./I";
-import {UiCommand} from "teamapps-client-communication";
-import {UiEvent} from "teamapps-client-communication";
+import {DtoA} from "./DtoA";
+import {DtoI} from "./DtoI";
+import {DtoACommandHandler} from "./DtoA";
+import {DtoICommandHandler} from "./DtoI";
+import {DtoAEventSource} from "./DtoA";
+import {DtoIEventSource} from "./DtoI";
+import {DtoCommand} from "teamapps-client-communication";
+import {DtoEvent} from "teamapps-client-communication";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export interface BConfig extends AConfig, I {
+export interface DtoB extends DtoA, DtoI {
 	_type?: string;
 }
 
-export interface BCommandHandler extends ACommandHandler, ICommandHandler {
+export interface DtoBCommandHandler extends ACommandHandler, ICommandHandler {
 }
 
-export interface BEventSource extends AEventSource, IEventSource {
+export interface DtoBEventSource extends AEventSource, IEventSource {
 }
 
 

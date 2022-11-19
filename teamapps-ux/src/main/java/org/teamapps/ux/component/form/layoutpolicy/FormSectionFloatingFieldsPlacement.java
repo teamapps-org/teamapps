@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.form.layoutpolicy;
 
-import org.teamapps.dto.UiFormSectionFloatingField;
-import org.teamapps.dto.UiFormSectionFloatingFieldsPlacement;
-import org.teamapps.dto.UiFormSectionPlacement;
+import org.teamapps.dto.DtoFormSectionFloatingField;
+import org.teamapps.dto.DtoFormSectionFloatingFieldsPlacement;
+import org.teamapps.dto.DtoFormSectionPlacement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 
@@ -169,11 +169,11 @@ public class FormSectionFloatingFieldsPlacement implements FormSectionPlacement 
 	}
 
 	@Override
-	public UiFormSectionPlacement createUiFormSectionPlacement() {
-		List<UiFormSectionFloatingField> uiFloatingFields = floatingFields.stream()
+	public DtoFormSectionPlacement createUiFormSectionPlacement() {
+		List<DtoFormSectionFloatingField> uiFloatingFields = floatingFields.stream()
 				.map(floatingField -> floatingField.createUiFormSectionFloatingField())
 				.collect(Collectors.toList());
-		UiFormSectionFloatingFieldsPlacement placement = new UiFormSectionFloatingFieldsPlacement(uiFloatingFields)
+		DtoFormSectionFloatingFieldsPlacement placement = new DtoFormSectionFloatingFieldsPlacement(uiFloatingFields)
 				.setRow(row)
 				.setColumn(column)
 				.setWrap(wrap)

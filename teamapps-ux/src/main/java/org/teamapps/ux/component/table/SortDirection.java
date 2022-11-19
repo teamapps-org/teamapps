@@ -19,16 +19,16 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.teamapps.dto.UiSortDirection;
+import org.teamapps.dto.DtoSortDirection;
 
 public enum SortDirection {
 	ASC, DESC;
 
-	public UiSortDirection toUiSortDirection() {
-		return UiSortDirection.valueOf(this.name());
+	public DtoSortDirection toUiSortDirection() {
+		return DtoSortDirection.valueOf(this.name());
 	}
 
-	public static SortDirection fromUiSortDirection(UiSortDirection uiSortDirection) {
+	public static SortDirection fromUiSortDirection(DtoSortDirection uiSortDirection) {
 		if (uiSortDirection == null) {
 			return null;
 		}

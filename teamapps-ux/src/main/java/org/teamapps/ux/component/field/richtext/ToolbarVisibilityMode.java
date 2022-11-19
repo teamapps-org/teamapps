@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.field.richtext;
 
-import org.teamapps.dto.UiToolbarVisibilityMode;
+import org.teamapps.dto.DtoToolbarVisibilityMode;
 
 public enum ToolbarVisibilityMode {
 	HIDDEN, VISIBLE, VISIBLE_IF_FOCUSED;
 
-	public UiToolbarVisibilityMode toToolbarVisibilityMode() {
-		return UiToolbarVisibilityMode.valueOf(this.name());
+	public DtoToolbarVisibilityMode toToolbarVisibilityMode() {
+		return DtoToolbarVisibilityMode.valueOf(this.name());
 	}
 }

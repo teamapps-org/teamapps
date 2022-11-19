@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.field.richtext;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiRichTextEditor;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoRichTextEditor;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
@@ -36,12 +36,12 @@ import java.util.Locale;
 
 public class RichTextEditor extends AbstractField<String> implements TextInputHandlingField {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiRichTextEditor.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiRichTextEditor.SpecialKeyPressedEvent.TYPE_ID);
-	public final ProjectorEvent<ImageUploadTooLargeEventData> onImageUploadTooLarge = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadTooLargeEvent.TYPE_ID);
-	public final ProjectorEvent<ImageUploadStartedEventData> onImageUploadStarted = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadStartedEvent.TYPE_ID);
-	public final ProjectorEvent<ImageUploadSuccessfulEventData> onImageUploadSuccessful = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<ImageUploadFailedEventData> onImageUploadFailed = createProjectorEventBoundToUiEvent(UiRichTextEditor.ImageUploadFailedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoRichTextEditor.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoRichTextEditor.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<ImageUploadTooLargeEventData> onImageUploadTooLarge = createProjectorEventBoundToUiEvent(DtoRichTextEditor.ImageUploadTooLargeEvent.TYPE_ID);
+	public final ProjectorEvent<ImageUploadStartedEventData> onImageUploadStarted = createProjectorEventBoundToUiEvent(DtoRichTextEditor.ImageUploadStartedEvent.TYPE_ID);
+	public final ProjectorEvent<ImageUploadSuccessfulEventData> onImageUploadSuccessful = createProjectorEventBoundToUiEvent(DtoRichTextEditor.ImageUploadSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<ImageUploadFailedEventData> onImageUploadFailed = createProjectorEventBoundToUiEvent(DtoRichTextEditor.ImageUploadFailedEvent.TYPE_ID);
 
 	private ToolbarVisibilityMode toolbarVisibilityMode = ToolbarVisibilityMode.VISIBLE;
 	private int minHeight = 150;
@@ -58,8 +58,8 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiRichTextEditor field = new UiRichTextEditor();
+	public DtoField createUiClientObject() {
+		DtoRichTextEditor field = new DtoRichTextEditor();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setToolbarVisibilityMode(this.toolbarVisibilityMode.toToolbarVisibilityMode());
 		field.setImageUploadEnabled(imageUploadEnabled);
@@ -72,20 +72,20 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		switch (event.getTypeId()) {
-			case UiRichTextEditor.ImageUploadTooLargeEvent.TYPE_ID -> {
-				var tooLargeEvent = event.as(UiRichTextEditor.ImageUploadTooLargeEventWrapper.class);
+			case DtoRichTextEditor.ImageUploadTooLargeEvent.TYPE_ID -> {
+				var tooLargeEvent = event.as(DtoRichTextEditor.ImageUploadTooLargeEventWrapper.class);
 				onImageUploadTooLarge.fire(new ImageUploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
 			}
-			case UiRichTextEditor.ImageUploadStartedEvent.TYPE_ID -> {
-				var uploadStartedEvent = event.as(UiRichTextEditor.ImageUploadStartedEventWrapper.class);
+			case DtoRichTextEditor.ImageUploadStartedEvent.TYPE_ID -> {
+				var uploadStartedEvent = event.as(DtoRichTextEditor.ImageUploadStartedEventWrapper.class);
 				onImageUploadStarted.fire(new ImageUploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(),
 						uploadStartedEvent.getIncompleteUploadsCount()));
 			}
-			case UiRichTextEditor.ImageUploadSuccessfulEvent.TYPE_ID -> {
-				var imageUploadedEvent = event.as(UiRichTextEditor.ImageUploadSuccessfulEventWrapper.class);
+			case DtoRichTextEditor.ImageUploadSuccessfulEvent.TYPE_ID -> {
+				var imageUploadedEvent = event.as(DtoRichTextEditor.ImageUploadSuccessfulEventWrapper.class);
 				onImageUploadSuccessful.fire(new ImageUploadSuccessfulEventData(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getMimeType(),
 						imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getIncompleteUploadsCount()));
 				String fileUuid = imageUploadedEvent.getFileUuid();
@@ -99,10 +99,10 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 						},
 						() -> getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid())
 				);
-				sendCommandIfRendered(() -> new UiRichTextEditor.SetUploadedImageUrlCommand(fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
+				sendCommandIfRendered(() -> new DtoRichTextEditor.SetUploadedImageUrlCommand(fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
 			}
-			case UiRichTextEditor.ImageUploadFailedEvent.TYPE_ID -> {
-				var uploadFailedEvent = event.as(UiRichTextEditor.ImageUploadFailedEventWrapper.class);
+			case DtoRichTextEditor.ImageUploadFailedEvent.TYPE_ID -> {
+				var uploadFailedEvent = event.as(DtoRichTextEditor.ImageUploadFailedEventWrapper.class);
 				onImageUploadFailed.fire(new ImageUploadFailedEventData(uploadFailedEvent.getName(), uploadFailedEvent.getMimeType(), uploadFailedEvent.getSizeInBytes(), uploadFailedEvent
 						.getIncompleteUploadsCount()));
 			}
@@ -115,7 +115,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setToolbarVisibilityMode(ToolbarVisibilityMode toolbarVisibilityMode) {
 		this.toolbarVisibilityMode = toolbarVisibilityMode;
-		sendCommandIfRendered(() -> new UiRichTextEditor.SetToolbarVisibilityModeCommand(toolbarVisibilityMode.toToolbarVisibilityMode()));
+		sendCommandIfRendered(() -> new DtoRichTextEditor.SetToolbarVisibilityModeCommand(toolbarVisibilityMode.toToolbarVisibilityMode()));
 	}
 
 	public UploadedFileToUrlConverter getUploadedFileToUrlConverter() {
@@ -132,7 +132,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		sendCommandIfRendered(() -> new UiRichTextEditor.SetUploadUrlCommand(uploadUrl));
+		sendCommandIfRendered(() -> new DtoRichTextEditor.SetUploadUrlCommand(uploadUrl));
 	}
 
 	public int getMaxImageFileSizeInBytes() {
@@ -141,7 +141,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setMaxImageFileSizeInBytes(int maxImageFileSizeInBytes) {
 		this.maxImageFileSizeInBytes = maxImageFileSizeInBytes;
-		sendCommandIfRendered(() -> new UiRichTextEditor.SetMaxImageFileSizeInBytesCommand(maxImageFileSizeInBytes));
+		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMaxImageFileSizeInBytesCommand(maxImageFileSizeInBytes));
 	}
 
 	public int getMinHeight() {
@@ -150,7 +150,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setMinHeight(int minHeight) {
 		this.minHeight = minHeight;
-		sendCommandIfRendered(() -> new UiRichTextEditor.SetMinHeightCommand(minHeight));
+		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMinHeightCommand(minHeight));
 	}
 
 	public int getMaxHeight() {
@@ -159,14 +159,14 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setMaxHeight(int maxHeight) {
 		this.maxHeight = maxHeight;
-		sendCommandIfRendered(() -> new UiRichTextEditor.SetMaxHeightCommand(maxHeight));
+		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMaxHeightCommand(maxHeight));
 	}
 
 	public void setFixedHeight(int height) {
 		this.minHeight = height;
 		this.maxHeight = height;
-		sendCommandIfRendered(() -> new UiRichTextEditor.SetMinHeightCommand(height));
-		sendCommandIfRendered(() -> new UiRichTextEditor.SetMaxHeightCommand(height));
+		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMinHeightCommand(height));
+		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMaxHeightCommand(height));
 	}
 
 	@Override

@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.webrtc;
 
-import org.teamapps.dto.UiSourceMediaTrackType;
+import org.teamapps.dto.DtoSourceMediaTrackType;
 
 public enum SourceMediaTrackType {
 
 	CAM, MIC, SCREEN;
 
-	public UiSourceMediaTrackType toUiSourceMediaTrackType() {
-		return UiSourceMediaTrackType.valueOf(this.name());
+	public DtoSourceMediaTrackType toUiSourceMediaTrackType() {
+		return DtoSourceMediaTrackType.valueOf(this.name());
 	}
 
 }

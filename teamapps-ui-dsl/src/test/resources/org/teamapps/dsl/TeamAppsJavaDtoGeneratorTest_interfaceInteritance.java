@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.UiObject;
+import org.teamapps.dto.DtoObject;
 
 /**
  * THIS IS GENERATED CODE!
@@ -33,10 +33,10 @@ import org.teamapps.dto.UiObject;
 
 @JsonTypeName("B")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface B extends A, UiObject {
+public interface DtoB extends DtoA, DtoObject {
 
 	public String getB();
-	public B setB(String b);
+	public DtoB setB(String b);
 
 
 

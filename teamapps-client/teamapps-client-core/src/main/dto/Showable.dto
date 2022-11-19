@@ -1,5 +1,5 @@
 package org.teamapps.dto;
 
-interface UiShowable extends UiClientObject {
+interface Showable extends ClientObject {
 	command show(int animationDuration);
 }

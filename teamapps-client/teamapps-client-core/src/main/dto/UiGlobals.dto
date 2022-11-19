@@ -1,27 +1,27 @@
 package org.teamapps.dto;
 
-import UiLocation from "teamapps-client-communication":org.teamapps.dto;
+import Location from "teamapps-client-communication":org.teamapps.dto;
 
-managed class UiGlobals {
+managed class Globals {
 
     static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
-    static event navigationStateChange(UiLocation location, boolean triggeredByUser);
+    static event navigationStateChange(Location location, boolean triggeredByUser);
 
     static command setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp);
 
     static command registerComponentLibrary(String uuid, String mainJsUrl);
     static command registerClientObjectType(String libraryUuid, String clientObjectType);
     static command toggleEventListening(String libraryUuid, String clientObjectId, String eventName, boolean listen);
-    static command render(String libraryUuid, UiClientObject component);
+    static command render(String libraryUuid, ClientObject component);
     static command unrender(String id);
-    static command refreshComponent(UiClientObject component);
+    static command refreshComponent(ClientObject component);
 
-    static command setConfig(UiConfiguration config);
+    static command setConfig(Configuration config);
     static command setThemeClassName(String theme);
-    static command setSessionMessageWindows(UiShowable* expiredMessageWindow, UiShowable* errorMessageWindow, UiShowable* terminatedMessageWindow);
+    static command setSessionMessageWindows(Showable* expiredMessageWindow, Showable* errorMessageWindow, Showable* terminatedMessageWindow);
 
     static command setPageTitle(String pageTitle);
-    static command addRootComponent(String containerElementId, UiComponent* component); // containerDomSelector == null --> body
+    static command addRootComponent(String containerElementId, Component* component); // containerDomSelector == null --> body
 
     static command addClientToken(String token);
     static command removeClientToken(String token);
@@ -30,7 +30,7 @@ managed class UiGlobals {
     static command downloadFile(String fileUrl, String downloadFileName);
     static command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, int animationDuration = 1000);
     static command exitFullScreen();
-    static command showDialogMessage(String icon, String title, String message, List<UiGenericErrorMessageOption> options);
+    static command showDialogMessage(String icon, String title, String message, List<GenericErrorMessageOption> options);
 
     // uuid is a server-generated id for this particular lock. Multiple locks are possible!
     static command requestWakeLock(String uuid) returns boolean;
@@ -50,6 +50,6 @@ enum KeyEventType {
     KEY_DOWN, KEY_UP
 }
 
-enum UiGenericErrorMessageOption {
+enum GenericErrorMessageOption {
 	OK, RELOAD
 }

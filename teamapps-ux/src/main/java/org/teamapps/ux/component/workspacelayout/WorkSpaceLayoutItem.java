@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.dto.UiWorkSpaceLayoutItem;
+import org.teamapps.dto.DtoWorkSpaceLayoutItem;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 
@@ -47,7 +47,7 @@ public abstract class WorkSpaceLayoutItem {
 		return id;
 	}
 
-	public abstract UiWorkSpaceLayoutItem createUiItem();
+	public abstract DtoWorkSpaceLayoutItem createUiItem();
 
 	public abstract LayoutItemDefinition createLayoutDefinitionItem();
 

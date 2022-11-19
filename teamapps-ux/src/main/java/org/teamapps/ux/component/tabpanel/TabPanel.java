@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.tabpanel;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiTab;
-import org.teamapps.dto.UiTabPanel;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoTab;
+import org.teamapps.dto.DtoTabPanel;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TabPanel extends AbstractComponent implements Component {
 
-	public final ProjectorEvent<Tab> onTabSelected = createProjectorEventBoundToUiEvent(UiTabPanel.TabSelectedEvent.TYPE_ID);
-	public final ProjectorEvent<Tab> onTabClosed = createProjectorEventBoundToUiEvent(UiTabPanel.TabClosedEvent.TYPE_ID);
+	public final ProjectorEvent<Tab> onTabSelected = createProjectorEventBoundToUiEvent(DtoTabPanel.TabSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<Tab> onTabClosed = createProjectorEventBoundToUiEvent(DtoTabPanel.TabClosedEvent.TYPE_ID);
 
 	private final List<Tab> tabs = new ArrayList<>();
 	private Tab selectedTab;
@@ -66,20 +66,20 @@ public class TabPanel extends AbstractComponent implements Component {
 		}
 		tabs.add(tab);
 		tab.setTabPanel(this);
-		sendCommandIfRendered(() -> new UiTabPanel.AddTabCommand(tab.createUiTab(), select));
+		sendCommandIfRendered(() -> new DtoTabPanel.AddTabCommand(tab.createUiTab(), select));
 	}
 
 	public void removeTab(Tab tab) {
 		boolean wasRemoved = tabs.remove(tab);
 		if (wasRemoved) {
-			sendCommandIfRendered(() -> new UiTabPanel.RemoveTabCommand(tab.getClientId()));
+			sendCommandIfRendered(() -> new DtoTabPanel.RemoveTabCommand(tab.getClientId()));
 		}
 	}
 
 	public void setSelectedTab(Tab tab) {
 		if (tab != null) {
 			this.selectedTab = tab;
-			sendCommandIfRendered(() -> new UiTabPanel.SelectTabCommand(tab.getClientId()));
+			sendCommandIfRendered(() -> new DtoTabPanel.SelectTabCommand(tab.getClientId()));
 		}
 	}
 
@@ -113,7 +113,7 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	private void updateToolButtons() {
-		sendCommandIfRendered(() -> new UiTabPanel.SetToolButtonsCommand(this.toolButtons.stream()
+		sendCommandIfRendered(() -> new DtoTabPanel.SetToolButtonsCommand(this.toolButtons.stream()
 				.map(toolButton -> toolButton.createUiReference())
 				.collect(Collectors.toList())));
 	}
@@ -128,7 +128,7 @@ public class TabPanel extends AbstractComponent implements Component {
 
 	public void setHideTabBarIfSingleTab(boolean hideTabBarIfSingleTab) {
 		this.hideTabBarIfSingleTab = hideTabBarIfSingleTab;
-		this.sendCommandIfRendered(() -> new UiTabPanel.SetHideTabBarIfSingleTabCommand(hideTabBarIfSingleTab));
+		this.sendCommandIfRendered(() -> new DtoTabPanel.SetHideTabBarIfSingleTabCommand(hideTabBarIfSingleTab));
 	}
 
 	public TabPanelTabStyle getTabStyle() {
@@ -137,14 +137,14 @@ public class TabPanel extends AbstractComponent implements Component {
 
 	public void setTabStyle(TabPanelTabStyle tabStyle) {
 		this.tabStyle = tabStyle;
-		this.sendCommandIfRendered(() -> new UiTabPanel.SetTabStyleCommand(tabStyle.toUiTabPanelTabStyle()));
+		this.sendCommandIfRendered(() -> new DtoTabPanel.SetTabStyleCommand(tabStyle.toUiTabPanelTabStyle()));
 	}
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiTabPanel uiTabPanel = new UiTabPanel();
+		DtoTabPanel uiTabPanel = new DtoTabPanel();
 		mapAbstractUiComponentProperties(uiTabPanel);
-		List<UiTab> uiTabs = tabs.stream()
+		List<DtoTab> uiTabs = tabs.stream()
 				.map(tab -> tab != null ? tab.createUiTab() : null)
 				.collect(Collectors.toList());
 		uiTabPanel.setTabs(uiTabs);
@@ -164,10 +164,10 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiTabPanel.TabSelectedEvent.TYPE_ID -> {
-				var tabSelectedEvent = event.as(UiTabPanel.TabSelectedEventWrapper.class);
+			case DtoTabPanel.TabSelectedEvent.TYPE_ID -> {
+				var tabSelectedEvent = event.as(DtoTabPanel.TabSelectedEventWrapper.class);
 				if (tabSelectedEvent.getTabId() == null) {
 					this.selectedTab = null;
 				} else {
@@ -183,13 +183,13 @@ public class TabPanel extends AbstractComponent implements Component {
 				}
 				onTabSelected.fire(selectedTab);
 			}
-			case UiTabPanel.TabNeedsRefreshEvent.TYPE_ID -> {
-				var tabNeedsRefreshEvent = event.as(UiTabPanel.TabNeedsRefreshEventWrapper.class);
+			case DtoTabPanel.TabNeedsRefreshEvent.TYPE_ID -> {
+				var tabNeedsRefreshEvent = event.as(DtoTabPanel.TabNeedsRefreshEventWrapper.class);
 				Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
-				sendCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
+				sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
 			}
-			case UiTabPanel.TabClosedEvent.TYPE_ID -> {
-				var tabClosedEvent = event.as(UiTabPanel.TabClosedEventWrapper.class);
+			case DtoTabPanel.TabClosedEvent.TYPE_ID -> {
+				var tabClosedEvent = event.as(DtoTabPanel.TabClosedEventWrapper.class);
 				String tabId = tabClosedEvent.getTabId();
 				Tab closedTab = this.getTabByClientId(tabId);
 				if (closedTab != null) {
@@ -206,23 +206,23 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	/*package-private*/ void handleTabToolbarChanged(Tab tab) {
-		sendCommandIfRendered(() -> new UiTabPanel.SetTabToolbarCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getToolbar())));
+		sendCommandIfRendered(() -> new DtoTabPanel.SetTabToolbarCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getToolbar())));
 	}
 
 	/*package-private*/ void handleTabContentChanged(Tab tab) {
-		sendCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
+		sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
 	}
 
 	/*package-private*/ void handleTabConfigurationChanged(Tab tab) {
 		String iconString = getSessionContext().resolveIcon(tab.getIcon());
 		String caption = tab.getTitle();
-		sendCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
+		sendCommandIfRendered(() -> new DtoTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
 	}
 
 	/*package-private*/ void handleTabVisibilityChanged(Tab tab) {
 		String iconString = getSessionContext().resolveIcon(tab.getIcon());
 		String caption = tab.getTitle();
-		sendCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
+		sendCommandIfRendered(() -> new DtoTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
 	}
 
 }

@@ -22,8 +22,8 @@ package org.teamapps.ux.component.toolbar;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.UiToolbar;
-import org.teamapps.dto.UiToolbarButton;
+import org.teamapps.dto.DtoToolbar;
+import org.teamapps.dto.DtoToolbarButton;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
@@ -126,11 +126,11 @@ public class ToolbarButton {
 		return new ToolbarButton(template, Object, null, togglesFullScreenOnComponent, null, 0);
 	}
 
-	public UiToolbarButton createUiToolbarButton() {
+	public DtoToolbarButton createUiToolbarButton() {
 		Template template = getAppliedTemplate();
 		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getPropertyNames());
 
-		UiToolbarButton ui = new UiToolbarButton(clientId, template.createUiTemplate(), values);
+		DtoToolbarButton ui = new DtoToolbarButton(clientId, template.createUiTemplate(), values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
 			ui.setDropDownComponent(dropDownComponentSupplier.get().createUiReference());
 		}

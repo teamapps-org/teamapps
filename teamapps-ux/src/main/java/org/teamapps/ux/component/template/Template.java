@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.template;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiTemplate;
+import org.teamapps.dto.DtoTemplate;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.format.FontStyle;
 import org.teamapps.ux.component.template.gridtemplate.AbstractTemplateElement;
@@ -35,14 +35,14 @@ import java.util.stream.Collectors;
 
 public interface Template {
 
-	UiTemplate createUiTemplate();
+	DtoTemplate createUiTemplate();
 
 	List<String> getPropertyNames();
 
 
 	// === static methods ===
 
-	static Map<String, UiTemplate> createUiTemplates(Map<String, ? extends Template> templates) {
+	static Map<String, DtoTemplate> createUiTemplates(Map<String, ? extends Template> templates) {
 		return templates.entrySet().stream()
 				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().createUiTemplate()));
 	}

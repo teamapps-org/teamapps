@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.linkbutton;
 
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiLinkButton;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoLinkButton;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -29,7 +29,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class LinkButton extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiLinkButton.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLinkButton.ClickedEvent.TYPE_ID);
 
 	private String text;
 	private String url;
@@ -46,8 +46,8 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	@Override
-	public UiLinkButton createUiClientObject() {
-		UiLinkButton ui = new UiLinkButton();
+	public DtoLinkButton createUiClientObject() {
+		DtoLinkButton ui = new DtoLinkButton();
 		mapAbstractUiComponentProperties(ui);
 		ui.setText(text);
 		ui.setUrl(url);
@@ -57,16 +57,16 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiLinkButton.ClickedEvent.TYPE_ID -> {
+			case DtoLinkButton.ClickedEvent.TYPE_ID -> {
 				onClicked.fire();
 			}
 		}
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new UiLinkButton.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLinkButton.UpdateCommand(createUiClientObject()));
 	}
 
 	public String getText() {

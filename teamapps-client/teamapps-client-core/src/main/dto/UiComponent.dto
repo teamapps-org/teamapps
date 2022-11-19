@@ -19,7 +19,7 @@
  */
 package org.teamapps.dto;
 
-abstract managed class UiComponent implements UiClientObject {
+abstract managed class Component implements ClientObject {
 	String debuggingId;
 	boolean visible = true;
 	Dictionary<Dictionary<String>> stylesBySelector;

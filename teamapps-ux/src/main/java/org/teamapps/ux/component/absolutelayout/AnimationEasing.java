@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.absolutelayout;
 
-import org.teamapps.dto.UiAnimationEasing;
+import org.teamapps.dto.DtoAnimationEasing;
 
 public enum AnimationEasing {
 
@@ -63,7 +63,7 @@ public enum AnimationEasing {
 		return cssString;
 	}
 
-	public UiAnimationEasing toUiAnimationEasing() {
-		return UiAnimationEasing.valueOf(this.name());
+	public DtoAnimationEasing toUiAnimationEasing() {
+		return DtoAnimationEasing.valueOf(this.name());
 	}
 }

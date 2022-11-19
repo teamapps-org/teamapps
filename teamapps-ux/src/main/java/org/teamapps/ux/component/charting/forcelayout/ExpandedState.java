@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.charting.forcelayout;
 
-import org.teamapps.dto.UiNetworkNode;
-import org.teamapps.dto.UiNetworkNodeExpandState;
+import org.teamapps.dto.DtoNetworkNode;
+import org.teamapps.dto.DtoNetworkNodeExpandState;
 
 public enum ExpandedState {
 
 	NOT_EXPANDABLE, EXPANDED, COLLAPSED;
 
-	public UiNetworkNodeExpandState toExpandState() {
-		return UiNetworkNodeExpandState.valueOf(this.name());
+	public DtoNetworkNodeExpandState toExpandState() {
+		return DtoNetworkNodeExpandState.valueOf(this.name());
 	}
 }

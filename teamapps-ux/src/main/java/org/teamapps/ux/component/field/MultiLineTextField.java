@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiMultiLineTextField;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoMultiLineTextField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
@@ -34,8 +34,8 @@ public class MultiLineTextField extends TextField {
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiMultiLineTextField uiField = new UiMultiLineTextField();
+	public DtoField createUiClientObject() {
+		DtoMultiLineTextField uiField = new DtoMultiLineTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
 		uiField.setShowClearButton(isShowClearButton());
@@ -47,7 +47,7 @@ public class MultiLineTextField extends TextField {
 	public void append(String s, boolean scrollToBottom) {
 		MultiWriteLockableValue.Lock lock = setAndLockValue(s);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new UiMultiLineTextField.AppendCommand(s, scrollToBottom), aVoid -> lock.release());
+			getSessionContext().sendCommand(getId(), new DtoMultiLineTextField.AppendCommand(s, scrollToBottom), aVoid -> lock.release());
 		} else {
 			lock.release();
 		}

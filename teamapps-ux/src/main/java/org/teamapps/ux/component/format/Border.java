@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.format;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiBorder;
+import org.teamapps.dto.DtoBorder;
 
 public class Border {
 
@@ -82,8 +82,8 @@ public class Border {
 		return this;
 	}
 
-	public UiBorder createUiBorder() {
-		UiBorder uiBorder = new UiBorder();
+	public DtoBorder createUiBorder() {
+		DtoBorder uiBorder = new DtoBorder();
 		uiBorder.setTop(top != null ? top.createUiLine() : null);
 		uiBorder.setLeft(left != null ? left.createUiLine() : null);
 		uiBorder.setBottom(bottom != null ? bottom.createUiLine() : null);

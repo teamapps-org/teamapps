@@ -21,7 +21,7 @@ package org.teamapps.ux.component.table;
 
 import org.teamapps.ux.data.extraction.ValueExtractor;
 import org.teamapps.ux.data.extraction.ValueInjector;
-import org.teamapps.dto.UiTableColumn;
+import org.teamapps.dto.DtoTableColumn;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
@@ -80,9 +80,9 @@ public class TableColumn<RECORD, VALUE> {
 		this.maxWidth = maxWidth;
 	}
 
-	public UiTableColumn createUiTableColumn() {
+	public DtoTableColumn createUiTableColumn() {
 		SessionContext context = CurrentSessionContext.get();
-		UiTableColumn uiTableColumn = new UiTableColumn(propertyName, context.resolveIcon(icon), title, field.createUiReference());
+		DtoTableColumn uiTableColumn = new DtoTableColumn(propertyName, context.resolveIcon(icon), title, field.createUiReference());
 		uiTableColumn.setDefaultWidth(defaultWidth);
 		uiTableColumn.setMinWidth(minWidth);
 		uiTableColumn.setDefaultWidth(defaultWidth);

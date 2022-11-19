@@ -20,16 +20,16 @@
 package org.teamapps.ux.component.floating;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiFloatingComponent;
+import org.teamapps.dto.DtoFloatingComponent;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 
 public class FloatingComponent extends AbstractComponent {
 
-	public final ProjectorEvent<Boolean> onExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiFloatingComponent.ExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<Boolean> onExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoFloatingComponent.ExpandedOrCollapsedEvent.TYPE_ID);
 
 	private final Component containerComponent;
 	private Component contentComponent;
@@ -52,7 +52,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiFloatingComponent ui = new UiFloatingComponent();
+		DtoFloatingComponent ui = new DtoFloatingComponent();
 		mapAbstractUiComponentProperties(ui);
 		ui.setContainerComponent(containerComponent.createUiReference());
 		ui.setContentComponent(Component.createUiClientObjectReference(contentComponent));
@@ -74,7 +74,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setWidth(int width) {
 		this.width = width;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetDimensionsCommand(width, height));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetDimensionsCommand(width, height));
 	}
 
 	public int getHeight() {
@@ -83,7 +83,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setHeight(int height) {
 		this.height = height;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetDimensionsCommand(width, height));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetDimensionsCommand(width, height));
 	}
 
 	public int getMarginX() {
@@ -92,7 +92,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setMarginX(int marginX) {
 		this.marginX = marginX;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetMarginsCommand(marginX, marginY));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetMarginsCommand(marginX, marginY));
 	}
 
 	public int getMarginY() {
@@ -101,7 +101,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setMarginY(int marginY) {
 		this.marginY = marginY;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetMarginsCommand(marginX, marginY));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetMarginsCommand(marginX, marginY));
 	}
 
 	public FloatingPosition getPosition() {
@@ -110,7 +110,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setPosition(FloatingPosition position) {
 		this.position = position;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetPositionCommand(position.toUiPosition()));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetPositionCommand(position.toUiPosition()));
 	}
 
 	public Color getBackgroundColor() {
@@ -119,7 +119,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 
 	public Color getExpanderHandleColor() {
@@ -128,7 +128,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanderHandleColor(Color expanderHandleColor) {
 		this.expanderHandleColor = expanderHandleColor;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetExpanderHandleColorCommand(expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetExpanderHandleColorCommand(expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null));
 	}
 
 	public boolean isCollapsible() {
@@ -145,7 +145,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetExpandedCommand(expanded));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetExpandedCommand(expanded));
 	}
 
 	public Component getContentComponent() {
@@ -154,14 +154,14 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setContentComponent(Component contentComponent) {
 		this.contentComponent = contentComponent;
-		sendCommandIfRendered(() -> new UiFloatingComponent.SetContentComponentCommand(contentComponent != null ? contentComponent.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetContentComponentCommand(contentComponent != null ? contentComponent.createUiReference() : null));
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiFloatingComponent.ExpandedOrCollapsedEvent.TYPE_ID -> {
-				var e = event.as(UiFloatingComponent.ExpandedOrCollapsedEventWrapper.class);
+			case DtoFloatingComponent.ExpandedOrCollapsedEvent.TYPE_ID -> {
+				var e = event.as(DtoFloatingComponent.ExpandedOrCollapsedEventWrapper.class);
 				onExpandedOrCollapsed.fire(e.getExpanded());
 			}
 		}

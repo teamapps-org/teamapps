@@ -21,7 +21,7 @@ package org.teamapps.ux.component.timegraph.graph;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.UiHoseGraph;
+import org.teamapps.dto.DtoHoseGraph;
 import org.teamapps.ux.component.timegraph.LineChartCurveType;
 import org.teamapps.ux.component.timegraph.datapoints.HoseGraphData;
 import org.teamapps.ux.component.timegraph.model.HoseGraphModel;
@@ -60,8 +60,8 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 		this.stripedArea = stripedArea;
 	}
 
-	public UiHoseGraph createUiFormat() {
-		UiHoseGraph ui = new UiHoseGraph();
+	public DtoHoseGraph createUiFormat() {
+		DtoHoseGraph ui = new DtoHoseGraph();
 		mapAbstractLineChartDataDisplayProperties(ui);
 
 		ui.setGraphType(curveType.toUiLineChartCurveType());

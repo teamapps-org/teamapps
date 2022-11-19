@@ -21,17 +21,17 @@ package org.teamapps.ux.component.media;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiVideoPlayer;
+import org.teamapps.dto.DtoVideoPlayer;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class VideoPlayer extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(UiVideoPlayer.ErrorLoadingEvent.TYPE_ID);
-	public final ProjectorEvent<Integer> onProgress = createProjectorEventBoundToUiEvent(UiVideoPlayer.PlayerProgressEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiVideoPlayer.EndedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(DtoVideoPlayer.ErrorLoadingEvent.TYPE_ID);
+	public final ProjectorEvent<Integer> onProgress = createProjectorEventBoundToUiEvent(DtoVideoPlayer.PlayerProgressEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(DtoVideoPlayer.EndedEvent.TYPE_ID);
 
 	private String url; //the url of the video
 	private boolean autoplay; // if set...
@@ -51,7 +51,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiVideoPlayer uiVideoPlayer = new UiVideoPlayer(url);
+		DtoVideoPlayer uiVideoPlayer = new DtoVideoPlayer(url);
 		mapAbstractUiComponentProperties(uiVideoPlayer);
 		uiVideoPlayer.setAutoplay(autoplay);
 		uiVideoPlayer.setShowControls(showControls);
@@ -64,33 +64,33 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiVideoPlayer.ErrorLoadingEvent.TYPE_ID -> {
-				var e = event.as(UiVideoPlayer.ErrorLoadingEventWrapper.class);
+			case DtoVideoPlayer.ErrorLoadingEvent.TYPE_ID -> {
+				var e = event.as(DtoVideoPlayer.ErrorLoadingEventWrapper.class);
 				onErrorLoading.fire(null);
 			}
-			case UiVideoPlayer.PlayerProgressEvent.TYPE_ID -> {
-				var e = event.as(UiVideoPlayer.PlayerProgressEventWrapper.class);
+			case DtoVideoPlayer.PlayerProgressEvent.TYPE_ID -> {
+				var e = event.as(DtoVideoPlayer.PlayerProgressEventWrapper.class);
 				onProgress.fire(e.getPositionInSeconds());
 			}
-			case UiVideoPlayer.EndedEvent.TYPE_ID -> {
-				var e = event.as(UiVideoPlayer.EndedEventWrapper.class);
+			case DtoVideoPlayer.EndedEvent.TYPE_ID -> {
+				var e = event.as(DtoVideoPlayer.EndedEventWrapper.class);
 				onEnded.fire();
 			}
 		}
 	}
 
 	public void play() {
-		sendCommandIfRendered(() -> new UiVideoPlayer.PlayCommand());
+		sendCommandIfRendered(() -> new DtoVideoPlayer.PlayCommand());
 	}
 
 	public void pause() {
-		sendCommandIfRendered(() -> new UiVideoPlayer.PauseCommand());
+		sendCommandIfRendered(() -> new DtoVideoPlayer.PauseCommand());
 	}
 
 	public void setPosition(int timeInSeconds) {
-		sendCommandIfRendered(() -> new UiVideoPlayer.JumpToCommand(timeInSeconds));
+		sendCommandIfRendered(() -> new DtoVideoPlayer.JumpToCommand(timeInSeconds));
 	}
 
 	public String getUrl() {
@@ -99,7 +99,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setUrl(String url) {
 		this.url = url;
-		sendCommandIfRendered(() -> new UiVideoPlayer.SetUrlCommand(url));
+		sendCommandIfRendered(() -> new DtoVideoPlayer.SetUrlCommand(url));
 	}
 
 	public boolean isAutoplay() {
@@ -108,7 +108,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setAutoplay(boolean autoplay) {
 		this.autoplay = autoplay;
-		sendCommandIfRendered(() -> new UiVideoPlayer.SetAutoplayCommand(autoplay));
+		sendCommandIfRendered(() -> new DtoVideoPlayer.SetAutoplayCommand(autoplay));
 	}
 
 	public boolean isShowControls() {
@@ -162,7 +162,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setPreloadMode(PreloadMode preloadMode) {
 		this.preloadMode = preloadMode;
-		sendCommandIfRendered(() -> new UiVideoPlayer.SetPreloadModeCommand(preloadMode.toUiPreloadMode()));
+		sendCommandIfRendered(() -> new DtoVideoPlayer.SetPreloadModeCommand(preloadMode.toUiPreloadMode()));
 	}
 
 }

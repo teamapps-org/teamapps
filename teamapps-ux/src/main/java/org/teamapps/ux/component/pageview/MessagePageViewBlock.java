@@ -22,8 +22,8 @@ package org.teamapps.ux.component.pageview;
 import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.UiClientRecord;
-import org.teamapps.dto.UiMessagePageViewBlock;
+import org.teamapps.dto.DtoClientRecord;
+import org.teamapps.dto.DtoMessagePageViewBlock;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
@@ -53,11 +53,11 @@ public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 		this.topRecord = topRecord;
 	}
 
-	public UiMessagePageViewBlock createUiBlock() {
-		UiMessagePageViewBlock uiBlock = new UiMessagePageViewBlock();
+	public DtoMessagePageViewBlock createUiBlock() {
+		DtoMessagePageViewBlock uiBlock = new DtoMessagePageViewBlock();
 		mapAbstractPageViewBlockAttributes(uiBlock);
 		uiBlock.setTopTemplate(topTemplate.createUiTemplate());
-		uiBlock.setTopRecord(topRecord != null ? new UiClientRecord().setValues(topRecordPropertyProvider.getValues(topRecord, topTemplate.getPropertyNames())) : null);
+		uiBlock.setTopRecord(topRecord != null ? new DtoClientRecord().setValues(topRecordPropertyProvider.getValues(topRecord, topTemplate.getPropertyNames())) : null);
 		uiBlock.setTopRecordAlignment(topRecordAlignment.toUiHorizontalElementAlignment());
 		uiBlock.setHtml(html);
 		uiBlock.setImageUrls(imageUrls);

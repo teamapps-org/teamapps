@@ -27,17 +27,17 @@ typeScriptFilePrelude() ::= <<
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.allReferencedClassesAndInterfaces:{c|import {<c.typeScriptIdentifier>\} from "./<c.typeScriptIdentifier>";}; separator="\n">
-<c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.typeScriptIdentifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.typeScriptIdentifier>";}; separator="\n">
-<if(c.hasCommands)>import {UiCommand} from "teamapps-client-communication";<endif>
-<if(c.hasEvents)>import {UiEvent} from "teamapps-client-communication";
+<c.allReferencedClassesAndInterfaces:{c|import {Dto<c.typeScriptIdentifier>\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
+<c.allReferencedEnums:{e|import {Dto<e.Identifier>\} from "./Dto<e.Identifier>";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {Dto<c.Identifier>CommandHandler\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {Dto<c.Identifier>EventSource\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
+<if(c.hasCommands)>import {DtoCommand} from "teamapps-client-communication";<endif>
+<if(c.hasEvents)>import {DtoEvent} from "teamapps-client-communication";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
-<if(c.hasQueries)>import {UiQuery} from "teamapps-client-communication";<endif>
-<c.imports:{imp|import {<imp.Identifier>\} from <imp.StringLiteral>;}; separator="\n">
+<if(c.hasQueries)>import {DtoQuery} from "teamapps-client-communication";<endif>
+<c.imports:{imp|import {Dto<imp.Identifier>\} from <imp.StringLiteral>;}; separator="\n">
 
-export interface <c.typeScriptIdentifier> <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.typeScriptIdentifier>};  separator=", "> <endif>{
+export interface Dto<c.typeScriptIdentifier> <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|Dto<c.typeScriptIdentifier>};  separator=", "> <endif>{
 	_type?: string;
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
 	<c.queryDeclaration:queryDeclaration(); separator=";\n">
@@ -50,7 +50,7 @@ export interface <c.Identifier>Reference {
 <endif>
 
 <if(c.typescriptFactoryAnnotation)>
-export function create<c.typeScriptIdentifier; format="cap">(<c.allRequiredProperties:parameter(false); separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>, <endif><if(c.allNonRequiredProperties)>nonRequiredProperties?: {<c.allNonRequiredProperties:parameter(true); separator=", ">}<endif>): <c.typeScriptIdentifier> {
+export function createDto<c.typeScriptIdentifier; format="cap">(<c.allRequiredProperties:parameter(false); separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>, <endif><if(c.allNonRequiredProperties)>nonRequiredProperties?: {<c.allNonRequiredProperties:parameter(true); separator=", ">}<endif>): Dto<c.typeScriptIdentifier> {
 	return {
 		_type: "<c.Identifier.text>"<if(c.allProperties)>,<endif>
 		<c.allRequiredProperties:{p|<p.Identifier>}; separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>,<endif>
@@ -60,13 +60,13 @@ export function create<c.typeScriptIdentifier; format="cap">(<c.allRequiredPrope
 <endif>
 
 <if(c.hasCommands)>
-export interface <c.Identifier.text>CommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
+export interface Dto<c.Identifier.text>CommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
 	<c.nonStaticCommandDeclarations:commandMethodStub(); separator="\n">
 }
 <endif>
 
 <if(c.hasEvents)>
-export interface <c.Identifier>EventSource <if(c.superClassAndDirectlyImplementedInterfacesWithEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
+export interface Dto<c.Identifier>EventSource <if(c.superClassAndDirectlyImplementedInterfacesWithEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
 	<c.nonStaticEventDeclarations:teamAppsEventDeclaration(); separator="\n">
 }
 <endif>
@@ -85,13 +85,13 @@ on<evt.Identifier.text; format="cap">: TeamAppsEvent\<<evt.typeScriptInterfaceNa
 >>
 
 eventInterface(evt) ::= <<
-export interface <evt.typeScriptInterfaceName> extends UiEvent {
+export interface <evt.typeScriptInterfaceName> extends DtoEvent {
 	<evt.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
 queryInterface(q) ::= <<
-export interface <q.typeScriptInterfaceName> extends UiQuery {
+export interface <q.typeScriptInterfaceName> extends DtoQuery {
 	<q.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
@@ -101,35 +101,35 @@ parameter(p, optional) ::= "<p.Identifier><if(optional)>?<endif>: <p.type.typeSc
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.allReferencedClassesAndInterfaces:{c|import {<c.typeScriptIdentifier>\} from "./<c.typeScriptIdentifier>";}; separator="\n">
+<c.allReferencedClassesAndInterfaces:{c|import {Dto<c.typeScriptIdentifier>\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.typeScriptIdentifier>";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.typeScriptIdentifier>";}; separator="\n">
-<if(c.hasCommands)>import {UiCommand} from "teamapps-client-communication";<endif>
-<if(c.hasEvents)>import {UiEvent} from "teamapps-client-communication";
+<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import Dto{<c.Identifier>CommandHandler\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import Dto{<c.Identifier>EventSource\} from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
+<if(c.hasCommands)>import {DtoCommand} from "teamapps-client-communication";<endif>
+<if(c.hasEvents)>import {DtoEvent} from "teamapps-client-communication";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
-<if(c.hasQueries)>import {UiQuery} from "teamapps-client-communication";<endif>
+<if(c.hasQueries)>import {DtoQuery} from "teamapps-client-communication";<endif>
 
-export interface <c.typeScriptIdentifier> <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
+export interface Dto<c.typeScriptIdentifier> <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|Dto<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
 	_type?: string;
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
 	<c.queryDeclaration:queryDeclaration(); separator=";\n">
 }
 
 <if(c.referencableBaseClass)>
-export interface <c.Identifier>Reference {
+export interface Dto<c.Identifier>Reference {
 	<c.referencableProperties:typeScriptPropertyDeclaration(true); separator="\n">
 }
 <endif>
 
 <if(c.hasCommands)>
-export interface <c.Identifier.text>CommandHandler <if(c.superInterfacesWithCommands)>extends <c.superInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
+export interface Dto<c.Identifier.text>CommandHandler <if(c.superInterfacesWithCommands)>extends <c.superInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
 	<c.nonStaticCommandDeclarations:commandMethodStub(); separator="\n">
 }
 <endif>
 
 <if(c.hasEvents)>
-export interface <c.Identifier>EventSource <if(c.superInterfacesWithEvents)>extends <c.superInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
+export interface Dto<c.Identifier>EventSource <if(c.superInterfacesWithEvents)>extends <c.superInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
 	<c.eventDeclaration:teamAppsEventDeclaration(); separator="\n">
 }
 <endif>
@@ -149,7 +149,7 @@ queryDeclaration(q) ::= <<
 
 enum(e) ::= <<
 <typeScriptFilePrelude()>
-export enum <e.Identifier> {
+export enum Dto<e.Identifier> {
 	<if(e.hasStringValues)>
 	<e.enumConstant:{ec|<ec.Identifier> = <ec.StringLiteral>}; separator=", ">
 	<else>
@@ -163,7 +163,7 @@ eventNamesObject(c, static) ::= <<
 >>
 
 indexTs(classes, interfaces, enums) ::= <<
-<interfaces:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
-<classes:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
-<enums:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
+<interfaces:{c|export * from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
+<classes:{c|export * from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
+<enums:{c|export * from "./Dto<c.typeScriptIdentifier>";}; separator="\n">
 >>

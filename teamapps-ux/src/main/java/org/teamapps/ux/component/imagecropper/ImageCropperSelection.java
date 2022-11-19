@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.imagecropper;
 
-import org.teamapps.dto.UiImageCropperSelection;
+import org.teamapps.dto.DtoImageCropperSelection;
 
 public class ImageCropperSelection {
 
@@ -35,8 +35,8 @@ public class ImageCropperSelection {
 		this.height = height;
 	}
 
-	public UiImageCropperSelection createUiImageCropperSelection() {
-		return new UiImageCropperSelection(left, top, width, height);
+	public DtoImageCropperSelection createUiImageCropperSelection() {
+		return new DtoImageCropperSelection(left, top, width, height);
 	}
 
 	public int getLeft() {

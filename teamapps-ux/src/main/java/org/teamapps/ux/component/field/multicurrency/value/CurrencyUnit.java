@@ -21,7 +21,7 @@ package org.teamapps.ux.component.field.multicurrency.value;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiCurrencyUnit;
+import org.teamapps.dto.DtoCurrencyUnit;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -85,8 +85,8 @@ public interface CurrencyUnit {
 		return getCurrencyName(locale);
 	}
 
-	default UiCurrencyUnit toUiCurrencyUnit(Locale locale) {
-		UiCurrencyUnit uiCurrencyUnit = new UiCurrencyUnit();
+	default DtoCurrencyUnit toUiCurrencyUnit(Locale locale) {
+		DtoCurrencyUnit uiCurrencyUnit = new DtoCurrencyUnit();
 		uiCurrencyUnit.setCode(getCode());
 		uiCurrencyUnit.setFractionDigits(getFractionDigits());
 		uiCurrencyUnit.setName(getName(locale));

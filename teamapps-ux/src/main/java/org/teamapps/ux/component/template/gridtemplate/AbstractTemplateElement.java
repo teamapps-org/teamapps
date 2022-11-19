@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.AbstractUiTemplateElement;
+import org.teamapps.dto.DtoAbstractTemplateElement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
@@ -140,7 +140,7 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 		return this;
 	}
 
-	public abstract AbstractUiTemplateElement createUiTemplateElement();
+	public abstract DtoAbstractTemplateElement createUiTemplateElement();
 
 	public Color getBackgroundColor() {
 		return backgroundColor;
@@ -151,7 +151,7 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 		return this;
 	}
 
-	protected void mapAbstractTemplateElementAttributesToUiElement(AbstractUiTemplateElement uiElement) {
+	protected void mapAbstractTemplateElementAttributesToUiElement(DtoAbstractTemplateElement uiElement) {
 		uiElement.setRowSpan(rowSpan);
 		uiElement.setColSpan(colSpan);
 		uiElement.setHorizontalAlignment(horizontalAlignment.toUiHorizontalElementAlignment());

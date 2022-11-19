@@ -19,7 +19,6 @@
  */
 package org.teamapps.dsl.generate;
 
-import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
@@ -34,8 +33,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TeamAppsIntermediateDtoModel {
-
-	public static final Set<String> IMPLICITELY_REFERENCABLE_CLASSES = Sets.newHashSet("UiEvent", "UiCommand", "UiQuery");
 
 	private final List<ClassDeclarationContext> classDeclarations = new ArrayList<>();
 	private final List<InterfaceDeclarationContext> interfaceDeclarations = new ArrayList<>();
@@ -790,9 +787,14 @@ public class TeamAppsIntermediateDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public boolean isReferenceToJsonAware(TeamAppsDtoParser.TypeContext typeContext) {
+	public boolean isDtoClassOrInterface(TeamAppsDtoParser.TypeContext typeContext) {
+		return findReferencedClass(typeContext) != null
+				|| findReferencedInterface(typeContext) != null;
+	}
+
+	public boolean isDtoType(TeamAppsDtoParser.TypeContext typeContext) {
 		return findReferencedClass(typeContext) != null
 				|| findReferencedInterface(typeContext) != null
-				|| IMPLICITELY_REFERENCABLE_CLASSES.contains(typeContext.getText());
+				|| findReferencedEnum(typeContext) != null;
 	}
 }

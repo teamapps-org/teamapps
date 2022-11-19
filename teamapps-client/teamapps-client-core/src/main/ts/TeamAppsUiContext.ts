@@ -17,30 +17,30 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiClientObjectConfig, UiComponentConfig, UiConfiguration} from "./generated";
-import {UiCommand, UiEvent} from "teamapps-client-communication";
+import {DtoClientObject as DtoClientObjectConfig, DtoComponent as DtoComponentConfig, DtoConfiguration} from "./generated";
+import {DtoCommand, DtoEvent} from "teamapps-client-communication";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiClientObject} from "./UiClientObject";
+import {ClientObject} from "./ClientObject";
 
 export interface TeamAppsUiContext {
 	readonly sessionId: string;
 	readonly isHighDensityScreen: boolean;
-	readonly config: UiConfiguration;
+	readonly config: DtoConfiguration;
 
-	getClientObjectById(id: string): Promise<UiClientObject>;
+	getClientObjectById(id: string): Promise<ClientObject>;
 }
 
 // TeamAppsUiContext implementations should implement this too. See usages.
 export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
-	readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand>;
+	readonly onStaticMethodCommandInvocation: TeamAppsEvent<DtoCommand>;
 
-	renderClientObject(libraryUuid: string, config: UiClientObjectConfig): Promise<UiClientObject>;
+	renderClientObject(libraryUuid: string, config: DtoClientObjectConfig): Promise<ClientObject>;
 
-	refreshComponent(libraryUuid: string, config: UiComponentConfig): void;
+	refreshComponent(libraryUuid: string, config: DtoComponentConfig): void;
 
 	destroyClientObject(componentId: string);
 
-	sendEvent(eventObject: UiEvent): void;
+	sendEvent(eventObject: DtoEvent): void;
 
 	toggleEventListener(libraryUuid: string | null, clientObjectId: string | null, qualifiedEventName: string, enabled: boolean): any;
 

@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.media;
 
-import org.teamapps.dto.UiPosterImageSize;
+import org.teamapps.dto.DtoPosterImageSize;
 
 public enum PosterImageSize {
 
 	CONTAIN, COVER, FILL;
 
-	public UiPosterImageSize toUiPosterImageSize() {
-		return UiPosterImageSize.valueOf(this.name());
+	public DtoPosterImageSize toUiPosterImageSize() {
+		return DtoPosterImageSize.valueOf(this.name());
 	}
 
 }

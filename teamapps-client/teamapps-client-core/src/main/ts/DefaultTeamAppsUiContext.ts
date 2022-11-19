@@ -21,38 +21,40 @@
 
 import {capitalizeFirstLetter, generateUUID} from "./util/string-util";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {UiClientObjectConfig, UiComponentConfig, UiConfiguration, UiGenericErrorMessageOption} from "./generated";
+import {DtoClientObject as DtoClientObjectConfig, DtoComponent as DtoComponentConfig, DtoConfiguration, DtoGenericErrorMessageOption} from "./generated";
 import {
-	createUiClientInfo,
+	createDtoClientInfo,
 	TeamAppsConnection,
 	TeamAppsConnectionImpl,
 	TeamAppsConnectionListener,
-	UiCommand,
-	UiEvent,
-	UiQuery,
-	UiSessionClosingReason
+	DtoCommand,
+	DtoEvent,
+	DtoQuery,
+	DtoSessionClosingReason
 } from "teamapps-client-communication";
 import * as jstz from "jstz";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {bind} from "./util/bind";
 import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from "./proxy/RefreshableComponentProxyHandle";
-import {UiComponent} from "./component/UiComponent";
-import {UiClientObject} from "./UiClientObject";
+import {Component} from "./component/Component";
+import {ClientObject} from "./ClientObject";
 import {Showable} from "./util/Showable";
-import {UiGlobals} from "./UiGlobals";
+import {Globals} from "./Globals";
 import {logException} from "./util/exception-util";
 import {createUiLocation} from "./util/location";
+import {AbstractUiWebComponent} from "./component/AbstractUiWebComponent";
+import {AbstractUiComponent} from "./component/AbstractUiComponent";
 
-type ClientObjectClass<T extends UiClientObject = UiClientObject> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
+type ClientObjectClass<T extends ClientObject = ClientObject> = { new(config: DtoComponentConfig, context: TeamAppsUiContext): T };
 
 
 
-function isClassicComponent(o: UiClientObject): o is UiComponent {
+function isClassicComponent(o: ClientObject): o is AbstractUiComponent {
 	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE !== 1;
 }
 
-function isWebComponent(o: UiClientObject): o is UiComponent {
+function isWebComponent(o: ClientObject): o is AbstractUiWebComponent {
 	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE === 1;
 }
 
@@ -64,7 +66,7 @@ class ClientObjectClassWrapper {
 		this.clazz = clazz;
 	}
 
-	toggleEventListener(qualifiedEventName: string, listener?: (x: UiEvent) => void) {
+	toggleEventListener(qualifiedEventName: string, listener?: (x: DtoEvent) => void) {
 		const eventName = capitalizeFirstLetter(qualifiedEventName.substring(qualifiedEventName.indexOf('.') + 1));
 		const event = this.clazz["on" + eventName];
 		const oldListener = this.eventListeners[qualifiedEventName];
@@ -82,11 +84,11 @@ class ClientObjectClassWrapper {
 }
 
 class ClientObjectWrapper {
-	clientObject: UiClientObject | RefreshableComponentProxyHandle;
+	clientObject: ClientObject | RefreshableComponentProxyHandle;
 	eventListeners: { [qualifiedName: string]: (any) => void } = {};
 	queryListeners: { [qualifiedName: string]: (any) => void } = {};
 
-	constructor(component: UiClientObject | RefreshableComponentProxyHandle) {
+	constructor(component: ClientObject | RefreshableComponentProxyHandle) {
 		this.clientObject = component;
 	}
 
@@ -94,7 +96,7 @@ class ClientObjectWrapper {
 		return isRefreshableComponentProxyHandle(this.clientObject) ? this.clientObject.proxy : this.clientObject
 	}
 
-	toggleEventListener(qualifiedEventName: string, listener?: (x: UiEvent) => void) {
+	toggleEventListener(qualifiedEventName: string, listener?: (x: DtoEvent) => void) {
 		const eventName = capitalizeFirstLetter(qualifiedEventName.substring(qualifiedEventName.indexOf('.') + 1));
 		const event = this.getUnwrappedComponent()["on" + eventName];
 		const oldListener = this.eventListeners[qualifiedEventName];
@@ -112,10 +114,10 @@ class ClientObjectWrapper {
 }
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
-	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand> = new TeamAppsEvent();
+	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<DtoCommand> = new TeamAppsEvent();
 	public readonly sessionId: string;
 	public isHighDensityScreen: boolean;
-	public config: UiConfiguration = {
+	public config: DtoConfiguration = {
 		_type: "UiConfiguration",
 		locale: "en",
 		themeClassName: null,
@@ -135,7 +137,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string } = {}) {
 		this.sessionId = generateUUID();
 
-		let clientInfo = createUiClientInfo({
+		let clientInfo = createDtoClientInfo({
 			viewPortWidth: window.innerWidth,
 			viewPortHeight: window.innerHeight,
 			screenWidth: window.screen.width,
@@ -143,7 +145,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			highDensityScreen: this.isHighDensityScreen,
 			timezoneOffsetMinutes: new Date().getTimezoneOffset(),
 			timezoneIana: jstz.determine().name(),
-			clientTokens: UiGlobals.getClientTokens(),
+			clientTokens: Globals.getClientTokens(),
 			location: createUiLocation(),
 			clientParameters: clientParameters,
 			teamAppsVersion: '__TEAMAPPS_VERSION__'
@@ -155,37 +157,37 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			onConnectionErrorOrBroken: (reason, message) => {
 				console.error(`Connection broken. ${message != null ? 'Message: ' + message : ""}`);
 				sessionStorage.clear();
-				if (reason == UiSessionClosingReason.WRONG_TEAMAPPS_VERSION) {
+				if (reason == DtoSessionClosingReason.WRONG_TEAMAPPS_VERSION) {
 					// NOTE that there is a special handling for wrong teamapps client versions on the server side, which sends the client a goToUrl() command for a page with a cache-prevention GET parameter.
 					// This is only in case the server-side logic does not work.
 					document.body.innerHTML = `<div class="centered-body-text">
 						<h3>Caching problem!</h3>
 						<p>Your browser uses an old client version to connect to our server. Please <a onclick="location.reload()">refresh this page</a>. If this does not help, please clear your browser's cache.</p>
 					<div>`;
-				} else if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT) {
+				} else if (reason == DtoSessionClosingReason.SESSION_NOT_FOUND || reason == DtoSessionClosingReason.SESSION_TIMEOUT) {
 					if (this.expiredMessageWindow != null) {
 						this.expiredMessageWindow.show(500);
 					} else {
-						UiGlobals.createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+						Globals.createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
+							false, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD], this).show(500);
 					}
-				} else if (reason == UiSessionClosingReason.TERMINATED_BY_APPLICATION) {
+				} else if (reason == DtoSessionClosingReason.TERMINATED_BY_APPLICATION) {
 					if (this.terminatedMessageWindow != null) {
 						this.terminatedMessageWindow.show(500);
 					} else {
-						UiGlobals.createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+						Globals.createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
+							true, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD], this).show(500);
 					}
 				} else {
 					if (this.errorMessageWindow != null) {
 						this.errorMessageWindow.show(500);
 					} else {
-						UiGlobals.createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+						Globals.createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
+							true, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD], this).show(500);
 					}
 				}
 			},
-			executeCommand: (libraryUuid: string, clientObjectId: string, uiCommand: UiCommand) => this.executeCommand(libraryUuid, clientObjectId, uiCommand)
+			executeCommand: (libraryUuid: string, clientObjectId: string, uiCommand: DtoCommand) => this.executeCommand(libraryUuid, clientObjectId, uiCommand)
 		};
 
 		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
@@ -203,22 +205,22 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	}
 
 	@bind
-	public sendEvent(eventObject: UiEvent) {
+	public sendEvent(eventObject: DtoEvent) {
 		this.connection.sendEvent(eventObject);
 	}
 
 	@bind
-	public async sendQuery(query: UiQuery): Promise<any> {
+	public async sendQuery(query: DtoQuery): Promise<any> {
 		let result = await this.connection.sendQuery(query);
 		let resultWrapper = [result];
 		resultWrapper = await this.replaceComponentReferencesWithInstances(resultWrapper)
 		return resultWrapper[0];
 	}
 
-	private async registerClientObject(clientObjectPromise: Promise<UiClientObject>, id: string, teamappsType: string, listeningEvents: string[], listeningQueries: string[]) {
+	private async registerClientObject(clientObjectPromise: Promise<ClientObject>, id: string, teamappsType: string, listeningEvents: string[], listeningQueries: string[]) {
 		console.debug("registering ClientObject: ", id);
 
-		const getClientComponentWrapper = async (clientObjectPromise: Promise<UiClientObject>) => {
+		const getClientComponentWrapper = async (clientObjectPromise: Promise<ClientObject>) => {
 			let clientObject = await clientObjectPromise;
 			if (isClassicComponent(clientObject)) {
 				return new ClientObjectWrapper(new RefreshableComponentProxyHandle(clientObject));
@@ -261,19 +263,19 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	public async renderClientObject(libraryUuid: string, config: UiClientObjectConfig) {
+	public async renderClientObject(libraryUuid: string, config: DtoClientObjectConfig) {
 		console.debug("rendering ClientObject: ", config._type, config.id, libraryUuid, config);
 		let promise = this.createClientObject(libraryUuid, config);
 		await this.registerClientObject(promise, config.id, config._type, config.listeningEvents, config.listeningQueries);
 		return await promise;
 	}
 
-	public async createClientObject(libraryUuid: string, config: UiClientObjectConfig): Promise<UiClientObject> {
+	public async createClientObject(libraryUuid: string, config: DtoClientObjectConfig): Promise<ClientObject> {
 		let componentClass = await this.getClientObjectClass(libraryUuid, config._type);
 		if (componentClass) {
 			
 			((config as any)._queries ?? []).forEach(queryName => {
-				(config as any)[queryName] = (queryObject: UiQuery) => this.sendQuery({...queryObject, _type: config._type + "." + queryName, componentId: config.id});
+				(config as any)[queryName] = (queryObject: DtoQuery) => this.sendQuery({...queryObject, _type: config._type + "." + queryName, componentId: config.id});
 			});
 			delete (config as any)._queries;
 
@@ -281,7 +283,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			if (isWebComponent) {
 				let webComponent = document.createElement('ui-div');
 				(webComponent as any).setConfig(config);
-				return webComponent as unknown as UiComponent;
+				return webComponent as unknown as Component;
 			} else {
 				return new (await componentClass).clazz(config, this);
 			}
@@ -291,8 +293,8 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	async refreshComponent(libraryUuid: string, config: UiComponentConfig) {
-		let clientObject = (await this.createClientObject(libraryUuid, config)) as UiComponent;
+	async refreshComponent(libraryUuid: string, config: DtoComponentConfig) {
+		let clientObject = (await this.createClientObject(libraryUuid, config)) as Component;
 		if (this.components[config.id] != null) {
 			(this.components[config.id].clientObject as RefreshableComponentProxyHandle).component = clientObject;
 		} else {
@@ -316,7 +318,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	public async getClientObjectById(id: string): Promise<UiClientObject> {
+	public async getClientObjectById(id: string): Promise<ClientObject> {
 		let promise = this.components.get(id);
 		if (promise == null) {
 			console.error(`Cannot find component with id ${id}`);
@@ -364,7 +366,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		return o;
 	}
 
-	private async executeCommand(libraryUuid: string | null, clientObjectId: string | null, command: UiCommand): Promise<any> {
+	private async executeCommand(libraryUuid: string | null, clientObjectId: string | null, command: DtoCommand): Promise<any> {
 		try {
 			command = await this.replaceComponentReferencesWithInstances(command);
 			this._executingCommand = true;

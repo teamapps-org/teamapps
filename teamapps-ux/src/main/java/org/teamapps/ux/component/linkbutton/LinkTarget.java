@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.linkbutton;
 
-import org.teamapps.dto.UiLinkTarget;
+import org.teamapps.dto.DtoLinkTarget;
 
 public enum LinkTarget {
 	SELF, BLANK, PARENT, TOP;
 
-	public UiLinkTarget toUiLinkTarget() {
-		return UiLinkTarget.valueOf(name());
+	public DtoLinkTarget toUiLinkTarget() {
+		return DtoLinkTarget.valueOf(name());
 	}
 }

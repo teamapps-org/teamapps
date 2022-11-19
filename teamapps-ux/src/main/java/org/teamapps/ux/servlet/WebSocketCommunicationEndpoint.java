@@ -127,16 +127,16 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 			totalReceiveCount.addAndGet(payload.length());
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
-				AbstractClientMessageWrapper clientMessage = new AbstractClientMessageWrapper(mapper.readTree(payload));
+				DtoAbstractClientMessageWrapper clientMessage = new DtoAbstractClientMessageWrapper(mapper.readTree(payload));
 
 				String uiSessionId = clientMessage.getSessionId();
 
 				switch (clientMessage.getTypeId()) {
-					case INIT.TYPE_ID -> {
+					case DtoINIT.TYPE_ID -> {
 						ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
-						INITWrapper init = clientMessage.as(INITWrapper.class);
+						DtoINITWrapper init = clientMessage.as(DtoINITWrapper.class);
 
-						UiClientInfoWrapper uiClientInfo = init.getClientInfo();
+						DtoClientInfoWrapper uiClientInfo = init.getClientInfo();
 						var clientInfo = new ClientInfo(
 								serverSideClientInfo.getIp(),
 								uiClientInfo.getScreenWidth(),
@@ -162,49 +162,49 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 								new MessageSenderImpl()
 						);
 					}
-					case REINIT.TYPE_ID -> {
-						REINITWrapper reinit = clientMessage.as(REINITWrapper.class);
+					case DtoREINIT.TYPE_ID -> {
+						DtoREINITWrapper reinit = clientMessage.as(DtoREINITWrapper.class);
 						getUiSession(uiSessionId).ifPresentOrElse(uiSession -> {
 							uiSession.reinit(reinit.getLastReceivedCommandId(), reinit.getMaxRequestedCommandId(), new MessageSenderImpl());
 						}, () -> {
 							LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + uiSessionId);
-							send(new REINIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null, null);
+							send(new DtoREINIT_NOK(DtoSessionClosingReason.SESSION_NOT_FOUND), null, null);
 						});
 					}
-					case TERMINATE.TYPE_ID -> {
-						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.close(UiSessionClosingReason.TERMINATED_BY_CLIENT));
+					case DtoTERMINATE.TYPE_ID -> {
+						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.close(DtoSessionClosingReason.TERMINATED_BY_CLIENT));
 					}
-					case EVENT.TYPE_ID -> {
-						EVENTWrapper eventMessage = clientMessage.as(EVENTWrapper.class);
+					case DtoEVT.TYPE_ID -> {
+						DtoEVENTWrapper eventMessage = clientMessage.as(DtoEVENTWrapper.class);
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent()));
 					}
-					case QUERY.TYPE_ID -> {
-						QUERYWrapper queryMessage = clientMessage.as(QUERYWrapper.class);
+					case DtoQRY.TYPE_ID -> {
+						DtoQUERYWrapper queryMessage = clientMessage.as(DtoQUERYWrapper.class);
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery()));
 					}
-					case CMD_RESULT.TYPE_ID -> {
-						CMD_RESULTWrapper cmdResult = clientMessage.as(CMD_RESULTWrapper.class);
+					case DtoCMD_RES.TYPE_ID -> {
+						DtoCMD_RESULTWrapper cmdResult = clientMessage.as(DtoCMD_RESULTWrapper.class);
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult()));
 					}
-					case CMD_REQUEST.TYPE_ID -> {
-						CMD_REQUESTWrapper cmdRequest = clientMessage.as(CMD_REQUESTWrapper.class);
+					case DtoCMD_REQ.TYPE_ID -> {
+						DtoCMD_REQUESTWrapper cmdRequest = clientMessage.as(DtoCMD_REQUESTWrapper.class);
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId()));
 					}
-					case KEEPALIVE.TYPE_ID -> {
+					case DtoKEEPALIVE.TYPE_ID -> {
 						getUiSession(uiSessionId).ifPresent(UiSession::handleKeepAlive);
 					}
 					default -> throw new TeamAppsCommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
 				}
 			} catch (TeamAppsSessionNotFoundException e) {
 				LOGGER.warn("TeamApps session not found: " + e.getSessionId());
-				send(new SESSION_CLOSED(UiSessionClosingReason.SESSION_NOT_FOUND).setMessage(e.getMessage()), this::close, (t) -> close());
+				send(new DtoSESSION_CLOSED(DtoSessionClosingReason.SESSION_NOT_FOUND).setMessage(e.getMessage()), this::close, (t) -> close());
 			} catch (Exception e) {
 				LOGGER.error("Exception while processing client message!", e);
-				send(new SESSION_CLOSED(UiSessionClosingReason.SERVER_SIDE_ERROR).setMessage(e.getMessage()), this::close, (t) -> close());
+				send(new DtoSESSION_CLOSED(DtoSessionClosingReason.SERVER_SIDE_ERROR).setMessage(e.getMessage()), this::close, (t) -> close());
 			}
 		}
 
-		private void send(AbstractServerMessage message, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
+		private void send(DtoAbstractServerMessage message, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
 			if (this.closed) {
 				sendingErrorHandler.onErrorWhileSending(new TeamAppsCommunicationException("Connection closed!"));
 				return;
@@ -253,14 +253,14 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 
 		private class MessageSenderImpl implements MessageSender {
 			@Override
-			public void sendMessageAsynchronously(AbstractServerMessage msg, SendingErrorHandler sendingErrorHandler) {
+			public void sendMessageAsynchronously(DtoAbstractServerMessage msg, SendingErrorHandler sendingErrorHandler) {
 				send(msg, null, sendingErrorHandler);
 			}
 
 			@Override
-			public void close(UiSessionClosingReason closingReason, String message) {
+			public void close(DtoSessionClosingReason closingReason, String message) {
 				send(
-						new SESSION_CLOSED(closingReason).setMessage(message),
+						new DtoSESSION_CLOSED(closingReason).setMessage(message),
 						() -> jettyWorkaroundCloseExecutor.execute(WebSocketHandler.this::close),
 						(t) -> jettyWorkaroundCloseExecutor.execute(() -> WebSocketHandler.this.close())
 				);

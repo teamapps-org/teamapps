@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.format;
 
-import org.teamapps.dto.UiTextAlignment;
+import org.teamapps.dto.DtoTextAlignment;
 
 public enum TextAlignment {
 
@@ -28,7 +28,7 @@ public enum TextAlignment {
 	RIGHT,
 	JUSTIFY;
 
-	public UiTextAlignment toUiTextAlignment() {
-		return UiTextAlignment.valueOf(this.toString());
+	public DtoTextAlignment toUiTextAlignment() {
+		return DtoTextAlignment.valueOf(this.toString());
 	}
 }

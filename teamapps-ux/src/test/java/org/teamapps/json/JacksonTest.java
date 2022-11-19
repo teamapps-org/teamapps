@@ -30,7 +30,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.assertj.core.api.Assertions;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.teamapps.dto.UiCommand;
+import org.teamapps.dto.DtoCommand;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -102,7 +102,7 @@ public class JacksonTest {
 
 		long startTime;
 		JsonNode[] jsonNodes = new JsonNode[1024];
-		UiCommand[] uiCommands = new UiCommand[1024];
+		DtoCommand[] uiCommands = new DtoCommand[1024];
 
 		for (int j = 0; j < 5; j++) {
 			startTime = System.currentTimeMillis();
@@ -113,7 +113,7 @@ public class JacksonTest {
 
 			startTime = System.currentTimeMillis();
 			for (int i = 0; i < 1_000; i++) {
-				uiCommands[i % 1024] = mapper.readValue(json, UiCommand.class);
+				uiCommands[i % 1024] = mapper.readValue(json, DtoCommand.class);
 			}
 			System.out.println("Jackson data binding: " + (System.currentTimeMillis() - startTime));
 		}

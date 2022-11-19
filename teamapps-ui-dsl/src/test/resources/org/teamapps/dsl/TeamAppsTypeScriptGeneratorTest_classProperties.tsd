@@ -4,7 +4,7 @@
  */
 
 
-export interface A {
+export interface DtoA {
 	_type?: string;
 	a: string;
 	b?: string;

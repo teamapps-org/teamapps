@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.AbstractUiTemplateElement;
-import org.teamapps.dto.UiBadgeElement;
+import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoBadgeElement;
 import org.teamapps.ux.component.format.FontStyle;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.Spacing;
@@ -73,8 +73,8 @@ public class BadgeElement extends TextElement {
 	}
 
 	@Override
-	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiBadgeElement uiBadgeElement = new UiBadgeElement(propertyName, row, column);
+	public DtoAbstractTemplateElement createUiTemplateElement() {
+		DtoBadgeElement uiBadgeElement = new DtoBadgeElement(propertyName, row, column);
 		mapAbstractTemplateElementAttributesToUiElement(uiBadgeElement);
 		mapTextElementAttributesToUiElement(uiBadgeElement);
 		uiBadgeElement.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);

@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.charting;
 
-import org.teamapps.dto.UiDataPointWeighting;
+import org.teamapps.dto.DtoDataPointWeighting;
 
 public enum DataPointWeighting {
 
 	RELATIVE, ABSOLUTE;
 
-	public UiDataPointWeighting toUiDataPointWeighting() {
-		return UiDataPointWeighting.valueOf(name());
+	public DtoDataPointWeighting toUiDataPointWeighting() {
+		return DtoDataPointWeighting.valueOf(name());
 	}
 
 }

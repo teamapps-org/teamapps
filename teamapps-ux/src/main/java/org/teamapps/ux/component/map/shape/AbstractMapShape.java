@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.map.shape;
 
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.AbstractUiMapShape;
-import org.teamapps.dto.AbstractUiMapShapeChange;
+import org.teamapps.dto.DtoAbstractMapShape;
+import org.teamapps.dto.DtoAbstractMapShapeChange;
 
 import java.util.UUID;
 
@@ -40,9 +40,9 @@ public abstract class AbstractMapShape {
 		this.properties = properties;
 	}
 
-	public abstract AbstractUiMapShape createUiMapShape();
+	public abstract DtoAbstractMapShape createUiMapShape();
 
-	protected void mapAbstractUiShapeProperties(AbstractUiMapShape uiShape) {
+	protected void mapAbstractUiShapeProperties(DtoAbstractMapShape uiShape) {
 		uiShape.setShapeProperties(properties.createUiShapeProperties());
 	}
 
@@ -70,7 +70,7 @@ public abstract class AbstractMapShape {
 	public interface MapShapeListener {
 		void handleShapeChanged(AbstractMapShape shape);
 
-		void handleShapeChanged(AbstractMapShape shape, AbstractUiMapShapeChange change);
+		void handleShapeChanged(AbstractMapShape shape, DtoAbstractMapShapeChange change);
 
 		void handleShapeRemoved(AbstractMapShape shape);
 	}

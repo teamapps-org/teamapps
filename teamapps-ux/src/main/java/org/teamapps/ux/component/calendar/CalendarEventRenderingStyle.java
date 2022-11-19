@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.calendar;
 
-import org.teamapps.dto.UiCalendarEventRenderingStyle;
+import org.teamapps.dto.DtoCalendarEventRenderingStyle;
 
 public enum CalendarEventRenderingStyle { // see http://fullcalendar.io/docs/event_rendering/Background_Events/
 	/**
@@ -35,7 +35,7 @@ public enum CalendarEventRenderingStyle { // see http://fullcalendar.io/docs/eve
 	 */
 	INVERSE_BACKGROUND;
 
-	public UiCalendarEventRenderingStyle toUiCalendarEventRenderingStyle() {
-		return UiCalendarEventRenderingStyle.valueOf(this.name());
+	public DtoCalendarEventRenderingStyle toUiCalendarEventRenderingStyle() {
+		return DtoCalendarEventRenderingStyle.valueOf(this.name());
 	}
 }

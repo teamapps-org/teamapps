@@ -21,9 +21,9 @@ package org.teamapps.ux.component.field.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiComboBox;
-import org.teamapps.dto.UiComboBoxTreeRecord;
-import org.teamapps.dto.UiField;
+import org.teamapps.dto.DtoComboBox;
+import org.teamapps.dto.DtoComboBoxTreeRecord;
+import org.teamapps.dto.DtoField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -101,8 +101,8 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiComboBox comboBox = new UiComboBox();
+	public DtoField createUiClientObject() {
+		DtoComboBox comboBox = new DtoComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		return comboBox;
 	}
@@ -144,7 +144,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 		if (record == null) {
 			return null;
 		}
-		CacheManipulationHandle<UiComboBoxTreeRecord> handle = recordCache.addRecord(record);
+		CacheManipulationHandle<DtoComboBoxTreeRecord> handle = recordCache.addRecord(record);
 		handle.commit(); // directly committing only works because client-side changes are blocked during server-side changes
 		return handle.getAndClearResult();
 	}

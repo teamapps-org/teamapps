@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.media;
 
-import org.teamapps.dto.UiMediaPreloadMode;
+import org.teamapps.dto.DtoMediaPreloadMode;
 
 public enum  PreloadMode {
 	/**
@@ -39,7 +39,7 @@ public enum  PreloadMode {
 	 */
 	AUTO;
 
-	public UiMediaPreloadMode toUiPreloadMode() {
-		return UiMediaPreloadMode.valueOf(this.name());
+	public DtoMediaPreloadMode toUiPreloadMode() {
+		return DtoMediaPreloadMode.valueOf(this.name());
 	}
 }

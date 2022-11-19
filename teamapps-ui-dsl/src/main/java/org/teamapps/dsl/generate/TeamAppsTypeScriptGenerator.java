@@ -89,7 +89,7 @@ public class TeamAppsTypeScriptGenerator {
                 System.out.println("Skipping @NotGenerated enum: " + enumContext.Identifier());
                 continue;
             }
-            generateEnum(enumContext, new FileWriter(new File(parentDir, enumContext.Identifier() + ".ts")));
+            generateEnum(enumContext, new FileWriter(new File(parentDir, "Dto" + enumContext.Identifier() + ".ts")));
         }
         for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getOwnInterfaceDeclarations()) {
             if (interfaceContext.notGeneratedAnnotation() != null) {
@@ -98,7 +98,7 @@ public class TeamAppsTypeScriptGenerator {
             }
             logger.info("Generating typescript definitions for interface: " + interfaceContext.Identifier());
             System.out.println("Generating typescript definitions for interface: " + interfaceContext.Identifier());
-            generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, interfaceContext.Identifier() + (interfaceContext.managedModifier() != null ? "Config": "") + ".ts")));
+            generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, "Dto" + interfaceContext.Identifier() + ".ts")));
         }
         for (TeamAppsDtoParser.ClassDeclarationContext classContext : model.getOwnClassDeclarations()) {
             if (classContext.notGeneratedAnnotation() != null) {
@@ -106,17 +106,17 @@ public class TeamAppsTypeScriptGenerator {
                 continue;
             }
             logger.info("Generating typescript definitions for class: " + classContext.Identifier());
-            generateClassDefinition(classContext, new FileWriter(new File(parentDir, classContext.Identifier() + (classContext.managedModifier() != null ? "Config": "") + ".ts")));
+            generateClassDefinition(classContext, new FileWriter(new File(parentDir, "Dto" + classContext.Identifier() + ".ts")));
         }
 
-        generateIndexTs(model, new FileWriter(new File(parentDir, "index.ts")));
+        generateIndexTs(new FileWriter(new File(parentDir, "index.ts")));
     }
 
-    private void generateIndexTs(TeamAppsIntermediateDtoModel model, Writer writer) throws IOException {
+    private void generateIndexTs(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("indexTs")
-                .add("classes", model.getClassDeclarations().stream().filter(c -> c.notGeneratedAnnotation() == null).collect(Collectors.toList()))
-                .add("interfaces", model.getEnumDeclarations())
-                .add("enums", model.getInterfaceDeclarations().stream().filter(c -> c.notGeneratedAnnotation() == null).collect(Collectors.toList()));
+                .add("classes", model.getOwnClassDeclarations().stream().filter(c -> c.notGeneratedAnnotation() == null).collect(Collectors.toList()))
+                .add("interfaces", model.getOwnInterfaceDeclarations().stream().filter(c -> c.notGeneratedAnnotation() == null).collect(Collectors.toList()))
+                .add("enums", model.getOwnEnumDeclarations().stream().filter(e -> e.notGeneratedAnnotation() == null).collect(Collectors.toList()));
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();

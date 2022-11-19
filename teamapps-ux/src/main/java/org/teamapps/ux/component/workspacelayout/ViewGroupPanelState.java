@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.dto.UiViewGroupPanelState;
+import org.teamapps.dto.DtoViewGroupPanelState;
 
 public enum ViewGroupPanelState {
 	NORMAL, MAXIMIZED, MINIMIZED;
 
-	public UiViewGroupPanelState toUiViewGroupPanelState() {
-		return UiViewGroupPanelState.valueOf(this.name());
+	public DtoViewGroupPanelState toUiViewGroupPanelState() {
+		return DtoViewGroupPanelState.valueOf(this.name());
 	}
 }

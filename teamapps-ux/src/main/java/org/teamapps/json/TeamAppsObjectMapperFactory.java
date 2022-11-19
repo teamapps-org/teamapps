@@ -36,7 +36,7 @@ public class TeamAppsObjectMapperFactory {
 		objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
 		objectMapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
 
-		objectMapper.registerSubtypes(INIT.class, TERMINATE.class, CMD_RESULT.class, QUERY.class, EVENT.class, REINIT.class, CMD_REQUEST.class, KEEPALIVE.class);
+		objectMapper.registerSubtypes(DtoINIT.class, DtoTERMINATE.class, DtoCMD_RESULT.class, DtoQRY.class, DtoEVT.class, DtoREINIT.class, DtoCMD_REQUEST.class, DtoKEEPALIVE.class);
 
 		return objectMapper;
 	}

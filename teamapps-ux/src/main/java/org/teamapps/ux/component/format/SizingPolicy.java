@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.format;
 
-import org.teamapps.dto.UiSizeType;
-import org.teamapps.dto.UiSizingPolicy;
+import org.teamapps.dto.DtoSizeType;
+import org.teamapps.dto.DtoSizingPolicy;
 
 public class SizingPolicy {
 
@@ -54,8 +54,8 @@ public class SizingPolicy {
 		return minAbsoluteSize;
 	}
 
-	public UiSizingPolicy createUiSizingPolicy() {
-		return new UiSizingPolicy(UiSizeType.valueOf(type.toString()))
+	public DtoSizingPolicy createUiSizingPolicy() {
+		return new DtoSizingPolicy(DtoSizeType.valueOf(type.toString()))
 				.setValue(value)
 				.setMinAbsoluteSize(minAbsoluteSize);
 	}

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.documentviewer;
 
-import org.teamapps.dto.UiPageDisplayMode;
+import org.teamapps.dto.DtoPageDisplayMode;
 
 public enum PageDisplayMode {
 
@@ -29,8 +29,8 @@ public enum PageDisplayMode {
 	COVER,
 	ORIGINAL_SIZE;
 
-	public UiPageDisplayMode toUiPageDisplayMode() {
-		return UiPageDisplayMode.valueOf(this.name());
+	public DtoPageDisplayMode toUiPageDisplayMode() {
+		return DtoPageDisplayMode.valueOf(this.name());
 	}
 
 }

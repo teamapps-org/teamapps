@@ -17,16 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {DtoComponent as DtoComponentConfig} from "../generated/DtoComponent";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {generateUUID} from "../util/string-util";
 import {debounce, DebounceMode} from "../util/debounce";
 import {DeferredExecutor} from "../util/DeferredExecutor";
-import {UiComponent} from "./UiComponent";
+import {Component} from "./Component";
 import {StyleManager} from "../util/StyleManager";
 
-export abstract class AbstractUiComponent<C extends UiComponentConfig = UiComponentConfig> implements UiComponent<C> {
+export abstract class AbstractUiComponent<C extends DtoComponentConfig = DtoComponentConfig> implements Component<C> {
 
 	public readonly onVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 	public readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();

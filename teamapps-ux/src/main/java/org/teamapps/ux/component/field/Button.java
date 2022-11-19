@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiButton;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiField;
+import org.teamapps.dto.DtoButton;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
@@ -38,8 +38,8 @@ import org.teamapps.ux.data.extraction.PropertyProvider;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Button<RECORD> extends AbstractField<Void> {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiButton.ClickedEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(UiButton.DropDownOpenedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoButton.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(DtoButton.DropDownOpenedEvent.TYPE_ID);
 
 	private Template template; // null: toString!
 	private RECORD templateRecord;
@@ -92,9 +92,9 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	@Override
-	public UiField createUiClientObject() {
+	public DtoField createUiClientObject() {
 		Object uiRecord = createUiRecord();
-		UiButton ui = new UiButton(template != null ? template.createUiTemplate() : null, uiRecord);
+		DtoButton ui = new DtoButton(template != null ? template.createUiTemplate() : null, uiRecord);
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
 		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
@@ -115,15 +115,15 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		switch (event.getTypeId()) {
-			case UiButton.ClickedEvent.TYPE_ID -> {
-				var e = event.as(UiButton.ClickedEventWrapper.class);
+			case DtoButton.ClickedEvent.TYPE_ID -> {
+				var e = event.as(DtoButton.ClickedEventWrapper.class);
 				this.onClicked.fire();
 			}
-			case UiButton.DropDownOpenedEvent.TYPE_ID -> {
-				var e = event.as(UiButton.DropDownOpenedEventWrapper.class);
+			case DtoButton.DropDownOpenedEvent.TYPE_ID -> {
+				var e = event.as(DtoButton.DropDownOpenedEventWrapper.class);
 				this.onDropDownOpened.fire();
 			}
 		}
@@ -135,7 +135,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setTemplate(Template template) {
 		this.template = template;
-		sendCommandIfRendered(() -> new UiButton.SetTemplateCommand(template.createUiTemplate(), createUiRecord()));
+		sendCommandIfRendered(() -> new DtoButton.SetTemplateCommand(template.createUiTemplate(), createUiRecord()));
 		return this;
 	}
 
@@ -145,7 +145,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setTemplateRecord(RECORD templateRecord) {
 		this.templateRecord = templateRecord;
-		sendCommandIfRendered(() -> new UiButton.SetTemplateRecordCommand(templateRecord));
+		sendCommandIfRendered(() -> new DtoButton.SetTemplateRecordCommand(templateRecord));
 		return this;
 	}
 
@@ -172,7 +172,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setMinDropDownWidth(Integer minDropDownWidth) {
 		this.minDropDownWidth = minDropDownWidth;
-		sendCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
+		sendCommandIfRendered(() -> new DtoButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
 		return this;
 	}
 
@@ -182,14 +182,14 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setMinDropDownHeight(Integer minDropDownHeight) {
 		this.minDropDownHeight = minDropDownHeight;
-		sendCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
+		sendCommandIfRendered(() -> new DtoButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
 		return this;
 	}
 
 	public Button<RECORD> setMinDropDownSize(Integer minDropDownWidth, Integer minDropDownHeight) {
 		this.minDropDownWidth = minDropDownWidth;
 		this.minDropDownHeight = minDropDownHeight;
-		sendCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
+		sendCommandIfRendered(() -> new DtoButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
 		return this;
 	}
 
@@ -199,7 +199,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setOpenDropDownIfNotSet(boolean openDropDownIfNotSet) {
 		this.openDropDownIfNotSet = openDropDownIfNotSet;
-		sendCommandIfRendered(() -> new UiButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet));
+		sendCommandIfRendered(() -> new DtoButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet));
 		return this;
 	}
 
@@ -209,7 +209,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		sendCommandIfRendered(() -> new UiButton.SetDropDownComponentCommand(Component.createUiClientObjectReference(dropDownComponent)));
+		sendCommandIfRendered(() -> new DtoButton.SetDropDownComponentCommand(Component.createUiClientObjectReference(dropDownComponent)));
 		return this;
 	}
 
@@ -219,6 +219,6 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public void setOnClickJavaScript(String onClickJavaScript) {
 		this.onClickJavaScript = onClickJavaScript;
-		sendCommandIfRendered(() -> new UiButton.SetOnClickJavaScriptCommand(onClickJavaScript));
+		sendCommandIfRendered(() -> new DtoButton.SetOnClickJavaScriptCommand(onClickJavaScript));
 	}
 }

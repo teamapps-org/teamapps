@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.media;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiMediaTrackMarker;
+import org.teamapps.dto.DtoMediaTrackMarker;
 
 public class TrackMarkerData {
 
@@ -38,8 +38,8 @@ public class TrackMarkerData {
 		this.backgroundColor = backgroundColor;
 	}
 
-	public UiMediaTrackMarker createMarker() {
-		UiMediaTrackMarker marker = new UiMediaTrackMarker();
+	public DtoMediaTrackMarker createMarker() {
+		DtoMediaTrackMarker marker = new DtoMediaTrackMarker();
 		marker.setTrack(track);
 		marker.setStart(start);
 		marker.setEnd(end);

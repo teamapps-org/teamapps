@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.template.htmltemplate;
 
-import org.teamapps.dto.UiHtmlTemplate;
-import org.teamapps.dto.UiTemplate;
+import org.teamapps.dto.DtoHtmlTemplate;
+import org.teamapps.dto.DtoTemplate;
 import org.teamapps.ux.component.template.Template;
 
 import java.util.List;
@@ -42,8 +42,8 @@ public class HtmlTemplate implements Template {
 	}
 
 	@Override
-	public UiTemplate createUiTemplate() {
-		return new UiHtmlTemplate(html);
+	public DtoTemplate createUiTemplate() {
+		return new DtoHtmlTemplate(html);
 	}
 
 	@Override

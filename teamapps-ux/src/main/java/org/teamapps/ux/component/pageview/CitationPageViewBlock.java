@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.dto.UiCitationPageViewBlock;
+import org.teamapps.dto.DtoCitationPageViewBlock;
 
 public class CitationPageViewBlock extends AbstractPageViewBlock {
 	
@@ -37,8 +37,8 @@ public class CitationPageViewBlock extends AbstractPageViewBlock {
 		this.author = author;
 	}
 
-	public UiCitationPageViewBlock createUiBlock() {
-		UiCitationPageViewBlock uiBlock = new UiCitationPageViewBlock();
+	public DtoCitationPageViewBlock createUiBlock() {
+		DtoCitationPageViewBlock uiBlock = new DtoCitationPageViewBlock();
 		mapAbstractPageViewBlockAttributes(uiBlock);
 		uiBlock.setCreatorImageUrl(creatorImageUrl);
 		uiBlock.setCreatorImageAlignment(creatorImageAlignment.toUiImageAligment());

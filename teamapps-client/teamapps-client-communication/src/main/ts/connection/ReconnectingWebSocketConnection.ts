@@ -18,11 +18,11 @@
  * =========================LICENSE_END==================================
  */
 import stringify from "json-stable-stringify";
-import {AbstractClientMessage, AbstractServerMessage} from "../generated";
+import {DtoAbstractClientMessage, DtoAbstractServerMessage} from "../generated";
 
 export interface ReconnectingCompressingWebSocketConnectionListener {
 	onConnected: () => void;
-	onMessage: (messageObject: AbstractServerMessage) => void;
+	onMessage: (messageObject: DtoAbstractServerMessage) => void;
 	onConnectionLost: () => void;
 	onReconnected: () => void;
 }
@@ -43,7 +43,7 @@ export class ReconnectingCompressingWebSocketConnection {
 		return this.connection != null && this.connection.readyState === WebSocket.OPEN;
 	};
 
-	public send(object: AbstractClientMessage) {
+	public send(object: DtoAbstractClientMessage) {
 		let jsonString = stringify(object, {
 			cmp: (a, b) => {
 				let aIsUnderscore = a.key[0] === '_';

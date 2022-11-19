@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.animation;
 
-import org.teamapps.dto.UiExitAnimation;
+import org.teamapps.dto.DtoExitAnimation;
 
 public enum ExitAnimation {
 	BACK_OUT_DOWN,
@@ -72,7 +72,7 @@ public enum ExitAnimation {
 	BOUNCE_OUT_RIGHT,
 	BOUNCE_OUT_UP;
 
-	public UiExitAnimation toUiExitAnimation() {
-		return UiExitAnimation.valueOf(name());
+	public DtoExitAnimation toUiExitAnimation() {
+		return DtoExitAnimation.valueOf(name());
 	}
 }

@@ -20,7 +20,7 @@
  */
 package org.teamapps.ux.component.div;
 
-import org.teamapps.dto.UiDiv;
+import org.teamapps.dto.DtoDiv;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -44,8 +44,8 @@ public class Div extends AbstractComponent {
 	}
 
 	@Override
-	public UiDiv createUiClientObject() {
-		UiDiv ui = new UiDiv();
+	public DtoDiv createUiClientObject() {
+		DtoDiv ui = new DtoDiv();
 		mapAbstractUiComponentProperties(ui);
 		ui.setContent(content != null ? content.createUiReference() : null);
 		ui.setInnerHtml(innerHtml);
@@ -58,7 +58,7 @@ public class Div extends AbstractComponent {
 
 	public void setContent(Component content) {
 		this.content = content;
-		sendCommandIfRendered(() -> new UiDiv.SetContentCommand(content != null ? content.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoDiv.SetContentCommand(content != null ? content.createUiReference() : null));
 	}
 
 	public String getInnerHtml() {
@@ -67,6 +67,6 @@ public class Div extends AbstractComponent {
 
 	public void setInnerHtml(String innerHtml) {
 		this.innerHtml = innerHtml;
-		sendCommandIfRendered(() -> new UiDiv.SetInnerHtmlCommand(innerHtml));
+		sendCommandIfRendered(() -> new DtoDiv.SetInnerHtmlCommand(innerHtml));
 	}
 }

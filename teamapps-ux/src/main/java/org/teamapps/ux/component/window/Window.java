@@ -22,7 +22,7 @@ package org.teamapps.ux.component.window;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiWindow;
+import org.teamapps.dto.DtoWindow;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -66,7 +66,7 @@ public class Window extends Panel {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiWindow window = new UiWindow();
+		DtoWindow window = new DtoWindow();
 		mapUiPanelProperties(window);
 		window.setModal(modal);
 		window.setWidth(width);
@@ -87,7 +87,7 @@ public class Window extends Panel {
 
 	public void setModal(boolean modal) {
 		this.modal = modal;
-		sendCommandIfRendered(() -> new UiWindow.SetModalCommand(modal));
+		sendCommandIfRendered(() -> new DtoWindow.SetModalCommand(modal));
 	}
 
 	public int getWidth() {
@@ -116,7 +116,7 @@ public class Window extends Panel {
 		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
 			this.setStretchContent(false);
 		}
-		sendCommandIfRendered(() -> new UiWindow.SetSizeCommand(width, height));
+		sendCommandIfRendered(() -> new DtoWindow.SetSizeCommand(width, height));
 	}
 
 	public Color getModalBackgroundDimmingColor() {
@@ -125,7 +125,7 @@ public class Window extends Panel {
 
 	public void setModalBackgroundDimmingColor(Color modalBackgroundDimmingColor) {
 		this.modalBackgroundDimmingColor = modalBackgroundDimmingColor;
-		sendCommandIfRendered(() -> new UiWindow.SetModalBackgroundDimmingColorCommand(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null));
+		sendCommandIfRendered(() -> new DtoWindow.SetModalBackgroundDimmingColorCommand(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null));
 	}
 
 	public void show() {
@@ -134,7 +134,7 @@ public class Window extends Panel {
 
 	public void show(int animationDuration) {
 		render();
-		sendCommandIfRendered(() -> new UiWindow.ShowCommand(animationDuration));
+		sendCommandIfRendered(() -> new DtoWindow.ShowCommand(animationDuration));
 	}
 
 	public void close() {
@@ -142,7 +142,7 @@ public class Window extends Panel {
 	}
 
 	public void close(int animationDuration) {
-		sendCommandIfRendered(() -> new UiWindow.CloseCommand(animationDuration));
+		sendCommandIfRendered(() -> new DtoWindow.CloseCommand(animationDuration));
 	}
 
 	public boolean isCloseable() {
@@ -151,7 +151,7 @@ public class Window extends Panel {
 
 	public void setCloseable(boolean closeable) {
 		this.closeable = closeable;
-		sendCommandIfRendered(() -> new UiWindow.SetCloseableCommand(closeable));
+		sendCommandIfRendered(() -> new DtoWindow.SetCloseableCommand(closeable));
 	}
 
 	public boolean isCloseOnEscape() {
@@ -160,7 +160,7 @@ public class Window extends Panel {
 
 	public void setCloseOnEscape(boolean closeOnEscape) {
 		this.closeOnEscape = closeOnEscape;
-		sendCommandIfRendered(() -> new UiWindow.SetCloseOnEscapeCommand(closeOnEscape));
+		sendCommandIfRendered(() -> new DtoWindow.SetCloseOnEscapeCommand(closeOnEscape));
 	}
 
 	public boolean isCloseOnClickOutside() {
@@ -169,6 +169,6 @@ public class Window extends Panel {
 
 	public void setCloseOnClickOutside(boolean closeOnClickOutside) {
 		this.closeOnClickOutside = closeOnClickOutside;
-		sendCommandIfRendered(() -> new UiWindow.SetCloseOnClickOutsideCommand(closeOnClickOutside));
+		sendCommandIfRendered(() -> new DtoWindow.SetCloseOnClickOutsideCommand(closeOnClickOutside));
 	}
 }

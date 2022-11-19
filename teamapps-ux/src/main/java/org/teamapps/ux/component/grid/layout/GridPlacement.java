@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.grid.layout;
 
-import org.teamapps.dto.UiGridPlacement;
+import org.teamapps.dto.DtoGridPlacement;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
@@ -48,7 +48,7 @@ public interface GridPlacement {
 
 	HorizontalElementAlignment getHorizontalAlignment();
 
-	UiGridPlacement createUiGridPlacement();
+	DtoGridPlacement createUiGridPlacement();
 
 	List<Component> getComponents();
 

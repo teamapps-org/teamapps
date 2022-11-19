@@ -3,9 +3,9 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {A} from "./A";
+import {DtoA} from "./DtoA";
 
-export interface B extends A {
+export interface DtoB extends DtoA {
 	_type?: string;
 	b?: string
 }

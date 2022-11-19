@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiPanel} from "../UiPanel";
+import {Panel} from "../UiPanel";
 import {UiComponentConfig, UiPanel_WindowButtonClickedEvent, UiWindowButtonType} from "../../generated";
 import {bind} from "teamapps-client-core";
 import {TabPanelItem} from "./TabPanelItem";
@@ -47,24 +47,24 @@ export class View implements ViewInfo {
 	}
 
 	public set component(component) {
-		if (this._component instanceof UiPanel) {
+		if (this._component instanceof Panel) {
 			this._component.onWindowButtonClicked.removeListener(this.handlePanelWindowButtonClicked);
 		}
 		this._component = component;
-		if (this._component instanceof UiPanel) {
+		if (this._component instanceof Panel) {
 			this._component.onWindowButtonClicked.addListener(this.handlePanelWindowButtonClicked);
 		}
 		if (this._parent) {
 			this._parent.updateTab(this.viewName, this._component);
 		}
-		if (component != null && component instanceof UiPanel) {
+		if (component != null && component instanceof Panel) {
 			component.setDraggable(true);
 		}
 	}
 
 	@bind
 	private handlePanelWindowButtonClicked(event: UiPanel_WindowButtonClickedEvent) {
-		if (event.windowButton === UiWindowButtonType.MINIMIZE && this._component instanceof UiPanel) {
+		if (event.windowButton === UiWindowButtonType.MINIMIZE && this._component instanceof Panel) {
 			this._component.restore(); // could be maximized, so first restore!
 		}
 		this.onPanelWindowButtonClicked.fire(event.windowButton);
@@ -95,8 +95,8 @@ export class View implements ViewInfo {
 	}
 
 	setWindowButtons(toolButtons: UiWindowButtonType[]) {
-		if (this.component instanceof UiPanel) {
-			(this.component as UiPanel).setWindowButtons(toolButtons);
+		if (this.component instanceof Panel) {
+			(this.component as Panel).setWindowButtons(toolButtons);
 		}
 	}
 

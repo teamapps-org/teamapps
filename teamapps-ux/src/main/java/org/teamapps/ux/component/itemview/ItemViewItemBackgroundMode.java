@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.itemview;
 
-import org.teamapps.dto.UiItemViewItemBackgroundMode;
+import org.teamapps.dto.DtoItemViewItemBackgroundMode;
 
 public enum ItemViewItemBackgroundMode {
 	LIGHT, OPAQUE, DARK;
 
-	public UiItemViewItemBackgroundMode toUiItemBackgroundMode() {
-		return UiItemViewItemBackgroundMode.valueOf(this.name());
+	public DtoItemViewItemBackgroundMode toUiItemBackgroundMode() {
+		return DtoItemViewItemBackgroundMode.valueOf(this.name());
 	}
 }

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.grid.layout;
 
-import org.teamapps.dto.UiGridColumn;
+import org.teamapps.dto.DtoGridColumn;
 import org.teamapps.ux.component.format.SizingPolicy;
 
 public class GridColumn {
@@ -73,8 +73,8 @@ public class GridColumn {
 		return this;
 	}
 
-	public UiGridColumn createUiGridColumn() {
-		return new UiGridColumn()
+	public DtoGridColumn createUiGridColumn() {
+		return new DtoGridColumn()
 				.setWidthPolicy(widthPolicy != null ? widthPolicy.createUiSizingPolicy() : null)
 				.setLeftPadding(leftPadding)
 				.setRightPadding(rightPadding);

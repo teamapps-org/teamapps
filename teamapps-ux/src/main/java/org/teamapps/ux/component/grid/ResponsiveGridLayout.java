@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.grid;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiResponsiveGridLayout;
-import org.teamapps.dto.UiResponsiveGridLayoutPolicy;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoResponsiveGridLayout;
+import org.teamapps.dto.DtoResponsiveGridLayoutPolicy;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.grid.layout.GridLayoutDefinition;
 
@@ -37,15 +37,15 @@ public class ResponsiveGridLayout extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		List<UiResponsiveGridLayoutPolicy> layoutPolicies = createUiLayoutPolicies();
-		UiResponsiveGridLayout uiResponsiveGridLayout = new UiResponsiveGridLayout(layoutPolicies);
+		List<DtoResponsiveGridLayoutPolicy> layoutPolicies = createUiLayoutPolicies();
+		DtoResponsiveGridLayout uiResponsiveGridLayout = new DtoResponsiveGridLayout(layoutPolicies);
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);
 		return uiResponsiveGridLayout;
 	}
 
-	private List<UiResponsiveGridLayoutPolicy> createUiLayoutPolicies() {
+	private List<DtoResponsiveGridLayoutPolicy> createUiLayoutPolicies() {
 		return layoutDefinitionsByMinWidth.entrySet().stream()
-					.map(entry -> new UiResponsiveGridLayoutPolicy(entry.getKey(), entry.getValue().createUiGridLayout()))
+					.map(entry -> new DtoResponsiveGridLayoutPolicy(entry.getKey(), entry.getValue().createUiGridLayout()))
 					.collect(Collectors.toList());
 	}
 
@@ -58,12 +58,12 @@ public class ResponsiveGridLayout extends AbstractComponent {
 	}
 
 	public void refreshLayout() {
-		sendCommandIfRendered(() -> new UiResponsiveGridLayout.UpdateLayoutPoliciesCommand(createUiLayoutPolicies()));
+		sendCommandIfRendered(() -> new DtoResponsiveGridLayout.UpdateLayoutPoliciesCommand(createUiLayoutPolicies()));
 	}
 
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		// none
 	}
 

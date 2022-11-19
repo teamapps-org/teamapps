@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.map.shape;
 
-import org.teamapps.dto.UiMapRectangle;
+import org.teamapps.dto.DtoMapRectangle;
 import org.teamapps.ux.component.map.Location;
 
 public class MapRectangle extends AbstractMapShape {
@@ -38,8 +38,8 @@ public class MapRectangle extends AbstractMapShape {
 		this.location2 = location2;
 	}
 
-	public UiMapRectangle createUiMapShape() {
-		UiMapRectangle uiRect = new UiMapRectangle();
+	public DtoMapRectangle createUiMapShape() {
+		DtoMapRectangle uiRect = new DtoMapRectangle();
 		mapAbstractUiShapeProperties(uiRect);
 		uiRect.setL1(location1.createUiLocation());
 		uiRect.setL2(location2.createUiLocation());

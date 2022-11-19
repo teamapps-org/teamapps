@@ -21,11 +21,11 @@ public class ModelUtil {
 	}
 
 	public static String getInterfaceTypeScriptIdentifier(TeamAppsDtoParser.InterfaceDeclarationContext i) {
-		return i.Identifier().getText() + (i.managedModifier() != null ? "Config": "");
+		return i.Identifier().getText();
 	}
 
 	public static String getClassTypeScriptIdentifier(TeamAppsDtoParser.ClassDeclarationContext i) {
-		return i.Identifier().getText() + (i.managedModifier() != null ? "Config": "");
+		return i.Identifier().getText();
 	}
 
 }

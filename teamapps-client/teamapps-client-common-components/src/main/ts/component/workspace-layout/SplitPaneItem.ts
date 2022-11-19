@@ -18,23 +18,23 @@
  * =========================LICENSE_END==================================
  */
 import {UiComponentConfig, UiSplitDirection, UiSplitSizePolicy} from "../../generated";
-import {UiSplitPane} from "../UiSplitPane";
+import {SplitPane} from "../UiSplitPane";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {ItemTreeItem} from "./ItemTree";
 import {generateUUID} from "../../Common";
 import {UiComponent} from "teamapps-client-core";
 
-export class SplitPaneItem implements ItemTreeItem<UiSplitPane> {
+export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 	id: string;
 	parent: SplitPaneItem;
-	component: UiSplitPane;
+	component: SplitPane;
 	private _firstChild: ItemTreeItem<UiComponent<UiComponentConfig>>;
 	private _lastChild: ItemTreeItem<UiComponent<UiComponentConfig>>;
 
 	constructor(id: string, parent: SplitPaneItem, splitDirection: UiSplitDirection, sizePolicy: UiSplitSizePolicy, firstChildRelativeSize: number, context: TeamAppsUiContext) {
 		this.id = id;
 		this.parent = parent;
-		this.component = new UiSplitPane({
+		this.component = new SplitPane({
 			id: generateUUID(),
 			splitDirection: splitDirection,
 			sizePolicy: sizePolicy,

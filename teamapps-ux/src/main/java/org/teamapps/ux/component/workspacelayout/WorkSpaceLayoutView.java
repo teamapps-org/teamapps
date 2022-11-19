@@ -22,7 +22,7 @@ package org.teamapps.ux.component.workspacelayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiWorkSpaceLayoutView;
+import org.teamapps.dto.DtoWorkSpaceLayoutView;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
@@ -116,7 +116,7 @@ public class WorkSpaceLayoutView {
 		return workSpaceLayout.getSessionContext();
 	}
 
-	public UiWorkSpaceLayoutView createUiView() {
+	public DtoWorkSpaceLayoutView createUiView() {
 		String icon = getSessionContext().resolveIcon(panel.getIcon());
 		String title = null;
 		if (tabTitle != null) {
@@ -129,7 +129,7 @@ public class WorkSpaceLayoutView {
 		if (!lazyLoading) {
 			uiPanel = panel.createUiReference();
 		}
-		UiWorkSpaceLayoutView view = new UiWorkSpaceLayoutView(getId(), icon, title, uiPanel);
+		DtoWorkSpaceLayoutView view = new DtoWorkSpaceLayoutView(getId(), icon, title, uiPanel);
 		view.setTabCloseable(closeable);
 		view.setLazyLoading(lazyLoading);
 		view.setVisible(visible);

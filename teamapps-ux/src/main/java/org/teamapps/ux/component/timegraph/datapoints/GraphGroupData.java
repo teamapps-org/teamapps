@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.timegraph.datapoints;
 
-import org.teamapps.dto.UiGraphData;
-import org.teamapps.dto.UiGraphGroupData;
+import org.teamapps.dto.DtoGraphData;
+import org.teamapps.dto.DtoGraphGroupData;
 import org.teamapps.ux.component.timegraph.Interval;
 
 import java.util.Map;
@@ -39,10 +39,10 @@ public interface GraphGroupData extends GraphData {
 	}
 
 	@Override
-	default UiGraphGroupData toUiGraphData() {
-		final Map<String, UiGraphData> uiGraphDataMap = getGraphData().entrySet().stream()
+	default DtoGraphGroupData toUiGraphData() {
+		final Map<String, DtoGraphData> uiGraphDataMap = getGraphData().entrySet().stream()
 				.filter(Objects::nonNull)
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toUiGraphData()));
-		return new UiGraphGroupData(uiGraphDataMap, getInterval().toUiLongInterval());
+		return new DtoGraphGroupData(uiGraphDataMap, getInterval().toUiLongInterval());
 	}
 }

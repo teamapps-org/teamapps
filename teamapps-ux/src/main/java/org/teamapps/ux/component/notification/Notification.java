@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiNotification;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoNotification;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -35,8 +35,8 @@ import org.teamapps.ux.component.template.BaseTemplateRecord;
 
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Notification extends AbstractComponent {
-	public final ProjectorEvent<Void> onOpened = createProjectorEventBoundToUiEvent(UiNotification.OpenedEvent.TYPE_ID);
-	public final ProjectorEvent<Boolean> onClosed = createProjectorEventBoundToUiEvent(UiNotification.ClosedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onOpened = createProjectorEventBoundToUiEvent(DtoNotification.OpenedEvent.TYPE_ID);
+	public final ProjectorEvent<Boolean> onClosed = createProjectorEventBoundToUiEvent(DtoNotification.ClosedEvent.TYPE_ID);
 
 	private boolean showing;
 
@@ -71,8 +71,8 @@ public class Notification extends AbstractComponent {
 		return notification;
 	}
 
-	public UiNotification createUiClientObject() {
-		UiNotification ui = new UiNotification();
+	public DtoNotification createUiClientObject() {
+		DtoNotification ui = new DtoNotification();
 		mapAbstractUiComponentProperties(ui);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setPadding(padding != null ? padding.createUiSpacing() : null);
@@ -84,14 +84,14 @@ public class Notification extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiNotification.OpenedEvent.TYPE_ID -> {
+			case DtoNotification.OpenedEvent.TYPE_ID -> {
 				this.showing = true;
 				onOpened.fire(null);
 			}
-			case UiNotification.ClosedEvent.TYPE_ID -> {
-				var e = event.as(UiNotification.ClosedEventWrapper.class);
+			case DtoNotification.ClosedEvent.TYPE_ID -> {
+				var e = event.as(DtoNotification.ClosedEventWrapper.class);
 				this.showing = false;
 				onClosed.fire(e.getByUser());
 			}
@@ -99,7 +99,7 @@ public class Notification extends AbstractComponent {
 	}
 
 	public void close() {
-		sendCommandIfRendered(() -> new UiNotification.CloseCommand());
+		sendCommandIfRendered(() -> new DtoNotification.CloseCommand());
 	}
 
 	public Color getBackgroundColor() {
@@ -108,7 +108,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -118,7 +118,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setPadding(Spacing padding) {
 		this.padding = padding;
-		sendCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -128,7 +128,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDisplayTimeInMillis(int displayTimeInMillis) {
 		this.displayTimeInMillis = displayTimeInMillis;
-		sendCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -138,7 +138,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDismissible(boolean dismissible) {
 		this.dismissible = dismissible;
-		sendCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -148,7 +148,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setShowProgressBar(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
-		sendCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -158,7 +158,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setContent(Component content) {
 		this.content = content;
-		sendCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 

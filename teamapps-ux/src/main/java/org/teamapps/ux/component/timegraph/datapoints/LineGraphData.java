@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.timegraph.datapoints;
 
-import org.teamapps.dto.UiLineGraphData;
-import org.teamapps.dto.UiLineGraphDataPoint;
+import org.teamapps.dto.DtoLineGraphData;
+import org.teamapps.dto.DtoLineGraphDataPoint;
 
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -55,9 +55,9 @@ public interface LineGraphData extends GraphData {
 	}
 
 	@Override
-	default UiLineGraphData toUiGraphData() {
-		return new UiLineGraphData(streamDataPoints()
-				.map(dp -> new UiLineGraphDataPoint(dp.getX(), dp.getY()))
+	default DtoLineGraphData toUiGraphData() {
+		return new DtoLineGraphData(streamDataPoints()
+				.map(dp -> new DtoLineGraphDataPoint(dp.getX(), dp.getY()))
 				.collect(Collectors.toList()), getInterval().toUiLongInterval());
 	}
 }

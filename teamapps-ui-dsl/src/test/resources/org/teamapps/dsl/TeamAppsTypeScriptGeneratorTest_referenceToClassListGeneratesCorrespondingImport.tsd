@@ -3,11 +3,11 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {A} from "./A";
+import {DtoA} from "./DtoA";
 
-export interface B {
+export interface DtoB {
 	_type?: string;
-	aObjects?: A[]
+	aObjects?: DtoA[]
 }
 
 

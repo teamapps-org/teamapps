@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiFieldMessage;
-import org.teamapps.dto.UiFieldMessagePosition;
-import org.teamapps.dto.UiFieldMessageSeverity;
-import org.teamapps.dto.UiFieldMessageVisibilityMode;
+import org.teamapps.dto.DtoFieldMessage;
+import org.teamapps.dto.DtoFieldMessagePosition;
+import org.teamapps.dto.DtoFieldMessageSeverity;
+import org.teamapps.dto.DtoFieldMessageVisibilityMode;
 
 import java.util.Objects;
 
@@ -39,8 +39,8 @@ public class FieldMessage {
 		WARNING,
 		ERROR;
 
-		public UiFieldMessageSeverity toUiFieldMessageSeverity() {
-			return UiFieldMessageSeverity.valueOf(name());
+		public DtoFieldMessageSeverity toUiFieldMessageSeverity() {
+			return DtoFieldMessageSeverity.valueOf(name());
 		}
 	}
 
@@ -49,8 +49,8 @@ public class FieldMessage {
 		BELOW,
 		POPOVER;
 
-		public UiFieldMessagePosition toUiFieldMessagePosition() {
-			return UiFieldMessagePosition.valueOf(name());
+		public DtoFieldMessagePosition toUiFieldMessagePosition() {
+			return DtoFieldMessagePosition.valueOf(name());
 		}
 	}
 
@@ -59,8 +59,8 @@ public class FieldMessage {
 		ON_FOCUS,
 		ON_HOVER_OR_FOCUS;
 
-		public UiFieldMessageVisibilityMode toUiFieldMessageVisibilityMode() {
-			return UiFieldMessageVisibilityMode.valueOf(name());
+		public DtoFieldMessageVisibilityMode toUiFieldMessageVisibilityMode() {
+			return DtoFieldMessageVisibilityMode.valueOf(name());
 		}
 	}
 
@@ -75,8 +75,8 @@ public class FieldMessage {
 		this.message = message;
 	}
 
-	public UiFieldMessage createUiFieldMessage(Position defaultPosition, Visibility defaultVisibility) {
-		return new UiFieldMessage(
+	public DtoFieldMessage createUiFieldMessage(Position defaultPosition, Visibility defaultVisibility) {
+		return new DtoFieldMessage(
 				severity.toUiFieldMessageSeverity(),
 				message,
 				position != null ? position.toUiFieldMessagePosition(): defaultPosition.toUiFieldMessagePosition(),

@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.charting.pie;
 
-import org.teamapps.dto.UiChartNamedDataPoint;
+import org.teamapps.dto.DtoChartNamedDataPoint;
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiPieChart;
+import org.teamapps.dto.DtoPieChart;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.charting.ChartLegendStyle;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 public class PieChart extends AbstractComponent {
 
-	public final ProjectorEvent<ChartNamedDataPoint> onDataPointClicked = createProjectorEventBoundToUiEvent(UiPieChart.DataPointClickedEvent.TYPE_ID);
+	public final ProjectorEvent<ChartNamedDataPoint> onDataPointClicked = createProjectorEventBoundToUiEvent(DtoPieChart.DataPointClickedEvent.TYPE_ID);
 
 	private long animationDuration = 500;
 	private ChartLegendStyle legendStyle;
@@ -56,7 +56,7 @@ public class PieChart extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiPieChart uiPieChart = new UiPieChart();
+		DtoPieChart uiPieChart = new DtoPieChart();
 		mapAbstractUiComponentProperties(uiPieChart);
 		uiPieChart.setDataPointWeighting(dataPointWeighting.toUiDataPointWeighting());
 		uiPieChart.setRotation3D(rotation3D);
@@ -68,10 +68,10 @@ public class PieChart extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiPieChart.DataPointClickedEvent.TYPE_ID -> {
-				var clickEvent = event.as(UiPieChart.DataPointClickedEventWrapper.class);
+			case DtoPieChart.DataPointClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoPieChart.DataPointClickedEventWrapper.class);
 				dataPoints.stream()
 						.filter(p -> Objects.equals(p.getName(), clickEvent.getDataPointName()))
 						.findFirst()
@@ -80,7 +80,7 @@ public class PieChart extends AbstractComponent {
 		}
 	}
 
-	private List<UiChartNamedDataPoint> createUiDataPoints() {
+	private List<DtoChartNamedDataPoint> createUiDataPoints() {
 		return dataPoints != null ? dataPoints.stream()
 				.map(ChartNamedDataPoint::createUiChartNamedDataPoint)
 				.collect(Collectors.toList()) : Collections.emptyList();
@@ -100,7 +100,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setLegendStyle(ChartLegendStyle legendStyle) {
 		this.legendStyle = legendStyle;
-		sendCommandIfRendered(() -> new UiPieChart.SetLegendStyleCommand(legendStyle.toUiChartLegendStyle()));
+		sendCommandIfRendered(() -> new DtoPieChart.SetLegendStyleCommand(legendStyle.toUiChartLegendStyle()));
 	}
 
 	public DataPointWeighting getDataPointWeighting() {
@@ -109,7 +109,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setDataPointWeighting(DataPointWeighting dataPointWeighting) {
 		this.dataPointWeighting = dataPointWeighting;
-		sendCommandIfRendered(() -> new UiPieChart.SetDataPointWeightingCommand(dataPointWeighting.toUiDataPointWeighting()));
+		sendCommandIfRendered(() -> new DtoPieChart.SetDataPointWeightingCommand(dataPointWeighting.toUiDataPointWeighting()));
 	}
 
 	public float getRotation3D() {
@@ -118,7 +118,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setRotation3D(float rotation3D) {
 		this.rotation3D = rotation3D;
-		sendCommandIfRendered(() -> new UiPieChart.SetRotation3DCommand(rotation3D));
+		sendCommandIfRendered(() -> new DtoPieChart.SetRotation3DCommand(rotation3D));
 	}
 
 	public float getHeight3D() {
@@ -127,7 +127,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setHeight3D(float height3D) {
 		this.height3D = height3D;
-		sendCommandIfRendered(() -> new UiPieChart.SetHeight3DCommand(height3D));
+		sendCommandIfRendered(() -> new DtoPieChart.SetHeight3DCommand(height3D));
 	}
 
 	public float getRotationClockwise() {
@@ -136,7 +136,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setRotationClockwise(float rotationClockwise) {
 		this.rotationClockwise = rotationClockwise;
-		sendCommandIfRendered(() -> new UiPieChart.SetRotationClockwiseCommand(rotationClockwise));
+		sendCommandIfRendered(() -> new DtoPieChart.SetRotationClockwiseCommand(rotationClockwise));
 	}
 
 	public float getInnerRadiusProportion() {
@@ -145,7 +145,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setInnerRadiusProportion(float innerRadiusProportion) {
 		this.innerRadiusProportion = innerRadiusProportion;
-		sendCommandIfRendered(() -> new UiPieChart.SetInnerRadiusProportionCommand(innerRadiusProportion));
+		sendCommandIfRendered(() -> new DtoPieChart.SetInnerRadiusProportionCommand(innerRadiusProportion));
 	}
 
 	public List<ChartNamedDataPoint> getDataPoints() {
@@ -155,6 +155,6 @@ public class PieChart extends AbstractComponent {
 	public void setDataPoints(List<ChartNamedDataPoint> dataPoints) {
 		this.dataPoints.clear();
 		this.dataPoints.addAll(dataPoints);
-		sendCommandIfRendered(() -> new UiPieChart.SetDataPointsCommand(createUiDataPoints(), animationDuration));
+		sendCommandIfRendered(() -> new DtoPieChart.SetDataPointsCommand(createUiDataPoints(), animationDuration));
 	}
 }

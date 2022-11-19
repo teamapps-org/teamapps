@@ -21,14 +21,14 @@ import * as log from "loglevel";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {UiComponentConfig, UiTabPanelTabStyle, UiViewGroupPanelState, UiWindowButtonType} from "../../generated";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiTabPanel} from "../UiTabPanel";
+import {TabPanel} from "../UiTabPanel";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {generateUUID, parseHtml} from "../../Common";
 import {UiComponent} from "teamapps-client-core";
 
-class MinimizableTabPanel extends UiTabPanel {
+class MinimizableTabPanel extends TabPanel {
 
 	private _minimized = false;
 
@@ -42,7 +42,7 @@ class MinimizableTabPanel extends UiTabPanel {
 	}
 }
 
-export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
+export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	private static logger = log.getLogger("UiWorkSpaceLayout.TabPanelItem");
 
 	public readonly id: string;

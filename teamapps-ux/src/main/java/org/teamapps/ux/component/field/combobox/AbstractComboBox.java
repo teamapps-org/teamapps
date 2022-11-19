@@ -43,10 +43,10 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractComboBox.class);
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
 
-	protected final ClientRecordCache<RECORD, UiComboBoxTreeRecord> recordCache;
+	protected final ClientRecordCache<RECORD, DtoComboBoxTreeRecord> recordCache;
 
 	private ComboBoxModel<RECORD> model;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
@@ -94,7 +94,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		this(query -> Collections.emptyList());
 	}
 
-	protected void mapCommonUiComboBoxProperties(UiComboBox ui) {
+	protected void mapCommonUiComboBoxProperties(DtoComboBox ui) {
 		mapAbstractFieldAttributesToUiField(ui);
 
 		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
@@ -117,41 +117,41 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		switch (event.getTypeId()) {
-			case UiTextInputHandlingField.TextInputEvent.TYPE_ID -> {
-				var textInputEvent = event.as(UiTextInputHandlingField.TextInputEventWrapper.class);
+			case DtoTextInputHandlingField.TextInputEvent.TYPE_ID -> {
+				var textInputEvent = event.as(DtoTextInputHandlingField.TextInputEventWrapper.class);
 				String string = textInputEvent.getEnteredString() != null ? textInputEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
 				this.onTextInput.fire(string);
 			}
-			case UiTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID -> {
-				var specialKeyPressedEvent = event.as(UiTextInputHandlingField.SpecialKeyPressedEventWrapper.class);
+			case DtoTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID -> {
+				var specialKeyPressedEvent = event.as(DtoTextInputHandlingField.SpecialKeyPressedEventWrapper.class);
 				this.onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
 			}
 		}
 	}
 
 	@Override
-	public Object handleUiQuery(UiQueryWrapper query) {
+	public Object handleUiQuery(DtoQueryWrapper query) {
 		switch (query.getTypeId()) {
-			case UiComboBox.RetrieveDropdownEntriesQuery.TYPE_ID -> {
-				var q = query.as(UiComboBox.RetrieveDropdownEntriesQueryWrapper.class);
+			case DtoComboBox.RetrieveDropdownEntriesQuery.TYPE_ID -> {
+				var q = query.as(DtoComboBox.RetrieveDropdownEntriesQueryWrapper.class);
 				String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
 				if (model != null) {
 					List<RECORD> resultRecords = model.getRecords(string);
 					if (distinctModelResultFiltering) {
 						resultRecords = filterOutSelected(resultRecords);
 					}
-					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
+					CacheManipulationHandle<List<DtoComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
 					cacheResponse.commit();
 					return cacheResponse.getAndClearResult();
 				} else {
 					return List.of();
 				}
 			}
-			case UiComboBox.LazyChildrenQuery.TYPE_ID -> {
-				var lazyChildrenQuery = query.as(UiComboBox.LazyChildrenQueryWrapper.class);
+			case DtoComboBox.LazyChildrenQuery.TYPE_ID -> {
+				var lazyChildrenQuery = query.as(DtoComboBox.LazyChildrenQueryWrapper.class);
 				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
 				if (parentRecord != null) {
 					if (model != null) {
@@ -159,7 +159,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 						if (distinctModelResultFiltering) {
 							childRecords = filterOutSelected(childRecords);
 						}
-						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
+						CacheManipulationHandle<List<DtoComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
 						cacheResponse.commit();
 						return cacheResponse.getAndClearResult();
 					}
@@ -182,7 +182,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	protected abstract Set<RECORD> getSelectedRecords();
 
-	protected UiComboBoxTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
+	protected DtoComboBoxTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
 		if (record == null) {
 			return null;
 		}
@@ -195,7 +195,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		templatePropertyNames.addAll(displayTemplate != null ? displayTemplate.getPropertyNames() : Collections.emptySet());
 		templatePropertyNames.addAll(dropdownTemplate != null ? dropdownTemplate.getPropertyNames() : Collections.emptySet());
 		Map<String, Object> values = propertyProvider.getValues(record, templatePropertyNames);
-		UiComboBoxTreeRecord uiTreeRecord = new UiComboBoxTreeRecord();
+		DtoComboBoxTreeRecord uiTreeRecord = new DtoComboBoxTreeRecord();
 		uiTreeRecord.setValues(values);
 
 		uiTreeRecord.setDisplayTemplateId(templateIdsByTemplate.get(displayTemplate));
@@ -212,12 +212,12 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		return uiTreeRecord;
 	}
 
-	protected void addParentLinkToUiRecord(RECORD record, UiComboBoxTreeRecord uiTreeRecord, Map<RECORD, UiComboBoxTreeRecord> othersCurrentlyBeingAddedToCache) {
+	protected void addParentLinkToUiRecord(RECORD record, DtoComboBoxTreeRecord uiTreeRecord, Map<RECORD, DtoComboBoxTreeRecord> othersCurrentlyBeingAddedToCache) {
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
 		if (treeNodeInfo != null) {
 			RECORD parent = (RECORD) treeNodeInfo.getParent();
 			if (parent != null) {
-				UiComboBoxTreeRecord uiParentFromOthers = othersCurrentlyBeingAddedToCache.get(parent);
+				DtoComboBoxTreeRecord uiParentFromOthers = othersCurrentlyBeingAddedToCache.get(parent);
 				if (uiParentFromOthers != null) {
 					uiTreeRecord.setParentId(uiParentFromOthers.getId());
 				} else {
@@ -236,12 +236,12 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String uuid = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, uuid);
-			sendCommandIfRendered(() -> new UiComboBox.RegisterTemplateCommand(uuid, template.createUiTemplate()));
+			sendCommandIfRendered(() -> new DtoComboBox.RegisterTemplateCommand(uuid, template.createUiTemplate()));
 		}
 		return template;
 	}
 
-	protected boolean isFreeTextEntry(UiComboBoxTreeRecord uiTreeRecord) {
+	protected boolean isFreeTextEntry(DtoComboBoxTreeRecord uiTreeRecord) {
 		return uiTreeRecord.getId() < 0;
 	}
 

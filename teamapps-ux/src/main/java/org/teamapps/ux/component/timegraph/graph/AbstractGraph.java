@@ -21,8 +21,8 @@ package org.teamapps.ux.component.timegraph.graph;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.UiGraph;
-import org.teamapps.dto.UiLongInterval;
+import org.teamapps.dto.DtoGraph;
+import org.teamapps.dto.DtoLongInterval;
 import org.teamapps.ux.component.timegraph.GraphChangeListener;
 import org.teamapps.ux.component.timegraph.Interval;
 import org.teamapps.ux.component.timegraph.LineChartYScaleZoomMode;
@@ -53,7 +53,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 		return id;
 	}
 
-	abstract public UiGraph createUiFormat();
+	abstract public DtoGraph createUiFormat();
 
 	public Interval getDisplayedIntervalY() {
 		return displayedIntervalY;
@@ -89,11 +89,11 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 		this.changeListener = listener;
 	}
 
-	protected void mapAbstractLineChartDataDisplayProperties(UiGraph ui) {
+	protected void mapAbstractLineChartDataDisplayProperties(DtoGraph ui) {
 		ui.setId(id);
 		ui.setYAxisVisible(yAxisVisible);
 		ui.setYAxisColor(yAxisColor != null ? yAxisColor.toHtmlColorString() : null);
-		ui.setIntervalY(displayedIntervalY != null ? displayedIntervalY.toUiLongInterval() : new UiLongInterval(0, 1000));
+		ui.setIntervalY(displayedIntervalY != null ? displayedIntervalY.toUiLongInterval() : new DtoLongInterval(0, 1000));
 		ui.setYScaleType(yScaleType.toUiScaleType());
 		ui.setYScaleZoomMode(yScaleZoomMode.toUiLineChartYScaleZoomMode());
 		ui.setYZeroLineVisible(yZeroLineVisible);

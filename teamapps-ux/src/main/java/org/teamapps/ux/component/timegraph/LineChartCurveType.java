@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph;
 
-import org.teamapps.dto.UiLineChartCurveType;
+import org.teamapps.dto.DtoLineChartCurveType;
 
 public enum LineChartCurveType {
 	LINEAR,
@@ -31,7 +31,7 @@ public enum LineChartCurveType {
 	MONOTONE,
 	CATMULLROM;
 
-	public UiLineChartCurveType toUiLineChartCurveType() {
-		return UiLineChartCurveType.valueOf(this.name());
+	public DtoLineChartCurveType toUiLineChartCurveType() {
+		return DtoLineChartCurveType.valueOf(this.name());
 	}
 }

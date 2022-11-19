@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.animation;
 
-import org.teamapps.dto.UiEntranceAnimation;
+import org.teamapps.dto.DtoEntranceAnimation;
 
 public enum EntranceAnimation {
 	BACK_IN_DOWN,
@@ -72,7 +72,7 @@ public enum EntranceAnimation {
 	BOUNCE_IN_RIGHT,
 	BOUNCE_IN_UP;
 
-	public UiEntranceAnimation toUiEntranceAnimation() {
-		return UiEntranceAnimation.valueOf(name());
+	public DtoEntranceAnimation toUiEntranceAnimation() {
+		return DtoEntranceAnimation.valueOf(name());
 	}
 }

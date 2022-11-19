@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.floating;
 
-import org.teamapps.dto.UiFloatingComponentPosition;
+import org.teamapps.dto.DtoFloatingComponentPosition;
 
 public enum FloatingPosition {
 
 	TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
 
-	public UiFloatingComponentPosition toUiPosition() {
-		return UiFloatingComponentPosition.valueOf(name());
+	public DtoFloatingComponentPosition toUiPosition() {
+		return DtoFloatingComponentPosition.valueOf(name());
 	}
 
 }

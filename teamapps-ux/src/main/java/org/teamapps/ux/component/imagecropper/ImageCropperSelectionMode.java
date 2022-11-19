@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.imagecropper;
 
-import org.teamapps.dto.UiImageCropperSelectionMode;
+import org.teamapps.dto.DtoImageCropperSelectionMode;
 
 public enum ImageCropperSelectionMode {
 	RECTANGLE, ROUND;
 
-	public UiImageCropperSelectionMode toUiImageCropperSelectionMode() {
-		return UiImageCropperSelectionMode.valueOf(this.name());
+	public DtoImageCropperSelectionMode toUiImageCropperSelectionMode() {
+		return DtoImageCropperSelectionMode.valueOf(this.name());
 	}
 }

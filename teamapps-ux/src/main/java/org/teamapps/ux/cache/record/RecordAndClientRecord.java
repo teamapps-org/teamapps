@@ -19,13 +19,13 @@
  */
 package org.teamapps.ux.cache.record;
 
-import org.teamapps.dto.UiIdentifiableClientRecord;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
 
 public class RecordAndClientRecord<RECORD> {
 	private final RECORD record;
-	private final UiIdentifiableClientRecord uiRecord;
+	private final DtoIdentifiableClientRecord uiRecord;
 
-	public RecordAndClientRecord(RECORD record, UiIdentifiableClientRecord uiRecord) {
+	public RecordAndClientRecord(RECORD record, DtoIdentifiableClientRecord uiRecord) {
 		this.record = record;
 		this.uiRecord = uiRecord;
 	}
@@ -34,7 +34,7 @@ public class RecordAndClientRecord<RECORD> {
 		return record;
 	}
 
-	public UiIdentifiableClientRecord getUiRecord() {
+	public DtoIdentifiableClientRecord getUiRecord() {
 		return uiRecord;
 	}
 }

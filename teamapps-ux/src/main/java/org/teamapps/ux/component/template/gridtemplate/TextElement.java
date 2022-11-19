@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.AbstractUiTemplateElement;
-import org.teamapps.dto.UiTextElement;
+import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoTextElement;
 import org.teamapps.ux.component.format.*;
 
 public class TextElement extends AbstractTemplateElement<TextElement> {
@@ -50,14 +50,14 @@ public class TextElement extends AbstractTemplateElement<TextElement> {
 	}
 
 	@Override
-	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiTextElement uiTextElement = new UiTextElement(propertyName, row, column);
+	public DtoAbstractTemplateElement createUiTemplateElement() {
+		DtoTextElement uiTextElement = new DtoTextElement(propertyName, row, column);
 		mapAbstractTemplateElementAttributesToUiElement(uiTextElement);
 		mapTextElementAttributesToUiElement(uiTextElement);
 		return uiTextElement;
 	}
 
-	protected void mapTextElementAttributesToUiElement(UiTextElement uiTextElement) {
+	protected void mapTextElementAttributesToUiElement(DtoTextElement uiTextElement) {
 		uiTextElement.setFontStyle(fontStyle != null ? fontStyle.createUiFontStyle() : null);
 		uiTextElement.setLineHeight(lineHeight);
 		uiTextElement.setWrapLines(wrapLines);

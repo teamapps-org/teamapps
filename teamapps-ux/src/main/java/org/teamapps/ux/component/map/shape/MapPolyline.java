@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.map.shape;
 
-import org.teamapps.dto.UiMapLocation;
-import org.teamapps.dto.UiMapPolyline;
-import org.teamapps.dto.UiPolylineAppend;
+import org.teamapps.dto.DtoMapLocation;
+import org.teamapps.dto.DtoMapPolyline;
+import org.teamapps.dto.DtoPolylineAppend;
 import org.teamapps.ux.component.map.Location;
 
 import java.util.ArrayList;
@@ -37,14 +37,14 @@ public class MapPolyline extends AbstractMapShape {
 		this.points = new ArrayList<>(points);
 	}
 
-	public UiMapPolyline createUiMapShape() {
-		UiMapPolyline uiPolyline = new UiMapPolyline();
+	public DtoMapPolyline createUiMapShape() {
+		DtoMapPolyline uiPolyline = new DtoMapPolyline();
 		mapAbstractUiShapeProperties(uiPolyline);
 		uiPolyline.setPath(toUiMapLocations(points));
 		return uiPolyline;
 	}
 
-	private List<UiMapLocation> toUiMapLocations(List<Location> locations) {
+	private List<DtoMapLocation> toUiMapLocations(List<Location> locations) {
 		return locations.stream()
 				.map(Location::createUiLocation)
 				.collect(Collectors.toList());
@@ -56,7 +56,7 @@ public class MapPolyline extends AbstractMapShape {
 
 	public MapPolyline addPoints(List<Location> points) {
 		this.points.addAll(points);
-		this.listener.handleShapeChanged(this, new UiPolylineAppend(toUiMapLocations(points)));
+		this.listener.handleShapeChanged(this, new DtoPolylineAppend(toUiMapLocations(points)));
 		return this;
 	}
 

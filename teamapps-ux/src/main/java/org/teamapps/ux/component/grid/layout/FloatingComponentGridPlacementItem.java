@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.grid.layout;
 
-import org.teamapps.dto.UiFloatingComponentGridPlacementItem;
+import org.teamapps.dto.DtoFloatingComponentGridPlacementItem;
 import org.teamapps.ux.component.Component;
 
 public class FloatingComponentGridPlacementItem {
@@ -37,8 +37,8 @@ public class FloatingComponentGridPlacementItem {
 		this.component = component;
 	}
 
-	public UiFloatingComponentGridPlacementItem createUiFloatingComponentGridPlacementItem() {
-		UiFloatingComponentGridPlacementItem uiItem = new UiFloatingComponentGridPlacementItem(component.createUiReference());
+	public DtoFloatingComponentGridPlacementItem createUiFloatingComponentGridPlacementItem() {
+		DtoFloatingComponentGridPlacementItem uiItem = new DtoFloatingComponentGridPlacementItem(component.createUiReference());
 		uiItem.setMinWidth(minWidth);
 		uiItem.setMaxWidth(maxWidth);
 		uiItem.setMinHeight(minHeight);

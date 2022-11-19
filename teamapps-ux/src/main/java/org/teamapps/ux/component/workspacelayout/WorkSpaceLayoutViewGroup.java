@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.dto.UiWorkSpaceLayoutItem;
-import org.teamapps.dto.UiWorkSpaceLayoutViewGroupItem;
+import org.teamapps.dto.DtoWorkSpaceLayoutItem;
+import org.teamapps.dto.DtoWorkSpaceLayoutViewGroupItem;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.workspacelayout.definition.ViewGroupDefinition;
@@ -80,11 +80,11 @@ public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 	}
 
 	@Override
-	public UiWorkSpaceLayoutItem createUiItem() {
+	public DtoWorkSpaceLayoutItem createUiItem() {
 		List<String> viewNames = getAllViews().stream()
 				.map(WorkSpaceLayoutView::getId)
 				.collect(Collectors.toList());
-		UiWorkSpaceLayoutViewGroupItem item = new UiWorkSpaceLayoutViewGroupItem(getId(), viewNames);
+		DtoWorkSpaceLayoutViewGroupItem item = new DtoWorkSpaceLayoutViewGroupItem(getId(), viewNames);
 		item.setSelectedViewName(selectedView != null ? selectedView.getId() : null);
 		item.setPanelState(panelState.toUiViewGroupPanelState());
 		item.setPersistent(persistent);

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.webrtc;
 
-import org.teamapps.dto.UiScreenSharingConstraints;
+import org.teamapps.dto.DtoScreenSharingConstraints;
 
 public class ScreenSharingConstraints {
 
@@ -34,8 +34,8 @@ public class ScreenSharingConstraints {
 		this.maxHeight = maxHeight;
 	}
 
-	public UiScreenSharingConstraints createUiScreenSharingConstraints() {
-		UiScreenSharingConstraints ui = new UiScreenSharingConstraints();
+	public DtoScreenSharingConstraints createUiScreenSharingConstraints() {
+		DtoScreenSharingConstraints ui = new DtoScreenSharingConstraints();
 		ui.setMaxWidth(maxWidth);
 		ui.setMaxHeight(maxHeight);
 		return ui;

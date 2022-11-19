@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph;
 
-import org.teamapps.dto.UiScaleType;
+import org.teamapps.dto.DtoScaleType;
 
 public enum ScaleType {
 
@@ -27,8 +27,8 @@ public enum ScaleType {
 	LOG10,
 	SYMLOG;
 
-	public UiScaleType toUiScaleType() {
-		return UiScaleType.valueOf(this.name());
+	public DtoScaleType toUiScaleType() {
+		return DtoScaleType.valueOf(this.name());
 	}
 
 }

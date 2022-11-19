@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiFieldEditingMode;
+import org.teamapps.dto.DtoFieldEditingMode;
 
 public enum FieldEditingMode {
 
@@ -28,8 +28,8 @@ public enum FieldEditingMode {
 	DISABLED,
 	READONLY;
 
-	public UiFieldEditingMode toUiFieldEditingMode() {
-		return UiFieldEditingMode.valueOf(this.name());
+	public DtoFieldEditingMode toUiFieldEditingMode() {
+		return DtoFieldEditingMode.valueOf(this.name());
 	}
 
 	public boolean isEditable() {

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.animation;
 
-import org.teamapps.dto.UiRepeatableAnimation;
+import org.teamapps.dto.DtoRepeatableAnimation;
 
 public enum RepeatableAnimation {
 
@@ -39,8 +39,8 @@ public enum RepeatableAnimation {
 	BLINK,
 	BLINK_SUBTLE;
 
-	public UiRepeatableAnimation toUiRepeatableAnimation() {
-		return UiRepeatableAnimation.valueOf(name());
+	public DtoRepeatableAnimation toUiRepeatableAnimation() {
+		return DtoRepeatableAnimation.valueOf(name());
 	}
 
 }

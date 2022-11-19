@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.template.gridtemplate;
 
-import org.teamapps.dto.AbstractUiTemplateElement;
-import org.teamapps.dto.UiCssAlignItems;
-import org.teamapps.dto.UiCssJustifyContent;
-import org.teamapps.dto.UiFloatingElement;
+import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoCssAlignItems;
+import org.teamapps.dto.DtoCssJustifyContent;
+import org.teamapps.dto.DtoFloatingElement;
 import org.teamapps.ux.css.CssAlignItems;
 import org.teamapps.ux.css.CssJustifyContent;
 
@@ -47,15 +47,15 @@ public class FloatingElement extends AbstractTemplateElement<FloatingElement> {
 	}
 
 	@Override
-	public AbstractUiTemplateElement createUiTemplateElement() {
-		List<AbstractUiTemplateElement> uiElements = elements.stream()
+	public DtoAbstractTemplateElement createUiTemplateElement() {
+		List<DtoAbstractTemplateElement> uiElements = elements.stream()
 				.map(element -> element != null ? element.createUiTemplateElement() : null)
 				.collect(Collectors.toList());
-		UiFloatingElement uiFloatingElement = new UiFloatingElement(propertyName, row, column, uiElements);
+		DtoFloatingElement uiFloatingElement = new DtoFloatingElement(propertyName, row, column, uiElements);
 		mapAbstractTemplateElementAttributesToUiElement(uiFloatingElement);
 		uiFloatingElement.setWrap(wrap);
-		uiFloatingElement.setAlignItems(alignItems != null ? UiCssAlignItems.valueOf(alignItems.name()) : null);
-		uiFloatingElement.setJustifyContent(justifyContent != null ? UiCssJustifyContent.valueOf(justifyContent.name()) : null);
+		uiFloatingElement.setAlignItems(alignItems != null ? DtoCssAlignItems.valueOf(alignItems.name()) : null);
+		uiFloatingElement.setJustifyContent(justifyContent != null ? DtoCssJustifyContent.valueOf(justifyContent.name()) : null);
 		return uiFloatingElement;
 	}
 

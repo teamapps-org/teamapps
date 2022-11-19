@@ -3,11 +3,11 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {A} from "./A";
-import {B} from "./B";
-import {C} from "./C";
+import {DtoA} from "./DtoA";
+import {DtoB} from "./DtoB";
+import {DtoC} from "./DtoC";
 
-export interface D extends A, B, C {
+export interface DtoD extends DtoA, DtoB, DtoC {
 	_type?: string;
 }
 

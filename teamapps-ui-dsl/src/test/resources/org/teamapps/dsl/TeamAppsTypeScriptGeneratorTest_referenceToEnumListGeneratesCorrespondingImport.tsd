@@ -3,11 +3,11 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {UiWeekDay} from "./UiWeekDay";
+import {DtoDtoWeekDay} from "./DtoDtoWeekDay";
 
-export interface UiCalendar {
+export interface DtoDtoCalendar {
 	_type?: string;
-	workingDays?: UiWeekDay[]
+	workingDays?: DtoDtoWeekDay[]
 }
 
 

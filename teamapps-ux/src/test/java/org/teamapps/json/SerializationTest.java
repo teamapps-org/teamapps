@@ -31,36 +31,36 @@ public class SerializationTest {
 	@Before
 	public void setUp() throws Exception {
 		teamAppsObjectMapper = TeamAppsObjectMapperFactory.create();
-		teamAppsObjectMapper.registerSubtypes(INIT_NOK.class);
+		teamAppsObjectMapper.registerSubtypes(DtoINIT_NOK.class);
 	}
 
 	@Test
 	public void serializeViaJsonSimple() throws Exception {
-		INIT init = new INIT("sessionId", null, 123);
+		DtoINIT init = new DtoINIT("sessionId", null, 123);
 		System.out.println(teamAppsObjectMapper.writeValueAsString(init));
 	}
 
 	@Test
 	public void serializeEnums() throws Exception {
-		INIT_NOK init = new INIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND);
+		DtoINIT_NOK init = new DtoINIT_NOK(DtoSessionClosingReason.SESSION_NOT_FOUND);
 		System.out.println(teamAppsObjectMapper.writeValueAsString(init));
 	}
 
 	@Test
 	public void serializeCommands() throws Exception {
-		UiWorkSpaceLayout.RefreshViewComponentCommand o = new UiWorkSpaceLayout.RefreshViewComponentCommand("viewName", new UiClientObjectReference("asdf"));
+		DtoWorkSpaceLayout.RefreshViewComponentCommand o = new DtoWorkSpaceLayout.RefreshViewComponentCommand("viewName", new UiClientObjectReference("asdf"));
 		System.out.println(teamAppsObjectMapper.writeValueAsString(o));
 	}
 
 	@Test
 	public void deserializeViaJackson() throws Exception {
-		UiObject uiObject = teamAppsObjectMapper.readValue("{\"_type\": \"INIT_NOK\", \"reason\":0}", UiObject.class);
+		DtoObject uiObject = teamAppsObjectMapper.readValue("{\"_type\": \"INIT_NOK\", \"reason\":0}", DtoObject.class);
 		System.out.println(uiObject);
 	}
 
 	@Test
 	public void blah() throws Exception {
-		UiMultiLineTextField.AppendCommand o = new UiMultiLineTextField.AppendCommand("string", true);
+		DtoMultiLineTextField.AppendCommand o = new DtoMultiLineTextField.AppendCommand("string", true);
 		System.out.println(teamAppsObjectMapper.writeValueAsString(o));
 	}
 }

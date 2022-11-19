@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.session;
 
-import org.teamapps.dto.UiLocation;
-import org.teamapps.dto.UiLocationWrapper;
+import org.teamapps.dto.DtoLocation;
+import org.teamapps.dto.DtoLocationWrapper;
 
 import java.util.Objects;
 
@@ -107,7 +107,7 @@ public class Location {
 		this.hash = hash;
 	}
 
-	public static Location fromUiLocation(UiLocation uiLocation) {
+	public static Location fromUiLocation(DtoLocation uiLocation) {
 		if (uiLocation.getPathname().length() > 0 && !uiLocation.getPathname().startsWith("/")) {
 			throw new IllegalArgumentException("Non-empty pathname must always start with a slash!");
 		}
@@ -124,7 +124,7 @@ public class Location {
 		);
 	}
 
-	public static Location fromUiLocationWrapper(UiLocationWrapper uiLocation) {
+	public static Location fromUiLocationWrapper(DtoLocationWrapper uiLocation) {
 		if (uiLocation.getPathname().length() > 0 && !uiLocation.getPathname().startsWith("/")) {
 			throw new IllegalArgumentException("Non-empty pathname must always start with a slash!");
 		}

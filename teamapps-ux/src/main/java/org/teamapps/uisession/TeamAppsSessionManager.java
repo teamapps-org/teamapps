@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsUploadManager;
 import org.teamapps.dto.UiGlobals;
-import org.teamapps.dto.UiSessionClosingReason;
+import org.teamapps.dto.DtoSessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.icons.SessionIconProvider;
@@ -219,7 +219,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getSearch()) ? "&" : "?";
 				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, null, new UiGlobals.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
 			}
-			uiSession.close(UiSessionClosingReason.WRONG_TEAMAPPS_VERSION);
+			uiSession.close(DtoSessionClosingReason.WRONG_TEAMAPPS_VERSION);
 			return;
 		}
 
@@ -282,7 +282,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		}
 		for (UiSession sessionToClose : sessionsToClose) {
 			LOGGER.info("Closing session: {} ({})", sessionToClose.getName(), sessionToClose.getSessionId());
-			sessionToClose.close(UiSessionClosingReason.SESSION_TIMEOUT);
+			sessionToClose.close(DtoSessionClosingReason.SESSION_TIMEOUT);
 		}
 	}
 

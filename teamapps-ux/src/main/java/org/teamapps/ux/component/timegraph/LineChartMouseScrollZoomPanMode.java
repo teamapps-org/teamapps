@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.timegraph;
 
-import org.teamapps.dto.UiLineChartMouseScrollZoomPanMode;
+import org.teamapps.dto.DtoLineChartMouseScrollZoomPanMode;
 
 public enum LineChartMouseScrollZoomPanMode {
 
 	ENABLED, WITH_MODIFIER_KEY, DISABLED;
 
-	public UiLineChartMouseScrollZoomPanMode toUiLineChartMouseScrollZoomPanMode() {
-		return UiLineChartMouseScrollZoomPanMode.valueOf(this.name());
+	public DtoLineChartMouseScrollZoomPanMode toUiLineChartMouseScrollZoomPanMode() {
+		return DtoLineChartMouseScrollZoomPanMode.valueOf(this.name());
 	}
 
 }

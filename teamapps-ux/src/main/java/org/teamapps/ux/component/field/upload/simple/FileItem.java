@@ -20,7 +20,7 @@
 
 package org.teamapps.ux.component.field.upload.simple;
 
-import org.teamapps.dto.UiFileItem;
+import org.teamapps.dto.DtoFileItem;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
@@ -149,8 +149,8 @@ public class FileItem {
 		this.fileField = fileField;
 	}
 
-	public UiFileItem createUiFileItem() {
-		UiFileItem uiFileItem = new UiFileItem();
+	public DtoFileItem createUiFileItem() {
+		DtoFileItem uiFileItem = new DtoFileItem();
 		uiFileItem.setUuid(uuid);
 		uiFileItem.setFileName(fileName);
 		uiFileItem.setDescription(description);

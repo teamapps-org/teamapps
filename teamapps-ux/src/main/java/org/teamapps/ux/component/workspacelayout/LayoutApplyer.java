@@ -47,7 +47,7 @@ class LayoutApplyer {
 
 	public Map<String, WorkSpaceLayoutItem> applyFromUiLayoutDescriptor(
 			Map<String, WorkSpaceLayoutItem> currentRootItemsByWindowId,
-			Map<String, UiWorkSpaceLayoutItemWrapper> newRootDescriptorsByWindowId
+			Map<String, DtoWorkSpaceLayoutItemWrapper> newRootDescriptorsByWindowId
 	) {
 		Map<String, LayoutItemWrapper> wrappedDescriptors = newRootDescriptorsByWindowId.entrySet().stream()
 				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> createWrapperFromUi(entry.getValue())));
@@ -239,13 +239,13 @@ class LayoutApplyer {
 		}
 	}
 
-	private static LayoutItemWrapper createWrapperFromUi(UiWorkSpaceLayoutItemWrapper child) {
+	private static LayoutItemWrapper createWrapperFromUi(DtoWorkSpaceLayoutItemWrapper child) {
 		switch (child.getTypeId()) {
-			case  UiWorkSpaceLayoutSplitItem.TYPE_ID -> {
-				return new UiWorkSpaceLayoutSplitItemWrapper(child.as(org.teamapps.dto.UiWorkSpaceLayoutSplitItemWrapper.class));
+			case  DtoWorkSpaceLayoutSplitItem.TYPE_ID -> {
+				return new DtoWorkSpaceLayoutSplitItemWrapper(child.as(org.teamapps.dto.DtoWorkSpaceLayoutSplitItemWrapper.class));
 			}
-			case  UiWorkSpaceLayoutViewGroupItem.TYPE_ID -> {
-				return new UiWorkSpaceLayoutViewGroupItemWrapper(child.as(org.teamapps.dto.UiWorkSpaceLayoutViewGroupItemWrapper.class));
+			case  DtoWorkSpaceLayoutViewGroupItem.TYPE_ID -> {
+				return new DtoWorkSpaceLayoutViewGroupItemWrapper(child.as(org.teamapps.dto.DtoWorkSpaceLayoutViewGroupItemWrapper.class));
 			}
 			default -> throw new IllegalArgumentException("Unknown layout item type " + child.getClass().getCanonicalName());
 		}
@@ -287,10 +287,10 @@ class LayoutApplyer {
 		ViewGroupPanelState getPanelState();
 	}
 
-	private static class UiWorkSpaceLayoutSplitItemWrapper implements SplitPaneWrapper {
-		private final org.teamapps.dto.UiWorkSpaceLayoutSplitItemWrapper item;
+	private static class DtoWorkSpaceLayoutSplitItemWrapper implements SplitPaneWrapper {
+		private final org.teamapps.dto.DtoWorkSpaceLayoutSplitItemWrapper item;
 
-		public UiWorkSpaceLayoutSplitItemWrapper(org.teamapps.dto.UiWorkSpaceLayoutSplitItemWrapper item) {
+		public DtoWorkSpaceLayoutSplitItemWrapper(org.teamapps.dto.DtoWorkSpaceLayoutSplitItemWrapper item) {
 			this.item = item;
 		}
 
@@ -326,10 +326,10 @@ class LayoutApplyer {
 
 	}
 
-	private static class UiWorkSpaceLayoutViewGroupItemWrapper implements ViewGroupWrapper {
-		private final org.teamapps.dto.UiWorkSpaceLayoutViewGroupItemWrapper item;
+	private static class DtoWorkSpaceLayoutViewGroupItemWrapper implements ViewGroupWrapper {
+		private final org.teamapps.dto.DtoWorkSpaceLayoutViewGroupItemWrapper item;
 
-		public UiWorkSpaceLayoutViewGroupItemWrapper(org.teamapps.dto.UiWorkSpaceLayoutViewGroupItemWrapper item) {
+		public DtoWorkSpaceLayoutViewGroupItemWrapper(org.teamapps.dto.DtoWorkSpaceLayoutViewGroupItemWrapper item) {
 			this.item = item;
 		}
 

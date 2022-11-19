@@ -21,7 +21,7 @@ package org.teamapps.ux.component.charting.forcelayout;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiNetworkLink;
+import org.teamapps.dto.DtoNetworkLink;
 
 public class ForceLayoutLink<RECORD> {
 
@@ -38,8 +38,8 @@ public class ForceLayoutLink<RECORD> {
 		this.target = target;
 	}
 
-	public UiNetworkLink toUiNetworkLink() {
-		UiNetworkLink ui = new UiNetworkLink(source.getId(), target.getId());
+	public DtoNetworkLink toUiNetworkLink() {
+		DtoNetworkLink ui = new DtoNetworkLink(source.getId(), target.getId());
 		ui.setLineWidth(lineWidth);
 		ui.setLineColor(lineColor != null ? lineColor.toHtmlColorString(): null);
 		ui.setLineDashArray(lineDashArray);

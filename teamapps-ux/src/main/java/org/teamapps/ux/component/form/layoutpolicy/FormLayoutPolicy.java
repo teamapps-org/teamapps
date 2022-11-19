@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.form.layoutpolicy;
 
-import org.teamapps.dto.UiFormLayoutPolicy;
-import org.teamapps.dto.UiFormSection;
+import org.teamapps.dto.DtoFormLayoutPolicy;
+import org.teamapps.dto.DtoFormSection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +54,8 @@ public class FormLayoutPolicy {
 		return this;
 	}
 
-	public UiFormLayoutPolicy createUiLayoutPolicy() {
-		List<UiFormSection> uiSections = sections.stream().map(section -> section != null ? section.createUiFormSection() : null).collect(Collectors.toList());
-		return new UiFormLayoutPolicy(minWidth, uiSections);
+	public DtoFormLayoutPolicy createUiLayoutPolicy() {
+		List<DtoFormSection> uiSections = sections.stream().map(section -> section != null ? section.createUiFormSection() : null).collect(Collectors.toList());
+		return new DtoFormLayoutPolicy(minWidth, uiSections);
 	}
 }

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.grid.layout;
 
-import org.teamapps.dto.UiComponentGridPlacement;
+import org.teamapps.dto.DtoComponentGridPlacement;
 import org.teamapps.ux.component.Component;
 
 import java.util.Collections;
@@ -38,8 +38,8 @@ public class ComponentGridPlacement extends AbstractGridPlacement {
 	}
 
 	@Override
-	public UiComponentGridPlacement createUiGridPlacement() {
-		UiComponentGridPlacement uiPlacement = new UiComponentGridPlacement(component.createUiReference());
+	public DtoComponentGridPlacement createUiGridPlacement() {
+		DtoComponentGridPlacement uiPlacement = new DtoComponentGridPlacement(component.createUiReference());
 		mapAbstractGridPlacementUiProperties(uiPlacement);
 		return uiPlacement;
 	}

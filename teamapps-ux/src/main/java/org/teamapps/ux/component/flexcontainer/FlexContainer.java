@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.flexcontainer;
 
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiFlexContainer;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoFlexContainer;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -43,8 +43,8 @@ public class FlexContainer extends AbstractComponent {
 	private CssJustifyContent justifyContent = CssJustifyContent.START;
 
 	@Override
-	public UiFlexContainer createUiClientObject() {
-		UiFlexContainer uiFlexContainer = new UiFlexContainer();
+	public DtoFlexContainer createUiClientObject() {
+		DtoFlexContainer uiFlexContainer = new DtoFlexContainer();
 		mapAbstractUiComponentProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()
 				.map(c -> c.createUiReference())
@@ -57,7 +57,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void addComponent(Component component) {
 		this.components.add(component);
-		sendCommandIfRendered(() -> new UiFlexContainer.AddComponentCommand(component.createUiReference()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.AddComponentCommand(component.createUiReference()));
 	}
 
 	public void addComponent(Component component, FlexSizingPolicy sizingPolicy) {
@@ -67,16 +67,16 @@ public class FlexContainer extends AbstractComponent {
 
 	public void removeComponent(Component component) {
 		this.components.remove(component);
-		sendCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(component.createUiReference()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(component.createUiReference()));
 	}
 
 	public void removeAllComponents() {
-		this.components.forEach(c -> sendCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(c.createUiReference())));
+		this.components.forEach(c -> sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(c.createUiReference())));
 		this.components.clear();
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 
 	}
 

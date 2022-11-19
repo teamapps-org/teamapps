@@ -101,10 +101,10 @@ public class TeamAppsJavaDtoGenerator {
 				continue;
 			}
 			System.out.println("Generating class: " + clazzContext.Identifier());
-			generateClass(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + ".java")));
-			generateClassJsonWrapper(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + "Wrapper.java")));
+			generateClass(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + ".java")));
+			generateClassJsonWrapper(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + "Wrapper.java")));
 			if (model.isReferencableBaseClass(clazzContext)) {
-				generateClassReference(clazzContext, new FileWriter(new File(packageDir, clazzContext.Identifier() + "Reference.java")));
+				generateClassReference(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + "Reference.java")));
 			}
 		}
 		for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getOwnInterfaceDeclarations()) {
@@ -115,10 +115,10 @@ public class TeamAppsJavaDtoGenerator {
 				continue;
 			}
 			logger.info("Generating interface: " + interfaceContext.Identifier());
-			generateInterface(interfaceContext, new FileWriter(new File(packageDir, interfaceContext.Identifier() + ".java")));
-			generateInterfaceJsonWrapper(interfaceContext, new FileWriter(new File(packageDir, interfaceContext.Identifier() + "Wrapper.java")));
+			generateInterface(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + ".java")));
+			generateInterfaceJsonWrapper(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + "Wrapper.java")));
 			if (model.isReferencableBaseInterface(interfaceContext)) {
-				generateInterfaceReference(interfaceContext, new FileWriter(new File(packageDir, interfaceContext.Identifier() + "Reference.java")));
+				generateInterfaceReference(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + "Reference.java")));
 			}
 		}
 		for (TeamAppsDtoParser.EnumDeclarationContext enumContext : model.getOwnEnumDeclarations()) {
@@ -128,7 +128,7 @@ public class TeamAppsJavaDtoGenerator {
 				System.out.println("Skipping @NotGenerated enum: " + enumContext.Identifier());
 				continue;
 			}
-			generateEnum(enumContext, new FileWriter(new File(packageDir, enumContext.Identifier() + ".java")));
+			generateEnum(enumContext, new FileWriter(new File(packageDir, "Dto" + enumContext.Identifier() + ".java")));
 		}
 	}
 

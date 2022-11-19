@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.map.shape;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiMapCircle;
+import org.teamapps.dto.DtoMapCircle;
 import org.teamapps.ux.component.map.Location;
 
 public class MapCircle extends AbstractMapShape {
@@ -53,8 +53,8 @@ public class MapCircle extends AbstractMapShape {
 		this(center, radiusMeters, new ShapeProperties(strokeColor, strokeWidth, fillColor));
 	}
 
-	public UiMapCircle createUiMapShape() {
-		UiMapCircle uiCircle = new UiMapCircle();
+	public DtoMapCircle createUiMapShape() {
+		DtoMapCircle uiCircle = new DtoMapCircle();
 		mapAbstractUiShapeProperties(uiCircle);
 		uiCircle.setCenter(center.createUiLocation());
 		uiCircle.setRadius(radiusMeters);

@@ -21,7 +21,7 @@ package org.teamapps.ux.cache.record.legacy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiIdentifiableClientRecord;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
 import org.teamapps.util.StreamUtil;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
 
-public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientRecord> {
+public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRecord> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClientRecordCache.class);
 

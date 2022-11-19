@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiNotificationBarItem;
+import org.teamapps.dto.DtoNotificationBarItem;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.animation.EntranceAnimation;
@@ -101,8 +101,8 @@ public class NotificationBarItem {
 		this.exitAnimation = exitAnimation;
 	}
 
-	public UiNotificationBarItem toUiNotificationBarItem() {
-		UiNotificationBarItem ui = new UiNotificationBarItem();
+	public DtoNotificationBarItem toUiNotificationBarItem() {
+		DtoNotificationBarItem ui = new DtoNotificationBarItem();
 		ui.setId(uiId);
 		ui.setIcon(SessionContext.current().resolveIcon(icon));
 		ui.setIconAnimation(iconAnimation != null ? iconAnimation.toUiRepeatableAnimation() : null);

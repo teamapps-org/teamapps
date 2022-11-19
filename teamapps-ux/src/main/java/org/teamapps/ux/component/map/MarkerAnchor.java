@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.map;
 
-import org.teamapps.dto.UiMapMarkerAnchor;
+import org.teamapps.dto.DtoMapMarkerAnchor;
 
 public enum MarkerAnchor {
 
@@ -33,8 +33,8 @@ public enum MarkerAnchor {
 	BOTTOM_LEFT,
 	BOTTOM_RIGHT;
 
-	public UiMapMarkerAnchor toUiMapMarkerAnchor() {
-		return UiMapMarkerAnchor.valueOf(name());
+	public DtoMapMarkerAnchor toUiMapMarkerAnchor() {
+		return DtoMapMarkerAnchor.valueOf(name());
 	}
 
 }

@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.field.datetime;
 
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiLocalTimeField;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoLocalTimeField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
@@ -35,8 +35,8 @@ public class LocalTimeField extends AbstractTimeField<LocalTime> {
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiLocalTimeField uiTimeField = new UiLocalTimeField();
+	public DtoField createUiClientObject() {
+		DtoLocalTimeField uiTimeField = new DtoLocalTimeField();
 		mapAbstractTimeFieldUiValues(uiTimeField);
 		return uiTimeField;
 	}

@@ -19,13 +19,13 @@
  */
 package org.teamapps.ux.component.splitpane;
 
-import org.teamapps.dto.UiSplitDirection;
+import org.teamapps.dto.DtoSplitDirection;
 
 public enum SplitDirection {
 
 	HORIZONTAL, VERTICAL;
 
-	UiSplitDirection toUiSplitDirection() {
-		return UiSplitDirection.valueOf(this.name());
+	DtoSplitDirection toUiSplitDirection() {
+		return DtoSplitDirection.valueOf(this.name());
 	}
 }

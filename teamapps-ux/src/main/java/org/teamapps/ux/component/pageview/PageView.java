@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiPageView;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoPageView;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.ArrayList;
@@ -32,8 +32,8 @@ public class PageView extends AbstractComponent {
 	private List<AbstractPageViewBlock> blocks = new ArrayList<>();
 
 	@Override
-	public UiPageView createUiClientObject() {
-		UiPageView uiPageView = new UiPageView();
+	public DtoPageView createUiClientObject() {
+		DtoPageView uiPageView = new DtoPageView();
 		mapAbstractUiComponentProperties(uiPageView);
 		uiPageView.setBlocks(blocks.stream()
 				.map(block -> block.createUiBlock())
@@ -43,16 +43,16 @@ public class PageView extends AbstractComponent {
 
 	public void addBlock(AbstractPageViewBlock block) {
 		blocks.add(block);
-		sendCommandIfRendered(() -> new UiPageView.AddBlockCommand(block.createUiBlock(), false, null));
+		sendCommandIfRendered(() -> new DtoPageView.AddBlockCommand(block.createUiBlock(), false, null));
 	}
 
 	public void removeBlock(AbstractPageViewBlock block) {
 		blocks.add(block);
-		sendCommandIfRendered(() -> new UiPageView.RemoveBlockCommand(block.getClientId()));
+		sendCommandIfRendered(() -> new DtoPageView.RemoveBlockCommand(block.getClientId()));
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		// none
 	}
 }

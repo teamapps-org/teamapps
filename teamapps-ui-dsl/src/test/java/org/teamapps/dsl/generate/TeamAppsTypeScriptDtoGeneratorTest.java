@@ -142,9 +142,9 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 	@Test
 	public void referenceToEnumListGeneratesCorrespondingImport() throws Exception {
 		executeClassTest(
-				"package org.teamapps.dto; \tenum UiWeekDay {SUNDAY, MONDAY }\n"
-						+ "\tclass UiCalendar { List<UiWeekDay> workingDays; }",
-				"UiCalendar",
+				"package org.teamapps.dto; \tenum DtoWeekDay {SUNDAY, MONDAY }\n"
+						+ "\tclass DtoCalendar { List<DtoWeekDay> workingDays; }",
+				"DtoCalendar",
 				"org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_referenceToEnumListGeneratesCorrespondingImport.tsd"
 		);
 	}

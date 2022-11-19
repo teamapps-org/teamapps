@@ -21,7 +21,7 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiImageField;
+import org.teamapps.dto.DtoImageField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.absolutelayout.Length;
@@ -42,8 +42,8 @@ public class ImageField extends AbstractField<String> {
 	}
 
 	@Override
-	public UiImageField createUiClientObject() {
-		UiImageField uiImageField = new UiImageField();
+	public DtoImageField createUiClientObject() {
+		DtoImageField uiImageField = new DtoImageField();
 		mapAbstractFieldAttributesToUiField(uiImageField);
 		uiImageField.setWidth(width.toCssString());
 		uiImageField.setHeight(height.toCssString());
@@ -59,7 +59,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setWidth(Length width) {
 		this.width = width;
-		sendCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -69,7 +69,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setHeight(Length height) {
 		this.height = height;
-		sendCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -79,7 +79,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setBorder(Border border) {
 		this.border = border;
-		sendCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -89,7 +89,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setImageSizing(ImageSizing imageSizing) {
 		this.imageSizing = imageSizing;
-		sendCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
 		return this;
 	}
 
@@ -99,6 +99,6 @@ public class ImageField extends AbstractField<String> {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
 	}
 }

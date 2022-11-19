@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.tabpanel;
 
-import org.teamapps.dto.UiTabPanelTabStyle;
+import org.teamapps.dto.DtoTabPanelTabStyle;
 
 public enum TabPanelTabStyle {
 
 	BLOCKS, EARS;
 
-	public UiTabPanelTabStyle toUiTabPanelTabStyle() {
-		return UiTabPanelTabStyle.valueOf(this.name());
+	public DtoTabPanelTabStyle toUiTabPanelTabStyle() {
+		return DtoTabPanelTabStyle.valueOf(this.name());
 	}
 
 }

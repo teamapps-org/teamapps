@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.map.shape;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiShapeProperties;
+import org.teamapps.dto.DtoShapeProperties;
 
 import java.util.List;
 
@@ -84,8 +84,8 @@ public class ShapeProperties {
 		this.strokeDashArray = strokeDashArray;
 	}
 
-	public UiShapeProperties createUiShapeProperties() {
-		UiShapeProperties properties = new UiShapeProperties();
+	public DtoShapeProperties createUiShapeProperties() {
+		DtoShapeProperties properties = new DtoShapeProperties();
 		properties.setFillColor(fillColor != null ? fillColor.toHtmlColorString() : null);
 		properties.setStrokeColor(strokeColor != null ? strokeColor.toHtmlColorString() : null);
 		properties.setStrokeWeight(strokeWeight);

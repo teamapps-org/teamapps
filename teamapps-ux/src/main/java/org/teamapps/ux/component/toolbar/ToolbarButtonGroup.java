@@ -22,8 +22,8 @@ package org.teamapps.ux.component.toolbar;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.UiToolbarButton;
-import org.teamapps.dto.UiToolbarButtonGroup;
+import org.teamapps.dto.DtoToolbarButton;
+import org.teamapps.dto.DtoToolbarButtonGroup;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.Template;
 
@@ -102,11 +102,11 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 		return position;
 	}
 
-	public UiToolbarButtonGroup createUiToolbarButtonGroup() {
-		List<UiToolbarButton> buttons = this.buttons.stream()
+	public DtoToolbarButtonGroup createUiToolbarButtonGroup() {
+		List<DtoToolbarButton> buttons = this.buttons.stream()
 				.map(button -> button.createUiToolbarButton())
 				.collect(Collectors.toList());
-		UiToolbarButtonGroup buttonGroup = new UiToolbarButtonGroup(clientId, buttons);
+		DtoToolbarButtonGroup buttonGroup = new DtoToolbarButtonGroup(clientId, buttons);
 		buttonGroup.setVisible(visible);
 		buttonGroup.setShowGroupSeparator(showGroupSeparator);
 		return buttonGroup;

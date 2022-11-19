@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.template;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiTemplate;
+import org.teamapps.dto.DtoTemplate;
 import org.teamapps.dto.UiTemplateReference;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.common.format.RgbaColor;
@@ -631,7 +631,7 @@ public enum BaseTemplate implements Template {
 	}
 
 	@Override
-	public UiTemplate createUiTemplate() {
+	public DtoTemplate createUiTemplate() {
 		return uiTemplateReference;
 	}
 

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.form.layoutpolicy;
 
-import org.teamapps.dto.UiFormSectionFloatingField;
+import org.teamapps.dto.DtoFormSectionFloatingField;
 import org.teamapps.ux.component.field.AbstractField;
 
 public class FormSectionFloatingField {
@@ -70,8 +70,8 @@ public class FormSectionFloatingField {
 		this.maxHeight = maxHeight;
 	}
 
-	public UiFormSectionFloatingField createUiFormSectionFloatingField() {
-		UiFormSectionFloatingField floatingField = new UiFormSectionFloatingField(field.createUiReference());
+	public DtoFormSectionFloatingField createUiFormSectionFloatingField() {
+		DtoFormSectionFloatingField floatingField = new DtoFormSectionFloatingField(field.createUiReference());
 		floatingField.setMinWidth(minWidth);
 		floatingField.setMaxWidth(maxWidth);
 		floatingField.setMinHeight(minHeight);

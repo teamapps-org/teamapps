@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.map;
 
-import org.teamapps.dto.UiMapLocation;
-import org.teamapps.dto.UiMapLocationWrapper;
+import org.teamapps.dto.DtoMapLocation;
+import org.teamapps.dto.DtoMapLocationWrapper;
 
 public class Location {
 
@@ -32,11 +32,11 @@ public class Location {
 		this.longitude = longitude;
 	}
 
-	public static Location fromUiMapLocation(UiMapLocation uiMapLocation) {
+	public static Location fromUiMapLocation(DtoMapLocation uiMapLocation) {
 		return new Location(uiMapLocation.getLatitude(), uiMapLocation.getLongitude());
 	}
 
-	public static Location fromUiMapLocationWrapper(UiMapLocationWrapper uiMapLocation) {
+	public static Location fromUiMapLocationWrapper(DtoMapLocationWrapper uiMapLocation) {
 		return new Location(uiMapLocation.getLatitude(), uiMapLocation.getLongitude());
 	}
 
@@ -48,8 +48,8 @@ public class Location {
 		return longitude;
 	}
 
-	public UiMapLocation createUiLocation() {
-		return new UiMapLocation((float) latitude, (float)longitude);
+	public DtoMapLocation createUiLocation() {
+		return new DtoMapLocation((float) latitude, (float)longitude);
 	}
 
 	@Override

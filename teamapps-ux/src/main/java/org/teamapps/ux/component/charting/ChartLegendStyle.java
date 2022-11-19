@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.charting;
 
-import org.teamapps.dto.UiChartLegendStyle;
+import org.teamapps.dto.DtoChartLegendStyle;
 
 public enum ChartLegendStyle {
 
@@ -30,8 +30,8 @@ public enum ChartLegendStyle {
 	SEPARATE_BOTTOM,
 	SEPARATE_RIGHT;
 
-	public UiChartLegendStyle toUiChartLegendStyle() {
-		return UiChartLegendStyle.valueOf(name());
+	public DtoChartLegendStyle toUiChartLegendStyle() {
+		return DtoChartLegendStyle.valueOf(name());
 	}
 
 }

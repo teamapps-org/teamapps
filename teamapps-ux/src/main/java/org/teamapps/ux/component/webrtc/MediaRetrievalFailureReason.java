@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.webrtc;
 
-import org.teamapps.dto.UiMediaRetrievalFailureReason;
+import org.teamapps.dto.DtoMediaRetrievalFailureReason;
 
 public enum MediaRetrievalFailureReason {
 	MIC_MEDIA_RETRIEVAL_FAILED,
@@ -27,7 +27,7 @@ public enum MediaRetrievalFailureReason {
 	DISPLAY_MEDIA_RETRIEVAL_FAILED,
 	VIDEO_MIXING_FAILED;
 
-	public UiMediaRetrievalFailureReason toUiMediaRetrievalFailureReason() {
-		return UiMediaRetrievalFailureReason.valueOf(this.name());
+	public DtoMediaRetrievalFailureReason toUiMediaRetrievalFailureReason() {
+		return DtoMediaRetrievalFailureReason.valueOf(this.name());
 	}
 }

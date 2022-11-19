@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiLabel;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoLabel;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
@@ -31,7 +31,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Label extends AbstractField<String> {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiLabel.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLabel.ClickedEvent.TYPE_ID);
 
 	private String caption;
 	private Icon icon;
@@ -48,8 +48,8 @@ public class Label extends AbstractField<String> {
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiLabel uiLabel = new UiLabel(caption);
+	public DtoField createUiClientObject() {
+		DtoLabel uiLabel = new DtoLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));
 		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createUiReference() : null);
@@ -57,10 +57,10 @@ public class Label extends AbstractField<String> {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		switch (event.getTypeId()) {
-			case UiLabel.ClickedEvent.TYPE_ID -> {
+			case DtoLabel.ClickedEvent.TYPE_ID -> {
 				this.onClicked.fire();
 			}
 		}
@@ -72,7 +72,7 @@ public class Label extends AbstractField<String> {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
-		sendCommandIfRendered(() -> new UiLabel.SetCaptionCommand(caption));
+		sendCommandIfRendered(() -> new DtoLabel.SetCaptionCommand(caption));
 	}
 
 	public Icon getIcon() {
@@ -81,7 +81,7 @@ public class Label extends AbstractField<String> {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-		sendCommandIfRendered(() -> new UiLabel.SetIconCommand(getSessionContext().resolveIcon(icon)));
+		sendCommandIfRendered(() -> new DtoLabel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
 	public Component getTargetComponent() {
@@ -93,7 +93,7 @@ public class Label extends AbstractField<String> {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetComponent = targetComponent;
-		sendCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(Component.createUiClientObjectReference(targetComponent)));
+		sendCommandIfRendered(() -> new DtoLabel.SetTargetComponentCommand(Component.createUiClientObjectReference(targetComponent)));
 		return this;
 	}
 }

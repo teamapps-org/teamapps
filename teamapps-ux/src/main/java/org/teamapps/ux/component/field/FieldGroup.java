@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiFieldGroup;
+import org.teamapps.dto.DtoFieldGroup;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.flexcontainer.FlexSizeUnit;
 import org.teamapps.ux.component.flexcontainer.FlexSizingPolicy;
@@ -34,8 +34,8 @@ public class FieldGroup extends AbstractComponent {
 	private final List<AbstractField> fields = new ArrayList<>();
 
 	@Override
-	public UiFieldGroup createUiClientObject() {
-		UiFieldGroup uiFieldGroup = new UiFieldGroup();
+	public DtoFieldGroup createUiClientObject() {
+		DtoFieldGroup uiFieldGroup = new DtoFieldGroup();
 		mapAbstractUiComponentProperties(uiFieldGroup);
 		uiFieldGroup.setFields(createUiFieldReferences());
 		return uiFieldGroup;
@@ -53,7 +53,7 @@ public class FieldGroup extends AbstractComponent {
 			index = this.fields.size();
 		}
 		this.fields.add(index, field);
-		sendCommandIfRendered(() -> new UiFieldGroup.SetFieldsCommand(createUiFieldReferences()));
+		sendCommandIfRendered(() -> new DtoFieldGroup.SetFieldsCommand(createUiFieldReferences()));
 	}
 
 	public void addField(AbstractField field, FlexSizingPolicy sizingPolicy) {
@@ -84,7 +84,7 @@ public class FieldGroup extends AbstractComponent {
 
 	public void removeField(AbstractField field) {
 		this.fields.remove(field);
-		sendCommandIfRendered(() -> new UiFieldGroup.SetFieldsCommand(createUiFieldReferences()));
+		sendCommandIfRendered(() -> new DtoFieldGroup.SetFieldsCommand(createUiFieldReferences()));
 	}
 
 }

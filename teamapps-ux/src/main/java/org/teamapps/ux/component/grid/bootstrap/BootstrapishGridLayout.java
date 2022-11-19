@@ -69,13 +69,13 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiResponsiveGridLayout uiResponsiveGridLayout = new UiResponsiveGridLayout(createUiLayoutPolicies());
+		DtoResponsiveGridLayout uiResponsiveGridLayout = new DtoResponsiveGridLayout(createUiLayoutPolicies());
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);
 		uiResponsiveGridLayout.setFillHeight(this.fillHeight);
 		return uiResponsiveGridLayout;
 	}
 
-	private List<UiResponsiveGridLayoutPolicy> createUiLayoutPolicies() {
+	private List<DtoResponsiveGridLayoutPolicy> createUiLayoutPolicies() {
 		// find out which responsive breakpoints are actually being used
 		Set<BootstrapishBreakpoint> usedResponsiveBreakpoints = rows.stream()
 				.flatMap(row -> row.getPlacements().stream())
@@ -84,27 +84,27 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 		// for each of these breakpoints, create the layout policy
 		return usedResponsiveBreakpoints.stream()
 				.map(breakpoint -> {
-					List<UiGridColumn> uiGridColumns = columns.stream()
+					List<DtoGridColumn> uiGridColumns = columns.stream()
 							.map(c -> c.createUiGridColumn()).collect(Collectors.toList());
-					List<UiGridPlacement> uiGridPlacements = createUiGridPlacements(breakpoint);
+					List<DtoGridPlacement> uiGridPlacements = createUiGridPlacements(breakpoint);
 					Integer maxUiRowIndex = uiGridPlacements.stream()
 							.map(uiGridPlacement -> uiGridPlacement.getRow())
 							.max(Integer::compareTo).orElse(0);
-					List<UiGridRow> uiGridRows = IntStream.rangeClosed(0, maxUiRowIndex)
-							.mapToObj(i -> new UiGridRow().setHeightPolicy(new UiSizingPolicy(UiSizeType.AUTO)))
+					List<DtoGridRow> uiGridRows = IntStream.rangeClosed(0, maxUiRowIndex)
+							.mapToObj(i -> new DtoGridRow().setHeightPolicy(new DtoSizingPolicy(DtoSizeType.AUTO)))
 							.collect(Collectors.toList());
-					UiGridLayout uiGridLayout = new UiGridLayout(uiGridColumns, uiGridRows, uiGridPlacements)
-							.setPadding(new UiSpacing().setTop(gridGap / 2).setRight(gridGap / 2).setBottom(gridGap / 2).setLeft(gridGap / 2))
+					DtoGridLayout uiGridLayout = new DtoGridLayout(uiGridColumns, uiGridRows, uiGridPlacements)
+							.setPadding(new DtoSpacing().setTop(gridGap / 2).setRight(gridGap / 2).setBottom(gridGap / 2).setLeft(gridGap / 2))
 							.setGridGap(this.gridGap)
 							.setVerticalAlignment(this.verticalItemAlignment != null ? this.verticalItemAlignment.toUiVerticalElementAlignment() : null)
 							.setHorizontalAlignment(this.horizontalItemAlignment != null ? this.horizontalItemAlignment.toUiHorizontalElementAlignment() : null);
-					return new UiResponsiveGridLayoutPolicy(responsiveBreakpointMinWidths.get(breakpoint), uiGridLayout);
+					return new DtoResponsiveGridLayoutPolicy(responsiveBreakpointMinWidths.get(breakpoint), uiGridLayout);
 				})
 				.collect(Collectors.toList());
 	}
 
-	private List<UiGridPlacement> createUiGridPlacements(BootstrapishBreakpoint breakpoint) {
-		List<UiGridPlacement> uiPlacements = new ArrayList<>();
+	private List<DtoGridPlacement> createUiGridPlacements(BootstrapishBreakpoint breakpoint) {
+		List<DtoGridPlacement> uiPlacements = new ArrayList<>();
 		int uiRowIndex = 0;
 		for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++, uiRowIndex++) {
 			int currentColumnIndex = 0;
@@ -119,7 +119,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 					uiRowIndex++;
 					currentColumnIndex = 0;
 				}
-				uiPlacements.add(new UiComponentGridPlacement(placement.getComponent().createUiReference())
+				uiPlacements.add(new DtoComponentGridPlacement(placement.getComponent().createUiReference())
 						.setRow(uiRowIndex)
 						.setColumn(currentColumnIndex + sizing.getOffset())
 						.setColSpan(colSpan)
@@ -133,11 +133,11 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 	}
 
 	public void refreshLayout() {
-		sendCommandIfRendered(() -> new UiResponsiveGridLayout.UpdateLayoutPoliciesCommand(createUiLayoutPolicies()));
+		sendCommandIfRendered(() -> new DtoResponsiveGridLayout.UpdateLayoutPoliciesCommand(createUiLayoutPolicies()));
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		// none
 	}
 
@@ -175,7 +175,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 
 	public void setFillHeight(boolean fillHeight) {
 		this.fillHeight = fillHeight;
-		sendCommandIfRendered(() -> new UiResponsiveGridLayout.SetFillHeightCommand(fillHeight));
+		sendCommandIfRendered(() -> new DtoResponsiveGridLayout.SetFillHeightCommand(fillHeight));
 	}
 
 	public Map<BootstrapishBreakpoint, Integer> getResponsiveBreakpointMinWidths() {

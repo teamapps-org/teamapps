@@ -21,7 +21,7 @@ package org.teamapps.ux.cache.record;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiIdentifiableClientRecord;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -31,7 +31,7 @@ import java.util.stream.IntStream;
 public class RenderedRecordsCache<RECORD> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final Map<EqualsHashCodeWrapper<RECORD>, UiIdentifiableClientRecord> uiRecordsByRecord = new HashMap<>();
+	private final Map<EqualsHashCodeWrapper<RECORD>, DtoIdentifiableClientRecord> uiRecordsByRecord = new HashMap<>();
 	private final List<RecordAndClientRecord<RECORD>> recordPairs = new ArrayList<>();
 	private final EqualsAndHashCode<RECORD> customEqualsAndHashCode;
 	private int startIndex = 0;
@@ -44,7 +44,7 @@ public class RenderedRecordsCache<RECORD> {
 		this.customEqualsAndHashCode = customEqualsAndHashCode;
 	}
 
-	public UiIdentifiableClientRecord getUiRecord(RECORD record) {
+	public DtoIdentifiableClientRecord getUiRecord(RECORD record) {
 		return uiRecordsByRecord.get(withCustomEqualsHashCode(record));
 	}
 

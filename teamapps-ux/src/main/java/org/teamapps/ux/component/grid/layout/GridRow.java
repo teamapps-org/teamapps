@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.grid.layout;
 
-import org.teamapps.dto.UiGridRow;
+import org.teamapps.dto.DtoGridRow;
 import org.teamapps.ux.component.format.SizingPolicy;
 
 public class GridRow {
@@ -73,8 +73,8 @@ public class GridRow {
 		return this;
 	}
 
-	public UiGridRow createUiGridRow() {
-		return new UiGridRow()
+	public DtoGridRow createUiGridRow() {
+		return new DtoGridRow()
 				.setHeightPolicy(heightPolicy != null ? heightPolicy.createUiSizingPolicy() : null)
 				.setTopPadding(topPadding)
 				.setBottomPadding(bottomPadding);

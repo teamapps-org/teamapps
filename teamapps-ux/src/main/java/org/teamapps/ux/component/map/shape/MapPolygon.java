@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.map.shape;
 
-import org.teamapps.dto.UiMapPolygon;
+import org.teamapps.dto.DtoMapPolygon;
 import org.teamapps.ux.component.map.Location;
 
 import java.util.List;
@@ -34,8 +34,8 @@ public class MapPolygon extends AbstractMapShape {
 		this.locations = locations;
 	}
 
-	public UiMapPolygon createUiMapShape() {
-		UiMapPolygon uiPolygon = new UiMapPolygon();
+	public DtoMapPolygon createUiMapShape() {
+		DtoMapPolygon uiPolygon = new DtoMapPolygon();
 		mapAbstractUiShapeProperties(uiPolygon);
 		uiPolygon.setPath(locations.stream()
 				.map(Location::createUiLocation)

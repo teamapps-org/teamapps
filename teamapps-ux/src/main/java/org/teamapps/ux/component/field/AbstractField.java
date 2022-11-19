@@ -21,8 +21,8 @@ package org.teamapps.ux.component.field;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiField;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.validator.FieldValidator;
@@ -45,9 +45,9 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 							CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
-	public final ProjectorEvent<VALUE> onFocus = createProjectorEventBoundToUiEvent(UiField.FocusEvent.TYPE_ID);
-	public final ProjectorEvent<VALUE> onBlur = createProjectorEventBoundToUiEvent(UiField.BlurEvent.TYPE_ID);
-	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(UiField.ValueChangedEvent.TYPE_ID);
+	public final ProjectorEvent<VALUE> onFocus = createProjectorEventBoundToUiEvent(DtoField.FocusEvent.TYPE_ID);
+	public final ProjectorEvent<VALUE> onBlur = createProjectorEventBoundToUiEvent(DtoField.BlurEvent.TYPE_ID);
+	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(DtoField.ValueChangedEvent.TYPE_ID);
 	public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
 
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
@@ -67,7 +67,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	public void setEditingMode(FieldEditingMode editingMode) {
 		this.editingMode = editingMode;
-		sendCommandIfRendered(() -> new UiField.SetEditingModeCommand(editingMode.toUiFieldEditingMode()));
+		sendCommandIfRendered(() -> new DtoField.SetEditingModeCommand(editingMode.toUiFieldEditingMode()));
 	}
 
 	public void setVisible(boolean visible) {
@@ -76,10 +76,10 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void focus() {
-		sendCommandIfRendered(() -> new UiField.FocusCommand());
+		sendCommandIfRendered(() -> new DtoField.FocusCommand());
 	}
 
-	protected void mapAbstractFieldAttributesToUiField(UiField uiField) {
+	protected void mapAbstractFieldAttributesToUiField(DtoField uiField) {
 		mapAbstractUiComponentProperties(uiField);
 		uiField.setValue(convertUxValueToUiValue(this.value.read()));
 		uiField.setEditingMode(editingMode.toUiFieldEditingMode());
@@ -93,7 +93,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		MultiWriteLockableValue.Lock lock = this.value.writeAndLock(value);
 		Object uiValue = this.convertUxValueToUiValue(value);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new UiField.SetValueCommand(uiValue), aVoid -> lock.release());
+			getSessionContext().sendCommand(getId(), new DtoField.SetValueCommand(uiValue), aVoid -> lock.release());
 		} else {
 			lock.release();
 		}
@@ -119,15 +119,15 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiField.ValueChangedEvent.TYPE_ID -> {
-		 var e = event.as(UiField.ValueChangedEventWrapper.class);
+			case DtoField.ValueChangedEvent.TYPE_ID -> {
+		 var e = event.as(DtoField.ValueChangedEventWrapper.class);
 				applyValueFromUi(e.getValue());
 				validate();
 			}
-			case UiField.FocusEvent.TYPE_ID -> onFocus.fire();
-			case UiField.BlurEvent.TYPE_ID -> onBlur.fire();
+			case DtoField.FocusEvent.TYPE_ID -> onFocus.fire();
+			case DtoField.BlurEvent.TYPE_ID -> onBlur.fire();
 		}
 	}
 
@@ -255,7 +255,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	private void updateFieldMessages() {
-		sendCommandIfRendered(() -> new UiField.SetFieldMessagesCommand(getFieldMessages().stream()
+		sendCommandIfRendered(() -> new DtoField.SetFieldMessagesCommand(getFieldMessages().stream()
 				.map(fieldMessage -> fieldMessage.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList())));
 	}

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.mobile;
 
-import org.teamapps.dto.UiNavigationBarButton;
+import org.teamapps.dto.DtoNavigationBarButton;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
@@ -54,8 +54,8 @@ public class NavigationBarButton<RECORD> {
 		return new NavigationBarButton<>(new BaseTemplateRecord<PAYLOAD>(icon, caption, payload));
 	}
 
-	public UiNavigationBarButton createUiNavigationBarButton() {
-		UiNavigationBarButton uiNavigationBarButton = new UiNavigationBarButton(clientId, data);
+	public DtoNavigationBarButton createUiNavigationBarButton() {
+		DtoNavigationBarButton uiNavigationBarButton = new DtoNavigationBarButton(clientId, data);
 		uiNavigationBarButton.setVisible(visible);
 		return uiNavigationBarButton;
 	}

@@ -19,10 +19,10 @@
  */
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {SimpleObjectProxy} from "./SimpleObjectProxy";
-import {UiComponent} from "../component/UiComponent";
+import {Component} from "../component/Component";
 import {insertAtIndex} from "../util/domUtil";
 
-export class RefreshableComponentProxyHandle<T extends UiComponent = UiComponent> {
+export class RefreshableComponentProxyHandle<T extends Component = Component> {
 	public proxy: T;
 	private _component: T;
 
@@ -52,7 +52,7 @@ export class RefreshableComponentProxyHandle<T extends UiComponent = UiComponent
 		const oldComponent = this._component;
 
 		console.debug(`copy old component's event listeners`);
-		Object.keys(oldComponent).forEach((key: keyof UiComponent) => {
+		Object.keys(oldComponent).forEach((key: keyof Component) => {
 			if (key.indexOf("on") === 0 && oldComponent[key] instanceof TeamAppsEvent) {
 				const event: TeamAppsEvent<any> = (oldComponent[key] as any);
 				console.debug(`copying ${event.getListeners().length} listeners for event: ${key}`);

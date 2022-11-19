@@ -102,13 +102,13 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if ("isDictionary".equals(propertyName)) {
 			return isDictionary(typeContext);
 		} else if ("isReferenceList".equals(propertyName)) {
-			return isList(typeContext) && model.isReferenceToJsonAware(getFirstTypeArgument(typeContext));
+			return isList(typeContext) && model.isDtoClassOrInterface(getFirstTypeArgument(typeContext));
 		} else if ("firstTypeArgument".equals(propertyName)) {
 			return getFirstTypeArgument(typeContext);
-		} else if ("isReferenceToJsonAware".equals(propertyName)) {
-			return model.isReferenceToJsonAware(typeContext);
-		} else if ("isTypeScriptConfig".equals(propertyName)) {
-			return isTypeScriptConfigSuffixed(typeContext);
+		} else if ("isDtoClassOrInterface".equals(propertyName)) {
+			return model.isDtoClassOrInterface(typeContext);
+		} else if ("isDtoType".equals(propertyName)) {
+			return model.isDtoType(typeContext);
 		} else if ("isPrimitiveType".equals(propertyName)) {
 			return isPrimitiveType(typeContext);
 		} else if ("isPrimitiveOrWrapperType".equals(propertyName)) {
@@ -171,13 +171,14 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			TeamAppsDtoParser.ClassDeclarationContext referencedClass = model.findReferencedClass(typeContext);
 			TeamAppsDtoParser.InterfaceDeclarationContext referencedInterface = model.findReferencedInterface(typeContext);
 			if (referencedClass != null) {
-				return model.findReferencableBaseClassName(referencedClass) + "Reference";
+				return "Dto" + model.findReferencableBaseClassName(referencedClass) + "Reference";
 			} else if (referencedInterface != null) {
-				return model.findReferencableBaseInterfaceName(referencedInterface) + "Reference";
+				return "Dto" + model.findReferencableBaseInterfaceName(referencedInterface) + "Reference";
 			} else {
 				throw new TeamAppsGeneratorException("Cannot find referencable class or interface for type " + typeContext.getText() + ". Are you sure it is a referencable class or interface (has @Referencable properties)?");
 			}
-
+		} else if (model.isDtoType(typeContext)) {
+			return "Dto" + typeContext.getText();
 		} else {
 			return typeContext.getText();
 		}
@@ -189,10 +190,10 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			return "List<" + getJavaTypeWrapperString(firstTypeArgument) + ">";
 		} else if (isDictionary(typeContext)) {
 			return "Map<String, " + getJavaTypeWrapperString(typeContext.typeReference().typeArguments().typeArgument(0).type()) + ">";
-		} else if (model.isReferenceToJsonAware(typeContext)) {
+		} else if (model.isDtoClassOrInterface(typeContext)) {
 			return getJavaTypeString(typeContext) + "Wrapper";
 		} else if (isObject(typeContext)) {
-			return "JsonWrapper";
+			return "DtoJsonWrapper";
 		} else {
 			return getJavaTypeString(typeContext);
 		}
@@ -223,8 +224,8 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			return "{[name: string]: " + getTypeScriptTypeName(getFirstTypeArgument(typeContext)) + "}";
 		} else if (isUiClientObjectReference(typeContext)) {
 			return "unknown";
-		} else if (isTypeScriptConfigSuffixed(typeContext)) {
-			return typeContext.typeReference().typeName().getText() + "Config";
+		} else if (model.isDtoType(typeContext)) {
+			return "Dto" + typeContext.getText();
 		} else if (PRIMITIVE_TYPE_TO_TYPESCRIPT_TYPE.containsKey(typeContext.getText())) {
 			return PRIMITIVE_TYPE_TO_TYPESCRIPT_TYPE.get(typeContext.getText());
 		} else {
@@ -234,13 +235,6 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 
 	private boolean isObject(TeamAppsDtoParser.TypeContext typeContext) {
 		return typeContext.typeReference() != null && Set.of("Object", "java.lang.Object").contains(typeContext.typeReference().typeName().getText());
-	}
-
-	private boolean isTypeScriptConfigSuffixed(TeamAppsDtoParser.TypeContext typeContext) {
-		TeamAppsDtoParser.ClassDeclarationContext referencedClass = model.findReferencedClass(typeContext);
-		TeamAppsDtoParser.InterfaceDeclarationContext referencedInterface = model.findReferencedInterface(typeContext);
-		return referencedClass != null && referencedClass.managedModifier() != null
-				|| referencedInterface != null && referencedInterface.managedModifier() != null;
 	}
 
 	private boolean isList(TeamAppsDtoParser.TypeContext typeContext) {

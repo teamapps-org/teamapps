@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.css;
 
-import org.teamapps.dto.UiCssJustifyContent;
+import org.teamapps.dto.DtoCssJustifyContent;
 
 public enum CssJustifyContent {
 
 	START, END, CENTER, SPACE_BETWEEN, SPACE_AROUND, SPACE_EVENLY, INITIAL, INHERIT;
 
-	public UiCssJustifyContent toUiCssJustifyContent() {
-		return UiCssJustifyContent.valueOf(this.name());
+	public DtoCssJustifyContent toUiCssJustifyContent() {
+		return DtoCssJustifyContent.valueOf(this.name());
 	}
 
 }

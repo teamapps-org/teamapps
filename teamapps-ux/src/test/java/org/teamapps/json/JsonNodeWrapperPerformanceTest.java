@@ -15,12 +15,12 @@ public class JsonNodeWrapperPerformanceTest {
 	public void doIt() throws Exception {
 		objectMapper = new ObjectMapper();
 
-		UiCurrencyUnit uiCurrencyUnit = new UiCurrencyUnit();
+		DtoCurrencyUnit uiCurrencyUnit = new DtoCurrencyUnit();
 		uiCurrencyUnit.setCode("EUR");
 		uiCurrencyUnit.setFractionDigits(2);
 		uiCurrencyUnit.setName("asdf");
 		uiCurrencyUnit.setSymbol("asldjf");
-		EVENT event1 = new EVENT("asdf", 1, new UiTable.CellValueChangedEvent("asdf", 123, "columnPropName", new UiCurrencyValue(uiCurrencyUnit, "123897")));
+		DtoEVT event1 = new DtoEVT("asdf", 1, new DtoTable.CellValueChangedEvent("asdf", 123, "columnPropName", new DtoCurrencyValue(uiCurrencyUnit, "123897")));
 
 		String event1String = objectMapper.writeValueAsString(event1);
 		System.out.println(event1String);
@@ -50,16 +50,16 @@ public class JsonNodeWrapperPerformanceTest {
 	private int runWrapping(String e1) throws JsonProcessingException {
 		int x = 0;
 		JsonNode jsonNode = objectMapper.readTree(e1);
-		EVENTWrapper eventWrapper = new EVENTWrapper(jsonNode);
+		DtoEVENTWrapper eventWrapper = new DtoEVENTWrapper(jsonNode);
 		x += eventWrapper.getSessionId().hashCode();
 		x += eventWrapper.getId();
-		UiEventWrapper uiEventWrapper = eventWrapper.getUiEvent();
-		UiTable.CellValueChangedEventWrapper cellValueChangedEventWrapper = uiEventWrapper.as(UiTable.CellValueChangedEventWrapper.class);
+		DtoEventWrapper uiEventWrapper = eventWrapper.getUiEvent();
+		DtoTable.CellValueChangedEventWrapper cellValueChangedEventWrapper = uiEventWrapper.as(DtoTable.CellValueChangedEventWrapper.class);
 		x += cellValueChangedEventWrapper.getComponentId().hashCode();
 		x += cellValueChangedEventWrapper.getRecordId();
 		x += cellValueChangedEventWrapper.getColumnPropertyName().hashCode();
-		UiCurrencyValueWrapper currencyValue = cellValueChangedEventWrapper.getValue().as(UiCurrencyValueWrapper.class);
-		UiCurrencyUnitWrapper currencyUnit = currencyValue.getCurrencyUnit();
+		DtoCurrencyValueWrapper currencyValue = cellValueChangedEventWrapper.getValue().as(DtoCurrencyValueWrapper.class);
+		DtoCurrencyUnitWrapper currencyUnit = currencyValue.getCurrencyUnit();
 		x += currencyUnit.getCode().hashCode();
 		x += currencyUnit.getFractionDigits();
 		x += currencyUnit.getName().hashCode();

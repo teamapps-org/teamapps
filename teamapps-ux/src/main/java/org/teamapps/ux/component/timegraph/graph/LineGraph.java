@@ -21,7 +21,7 @@ package org.teamapps.ux.component.timegraph.graph;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.UiLineGraph;
+import org.teamapps.dto.DtoLineGraph;
 import org.teamapps.ux.component.timegraph.LineChartCurveType;
 import org.teamapps.ux.component.timegraph.datapoints.LineGraphData;
 import org.teamapps.ux.component.timegraph.model.LineGraphModel;
@@ -59,8 +59,8 @@ public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 	}
 
 	@Override
-	public UiLineGraph createUiFormat() {
-		UiLineGraph ui = new UiLineGraph();
+	public DtoLineGraph createUiFormat() {
+		DtoLineGraph ui = new DtoLineGraph();
 		mapAbstractLineChartDataDisplayProperties(ui);
 		ui.setGraphType(graphType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);

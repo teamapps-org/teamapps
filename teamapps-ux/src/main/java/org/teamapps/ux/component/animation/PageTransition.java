@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.animation;
 
-import org.teamapps.dto.UiPageTransition;
+import org.teamapps.dto.DtoPageTransition;
 
 public enum PageTransition {
 	MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT,
@@ -86,8 +86,8 @@ public enum PageTransition {
 	ROTATE_SIDES_OUT_VS_ROTATE_SIDES_IN,
 	ROTATE_SLIDE_OUT_VS_ROTATE_SLIDE_IN;
 
-	public UiPageTransition toUiPageTransition() {
-		return UiPageTransition.valueOf(name());
+	public DtoPageTransition toUiPageTransition() {
+		return DtoPageTransition.valueOf(name());
 	}
 }
 

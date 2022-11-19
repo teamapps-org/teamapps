@@ -20,10 +20,10 @@
 package org.teamapps.ux.component.field;
 
 import org.apache.commons.lang3.StringUtils;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiTextField;
-import org.teamapps.dto.UiTextInputHandlingField;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoTextField;
+import org.teamapps.dto.DtoTextInputHandlingField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -31,8 +31,8 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TextField extends AbstractField<String> implements TextInputHandlingField {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
 
 	private int maxCharacters;
 	private boolean showClearButton;
@@ -49,7 +49,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setMaxCharacters(int maxCharacters) {
 		this.maxCharacters = maxCharacters;
-		sendCommandIfRendered(() -> new UiTextField.SetMaxCharactersCommand(maxCharacters));
+		sendCommandIfRendered(() -> new DtoTextField.SetMaxCharactersCommand(maxCharacters));
 		return this;
 	}
 
@@ -59,7 +59,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		sendCommandIfRendered(() -> new UiTextField.SetShowClearButtonCommand(showClearButton));
+		sendCommandIfRendered(() -> new DtoTextField.SetShowClearButtonCommand(showClearButton));
 		return this;
 	}
 
@@ -69,7 +69,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		sendCommandIfRendered(() -> new UiTextField.SetPlaceholderTextCommand(emptyText));
+		sendCommandIfRendered(() -> new DtoTextField.SetPlaceholderTextCommand(emptyText));
 		return this;
 	}
 
@@ -82,8 +82,8 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	public UiField createUiClientObject() {
-		UiTextField uiField = new UiTextField();
+	public DtoField createUiClientObject() {
+		DtoTextField uiField = new DtoTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(maxCharacters);
 		uiField.setShowClearButton(showClearButton);
@@ -93,7 +93,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		defaultHandleTextInputEvent(event);
 	}

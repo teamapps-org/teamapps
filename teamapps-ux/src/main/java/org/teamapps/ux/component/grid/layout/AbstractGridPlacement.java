@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.grid.layout;
 
-import org.teamapps.dto.UiGridPlacement;
+import org.teamapps.dto.DtoGridPlacement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 
@@ -44,7 +44,7 @@ public abstract class AbstractGridPlacement implements GridPlacement {
 		this.column = column;
 	}
 
-	protected void mapAbstractGridPlacementUiProperties(UiGridPlacement uiPlacement) {
+	protected void mapAbstractGridPlacementUiProperties(DtoGridPlacement uiPlacement) {
 		uiPlacement.setColumn(column)
 				.setRow(row)
 				.setRowSpan(rowSpan)

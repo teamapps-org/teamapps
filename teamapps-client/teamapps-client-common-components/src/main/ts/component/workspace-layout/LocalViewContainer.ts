@@ -30,11 +30,11 @@ import {
 	UiWorkSpaceLayoutView,
 	UiWorkSpaceLayoutViewGroupItem
 } from "../../generated";
-import {UiPanel} from "../UiPanel";
-import {UiWorkSpaceLayout, UiWorkspaceLayoutDndDataTransfer} from "./UiWorkSpaceLayout";
+import {Panel} from "../UiPanel";
+import {WorkSpaceLayout, UiWorkspaceLayoutDndDataTransfer} from "./UiWorkSpaceLayout";
 import {css, generateUUID, getMicrosoftBrowserVersion, parseHtml} from "../../Common";
 import {bind} from "teamapps-client-core";
-import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
+import {Toolbar} from "../tool-container/toolbar/UiToolbar";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
@@ -45,14 +45,14 @@ import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {UiComponent} from "teamapps-client-core";
-import {UiMultiProgressDisplay} from "../UiMultiProgressDisplay";
+import {MultiProgressDisplay} from "../UiMultiProgressDisplay";
 
 export class LocalViewContainer implements ViewContainer {
 
 	private static DND_MIME_TYPE: string = getMicrosoftBrowserVersion() ? 'text' : 'teamapps/uiworkspaceview';
 
 	private itemTree = new ItemTree();
-	private _toolbar: UiToolbar;
+	private _toolbar: Toolbar;
 
 	private $mainDiv: HTMLElement;
 	private $toolbarContainer: HTMLElement;
@@ -66,16 +66,16 @@ export class LocalViewContainer implements ViewContainer {
 	private $normalContainerOfMaximizedTabPanel: HTMLElement;
 	private $minimizedViewsBar: HTMLElement;
 	private $progressContainer: HTMLElement;
-	private multiProgressDisplay: UiMultiProgressDisplay;
+	private multiProgressDisplay: MultiProgressDisplay;
 	private viewEventsSuppressed: boolean;
 
-	constructor(private workSpaceLayout: UiWorkSpaceLayout,
+	constructor(private workSpaceLayout: WorkSpaceLayout,
 	            public readonly windowId: string,
 	            viewConfigs: UiWorkSpaceLayoutView[],
 	            initialLayout: UiWorkSpaceLayoutItem,
 	            private context: TeamAppsUiContext,
 	            private listener: ViewContainerListener,
-	            multiProgressDisplay: UiMultiProgressDisplay) {
+	            multiProgressDisplay: MultiProgressDisplay) {
 		this.$mainDiv = parseHtml(`<div data-id="${this.workSpaceLayoutId}" class="UiWorkSpaceLayout">
     <div class="toolbar-container"></div>
     <div class="content-container-wrapper">
@@ -319,7 +319,7 @@ export class LocalViewContainer implements ViewContainer {
 		return this.workSpaceLayout.getId();
 	}
 
-	public setToolbar(toolbar: UiToolbar): void {
+	public setToolbar(toolbar: Toolbar): void {
 		if (this._toolbar) {
 			this.$toolbarContainer.innerHTML = '';
 		}
@@ -372,7 +372,7 @@ export class LocalViewContainer implements ViewContainer {
 
 	private getViewNameForDragTarget(target: HTMLElement) {
 		let viewName: string | null;
-		let isDraggablePanelHeadingElement = UiPanel.isDraggablePanelHeadingElement(target);
+		let isDraggablePanelHeadingElement = Panel.isDraggablePanelHeadingElement(target);
 		if (isDraggablePanelHeadingElement) {
 			viewName = target.closest('.tab-content-wrapper').getAttribute('data-tab-name');
 		}
@@ -583,7 +583,7 @@ export class LocalViewContainer implements ViewContainer {
 		if (updateIndex) {
 			this.itemTree.updateIndex();
 		}
-		if (this.windowId !== UiWorkSpaceLayout.ROOT_WINDOW_ID && this.itemTree.viewCount === 0) {
+		if (this.windowId !== WorkSpaceLayout.ROOT_WINDOW_ID && this.itemTree.viewCount === 0) {
 			window.close();
 		}
 	}
@@ -778,7 +778,7 @@ export class LocalViewContainer implements ViewContainer {
 			});
 	}
 
-	setMultiProgressDisplay(multiProgressDisplay: UiMultiProgressDisplay) {
+	setMultiProgressDisplay(multiProgressDisplay: MultiProgressDisplay) {
 		this.multiProgressDisplay && this.multiProgressDisplay.getMainElement().remove();
 		this.multiProgressDisplay = multiProgressDisplay;
 		multiProgressDisplay && this.$progressContainer.appendChild(multiProgressDisplay.getMainElement());

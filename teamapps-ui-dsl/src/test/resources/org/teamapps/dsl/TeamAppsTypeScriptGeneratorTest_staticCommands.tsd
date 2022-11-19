@@ -3,13 +3,13 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {UiCommand} from "teamapps-client-communication";
+import {DtoCommand} from "teamapps-client-communication";
 
-export interface AConfig {
+export interface DtoA {
 	_type?: string;
 }
 
-export interface ACommandHandler {
+export interface DtoACommandHandler {
 }
 
 

@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiSpecialKey;
+import org.teamapps.dto.DtoSpecialKey;
 
 public enum SpecialKey {
 	ENTER, ESCAPE;
 
-	public UiSpecialKey toUiSpecialKey() {
-		return UiSpecialKey.valueOf(this.name());
+	public DtoSpecialKey toUiSpecialKey() {
+		return DtoSpecialKey.valueOf(this.name());
 	}
 }

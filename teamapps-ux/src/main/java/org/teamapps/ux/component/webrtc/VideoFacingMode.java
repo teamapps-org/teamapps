@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.webrtc;
 
-import org.teamapps.dto.UiVideoFacingMode;
+import org.teamapps.dto.DtoVideoFacingMode;
 
 public enum VideoFacingMode {
 
@@ -28,8 +28,8 @@ public enum VideoFacingMode {
 	LEFT,
 	RIGHT;
 
-	public UiVideoFacingMode toUiVideoFacingMode() {
-		return UiVideoFacingMode.valueOf(name());
+	public DtoVideoFacingMode toUiVideoFacingMode() {
+		return DtoVideoFacingMode.valueOf(name());
 	}
 
 }

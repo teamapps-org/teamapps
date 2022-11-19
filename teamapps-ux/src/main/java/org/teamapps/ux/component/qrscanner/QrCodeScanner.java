@@ -19,22 +19,22 @@
  */
 package org.teamapps.ux.component.qrscanner;
 
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiQrCodeScanner;
+import org.teamapps.dto.DtoQrCodeScanner;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class QrCodeScanner extends AbstractComponent {
 
-	public final ProjectorEvent<String> onQrCodeDetected = createProjectorEventBoundToUiEvent(UiQrCodeScanner.QrCodeDetectedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onQrCodeDetected = createProjectorEventBoundToUiEvent(DtoQrCodeScanner.QrCodeDetectedEvent.TYPE_ID);
 
 	private boolean scanning;
 	private boolean stopsScanningAtFirstResult;
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiQrCodeScanner ui = new UiQrCodeScanner();
+		DtoQrCodeScanner ui = new DtoQrCodeScanner();
 		mapAbstractUiComponentProperties(ui);
 		ui.setScanning(scanning);
 		ui.setStopsScanningAtFirstResult(stopsScanningAtFirstResult);
@@ -42,10 +42,10 @@ public class QrCodeScanner extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiQrCodeScanner.QrCodeDetectedEvent.TYPE_ID -> {
-				var e = event.as(UiQrCodeScanner.QrCodeDetectedEventWrapper.class);
+			case DtoQrCodeScanner.QrCodeDetectedEvent.TYPE_ID -> {
+				var e = event.as(DtoQrCodeScanner.QrCodeDetectedEventWrapper.class);
 				onQrCodeDetected.fire(e.getCode());
 			}
 		}
@@ -54,15 +54,15 @@ public class QrCodeScanner extends AbstractComponent {
 	public void startScanning(boolean stopScanningAtFirstResult) {
 		scanning = true;
 		this.stopsScanningAtFirstResult = stopScanningAtFirstResult;
-		sendCommandIfRendered(() -> new UiQrCodeScanner.StartScanningCommand(stopScanningAtFirstResult));
+		sendCommandIfRendered(() -> new DtoQrCodeScanner.StartScanningCommand(stopScanningAtFirstResult));
 	}
 
 	public void stopScanning() {
 		scanning = false;
-		sendCommandIfRendered(() -> new UiQrCodeScanner.StopScanningCommand());
+		sendCommandIfRendered(() -> new DtoQrCodeScanner.StopScanningCommand());
 	}
 
 	public void switchCamera() {
-		sendCommandIfRendered(() -> new UiQrCodeScanner.SwitchCameraCommand());
+		sendCommandIfRendered(() -> new DtoQrCodeScanner.SwitchCameraCommand());
 	}
 }

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.webrtc;
 
-import org.teamapps.dto.UiVideoTrackConstraints;
+import org.teamapps.dto.DtoVideoTrackConstraints;
 
 import java.util.Objects;
 
@@ -46,8 +46,8 @@ public class VideoTrackConstraints {
 		this.frameRate = frameRate;
 	}
 
-	public UiVideoTrackConstraints createUiVideoTrackConstraints() {
-		UiVideoTrackConstraints ui = new UiVideoTrackConstraints();
+	public DtoVideoTrackConstraints createUiVideoTrackConstraints() {
+		DtoVideoTrackConstraints ui = new DtoVideoTrackConstraints();
 		ui.setHeight(height);
 		ui.setWidth(width);
 		ui.setFacingMode(facingMode.toUiVideoFacingMode());

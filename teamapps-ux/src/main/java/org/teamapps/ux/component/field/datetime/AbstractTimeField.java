@@ -31,8 +31,8 @@ import java.util.Locale;
 
 public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(UiTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
 
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;
@@ -46,12 +46,12 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		super.handleUiEvent(event);
 		defaultHandleTextInputEvent(event);
 	}
 
-	public void mapAbstractTimeFieldUiValues(AbstractUiTimeField uiTimeField) {
+	public void mapAbstractTimeFieldUiValues(DtoAbstractTimeField uiTimeField) {
 		mapAbstractFieldAttributesToUiField(uiTimeField);
 		uiTimeField.setShowDropDownButton(isShowDropDownButton());
 		uiTimeField.setLocale(locale.toLanguageTag());
@@ -65,7 +65,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		sendCommandIfRendered(() -> new AbstractUiTimeField.SetShowDropDownButtonCommand(showDropDownButton));
+		sendCommandIfRendered(() -> new DtoAbstractTimeField.SetShowDropDownButtonCommand(showDropDownButton));
 	}
 
 
@@ -83,7 +83,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		sendCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+		sendCommandIfRendered(() -> new DtoAbstractTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public DateTimeFormatDescriptor getTimeFormat() {
@@ -92,7 +92,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		sendCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+		sendCommandIfRendered(() -> new DtoAbstractTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public boolean isShowClearButton() {
@@ -101,7 +101,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		sendCommandIfRendered(() -> new AbstractUiTimeField.SetShowClearButtonCommand(showClearButton));
+		sendCommandIfRendered(() -> new DtoAbstractTimeField.SetShowClearButtonCommand(showClearButton));
 	}
 
 	@Override

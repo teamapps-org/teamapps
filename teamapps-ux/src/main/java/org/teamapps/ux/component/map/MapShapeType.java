@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.map;
 
-import org.teamapps.dto.UiMapShapeType;
+import org.teamapps.dto.DtoMapShapeType;
 
 public enum MapShapeType {
 
@@ -29,8 +29,8 @@ public enum MapShapeType {
 	POLYLINE,
 	RECTANGLE;
 
-	public UiMapShapeType toUiMapShapeType() {
-		return UiMapShapeType.valueOf(name());
+	public DtoMapShapeType toUiMapShapeType() {
+		return DtoMapShapeType.valueOf(name());
 	}
 
 }

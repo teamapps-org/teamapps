@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.toolbutton;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiToolButton;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoToolButton;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -32,7 +32,7 @@ import org.teamapps.ux.component.TeamAppsComponent;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ToolButton extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(UiToolButton.DropDownOpenedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(DtoToolButton.DropDownOpenedEvent.TYPE_ID);
 
 	private Icon icon;
 	private String caption;
@@ -44,7 +44,7 @@ public class ToolButton extends AbstractComponent {
 	private Integer minDropDownWidth = 300;
 	private Integer minDropDownHeight = 300;
 
-	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(UiToolButton.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(DtoToolButton.ClickedEvent.TYPE_ID);
 
 	public ToolButton(Icon icon) {
 		this(icon, null, null);
@@ -72,7 +72,7 @@ public class ToolButton extends AbstractComponent {
 	@Override
 	public UiComponent createUiClientObject() {
 		String icon = getSessionContext().resolveIcon(this.icon);
-		UiToolButton uiToolButton = new UiToolButton(icon, popoverText);
+		DtoToolButton uiToolButton = new DtoToolButton(icon, popoverText);
 		uiToolButton.setCaption(caption);
 		mapAbstractUiComponentProperties(uiToolButton);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
@@ -84,14 +84,14 @@ public class ToolButton extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiToolButton.ClickedEvent.TYPE_ID -> {
-				var e = event.as(UiToolButton.ClickedEventWrapper.class);
+			case DtoToolButton.ClickedEvent.TYPE_ID -> {
+				var e = event.as(DtoToolButton.ClickedEventWrapper.class);
 				this.onClick.fire(null);
 			}
-			case UiToolButton.DropDownOpenedEvent.TYPE_ID -> {
-				var e = event.as(UiToolButton.DropDownOpenedEventWrapper.class);
+			case DtoToolButton.DropDownOpenedEvent.TYPE_ID -> {
+				var e = event.as(DtoToolButton.DropDownOpenedEventWrapper.class);
 				this.onDropDownOpened.fire(null);
 			}
 		}
@@ -103,7 +103,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-		sendCommandIfRendered(() -> new UiToolButton.SetIconCommand(getSessionContext().resolveIcon(icon)));
+		sendCommandIfRendered(() -> new DtoToolButton.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
 	public String getCaption() {
@@ -121,7 +121,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setPopoverText(String popoverText) {
 		this.popoverText = popoverText;
-		sendCommandIfRendered(() -> new UiToolButton.SetPopoverTextCommand(popoverText));
+		sendCommandIfRendered(() -> new DtoToolButton.SetPopoverTextCommand(popoverText));
 	}
 
 	public boolean isOpenDropDownIfNotSet() {
@@ -130,7 +130,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setOpenDropDownIfNotSet(boolean openDropDownIfNotSet) {
 		this.openDropDownIfNotSet = openDropDownIfNotSet;
-		sendCommandIfRendered(() -> new UiToolButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet));
+		sendCommandIfRendered(() -> new DtoToolButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet));
 	}
 
 	public Component getDropDownComponent() {
@@ -139,7 +139,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		sendCommandIfRendered(() -> new UiToolButton.SetDropDownComponentCommand(dropDownComponent != null ? dropDownComponent.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoToolButton.SetDropDownComponentCommand(dropDownComponent != null ? dropDownComponent.createUiReference() : null));
 	}
 
 	public Integer getMinDropDownWidth() {
@@ -148,7 +148,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setMinDropDownWidth(Integer minDropDownWidth) {
 		this.minDropDownWidth = minDropDownWidth;
-		sendCommandIfRendered(() -> new UiToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
+		sendCommandIfRendered(() -> new DtoToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
 	}
 
 	public Integer getMinDropDownHeight() {
@@ -157,7 +157,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setMinDropDownHeight(Integer minDropDownHeight) {
 		this.minDropDownHeight = minDropDownHeight;
-		sendCommandIfRendered(() -> new UiToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
+		sendCommandIfRendered(() -> new DtoToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
 	}
 
 }

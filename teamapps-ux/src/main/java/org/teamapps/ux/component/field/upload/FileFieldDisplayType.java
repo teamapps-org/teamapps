@@ -19,13 +19,13 @@
  */
 package org.teamapps.ux.component.field.upload;
 
-import org.teamapps.dto.UiFileFieldDisplayType;
+import org.teamapps.dto.DtoFileFieldDisplayType;
 
 public enum FileFieldDisplayType {
 
 	LIST, FLOATING;
 
-	public UiFileFieldDisplayType toUiFileFieldDisplayType() {
-		return UiFileFieldDisplayType.valueOf(this.name());
+	public DtoFileFieldDisplayType toUiFileFieldDisplayType() {
+		return DtoFileFieldDisplayType.valueOf(this.name());
 	}
 }

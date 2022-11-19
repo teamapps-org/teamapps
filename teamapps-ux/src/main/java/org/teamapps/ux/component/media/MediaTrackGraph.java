@@ -19,15 +19,15 @@
  */
 package org.teamapps.ux.component.media;
 
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiMediaTrackGraph;
+import org.teamapps.dto.DtoMediaTrackGraph;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class MediaTrackGraph extends AbstractComponent {
 
-	public ProjectorEvent<TimeSelection> onTimeSelection = createProjectorEventBoundToUiEvent(UiMediaTrackGraph.HandleTimeSelectionEvent.TYPE_ID);
+	public ProjectorEvent<TimeSelection> onTimeSelection = createProjectorEventBoundToUiEvent(DtoMediaTrackGraph.HandleTimeSelectionEvent.TYPE_ID);
 
 	private MediaTrackData data;
 
@@ -37,7 +37,7 @@ public class MediaTrackGraph extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiMediaTrackGraph uiMediaTrackGraph = new UiMediaTrackGraph();
+		DtoMediaTrackGraph uiMediaTrackGraph = new DtoMediaTrackGraph();
 		mapAbstractUiComponentProperties(uiMediaTrackGraph);
 		uiMediaTrackGraph.setTrackCount(data.getTrackCount());
 		uiMediaTrackGraph.setTrackData(data.getTrackData());
@@ -46,10 +46,10 @@ public class MediaTrackGraph extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiMediaTrackGraph.HandleTimeSelectionEvent.TYPE_ID -> {
-				var timeSelectionEvent = event.as(UiMediaTrackGraph.HandleTimeSelectionEventWrapper.class);
+			case DtoMediaTrackGraph.HandleTimeSelectionEvent.TYPE_ID -> {
+				var timeSelectionEvent = event.as(DtoMediaTrackGraph.HandleTimeSelectionEventWrapper.class);
 				long start = timeSelectionEvent.getStart();
 				long end = timeSelectionEvent.getEnd();
 				onTimeSelection.fire(new TimeSelection(start, end));
@@ -58,7 +58,7 @@ public class MediaTrackGraph extends AbstractComponent {
 	}
 
 	public void setCursorPosition(long time) {
-		sendCommandIfRendered(() -> new UiMediaTrackGraph.SetCursorPositionCommand(time));
+		sendCommandIfRendered(() -> new DtoMediaTrackGraph.SetCursorPositionCommand(time));
 	}
 
 	public static class TimeSelection {

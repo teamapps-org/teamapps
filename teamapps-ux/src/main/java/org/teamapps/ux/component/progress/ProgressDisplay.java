@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.progress;
 
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiProgressDisplay;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoProgressDisplay;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -39,8 +39,8 @@ import org.teamapps.ux.task.ProgressStatus;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ProgressDisplay extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(UiProgressDisplay.ClickedEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onCancelButtonClicked = createProjectorEventBoundToUiEvent(UiProgressDisplay.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onCancelButtonClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);
 
 	private Icon icon;
 	private String taskName;
@@ -68,8 +68,8 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public UiProgressDisplay createUiClientObject() {
-		UiProgressDisplay ui = new UiProgressDisplay();
+	public DtoProgressDisplay createUiClientObject() {
+		DtoProgressDisplay ui = new DtoProgressDisplay();
 		mapAbstractUiComponentProperties(ui);
 		ui.setIcon(getSessionContext().resolveIcon(icon));
 		ui.setTaskName(taskName);
@@ -81,18 +81,18 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	private void updateUi() {
-		sendCommandIfRendered(() -> new UiProgressDisplay.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoProgressDisplay.UpdateCommand(createUiClientObject()));
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiProgressDisplay.ClickedEvent.TYPE_ID -> {
-				var clickedEvent = event.as(UiProgressDisplay.ClickedEventWrapper.class);
+			case DtoProgressDisplay.ClickedEvent.TYPE_ID -> {
+				var clickedEvent = event.as(DtoProgressDisplay.ClickedEventWrapper.class);
 				this.onClicked.fire(null);
 			}
-			case UiProgressDisplay.CancelButtonClickedEvent.TYPE_ID -> {
-				var cancelButtonClickedEvent = event.as(UiProgressDisplay.CancelButtonClickedEventWrapper.class);
+			case DtoProgressDisplay.CancelButtonClickedEvent.TYPE_ID -> {
+				var cancelButtonClickedEvent = event.as(DtoProgressDisplay.CancelButtonClickedEventWrapper.class);
 				if (this.observedProgress != null) {
 					this.observedProgress.requestCancellation();
 				}

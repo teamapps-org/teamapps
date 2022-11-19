@@ -23,9 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.util.ExceptionUtil;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiShakaManifest;
-import org.teamapps.dto.UiShakaPlayer;
+import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoShakaManifest;
+import org.teamapps.dto.DtoShakaPlayer;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.media.PosterImageSize;
@@ -34,13 +34,13 @@ import org.teamapps.ux.session.SessionContext;
 
 public class ShakaPlayer extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(UiShakaPlayer.ErrorLoadingEvent.TYPE_ID);
-	public final ProjectorEvent<UiShakaManifest> onManifestLoaded = createProjectorEventBoundToUiEvent(UiShakaPlayer.ManifestLoadedEvent.TYPE_ID);
-	public final ProjectorEvent<Long> onTimeUpdate = createProjectorEventBoundToUiEvent(UiShakaPlayer.TimeUpdateEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(UiShakaPlayer.EndedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(DtoShakaPlayer.ErrorLoadingEvent.TYPE_ID);
+	public final ProjectorEvent<DtoShakaManifest> onManifestLoaded = createProjectorEventBoundToUiEvent(DtoShakaPlayer.ManifestLoadedEvent.TYPE_ID);
+	public final ProjectorEvent<Long> onTimeUpdate = createProjectorEventBoundToUiEvent(DtoShakaPlayer.TimeUpdateEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(DtoShakaPlayer.EndedEvent.TYPE_ID);
 
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
-		SessionContext.current().sendStaticCommand(ShakaPlayer.class, new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
+		SessionContext.current().sendStaticCommand(ShakaPlayer.class, new DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
 
 
@@ -66,7 +66,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiShakaPlayer ui = new UiShakaPlayer();
+		DtoShakaPlayer ui = new DtoShakaPlayer();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHlsUrl(hlsUrl);
 		ui.setDashUrl(dashUrl);
@@ -82,24 +82,24 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiShakaPlayer.ErrorLoadingEvent.TYPE_ID -> {
-				var e = event.as(UiShakaPlayer.ErrorLoadingEventWrapper.class);
+			case DtoShakaPlayer.ErrorLoadingEvent.TYPE_ID -> {
+				var e = event.as(DtoShakaPlayer.ErrorLoadingEventWrapper.class);
 				onErrorLoading.fire(null);
 			}
-			case UiShakaPlayer.ManifestLoadedEvent.TYPE_ID -> {
-				var e = event.as(UiShakaPlayer.ManifestLoadedEventWrapper.class);
-				UiShakaManifest manifest = ExceptionUtil.softenExceptions(() -> new ObjectMapper().treeToValue(e.getManifest().getJsonNode(), UiShakaManifest.class));
+			case DtoShakaPlayer.ManifestLoadedEvent.TYPE_ID -> {
+				var e = event.as(DtoShakaPlayer.ManifestLoadedEventWrapper.class);
+				DtoShakaManifest manifest = ExceptionUtil.softenExceptions(() -> new ObjectMapper().treeToValue(e.getManifest().getJsonNode(), DtoShakaManifest.class));
 				onManifestLoaded.fire(manifest);
 			}
-			case UiShakaPlayer.TimeUpdateEvent.TYPE_ID -> {
-				var e = event.as(UiShakaPlayer.TimeUpdateEventWrapper.class);
+			case DtoShakaPlayer.TimeUpdateEvent.TYPE_ID -> {
+				var e = event.as(DtoShakaPlayer.TimeUpdateEventWrapper.class);
 				onTimeUpdate.fire(e.getTimeMillis());
 				this.timeMillis = e.getTimeMillis();
 			}
-			case UiShakaPlayer.EndedEvent.TYPE_ID -> {
-				var e = event.as(UiShakaPlayer.EndedEventWrapper.class);
+			case DtoShakaPlayer.EndedEvent.TYPE_ID -> {
+				var e = event.as(DtoShakaPlayer.EndedEventWrapper.class);
 				onEnded.fire();
 			}
 		}
@@ -107,7 +107,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setTime(long timeMillis) {
 		this.timeMillis = timeMillis;
-		sendCommandIfRendered(() -> new UiShakaPlayer.SetTimeCommand(timeMillis));
+		sendCommandIfRendered(() -> new DtoShakaPlayer.SetTimeCommand(timeMillis));
 	}
 
 	public long getTime() {
@@ -118,7 +118,7 @@ public class ShakaPlayer extends AbstractComponent {
 		this.timeMillis = 0;
 		this.hlsUrl = hlsUrl;
 		this.dashUrl = dashUrl;
-		sendCommandIfRendered(() -> new UiShakaPlayer.SetUrlsCommand(hlsUrl, dashUrl));
+		sendCommandIfRendered(() -> new DtoShakaPlayer.SetUrlsCommand(hlsUrl, dashUrl));
 	}
 
 	public String getHlsUrl() {
@@ -197,6 +197,6 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void selectAudioLanguage(String language, String role) {
 		this.audioLanguage = language;
-		sendCommandIfRendered(() -> new UiShakaPlayer.SelectAudioLanguageCommand(language, role));
+		sendCommandIfRendered(() -> new DtoShakaPlayer.SelectAudioLanguageCommand(language, role));
 	}
 }

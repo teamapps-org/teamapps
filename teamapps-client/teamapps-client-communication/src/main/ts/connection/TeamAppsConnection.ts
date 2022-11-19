@@ -18,17 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiCommand, UiEvent, UiQuery, UiSessionClosingReason} from "../generated";
-
-export const typescriptDeclarationFixConstant = 1;
+import {DtoCommand, DtoEvent, DtoQuery, DtoSessionClosingReason} from "../generated";
 
 export interface TeamAppsConnection {
-	sendEvent(event: UiEvent): void;
-	sendQuery(query: UiQuery): Promise<any>;
+	sendEvent(event: DtoEvent): void;
+	sendQuery(query: DtoQuery): Promise<any>;
 }
 
 export interface TeamAppsConnectionListener {
 	onConnectionInitialized(): void;
-	onConnectionErrorOrBroken(reason: UiSessionClosingReason, message?: string): void;
-	executeCommand(libraryUuid: string, clientObjectId: string, uiCommand: UiCommand): Promise<any>;
+	onConnectionErrorOrBroken(reason: DtoSessionClosingReason, message?: string): void;
+	executeCommand(libraryUuid: string, clientObjectId: string, uiCommand: DtoCommand): Promise<any>;
 }

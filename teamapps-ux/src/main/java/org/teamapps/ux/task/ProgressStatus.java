@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.task;
 
-import org.teamapps.dto.UiProgressStatus;
+import org.teamapps.dto.DtoProgressStatus;
 
 public enum ProgressStatus {
 	NOT_YET_STARTED,
@@ -29,7 +29,7 @@ public enum ProgressStatus {
 	COMPLETE,
 	FAILED;
 
-	public UiProgressStatus toUiProgressStatus() {
-		return UiProgressStatus.valueOf(name());
+	public DtoProgressStatus toUiProgressStatus() {
+		return DtoProgressStatus.valueOf(name());
 	}
 }

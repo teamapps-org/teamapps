@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.iframe;
 
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiIFrame;
+import org.teamapps.dto.DtoIFrame;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
@@ -41,13 +41,13 @@ public class IFrame extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiIFrame uiIFrame = new UiIFrame().setUrl(url);
+		DtoIFrame uiIFrame = new DtoIFrame().setUrl(url);
 		mapAbstractUiComponentProperties(uiIFrame);
 		return uiIFrame;
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 	}
 
 	public String getUrl() {
@@ -56,6 +56,6 @@ public class IFrame extends AbstractComponent {
 
 	public void setUrl(String url) {
 		this.url = url;
-		sendCommandIfRendered(() -> new UiIFrame.SetUrlCommand(url));
+		sendCommandIfRendered(() -> new DtoIFrame.SetUrlCommand(url));
 	}
 }

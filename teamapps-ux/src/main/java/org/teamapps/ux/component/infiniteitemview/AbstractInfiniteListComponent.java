@@ -23,9 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.databinding.ObservableValue;
 import org.teamapps.databinding.TwoWayBindableValueImpl;
-import org.teamapps.dto.AbstractUiInfiniteListComponent;
-import org.teamapps.dto.UiIdentifiableClientRecord;
-import org.teamapps.dto.UiTableClientRecord;
+import org.teamapps.dto.DtoAbstractInfiniteListComponent;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.dto.DtoTableClientRecord;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.EqualsAndHashCode;
@@ -42,7 +42,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public final ProjectorEvent<ItemRange> onDisplayedRangeChanged = createProjectorEventBoundToUiEvent(AbstractUiInfiniteListComponent.DisplayedRangeChangedEvent.TYPE_ID);
+	public final ProjectorEvent<ItemRange> onDisplayedRangeChanged = createProjectorEventBoundToUiEvent(DtoAbstractInfiniteListComponent.DisplayedRangeChangedEvent.TYPE_ID);
 
 	private Disposable modelOnAllDataChangedListenerDisposable;
 	private Disposable modelOnRecordsAddedListenerDisposable;
@@ -118,7 +118,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		this.displayedRange = newRange;
 		LOGGER.debug("new displayedRange: {}", newRange);
 		if (newRange.overlaps(oldRange)) {
-			List<UiIdentifiableClientRecord> newUiRecords = new ArrayList<>();
+			List<DtoIdentifiableClientRecord> newUiRecords = new ArrayList<>();
 			boolean recordsRemoved = false;
 			if (newRange.getStart() < oldRange.getStart()) {
 				List<RECORD> records = retrieveRecords(newRange.getStart(), oldRange.getStart() - newRange.getStart());
@@ -207,7 +207,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 
 	protected void updateSingleRecordOnClient(RECORD record) {
 		if (isRendered()) {
-			UiTableClientRecord uiRecord = (UiTableClientRecord) renderedRecords.getUiRecord(record);
+			DtoTableClientRecord uiRecord = (DtoTableClientRecord) renderedRecords.getUiRecord(record);
 			int index = renderedRecords.getIndex(record);
 			sendUpdateDataCommandToClient(index, renderedRecords.getUiRecordIds(), List.of(uiRecord), getModelCount());
 		}
@@ -222,19 +222,19 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 
 	protected abstract List<RECORD> retrieveRecords(int startIndex, int length);
 
-	private void updateClientRenderData(List<UiIdentifiableClientRecord> newUiRecords) {
+	private void updateClientRenderData(List<DtoIdentifiableClientRecord> newUiRecords) {
 		LOGGER.debug("newUiRecords: {}", newUiRecords.size());
 		sendUpdateDataCommandToClient(displayedRange.getStart(), renderedRecords.getUiRecordIds(), newUiRecords, getModelCount());
 	}
 
-	protected abstract void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<UiIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords);
+	protected abstract void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<DtoIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords);
 
 	private UiRecordMappingResult<RECORD> mapToClientRecords(List<RECORD> newRecords) {
-		List<UiIdentifiableClientRecord> newUiRecords = new ArrayList<>();
+		List<DtoIdentifiableClientRecord> newUiRecords = new ArrayList<>();
 		List<RecordAndClientRecord<RECORD>> recordAndClientRecords = new ArrayList<>();
 		for (RECORD r : newRecords) {
-			UiIdentifiableClientRecord existingUiRecord = renderedRecords.getUiRecord(r);
-			UiIdentifiableClientRecord newUiRecord = createUiIdentifiableClientRecord(r);
+			DtoIdentifiableClientRecord existingUiRecord = renderedRecords.getUiRecord(r);
+			DtoIdentifiableClientRecord newUiRecord = createUiIdentifiableClientRecord(r);
 			boolean isNew = existingUiRecord == null || !existingUiRecord.getValues().equals(newUiRecord.getValues());
 			if (isNew) {
 				newUiRecords.add(newUiRecord);
@@ -244,13 +244,13 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		return new UiRecordMappingResult<>(recordAndClientRecords, newUiRecords);
 	}
 
-	protected abstract UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record);
+	protected abstract DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record);
 
 	private static class UiRecordMappingResult<RECORD> {
 		List<RecordAndClientRecord<RECORD>> recordAndClientRecords;
-		List<UiIdentifiableClientRecord> newUiRecords;
+		List<DtoIdentifiableClientRecord> newUiRecords;
 
-		public UiRecordMappingResult(List<RecordAndClientRecord<RECORD>> recordAndClientRecords, List<UiIdentifiableClientRecord> newUiRecords) {
+		public UiRecordMappingResult(List<RecordAndClientRecord<RECORD>> recordAndClientRecords, List<DtoIdentifiableClientRecord> newUiRecords) {
 			this.recordAndClientRecords = recordAndClientRecords;
 			this.newUiRecords = newUiRecords;
 		}

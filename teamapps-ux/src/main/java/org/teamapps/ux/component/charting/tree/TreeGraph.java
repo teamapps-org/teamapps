@@ -37,10 +37,10 @@ import java.util.stream.Collectors;
 
 public class TreeGraph<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<TreeGraphNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(UiTreeGraph.NodeClickedEvent.TYPE_ID);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.NodeExpandedOrCollapsedEvent.TYPE_ID);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.ParentExpandedOrCollapsedEvent.TYPE_ID);
-	public final ProjectorEvent<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiTreeGraph.SideListExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<TreeGraphNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(DtoTreeGraph.NodeClickedEvent.TYPE_ID);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoTreeGraph.NodeExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoTreeGraph.ParentExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoTreeGraph.SideListExpandedOrCollapsedEvent.TYPE_ID);
 
 	private float zoomFactor;
 	private boolean compact = false;
@@ -57,8 +57,8 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiTreeGraph createUiClientObject() {
-		UiTreeGraph ui = new UiTreeGraph();
+	public DtoTreeGraph createUiClientObject() {
+		DtoTreeGraph ui = new DtoTreeGraph();
 		mapAbstractUiComponentProperties(ui);
 		ui.setNodes(createUiNodes(nodesById.values()));
 		ui.setZoomFactor(zoomFactor);
@@ -71,14 +71,14 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		return ui;
 	}
 
-	private List<UiTreeGraphNode> createUiNodes(Collection<TreeGraphNode<RECORD>> nodes) {
+	private List<DtoTreeGraphNode> createUiNodes(Collection<TreeGraphNode<RECORD>> nodes) {
 		return nodes.stream()
 				.map(this::createUiNode)
 				.collect(Collectors.toList());
 	}
 
-	private UiTreeGraphNode createUiNode(TreeGraphNode<RECORD> node) {
-		UiTreeGraphNode uiNode = new UiTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
+	private DtoTreeGraphNode createUiNode(TreeGraphNode<RECORD> node) {
+		DtoTreeGraphNode uiNode = new DtoTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
 		uiNode.setParentId(node.getParent() != null ? node.getParent().getId() : null);
 		uiNode.setParentExpandable(node.isParentExpandable());
@@ -90,13 +90,13 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		return uiNode;
 	}
 
-	private UiBaseTreeGraphNode createBaseUiNode(BaseTreeGraphNode<RECORD> node) {
-		UiBaseTreeGraphNode uiNode = new UiBaseTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
+	private DtoBaseTreeGraphNode createBaseUiNode(BaseTreeGraphNode<RECORD> node) {
+		DtoBaseTreeGraphNode uiNode = new DtoBaseTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
 		return uiNode;
 	}
 
-	private void mapBaseTreeGraphNodeAttributes(BaseTreeGraphNode<RECORD> node, UiBaseTreeGraphNode uiNode) {
+	private void mapBaseTreeGraphNodeAttributes(BaseTreeGraphNode<RECORD> node, DtoBaseTreeGraphNode uiNode) {
 		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? node.getBackgroundColor().toHtmlColorString() : null);
 		uiNode.setBorderColor(node.getBorderColor() != null ? node.getBorderColor().toHtmlColorString() : null);
 		uiNode.setBorderWidth(node.getBorderWidth());
@@ -110,26 +110,26 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		uiNode.setDashArray(node.getDashArray());
 	}
 
-	private UiClientRecord createUiRecord(RECORD record, Template template) {
-		UiClientRecord uiClientRecord = new UiClientRecord();
+	private DtoClientRecord createUiRecord(RECORD record, Template template) {
+		DtoClientRecord uiClientRecord = new DtoClientRecord();
 		uiClientRecord.setValues(propertyProvider.getValues(record, template.getPropertyNames()));
 		return uiClientRecord;
 	}
 
 	public void setZoomFactor(float zoomFactor) {
 		this.zoomFactor = zoomFactor;
-		sendCommandIfRendered(() -> new UiTreeGraph.SetZoomFactorCommand(zoomFactor));
+		sendCommandIfRendered(() -> new DtoTreeGraph.SetZoomFactorCommand(zoomFactor));
 	}
 
 	public void setNodes(List<TreeGraphNode<RECORD>> nodes) {
 		this.nodesById.clear();
 		nodes.forEach(n -> nodesById.put(n.getId(), n));
-		sendCommandIfRendered(() -> new UiTreeGraph.SetNodesCommand(createUiNodes(nodes)));
+		sendCommandIfRendered(() -> new DtoTreeGraph.SetNodesCommand(createUiNodes(nodes)));
 	}
 
 	public void addNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		sendCommandIfRendered(() -> new UiTreeGraph.AddNodeCommand(createUiNode(node)));
+		sendCommandIfRendered(() -> new DtoTreeGraph.AddNodeCommand(createUiNode(node)));
 	}
 
 	public void addNodes(List<TreeGraphNode<RECORD>> nodes) {
@@ -139,42 +139,42 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public void removeNode(TreeGraphNode<RECORD> node) {
 		this.nodesById.remove(node.getId());
-		sendCommandIfRendered(() -> new UiTreeGraph.RemoveNodeCommand(node.getId()));
+		sendCommandIfRendered(() -> new DtoTreeGraph.RemoveNodeCommand(node.getId()));
 	}
 
 	public void updateNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		sendCommandIfRendered(() -> new UiTreeGraph.UpdateNodeCommand(createUiNode(node)));
+		sendCommandIfRendered(() -> new DtoTreeGraph.UpdateNodeCommand(createUiNode(node)));
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiTreeGraph.NodeClickedEvent.TYPE_ID -> {
-				var e = event.as(UiTreeGraph.NodeClickedEventWrapper.class);
+			case DtoTreeGraph.NodeClickedEvent.TYPE_ID -> {
+				var e = event.as(DtoTreeGraph.NodeClickedEventWrapper.class);
 				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
 				if (node != null) {
 					onNodeClicked.fire(node);
 				}
 			}
-			case UiTreeGraph.NodeExpandedOrCollapsedEvent.TYPE_ID -> {
-				var e = event.as(UiTreeGraph.NodeExpandedOrCollapsedEventWrapper.class);
+			case DtoTreeGraph.NodeExpandedOrCollapsedEvent.TYPE_ID -> {
+				var e = event.as(DtoTreeGraph.NodeExpandedOrCollapsedEventWrapper.class);
 				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
 				if (node != null) {
 					node.setExpanded(e.getExpanded());
 					onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
 				}
 			}
-			case UiTreeGraph.ParentExpandedOrCollapsedEvent.TYPE_ID -> {
-				var e = event.as(UiTreeGraph.ParentExpandedOrCollapsedEventWrapper.class);
+			case DtoTreeGraph.ParentExpandedOrCollapsedEvent.TYPE_ID -> {
+				var e = event.as(DtoTreeGraph.ParentExpandedOrCollapsedEventWrapper.class);
 				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
 				if (node != null) {
 					node.setParentExpanded(e.getExpanded());
 					onParentExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
 				}
 			}
-			case UiTreeGraph.SideListExpandedOrCollapsedEvent.TYPE_ID -> {
-				var e = event.as(UiTreeGraph.SideListExpandedOrCollapsedEventWrapper.class);
+			case DtoTreeGraph.SideListExpandedOrCollapsedEvent.TYPE_ID -> {
+				var e = event.as(DtoTreeGraph.SideListExpandedOrCollapsedEventWrapper.class);
 				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
 				if (node != null) {
 					node.setSideListExpanded(e.getExpanded());
@@ -195,15 +195,15 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoTreeGraph.UpdateCommand(createUiClientObject()));
 	}
 
 	public void moveToRootNode() {
-		sendCommandIfRendered(() -> new UiTreeGraph.MoveToRootNodeCommand());
+		sendCommandIfRendered(() -> new DtoTreeGraph.MoveToRootNodeCommand());
 	}
 
 	public void moveToNode(TreeGraphNode<RECORD> node) {
-		sendCommandIfRendered(() -> new UiTreeGraph.MoveToNodeCommand(node.getId()));
+		sendCommandIfRendered(() -> new DtoTreeGraph.MoveToNodeCommand(node.getId()));
 	}
 
 	private Collection<TreeGraphNode<RECORD>> getAllDescendants(TreeGraphNode<RECORD> node, boolean includeSelf) {

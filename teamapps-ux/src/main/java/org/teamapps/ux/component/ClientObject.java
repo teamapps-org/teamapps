@@ -44,10 +44,10 @@ public interface ClientObject {
 	 */
 	UiClientObjectReference createUiReference();
 
-	default void handleUiEvent(UiEventWrapper event) {
+	default void handleUiEvent(DtoEventWrapper event) {
 	}
 
-	default Object handleUiQuery(UiQueryWrapper query) {
+	default Object handleUiQuery(DtoQueryWrapper query) {
 		return null;
 	}
 }

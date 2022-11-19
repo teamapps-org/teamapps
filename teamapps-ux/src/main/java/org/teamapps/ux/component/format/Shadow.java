@@ -21,7 +21,7 @@ package org.teamapps.ux.component.format;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiShadow;
+import org.teamapps.dto.DtoShadow;
 
 public class Shadow {
 
@@ -63,8 +63,8 @@ public class Shadow {
 		return color;
 	}
 
-	public UiShadow createUiShadow() {
-		return new UiShadow(color != null ? color.toHtmlColorString() : null, blur)
+	public DtoShadow createUiShadow() {
+		return new DtoShadow(color != null ? color.toHtmlColorString() : null, blur)
 				.setOffsetX(offsetX)
 				.setOffsetY(offsetY)
 				.setSpread(spread);

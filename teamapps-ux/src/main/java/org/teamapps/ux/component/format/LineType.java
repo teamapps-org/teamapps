@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.format;
 
-import org.teamapps.dto.UiLineType;
+import org.teamapps.dto.DtoLineType;
 
 public enum LineType {
 
@@ -28,7 +28,7 @@ public enum LineType {
 	DASHED,
 	DOUBLE,;
 
-	public UiLineType createUiLineType() {
-		return UiLineType.valueOf(this.toString());
+	public DtoLineType createUiLineType() {
+		return DtoLineType.valueOf(this.toString());
 	}
 }

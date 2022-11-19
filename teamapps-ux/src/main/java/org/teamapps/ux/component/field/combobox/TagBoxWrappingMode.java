@@ -19,15 +19,15 @@
  */
 package org.teamapps.ux.component.field.combobox;
 
-import org.teamapps.dto.UiTagComboBox;
-import org.teamapps.dto.UiTagComboBoxWrappingMode;
+import org.teamapps.dto.DtoTagComboBox;
+import org.teamapps.dto.DtoTagComboBoxWrappingMode;
 
 public enum TagBoxWrappingMode {
 
 	SINGLE_LINE, MULTI_LINE, SINGLE_TAG_PER_LINE;
 
-	public UiTagComboBoxWrappingMode toUiWrappingMode() {
-		return UiTagComboBoxWrappingMode.valueOf(this.name());
+	public DtoTagComboBoxWrappingMode toUiWrappingMode() {
+		return DtoTagComboBoxWrappingMode.valueOf(this.name());
 	}
 
 }

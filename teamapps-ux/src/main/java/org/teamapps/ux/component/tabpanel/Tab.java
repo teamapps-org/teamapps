@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.tabpanel;
 
-import org.teamapps.dto.UiTab;
+import org.teamapps.dto.DtoTab;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
@@ -63,9 +63,9 @@ public class Tab {
 		this.lazyLoading = lazyLoading;
 	}
 
-	public UiTab createUiTab() {
+	public DtoTab createUiTab() {
 		SessionContext context = CurrentSessionContext.get();
-		UiTab uiTab = new UiTab(clientId, context.resolveIcon(icon), title);
+		DtoTab uiTab = new DtoTab(clientId, context.resolveIcon(icon), title);
 		uiTab.setCloseable(closeable);
 		uiTab.setLazyLoading(this.isLazyLoading());
 		uiTab.setRightSide(this.rightSide);

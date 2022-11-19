@@ -45,26 +45,26 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Table.class);
 
-	public final ProjectorEvent<CellEditingStartedEvent<RECORD, ?>> onCellEditingStarted = createProjectorEventBoundToUiEvent(UiTable.CellEditingStartedEvent.TYPE_ID);
-	public final ProjectorEvent<CellEditingStoppedEvent<RECORD, ?>> onCellEditingStopped = createProjectorEventBoundToUiEvent(UiTable.CellEditingStoppedEvent.TYPE_ID);
-	public final ProjectorEvent<FieldValueChangedEventData<RECORD, ?>> onCellValueChanged = createProjectorEventBoundToUiEvent(UiTable.CellValueChangedEvent.TYPE_ID);
+	public final ProjectorEvent<CellEditingStartedEvent<RECORD, ?>> onCellEditingStarted = createProjectorEventBoundToUiEvent(DtoTable.CellEditingStartedEvent.TYPE_ID);
+	public final ProjectorEvent<CellEditingStoppedEvent<RECORD, ?>> onCellEditingStopped = createProjectorEventBoundToUiEvent(DtoTable.CellEditingStoppedEvent.TYPE_ID);
+	public final ProjectorEvent<FieldValueChangedEventData<RECORD, ?>> onCellValueChanged = createProjectorEventBoundToUiEvent(DtoTable.CellValueChangedEvent.TYPE_ID);
 	/**
 	 * Fired when any number of rows is selected by the user.
 	 */
-	public final ProjectorEvent<List<RECORD>> onRowsSelected = createProjectorEventBoundToUiEvent(UiTable.RowsSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<List<RECORD>> onRowsSelected = createProjectorEventBoundToUiEvent(DtoTable.RowsSelectedEvent.TYPE_ID);
 	/**
 	 * Fired only when a single row is selected by the user.
 	 */
-	public final ProjectorEvent<RECORD> onSingleRowSelected = createProjectorEventBoundToUiEvent(UiTable.RowsSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<RECORD> onSingleRowSelected = createProjectorEventBoundToUiEvent(DtoTable.RowsSelectedEvent.TYPE_ID);
 	/**
 	 * Fired only when multiple rows are selected by the user.
 	 */
-	public final ProjectorEvent<List<RECORD>> onMultipleRowsSelected = createProjectorEventBoundToUiEvent(UiTable.RowsSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<List<RECORD>> onMultipleRowsSelected = createProjectorEventBoundToUiEvent(DtoTable.RowsSelectedEvent.TYPE_ID);
 
-	public final ProjectorEvent<CellClickedEvent<RECORD, ?>> onCellClicked = createProjectorEventBoundToUiEvent(UiTable.CellClickedEvent.TYPE_ID);
-	public final ProjectorEvent<SortingChangedEventData> onSortingChanged = createProjectorEventBoundToUiEvent(UiTable.SortingChangedEvent.TYPE_ID);
-	public final ProjectorEvent<ColumnOrderChangeEventData<RECORD, ?>> onColumnOrderChange = createProjectorEventBoundToUiEvent(UiTable.FieldOrderChangeEvent.TYPE_ID);
-	public final ProjectorEvent<ColumnSizeChangeEventData<RECORD, ?>> onColumnSizeChange = createProjectorEventBoundToUiEvent(UiTable.ColumnSizeChangeEvent.TYPE_ID);
+	public final ProjectorEvent<CellClickedEvent<RECORD, ?>> onCellClicked = createProjectorEventBoundToUiEvent(DtoTable.CellClickedEvent.TYPE_ID);
+	public final ProjectorEvent<SortingChangedEventData> onSortingChanged = createProjectorEventBoundToUiEvent(DtoTable.SortingChangedEvent.TYPE_ID);
+	public final ProjectorEvent<ColumnOrderChangeEventData<RECORD, ?>> onColumnOrderChange = createProjectorEventBoundToUiEvent(DtoTable.FieldOrderChangeEvent.TYPE_ID);
+	public final ProjectorEvent<ColumnSizeChangeEventData<RECORD, ?>> onColumnSizeChange = createProjectorEventBoundToUiEvent(DtoTable.ColumnSizeChangeEvent.TYPE_ID);
 
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
@@ -162,7 +162,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			field.setParent(this);
 		});
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new UiTable.AddColumnsCommand(newColumns.stream()
+			getSessionContext().sendCommand(getId(), new DtoTable.AddColumnsCommand(newColumns.stream()
 					.map(TableColumn::createUiTableColumn)
 					.collect(Collectors.toList()), index));
 			// TODO #table resend data
@@ -183,7 +183,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	public void removeColumns(List<TableColumn<RECORD, ?>> obsoleteColumns) {
 		this.columns.removeAll(obsoleteColumns);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new UiTable.RemoveColumnsCommand(obsoleteColumns.stream()
+			getSessionContext().sendCommand(getId(), new DtoTable.RemoveColumnsCommand(obsoleteColumns.stream()
 					.map(TableColumn::getPropertyName)
 					.collect(Collectors.toList())));
 		}
@@ -197,10 +197,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	@Override
 	public UiComponent createUiClientObject() {
-		List<UiTableColumn> columns = this.columns.stream()
+		List<DtoTableColumn> columns = this.columns.stream()
 				.map(TableColumn::createUiTableColumn)
 				.collect(Collectors.toList());
-		UiTable uiTable = new UiTable(columns);
+		DtoTable uiTable = new DtoTable(columns);
 		mapAbstractUiComponentProperties(uiTable);
 		uiTable.setSelectionFrame(selectionFrame != null ? selectionFrame.createUiSelectionFrame() : null);
 		uiTable.setDisplayAsList(displayAsList);
@@ -231,10 +231,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiTable.RowsSelectedEvent.TYPE_ID -> {
-				var rowsSelectedEvent = event.as(UiTable.RowsSelectedEventWrapper.class);
+			case DtoTable.RowsSelectedEvent.TYPE_ID -> {
+				var rowsSelectedEvent = event.as(DtoTable.RowsSelectedEventWrapper.class);
 				selectedRecords = renderedRecords.getRecords(rowsSelectedEvent.getRecordIds());
 				this.onRowsSelected.fire(selectedRecords);
 				if (selectedRecords.size() == 1) {
@@ -243,16 +243,16 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 					this.onMultipleRowsSelected.fire(selectedRecords);
 				}
 			}
-			case UiTable.CellClickedEvent.TYPE_ID -> {
-				var cellClickedEvent = event.as(UiTable.CellClickedEventWrapper.class);
+			case DtoTable.CellClickedEvent.TYPE_ID -> {
+				var cellClickedEvent = event.as(DtoTable.CellClickedEventWrapper.class);
 				RECORD record = renderedRecords.getRecord(cellClickedEvent.getRecordId());
 				TableColumn<RECORD, ?> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
 				if (record != null && column != null) {
 					this.onCellClicked.fire(new CellClickedEvent<>(record, column));
 				}
 			}
-			case UiTable.CellEditingStartedEvent.TYPE_ID -> {
-				var editingStartedEvent = event.as(UiTable.CellEditingStartedEventWrapper.class);
+			case DtoTable.CellEditingStartedEvent.TYPE_ID -> {
+				var editingStartedEvent = event.as(DtoTable.CellEditingStartedEventWrapper.class);
 				RECORD record = renderedRecords.getRecord(editingStartedEvent.getRecordId());
 				TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
 				if (record == null || column == null) {
@@ -273,8 +273,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				activeEditorField.setCustomFieldMessages(messages);
 				this.onCellEditingStarted.fire(new CellEditingStartedEvent(record, column, cellValue));
 			}
-			case UiTable.CellEditingStoppedEvent.TYPE_ID -> {
-				var editingStoppedEvent = event.as(UiTable.CellEditingStoppedEventWrapper.class);
+			case DtoTable.CellEditingStoppedEvent.TYPE_ID -> {
+				var editingStoppedEvent = event.as(DtoTable.CellEditingStoppedEventWrapper.class);
 				this.activeEditorCell = null;
 				RECORD record = renderedRecords.getRecord(editingStoppedEvent.getRecordId());
 				TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
@@ -283,8 +283,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				}
 				this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(record, column));
 			}
-			case UiTable.CellValueChangedEvent.TYPE_ID -> {
-				var changeEvent = event.as(UiTable.CellValueChangedEventWrapper.class);
+			case DtoTable.CellValueChangedEvent.TYPE_ID -> {
+				var changeEvent = event.as(DtoTable.CellValueChangedEventWrapper.class);
 				RECORD record = renderedRecords.getRecord(changeEvent.getRecordId());
 				TableColumn<RECORD, ?> column = this.getColumnByPropertyName(changeEvent.getColumnPropertyName());
 				if (record == null || column == null) {
@@ -296,16 +296,16 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 						.put(column.getPropertyName(), value);
 				onCellValueChanged.fire(new FieldValueChangedEventData(record, column, value));
 			}
-			case UiTable.SortingChangedEvent.TYPE_ID -> {
-				var sortingChangedEvent = event.as(UiTable.SortingChangedEventWrapper.class);
+			case DtoTable.SortingChangedEvent.TYPE_ID -> {
+				var sortingChangedEvent = event.as(DtoTable.SortingChangedEventWrapper.class);
 				var sortField = sortingChangedEvent.getSortField();
 				var sortDirection = SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection());
 				this.sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
 				getModel().setSorting(sorting);
 				onSortingChanged.fire(new SortingChangedEventData(sortingChangedEvent.getSortField(), SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection())));
 			}
-			case UiTable.DisplayedRangeChangedEvent.TYPE_ID -> {
-				var d = event.as(UiTable.DisplayedRangeChangedEventWrapper.class);
+			case DtoTable.DisplayedRangeChangedEvent.TYPE_ID -> {
+				var d = event.as(DtoTable.DisplayedRangeChangedEventWrapper.class);
 				try {
 					handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
 				} catch (DuplicateEntriesException e) {
@@ -315,26 +315,26 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 					refreshData();
 				}
 			}
-			case UiTable.FieldOrderChangeEvent.TYPE_ID -> {
-				var fieldOrderChangeEvent = event.as(UiTable.FieldOrderChangeEventWrapper.class);
+			case DtoTable.FieldOrderChangeEvent.TYPE_ID -> {
+				var fieldOrderChangeEvent = event.as(DtoTable.FieldOrderChangeEventWrapper.class);
 				TableColumn<RECORD, ?> column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
 				onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, fieldOrderChangeEvent.getPosition()));
 			}
-			case UiTable.ColumnSizeChangeEvent.TYPE_ID -> {
-				var columnSizeChangeEvent = event.as(UiTable.ColumnSizeChangeEventWrapper.class);
+			case DtoTable.ColumnSizeChangeEvent.TYPE_ID -> {
+				var columnSizeChangeEvent = event.as(DtoTable.ColumnSizeChangeEventWrapper.class);
 				TableColumn<RECORD, ?> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
 				onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, columnSizeChangeEvent.getSize()));
 			}
-			case UiTable.ContextMenuRequestedEvent.TYPE_ID -> {
-				var e = event.as(UiTable.ContextMenuRequestedEventWrapper.class);
+			case DtoTable.ContextMenuRequestedEvent.TYPE_ID -> {
+				var e = event.as(DtoTable.ContextMenuRequestedEventWrapper.class);
 				lastSeenContextMenuRequestId = e.getRequestId();
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
-						sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 					}
 				} else {
 					closeContextMenu();
@@ -394,10 +394,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setCellValue(RECORD record, String propertyName, Object value) {
 		transientChangesByRecordAndPropertyName.computeIfAbsent(record, record1 -> new HashMap<>()).put(propertyName, value);
-		UiIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
+		DtoIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
 			final Object uiValue = getColumnByPropertyName(propertyName).getField().convertUxValueToUiValue(value);
-			sendCommandIfRendered(() -> new UiTable.SetCellValueCommand(uiRecordIdOrNull.getId(), propertyName, uiValue));
+			sendCommandIfRendered(() -> new DtoTable.SetCellValueCommand(uiRecordIdOrNull.getId(), propertyName, uiValue));
 		}
 	}
 
@@ -414,9 +414,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				markedCells.remove(record);
 			}
 		}
-		UiIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
+		DtoIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			sendCommandIfRendered(() -> new UiTable.MarkTableFieldCommand(uiRecordIdOrNull.getId(), propertyName, mark));
+			sendCommandIfRendered(() -> new DtoTable.MarkTableFieldCommand(uiRecordIdOrNull.getId(), propertyName, mark));
 		}
 	}
 
@@ -427,14 +427,14 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void clearAllCellMarkings() {
 		markedCells.clear();
-		sendCommandIfRendered(() -> new UiTable.ClearAllFieldMarkingsCommand());
+		sendCommandIfRendered(() -> new DtoTable.ClearAllFieldMarkingsCommand());
 	}
 
 	// TODO implement using decider? more general formatting options?
 	public void setRecordBold(RECORD record, boolean bold) {
-		UiIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
+		DtoIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			sendCommandIfRendered(() -> new UiTable.SetRecordBoldCommand(uiRecordIdOrNull.getId(), bold));
+			sendCommandIfRendered(() -> new DtoTable.SetRecordBoldCommand(uiRecordIdOrNull.getId(), bold));
 		}
 	}
 
@@ -452,7 +452,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setSelectedRecords(List<RECORD> records, boolean scrollToFirstIfAvailable) {
 		this.selectedRecords = records == null ? List.of() : List.copyOf(records);
-		sendCommandIfRendered(() -> new UiTable.SelectRecordsCommand(renderedRecords.getUiRecordIds(selectedRecords), scrollToFirstIfAvailable));
+		sendCommandIfRendered(() -> new DtoTable.SelectRecordsCommand(renderedRecords.getUiRecordIds(selectedRecords), scrollToFirstIfAvailable));
 	}
 
 	public void setSelectedRow(int rowIndex) {
@@ -462,10 +462,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	public void setSelectedRow(int rowIndex, boolean scrollTo) {
 		getRecordByRowIndex(rowIndex).ifPresentOrElse(record -> {
 			this.selectedRecords = List.of(record);
-			sendCommandIfRendered(() -> new UiTable.SelectRowsCommand(List.of(rowIndex), scrollTo));
+			sendCommandIfRendered(() -> new DtoTable.SelectRowsCommand(List.of(rowIndex), scrollTo));
 		}, () -> {
 			this.selectedRecords = List.of();
-			sendCommandIfRendered(() -> new UiTable.SelectRowsCommand(List.of(), scrollTo));
+			sendCommandIfRendered(() -> new DtoTable.SelectRowsCommand(List.of(), scrollTo));
 		});
 	}
 
@@ -475,7 +475,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setSelectedRows(List<Integer> rowIndexes, boolean scrollToFirst) {
 		this.selectedRecords = getRecordsByRowIndexes(rowIndexes);
-		sendCommandIfRendered(() -> new UiTable.SelectRowsCommand(rowIndexes, scrollToFirst));
+		sendCommandIfRendered(() -> new DtoTable.SelectRowsCommand(rowIndexes, scrollToFirst));
 	}
 
 	private List<RECORD> getRecordsByRowIndexes(List<Integer> rowIndexes) {
@@ -498,7 +498,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	protected void updateColumnMessages(TableColumn<RECORD, ?> tableColumn) {
-		sendCommandIfRendered(() -> new UiTable.SetColumnMessagesCommand(tableColumn.getPropertyName(), tableColumn.getMessages().stream()
+		sendCommandIfRendered(() -> new DtoTable.SetColumnMessagesCommand(tableColumn.getPropertyName(), tableColumn.getMessages().stream()
 				.map(message -> message.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
 				.collect(Collectors.toList())));
 	}
@@ -548,9 +548,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	private void updateSingleCellMessages(RECORD record, String propertyName, List<FieldMessage> cellMessages) {
-		UiIdentifiableClientRecord uiRecordId = renderedRecords.getUiRecord(record);
+		DtoIdentifiableClientRecord uiRecordId = renderedRecords.getUiRecord(record);
 		if (uiRecordId != null) {
-			sendCommandIfRendered(() -> new UiTable.SetSingleCellMessagesCommand(
+			sendCommandIfRendered(() -> new DtoTable.SetSingleCellMessagesCommand(
 					uiRecordId.getId(),
 					propertyName,
 					cellMessages.stream()
@@ -562,14 +562,14 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 
 	protected void updateColumnVisibility(TableColumn<RECORD, ?> tableColumn) {
-		sendCommandIfRendered(() -> new UiTable.SetColumnVisibilityCommand(tableColumn.getPropertyName(), tableColumn.isVisible()));
+		sendCommandIfRendered(() -> new DtoTable.SetColumnVisibilityCommand(tableColumn.getPropertyName(), tableColumn.isVisible()));
 	}
 
 	// TODO #focus propagation
 //	@Override
 //	public void handleFieldFocused(AbstractField field) {
 //		if (selectedRecord != null) {
-//			queueCommandIfRendered(() -> new UiTable.FocusCellCommand(clientRecordCache.getUiRecord(selectedRecord), field.getPropertyName()));
+//			queueCommandIfRendered(() -> new DtoTable.FocusCellCommand(clientRecordCache.getUiRecord(selectedRecord), field.getPropertyName()));
 //		}
 //	}
 
@@ -681,11 +681,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<UiIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
+	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<DtoIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
 		sendCommandIfRendered(() -> {
 			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; newUiRecords.size: {}; totalCount: {}",
 					start, uiRecordIds.size(), renderedRecords.size(), newUiRecords.size(), totalNumberOfRecords);
-			return new UiTable.UpdateDataCommand(
+			return new DtoTable.UpdateDataCommand(
 					start,
 					uiRecordIds,
 					(List) newUiRecords,
@@ -756,7 +756,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 
-	private void applyTransientChangesToClientRecord(UiTableClientRecord uiRecord) {
+	private void applyTransientChangesToClientRecord(DtoTableClientRecord uiRecord) {
 		Map<String, Object> changes = transientChangesByRecordAndPropertyName.get(renderedRecords.getRecord(uiRecord.getId()));
 		if (changes != null) {
 			changes.forEach((key, value) -> uiRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertUxValueToUiValue(value)));
@@ -765,13 +765,13 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void cancelEditing() {
 		TableCellCoordinates<RECORD> activeEditorCell = getActiveEditorCell();
-		UiIdentifiableClientRecord uiRecord = renderedRecords.getUiRecord(activeEditorCell.getRecord());
+		DtoIdentifiableClientRecord uiRecord = renderedRecords.getUiRecord(activeEditorCell.getRecord());
 		if (uiRecord != null) {
-			sendCommandIfRendered(() -> new UiTable.CancelEditingCellCommand(uiRecord.getId(), activeEditorCell.getPropertyName()));
+			sendCommandIfRendered(() -> new DtoTable.CancelEditingCellCommand(uiRecord.getId(), activeEditorCell.getPropertyName()));
 		}
 	}
 
-	private Map<String, List<UiFieldMessage>> createUiFieldMessagesForRecord(Map<String, List<FieldMessage>> recordFieldMessages) {
+	private Map<String, List<DtoFieldMessage>> createUiFieldMessagesForRecord(Map<String, List<FieldMessage>> recordFieldMessages) {
 		return recordFieldMessages.entrySet().stream()
 				.collect(Collectors.toMap(
 						entry -> entry.getKey(),
@@ -782,8 +782,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	protected UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
-		UiTableClientRecord clientRecord = new UiTableClientRecord();
+	protected DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+		DtoTableClientRecord clientRecord = new DtoTableClientRecord();
 		clientRecord.setId(++clientRecordIdCounter);
 		Map<String, Object> uxValues = extractRecordProperties(record);
 		Map<String, Object> uiValues = columns.stream()
@@ -1148,7 +1148,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void closeContextMenu() {
-		sendCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 }

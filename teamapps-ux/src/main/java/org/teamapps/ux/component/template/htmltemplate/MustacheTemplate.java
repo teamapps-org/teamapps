@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.template.htmltemplate;
 
-import org.teamapps.dto.UiMustacheTemplate;
-import org.teamapps.dto.UiTemplate;
+import org.teamapps.dto.DtoMustacheTemplate;
+import org.teamapps.dto.DtoTemplate;
 import org.teamapps.ux.component.template.Template;
 
 import java.util.List;
@@ -42,8 +42,8 @@ public class MustacheTemplate implements Template {
 	}
 
 	@Override
-	public UiTemplate createUiTemplate() {
-		return new UiMustacheTemplate(templateString);
+	public DtoTemplate createUiTemplate() {
+		return new DtoMustacheTemplate(templateString);
 	}
 
 	@Override

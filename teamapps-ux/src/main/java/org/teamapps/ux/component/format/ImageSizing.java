@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.format;
 
-import org.teamapps.dto.UiImageSizing;
+import org.teamapps.dto.DtoImageSizing;
 
 public enum ImageSizing {
 	COVER, CONTAIN, ORIGINAL, STRETCH;
 
-	public UiImageSizing toUiImageSizing() {
-		return UiImageSizing.valueOf(this.name());
+	public DtoImageSizing toUiImageSizing() {
+		return DtoImageSizing.valueOf(this.name());
 	}
 }

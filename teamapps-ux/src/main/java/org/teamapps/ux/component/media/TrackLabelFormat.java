@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.media;
 
-import org.teamapps.dto.UiTrackLabelFormat;
+import org.teamapps.dto.DtoTrackLabelFormat;
 
 public enum TrackLabelFormat {
 
@@ -28,8 +28,8 @@ public enum TrackLabelFormat {
 	LANGUAGE_ROLE,
 	ROLE;
 
-	public UiTrackLabelFormat toUiTrackLabelFormat() {
-		return UiTrackLabelFormat.valueOf(this.name());
+	public DtoTrackLabelFormat toUiTrackLabelFormat() {
+		return DtoTrackLabelFormat.valueOf(this.name());
 	}
 
 }

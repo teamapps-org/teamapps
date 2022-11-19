@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.html;
 
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEventWrapper;
-import org.teamapps.dto.UiHtmlView;
+import org.teamapps.dto.DtoHtmlView;
 import org.teamapps.ux.component.*;
 
 import java.util.*;
@@ -50,7 +50,7 @@ public class HtmlView extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiHtmlView ui = new UiHtmlView();
+		DtoHtmlView ui = new DtoHtmlView();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHtml(html);
 		ui.setComponentsByContainerElementSelector(componentsByContainerElementSelector.entrySet().stream()
@@ -62,7 +62,7 @@ public class HtmlView extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 
 	}
 
@@ -81,16 +81,16 @@ public class HtmlView extends AbstractComponent {
 	public void addComponent(String containerSelector, Component component, boolean clearContainer) {
 		this.componentsByContainerElementSelector.computeIfAbsent(containerSelector, s -> new ArrayList<>())
 				.add(component);
-		this.sendCommandIfRendered(() -> new UiHtmlView.AddComponentCommand(containerSelector, component.createUiReference(), clearContainer));
+		this.sendCommandIfRendered(() -> new DtoHtmlView.AddComponentCommand(containerSelector, component.createUiReference(), clearContainer));
 	}
 
 	public void removeComponent(Component component) {
 		componentsByContainerElementSelector.entrySet().removeIf(entry -> entry.getValue() == component);
-		this.sendCommandIfRendered(() -> new UiHtmlView.RemoveComponentCommand(component.createUiReference()));
+		this.sendCommandIfRendered(() -> new DtoHtmlView.RemoveComponentCommand(component.createUiReference()));
 	}
 
 	public void setContentHtml(String containerElementSelector, String html) {
 		contentHtmlByContainerElementSelector.put(containerElementSelector, html);
-		this.sendCommandIfRendered(() -> new UiHtmlView.SetContentHtmlCommand(containerElementSelector, html));
+		this.sendCommandIfRendered(() -> new DtoHtmlView.SetContentHtmlCommand(containerElementSelector, html));
 	}
 }

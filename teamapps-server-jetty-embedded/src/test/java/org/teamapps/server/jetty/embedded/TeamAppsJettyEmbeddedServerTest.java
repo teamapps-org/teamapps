@@ -34,7 +34,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 		WebController controller = (SessionContext sessionContext) -> {
 			RootPanel rootPanel = sessionContext.addRootPanel();
 			rootPanel.setCssStyle("background-color", "blue");
-			rootPanel.setCssStyle(".UiDummyComponent", "background-color", "green");
+			rootPanel.setCssStyle(".DtoDummyComponent", "background-color", "green");
 			DummyComponent content = new DummyComponent();
 			content.onClick.addListener((eventData, disposable) -> {
 				System.out.println("Clicked!");

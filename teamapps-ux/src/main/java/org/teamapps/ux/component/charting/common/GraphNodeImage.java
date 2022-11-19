@@ -21,16 +21,16 @@ package org.teamapps.ux.component.charting.common;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiTreeGraphNodeImage;
-import org.teamapps.dto.UiTreeGraphNodeImageCornerShape;
+import org.teamapps.dto.DtoTreeGraphNodeImage;
+import org.teamapps.dto.DtoTreeGraphNodeImageCornerShape;
 
 public class GraphNodeImage {
 
 	public enum CornerShape {
 		ORIGINAL, ROUNDED, CIRCLE;
 
-		public UiTreeGraphNodeImageCornerShape toUiCornerShape() {
-			return UiTreeGraphNodeImageCornerShape.valueOf(this.name());
+		public DtoTreeGraphNodeImageCornerShape toUiCornerShape() {
+			return DtoTreeGraphNodeImageCornerShape.valueOf(this.name());
 		}
 	}
 	private String url;
@@ -50,8 +50,8 @@ public class GraphNodeImage {
 		this.height = height;
 	}
 
-	public UiTreeGraphNodeImage createUiTreeGraphNodeImage() {
-		UiTreeGraphNodeImage ui = new UiTreeGraphNodeImage(url, width, height);
+	public DtoTreeGraphNodeImage createUiTreeGraphNodeImage() {
+		DtoTreeGraphNodeImage ui = new DtoTreeGraphNodeImage(url, width, height);
 		ui.setCenterTopDistance(centerTopDistance);
 		ui.setCenterLeftDistance(centerLeftDistance);
 		ui.setCornerShape(cornerShape.toUiCornerShape());

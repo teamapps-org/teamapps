@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.timegraph.datapoints;
 
-import org.teamapps.dto.UiGraphData;
-import org.teamapps.dto.UiHoseGraphData;
+import org.teamapps.dto.DtoGraphData;
+import org.teamapps.dto.DtoHoseGraphData;
 import org.teamapps.ux.component.timegraph.Interval;
 
 import java.util.Objects;
@@ -44,11 +44,11 @@ public interface HoseGraphData extends GraphData {
 	}
 
 	@Override
-	default UiGraphData toUiGraphData() {
+	default DtoGraphData toUiGraphData() {
 		final LineGraphData lowerLineData = getLowerLineData();
 		final LineGraphData middleLineData = getMiddleLineData();
 		final LineGraphData upperLineData = getUpperLineData();
-		return new UiHoseGraphData(
+		return new DtoHoseGraphData(
 				lowerLineData != null ? lowerLineData.toUiGraphData() : null,
 				middleLineData != null ? middleLineData.toUiGraphData() : null,
 				upperLineData != null ? upperLineData.toUiGraphData() : null,

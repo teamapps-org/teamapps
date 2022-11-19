@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field.datetime;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.AbstractUiDateTimeField;
+import org.teamapps.dto.DtoAbstractDateTimeField;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.session.DateTimeFormatDescriptor;
 
@@ -41,7 +41,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 		this.timeFormat = getSessionContext().getConfiguration().getTimeFormat();
 	}
 
-	protected void mapAbstractDateTimeFieldUiValues(AbstractUiDateTimeField uiField) {
+	protected void mapAbstractDateTimeFieldUiValues(DtoAbstractDateTimeField uiField) {
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setShowDropDownButton(showDropDownButton);
 		uiField.setFavorPastDates(favorPastDates);
@@ -56,7 +56,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		sendCommandIfRendered(() -> new AbstractUiDateTimeField.SetShowDropDownButtonCommand(showDropDownButton));
+		sendCommandIfRendered(() -> new DtoAbstractDateTimeField.SetShowDropDownButtonCommand(showDropDownButton));
 	}
 
 	public boolean isFavorPastDates() {
@@ -65,7 +65,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setFavorPastDates(boolean favorPastDates) {
 		this.favorPastDates = favorPastDates;
-		sendCommandIfRendered(() -> new AbstractUiDateTimeField.SetFavorPastDatesCommand(favorPastDates));
+		sendCommandIfRendered(() -> new DtoAbstractDateTimeField.SetFavorPastDatesCommand(favorPastDates));
 	}
 
 	public Locale getLocale() {
@@ -82,7 +82,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		sendCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
+		sendCommandIfRendered(() -> new DtoAbstractDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -91,7 +91,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		sendCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
+		sendCommandIfRendered(() -> new DtoAbstractDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public DateTimeFormatDescriptor getTimeFormat() {
@@ -100,7 +100,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		sendCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
+		sendCommandIfRendered(() -> new DtoAbstractDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 }

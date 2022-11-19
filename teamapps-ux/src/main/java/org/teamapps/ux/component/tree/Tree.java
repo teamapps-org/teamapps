@@ -40,8 +40,8 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(Tree.class);
 
-	public final ProjectorEvent<RECORD> onNodeSelected = createProjectorEventBoundToUiEvent(UiTree.NodeSelectedEvent.TYPE_ID);
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(UiTree.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<RECORD> onNodeSelected = createProjectorEventBoundToUiEvent(DtoTree.NodeSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoTree.TextInputEvent.TYPE_ID);
 
 	private TreeModel<RECORD> model;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
@@ -60,7 +60,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 
 	private int clientRecordIdCounter = 0;
-	private final Map<RECORD, UiTreeRecord> uiRecordsByRecord = new HashMap<>();
+	private final Map<RECORD, DtoTreeRecord> uiRecordsByRecord = new HashMap<>();
 
 	private Disposable modelAllNodesChangedListener;
 	private Disposable modelChangedListener;
@@ -78,8 +78,8 @@ public class Tree<RECORD> extends AbstractComponent {
 				List<Integer> removedUiIds = changedEventData.getRemovedNodes().stream()
 						.map(key -> uiRecordsByRecord.remove(key).getId())
 						.collect(Collectors.toList());
-				List<UiTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
-				getSessionContext().sendCommand(getId(), new UiTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords));
+				List<DtoTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
+				getSessionContext().sendCommand(getId(), new DtoTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords));
 			}
 		});
 	}
@@ -93,13 +93,13 @@ public class Tree<RECORD> extends AbstractComponent {
 		}
 	}
 
-	protected List<UiTreeRecord> createOrUpdateUiRecords(List<RECORD> records) {
+	protected List<DtoTreeRecord> createOrUpdateUiRecords(List<RECORD> records) {
 		if (records == null) {
 			return Collections.emptyList();
 		}
-		ArrayList<UiTreeRecord> uiRecords = new ArrayList<>();
+		ArrayList<DtoTreeRecord> uiRecords = new ArrayList<>();
 		for (RECORD record : records) {
-			UiTreeRecord uiRecord = createUiTreeRecordWithoutParentRelation(record);
+			DtoTreeRecord uiRecord = createUiTreeRecordWithoutParentRelation(record);
 			uiRecordsByRecord.put(record, uiRecord);
 			uiRecords.add(uiRecord);
 		}
@@ -109,7 +109,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		return uiRecords;
 	}
 
-	protected UiTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
+	protected DtoTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
 		if (record == null) {
 			return null;
 		}
@@ -117,11 +117,11 @@ public class Tree<RECORD> extends AbstractComponent {
 		List<String> propertyNames = template != null ? template.getPropertyNames() : Collections.emptyList();
 		Map<String, Object> values = propertyProvider.getValues(record, propertyNames);
 
-		UiTreeRecord uiTreeRecord;
+		DtoTreeRecord uiTreeRecord;
 		if (uiRecordsByRecord.containsKey(record)) {
 			uiTreeRecord = uiRecordsByRecord.get(record);
 		} else {
-			uiTreeRecord = new UiComboBoxTreeRecord();
+			uiTreeRecord = new DtoComboBoxTreeRecord();
 			uiTreeRecord.setId(++clientRecordIdCounter);
 		}
 		uiTreeRecord.setValues(values);
@@ -138,12 +138,12 @@ public class Tree<RECORD> extends AbstractComponent {
 		return uiTreeRecord;
 	}
 
-	protected void addParentLinkToUiRecord(RECORD record, UiTreeRecord uiTreeRecord) {
+	protected void addParentLinkToUiRecord(RECORD record, DtoTreeRecord uiTreeRecord) {
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
 		if (treeNodeInfo != null) {
 			RECORD parent = (RECORD) treeNodeInfo.getParent();
 			if (parent != null) {
-				UiTreeRecord uiParent = uiRecordsByRecord.get(parent);
+				DtoTreeRecord uiParent = uiRecordsByRecord.get(parent);
 				if (uiParent != null) {
 					uiTreeRecord.setParentId(uiParent.getId());
 				}
@@ -157,14 +157,14 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String uuid = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, uuid);
-			sendCommandIfRendered(() -> new UiTree.RegisterTemplateCommand(uuid, template.createUiTemplate()));
+			sendCommandIfRendered(() -> new DtoTree.RegisterTemplateCommand(uuid, template.createUiTemplate()));
 		}
 		return template;
 	}
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiTree uiTree = new UiTree();
+		DtoTree uiTree = new DtoTree();
 		mapAbstractUiComponentProperties(uiTree);
 		List<RECORD> records = model.getRecords();
 		if (records != null) {
@@ -189,24 +189,24 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiTree.NodeSelectedEvent.TYPE_ID -> {
-				var nodeSelectedEvent = event.as(UiTree.NodeSelectedEventWrapper.class);
+			case DtoTree.NodeSelectedEvent.TYPE_ID -> {
+				var nodeSelectedEvent = event.as(DtoTree.NodeSelectedEventWrapper.class);
 				RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
 				selectedNode = record;
 				if (record != null) {
 					onNodeSelected.fire(record);
 				}
 			}
-			case UiTree.RequestTreeDataEvent.TYPE_ID -> {
-				var requestTreeDataEvent = event.as(UiTree.RequestTreeDataEventWrapper.class);
+			case DtoTree.RequestTreeDataEvent.TYPE_ID -> {
+				var requestTreeDataEvent = event.as(DtoTree.RequestTreeDataEventWrapper.class);
 				RECORD parentNode = getRecordByUiId(requestTreeDataEvent.getParentNodeId());
 				if (parentNode != null) {
 					List<RECORD> children = model.getChildRecords(parentNode);
-					List<UiTreeRecord> uiChildren = createOrUpdateUiRecords(children);
+					List<DtoTreeRecord> uiChildren = createOrUpdateUiRecords(children);
 					if (isRendered()) {
-						getSessionContext().sendCommand(getId(), new UiTree.BulkUpdateCommand(Collections.emptyList(), uiChildren));
+						getSessionContext().sendCommand(getId(), new DtoTree.BulkUpdateCommand(Collections.emptyList(), uiChildren));
 					}
 				}
 			}
@@ -220,7 +220,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	public void setSelectedNode(RECORD selectedNode) {
 		int uiRecordId = uiRecordsByRecord.get(selectedNode) != null ? uiRecordsByRecord.get(selectedNode).getId() : -1;
 		this.selectedNode = selectedNode;
-		sendCommandIfRendered(() -> new UiTree.SetSelectedNodeCommand(uiRecordId));
+		sendCommandIfRendered(() -> new DtoTree.SetSelectedNodeCommand(uiRecordId));
 	}
 
 	public TreeModel<RECORD> getModel() {
@@ -237,8 +237,8 @@ public class Tree<RECORD> extends AbstractComponent {
 	private void refresh() {
 		if (isRendered()) {
 			uiRecordsByRecord.clear();
-			List<UiTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
-			getSessionContext().sendCommand(getId(), new UiTree.ReplaceDataCommand(uiRecords));
+			List<DtoTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
+			getSessionContext().sendCommand(getId(), new DtoTree.ReplaceDataCommand(uiRecords));
 		}
 	}
 

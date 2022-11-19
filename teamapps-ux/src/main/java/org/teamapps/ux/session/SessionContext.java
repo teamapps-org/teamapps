@@ -79,7 +79,7 @@ public class SessionContext {
 	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiGlobals.ToggleEventListeningCommand(null, null, UiGlobals.GlobalKeyEventOccurredEvent.TYPE_ID, hasListeners)));
 	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiGlobals.ToggleEventListeningCommand(null, null, UiGlobals.NavigationStateChangeEvent.TYPE_ID, hasListeners)));
 	public final ProjectorEvent<UiSessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
-	public final Event<UiSessionClosingReason> onDestroyed = new Event<>();
+	public final Event<DtoSessionClosingReason> onDestroyed = new Event<>();
 
 	/**
 	 * Decorators around all executions inside this SessionContext. These will be invoked when the Thread is already bound to the SessionContext, so SessionContext.current() will
@@ -114,7 +114,7 @@ public class SessionContext {
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
-		public void onUiEvent(String sessionId, UiEventWrapper event) {
+		public void onUiEvent(String sessionId, DtoEventWrapper event) {
 			runWithContext(() -> {
 				String uiComponentId = event.getComponentId();
 				if (uiComponentId != null) {
@@ -131,7 +131,7 @@ public class SessionContext {
 		}
 
 		@Override
-		public void onUiQuery(String sessionId, UiQueryWrapper query, Consumer<Object> resultCallback) {
+		public void onUiQuery(String sessionId, DtoQueryWrapper query, Consumer<Object> resultCallback) {
 			runWithContext(() -> {
 				String uiComponentId = query.getComponentId();
 				ClientObject clientObject = getClientObject(uiComponentId);
@@ -158,7 +158,7 @@ public class SessionContext {
 		}
 
 		@Override
-		public void onClosed(String sessionId, UiSessionClosingReason reason) {
+		public void onClosed(String sessionId, DtoSessionClosingReason reason) {
 			runWithContext(() -> {
 				onDestroyed.fireIgnoringExceptions(reason);
 				// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
@@ -195,7 +195,7 @@ public class SessionContext {
 		this.componentLibraryRegistry = componentLibraryRegistry;
 	}
 
-	public Event<UiSessionClosingReason> onDestroyed() {
+	public Event<DtoSessionClosingReason> onDestroyed() {
 		return onDestroyed;
 	}
 
@@ -270,14 +270,14 @@ public class SessionContext {
 	}
 
 	public void destroy() {
-		destroy(UiSessionClosingReason.TERMINATED_BY_APPLICATION);
+		destroy(DtoSessionClosingReason.TERMINATED_BY_APPLICATION);
 	}
 
-	private void destroy(UiSessionClosingReason reason) {
+	private void destroy(DtoSessionClosingReason reason) {
 		uiSession.close(reason);
 	}
 
-	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
+	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, DtoCommand<RESULT> command, Consumer<RESULT> resultCallback) {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
@@ -287,11 +287,11 @@ public class SessionContext {
 		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(componentLibraryInfo.getUuid(), null, command, wrappedCallback)));
 	}
 
-	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, UiCommand<RESULT> command) {
+	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, DtoCommand<RESULT> command) {
 		sendStaticCommand(clientObjectClass, command, null);
 	}
 
-	public <RESULT> void sendCommand(String clientObjectId, UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
+	public <RESULT> void sendCommand(String clientObjectId, DtoCommand<RESULT> command, Consumer<RESULT> resultCallback) {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
@@ -299,7 +299,7 @@ public class SessionContext {
 		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(null, clientObjectId, command, wrappedCallback)));
 	}
 
-	public void sendCommand(String clientObjectId, UiCommand<?> command) {
+	public void sendCommand(String clientObjectId, DtoCommand<?> command) {
 		this.sendCommand(clientObjectId, command, null);
 	}
 
@@ -392,7 +392,7 @@ public class SessionContext {
 					return ((R) resultHolder[0]);
 				} catch (Throwable t) {
 					LOGGER.error("Exception while executing within session context", t);
-					this.destroy(UiSessionClosingReason.SERVER_SIDE_ERROR);
+					this.destroy(DtoSessionClosingReason.SERVER_SIDE_ERROR);
 					throw t;
 				} finally {
 					CurrentSessionContext.unset();
@@ -559,7 +559,7 @@ public class SessionContext {
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			sendStaticCommand(RootPanel.class, new UiNotification.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+			sendStaticCommand(RootPanel.class, new DtoNotification.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
 	}
@@ -639,10 +639,10 @@ public class SessionContext {
 
 		Button<?> refreshButton = new Button<>(null, refreshButtonCaption);
 		refreshButton.setCssStyle("margin", "10px 0");
-		refreshButton.setCssStyle(".UiButton", "background-color", RgbaColor.MATERIAL_BLUE_600.toHtmlColorString());
-		refreshButton.setCssStyle(".UiButton", "color", RgbaColor.WHITE.toHtmlColorString());
-		refreshButton.setCssStyle(".UiButton", "font-size", "120%");
-		refreshButton.setCssStyle(".UiButton", "height", "50px");
+		refreshButton.setCssStyle(".DtoButton", "background-color", RgbaColor.MATERIAL_BLUE_600.toHtmlColorString());
+		refreshButton.setCssStyle(".DtoButton", "color", RgbaColor.WHITE.toHtmlColorString());
+		refreshButton.setCssStyle(".DtoButton", "font-size", "120%");
+		refreshButton.setCssStyle(".DtoButton", "height", "50px");
 		refreshButton.setOnClickJavaScript("window.location.reload()");
 		verticalLayout.addComponentAutoSize(refreshButton);
 
@@ -701,7 +701,7 @@ public class SessionContext {
 		return uiSession.getSessionId();
 	}
 
-	public void handleStaticEvent(UiEventWrapper event) {
+	public void handleStaticEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
 			case UiGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {
 				UiGlobals.GlobalKeyEventOccurredEventWrapper e = event.as(UiGlobals.GlobalKeyEventOccurredEventWrapper.class);

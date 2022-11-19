@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 
 public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeClickedEvent.TYPE_ID);
-	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeDoubleClicked = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeDoubleClickedEvent.TYPE_ID);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(UiNetworkGraph.NodeExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(DtoNetworkGraph.NodeClickedEvent.TYPE_ID);
+	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeDoubleClicked = createProjectorEventBoundToUiEvent(DtoNetworkGraph.NodeDoubleClickedEvent.TYPE_ID);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoNetworkGraph.NodeExpandedOrCollapsedEvent.TYPE_ID);
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
 	private final List<ForceLayoutLink<RECORD>> links;
@@ -71,28 +71,28 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		List<UiNetworkNode> nodes = createUiNodes(this.nodes);
-		List<UiNetworkLink> links = createUiLinks(this.links);
-		UiNetworkGraph ui = new UiNetworkGraph(nodes, links, Collections.emptyList());
+		List<DtoNetworkNode> nodes = createUiNodes(this.nodes);
+		List<DtoNetworkLink> links = createUiLinks(this.links);
+		DtoNetworkGraph ui = new DtoNetworkGraph(nodes, links, Collections.emptyList());
 		ui.setAnimationDuration(animationDuration);
 		mapAbstractUiComponentProperties(ui);
 		return ui;
 	}
 
-	private List<UiNetworkNode> createUiNodes(List<ForceLayoutNode<RECORD>> nodes) {
+	private List<DtoNetworkNode> createUiNodes(List<ForceLayoutNode<RECORD>> nodes) {
 		return nodes.stream()
 				.map(n -> createUiNode(n))
 				.collect(Collectors.toList());
 	}
 
-	private List<UiNetworkLink> createUiLinks(List<ForceLayoutLink<RECORD>> links) {
+	private List<DtoNetworkLink> createUiLinks(List<ForceLayoutLink<RECORD>> links) {
 		return links.stream()
 				.map(l -> l.toUiNetworkLink())
 				.collect(Collectors.toList());
 	}
 
-	private UiNetworkNode createUiNode(ForceLayoutNode<RECORD> node) {
-		UiNetworkNode uiNode = new UiNetworkNode(node.getId(), node.getWidth(), node.getHeight());
+	private DtoNetworkNode createUiNode(ForceLayoutNode<RECORD> node) {
+		DtoNetworkNode uiNode = new DtoNetworkNode(node.getId(), node.getWidth(), node.getHeight());
 		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? node.getBackgroundColor().toHtmlColorString() : null);
 		uiNode.setBorderColor(node.getBorderColor() != null ? node.getBorderColor().toHtmlColorString() : null);
 		uiNode.setBorderWidth(node.getBorderWidth());
@@ -106,31 +106,31 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		return uiNode;
 	}
 
-	private UiClientRecord createUiRecord(ForceLayoutNode<RECORD> node) {
-		UiClientRecord uiClientRecord = new UiClientRecord();
+	private DtoClientRecord createUiRecord(ForceLayoutNode<RECORD> node) {
+		DtoClientRecord uiClientRecord = new DtoClientRecord();
 		uiClientRecord.setValues(propertyProvider.getValues(node.getRecord(), node.getTemplate().getPropertyNames()));
 		return uiClientRecord;
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiNetworkGraph.NodeClickedEvent.TYPE_ID -> {
-				var clickEvent = event.as(UiNetworkGraph.NodeClickedEventWrapper.class);
+			case DtoNetworkGraph.NodeClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoNetworkGraph.NodeClickedEventWrapper.class);
 				nodes.stream()
 						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
 						.findFirst()
 						.ifPresent(onNodeClicked::fire);
 			}
-			case UiNetworkGraph.NodeDoubleClickedEvent.TYPE_ID -> {
-				var clickEvent = event.as(UiNetworkGraph.NodeDoubleClickedEventWrapper.class);
+			case DtoNetworkGraph.NodeDoubleClickedEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoNetworkGraph.NodeDoubleClickedEventWrapper.class);
 				nodes.stream()
 						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
 						.findFirst()
 						.ifPresent(onNodeDoubleClicked::fire);
 			}
-			case UiNetworkGraph.NodeExpandedOrCollapsedEvent.TYPE_ID -> {
-				var clickEvent = event.as(UiNetworkGraph.NodeExpandedOrCollapsedEventWrapper.class);
+			case DtoNetworkGraph.NodeExpandedOrCollapsedEvent.TYPE_ID -> {
+				var clickEvent = event.as(DtoNetworkGraph.NodeExpandedOrCollapsedEventWrapper.class);
 				nodes.stream()
 						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
 						.findFirst()
@@ -150,7 +150,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	public void addNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink<RECORD>> links) {
 		this.nodes.addAll(nodes);
 		this.links.addAll(links);
-		sendCommandIfRendered(() -> new UiNetworkGraph.AddNodesAndLinksCommand(createUiNodes(nodes), createUiLinks(links)));
+		sendCommandIfRendered(() -> new DtoNetworkGraph.AddNodesAndLinksCommand(createUiNodes(nodes), createUiLinks(links)));
 	}
 
 	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes) {
@@ -166,7 +166,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		List<String> nodeIds = nodes.stream().map(n -> n.getId()).collect(Collectors.toList());
 		Map<String, List<String>> linksBySourceNodeId = links.stream()
 				.collect(Collectors.groupingBy(l -> l.getSource().getId(), Collectors.mapping(l -> l.getTarget().getId(), Collectors.toList())));
-		sendCommandIfRendered(() -> new UiNetworkGraph.RemoveNodesAndLinksCommand(nodeIds, linksBySourceNodeId));
+		sendCommandIfRendered(() -> new DtoNetworkGraph.RemoveNodesAndLinksCommand(nodeIds, linksBySourceNodeId));
 	}
 
 	public List<ForceLayoutNode<RECORD>> getNodes() {
@@ -190,6 +190,6 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	}
 
 	public void setDistance(float linkDistanceFactor, float nodeDistanceFactor) {
-		sendCommandIfRendered(() -> new UiNetworkGraph.SetDistanceCommand(linkDistanceFactor, nodeDistanceFactor));
+		sendCommandIfRendered(() -> new DtoNetworkGraph.SetDistanceCommand(linkDistanceFactor, nodeDistanceFactor));
 	}
 }

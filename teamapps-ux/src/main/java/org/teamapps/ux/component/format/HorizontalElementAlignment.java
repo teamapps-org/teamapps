@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.format;
 
-import org.teamapps.dto.UiHorizontalElementAlignment;
+import org.teamapps.dto.DtoHorizontalElementAlignment;
 
 public enum HorizontalElementAlignment {
 
@@ -28,7 +28,7 @@ public enum HorizontalElementAlignment {
 	RIGHT,
 	STRETCH;
 
-	public UiHorizontalElementAlignment toUiHorizontalElementAlignment() {
-		return UiHorizontalElementAlignment.valueOf(this.toString());
+	public DtoHorizontalElementAlignment toUiHorizontalElementAlignment() {
+		return DtoHorizontalElementAlignment.valueOf(this.toString());
 	}
 }

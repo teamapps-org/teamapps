@@ -4,11 +4,11 @@
  */
 
 
-export interface A {
+export interface DtoA {
 	_type?: string;
 }
 
-export function createA(): A {
+export function createDtoA(): DtoA {
 	return {
 		_type: "A"
 	};

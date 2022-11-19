@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiNumberFieldSliderMode;
+import org.teamapps.dto.DtoNumberFieldSliderMode;
 
 public enum NumberFieldSliderMode {
 	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED, SLIDER_ONLY;
 
-	public UiNumberFieldSliderMode toUiNumberFieldSliderMode() {
-		return UiNumberFieldSliderMode.valueOf(this.name());
+	public DtoNumberFieldSliderMode toUiNumberFieldSliderMode() {
+		return DtoNumberFieldSliderMode.valueOf(this.name());
 	}
 }

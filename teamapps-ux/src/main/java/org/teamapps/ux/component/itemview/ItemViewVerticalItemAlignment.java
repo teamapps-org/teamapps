@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.itemview;
 
-import org.teamapps.dto.UiVerticalItemAlignment;
+import org.teamapps.dto.DtoVerticalItemAlignment;
 
 public enum ItemViewVerticalItemAlignment {
 
@@ -28,8 +28,8 @@ public enum ItemViewVerticalItemAlignment {
 	BOTTOM,
 	STRETCH;
 
-	public UiVerticalItemAlignment toUiItemJustification() {
-		return UiVerticalItemAlignment.valueOf(this.name());
+	public DtoVerticalItemAlignment toUiItemJustification() {
+		return DtoVerticalItemAlignment.valueOf(this.name());
 	}
 
 }

@@ -25,7 +25,7 @@ import org.teamapps.ux.component.AbstractComponent;
 
 public class ImageCropper extends AbstractComponent {
 
-	public final ProjectorEvent<ImageCropperSelection> onSelectionChanged = createProjectorEventBoundToUiEvent(UiImageCropper.SelectionChangedEvent.TYPE_ID);
+	public final ProjectorEvent<ImageCropperSelection> onSelectionChanged = createProjectorEventBoundToUiEvent(DtoImageCropper.SelectionChangedEvent.TYPE_ID);
 
 	private String imageUrl;
 	private ImageCropperSelectionMode selectionMode = ImageCropperSelectionMode.RECTANGLE;
@@ -37,16 +37,16 @@ public class ImageCropper extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiImageCropper uiImageCropper = new UiImageCropper(imageUrl, selectionMode.toUiImageCropperSelectionMode(), aspectRatio);
+		DtoImageCropper uiImageCropper = new DtoImageCropper(imageUrl, selectionMode.toUiImageCropperSelectionMode(), aspectRatio);
 		mapAbstractUiComponentProperties(uiImageCropper);
 		return uiImageCropper;
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiImageCropper.SelectionChangedEvent.TYPE_ID -> {
-				UiImageCropperSelectionWrapper uiSelection = event.as(UiImageCropper.SelectionChangedEventWrapper.class).getSelection();
+			case DtoImageCropper.SelectionChangedEvent.TYPE_ID -> {
+				DtoImageCropperSelectionWrapper uiSelection = event.as(DtoImageCropper.SelectionChangedEventWrapper.class).getSelection();
 				ImageCropperSelection selection = new ImageCropperSelection(uiSelection.getLeft(), uiSelection.getTop(), uiSelection.getWidth(), uiSelection.getHeight());
 				this.selection = selection;
 				this.onSelectionChanged.fire(selection);
@@ -60,7 +60,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
-		sendCommandIfRendered(() -> new UiImageCropper.SetImageUrlCommand(imageUrl));
+		sendCommandIfRendered(() -> new DtoImageCropper.SetImageUrlCommand(imageUrl));
 	}
 
 	public ImageCropperSelectionMode getSelectionMode() {
@@ -69,7 +69,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setSelectionMode(ImageCropperSelectionMode selectionMode) {
 		this.selectionMode = selectionMode;
-		sendCommandIfRendered(() -> new UiImageCropper.SetSelectionModeCommand(selectionMode.toUiImageCropperSelectionMode()));
+		sendCommandIfRendered(() -> new DtoImageCropper.SetSelectionModeCommand(selectionMode.toUiImageCropperSelectionMode()));
 	}
 
 	public Float getAspectRatio() {
@@ -78,7 +78,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setAspectRatio(Float aspectRatio) {
 		this.aspectRatio = aspectRatio;
-		sendCommandIfRendered(() -> new UiImageCropper.SetAspectRatioCommand(aspectRatio));
+		sendCommandIfRendered(() -> new DtoImageCropper.SetAspectRatioCommand(aspectRatio));
 	}
 
 	public ImageCropperSelection getSelection() {
@@ -87,7 +87,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setSelection(ImageCropperSelection selection) {
 		this.selection = selection;
-		sendCommandIfRendered(() -> new UiImageCropper.SetSelectionCommand(selection.createUiImageCropperSelection()));
+		sendCommandIfRendered(() -> new DtoImageCropper.SetSelectionCommand(selection.createUiImageCropperSelection()));
 	}
 
 }

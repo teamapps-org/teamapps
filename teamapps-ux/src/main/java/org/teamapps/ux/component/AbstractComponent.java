@@ -151,11 +151,11 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
-	protected void sendCommandIfRendered(Supplier<UiCommand<?>> commandSupplier) {
+	protected void sendCommandIfRendered(Supplier<DtoCommand<?>> commandSupplier) {
 		this.sendCommandIfRendered(getId(), commandSupplier);
 	}
 
-	protected void sendCommandIfRendered(String clientObjectId, Supplier<UiCommand<?>> commandSupplier) {
+	protected void sendCommandIfRendered(String clientObjectId, Supplier<DtoCommand<?>> commandSupplier) {
 		if (renderingState == RenderingState.RENDERED) {
 			sessionContext.sendCommand(clientObjectId, commandSupplier.get());
 		} else if (renderingState == RenderingState.RENDERING) {
@@ -165,8 +165,8 @@ public abstract class AbstractComponent implements Component {
 			side! Therefore, sending the command must be forcibly enqueued.
 
 			Example: A panel contains a table. The panel's title is bound to the table's "count" ObservableValue. When the panel is rendered, the table also is rendered (as part of rendering the
-			panel). While rendering, the table sets its "count" value, so the panel's title is changed. However, the UiPanel's setTitle() method already has been invoked, so the change will not have
-			any effect on the initialization of the UiPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
+			panel). While rendering, the table sets its "count" value, so the panel's title is changed. However, the DtoPanel's setTitle() method already has been invoked, so the change will not have
+			any effect on the initialization of the DtoPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
 			the panel was rendered (which is only after completing its createUiComponent() method).
 			 */
 			sessionContext.runWithContext(() -> {

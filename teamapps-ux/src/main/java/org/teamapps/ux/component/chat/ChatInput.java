@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.teamapps.dto.UiChatInput;
-import org.teamapps.dto.UiEventWrapper;
+import org.teamapps.dto.DtoChatInput;
+import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class ChatInput extends AbstractComponent {
 
-	public final ProjectorEvent<NewChatMessageData> onMessageSent = createProjectorEventBoundToUiEvent(UiChatInput.MessageSentEvent.TYPE_ID);
+	public final ProjectorEvent<NewChatMessageData> onMessageSent = createProjectorEventBoundToUiEvent(DtoChatInput.MessageSentEvent.TYPE_ID);
 
 	private long maxBytesPerUpload = 5000000;
 	private String uploadUrl = "/upload";
@@ -40,8 +40,8 @@ public class ChatInput extends AbstractComponent {
 	private boolean attachmentsEnabled = true;
 
 	@Override
-	public UiChatInput createUiClientObject() {
-		UiChatInput uiChatInput = new UiChatInput(getSessionContext().resolveIcon(defaultAttachmentIcon));
+	public DtoChatInput createUiClientObject() {
+		DtoChatInput uiChatInput = new DtoChatInput(getSessionContext().resolveIcon(defaultAttachmentIcon));
 		mapAbstractUiComponentProperties(uiChatInput);
 		uiChatInput.setMaxBytesPerUpload(maxBytesPerUpload);
 		uiChatInput.setUploadUrl(uploadUrl);
@@ -51,10 +51,10 @@ public class ChatInput extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiChatInput.MessageSentEvent.TYPE_ID -> {
-				var messageSentEvent = event.as(UiChatInput.MessageSentEventWrapper.class);
+			case DtoChatInput.MessageSentEvent.TYPE_ID -> {
+				var messageSentEvent = event.as(DtoChatInput.MessageSentEventWrapper.class);
 				String text = messageSentEvent.getMessage().getText();
 				if (messageLengthLimit > 0 && text.length() > messageLengthLimit) {
 					text = text.substring(0, messageLengthLimit);
@@ -114,7 +114,7 @@ public class ChatInput extends AbstractComponent {
 	public void setAttachmentsEnabled(boolean attachmentsEnabled) {
 		if (attachmentsEnabled != this.attachmentsEnabled) {
 			this.attachmentsEnabled = attachmentsEnabled;
-			sendCommandIfRendered(() -> new UiChatInput.SetAttachmentsEnabledCommand(attachmentsEnabled));
+			sendCommandIfRendered(() -> new DtoChatInput.SetAttachmentsEnabledCommand(attachmentsEnabled));
 		}
 	}
 }

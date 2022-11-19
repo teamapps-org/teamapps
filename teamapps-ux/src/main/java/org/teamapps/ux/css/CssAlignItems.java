@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.css;
 
-import org.teamapps.dto.UiCssAlignItems;
+import org.teamapps.dto.DtoCssAlignItems;
 
 public enum CssAlignItems {
 
 	STRETCH, CENTER, FLEX_START, FLEX_END, BASELINE, INITIAL, INHERIT;
 
-	public UiCssAlignItems toCssAlignItems() {
-		return UiCssAlignItems.valueOf(this.name());
+	public DtoCssAlignItems toCssAlignItems() {
+		return DtoCssAlignItems.valueOf(this.name());
 	}
 
 }

@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.AbstractUiTemplateElement;
-import org.teamapps.dto.UiGlyphIconElement;
+import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoGlyphIconElement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 
@@ -55,8 +55,8 @@ public class GlyphIconElement extends AbstractTemplateElement<GlyphIconElement> 
 	}
 
 	@Override
-	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiGlyphIconElement uiElement = new UiGlyphIconElement(propertyName, row, column, size);
+	public DtoAbstractTemplateElement createUiTemplateElement() {
+		DtoGlyphIconElement uiElement = new DtoGlyphIconElement(propertyName, row, column, size);
 		uiElement.setFontColor(fontColor != null ? fontColor.toHtmlColorString() : null);
 		mapAbstractTemplateElementAttributesToUiElement(uiElement);
 		return uiElement;

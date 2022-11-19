@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Panel extends AbstractComponent implements Component {
 
-	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(UiPanel.WindowButtonClickedEvent.TYPE_ID);
+	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(DtoPanel.WindowButtonClickedEvent.TYPE_ID);
 
 	private String title;
 	private Icon icon;
@@ -106,7 +106,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	private void updateToolButtons() {
-		sendCommandIfRendered(() -> new UiPanel.SetToolButtonsCommand(this.toolButtons.stream()
+		sendCommandIfRendered(() -> new DtoPanel.SetToolButtonsCommand(this.toolButtons.stream()
 				.map(toolButton -> toolButton.createUiReference())
 				.collect(Collectors.toList())));
 	}
@@ -122,7 +122,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	private void updateWindowButtons() {
-		sendCommandIfRendered(() -> new UiPanel.SetWindowButtonsCommand(this.windowButtons.stream()
+		sendCommandIfRendered(() -> new DtoPanel.SetWindowButtonsCommand(this.windowButtons.stream()
 				.map(b -> b.toUiWindowButtonType())
 				.collect(Collectors.toList())));
 	}
@@ -133,12 +133,12 @@ public class Panel extends AbstractComponent implements Component {
 
 	@Override
 	public UiComponent createUiClientObject() {
-		UiPanel uiPanel = new UiPanel();
+		DtoPanel uiPanel = new DtoPanel();
 		mapUiPanelProperties(uiPanel);
 		return uiPanel;
 	}
 
-	protected void mapUiPanelProperties(UiPanel uiPanel) {
+	protected void mapUiPanelProperties(DtoPanel uiPanel) {
 		mapAbstractUiComponentProperties(uiPanel);
 		uiPanel.setTitle(title);
 		uiPanel.setIcon(getSessionContext().resolveIcon(icon));
@@ -158,11 +158,11 @@ public class Panel extends AbstractComponent implements Component {
 		uiPanel.setStretchContent(stretchContent);
 	}
 
-	public UiPanelHeaderField createUiPanelHeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
+	public DtoPanelHeaderField createUiPanelHeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
 		if (field == null) {
 			return null;
 		}
-		UiPanelHeaderField uiPanelHeaderField = new UiPanelHeaderField(field.createUiReference());
+		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField(field.createUiReference());
 		uiPanelHeaderField.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanelHeaderField.setMinWidth(minWidth);
 		uiPanelHeaderField.setMaxWidth(maxWidth);
@@ -177,7 +177,7 @@ public class Panel extends AbstractComponent implements Component {
 		this.leftHeaderFieldIcon = icon;
 		this.leftHeaderFieldMinWidth = minWidth;
 		this.leftHeaderFieldMaxWidth = maxWidth;
-		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 		return this;
 	}
 
@@ -193,7 +193,7 @@ public class Panel extends AbstractComponent implements Component {
 		this.rightHeaderFieldIcon = icon;
 		this.rightHeaderFieldMinWidth = minWidth;
 		this.rightHeaderFieldMaxWidth = maxWidth;
-		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 		return this;
 	}
@@ -207,14 +207,14 @@ public class Panel extends AbstractComponent implements Component {
 		if (content != null) {
 			content.setParent(this);
 		}
-		sendCommandIfRendered(() -> new UiPanel.SetContentCommand(content != null ? content.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoPanel.SetContentCommand(content != null ? content.createUiReference() : null));
 	}
 
 	@Override
-	public void handleUiEvent(UiEventWrapper event) {
+	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiPanel.WindowButtonClickedEvent.TYPE_ID -> {
-				var clickedEvent = event.as(UiPanel.WindowButtonClickedEventWrapper.class);
+			case DtoPanel.WindowButtonClickedEvent.TYPE_ID -> {
+				var clickedEvent = event.as(DtoPanel.WindowButtonClickedEventWrapper.class);
 				this.onWindowButtonClicked.fire(WindowButtonType.fromUiWindowButtonType(clickedEvent.getWindowButton()));
 			}
 		}
@@ -226,7 +226,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setTitle(String title) {
 		this.title = title;
-		sendCommandIfRendered(() -> new UiPanel.SetTitleCommand(title));
+		sendCommandIfRendered(() -> new DtoPanel.SetTitleCommand(title));
 	}
 
 	public Icon getIcon() {
@@ -235,7 +235,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-		sendCommandIfRendered(() -> new UiPanel.SetIconCommand(getSessionContext().resolveIcon(icon)));
+		sendCommandIfRendered(() -> new DtoPanel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
 	public Component getContent() {
@@ -309,7 +309,7 @@ public class Panel extends AbstractComponent implements Component {
 		}
 		this.leftHeaderField = leftHeaderField;
 		leftHeaderField.setParent(this);
-		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public Icon getLeftHeaderFieldIcon() {
@@ -318,7 +318,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldIcon(Icon leftHeaderFieldIcon) {
 		this.leftHeaderFieldIcon = leftHeaderFieldIcon;
-		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public int getLeftHeaderFieldMinWidth() {
@@ -327,7 +327,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldMinWidth(int leftHeaderFieldMinWidth) {
 		this.leftHeaderFieldMinWidth = leftHeaderFieldMinWidth;
-		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public int getLeftHeaderFieldMaxWidth() {
@@ -336,7 +336,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldMaxWidth(int leftHeaderFieldMaxWidth) {
 		this.leftHeaderFieldMaxWidth = leftHeaderFieldMaxWidth;
-		sendCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public void setRightHeaderField(AbstractField<?> rightHeaderField) {
@@ -345,7 +345,7 @@ public class Panel extends AbstractComponent implements Component {
 		}
 		this.rightHeaderField = rightHeaderField;
 		rightHeaderField.setParent(this);
-		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -355,7 +355,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldIcon(Icon rightHeaderFieldIcon) {
 		this.rightHeaderFieldIcon = rightHeaderFieldIcon;
-		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -365,7 +365,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldMinWidth(int rightHeaderFieldMinWidth) {
 		this.rightHeaderFieldMinWidth = rightHeaderFieldMinWidth;
-		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -375,7 +375,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldMaxWidth(int rightHeaderFieldMaxWidth) {
 		this.rightHeaderFieldMaxWidth = rightHeaderFieldMaxWidth;
-		sendCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -394,7 +394,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setStretchContent(boolean stretchContent) {
 		this.stretchContent = stretchContent;
-		sendCommandIfRendered(() -> new UiPanel.SetStretchContentCommand(stretchContent));
+		sendCommandIfRendered(() -> new DtoPanel.SetStretchContentCommand(stretchContent));
 	}
 
 

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.UiObject;
+import org.teamapps.dto.DtoObject;
 
 /**
  * THIS IS GENERATED CODE!
@@ -33,12 +33,12 @@ import org.teamapps.dto.UiObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class A implements UiObject {
+public abstract class DtoA implements DtoObject {
 
     public static final String TYPE_ID = "A";
 
 
-	public A() {
+	public DtoA() {
 	}
 
 	@SuppressWarnings("unchecked")
@@ -54,7 +54,7 @@ public abstract class A implements UiObject {
 
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"b"})
-	public static class ACommand implements UiCommand<Void> {
+	public static class ACommand implements DtoCommand<Void> {
 
 		protected String b;
 
