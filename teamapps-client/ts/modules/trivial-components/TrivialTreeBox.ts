@@ -189,8 +189,8 @@ class EntryWrapper<E> {
 		return this.children != null && this.children.length === 0;
 	}
 
-	public get expanded() {
-		return (this.entry as any)[this.config.expandedProperty] || false;
+	public get expanded(): boolean {
+		return !!(this.entry as any)[this.config.expandedProperty] || false;
 	}
 
 	public set expanded(expanded: boolean) {
@@ -214,7 +214,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	private config: TrivialTreeBoxConfig<E>;
 
 	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
-	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>();
+	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<{node: E, expanded: boolean}>();
 
 	private $componentWrapper: HTMLElement;
 	private $tree: HTMLElement;
@@ -308,8 +308,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		return $childrenWrapper;
 	}
 
-	private setNodeExpanded(node: EntryWrapper<E>, expanded: boolean, animate: boolean) {
-		let expansionStateChange = !!node.expanded != !!expanded;
+	private setNodeExpanded(node: EntryWrapper<E>, expanded: boolean, animate: boolean, fireEvent = true) {
+		let expansionStateChange = node.expanded != expanded;
 
 		if (expanded && this.config.enforceSingleExpandedPath) {
 			const currentlyExpandedNodes = this.findEntries((n) => {
@@ -321,7 +321,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			for (let i = 0; i < currentlyExpandedNodes.length; i++) {
 				const currentlyExpandedNode = currentlyExpandedNodes[i];
 				if (newExpandedPath.indexOf(currentlyExpandedNode) === -1) {
-					this.setNodeExpanded(currentlyExpandedNode, false, true);
+					this.setNodeExpanded(currentlyExpandedNode, false, true, fireEvent);
 				}
 			}
 		}
@@ -351,8 +351,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			}
 		}
 
-		if (expansionStateChange) {
-			this.onNodeExpansionStateChanged.fire(node.entry);
+		if (expansionStateChange && fireEvent) {
+			this.onNodeExpansionStateChanged.fire({node: node.entry, expanded: expanded});
 		}
 	}
 

@@ -50,6 +50,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	private final Logger LOGGER = LoggerFactory.getLogger(Tree.class);
 
 	public final Event<RECORD> onNodeSelected = new Event<>();
+	public final Event<TreeNodeExpansionEvent<RECORD>> onNodeExpansionChanged = new Event<>();
 	public final Event<String> onTextInput = new Event<>();
 
 	private TreeModel<RECORD> model;
@@ -203,7 +204,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_TREE_NODE_SELECTED:
+			case UI_TREE_NODE_SELECTED:  {
 				UiTree.NodeSelectedEvent nodeSelectedEvent = (UiTree.NodeSelectedEvent) event;
 				RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
 				selectedNode = record;
@@ -211,7 +212,17 @@ public class Tree<RECORD> extends AbstractComponent {
 					onNodeSelected.fire(record);
 				}
 				break;
-			case UI_TREE_REQUEST_TREE_DATA:
+			}
+			case UI_TREE_NODE_EXPANSION_CHANGED: {
+				UiTree.NodeExpansionChangedEvent e = (UiTree.NodeExpansionChangedEvent) event;
+				RECORD record = getRecordByUiId(e.getNodeId());
+				selectedNode = record;
+				if (record != null) {
+					onNodeExpansionChanged.fire(new TreeNodeExpansionEvent<>(record, e.getExpanded()));
+				}
+				break;
+			}
+			case UI_TREE_REQUEST_TREE_DATA: {
 				UiTree.RequestTreeDataEvent requestTreeDataEvent = (UiTree.RequestTreeDataEvent) event;
 				RECORD parentNode = getRecordByUiId(requestTreeDataEvent.getParentNodeId());
 				if (parentNode != null) {
@@ -222,6 +233,7 @@ public class Tree<RECORD> extends AbstractComponent {
 					}
 				}
 				break;
+			}
 		}
 	}
 

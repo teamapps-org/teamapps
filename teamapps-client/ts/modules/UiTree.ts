@@ -19,6 +19,7 @@
  */
 
 import {
+	UiTree_NodeExpansionChangedEvent,
 	UiTree_NodeSelectedEvent,
 	UiTree_RequestTreeDataEvent,
 	UiTree_TextInputEvent,
@@ -43,6 +44,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 	public readonly onTextInput: TeamAppsEvent<UiTree_TextInputEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 500});
 	public readonly onNodeSelected: TeamAppsEvent<UiTree_NodeSelectedEvent> = new TeamAppsEvent();
 	public readonly onRequestTreeData: TeamAppsEvent<UiTree_RequestTreeDataEvent> = new TeamAppsEvent();
+	public readonly onNodeExpansionChanged: TeamAppsEvent<UiTree_NodeExpansionChangedEvent> = new TeamAppsEvent();
 
 	private $panel: HTMLElement;
 	private trivialTree: TrivialTree<UiTreeRecordConfig>;
@@ -85,6 +87,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 				nodeId: entry.id
 			});
 		});
+		this.trivialTree.onNodeExpansionStateChanged.addListener(({node, expanded}) => this.onNodeExpansionChanged.fire({nodeId: node.id, expanded}))
 		this.$panel.appendChild(this.trivialTree.getMainDomElement());
 
 		if (config.selectedNodeId != null) {

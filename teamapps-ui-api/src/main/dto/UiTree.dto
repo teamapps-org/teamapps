@@ -38,5 +38,6 @@ class UiTree extends UiComponent {
 
 	event textInput(String text);
 	event nodeSelected(int nodeId); // TODO boolean isRightMouseButton, boolean isDoubleClick
+	event nodeExpansionChanged(int nodeId, boolean expanded);
 	event requestTreeData(int parentNodeId);
 }
