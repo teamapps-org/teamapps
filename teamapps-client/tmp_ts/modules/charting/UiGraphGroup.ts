@@ -18,25 +18,25 @@
  * =========================LICENSE_END==================================
  */
 import {SVGSelection} from "./Charting";
-import {AbstractUiGraph} from "./AbstractUiGraph";
+import {DtoAbstractGraph} from "./DtoAbstractGraph";
 import {UiTimeGraph} from "./UiTimeGraph";
 import {ScaleTime} from 'd3';
 import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMode";
-import {UiGraphGroupConfig} from "../../generated/UiGraphGroupConfig";
-import {UiGraphGroupDataConfig} from "../../generated/UiGraphGroupDataConfig";
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+import {DtoGraphGroup} from "../../generated/DtoGraphGroup";
+import {DtoGraphGroupData} from "../../generated/DtoGraphGroupData";
+import {DtoLongInterval} from "../../generated/DtoLongInterval";
 import * as d3 from "d3";
 import {GraphContext} from "./GraphContext";
 import {IntervalManager} from "../util/IntervalManager";
 
-export class UiGraphGroup extends AbstractUiGraph<UiGraphGroupConfig, UiGraphGroupDataConfig> {
+export class UiGraphGroup extends DtoAbstractGraph<DtoGraphGroup, DtoGraphGroupData> {
 
 	private $yZeroLine: SVGSelection;
-	private graphs = new Map<String, AbstractUiGraph>();
+	private graphs = new Map<String, DtoAbstractGraph>();
 
 	constructor(
 		timeGraphId: string,
-		config: UiGraphGroupConfig,
+		config: DtoGraphGroup,
 		private dropShadowFilterId: string,
 		graphContext: GraphContext
 	) {
@@ -64,7 +64,7 @@ export class UiGraphGroup extends AbstractUiGraph<UiGraphGroupConfig, UiGraphGro
 		this.graphs.forEach(graph => graph.markIntervalAsCovered(zoomLevel, interval));
 	}
 
-	addData(zoomLevel: number, data: UiGraphGroupDataConfig): void {
+	addData(zoomLevel: number, data: DtoGraphGroupData): void {
 		for(let [graphId, graphData] of Object.entries(data.graphDataByGraphId)) {
 			this.graphs.get(graphId).addData(zoomLevel, graphData);
 		}

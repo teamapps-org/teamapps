@@ -21,12 +21,12 @@
 
 
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {generateUUID, parseHtml} from "../Common";
-import {UiYoutubePlayerConfig} from "../../generated/UiYoutubePlayerConfig";
+import {DtoYoutubePlayer} from "../../generated/DtoYoutubePlayer";
 
-export class UiYoutubePlayer extends AbstractUiComponent<UiYoutubePlayerConfig> implements LiveStreamPlayer {
+export class UiYoutubePlayer extends AbstractComponent<DtoYoutubePlayer> implements LiveStreamPlayer {
 	private static scriptTagAdded: boolean = false;
 	private static scriptLoaded: boolean = false;
 	private static commandsToInvokeWhenScripLoaded: Function[] = [];
@@ -54,7 +54,7 @@ export class UiYoutubePlayer extends AbstractUiComponent<UiYoutubePlayerConfig> 
 		}
 	}
 
-	constructor(config: UiYoutubePlayerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoYoutubePlayer, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$wrapper = parseHtml("<div>");
 		let elementUuid = generateUUID();

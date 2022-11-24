@@ -20,16 +20,16 @@
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+
 import {
 	UiRichTextEditor_ImageUploadFailedEvent,
 	UiRichTextEditor_ImageUploadStartedEvent,
 	UiRichTextEditor_ImageUploadSuccessfulEvent,
 	UiRichTextEditor_ImageUploadTooLargeEvent,
 	UiRichTextEditorCommandHandler,
-	UiRichTextEditorConfig,
+	DtoRichTextEditor,
 	UiRichTextEditorEventSource
-} from "../../generated/UiRichTextEditorConfig";
+} from "../../generated/DtoRichTextEditor";
 import tinymce, {Editor} from 'tinymce';
 import 'tinymce/themes/silver';
 import 'tinymce/icons/default';
@@ -47,18 +47,18 @@ import 'tinymce/plugins/contextmenu';
 import 'tinymce/plugins/searchreplace';
 import 'tinymce/plugins/spellchecker';
 import 'tinymce/plugins/textcolor';
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {UiToolbarVisibilityMode} from "../../generated/UiToolbarVisibilityMode";
 import {UiSpinner} from "../micro-components/UiSpinner";
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
-} from "../../generated/UiTextInputHandlingFieldConfig";
+} from "../../generated/DtoTextInputHandlingField";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {parseHtml, removeTags} from "../Common";
 
 
-export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> implements UiRichTextEditorEventSource, UiRichTextEditorCommandHandler {
+export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> implements UiRichTextEditorEventSource, UiRichTextEditorCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
 		throttlingMode: "throttle",
@@ -135,7 +135,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	private $spinnerWrapper: HTMLElement;
 	private destroying: boolean;
 
-	protected initialize(config: UiRichTextEditorConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoRichTextEditor, context: TeamAppsUiContext) {
 		this._config.toolbarVisibilityMode = config.toolbarVisibilityMode;
 		this.setMaxImageFileSizeInBytes(config.maxImageFileSizeInBytes);
 		this.setUploadUrl(config.uploadUrl);
@@ -570,4 +570,4 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiRichTextEditor", UiRichTextEditor);
+

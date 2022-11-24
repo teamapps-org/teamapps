@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.field.upload;
 
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoField;
 import org.teamapps.dto.DtoFileField;
 import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;

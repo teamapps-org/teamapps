@@ -17,22 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiToolbarButtonGroup as UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroup";
+import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
-import {ToolbarButton} from "./UiToolbarButton";
-import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
+import {ToolbarButton} from "./ToolbarButton";
+import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 
-import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
-import {ButtonVisibilities, Toolbar} from "./UiToolbar";
-import {UiDropDownButtonClickInfo} from "../../../generated/UiDropDownButtonClickInfo";
-import {TeamAppsEvent} from "../teamapps-client-core";
-import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../../Common";
-import {UiComponent} from "../teamapps-client-core";
+import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {ButtonVisibilities, Toolbar} from "./Toolbar";
+import {DtoDropDownButtonClickInfo} from "../../../generated";
+import {insertAfter, insertBefore, outerWidthIncludingMargins} from "../../../Common";
 
 export class ToolbarButtonGroup {
-	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: UiDropDownButtonClickInfo}> = new TeamAppsEvent();
+	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: DtoDropDownButtonClickInfo}> = new TeamAppsEvent();
 
-	private config: UiToolbarButtonGroupConfig;
+	private config: DtoToolbarButtonGroup;
 	private visible: boolean = true;
 	private $buttonGroupWrapper: HTMLElement;
 	private $buttonGroup: HTMLElement;
@@ -40,7 +38,7 @@ export class ToolbarButtonGroup {
 	private $separator: HTMLElement;
 	private buttonsShiftedToOverflowDropDown: ToolbarButton[] = [];
 
-	constructor(buttonGroupConfig: UiToolbarButtonGroupConfig, private toolbar: Toolbar, private context: TeamAppsUiContext) {
+	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolbar: Toolbar, private context: TeamAppsUiContext) {
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
 		const $buttonGroup = parseHtml(`<div class="toolbar-button-group" id="${this.toolbarId}_${buttonGroupConfig.groupId}"></div>`);
@@ -52,7 +50,7 @@ export class ToolbarButtonGroup {
 		this.buttons = new OrderedDictionary<ToolbarButton>();
 
 		for (let j = 0; j < buttonGroupConfig.buttons.length; j++) {
-			const buttonConfig: UiToolbarButtonConfig = buttonGroupConfig.buttons[j];
+			const buttonConfig: DtoToolbarButton = buttonGroupConfig.buttons[j];
 			const button = this.createButton(buttonConfig);
 			this.buttons.push(buttonConfig.buttonId, button);
 			$buttonGroup.append(button.getMainDomElement());
@@ -80,13 +78,13 @@ export class ToolbarButtonGroup {
 		return this.config.position;
 	}
 
-	private createButton(buttonConfig: UiToolbarButtonConfig) {
+	private createButton(buttonConfig: DtoToolbarButton) {
 		const button = new ToolbarButton(buttonConfig, this.context);
 		button.onClicked.addListener(dropDownButtonClickInfo => this.onButtonClicked.fire({buttonId: buttonConfig.buttonId, dropDownButtonClickInfo}));
 		return button;
 	}
 
-	public setDropDownComponent(buttonId: string, component: UiComponent) {
+	public setDropDownComponent(buttonId: string, component: Component) {
 		this.buttons.getValue(buttonId).setDropDownComponent(component);
 	}
 
@@ -98,7 +96,7 @@ export class ToolbarButtonGroup {
 		}
 	}
 
-	public addButton(buttonConfig: UiToolbarButtonConfig, neighborButtonId: string, beforeNeighbor: boolean) {
+	public addButton(buttonConfig: DtoToolbarButton, neighborButtonId: string, beforeNeighbor: boolean) {
 		const button = this.createButton(buttonConfig);
 
 		const existingButton = this.buttons.getValue(buttonConfig.buttonId);

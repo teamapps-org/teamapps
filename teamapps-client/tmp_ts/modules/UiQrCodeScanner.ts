@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {UiQrCodeScanner_QrCodeDetectedEvent, UiQrCodeScannerCommandHandler, UiQrCodeScannerConfig, UiQrCodeScannerEventSource} from "../generated/UiQrCodeScannerConfig";
+import {AbstractComponent} from "teamapps-client-core";
+import {UiQrCodeScanner_QrCodeDetectedEvent, UiQrCodeScannerCommandHandler, DtoQrCodeScanner, UiQrCodeScannerEventSource} from "../generated/DtoQrCodeScanner";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {calculateDisplayModeInnerSize, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {QrScanner} from './qr-code-scanner/qr-scanner';
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 
-export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> implements UiQrCodeScannerCommandHandler, UiQrCodeScannerEventSource {
+export class UiQrCodeScanner extends AbstractComponent<DtoQrCodeScanner> implements UiQrCodeScannerCommandHandler, UiQrCodeScannerEventSource {
 
 	public readonly onQrCodeDetected: TeamAppsEvent<UiQrCodeScanner_QrCodeDetectedEvent> = new TeamAppsEvent();
 
@@ -38,7 +38,7 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 
 	private selectedCameraIndex: number = 0;
 
-	constructor(config: UiQrCodeScannerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoQrCodeScanner, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="UiQrCodeScanner">
@@ -114,4 +114,4 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiQrCodeScanner", UiQrCodeScanner);
+

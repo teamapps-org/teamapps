@@ -19,13 +19,15 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class ImageField extends Field {
 	String width; // css
 	String height; // css
     Border border;
     Shadow shadow;
-	ImageSizing imageSizing = ImageSizing.CONTAIN;
-	String backgroundColor = "transparent";
+	ImageSizing imageSizing;
+	String backgroundColor;
 
 	command update(ImageField config);
 }

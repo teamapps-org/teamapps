@@ -21,7 +21,7 @@ package org.teamapps.ux.session;
 
 import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.UiConfiguration;
+import org.teamapps.dto.DtoConfiguration;
 import org.teamapps.ux.session.DateTimeFormatDescriptor.FullLongMediumShortType;
 
 import java.time.DayOfWeek;
@@ -68,8 +68,8 @@ public class SessionConfiguration {
 		return DayOfWeek.of(GregorianCalendar.getInstance(locale).getFirstDayOfWeek()).minus(1);
 	}
 
-	public UiConfiguration createUiConfiguration() {
-		UiConfiguration config = new UiConfiguration();
+	public DtoConfiguration createUiConfiguration() {
+		DtoConfiguration config = new DtoConfiguration();
 		config.setLocale(locale.toLanguageTag());
 		config.setOptimizedForTouch(optimizedForTouch);
 		config.setThemeClassName(theme.getCssClass());

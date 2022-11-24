@@ -19,11 +19,11 @@
  */
 package org.teamapps.ux.session;
 
-import org.teamapps.dto.KeyEventType;
+import org.teamapps.dto.DtoKeyEventType;
 import org.teamapps.ux.component.Component;
 
 public class KeyboardEvent {
-	private final KeyEventType eventType;
+	private final DtoKeyEventType eventType;
 	private final Component sourceComponent;
 	private final String code;
 	private final boolean isComposing;
@@ -38,7 +38,7 @@ public class KeyboardEvent {
 	private final boolean shiftKey;
 	private final boolean metaKey;
 
-	public KeyboardEvent(KeyEventType eventType, Component sourceComponent, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey) {
+	public KeyboardEvent(DtoKeyEventType eventType, Component sourceComponent, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey) {
 		this.eventType = eventType;
 		this.sourceComponent = sourceComponent;
 		this.code = code;
@@ -55,7 +55,7 @@ public class KeyboardEvent {
 		this.metaKey = metaKey;
 	}
 
-	public KeyEventType getEventType() {
+	public DtoKeyEventType getEventType() {
 		return eventType;
 	}
 

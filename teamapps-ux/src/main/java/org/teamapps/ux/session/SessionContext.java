@@ -25,7 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoClientObject;
+import org.teamapps.dto.DtoGlobals;
+import org.teamapps.dto.DtoNotification;
+import org.teamapps.dto.protocol.DtoCommand;
+import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.protocol.DtoQueryWrapper;
+import org.teamapps.dto.protocol.DtoSessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -48,7 +54,6 @@ import org.teamapps.ux.component.notification.NotificationPosition;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.rootpanel.WakeLock;
 import org.teamapps.ux.component.template.Template;
-import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.i18n.ResourceBundleTranslationProvider;
 import org.teamapps.ux.i18n.TranslationProvider;
@@ -66,7 +71,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
@@ -76,8 +80,8 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
-	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiGlobals.ToggleEventListeningCommand(null, null, UiGlobals.GlobalKeyEventOccurredEvent.TYPE_ID, hasListeners)));
-	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new UiGlobals.ToggleEventListeningCommand(null, null, UiGlobals.NavigationStateChangeEvent.TYPE_ID, hasListeners)));
+	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new DtoGlobals.ToggleEventListeningCommand(null, null, DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID, hasListeners)));
+	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(RootPanel.class, new DtoGlobals.ToggleEventListeningCommand(null, null, DtoGlobals.NavigationStateChangeEvent.TYPE_ID, hasListeners)));
 	public final ProjectorEvent<UiSessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
 	public final Event<DtoSessionClosingReason> onDestroyed = new Event<>();
 
@@ -201,7 +205,7 @@ public class SessionContext {
 
 
 	public void pushNavigationState(String relativeUrl) {
-		sendStaticCommand(RootPanel.class, new UiGlobals.PushHistoryStateCommand(relativeUrl));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.PushHistoryStateCommand(relativeUrl));
 	}
 
 	public void navigateBack(int steps) {
@@ -209,7 +213,7 @@ public class SessionContext {
 	}
 
 	public void navigateForward(int steps) {
-		sendStaticCommand(RootPanel.class, new UiGlobals.NavigateForwardCommand(steps));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.NavigateForwardCommand(steps));
 	}
 
 	public static SessionContext current() {
@@ -331,18 +335,6 @@ public class SessionContext {
 		return this.serverContext.getUploadedFileByUuid(uuid);
 	}
 
-	public TemplateReference registerTemplate(String id, Template template) {
-		registeredTemplates.put(id, template);
-		sendStaticCommand(RootPanel.class, new UiGlobals.RegisterTemplateCommand(id, template.createUiTemplate()));
-		return new TemplateReference(template, id);
-	}
-
-	public void registerTemplates(Map<String, Template> templates) {
-		registeredTemplates.putAll(templates);
-		sendStaticCommand(RootPanel.class, new UiGlobals.RegisterTemplatesCommand(templates.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().createUiTemplate()))));
-	}
-
 	public Template getTemplate(String id) {
 		return registeredTemplates.get(id);
 	}
@@ -436,7 +428,7 @@ public class SessionContext {
 
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
-		sendStaticCommand(RootPanel.class, new UiGlobals.SetConfigCommand(config.createUiConfiguration()));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.SetConfigCommand(config.createUiConfiguration()));
 		updateSessionMessageWindows();
 	}
 
@@ -465,23 +457,23 @@ public class SessionContext {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		clientObjectsById.put(clientObject.getId(), clientObject);
-		UiClientObject uiClientObject = clientObject.createUiClientObject();
+		DtoClientObject uiClientObject = clientObject.createUiClientObject();
 
 		ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
 		loadComponentLibraryIfNecessary(clientObject, componentLibraryInfo);
 
 		if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
-			sendStaticCommand(RootPanel.class, new UiGlobals.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiClientObject.getClass().getSimpleName()));
+			sendStaticCommand(RootPanel.class, new DtoGlobals.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiClientObject.getClass().getSimpleName()));
 			clientObjectTypesKnownToClient.add(clientObject.getClass());
 		}
 
-		sendStaticCommand(RootPanel.class, new UiGlobals.RenderCommand(componentLibraryInfo.getUuid(), uiClientObject));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.RenderCommand(componentLibraryInfo.getUuid(), uiClientObject));
 	}
 
 	private void loadComponentLibraryIfNecessary(ClientObject clientObject, ComponentLibraryInfo componentLibraryInfo) {
 		if (!componentLibrariesLoaded.contains(componentLibraryInfo.getComponentLibrary())) {
 			String mainJsUrl = componentLibraryRegistry.getMainJsUrl(clientObject.getClass());
-			sendStaticCommand(RootPanel.class, new UiGlobals.RegisterComponentLibraryCommand(componentLibraryInfo.getUuid(), mainJsUrl), null);
+			sendStaticCommand(RootPanel.class, new DtoGlobals.RegisterComponentLibraryCommand(componentLibraryInfo.getUuid(), mainJsUrl), null);
 			componentLibrariesLoaded.add(componentLibraryInfo.getComponentLibrary());
 		}
 	}
@@ -489,7 +481,7 @@ public class SessionContext {
 	public void unrenderClientObject(ClientObject clientObject) {
 		sendStaticCommand(RootPanel.class,
 				// unregister only after the ui destroyed the object!
-				new UiGlobals.UnrenderCommand(clientObject.getId()), unused -> clientObjectsById.remove(clientObject.getId()));
+				new DtoGlobals.UnrenderCommand(clientObject.getId()), unused -> clientObjectsById.remove(clientObject.getId()));
 	}
 
 	public ClientObject getClientObject(String clientObjectId) {
@@ -513,15 +505,15 @@ public class SessionContext {
 	}
 
 	public void download(String url, String downloadFileName) {
-		runWithContext(() -> sendStaticCommand(RootPanel.class, new UiGlobals.DownloadFileCommand(url, downloadFileName)));
+		runWithContext(() -> sendStaticCommand(RootPanel.class, new DtoGlobals.DownloadFileCommand(url, downloadFileName)));
 	}
 
 	public void setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, Duration animationDuration) {
-		sendStaticCommand(RootPanel.class, new UiGlobals.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()));
 	}
 
 	public void exitFullScreen() {
-		sendStaticCommand(RootPanel.class, new UiGlobals.ExitFullScreenCommand());
+		sendStaticCommand(RootPanel.class, new DtoGlobals.ExitFullScreenCommand());
 	}
 
 	public void addRootComponent(String containerElementSelector, Component component) {
@@ -529,7 +521,7 @@ public class SessionContext {
 	}
 
 	public void addRootPanel(String containerElementSelector, Component rootPanel) {
-		sendStaticCommand(RootPanel.class, new UiGlobals.AddRootComponentCommand(containerElementSelector, rootPanel.createUiReference()));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.AddRootComponentCommand(containerElementSelector, rootPanel.createUiReference()));
 	}
 
 	public RootPanel addRootPanel(String containerElementSelector) {
@@ -544,17 +536,17 @@ public class SessionContext {
 
 	public void addClientToken(String token) {
 		getClientInfo().getClientTokens().add(token);
-		sendStaticCommand(RootPanel.class, new UiGlobals.AddClientTokenCommand(token));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.AddClientTokenCommand(token));
 	}
 
 	public void removeClientToken(String token) {
 		getClientInfo().getClientTokens().remove(token);
-		sendStaticCommand(RootPanel.class, new UiGlobals.RemoveClientTokenCommand(token));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.RemoveClientTokenCommand(token));
 	}
 
 	public void clearClientTokens() {
 		getClientInfo().getClientTokens().clear();
-		sendStaticCommand(RootPanel.class, new UiGlobals.ClearClientTokensCommand());
+		sendStaticCommand(RootPanel.class, new DtoGlobals.ClearClientTokensCommand());
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
@@ -617,7 +609,7 @@ public class SessionContext {
 
 	private void updateSessionMessageWindows() {
 		sendCommand(null,
-				new UiGlobals.SetSessionMessageWindowsCommand(
+				new DtoGlobals.SetSessionMessageWindowsCommand(
 						sessionExpiredWindow != null ? sessionExpiredWindow.createUiReference()
 								: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
 								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
@@ -662,9 +654,9 @@ public class SessionContext {
 		String uuid = UUID.randomUUID().toString();
 		CompletableFuture<WakeLock> completableFuture = new CompletableFuture<>();
 		runWithContext(() -> {
-			sendStaticCommand(RootPanel.class, new UiGlobals.RequestWakeLockCommand(uuid), successful -> {
+			sendStaticCommand(RootPanel.class, new DtoGlobals.RequestWakeLockCommand(uuid), successful -> {
 				if (successful) {
-					completableFuture.complete(() -> sendStaticCommand(RootPanel.class, new UiGlobals.ReleaseWakeLockCommand(uuid)));
+					completableFuture.complete(() -> sendStaticCommand(RootPanel.class, new DtoGlobals.ReleaseWakeLockCommand(uuid)));
 				} else {
 					completableFuture.completeExceptionally(new RuntimeException("Could not acquire WakeLock"));
 				}
@@ -674,7 +666,7 @@ public class SessionContext {
 	}
 
 	public void goToUrl(String url, boolean blankPage) {
-		sendStaticCommand(RootPanel.class, new UiGlobals.GoToUrlCommand(url, blankPage));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.GoToUrlCommand(url, blankPage));
 	}
 
 	public void setFavicon(Icon<?, ?> icon) {
@@ -686,15 +678,15 @@ public class SessionContext {
 	}
 
 	public void setFavicon(String url) {
-		sendStaticCommand(RootPanel.class, new UiGlobals.SetFaviconCommand(url));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.SetFaviconCommand(url));
 	}
 
 	public void setTitle(String title) {
-		sendStaticCommand(RootPanel.class, new UiGlobals.SetTitleCommand(title));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.SetTitleCommand(title));
 	}
 
 	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		sendStaticCommand(RootPanel.class, new UiGlobals.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
+		sendStaticCommand(RootPanel.class, new DtoGlobals.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
 	}
 
 	public String getSessionId() {
@@ -703,8 +695,8 @@ public class SessionContext {
 
 	public void handleStaticEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case UiGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {
-				UiGlobals.GlobalKeyEventOccurredEventWrapper e = event.as(UiGlobals.GlobalKeyEventOccurredEventWrapper.class);
+			case DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {
+				DtoGlobals.GlobalKeyEventOccurredEventWrapper e = event.as(DtoGlobals.GlobalKeyEventOccurredEventWrapper.class);
 				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
 						e.getEventType(),
 						(e.getSourceComponentId() != null ? (Component) getClientObject(e.getSourceComponentId()) : null),
@@ -722,8 +714,8 @@ public class SessionContext {
 						e.getMetaKey()
 				));
 			}
-			case UiGlobals.NavigationStateChangeEvent.TYPE_ID -> {
-				UiGlobals.NavigationStateChangeEventWrapper e = event.as(UiGlobals.NavigationStateChangeEventWrapper.class);
+			case DtoGlobals.NavigationStateChangeEvent.TYPE_ID -> {
+				DtoGlobals.NavigationStateChangeEventWrapper e = event.as(DtoGlobals.NavigationStateChangeEventWrapper.class);
 				Location location = Location.fromUiLocationWrapper(e.getLocation());
 				this.currentLocation = location;
 				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));

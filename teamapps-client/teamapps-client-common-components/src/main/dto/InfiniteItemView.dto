@@ -19,17 +19,19 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class InfiniteItemView extends Component {
 	required Template itemTemplate;
-	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width
 	required int rowHeight;
 	List<IdentifiableClientRecord> data;
-	int totalNumberOfRecords = 0;
-	int horizontalItemMargin = 0;
-	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
-	ItemJustification itemJustification = ItemJustification.LEFT;
-	VerticalItemAlignment verticalItemAlignment = VerticalItemAlignment.STRETCH;
-	boolean contextMenuEnabled = false;
+	int totalNumberOfRecords;
+	int horizontalItemMargin;
+	boolean autoHeight; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+	ItemJustification itemJustification;
+	VerticalItemAlignment verticalItemAlignment;
+	boolean contextMenuEnabled;
 
 	command addData(int startIndex, List<IdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
 	command removeData(List<Integer> ids);
@@ -46,20 +48,20 @@ managed class InfiniteItemView extends Component {
 	event contextMenuRequested(int requestId, int recordId);
 }
 
-managed class InfiniteItemView2 extends AbstractUiInfiniteListComponent {
+managed class InfiniteItemView2 extends AbstractInfiniteListComponent {
 	required Template itemTemplate;
 
-	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
-	double itemHeight = 100;
+	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	double itemHeight;
 	double horizontalSpacing;
 	double verticalSpacing;
 	double itemPositionAnimationTime; // ms
-	HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.CENTER;
-	VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
-	ItemJustification rowHorizontalAlignment = ItemJustification.SPACE_AROUND;
-//	boolean autoHeight = false; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+	HorizontalElementAlignment itemContentHorizontalAlignment;
+	VerticalElementAlignment itemContentVerticalAlignment;
+	ItemJustification rowHorizontalAlignment;
+//	boolean autoHeight; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 
-	boolean contextMenuEnabled = false;
+	boolean contextMenuEnabled;
 	
 	command setData(int startIndex, List<Integer> recordIds, List<IdentifiableClientRecord> newRecords, int totalNumberOfRecords);
 

@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.dummy;
 
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoDummyComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -43,7 +43,7 @@ public class DummyComponent extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoDummyComponent dummyComponent = new DtoDummyComponent();
 		mapAbstractUiComponentProperties(dummyComponent);
 		dummyComponent.setText(text);

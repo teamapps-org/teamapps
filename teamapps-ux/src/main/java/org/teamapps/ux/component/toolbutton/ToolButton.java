@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.toolbutton;
 
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoToolButton;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -70,7 +70,7 @@ public class ToolButton extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		String icon = getSessionContext().resolveIcon(this.icon);
 		DtoToolButton uiToolButton = new DtoToolButton(icon, popoverText);
 		uiToolButton.setCaption(caption);

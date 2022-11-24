@@ -18,21 +18,21 @@
  * =========================LICENSE_END==================================
  */
 import {
-	UiRelativeWorkSpaceViewPosition,
-	UiSplitSizePolicy,
-	UiViewGroupPanelState,
-	UiWorkSpaceLayoutItem,
-	UiWorkSpaceLayoutView
+	DtoRelativeWorkSpaceViewPosition,
+	DtoSplitSizePolicy,
+	DtoViewGroupPanelState,
+	DtoWorkSpaceLayoutItem,
+	DtoWorkSpaceLayoutView
 } from "../../generated";
 import {ViewInfo} from "./ViewInfo";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {UiComponent} from "teamapps-client-core";
+import {Component} from "teamapps-client-core";
 
 export interface ViewContainer {
 	windowId: string;
 
-	refreshViewComponent(viewName: string, component: UiComponent): void;
+	refreshViewComponent(viewName: string, component: Component): void;
 
 	refreshViewAttributes(viewName: string, tabIcon: string, tabCaption: string, tabCloseable: boolean, visible: boolean): void;
 
@@ -40,21 +40,21 @@ export interface ViewContainer {
 
 	setViewVisible(viewName: string, visible: boolean): void;
 
-	redefineLayout(newLayout: UiWorkSpaceLayoutItem, addedViewConfigs: UiWorkSpaceLayoutView[]): void;
+	redefineLayout(newLayout: DtoWorkSpaceLayoutItem, addedViewConfigs: DtoWorkSpaceLayoutView[]): void;
 
-	moveViewToTopLevel(viewName: string, windowId: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void;
+	moveViewToTopLevel(viewName: string, windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void;
 
-	moveViewRelativeToOtherView(viewName: string, existingViewName: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void;
+	moveViewRelativeToOtherView(viewName: string, existingViewName: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void;
 
 	moveViewToTab(viewName: string, existingViewName: string, select: boolean): void;
 
-	addViewToTopLevel(newView: UiWorkSpaceLayoutView, windowId: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void;
+	addViewToTopLevel(newView: DtoWorkSpaceLayoutView, windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void;
 
-	addViewRelativeToOtherView(newView: UiWorkSpaceLayoutView, existingViewName: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void;
+	addViewRelativeToOtherView(newView: DtoWorkSpaceLayoutView, existingViewName: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void;
 
-	addViewAsTab(newView: UiWorkSpaceLayoutView, itemId: string, select: boolean): void;
+	addViewAsTab(newView: DtoWorkSpaceLayoutView, itemId: string, select: boolean): void;
 
-	addViewAsNeighbourTab(newView: UiWorkSpaceLayoutView, existingViewName: string, select: boolean): void;
+	addViewAsNeighbourTab(newView: DtoWorkSpaceLayoutView, existingViewName: string, select: boolean): void;
 
 	getViewInfo(viewName: string): ViewInfo;
 
@@ -62,7 +62,7 @@ export interface ViewContainer {
 
 	selectViewTab(viewName: string): void;
 
-	setViewGroupPanelState(viewGroupId: string, panelState: UiViewGroupPanelState): void;
+	setViewGroupPanelState(viewGroupId: string, panelState: DtoViewGroupPanelState): void;
 }
 
 export interface ViewContainerListener {

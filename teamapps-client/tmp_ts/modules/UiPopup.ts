@@ -18,21 +18,21 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiPopupCommandHandler, UiPopupConfig} from "../generated/UiPopupConfig";
+import {UiPopupCommandHandler, DtoPopup} from "../generated/DtoPopup";
 import {parseHtml} from "./Common";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
-export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPopupCommandHandler {
+export class UiPopup extends AbstractComponent<DtoPopup> implements UiPopupCommandHandler {
 
 	private contentComponent: UiComponent;
 	private $main: HTMLElement;
 	private $componentWrapper: HTMLElement;
 
-	constructor(config: UiPopupConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoPopup, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="UiPopup">
@@ -116,4 +116,4 @@ export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPop
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiPopup", UiPopup);
+

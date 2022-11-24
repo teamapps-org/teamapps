@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.session;
 
-import org.teamapps.dto.DtoLocation;
-import org.teamapps.dto.DtoLocationWrapper;
+import org.teamapps.dto.protocol.DtoLocation;
+import org.teamapps.dto.protocol.DtoLocationWrapper;
 
 import java.util.Objects;
 

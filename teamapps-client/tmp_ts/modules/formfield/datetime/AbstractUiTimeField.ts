@@ -25,22 +25,22 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
-} from "../../../generated/UiTextInputHandlingFieldConfig";
+} from "../../../generated/DtoTextInputHandlingField";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
 import {
-	AbstractUiTimeFieldCommandHandler,
-	AbstractUiTimeFieldConfig,
-	AbstractUiTimeFieldEventSource
-} from "../../../generated/AbstractUiTimeFieldConfig";
+	DtoAbstractTimeFieldCommandHandler,
+	DtoAbstractTimeFieldConfig,
+	DtoAbstractTimeFieldEventSource
+} from "../../../generated/DtoAbstractTimeFieldConfig";
 import {parseHtml} from "../../Common";
-import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFormatDescriptorConfig";
+import {DtoDateTimeFormatDescriptor} from "../../../generated/DtoDateTimeFormatDescriptor";
 import {LocalDateTime} from "../../datetime/LocalDateTime";
 import {TreeBoxDropdown} from "../../trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "../../trivial-components/TrivialTreeBox";
 
 
-export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiTimeFieldEventSource, AbstractUiTimeFieldCommandHandler {
+export abstract class DtoAbstractTimeField<C extends DtoAbstractTimeFieldConfig, V> extends UiField<C, V> implements DtoAbstractTimeFieldEventSource, DtoAbstractTimeFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
@@ -48,7 +48,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected timeRenderer: (time: LocalDateTime) => string;
 
-	protected initialize(config: AbstractUiTimeFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoAbstractTimeFieldConfig, context: TeamAppsUiContext) {
 		let timeSuggestionEngine = new TimeSuggestionEngine();
 		this.timeRenderer = this.createTimeRenderer();
 
@@ -66,7 +66,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		})));
 
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
-		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiTimeField");
+		this.trivialComboBox.getMainDomElement().classList.add("DtoAbstractTimeField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
@@ -123,7 +123,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		return null;
 	}
 
-	setLocaleAndTimeFormat(locale: string, timeFormat: UiDateTimeFormatDescriptorConfig): void {
+	setLocaleAndTimeFormat(locale: string, timeFormat: DtoDateTimeFormatDescriptor): void {
 		this._config.locale = locale;
 		this._config.timeFormat = timeFormat;
 		this.timeRenderer = this.createTimeRenderer();

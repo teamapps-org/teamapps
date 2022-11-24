@@ -18,10 +18,9 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "../component/AbstractUiComponent";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {AbstractComponent, DtoComponent} from "teamapps-client-core";
 
-export class ElementUiComponentAdapter extends AbstractUiComponent<UiComponentConfig> {
+export class ElementUiComponentAdapter extends AbstractComponent<DtoComponent> {
 
 	constructor(private element: HTMLElement) {
 		super({_type: "ElementUiComponentAdapter", id: ""}, null);

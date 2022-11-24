@@ -19,7 +19,7 @@
  */
 
 import {ProgressIndicator} from "./ProgressIndicator";
-import {generateUUID, parseHtml} from "../Common";
+import {generateUUID, parseHtml} from "teamapps-client-core";
 
 export class ProgressBar implements ProgressIndicator {
 	private $mainDomElement: HTMLElement;

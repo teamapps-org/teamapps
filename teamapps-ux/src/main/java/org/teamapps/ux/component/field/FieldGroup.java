@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiClientObjectReference;
+import org.teamapps.dto.DtoClientObjectReference;
 import org.teamapps.dto.DtoFieldGroup;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.flexcontainer.FlexSizeUnit;
@@ -41,7 +41,7 @@ public class FieldGroup extends AbstractComponent {
 		return uiFieldGroup;
 	}
 
-	private List<UiClientObjectReference> createUiFieldReferences() {
+	private List<DtoClientObjectReference> createUiFieldReferences() {
 		return fields.stream()
 				.map(c -> c.createUiReference())
 				.collect(Collectors.toList());

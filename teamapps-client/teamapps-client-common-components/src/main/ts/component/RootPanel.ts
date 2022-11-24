@@ -17,36 +17,33 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiPageTransition, UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {pageTransition, parseHtml} from "../Common";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiComponent} from "./UiComponent";
+import {DtoPageTransition, DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
+import {AbstractComponent, Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {pageTransition} from "../Common";
 
 // noinspection JSUnusedGlobalSymbols
-export class RootPanel extends AbstractUiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler {
+export class RootPanel extends AbstractComponent<DtoRootPanel> implements DtoRootPanelCommandHandler {
 
 	private $root: HTMLElement;
-	private content: UiComponent;
+	private content: Component;
 	private $contentWrapper: HTMLElement;
 	private $imagePreloadDiv: HTMLElement;
 
-	constructor(config: UiRootPanelConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoRootPanel, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$root = parseHtml(`<div data-background-container-id="${config.id}" class="UiRootPanel teamapps-backgroundImage">
+		this.$root = parseHtml(`<div data-background-container-id="${config.id}" class="DtoRootPanel teamapps-backgroundImage">
               <div class="image-preload-div"></div>
 		</div>`);
 		this.$imagePreloadDiv = this.$root.querySelector<HTMLElement>(":scope .image-preload-div");
-		this.setContent(config.content as UiComponent);
+		this.setContent(config.content as Component);
 	}
 
 	public doGetMainElement(): HTMLElement {
 		return this.$root;
 	}
 
-	public setContent(content: UiComponent, transition: UiPageTransition | null = null, animationDuration: number = 0): void {
+	public setContent(content: Component, transition: DtoPageTransition | null = null, animationDuration: number = 0): void {
 		if (content == this.content) {
 			return;
 		}
@@ -77,4 +74,4 @@ export class RootPanel extends AbstractUiComponent<UiRootPanelConfig> implements
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiRootPanel", RootPanel);
+

@@ -19,11 +19,11 @@
  */
 package org.teamapps.ux.component.template.gridtemplate;
 
-import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoImageElement;
 import org.teamapps.ux.component.format.*;
 
-public class ImageElement extends AbstractTemplateElement {
+public class ImageElement extends AbstractGridTemplateElement {
 
 	protected int width;
 	protected int height;
@@ -113,20 +113,20 @@ public class ImageElement extends AbstractTemplateElement {
 		return this;
 	}
 
-	public AbstractTemplateElement setVerticalAlignment(final VerticalElementAlignment verticalAlignment) {
+	public AbstractGridTemplateElement setVerticalAlignment(final VerticalElementAlignment verticalAlignment) {
 		this.verticalAlignment = verticalAlignment;
 		return this;
 	}
 
-	public AbstractTemplateElement setMargin(final Spacing margin) {
+	public AbstractGridTemplateElement setMargin(final Spacing margin) {
 		this.margin = margin;
 		return this;
 	}
 
 	@Override
-	public DtoAbstractTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createUiTemplateElement() {
 		DtoImageElement uiImageElement = new DtoImageElement(propertyName, row, column, width, height);
-		mapAbstractTemplateElementAttributesToUiElement(uiImageElement);
+		mapAbstractGridTemplateElementAttributesToUiElement(uiImageElement);
 		uiImageElement.setBorder(border != null ? border.createUiBorder() : null);
 		uiImageElement.setPadding(padding != null ? padding.createUiSpacing() : null);
 		uiImageElement.setShadow(shadow != null ? shadow.createUiShadow() : null);

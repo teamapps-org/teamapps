@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class FloatingComponent extends Component {
 
 	Component* containerComponent;
@@ -32,8 +34,8 @@ managed class FloatingComponent extends Component {
     String backgroundColor;
     String expanderHandleColor;
 
-    boolean collapsible = true;
-    boolean expanded = true;
+    boolean collapsible;
+    boolean expanded;
 
 	command setContentComponent(Component* contentComponent);
 	command setExpanded(boolean expanded);

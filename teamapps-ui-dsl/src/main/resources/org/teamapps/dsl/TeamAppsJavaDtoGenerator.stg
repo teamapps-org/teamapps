@@ -28,7 +28,7 @@ public <if(c.abstractModifier)>abstract <endif>class <c.javaClassName> <if(c.sup
 
     public static final String TYPE_ID = "<c.Identifier>";
 
-	<c.propertiesNotImplementedBySuperClasses:propertyDeclaration(); separator="\n">
+	<c.propertiesNotImplementedBySuperClasses:fieldDeclaration(); separator="\n">
 
 	<constructor(c, "Dto", "")>
 
@@ -39,10 +39,10 @@ public <if(c.abstractModifier)>abstract <endif>class <c.javaClassName> <if(c.sup
 	<c.propertiesNotImplementedBySuperClasses:setter(c.javaClassName); separator="\n\n">
 
 	<c.eventDeclaration:eventClass(); separator="\n\n">
-	<c.eventDeclaration:eventJsonWrapper("Event"); separator="\n\n">
+	<c.eventDeclaration:eventJsonWrapper(); separator="\n\n">
 
 	<c.queryDeclaration:queryClass(); separator="\n\n">
-	<c.queryDeclaration:eventJsonWrapper("Query"); separator="\n\n">
+	<c.queryDeclaration:eventJsonWrapper(); separator="\n\n">
 
     <queryListGetter(c)>
 
@@ -66,7 +66,7 @@ classReference(c) ::= <<
 @JsonTypeName("<c.Identifier>Reference")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class <c.javaClassName>Reference {
-	<c.referencableProperties:propertyDeclaration(); separator="\n">
+	<c.referencableProperties:fieldDeclaration(); separator="\n">
 
 	public Dto<c.Identifier.text; format="cap">Reference(<c.referencableProperties:parameter(); separator=", ">) {
     	<c.referencableProperties:propertyAssignment(); separator="\n">
@@ -89,10 +89,10 @@ public interface <c.javaClassName><if(c.typeArguments)><c.typeArguments.text><en
 	<c.nonRequiredProperties:setterStub(c); separator="\n">
 	
 	<c.eventDeclaration:eventClass(); separator="\n\n">
-    <c.eventDeclaration:eventJsonWrapper("Event"); separator="\n\n">
+    <c.eventDeclaration:eventJsonWrapper(); separator="\n\n">
 
 	<c.queryDeclaration:queryClass(); separator="\n\n">
-	<c.queryDeclaration:eventJsonWrapper("Query"); separator="\n\n">
+	<c.queryDeclaration:eventJsonWrapper(); separator="\n\n">
 
 	<c.commandDeclaration:commandClass(); separator="\n\n">
 
@@ -133,9 +133,7 @@ import org.teamapps.dto.DtoObject;
  */
 >>
 
-propertyDeclaration(p) ::= <<
-<if(p.type.isObjectReference)>
-<endif>
+fieldDeclaration(p) ::= <<
 protected <p.type.javaTypeString> <p.Identifier><if(p.defaultValueAssignment)> = <defaultValue(p)><endif>;
 >>
 
@@ -216,7 +214,7 @@ public enum <e.javaClassName> {
 	<if(e.hasStringValues)>
 	private final String jsonValue;
 
-	<e.Identifier>(String jsonValue) {
+	<e.javaClassName>(String jsonValue) {
 		this.jsonValue = jsonValue;
 	}
 
@@ -242,7 +240,7 @@ public static class <ed.Identifier.text; format="cap">Event implements DtoEvent 
 
     public static final String TYPE_ID = "<ed.declaringClass.Identifier.text>.<ed.Identifier.text>";
 
-	<ed.allProperties:propertyDeclaration(); separator="\n">
+	<ed.allProperties:fieldDeclaration(); separator="\n">
 
 	<constructor(ed, "", "Event")>
 
@@ -269,7 +267,7 @@ public static class <qd.Identifier.text; format="cap">Query implements DtoQuery 
 
     public static final String TYPE_ID = "<qd.declaringClass.Identifier.text>.<qd.Identifier.text>";
 
-	<qd.allProperties:propertyDeclaration(); separator="\n">
+	<qd.allProperties:fieldDeclaration(); separator="\n">
 
 	<constructor(qd, "", "Query")>
 
@@ -286,9 +284,9 @@ public static class <qd.Identifier.text; format="cap">Query implements DtoQuery 
 commandClass(cmd) ::= <<
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
 @JsonPropertyOrder({<cmd.allProperties:{p|"<p.Identifier>"}; separator=", ">})
-public static class <cmd.Identifier.text; format="cap">Command implements DtoCommand\<<cmd.returnType>\> {
+public static class <cmd.Identifier.text; format="cap">Command implements DtoCommand\<<if(cmd.type)><cmd.type.javaNonPrimitiveTypeString><else>Void<endif>\> {
 
-	<cmd.allProperties:propertyDeclaration(); separator="\n">
+	<cmd.allProperties:fieldDeclaration(); separator="\n">
 
 	<constructor(cmd, "", "Command")>
 
@@ -318,17 +316,17 @@ public class <c.javaClassName>Wrapper extends <if(c.superClassDecl)>Dto<c.superC
 }
 >>
 
-eventJsonWrapper(c, suffix) ::= <<
-public static class <c.javaClassName; format="cap"><suffix>Wrapper extends DtoJsonWrapper {
+eventJsonWrapper(c) ::= <<
+public static class <c.javaClassName>Wrapper extends DtoJsonWrapper {
 
     public static final String TYPE_ID = "<c.Identifier>";
 
-    public <c.javaClassName; format="cap"><suffix>Wrapper(JsonNode jsonNode) {
+    public <c.javaClassName>Wrapper(JsonNode jsonNode) {
         super(jsonNode);
     }
 
-    public Class\<? extends <c.Identifier.text; format="cap"><suffix>\> getDtoClass() {
-        return <c.Identifier.text; format="cap"><suffix>.class;
+    public Class\<? extends <c.javaClassName>\> getDtoClass() {
+        return <c.javaClassName>.class;
     }
 
     <c.allProperties:jsonWrapperGetter(); separator="\n\n">

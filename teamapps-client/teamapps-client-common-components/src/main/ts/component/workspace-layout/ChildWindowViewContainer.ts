@@ -18,22 +18,19 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {UiRelativeWorkSpaceViewPosition, UiSplitSizePolicy, UiWorkSpaceLayoutItem} from "../../generated";
-import {DeferredExecutor} from "../../util/DeferredExecutor";
-import {UiWorkSpaceLayoutView as UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutView";
+import {DtoRelativeWorkSpaceViewPosition, DtoSplitSizePolicy, DtoWorkSpaceLayoutItem} from "../../generated";
+import {Component, DeferredExecutor, generateUUID, TeamAppsUiContext, TeamAppsUiContextInternalApi} from "teamapps-client-core";
+import {DtoWorkSpaceLayoutView as DtoWorkSpaceLayoutView} from "../../generated/DtoWorkSpaceLayoutView";
 import {ViewInfo} from "./ViewInfo";
-import {WorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./UiWorkSpaceLayout";
-import {generateUUID} from "../../Common";
+import {DtoWorkspaceLayoutSubWindowProtocol_INIT_OK, WorkSpaceLayout} from "./WorkSpaceLayout";
 import {ViewContainer, ViewContainerListener} from "./ViewContainer";
-import {UiEvent as UiEvent} from "teamapps-client-communication";
-import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "teamapps-client-core";
+import {DtoEvent as DtoEvent} from "teamapps-client-communication";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {UiComponent} from "teamapps-client-core";
 
 export interface ChildWindowViewContainerListener extends ViewContainerListener {
 	handleInitialized(windowId: string, initialViewInfo: ViewInfo): void;
 
-	handleUiEvent(uiEvent: UiEvent): void;
+	handleUiEvent(uiEvent: DtoEvent): void;
 
 	handleClosed(childWindowViewContainer: ChildWindowViewContainer): void;
 }
@@ -46,7 +43,7 @@ interface RemoteMethodInvocationCallback {
 
 export class ChildWindowViewContainer implements ViewContainer {
 
-	private static logger: log.Logger = log.getLogger("UiWorkSpaceLayout.ChildWindowViewContainer");
+	private static logger: log.Logger = log.getLogger("DtoWorkSpaceLayout.ChildWindowViewContainer");
 
 	private _viewInfos: { [viewName: string]: ViewInfo } = {};
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
@@ -84,15 +81,15 @@ export class ChildWindowViewContainer implements ViewContainer {
 		(this.context as any as TeamAppsUiContextInternalApi).onStaticMethodCommandInvocation
 			.addListener(uiCommand => {
 				let c = uiCommand as any;
-				if (uiCommand._type === "UiRootPanel.registerTemplate") {
+				if (uiCommand._type === "DtoRootPanel.registerTemplate") {
 					this.sendCommandToWindow(null, uiCommand._type, [c.id, c.template])
-				} else if (uiCommand._type === "UiRootPanel.registerTemplates") {
+				} else if (uiCommand._type === "DtoRootPanel.registerTemplates") {
 					this.sendCommandToWindow(null, uiCommand._type, [c.templates]);
 				}
 			});
 
 		if (e.data._type === 'INIT') {
-			const initOkMessage: UiWorkspaceLayoutSubWindowProtocol_INIT_OK = {
+			const initOkMessage: DtoWorkspaceLayoutSubWindowProtocol_INIT_OK = {
 				_type: 'INIT_OK',
 				sessionId: this.context.sessionId,
 				workspaceLayoutId: this.owner.getId(),
@@ -126,7 +123,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 			// 			}
 			// 		}
 			// 	}
-			// }) as UiComponent<UiComponentConfig>, componentId, teamappsType, ["TODO"], ["TODO"]);
+			// }) as Component, componentId, teamappsType, ["TODO"], ["TODO"]);
 		} else if (e.data._type === 'EVENT') {
 			this.listener.handleUiEvent(e.data.eventObject);
 		} else if (e.data._type === 'CHILD_WINDOW_CREATED') {
@@ -149,7 +146,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 		}
 	}
 
-	refreshViewComponent(viewName: string, component: UiComponent): void {
+	refreshViewComponent(viewName: string, component: Component): void {
 		ChildWindowViewContainer.logger.error("TODO #componentRef introduce windowIds..."); // TODO #componentRef
 		// this.sendCommandToWindow(this.owner.getId(), "refreshViewComponent", arguments);
 	}
@@ -159,23 +156,23 @@ export class ChildWindowViewContainer implements ViewContainer {
 		// this.sendCommandToWindow(this.owner.getId(), "refreshView", arguments);
 	}
 
-	addViewToTopLevel(newView: UiWorkSpaceLayoutViewConfig, windowId: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void {
+	addViewToTopLevel(newView: DtoWorkSpaceLayoutView, windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void {
 		console.warn("Sending: addViewToTopLevel");
 		this._viewInfos[newView.viewName] = newView;
 		this.sendCommandToWindow(this.owner.getId(), "addViewToTopLevel", arguments);
 	}
 
-	addViewRelativeToOtherView(newView: UiWorkSpaceLayoutViewConfig, existingViewName: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void {
+	addViewRelativeToOtherView(newView: DtoWorkSpaceLayoutView, existingViewName: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void {
 		this._viewInfos[newView.viewName] = newView;
 		this.sendCommandToWindow(this.owner.getId(), "addViewRelativeToOtherView", arguments);
 	}
 
-	addViewAsTab(newView: UiWorkSpaceLayoutViewConfig, itemId: string): void {
+	addViewAsTab(newView: DtoWorkSpaceLayoutView, itemId: string): void {
 		this._viewInfos[newView.viewName] = newView;
 		this.sendCommandToWindow(this.owner.getId(), "addViewAsTab", arguments);
 	}
 
-	addViewAsNeighbourTab(newView: UiWorkSpaceLayoutViewConfig, existingViewName: string): void {
+	addViewAsNeighbourTab(newView: DtoWorkSpaceLayoutView, existingViewName: string): void {
 		this._viewInfos[newView.viewName] = newView;
 		this.sendCommandToWindow(this.owner.getId(), "addViewAsNeighbourTab", arguments);
 	}
@@ -189,15 +186,15 @@ export class ChildWindowViewContainer implements ViewContainer {
 		this.sendCommandToWindow(this.owner.getId(), "setViewVisible", arguments);
 	}
 
-	redefineLayout(newLayout: UiWorkSpaceLayoutItem, addedViewConfigs: UiWorkSpaceLayoutViewConfig[]): void {
+	redefineLayout(newLayout: DtoWorkSpaceLayoutItem, addedViewConfigs: DtoWorkSpaceLayoutView[]): void {
 		this.sendCommandToWindow(this.owner.getId(), "redefineLayout", arguments);
 	}
 
-	moveViewToTopLevel(viewName: string, windowId: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void {
+	moveViewToTopLevel(viewName: string, windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void {
 		this.sendCommandToWindow(this.owner.getId(), "moveViewToTopLevel", arguments);
 	}
 
-	moveViewRelativeToOtherView(viewName: string, existingViewName: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void {
+	moveViewRelativeToOtherView(viewName: string, existingViewName: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void {
 		this.sendCommandToWindow(this.owner.getId(), "moveViewRelativeToOtherView", arguments);
 	}
 

@@ -18,11 +18,11 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+
 import * as d3 from "d3";
 import {Selection} from "d3-selection";
 import {ScaleTime} from "d3-scale";
@@ -34,14 +34,14 @@ import {
 	UiTimeGraph_IntervalSelectedEvent,
 	UiTimeGraph_ZoomedEvent,
 	UiTimeGraphCommandHandler,
-	UiTimeGraphConfig,
+	DtoTimeGraph,
 	UiTimeGraphEventSource
-} from "../../generated/UiTimeGraphConfig";
-import {createUiLongIntervalConfig, UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+} from "../../generated/DtoTimeGraph";
+import {createDtoLongInterval, DtoLongInterval} from "../../generated/DtoLongInterval";
 import {BrushBehavior} from "d3-brush";
 import {debouncedMethod, DebounceMode} from "../util/debounce";
 import {UiLineChartMouseScrollZoomPanMode} from "../../generated/UiLineChartMouseScrollZoomPanMode";
-import {UiTimeChartZoomLevelConfig} from "../../generated/UiTimeChartZoomLevelConfig";
+import {DtoTimeChartZoomLevel} from "../../generated/DtoTimeChartZoomLevel";
 import {UiLineGraph} from "./UiLineGraph";
 import {UiHoseGraph} from "./UiHoseGraph";
 import {UiGraphGroup} from "./UiGraphGroup";
@@ -51,16 +51,16 @@ import {SVGGSelection, SVGSelection} from "./Charting";
 import {UiGraph} from "./UiGraph";
 import {UiIncidentGraph} from "./UiIncidentGraph";
 import {TimeGraphPopper} from "./TimeGraphPopper";
-import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
-import {UiGraphConfig} from "../../generated/UiGraphConfig";
-import {AbstractUiGraph} from "./AbstractUiGraph";
+import {DtoGraphData} from "../../generated/DtoGraphData";
+import {DtoGraph} from "../../generated/DtoGraph";
+import {DtoAbstractGraph} from "./DtoAbstractGraph";
 import {GraphContext, PopperHandle} from "./GraphContext";
-import {UiLineGraphDataConfig} from "../../generated/UiLineGraphDataConfig";
-import {UiHoseGraphDataConfig} from "../../generated/UiHoseGraphDataConfig";
+import {DtoLineGraphData} from "../../generated/DtoLineGraphData";
+import {DtoHoseGraphData} from "../../generated/DtoHoseGraphData";
 
 export const yTickFormat = d3.format("-,.2s");
 
-export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implements UiTimeGraphCommandHandler, UiTimeGraphEventSource {
+export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements UiTimeGraphCommandHandler, UiTimeGraphEventSource {
 
 	public readonly onIntervalSelected: TeamAppsEvent<UiTimeGraph_IntervalSelectedEvent> = new TeamAppsEvent<UiTimeGraph_IntervalSelectedEvent>();
 	public readonly onZoomed: TeamAppsEvent<UiTimeGraph_ZoomedEvent> = new TeamAppsEvent<UiTimeGraph_ZoomedEvent>();
@@ -69,7 +69,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	public static readonly DROP_SHADOW_ID = "drop-shadow";
 
 	private mouseScrollZoomPanMode: UiLineChartMouseScrollZoomPanMode;
-	private intervalX: UiLongIntervalConfig;
+	private intervalX: DtoLongInterval;
 	private maxPixelsBetweenDataPoints: number;
 
 	private graphById: { [id: string]: UiGraph } = {};
@@ -93,8 +93,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	private brush: BrushBehavior<number>;
 	private $brush: SVGGSelection<number>;
 	private $graphClipContainer: SVGGSelection<any>;
-	private xSelection: UiLongIntervalConfig;
-	private zoomLevels: UiTimeChartZoomLevelConfig[];
+	private xSelection: DtoLongInterval;
+	private zoomLevels: DtoTimeChartZoomLevel[];
 	private $yAxisContainer: SVGSelection<any>;
 
 	private lastDrawableWidth: number = 0;
@@ -114,7 +114,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return this.getAllSeries().reduce((sum, s) => sum + (s.getYAxis()?.getWidth() ?? 0), 0);
 	}
 
-	constructor(config: UiTimeGraphConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoTimeGraph, context: TeamAppsUiContext) {
 		super(config, context);
 
 		const me = this;
@@ -236,7 +236,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 	}
 
-	zoomTo(intervalX: UiLongIntervalConfig): void {
+	zoomTo(intervalX: DtoLongInterval): void {
 		if (intervalX.min < this.intervalX.min) {
 			intervalX.min = this.intervalX.min;
 		}
@@ -253,7 +253,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.zoom.transform(this.$graphClipContainer, d3.zoomIdentity.scale(k).translate(-this.scaleX(intervalX.min), 0));
 	}
 
-	private createGraph(lineFormat: UiGraphConfig): AbstractUiGraph {
+	private createGraph(lineFormat: DtoGraph): DtoAbstractGraph {
 		let display = UiTimeGraph.createDataDisplay(this._config.id, lineFormat, this.dropShadowFilterId, this.graphContext);
 		this.$graphClipContainer.node().appendChild(display.getMainSelection().node());
 		display.setYRange([this.drawableHeight, 0]);
@@ -263,8 +263,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return display;
 	}
 
-	public static createDataDisplay(timeGraphId: string, graphConfig: UiGraphConfig, dropShadowFilterId: string, graphContext: GraphContext) {
-		let display: AbstractUiGraph;
+	public static createDataDisplay(timeGraphId: string, graphConfig: DtoGraph, dropShadowFilterId: string, graphContext: GraphContext) {
+		let display: DtoAbstractGraph;
 		if (graphConfig._type === 'UiLineGraph') {
 			display = new UiLineGraph(timeGraphId, graphConfig, dropShadowFilterId);
 		} else if (graphConfig._type === 'UiHoseGraph') {
@@ -307,7 +307,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		// this.logger.debug("millisecondsPerPixel: " + millisecondsPerPixel + " zoomLevel: " + zoomLevel + " at scale: " + zoomTransform.k);
 
 
-		let uncoveredIntervalsByGraphId: { [graphId: string]: UiLongIntervalConfig[] } = {};
+		let uncoveredIntervalsByGraphId: { [graphId: string]: DtoLongInterval[] } = {};
 		for (let [id, graph] of Object.entries(this.graphById)) {
 			let uncoveredIntervals = graph.getUncoveredIntervals(zoomLevel, [domain[0], domain[1]]);
 			uncoveredIntervals = uncoveredIntervals
@@ -315,7 +315,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 				.filter(i => !(i[0] == null || isNaN(i[0]) || i[1] == null || isNaN(i[1]))); // invalid intervals
 
 			if (uncoveredIntervals.length > 0) {
-				uncoveredIntervalsByGraphId[id] = uncoveredIntervals.map(i => createUiLongIntervalConfig(i[0], i[1]));
+				uncoveredIntervalsByGraphId[id] = uncoveredIntervals.map(i => createDtoLongInterval(i[0], i[1]));
 				uncoveredIntervals.forEach(i => graph.markIntervalAsCovered(zoomLevel, i));
 			}
 		}
@@ -325,7 +325,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 				zoomLevelIndex: zoomLevel,
 				millisecondsPerPixel: this.getMillisecondsPerPixel(),
 				neededIntervalsByGraphId: uncoveredIntervalsByGraphId,
-				displayedInterval: createUiLongIntervalConfig(domain[0], domain[1])
+				displayedInterval: createDtoLongInterval(domain[0], domain[1])
 			});
 		}
 
@@ -388,7 +388,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		}
 		let brushSelection = d3.brushSelection(this.$brush.node());
 		if (brushSelection != null) {
-			this.xSelection = createUiLongIntervalConfig(+transformedScaleX.invert(brushSelection[0] as number), +transformedScaleX.invert(brushSelection[1] as number));
+			this.xSelection = createDtoLongInterval(+transformedScaleX.invert(brushSelection[0] as number), +transformedScaleX.invert(brushSelection[1] as number));
 			this.onIntervalSelected.fire({
 				intervalX: this.xSelection
 			});
@@ -445,7 +445,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return Object.keys(this.graphById).map(id => this.graphById[id]);
 	}
 
-	addData(zoomLevel: number, data: { [graphId: string]: UiGraphDataConfig }): void {
+	addData(zoomLevel: number, data: { [graphId: string]: DtoGraphData }): void {
 		for (const [graphId, graphData] of Object.entries(data)) {
 			let graph = this.graphById[graphId];
 			if (graph != null) {
@@ -455,7 +455,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.redraw();
 	}
 
-	resetAllData(intervalX: UiLongIntervalConfig, newZoomLevels: UiTimeChartZoomLevelConfig[]): void {
+	resetAllData(intervalX: DtoLongInterval, newZoomLevels: DtoTimeChartZoomLevel[]): void {
 		this.setIntervalX(intervalX);
 		this.zoomLevels = newZoomLevels;
 		Object.values(this.graphById).forEach(g => g.resetData());
@@ -467,7 +467,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.redraw();
 	}
 
-	setIntervalX(intervalX: UiLongIntervalConfig): void {
+	setIntervalX(intervalX: DtoLongInterval): void {
 		this.intervalX = intervalX;
 		this.updateZoomExtents();
 		this.scaleX.domain([this.intervalX.min, this.intervalX.max]);
@@ -500,13 +500,13 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		let currentZoomLevel = this.getCurrentZoomLevel();
 		this.onZoomed.fire({
 			millisecondsPerPixel: this.getMillisecondsPerPixel(),
-			displayedInterval: createUiLongIntervalConfig(+domain[0], +domain[1]),
+			displayedInterval: createDtoLongInterval(+domain[0], +domain[1]),
 			zoomLevelIndex: currentZoomLevel,
 			neededIntervalsByGraphId: null
 		});
 	}
 
-	setSelectedInterval(intervalX: UiLongIntervalConfig): void {
+	setSelectedInterval(intervalX: DtoLongInterval): void {
 		this.xSelection = intervalX;
 		this.redraw();
 	}
@@ -533,7 +533,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return this.maxPixelsBetweenDataPoints * displayedMilliseconds / (this.drawableWidth * highestZoomLevelApproximateMillisPerDataPoint);
 	}
 
-	setGraphs(graphs: UiGraphConfig[]) {
+	setGraphs(graphs: DtoGraph[]) {
 		graphs.forEach(lineConfig => {
 			let existingSeries = this.graphById[lineConfig.id];
 			if (existingSeries) {
@@ -542,7 +542,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 				this.graphById[lineConfig.id] = this.createGraph(lineConfig);
 			}
 		});
-		let lineConfigsById = graphs.reduce((previousValue, currentValue) => (previousValue[currentValue.id] = previousValue) && previousValue, {} as { [id: string]: UiGraphConfig });
+		let lineConfigsById = graphs.reduce((previousValue, currentValue) => (previousValue[currentValue.id] = previousValue) && previousValue, {} as { [id: string]: DtoGraph });
 		Object.keys(this.graphById).forEach(lineId => {
 			if (!lineConfigsById[lineId]) {
 				this.graphById[lineId].destroy();
@@ -552,7 +552,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.onResize();
 	}
 
-	addOrUpdateGraph(graph: UiGraphConfig) {
+	addOrUpdateGraph(graph: DtoGraph) {
 		let series = this.graphById[graph.id];
 		if (series) {
 			series.setConfig(graph);
@@ -564,4 +564,4 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 }
 
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiTimeGraph", UiTimeGraph);
+

@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 abstract managed class Component implements ClientObject {
 	String debuggingId;
-	boolean visible = true;
+	boolean visible;
 	Dictionary<Dictionary<String>> stylesBySelector;
 	Dictionary<Dictionary<Boolean>> classNamesBySelector;
 	Dictionary<Dictionary<String>> attributesBySelector; // "__ta-deleted-attribute__" for removing attributes

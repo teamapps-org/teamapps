@@ -19,15 +19,17 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class Map extends Component {
 	required Dictionary<Template> markerTemplates;
 	String accessToken;
 	MapConfig mapConfig;
 
-	MapType mapType = MapType.MAP_BOX_STREETS;
-	int zoomLevel = 5;
+	MapType mapType;
+	int zoomLevel;
 	MapLocation mapPosition;
-	Dictionary<AbstractUiMapShape> shapes;
+	Dictionary<AbstractMapShape> shapes;
 	List<MapMarkerClientRecord> markers;
 	MapMarkerCluster markerCluster;
 
@@ -36,8 +38,8 @@ managed class Map extends Component {
 	command removeMarker(int id);
 	command setMapMarkerCluster(MapMarkerCluster cluster);
 
-	command addShape(String shapeId, AbstractUiMapShape shape);
-	command updateShape(String shapeId, AbstractUiMapShape shape);
+	command addShape(String shapeId, AbstractMapShape shape);
+	command updateShape(String shapeId, AbstractMapShape shape);
 	command removeShape(String shapeId);
 	command clearShapes();
 	command clearMarkers();
@@ -57,15 +59,15 @@ managed class Map extends Component {
 	event locationChanged(MapLocation center, MapArea displayedArea);
 	event mapClicked(MapLocation location);
 	event markerClicked(int markerId);
-	event shapeDrawn(String shapeId, AbstractUiMapShape shape);
+	event shapeDrawn(String shapeId, AbstractMapShape shape);
 }
 
 class MapConfig {
 	String urlTemplate;
-	String id = "";
-	int minZoom = 1;
-	int maxZoom = 18;
-	String attribution = "";
+	String id;
+	int minZoom;
+	int maxZoom;
+	String attribution;
 }
 
 enum MapType {
@@ -120,7 +122,7 @@ enum MapMarkerAnchor {
 	TOP_LEFT = "top-left",
 	TOP_RIGHT = "top-right",
 	BOTTOM_LEFT = "bottom-left",
-	BOTTOM_RIGHT = "bottom-right";
+	BOTTOM_RIGHT;
 }
 
 class MapMarkerCluster {
@@ -129,9 +131,9 @@ class MapMarkerCluster {
 
 class HeatMapData {
 	required List<HeatMapDataElement> elements;
-	int maxCount = 10;
-	int radius = 25;
-	int blur = 15;
+	int maxCount;
+	int radius;
+	int blur;
 }
 
 class HeatMapDataElement {
@@ -147,37 +149,33 @@ enum MapShapeType {
     RECTANGLE;
 }
 
-abstract class AbstractUiMapShape {
+abstract class AbstractMapShape {
 	ShapeProperties shapeProperties;
 }
 
 
-abstract class AbstractUiMapShapeChange {
+abstract class AbstractMapShapeChange {
 }
 
-@TypeScriptFactory
-class MapCircle extends AbstractUiMapShape {
+class MapCircle extends AbstractMapShape {
 	MapLocation center;
 	int radius; // meters
 }
 
-@TypeScriptFactory
-class MapPolygon extends AbstractUiMapShape {
+class MapPolygon extends AbstractMapShape {
 	List<MapLocation> path;
 }
 
-@TypeScriptFactory
-class MapPolyline extends AbstractUiMapShape {
+class MapPolyline extends AbstractMapShape {
 	List<MapLocation> path;
 }
 
 
-class PolylineAppend extends AbstractUiMapShapeChange {
+class PolylineAppend extends AbstractMapShapeChange {
     required List<MapLocation> appendedPath;
 }
 
-@TypeScriptFactory
-class MapRectangle extends AbstractUiMapShape {
+class MapRectangle extends AbstractMapShape {
 	MapLocation l1;
 	MapLocation l2;
 }

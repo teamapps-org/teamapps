@@ -19,18 +19,20 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class ComboBox extends Field implements TextInputHandlingField {
 	Dictionary<Template> templates;
-	boolean showDropDownButton = true;
-	boolean showDropDownAfterResultsArrive = false;
-	boolean highlightFirstResultEntry = true;
+	boolean showDropDownButton;
+	boolean showDropDownAfterResultsArrive;
+	boolean highlightFirstResultEntry;
 	boolean showHighlighting; // TODO highlight any line of the template, but only corresponding to the textMatchingMode
-	boolean autoComplete = true; // if true, by typing any letter, the first matching will be selected (keeping all not yet entered letters int the text box selected)
-	int textHighlightingEntryLimit = 100;
+	boolean autoComplete; // if true, by typing any letter, the first matching will be selected (keeping all not yet entered letters int the text box selected)
+	int textHighlightingEntryLimit;
 	boolean allowAnyText;
 	boolean showClearButton;
 	boolean animate;
-	boolean showExpanders = true;
+	boolean showExpanders;
 	String placeholderText;
 	Integer dropDownMinWidth;
 	Integer dropDownMaxHeight;

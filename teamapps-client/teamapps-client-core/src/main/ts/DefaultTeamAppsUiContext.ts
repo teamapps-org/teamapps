@@ -43,18 +43,18 @@ import {Showable} from "./util/Showable";
 import {Globals} from "./Globals";
 import {logException} from "./util/exception-util";
 import {createUiLocation} from "./util/location";
-import {AbstractUiWebComponent} from "./component/AbstractUiWebComponent";
-import {AbstractUiComponent} from "./component/AbstractUiComponent";
+import {AbstractWebComponent} from "./component/AbstractWebComponent";
+import {AbstractComponent} from "./component/AbstractComponent";
 
 type ClientObjectClass<T extends ClientObject = ClientObject> = { new(config: DtoComponentConfig, context: TeamAppsUiContext): T };
 
 
 
-function isClassicComponent(o: ClientObject): o is AbstractUiComponent {
+function isClassicComponent(o: ClientObject): o is AbstractComponent {
 	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE !== 1;
 }
 
-function isWebComponent(o: ClientObject): o is AbstractUiWebComponent {
+function isWebComponent(o: ClientObject): o is AbstractWebComponent {
 	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE === 1;
 }
 
@@ -114,6 +114,9 @@ class ClientObjectWrapper {
 }
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
+
+	public readonly templateRegistry: any = null;
+
 	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<DtoCommand> = new TeamAppsEvent();
 	public readonly sessionId: string;
 	public isHighDensityScreen: boolean;

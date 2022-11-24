@@ -23,43 +23,43 @@ import {TrivialTagComboBox} from "../trivial-components/TrivialTagComboBox";
 import {
 	UiTagComboBox_WrappingMode,
 	UiTagComboBoxCommandHandler,
-	UiTagComboBoxConfig,
+	DtoTagComboBox,
 	UiTagComboBoxEventSource
-} from "../../generated/UiTagComboBoxConfig";
+} from "../../generated/DtoTagComboBox";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+
+import {TeamAppsEvent} from "teamapps-client-core";
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
-} from "../../generated/UiTextInputHandlingFieldConfig";
+} from "../../generated/DtoTextInputHandlingField";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
-import {UiComboBoxTreeRecordConfig} from "../../generated/UiComboBoxTreeRecordConfig";
-import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
+import {DtoComboBoxTreeRecord} from "../../generated/DtoComboBoxTreeRecord";
+import {DtoTemplate} from "../../generated/DtoTemplate";
 import {isFreeTextEntry} from "./UiComboBox";
 import {buildObjectTree, getAutoCompleteOffValue, NodeWithChildren, parseHtml, Renderer} from "../Common";
 import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
-export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRecordConfig[]> implements UiTagComboBoxEventSource, UiTagComboBoxCommandHandler {
+export class UiTagComboBox extends UiField<DtoTagComboBox, DtoComboBoxTreeRecord[]> implements UiTagComboBoxEventSource, UiTagComboBoxCommandHandler {
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 250});
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 250});
 
 	private $originalInput: HTMLElement;
-	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>;
+	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
 	private templateRenderers: { [name: string]: Renderer };
-	private resultCallbacksQueue: ((result: NodeWithChildren<UiComboBoxTreeRecordConfig>[]) => void)[] = [];
+	private resultCallbacksQueue: ((result: NodeWithChildren<DtoComboBoxTreeRecord>[]) => void)[] = [];
 
 	private freeTextIdEntryCounter = -1;
 
-	protected initialize(config: UiTagComboBoxConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoTagComboBox, context: TeamAppsUiContext) {
 		this.$originalInput = parseHtml(`<input type="text" autocomplete="${getAutoCompleteOffValue()}">`);
 
 		this.templateRenderers = config.templates != null ? context.templateRegistry.createTemplateRenderers(config.templates) : {};
 
-		this.trivialTagComboBox = new TrivialTagComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>({
+		this.trivialTagComboBox = new TrivialTagComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>({
 			selectedEntryRenderingFunction: (entry) => {
 				if (isFreeTextEntry(entry)) {
 					return wrapWithDefaultTagWrapper(`<div class="free-text-entry">${entry.asString}</div>`, config.showClearButton);
@@ -96,13 +96,13 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 			},
 			textHighlightingEntryLimit: config.textHighlightingEntryLimit,
 			preselectionMatcher: (query, entry) => entry.asString.toLowerCase().indexOf(query.toLowerCase()) >= 0
-		}, new TrivialTreeBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>({
+		}, new TrivialTreeBox<NodeWithChildren<DtoComboBoxTreeRecord>>({
 			childrenProperty: "__children",
 			expandedProperty: "expanded",
 			showExpanders: config.showExpanders,
 			entryRenderingFunction: entry => this.renderRecord(entry, true),
 			idFunction: entry => entry && entry.id,
-			lazyChildrenQueryFunction: async (node: NodeWithChildren<UiComboBoxTreeRecordConfig>) => buildObjectTree(await config.lazyChildren({parentId: node.id}), "id", "parentId"),
+			lazyChildrenQueryFunction: async (node: NodeWithChildren<DtoComboBoxTreeRecord>) => buildObjectTree(await config.lazyChildren({parentId: node.id}), "id", "parentId"),
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			selectableDecider: entry => entry.selectable,
 			selectOnHover: true,
@@ -134,7 +134,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		this.trivialTagComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
-	private renderRecord(record: NodeWithChildren<UiComboBoxTreeRecordConfig>, dropdown: boolean): string {
+	private renderRecord(record: NodeWithChildren<DtoComboBoxTreeRecord>, dropdown: boolean): string {
 		const templateId = dropdown ? record.dropDownTemplateId : record.displayTemplateId;
 		if (templateId != null && this.templateRenderers[templateId] != null) {
 			const renderer = this.templateRenderers[templateId];
@@ -161,7 +161,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		return this.trivialTagComboBox.getSelectedEntries();
 	}
 
-	protected convertValueForSendingToServer(values: UiComboBoxTreeRecordConfig[]): any {
+	protected convertValueForSendingToServer(values: DtoComboBoxTreeRecord[]): any {
 		return values.map(value => isFreeTextEntry(value) ? value.asString : value.id);
 	}
 
@@ -181,11 +181,11 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		}
 	}
 
-	registerTemplate(id: string, template: UiTemplateConfig): void {
+	registerTemplate(id: string, template: DtoTemplate): void {
 		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
-	replaceFreeTextEntry(freeText: string, record: UiComboBoxTreeRecordConfig): void {
+	replaceFreeTextEntry(freeText: string, record: DtoComboBoxTreeRecord): void {
 		const selectedEntries = this.trivialTagComboBox.getSelectedEntries();
 		var changed = false;
 		for (let i = 0; i < selectedEntries.length; i++) {
@@ -207,7 +207,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 
 
-	public getReadOnlyHtml(records: UiComboBoxTreeRecordConfig[], availableWidth: number): string {
+	public getReadOnlyHtml(records: DtoComboBoxTreeRecord[], availableWidth: number): string {
 		let content: string;
 		if (records != null) {
 			content = records.map((record) => {
@@ -223,7 +223,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		return [];
 	}
 
-	public valuesChanged(v1: UiComboBoxTreeRecordConfig[], v2: UiComboBoxTreeRecordConfig[]): boolean {
+	public valuesChanged(v1: DtoComboBoxTreeRecord[], v2: DtoComboBoxTreeRecord[]): boolean {
 		if (v1 == null && v2 == null) {
 			return false;
 		}
@@ -242,4 +242,4 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiTagComboBox", UiTagComboBox);
+

@@ -18,22 +18,22 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
-import {UiFlexContainerCommandHandler, UiFlexContainerConfig} from "../generated/UiFlexContainerConfig";
+import {UiFlexContainerCommandHandler, DtoFlexContainer} from "../generated/DtoFlexContainer";
 import {UiCssFlexDirection} from "../generated/UiCssFlexDirection";
 import {UiCssAlignItems} from "../generated/UiCssAlignItems";
 import {UiCssJustifyContent} from "../generated/UiCssJustifyContent";
 import {UiComponent} from "./UiComponent";
 
-export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> implements UiFlexContainerCommandHandler {
+export class UiFlexContainer extends AbstractComponent<DtoFlexContainer> implements UiFlexContainerCommandHandler {
 
 	private $main: HTMLDivElement;
 	private components: UiComponent[] = [];
 
-	constructor(config: UiFlexContainerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoFlexContainer, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiFlexContainer"></div>`);
 		this.$main.style.flexDirection = config.flexDirection;
@@ -63,4 +63,4 @@ export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> 
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiFlexContainer", UiFlexContainer);
+

@@ -105,7 +105,7 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.QueryDeclarationContext node) {
-        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Query";
+        return StringUtils.capitalize(node.Identifier().getText()) + "Query";
     }
 
 	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.QueryDeclarationContext commandContext) {

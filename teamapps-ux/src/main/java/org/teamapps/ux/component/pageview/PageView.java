@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.pageview;
 
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoPageView;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.ArrayList;

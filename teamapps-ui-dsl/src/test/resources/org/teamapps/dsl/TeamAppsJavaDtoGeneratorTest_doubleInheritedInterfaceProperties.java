@@ -31,12 +31,12 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.dto.DtoCWrapper;
 import org.teamapps.dto.DtoA;
-import org.teamapps.dto.DtoB;
-import org.teamapps.dto.DtoC;
 import org.teamapps.dto.DtoAWrapper;
+import org.teamapps.dto.DtoB;
 import org.teamapps.dto.DtoBWrapper;
+import org.teamapps.dto.DtoC;
+import org.teamapps.dto.DtoCWrapper;
 
 @JsonTypeName("D")
 @JsonInclude(JsonInclude.Include.NON_NULL)

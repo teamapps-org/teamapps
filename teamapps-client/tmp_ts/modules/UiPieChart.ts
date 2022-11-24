@@ -18,25 +18,25 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiPieChart_DataPointClickedEvent, UiPieChartCommandHandler, UiPieChartConfig, UiPieChartEventSource} from "../generated/UiPieChartConfig";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {UiPieChart_DataPointClickedEvent, UiPieChartCommandHandler, DtoPieChart, UiPieChartEventSource} from "../generated/DtoPieChart";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiChartNamedDataPointConfig} from "../generated/UiChartNamedDataPointConfig";
+import {DtoChartNamedDataPoint} from "../generated/DtoChartNamedDataPoint";
 import * as d3 from "d3"
 import {UiDataPointWeighting} from '../generated/UiDataPointWeighting';
 import {UiChartLegendStyle} from "../generated/UiChartLegendStyle";
 
-export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements UiPieChartCommandHandler, UiPieChartEventSource {
+export class UiPieChart extends AbstractComponent<DtoPieChart> implements UiPieChartCommandHandler, UiPieChartEventSource {
 
 	readonly onDataPointClicked: TeamAppsEvent<UiPieChart_DataPointClickedEvent> = new TeamAppsEvent();
 
 	chart: Chart;
-	config: UiPieChartConfig;
+	config: DtoPieChart;
 
 
-	constructor(config: UiPieChartConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoPieChart, context: TeamAppsUiContext) {
 		super(config, context);
 		this.config = config;
 		this.createChart();
@@ -77,7 +77,7 @@ export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements
 	}
 
 
-	setDataPoints(dataPoints: UiChartNamedDataPointConfig[], animationDuration: number): void {
+	setDataPoints(dataPoints: DtoChartNamedDataPoint[], animationDuration: number): void {
 		this.config.dataPoints = dataPoints;
 		this.chart
 			.data(this.config)
@@ -128,7 +128,7 @@ export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiPieChart", UiPieChart);
+
 
 
 /*
@@ -158,8 +158,8 @@ interface Chart {
 	defaultTextFill(defaultTextFill: string): Chart,
 	defaultFont(): string,
 	defaultFont(defaultFont: string): Chart,
-	data(): UiPieChartConfig,
-	data(data: UiPieChartConfig): Chart,
+	data(): DtoPieChart,
+	data(data: DtoPieChart): Chart,
 	duration(): number,
 	duration(duration: number): Chart,
 	firstRun(): boolean,
@@ -1057,7 +1057,7 @@ export interface PatternifyParameter {
 export interface PieChartAttributes {
 	[key: string]: any,
 
-	data?: UiPieChartConfig,
+	data?: DtoPieChart,
 	svgWidth?: number,
 	svgHeight?: number,
 	marginTop?: number,

@@ -19,8 +19,10 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class MediaSoupV3WebRtcClient extends Component {
-	Double displayAreaAspectRatio = 4/3d;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
+	Double displayAreaAspectRatio;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
 	boolean activityLineVisible;
 	String activityInactiveColor;
 	String activityActiveColor;
@@ -28,10 +30,10 @@ managed class MediaSoupV3WebRtcClient extends Component {
 	String caption;
 	String noVideoImageUrl;
 	WebRtcClientSpinnerPolicy spinnerPolicy;
-	double playbackVolume = 1; // 0-1
-	boolean contextMenuEnabled = false;
-	boolean bitrateDisplayEnabled = false;
-	int forceRefreshCount = 0;
+	double playbackVolume; // 0-1
+	boolean contextMenuEnabled;
+	boolean bitrateDisplayEnabled;
+	int forceRefreshCount;
 	
 	// only one (or none) of the following must be set:
 	MediaSoupPublishingParameters publishingParameters;
@@ -106,7 +108,7 @@ class MediaSoupPublishingParameters {
 	boolean simulcast;
 	long minBitrate;
 	long maxBitrate;
-	long keyFrameRequestDelay = 2500; // milliseconds
+	long keyFrameRequestDelay; // milliseconds
 }
 
 class MediaServerUrlAndToken {
@@ -129,10 +131,10 @@ class MediaSoupPlaybackParameters {
 
 class AudioTrackConstraints {
 	String deviceId;
-    int channelCount = 1;
-    boolean autoGainControl = true;
-    boolean echoCancellation = true;
-    boolean noiseSuppression = true;
+    int channelCount;
+    boolean autoGainControl;
+    boolean echoCancellation;
+    boolean noiseSuppression;
 }
 
 class VideoTrackConstraints {
@@ -140,8 +142,8 @@ class VideoTrackConstraints {
     Double aspectRatio;
 	Integer width;
 	Integer height;
-    VideoFacingMode facingMode = VideoFacingMode.USER;
-    double frameRate = 20;
+    VideoFacingMode facingMode;
+    double frameRate;
 }
 
 class ScreenSharingConstraints {

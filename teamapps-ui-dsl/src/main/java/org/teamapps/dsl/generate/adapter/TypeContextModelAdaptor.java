@@ -88,9 +88,11 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		TeamAppsDtoParser.TypeContext typeContext = (TeamAppsDtoParser.TypeContext) o;
 
 		if ("javaTypeString".equals(propertyName)) {
-			return getJavaTypeString(typeContext);
+			return getJavaTypeString(typeContext, false);
+		} else if ("javaNonPrimitiveTypeString".equals(propertyName)) {
+			return getJavaTypeString(typeContext, true);
 		} else if ("primitiveTypeName".equals(propertyName)) {
-			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.inverse().getOrDefault(typeContext.getText(), getJavaTypeString(typeContext));
+			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.inverse().getOrDefault(typeContext.getText(), getJavaTypeString(typeContext, false));
 		} else if ("javaTypeWrapperString".equals(propertyName)) {
 			return getJavaTypeWrapperString(typeContext);
 		} else if ("isString".equals(propertyName)) {
@@ -157,16 +159,16 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.values().contains(typeContext.getText());
 	}
 
-	private String getJavaTypeString(TeamAppsDtoParser.TypeContext typeContext) {
+	private String getJavaTypeString(TeamAppsDtoParser.TypeContext typeContext, boolean forceNonPrimitive) {
 		if (isList(typeContext)) {
 			TeamAppsDtoParser.TypeContext firstTypeArgument = getFirstTypeArgument(typeContext);
 			if (isObject(firstTypeArgument)) {
 				return "List";
 			} else {
-				return "List<" + getJavaTypeString(firstTypeArgument) + ">";
+				return "List<" + getJavaTypeString(firstTypeArgument, true) + ">";
 			}
 		} else if (isDictionary(typeContext)) {
-			return "Map<String, " + getJavaTypeString(typeContext.typeReference().typeArguments().typeArgument(0).type()) + ">";
+			return "Map<String, " + getJavaTypeString(typeContext.typeReference().typeArguments().typeArgument(0).type(), true) + ">";
 		} else if (isUiClientObjectReference(typeContext)) {
 			TeamAppsDtoParser.ClassDeclarationContext referencedClass = model.findReferencedClass(typeContext);
 			TeamAppsDtoParser.InterfaceDeclarationContext referencedInterface = model.findReferencedInterface(typeContext);
@@ -179,6 +181,8 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			}
 		} else if (model.isDtoType(typeContext)) {
 			return "Dto" + typeContext.getText();
+		} else if (isPrimitiveType(typeContext) && forceNonPrimitive) {
+			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(typeContext.getText());
 		} else {
 			return typeContext.getText();
 		}
@@ -191,11 +195,11 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if (isDictionary(typeContext)) {
 			return "Map<String, " + getJavaTypeWrapperString(typeContext.typeReference().typeArguments().typeArgument(0).type()) + ">";
 		} else if (model.isDtoClassOrInterface(typeContext)) {
-			return getJavaTypeString(typeContext) + "Wrapper";
+			return getJavaTypeString(typeContext, false) + "Wrapper";
 		} else if (isObject(typeContext)) {
 			return "DtoJsonWrapper";
 		} else {
-			return getJavaTypeString(typeContext);
+			return getJavaTypeString(typeContext, false);
 		}
 	}
 

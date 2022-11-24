@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.itemview;
 
-import org.teamapps.dto.DtoEventWrapper;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoIdentifiableClientRecord;
 import org.teamapps.dto.DtoItemView;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -203,7 +203,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoItemView uiItemView = new DtoItemView();
 		mapAbstractUiComponentProperties(uiItemView);
 		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate.createUiTemplate() : null);

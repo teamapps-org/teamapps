@@ -21,8 +21,8 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoButton;
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoField;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;

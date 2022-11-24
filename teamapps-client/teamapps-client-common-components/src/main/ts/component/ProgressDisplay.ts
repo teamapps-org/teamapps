@@ -18,24 +18,21 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {parseHtml, removeClassesByFunction} from "../Common";
+import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {removeClassesByFunction} from "../Common";
 import {
-	UiProgressDisplay_CancelButtonClickedEvent,
-	UiProgressDisplay_ClickedEvent,
-	UiProgressDisplayCommandHandler,
-	UiProgressDisplayConfig,
-	UiProgressDisplayEventSource
-} from "../generated/UiProgressDisplayConfig";
+	DtoProgressDisplay,
+	DtoProgressDisplay_CancelButtonClickedEvent,
+	DtoProgressDisplay_ClickedEvent,
+	DtoProgressDisplayCommandHandler,
+	DtoProgressDisplayEventSource
+} from "../generated";
 import {ProgressBar} from "../micro-components/ProgressBar";
 
 
-export class ProgressDisplay extends AbstractUiComponent<UiProgressDisplayConfig> implements UiProgressDisplayCommandHandler, UiProgressDisplayEventSource {
-	onCancelButtonClicked: TeamAppsEvent<UiProgressDisplay_CancelButtonClickedEvent> = new TeamAppsEvent();
-	onClicked: TeamAppsEvent<UiProgressDisplay_ClickedEvent> = new TeamAppsEvent();
+export class ProgressDisplay extends AbstractComponent<DtoProgressDisplay> implements DtoProgressDisplayCommandHandler, DtoProgressDisplayEventSource {
+	onCancelButtonClicked: TeamAppsEvent<DtoProgressDisplay_CancelButtonClickedEvent> = new TeamAppsEvent();
+	onClicked: TeamAppsEvent<DtoProgressDisplay_ClickedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $icon: HTMLElement;
@@ -45,10 +42,10 @@ export class ProgressDisplay extends AbstractUiComponent<UiProgressDisplayConfig
 	private $cancelButton: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: UiProgressDisplayConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoProgressDisplay, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiProgressDisplay">
+		this.$main = parseHtml(`<div class="DtoProgressDisplay">
 			<div class="title">
 				<div class="icon img img-16"></div>
         		<div class="task-name"></div>
@@ -77,7 +74,7 @@ export class ProgressDisplay extends AbstractUiComponent<UiProgressDisplayConfig
 		return this.$main;
 	}
 
-	update(config: UiProgressDisplayConfig): void {
+	update(config: DtoProgressDisplay): void {
 		this.$icon.style.backgroundImage = `url('${config.icon}')`;
 		this.$taskName.textContent = config.taskName;
 		this.$statusMessage.textContent = config.statusMessage;
@@ -94,4 +91,4 @@ export class ProgressDisplay extends AbstractUiComponent<UiProgressDisplayConfig
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiProgressDisplay", ProgressDisplay);
+

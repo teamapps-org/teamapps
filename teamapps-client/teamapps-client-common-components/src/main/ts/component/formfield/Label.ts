@@ -17,25 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "./AbstractUiField";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiFieldEditingMode, UiLabel_ClickedEvent, UiLabelCommandHandler, UiLabelConfig, UiLabelEventSource} from "../../generated";
-import {TeamAppsEvent} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {parseHtml} from "teamapps-client-core";
-import {UiComponent} from "teamapps-client-core";
+import {AbstractField} from "./AbstractField";
+import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoFieldEditingMode, DtoLabel, DtoLabel_ClickedEvent, DtoLabelCommandHandler, DtoLabelEventSource} from "../../generated";
 
-export class Label extends AbstractField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
-	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>();
+export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEventSource, DtoLabelCommandHandler {
+	public readonly onClicked: TeamAppsEvent<DtoLabel_ClickedEvent> = new TeamAppsEvent<DtoLabel_ClickedEvent>();
 
 	private $main: HTMLElement;
 	private $icon: HTMLElement;
 	private $caption: HTMLElement;
-	private targetComponent: UiComponent;
+	private targetComponent: Component;
 	private targetFieldVisibilityChangeHandler: (visible: boolean) => void;
 
-	protected initialize(config: UiLabelConfig, context: TeamAppsUiContext): void {
-		this.$main = parseHtml(`<div class="UiLabel"><div class="icon img img-16 hidden"></div><span class="caption">${config.caption}</span></div>`);
+	protected initialize(config: DtoLabel, context: TeamAppsUiContext): void {
+		this.$main = parseHtml(`<div class="DtoLabel"><div class="icon img img-16 hidden"></div><span class="caption">${config.caption}</span></div>`);
 		this.$icon = this.$main.querySelector<HTMLElement>(":scope .icon");
 		this.$caption = this.$main.querySelector<HTMLElement>(":scope .caption");
 		this.setIcon(config.icon);
@@ -48,10 +44,10 @@ export class Label extends AbstractField<UiLabelConfig, string> implements UiLab
 			}
 		});
 		this.targetFieldVisibilityChangeHandler = (visible: boolean) => this.setVisible(visible);
-		this.setTargetComponent(config.targetComponent as UiComponent);
+		this.setTargetComponent(config.targetComponent as Component);
 	}
 
-	public setTargetComponent(targetField: UiComponent) {
+	public setTargetComponent(targetField: Component) {
 		if (this.targetComponent != null) {
 			this.targetComponent.onVisibilityChanged.removeListener(this.targetFieldVisibilityChangeHandler)
 		}
@@ -95,7 +91,7 @@ export class Label extends AbstractField<UiLabelConfig, string> implements UiLab
 		this.$caption.textContent = this.getCommittedValue() || this.config.caption || "";
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
 		// does not have any editing mode support...
 	}
 
@@ -104,4 +100,4 @@ export class Label extends AbstractField<UiLabelConfig, string> implements UiLab
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiLabel", Label);
+

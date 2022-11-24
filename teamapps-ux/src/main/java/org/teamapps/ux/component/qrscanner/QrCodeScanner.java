@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.qrscanner;
 
-import org.teamapps.dto.DtoEventWrapper;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoQrCodeScanner;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
@@ -33,7 +33,7 @@ public class QrCodeScanner extends AbstractComponent {
 	private boolean stopsScanningAtFirstResult;
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoQrCodeScanner ui = new DtoQrCodeScanner();
 		mapAbstractUiComponentProperties(ui);
 		ui.setScanning(scanning);

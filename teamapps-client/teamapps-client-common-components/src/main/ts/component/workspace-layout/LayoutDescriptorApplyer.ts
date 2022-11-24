@@ -18,11 +18,11 @@
  * =========================LICENSE_END==================================
  */
 import {
-	UiViewGroupPanelState,
-	UiWorkSpaceLayoutItem,
-	UiWorkSpaceLayoutSplitItem,
-	UiWorkSpaceLayoutView,
-	UiWorkSpaceLayoutViewGroupItem
+	DtoViewGroupPanelState,
+	DtoWorkSpaceLayoutItem,
+	DtoWorkSpaceLayoutSplitItem,
+	DtoWorkSpaceLayoutView,
+	DtoWorkSpaceLayoutViewGroupItem
 } from "../../generated";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
@@ -30,15 +30,14 @@ import {SplitPaneItem} from "./SplitPaneItem";
 import {TabPanelItem} from "./TabPanelItem";
 import {LocalViewContainer} from "./LocalViewContainer";
 import * as log from "loglevel";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./UiWorkSpaceLayout";
-import {UiComponent} from "teamapps-client-core";
+import {Component, TeamAppsUiContext} from "teamapps-client-core";
+import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./WorkSpaceLayout";
 
 export class LayoutDescriptorApplyer {
 
 	private static logger: log.Logger = log.getLogger("LocalViewContainer");
 
-	private descriptorItemById: { [itemId: string]: UiWorkSpaceLayoutItem } = {};
+	private descriptorItemById: { [itemId: string]: DtoWorkSpaceLayoutItem } = {};
 	private descriptorViewNames: string[] = [];
 
 	private clientItemsById: { [itemId: string]: ItemTreeItem } = {};
@@ -48,16 +47,16 @@ export class LayoutDescriptorApplyer {
 
 	constructor(
 		private $rootItemContainer: HTMLElement,
-		private viewGroupFactory: (config: UiWorkSpaceLayoutViewGroupItem, parent: SplitPaneItem) => TabPanelItem,
-		private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: UiViewGroupPanelState) => void,
+		private viewGroupFactory: (config: DtoWorkSpaceLayoutViewGroupItem, parent: SplitPaneItem) => TabPanelItem,
+		private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: DtoViewGroupPanelState) => void,
 		private context: TeamAppsUiContext
 	) {
 	}
 
 	public apply(
 		currentRootItem: ItemTreeItem,
-		newLayoutDescriptor: UiWorkSpaceLayoutItem,
-		newViewConfigs: UiWorkSpaceLayoutView[]
+		newLayoutDescriptor: DtoWorkSpaceLayoutItem,
+		newViewConfigs: DtoWorkSpaceLayoutView[]
 	): ItemTreeItem {
 		this.descriptorItemById = {};
 		this.descriptorViewNames = [];
@@ -73,7 +72,7 @@ export class LayoutDescriptorApplyer {
 		return this.addNewStructure(newLayoutDescriptor, null, false, newViewConfigs);
 	}
 
-	private buildDescriptorDictionaries(descriptorItem: UiWorkSpaceLayoutItem) {
+	private buildDescriptorDictionaries(descriptorItem: DtoWorkSpaceLayoutItem) {
 		this.descriptorItemById[descriptorItem.id] = descriptorItem;
 		if (isTabPanelDescriptor(descriptorItem)) {
 			this.descriptorViewNames.push(...descriptorItem.viewNames);
@@ -97,14 +96,14 @@ export class LayoutDescriptorApplyer {
 		}
 	}
 
-	public cleanupUnknownClientItems(clientSideItem: ItemTreeItem, descriptorItem: UiWorkSpaceLayoutItem, parent: SplitPaneItem | null) {
+	public cleanupUnknownClientItems(clientSideItem: ItemTreeItem, descriptorItem: DtoWorkSpaceLayoutItem, parent: SplitPaneItem | null) {
 		// descriptorItem may be null for recursive executions of this method!
 		if (descriptorItem != null && descriptorItem.id === clientSideItem.id) {
 			if (clientSideItem instanceof SplitPaneItem) {
-				this.cleanupUnknownClientItems(clientSideItem.firstChild, (descriptorItem as UiWorkSpaceLayoutSplitItem).firstChild, clientSideItem);
-				this.cleanupUnknownClientItems(clientSideItem.lastChild, (descriptorItem as UiWorkSpaceLayoutSplitItem).lastChild, clientSideItem);
+				this.cleanupUnknownClientItems(clientSideItem.firstChild, (descriptorItem as DtoWorkSpaceLayoutSplitItem).firstChild, clientSideItem);
+				this.cleanupUnknownClientItems(clientSideItem.lastChild, (descriptorItem as DtoWorkSpaceLayoutSplitItem).lastChild, clientSideItem);
 			} else if (clientSideItem instanceof TabPanelItem) {
-				this.stashUnknownViews(clientSideItem, (descriptorItem as UiWorkSpaceLayoutViewGroupItem).viewNames);
+				this.stashUnknownViews(clientSideItem, (descriptorItem as DtoWorkSpaceLayoutViewGroupItem).viewNames);
 			}
 		} else {
 			let correspondingDescriptorItem = this.descriptorItemById[clientSideItem.id];
@@ -151,7 +150,7 @@ export class LayoutDescriptorApplyer {
 		});
 	}
 
-	private addNewStructure(descriptor: UiWorkSpaceLayoutItem, parent: SplitPaneItem | null, firstChild: boolean, newViewConfigs: UiWorkSpaceLayoutView[]) {
+	private addNewStructure(descriptor: DtoWorkSpaceLayoutItem, parent: SplitPaneItem | null, firstChild: boolean, newViewConfigs: DtoWorkSpaceLayoutView[]) {
 		if (descriptor == null) {
 			return null;
 		}
@@ -191,7 +190,7 @@ export class LayoutDescriptorApplyer {
 		return item;
 	}
 
-	private createTreeItemFromLayoutDescriptor(descriptor: UiWorkSpaceLayoutItem, parent: SplitPaneItem, newViewConfigs: UiWorkSpaceLayoutView[]) {
+	private createTreeItemFromLayoutDescriptor(descriptor: DtoWorkSpaceLayoutItem, parent: SplitPaneItem, newViewConfigs: DtoWorkSpaceLayoutView[]) {
 		if (isTabPanelDescriptor(descriptor)) {
 			let tabPanelItem = this.viewGroupFactory(descriptor, parent);
 			this.addViews(tabPanelItem, descriptor, newViewConfigs);
@@ -204,7 +203,7 @@ export class LayoutDescriptorApplyer {
 		}
 	}
 
-	private addViews(tabPanelItem: TabPanelItem, viewGroupDescriptor: UiWorkSpaceLayoutViewGroupItem, newViewConfigs: UiWorkSpaceLayoutView[]) {
+	private addViews(tabPanelItem: TabPanelItem, viewGroupDescriptor: DtoWorkSpaceLayoutViewGroupItem, newViewConfigs: DtoWorkSpaceLayoutView[]) {
 		viewGroupDescriptor.viewNames.forEach((viewName, index) => {
 			let selected = viewName === viewGroupDescriptor.selectedViewName || viewGroupDescriptor.selectedViewName == null && index === 0;
 			let tabAlreadyInGroupItem = tabPanelItem.tabs.filter(tab => tab.viewName === viewName)[0];
@@ -219,7 +218,7 @@ export class LayoutDescriptorApplyer {
 			} else {
 				let newViewConfig = newViewConfigs.filter(view => view.viewName === viewName)[0];
 				if (newViewConfig != null) {
-					let view = new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component as UiComponent);
+					let view = new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component as Component);
 					tabPanelItem.addTab(view, selected);
 				} else {
 					LayoutDescriptorApplyer.logger.error("View item references non-existing view: " + viewName);

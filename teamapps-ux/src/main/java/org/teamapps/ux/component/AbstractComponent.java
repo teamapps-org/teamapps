@@ -21,7 +21,10 @@ package org.teamapps.ux.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.DtoGlobals;
+import org.teamapps.dto.protocol.DtoCommand;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.css.CssStyles;
@@ -63,7 +66,7 @@ public abstract class AbstractComponent implements Component {
 		id = getClass().getSimpleName() + "-" + UUID.randomUUID().toString();
 	}
 
-	protected void mapAbstractUiComponentProperties(UiComponent uiComponent) {
+	protected void mapAbstractUiComponentProperties(DtoComponent uiComponent) {
 		uiComponent.setId(id);
 		uiComponent.setDebuggingId(debuggingId);
 		uiComponent.setVisible(visible);
@@ -85,7 +88,7 @@ public abstract class AbstractComponent implements Component {
 			changed = listeningEventNames.remove(name);
 		}
 		if (changed) {
-			sendCommandIfRendered(null, () -> new UiGlobals.ToggleEventListeningCommand(null, getId(), name, listen));
+			sendCommandIfRendered(null, () -> new DtoGlobals.ToggleEventListeningCommand(null, getId(), name, listen));
 		}
 	}
 
@@ -113,7 +116,7 @@ public abstract class AbstractComponent implements Component {
 		boolean changed = visible != this.visible;
 		this.visible = visible;
 		if (changed) {
-			sendCommandIfRendered(() -> new UiComponent.SetVisibleCommand(visible));
+			sendCommandIfRendered(() -> new DtoComponent.SetVisibleCommand(visible));
 		}
 	}
 
@@ -137,17 +140,17 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	@Override
-	public UiClientObjectReference createUiReference() {
+	public DtoClientObjectReference createUiReference() {
 		LOGGER.debug("createUiClientObjectReference: " + getId());
 		if (!isRendered()) {
 			render();
 		}
-		return new UiClientObjectReference(getId());
+		return new DtoClientObjectReference(getId());
 	}
 
 	public void reRenderIfRendered() {
 		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.sendStaticCommand(RootPanel.class, new UiGlobals.RefreshComponentCommand(createUiClientObject()));
+			sessionContext.sendStaticCommand(RootPanel.class, new DtoGlobals.RefreshComponentCommand(createUiClientObject()));
 		}
 	}
 
@@ -161,7 +164,7 @@ public abstract class AbstractComponent implements Component {
 		} else if (renderingState == RenderingState.RENDERING) {
 			/*
 			This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a thrown event. This change must be transported to the client
-			as command (since the corresponding setter of the parent's UiComponent has possibly already been set). However, this command must be enqueued after the component is rendered on the client
+			as command (since the corresponding setter of the parent's DtoComponent has possibly already been set). However, this command must be enqueued after the component is rendered on the client
 			side! Therefore, sending the command must be forcibly enqueued.
 
 			Example: A panel contains a table. The panel's title is bound to the table's "count" ObservableValue. When the panel is rendered, the table also is rendered (as part of rendering the
@@ -184,7 +187,7 @@ public abstract class AbstractComponent implements Component {
 		styles.put(propertyName, value);
 
 		final String selector2 = selector;
-		sendCommandIfRendered(() -> new UiComponent.SetStyleCommand(selector2, styles));
+		sendCommandIfRendered(() -> new DtoComponent.SetStyleCommand(selector2, styles));
 	}
 
 	@Override
@@ -196,7 +199,7 @@ public abstract class AbstractComponent implements Component {
 		classNames.put(className, enabled);
 
 		final String selector2 = selector;
-		sendCommandIfRendered(() -> new UiComponent.SetClassNamesCommand(selector2, classNames));
+		sendCommandIfRendered(() -> new DtoComponent.SetClassNamesCommand(selector2, classNames));
 	}
 
 	@Override
@@ -212,7 +215,7 @@ public abstract class AbstractComponent implements Component {
 		}
 
 		final String selector2 = selector;
-		sendCommandIfRendered(() -> new UiComponent.SetAttributesCommand(selector2, attributes));
+		sendCommandIfRendered(() -> new DtoComponent.SetAttributesCommand(selector2, attributes));
 	}
 
 	//	@Override

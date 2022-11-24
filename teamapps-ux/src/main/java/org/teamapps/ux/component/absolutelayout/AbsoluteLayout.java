@@ -22,7 +22,7 @@ package org.teamapps.ux.component.absolutelayout;
 import org.teamapps.dto.DtoAbsoluteLayout;
 import org.teamapps.dto.DtoAbsolutePositionedComponent;
 import org.teamapps.dto.DtoAbsolutePositioning;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;

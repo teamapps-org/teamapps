@@ -39,9 +39,7 @@ public class DtoA implements DtoObject {
     public static final String TYPE_ID = "A";
 
 	protected Object x;
-
 	protected List y;
-
 	protected Map<String, Object> z;
 
 	public DtoA() {

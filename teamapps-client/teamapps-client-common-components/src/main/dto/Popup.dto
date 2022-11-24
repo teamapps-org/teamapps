@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class Popup extends Component {
 	Component* contentComponent;
 	int width; // 0 = full width, -1 = auto
@@ -26,8 +28,8 @@ managed class Popup extends Component {
 	int x; 
 	int y; 
     String backgroundColor;
-	boolean modal = false;
-	String dimmingColor = "rgba(0, 0, 0, .2)";
+	boolean modal;
+	String dimmingColor;
     boolean closeOnEscape; // close if the user presses escape
     boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
 

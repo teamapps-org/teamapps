@@ -21,7 +21,7 @@ package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
-import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.SizeType;
 import org.teamapps.ux.component.format.SizingPolicy;
@@ -49,7 +49,7 @@ public class GridTemplate implements Template {
 
 	List<GridColumn> columns = new ArrayList<>();
 	List<GridRow> rows = new ArrayList<>();
-	List<AbstractTemplateElement<?>> elements = new ArrayList<>();
+	List<AbstractGridTemplateElement<?>> elements = new ArrayList<>();
 
 	public GridTemplate() {
 
@@ -138,12 +138,12 @@ public class GridTemplate implements Template {
 		return this;
 	}
 
-	public GridTemplate setElements(final List<AbstractTemplateElement<?>> elements) {
+	public GridTemplate setElements(final List<AbstractGridTemplateElement<?>> elements) {
 		this.elements = elements;
 		return this;
 	}
 
-	public GridTemplate addElement(final AbstractTemplateElement element) {
+	public GridTemplate addElement(final AbstractGridTemplateElement element) {
 		this.elements.add(element);
 		return this;
 	}
@@ -164,7 +164,7 @@ public class GridTemplate implements Template {
 		return rows;
 	}
 
-	public List<AbstractTemplateElement<?>> getElements() {
+	public List<AbstractGridTemplateElement<?>> getElements() {
 		return elements;
 	}
 
@@ -248,7 +248,7 @@ public class GridTemplate implements Template {
 		List<DtoGridRow> uiRows = rows.stream()
 				.map(row -> row != null ? row.createUiGridRow() : null)
 				.collect(Collectors.toList());
-		List<DtoAbstractTemplateElement> uiTemplateElements = elements.stream()
+		List<DtoAbstractGridTemplateElement> uiTemplateElements = elements.stream()
 				.map(element -> element != null ? element.createUiTemplateElement() : null)
 				.collect(Collectors.toList());
 		DtoGridTemplate uiGridTemplate = new DtoGridTemplate(uiColumns, uiRows, uiTemplateElements);

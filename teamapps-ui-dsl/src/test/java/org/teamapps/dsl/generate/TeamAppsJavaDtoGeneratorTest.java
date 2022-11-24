@@ -32,7 +32,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void classProperties() throws Exception {
 		executeClassTest(
 				"package org.teamapps.dto222; " +
-						"import UiComponent from \"blah\":org.teamapps.dto.blah; " +
+						"import DtoComponent from \"blah\":org.teamapps.dto.blah; " +
 						"class A { "
 						+ " required String aasdf; "
 						+ " String b; "

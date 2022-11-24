@@ -18,21 +18,21 @@
  * =========================LICENSE_END==================================
  */
 import {UiField} from "./UiField";
-import {UiImageFieldCommandHandler, UiImageFieldConfig, UiImageFieldEventSource} from "../../generated/UiImageFieldConfig";
+import {UiImageFieldCommandHandler, DtoImageField, UiImageFieldEventSource} from "../../generated/DtoImageField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiBorderConfig} from "../../generated/UiBorderConfig";
-import {UiShadowConfig} from "../../generated/UiShadowConfig";
+
+import {DtoBorder} from "../../generated/DtoBorder";
+import {DtoShadow} from "../../generated/DtoShadow";
 import {UiImageSizing} from "../../generated/UiImageSizing";
 import {createImageSizingCssObject, createUiBorderCssObject, createUiShadowCssObject, cssObjectToString} from "../util/CssFormatUtil";
 import {parseHtml} from "../Common";
 
-export class UiImageField extends UiField<UiImageFieldConfig, string> implements UiImageFieldEventSource, UiImageFieldCommandHandler {
+export class UiImageField extends UiField<DtoImageField, string> implements UiImageFieldEventSource, UiImageFieldCommandHandler {
 
 	private _$field: HTMLElement;
 
-	protected initialize(config: UiImageFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoImageField, context: TeamAppsUiContext) {
 		this._$field = parseHtml(`<div class="UiImageField">`);
 
 		this.update(config);
@@ -53,11 +53,11 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 		});
 	}
 
-	setBorder(border: UiBorderConfig): void {
+	setBorder(border: DtoBorder): void {
 		Object.assign(this._$field.style, createUiBorderCssObject(border));
 	}
 
-	setShadow(shadow: UiShadowConfig): void {
+	setShadow(shadow: DtoShadow): void {
 		Object.assign(this._$field.style, createUiShadowCssObject(shadow));
 	}
 
@@ -65,7 +65,7 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 		Object.assign(this._$field.style, createImageSizingCssObject(imageSizing));
 	}
 
-	update(config: UiImageFieldConfig) {
+	update(config: DtoImageField) {
 		this._config = config;
 		this.setSize(config.width, config.height);
 		this.setBorder(config.border);
@@ -115,4 +115,4 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiImageField", UiImageField);
+

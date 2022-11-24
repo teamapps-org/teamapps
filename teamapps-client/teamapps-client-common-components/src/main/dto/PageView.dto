@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class PageView extends Component {
 	List<PageViewBlock> blocks;
 
@@ -46,7 +48,7 @@ class MessagePageViewBlock extends PageViewBlock {
 
 class CitationPageViewBlock extends PageViewBlock {
 	String creatorImageUrl;
-	PageViewBlockCreatorImageAlignment creatorImageAlignment = PageViewBlockCreatorImageAlignment.LEFT;
+	PageViewBlockCreatorImageAlignment creatorImageAlignment;
 	String citation; // rich text!
 	String author; // plain text
 }

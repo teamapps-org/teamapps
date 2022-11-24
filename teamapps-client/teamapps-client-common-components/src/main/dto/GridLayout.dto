@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class StaticGridLayout extends Component {
 	required GridLayout descriptor;
 
@@ -27,7 +29,7 @@ managed class StaticGridLayout extends Component {
 
 managed class ResponsiveGridLayout extends Component {
 	required List<ResponsiveGridLayoutPolicy> layoutPolicies;
-	boolean fillHeight = false;
+	boolean fillHeight;
 
 	command updateLayoutPolicies(List<ResponsiveGridLayoutPolicy> layoutPolicies);
 	command setFillHeight(boolean fillHeight);
@@ -47,9 +49,9 @@ class GridLayout {
     Border border;
     Shadow shadow;
     String backgroundColor;
-    int gridGap = 7;
-    VerticalElementAlignment verticalAlignment = VerticalElementAlignment.STRETCH;
-    HorizontalElementAlignment horizontalAlignment = HorizontalElementAlignment.STRETCH;
+    int gridGap;
+    VerticalElementAlignment verticalAlignment;
+    HorizontalElementAlignment horizontalAlignment;
 }
 
 class GridColumn {
@@ -67,14 +69,14 @@ class GridRow {
 interface GridPlacement {
     int row;
     int column;
-    int rowSpan = 1;
-    int colSpan = 1;
+    int rowSpan;
+    int colSpan;
     int minWidth;
     int maxWidth;
 	int minHeight;
 	int maxHeight;
-    VerticalElementAlignment verticalAlignment = null; // fall back to default defined on layout level!
-    HorizontalElementAlignment horizontalAlignment = null; // fall back to default defined on layout level!
+    VerticalElementAlignment verticalAlignment; // fall back to default defined on layout level!
+    HorizontalElementAlignment horizontalAlignment; // fall back to default defined on layout level!
 }
 
 // =============== Component Placements ===============

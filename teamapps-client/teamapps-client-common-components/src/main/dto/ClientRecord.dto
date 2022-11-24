@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 class ClientRecord {
     Dictionary<Object> values;
     String asString;
@@ -32,15 +34,15 @@ class HierarchicalClientRecord extends IdentifiableClientRecord {
 	Integer parentId;
 	boolean expanded;
 	boolean lazyChildren;
-	boolean selectable = true;
+	boolean selectable;
 }
 
 class TreeRecord extends HierarchicalClientRecord {
-	String displayTemplateId = null; // null == use asString
+	String displayTemplateId; // null == use asString
 }
 
 class ComboBoxTreeRecord extends TreeRecord {
-	String dropDownTemplateId = null; // null == use asString
+	String dropDownTemplateId; // null == use asString
 }
 
 class CalendarEventClientRecord extends IdentifiableClientRecord {

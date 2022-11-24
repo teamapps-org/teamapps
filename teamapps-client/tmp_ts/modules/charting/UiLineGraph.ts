@@ -21,15 +21,15 @@ import {Area, Line} from "d3-shape";
 import * as d3 from "d3";
 import {ScaleLinear} from "d3";
 import {CurveTypeToCurveFactory, DataPoint, SVGSelection} from "./Charting";
-import {AbstractUiGraph} from "./AbstractUiGraph";
+import {DtoAbstractGraph} from "./DtoAbstractGraph";
 import {isVisibleColor} from "../Common";
-import {UiLineGraphDataConfig} from "../../generated/UiLineGraphDataConfig";
-import {UiLineGraphConfig} from "../../generated/UiLineGraphConfig";
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+import {DtoLineGraphData} from "../../generated/DtoLineGraphData";
+import {DtoLineGraph} from "../../generated/DtoLineGraph";
+import {DtoLongInterval} from "../../generated/DtoLongInterval";
 import {LineGraphDataStore} from "./DataStore";
-import {UiLineGraphDataPointConfig} from "../../generated/UiLineGraphDataPointConfig";
+import {DtoLineGraphDataPoint} from "../../generated/DtoLineGraphDataPoint";
 
-export class UiLineGraph extends AbstractUiGraph<UiLineGraphConfig, UiLineGraphDataConfig> {
+export class UiLineGraph extends DtoAbstractGraph<DtoLineGraph, DtoLineGraphData> {
 
 	private line: Line<DataPoint>;
 	private $line: SVGSelection<any>;
@@ -45,7 +45,7 @@ export class UiLineGraph extends AbstractUiGraph<UiLineGraphConfig, UiLineGraphD
 
 	constructor(
 		timeGraphId: string,
-		config: UiLineGraphConfig,
+		config: DtoLineGraph,
 		private dropShadowFilterId: string
 	) {
 		super(config, timeGraphId);
@@ -62,7 +62,7 @@ export class UiLineGraph extends AbstractUiGraph<UiLineGraphConfig, UiLineGraphD
 		this.dataStore.markIntervalAsCovered(zoomLevel, interval);
 	}
 
-	public addData(zoomLevel: number, data: UiLineGraphDataConfig): void {
+	public addData(zoomLevel: number, data: DtoLineGraphData): void {
 		this.dataStore.addData(zoomLevel, data);
 	}
 
@@ -127,7 +127,7 @@ export class UiLineGraph extends AbstractUiGraph<UiLineGraphConfig, UiLineGraphD
 			this.$area.attr("d", this.area(dataPoints));
 		}
 
-		let $dotsDataSelection = this.$dots.selectAll<SVGCircleElement, UiLineGraphDataPointConfig>("circle.dot")
+		let $dotsDataSelection = this.$dots.selectAll<SVGCircleElement, DtoLineGraphDataPoint>("circle.dot")
 			.data(this.config.dataDotRadius > 0 ? dataPoints : [])
 			.join("circle")
 			.classed("dot", true)
@@ -145,7 +145,7 @@ export class UiLineGraph extends AbstractUiGraph<UiLineGraphConfig, UiLineGraphD
 			.attr("visibility", (this.config.yZeroLineVisible && this.scaleY.domain()[0] !== 0) ? "visible" : "hidden");
 	}
 
-	setConfig(graphConfig: UiLineGraphConfig) {
+	setConfig(graphConfig: DtoLineGraph) {
 		super.setConfig(graphConfig);
 		this.initLinesAndColorScale();
 	}

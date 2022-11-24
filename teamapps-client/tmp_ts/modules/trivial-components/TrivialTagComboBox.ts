@@ -32,7 +32,7 @@ import {Instance as Popper} from '@popperjs/core';
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {elementIndex, getAutoCompleteOffValue, insertAfter, insertAtIndex, insertBefore, parseHtml, selectElementContents} from "../Common";
 import {createComboBoxPopper} from "./ComboBoxPopper";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 
 export interface TrivialTagComboBoxConfig<E> {
 	/**

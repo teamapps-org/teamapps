@@ -20,11 +20,11 @@
 import {ScaleTime} from "d3-scale";
 import {SVGSelection} from "./Charting";
 import {YAxis} from "./YAxis";
-import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
-import {UiGraphConfig} from "../../generated/UiGraphConfig";
+import {DtoGraphData} from "../../generated/DtoGraphData";
+import {DtoLongInterval} from "../../generated/DtoLongInterval";
+import {DtoGraph} from "../../generated/DtoGraph";
 
-export interface UiGraph<C extends UiGraphConfig = UiGraphConfig, D extends UiGraphDataConfig = UiGraphDataConfig> {
+export interface UiGraph<C extends DtoGraph = DtoGraph, D extends DtoGraphData = DtoGraphData> {
 
 	setConfig(config: C): void;
 

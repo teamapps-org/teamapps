@@ -19,21 +19,21 @@
  */
 import {
 	UiLocalTimeFieldCommandHandler,
-	UiLocalTimeFieldConfig,
+	DtoLocalTimeField,
 	UiLocalTimeFieldEventSource
-} from "../../../generated/UiLocalTimeFieldConfig";
+} from "../../../generated/DtoLocalTimeField";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {AbstractUiTimeField} from "./AbstractUiTimeField";
+import {DtoAbstractTimeField} from "./DtoAbstractTimeField";
 import {arraysEqual} from "../../Common";
 import {LocalDateTime} from "../../datetime/LocalDateTime";
 import {createTimeRenderer} from "./datetime-rendering";
 
 type LocalTime = [number, number, number, number];
 
-export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig, LocalTime> implements UiLocalTimeFieldEventSource, UiLocalTimeFieldCommandHandler {
+export class UiLocalTimeField extends DtoAbstractTimeField<DtoLocalTimeField, LocalTime> implements UiLocalTimeFieldEventSource, UiLocalTimeFieldCommandHandler {
 
-	protected initialize(config: UiLocalTimeFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoLocalTimeField, context: TeamAppsUiContext) {
 		super.initialize(config, context);
 		this.getMainInnerDomElement().classList.add("UiLocalTimeField");
 	}
@@ -86,4 +86,4 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiLocalTimeField", UiLocalTimeField);
+

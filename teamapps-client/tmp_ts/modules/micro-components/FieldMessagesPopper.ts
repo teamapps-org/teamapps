@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import { createPopper, Instance as Popper } from '@popperjs/core';
-import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
+import {DtoFieldMessage} from "../../generated/DtoFieldMessage";
 import {UiFieldMessagePosition} from "../../generated/UiFieldMessagePosition";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiFieldMessageVisibilityMode} from "../../generated/UiFieldMessageVisibilityMode";
@@ -55,7 +55,7 @@ export class FieldMessagesPopper {
 		});
 	}
 
-	public setMessages(messages: UiFieldMessageConfig[] = []) {
+	public setMessages(messages: DtoFieldMessage[] = []) {
 		this.$messagesContainer.innerHTML = '';
 		if (messages.length > 0) {
 			const highestSeverity = getHighestSeverity(messages);
@@ -92,7 +92,7 @@ export class FieldMessagesPopper {
 	}
 }
 
-export function createMessageElement(message: UiFieldMessageConfig) {
+export function createMessageElement(message: DtoFieldMessage) {
 	const severityCssClass = `field-message-${UiFieldMessageSeverity[message.severity].toLowerCase()}`;
 	const positionCssClass = `position-${UiFieldMessagePosition[message.position].toLowerCase()}`;
 	const visibilityCssClass = `visibility-${UiFieldMessageVisibilityMode[message.visibilityMode].toLowerCase()}`;

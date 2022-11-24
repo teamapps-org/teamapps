@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.field;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.DtoEventWrapper;
-import org.teamapps.dto.DtoNumberField;
 import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoNumberField;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;

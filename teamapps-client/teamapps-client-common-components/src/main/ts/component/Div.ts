@@ -17,10 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiDivCommandHandler, UiDivConfig} from "../generated/UiDivConfig";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiComponent} from "./UiComponent";
-import {AbstractUiWebComponent} from "./AbstractUiWebComponent";
+import {DtoDiv, DtoDivCommandHandler} from "../generated";
+
+import {AbstractWebComponent, Component} from "teamapps-client-core";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -32,7 +31,7 @@ template.innerHTML = `
 <slot></slot>
 `;
 
-export class Div extends AbstractUiWebComponent<UiDivConfig> implements UiDivCommandHandler {
+export class Div extends AbstractWebComponent<DtoDiv> implements DtoDivCommandHandler {
 	private $slot: HTMLSlotElement;
 
 	constructor() {
@@ -41,7 +40,7 @@ export class Div extends AbstractUiWebComponent<UiDivConfig> implements UiDivCom
 		this.$slot = this.shadowRoot.querySelector("slot");
 	}
 
-	public setConfig(config: UiDivConfig) {
+	public setConfig(config: DtoDiv) {
 		super.setConfig(config);
 		if (config.innerHtml != null) {
 			this.setInnerHtml(config.innerHtml);
@@ -55,7 +54,7 @@ export class Div extends AbstractUiWebComponent<UiDivConfig> implements UiDivCom
 		if (content == null) {
 			this.innerHTML = '';
 		} else {
-			this.appendChild((content as UiComponent).getMainElement())
+			this.appendChild((content as Component).getMainElement())
 		}
 	}
 
@@ -68,5 +67,5 @@ export class Div extends AbstractUiWebComponent<UiDivConfig> implements UiDivCom
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiDiv", Div);
+
 window.customElements.define("ui-div", Div);

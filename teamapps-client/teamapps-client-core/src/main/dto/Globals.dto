@@ -28,7 +28,7 @@ managed class Globals {
     static command clearClientTokens();
 
     static command downloadFile(String fileUrl, String downloadFileName);
-    static command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, int animationDuration = 1000);
+    static command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, int animationDuration);
     static command exitFullScreen();
     static command showDialogMessage(String icon, String title, String message, List<GenericErrorMessageOption> options);
 

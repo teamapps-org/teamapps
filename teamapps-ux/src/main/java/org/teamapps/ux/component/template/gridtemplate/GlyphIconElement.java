@@ -20,12 +20,12 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoGlyphIconElement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 
-public class GlyphIconElement extends AbstractTemplateElement<GlyphIconElement> {
+public class GlyphIconElement extends AbstractGridTemplateElement<GlyphIconElement> {
 
 	protected int size;
 	protected Color fontColor;
@@ -55,10 +55,10 @@ public class GlyphIconElement extends AbstractTemplateElement<GlyphIconElement> 
 	}
 
 	@Override
-	public DtoAbstractTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createUiTemplateElement() {
 		DtoGlyphIconElement uiElement = new DtoGlyphIconElement(propertyName, row, column, size);
 		uiElement.setFontColor(fontColor != null ? fontColor.toHtmlColorString() : null);
-		mapAbstractTemplateElementAttributesToUiElement(uiElement);
+		mapAbstractGridTemplateElementAttributesToUiElement(uiElement);
 		return uiElement;
 	}
 

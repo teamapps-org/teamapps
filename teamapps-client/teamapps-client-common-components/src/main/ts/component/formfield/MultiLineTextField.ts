@@ -18,28 +18,26 @@
  * =========================LICENSE_END==================================
  */
 import {
-	UiFieldEditingMode,
-	UiMultiLineTextFieldCommandHandler,
-	UiMultiLineTextFieldConfig,
-	UiMultiLineTextFieldEventSource,
-	UiSpecialKey,
-	UiTextInputHandlingField_SpecialKeyPressedEvent,
-	UiTextInputHandlingField_TextInputEvent
+	DtoFieldEditingMode,
+	DtoMultiLineTextField,
+	DtoMultiLineTextFieldCommandHandler,
+	DtoMultiLineTextFieldEventSource,
+	DtoSpecialKey,
+	DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {Constants, escapeHtml, hasVerticalScrollBar, parseHtml} from "../../Common";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
+import {Constants, escapeHtml, hasVerticalScrollBar} from "../../Common";
+import {parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
-import {TeamAppsEvent} from "teamapps-client-core";
-import {AbstractField} from "./AbstractUiField";
+import {AbstractField} from "./AbstractField";
 
-export class MultiLineTextField extends AbstractField<UiMultiLineTextFieldConfig, string> implements UiMultiLineTextFieldEventSource, UiMultiLineTextFieldCommandHandler {
+export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, string> implements DtoMultiLineTextFieldEventSource, DtoMultiLineTextFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
+	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent>({
 		throttlingMode: "debounce",
 		delay: 250
 	});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent>({
 		throttlingMode: "debounce",
 		delay: 250
 	});
@@ -49,8 +47,8 @@ export class MultiLineTextField extends AbstractField<UiMultiLineTextFieldConfig
 	private $clearButton: HTMLElement;
 	private showClearButton: boolean;
 
-	protected initialize(config: UiMultiLineTextFieldConfig, context: TeamAppsUiContext) {
-		this.$wrapper = parseHtml(`<div class="UiMultiLineTextField teamapps-input-wrapper field-border field-border-glow field-background">
+	protected initialize(config: DtoMultiLineTextField, context: TeamAppsUiContext) {
+		this.$wrapper = parseHtml(`<div class="DtoMultiLineTextField teamapps-input-wrapper field-border field-border-glow field-background">
 	<textarea></textarea>
 	<div class="clear-button tr-remove-button"></div>
 </div>`);
@@ -68,11 +66,11 @@ export class MultiLineTextField extends AbstractField<UiMultiLineTextFieldConfig
 		this.setShowClearButton(config.showClearButton);
 
 		this.$field.addEventListener('focus', () => {
-			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
 			}
 		});
 		this.$field.addEventListener('blur', () => {
-			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
@@ -86,11 +84,11 @@ export class MultiLineTextField extends AbstractField<UiMultiLineTextFieldConfig
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
 				this.onSpecialKeyPressed.fire({
-					key: UiSpecialKey.ESCAPE
+					key: DtoSpecialKey.ESCAPE
 				});
 			} else if (e.key === 'Enter') {
 				this.onSpecialKeyPressed.fire({
-					key: UiSpecialKey.ENTER
+					key: DtoSpecialKey.ENTER
 				});
 			}
 		});
@@ -169,12 +167,12 @@ export class MultiLineTextField extends AbstractField<UiMultiLineTextFieldConfig
 		}
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
-		return `<div class="static-readonly-UiMultiLineTextField">${value == null ? "" : escapeHtml(value)}</div>`;
+		return `<div class="static-readonly-DtoMultiLineTextField">${value == null ? "" : escapeHtml(value)}</div>`;
 	}
 
 	public getDefaultValue(): string {
@@ -187,4 +185,4 @@ export class MultiLineTextField extends AbstractField<UiMultiLineTextFieldConfig
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiMultiLineTextField", MultiLineTextField);
+

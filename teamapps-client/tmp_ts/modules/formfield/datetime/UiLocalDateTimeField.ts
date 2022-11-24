@@ -19,20 +19,20 @@
  */
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {AbstractUiDateTimeField} from "./AbstractUiDateTimeField";
+import {DtoAbstractDateTimeField} from "./DtoAbstractDateTimeField";
 import {
 	UiLocalDateTimeFieldCommandHandler,
-	UiLocalDateTimeFieldConfig,
+	DtoLocalDateTimeField,
 	UiLocalDateTimeFieldEventSource
-} from "../../../generated/UiLocalDateTimeFieldConfig";
+} from "../../../generated/DtoLocalDateTimeField";
 import {arraysEqual} from "../../Common";
 import {DateTime} from "luxon";
 
 type LocalDateTimeArray = [number, number, number, number, number, number, number];
 
-export class UiLocalDateTimeField extends AbstractUiDateTimeField<UiLocalDateTimeFieldConfig, LocalDateTimeArray> implements UiLocalDateTimeFieldEventSource, UiLocalDateTimeFieldCommandHandler {
+export class UiLocalDateTimeField extends DtoAbstractDateTimeField<DtoLocalDateTimeField, LocalDateTimeArray> implements UiLocalDateTimeFieldEventSource, UiLocalDateTimeFieldCommandHandler {
 
-	protected initialize(config: UiLocalDateTimeFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoLocalDateTimeField, context: TeamAppsUiContext) {
 		super.initialize(config, context);
 		this.getMainInnerDomElement().classList.add("UiDateTimeField");
 	}
@@ -97,4 +97,4 @@ export class UiLocalDateTimeField extends AbstractUiDateTimeField<UiLocalDateTim
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiLocalDateTimeField", UiLocalDateTimeField);
+

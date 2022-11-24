@@ -19,21 +19,21 @@
  */
 import * as d3 from "d3";
 import {GraphContext, PopperHandle} from "./GraphContext";
-import {AbstractUiGraph} from "./AbstractUiGraph";
-import {UiIncidentGraphConfig} from "../../generated/UiIncidentGraphConfig";
-import {UiIncidentGraphDataConfig} from "../../generated/UiIncidentGraphDataConfig";
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+import {AbstractGraph} from "./AbstractGraph";
+import {DtoIncidentGraph} from "../../generated/DtoIncidentGraph";
+import {DtoIncidentGraphData} from "../../generated/DtoIncidentGraphData";
+import {DtoLongInterval} from "../../generated/DtoLongInterval";
 import {IncidentGraphDataStore} from "./DataStore";
 import {IntervalManager} from "../util/IntervalManager";
 
-export class UiIncidentGraph extends AbstractUiGraph<UiIncidentGraphConfig, UiIncidentGraphDataConfig> {
+export class UiIncidentGraph extends DtoAbstractGraph<DtoIncidentGraph, DtoIncidentGraphData> {
 
 	private dataStore = new IncidentGraphDataStore();
 	private popperHandle: PopperHandle;
 
 	constructor(
 		timeGraphId: string,
-		config: UiIncidentGraphConfig,
+		config: DtoIncidentGraph,
 		private graphContext: GraphContext
 	) {
 		super(config, timeGraphId);
@@ -49,7 +49,7 @@ export class UiIncidentGraph extends AbstractUiGraph<UiIncidentGraphConfig, UiIn
 		this.dataStore.markIntervalAsCovered(zoomLevel, interval);
 	}
 
-	public addData(zoomLevel: number, data: UiIncidentGraphDataConfig): void {
+	public addData(zoomLevel: number, data: DtoIncidentGraphData): void {
 		this.dataStore.addData(zoomLevel, data)
 	}
 

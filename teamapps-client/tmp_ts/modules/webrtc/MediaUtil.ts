@@ -18,12 +18,12 @@
  * =========================LICENSE_END==================================
  */
 import vad from "voice-activity-detection";
-import {UiAudioTrackConstraintsConfig} from "../../generated/UiAudioTrackConstraintsConfig";
-import {UiVideoTrackConstraintsConfig} from "../../generated/UiVideoTrackConstraintsConfig";
-import {UiScreenSharingConstraintsConfig} from "../../generated/UiScreenSharingConstraintsConfig";
+import {DtoAudioTrackConstraints} from "../../generated/DtoAudioTrackConstraints";
+import {DtoVideoTrackConstraints} from "../../generated/DtoVideoTrackConstraints";
+import {DtoScreenSharingConstraints} from "../../generated/DtoScreenSharingConstraints";
 import {WebRtcPublishingFailureReason} from "../../generated/WebRtcPublishingFailureReason";
 import {UiMediaDeviceKind} from "../../generated/UiMediaDeviceKind";
-import {createUiMediaDeviceInfoConfig, UiMediaDeviceInfoConfig} from "../../generated/UiMediaDeviceInfoConfig";
+import {createDtoMediaDeviceInfo, DtoMediaDeviceInfo} from "../../generated/DtoMediaDeviceInfo";
 import {listenStreamEnded, mixStreams} from "./utils";
 import {determineVideoSize, MediaStreamWithMixiSizingInfo, MixSizingInfo} from "./MultiStreamsMixer";
 
@@ -55,7 +55,7 @@ export function addVoiceActivityDetection(audioTrack: MediaStreamTrack, onVoiceS
 }
 
 
-export async function retrieveUserMedia(audioConstraints: UiAudioTrackConstraintsConfig, videoConstraints: UiVideoTrackConstraintsConfig, screenSharingConstraints: UiScreenSharingConstraintsConfig,
+export async function retrieveUserMedia(audioConstraints: DtoAudioTrackConstraints, videoConstraints: DtoVideoTrackConstraints, screenSharingConstraints: DtoScreenSharingConstraints,
                                         streamEndedHandler: (stream: MediaStream, isDisplay: boolean) => void) {
 	let micCamStream: MediaStream = null;
 	try {
@@ -130,14 +130,14 @@ export async function retrieveUserMedia(audioConstraints: UiAudioTrackConstraint
 	return {sourceStreams, targetStream};
 }
 
-export function createVideoConstraints(videoConstraints: UiVideoTrackConstraintsConfig): MediaTrackConstraints {
+export function createVideoConstraints(videoConstraints: DtoVideoTrackConstraints): MediaTrackConstraints {
 	return videoConstraints && {
 		...videoConstraints,
 		facingMode: null // TODO UiVideoFacingMode[videoConstraints.facingMode].toLocaleLowerCase() ==> make nullable!!!!
 	};
 }
 
-export function createDisplayMediaStreamConstraints(screenSharingConstraints: UiScreenSharingConstraintsConfig) {
+export function createDisplayMediaStreamConstraints(screenSharingConstraints: DtoScreenSharingConstraints) {
 	return {
 		video: screenSharingConstraints && {
 			frameRate: {max: 5, ideal: 5},
@@ -148,7 +148,7 @@ export function createDisplayMediaStreamConstraints(screenSharingConstraints: Ui
 	};
 }
 
-export async function getDisplayStream(screenSharingConstraints: UiScreenSharingConstraintsConfig) {
+export async function getDisplayStream(screenSharingConstraints: DtoScreenSharingConstraints) {
 	if (canPublishScreen()) {
 		return await (window.navigator.mediaDevices as any).getDisplayMedia(createDisplayMediaStreamConstraints(screenSharingConstraints)) as MediaStream;
 	} else {
@@ -160,7 +160,7 @@ export function canPublishScreen() {
 	return (window.navigator.mediaDevices as any).getDisplayMedia != null;
 }
 
-export async function enumerateDevices(): Promise<UiMediaDeviceInfoConfig[]> {
+export async function enumerateDevices(): Promise<DtoMediaDeviceInfo[]> {
 	const uiMediaDeviceKindByKindString = {
 		'audioinput': UiMediaDeviceKind.AUDIO_INPUT,
 		'videoinput': UiMediaDeviceKind.VIDEO_INPUT,
@@ -174,12 +174,12 @@ export async function enumerateDevices(): Promise<UiMediaDeviceInfoConfig[]> {
 	} finally {
 		try {
 			let devices = await navigator.mediaDevices.enumerateDevices();
-			return devices.map((deviceInfo, i) => createUiMediaDeviceInfoConfig({
+			return devices.map((deviceInfo, i) => createDtoMediaDeviceInfo({
 				deviceId: deviceInfo.deviceId,
 				groupId: deviceInfo.groupId,
 				kind: uiMediaDeviceKindByKindString[deviceInfo.kind],
 				label: deviceInfo.label
-			} as UiMediaDeviceInfoConfig))
+			} as DtoMediaDeviceInfo))
 				.filter(uiDeviceInfo => uiDeviceInfo.kind != null);
 		} catch (e) {
 			return [];

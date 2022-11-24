@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.grid;
 
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoResponsiveGridLayout;
 import org.teamapps.dto.DtoResponsiveGridLayoutPolicy;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.grid.layout.GridLayoutDefinition;
 
@@ -36,7 +36,7 @@ public class ResponsiveGridLayout extends AbstractComponent {
 	private final Map<Integer, GridLayoutDefinition> layoutDefinitionsByMinWidth = new HashMap<>();
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		List<DtoResponsiveGridLayoutPolicy> layoutPolicies = createUiLayoutPolicies();
 		DtoResponsiveGridLayout uiResponsiveGridLayout = new DtoResponsiveGridLayout(layoutPolicies);
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);

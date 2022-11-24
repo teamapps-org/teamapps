@@ -17,56 +17,58 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "teamapps-client-core";
 import {
-	UiConfiguration,
-	UiRelativeWorkSpaceViewPosition,
-	UiSplitSizePolicy,
-	UiTemplate,
-	UiViewGroupPanelState,
-	UiWorkSpaceLayout_ChildWindowClosedEvent,
-	UiWorkSpaceLayout_ChildWindowCreationFailedEvent,
-	UiWorkSpaceLayout_LayoutChangedEvent,
-	UiWorkSpaceLayout_ViewClosedEvent,
-	UiWorkSpaceLayout_ViewDraggedToNewWindowEvent,
-	UiWorkSpaceLayout_ViewGroupPanelStateChangedEvent,
-	UiWorkSpaceLayout_ViewNeedsRefreshEvent,
-	UiWorkSpaceLayout_ViewSelectedEvent,
-	UiWorkSpaceLayoutCommandHandler,
-	UiWorkSpaceLayoutConfig,
-	UiWorkSpaceLayoutEventSource,
-	UiWorkSpaceLayoutItem,
-	UiWorkSpaceLayoutSplitItem,
-	UiWorkSpaceLayoutView,
-	UiWorkSpaceLayoutViewGroupItem
+	AbstractComponent,
+	Component,
+	DtoConfiguration,
+	TeamAppsEvent,
+	TeamAppsUiContext,
+	TeamAppsUiContextInternalApi
+} from "teamapps-client-core";
+import {
+	DtoRelativeWorkSpaceViewPosition,
+	DtoSplitSizePolicy,
+	DtoTemplate,
+	DtoViewGroupPanelState,
+	DtoWorkSpaceLayout,
+	DtoWorkSpaceLayout_ChildWindowClosedEvent,
+	DtoWorkSpaceLayout_ChildWindowCreationFailedEvent,
+	DtoWorkSpaceLayout_LayoutChangedEvent,
+	DtoWorkSpaceLayout_ViewClosedEvent,
+	DtoWorkSpaceLayout_ViewDraggedToNewWindowEvent,
+	DtoWorkSpaceLayout_ViewGroupPanelStateChangedEvent,
+	DtoWorkSpaceLayout_ViewNeedsRefreshEvent,
+	DtoWorkSpaceLayout_ViewSelectedEvent,
+	DtoWorkSpaceLayoutCommandHandler,
+	DtoWorkSpaceLayoutEventSource,
+	DtoWorkSpaceLayoutItem,
+	DtoWorkSpaceLayoutSplitItem,
+	DtoWorkSpaceLayoutView,
+	DtoWorkSpaceLayoutViewGroupItem
 } from "../../generated";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {ViewInfo} from "./ViewInfo";
 import {ViewContainer} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {LocalViewContainer} from "./LocalViewContainer";
 import {ChildWindowViewContainer} from "./ChildWindowViewContainer";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {Toolbar} from "../tool-container/toolbar/UiToolbar";
-import {UiComponent} from "teamapps-client-core";
-import {ProgressDisplay} from "../UiProgressDisplay";
-import {MultiProgressDisplay} from "../UiMultiProgressDisplay";
+import {Toolbar} from "../tool-container/toolbar/Toolbar";
+import {ProgressDisplay} from "../ProgressDisplay";
+import {MultiProgressDisplay} from "../MultiProgressDisplay";
 
-export type UiWorkspaceLayoutSubWindowProtocol_INIT_OK = {
+export type DtoWorkspaceLayoutSubWindowProtocol_INIT_OK = {
 	_type: 'INIT_OK',
 	sessionId: string,
 	workspaceLayoutId: string,
 	windowId: string,
-	uiConfiguration: UiConfiguration,
+	uiConfiguration: DtoConfiguration,
 	backgroundImage: string,
 	blurredBackgroundImage: string,
-	registeredTemplates: { [name: string]: UiTemplate },
+	registeredTemplates: { [name: string]: DtoTemplate },
 	childWindowPageTitle: string
 }
 
-export type UiWorkspaceLayoutDndDataTransfer = {
+export type DtoWorkspaceLayoutDndDataTransfer = {
 	sourceUiSessionId: string,
 	sourceWorkspaceLayoutId: string,
 	sourceWindowId: string,
@@ -79,16 +81,16 @@ export type UiWorkspaceLayoutDndDataTransfer = {
 	visible: boolean
 }
 
-export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig> implements UiWorkSpaceLayoutCommandHandler, UiWorkSpaceLayoutEventSource {
+export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> implements DtoWorkSpaceLayoutCommandHandler, DtoWorkSpaceLayoutEventSource {
 
-	public readonly onLayoutChanged: TeamAppsEvent<UiWorkSpaceLayout_LayoutChangedEvent> = new TeamAppsEvent();
-	public readonly onViewDraggedToNewWindow: TeamAppsEvent<UiWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new TeamAppsEvent();
-	public readonly onViewNeedsRefresh: TeamAppsEvent<UiWorkSpaceLayout_ViewNeedsRefreshEvent> = new TeamAppsEvent();
-	public readonly onChildWindowCreationFailed: TeamAppsEvent<UiWorkSpaceLayout_ChildWindowCreationFailedEvent> = new TeamAppsEvent();
-	public readonly onChildWindowClosed: TeamAppsEvent<UiWorkSpaceLayout_ChildWindowClosedEvent> = new TeamAppsEvent();
-	public readonly onViewSelected: TeamAppsEvent<UiWorkSpaceLayout_ViewSelectedEvent> = new TeamAppsEvent();
-	public readonly onViewClosed: TeamAppsEvent<UiWorkSpaceLayout_ViewClosedEvent> = new TeamAppsEvent();
-	public readonly onViewGroupPanelStateChanged: TeamAppsEvent<UiWorkSpaceLayout_ViewGroupPanelStateChangedEvent> = new TeamAppsEvent();
+	public readonly onLayoutChanged: TeamAppsEvent<DtoWorkSpaceLayout_LayoutChangedEvent> = new TeamAppsEvent();
+	public readonly onViewDraggedToNewWindow: TeamAppsEvent<DtoWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new TeamAppsEvent();
+	public readonly onViewNeedsRefresh: TeamAppsEvent<DtoWorkSpaceLayout_ViewNeedsRefreshEvent> = new TeamAppsEvent();
+	public readonly onChildWindowCreationFailed: TeamAppsEvent<DtoWorkSpaceLayout_ChildWindowCreationFailedEvent> = new TeamAppsEvent();
+	public readonly onChildWindowClosed: TeamAppsEvent<DtoWorkSpaceLayout_ChildWindowClosedEvent> = new TeamAppsEvent();
+	public readonly onViewSelected: TeamAppsEvent<DtoWorkSpaceLayout_ViewSelectedEvent> = new TeamAppsEvent();
+	public readonly onViewClosed: TeamAppsEvent<DtoWorkSpaceLayout_ViewClosedEvent> = new TeamAppsEvent();
+	public readonly onViewGroupPanelStateChanged: TeamAppsEvent<DtoWorkSpaceLayout_ViewGroupPanelStateChangedEvent> = new TeamAppsEvent();
 
 	public static readonly ROOT_WINDOW_ID: string = "ROOT_WINDOW";
 
@@ -98,7 +100,7 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 	private localViewContainer: LocalViewContainer;
 	private viewContainersByWindowId: { [windowId: string]: ViewContainer } = {};
 
-	constructor(config: UiWorkSpaceLayoutConfig,
+	constructor(config: DtoWorkSpaceLayout,
 	            context: TeamAppsUiContext,
 	            windowId = WorkSpaceLayout.ROOT_WINDOW_ID,
 	            rootWindowMessagePort?: MessagePort) {
@@ -178,11 +180,11 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 				if (relativePosition === RelativeDropPosition.TAB) {
 					this.moveViewToNeighbourTab(viewInfo.viewName, existingViewName, true);
 				} else {
-					this.moveViewRelativeToOtherView(viewInfo.viewName, existingViewName, UiRelativeWorkSpaceViewPosition[RelativeDropPosition[relativePosition] as keyof typeof UiRelativeWorkSpaceViewPosition], UiSplitSizePolicy.RELATIVE, .5);
+					this.moveViewRelativeToOtherView(viewInfo.viewName, existingViewName, DtoRelativeWorkSpaceViewPosition[RelativeDropPosition[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPosition], DtoSplitSizePolicy.RELATIVE, .5);
 				}
 			} else {
 				let isFirst = relativePosition === RelativeDropPosition.LEFT || relativePosition === RelativeDropPosition.TOP;
-				this.moveViewToTopLevel(viewInfo.viewName, targetWindowId, UiRelativeWorkSpaceViewPosition[RelativeDropPosition[relativePosition] as keyof typeof UiRelativeWorkSpaceViewPosition], UiSplitSizePolicy.RELATIVE, isFirst ? .3 : .7);
+				this.moveViewToTopLevel(viewInfo.viewName, targetWindowId, DtoRelativeWorkSpaceViewPosition[RelativeDropPosition[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPosition], DtoSplitSizePolicy.RELATIVE, isFirst ? .3 : .7);
 			}
 		} else {
 			this.rootWindowMessagePort.postMessage({
@@ -221,13 +223,13 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 		}
 	}
 
-	redefineLayout(layoutsByWindowId: {[windowId: string]: UiWorkSpaceLayoutItem}, addedViews: UiWorkSpaceLayoutView[]): void {
+	redefineLayout(layoutsByWindowId: {[windowId: string]: DtoWorkSpaceLayoutItem}, addedViews: DtoWorkSpaceLayoutView[]): void {
 		Object.keys(layoutsByWindowId).forEach(windowId => {
 			this.viewContainersByWindowId[windowId].redefineLayout(layoutsByWindowId[windowId], addedViews);
 		});
 	}
 
-	async moveViewToTopLevel(viewName: string, targetWindowId: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number) {
+	async moveViewToTopLevel(viewName: string, targetWindowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number) {
 		let sourceViewContainer = await this.getViewContainerByViewName(viewName);
 		let targetViewContainer = this.viewContainersByWindowId[targetWindowId];
 		if (sourceViewContainer === targetViewContainer) {
@@ -239,7 +241,7 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 		}
 	}
 
-	async moveViewRelativeToOtherView(viewName: string, existingViewName: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number) {
+	async moveViewRelativeToOtherView(viewName: string, existingViewName: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number) {
 		let sourceViewContainer = await this.getViewContainerByViewName(viewName);
 		let targetViewContainer = await this.getViewContainerByViewName(existingViewName);
 		if (sourceViewContainer === targetViewContainer) {
@@ -263,27 +265,27 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 		}
 	}
 
-	addViewToTopLevel(newView: UiWorkSpaceLayoutView, windowId: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void {
+	addViewToTopLevel(newView: DtoWorkSpaceLayoutView, windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number): void {
 		let targetViewContainer = this.viewContainersByWindowId[windowId];
 		targetViewContainer.addViewToTopLevel(newView, windowId, relativePosition, sizePolicy, referenceChildSize);
 	}
 
-	async addViewRelativeToOtherView(newView: UiWorkSpaceLayoutView, existingViewName: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number) {
+	async addViewRelativeToOtherView(newView: DtoWorkSpaceLayoutView, existingViewName: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: DtoSplitSizePolicy, referenceChildSize: number) {
 		let targetViewContainer = await this.getViewContainerByViewName(existingViewName);
 		targetViewContainer.addViewRelativeToOtherView(newView, existingViewName, relativePosition, sizePolicy, referenceChildSize);
 	}
 
-	async addViewAsTab(newView: UiWorkSpaceLayoutView, layoutItemId: string, select: boolean) {
+	async addViewAsTab(newView: DtoWorkSpaceLayoutView, layoutItemId: string, select: boolean) {
 		let targetViewContainer = await this.getViewContainerByItemId(layoutItemId);
 		targetViewContainer.addViewAsTab(newView, layoutItemId, select);
 	}
 
-	async addViewAsNeighbourTab(newView: UiWorkSpaceLayoutView, existingViewName: string, select: boolean) {
+	async addViewAsNeighbourTab(newView: DtoWorkSpaceLayoutView, existingViewName: string, select: boolean) {
 		let targetViewContainer = await this.getViewContainerByViewName(existingViewName);
 		targetViewContainer.addViewAsNeighbourTab(newView, existingViewName, select);
 	}
 
-	async refreshViewComponent(viewName: string, component: UiComponent) {
+	async refreshViewComponent(viewName: string, component: Component) {
 		let viewContainter: ViewContainer = await this.getViewContainerByViewName(viewName);
 		viewContainter.refreshViewComponent(viewName, component);
 	}
@@ -298,7 +300,7 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 		viewContainer.selectViewTab(viewName);
 	}
 
-	async setViewGroupPanelState(viewGroupId: string, panelState: UiViewGroupPanelState) {
+	async setViewGroupPanelState(viewGroupId: string, panelState: DtoViewGroupPanelState) {
 		let viewContainer = await this.getViewContainerByItemId(viewGroupId);
 		viewContainer.setViewGroupPanelState(viewGroupId, panelState);
 	}
@@ -334,7 +336,7 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 		}
 	}
 
-	private extractViewNamesFromLayoutDescriptor(item: UiWorkSpaceLayoutItem): string[] {
+	private extractViewNamesFromLayoutDescriptor(item: DtoWorkSpaceLayoutItem): string[] {
 		if (isTabPanelDescriptor(item)) {
 			return item.viewNames;
 		} else if (isSplitPanelDescriptor(item)) {
@@ -370,7 +372,7 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 		}
 	}
 
-	private extractItemIdsFromLayoutDescriptor(item: UiWorkSpaceLayoutItem): string[] {
+	private extractItemIdsFromLayoutDescriptor(item: DtoWorkSpaceLayoutItem): string[] {
 		if (isTabPanelDescriptor(item)) {
 			return [item.id];
 		} else if (isSplitPanelDescriptor(item)) {
@@ -385,9 +387,9 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 			.map(windowId => this.viewContainersByWindowId[windowId]);
 	}
 
-	private static createEmptyViewConfig(viewInfo: ViewInfo): UiWorkSpaceLayoutView {
+	private static createEmptyViewConfig(viewInfo: ViewInfo): DtoWorkSpaceLayoutView {
 		return {
-			_type: "UiWorkSpaceLayoutView",
+			_type: "DtoWorkSpaceLayoutView",
 			viewName: viewInfo.viewName,
 			tabIcon: viewInfo.tabIcon,
 			tabCaption: viewInfo.tabCaption,
@@ -400,11 +402,11 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 		this.localViewContainer.setToolbar(toolbar);
 	}
 
-	public async getCurrentLayout(): Promise<{[name: string]: UiWorkSpaceLayoutItem}> {
+	public async getCurrentLayout(): Promise<{[name: string]: DtoWorkSpaceLayoutItem}> {
 		if (this.isRootWindow) {
 			return Promise.all(this.viewContainers.map(vc => vc.getLayoutDescriptor()))
 				.then((windowLayoutDescriptors: WindowLayoutDescriptor[]) => {
-					let desciptorsByWindowId: {[windowId: string]: UiWorkSpaceLayoutItem} = {};
+					let desciptorsByWindowId: {[windowId: string]: DtoWorkSpaceLayoutItem} = {};
 					for (let windowLayoutDescriptor of windowLayoutDescriptors) {
 						desciptorsByWindowId[windowLayoutDescriptor.windowId] = windowLayoutDescriptor.layout;
 					}
@@ -429,7 +431,7 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 		this.localViewContainer.destroy();
 	}
 
-	fireViewGroupPanelStateChanged(viewGroupId: string, panelState: UiViewGroupPanelState) {
+	fireViewGroupPanelStateChanged(viewGroupId: string, panelState: DtoViewGroupPanelState) {
 		this.onViewGroupPanelStateChanged.fire({
 			viewGroupId: viewGroupId,
 			panelState: panelState
@@ -441,12 +443,12 @@ export class WorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig
 	}
 }
 
-export function isTabPanelDescriptor(item: UiWorkSpaceLayoutItem): item is UiWorkSpaceLayoutViewGroupItem {
-	return item._type === 'UiWorkSpaceLayoutViewGroupItem';
+export function isTabPanelDescriptor(item: DtoWorkSpaceLayoutItem): item is DtoWorkSpaceLayoutViewGroupItem {
+	return item._type === 'DtoWorkSpaceLayoutViewGroupItem';
 }
 
-export function isSplitPanelDescriptor(item: UiWorkSpaceLayoutItem): item is UiWorkSpaceLayoutSplitItem {
-	return item._type === 'UiWorkSpaceLayoutSplitItem';
+export function isSplitPanelDescriptor(item: DtoWorkSpaceLayoutItem): item is DtoWorkSpaceLayoutSplitItem {
+	return item._type === 'DtoWorkSpaceLayoutSplitItem';
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiWorkSpaceLayout", WorkSpaceLayout);
+

@@ -20,7 +20,11 @@
 package org.teamapps.ux.component.field.multicurrency;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoCurrencyField;
+import org.teamapps.dto.DtoCurrencyUnit;
+import org.teamapps.dto.DtoCurrencyValue;
+import org.teamapps.dto.DtoField;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;

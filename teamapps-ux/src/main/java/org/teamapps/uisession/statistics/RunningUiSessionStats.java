@@ -21,9 +21,9 @@ package org.teamapps.uisession.statistics;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import org.teamapps.dto.DtoCommand;
-import org.teamapps.dto.DtoEvent;
-import org.teamapps.dto.DtoQuery;
+import org.teamapps.dto.protocol.DtoCommand;
+import org.teamapps.dto.protocol.DtoEvent;
+import org.teamapps.dto.protocol.DtoQuery;
 import org.teamapps.uisession.UiSessionState;
 
 import java.util.ArrayDeque;

@@ -22,23 +22,23 @@ import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {
-	AbstractUiDateTimeFieldCommandHandler,
-	AbstractUiDateTimeFieldConfig,
-	AbstractUiDateTimeFieldEventSource
-} from "../../../generated/AbstractUiDateTimeFieldConfig";
-import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFormatDescriptorConfig";
+	DtoAbstractDateTimeFieldCommandHandler,
+	DtoAbstractDateTimeFieldConfig,
+	DtoAbstractDateTimeFieldEventSource
+} from "../../../generated/DtoAbstractDateTimeFieldConfig";
+import {DtoDateTimeFormatDescriptor} from "../../../generated/DtoDateTimeFormatDescriptor";
 import {DateTime} from "luxon";
 import {DateSuggestionEngine} from "./DateSuggestionEngine";
 import {createDateRenderer, createTimeRenderer} from "./datetime-rendering";
 
-export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiDateTimeFieldEventSource, AbstractUiDateTimeFieldCommandHandler {
+export abstract class DtoAbstractDateTimeField<C extends DtoAbstractDateTimeFieldConfig, V> extends UiField<C, V> implements DtoAbstractDateTimeFieldEventSource, DtoAbstractDateTimeFieldCommandHandler {
 
 	protected trivialDateTimeField: TrivialDateTimeField;
 	protected dateSuggestionEngine: DateSuggestionEngine;
 	protected dateRenderer: (time: DateTime) => string;
 	protected timeRenderer: (time: DateTime) => string;
 
-	protected initialize(config: AbstractUiDateTimeFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoAbstractDateTimeFieldConfig, context: TeamAppsUiContext) {
 		this.updateDateSuggestionEngine();
 		this.dateRenderer = this.createDateRenderer();
 		this.timeRenderer = this.createTimeRenderer();
@@ -52,7 +52,7 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			favorPastDates: config.favorPastDates
 		});
-		this.trivialDateTimeField.getMainDomElement().classList.add("AbstractUiDateTimeField");
+		this.trivialDateTimeField.getMainDomElement().classList.add("DtoAbstractDateTimeField");
 		this.trivialDateTimeField.onChange.addListener(() => this.commit());
 
 		this.trivialDateTimeField.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
@@ -119,7 +119,7 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		return null;
 	}
 
-	setLocaleAndFormats(locale: string, dateFormat: UiDateTimeFormatDescriptorConfig, timeFormat: UiDateTimeFormatDescriptorConfig): void {
+	setLocaleAndFormats(locale: string, dateFormat: DtoDateTimeFormatDescriptor, timeFormat: DtoDateTimeFormatDescriptor): void {
 		this._config.locale = locale;
 		this._config.dateFormat = dateFormat;
 		this._config.timeFormat = timeFormat;
@@ -130,12 +130,12 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 
 	setFavorPastDates(favorPastDates: boolean): void {
 		// TODO
-		this.logger.warn("TODO: implement AbstractUiDateTimeField.setFavorPastDates()")
+		this.logger.warn("TODO: implement DtoAbstractDateTimeField.setFavorPastDates()")
 	}
 
 	setShowDropDownButton(showDropDownButton: boolean): void {
 		// TODO
-		this.logger.warn("TODO: implement AbstractUiDateTimeField.setShowDropDownButton()")
+		this.logger.warn("TODO: implement DtoAbstractDateTimeField.setShowDropDownButton()")
 	}
 
 }

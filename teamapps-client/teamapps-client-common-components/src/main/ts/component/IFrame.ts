@@ -17,20 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiIFrameCommandHandler, UiIFrameConfig} from "../generated/UiIFrameConfig";
-import {parseHtml} from "../Common";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {AbstractComponent, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoIFrame, DtoIFrameCommandHandler} from "../generated";
 
-export class IFrame extends AbstractUiComponent<UiIFrameConfig> implements UiIFrameCommandHandler {
+
+export class IFrame extends AbstractComponent<DtoIFrame> implements DtoIFrameCommandHandler {
 
 	private $iframe: HTMLIFrameElement;
 
-	constructor(config: UiIFrameConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoIFrame, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$iframe = parseHtml(`<iframe class="UiIFrame" src="${config.url}"></iframe>`);
+		this.$iframe = parseHtml(`<iframe class="DtoIFrame" src="${config.url}"></iframe>`);
 		// this.$iframe.addEventListener("load", e => {
 		// 	console.log(`load: ${this.$iframe.src}`);
 		// });
@@ -50,4 +47,4 @@ export class IFrame extends AbstractUiComponent<UiIFrameConfig> implements UiIFr
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiIFrame", IFrame);
+

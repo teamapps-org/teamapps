@@ -22,7 +22,7 @@
 ///<reference types="slickgrid/slick.rowselectionmodel"/>
 
 
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {
 	UiTable_CellClickedEvent,
 	UiTable_CellEditingStartedEvent,
@@ -34,32 +34,32 @@ import {
 	UiTable_FieldOrderChangeEvent, UiTable_RowsSelectedEvent,
 	UiTable_SortingChangedEvent,
 	UiTableCommandHandler,
-	UiTableConfig,
+	DtoTable,
 	UiTableEventSource
-} from "../../generated/UiTableConfig";
+} from "../../generated/DtoTable";
 import {UiField, ValueChangeEventData} from "../formfield/UiField";
 import {DEFAULT_TEMPLATES} from "../trivial-components/TrivialCore";
-import {UiTableColumnConfig} from "../../generated/UiTableColumnConfig";
+import {DtoTableColumn} from "../../generated/DtoTableColumn";
 import {UiCompositeFieldTableCellEditor} from "./UiCompositeFieldTableCellEditor";
 import {debouncedMethod, DebounceMode} from "../util/debounce";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {arraysEqual, closestAncestor, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml} from "../Common";
 import {UiSortDirection} from "../../generated/UiSortDirection";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+
 import {UiGenericTableCellEditor} from "./UiGenericTableCellEditor";
 import {FixedSizeTableCellEditor} from "./FixedSizeTableCellEditor";
-import {UiHierarchicalClientRecordConfig} from "../../generated/UiHierarchicalClientRecordConfig";
+import {DtoHierarchicalClientRecord} from "../../generated/DtoHierarchicalClientRecord";
 import {TableDataProvider} from "./TableDataProvider";
 import {UiButton, UiCompositeField, UiFileField, UiMultiLineTextField, UiRichTextEditor} from "..";
-import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
+import {DtoFieldMessage} from "../../generated/DtoFieldMessage";
 import {FieldMessagesPopper, getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {nonRecursive} from "../util/nonRecursive";
 import {throttledMethod} from "../util/throttle";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
-import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
+import {DtoTableClientRecord} from "../../generated/DtoTableClientRecord";
 import {UiTableRowSelectionModel} from "./UiTableRowSelectionModel";
 import {ContextMenu} from "../micro-components/ContextMenu";
 import {UiComponent} from "../UiComponent";
@@ -74,7 +74,7 @@ interface Column extends Slick.Column<any> {
 	width: number;
 	minWidth?: number;
 	maxWidth?: number;
-	formatter: (row: number, cell: number, value: any, columnDef: Slick.Column<UiTableClientRecordConfig>, dataContext: UiTableClientRecordConfig) => string;
+	formatter: (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => string;
 	asyncEditorLoading?: boolean;
 	autoEdit?: boolean;
 	focusable: boolean;
@@ -85,8 +85,8 @@ interface Column extends Slick.Column<any> {
 	cannotTriggerInsert?: boolean,
 	unselectable?: boolean,
 	hiddenIfOnlyEmptyCellsVisible: boolean,
-	messages?: UiFieldMessageConfig[],
-	uiConfig?: UiTableColumnConfig,
+	messages?: DtoFieldMessage[],
+	uiConfig?: DtoTableColumn,
 	visible: boolean
 }
 
@@ -99,7 +99,7 @@ const backgroundColorCssClassesByMessageSeverity = {
 
 type FieldsByName = { [fieldName: string]: UiField };
 
-export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTableCommandHandler, UiTableEventSource {
+export class UiTable extends AbstractComponent<DtoTable> implements UiTableCommandHandler, UiTableEventSource {
 
 	public readonly onCellEditingStarted: TeamAppsEvent<UiTable_CellEditingStartedEvent> = new TeamAppsEvent();
 	public readonly onCellEditingStopped: TeamAppsEvent<UiTable_CellEditingStoppedEvent> = new TeamAppsEvent();
@@ -135,7 +135,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private rowSelectionCausedByApiCall: boolean;
 
-	constructor(config: UiTableConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoTable, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$component = parseHtml(`<div class="UiTable"">
     <div class="slick-table"></div>
@@ -162,12 +162,12 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		});
 	}
 
-	private isRowExpanded(item: UiHierarchicalClientRecordConfig): boolean {
+	private isRowExpanded(item: DtoHierarchicalClientRecord): boolean {
 		return item.expanded;
 	}
 
 	@executeWhenFirstDisplayed()
-	private createSlickGrid(config: UiTableConfig, $table: HTMLElement) {
+	private createSlickGrid(config: DtoTable, $table: HTMLElement) {
 		this.allColumns = this._createColumns();
 
 		if (config.showRowCheckBoxes) {
@@ -175,7 +175,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			this.allColumns.unshift(checkboxSelector.getColumnDefinition() as Column);
 		}
 		if (config.showNumbering) {
-			const RowNumberFormatter: Slick.Formatter<UiTableClientRecordConfig> = (row: number, cell: number, value: any, columnDef: Slick.Column<UiTableClientRecordConfig>, dataContext: UiTableClientRecordConfig) => {
+			const RowNumberFormatter: Slick.Formatter<DtoTableClientRecord> = (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => {
 				return "" + (row + 1);
 			};
 			this.allColumns.unshift({
@@ -281,7 +281,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			this.dataProvider.setSelectedRows(args.rows);
 			this.updateSelectionFramePosition(true);
 		});
-		this._grid.onCellChange.subscribe((eventData: EventData, args: Slick.OnCellChangeEventArgs<UiTableClientRecordConfig>) => {
+		this._grid.onCellChange.subscribe((eventData: EventData, args: Slick.OnCellChangeEventArgs<DtoTableClientRecord>) => {
 
 			// The problem with this approach is we do not get the intermediate committed change events!
 			// let columnPropertyName = this.getVisibleColumns()[args.cell].id;
@@ -289,7 +289,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 			this.updateSelectionFramePosition(true);
 		});
-		this._grid.onClick.subscribe((e: MouseEvent, args: Slick.OnClickEventArgs<UiTableClientRecordConfig>) => {
+		this._grid.onClick.subscribe((e: MouseEvent, args: Slick.OnClickEventArgs<DtoTableClientRecord>) => {
 			setTimeout(/* make sure the table updated its activeCell property! */ () => {
 				const column = this._grid.getColumns()[args.cell];
 				let fieldName = column.id;
@@ -303,7 +303,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 						// this.dropDown.setContentComponent(null);
 						// this.dropDown.open($buttonElement, {
 						// 	width: uiButton.minDropDownWidth,
-						// 	minHeight: uiButtonConfig.minDropDownHeight
+						// 	minHeight: DtoButton.minDropDownHeight
 						// });
 					} else if (uiField instanceof UiFileField) {
 						let $templateWrapper = $((<any>e).target).closest(".custom-entry-template-wrapper");
@@ -509,7 +509,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		return columns;
 	}
 
-	private createSlickColumnConfig(columnConfig: UiTableColumnConfig): Column {
+	private createSlickColumnConfig(columnConfig: DtoTableColumn): Column {
 		const uiField = columnConfig.field as UiField;
 		this.prepareEditorField(columnConfig.propertyName, uiField);
 
@@ -593,10 +593,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				this.logger.warn("TODO: create cell formatter for UiCompositeField!");
 				return null;
 				// return (row: number, cell: number, value: any, columnDef: Slick.Column<TableDataProviderItem>, dataContext: TableDataProviderItem) => {
-				// return field.getReadOnlyHtml(field as UiCompositeFieldConfig, {_type: "UiRecordValue", value: dataContext}, this._context, columnDef.width + 1);
+				// return field.getReadOnlyHtml(field as DtoCompositeField, {_type: "UiRecordValue", value: dataContext}, this._context, columnDef.width + 1);
 				// };
 			} else if (field.getReadOnlyHtml) {
-				return (row: number, cell: number, value: any, columnDef: Slick.Column<UiTableClientRecordConfig>, dataContext: UiTableClientRecordConfig) => {
+				return (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => {
 					return field.getReadOnlyHtml(dataContext.values[columnDef.id], columnDef.width);
 				};
 			} else {
@@ -605,7 +605,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		};
 
 		const innerCellFormatter = createInnerCellFormatter(); // may be undefined!
-		return (row: number, cell: number, value: any, columnDef: Slick.Column<UiTableClientRecordConfig>, dataContext: UiTableClientRecordConfig) => {
+		return (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => {
 			const innerHtml = innerCellFormatter ? innerCellFormatter(row, cell, value, columnDef, dataContext) : "###";
 			const highestMessageSeverity = getHighestSeverity(dataContext.messages && dataContext.messages[columnDef.id], null);
 			const fieldCssClasses: string[] = [];
@@ -642,7 +642,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	@executeWhenFirstDisplayed()
-	updateData(startIndex: number, recordIds: number[], newRecords: UiTableClientRecordConfig[], totalNumberOfRecords: number): any {
+	updateData(startIndex: number, recordIds: number[], newRecords: DtoTableClientRecord[], totalNumberOfRecords: number): any {
 		let editorCoordinates: { recordId: any; fieldName: any };
 		editorCoordinates = this._grid.getCellEditor() != null ? {
 			recordId: this.getActiveCellRecordId(),
@@ -705,10 +705,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 	}
 
-	// private cellMessages: {[recordId: number]: {[fieldName: string]: UiFieldMessageConfig[]}} = {};
+	// private cellMessages: {[recordId: number]: {[fieldName: string]: DtoFieldMessage[]}} = {};
 	private fieldMessagePopper = new FieldMessagesPopper();
 
-	setSingleCellMessages(recordId: number, fieldName: string, messages: UiFieldMessageConfig[]): void {
+	setSingleCellMessages(recordId: number, fieldName: string, messages: DtoFieldMessage[]): void {
 		if (messages == null) {
 			messages = [];
 		}
@@ -730,7 +730,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 	}
 
-	setColumnMessages(fieldName: string, messages: UiFieldMessageConfig[]): void {
+	setColumnMessages(fieldName: string, messages: DtoFieldMessage[]): void {
 		const column = this.getColumnById(fieldName);
 		column.messages = messages;
 		const columnCssClass = this.getColumnCssClass(column);
@@ -885,7 +885,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private getActiveCellRecordId(): any {
 		if (this._grid.getActiveCell()) {
-			let dataItem: UiTableClientRecordConfig = this._grid.getDataItem(this._grid.getActiveCell().row);
+			let dataItem: DtoTableClientRecord = this._grid.getDataItem(this._grid.getActiveCell().row);
 			return dataItem ? dataItem.id : null;
 		}
 	}
@@ -932,7 +932,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	@executeWhenFirstDisplayed()
-	addColumns(columnConfigs: UiTableColumnConfig[], index: number): void {
+	addColumns(columnConfigs: DtoTableColumn[], index: number): void {
 		const slickColumnConfigs = this._grid.getColumns();
 		const newSlickColumnConfigs = columnConfigs.map(columnConfig => this.createSlickColumnConfig(columnConfig));
 		slickColumnConfigs.splice(index, 0, ...newSlickColumnConfigs);
@@ -981,4 +981,4 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiTable", UiTable);
+

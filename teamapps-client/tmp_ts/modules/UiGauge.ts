@@ -18,22 +18,22 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiGaugeCommandHandler, UiGaugeConfig} from "../generated/UiGaugeConfig";
-import {UiGaugeOptionsConfig} from "../generated/UiGaugeOptionsConfig";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {UiGaugeCommandHandler, DtoGauge} from "../generated/DtoGauge";
+import {DtoGaugeOptions} from "../generated/DtoGaugeOptions";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {LinearGauge, RadialGauge} from "canvas-gauges";
 import {debouncedMethod, DebounceMode} from "./util/debounce";
 import {parseHtml} from "./Common";
 
-export class UiGauge extends AbstractUiComponent<UiGaugeConfig> implements UiGaugeCommandHandler {
+export class UiGauge extends AbstractComponent<DtoGauge> implements UiGaugeCommandHandler {
 	private $main: HTMLElement;
 	private gauge: LinearGauge;
 	private value: number;
 
-	constructor(config: UiGaugeConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoGauge, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiGauge" data-teamapps-id="${this.getId()}"><canvas></canvas></div>`);
 		this.value = config.options.value;
@@ -80,13 +80,13 @@ export class UiGauge extends AbstractUiComponent<UiGaugeConfig> implements UiGau
 		}
 	}
 
-	setOptions(options: UiGaugeOptionsConfig): void {
+	setOptions(options: DtoGaugeOptions): void {
 		let options1 = this.createOptions(options);
 		this.gauge.update(options1);
 
 	}
 
-	createOptions(options: UiGaugeOptionsConfig): any {
+	createOptions(options: DtoGaugeOptions): any {
 		let gaugeOptions = {} as any;
 		if (typeof options.borderRadius !== "undefined") gaugeOptions.borderRadius = options.borderRadius;
 		if (typeof options.barBeginCircle !== "undefined") gaugeOptions.barBeginCircle = options.barBeginCircle;
@@ -200,4 +200,4 @@ export class UiGauge extends AbstractUiComponent<UiGaugeConfig> implements UiGau
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiGauge", UiGauge);
+

@@ -132,6 +132,12 @@
 
             <dependency>
                 <groupId>org.teamapps</groupId>
+                <artifactId>teamapps-client-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-client-common-components</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 
 enum ProgressStatus {
 	NOT_YET_STARTED = "not-yet-started",

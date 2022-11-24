@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class Map2 extends Component {
 	required Dictionary<Template> markerTemplates;
 	String baseApiUrl;
@@ -26,9 +28,9 @@ managed class Map2 extends Component {
 	String styleUrl;
 	boolean displayAttributionControl;
 
-	double zoomLevel = 5;
+	double zoomLevel;
 	MapLocation mapPosition;
-	Dictionary<AbstractUiMapShape> shapes;
+	Dictionary<AbstractMapShape> shapes;
 	List<MapMarkerClientRecord> markers;
 	MapMarkerCluster markerCluster;
 
@@ -41,9 +43,9 @@ managed class Map2 extends Component {
 
 	command setHeatMap(HeatMapData data);
 
-	command addShape(String shapeId, AbstractUiMapShape shape);
-	command updateShape(String shapeId, AbstractUiMapShape shape);
-	command changeShape(String shapeId, AbstractUiMapShapeChange change);
+	command addShape(String shapeId, AbstractMapShape shape);
+	command updateShape(String shapeId, AbstractMapShape shape);
+	command changeShape(String shapeId, AbstractMapShapeChange change);
 	command removeShape(String shapeId);
 	command clearShapes();
 
@@ -60,7 +62,7 @@ managed class Map2 extends Component {
 	event locationChanged(MapLocation center, MapArea displayedArea);
 	event mapClicked(MapLocation location);
 	event markerClicked(int markerId);
-	event shapeDrawn(String shapeId, AbstractUiMapShape shape);
+	event shapeDrawn(String shapeId, AbstractMapShape shape);
 }
 
 

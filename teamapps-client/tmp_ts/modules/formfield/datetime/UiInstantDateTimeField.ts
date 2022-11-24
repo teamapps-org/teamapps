@@ -19,17 +19,17 @@
  */
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {AbstractUiDateTimeField} from "./AbstractUiDateTimeField";
+import {DtoAbstractDateTimeField} from "./DtoAbstractDateTimeField";
 import {
 	UiInstantDateTimeFieldCommandHandler,
-	UiInstantDateTimeFieldConfig,
+	DtoInstantDateTimeField,
 	UiInstantDateTimeFieldEventSource
-} from "../../../generated/UiInstantDateTimeFieldConfig";
+} from "../../../generated/DtoInstantDateTimeField";
 import {DateTime} from "luxon";
 
-export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDateTimeFieldConfig, number> implements UiInstantDateTimeFieldEventSource, UiInstantDateTimeFieldCommandHandler {
+export class UiInstantDateTimeField extends DtoAbstractDateTimeField<DtoInstantDateTimeField, number> implements UiInstantDateTimeFieldEventSource, UiInstantDateTimeFieldCommandHandler {
 
-	protected initialize(config: UiInstantDateTimeFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoInstantDateTimeField, context: TeamAppsUiContext) {
 		super.initialize(config, context);
 		this.getMainInnerDomElement().classList.add("UiDateTimeField");
 	}
@@ -90,4 +90,4 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiInstantDateTimeField", UiInstantDateTimeField);
+

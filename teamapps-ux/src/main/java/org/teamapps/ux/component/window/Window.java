@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.window;
 
-import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.common.format.RgbaColor;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoWindow;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
@@ -65,7 +65,7 @@ public class Window extends Panel {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoWindow window = new DtoWindow();
 		mapUiPanelProperties(window);
 		window.setModal(modal);

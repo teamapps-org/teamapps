@@ -18,13 +18,13 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {keyCodes} from "./trivial-components/TrivialCore";
-import {UiCachedImageConfig} from "../generated/UiCachedImageConfig";
+import {DtoCachedImage} from "../generated/DtoCachedImage";
 import {applyDisplayMode, enableScrollViaDragAndDrop, parseHtml} from "./Common";
-import {UiImageDisplay_ImageDisplayedEvent, UiImageDisplay_ImagesRequestEvent, UiImageDisplayCommandHandler, UiImageDisplayConfig, UiImageDisplayEventSource} from "../generated/UiImageDisplayConfig";
+import {UiImageDisplay_ImageDisplayedEvent, UiImageDisplay_ImagesRequestEvent, UiImageDisplayCommandHandler, DtoImageDisplay, UiImageDisplayEventSource} from "../generated/DtoImageDisplay";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
@@ -36,7 +36,7 @@ interface UiCachedImage {
 	naturalHeight?: number;
 }
 
-export class UiImageDisplay extends AbstractUiComponent<UiImageDisplayConfig> implements UiImageDisplayCommandHandler, UiImageDisplayEventSource {
+export class UiImageDisplay extends AbstractComponent<DtoImageDisplay> implements UiImageDisplayCommandHandler, UiImageDisplayEventSource {
 
 	public readonly onImagesRequest: TeamAppsEvent<UiImageDisplay_ImagesRequestEvent> = new TeamAppsEvent<UiImageDisplay_ImagesRequestEvent>();
 	public readonly onImageDisplayed: TeamAppsEvent<UiImageDisplay_ImageDisplayedEvent> = new TeamAppsEvent<UiImageDisplay_ImageDisplayedEvent>();
@@ -60,7 +60,7 @@ export class UiImageDisplay extends AbstractUiComponent<UiImageDisplayConfig> im
 	private displayMode: UiPageDisplayMode;
 	private currentImageIndex: number;
 
-	constructor(config: UiImageDisplayConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoImageDisplay, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$componentWrapper = parseHtml(
@@ -124,7 +124,7 @@ export class UiImageDisplay extends AbstractUiComponent<UiImageDisplayConfig> im
 		}
 	};
 
-	public setCachedImages(startIndex: number, images: UiCachedImageConfig[], totalNumberOfRecords: number) {
+	public setCachedImages(startIndex: number, images: DtoCachedImage[], totalNumberOfRecords: number) {
 		this.totalNumberOfRecords = totalNumberOfRecords;
 
 		images.forEach((imageConfig, index) => {
@@ -210,4 +210,4 @@ export class UiImageDisplay extends AbstractUiComponent<UiImageDisplayConfig> im
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiImageDisplay", UiImageDisplay);
+

@@ -212,7 +212,7 @@ export class Globals {
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("Globals", Globals);
+
 
 
 let keyboardEventSettings: { unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean } = {

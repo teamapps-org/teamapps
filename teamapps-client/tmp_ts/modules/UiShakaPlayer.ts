@@ -22,17 +22,17 @@ import "shaka-player/dist/controls.css"
 import "@less/components/UiShakaPlayer.less"
 
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiShakaPlayer_EndedEvent,
 	UiShakaPlayer_ErrorLoadingEvent, UiShakaPlayer_ManifestLoadedEvent,
 	UiShakaPlayer_TimeUpdateEvent,
 	UiShakaPlayerCommandHandler,
-	UiShakaPlayerConfig,
+	DtoShakaPlayer,
 	UiShakaPlayerEventSource,
-} from "../generated/UiShakaPlayerConfig";
+} from "../generated/DtoShakaPlayer";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 import {UiPosterImageSize} from "../generated/UiPosterImageSize";
@@ -49,10 +49,10 @@ import ManifestConfiguration = shaka.extern.ManifestConfiguration;
 import ManifestParser = shaka.extern.ManifestParser;
 import PlayerInterface = shaka.extern.ManifestParser.PlayerInterface;
 import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
-import {UiShakaManifestConfig} from "../generated/UiShakaManifestConfig";
+import {DtoShakaManifest} from "../generated/DtoShakaManifest";
 import Manifest = shaka.extern.Manifest;
 
-export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> implements UiShakaPlayerCommandHandler, UiShakaPlayerEventSource {
+export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements UiShakaPlayerCommandHandler, UiShakaPlayerEventSource {
 
 	public readonly onManifestLoaded: TeamAppsEvent<UiShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();
 	public readonly onTimeUpdate: TeamAppsEvent<UiShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
@@ -65,7 +65,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 
 	private ui: Overlay;
 
-	constructor(config: UiShakaPlayerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoShakaPlayer, context: TeamAppsUiContext) {
 		super(config, context);
 
 		console.log(config.hlsUrl, config.dashUrl, config.posterImageUrl)
@@ -124,7 +124,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 		this.setUrls(config.hlsUrl, config.dashUrl);
 	}
 
-	private createUiManifest(manifest: Manifest): UiShakaManifestConfig {
+	private createUiManifest(manifest: Manifest): DtoShakaManifest {
 		return {
 			variants: manifest.variants.map(v => {
 				return {
@@ -267,4 +267,4 @@ class DistinctAudioTracksManifestParserDecorator implements ManifestParser {
 
 shaka.polyfill.installAll();
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiShakaPlayer", UiShakaPlayer);
+

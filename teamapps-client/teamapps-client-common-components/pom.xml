@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-communication</artifactId>
+            <artifactId>teamapps-client-core</artifactId>
         </dependency>
     </dependencies>
 

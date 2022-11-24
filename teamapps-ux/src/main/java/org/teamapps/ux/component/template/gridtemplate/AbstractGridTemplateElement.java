@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
@@ -28,7 +28,7 @@ import org.teamapps.ux.component.format.VerticalElementAlignment;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractTemplateElement<C extends AbstractTemplateElement> {
+public abstract class AbstractGridTemplateElement<C extends AbstractGridTemplateElement> {
 
 	protected String propertyName;
 	protected int row;
@@ -40,17 +40,17 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 	protected Spacing margin;
 	protected Color backgroundColor;
 
-	public AbstractTemplateElement(String propertyName) {
+	public AbstractGridTemplateElement(String propertyName) {
 		this.propertyName = propertyName;
 	}
 
-	public AbstractTemplateElement(String propertyName, int row, int column) {
+	public AbstractGridTemplateElement(String propertyName, int row, int column) {
 		this.propertyName = propertyName;
 		this.row = row;
 		this.column = column;
 	}
 
-	public AbstractTemplateElement(String propertyName, int row, int column, int rowSpan, int colSpan) {
+	public AbstractGridTemplateElement(String propertyName, int row, int column, int rowSpan, int colSpan) {
 		this.propertyName = propertyName;
 		this.row = row;
 		this.column = column;
@@ -58,7 +58,7 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 		this.colSpan = colSpan;
 	}
 
-	public AbstractTemplateElement(String propertyName, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment) {
+	public AbstractGridTemplateElement(String propertyName, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment) {
 		this.propertyName = propertyName;
 		this.row = row;
 		this.column = column;
@@ -117,7 +117,7 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 		return horizontalAlignment;
 	}
 
-	public AbstractTemplateElement<C> setHorizontalAlignment(HorizontalElementAlignment horizontalAlignment) {
+	public AbstractGridTemplateElement<C> setHorizontalAlignment(HorizontalElementAlignment horizontalAlignment) {
 		this.horizontalAlignment = horizontalAlignment;
 		return this;
 	}
@@ -126,7 +126,7 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 		return verticalAlignment;
 	}
 
-	public AbstractTemplateElement<C> setVerticalAlignment(VerticalElementAlignment verticalAlignment) {
+	public AbstractGridTemplateElement<C> setVerticalAlignment(VerticalElementAlignment verticalAlignment) {
 		this.verticalAlignment = verticalAlignment;
 		return this;
 	}
@@ -135,23 +135,23 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 		return margin;
 	}
 
-	public AbstractTemplateElement<C> setMargin(Spacing margin) {
+	public AbstractGridTemplateElement<C> setMargin(Spacing margin) {
 		this.margin = margin;
 		return this;
 	}
 
-	public abstract DtoAbstractTemplateElement createUiTemplateElement();
+	public abstract DtoAbstractGridTemplateElement createUiTemplateElement();
 
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 
-	public AbstractTemplateElement<C> setBackgroundColor(Color backgroundColor) {
+	public AbstractGridTemplateElement<C> setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 		return this;
 	}
 
-	protected void mapAbstractTemplateElementAttributesToUiElement(DtoAbstractTemplateElement uiElement) {
+	protected void mapAbstractGridTemplateElementAttributesToUiElement(DtoAbstractGridTemplateElement uiElement) {
 		uiElement.setRowSpan(rowSpan);
 		uiElement.setColSpan(colSpan);
 		uiElement.setHorizontalAlignment(horizontalAlignment.toUiHorizontalElementAlignment());

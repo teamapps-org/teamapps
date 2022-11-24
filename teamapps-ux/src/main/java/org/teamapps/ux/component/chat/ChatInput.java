@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.chat;
 
 import org.teamapps.dto.DtoChatInput;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;

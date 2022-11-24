@@ -18,8 +18,8 @@
  * =========================LICENSE_END==================================
  */
 import {DtoComponent as DtoComponentConfig} from "./generated";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {Component} from "./component/Component";
+import {TeamAppsUiContext} from "./TeamAppsUiContext";
 
 type ComponentClass<T extends Component> = { new(config: DtoComponentConfig, context: TeamAppsUiContext): T };
 

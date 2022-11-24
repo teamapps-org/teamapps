@@ -19,16 +19,18 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class NumberField extends Field implements TextInputHandlingField {
   	String locale;
-	int precision = -1; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
+	int precision; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
 	String placeholderText;
 	boolean showClearButton;
-	double minValue = Double.MIN_VALUE;
-    double maxValue = Double.MAX_VALUE;
-    NumberFieldSliderMode sliderMode = NumberFieldSliderMode.DISABLED;
-    double sliderStep = 1;
-    boolean commitOnSliderChange = true;
+	double minValue;
+    double maxValue;
+    NumberFieldSliderMode sliderMode;
+    double sliderStep;
+    boolean commitOnSliderChange;
 
     command setMinValue(double min);
     command setMaxValue(double max);

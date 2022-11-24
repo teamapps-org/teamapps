@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 /**********************************************************************************************************************
 *
 *                                                 F O R M   D E S I G N E R
@@ -44,19 +46,19 @@ managed class PropertyEditor extends Component {
 ***********************************************************************************************************************/
 
 managed class DummyComponent extends Component {
-	String text = "This is a dummy component.";
+	String text;
 	event clicked(int clickCount);
 	command setText(String text);
 }
 
 managed class DummyField extends Field {
-	String text = "This is a dummy field.";
+	String text;
 }
 
 
 managed class VerticalLayout extends Component {
 	List<Component*> components;
-	Integer fixedChildHeight = null; // deprecated. only for testing!
+	Integer fixedChildHeight; // deprecated. only for testing!
 
 	command addComponent(Component* component);
 	command removeComponent(Component* component);
@@ -66,10 +68,10 @@ managed class TemplateTestContainer extends Component {
 	required GridTemplate template;
 	required Object data;
 
-	int minContainerWidth = 0;
-	int minContainerHeight = 0;
-	int maxContainerWidth = 0;
-	int maxContainerHeight = 0;
+	int minContainerWidth;
+	int minContainerHeight;
+	int maxContainerWidth;
+	int maxContainerHeight;
 	String description;
 }
 

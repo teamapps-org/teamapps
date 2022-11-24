@@ -18,15 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiDocumentViewerCommandHandler, UiDocumentViewerConfig} from "../generated/UiDocumentViewerConfig";
+import {UiDocumentViewerCommandHandler, DtoDocumentViewer} from "../generated/DtoDocumentViewer";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {css, enableScrollViaDragAndDrop, generateUUID, parseHtml} from "./Common";
-import {UiBorderConfig} from "../generated/UiBorderConfig";
+import {DtoBorder} from "../generated/DtoBorder";
 import {createUiBorderCssString, createUiShadowCssString} from "./util/CssFormatUtil";
-import {UiShadowConfig} from "../generated/UiShadowConfig";
+import {DtoShadow} from "../generated/DtoShadow";
 
 interface Page {
 	$img: HTMLElement;
@@ -34,7 +34,7 @@ interface Page {
 	naturalHeight?: number;
 }
 
-export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig> implements UiDocumentViewerCommandHandler {
+export class UiDocumentViewer extends AbstractComponent<DtoDocumentViewer> implements UiDocumentViewerCommandHandler {
 
 	private $componentWrapper: HTMLElement;
 	private $pagesContainerWrapper: HTMLElement;
@@ -45,11 +45,11 @@ export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig
 
 	private uuidClass: string;
 	private $styleTag: HTMLElement;
-	private pageBorder: UiBorderConfig;
+	private pageBorder: DtoBorder;
 	private pageSpacing: number;
-	private pageShadow: UiShadowConfig;
+	private pageShadow: DtoShadow;
 
-	constructor(config: UiDocumentViewerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoDocumentViewer, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.uuidClass = `UiDocumentViewer-${generateUUID()}`;
@@ -176,7 +176,7 @@ export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig
 		return this.$componentWrapper;
 	}
 
-	setPageBorder(pageBorder: UiBorderConfig): void {
+	setPageBorder(pageBorder: DtoBorder): void {
 		this.pageBorder = pageBorder;
 		this.updateStyles();
 	}
@@ -190,7 +190,7 @@ export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig
 		this.updateStyles();
 	}
 
-	setPageShadow(pageShadow: UiShadowConfig): void {
+	setPageShadow(pageShadow: DtoShadow): void {
 		this.pageShadow = pageShadow;
 		this.updateStyles();
 	}
@@ -208,4 +208,4 @@ export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiDocumentViewer", UiDocumentViewer);
+

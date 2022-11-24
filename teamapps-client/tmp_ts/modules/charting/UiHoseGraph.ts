@@ -20,18 +20,18 @@
 import {Line} from "d3-shape";
 import * as d3 from "d3";
 import {CurveTypeToCurveFactory, DataPoint, SVGSelection} from "./Charting";
-import {AbstractUiGraph} from "./AbstractUiGraph";
+import {DtoAbstractGraph} from "./DtoAbstractGraph";
 import {LineGraphDataStore} from "./DataStore";
 import {D3Area2} from "./D3Area2";
 import {isVisibleColor} from "../Common";
-import {UiHoseGraphConfig} from "../../generated/UiHoseGraphConfig";
-import {UiHoseGraphDataConfig} from "../../generated/UiHoseGraphDataConfig";
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+import {DtoHoseGraph} from "../../generated/DtoHoseGraph";
+import {DtoHoseGraphData} from "../../generated/DtoHoseGraphData";
+import {DtoLongInterval} from "../../generated/DtoLongInterval";
 import {IntervalManager} from "../util/IntervalManager";
-import {UiLineGraphDataPointConfig} from "../../generated/UiLineGraphDataPointConfig";
+import {DtoLineGraphDataPoint} from "../../generated/DtoLineGraphDataPoint";
 import * as log from "loglevel";
 
-export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphDataConfig> {
+export class UiHoseGraph extends DtoAbstractGraph<DtoHoseGraph, DtoHoseGraphData> {
 
 	private static logger: log.Logger = log.getLogger("UiHoseGraph");
 
@@ -58,7 +58,7 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 
 	constructor(
 		timeGraphId: string,
-		config: UiHoseGraphConfig,
+		config: DtoHoseGraph,
 		private dropShadowFilterId: string
 	) {
 		super(config, timeGraphId);
@@ -77,7 +77,7 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 		this.dataStores.forEach(ds => ds.markIntervalAsCovered(zoomLevel, interval));
 	}
 
-	public addData(zoomLevel: number, data: UiHoseGraphDataConfig): void {
+	public addData(zoomLevel: number, data: DtoHoseGraphData): void {
 		if (data.upperLineData != null) {
 			this.upperLineDataStore.addData(zoomLevel, data.upperLineData);
 		}
@@ -139,21 +139,21 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 		this.$defs.select(".area-stripe-fill path")
 			.attr("stroke", this.config.areaColor ?? "#00000000");
 
-		let areaDataMax: UiLineGraphDataPointConfig[];
+		let areaDataMax: DtoLineGraphDataPoint[];
 		if (isVisibleColor(this.config.upperLineColor)) {
 			areaDataMax = this.upperLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints;
 		} else {
 			UiHoseGraph.logger.info("NOT drawing upperLine, since line color is invisible!")
 			areaDataMax = [];
 		}
-		let lineData: UiLineGraphDataPointConfig[];
+		let lineData: DtoLineGraphDataPoint[];
 		if (isVisibleColor(this.config.middleLineColor)) {
 			lineData = this.middleLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints;
 		} else {
 			UiHoseGraph.logger.info("NOT drawing middleLine, since line color is invisible!")
 			lineData = [];
 		}
-		let areaDataMin: UiLineGraphDataPointConfig[];
+		let areaDataMin: DtoLineGraphDataPoint[];
 		if (isVisibleColor(this.config.lowerLineColor)) {
 			areaDataMin = this.lowerLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints;
 		} else {
@@ -194,7 +194,7 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 			.attr("d", this.area.writePath(areaDataMin, areaDataMax))
 			.attr("fill", this.config.stripedArea ? `url(#area-stripe-fill-${this.timeGraphId}-${this.config.id})`: this.config.areaColor ?? "#00000000");
 
-		let $dotsDataSelection = this.$dots.selectAll<SVGCircleElement, UiHoseGraphDataConfig>("circle.dot")
+		let $dotsDataSelection = this.$dots.selectAll<SVGCircleElement, DtoHoseGraphData>("circle.dot")
 			.data(this.config.dataDotRadius > 0 ? lineData : [])
 			.join("circle")
 			.classed("dot", true)
@@ -212,7 +212,7 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 			.attr("visibility", (this.config.yZeroLineVisible && this.scaleY.domain()[0] !== 0) ? "visible" : "hidden");
 	}
 
-	setConfig(lineFormat: UiHoseGraphConfig) {
+	setConfig(lineFormat: DtoHoseGraph) {
 		super.setConfig(lineFormat);
 		this.initLinesAndColorScale();
 	}

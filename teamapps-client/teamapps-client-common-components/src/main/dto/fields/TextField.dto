@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed interface TextInputHandlingField {
 	event textInput(String enteredString);
 	event specialKeyPressed(SpecialKey key); // CAUTION: unfiltered at the moment. E.g. ComboBox selection via ENTER or TextField reset via ESCAPE
@@ -32,7 +34,7 @@ managed class TextField extends Field implements TextInputHandlingField {
 	int maxCharacters; //if > 0, do not allow to enter more than this number of characters
 	boolean showClearButton;
 	String placeholderText;
-	boolean autofill = false; // browser feature
+	boolean autofill; // browser feature
 
 	command setMaxCharacters(int maxCharacters);
 	command setShowClearButton(boolean showClearButton);
@@ -42,14 +44,14 @@ managed class TextField extends Field implements TextInputHandlingField {
 managed class PasswordField extends TextField {
 	boolean sendValueAsMd5;
 	String salt; // if sendValueAsMd5 == true and salt != null, then submit md5(salt + md5(fieldValue))
-	boolean autofill = false;
+	boolean autofill;
 
 	command setSendValueAsMd5(boolean sendValueAsMd5);
 	command setSalt(String salt);
 }
 
 managed class MultiLineTextField extends TextField {
-	boolean adjustHeightToContent = false;
+	boolean adjustHeightToContent;
 
 	command append(String s, boolean scrollToBottom);
 }

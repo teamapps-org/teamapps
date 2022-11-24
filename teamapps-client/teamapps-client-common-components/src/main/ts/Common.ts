@@ -17,9 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiEntranceAnimation, UiExitAnimation, UiPageDisplayMode, UiPageTransition, UiRepeatableAnimation, UiTemplate} from "./generated";
+import {
+	DtoEntranceAnimation,
+	DtoExitAnimation,
+	DtoPageDisplayMode,
+	DtoPageTransition,
+	DtoRepeatableAnimation,
+	DtoTemplate
+} from "./generated";
 import rgba from "color-rgba";
-import {parseHtml} from "teamapps-client-core";
+import {Component, parseHtml} from "teamapps-client-core";
 
 export const defaultSpinnerTemplate = `<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`;
 
@@ -27,134 +34,134 @@ export type RenderingFunction = (data: any) => string;
 
 export type Renderer = {
 	render: RenderingFunction,
-	template: UiTemplate
+	template: DtoTemplate
 };
 
 export class Constants {
 	private static _SCROLLBAR_WIDTH: number;
 
 	public static ENTRANCE_ANIMATION_CSS_CLASSES = {
-		[UiEntranceAnimation.BACK_IN_DOWN]: "animate__animated animate__backInDown",
-		[UiEntranceAnimation.BACK_IN_LEFT]: "animate__animated animate__backInLeft",
-		[UiEntranceAnimation.BACK_IN_RIGHT]: "animate__animated animate__backInRight",
-		[UiEntranceAnimation.BACK_IN_UP]: "animate__animated animate__backInUp",
+		[DtoEntranceAnimation.BACK_IN_DOWN]: "animate__animated animate__backInDown",
+		[DtoEntranceAnimation.BACK_IN_LEFT]: "animate__animated animate__backInLeft",
+		[DtoEntranceAnimation.BACK_IN_RIGHT]: "animate__animated animate__backInRight",
+		[DtoEntranceAnimation.BACK_IN_UP]: "animate__animated animate__backInUp",
 
-		[UiEntranceAnimation.LIGHT_SPEED_IN_RIGHT]: "animate__animated animate__lightSpeedIn",
-		[UiEntranceAnimation.LIGHT_SPEED_IN_LEFT]: "animate__animated animate__lightSpeedIn",
-		[UiEntranceAnimation.JACK_IN_THE_BOX]: "animate__animated animate__lightSpeedIn",
-		[UiEntranceAnimation.ROLL_IN]: "animate__animated animate__rollIn",
+		[DtoEntranceAnimation.LIGHT_SPEED_IN_RIGHT]: "animate__animated animate__lightSpeedIn",
+		[DtoEntranceAnimation.LIGHT_SPEED_IN_LEFT]: "animate__animated animate__lightSpeedIn",
+		[DtoEntranceAnimation.JACK_IN_THE_BOX]: "animate__animated animate__lightSpeedIn",
+		[DtoEntranceAnimation.ROLL_IN]: "animate__animated animate__rollIn",
 
-		[UiEntranceAnimation.ZOOM_IN]: "animate__animated animate__zoomIn",
-		[UiEntranceAnimation.ZOOM_IN_DOWN]: "animate__animated animate__zoomInDown",
-		[UiEntranceAnimation.ZOOM_IN_LEFT]: "animate__animated animate__zoomInLeft",
-		[UiEntranceAnimation.ZOOM_IN_RIGHT]: "animate__animated animate__zoomInRight",
-		[UiEntranceAnimation.ZOOM_IN_UP]: "animate__animated animate__zoomInUp",
+		[DtoEntranceAnimation.ZOOM_IN]: "animate__animated animate__zoomIn",
+		[DtoEntranceAnimation.ZOOM_IN_DOWN]: "animate__animated animate__zoomInDown",
+		[DtoEntranceAnimation.ZOOM_IN_LEFT]: "animate__animated animate__zoomInLeft",
+		[DtoEntranceAnimation.ZOOM_IN_RIGHT]: "animate__animated animate__zoomInRight",
+		[DtoEntranceAnimation.ZOOM_IN_UP]: "animate__animated animate__zoomInUp",
 
-		[UiEntranceAnimation.SLIDE_IN_UP]: "animate__animated animate__slideInUp",
-		[UiEntranceAnimation.SLIDE_IN_DOWN]: "animate__animated animate__slideInDown",
-		[UiEntranceAnimation.SLIDE_IN_LEFT]: "animate__animated animate__slideInLeft",
-		[UiEntranceAnimation.SLIDE_IN_RIGHT]: "animate__animated animate__slideInRight",
+		[DtoEntranceAnimation.SLIDE_IN_UP]: "animate__animated animate__slideInUp",
+		[DtoEntranceAnimation.SLIDE_IN_DOWN]: "animate__animated animate__slideInDown",
+		[DtoEntranceAnimation.SLIDE_IN_LEFT]: "animate__animated animate__slideInLeft",
+		[DtoEntranceAnimation.SLIDE_IN_RIGHT]: "animate__animated animate__slideInRight",
 
-		[UiEntranceAnimation.ROTATE_IN]: "animate__animated animate__rotateIn",
-		[UiEntranceAnimation.ROTATE_IN_DOWNLEFT]: "animate__animated animate__rotateInDownLeft",
-		[UiEntranceAnimation.ROTATE_IN_DOWNRIGHT]: "animate__animated animate__rotateInDownRight",
-		[UiEntranceAnimation.ROTATE_IN_UPLEFT]: "animate__animated animate__rotateInUpLeft",
-		[UiEntranceAnimation.ROTATE_IN_UPRIGHT]: "animate__animated animate__rotateInUpRight",
+		[DtoEntranceAnimation.ROTATE_IN]: "animate__animated animate__rotateIn",
+		[DtoEntranceAnimation.ROTATE_IN_DOWNLEFT]: "animate__animated animate__rotateInDownLeft",
+		[DtoEntranceAnimation.ROTATE_IN_DOWNRIGHT]: "animate__animated animate__rotateInDownRight",
+		[DtoEntranceAnimation.ROTATE_IN_UPLEFT]: "animate__animated animate__rotateInUpLeft",
+		[DtoEntranceAnimation.ROTATE_IN_UPRIGHT]: "animate__animated animate__rotateInUpRight",
 
-		[UiEntranceAnimation.FLIP_IN_X]: "animate__animated animate__flipInX",
-		[UiEntranceAnimation.FLIP_IN_Y]: "animate__animated animate__flipInY",
+		[DtoEntranceAnimation.FLIP_IN_X]: "animate__animated animate__flipInX",
+		[DtoEntranceAnimation.FLIP_IN_Y]: "animate__animated animate__flipInY",
 
-		[UiEntranceAnimation.FADE_IN]: "animate__animated animate__fadeIn",
-		[UiEntranceAnimation.FADE_IN_DOWN]: "animate__animated animate__fadeInDown",
-		[UiEntranceAnimation.FADE_IN_DOWNBIG]: "animate__animated animate__fadeInDownBig",
-		[UiEntranceAnimation.FADE_IN_LEFT]: "animate__animated animate__fadeInLeft",
-		[UiEntranceAnimation.FADE_IN_LEFTBIG]: "animate__animated animate__fadeInLeftBig",
-		[UiEntranceAnimation.FADE_IN_RIGHT]: "animate__animated animate__fadeInRight",
-		[UiEntranceAnimation.FADE_IN_RIGHTBIG]: "animate__animated animate__fadeInRightBig",
-		[UiEntranceAnimation.FADE_IN_UP]: "animate__animated animate__fadeInUp",
-		[UiEntranceAnimation.FADE_IN_UPBIG]: "animate__animated animate__fadeInUpBig",
-		[UiEntranceAnimation.FADE_IN_TOP_LEFT]: "animate__animated animate__fadeInTopLeft",
-		[UiEntranceAnimation.FADE_IN_TOP_RIGHT]: "animate__animated animate__fadeInTopRight",
-		[UiEntranceAnimation.FADE_IN_BOTTOM_LEFT]: "animate__animated animate__fadeInBottomLeft",
-		[UiEntranceAnimation.FADE_IN_BOTTOM_RIGHT]: "animate__animated animate__fadeInBottomRight",
+		[DtoEntranceAnimation.FADE_IN]: "animate__animated animate__fadeIn",
+		[DtoEntranceAnimation.FADE_IN_DOWN]: "animate__animated animate__fadeInDown",
+		[DtoEntranceAnimation.FADE_IN_DOWNBIG]: "animate__animated animate__fadeInDownBig",
+		[DtoEntranceAnimation.FADE_IN_LEFT]: "animate__animated animate__fadeInLeft",
+		[DtoEntranceAnimation.FADE_IN_LEFTBIG]: "animate__animated animate__fadeInLeftBig",
+		[DtoEntranceAnimation.FADE_IN_RIGHT]: "animate__animated animate__fadeInRight",
+		[DtoEntranceAnimation.FADE_IN_RIGHTBIG]: "animate__animated animate__fadeInRightBig",
+		[DtoEntranceAnimation.FADE_IN_UP]: "animate__animated animate__fadeInUp",
+		[DtoEntranceAnimation.FADE_IN_UPBIG]: "animate__animated animate__fadeInUpBig",
+		[DtoEntranceAnimation.FADE_IN_TOP_LEFT]: "animate__animated animate__fadeInTopLeft",
+		[DtoEntranceAnimation.FADE_IN_TOP_RIGHT]: "animate__animated animate__fadeInTopRight",
+		[DtoEntranceAnimation.FADE_IN_BOTTOM_LEFT]: "animate__animated animate__fadeInBottomLeft",
+		[DtoEntranceAnimation.FADE_IN_BOTTOM_RIGHT]: "animate__animated animate__fadeInBottomRight",
 
-		[UiEntranceAnimation.BOUNCE_IN]: "animate__animated animate__bounceIn",
-		[UiEntranceAnimation.BOUNCE_IN_DOWN]: "animate__animated animate__bounceInDown",
-		[UiEntranceAnimation.BOUNCE_IN_LEFT]: "animate__animated animate__bounceInLeft",
-		[UiEntranceAnimation.BOUNCE_IN_RIGHT]: "animate__animated animate__bounceInRight",
-		[UiEntranceAnimation.BOUNCE_IN_UP]: "animate__animated animate__bounceInUp"
+		[DtoEntranceAnimation.BOUNCE_IN]: "animate__animated animate__bounceIn",
+		[DtoEntranceAnimation.BOUNCE_IN_DOWN]: "animate__animated animate__bounceInDown",
+		[DtoEntranceAnimation.BOUNCE_IN_LEFT]: "animate__animated animate__bounceInLeft",
+		[DtoEntranceAnimation.BOUNCE_IN_RIGHT]: "animate__animated animate__bounceInRight",
+		[DtoEntranceAnimation.BOUNCE_IN_UP]: "animate__animated animate__bounceInUp"
 	};
 
 	public static EXIT_ANIMATION_CSS_CLASSES = {
-		[UiExitAnimation.BACK_OUT_DOWN]: "animate__animated animate__backOutDown",
-		[UiExitAnimation.BACK_OUT_LEFT]: "animate__animated animate__backOutLeft",
-		[UiExitAnimation.BACK_OUT_RIGHT]: "animate__animated animate__backOutRight",
-		[UiExitAnimation.BACK_OUT_UP]: "animate__animated animate__backOutUp",
+		[DtoExitAnimation.BACK_OUT_DOWN]: "animate__animated animate__backOutDown",
+		[DtoExitAnimation.BACK_OUT_LEFT]: "animate__animated animate__backOutLeft",
+		[DtoExitAnimation.BACK_OUT_RIGHT]: "animate__animated animate__backOutRight",
+		[DtoExitAnimation.BACK_OUT_UP]: "animate__animated animate__backOutUp",
 
-		[UiExitAnimation.LIGHT_SPEED_OUT_RIGHT]: "animate__animated animate__lightSpeedOutRight",
-		[UiExitAnimation.LIGHT_SPEED_OUT_LEFT]: "animate__animated animate__lightSpeedOutLeft",
-		[UiExitAnimation.ROLL_OUT]: "animate__animated animate__rollOut",
-		[UiExitAnimation.HINGE]: "animate__animated animate__hinge",
+		[DtoExitAnimation.LIGHT_SPEED_OUT_RIGHT]: "animate__animated animate__lightSpeedOutRight",
+		[DtoExitAnimation.LIGHT_SPEED_OUT_LEFT]: "animate__animated animate__lightSpeedOutLeft",
+		[DtoExitAnimation.ROLL_OUT]: "animate__animated animate__rollOut",
+		[DtoExitAnimation.HINGE]: "animate__animated animate__hinge",
 
-		[UiExitAnimation.ZOOM_OUT]: "animate__animated animate__zoomOut",
-		[UiExitAnimation.ZOOM_OUT_DOWN]: "animate__animated animate__zoomOutDown",
-		[UiExitAnimation.ZOOM_OUT_LEFT]: "animate__animated animate__zoomOutLeft",
-		[UiExitAnimation.ZOOM_OUT_RIGHT]: "animate__animated animate__zoomOutRight",
-		[UiExitAnimation.ZOOM_OUT_UP]: "animate__animated animate__zoomOutUp",
+		[DtoExitAnimation.ZOOM_OUT]: "animate__animated animate__zoomOut",
+		[DtoExitAnimation.ZOOM_OUT_DOWN]: "animate__animated animate__zoomOutDown",
+		[DtoExitAnimation.ZOOM_OUT_LEFT]: "animate__animated animate__zoomOutLeft",
+		[DtoExitAnimation.ZOOM_OUT_RIGHT]: "animate__animated animate__zoomOutRight",
+		[DtoExitAnimation.ZOOM_OUT_UP]: "animate__animated animate__zoomOutUp",
 
-		[UiExitAnimation.SLIDE_OUT_UP]: "animate__animated animate__slideOutUp",
-		[UiExitAnimation.SLIDE_OUT_DOWN]: "animate__animated animate__slideOutDown",
-		[UiExitAnimation.SLIDE_OUT_LEFT]: "animate__animated animate__slideOutLeft",
-		[UiExitAnimation.SLIDE_OUT_RIGHT]: "animate__animated animate__slideOutRight",
+		[DtoExitAnimation.SLIDE_OUT_UP]: "animate__animated animate__slideOutUp",
+		[DtoExitAnimation.SLIDE_OUT_DOWN]: "animate__animated animate__slideOutDown",
+		[DtoExitAnimation.SLIDE_OUT_LEFT]: "animate__animated animate__slideOutLeft",
+		[DtoExitAnimation.SLIDE_OUT_RIGHT]: "animate__animated animate__slideOutRight",
 
-		[UiExitAnimation.ROTATE_OUT]: "animate__animated animate__rotateOut",
-		[UiExitAnimation.ROTATE_OUT_DOWNLEFT]: "animate__animated animate__rotateOutDownLeft",
-		[UiExitAnimation.ROTATE_OUT_DOWNRIGHT]: "animate__animated animate__rotateOutDownRight",
-		[UiExitAnimation.ROTATE_OUT_UPLEFT]: "animate__animated animate__rotateOutUpLeft",
-		[UiExitAnimation.ROTATE_OUT_UPRIGHT]: "animate__animated animate__rotateOutUpRight",
+		[DtoExitAnimation.ROTATE_OUT]: "animate__animated animate__rotateOut",
+		[DtoExitAnimation.ROTATE_OUT_DOWNLEFT]: "animate__animated animate__rotateOutDownLeft",
+		[DtoExitAnimation.ROTATE_OUT_DOWNRIGHT]: "animate__animated animate__rotateOutDownRight",
+		[DtoExitAnimation.ROTATE_OUT_UPLEFT]: "animate__animated animate__rotateOutUpLeft",
+		[DtoExitAnimation.ROTATE_OUT_UPRIGHT]: "animate__animated animate__rotateOutUpRight",
 
-		[UiExitAnimation.FLIP_OUT_X]: "animate__animated animate__flipOutX",
-		[UiExitAnimation.FLIP_OUT_Y]: "animate__animated animate__flipOutY",
+		[DtoExitAnimation.FLIP_OUT_X]: "animate__animated animate__flipOutX",
+		[DtoExitAnimation.FLIP_OUT_Y]: "animate__animated animate__flipOutY",
 
-		[UiExitAnimation.FADE_OUT]: "animate__animated animate__fadeOut",
-		[UiExitAnimation.FADE_OUT_DOWN]: "animate__animated animate__fadeOutDown",
-		[UiExitAnimation.FADE_OUT_DOWNBIG]: "animate__animated animate__fadeOutDownBig",
-		[UiExitAnimation.FADE_OUT_LEFT]: "animate__animated animate__fadeOutLeft",
-		[UiExitAnimation.FADE_OUT_LEFTBIG]: "animate__animated animate__fadeOutLeftBig",
-		[UiExitAnimation.FADE_OUT_RIGHT]: "animate__animated animate__fadeOutRight",
-		[UiExitAnimation.FADE_OUT_RIGHTBIG]: "animate__animated animate__fadeOutRightBig",
-		[UiExitAnimation.FADE_OUT_UP]: "animate__animated animate__fadeOutUp",
-		[UiExitAnimation.FADE_OUT_UPBIG]: "animate__animated animate__fadeOutUpBig",
-		[UiExitAnimation.FADE_OUT_TOP_LEFT]: "animate__animated animate__fadeOutTopLeft",
-		[UiExitAnimation.FADE_OUT_TOP_RIGHT]: "animate__animated animate__fadeOutTopRight",
-		[UiExitAnimation.FADE_OUT_BOTTOM_RIGHT]: "animate__animated animate__fadeOutBottomRight",
-		[UiExitAnimation.FADE_OUT_BOTTOM_LEFT]: "animate__animated animate__fadeOutBottomLeft",
+		[DtoExitAnimation.FADE_OUT]: "animate__animated animate__fadeOut",
+		[DtoExitAnimation.FADE_OUT_DOWN]: "animate__animated animate__fadeOutDown",
+		[DtoExitAnimation.FADE_OUT_DOWNBIG]: "animate__animated animate__fadeOutDownBig",
+		[DtoExitAnimation.FADE_OUT_LEFT]: "animate__animated animate__fadeOutLeft",
+		[DtoExitAnimation.FADE_OUT_LEFTBIG]: "animate__animated animate__fadeOutLeftBig",
+		[DtoExitAnimation.FADE_OUT_RIGHT]: "animate__animated animate__fadeOutRight",
+		[DtoExitAnimation.FADE_OUT_RIGHTBIG]: "animate__animated animate__fadeOutRightBig",
+		[DtoExitAnimation.FADE_OUT_UP]: "animate__animated animate__fadeOutUp",
+		[DtoExitAnimation.FADE_OUT_UPBIG]: "animate__animated animate__fadeOutUpBig",
+		[DtoExitAnimation.FADE_OUT_TOP_LEFT]: "animate__animated animate__fadeOutTopLeft",
+		[DtoExitAnimation.FADE_OUT_TOP_RIGHT]: "animate__animated animate__fadeOutTopRight",
+		[DtoExitAnimation.FADE_OUT_BOTTOM_RIGHT]: "animate__animated animate__fadeOutBottomRight",
+		[DtoExitAnimation.FADE_OUT_BOTTOM_LEFT]: "animate__animated animate__fadeOutBottomLeft",
 
-		[UiExitAnimation.BOUNCE_OUT]: "animate__animated animate__bounceOut",
-		[UiExitAnimation.BOUNCE_OUT_DOWN]: "animate__animated animate__bounceOutDown",
-		[UiExitAnimation.BOUNCE_OUT_LEFT]: "animate__animated animate__bounceOutLeft",
-		[UiExitAnimation.BOUNCE_OUT_RIGHT]: "animate__animated animate__bounceOutRight",
-		[UiExitAnimation.BOUNCE_OUT_UP]: "animate__animated animate__bounceOutUp"
+		[DtoExitAnimation.BOUNCE_OUT]: "animate__animated animate__bounceOut",
+		[DtoExitAnimation.BOUNCE_OUT_DOWN]: "animate__animated animate__bounceOutDown",
+		[DtoExitAnimation.BOUNCE_OUT_LEFT]: "animate__animated animate__bounceOutLeft",
+		[DtoExitAnimation.BOUNCE_OUT_RIGHT]: "animate__animated animate__bounceOutRight",
+		[DtoExitAnimation.BOUNCE_OUT_UP]: "animate__animated animate__bounceOutUp"
 	};
 
 	public static REPEATABLE_ANIMATION_CSS_CLASSES = {
-		[UiRepeatableAnimation.BOUNCE]: "animate__animated animate__bounce",
-		[UiRepeatableAnimation.FLASH]: "animate__animated animate__flash",
-		[UiRepeatableAnimation.PULSE]: "animate__animated animate__pulse",
-		[UiRepeatableAnimation.RUBBER_BAND]: "animate__animated animate__rubberBand",
-		[UiRepeatableAnimation.SHAKE_X]: "animate__animated animate__shakeX",
-		[UiRepeatableAnimation.SHAKE_Y]: "animate__animated animate__shakeY",
-		[UiRepeatableAnimation.HEAD_SHAKE]: "animate__animated animate__headShake",
-		[UiRepeatableAnimation.SWING]: "animate__animated animate__swing",
-		[UiRepeatableAnimation.TADA]: "animate__animated animate__tada",
-		[UiRepeatableAnimation.WOBBLE]: "animate__animated animate__wobble",
-		[UiRepeatableAnimation.JELLO]: "animate__animated animate__jello",
-		[UiRepeatableAnimation.HEART_BEAT]: "animate__animated animate__heartBeat",
-		[UiRepeatableAnimation.FLIP]: "animate__animated animate__flip",
+		[DtoRepeatableAnimation.BOUNCE]: "animate__animated animate__bounce",
+		[DtoRepeatableAnimation.FLASH]: "animate__animated animate__flash",
+		[DtoRepeatableAnimation.PULSE]: "animate__animated animate__pulse",
+		[DtoRepeatableAnimation.RUBBER_BAND]: "animate__animated animate__rubberBand",
+		[DtoRepeatableAnimation.SHAKE_X]: "animate__animated animate__shakeX",
+		[DtoRepeatableAnimation.SHAKE_Y]: "animate__animated animate__shakeY",
+		[DtoRepeatableAnimation.HEAD_SHAKE]: "animate__animated animate__headShake",
+		[DtoRepeatableAnimation.SWING]: "animate__animated animate__swing",
+		[DtoRepeatableAnimation.TADA]: "animate__animated animate__tada",
+		[DtoRepeatableAnimation.WOBBLE]: "animate__animated animate__wobble",
+		[DtoRepeatableAnimation.JELLO]: "animate__animated animate__jello",
+		[DtoRepeatableAnimation.HEART_BEAT]: "animate__animated animate__heartBeat",
+		[DtoRepeatableAnimation.FLIP]: "animate__animated animate__flip",
 
 		// custom:
-		[UiRepeatableAnimation.BLINK]: "ta-blink",
-		[UiRepeatableAnimation.BLINK_SUBTLE]: "ta-blink-subtle"
+		[DtoRepeatableAnimation.BLINK]: "ta-blink",
+		[DtoRepeatableAnimation.BLINK_SUBTLE]: "ta-blink-subtle"
 	}
 
 	public static POINTER_EVENTS = {
@@ -336,7 +343,7 @@ export function formatDecimalNumber(integerNumber: number, precision: number, de
 	return (integerNumber < 0 ? '-' : '') + formattedIntegerPart + decimalSeparator + fractionalPart;
 }
 
-export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displayMode: UiPageDisplayMode | any, options?: {
+export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displayMode: DtoPageDisplayMode | any, options?: {
 	innerPreferredDimensions?: { // only needed for ORIGINAL_SIZE!
 		width: number,
 		height: number,
@@ -375,7 +382,7 @@ export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displ
 
 export function calculateDisplayModeInnerSize(containerDimensions: { width: number, height: number },
 											  innerPreferredDimensions: { width: number, height: number },
-											  displayMode: UiPageDisplayMode | any,
+											  displayMode: DtoPageDisplayMode | any,
 											  zoomFactor: number = 1,
 											  considerScrollbars = false
 ): { width: number, height: number } {
@@ -384,9 +391,9 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 
 	console.debug(`outer dimensions: ${containerDimensions.width}x${containerDimensions.height}`);
 	console.debug(`inner dimensions: ${innerPreferredDimensions.width}x${innerPreferredDimensions.height}`);
-	console.debug(`displayMode: ${UiPageDisplayMode[displayMode]}`);
+	console.debug(`displayMode: ${DtoPageDisplayMode[displayMode]}`);
 
-	if (displayMode === UiPageDisplayMode.FIT_WIDTH) {
+	if (displayMode === DtoPageDisplayMode.FIT_WIDTH) {
 		let width = Math.floor(containerDimensions.width * zoomFactor);
 		if (considerScrollbars && zoomFactor <= 1 && Math.ceil(width / imageAspectRatio) > containerDimensions.height) {
 			// There will be a vertical scroll bar, so make sure the width will not result in a horizontal scrollbar, too
@@ -394,7 +401,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			width = Math.min(width, containerDimensions.width - Constants.SCROLLBAR_WIDTH);
 		}
 		return {width: width, height: width / imageAspectRatio};
-	} else if (displayMode === UiPageDisplayMode.FIT_HEIGHT) {
+	} else if (displayMode === DtoPageDisplayMode.FIT_HEIGHT) {
 		let height = Math.floor(containerDimensions.height * zoomFactor);
 		if (considerScrollbars && zoomFactor <= 1 && height * imageAspectRatio > containerDimensions.width) {
 			// There will be a horizontal scroll bar, so make sure the width will not result in a vertical scrollbar, too
@@ -402,7 +409,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			height = Math.min(height, containerDimensions.height - Constants.SCROLLBAR_WIDTH);
 		}
 		return {width: height * imageAspectRatio, height: height};
-	} else if (displayMode === UiPageDisplayMode.FIT_SIZE) {
+	} else if (displayMode === DtoPageDisplayMode.FIT_SIZE) {
 		if (imageAspectRatio > viewPortAspectRatio) {
 			let width = Math.floor(containerDimensions.width * zoomFactor);
 			return {width: width, height: width / imageAspectRatio};
@@ -410,7 +417,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			let height = Math.floor(containerDimensions.height * zoomFactor);
 			return {width: height * imageAspectRatio, height: height};
 		}
-	} else if (displayMode === UiPageDisplayMode.COVER) {
+	} else if (displayMode === DtoPageDisplayMode.COVER) {
 		if (imageAspectRatio < viewPortAspectRatio) {
 			let width = Math.floor(containerDimensions.width * zoomFactor);
 			return {width: width, height: width / imageAspectRatio};
@@ -649,7 +656,7 @@ export function arraysEqual(a: any[], b: any[]) {
 	}
 }
 
-export function maximizeComponent(component: UiComponent, maximizeAnimationCallback?: () => void) {
+export function maximizeComponent(component: Component, maximizeAnimationCallback?: () => void) {
 	const $parentDomElement = component.getMainElement().parentElement;
 	const scrollTop = window.scrollY;
 	const scrollLeft = window.scrollX;
@@ -904,12 +911,12 @@ export function animateCSS(el: HTMLElement, animationCssClasses: string, animati
 }
 
 export function fadeOut(el: HTMLElement) {
-	animateCSS(el, Constants.EXIT_ANIMATION_CSS_CLASSES[UiExitAnimation.FADE_OUT], 300, () => el.classList.add("hidden"));
+	animateCSS(el, Constants.EXIT_ANIMATION_CSS_CLASSES[DtoExitAnimation.FADE_OUT], 300, () => el.classList.add("hidden"));
 }
 
 export function fadeIn(el: HTMLElement) {
 	el.classList.remove("hidden");
-	animateCSS(el, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[UiEntranceAnimation.FADE_IN]);
+	animateCSS(el, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[DtoEntranceAnimation.FADE_IN]);
 }
 
 export var pageTransitionAnimationPairs = {
@@ -1189,8 +1196,8 @@ export function animatePageTransition(outEl: HTMLElement, inEl: HTMLElement, ani
 	}
 }
 
-export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: UiPageTransition, animationDuration: number = 300, callback?: () => any) {
-	let s = UiPageTransition[pageTransition].toLowerCase().replace(/_{1,1}([a-z])/g, (g0, g1) => g1.toUpperCase()) as keyof typeof pageTransitionAnimationPairs;
+export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: DtoPageTransition, animationDuration: number = 300, callback?: () => any) {
+	let s = DtoPageTransition[pageTransition].toLowerCase().replace(/_{1,1}([a-z])/g, (g0, g1) => g1.toUpperCase()) as keyof typeof pageTransitionAnimationPairs;
 	animatePageTransition(outEl, inEl, s, animationDuration, callback);
 }
 

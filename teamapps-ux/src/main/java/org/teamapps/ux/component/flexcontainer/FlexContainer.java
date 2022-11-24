@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.flexcontainer;
 
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoFlexContainer;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;

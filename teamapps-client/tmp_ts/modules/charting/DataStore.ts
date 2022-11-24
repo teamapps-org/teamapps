@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+import {DtoLongInterval} from "../../generated/DtoLongInterval";
 import {DataPoint} from "./Charting";
-import {UiLineGraphDataPointConfig} from "../../generated/UiLineGraphDataPointConfig";
-import {UiLineGraphDataConfig} from "../../generated/UiLineGraphDataConfig";
-import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
-import {UiIncidentGraphDataConfig} from "../../generated/UiIncidentGraphDataConfig";
-import {UiIncidentGraphDataPointConfig} from "../../generated/UiIncidentGraphDataPointConfig";
+import {DtoLineGraphDataPoint} from "../../generated/DtoLineGraphDataPoint";
+import {DtoLineGraphData} from "../../generated/DtoLineGraphData";
+import {DtoGraphData} from "../../generated/DtoGraphData";
+import {DtoIncidentGraphData} from "../../generated/DtoIncidentGraphData";
+import {DtoIncidentGraphDataPoint} from "../../generated/DtoIncidentGraphDataPoint";
 import {Interval, IntervalManager} from "../util/IntervalManager";
 
 
-abstract class AbstractDataStore<D extends UiGraphDataConfig> {
+abstract class AbstractDataStore<D extends DtoGraphData> {
 
 	private intervalManagerByZoomLevel: Map<number, IntervalManager> = new Map();
 	private dataObsolete = false;
@@ -68,15 +68,15 @@ abstract class AbstractDataStore<D extends UiGraphDataConfig> {
 	}
 }
 
-export class LineGraphDataStore extends AbstractDataStore<UiLineGraphDataConfig> {
+export class LineGraphDataStore extends AbstractDataStore<DtoLineGraphData> {
 
-	private zoomLevelData: UiLineGraphDataPointConfig[][] = [];
+	private zoomLevelData: DtoLineGraphDataPoint[][] = [];
 
 	protected doResetData() {
 		this.zoomLevelData = [];
 	}
 
-	protected doAddData(zoomLevel: number, data: UiLineGraphDataConfig) {
+	protected doAddData(zoomLevel: number, data: DtoLineGraphData) {
 		this.assureZoomLevelArrayExists(zoomLevel);
 
 		let interval = [data.interval.min, data.interval.max];
@@ -128,15 +128,15 @@ export class LineGraphDataStore extends AbstractDataStore<UiLineGraphDataConfig>
 	}
 }
 
-export class IncidentGraphDataStore extends AbstractDataStore<UiIncidentGraphDataConfig> {
+export class IncidentGraphDataStore extends AbstractDataStore<DtoIncidentGraphData> {
 
-	private zoomLevelData: UiIncidentGraphDataPointConfig[][] = [];
+	private zoomLevelData: DtoIncidentGraphDataPoint[][] = [];
 
 	protected doResetData() {
 		this.zoomLevelData = [];
 	}
 
-	protected doAddData(zoomLevel: number, data: UiIncidentGraphDataConfig) {
+	protected doAddData(zoomLevel: number, data: DtoIncidentGraphData) {
 		let interval = [data.interval.min, data.interval.max];
 		this.assureZoomLevelArrayExists(zoomLevel);
 		this.zoomLevelData[zoomLevel] = this.zoomLevelData[zoomLevel].filter(dp => {

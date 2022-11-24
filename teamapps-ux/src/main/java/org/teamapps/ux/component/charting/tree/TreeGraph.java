@@ -19,20 +19,19 @@
  */
 package org.teamapps.ux.component.charting.tree;
 
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoBaseTreeGraphNode;
+import org.teamapps.dto.DtoClientRecord;
+import org.teamapps.dto.DtoTreeGraph;
+import org.teamapps.dto.DtoTreeGraphNode;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TreeGraph<RECORD> extends AbstractComponent {

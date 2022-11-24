@@ -20,7 +20,6 @@
 import {NumberParser} from "./NumberParser";
 
 
-
 export class BigDecimal {
 	private constructor(public readonly value: string) {
 	}

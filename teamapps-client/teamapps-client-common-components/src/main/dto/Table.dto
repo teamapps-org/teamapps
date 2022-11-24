@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 enum SortDirection {
 	ASC, DESC
 }
@@ -31,45 +33,45 @@ class TableColumn {
 	int minWidth;
 	int defaultWidth;
 	int maxWidth;
-	boolean sortable = true;
-	boolean resizeable = true;
-	boolean visible = true;
-	boolean hiddenIfOnlyEmptyCellsVisible = false;
+	boolean sortable;
+	boolean resizeable;
+	boolean visible;
+	boolean hiddenIfOnlyEmptyCellsVisible;
 	List<FieldMessage> messages;
 	TextAlignment headerAlignment;
 }
 
-managed class Table extends AbstractUiInfiniteListComponent {
+managed class Table extends AbstractInfiniteListComponent {
 	required List<TableColumn> columns;
 
 	boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
 	boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
-	int rowHeight = 28;
-	boolean stripedRows = true;
-	String stripedRowColorEven = "rgb(255, 255, 255)";
-	String stripedRowColorOdd = "rgba(0, 0, 0, 0.05)";
+	int rowHeight;
+	boolean stripedRows;
+	String stripedRowColorEven;
+	String stripedRowColorOdd;
 	boolean hideHeaders; //if true, do not show any headers
-	boolean allowMultiRowSelection = true;
-	String selectionColor = "rgb(222, 238, 255)"; // null = default color
-	int rowBorderWidth = 1; // even in list mode! the border will be there but transparent!
-	String rowBorderColor = "rgb(204, 204, 204)";
+	boolean allowMultiRowSelection;
+	String selectionColor; // null = default color
+	int rowBorderWidth; // even in list mode! the border will be there but transparent!
+	String rowBorderColor;
 
 	boolean showRowCheckBoxes; //if true, show check boxes on the left
 	boolean showNumbering; //if true, show numbering on the left
 	boolean textSelectionEnabled;
 
 	String sortField; //if available the table is initially sorted by this field
-	SortDirection sortDirection = SortDirection.ASC;
+	SortDirection sortDirection;
 
 	boolean editable; //only valid for tables
 
 	boolean treeMode; //if true, use the parent id property of record to display the table as tree
 	String indentedColumnName; // if set, indent this column depending on the depth in the data hierarchy
-	int indentation = 15; // in pixels
+	int indentation; // in pixels
 
 	SelectionFrame selectionFrame;
 
-	boolean contextMenuEnabled = false;
+	boolean contextMenuEnabled;
 
 	command clearTable();
 	command updateData(int startIndex, List<Integer> recordIds, List<TableClientRecord> newRecords, int totalNumberOfRecords);
@@ -104,18 +106,18 @@ managed class Table extends AbstractUiInfiniteListComponent {
 	event columnSizeChange(String columnPropertyName, int size);
 
 	// =========== header/footer row ("outerRow") ===========
-	boolean showHeaderRow = false;
-    int headerRowBorderWidth = 1; // even in list mode! the border will be there but transparent!
-    String headerRowBorderColor = "rgb(204, 204, 204)";
-    int headerRowHeight = 28;
-    String headerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
+	boolean showHeaderRow;
+    int headerRowBorderWidth; // even in list mode! the border will be there but transparent!
+    String headerRowBorderColor;
+    int headerRowHeight;
+    String headerRowBackgroundColor;
     Dictionary<Field*> headerRowFields;
 
-	boolean showFooterRow = false;
-    int footerRowBorderWidth = 1; // even in list mode! the border will be there but transparent!
-    String footerRowBorderColor = "rgb(204, 204, 204)";
-    int footerRowHeight = 28;
-    String footerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
+	boolean showFooterRow;
+    int footerRowBorderWidth; // even in list mode! the border will be there but transparent!
+    String footerRowBorderColor;
+    int footerRowHeight;
+    String footerRowBackgroundColor;
     Dictionary<Field*> footerRowFields;
 }
 
@@ -133,12 +135,12 @@ class TableCellMessages {
 }
 
 class SelectionFrame {
-	String color = "rgb(102, 174, 232)";
-	int borderWidth = 2;
-	int animationDuration = 100; // ms
-	int glowingWidth = 5;
-	int shadowWidth = 0;
-	boolean fullRow = false;
+	String color;
+	int borderWidth;
+	int animationDuration; // ms
+	int glowingWidth;
+	int shadowWidth;
+	boolean fullRow;
 }
 
 class TableClientRecord extends IdentifiableClientRecord {

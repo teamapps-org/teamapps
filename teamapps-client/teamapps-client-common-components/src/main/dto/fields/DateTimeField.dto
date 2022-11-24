@@ -19,23 +19,25 @@
  */
 package org.teamapps.dto;
 
-abstract managed class AbstractUiDateTimeField extends Field implements TextInputHandlingField {
-	boolean showDropDownButton = true;
-	boolean favorPastDates = false; // TODO!!!
+import Component from "teamapps-client-core":org.teamapps.dto;
+
+abstract managed class AbstractDateTimeField extends Field implements TextInputHandlingField {
+	boolean showDropDownButton;
+	boolean favorPastDates; // TODO!!!
 	String locale;
-	DateTimeFormatDescriptor dateFormat = null; // if null, Configuration.dateFormat applies
-	DateTimeFormatDescriptor timeFormat = null; // if null, Configuration.timeFormat applies
+	DateTimeFormatDescriptor dateFormat; // if null, Configuration.dateFormat applies
+	DateTimeFormatDescriptor timeFormat; // if null, Configuration.timeFormat applies
 
 	command setShowDropDownButton(boolean showDropDownButton);
 	command setFavorPastDates(boolean favorPastDates);
 	command setLocaleAndFormats(String locale, DateTimeFormatDescriptor dateFormat, DateTimeFormatDescriptor timeFormat);
 }
 
-managed class LocalDateTimeField extends AbstractUiDateTimeField {
+managed class LocalDateTimeField extends AbstractDateTimeField {
 }
 
-managed class InstantDateTimeField extends AbstractUiDateTimeField {
-	String timeZoneId = null; // if null, Configuration.timeZoneId applies
+managed class InstantDateTimeField extends AbstractDateTimeField {
+	String timeZoneId; // if null, Configuration.timeZoneId applies
 
 	command setTimeZoneId(String timeZoneId);
 }

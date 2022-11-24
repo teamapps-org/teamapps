@@ -31,18 +31,18 @@ import {
 	UiCalendar_ViewChangedEvent,
 	UiCalendar_WeekHeaderClickedEvent,
 	UiCalendarCommandHandler,
-	UiCalendarConfig,
+	DtoCalendar,
 	UiCalendarEventSource
-} from "../generated/UiCalendarConfig";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+} from "../generated/DtoCalendar";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiCalendarViewMode} from "../generated/UiCalendarViewMode";
 import {UiCalendarEventRenderingStyle} from "../generated/UiCalendarEventRenderingStyle";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {Interval, IntervalManager} from "./util/IntervalManager";
 import {parseHtml, prependChild, Renderer} from "./Common";
-import {UiCalendarEventClientRecordConfig} from "../generated/UiCalendarEventClientRecordConfig";
-import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {DtoCalendarEventClientRecord} from "../generated/DtoCalendarEventClientRecord";
+import {DtoTemplate} from "../generated/DtoTemplate";
 
 import {addDays, Calendar} from '@fullcalendar/core';
 import dayGridPlugin, {DayGridView} from '@fullcalendar/daygrid';
@@ -71,7 +71,7 @@ const RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: EventRen
 	[UiCalendarEventRenderingStyle.INVERSE_BACKGROUND]: 'inverse-background',
 };
 
-export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements UiCalendarCommandHandler, UiCalendarEventSource {
+export class UiCalendar extends AbstractComponent<DtoCalendar> implements UiCalendarCommandHandler, UiCalendarEventSource {
 
 	public readonly onEventClicked: TeamAppsEvent<UiCalendar_EventClickedEvent> = new TeamAppsEvent();
 	public readonly onEventMoved: TeamAppsEvent<UiCalendar_EventMovedEvent> = new TeamAppsEvent();
@@ -88,7 +88,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 	private templateRenderers: { [name: string]: Renderer };
 	private calendar: Calendar;
 
-	constructor(config: UiCalendarConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoCalendar, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="UiCalendar">
@@ -319,7 +319,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
             </style>`));
 	}
 
-	registerTemplate(id: string, template: UiTemplateConfig): void {
+	registerTemplate(id: string, template: DtoTemplate): void {
 		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
@@ -341,7 +341,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 		this.refreshEventsDisplay();
 	}
 
-	public setCalendarData(events: UiCalendarEventClientRecordConfig[]) {
+	public setCalendarData(events: DtoCalendarEventClientRecord[]) {
 		this.eventSource.removeAllEvents();
 		this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, events.map(e => this.convertToFullCalendarEvent(e)));
 		this.refreshEventsDisplay();
@@ -376,7 +376,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 		this.calendar && this.calendar.destroy();
 	}
 
-	public convertToFullCalendarEvent(event: UiCalendarEventClientRecordConfig): EventInput {
+	public convertToFullCalendarEvent(event: DtoCalendarEventClientRecord): EventInput {
 		return {
 			id: "" + event.id,
 			start: new Date(event.start),
@@ -505,4 +505,4 @@ class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 }
 
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiCalendar", UiCalendar);
+

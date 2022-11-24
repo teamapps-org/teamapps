@@ -19,8 +19,8 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.DtoAbstractServerMessage;
-import org.teamapps.dto.DtoSessionClosingReason;
+import org.teamapps.dto.protocol.DtoAbstractServerMessage;
+import org.teamapps.dto.protocol.DtoSessionClosingReason;
 
 public interface MessageSender {
 

@@ -19,10 +19,12 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class LinkButton extends Component {
 	String text;
-	String url = null; // null = still render as link but do not open a page
-	LinkTarget target = LinkTarget.BLANK;
+	String url; // null = still render as link but do not open a page
+	LinkTarget target;
 	String onClickJavaScript;
 
 	command update(LinkButton config);

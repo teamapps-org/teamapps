@@ -19,7 +19,7 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.DtoCommand;
+import org.teamapps.dto.protocol.DtoCommand;
 
 import java.util.function.Consumer;
 

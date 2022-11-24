@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Logger} from "loglevel";
 
 export type Interval = [number, number]; 
 

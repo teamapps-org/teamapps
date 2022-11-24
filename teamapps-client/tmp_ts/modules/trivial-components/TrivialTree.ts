@@ -26,7 +26,7 @@ import {
 	unProxyEntry
 } from "./TrivialCore";
 import KeyDownEvent = JQuery.KeyDownEvent;
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 
 export interface TrivialTreeConfig<E> extends TrivialTreeBoxConfig<E> {
     directSelectionViaArrowKeys?: boolean

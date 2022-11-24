@@ -31,12 +31,12 @@ import {
 	UiFileField_UploadSuccessfulEvent,
 	UiFileField_UploadTooLargeEvent,
 	UiFileFieldCommandHandler,
-	UiFileFieldConfig,
+	DtoFileField,
 	UiFileFieldEventSource
-} from "../../../generated/UiFileFieldConfig";
+} from "../../../generated/DtoFileField";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {UiTemplateConfig} from "../../../generated/UiTemplateConfig";
+import {DtoTemplate} from "../../../generated/DtoTemplate";
 import {StaticIcons} from "../../util/StaticIcons";
 import {ProgressIndicator} from "../../micro-components/ProgressIndicator";
 import {ProgressCircle} from "../../micro-components/ProgressCircle";
@@ -44,10 +44,10 @@ import {ProgressBar} from "../../micro-components/ProgressBar";
 import * as log from "loglevel";
 import {Logger} from "loglevel";
 import {keyCodes} from "../../trivial-components/TrivialCore";
-import {UiIdentifiableClientRecordConfig} from "../../../generated/UiIdentifiableClientRecordConfig";
+import {DtoIdentifiableClientRecord} from "../../../generated/DtoIdentifiableClientRecord";
 import {FileUploader} from "../../util/FileUploader";
 
-export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClientRecordConfig[]> implements UiFileFieldEventSource, UiFileFieldCommandHandler {
+export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientRecord[]> implements UiFileFieldEventSource, UiFileFieldCommandHandler {
 
 	public readonly onFileItemClicked: TeamAppsEvent<UiFileField_FileItemClickedEvent> = new TeamAppsEvent();
 	public readonly onFileItemRemoveButtonClicked: TeamAppsEvent<UiFileField_FileItemRemoveButtonClickedEvent> = new TeamAppsEvent();
@@ -68,11 +68,11 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	private maxFiles: number;
 	private maxBytesPerFile: number;
 	private uploadButtonData: any;
-	private uploadButtonTemplate: UiTemplateConfig;
+	private uploadButtonTemplate: DtoTemplate;
 	private uploadUrl: string;
 	private $fileList: HTMLElement;
 
-	protected initialize(config: UiFileFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoFileField, context: TeamAppsUiContext) {
 		this.fileItems = [];
 		let uuid = "ui-file-field" + generateUUID();
 		this.$wrapper = parseHtml(`<div class="UiFileField drop-zone" id="${uuid}">
@@ -134,7 +134,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		return v == null || Array.isArray(v);
 	}
 
-	public setItemTemplate(itemTemplate: UiTemplateConfig): void {
+	public setItemTemplate(itemTemplate: DtoTemplate): void {
 		this.itemRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
 		this.displayCommittedValue();
 	}
@@ -166,7 +166,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		}
 	}
 
-	public setUploadButtonTemplate(uploadButtonTemplate: UiTemplateConfig): void {
+	public setUploadButtonTemplate(uploadButtonTemplate: DtoTemplate): void {
 		this.uploadButtonTemplate = uploadButtonTemplate;
 		this.$uploadButtonTemplate.innerHTML = '';
 		if (this.uploadButtonTemplate && this.uploadButtonData) {
@@ -251,7 +251,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		this.updateVisibilities();
 	}
 
-	replaceFileItem(uuid: string, data: UiIdentifiableClientRecordConfig): void {
+	replaceFileItem(uuid: string, data: DtoIdentifiableClientRecord): void {
 		let correspondingItem = uuid && this.fileItems.filter(fileItem => fileItem.uuid === uuid)[0];
 		if (correspondingItem) {
 			correspondingItem.data = data;
@@ -261,7 +261,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		}
 	}
 
-	protected convertValueForSendingToServer(clientRecords: UiIdentifiableClientRecordConfig[]): any {
+	protected convertValueForSendingToServer(clientRecords: DtoIdentifiableClientRecord[]): any {
 		return clientRecords.map(clientRecord => clientRecord.id);
 	}
 
@@ -315,7 +315,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		}
 	}
 
-	public getTransientValue(): UiIdentifiableClientRecordConfig[] {
+	public getTransientValue(): DtoIdentifiableClientRecord[] {
 		return this.fileItems
 			.filter(fileItem => fileItem.state === FileItemState.DISPLAYING)
 			.map(fileItem => fileItem.data);
@@ -326,7 +326,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		this.updateVisibilities();
 	}
 
-	public getReadOnlyHtml(value: UiIdentifiableClientRecordConfig[], availableWidth: number): string {
+	public getReadOnlyHtml(value: DtoIdentifiableClientRecord[], availableWidth: number): string {
 		let content: string;
 		if (value != null) {
 			content = value.map((entry) => this.itemRenderer.render(entry.values)).join("");
@@ -336,11 +336,11 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		return `<div class="static-readonly-UiFileField">${content}</div>`
 	}
 
-	getDefaultValue(): UiIdentifiableClientRecordConfig[] {
+	getDefaultValue(): DtoIdentifiableClientRecord[] {
 		return [];
 	}
 
-	public valuesChanged(v1: UiIdentifiableClientRecordConfig[], c2: UiIdentifiableClientRecordConfig[]): boolean {
+	public valuesChanged(v1: DtoIdentifiableClientRecord[], c2: DtoIdentifiableClientRecord[]): boolean {
 		return true; // TODO pojos
 	}
 
@@ -379,7 +379,7 @@ class UploadItem {
 
 	private $main: HTMLElement;
 
-	private _data: UiIdentifiableClientRecordConfig;
+	private _data: DtoIdentifiableClientRecord;
 	private _state: FileItemState | null;
 	private $fileInfo: HTMLElement;
 	private $progressIndicator: HTMLElement;
@@ -492,7 +492,7 @@ class UploadItem {
 		}
 	}
 
-	public set data(data: UiIdentifiableClientRecordConfig) {
+	public set data(data: DtoIdentifiableClientRecord) {
 		this._data = data;
 		this.$templateWrapper.innerHTML = this.renderer.render(data.values);
 		this.setState(FileItemState.DISPLAYING);
@@ -523,4 +523,4 @@ class UploadItem {
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiFileField", UiFileField);
+

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.template.gridtemplate;
 
-import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoCssAlignItems;
 import org.teamapps.dto.DtoCssJustifyContent;
 import org.teamapps.dto.DtoFloatingElement;
@@ -30,9 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FloatingElement extends AbstractTemplateElement<FloatingElement> {
+public class FloatingElement extends AbstractGridTemplateElement<FloatingElement> {
 
-	protected List<AbstractTemplateElement<?>> elements = new ArrayList<>();
+	protected List<AbstractGridTemplateElement<?>> elements = new ArrayList<>();
 	protected boolean wrap;
 	protected CssAlignItems alignItems = CssAlignItems.CENTER;
 	protected CssJustifyContent justifyContent = CssJustifyContent.START;
@@ -47,29 +47,29 @@ public class FloatingElement extends AbstractTemplateElement<FloatingElement> {
 	}
 
 	@Override
-	public DtoAbstractTemplateElement createUiTemplateElement() {
-		List<DtoAbstractTemplateElement> uiElements = elements.stream()
+	public DtoAbstractGridTemplateElement createUiTemplateElement() {
+		List<DtoAbstractGridTemplateElement> uiElements = elements.stream()
 				.map(element -> element != null ? element.createUiTemplateElement() : null)
 				.collect(Collectors.toList());
 		DtoFloatingElement uiFloatingElement = new DtoFloatingElement(propertyName, row, column, uiElements);
-		mapAbstractTemplateElementAttributesToUiElement(uiFloatingElement);
+		mapAbstractGridTemplateElementAttributesToUiElement(uiFloatingElement);
 		uiFloatingElement.setWrap(wrap);
 		uiFloatingElement.setAlignItems(alignItems != null ? DtoCssAlignItems.valueOf(alignItems.name()) : null);
 		uiFloatingElement.setJustifyContent(justifyContent != null ? DtoCssJustifyContent.valueOf(justifyContent.name()) : null);
 		return uiFloatingElement;
 	}
 
-	public FloatingElement addElement(AbstractTemplateElement<?> element) {
+	public FloatingElement addElement(AbstractGridTemplateElement<?> element) {
 		elements.add(element);
 		return this;
 	}
 
-	public FloatingElement setElements(final List<AbstractTemplateElement<?>> elements) {
+	public FloatingElement setElements(final List<AbstractGridTemplateElement<?>> elements) {
 		this.elements = elements;
 		return this;
 	}
 
-	public List<AbstractTemplateElement<?>> getElements() {
+	public List<AbstractGridTemplateElement<?>> getElements() {
 		return elements;
 	}
 

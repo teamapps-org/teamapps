@@ -153,10 +153,10 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
 		model.findAllReferencedInterfaces(classContext).stream()
 				.forEach(i -> {
 					String className = i.Identifier().getText();
-					Import explicitImport = explicitImports.get(className);
-					imports.add(className, explicitImport != null ? explicitImport.jsModuleName() : "./Dto" + className, TeamAppsIntermediateDtoModel.getPackageName(i));
+					String jsModuleName = getImportJsModuleName(explicitImports, className);
+					imports.add(className, jsModuleName, TeamAppsIntermediateDtoModel.getPackageName(i));
 					if (!typescript) {
-						imports.add(className + "Wrapper", explicitImport != null ? explicitImport.jsModuleName() : "./Dto" + className, TeamAppsIntermediateDtoModel.getPackageName(i));
+						imports.add(className + "Wrapper", jsModuleName, TeamAppsIntermediateDtoModel.getPackageName(i));
 					}
 				});
 		model.findAllReferencedEnums(classContext).stream()
@@ -164,20 +164,26 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
 
 		if (typescript) {
 			Optional.ofNullable(model.findSuperClass(classContext))
-					.filter(c -> !c.commandDeclaration().isEmpty())
-					.ifPresent(c -> imports.add("Dto" + c.Identifier().getText() + "CommandHandler", "./Dto" + c.Identifier() + "CommandHandler", null));
+					.filter(c -> !model.getAllCommands(c).isEmpty())
+					.ifPresent(c -> imports.add(c.Identifier().getText() + "CommandHandler", getImportJsModuleName(explicitImports, c.Identifier().getText()), null));
 			model.getDirectlyImplementedInterfaces(classContext).stream()
-					.filter(c -> !c.commandDeclaration().isEmpty())
-					.forEach(c -> imports.add("Dto" + c.Identifier().getText() + "CommandHandler", "./Dto" + c.Identifier() + "CommandHandler", null));
+					.filter(c -> !model.getAllCommands(c).isEmpty())
+					.forEach(c -> imports.add(c.Identifier().getText() + "CommandHandler", getImportJsModuleName(explicitImports, c.Identifier().getText()), null));
 			Optional.ofNullable(model.findSuperClass(classContext))
-					.filter(c -> !c.eventDeclaration().isEmpty())
-					.ifPresent(c -> imports.add("Dto" + c.Identifier().getText() + "EventSource", "./Dto" + c.Identifier() + "EventSource", null));
+					.filter(c -> !model.getAllEvents(c).isEmpty())
+					.ifPresent(c -> imports.add(c.Identifier().getText() + "EventSource", getImportJsModuleName(explicitImports, c.Identifier().getText()), null));
 			model.getDirectlyImplementedInterfaces(classContext).stream()
-					.filter(c -> !c.eventDeclaration().isEmpty())
-					.forEach(c -> imports.add("Dto" + c.Identifier().getText() + "EventSource", "./Dto" + c.Identifier() + "EventSource", null));
+					.filter(c -> !model.getAllEvents(c).isEmpty())
+					.forEach(c -> imports.add(c.Identifier().getText() + "EventSource", getImportJsModuleName(explicitImports, c.Identifier().getText()), null));
 		}
 
 		return imports.getAll();
+	}
+
+	private static String getImportJsModuleName(Map<String, Import> explicitImports, String className) {
+		Import explicitImport = explicitImports.get(className);
+		String jsModuleName = explicitImport != null ? explicitImport.jsModuleName() : "./Dto" + className;
+		return jsModuleName;
 	}
 
 	private boolean hasQueries(TeamAppsDtoParser.ClassDeclarationContext classContext) {

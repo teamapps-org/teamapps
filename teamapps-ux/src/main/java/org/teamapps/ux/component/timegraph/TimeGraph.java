@@ -21,6 +21,7 @@ package org.teamapps.ux.component.timegraph;
 
 import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.*;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -126,7 +127,7 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		List<DtoTimeChartZoomLevel> uiZoomLevels = createUiZoomlevels();
 
 		Interval domainX = retrieveDomainX();

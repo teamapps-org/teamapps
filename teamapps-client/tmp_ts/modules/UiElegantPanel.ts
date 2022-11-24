@@ -18,23 +18,23 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {UiElegantPanelCommandHandler, UiElegantPanelConfig} from "../generated/UiElegantPanelConfig";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {DtoComponent} from "../generated/DtoComponent";
+import {UiElegantPanelCommandHandler, DtoElegantPanel} from "../generated/DtoElegantPanel";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiSpacingCssString} from "./util/CssFormatUtil";
 import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
 import {parseHtml} from "./Common";
 import {UiComponent} from "./UiComponent";
 
-export class UiElegantPanel extends AbstractUiComponent<UiElegantPanelConfig> implements UiElegantPanelCommandHandler {
+export class UiElegantPanel extends AbstractComponent<DtoElegantPanel> implements UiElegantPanelCommandHandler {
 
 	private $element: HTMLElement;
 	private $contentContainer: HTMLElement;
-	private contentComponent: UiComponent<UiComponentConfig>;
+	private contentComponent: UiComponent<DtoComponent>;
 
-	constructor(config: UiElegantPanelConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoElegantPanel, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$element = parseHtml(`<div class="UiElegantPanel">
                 <div class="flex-container">
@@ -71,4 +71,4 @@ export class UiElegantPanel extends AbstractUiComponent<UiElegantPanelConfig> im
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiElegantPanel", UiElegantPanel);
+

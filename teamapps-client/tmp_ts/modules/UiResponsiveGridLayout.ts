@@ -17,15 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiGridLayout} from "./micro-components/UiGridLayout";
-import {UiResponsiveGridLayoutCommandHandler, UiResponsiveGridLayoutConfig} from "../generated/UiResponsiveGridLayoutConfig";
-import {UiResponsiveGridLayoutPolicyConfig} from "../generated/UiResponsiveGridLayoutPolicyConfig";
+import {UiResponsiveGridLayoutCommandHandler, DtoResponsiveGridLayout} from "../generated/DtoResponsiveGridLayout";
+import {DtoResponsiveGridLayoutPolicy} from "../generated/DtoResponsiveGridLayoutPolicy";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
-export class UiResponsiveGridLayout extends AbstractUiComponent<UiResponsiveGridLayoutConfig> implements UiResponsiveGridLayoutCommandHandler {
+export class UiResponsiveGridLayout extends AbstractComponent<DtoResponsiveGridLayout> implements UiResponsiveGridLayoutCommandHandler {
 
 	private $main: HTMLElement;
 	private $gridLayout: HTMLElement;
@@ -33,7 +33,7 @@ export class UiResponsiveGridLayout extends AbstractUiComponent<UiResponsiveGrid
 	private layoutsFromSmallToLargeMinApplicableWidth: { minApplicableWidth: number, layout: UiGridLayout }[];
 	private currentLayout: UiGridLayout;
 
-	constructor(config: UiResponsiveGridLayoutConfig,
+	constructor(config: DtoResponsiveGridLayout,
 	            context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiResponsiveGridLayout">
@@ -48,7 +48,7 @@ export class UiResponsiveGridLayout extends AbstractUiComponent<UiResponsiveGrid
 		return this.$main;
 	}
 
-	updateLayoutPolicies(layoutPolicies: UiResponsiveGridLayoutPolicyConfig[]): void {
+	updateLayoutPolicies(layoutPolicies: DtoResponsiveGridLayoutPolicy[]): void {
 		layoutPolicies.sort((a, b) => a.minApplicableWidth - b.minApplicableWidth);
 		this.layoutsFromSmallToLargeMinApplicableWidth = layoutPolicies.map(lp => {
 			return {
@@ -86,4 +86,4 @@ export class UiResponsiveGridLayout extends AbstractUiComponent<UiResponsiveGrid
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiResponsiveGridLayout", UiResponsiveGridLayout);
+

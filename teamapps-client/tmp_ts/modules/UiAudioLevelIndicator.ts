@@ -19,12 +19,12 @@
  */
 
 import {parseHtml} from "./Common";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {UiAudioLevelIndicatorCommandHandler, UiAudioLevelIndicatorConfig} from "../generated/UiAudioLevelIndicatorConfig";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {UiAudioLevelIndicatorCommandHandler, DtoAudioLevelIndicator} from "../generated/DtoAudioLevelIndicator";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
-export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndicatorConfig> implements UiAudioLevelIndicatorCommandHandler {
+export class UiAudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndicator> implements UiAudioLevelIndicatorCommandHandler {
 	private $main: HTMLElement;
 	private $activityDisplay: HTMLElement;
 	private $canvas: HTMLCanvasElement;
@@ -37,7 +37,7 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 	private maxLevel2 = 0;
 	private lastDrawingTimestamp = 0;
 
-	constructor(config: UiAudioLevelIndicatorConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoAudioLevelIndicator, context: TeamAppsUiContext) {
 		super(config, context)
 
 		this.$main = parseHtml(`
@@ -165,4 +165,4 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiAudioLevelIndicator", UiAudioLevelIndicator);
+

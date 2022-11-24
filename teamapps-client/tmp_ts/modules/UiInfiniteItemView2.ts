@@ -18,22 +18,22 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {addDelegatedEventListener, parseHtml, Renderer} from "./Common";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
 	UiInfiniteItemView2_ContextMenuRequestedEvent, UiInfiniteItemView2_DisplayedRangeChangedEvent,
 	UiInfiniteItemView2_ItemClickedEvent,
 	UiInfiniteItemView2CommandHandler,
-	UiInfiniteItemView2Config,
+	DtoInfiniteItemView2,
 	UiInfiniteItemView2EventSource
-} from "../generated/UiInfiniteItemView2Config";
+} from "../generated/DtoInfiniteItemView2";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {DtoTemplate} from "../generated/DtoTemplate";
 import {UiItemJustification} from "../generated/UiItemJustification";
-import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
+import {DtoIdentifiableClientRecord} from "../generated/DtoIdentifiableClientRecord";
 import {ContextMenu} from "./micro-components/ContextMenu";
 import {UiComponent} from "./UiComponent";
 import {debouncedMethod, DebounceMode} from "./util/debounce";
@@ -41,7 +41,7 @@ import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlig
 import {UiVerticalElementAlignment} from "../generated/UiVerticalElementAlignment";
 
 type RenderedItem = {
-	item: UiIdentifiableClientRecordConfig,
+	item: DtoIdentifiableClientRecord,
 	$element: HTMLElement,
 	$wrapper: HTMLElement,
 	x: number,
@@ -63,7 +63,7 @@ export var cssAlignItems = {
 	[UiVerticalElementAlignment.STRETCH]: "stretch"
 };
 
-export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2Config> implements UiInfiniteItemView2CommandHandler, UiInfiniteItemView2EventSource {
+export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2> implements UiInfiniteItemView2CommandHandler, UiInfiniteItemView2EventSource {
 
 	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent();
 	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent();
@@ -80,7 +80,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
 	private totalNumberOfRecords: number = null;
 
-	constructor(config: UiInfiniteItemView2Config, context: TeamAppsUiContext) {
+	constructor(config: DtoInfiniteItemView2, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this._config.id}">
                 <div class="grid"></div>
@@ -193,7 +193,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		}
 	}
 
-	private createRenderedItem(item: UiIdentifiableClientRecordConfig): RenderedItem {
+	private createRenderedItem(item: DtoIdentifiableClientRecord): RenderedItem {
 		let $wrapper = document.createElement("div");
 		let $element = parseHtml(this.itemTemplateRenderer.render(item.values));
 		$wrapper.classList.add("item-wrapper");
@@ -236,7 +236,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		}
 	}
 
-	setData(startIndex: number, recordIds: number[], newRecords: UiIdentifiableClientRecordConfig[], totalNumberOfRecords: number): void {
+	setData(startIndex: number, recordIds: number[], newRecords: DtoIdentifiableClientRecord[], totalNumberOfRecords: number): void {
 		this.logger.debug("got data ", startIndex, recordIds.length, newRecords.length, totalNumberOfRecords);
 		this.totalNumberOfRecords = totalNumberOfRecords;
 		this.updateGridHeight();
@@ -284,7 +284,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
             }`;
 	}
 
-	setItemTemplate(itemTemplate: UiTemplateConfig): void {
+	setItemTemplate(itemTemplate: DtoTemplate): void {
 		this.itemTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
 		this.rerenderAllItems();
 	}
@@ -348,4 +348,4 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiInfiniteItemView2", UiInfiniteItemView2);
+

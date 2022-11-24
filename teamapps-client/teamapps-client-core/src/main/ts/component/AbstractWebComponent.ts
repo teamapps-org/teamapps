@@ -1,11 +1,11 @@
 import {Component} from "./Component";
 import {CustomElement} from "../custom-declarations/web-components";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {DtoComponent as DtoComponentConfig} from "../generated";
 import {debounce, DebounceMode} from "../util/debounce";
 import {StyleManager} from "../util/StyleManager";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export abstract class AbstractUiWebComponent<C extends DtoComponentConfig = DtoComponentConfig> extends HTMLElement implements Component<C>, CustomElement {
+export abstract class AbstractWebComponent<C extends DtoComponentConfig = DtoComponentConfig> extends HTMLElement implements Component<C>, CustomElement {
 
 	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
 	readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();

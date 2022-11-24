@@ -17,31 +17,30 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "./AbstractUiField";
+import {AbstractField} from "./AbstractField";
 import {
-	UiFieldEditingMode,
-	UiSpecialKey,
-	UiTextFieldCommandHandler,
-	UiTextFieldConfig,
-	UiTextFieldEventSource,
-	UiTextInputHandlingField_SpecialKeyPressedEvent,
-	UiTextInputHandlingField_TextInputEvent
+	DtoFieldEditingMode,
+	DtoSpecialKey,
+	DtoTextField,
+	DtoTextFieldCommandHandler,
+	DtoTextFieldEventSource,
+	DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {TeamAppsEvent} from "teamapps-client-core";
+import {parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {escapeHtml} from "../../Common";
 
-export class TextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends AbstractField<C, string> implements UiTextFieldEventSource, UiTextFieldCommandHandler {
+export class TextField<C extends DtoTextField = DtoTextField> extends AbstractField<C, string> implements DtoTextFieldEventSource, DtoTextFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
 
 	private $wrapper: HTMLElement;
 	protected $field: HTMLInputElement;
 	private showClearButton: boolean;
 
 	protected initialize(config: C, context: TeamAppsUiContext) {
-		this.$wrapper = parseHtml(`<div class="UiTextField field-border field-border-glow field-background clearable-field-wrapper form-control">
+		this.$wrapper = parseHtml(`<div class="DtoTextField field-border field-border-glow field-background clearable-field-wrapper form-control">
     <input type="text"></input>
     <div class="clear-button tr-remove-button"></div>  
 </div>`);
@@ -62,12 +61,12 @@ export class TextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends 
 		this.setShowClearButton(config.showClearButton);
 
 		this.$field.addEventListener("focus", () => {
-			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
 				this.$field.select();
 			}
 		});
 		this.$field.addEventListener("change", () => {
-			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
@@ -82,15 +81,15 @@ export class TextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends 
 				this.fireTextInput();
 				this.$field.select();
 				this.onSpecialKeyPressed.fire({
-					key: UiSpecialKey.ESCAPE
+					key: DtoSpecialKey.ESCAPE
 				});
 			} else if (e.key === 'Enter') {
-				if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+				if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
 					// this needs to be done here, additionally, since otherwise the onSpecialKeyPressed gets fired before the commit...
 					this.commit();
 				}
 				this.onSpecialKeyPressed.fire({
-					key: UiSpecialKey.ENTER
+					key: DtoSpecialKey.ENTER
 				});
 			}
 		});
@@ -150,12 +149,12 @@ export class TextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends 
 		this.$field.focus();
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
-		return `<div class="static-readonly-UiTextField">${value == null ? "" : escapeHtml(value)}</div>`;
+		return `<div class="static-readonly-DtoTextField">${value == null ? "" : escapeHtml(value)}</div>`;
 	}
 
 	getDefaultValue(): string {
@@ -168,4 +167,4 @@ export class TextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends 
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiTextField", TextField);
+

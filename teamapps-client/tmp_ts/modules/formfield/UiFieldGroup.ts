@@ -17,19 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {UiFieldGroupCommandHandler, UiFieldGroupConfig} from "../../generated/UiFieldGroupConfig";
+
+import {AbstractComponent} from "teamapps-client-core";
+import {UiFieldGroupCommandHandler, DtoFieldGroup} from "../../generated/DtoFieldGroup";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {parseHtml} from "../Common";
 import {UiField} from "./UiField";
 
-export class UiFieldGroup extends AbstractUiComponent<UiFieldGroupConfig> implements UiFieldGroupCommandHandler {
+export class UiFieldGroup extends AbstractComponent<DtoFieldGroup> implements UiFieldGroupCommandHandler {
 
 	private $main: HTMLElement;
 	private fields: UiField[];
 
-	constructor(config: UiFieldGroupConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoFieldGroup, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiFieldGroup"></div>`);
 		this.setFields(config.fields as UiField[]);
@@ -53,4 +53,4 @@ export class UiFieldGroup extends AbstractUiComponent<UiFieldGroupConfig> implem
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiFieldGroup", UiFieldGroup);
+

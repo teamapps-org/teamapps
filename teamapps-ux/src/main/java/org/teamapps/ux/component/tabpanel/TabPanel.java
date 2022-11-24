@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.tabpanel;
 
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoTab;
 import org.teamapps.dto.DtoTabPanel;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -141,7 +141,7 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoTabPanel uiTabPanel = new DtoTabPanel();
 		mapAbstractUiComponentProperties(uiTabPanel);
 		List<DtoTab> uiTabs = tabs.stream()

@@ -19,18 +19,20 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class NetworkGraph extends Component{
 	required List<NetworkNode> nodes;
 	required List<NetworkLink> links;
 	required List<NetworkImage> images;
-	double gravity = 0.1f;
-	double theta = 0.3f;
-	double alpha = 0.1f;
-	int charge = -300;
-	int distance = 30;
-	int strength = -30;
+	double gravity;
+	double theta;
+	double alpha;
+	int charge;
+	int distance;
+	int strength;
 	String highlightColor;
-	int animationDuration = 1000;
+	int animationDuration;
 
 	command setZoomFactor(double zoomFactor);
 	command setGravity(double gravity);
@@ -51,12 +53,12 @@ class NetworkNode {
 	required int width;
 	required int height;
 
-	String backgroundColor = "rgb(255, 255, 255)";
-	String borderColor = "rgb(100, 100, 100)";
-	double borderWidth = 1;
-	double borderRadius = 0;
+	String backgroundColor;
+	String borderColor;
+	double borderWidth;
+	double borderRadius;
 
-	double distanceFactor = 0.6f;
+	double distanceFactor;
 
 	TreeGraphNodeImage image;
 	TreeGraphNodeIcon icon;
@@ -74,8 +76,8 @@ enum NetworkNodeExpandState {
 class NetworkLink {
 	required String source;
 	required String target;
-	String lineColor = "rgb(127, 127, 127)";
-	double lineWidth = 1.5f;
+	String lineColor;
+	double lineWidth;
 	String lineDashArray;
 	int linkLength;
 }

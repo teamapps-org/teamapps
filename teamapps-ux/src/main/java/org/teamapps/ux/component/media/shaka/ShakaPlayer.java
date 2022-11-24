@@ -22,10 +22,10 @@ package org.teamapps.ux.component.media.shaka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.util.ExceptionUtil;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoShakaManifest;
 import org.teamapps.dto.DtoShakaPlayer;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.media.PosterImageSize;
@@ -65,7 +65,7 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoShakaPlayer ui = new DtoShakaPlayer();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHlsUrl(hlsUrl);

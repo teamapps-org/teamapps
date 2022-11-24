@@ -19,13 +19,15 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 
 
 managed class PictureChooser extends Field {
-	String uploadUrl = "/upload"; // May point anywhere.
-	long maxFileSize = 5000000;
-	String fileTooLargeMessage = "File too large!";
-	String uploadErrorMessage = "Error while transmitting file...";
+	String uploadUrl; // May point anywhere.
+	long maxFileSize;
+	String fileTooLargeMessage;
+	String uploadErrorMessage;
 
 	String browseButtonIcon;
     String deleteButtonIcon;

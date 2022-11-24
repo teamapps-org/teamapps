@@ -17,21 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponentConfig, UiSplitDirection, UiSplitSizePolicy} from "../../generated";
-import {SplitPane} from "../UiSplitPane";
-import {TeamAppsUiContext} from "teamapps-client-core";
+import {DtoSplitDirection, DtoSplitSizePolicy} from "../../generated";
+import {SplitPane} from "../SplitPane";
+import {Component, generateUUID, TeamAppsUiContext} from "teamapps-client-core";
 import {ItemTreeItem} from "./ItemTree";
-import {generateUUID} from "../../Common";
-import {UiComponent} from "teamapps-client-core";
 
 export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 	id: string;
 	parent: SplitPaneItem;
 	component: SplitPane;
-	private _firstChild: ItemTreeItem<UiComponent<UiComponentConfig>>;
-	private _lastChild: ItemTreeItem<UiComponent<UiComponentConfig>>;
+	private _firstChild: ItemTreeItem<Component>;
+	private _lastChild: ItemTreeItem<Component>;
 
-	constructor(id: string, parent: SplitPaneItem, splitDirection: UiSplitDirection, sizePolicy: UiSplitSizePolicy, firstChildRelativeSize: number, context: TeamAppsUiContext) {
+	constructor(id: string, parent: SplitPaneItem, splitDirection: DtoSplitDirection, sizePolicy: DtoSplitSizePolicy, firstChildRelativeSize: number, context: TeamAppsUiContext) {
 		this.id = id;
 		this.parent = parent;
 		this.component = new SplitPane({
@@ -57,31 +55,31 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 		return [...firstChildViewNames, ...lastChildViewNames];
 	}
 
-	public set firstChild(firstChild: ItemTreeItem<UiComponent<UiComponentConfig>>) {
+	public set firstChild(firstChild: ItemTreeItem<Component>) {
 		this._firstChild = firstChild;
 		this._firstChild && (this._firstChild.parent = this);
 		this.component.setFirstChild(firstChild ? firstChild.component : null);
 	}
 
-	public set lastChild(lastChild: ItemTreeItem<UiComponent<UiComponentConfig>>) {
+	public set lastChild(lastChild: ItemTreeItem<Component>) {
 		this._lastChild = lastChild;
 		this._lastChild && (this._lastChild.parent = this);
 		this.component.setLastChild(lastChild ? lastChild.component : null);
 	}
 
-	public get firstChild(): ItemTreeItem<UiComponent<UiComponentConfig>> {
+	public get firstChild(): ItemTreeItem<Component> {
 		return this._firstChild;
 	}
 
-	public get lastChild(): ItemTreeItem<UiComponent<UiComponentConfig>> {
+	public get lastChild(): ItemTreeItem<Component> {
 		return this._lastChild;
 	}
 
-	get splitDirection(): UiSplitDirection {
+	get splitDirection(): DtoSplitDirection {
 		return this.component.splitDirection;
 	}
 
-	get sizePolicy(): UiSplitSizePolicy {
+	get sizePolicy(): DtoSplitSizePolicy {
 		return this.component.sizePolicy;
 	}
 

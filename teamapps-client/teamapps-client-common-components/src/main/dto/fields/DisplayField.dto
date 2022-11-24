@@ -19,10 +19,12 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class DisplayField extends Field {
 	boolean showBorder; //if true, show a border like for text fields
 	boolean showHtml; //if true, treat the value as valid HTML
-	boolean removeStyleTags = true;
+	boolean removeStyleTags;
 
 	command setShowBorder(boolean showBorder);
 	command setShowHtml(boolean showHtml);

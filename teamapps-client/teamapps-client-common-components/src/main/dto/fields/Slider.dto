@@ -19,15 +19,17 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class Slider extends Field {
-	double min = 0;
-	double max = 100;
-	double step = 1;
-	int displayedDecimals = 0;
-	String selectionColor = "rgb(51, 122, 183)";
+	double min;
+	double max;
+	double step;
+	int displayedDecimals;
+	String selectionColor;
 	String tooltipPrefix;
 	String tooltipPostfix;
-	boolean humanReadableFileSize = false;
+	boolean humanReadableFileSize;
 
 	command setMin(double min);
 	command setMax(double max);

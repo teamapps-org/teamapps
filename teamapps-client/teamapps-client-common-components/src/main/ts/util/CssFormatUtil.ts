@@ -17,39 +17,41 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiTextAlignment} from "../generated/UiTextAlignment";
-import {UiVerticalElementAlignment} from "../generated/UiVerticalElementAlignment";
-import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
-import {UiSizeType} from "../generated/UiSizeType";
-import {UiFontStyle} from "../generated/UiFontStyle";
-import {UiLine} from "../generated/UiLine";
-import {UiLineType} from "../generated/UiLineType";
-import {UiBorder} from "../generated/UiBorder";
-import {UiShadow} from "../generated/UiShadow";
-import {UiSpacing} from "../generated/UiSpacing";
-import {UiSizingPolicy} from "../generated/UiSizingPolicy";
-import {UiImageSizing} from "../generated/UiImageSizing";
+import {
+	DtoBorder,
+	DtoFontStyle,
+	DtoHorizontalElementAlignment,
+	DtoImageSizing,
+	DtoLine,
+	DtoLineType,
+	DtoShadow,
+	DtoSizeType,
+	DtoSizingPolicy,
+	DtoSpacing,
+	DtoTextAlignment,
+	DtoVerticalElementAlignment
+} from "../generated";
 
 export type CssPropertyObject = { [cssProperty: string]: string };
 
 export const cssUnitByUiSizeType = {
-	[UiSizeType.FIXED]: 'px',
-	[UiSizeType.FRACTION]: 'fr',
-	[UiSizeType.RELATIVE]: '%'
+	[DtoSizeType.FIXED]: 'px',
+	[DtoSizeType.FRACTION]: 'fr',
+	[DtoSizeType.RELATIVE]: '%'
 };
 
 export const cssHorizontalAlignmentByUiVerticalAlignment = {
-	[UiHorizontalElementAlignment.LEFT]: 'start',
-	[UiHorizontalElementAlignment.CENTER]: 'center',
-	[UiHorizontalElementAlignment.RIGHT]: 'end',
-	[UiHorizontalElementAlignment.STRETCH]: 'stretch'
+	[DtoHorizontalElementAlignment.LEFT]: 'start',
+	[DtoHorizontalElementAlignment.CENTER]: 'center',
+	[DtoHorizontalElementAlignment.RIGHT]: 'end',
+	[DtoHorizontalElementAlignment.STRETCH]: 'stretch'
 };
 
 export const cssVerticalAlignmentByUiVerticalAlignment = {
-	[UiVerticalElementAlignment.TOP]: 'start',
-	[UiVerticalElementAlignment.CENTER]: 'center',
-	[UiVerticalElementAlignment.BOTTOM]: 'end',
-	[UiVerticalElementAlignment.STRETCH]: 'stretch'
+	[DtoVerticalElementAlignment.TOP]: 'start',
+	[DtoVerticalElementAlignment.CENTER]: 'center',
+	[DtoVerticalElementAlignment.BOTTOM]: 'end',
+	[DtoVerticalElementAlignment.STRETCH]: 'stretch'
 };
 
 export function createUiColorCssObject(cssProperty: string, uiColor: string) {
@@ -62,11 +64,11 @@ export function createUiColorCssObject(cssProperty: string, uiColor: string) {
 	}
 }
 
-export function createTextAlignmentCssString(alignment: UiTextAlignment) {
-	return alignment == null ? '' : 'text-align:' + UiTextAlignment[alignment].toLowerCase() + ';';
+export function createTextAlignmentCssString(alignment: DtoTextAlignment) {
+	return alignment == null ? '' : 'text-align:' + DtoTextAlignment[alignment].toLowerCase() + ';';
 }
 
-export function createUiFontStyleCssString(fontStyle: UiFontStyle) {
+export function createUiFontStyleCssString(fontStyle: DtoFontStyle) {
 	if (fontStyle == null) {
 		return '';
 	} else {
@@ -79,11 +81,11 @@ export function createUiFontStyleCssString(fontStyle: UiFontStyle) {
 	}
 }
 
-export function createUiLineCssString(lineConfig: UiLine) {
-	return lineConfig != null ? `${lineConfig.thickness}px ${UiLineType[lineConfig.type]} ${(lineConfig.color ?? '')}` : '';
+export function createUiLineCssString(lineConfig: DtoLine) {
+	return lineConfig != null ? `${lineConfig.thickness}px ${DtoLineType[lineConfig.type]} ${(lineConfig.color ?? '')}` : '';
 }
 
-export function createUiBorderCssObject(borderConfig: UiBorder): CssPropertyObject {
+export function createUiBorderCssObject(borderConfig: DtoBorder): CssPropertyObject {
 	if (borderConfig == null) {
 		return {};
 	} else {
@@ -107,7 +109,7 @@ export function createUiBorderCssObject(borderConfig: UiBorder): CssPropertyObje
 	}
 }
 
-export function createUiBorderCssString(borderConfig: UiBorder) {
+export function createUiBorderCssString(borderConfig: DtoBorder) {
 	if (borderConfig == null) {
 		return '';
 	} else {
@@ -116,7 +118,7 @@ export function createUiBorderCssString(borderConfig: UiBorder) {
 	}
 }
 
-export function createUiShadowCssObject(shadowConfig: UiShadow): CssPropertyObject {
+export function createUiShadowCssObject(shadowConfig: DtoShadow): CssPropertyObject {
 	if (shadowConfig == null) {
 		return {};
 	} else {
@@ -126,22 +128,22 @@ export function createUiShadowCssObject(shadowConfig: UiShadow): CssPropertyObje
 	}
 }
 
-export function createUiShadowCssString(shadowConfig: UiShadow): string {
+export function createUiShadowCssString(shadowConfig: DtoShadow): string {
 	return cssObjectToString(createUiShadowCssObject(shadowConfig));
 }
 
-export function createImageSizingCssObject(imageSizing: UiImageSizing): CssPropertyObject {
+export function createImageSizingCssObject(imageSizing: DtoImageSizing): CssPropertyObject {
 	if (imageSizing == null ) {
 		return {};
 	} else {
 		let backgroundSize: string;
-		if (imageSizing === UiImageSizing.ORIGINAL) {
+		if (imageSizing === DtoImageSizing.ORIGINAL) {
 			backgroundSize = "auto";
-		} else if (imageSizing === UiImageSizing.STRETCH) {
+		} else if (imageSizing === DtoImageSizing.STRETCH) {
 			backgroundSize = "100% 100%";
-		} else if (imageSizing === UiImageSizing.CONTAIN) {
+		} else if (imageSizing === DtoImageSizing.CONTAIN) {
 			backgroundSize = "contain";
-		} else if (imageSizing ===UiImageSizing.COVER) {
+		} else if (imageSizing ===DtoImageSizing.COVER) {
 			backgroundSize = "cover";
 		}
 		return {
@@ -150,11 +152,11 @@ export function createImageSizingCssObject(imageSizing: UiImageSizing): CssPrope
 	}
 }
 
-export function createUiSpacingValueCssString(spacingConfig: UiSpacing) {
+export function createUiSpacingValueCssString(spacingConfig: DtoSpacing) {
 	return spacingConfig != null ? `${spacingConfig.top}px ${spacingConfig.right}px ${spacingConfig.bottom}px ${spacingConfig.left}px` : null;
 }
 
-export function createUiSpacingCssObject(cssProperty: string, spacingConfig: UiSpacing) {
+export function createUiSpacingCssObject(cssProperty: string, spacingConfig: DtoSpacing) {
 	if (spacingConfig == null) {
 		return {};
 	} else {
@@ -164,7 +166,7 @@ export function createUiSpacingCssObject(cssProperty: string, spacingConfig: UiS
 	}
 }
 
-export function createUiSpacingCssString(cssProperty: string, spacingConfig: UiSpacing): string {
+export function createUiSpacingCssString(cssProperty: string, spacingConfig: DtoSpacing): string {
 	if (spacingConfig == null) {
 		return '';
 	} else {
@@ -172,11 +174,11 @@ export function createUiSpacingCssString(cssProperty: string, spacingConfig: UiS
 	}
 }
 
-export function createCssGridRowOrColumnString(sizePolicy: UiSizingPolicy) {
+export function createCssGridRowOrColumnString(sizePolicy: DtoSizingPolicy) {
 	let maxSizeString: string;
-	if (sizePolicy.type === UiSizeType.AUTO) {
+	if (sizePolicy.type === DtoSizeType.AUTO) {
 		maxSizeString = 'auto';
-	} else if (sizePolicy.type === UiSizeType.RELATIVE) {
+	} else if (sizePolicy.type === DtoSizeType.RELATIVE) {
 		maxSizeString = (sizePolicy.value * 100) + cssUnitByUiSizeType[sizePolicy.type];
 	} else {
 		maxSizeString = sizePolicy.value + cssUnitByUiSizeType[sizePolicy.type];

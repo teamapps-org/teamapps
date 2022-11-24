@@ -18,17 +18,18 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiDummyComponent_ClickedEvent, UiDummyComponentCommandHandler, UiDummyComponentConfig, UiDummyComponentEventSource} from "../generated/UiDummyComponentConfig";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {parseHtml} from "../Common";
+import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {
+	DtoDummyComponent,
+	DtoDummyComponent_ClickedEvent,
+	DtoDummyComponentCommandHandler,
+	DtoDummyComponentEventSource
+} from "../generated";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
-export class DummyComponent extends AbstractUiComponent<UiDummyComponentConfig> implements UiDummyComponentCommandHandler, UiDummyComponentEventSource {
+export class DummyComponent extends AbstractComponent<DtoDummyComponent> implements DtoDummyComponentCommandHandler, DtoDummyComponentEventSource {
 
-	public readonly onClicked: TeamAppsEvent<UiDummyComponent_ClickedEvent> = new TeamAppsEvent<UiDummyComponent_ClickedEvent>();
+	public readonly onClicked: TeamAppsEvent<DtoDummyComponent_ClickedEvent> = new TeamAppsEvent<DtoDummyComponent_ClickedEvent>();
 
 	private static allDummies: DummyComponent[] = [];
 
@@ -41,9 +42,9 @@ export class DummyComponent extends AbstractUiComponent<UiDummyComponentConfig> 
 	private commandCount: number = 0;
 	private text: string = "";
 
-	constructor(config: UiDummyComponentConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoDummyComponent, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = parseHtml('<div class="UiDummyComponent" id="' + config.id + '"></div>');
+		this.$panel = parseHtml('<div class="DtoDummyComponent" id="' + config.id + '"></div>');
 		this.$panel.addEventListener("click", () => {
 			this.clickCount++;
 			this.onClicked.fire({
@@ -104,4 +105,4 @@ destroyed: <span class="${this.destroyed ? 'text-danger blink text-bold' : ''}">
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiDummyComponent", DummyComponent);
+

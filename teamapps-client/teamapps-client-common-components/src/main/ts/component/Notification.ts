@@ -18,58 +18,54 @@
  * =========================LICENSE_END==================================
  */
 import {
-	UiEntranceAnimation,
-	UiExitAnimation,
-	UiNotification_ClosedEvent,
-	UiNotification_OpenedEvent,
-	UiNotificationCommandHandler,
-	UiNotificationConfig,
-	UiNotificationEventSource,
-	UiNotificationPosition
+	DtoEntranceAnimation,
+	DtoExitAnimation,
+	DtoNotification,
+	DtoNotification_ClosedEvent,
+	DtoNotification_OpenedEvent,
+	DtoNotificationCommandHandler,
+	DtoNotificationEventSource,
+	DtoNotificationPosition
 } from "../generated";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {animateCSS, Constants, parseHtml} from "../Common";
+import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {animateCSS, Constants} from "../Common";
 import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiComponent} from "./UiComponent";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 const containersByPosition: {
-	[UiNotificationPosition.TOP_LEFT]: HTMLElement,
-	[UiNotificationPosition.TOP_CENTER]: HTMLElement,
-	[UiNotificationPosition.TOP_RIGHT]: HTMLElement,
-	[UiNotificationPosition.BOTTOM_LEFT]: HTMLElement,
-	[UiNotificationPosition.BOTTOM_CENTER]: HTMLElement,
-	[UiNotificationPosition.BOTTOM_RIGHT]: HTMLElement
+	[DtoNotificationPosition.TOP_LEFT]: HTMLElement,
+	[DtoNotificationPosition.TOP_CENTER]: HTMLElement,
+	[DtoNotificationPosition.TOP_RIGHT]: HTMLElement,
+	[DtoNotificationPosition.BOTTOM_LEFT]: HTMLElement,
+	[DtoNotificationPosition.BOTTOM_CENTER]: HTMLElement,
+	[DtoNotificationPosition.BOTTOM_RIGHT]: HTMLElement
 } = {
-	[UiNotificationPosition.TOP_LEFT]: parseHtml(`<div class="UiNotification-container top-left"></div>`),
-	[UiNotificationPosition.TOP_CENTER]: parseHtml(`<div class="UiNotification-container top-center"></div>`),
-	[UiNotificationPosition.TOP_RIGHT]: parseHtml(`<div class="UiNotification-container top-right"></div>`),
-	[UiNotificationPosition.BOTTOM_LEFT]: parseHtml(`<div class="UiNotification-container bottom-left"></div>`),
-	[UiNotificationPosition.BOTTOM_CENTER]: parseHtml(`<div class="UiNotification-container bottom-center"></div>`),
-	[UiNotificationPosition.BOTTOM_RIGHT]: parseHtml(`<div class="UiNotification-container bottom-right"></div>`)
+	[DtoNotificationPosition.TOP_LEFT]: parseHtml(`<div class="DtoNotification-container top-left"></div>`),
+	[DtoNotificationPosition.TOP_CENTER]: parseHtml(`<div class="DtoNotification-container top-center"></div>`),
+	[DtoNotificationPosition.TOP_RIGHT]: parseHtml(`<div class="DtoNotification-container top-right"></div>`),
+	[DtoNotificationPosition.BOTTOM_LEFT]: parseHtml(`<div class="DtoNotification-container bottom-left"></div>`),
+	[DtoNotificationPosition.BOTTOM_CENTER]: parseHtml(`<div class="DtoNotification-container bottom-center"></div>`),
+	[DtoNotificationPosition.BOTTOM_RIGHT]: parseHtml(`<div class="DtoNotification-container bottom-right"></div>`)
 };
 
 let notifications: {
 	notification: Notification;
-	position: UiNotificationPosition;
+	position: DtoNotificationPosition;
 	$wrapper: HTMLElement;
 }[] = [];
 
-function getNotificationsByPosition(position: UiNotificationPosition) {
+function getNotificationsByPosition(position: DtoNotificationPosition) {
 	return notifications.filter(n => n.position == position);
 }
 
 let updateContainerVisibilities = function () {
-	[UiNotificationPosition.TOP_LEFT,
-		UiNotificationPosition.TOP_CENTER,
-		UiNotificationPosition.TOP_RIGHT,
-		UiNotificationPosition.BOTTOM_LEFT,
-		UiNotificationPosition.BOTTOM_CENTER,
-		UiNotificationPosition.BOTTOM_RIGHT].forEach(pos => {
+	[DtoNotificationPosition.TOP_LEFT,
+		DtoNotificationPosition.TOP_CENTER,
+		DtoNotificationPosition.TOP_RIGHT,
+		DtoNotificationPosition.BOTTOM_LEFT,
+		DtoNotificationPosition.BOTTOM_CENTER,
+		DtoNotificationPosition.BOTTOM_RIGHT].forEach(pos => {
 		let hasNotifications = getNotificationsByPosition(pos).length > 0;
 		if (hasNotifications && containersByPosition[pos].parentNode !== document.body) {
 			document.body.appendChild(containersByPosition[pos]);
@@ -79,7 +75,7 @@ let updateContainerVisibilities = function () {
 	});
 };
 
-export function showNotification(notification: Notification, position: UiNotificationPosition, entranceAnimation: UiEntranceAnimation, exitAnimation: UiExitAnimation) {
+export function showNotification(notification: Notification, position: DtoNotificationPosition, entranceAnimation: DtoEntranceAnimation, exitAnimation: DtoExitAnimation) {
 	let notif = notifications.filter(n => n.notification == notification)[0];
 
 	if (notif == null || notif.position != position) {
@@ -123,10 +119,10 @@ export function showNotification(notification: Notification, position: UiNotific
 	setTimeout(() => notification.startCloseTimeout());
 }
 
-export class Notification extends AbstractUiComponent<UiNotificationConfig> implements UiNotificationCommandHandler, UiNotificationEventSource {
+export class Notification extends AbstractComponent<DtoNotification> implements DtoNotificationCommandHandler, DtoNotificationEventSource {
 
-	public readonly onOpened: TeamAppsEvent<UiNotification_OpenedEvent> = new TeamAppsEvent();
-	public readonly onClosed: TeamAppsEvent<UiNotification_ClosedEvent> = new TeamAppsEvent();
+	public readonly onOpened: TeamAppsEvent<DtoNotification_OpenedEvent> = new TeamAppsEvent();
+	public readonly onClosed: TeamAppsEvent<DtoNotification_ClosedEvent> = new TeamAppsEvent();
 	public readonly onClosedAnyWay: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
@@ -134,10 +130,10 @@ export class Notification extends AbstractUiComponent<UiNotificationConfig> impl
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: UiNotificationConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoNotification, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiNotification">
+		this.$main = parseHtml(`<div class="DtoNotification">
 	<div class="close-button"></div>
 	<div class="content-container"></div>
 	<div class="progress-container"></div>
@@ -151,7 +147,7 @@ export class Notification extends AbstractUiComponent<UiNotificationConfig> impl
 		this.update(config);
 	}
 
-	public update(config: UiNotificationConfig) {
+	public update(config: DtoNotification) {
 		this.config = config;
 		this.$main.style.backgroundColor = config.backgroundColor;
 		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
@@ -167,15 +163,15 @@ export class Notification extends AbstractUiComponent<UiNotificationConfig> impl
 			this.progressBar = null;
 		}
 
-		if (this.$contentContainer.firstChild !== (config.content && (config.content as UiComponent).getMainElement())) {
+		if (this.$contentContainer.firstChild !== (config.content && (config.content as Component).getMainElement())) {
 			this.$contentContainer.innerHTML = '';
 			if (config.content != null) {
-				this.$contentContainer.appendChild((config.content as UiComponent).getMainElement());
+				this.$contentContainer.appendChild((config.content as Component).getMainElement());
 			}
 		}
 	}
 
-	public static showNotification(notification: Notification, position: UiNotificationPosition, entranceAnimation: UiEntranceAnimation, exitAnimation: UiExitAnimation, context: TeamAppsUiContext) {
+	public static showNotification(notification: Notification, position: DtoNotificationPosition, entranceAnimation: DtoEntranceAnimation, exitAnimation: DtoExitAnimation, context: TeamAppsUiContext) {
 		showNotification(notification, position, entranceAnimation, exitAnimation);
 	}
 
@@ -208,4 +204,4 @@ export class Notification extends AbstractUiComponent<UiNotificationConfig> impl
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiNotification", Notification);
+

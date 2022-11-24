@@ -18,21 +18,21 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiItemViewItemGroupConfig} from "../generated/UiItemViewItemGroupConfig";
+import {DtoItemViewItemGroup} from "../generated/DtoItemViewItemGroup";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {DEFAULT_TEMPLATES, trivialMatch} from "./trivial-components/TrivialCore";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {generateUUID, parseHtml, Renderer} from "./Common";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiItemView_ItemClickedEvent, UiItemViewCommandHandler, UiItemViewConfig, UiItemViewEventSource} from "../generated/UiItemViewConfig";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {UiItemView_ItemClickedEvent, UiItemViewCommandHandler, DtoItemView, UiItemViewEventSource} from "../generated/DtoItemView";
 import {UiItemViewFloatStyle} from "../generated/UiItemViewFloatStyle";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {isGridTemplate} from "./TemplateRegistry";
 import {UiItemJustification} from "../generated/UiItemJustification";
 import {UiItemViewItemBackgroundMode} from "../generated/UiItemViewItemBackgroundMode";
 import * as log from "loglevel";
-import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
+import {DtoIdentifiableClientRecord} from "../generated/DtoIdentifiableClientRecord";
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
 
 export var itemCssStringsJustification = {
@@ -50,7 +50,7 @@ export var itemCssStringsAlignItems = {
 	[UiVerticalItemAlignment.STRETCH]: "stretch"
 };
 
-export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements UiItemViewCommandHandler, UiItemViewEventSource {
+export class UiItemView extends AbstractComponent<DtoItemView> implements UiItemViewCommandHandler, UiItemViewEventSource {
 
 	public readonly onItemClicked: TeamAppsEvent<UiItemView_ItemClickedEvent> = new TeamAppsEvent<UiItemView_ItemClickedEvent>();
 
@@ -59,7 +59,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 	private groupsByGroupId: { [index: string]: ItemGroup } = {};
 	private filterString: string = "";
 
-	constructor(config: UiItemViewConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoItemView, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$itemView = parseHtml('<div class="UiItemView"></div>');
@@ -80,7 +80,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 		return this.$itemView;
 	}
 
-	public addItemGroup(itemGroupConfig: UiItemViewItemGroupConfig): ItemGroup {
+	public addItemGroup(itemGroupConfig: DtoItemViewItemGroup): ItemGroup {
 		if (this.groupsByGroupId[itemGroupConfig.id]) {
 			this.removeItemGroup(itemGroupConfig.id);
 		}
@@ -90,7 +90,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 		return itemGroup;
 	}
 
-	private createItemGroup(itemGroupConfig: UiItemViewItemGroupConfig) {
+	private createItemGroup(itemGroupConfig: DtoItemViewItemGroup) {
 		const itemGroup = new ItemGroup(this, this._context, itemGroupConfig, this.groupHeaderTemplateRenderer);
 		itemGroup.onItemClicked.addListener(item => this.onItemClicked.fire({
 			groupId: itemGroupConfig.id,
@@ -101,7 +101,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 		return itemGroup;
 	}
 
-	public refreshItemGroup(itemGroupConfig: UiItemViewItemGroupConfig): void {
+	public refreshItemGroup(itemGroupConfig: DtoItemViewItemGroup): void {
 		let oldGroup = this.groupsByGroupId[itemGroupConfig.id];
 		if (!oldGroup) {
 			this.logger.error(`Could not refresh non-existing group "${itemGroupConfig.id}"!`);
@@ -119,7 +119,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 		delete this.groupsByGroupId[groupId];
 	}
 
-	public addItem(groupId: string, item: UiIdentifiableClientRecordConfig): void {
+	public addItem(groupId: string, item: DtoIdentifiableClientRecord): void {
 		const itemGroup = this.groupsByGroupId[groupId];
 		if (!itemGroup) {
 			this.logger.error(`Cannot find group ${groupId} in UiItemView ` + this._config.id);
@@ -160,16 +160,16 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 
 class ItemGroup {
 	private $itemGroup: HTMLElement;
-	private items: UiIdentifiableClientRecordConfig[];
-	private trivialTreeBox: TrivialTreeBox<UiIdentifiableClientRecordConfig>;
+	private items: DtoIdentifiableClientRecord[];
+	private trivialTreeBox: TrivialTreeBox<DtoIdentifiableClientRecord>;
 	private itemRenderer: Renderer;
 	private filterString: string;
 
 	private static logger = log.getLogger("UiItemView-ItemGroup");
 
-	public readonly onItemClicked: TeamAppsEvent<UiIdentifiableClientRecordConfig> = new TeamAppsEvent<UiIdentifiableClientRecordConfig>();
+	public readonly onItemClicked: TeamAppsEvent<DtoIdentifiableClientRecord> = new TeamAppsEvent<DtoIdentifiableClientRecord>();
 
-	constructor(private itemView: UiItemView, private context: TeamAppsUiContext, private config: UiItemViewItemGroupConfig, groupHeaderTemplateRenderer: Renderer) {
+	constructor(private itemView: UiItemView, private context: TeamAppsUiContext, private config: DtoItemViewItemGroup, groupHeaderTemplateRenderer: Renderer) {
 		this.items = config.items;
 
 		const groupHtmlId = `item-group-${generateUUID()}`;
@@ -213,7 +213,7 @@ class ItemGroup {
 		$itemContainer.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";
 
 		this.itemRenderer = context.templateRegistry.createTemplateRenderer(config.itemTemplate);
-		this.trivialTreeBox = new TrivialTreeBox<UiIdentifiableClientRecordConfig>({
+		this.trivialTreeBox = new TrivialTreeBox<DtoIdentifiableClientRecord>({
 			entryRenderingFunction: (entry) => this.itemRenderer.render(entry.values),
 			spinnerTemplate: DEFAULT_TEMPLATES.defaultSpinnerTemplate,
 			entries: config.items,
@@ -272,7 +272,7 @@ class ItemGroup {
 		return this.$itemGroup;
 	}
 
-	addItem(item: UiIdentifiableClientRecordConfig) {
+	addItem(item: DtoIdentifiableClientRecord) {
 		this.items.push(item);
 		this.filter();
 	}
@@ -287,4 +287,4 @@ class ItemGroup {
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiItemView", UiItemView);
+

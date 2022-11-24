@@ -24,7 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.dto.*;
+import org.teamapps.dto.CMD;
+import org.teamapps.dto.protocol.*;
 import org.teamapps.uisession.commandbuffer.CommandBuffer;
 import org.teamapps.uisession.commandbuffer.CommandBufferException;
 import org.teamapps.uisession.statistics.RunningUiSessionStats;
@@ -246,7 +247,7 @@ public class UiSession {
 	}
 
 	public void handleEvent(int clientMessageId, DtoEventWrapper event) {
-		statistics.eventReceived(event.getUiClass());
+		statistics.eventReceived(event.getDtoClass());
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Recieved event ({}): {}", sessionId.substring(0, 8), event.getClass());
@@ -257,7 +258,7 @@ public class UiSession {
 	}
 
 	public void handleQuery(int clientMessageId, DtoQueryWrapper query) {
-		statistics.queryReceived(query.getUiClass());
+		statistics.queryReceived(query.getDtoClass());
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Recieved query ({}): {}", sessionId.substring(0, 8), query.getClass());
@@ -268,8 +269,8 @@ public class UiSession {
 				sessionId,
 				query,
 				result -> {
-					sendAsyncWithErrorHandler(new DtoQUERY_RESULT(clientMessageId, result));
-					statistics.queryResultSentFor(query.getUiClass());
+					sendAsyncWithErrorHandler(new DtoQRY_RES(clientMessageId, result));
+					statistics.queryResultSentFor(query.getDtoClass());
 				}
 		));
 	}

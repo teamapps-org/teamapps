@@ -29,7 +29,7 @@ enum FieldEditingMode {
 }
 
 abstract managed class Field extends Component {
-	FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
+	FieldEditingMode editingMode;
 	Object value;
 	List<FieldMessage> fieldMessages;
 

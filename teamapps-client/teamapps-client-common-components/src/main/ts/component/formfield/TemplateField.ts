@@ -17,38 +17,36 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "./AbstractUiField";
+import {AbstractField} from "./AbstractField";
 import {
-	UiClientRecord,
-	UiFieldEditingMode,
-	UiTemplateField_ClickedEvent,
-	UiTemplateFieldCommandHandler,
-	UiTemplateFieldConfig,
-	UiTemplateFieldEventSource
+	DtoClientRecord,
+	DtoFieldEditingMode,
+	DtoTemplateField,
+	DtoTemplateField_ClickedEvent,
+	DtoTemplateFieldCommandHandler,
+	DtoTemplateFieldEventSource
 } from "../../generated";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {parseHtml, Renderer} from "../../Common";
-import {TeamAppsEvent} from "teamapps-client-core";
+import {parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Renderer} from "../../Common";
 
-export class TemplateField extends AbstractField<UiTemplateFieldConfig, UiClientRecord> implements UiTemplateFieldCommandHandler, UiTemplateFieldEventSource {
+export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {
 
-    public readonly onClicked: TeamAppsEvent<UiTemplateField_ClickedEvent> = new TeamAppsEvent();
+    public readonly onClicked: TeamAppsEvent<DtoTemplateField_ClickedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private templateRenderer: Renderer;
 
-	constructor(config: UiTemplateFieldConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoTemplateField, context: TeamAppsUiContext) {
 		super(config, context);
 	}
 
-	protected initialize(config: UiTemplateFieldConfig, context: TeamAppsUiContext): void {
-		this.$main = parseHtml(`<div class="UiTemplateField"></div>`);
+	protected initialize(config: DtoTemplateField, context: TeamAppsUiContext): void {
+		this.$main = parseHtml(`<div class="DtoTemplateField"></div>`);
 		this.$main.addEventListener("click", ev => this.onClicked.fire({}));
 		this.update(config);
 	}
 
-	update(config: UiTemplateFieldConfig): void {
+	update(config: DtoTemplateField): void {
 		this.templateRenderer = this._context.templateRegistry.createTemplateRenderer(config.template);
 		this.displayCommittedValue();
 	}
@@ -65,26 +63,26 @@ export class TemplateField extends AbstractField<UiTemplateFieldConfig, UiClient
 		// do nothing
 	}
 
-	getTransientValue(): UiClientRecord {
+	getTransientValue(): DtoClientRecord {
 		return this.getCommittedValue();
 	}
 
-	isValidData(v: UiClientRecord): boolean {
+	isValidData(v: DtoClientRecord): boolean {
 		return true;
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode?: DtoFieldEditingMode): void {
 		// nothing to do!
 	}
 
-	valuesChanged(v1: UiClientRecord, v2: UiClientRecord): boolean {
+	valuesChanged(v1: DtoClientRecord, v2: DtoClientRecord): boolean {
 		return false;
 	}
 
 
-	getReadOnlyHtml(value: UiClientRecord, availableWidth: number): string {
-		return `<div class="static-readonly-UiTemplateField">${value != null ? this.templateRenderer.render(value.values) : ""}</div>`;
+	getReadOnlyHtml(value: DtoClientRecord, availableWidth: number): string {
+		return `<div class="static-readonly-DtoTemplateField">${value != null ? this.templateRenderer.render(value.values) : ""}</div>`;
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiTemplateField", TemplateField);
+

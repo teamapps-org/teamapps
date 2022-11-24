@@ -162,10 +162,10 @@ class Location {
 abstract class AbstractServerMessage { }
 
 class INIT_OK extends AbstractServerMessage {
-	required int minRequestedCommands = 5;
-	required int maxRequestedCommands = 20;
-	required int sentEventsBufferSize = 500;
-	required long keepaliveInterval = 25000;
+	required int minRequestedCommands;
+	required int maxRequestedCommands;
+	required int sentEventsBufferSize;
+	required long keepaliveInterval;
 }
 
 class INIT_NOK extends AbstractServerMessage {

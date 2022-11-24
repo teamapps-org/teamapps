@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.field.upload;
 
 import net.coobird.thumbnailator.Thumbnails;
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoField;
 import org.teamapps.dto.DtoPictureChooser;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;

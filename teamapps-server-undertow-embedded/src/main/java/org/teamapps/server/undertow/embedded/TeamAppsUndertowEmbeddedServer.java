@@ -27,7 +27,6 @@ import io.undertow.servlet.api.*;
 import io.undertow.servlet.util.ImmediateInstanceHandle;
 import io.undertow.websockets.extensions.PerMessageDeflateHandshake;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
-import org.teamapps.client.ClientCodeExtractor;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsCore;
 import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFactory;

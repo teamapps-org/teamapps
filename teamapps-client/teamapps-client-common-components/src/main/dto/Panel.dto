@@ -19,19 +19,23 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
+import Showable from "teamapps-client-core":org.teamapps.dto;
+
 managed class Panel extends Component {
 	String icon;
 	String title;
 	PanelHeaderField leftHeaderField;
 	PanelHeaderField rightHeaderField;
-	PanelHeaderComponentMinimizationPolicy headerComponentMinimizationPolicy = PanelHeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
-	boolean alwaysShowHeaderFieldIcons = true;
+	PanelHeaderComponentMinimizationPolicy headerComponentMinimizationPolicy;
+	boolean alwaysShowHeaderFieldIcons;
 	boolean hideTitleBar;
 
 	Toolbar* toolbar;
 	Component* content;
-	boolean stretchContent = true;
-	int padding = 0;
+	boolean stretchContent;
+	int padding;
 	List<WindowButtonType> windowButtons;
 	List<ToolButton*> toolButtons;
 
@@ -56,16 +60,16 @@ enum PanelHeaderComponentMinimizationPolicy {
 class PanelHeaderField {
 	required Field* field;
 	String icon;
-	int minWidth = 50;
-	int maxWidth = 200;
+	int minWidth;
+	int maxWidth;
 }
 
 managed class Window extends Panel implements Showable {
-	boolean modal = true;
-	int width = 0; // 0 = full width
-	int height = 0; // 0 = full height, -1 = auto
-	String headerBackgroundColor = "rgba(190, 190, 190, .72)";
-	String modalBackgroundDimmingColor = "rgba(0, 0, 0, .2)";
+	boolean modal;
+	int width; // 0 = full width
+	int height; // 0 = full height, -1 = auto
+	String headerBackgroundColor;
+	String modalBackgroundDimmingColor;
     boolean closeable; // show "close" special tool button
     boolean closeOnEscape; // close if the user presses escape
     boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
@@ -81,11 +85,11 @@ managed class Window extends Panel implements Showable {
 }
 
 managed class ElegantPanel extends Component {
-	String bodyBackgroundColor = "rgba(255, 255, 255, .4)";
+	String bodyBackgroundColor;
 	Component* content;
-	Spacing padding = new Spacing().setTop(20).setBottom(20);
-	HorizontalElementAlignment horizontalContentAlignment = HorizontalElementAlignment.CENTER;
-	int maxContentWidth = 0; // 0 = 100%
+	Spacing padding;
+	HorizontalElementAlignment horizontalContentAlignment;
+	int maxContentWidth; // 0 = 100%
 
 	command setContent(Component* content);
 }

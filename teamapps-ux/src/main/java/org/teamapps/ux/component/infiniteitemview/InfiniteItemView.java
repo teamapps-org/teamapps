@@ -19,10 +19,11 @@
  */
 package org.teamapps.ux.component.infiniteitemview;
 
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.dto.DtoInfiniteItemView;
+import org.teamapps.dto.DtoInfiniteItemViewDataRequestWrapper;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
@@ -33,6 +34,9 @@ import org.teamapps.ux.component.itemview.ItemViewRowJustification;
 import org.teamapps.ux.component.itemview.ItemViewVerticalItemAlignment;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -98,7 +102,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
 		mapAbstractUiComponentProperties(ui);
 		int recordCount = model.getCount();

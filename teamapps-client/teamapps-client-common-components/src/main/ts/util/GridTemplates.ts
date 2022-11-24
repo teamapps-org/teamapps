@@ -30,16 +30,18 @@ import {
 	cssObjectToString,
 	cssVerticalAlignmentByUiVerticalAlignment
 } from "./CssFormatUtil";
-import {UiTextElement} from "../generated/UiTextElement";
-import {UiBadgeElement} from "../generated/UiBadgeElement";
-import {UiFloatingElement} from "../generated/UiFloatingElement";
-import {UiImageElement} from "../generated/UiImageElement";
-import {UiIconElement} from "../generated/UiIconElement";
-import {UiGlyphIconElement} from "../generated/UiGlyphIconElement";
-import {AbstractUiTemplateElement} from "../generated/AbstractUiTemplateElement";
-import {UiGridTemplate} from "../generated/UiGridTemplate";
+import {
+	DtoAbstractGridTemplateElement,
+	DtoBadgeElement,
+	DtoFloatingElement,
+	DtoGlyphIconElement,
+	DtoGridTemplate,
+	DtoIconElement,
+	DtoImageElement,
+	DtoTextElement
+} from "../generated";
 
-function createTextElementRenderer(element: UiTextElement, additionalCssClass?: string, additionalStyles?: string): RenderingFunction {
+function createTextElementRenderer(element: DtoTextElement, additionalCssClass?: string, additionalStyles?: string): RenderingFunction {
 	const fontStyleCssString = createUiFontStyleCssString(element.fontStyle);
 	const elementStyleCssString = (element.lineHeight ? ('line-height:' + element.lineHeight + ';') : '')
 		+ (`white-space:${element.wrapLines ? 'normal' : 'nowrap'};`)
@@ -51,32 +53,32 @@ function createTextElementRenderer(element: UiTextElement, additionalCssClass?: 
 		if (value == null) {
 			return "";
 		} else if (element.fontStyle != null && element.fontStyle.backgroundColor) {
-			return `<div class="grid-template-element UiTextElement wrapper ${additionalCssClass || ''}" style="${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">
+			return `<div class="grid-template-element DtoTextElement wrapper ${additionalCssClass || ''}" style="${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">
 	<span data-key="${element.property}" style="${fontStyleCssString}">${value || ''}</span>
 </div>`;
 		} else {
-			return `<span data-key="${element.property}" class="grid-template-element UiTextElement ${additionalCssClass || ''}" style="${fontStyleCssString} ${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">${value || ''}</span>`;
+			return `<span data-key="${element.property}" class="grid-template-element DtoTextElement ${additionalCssClass || ''}" style="${fontStyleCssString} ${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">${value || ''}</span>`;
 		}
 	};
 }
 
-function createBadgeElementRenderer(element: UiBadgeElement, additionalCss: string): RenderingFunction {
+function createBadgeElementRenderer(element: DtoBadgeElement, additionalCss: string): RenderingFunction {
 	const borderStyle = `border: 1px solid ${element.borderColor ? element.borderColor ?? '' : 'transparent'};`;
-	return createTextElementRenderer(element, 'UiBadgeElement', borderStyle + additionalCss);
+	return createTextElementRenderer(element, 'DtoBadgeElement', borderStyle + additionalCss);
 }
 
-function createFloatingElementRenderer(element: UiFloatingElement, additionalCss: string): RenderingFunction {
+function createFloatingElementRenderer(element: DtoFloatingElement, additionalCss: string): RenderingFunction {
 	const elementRenderers = element.elements.map(subElement => createElementRenderer(subElement));
 	const wrapCss = `flex-wrap: ${element.wrap ? 'wrap' : 'nowrap'};`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	const alignItemsCss = `align-items: ${element.alignItems ?? 'flex-start'};`;
 	const justifyContentCss = `justify-content: ${element.justifyContent ?? 'start'};`;
 	return (data: any) => {
-		return `<div class='grid-template-element UiFloatingElement' style="${wrapCss} ${backgroundColorCss} ${alignItemsCss} ${justifyContentCss} ${additionalCss}">${elementRenderers.map(renderer => renderer(data)).join('')}</div>`;
+		return `<div class='grid-template-element DtoFloatingElement' style="${wrapCss} ${backgroundColorCss} ${alignItemsCss} ${justifyContentCss} ${additionalCss}">${elementRenderers.map(renderer => renderer(data)).join('')}</div>`;
 	};
 }
 
-function createImageElementRenderer(element: UiImageElement, additionalCss: string): RenderingFunction {
+function createImageElementRenderer(element: DtoImageElement, additionalCss: string): RenderingFunction {
 	let style = (element.width ? ('width:' + element.width + 'px;') : '')
 		+ (element.height ? ('height:' + element.height + 'px;') : '')
 		+ createUiBorderCssString(element.border)
@@ -88,28 +90,28 @@ function createImageElementRenderer(element: UiImageElement, additionalCss: stri
 		let value = data[element.property];
 		if (value != null) {
 			const backgroundImage = `background-image: url('${value}');`;
-			return `<div data-key="${element.property}" class="grid-template-element UiImageElement" style="${style} ${backgroundImage} ${additionalCss}"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element DtoImageElement" style="${style} ${backgroundImage} ${additionalCss}"></div>`;
 		} else {
 			return '';
 		}
 	};
 }
 
-function createIconElementRenderer(element: UiIconElement, additionalCss: string): RenderingFunction {
+function createIconElementRenderer(element: DtoIconElement, additionalCss: string): RenderingFunction {
 	const style = `width:${element.size}px; height:${element.size}px; background-size:${element.size}px;`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
 		let value = data[element.property];
 		if (value != null) {
 			const backgroundImage = value ? `background-image: url('${value}');` : '';
-			return `<div data-key="${element.property}" class="grid-template-element UiIconElement" style="${style} ${backgroundImage} ${backgroundColorCss} ${additionalCss}"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element DtoIconElement" style="${style} ${backgroundImage} ${backgroundColorCss} ${additionalCss}"></div>`;
 		} else {
 			return '';
 		}
 	};
 }
 
-function createGlyphIconElementRenderer(element: UiGlyphIconElement, additionalCss: string): RenderingFunction {
+function createGlyphIconElementRenderer(element: DtoGlyphIconElement, additionalCss: string): RenderingFunction {
 	const style = `font-size:${element.size}px; text-align: center;`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
@@ -117,12 +119,12 @@ function createGlyphIconElementRenderer(element: UiGlyphIconElement, additionalC
 		if (value == null) {
 			return "";
 		} else {
-			return `<div data-key="${element.property}" class="grid-template-element UiGlyphIconElement fas fa-${value}" style="${style} ${backgroundColorCss} ${additionalCss}')"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element DtoGlyphIconElement fas fa-${value}" style="${style} ${backgroundColorCss} ${additionalCss}')"></div>`;
 		}
 	};
 }
 
-function createElementRenderer(element: AbstractUiTemplateElement, additionalCss = ""): RenderingFunction {
+function createElementRenderer(element: DtoAbstractGridTemplateElement, additionalCss = ""): RenderingFunction {
 	const column = `grid-column: ${element.column + 1} / ${element.column + element.colSpan + 1};`;
 	const row = `grid-row: ${element.row + 1} / ${element.row + element.rowSpan + 1};`;
 	const horizontalAlignmentCss = `justify-self: ${cssHorizontalAlignmentByUiVerticalAlignment[element.horizontalAlignment]};`;
@@ -154,31 +156,31 @@ function createElementRenderer(element: AbstractUiTemplateElement, additionalCss
 	}
 }
 
-export function isUiTextElement(element: AbstractUiTemplateElement): element is UiTextElement {
-	return element._type === "UiTextElement";
+export function isUiTextElement(element: DtoAbstractGridTemplateElement): element is DtoTextElement {
+	return element._type === "DtoTextElement";
 }
 
-export function isUiBadgeElement(element: AbstractUiTemplateElement): element is UiBadgeElement {
-	return element._type === "UiBadgeElement";
+export function isUiBadgeElement(element: DtoAbstractGridTemplateElement): element is DtoBadgeElement {
+	return element._type === "DtoBadgeElement";
 }
 
-export function isUiFloatingElement(element: AbstractUiTemplateElement): element is UiFloatingElement {
-	return element._type === "UiFloatingElement";
+export function isUiFloatingElement(element: DtoAbstractGridTemplateElement): element is DtoFloatingElement {
+	return element._type === "DtoFloatingElement";
 }
 
-export function isUiImageElement(element: AbstractUiTemplateElement): element is UiImageElement {
-	return element._type === "UiImageElement";
+export function isUiImageElement(element: DtoAbstractGridTemplateElement): element is DtoImageElement {
+	return element._type === "DtoImageElement";
 }
 
-export function isUiIconElement(element: AbstractUiTemplateElement): element is UiIconElement {
-	return element._type === "UiIconElement";
+export function isUiIconElement(element: DtoAbstractGridTemplateElement): element is DtoIconElement {
+	return element._type === "DtoIconElement";
 }
 
-export function isUiGlyphIconElement(element: AbstractUiTemplateElement): element is UiGlyphIconElement {
-	return element._type === "UiGlyphIconElement";
+export function isUiGlyphIconElement(element: DtoAbstractGridTemplateElement): element is DtoGlyphIconElement {
+	return element._type === "DtoGlyphIconElement";
 }
 
-export function createGridTemplateRenderer(template: UiGridTemplate, idPropertyName: string): Renderer {
+export function createGridTemplateRenderer(template: DtoGridTemplate, idPropertyName: string): Renderer {
 	const renderers = template.elements.map(element => {
 
 		let startColumn = template.columns[element.column];
@@ -222,7 +224,7 @@ export function createGridTemplateRenderer(template: UiGridTemplate, idPropertyN
 			} else {
 				let ariaLabel = data[template.ariaLabelProperty];
 				let title = data[template.titleProperty];
-				return `<div class="UiGridTemplate" style="${gridCss}" ${data[idPropertyName] ? `data-id="${data[idPropertyName]}"` : ''} ${ariaLabel != null ? `aria-label="${ariaLabel}"` : ''} ${title != null ? `title="${title}"` : ""}>
+				return `<div class="DtoGridTemplate" style="${gridCss}" ${data[idPropertyName] ? `data-id="${data[idPropertyName]}"` : ''} ${ariaLabel != null ? `aria-label="${ariaLabel}"` : ''} ${title != null ? `title="${title}"` : ""}>
 	${renderers.map(renderer => renderer(data)).join("")}
 </div>`;
 			}

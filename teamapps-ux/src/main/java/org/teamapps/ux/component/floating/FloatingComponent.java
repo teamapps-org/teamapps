@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.floating;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoEventWrapper;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoFloatingComponent;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -51,7 +51,7 @@ public class FloatingComponent extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoFloatingComponent ui = new DtoFloatingComponent();
 		mapAbstractUiComponentProperties(ui);
 		ui.setContainerComponent(containerComponent.createUiReference());

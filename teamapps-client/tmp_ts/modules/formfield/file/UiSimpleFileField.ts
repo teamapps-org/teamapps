@@ -26,7 +26,7 @@ import {arraysEqual, generateUUID, parseHtml} from "../../Common";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {keyCodes} from "../../trivial-components/TrivialCore";
-import {createUiFileItemConfig, UiFileItemConfig} from "../../../generated/UiFileItemConfig";
+import {createDtoFileItem, DtoFileItem} from "../../../generated/DtoFileItem";
 import {
 	UiSimpleFileField_FileItemClickedEvent,
 	UiSimpleFileField_FileItemRemovedEvent,
@@ -37,15 +37,15 @@ import {
 	UiSimpleFileField_UploadSuccessfulEvent,
 	UiSimpleFileField_UploadTooLargeEvent,
 	UiSimpleFileFieldCommandHandler,
-	UiSimpleFileFieldConfig,
+	DtoSimpleFileField,
 	UiSimpleFileFieldEventSource
-} from "../../../generated/UiSimpleFileFieldConfig";
+} from "../../../generated/DtoSimpleFileField";
 import {FileItemState, UiFileItem} from "./UiFileItem";
 
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
-export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileItemConfig[]> implements UiSimpleFileFieldEventSource, UiSimpleFileFieldCommandHandler {
+export class UiSimpleFileField extends UiField<DtoSimpleFileField, DtoFileItem[]> implements UiSimpleFileFieldEventSource, UiSimpleFileFieldCommandHandler {
 
 	public readonly onFileItemClicked: TeamAppsEvent<UiSimpleFileField_FileItemClickedEvent> = new TeamAppsEvent();
 	public readonly onFileItemRemoved: TeamAppsEvent<UiSimpleFileField_FileItemRemovedEvent> = new TeamAppsEvent();
@@ -69,7 +69,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 	private uploadErrorMessage: string;
 	private uploadUrl: string;
 
-	protected initialize(config: UiSimpleFileFieldConfig, context: TeamAppsUiContext): void {
+	protected initialize(config: DtoSimpleFileField, context: TeamAppsUiContext): void {
 		this.fileItems = {};
 
 		this.$main = parseHtml(`<div class="UiSimpleFileField drop-zone form-control field-border field-border-glow field-background">
@@ -144,7 +144,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 			.forEach(uuid => this.addFileItem(this.getCommittedValue().filter(item => item.uuid === uuid)[0]));
 	}
 
-	getDefaultValue(): UiFileItemConfig[] {
+	getDefaultValue(): DtoFileItem[] {
 		return [];
 	}
 
@@ -155,10 +155,10 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 		return this.$main;
 	}
 
-	getTransientValue(): UiFileItemConfig[] {
+	getTransientValue(): DtoFileItem[] {
 		return Object.values(this.fileItems)
 		// .filter(item => item.state === FileItemState.DONE)
-			.map(item => createUiFileItemConfig({
+			.map(item => createDtoFileItem({
 				uuid: item.uuid,
 				icon: item.icon,
 				thumbnail: item.thumbnail,
@@ -169,7 +169,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 			}));
 	}
 
-	isValidData(v: UiFileItemConfig[]): boolean {
+	isValidData(v: DtoFileItem[]): boolean {
 		return v == null || Array.isArray(v);
 	}
 
@@ -178,11 +178,11 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 		this.updateVisibilities();
 	}
 
-	valuesChanged(v1: UiFileItemConfig[], v2: UiFileItemConfig[]): boolean {
+	valuesChanged(v1: DtoFileItem[], v2: DtoFileItem[]): boolean {
 		return !arraysEqual(v1.map(item => item.uuid), v2.map(item => item.uuid));
 	}
 
-	addFileItem(itemConfig: UiFileItemConfig, state: FileItemState = FileItemState.DONE): void {
+	addFileItem(itemConfig: DtoFileItem, state: FileItemState = FileItemState.DONE): void {
 		const fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state, this._context);
 		this.fileItems[itemConfig.uuid] = fileItem;
 		this.$fileList.appendChild(fileItem.getMainDomElement());
@@ -231,7 +231,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 		this.uploadUrl = uploadUrl
 	}
 
-	updateFileItem(itemConfig: UiFileItemConfig): void {
+	updateFileItem(itemConfig: DtoFileItem): void {
 		const fileItem = this.fileItems[itemConfig.uuid];
 		if (fileItem != null) {
 			fileItem.update(itemConfig);
@@ -332,4 +332,4 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 
 
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiSimpleFileField", UiSimpleFileField);
+

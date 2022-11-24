@@ -26,7 +26,7 @@ import jakarta.websocket.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.dto.*;
+import org.teamapps.dto.protocol.*;
 import org.teamapps.uisession.*;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.Location;
@@ -175,19 +175,19 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.close(DtoSessionClosingReason.TERMINATED_BY_CLIENT));
 					}
 					case DtoEVT.TYPE_ID -> {
-						DtoEVENTWrapper eventMessage = clientMessage.as(DtoEVENTWrapper.class);
+						DtoEVTWrapper eventMessage = clientMessage.as(DtoEVTWrapper.class);
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent()));
 					}
 					case DtoQRY.TYPE_ID -> {
-						DtoQUERYWrapper queryMessage = clientMessage.as(DtoQUERYWrapper.class);
+						DtoQRYWrapper queryMessage = clientMessage.as(DtoQRYWrapper.class);
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery()));
 					}
 					case DtoCMD_RES.TYPE_ID -> {
-						DtoCMD_RESULTWrapper cmdResult = clientMessage.as(DtoCMD_RESULTWrapper.class);
+						DtoCMD_RESWrapper cmdResult = clientMessage.as(DtoCMD_RESWrapper.class);
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult()));
 					}
 					case DtoCMD_REQ.TYPE_ID -> {
-						DtoCMD_REQUESTWrapper cmdRequest = clientMessage.as(DtoCMD_REQUESTWrapper.class);
+						DtoCMD_REQWrapper cmdRequest = clientMessage.as(DtoCMD_REQWrapper.class);
 						getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId()));
 					}
 					case DtoKEEPALIVE.TYPE_ID -> {

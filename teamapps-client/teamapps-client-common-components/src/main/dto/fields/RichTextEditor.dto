@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 enum ToolbarVisibilityMode {
 	HIDDEN, VISIBLE, VISIBLE_IF_FOCUSED
 }
@@ -26,11 +28,11 @@ enum ToolbarVisibilityMode {
 managed class RichTextEditor extends Field implements TextInputHandlingField {
     String locale;
     boolean imageUploadEnabled;
-	String uploadUrl = "/upload";
-	long maxImageFileSizeInBytes = 5000000;
-	ToolbarVisibilityMode toolbarVisibilityMode = ToolbarVisibilityMode.VISIBLE_IF_FOCUSED;
-	int minHeight = 150;
-	int maxHeight = 150;
+	String uploadUrl;
+	long maxImageFileSizeInBytes;
+	ToolbarVisibilityMode toolbarVisibilityMode;
+	int minHeight;
+	int maxHeight;
 
 	event imageUploadTooLarge(String fileName, String mimeType, long sizeInBytes);
 	event imageUploadStarted(String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);

@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.mobile;
 
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoMobileLayout;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -41,7 +41,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoMobileLayout uiMobileLayout = new DtoMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (content != null) {

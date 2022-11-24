@@ -18,26 +18,22 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractComponent, bind, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
-	UiField_BlurEvent,
-	UiField_FocusEvent,
-	UiField_ValueChangedEvent,
-	UiFieldCommandHandler,
-	UiFieldConfig,
-	UiFieldEditingMode,
-	UiFieldEventSource,
-	UiFieldMessage,
-	UiFieldMessagePosition,
-	UiFieldMessageSeverity,
-	UiFieldMessageVisibilityMode
+	DtoField,
+	DtoField_BlurEvent,
+	DtoField_FocusEvent,
+	DtoField_ValueChangedEvent,
+	DtoFieldCommandHandler,
+	DtoFieldEditingMode,
+	DtoFieldEventSource,
+	DtoFieldMessage,
+	DtoFieldMessagePosition,
+	DtoFieldMessageSeverity,
+	DtoFieldMessageVisibilityMode
 } from "../../generated";
-import {TeamAppsEvent} from "teamapps-client-core";
-import {AbstractUiComponent} from "teamapps-client-core";
 import {createPopper, Instance as Popper} from '@popperjs/core';
-import {bind} from "teamapps-client-core";
 import {prependChild} from "../../Common";
-import {parseHtml} from "teamapps-client-core";
 import Logger = log.Logger;
 
 
@@ -46,22 +42,22 @@ export interface ValueChangeEventData {
 }
 
 interface FieldMessage {
-	message: UiFieldMessage,
+	message: DtoFieldMessage,
 	$message: HTMLElement
 }
 
-export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V = any> extends AbstractUiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
+export abstract class AbstractField<C extends DtoField = DtoField, V = any> extends AbstractComponent<C> implements DtoFieldCommandHandler, DtoFieldEventSource {
 
-	public readonly onValueChanged: TeamAppsEvent<UiField_ValueChangedEvent> = new TeamAppsEvent();
-	public readonly onFocus: TeamAppsEvent<UiField_FocusEvent> = new TeamAppsEvent();
-	public readonly onBlur: TeamAppsEvent<UiField_BlurEvent> = new TeamAppsEvent();
+	public readonly onValueChanged: TeamAppsEvent<DtoField_ValueChangedEvent> = new TeamAppsEvent();
+	public readonly onFocus: TeamAppsEvent<DtoField_FocusEvent> = new TeamAppsEvent();
+	public readonly onBlur: TeamAppsEvent<DtoField_BlurEvent> = new TeamAppsEvent();
 	public readonly onUserManipulation: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	public static editingModeCssClasses: { [x: number]: string } = {
-		[UiFieldEditingMode.EDITABLE]: "editable",
-		[UiFieldEditingMode.EDITABLE_IF_FOCUSED]: "editable-if-focused",
-		[UiFieldEditingMode.DISABLED]: "disabled",
-		[UiFieldEditingMode.READONLY]: "readonly"
+		[DtoFieldEditingMode.EDITABLE]: "editable",
+		[DtoFieldEditingMode.EDITABLE_IF_FOCUSED]: "editable-if-focused",
+		[DtoFieldEditingMode.DISABLED]: "disabled",
+		[DtoFieldEditingMode.READONLY]: "readonly"
 	};
 
 	protected logger: Logger = log.getLogger(((<any>(this.constructor)).name || this.constructor.toString().match(/\w+/g)[1]));
@@ -86,7 +82,7 @@ export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V =
 		super(_config, _context);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
-		this.$fieldWrapper = parseHtml(`<div class="UiField"></div>`);
+		this.$fieldWrapper = parseHtml(`<div class="DtoField"></div>`);
 		this.initialize(_config, _context);
 		this.$fieldWrapper.appendChild(this.$messagesContainerAbove);
 		this.$fieldWrapper.appendChild(this.getMainInnerDomElement());
@@ -123,21 +119,21 @@ export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V =
 
 	private updateFieldMessageVisibilities() {
 		let highestVisibilityByPosition = this.getHighestVisibilitiesByMessagePosition();
-		let messagesVisible = (position: UiFieldMessagePosition) => highestVisibilityByPosition[position] === UiFieldMessageVisibilityMode.ALWAYS_VISIBLE
-			|| highestVisibilityByPosition[position] === UiFieldMessageVisibilityMode.ON_HOVER_OR_FOCUS && this.hovering
+		let messagesVisible = (position: DtoFieldMessagePosition) => highestVisibilityByPosition[position] === DtoFieldMessageVisibilityMode.ALWAYS_VISIBLE
+			|| highestVisibilityByPosition[position] === DtoFieldMessageVisibilityMode.ON_HOVER_OR_FOCUS && this.hovering
 			|| this.hasFocus();
-		if (messagesVisible(UiFieldMessagePosition.ABOVE)) {
+		if (messagesVisible(DtoFieldMessagePosition.ABOVE)) {
 			this.$messagesContainerAbove.classList.remove("hidden");
 		} else {
 			this.$messagesContainerAbove.classList.add("hidden");
 		}
-		if (messagesVisible(UiFieldMessagePosition.BELOW)) {
+		if (messagesVisible(DtoFieldMessagePosition.BELOW)) {
 			this.$messagesContainerBelow.classList.remove("hidden");
 		} else {
 			this.$messagesContainerBelow.classList.add("hidden");
 		}
 		if (this._messageTooltip != null) {
-			if (messagesVisible(UiFieldMessagePosition.POPOVER)) {
+			if (messagesVisible(DtoFieldMessagePosition.POPOVER)) {
 				this._messageTooltip.$popperElement.classList.remove("hidden");
 				this._messageTooltip.popper.update();
 			} else {
@@ -147,13 +143,13 @@ export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V =
 	}
 
 	private getHighestVisibilitiesByMessagePosition() {
-		let highestVisibilityByPosition: { [position in UiFieldMessagePosition]: UiFieldMessageVisibilityMode } = {
-			[UiFieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == UiFieldMessagePosition.ABOVE)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, UiFieldMessageVisibilityMode.ON_FOCUS),
-			[UiFieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == UiFieldMessagePosition.BELOW)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, UiFieldMessageVisibilityMode.ON_FOCUS),
-			[UiFieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == UiFieldMessagePosition.POPOVER)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, UiFieldMessageVisibilityMode.ON_FOCUS)
+		let highestVisibilityByPosition: { [position in DtoFieldMessagePosition]: DtoFieldMessageVisibilityMode } = {
+			[DtoFieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.ABOVE)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, DtoFieldMessageVisibilityMode.ON_FOCUS),
+			[DtoFieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.BELOW)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, DtoFieldMessageVisibilityMode.ON_FOCUS),
+			[DtoFieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.POPOVER)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, DtoFieldMessageVisibilityMode.ON_FOCUS)
 		};
 		return highestVisibilityByPosition;
 	}
@@ -239,50 +235,50 @@ export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V =
 		return changed;
 	}
 
-	public setEditingMode(editingMode: UiFieldEditingMode = UiFieldEditingMode.EDITABLE): void {
+	public setEditingMode(editingMode: DtoFieldEditingMode = DtoFieldEditingMode.EDITABLE): void {
 		const oldEditingMode = this.config.editingMode;
 		this.config.editingMode = editingMode;
 		this.onEditingModeChanged(editingMode, oldEditingMode);
 	}
 
-	protected abstract onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void;
+	protected abstract onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode?: DtoFieldEditingMode): void;
 
-	public getEditingMode(): UiFieldEditingMode {
+	public getEditingMode(): DtoFieldEditingMode {
 		return this.config.editingMode;
 	}
 
 	public isEditable(): boolean {
-		return this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED;
+		return this.getEditingMode() === DtoFieldEditingMode.EDITABLE || this.getEditingMode() === DtoFieldEditingMode.EDITABLE_IF_FOCUSED;
 	}
 
-	public static defaultOnEditingModeChangedImpl(field: AbstractField<UiFieldConfig, any>, $focusableElementProvider: () => HTMLElement) {
+	public static defaultOnEditingModeChangedImpl(field: AbstractField<DtoField, any>, $focusableElementProvider: () => HTMLElement) {
 		field.getMainElement().classList.remove(...Object.values(AbstractField.editingModeCssClasses));
 		field.getMainElement().classList.add(AbstractField.editingModeCssClasses[field.getEditingMode()]);
 
 		const $focusableElement = $focusableElementProvider();
 		if ($focusableElement) {
 			switch (field.getEditingMode()) {
-				case UiFieldEditingMode.EDITABLE:
+				case DtoFieldEditingMode.EDITABLE:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "0");
 					break;
-				case UiFieldEditingMode.EDITABLE_IF_FOCUSED:
+				case DtoFieldEditingMode.EDITABLE_IF_FOCUSED:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "0");
 					break;
-				case UiFieldEditingMode.DISABLED:
+				case DtoFieldEditingMode.DISABLED:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.setAttribute("disabled", "disabled");
 					break;
-				case UiFieldEditingMode.READONLY:
+				case DtoFieldEditingMode.READONLY:
 					$focusableElement.setAttribute("readonly", "readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "-1");
 					break;
 				default:
-					log.getLogger("UiField").error("unknown editing mode! " + field.getEditingMode());
+					log.getLogger("DtoField").error("unknown editing mode! " + field.getEditingMode());
 			}
 		}
 	}
@@ -295,7 +291,7 @@ export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V =
 		return this.fieldMessages.map(m => m.message);
 	}
 
-	setFieldMessages(fieldMessageConfigs: UiFieldMessage[]): void {
+	setFieldMessages(fieldMessageConfigs: DtoFieldMessage[]): void {
 		if (fieldMessageConfigs == null) {
 			fieldMessageConfigs = [];
 		}
@@ -316,24 +312,24 @@ export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V =
 			});
 
 		let getHighestSeverity = function (messages: FieldMessage[]) {
-			return messages.reduce((highestSeverity, message) => message.message.severity > highestSeverity ? message.message.severity : highestSeverity, UiFieldMessageSeverity.INFO);
+			return messages.reduce((highestSeverity, message) => message.message.severity > highestSeverity ? message.message.severity : highestSeverity, DtoFieldMessageSeverity.INFO);
 		};
 		if (this.fieldMessages && this.fieldMessages.length > 0) {
-			this.getMainElement().classList.add("message-" + UiFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
+			this.getMainElement().classList.add("message-" + DtoFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
 		}
 
-		let fieldMessagesByPosition: { [position in UiFieldMessagePosition]: FieldMessage[] } = {
-			[UiFieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == UiFieldMessagePosition.ABOVE),
-			[UiFieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == UiFieldMessagePosition.BELOW),
-			[UiFieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == UiFieldMessagePosition.POPOVER)
+		let fieldMessagesByPosition: { [position in DtoFieldMessagePosition]: FieldMessage[] } = {
+			[DtoFieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.ABOVE),
+			[DtoFieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.BELOW),
+			[DtoFieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.POPOVER)
 		};
 
-		fieldMessagesByPosition[UiFieldMessagePosition.ABOVE].forEach(message => prependChild(this.getMessagesContainer(message.message.position), message.$message));
-		fieldMessagesByPosition[UiFieldMessagePosition.BELOW].forEach(message => this.getMessagesContainer(message.message.position).appendChild(message.$message));
-		if (fieldMessagesByPosition[UiFieldMessagePosition.POPOVER].length > 0) {
-			const highestPopoverSeverity = getHighestSeverity(fieldMessagesByPosition[UiFieldMessagePosition.POPOVER]);
-			this.messageTooltip.$popperElement.classList.add(`ta-tooltip-${UiFieldMessageSeverity[highestPopoverSeverity].toLowerCase()}`);
-			fieldMessagesByPosition[UiFieldMessagePosition.POPOVER].forEach(message => {
+		fieldMessagesByPosition[DtoFieldMessagePosition.ABOVE].forEach(message => prependChild(this.getMessagesContainer(message.message.position), message.$message));
+		fieldMessagesByPosition[DtoFieldMessagePosition.BELOW].forEach(message => this.getMessagesContainer(message.message.position).appendChild(message.$message));
+		if (fieldMessagesByPosition[DtoFieldMessagePosition.POPOVER].length > 0) {
+			const highestPopoverSeverity = getHighestSeverity(fieldMessagesByPosition[DtoFieldMessagePosition.POPOVER]);
+			this.messageTooltip.$popperElement.classList.add(`ta-tooltip-${DtoFieldMessageSeverity[highestPopoverSeverity].toLowerCase()}`);
+			fieldMessagesByPosition[DtoFieldMessagePosition.POPOVER].forEach(message => {
 				this.messageTooltip.$messageContainer.appendChild(message.$message);
 			});
 			this.messageTooltip.$popperElement.classList.remove("empty");
@@ -345,10 +341,10 @@ export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V =
 		this.updateFieldMessageVisibilities();
 	}
 
-	private createMessageElement(message: UiFieldMessage) {
-		const severityCssClass = `field-message-${UiFieldMessageSeverity[message.severity].toLowerCase()}`;
-		const positionCssClass = `position-${UiFieldMessagePosition[message.position].toLowerCase()}`;
-		const visibilityCssClass = `visibility-${UiFieldMessageVisibilityMode[message.visibilityMode].toLowerCase()}`;
+	private createMessageElement(message: DtoFieldMessage) {
+		const severityCssClass = `field-message-${DtoFieldMessageSeverity[message.severity].toLowerCase()}`;
+		const positionCssClass = `position-${DtoFieldMessagePosition[message.position].toLowerCase()}`;
+		const visibilityCssClass = `visibility-${DtoFieldMessageVisibilityMode[message.visibilityMode].toLowerCase()}`;
 		return parseHtml(`<div class="field-message ${severityCssClass} ${positionCssClass} ${visibilityCssClass}">${message.message}</div>`);
 	}
 
@@ -406,19 +402,19 @@ export abstract class AbstractField<C extends UiFieldConfig = UiFieldConfig, V =
 		this.messageTooltip.popper.update();
 	}
 
-	protected getMessagesContainer(position: UiFieldMessagePosition) {
-		if (position === UiFieldMessagePosition.ABOVE) {
+	protected getMessagesContainer(position: DtoFieldMessagePosition) {
+		if (position === DtoFieldMessagePosition.ABOVE) {
 			return this.$messagesContainerAbove;
-		} else if (position === UiFieldMessagePosition.BELOW) {
+		} else if (position === DtoFieldMessagePosition.BELOW) {
 			return this.$messagesContainerBelow;
-		} else if (position === UiFieldMessagePosition.POPOVER) {
+		} else if (position === DtoFieldMessagePosition.POPOVER) {
 			return this.messageTooltip.$messageContainer;
 		}
 	}
 
 }
 
-export function getHighestSeverity (messages: UiFieldMessage[], defaultSeverity: UiFieldMessageSeverity | null = UiFieldMessageSeverity.INFO) {
+export function getHighestSeverity (messages: DtoFieldMessage[], defaultSeverity: DtoFieldMessageSeverity | null = DtoFieldMessageSeverity.INFO) {
 	if (messages == null) {
 		return defaultSeverity;
 	}

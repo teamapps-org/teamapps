@@ -18,14 +18,13 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
+import {Component} from "teamapps-client-core";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
 import {TabPanelItem} from "./TabPanelItem";
-import {UiComponent} from "teamapps-client-core";
 
 
-export interface ItemTreeItem<C extends UiComponent<UiComponentConfig> = UiComponent<UiComponentConfig>> {
+export interface ItemTreeItem<C extends Component = Component> {
 	id: string;
 	parent: SplitPaneItem;
 	component: C;
@@ -36,10 +35,10 @@ export interface ItemTreeItem<C extends UiComponent<UiComponentConfig> = UiCompo
 export class ItemTree {
 	private static logger: log.Logger = log.getLogger("ItemTree");
 
-	private _rootItem: ItemTreeItem<UiComponent<UiComponentConfig>>;
+	private _rootItem: ItemTreeItem<Component>;
 	private _viewsByName: { [viewName: string]: View } = {};
 
-	set rootItem(item: ItemTreeItem<UiComponent<UiComponentConfig>>) {
+	set rootItem(item: ItemTreeItem<Component>) {
 		this._rootItem = item;
 		this.updateIndex();
 	}
@@ -77,7 +76,7 @@ export class ItemTree {
 		return view;
 	}
 
-	private doForEachItemAndView(item: ItemTreeItem<UiComponent<UiComponentConfig>>, itemFun: (item: ItemTreeItem<UiComponent<UiComponentConfig>>) => void, viewFun: (view: View) => void) {
+	private doForEachItemAndView(item: ItemTreeItem, itemFun: (item: ItemTreeItem) => void, viewFun: (view: View) => void) {
 		itemFun && itemFun(item);
 		if (item instanceof SplitPaneItem) {
 			item.firstChild && this.doForEachItemAndView(item.firstChild, itemFun, viewFun);

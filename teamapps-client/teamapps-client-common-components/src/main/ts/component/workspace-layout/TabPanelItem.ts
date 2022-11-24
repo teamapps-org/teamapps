@@ -18,15 +18,12 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {TeamAppsEvent} from "teamapps-client-core";
-import {UiComponentConfig, UiTabPanelTabStyle, UiViewGroupPanelState, UiWindowButtonType} from "../../generated";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TabPanel} from "../UiTabPanel";
+import {Component, generateUUID, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoTabPanelTabStyle, DtoViewGroupPanelState, DtoWindowButtonType} from "../../generated";
+import {TabPanel} from "../TabPanel";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
-import {generateUUID, parseHtml} from "../../Common";
-import {UiComponent} from "teamapps-client-core";
 
 class MinimizableTabPanel extends TabPanel {
 
@@ -43,7 +40,7 @@ class MinimizableTabPanel extends TabPanel {
 }
 
 export class TabPanelItem implements ItemTreeItem<TabPanel> {
-	private static logger = log.getLogger("UiWorkSpaceLayout.TabPanelItem");
+	private static logger = log.getLogger("DtoWorkSpaceLayout.TabPanelItem");
 
 	public readonly id: string;
 	public readonly persistent: boolean;
@@ -51,7 +48,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	parent: SplitPaneItem | null;
 	private _tabs: {
 		view: View,
-		windowButtonListener: (buttonType: UiWindowButtonType) => void
+		windowButtonListener: (buttonType: DtoWindowButtonType) => void
 	}[] = [];
 
 	public get tabs() {
@@ -63,9 +60,9 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	public readonly onTabSelected: TeamAppsEvent<{ tabPanelItemId: string, tabId: string }> = new TeamAppsEvent();
 	public readonly onTabNeedsRefresh: TeamAppsEvent<{ tabId: string }> = new TeamAppsEvent();
 	public readonly onTabClosed: TeamAppsEvent<string> = new TeamAppsEvent();
-	public readonly onPanelStateChangeTriggered: TeamAppsEvent<UiViewGroupPanelState> = new TeamAppsEvent();
+	public readonly onPanelStateChangeTriggered: TeamAppsEvent<DtoViewGroupPanelState> = new TeamAppsEvent();
 
-	private _state: UiViewGroupPanelState = UiViewGroupPanelState.NORMAL;
+	private _state: DtoViewGroupPanelState = DtoViewGroupPanelState.NORMAL;
 
 	constructor(id: string, persistent: boolean, parent: SplitPaneItem, private context: TeamAppsUiContext) {
 		this.id = id;
@@ -73,16 +70,16 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		this.parent = parent;
 		let uuid = generateUUID();
 		this.component = new MinimizableTabPanel({
-			_type: "UiTabPanel",
+			_type: "DtoTabPanel",
 			id: uuid,
 			hideTabBarIfSingleTab: true,
-			tabStyle: UiTabPanelTabStyle.EARS
+			tabStyle: DtoTabPanelTabStyle.EARS
 		}, context);
 		this.component.setWindowButtons(this.createWindowButtonList());
 		this.component.onWindowButtonClicked.addListener(eventObject => {
-			if (eventObject.windowButton === UiWindowButtonType.MINIMIZE) {
+			if (eventObject.windowButton === DtoWindowButtonType.MINIMIZE) {
 				this.component.restore(); // could be maximized, so first restore!
-				this.onPanelStateChangeTriggered.fire(UiViewGroupPanelState.MINIMIZED);
+				this.onPanelStateChangeTriggered.fire(DtoViewGroupPanelState.MINIMIZED);
 			}
 		});
 		this.component.onTabSelected.addListener(eventObject => this.onTabSelected.fire({tabPanelItemId: this.id, tabId: eventObject.tabId}));
@@ -102,10 +99,10 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		return this._tabs.map(tab => tab.view.viewName);
 	}
 
-	private createWindowButtonList(closeButton?: boolean): UiWindowButtonType[] {
-		let toolButtons: UiWindowButtonType[] = [UiWindowButtonType.MINIMIZE, UiWindowButtonType.MAXIMIZE_RESTORE];
+	private createWindowButtonList(closeButton?: boolean): DtoWindowButtonType[] {
+		let toolButtons: DtoWindowButtonType[] = [DtoWindowButtonType.MINIMIZE, DtoWindowButtonType.MAXIMIZE_RESTORE];
 		if (closeButton) {
-			toolButtons.push(UiWindowButtonType.CLOSE);
+			toolButtons.push(DtoWindowButtonType.CLOSE);
 		}
 		return toolButtons;
 	}
@@ -123,10 +120,10 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		}, select, index);
 
 
-		const windowButtonListener = (windowButtonType: UiWindowButtonType) => {
-			if (windowButtonType === UiWindowButtonType.MINIMIZE) {
-				this.onPanelStateChangeTriggered.fire(UiViewGroupPanelState.MINIMIZED);
-			} else if (windowButtonType === UiWindowButtonType.CLOSE) {
+		const windowButtonListener = (windowButtonType: DtoWindowButtonType) => {
+			if (windowButtonType === DtoWindowButtonType.MINIMIZE) {
+				this.onPanelStateChangeTriggered.fire(DtoViewGroupPanelState.MINIMIZED);
+			} else if (windowButtonType === DtoWindowButtonType.CLOSE) {
 				this.removeTab(view);
 				this.onTabClosed.fire(view.viewName);
 			}
@@ -139,7 +136,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 
 		view.parent = this;
 
-		if (this.state === UiViewGroupPanelState.MINIMIZED) {
+		if (this.state === DtoViewGroupPanelState.MINIMIZED) {
 			this.updateMinimizedButton();
 		}
 	}
@@ -155,12 +152,12 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		this._tabs = this._tabs.filter(tab => tab.view !== view);
 		this.updateWindowToolButtons();
 
-		if (this.state == UiViewGroupPanelState.MINIMIZED) {
+		if (this.state == DtoViewGroupPanelState.MINIMIZED) {
 			this.updateMinimizedButton();
 		}
 	}
 
-	public updateTab(viewName: string, component: UiComponent<UiComponentConfig>) {
+	public updateTab(viewName: string, component: Component) {
 		this.component.setTabContent(viewName, component, true);
 		this.updateWindowToolButtons();
 	}
@@ -188,12 +185,12 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	}
 
 	get maximized() {
-		return this._state === UiViewGroupPanelState.MAXIMIZED
+		return this._state === DtoViewGroupPanelState.MAXIMIZED
 	}
 
-	set state(state: UiViewGroupPanelState) {
+	set state(state: DtoViewGroupPanelState) {
 		this._state = state;
-		let minimized = state === UiViewGroupPanelState.MINIMIZED;
+		let minimized = state === DtoViewGroupPanelState.MINIMIZED;
 		this.component.minimized = minimized;
 		if (minimized) {
 			this.updateMinimizedButton();
@@ -207,10 +204,10 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		// noinspection CssUnknownTarget
 		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize} ta-icon-window-restore-grey"></div>`));
 		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${tab.view.tabIcon}')"></div>`)));
-		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(UiViewGroupPanelState.NORMAL));
+		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(DtoViewGroupPanelState.NORMAL));
 	}
 
-	get state(): UiViewGroupPanelState {
+	get state(): DtoViewGroupPanelState {
 		return this._state;
 	}
 }

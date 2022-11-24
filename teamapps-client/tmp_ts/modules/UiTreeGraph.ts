@@ -20,26 +20,26 @@
 
 import * as d3 from "d3";
 import {BaseType, HierarchyNode, HierarchyPointLink, HierarchyPointNode, Selection, ZoomBehavior} from "d3";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {
 	UiTreeGraph_NodeClickedEvent,
 	UiTreeGraph_NodeExpandedOrCollapsedEvent,
 	UiTreeGraph_ParentExpandedOrCollapsedEvent,
 	UiTreeGraph_SideListExpandedOrCollapsedEvent,
 	UiTreeGraphCommandHandler,
-	UiTreeGraphConfig,
+	DtoTreeGraph,
 	UiTreeGraphEventSource
-} from "../generated/UiTreeGraphConfig";
+} from "../generated/DtoTreeGraph";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiTreeGraphNodeConfig} from "../generated/UiTreeGraphNodeConfig";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {DtoTreeGraphNode} from "../generated/DtoTreeGraphNode";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
+import {UiTreeGraphNodeImage_CornerShape} from "../generated/DtoTreeGraphNodeImage";
 import {parseHtml} from "./Common";
 import {flextree, FlexTreeLayout} from "d3-flextree";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
-export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
+export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
 
 	public readonly onNodeClicked: TeamAppsEvent<UiTreeGraph_NodeClickedEvent> = new TeamAppsEvent();
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
@@ -49,7 +49,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 	private chart: TreeChart;
 	private $main: HTMLElement;
 
-	constructor(config: UiTreeGraphConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoTreeGraph, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="UiTreeGraph">`);
@@ -60,7 +60,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 		(window as any).moveToRootNode = () => this.moveToRootNode();
 	}
 
-	public update(config: UiTreeGraphConfig) {
+	public update(config: DtoTreeGraph) {
 		this.chart
 			.backgroundColor(config.backgroundColor)
 			.initialZoom(config.zoomFactor)
@@ -98,12 +98,12 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 		this.chart.moveToNode(nodeId);
 	}
 
-	setNodes(nodes: UiTreeGraphNodeConfig[]): void {
+	setNodes(nodes: DtoTreeGraphNode[]): void {
 		this.chart.data(nodes)
 			.render();
 	}
 
-	addNode(node: UiTreeGraphNodeConfig): void {
+	addNode(node: DtoTreeGraphNode): void {
 		this.chart.data().push(node);
 		this.chart.render();
 	}
@@ -118,7 +118,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 		this.chart.render();
 	}
 
-	updateNode(node: UiTreeGraphNodeConfig): void {
+	updateNode(node: DtoTreeGraphNode): void {
 		let index = this.chart.data().findIndex(n => n.id === node.id);
 		if (index !== -1) {
 			this.chart.data()[index] = node;
@@ -145,7 +145,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiTreeGraph", UiTreeGraph);
+
 
 interface TreeChart {
 	getChartState: () => TreeChartAttributes;
@@ -194,9 +194,9 @@ interface TreeChart {
 
 	backgroundColor(backgroundColor: string): TreeChart;
 
-	data(): UiTreeGraphNodeConfig[];
+	data(): DtoTreeGraphNode[];
 
-	data(data: UiTreeGraphNodeConfig[]): TreeChart;
+	data(data: DtoTreeGraphNode[]): TreeChart;
 
 	depth(): number;
 
@@ -254,13 +254,13 @@ interface TreeChart {
 
 }
 
-interface TreeNode extends HierarchyPointNode<UiTreeGraphNodeConfig> {
+interface TreeNode extends HierarchyPointNode<DtoTreeGraphNode> {
 	hasChildren?: boolean,
 	sideListNodes: TreeNodeLike[]
 }
 
 interface TreeNodeLike {
-	data: UiTreeGraphNodeConfig,
+	data: DtoTreeGraphNode,
 	id?: string,
 	hasChildren?: boolean,
 	parent?: TreeNode | null,
@@ -269,14 +269,14 @@ interface TreeNodeLike {
 }
 
 export interface Layouts {
-	treemap: FlexTreeLayout<UiTreeGraphNodeConfig>
+	treemap: FlexTreeLayout<DtoTreeGraphNode>
 }
 
 export interface TreeChartAttributes {
 	[key: string]: any,
 
 	id: string,
-	data?: UiTreeGraphNodeConfig[],
+	data?: DtoTreeGraphNode[],
 	root: TreeNode,
 	svg: Selection<SVGElement, any, any, any>,
 	svgWidth?: number,
@@ -570,9 +570,9 @@ class TreeChart {
 		let visibleNodeRecordsInOrder = attrs.data.filter(r => visibleNodeRecords[r.id] != null);
 
 		// Store new root by converting flat data to hierarchy
-		let hierarchy = d3.stratify<UiTreeGraphNodeConfig>()
-			.id((d: UiTreeGraphNodeConfig) => d.id)
-			.parentId((d: UiTreeGraphNodeConfig) => visibleNodeRecords[d.parentId] != null ? d.parentId : null)
+		let hierarchy = d3.stratify<DtoTreeGraphNode>()
+			.id((d: DtoTreeGraphNode) => d.id)
+			.parentId((d: DtoTreeGraphNode) => visibleNodeRecords[d.parentId] != null ? d.parentId : null)
 			(visibleNodeRecordsInOrder) as TreeNode;
 		attrs.root = hierarchy;
 
@@ -594,7 +594,7 @@ class TreeChart {
 
 		//  Assigns the x and y position for the nodes
 		// Generate tree layout function
-		let treeLayout = flextree<UiTreeGraphNodeConfig>()
+		let treeLayout = flextree<DtoTreeGraphNode>()
 			.nodeSize(node => {
 				let width = node.data.width;
 				if (node.data.sideListExpanded && node.data.sideListNodes && node.data.sideListNodes.length > 0) {
@@ -763,7 +763,7 @@ class TreeChart {
 		return childrenExpanderButtonG;
 	}
 
-	calculateNodeSize(d: HierarchyNode<UiTreeGraphNodeConfig>) {
+	calculateNodeSize(d: HierarchyNode<DtoTreeGraphNode>) {
 		let attrs = this.getChartState();
 		let nodeWidth = d.data.width;
 		let nodeHeight = d.data.height;
@@ -776,7 +776,7 @@ class TreeChart {
 		return {width: nodeWidth, height: nodeHeight};
 	}
 
-	calculateSideListSize(d: HierarchyNode<UiTreeGraphNodeConfig>) {
+	calculateSideListSize(d: HierarchyNode<DtoTreeGraphNode>) {
 		return d.data.sideListNodes.reduce((size, node) => {
 			size.width = Math.max(size.width, node.width);
 			size.height += node.height + this.getChartState().sideListVerticalGap;
@@ -944,24 +944,24 @@ class TreeChart {
 		return {x: d.parent.x + d.parent.data.width / 2, y: d.parent.y + d.parent.data.height};
 	}
 
-	private drawLinks(parentSelection: Selection<SVGElement, any, any, any>, links: HierarchyPointLink<UiTreeGraphNodeConfig>[]) {
+	private drawLinks(parentSelection: Selection<SVGElement, any, any, any>, links: HierarchyPointLink<DtoTreeGraphNode>[]) {
 		const attrs = this.getChartState();
 		// --------------------------  LINKS ----------------------
 		// Get links selection
 		const linkSelection = parentSelection.selectAll(':scope > path.link')
-			.data(links, (d: HierarchyPointLink<UiTreeGraphNodeConfig>) => d.target.id)
+			.data(links, (d: HierarchyPointLink<DtoTreeGraphNode>) => d.target.id)
 			.join(
 				enter => enter
 					.insert('path', "g")
 					.attr("class", "link")
-					.attr('d', (d: HierarchyPointLink<UiTreeGraphNodeConfig>) => {
+					.attr('d', (d: HierarchyPointLink<DtoTreeGraphNode>) => {
 						let transitionOrigin = this.getParentExpanderPosition(d.target as TreeNode);
 						return this.diagonalLine(transitionOrigin, transitionOrigin);
 					}),
 				update => update,
 				exit => exit.transition()
 					.duration(attrs.duration)
-					.attr('d', (d: HierarchyPointLink<UiTreeGraphNodeConfig>) => {
+					.attr('d', (d: HierarchyPointLink<DtoTreeGraphNode>) => {
 						let transitionOrigin = this.getParentExpanderPosition(d.target as TreeNode);
 						return this.diagonalLine(transitionOrigin, transitionOrigin);
 					})
@@ -1037,10 +1037,10 @@ class TreeChart {
 	}
 
 	// Toggle children on click.
-	private getVisibleNodeRecords(records: UiTreeGraphNodeConfig[]) {
+	private getVisibleNodeRecords(records: DtoTreeGraphNode[]) {
 		const recordsById = getById(records);
 
-		function depth(r: UiTreeGraphNodeConfig) {
+		function depth(r: DtoTreeGraphNode) {
 			let depth = 0;
 			while (r.parentId != null && recordsById[r.parentId] != null) {
 				depth++;
@@ -1055,8 +1055,8 @@ class TreeChart {
 			.sort((r1, r2) => depth(r2) - depth(r1))
 			[0];
 
-		const visibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = {[visibleRoot.id]: visibleRoot};
-		const invisibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = {};
+		const visibleNodeRecordsById: { [id: string]: DtoTreeGraphNode } = {[visibleRoot.id]: visibleRoot};
+		const invisibleNodeRecordsById: { [id: string]: DtoTreeGraphNode } = {};
 
 		// everything above the visible root is invisible (by definition)
 		let invisibleParent = visibleRoot; // only for initialization. the visible root remains visible
@@ -1068,7 +1068,7 @@ class TreeChart {
 		} while (invisibleParent != null);
 
 		// propagate visibility/invisibility knowledge downwards
-		let remainingRecords: UiTreeGraphNodeConfig[] = records.filter(r => visibleNodeRecordsById[r.id] == null && invisibleNodeRecordsById[r.id] == null);
+		let remainingRecords: DtoTreeGraphNode[] = records.filter(r => visibleNodeRecordsById[r.id] == null && invisibleNodeRecordsById[r.id] == null);
 		let visibleNodesChanged: boolean;
 		do {
 			visibleNodesChanged = false;
@@ -1095,15 +1095,15 @@ class TreeChart {
 		return visibleNodeRecordsById;
 	}
 
-	private getAllDescendants(node: UiTreeGraphNodeConfig, includeSelf: boolean) {
+	private getAllDescendants(node: DtoTreeGraphNode, includeSelf: boolean) {
 		// O(h^2) where h is the height of the tree.
 		// So the worst case performance is O(n * n/2) for a totally linear tree.
 		// Average case: O(n * log(n))
 		// If used for a root node (see usages!!): O(n) due to optimization!
 
-		const descendantsById: { [id: string]: UiTreeGraphNodeConfig } = {};
+		const descendantsById: { [id: string]: DtoTreeGraphNode } = {};
 		descendantsById[node.id] = node;
-		const nonDescendantsById: { [id: string]: UiTreeGraphNodeConfig } = {}; // common case optimization!
+		const nonDescendantsById: { [id: string]: DtoTreeGraphNode } = {}; // common case optimization!
 
 		let untaggedNodes = this.getChartState().data.filter(n => n.id != node.id);
 
@@ -1173,7 +1173,7 @@ class TreeChart {
 		}
 	}
 
-	private moveToHierarchyNode(node: HierarchyPointNode<UiTreeGraphNodeConfig>, animationDuration: number = 400) {
+	private moveToHierarchyNode(node: HierarchyPointNode<DtoTreeGraphNode>, animationDuration: number = 400) {
 		let attrs: TreeChartAttributes = this.getChartState();
 		let zoomTransform = d3.zoomTransform(attrs.svg.node());
 

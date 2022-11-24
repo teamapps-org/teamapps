@@ -21,10 +21,11 @@ package org.teamapps.ux.component.form;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyInjector;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.DtoFormLayoutPolicy;
+import org.teamapps.dto.DtoGridForm;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -32,6 +33,9 @@ import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.validator.MultiFieldValidator;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyInjector;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +87,8 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
 
 	@Override
-	public UiComponent createUiClientObject() {
-		List<UiClientObjectReference> uiFields = logicalForm.getFields().values().stream()
+	public DtoComponent createUiClientObject() {
+		List<DtoClientObjectReference> uiFields = logicalForm.getFields().values().stream()
 				.map(field -> field != null ? field.createUiReference() : null)
 				.collect(Collectors.toList());
 		List<DtoFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();

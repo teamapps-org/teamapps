@@ -19,13 +19,15 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class Button extends Field {
 	required Template template;
 	required Object templateRecord;
 
-	int minDropDownWidth = 450;
-	int minDropDownHeight = 200;
-	boolean openDropDownIfNotSet = false;
+	int minDropDownWidth;
+	int minDropDownHeight;
+	boolean openDropDownIfNotSet;
 	Component* dropDownComponent;
 	String onClickJavaScript;
 

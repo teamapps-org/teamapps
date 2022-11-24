@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 enum CalendarViewMode {
 	YEAR, MONTH, WEEK, DAY
 }
@@ -35,25 +37,25 @@ managed class Calendar extends Component {
 	Dictionary<Template> templates;
 	List<CalendarEventClientRecord> initialData;
 	
-	CalendarViewMode activeViewMode = CalendarViewMode.MONTH;
-	long displayedDate = System.currentTimeMillis();
-	boolean showHeader = true;
-	boolean tableBorder = true;
-	boolean showWeekNumbers = true;
-	int businessHoursStart = 8;
-	int businessHoursEnd = 17;
-	WeekDay firstDayOfWeek = null;
-	List<WeekDay> workingDays = java.util.Arrays.asList(WeekDay.MONDAY, WeekDay.TUESDAY, WeekDay.WEDNESDAY, WeekDay.THURSDAY, WeekDay.FRIDAY);
-	String tableHeaderBackgroundColor = "rgb(255, 255, 255)";
-    String defaultBackgroundColor = "rgb(154, 204, 228)";
-    String defaultBorderColor = "rgb(154, 204, 228)";
+	CalendarViewMode activeViewMode;
+	long displayedDate;
+	boolean showHeader;
+	boolean tableBorder;
+	boolean showWeekNumbers;
+	int businessHoursStart;
+	int businessHoursEnd;
+	WeekDay firstDayOfWeek;
+	List<WeekDay> workingDays;
+	String tableHeaderBackgroundColor;
+    String defaultBackgroundColor;
+    String defaultBorderColor;
 
-    boolean navigateOnHeaderClicks = true;
-    int minYearViewMonthTileWidth = 175;
-    int maxYearViewMonthTileWidth = 0;
+    boolean navigateOnHeaderClicks;
+    int minYearViewMonthTileWidth;
+    int maxYearViewMonthTileWidth;
 
     String locale;
-    String timeZoneId = "UTC";
+    String timeZoneId;
 
 	command setViewMode(CalendarViewMode viewMode);
 	command setDisplayedDate(long date);

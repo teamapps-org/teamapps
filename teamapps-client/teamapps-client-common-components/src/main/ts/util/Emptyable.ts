@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "./TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 
 export interface Emptyable {
 	readonly empty: boolean;

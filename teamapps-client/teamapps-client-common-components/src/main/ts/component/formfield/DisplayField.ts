@@ -17,21 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiDisplayFieldCommandHandler, UiDisplayFieldConfig, UiDisplayFieldEventSource, UiFieldEditingMode} from "../../generated";
-import {AbstractField} from "./AbstractUiField";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {escapeHtml, parseHtml, removeTags} from "../../Common";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {DtoDisplayField, DtoDisplayFieldCommandHandler, DtoDisplayFieldEventSource, DtoFieldEditingMode} from "../../generated";
+import {AbstractField} from "./AbstractField";
+import {parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {escapeHtml, removeTags} from "../../Common";
 
 
-export class DisplayField extends AbstractField<UiDisplayFieldConfig, string> implements UiDisplayFieldEventSource, UiDisplayFieldCommandHandler {
+export class DisplayField extends AbstractField<DtoDisplayField, string> implements DtoDisplayFieldEventSource, DtoDisplayFieldCommandHandler {
 
 	private _$field: HTMLElement;
 	private showHtml: boolean;
 	private removeStyleTags: boolean;
 
-	protected initialize(config: UiDisplayFieldConfig, context: TeamAppsUiContext) {
-		this._$field = parseHtml(`<div class="UiDisplayField">`);
+	protected initialize(config: DtoDisplayField, context: TeamAppsUiContext) {
+		this._$field = parseHtml(`<div class="DtoDisplayField">`);
 
 		this.setShowBorder(config.showBorder);
 		this.setShowHtml(config.showHtml);
@@ -82,7 +81,7 @@ export class DisplayField extends AbstractField<UiDisplayFieldConfig, string> im
 		return this.getCommittedValue();
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => null);
 	}
 
@@ -97,7 +96,7 @@ export class DisplayField extends AbstractField<UiDisplayFieldConfig, string> im
 		} else {
 			content = "";
 		}
-		return `<div class="static-readonly-UiDisplayField">${content}</div>`;
+		return `<div class="static-readonly-DtoDisplayField">${content}</div>`;
 	}
 
 	getDefaultValue() {
@@ -109,4 +108,4 @@ export class DisplayField extends AbstractField<UiDisplayFieldConfig, string> im
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiDisplayField", DisplayField);
+

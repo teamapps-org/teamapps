@@ -19,7 +19,8 @@
  */
 
 import {ProgressIndicator} from "./ProgressIndicator";
-import {generateUUID, parseHtml, parseSvg} from "../Common";
+import {parseSvg} from "../Common";
+import {generateUUID} from "teamapps-client-core";
 
 export class ProgressCircle implements ProgressIndicator {
 	private $mainDomElement: HTMLElement;

@@ -22,6 +22,7 @@ package org.teamapps.ux.component.chat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.*;
+import org.teamapps.dto.protocol.DtoQueryWrapper;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icon.material.MaterialIconStyles;
 import org.teamapps.icons.Icon;

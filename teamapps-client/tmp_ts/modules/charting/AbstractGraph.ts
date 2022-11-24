@@ -19,19 +19,12 @@
  */
 import {ScaleContinuousNumeric, ScaleTime} from "d3-scale";
 import {SVGSelection} from "./Charting";
-import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMode";
 import * as d3 from "d3";
 import {NamespaceLocalObject} from "d3";
-import {UiScaleType} from "../../generated/UiScaleType";
 import {UiGraph} from "./UiGraph";
 import {YAxis} from "./YAxis";
-import {UiGraphConfig} from "../../generated/UiGraphConfig";
-import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
-import {Interval} from "../util/IntervalManager";
 
-export abstract class AbstractUiGraph<C extends UiGraphConfig = UiGraphConfig,
-	D extends UiGraphDataConfig = UiGraphDataConfig>
+export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends DtoGraphData = DtoGraphData>
 	implements UiGraph<C, D> {
 
 	protected config: C;

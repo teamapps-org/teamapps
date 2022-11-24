@@ -18,21 +18,21 @@
  * =========================LICENSE_END==================================
  */
 import {UiField} from "./UiField";
-import {UiColorPickerConfig, UiColorPickerEventSource} from "../../generated/UiColorPickerConfig";
+import {DtoColorPicker, UiColorPickerEventSource} from "../../generated/DtoColorPicker";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {parseHtml} from "../Common";
 
-export class UiColorPicker extends UiField<UiColorPickerConfig, string> implements UiColorPickerEventSource {
+export class UiColorPicker extends UiField<DtoColorPicker, string> implements UiColorPickerEventSource {
 	private $main: HTMLElement;
 	private pickr: Pickr;
 	private doNotCommit: boolean;
 
-	protected initialize(config: UiColorPickerConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoColorPicker, context: TeamAppsUiContext) {
 		this.$main = parseHtml(`<div class="UiColorPicker" tabindex="-1"><div class="pickr"></div></div>`);
 		this.doNotCommit = true;
 		this.pickr = createPickr({
@@ -145,4 +145,4 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, string> implemen
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiColorPicker", UiColorPicker);
+

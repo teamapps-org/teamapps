@@ -19,7 +19,10 @@
  */
 package org.teamapps.ux.component;
 
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoClientObject;
+import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.protocol.DtoQueryWrapper;
 
 /**
  * A client object has a representation on the client.
@@ -36,13 +39,13 @@ public interface ClientObject {
 
 	boolean isRendered();
 
-	UiClientObject createUiClientObject();
+	DtoClientObject createUiClientObject();
 
 	/**
 	 * Creates a ui reference to a client object.
 	 * Ui references are just a simple way to reference objects on the client side.
 	 */
-	UiClientObjectReference createUiReference();
+	DtoClientObjectReference createUiReference();
 
 	default void handleUiEvent(DtoEventWrapper event) {
 	}

@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiFloatingComponent_ExpandedOrCollapsedEvent, UiFloatingComponentCommandHandler, UiFloatingComponentConfig, UiFloatingComponentEventSource} from "../generated/UiFloatingComponentConfig";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {UiFloatingComponent_ExpandedOrCollapsedEvent, UiFloatingComponentCommandHandler, DtoFloatingComponent, UiFloatingComponentEventSource} from "../generated/DtoFloatingComponent";
 import {UiComponent} from "./UiComponent";
 import ResizeObserver from 'resize-observer-polyfill';
 import {parseHtml, prependChild, removeClassesByFunction} from "./Common";
@@ -28,7 +28,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiFloatingComponentPosition} from "../generated/UiFloatingComponentPosition";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
-export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponentConfig> implements UiFloatingComponentCommandHandler, UiFloatingComponentEventSource {
+export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent> implements UiFloatingComponentCommandHandler, UiFloatingComponentEventSource {
 
 	public readonly onExpandedOrCollapsed: TeamAppsEvent<UiFloatingComponent_ExpandedOrCollapsedEvent> = new TeamAppsEvent();
 
@@ -38,7 +38,7 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 
 	private $expanderHandle: HTMLElement;
 
-	constructor(config: UiFloatingComponentConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoFloatingComponent, context: TeamAppsUiContext) {
 		super(config, context);
 		this.containerComponent = config.containerComponent as UiComponent;
 
@@ -186,4 +186,4 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiFloatingComponent", UiFloatingComponent);
+

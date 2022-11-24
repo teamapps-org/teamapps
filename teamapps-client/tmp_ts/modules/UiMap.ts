@@ -20,12 +20,12 @@
 ///<reference types="leaflet.heat"/>
 
 
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {generateUUID, parseHtml, Renderer} from "./Common";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {createUiMapPolylineConfig, UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
-import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
-import {UiHeatMapDataConfig} from "../generated/UiHeatMapDataConfig";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {createDtoMapPolyline, DtoMapPolyline} from "../generated/DtoMapPolyline";
+import {DtoMapMarkerCluster} from "../generated/DtoMapMarkerCluster";
+import {DtoHeatMapData} from "../generated/DtoHeatMapData";
 import {
 	UiMap_LocationChangedEvent,
 	UiMap_MapClickedEvent,
@@ -33,9 +33,9 @@ import {
 	UiMap_ShapeDrawnEvent,
 	UiMap_ZoomLevelChangedEvent,
 	UiMapCommandHandler,
-	UiMapConfig,
+	DtoMap,
 	UiMapEventSource
-} from "../generated/UiMapConfig";
+} from "../generated/DtoMap";
 import {UiMapType} from "../generated/UiMapType";
 import L, {Circle, LatLngBounds, LatLngExpression, Layer, Marker, PathOptions, Polygon, Polyline, Rectangle} from "leaflet";
 import "leaflet.markercluster";
@@ -44,37 +44,37 @@ import "leaflet-draw";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
-import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {DtoTemplate} from "../generated/DtoTemplate";
 import {isGridTemplate} from "./TemplateRegistry";
 import {isUiGlyphIconElement, isUiIconElement, isUiImageElement} from "./util/UiGridTemplates";
-import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
-import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
-import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
+import {DtoMapMarkerClientRecord} from "../generated/DtoMapMarkerClientRecord";
+import {createDtoMapLocation, DtoMapLocation} from "../generated/DtoMapLocation";
+import {createDtoMapArea} from "../generated/DtoMapArea";
 import {UiMapShapeType} from "../generated/UiMapShapeType";
-import {createUiMapCircleConfig, UiMapCircleConfig} from "../generated/UiMapCircleConfig";
-import {createUiMapPolygonConfig, UiMapPolygonConfig} from "../generated/UiMapPolygonConfig";
-import {createUiMapRectangleConfig, UiMapRectangleConfig} from "../generated/UiMapRectangleConfig";
-import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
-import {UiShapePropertiesConfig} from "../generated/UiShapePropertiesConfig";
-import {UiMapConfigConfig} from "../generated/UiMapConfigConfig";
+import {createDtoMapCircle, DtoMapCircle} from "../generated/DtoMapCircle";
+import {createDtoMapPolygon, DtoMapPolygon} from "../generated/DtoMapPolygon";
+import {createDtoMapRectangle, DtoMapRectangle} from "../generated/DtoMapRectangle";
+import {DtoAbstractMapShapeConfig} from "../generated/DtoAbstractMapShapeConfig";
+import {DtoShapeProperties} from "../generated/DtoShapeProperties";
+import {DtoMapConfig} from "../generated/DtoMapConfig";
 
-export function isUiMapCircle(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapCircleConfig {
+export function isUiMapCircle(shapeConfig: DtoAbstractMapShapeConfig): shapeConfig is DtoMapCircle {
 	return shapeConfig._type === "UiMapCircle";
 }
 
-export function isUiMapPolygon(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapPolygonConfig {
+export function isUiMapPolygon(shapeConfig: DtoAbstractMapShapeConfig): shapeConfig is DtoMapPolygon {
 	return shapeConfig._type === "UiMapPolygon";
 }
 
-export function isUiMapPolyline(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapPolylineConfig {
+export function isUiMapPolyline(shapeConfig: DtoAbstractMapShapeConfig): shapeConfig is DtoMapPolyline {
 	return shapeConfig._type === "UiMapPolyline";
 }
 
-export function isUiMapRectangle(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapRectangleConfig {
+export function isUiMapRectangle(shapeConfig: DtoAbstractMapShapeConfig): shapeConfig is DtoMapRectangle {
 	return shapeConfig._type === "UiMapRectangle";
 }
 
-export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapCommandHandler, UiMapEventSource {
+export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHandler, UiMapEventSource {
 
 	public readonly onZoomLevelChanged: TeamAppsEvent<UiMap_ZoomLevelChangedEvent> = new TeamAppsEvent();
 	public readonly onLocationChanged: TeamAppsEvent<UiMap_LocationChangedEvent> = new TeamAppsEvent();
@@ -98,7 +98,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	private drawPolylineFeature: L.Draw.Polyline;
 	private drawRectangleFeature: L.Draw.Rectangle;
 
-	constructor(config: UiMapConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoMap, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$map = parseHtml('<div class="UiMap">');
 		this.id = this.getId();
@@ -135,7 +135,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		}
 		this.leaflet.on('click', (event) => {
 			this.onMapClicked.fire({
-				location: createUiMapLocationConfig((event as any).latlng.lat, (event as any).latlng.lng)
+				location: createDtoMapLocation((event as any).latlng.lat, (event as any).latlng.lng)
 			});
 		});
 		this.leaflet.on('zoomend', (event) => {
@@ -147,8 +147,8 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 			const location = this.leaflet.getCenter();
 			const bounds = this.leaflet.getBounds();
 			this.onLocationChanged.fire({
-				center: createUiMapLocationConfig(location.lat, location.lng),
-				displayedArea: createUiMapAreaConfig(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
+				center: createDtoMapLocation(location.lat, location.lng),
+				displayedArea: createDtoMapArea(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
 			});
 		});
 
@@ -168,21 +168,21 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 				let circle = layer as Circle;
 				this.onShapeDrawn.fire({
 					shapeId: shapeId,
-					shape: createUiMapCircleConfig({center: toUiLocation(circle.getLatLng()), radius: circle.getRadius()})
+					shape: createDtoMapCircle({center: toUiLocation(circle.getLatLng()), radius: circle.getRadius()})
 				});
 			} else if (type === 'polygon') {
 				let polygon = layer as Polygon;
 				let path = flattenArray(polygon.getLatLngs()).map(ll => toUiLocation(ll));
-				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapPolygonConfig({path})});
+				this.onShapeDrawn.fire({shapeId: shapeId, shape: createDtoMapPolygon({path})});
 			} else if (type === 'polyline') {
 				let polyline = layer as Polyline;
 				let path = flattenArray(polyline.getLatLngs()).map(ll => toUiLocation(ll));
-				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapPolylineConfig({path})});
+				this.onShapeDrawn.fire({shapeId: shapeId, shape: createDtoMapPolyline({path})});
 			} else if (type === 'rectangle') {
 				let rectangle = layer as Rectangle;
 				this.onShapeDrawn.fire({
 					shapeId: shapeId,
-					shape: createUiMapRectangleConfig({
+					shape: createDtoMapRectangle({
 						l1: toUiLocation(rectangle.getBounds().getNorthWest()),
 						l2: toUiLocation(rectangle.getBounds().getSouthEast())
 					})
@@ -193,7 +193,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 
 	@executeWhenFirstDisplayed()
-	public addShape(shapeId: string, shapeConfig: AbstractUiMapShapeConfig): void {
+	public addShape(shapeId: string, shapeConfig: DtoAbstractMapShapeConfig): void {
 		if (isUiMapCircle(shapeConfig)) {
 			this.shapesById[shapeId] = L.circle(
 				this.createLeafletLatLng(shapeConfig.center), shapeConfig.radius, createPathOptions(shapeConfig.shapeProperties)
@@ -232,7 +232,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 
 	@executeWhenFirstDisplayed()
-	updateShape(shapeId: string, shapeConfig: AbstractUiMapShapeConfig): void {
+	updateShape(shapeId: string, shapeConfig: DtoAbstractMapShapeConfig): void {
 		let shape = this.shapesById[shapeId];
 		if (shape == null) {
 			this.logger.warn(`There is no shape with id ${shapeId}`);
@@ -243,7 +243,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 
 	@executeWhenFirstDisplayed()
-	public addPolylinePoints(lineId: string, points: UiMapLocationConfig[]): void {
+	public addPolylinePoints(lineId: string, points: DtoMapLocation[]): void {
 		let polyline = this.shapesById[lineId] as Polyline;
 		if (polyline == null) {
 			this.logger.warn(`There is no polyline with id ${lineId}`);
@@ -252,12 +252,12 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		points.forEach(p => polyline.addLatLng(this.convertToLatLng(p)));
 	}
 
-	private convertToLatLng(loc: UiMapLocationConfig): LatLngExpression {
+	private convertToLatLng(loc: DtoMapLocation): LatLngExpression {
 		return [loc.latitude, loc.longitude];
 	}
 
 	@executeWhenFirstDisplayed()
-	public addMarker(markerConfig: UiMapMarkerClientRecordConfig): void {
+	public addMarker(markerConfig: DtoMapMarkerClientRecord): void {
 		this.createMarker(markerConfig).addTo(this.leaflet);
 	}
 
@@ -284,7 +284,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		});
 	}
 
-	private createMarker(markerConfig: UiMapMarkerClientRecordConfig) {
+	private createMarker(markerConfig: DtoMapMarkerClientRecord) {
 		let renderer = this.markerTemplateRenderers[markerConfig.templateId] || this._context.templateRegistry.getTemplateRendererByName(markerConfig.templateId);
 		let iconWidth: number = 0;
 		if (isGridTemplate(renderer.template)) {
@@ -325,7 +325,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		this.leaflet.setZoom(zoomLevel);
 	}
 
-	public setMapConfig(mapConfig: UiMapConfigConfig): void {
+	public setMapConfig(mapConfig: DtoMapConfig): void {
 		const token = this._config.accessToken;
 		let removeLayer = true;
 		let layer = L.tileLayer(mapConfig.urlTemplate, {
@@ -486,16 +486,16 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 
 	@executeWhenFirstDisplayed()
-	public setLocation(location: UiMapLocationConfig): void {
+	public setLocation(location: DtoMapLocation): void {
 		this.leaflet.setView(this.createLeafletLatLng(location), this.leaflet.getZoom());
 	}
 
-	private createLeafletLatLng(location: UiMapLocationConfig) {
+	private createLeafletLatLng(location: DtoMapLocation) {
 		return new L.LatLng(location.latitude, location.longitude);
 	}
 
 	@executeWhenFirstDisplayed()
-	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
+	public setMapMarkerCluster(clusterConfig: DtoMapMarkerCluster): void {
 		this.clearMarkerCluster();
 		if (clusterConfig) {
 			this.clusterLayer = (L as any).markerClusterGroup();
@@ -515,7 +515,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 
 	@executeWhenFirstDisplayed()
-	public setHeatMap(data: UiHeatMapDataConfig): void {
+	public setHeatMap(data: DtoHeatMapData): void {
 		this.clearHeatMap();
 		if (data) {
 			let elements = new Array(data.elements.length);
@@ -539,11 +539,11 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		}
 	}
 
-	registerTemplate(id: string, template: UiTemplateConfig): void {
+	registerTemplate(id: string, template: DtoTemplate): void {
 		this.markerTemplateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
-	fitBounds(southWest: UiMapLocationConfig, northEast: UiMapLocationConfig): void {
+	fitBounds(southWest: DtoMapLocation, northEast: DtoMapLocation): void {
 		this.leaflet.fitBounds(L.latLngBounds(this.createLeafletLatLng(southWest), this.createLeafletLatLng(northEast)))
 	}
 
@@ -551,7 +551,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		this.leaflet.invalidateSize();
 	}
 
-	startDrawingShape(shapeType: UiMapShapeType, shapeProperties: UiShapePropertiesConfig): void {
+	startDrawingShape(shapeType: UiMapShapeType, shapeProperties: DtoShapeProperties): void {
 		let drawFeature: L.Draw.Feature;
 		switch (shapeType) {
 			case UiMapShapeType.CIRCLE      :
@@ -579,7 +579,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 }
 
-function createPathOptions(shapePropertiesConfig: UiShapePropertiesConfig): PathOptions {
+function createPathOptions(shapePropertiesConfig: DtoShapeProperties): PathOptions {
 	return {
 		color: shapePropertiesConfig.strokeColor,
 		fill: shapePropertiesConfig.fillColor != null,
@@ -590,7 +590,7 @@ function createPathOptions(shapePropertiesConfig: UiShapePropertiesConfig): Path
 }
 
 function toUiLocation(latlng: L.LatLng) {
-	return createUiMapLocationConfig(latlng.lat, latlng.lng);
+	return createDtoMapLocation(latlng.lat, latlng.lng);
 }
 
 function flattenArray<T>(arr: T[] | T[][] | T[][][]): T[] {
@@ -605,4 +605,4 @@ function flattenArray<T>(arr: T[] | T[][] | T[][][]): T[] {
 	}, []);
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiMap", UiMap);
+

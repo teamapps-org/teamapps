@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.rootpanel;
 
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoRootPanel;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -34,7 +34,7 @@ public class RootPanel extends AbstractComponent implements Component {
 	private Component content;
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoRootPanel uiRootPanel = new DtoRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
 		uiRootPanel.setContent(content != null ? content.createUiReference() : null);

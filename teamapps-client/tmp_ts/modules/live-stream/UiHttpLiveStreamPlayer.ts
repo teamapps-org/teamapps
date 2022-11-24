@@ -20,12 +20,12 @@
 
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
 import {UiSpinner} from "../micro-components/UiSpinner";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiHttpLiveStreamPlayerConfig} from "../../generated/UiHttpLiveStreamPlayerConfig";
+import {DtoHttpLiveStreamPlayer} from "../../generated/DtoHttpLiveStreamPlayer";
 import {parseHtml} from "../Common";
 
-export class UiHttpLiveStreamPlayer extends AbstractUiComponent<UiHttpLiveStreamPlayerConfig> implements LiveStreamPlayer {
+export class UiHttpLiveStreamPlayer extends AbstractComponent<DtoHttpLiveStreamPlayer> implements LiveStreamPlayer {
 	private $main: HTMLElement;
 	private $videoContainer: any;
 	private $notSupportedMessage: any;
@@ -35,7 +35,7 @@ export class UiHttpLiveStreamPlayer extends AbstractUiComponent<UiHttpLiveStream
 	private $spinnerContainer: HTMLElement;
 	private resetTimer: number = null;
 
-	constructor(config: UiHttpLiveStreamPlayerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoHttpLiveStreamPlayer, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`
 <div class="HttpLiveStreamPlayer">

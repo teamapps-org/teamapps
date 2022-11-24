@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.documentviewer;
 
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoDocumentViewer;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.Shadow;
@@ -48,7 +48,7 @@ public class DocumentViewer extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoDocumentViewer documentViewer = new DtoDocumentViewer();
 		mapAbstractUiComponentProperties(documentViewer);
 		documentViewer.setPageUrls(pageUrls);

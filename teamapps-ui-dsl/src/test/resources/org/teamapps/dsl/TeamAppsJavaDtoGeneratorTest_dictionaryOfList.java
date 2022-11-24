@@ -31,8 +31,8 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.dto.DtoXWrapper;
 import org.teamapps.dto.DtoX;
+import org.teamapps.dto.DtoXWrapper;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)

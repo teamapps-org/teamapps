@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 class DateTimeFormatDescriptor {
 
 	// either dateStyle and/or timeStyle can be set, or the other fields. Both does not work. Exception: hourCycle
@@ -42,32 +44,32 @@ class DateTimeFormatDescriptor {
 enum DayPeriodType {
     NARROW = "narrow",
     SHORT = "short",
-    LONG = "long";
+    LONG;
 }
 
 enum HourCycleType {
     H11 = "h11", // 0-11
     H12 = "h12", // 1-12
     H23 = "h23", // 0-23
-    H24 = "h24"; // 1-24
+    H24; // 1-24
 }
 
 enum FullLongMediumShortType {
     FULL = "full",
     LONG = "long",
     MEDIUM = "medium",
-    SHORT = "short";
+    SHORT;
 }
 
 enum LongShortNarrowType {
     LONG = "long",
     SHORT = "short",
-    NARROW = "narrow";
+    NARROW;
 }
 
 enum NumericType {
     NUMERIC = "numeric",
-    TWO_DIGIT = "2-digit";
+    TWO_DIGIT;
 }
 
 enum NumericOrLongShortNarrowType {
@@ -75,5 +77,5 @@ enum NumericOrLongShortNarrowType {
     TWO_DIGIT = "2-digit",
     LONG = "long",
     SHORT = "short",
-    NARROW = "narrow";
+    NARROW;
 }

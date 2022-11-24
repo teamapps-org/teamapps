@@ -17,43 +17,38 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {DropDown} from "../../micro-components/UiDropDown";
+import {bind, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {DropDown} from "../../micro-components/DropDown";
 import {
-	UiButton_ClickedEvent,
-	UiButton_DropDownOpenedEvent,
-	UiButtonCommandHandler,
-	UiButtonConfig,
-	UiButtonEventSource,
-	UiFieldEditingMode,
-	UiFieldMessage,
-	UiTemplate
+	DtoButton,
+	DtoButton_ClickedEvent,
+	DtoButton_DropDownOpenedEvent,
+	DtoButtonCommandHandler,
+	DtoButtonEventSource,
+	DtoFieldEditingMode,
+	DtoFieldMessage,
+	DtoTemplate
 } from "../../generated";
-import {AbstractField} from "./AbstractUiField";
-import {TeamAppsEvent} from "teamapps-client-core";
-import {bind} from "teamapps-client-core";
-import {parseHtml} from "teamapps-client-core";
-import {UiComponent} from "teamapps-client-core";
+import {AbstractField} from "./AbstractField";
 
-export class Button extends AbstractField<UiButtonConfig, void> implements UiButtonEventSource, UiButtonCommandHandler {
+export class Button extends AbstractField<DtoButton, void> implements DtoButtonEventSource, DtoButtonCommandHandler {
 
-	public readonly onClicked: TeamAppsEvent<UiButton_ClickedEvent> = new TeamAppsEvent();
-	public readonly onDropDownOpened: TeamAppsEvent<UiButton_DropDownOpenedEvent> = new TeamAppsEvent();
+	public readonly onClicked: TeamAppsEvent<DtoButton_ClickedEvent> = new TeamAppsEvent();
+	public readonly onDropDownOpened: TeamAppsEvent<DtoButton_DropDownOpenedEvent> = new TeamAppsEvent();
 
-	private template: UiTemplate;
+	private template: DtoTemplate;
 	private templateRecord: any;
 
 	private $main: HTMLElement;
 
 	private _dropDown: DropDown; // lazy-init!
-	private dropDownComponent: UiComponent;
+	private dropDownComponent: Component;
 	private minDropDownWidth: number;
 	private minDropDownHeight: number;
 	private openDropDownIfNotSet: boolean;
 	private onClickJavaScript: string;
 
-	protected initialize(config: UiButtonConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoButton, context: TeamAppsUiContext) {
 		this.template = config.template;
 		this.templateRecord = config.templateRecord;
 
@@ -77,10 +72,10 @@ export class Button extends AbstractField<UiButtonConfig, void> implements UiBut
 			}
 		}));
 
-		// It is necessary to commit only after a full "click", since fields commit on blur. E.g. a UiTextField should blur-commit first, before the button click-commits. This would not work with "mousedown".
+		// It is necessary to commit only after a full "click", since fields commit on blur. E.g. a DtoTextField should blur-commit first, before the button click-commits. This would not work with "mousedown".
 		["click", "keypress"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
 			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
-				if (this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED) {
+				if (this.getEditingMode() === DtoFieldEditingMode.EDITABLE || this.getEditingMode() === DtoFieldEditingMode.EDITABLE_IF_FOCUSED) {
 					if (this.onClickJavaScript != null) {
 						let context = this._context; // make context available in evaluated javascript
 						eval(this.onClickJavaScript);
@@ -90,7 +85,7 @@ export class Button extends AbstractField<UiButtonConfig, void> implements UiBut
 				}
 			}
 		}));
-		this.setDropDownComponent(config.dropDownComponent as UiComponent);
+		this.setDropDownComponent(config.dropDownComponent as Component);
 		this.setOnClickJavaScript(config.onClickJavaScript);
 	}
 
@@ -99,7 +94,7 @@ export class Button extends AbstractField<UiButtonConfig, void> implements UiBut
 		this.minDropDownHeight = minDropDownHeight;
 	}
 
-	setDropDownComponent(component: UiComponent): void {
+	setDropDownComponent(component: Component): void {
 		if (this.dropDownComponent != null && (this.dropDownComponent as any).onItemClicked != null) {
 			(this.dropDownComponent as any).onItemClicked.removeListener(this.closeDropDown);
 		}
@@ -124,7 +119,7 @@ export class Button extends AbstractField<UiButtonConfig, void> implements UiBut
 		// lazy-init!
 		if (this._dropDown == null) {
 			this._dropDown = new DropDown();
-			this._dropDown.getMainDomElement().classList.add("UiButton-dropdown");
+			this._dropDown.getMainDomElement().classList.add("DtoButton-dropdown");
 			this._dropDown.onClose.addListener(eventObject => this.getMainInnerDomElement().classList.remove("open"))
 		}
 		return this._dropDown;
@@ -138,7 +133,7 @@ export class Button extends AbstractField<UiButtonConfig, void> implements UiBut
 		return this.$main;
 	}
 
-	setTemplate(template: UiTemplate, templateRecord: any): void {
+	setTemplate(template: DtoTemplate, templateRecord: any): void {
 		this.template = template;
 		this.setTemplateRecord(templateRecord);
 	}
@@ -153,7 +148,7 @@ export class Button extends AbstractField<UiButtonConfig, void> implements UiBut
 		return this.template != null ? this._context.templateRegistry.createTemplateRenderer(this.template).render(this.templateRecord) : this.templateRecord;
 	}
 
-	setFieldMessages(fieldMessageConfigs: UiFieldMessage[]): void {
+	setFieldMessages(fieldMessageConfigs: DtoFieldMessage[]): void {
 		super.setFieldMessages(fieldMessageConfigs);
 	}
 
@@ -169,12 +164,12 @@ export class Button extends AbstractField<UiButtonConfig, void> implements UiBut
 		return null;
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$main);
 	}
 
 	public getReadOnlyHtml(value: void, availableWidth: number): string {
-		return `<div class="UiButton btn field-border field-border-glow field-background">
+		return `<div class="DtoButton btn field-border field-border-glow field-background">
 			${this.renderContent()}
         </div>`;
 	}
@@ -196,4 +191,4 @@ export class Button extends AbstractField<UiButtonConfig, void> implements UiBut
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiButton", Button);
+

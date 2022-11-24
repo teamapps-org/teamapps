@@ -18,22 +18,23 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "../teamapps-client-core";
-import {UiToolbarCommandHandler, UiToolbarConfig, UiToolbarEventSource} from "../../../generated/UiToolbarConfig";
-import {UiToolbarButtonGroup as UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroup";
-import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
-import {ToolAccordion} from "../tool-accordion/UiToolAccordion";
-import {AbstractToolContainer} from "../DtoAbstractToolContainer";
-import {DropDown} from "../../../micro-components/UiDropDown";
-import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
-import {AbstractUiToolContainer_ToolbarButtonClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
-import {TeamAppsUiComponentRegistry} from "../teamapps-client-core";
+import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {
+	DtoAbstractToolContainer_ToolbarButtonClickEvent,
+	DtoToolbar,
+	DtoToolbarButtonGroupPosition,
+	DtoToolbarCommandHandler,
+	DtoToolbarEventSource
+} from "../../../generated";
+import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
+import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {ToolAccordion} from "../tool-accordion/ToolAccordion";
+import {AbstractToolContainer} from "../AbstractToolContainer";
+import {DropDown} from "../../../micro-components/DropDown";
 import {Emptyable} from "../../../util/Emptyable";
-import {ToolbarButton} from "./UiToolbarButton";
-import {ToolbarButtonGroup} from "./UiToolbarButtonGroup";
-import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../../Common";
-import {UiComponent} from "../teamapps-client-core";
-import {UiToolbarButtonGroupPosition} from "../../../generated/UiToolbarButtonGroupPosition";
+import {ToolbarButton} from "./ToolbarButton";
+import {ToolbarButtonGroup} from "./ToolbarButtonGroup";
+import {insertAfter, insertBefore, outerWidthIncludingMargins} from "../../../Common";
 
 interface FQButtonId {
 	groupId: string,
@@ -43,11 +44,11 @@ interface FQButtonId {
 
 export type ButtonVisibilities = { fittingButtons: FQButtonId[], nonFittingButtons: FQButtonId[], hiddenButtons: FQButtonId[] };
 
-export class Toolbar extends AbstractToolContainer<UiToolbarConfig> implements Emptyable, UiToolbarCommandHandler, UiToolbarEventSource {
+export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptyable, DtoToolbarCommandHandler, DtoToolbarEventSource {
 
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>();
 
-	public readonly onToolbarButtonClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent>();
+	public readonly onToolbarButtonClick: TeamAppsEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent();
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
@@ -65,9 +66,9 @@ export class Toolbar extends AbstractToolContainer<UiToolbarConfig> implements E
 	private $overflowDropDownButton: HTMLElement;
 	private totalWidthOfOverflowButtons: number;
 
-	constructor(config: UiToolbarConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoToolbar, context: TeamAppsUiContext) {
 		super(config, context);
-		this._$toolbar = parseHtml(`<div class="UiToolbar teamapps-blurredBackgroundImage"></div>`);
+		this._$toolbar = parseHtml(`<div class="DtoToolbar teamapps-blurredBackgroundImage"></div>`);
 		this._$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this._$toolbar.appendChild(this._$backgroundColorDiv);
 		this._$innerContainer = parseHtml('<div class="inner-container">');
@@ -130,7 +131,7 @@ export class Toolbar extends AbstractToolContainer<UiToolbarConfig> implements E
 		}
 	}
 
-	public setDropDownComponent(groupId: string, buttonId: string, component: UiComponent): void {
+	public setDropDownComponent(groupId: string, buttonId: string, component: Component): void {
 		this.buttonGroupsById[groupId].setDropDownComponent(buttonId, component);
 		this.overflowToolAccordion.setDropDownComponent(groupId, buttonId, component);
 	}
@@ -155,7 +156,7 @@ export class Toolbar extends AbstractToolContainer<UiToolbarConfig> implements E
 		this.updateButtonOverflow();
 	}
 
-	public addButtonGroup(groupConfig: UiToolbarButtonGroupConfig, rightSide: boolean) {
+	public addButtonGroup(groupConfig: DtoToolbarButtonGroup, rightSide: boolean) {
 		const existingButtonGroup = this.buttonGroupsById[groupConfig.groupId];
 		if (existingButtonGroup) {
 			this.removeButtonGroup(groupConfig.groupId);
@@ -190,7 +191,7 @@ export class Toolbar extends AbstractToolContainer<UiToolbarConfig> implements E
 		}
 	}
 
-	private insertGroupAtCorrectSortingPosition(buttonGroup: ToolbarButtonGroup, position: UiToolbarButtonGroupPosition, rightSide: boolean) {
+	private insertGroupAtCorrectSortingPosition(buttonGroup: ToolbarButtonGroup, position: DtoToolbarButtonGroupPosition, rightSide: boolean) {
 		let otherButtonGroups = (rightSide ? this.rightButtonGroups: this.leftButtonGroups).sort((group1, group2) => group1.position - group2.position);
 		let otherGroupIndex = 0;
 		for (; otherGroupIndex < otherButtonGroups.length; otherGroupIndex++) {
@@ -231,7 +232,7 @@ export class Toolbar extends AbstractToolContainer<UiToolbarConfig> implements E
 		}
 	}
 
-	public addButton(groupId: string, buttonConfig: UiToolbarButtonConfig, neighborButtonId: string, beforeNeighbor: boolean) {
+	public addButton(groupId: string, buttonConfig: DtoToolbarButton, neighborButtonId: string, beforeNeighbor: boolean) {
 		this.buttonGroupsById[groupId] && this.buttonGroupsById[groupId].addButton(buttonConfig, neighborButtonId, beforeNeighbor);
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.addButton(groupId, buttonConfig, neighborButtonId, beforeNeighbor);
@@ -305,4 +306,4 @@ export class Toolbar extends AbstractToolContainer<UiToolbarConfig> implements E
 }
 
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiToolbar", Toolbar);
+

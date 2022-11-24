@@ -19,15 +19,15 @@
  */
 
 
-import {UiComponent} from "../component/UiComponent";
-import {doOnceOnClickOutsideElement, parseHtml} from "../Common";
+import {doOnceOnClickOutsideElement} from "../Common";
+import {Component, parseHtml} from "teamapps-client-core";
 
 export class ContextMenu {
 
 	private width: number = 250;
 	private height: number = -1;
 	private viewPortPadding: number = 10;
-	private content: UiComponent;
+	private content: Component;
 
 	private $main: HTMLElement;
 	private $spinner: HTMLElement;
@@ -43,7 +43,7 @@ export class ContextMenu {
 		this.updateSize();
 	}
 
-	public setContent(content: UiComponent, requestId?: number) {
+	public setContent(content: Component, requestId?: number) {
 		if (requestId != null && requestId !== this.currentRequestId) {
 			return;
 		}

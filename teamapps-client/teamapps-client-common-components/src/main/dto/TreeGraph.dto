@@ -19,11 +19,13 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class TreeGraph extends Component {
     List<TreeGraphNode> nodes;
 
-	String backgroundColor = "rgba(0, 0, 0, 0)";
-    double zoomFactor = 1;
+	String backgroundColor;
+    double zoomFactor;
     boolean compact;
 
     int verticalLayerGap;
@@ -54,10 +56,10 @@ class BaseTreeGraphNode {
 	required String id;
     required int width;
     required int height;
-    String backgroundColor = "rgb(255, 255, 255)";
-    String borderColor = "rgb(100, 100, 100)";
-    double borderWidth = 1;
-    double borderRadius = 0;
+    String backgroundColor;
+    String borderColor;
+    double borderWidth;
+    double borderRadius;
 
     TreeGraphNodeImage image;
     TreeGraphNodeIcon icon;
@@ -65,18 +67,18 @@ class BaseTreeGraphNode {
     Template template;     // will get embedded using foreignObject
     ClientRecord record;   // will get embedded using foreignObject
 
-    String connectorLineColor = "rgb(100, 100, 100)"; // line to parent node
+    String connectorLineColor; // line to parent node
     int connectorLineWidth;
     String dashArray;
 }
 
 class TreeGraphNode extends BaseTreeGraphNode{
     String parentId;
-    boolean parentExpandable = false;
-    boolean parentExpanded = true;
+    boolean parentExpandable;
+    boolean parentExpanded;
 
     boolean expanded;
-    boolean hasLazyChildren = false;
+    boolean hasLazyChildren;
 
     List<BaseTreeGraphNode> sideListNodes;
     boolean sideListExpanded;
@@ -88,10 +90,10 @@ class TreeGraphNodeImage {
     required int height;
     int centerTopDistance; //top distance of image center from top-left corner of node, e.g. -10 and height 30 means image will be 25 pixels above the top line of the node
     int centerLeftDistance; //left distance of image center from top-left corner of node
-    TreeGraphNodeImageCornerShape cornerShape = TreeGraphNodeImageCornerShape.ROUNDED;
-    boolean shadow = false;
-    double borderWidth = 0;
-    String borderColor = "rgb(100, 100, 100)";
+    TreeGraphNodeImageCornerShape cornerShape;
+    boolean shadow;
+    double borderWidth;
+    String borderColor;
 }
 
 enum TreeGraphNodeImageCornerShape {

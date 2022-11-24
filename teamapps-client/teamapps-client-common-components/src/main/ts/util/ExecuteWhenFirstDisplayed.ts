@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DeferredExecutor} from "./DeferredExecutor";
+import {DeferredExecutor} from "teamapps-client-core";
 
 export function executeWhenFirstDisplayed(onlyOnce?: boolean) {
 	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {

@@ -21,10 +21,10 @@
 
 
 import * as d3 from "d3v3";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiMediaTrackGraph_HandleTimeSelectionEvent, UiMediaTrackGraphCommandHandler, UiMediaTrackGraphConfig, UiMediaTrackGraphEventSource} from "../generated/UiMediaTrackGraphConfig";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {UiMediaTrackGraph_HandleTimeSelectionEvent, UiMediaTrackGraphCommandHandler, DtoMediaTrackGraph, UiMediaTrackGraphEventSource} from "../generated/DtoMediaTrackGraph";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
@@ -41,7 +41,7 @@ interface Marker {
 	bg: string
 }
 
-export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConfig> implements UiMediaTrackGraphCommandHandler, UiMediaTrackGraphEventSource {
+export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> implements UiMediaTrackGraphCommandHandler, UiMediaTrackGraphEventSource {
 
 	public readonly onHandleTimeSelection: TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent> = new TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent>();
 
@@ -68,7 +68,7 @@ export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConf
 	private markerData: Marker[];
 
 
-	constructor(config: UiMediaTrackGraphConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoMediaTrackGraph, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$graph = parseHtml('<div class="UiMediaTrackGraph" id="' + this.getId() + '">');
 
@@ -384,4 +384,4 @@ export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConf
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiMediaTrackGraph", UiMediaTrackGraph);
+

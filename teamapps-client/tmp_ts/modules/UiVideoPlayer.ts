@@ -22,23 +22,23 @@
 import "mediaelement/full";
 
 
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiVideoPlayer_EndedEvent,
 	UiVideoPlayer_ErrorLoadingEvent,
 	UiVideoPlayer_PlayerProgressEvent,
 	UiVideoPlayerCommandHandler,
-	UiVideoPlayerConfig,
+	DtoVideoPlayer,
 	UiVideoPlayerEventSource
-} from "../generated/UiVideoPlayerConfig";
+} from "../generated/DtoVideoPlayer";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiMediaPreloadMode} from "../generated/UiMediaPreloadMode";
 import {parseHtml} from "./Common";
 import {UiPosterImageSize} from "../generated/UiPosterImageSize";
 
-export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> implements UiVideoPlayerCommandHandler, UiVideoPlayerEventSource {
+export class UiVideoPlayer extends AbstractComponent<DtoVideoPlayer> implements UiVideoPlayerCommandHandler, UiVideoPlayerEventSource {
 
 	public readonly onPlayerProgress: TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent>();
 	public readonly onEnded: TeamAppsEvent<UiVideoPlayer_EndedEvent> = new TeamAppsEvent<UiVideoPlayer_EndedEvent>();
@@ -54,7 +54,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	private autoplay: boolean;
 	private playState: "initial" | "playing" | "paused" = "initial";
 
-	constructor(config: UiVideoPlayerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoVideoPlayer, context: TeamAppsUiContext) {
 		super(config, context);
 
 		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
@@ -198,4 +198,4 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiVideoPlayer", UiVideoPlayer);
+

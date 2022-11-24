@@ -33,7 +33,7 @@ import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import {NumberParser} from "../util/NumberParser";
 import {DropDownComponent} from "./dropdown/DropDownComponent";
 import {parseHtml} from "../Common";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {TreeBoxDropdown} from "./dropdown/TreeBoxDropdown";
 import {createComboBoxPopper} from "./ComboBoxPopper";
 import {BigDecimal} from "../util/BigDecimalString";

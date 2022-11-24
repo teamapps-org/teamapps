@@ -17,29 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {
-	UiComponentConfig,
-	UiComponentFieldCommandHandler,
-	UiComponentFieldConfig,
-	UiComponentFieldEventSource,
-	UiFieldEditingMode
-} from "../../generated";
-import {AbstractField} from "./AbstractUiField";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {parseHtml} from "teamapps-client-core";
-import {UiComponent} from "teamapps-client-core";
+import {DtoComponentField, DtoComponentFieldCommandHandler, DtoComponentFieldEventSource, DtoFieldEditingMode} from "../../generated";
+import {AbstractField} from "./AbstractField";
+import {Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
 
 
-export class ComponentField extends AbstractField<UiComponentFieldConfig, void> implements UiComponentFieldEventSource, UiComponentFieldCommandHandler {
+export class ComponentField extends AbstractField<DtoComponentField, void> implements DtoComponentFieldEventSource, DtoComponentFieldCommandHandler {
 
-	private component: UiComponent<UiComponentConfig>;
+	private component: Component;
 	private $componentWrapper: HTMLElement;
 
-	protected initialize(config: UiComponentFieldConfig, context: TeamAppsUiContext) {
-		this.$componentWrapper = parseHtml('<div class="UiComponentField"></div>');
+	protected initialize(config: DtoComponentField, context: TeamAppsUiContext) {
+		this.$componentWrapper = parseHtml('<div class="DtoComponentField"></div>');
 		this.setHeight(config.height);
-		this.setComponent(config.component as UiComponent);
+		this.setComponent(config.component as Component);
 		this.setBordered(!!config.bordered)
 	}
 
@@ -53,7 +44,7 @@ export class ComponentField extends AbstractField<UiComponentFieldConfig, void> 
 		this.$componentWrapper.classList.toggle("field-border-glow", bordered)
 	}
 
-	setComponent(component: UiComponent): void {
+	setComponent(component: Component): void {
 		if (this.component != null) {
 			this.component.getMainElement().remove();
 		}
@@ -80,7 +71,7 @@ export class ComponentField extends AbstractField<UiComponentFieldConfig, void> 
 	getTransientValue(): void {
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
 		// do nothing (default implementation)
 	}
 
@@ -93,4 +84,4 @@ export class ComponentField extends AbstractField<UiComponentFieldConfig, void> 
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiComponentField", ComponentField);
+

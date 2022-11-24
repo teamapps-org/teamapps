@@ -21,7 +21,10 @@ package org.teamapps.ux.component.panel;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.databinding.ObservableValue;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.DtoPanel;
+import org.teamapps.dto.DtoPanelHeaderField;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -132,7 +135,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoPanel uiPanel = new DtoPanel();
 		mapUiPanelProperties(uiPanel);
 		return uiPanel;

@@ -17,22 +17,26 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DropDown} from "../../../micro-components/UiDropDown";
-import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
-import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
-import {Toolbar} from "./UiToolbar";
-import {AbstractToolContainer} from "../DtoAbstractToolContainer";
-import {generateUUID, parseHtml, prependChild} from "../../../Common";
-import {createUiDropDownButtonClickInfo, UiDropDownButtonClickInfo} from "../../../generated/UiDropDownButtonClickInfo";
-import {TeamAppsEvent} from "../teamapps-client-core";
-
-import {UiGridTemplate} from "../../../generated/UiGridTemplate";
-import {UiComponent} from "../teamapps-client-core";
-import {enterFullScreen, exitFullScreen, isFullScreen} from "../../../util/fullscreen";
+import {DropDown} from "../../../micro-components/DropDown";
+import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {
+	Component,
+	enterFullScreen,
+	exitFullScreen,
+	generateUUID,
+	isFullScreen,
+	parseHtml,
+	TeamAppsEvent,
+	TeamAppsUiContext
+} from "teamapps-client-core";
+import {Toolbar} from "./Toolbar";
+import {AbstractToolContainer} from "../AbstractToolContainer";
+import {prependChild} from "../../../Common";
+import {createDtoDropDownButtonClickInfo, DtoDropDownButtonClickInfo, DtoGridTemplate} from "../../../generated";
 
 export class ToolbarButton {
 
-	public readonly onClicked: TeamAppsEvent<UiDropDownButtonClickInfo> = new TeamAppsEvent();
+	public readonly onClicked: TeamAppsEvent<DtoDropDownButtonClickInfo> = new TeamAppsEvent();
 
 	private $buttonWrapper: HTMLElement;
 	private $button: HTMLElement;
@@ -42,12 +46,12 @@ export class ToolbarButton {
 
 	private hasDropDown: boolean;
 	private dropDown: DropDown;
-	private dropDownComponent: UiComponent;
+	private dropDownComponent: Component;
 
-	private uuidClass: string = `UiToolbarButton-${generateUUID()}`;
+	private uuidClass: string = `DtoToolbarButton-${generateUUID()}`;
 	private $styleTag: HTMLStyleElement;
 
-	constructor(public config: UiToolbarButtonConfig, private context: TeamAppsUiContext) {
+	constructor(public config: DtoToolbarButton, private context: TeamAppsUiContext) {
 		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.buttonId}">
 	<div class="toolbar-button-caret ${config.hasDropDown ? '' : 'hidden'}">
 	  <div class="caret"></div>
@@ -61,19 +65,19 @@ export class ToolbarButton {
 		this.$button = parseHtml(renderer.render(config.recordData));
 		prependChild(this.$buttonWrapper, this.$button);
 		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
-		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplate).maxHeight || Toolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
+		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as DtoGridTemplate).maxHeight || Toolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
 		this.$styleTag = this.$buttonWrapper.querySelector(":scope style");
 		this.updateStyles();
 		this.setVisible(config.visible);
 		this.setHasDropDown(config.hasDropDown);
-		this.setDropDownComponent(config.dropDownComponent as UiComponent);
+		this.setDropDownComponent(config.dropDownComponent as Component);
 
 		this.$buttonWrapper.addEventListener("mousedown", (e) => {
 			if (this.config.togglesFullScreenOnComponent) {
 				if (isFullScreen()) {
 					exitFullScreen();
 				} else {
-					enterFullScreen((this.config.togglesFullScreenOnComponent as UiComponent).getMainElement());
+					enterFullScreen((this.config.togglesFullScreenOnComponent as Component).getMainElement());
 				}
 			}
 			if (this.config.startPlaybackComponent) {
@@ -83,12 +87,12 @@ export class ToolbarButton {
 				window.open(this.config.openNewTabWithUrl, '_blank');
 			}
 
-			let dropdownClickInfo: UiDropDownButtonClickInfo = null;
+			let dropdownClickInfo: DtoDropDownButtonClickInfo = null;
 			if (this.hasDropDown) {
 				if (this.dropDown == null) {
 					this.dropDown = new DropDown(this.dropDownComponent);
 				}
-				dropdownClickInfo = createUiDropDownButtonClickInfo(!this.dropDown.isOpen, this.dropDownComponent != null);
+				dropdownClickInfo = createDtoDropDownButtonClickInfo(!this.dropDown.isOpen, this.dropDownComponent != null);
 				if (!this.dropDown.isOpen) {
 					this.dropDown.setContentComponent(this.dropDownComponent);
 					this.dropDown.open({$reference: this.$buttonWrapper, width: config.dropDownPanelWidth});
@@ -105,7 +109,7 @@ export class ToolbarButton {
 		return this.$buttonWrapper;
 	}
 
-	setDropDownComponent(component: UiComponent) {
+	setDropDownComponent(component: Component) {
 		this.dropDownComponent = component;
 		if (this.dropDown != null) {
 			this.dropDown.setContentComponent(component);

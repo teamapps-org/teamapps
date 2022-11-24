@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
-managed class AbstractUiInfiniteListComponent extends Component {
+import Component from "teamapps-client-core":org.teamapps.dto;
+
+abstract managed class AbstractInfiniteListComponent extends Component {
 	event displayedRangeChanged(int startIndex, int length);
 }

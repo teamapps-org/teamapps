@@ -20,6 +20,7 @@
 package org.teamapps.ux.component.grid.bootstrap;
 
 import org.teamapps.dto.*;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
@@ -27,12 +28,7 @@ import org.teamapps.ux.component.format.SizingPolicy;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 import org.teamapps.ux.component.grid.layout.GridColumn;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -68,7 +64,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoResponsiveGridLayout uiResponsiveGridLayout = new DtoResponsiveGridLayout(createUiLayoutPolicies());
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);
 		uiResponsiveGridLayout.setFillHeight(this.fillHeight);

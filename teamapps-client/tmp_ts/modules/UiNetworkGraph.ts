@@ -22,26 +22,26 @@
 
 import * as d3 from "d3";
 import {ForceLink, Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiNetworkGraph_NodeClickedEvent,
 	UiNetworkGraph_NodeDoubleClickedEvent,
 	UiNetworkGraph_NodeExpandedOrCollapsedEvent,
 	UiNetworkGraphCommandHandler,
-	UiNetworkGraphConfig,
+	DtoNetworkGraph,
 	UiNetworkGraphEventSource
-} from "../generated/UiNetworkGraphConfig";
+} from "../generated/DtoNetworkGraph";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
-import {UiNetworkNode_ExpandState, UiNetworkNodeConfig} from "../generated/UiNetworkNodeConfig";
+import {UiNetworkNode_ExpandState, DtoNetworkNode} from "../generated/DtoNetworkNode";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {patternify} from "./UiTreeGraph";
-import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
-import {UiNetworkLinkConfig} from "../generated/UiNetworkLinkConfig";
+import {UiTreeGraphNodeImage_CornerShape} from "../generated/DtoTreeGraphNodeImage";
+import {DtoNetworkLink} from "../generated/DtoNetworkLink";
 
-export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> implements UiNetworkGraphCommandHandler, UiNetworkGraphEventSource {
+export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implements UiNetworkGraphCommandHandler, UiNetworkGraphEventSource {
 
 	public readonly onNodeClicked: TeamAppsEvent<UiNetworkGraph_NodeClickedEvent> = new TeamAppsEvent();
 	public readonly onNodeDoubleClicked: TeamAppsEvent<UiNetworkGraph_NodeDoubleClickedEvent> = new TeamAppsEvent();
@@ -55,15 +55,15 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	private linksContainer: d3.Selection<SVGGElement, any, null, undefined>;
 	private zoom: ZoomBehavior<Element, unknown>;
 
-	private simulation: Simulation<UiNetworkNodeConfig & any, undefined>;
-	private linkForce: ForceLink<UiNetworkNodeConfig & any, UiNetworkLinkConfig & any>;
+	private simulation: Simulation<DtoNetworkNode & any, undefined>;
+	private linkForce: ForceLink<DtoNetworkNode & any, DtoNetworkLink & any>;
 
-	private nodes: (UiNetworkNodeConfig & any)[];
-	private links: (UiNetworkLinkConfig & any)[];
+	private nodes: (DtoNetworkNode & any)[];
+	private links: (DtoNetworkLink & any)[];
 
 	private lastDraggedNode: any;
 
-	constructor(config: UiNetworkGraphConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoNetworkGraph, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$graph = parseHtml('<div class="UiNetworkGraph" id="' + this.getId() + '">');
 
@@ -80,21 +80,21 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	@executeWhenFirstDisplayed()
 	public createGraph(gravity: any, images: any) {
 		this.linkForce = d3.forceLink(this.links)
-			.id(d => (d as UiNetworkNodeConfig).id)
-			.distance((link: UiNetworkLinkConfig) => {
+			.id(d => (d as DtoNetworkNode).id)
+			.distance((link: DtoNetworkLink) => {
 				return link.linkLength;
 			})
-			// .distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
+			// .distance((link: SimulationLinkDatum<DtoNetworkNode & any>) => {
 			// 	return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * 0.75 + ;
 			// });
 		let force = d3.forceManyBody();
 		force.strength(-30)
-		this.simulation = d3.forceSimulation<UiNetworkNodeConfig & any>()
+		this.simulation = d3.forceSimulation<DtoNetworkNode & any>()
 			.nodes(this.nodes)
 			.force("charge", force)
 			.force("link", this.linkForce)
 			.force("center", d3.forceCenter(this.getWidth() / 2, this.getWidth() / 2))
-			.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
+			.force("collide", d3.forceCollide((a: DtoNetworkNode & any) => {
 				return Math.sqrt(a.width * a.width + a.height * a.height) * a.distanceFactor;
 			}))
 			.stop();
@@ -243,11 +243,11 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	}
 
 	public setDistance(linkDistance: number, nodeDistance: number): void {
-		this.linkForce.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
+		this.linkForce.distance((link: SimulationLinkDatum<DtoNetworkNode & any>) => {
 			return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * linkDistance;
 		});
 
-		this.simulation.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
+		this.simulation.force("collide", d3.forceCollide((a: DtoNetworkNode & any) => {
 			return Math.sqrt(a.width * a.width + a.height * a.height) * a.distanceFactor * nodeDistance;
 		}));
 
@@ -271,9 +271,9 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.linksContainer.selectAll("line")
 			.data(this.links)
 			.join("line")
-			.attr("stroke-width", (d: UiNetworkLinkConfig) => d.lineWidth || 2)
-			.attr('stroke', (d: UiNetworkLinkConfig) => d.lineColor)
-			.attr('stroke-dasharray', (d: UiNetworkLinkConfig) => d.lineDashArray ? d.lineDashArray : null)
+			.attr("stroke-width", (d: DtoNetworkLink) => d.lineWidth || 2)
+			.attr('stroke', (d: DtoNetworkLink) => d.lineColor)
+			.attr('stroke-dasharray', (d: DtoNetworkLink) => d.lineDashArray ? d.lineDashArray : null)
 			.transition()
 			.duration(animationDuration)
 			.attr("x1", (d: any) => d.source.x)
@@ -287,19 +287,19 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		const nodesSelection: d3.Selection<SVGGElement, any, SVGGElement, any> = this.container.selectAll<SVGGElement, any>('g.node')
 			.data(this.nodes, ({
 				                   id
-			                   }: UiNetworkNodeConfig) => id);
+			                   }: DtoNetworkNode) => id);
 
 		// Enter any new nodes at the parent's previous position.
 		const nodeEnter = nodesSelection.enter().append('g')
 			.attr('class', 'node')
 			.attr('cursor', 'pointer')
-			.on('click', (d: UiNetworkNodeConfig) => {
+			.on('click', (d: DtoNetworkNode) => {
 				if (d3.event.srcElement.classList.contains('node-button-circle')) {
 					return;
 				}
 				this.onNodeClicked.fire({nodeId: d.id});
 			})
-			.on('dblclick', (d: UiNetworkNodeConfig) => {
+			.on('dblclick', (d: DtoNetworkNode) => {
 				if (d3.event.srcElement.classList.contains('node-button-circle')) {
 					return;
 				}
@@ -310,7 +310,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		patternify(nodeEnter, {
 			tag: 'rect',
 			selector: 'node-rect',
-			data: (d: UiNetworkNodeConfig) => [d]
+			data: (d: DtoNetworkNode) => [d]
 		});
 
 		nodeEnter.call(d3.drag()
@@ -352,26 +352,26 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		patternify(nodeEnter, {
 			tag: 'image',
 			selector: 'node-icon-image',
-			data: (d: UiNetworkNodeConfig) => d.icon ? [d] : []
+			data: (d: DtoNetworkNode) => d.icon ? [d] : []
 		})
-			.attr('width', (data: UiNetworkNodeConfig) => data.icon.size)
-			.attr('height', (data: UiNetworkNodeConfig) => data.icon.size)
-			.attr("xlink:href", (data: UiNetworkNodeConfig) => data.icon.icon)
-			.attr('x', (data: UiNetworkNodeConfig) => -data.width / 2 - data.icon.size / 2)
-			.attr('y', (data: UiNetworkNodeConfig) => -data.height / 2 - data.icon.size / 2);
+			.attr('width', (data: DtoNetworkNode) => data.icon.size)
+			.attr('height', (data: DtoNetworkNode) => data.icon.size)
+			.attr("xlink:href", (data: DtoNetworkNode) => data.icon.icon)
+			.attr('x', (data: DtoNetworkNode) => -data.width / 2 - data.icon.size / 2)
+			.attr('y', (data: DtoNetworkNode) => -data.height / 2 - data.icon.size / 2);
 
 		// Defined node images wrapper group
 		const imageGroups = patternify(nodeEnter, {
 			tag: 'g',
 			selector: 'node-image-group',
-			data: (d: UiNetworkNodeConfig) => [d]
+			data: (d: DtoNetworkNode) => [d]
 		});
 
 		// Add background rectangle for node image
 		patternify(imageGroups, {
 			tag: 'rect',
 			selector: 'node-image-rect',
-			data: (d: UiNetworkNodeConfig) => [d]
+			data: (d: DtoNetworkNode) => [d]
 		});
 
 		// Node update styles
@@ -387,16 +387,16 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		const foreignObject = patternify(nodeUpdate, {
 			tag: 'foreignObject',
 			selector: 'node-foreign-object',
-			data: (d: UiNetworkNodeConfig) => [d]
+			data: (d: DtoNetworkNode) => [d]
 		});
 
 		let foreignObjectInner = foreignObject.selectAll('.node-foreign-object-div')
-			.data((d: UiNetworkNodeConfig) => [d], d => (d as UiNetworkNodeConfig).id);
+			.data((d: DtoNetworkNode) => [d], d => (d as DtoNetworkNode).id);
 		foreignObjectInner
 			.enter()
 			.append('xhtml:div')
 			.classed('node-foreign-object-div', true)
-			.html((d: UiNetworkNodeConfig) => this._context.templateRegistry.createTemplateRenderer(d.template).render(d.record.values));
+			.html((d: DtoNetworkNode) => this._context.templateRegistry.createTemplateRenderer(d.template).render(d.record.values));
 		foreignObjectInner.exit().remove();
 
 		this.restyleForeignObjectElements();
@@ -405,9 +405,9 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		const nodeButtonGroups = patternify(nodeEnter, {
 			tag: 'g',
 			selector: 'node-button-g',
-			data: (d: UiNetworkNodeConfig) => [d]
+			data: (d: DtoNetworkNode) => [d]
 		})
-			.on('mousedown', (d: UiNetworkNodeConfig) => {
+			.on('mousedown', (d: DtoNetworkNode) => {
 				if (d.expandState == UiNetworkNode_ExpandState.EXPANDED) {
 					d.expandState = UiNetworkNode_ExpandState.COLLAPSED;
 				} else {
@@ -422,20 +422,20 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		patternify(nodeButtonGroups, {
 			tag: 'circle',
 			selector: 'node-button-circle',
-			data: (d: UiNetworkNodeConfig) => [d]
+			data: (d: DtoNetworkNode) => [d]
 		});
 		// Restyle node button circle
 		nodeUpdate.select('.node-button-circle')
 			.attr('r', 10)
-			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
-			.attr('fill', (d: UiNetworkNodeConfig) => d.backgroundColor)
-			.attr('stroke', (d: UiNetworkNodeConfig) => d.borderColor);
+			.attr('stroke-width', (d: DtoNetworkNode) => d.borderWidth)
+			.attr('fill', (d: DtoNetworkNode) => d.backgroundColor)
+			.attr('stroke', (d: DtoNetworkNode) => d.borderColor);
 
 		// Add button text
 		patternify(nodeButtonGroups, {
 			tag: 'text',
 			selector: 'node-button-text',
-			data: (d: UiNetworkNodeConfig) => [d]
+			data: (d: DtoNetworkNode) => [d]
 		})
 			.attr('pointer-events', 'none')
 		// Restyle button texts
@@ -445,16 +445,16 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr('stroke', 'none')
 			.attr('fill', 'black')
 			.attr('font-size', 22)
-			.text((d: UiNetworkNodeConfig) => d.expandState === UiNetworkNode_ExpandState.EXPANDED ? '–' : '+');
+			.text((d: DtoNetworkNode) => d.expandState === UiNetworkNode_ExpandState.EXPANDED ? '–' : '+');
 
 		// Move node button group to the desired position
 		nodeUpdate.select('.node-button-g')
-			.attr('transform', (d: UiNetworkNodeConfig) => `translate(0,${d.height / 2})`)
-			.attr('display', (data: UiNetworkNodeConfig) => data.expandState === UiNetworkNode_ExpandState.NOT_EXPANDABLE ? 'none' : 'inherit');
+			.attr('transform', (d: DtoNetworkNode) => `translate(0,${d.height / 2})`)
+			.attr('display', (data: DtoNetworkNode) => data.expandState === UiNetworkNode_ExpandState.NOT_EXPANDABLE ? 'none' : 'inherit');
 
 		// Move images to desired positions
 		nodeUpdate.selectAll('.node-image-group')
-			.attr('transform', (d: UiNetworkNodeConfig) => {
+			.attr('transform', (d: DtoNetworkNode) => {
 				if (d.image) {
 					let x = -d.image.width / 2 - d.width / 2;
 					let y = -d.image.height / 2 - d.height / 2;
@@ -466,29 +466,29 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 		// Style node image rectangles
 		nodeUpdate.select('.node-image-rect')
-			.attr('fill', (d: UiNetworkNodeConfig) => `url('#${d.id}')`)
-			.attr('width', (d: UiNetworkNodeConfig) => d.image && d.image.width)
-			.attr('height', (d: UiNetworkNodeConfig) => d.image && d.image.height)
-			.attr('stroke', (d: UiNetworkNodeConfig) => d.image && (d.image.borderColor))
-			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.image && d.image.borderWidth)
-			.attr('rx', (d: UiNetworkNodeConfig) => d.image && (d.image.cornerShape == UiTreeGraphNodeImage_CornerShape.CIRCLE ? Math.max(d.image.width, d.image.height)
+			.attr('fill', (d: DtoNetworkNode) => `url('#${d.id}')`)
+			.attr('width', (d: DtoNetworkNode) => d.image && d.image.width)
+			.attr('height', (d: DtoNetworkNode) => d.image && d.image.height)
+			.attr('stroke', (d: DtoNetworkNode) => d.image && (d.image.borderColor))
+			.attr('stroke-width', (d: DtoNetworkNode) => d.image && d.image.borderWidth)
+			.attr('rx', (d: DtoNetworkNode) => d.image && (d.image.cornerShape == UiTreeGraphNodeImage_CornerShape.CIRCLE ? Math.max(d.image.width, d.image.height)
 				: d.image.cornerShape == UiTreeGraphNodeImage_CornerShape.ROUNDED ? Math.min(d.image.width, d.image.height) / 10
 					: 0))
-			.attr('y', (d: UiNetworkNodeConfig) => d.image && d.image.centerTopDistance)
-			.attr('x', (d: UiNetworkNodeConfig) => d.image && d.image.centerLeftDistance);
-		// .attr('filter', (d: UiNetworkNodeConfig) => d.image && d.image.shadowId);
+			.attr('y', (d: DtoNetworkNode) => d.image && d.image.centerTopDistance)
+			.attr('x', (d: DtoNetworkNode) => d.image && d.image.centerLeftDistance);
+		// .attr('filter', (d: DtoNetworkNode) => d.image && d.image.shadowId);
 
 		// Style node rectangles
 		nodeUpdate.select('.node-rect')
-			.attr('width', (d: UiNetworkNodeConfig) => d.width)
-			.attr('height', (d: UiNetworkNodeConfig) => d.height)
-			.attr('x', (d: UiNetworkNodeConfig) => -d.width / 2)
-			.attr('y', (d: UiNetworkNodeConfig) => -d.height / 2)
-			.attr('rx', (d: UiNetworkNodeConfig) => d.borderRadius || 0)
-			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
+			.attr('width', (d: DtoNetworkNode) => d.width)
+			.attr('height', (d: DtoNetworkNode) => d.height)
+			.attr('x', (d: DtoNetworkNode) => -d.width / 2)
+			.attr('y', (d: DtoNetworkNode) => -d.height / 2)
+			.attr('rx', (d: DtoNetworkNode) => d.borderRadius || 0)
+			.attr('stroke-width', (d: DtoNetworkNode) => d.borderWidth)
 			.attr('cursor', 'pointer')
-			.attr('stroke', ({borderColor}: UiNetworkNodeConfig) => borderColor)
-			.style("fill", ({backgroundColor}: UiNetworkNodeConfig) => backgroundColor);
+			.attr('stroke', ({borderColor}: DtoNetworkNode) => borderColor)
+			.style("fill", ({backgroundColor}: DtoNetworkNode) => backgroundColor);
 
 		// Remove any exiting nodes after transition
 		const nodeExitTransition = nodesSelection.exit()
@@ -500,28 +500,28 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.container.selectAll('.node-foreign-object')
 			.attr('width', ({
 				                width
-			                }: UiNetworkNodeConfig) => width)
+			                }: DtoNetworkNode) => width)
 			.attr('height', ({
 				                 height
-			                 }: UiNetworkNodeConfig) => height)
+			                 }: DtoNetworkNode) => height)
 			.attr('x', ({
 				            width
-			            }: UiNetworkNodeConfig) => -width / 2)
+			            }: DtoNetworkNode) => -width / 2)
 			.attr('y', ({
 				            height
-			            }: UiNetworkNodeConfig) => -height / 2);
+			            }: DtoNetworkNode) => -height / 2);
 		this.container.selectAll('.node-foreign-object-div')
 			.style('width', ({
 				                 width
-			                 }: UiNetworkNodeConfig) => `${width}px`)
+			                 }: DtoNetworkNode) => `${width}px`)
 			.style('height', ({
 				                  height
-			                  }: UiNetworkNodeConfig) => `${height}px`)
+			                  }: DtoNetworkNode) => `${height}px`)
 			.select('*')
 			.style('display', 'inline-grid')
 	}
 
-	public addNodesAndLinks(newNodes: UiNetworkNodeConfig[], newLinks: UiNetworkLinkConfig[]): void {
+	public addNodesAndLinks(newNodes: DtoNetworkNode[], newLinks: DtoNetworkLink[]): void {
 		this.nodes.push(...newNodes);
 		this.links.push(...newLinks);
 
@@ -536,7 +536,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.updateLinks(this._config.animationDuration);
 	}
 
-	private placeNewNodesNearExistingParentsOnes(newLinks: UiNetworkLinkConfig[], newNodes: UiNetworkNodeConfig[]) {
+	private placeNewNodesNearExistingParentsOnes(newLinks: DtoNetworkLink[], newNodes: DtoNetworkNode[]) {
 		let changed: boolean;
 		do {
 			changed = false;
@@ -590,4 +590,4 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiNetworkGraph", UiNetworkGraph);
+

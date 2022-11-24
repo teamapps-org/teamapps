@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.template.gridtemplate;
 
-import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoIconElement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 
-public class IconElement extends AbstractTemplateElement<IconElement> {
+public class IconElement extends AbstractGridTemplateElement<IconElement> {
 
 	protected int size;
 
@@ -49,9 +49,9 @@ public class IconElement extends AbstractTemplateElement<IconElement> {
 	}
 
 	@Override
-	public DtoAbstractTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createUiTemplateElement() {
 		DtoIconElement uiIconElement = new DtoIconElement(propertyName, row, column, size);
-		mapAbstractTemplateElementAttributesToUiElement(uiIconElement);
+		mapAbstractGridTemplateElementAttributesToUiElement(uiIconElement);
 		return uiIconElement;
 	}
 

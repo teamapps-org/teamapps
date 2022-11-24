@@ -18,38 +18,34 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {parseHtml} from "../Common";
-import {UiFlexContainerCommandHandler, UiFlexContainerConfig} from "../generated/UiFlexContainerConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractComponent, Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoFlexContainer, DtoFlexContainerCommandHandler} from "../generated";
 
-export class FlexContainer extends AbstractUiComponent<UiFlexContainerConfig> implements UiFlexContainerCommandHandler {
+export class FlexContainer extends AbstractComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
 
 	private $main: HTMLDivElement;
-	private components: UiComponent[] = [];
+	private components: Component[] = [];
 
-	constructor(config: UiFlexContainerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoFlexContainer, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<div class="UiFlexContainer"></div>`);
+		this.$main = parseHtml(`<div class="DtoFlexContainer"></div>`);
 		this.$main.style.flexDirection = config.flexDirection;
 		this.$main.style.alignItems = config.alignItems;
 		this.$main.style.justifyContent = config.justifyContent;
 
-		config.components.forEach(c => this.addComponent(c as UiComponent));
+		config.components.forEach(c => this.addComponent(c as Component));
 	}
 
 	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
-	addComponent(component: UiComponent): void {
+	addComponent(component: Component): void {
 		this.components.push(component);
 		this.$main.appendChild(component.getMainElement());
 	}
 
-	removeComponent(component: UiComponent): void {
+	removeComponent(component: Component): void {
 		try {
 			this.$main.removeChild(component.getMainElement());
 		} catch (e) {
@@ -60,4 +56,4 @@ export class FlexContainer extends AbstractUiComponent<UiFlexContainerConfig> im
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiFlexContainer", FlexContainer);
+

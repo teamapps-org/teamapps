@@ -18,20 +18,20 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiWebRtcPlayerCommandHandler, UiWebRtcPlayerConfig} from "../generated/UiWebRtcPlayerConfig";
+import {UiWebRtcPlayerCommandHandler, DtoWebRtcPlayer} from "../generated/DtoWebRtcPlayer";
 import {UiSpinner} from "./micro-components/UiSpinner";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {applyDisplayMode, parseHtml} from "./Common";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiWebRtcPlayingSettingsConfig} from "../generated/UiWebRtcPlayingSettingsConfig";
+import {DtoWebRtcPlayingSettings} from "../generated/DtoWebRtcPlayingSettings";
 import {getPlayableVideoCodecs} from "./util/getPlayableVideoCodecs";
 import {UiVideoCodec} from "../generated/UiVideoCodec";
 
 type WebRtcState = 'new' | 'checking' | 'connected' | 'completed' | 'failed' | 'disconnected' | 'closed';
 
-export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> implements UiWebRtcPlayerCommandHandler {
+export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implements UiWebRtcPlayerCommandHandler {
 
 	private static readonly PEER_CONNECTION_CONFIG: any = {'iceServers': []};
 
@@ -42,13 +42,13 @@ export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> im
 
 	private remoteVideo: HTMLVideoElement;
 	private peerConnection: RTCPeerConnection = null;
-	private settings: UiWebRtcPlayingSettingsConfig;
+	private settings: DtoWebRtcPlayingSettings;
 	private signalingWsConnection: WebSocket = null;
 	private streamInfo: { applicationName: string; streamName: string; sessionId: string };
 	private userData: object;
 	private iceConnectionState: WebRtcState;
 
-	constructor(config: UiWebRtcPlayerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoWebRtcPlayer, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`
@@ -79,7 +79,7 @@ export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> im
 		return await getPlayableVideoCodecs();
 	}
 
-	public play(settings: UiWebRtcPlayingSettingsConfig) {
+	public play(settings: DtoWebRtcPlayingSettings) {
 		this.stopPlaying();
 		this.settings = settings;
 		this.reconnectForPlaying();
@@ -270,4 +270,4 @@ export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> im
 (window as any).RTCIceCandidate = (window as any).RTCIceCandidate || (window as any).mozRTCIceCandidate || (window as any).webkitRTCIceCandidate;
 (window as any).RTCSessionDescription = (window as any).RTCSessionDescription || (window as any).mozRTCSessionDescription || (window as any).webkitRTCSessionDescription;
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiWebRtcPlayer", UiWebRtcPlayer);
+

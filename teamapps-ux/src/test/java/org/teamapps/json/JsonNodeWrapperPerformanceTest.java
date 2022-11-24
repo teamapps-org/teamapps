@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.teamapps.dto.*;
+import org.teamapps.dto.protocol.DtoEVT;
+import org.teamapps.dto.protocol.DtoEVTWrapper;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 
 public class JsonNodeWrapperPerformanceTest {
 
@@ -40,8 +43,7 @@ public class JsonNodeWrapperPerformanceTest {
 		int x = 0;
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < NUMBER_OF_RUNS; i++) {
-			var e1 = event1String.substring(0, 42) + i + event1String.substring(42);
-			x += testRun.run(e1);
+			x += testRun.run(event1String);
 		}
 		System.out.println(testName + ": " + (System.currentTimeMillis() - startTime));
 		return x;
@@ -50,7 +52,7 @@ public class JsonNodeWrapperPerformanceTest {
 	private int runWrapping(String e1) throws JsonProcessingException {
 		int x = 0;
 		JsonNode jsonNode = objectMapper.readTree(e1);
-		DtoEVENTWrapper eventWrapper = new DtoEVENTWrapper(jsonNode);
+		DtoEVTWrapper eventWrapper = new DtoEVTWrapper(jsonNode);
 		x += eventWrapper.getSessionId().hashCode();
 		x += eventWrapper.getId();
 		DtoEventWrapper uiEventWrapper = eventWrapper.getUiEvent();

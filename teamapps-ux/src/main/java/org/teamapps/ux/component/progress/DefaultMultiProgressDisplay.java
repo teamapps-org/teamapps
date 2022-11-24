@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.progress;
 
 import org.teamapps.dto.DtoDefaultMultiProgressDisplay;
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoMultiProgressDisplay;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;

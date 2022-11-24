@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoClientRecord;
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoTemplateField;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;

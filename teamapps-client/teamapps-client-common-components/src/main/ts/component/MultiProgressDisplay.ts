@@ -18,29 +18,32 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {parseHtml} from "../Common";
-import {UiDefaultMultiProgressDisplayCommandHandler, UiDefaultMultiProgressDisplayConfig, UiDefaultMultiProgressDisplayEventSource} from "../generated/UiDefaultMultiProgressDisplayConfig";
-import {UiMultiProgressDisplay_ClickedEvent, UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayConfig, UiMultiProgressDisplayEventSource} from "../generated/UiMultiProgressDisplayConfig";
+import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {
+	DtoDefaultMultiProgressDisplay,
+	DtoDefaultMultiProgressDisplayCommandHandler,
+	DtoDefaultMultiProgressDisplayEventSource,
+	DtoMultiProgressDisplay,
+	DtoMultiProgressDisplay_ClickedEvent,
+	DtoMultiProgressDisplayCommandHandler,
+	DtoMultiProgressDisplayEventSource
+} from "../generated";
 
-export abstract class MultiProgressDisplay<C extends UiMultiProgressDisplayConfig = UiMultiProgressDisplayConfig> extends AbstractUiComponent<C> implements UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayEventSource {
-	public readonly onClicked: TeamAppsEvent<UiMultiProgressDisplay_ClickedEvent> = new TeamAppsEvent();
+export abstract class MultiProgressDisplay<C extends DtoMultiProgressDisplay = DtoMultiProgressDisplay> extends AbstractComponent<C> implements DtoMultiProgressDisplayCommandHandler, DtoMultiProgressDisplayEventSource {
+	public readonly onClicked: TeamAppsEvent<DtoMultiProgressDisplay_ClickedEvent> = new TeamAppsEvent();
 	abstract update(config: C): void;
 }
 
-export class UiDefaultMultiProgressDisplay extends MultiProgressDisplay<UiDefaultMultiProgressDisplayConfig> implements UiDefaultMultiProgressDisplayCommandHandler, UiDefaultMultiProgressDisplayEventSource {
+export class DefaultMultiProgressDisplay extends MultiProgressDisplay<DtoDefaultMultiProgressDisplay> implements DtoDefaultMultiProgressDisplayCommandHandler, DtoDefaultMultiProgressDisplayEventSource {
 
 	private $main: HTMLElement;
 	private $spinner: HTMLElement;
 	private $runningCount: HTMLElement;
 
-	constructor(config: UiDefaultMultiProgressDisplayConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoDefaultMultiProgressDisplay, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiDefaultMultiProgressDisplay">
+		this.$main = parseHtml(`<div class="DtoDefaultMultiProgressDisplay">
 	<div class="spinner teamapps-spinner"></div>					
 	<div class="running-count">0</div>					
 </div>`);
@@ -57,7 +60,7 @@ export class UiDefaultMultiProgressDisplay extends MultiProgressDisplay<UiDefaul
 		return this.$main;
 	}
 
-	update(config: UiDefaultMultiProgressDisplayConfig): void {
+	update(config: DtoDefaultMultiProgressDisplay): void {
 		this.$main.classList.toggle("no-tasks", config.runningCount === 0);
 		this.$spinner.classList.toggle('hidden', config.runningCount === 0);
 		this.$runningCount.innerText = "" + config.runningCount;
@@ -65,4 +68,4 @@ export class UiDefaultMultiProgressDisplay extends MultiProgressDisplay<UiDefaul
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiDefaultMultiProgressDisplay", UiDefaultMultiProgressDisplay);
+

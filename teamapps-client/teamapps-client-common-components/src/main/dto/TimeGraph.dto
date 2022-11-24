@@ -19,16 +19,18 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class TimeGraph extends Component {
-	LineChartYScaleZoomMode yScaleZoomMode = LineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
+	LineChartYScaleZoomMode yScaleZoomMode;
 	required LongInterval intervalX;
 	required List<TimeChartZoomLevel> zoomLevels;
 	required int maxPixelsBetweenDataPoints;  // ... before switching to higher zoom level
 	required List<Graph> graphs;
-	ScaleType yScaleType = ScaleType.LINEAR;
-	LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode = LineChartMouseScrollZoomPanMode.ENABLED;
+	ScaleType yScaleType;
+	LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode;
 	String locale;
-	String timeZoneId = null;
+	String timeZoneId;
 
 	command setIntervalX(LongInterval intervalX);
 	command setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints);
@@ -77,7 +79,7 @@ interface Graph {
 
 class LineGraph implements Graph {
 	String dataSeriesId;
-	LineChartCurveType graphType = LineChartCurveType.MONOTONE;
+	LineChartCurveType graphType;
     double dataDotRadius;
     String lineColorScaleMin;
     String lineColorScaleMax;
@@ -89,7 +91,7 @@ class HoseGraph implements Graph {
 	String upperBoundDataSeriesId;
 	String middleLineDataSeriesId;
 	String lowerBoundDataSeriesId;
-	LineChartCurveType graphType = LineChartCurveType.MONOTONE;
+	LineChartCurveType graphType;
     double dataDotRadius;
     String areaColor;
     boolean stripedArea;

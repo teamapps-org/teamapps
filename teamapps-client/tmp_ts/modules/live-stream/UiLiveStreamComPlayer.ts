@@ -19,18 +19,18 @@
  */
 
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiLiveStreamComPlayerConfig} from "../../generated/UiLiveStreamComPlayerConfig";
+import {DtoLiveStreamComPlayer} from "../../generated/DtoLiveStreamComPlayer";
 import {parseHtml} from "../Common";
 
-export class UiLiveStreamComPlayer extends AbstractUiComponent<UiLiveStreamComPlayerConfig> implements LiveStreamPlayer {
+export class UiLiveStreamComPlayer extends AbstractComponent<DtoLiveStreamComPlayer> implements LiveStreamPlayer {
 
 	private playing: boolean = false;
 	private $wrapper: HTMLElement;
 	private player: Element;
 
-	constructor(config: UiLiveStreamComPlayerConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoLiveStreamComPlayer, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$wrapper = parseHtml('<div class="livestreamcom-player-wrapper">');
 	}

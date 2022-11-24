@@ -21,8 +21,8 @@ package org.teamapps.ux.component.field;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoField;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.validator.FieldValidator;

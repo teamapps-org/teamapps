@@ -636,10 +636,10 @@ public class TeamAppsIntermediateDtoModel {
 	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(ClassDeclarationContext classContext) {
 		return Stream.of(
 						findSuperClassAndDirectlyImplementedInterfaces(classContext).stream(),
-						findSuperClassAndDirectlyImplementedInterfaces(classContext).stream()
-								.flatMap(c -> c instanceof ClassDeclarationContext
-										? findAllReferencedClassesAndInterfaces(((ClassDeclarationContext) c)).stream()
-										: findAllReferencedClassesAndInterfaces(((InterfaceDeclarationContext) c)).stream()),
+//						findSuperClassAndDirectlyImplementedInterfaces(classContext).stream()
+//								.flatMap(c -> c instanceof ClassDeclarationContext
+//										? findAllReferencedClassesAndInterfaces(((ClassDeclarationContext) c)).stream()
+//										: findAllReferencedClassesAndInterfaces(((InterfaceDeclarationContext) c)).stream()),
 						classContext.propertyDeclaration().stream()
 								.map(p -> findReferencedClassOrInterface(p.type())),
 						classContext.commandDeclaration().stream()

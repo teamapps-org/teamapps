@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 enum SplitSizePolicy {
 	FIRST_FIXED,
 	LAST_FIXED,
@@ -28,14 +30,14 @@ enum SplitSizePolicy {
 managed class SplitPane extends Component implements Emptyable {
 	required SplitDirection splitDirection;
 	required SplitSizePolicy sizePolicy;
-	double referenceChildSize = 0.5f; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
+	double referenceChildSize; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
 	Component* firstChild;
 	Component* lastChild;
-	int firstChildMinSize = 10; // in pixels
-	int lastChildMinSize = 10;  // in pixels
-	boolean resizable = true;
-	boolean fillIfSingleChild = true; // if one element is missing the other takes the whole place
-	boolean collapseEmptyChildren = true; // if true, empty children (implementing Emptyable) will be collapsed
+	int firstChildMinSize; // in pixels
+	int lastChildMinSize;  // in pixels
+	boolean resizable;
+	boolean fillIfSingleChild; // if one element is missing the other takes the whole place
+	boolean collapseEmptyChildren; // if true, empty children (implementing Emptyable) will be collapsed
 
 	command setFirstChild(Component* firstChild);
 	command setLastChild(Component* lastChild);

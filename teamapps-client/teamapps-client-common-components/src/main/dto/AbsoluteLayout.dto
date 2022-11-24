@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class AbsoluteLayout extends Component {
 	List<AbsolutePositionedComponent> components;
 

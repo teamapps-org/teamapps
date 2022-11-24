@@ -18,31 +18,28 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiComponentConfig, UiNavigationBarButton} from "../generated";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml, Renderer} from "../Common";
-import {TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, Renderer} from "../Common";
 import {
-	UiNavigationBar_ButtonClickedEvent,
-	UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent,
-	UiNavigationBarCommandHandler,
-	UiNavigationBarConfig,
-	UiNavigationBarEventSource
-} from "../generated/UiNavigationBarConfig";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiComponent} from "./UiComponent";
-import {MultiProgressDisplay} from "./UiMultiProgressDisplay";
+	DtoNavigationBar,
+	DtoNavigationBar_ButtonClickedEvent,
+	DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent,
+	DtoNavigationBarButton,
+	DtoNavigationBarCommandHandler,
+	DtoNavigationBarEventSource
+} from "../generated";
+import {MultiProgressDisplay} from "./MultiProgressDisplay";
+
 
 interface Button {
 	data: any;
 	$button: HTMLElement;
 }
 
-export class NavigationBar extends AbstractUiComponent<UiNavigationBarConfig> implements UiNavigationBarCommandHandler, UiNavigationBarEventSource {
+export class NavigationBar extends AbstractComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
 
-	public readonly onButtonClicked: TeamAppsEvent<UiNavigationBar_ButtonClickedEvent> = new TeamAppsEvent();
-	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent();
+	public readonly onButtonClicked: TeamAppsEvent<DtoNavigationBar_ButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent();
 
 	private $bar: HTMLElement;
 	private $buttonsContainer: HTMLElement;
@@ -50,18 +47,18 @@ export class NavigationBar extends AbstractUiComponent<UiNavigationBarConfig> im
 	private buttonTemplateRenderer: Renderer;
 	private $fanOutContainerWrapper: HTMLElement;
 	private $fanOutContainer: HTMLElement;
-	private fanOutComponents: UiComponent[] = [];
-	private currentFanOutComponent: UiComponent<UiComponentConfig>;
+	private fanOutComponents: Component[] = [];
+	private currentFanOutComponent: Component;
 	private fanoutClickOutsideHandle: ClickOutsideHandle;
 	private multiProgressDisplay: MultiProgressDisplay;
 	private $multiProgressDisplayContainer: HTMLElement;
 
-	constructor(config: UiNavigationBarConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoNavigationBar, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.buttonTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.buttonTemplate, null);
 
-		this.$bar = parseHtml(`<div class="UiNavigationBar">
+		this.$bar = parseHtml(`<div class="DtoNavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>
                 </div>
@@ -77,7 +74,7 @@ export class NavigationBar extends AbstractUiComponent<UiNavigationBarConfig> im
 		this.setBackgroundColor(config.backgroundColor);
 		this.setBorderColor(config.borderColor);
 		if (config.fanOutComponents) {
-			config.fanOutComponents.forEach(c => this.addFanOutComponent(c as UiComponent));
+			config.fanOutComponents.forEach(c => this.addFanOutComponent(c as Component));
 		}
 
 		this.setMultiProgressDisplay(config.multiProgressDisplay as MultiProgressDisplay);
@@ -97,20 +94,20 @@ export class NavigationBar extends AbstractUiComponent<UiNavigationBarConfig> im
 		return this.$bar;
 	}
 
-	setButtons(buttons: UiNavigationBarButton[]): void {
+	setButtons(buttons: DtoNavigationBarButton[]): void {
 		this.$buttonsContainer.innerHTML = '';
 		this.buttons = {};
 		buttons.forEach(button => this.addButton(button));
 	}
 
-	private addButton(button: UiNavigationBarButton) {
+	private addButton(button: DtoNavigationBarButton) {
 		let $button = parseHtml(`<div class="nav-button-wrapper"><div class="nav-button-inner-wrapper"></div></div>`);
 		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper");
 		$innerWrapper.appendChild(parseHtml(this.buttonTemplateRenderer.render(button.data)));
 		$button.addEventListener("click", () => {
 			this.onButtonClicked.fire({
 				buttonId: button.id,
-				visibleFanOutComponentId: this.currentFanOutComponent && (this.currentFanOutComponent as AbstractUiComponent).getId()
+				visibleFanOutComponentId: this.currentFanOutComponent && (this.currentFanOutComponent as AbstractComponent).getId()
 			});
 		});
 		this.buttons[button.id] = {
@@ -128,7 +125,7 @@ export class NavigationBar extends AbstractUiComponent<UiNavigationBarConfig> im
 		}
 	}
 
-	public addFanOutComponent(fanOutComponent: UiComponent) {
+	public addFanOutComponent(fanOutComponent: Component) {
 		if (this.fanOutComponents.indexOf(fanOutComponent) === -1) {
 			fanOutComponent.getMainElement().classList.add("pseudo-hidden");
 			this.$fanOutContainer.appendChild(fanOutComponent.getMainElement());
@@ -136,12 +133,12 @@ export class NavigationBar extends AbstractUiComponent<UiNavigationBarConfig> im
 		}
 	};
 
-	public removeFanOutComponent(fanOutComponent: UiComponent) {
+	public removeFanOutComponent(fanOutComponent: Component) {
 		fanOutComponent.getMainElement().remove();
 		this.fanOutComponents = this.fanOutComponents.filter(c => c !== fanOutComponent);
 	};
 
-	public showFanOutComponent(fanOutComponent: UiComponent) {
+	public showFanOutComponent(fanOutComponent: Component) {
 		this.addFanOutComponent(fanOutComponent);
 		const showFanout = () => {
 			this.currentFanOutComponent = fanOutComponent;
@@ -203,4 +200,4 @@ export class NavigationBar extends AbstractUiComponent<UiNavigationBarConfig> im
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiNavigationBar", NavigationBar);
+

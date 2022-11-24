@@ -18,10 +18,8 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {AbstractUiToolContainerConfig} from "../../generated/AbstractUiToolContainerConfig";
-import {parseHtml} from "teamapps-client-core";
+import {AbstractComponent, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
 
 
 interface Button {
@@ -29,7 +27,7 @@ interface Button {
 	$button: HTMLElement;
 }
 
-export abstract class AbstractToolContainer<C extends AbstractUiToolContainerConfig> extends AbstractUiComponent<C> {
+export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> extends AbstractComponent<C> {
 
 	protected static $sizeTestingContainer: HTMLElement;
 

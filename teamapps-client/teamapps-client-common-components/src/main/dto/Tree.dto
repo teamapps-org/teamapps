@@ -19,19 +19,21 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class Tree extends Component {
 	Dictionary<Template> templates;
-	String defaultTemplateId = null; // null: use asString property
+	String defaultTemplateId; // null: use asString property
 
 	List<TreeRecord> initialData; //if available, use this as data source
 	Integer selectedNodeId;
 
 	boolean animate;
-	boolean showExpanders = true;
-	boolean openOnSelection = false;
-	boolean enforceSingleExpandedPath = false;
+	boolean showExpanders;
+	boolean openOnSelection;
+	boolean enforceSingleExpandedPath;
 
-	int indentation = 15; // indentation in pixels per level
+	int indentation; // indentation in pixels per level
 
 	command replaceData(List<TreeRecord> nodes);
 	command bulkUpdate(List<Integer> nodesToBeRemoved, List<TreeRecord> nodesToBeAdded);

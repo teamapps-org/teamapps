@@ -29,8 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsUploadManager;
-import org.teamapps.dto.UiGlobals;
-import org.teamapps.dto.DtoSessionClosingReason;
+import org.teamapps.dto.DtoGlobals;
+import org.teamapps.dto.protocol.DtoSessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.icons.SessionIconProvider;
@@ -39,7 +39,6 @@ import org.teamapps.uisession.statistics.SessionStatsUpdatedEventData;
 import org.teamapps.uisession.statistics.UiSessionStats;
 import org.teamapps.util.threading.SequentialExecutorFactory;
 import org.teamapps.ux.component.ComponentLibraryRegistry;
-import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
@@ -217,7 +216,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			if (!hasTeamAppsRefreshParameter) {
 				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
 				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getSearch()) ? "&" : "?";
-				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, null, new UiGlobals.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
+				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, null, new DtoGlobals.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
 			}
 			uiSession.close(DtoSessionClosingReason.WRONG_TEAMAPPS_VERSION);
 			return;
@@ -230,8 +229,6 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		try {
 			// TODO make non-blocking when exception handling (and thereby session invalidation) is changed
 			sessionContext.runWithContext(() -> {
-				sessionContext.registerTemplates(Arrays.stream(BaseTemplate.values())
-						.collect(Collectors.toMap(Enum::name, BaseTemplate::getTemplate)));     // TODO is this still necessary??
 				webController.onSessionStart(sessionContext);
 			}).get();
 		} catch (InterruptedException | ExecutionException e) {

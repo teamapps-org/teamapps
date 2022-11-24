@@ -33,9 +33,9 @@ import {
 	UiPictureChooser_UploadSuccessfulEvent,
 	UiPictureChooser_UploadTooLargeEvent,
 	UiPictureChooserCommandHandler,
-	UiPictureChooserConfig,
+	DtoPictureChooser,
 	UiPictureChooserEventSource
-} from "../../../generated/UiPictureChooserConfig";
+} from "../../../generated/DtoPictureChooser";
 import {FileUploader} from "../../util/FileUploader";
 import {ProgressIndicator} from "../../micro-components/ProgressIndicator";
 import {ProgressCircle} from "../../micro-components/ProgressCircle";
@@ -43,7 +43,7 @@ import {ProgressCircle} from "../../micro-components/ProgressCircle";
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
-export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> implements UiPictureChooserEventSource, UiPictureChooserCommandHandler {
+export class UiPictureChooser extends UiField<DtoPictureChooser, string> implements UiPictureChooserEventSource, UiPictureChooserCommandHandler {
 
 	public readonly onUploadCanceled: TeamAppsEvent<UiPictureChooser_UploadCanceledEvent> = new TeamAppsEvent();
 	public readonly onUploadFailed: TeamAppsEvent<UiPictureChooser_UploadFailedEvent> = new TeamAppsEvent();
@@ -68,7 +68,7 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
 	private uploader: FileUploader;
 	private progressIndicator: ProgressIndicator;
 
-	protected initialize(config: UiPictureChooserConfig, context: TeamAppsUiContext): void {
+	protected initialize(config: DtoPictureChooser, context: TeamAppsUiContext): void {
 		this.$main = parseHtml(`<div class="UiPictureChooser drop-zone form-control field-border field-border-glow field-background">
     <div class="picture-wrapper">
     	<div class="picture hidden"></div>
@@ -286,4 +286,4 @@ export function formatString(s: string, ...params: any[]) {
 	return s;
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiPictureChooser", UiPictureChooser);
+

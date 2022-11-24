@@ -74,16 +74,6 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
                         return getPriority.apply(p2) - getPriority.apply(p1);
                     })
                     .collect(Collectors.toList());
-        } else if ("returnType".equals(propertyName)) {
-            if (commandContext.type() != null) {
-                if (TypeContextModelAdaptor.PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(commandContext.type().getText())) {
-                    return TypeContextModelAdaptor.PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(commandContext.type().getText());
-                } else {
-                    return commandContext.type().getText();
-                }
-            } else {
-                return "Void";
-            }
         } else {
             return super.getProperty(interpreter, seld, o, property, propertyName);
         }

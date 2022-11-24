@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.notification;
 
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoNotificationBar;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -79,7 +79,7 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoNotificationBar ui = new DtoNotificationBar();
 		mapAbstractUiComponentProperties(ui);
 		ui.setInitialItems(itemsByUiId.values().stream()

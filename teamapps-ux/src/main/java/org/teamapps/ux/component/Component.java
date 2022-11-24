@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component;
 
-import org.teamapps.dto.UiClientObjectReference;
+import org.teamapps.dto.DtoClientObjectReference;
 import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.format.Shadow;
 import org.teamapps.ux.component.format.Spacing;
@@ -91,7 +91,7 @@ public interface Component extends ClientObject {
 
 	// == static methods ==
 
-	static UiClientObjectReference createUiClientObjectReference(Component component) {
+	static DtoClientObjectReference createUiClientObjectReference(Component component) {
 		if (component == null) {
 			return null;
 		}

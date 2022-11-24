@@ -19,9 +19,9 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.DtoEventWrapper;
-import org.teamapps.dto.DtoQueryWrapper;
-import org.teamapps.dto.DtoSessionClosingReason;
+import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.protocol.DtoQueryWrapper;
+import org.teamapps.dto.protocol.DtoSessionClosingReason;
 
 import java.util.function.Consumer;
 

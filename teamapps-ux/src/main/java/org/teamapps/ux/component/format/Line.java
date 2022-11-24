@@ -52,6 +52,10 @@ public class Line {
 	}
 
 	public DtoLine createUiLine() {
-		return new DtoLine(thickness, color != null ? color.toHtmlColorString() : null).setType(type != null ? type.createUiLineType() : null);
+		DtoLine dtoLine = new DtoLine();
+		dtoLine.setThickness(thickness);
+		dtoLine.setColor(color!= null ? color.toHtmlColorString() : null);
+		dtoLine.setType(type != null ? type.createUiLineType() : null);
+		return dtoLine;
 	}
 }

@@ -17,20 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Panel} from "../UiPanel";
-import {UiComponentConfig, UiPanel_WindowButtonClickedEvent, UiWindowButtonType} from "../../generated";
-import {bind} from "teamapps-client-core";
+import {Panel} from "../Panel";
+import {DtoPanel_WindowButtonClickedEvent, DtoWindowButtonType} from "../../generated";
+import {bind, Component, TeamAppsEvent} from "teamapps-client-core";
 import {TabPanelItem} from "./TabPanelItem";
 import {ViewInfo} from "./ViewInfo";
-import {TeamAppsEvent} from "teamapps-client-core";
-import {UiComponent} from "teamapps-client-core";
 
 export class View implements ViewInfo {
 
-	public readonly onPanelWindowButtonClicked: TeamAppsEvent<UiWindowButtonType> = new TeamAppsEvent();
+	public readonly onPanelWindowButtonClicked: TeamAppsEvent<DtoWindowButtonType> = new TeamAppsEvent();
 
 	private _parent: TabPanelItem;
-	private _component: UiComponent<UiComponentConfig>;
+	private _component: Component;
 
 	constructor(public viewName: string,
 	            public tabIcon: string,
@@ -38,7 +36,7 @@ export class View implements ViewInfo {
 	            public tabCloseable: boolean,
 	            public lazyLoading: boolean,
 	            public visible: boolean,
-	            component: UiComponent<UiComponentConfig>) {
+	            component: Component) {
 		this.component = component;
 	}
 
@@ -63,8 +61,8 @@ export class View implements ViewInfo {
 	}
 
 	@bind
-	private handlePanelWindowButtonClicked(event: UiPanel_WindowButtonClickedEvent) {
-		if (event.windowButton === UiWindowButtonType.MINIMIZE && this._component instanceof Panel) {
+	private handlePanelWindowButtonClicked(event: DtoPanel_WindowButtonClickedEvent) {
+		if (event.windowButton === DtoWindowButtonType.MINIMIZE && this._component instanceof Panel) {
 			this._component.restore(); // could be maximized, so first restore!
 		}
 		this.onPanelWindowButtonClicked.fire(event.windowButton);
@@ -94,7 +92,7 @@ export class View implements ViewInfo {
 		};
 	}
 
-	setWindowButtons(toolButtons: UiWindowButtonType[]) {
+	setWindowButtons(toolButtons: DtoWindowButtonType[]) {
 		if (this.component instanceof Panel) {
 			(this.component as Panel).setWindowButtons(toolButtons);
 		}

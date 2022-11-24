@@ -18,51 +18,51 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {Constants, generateUUID, parseHtml, Renderer} from "./Common";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
 	UiInfiniteItemView_ContextMenuRequestedEvent,
 	UiInfiniteItemView_DisplayedRangeChangedEvent,
 	UiInfiniteItemView_ItemClickedEvent,
 	UiInfiniteItemViewCommandHandler,
-	UiInfiniteItemViewConfig,
+	DtoInfiniteItemView,
 	UiInfiniteItemViewEventSource
-} from "../generated/UiInfiniteItemViewConfig";
+} from "../generated/DtoInfiniteItemView";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {DtoTemplate} from "../generated/DtoTemplate";
 import {itemCssStringsAlignItems, itemCssStringsJustification} from "./UiItemView";
 import {UiItemJustification} from "../generated/UiItemJustification";
-import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
+import {DtoIdentifiableClientRecord} from "../generated/DtoIdentifiableClientRecord";
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
 import {ContextMenu} from "./micro-components/ContextMenu";
 import {UiComponent} from "./UiComponent";
 import {loadSensitiveThrottling, throttle} from "./util/throttle";
 import {
-	createUiInfiniteItemViewDataRequestConfig,
-	UiInfiniteItemViewDataRequestConfig
-} from "../generated/UiInfiniteItemViewDataRequestConfig";
-import {UiTableClientRecordConfig} from "../generated/UiTableClientRecordConfig";
+	createDtoInfiniteItemViewDataRequest,
+	DtoInfiniteItemViewDataRequest
+} from "../generated/DtoInfiniteItemViewDataRequest";
+import {DtoTableClientRecord} from "../generated/DtoTableClientRecord";
 
 const ROW_LOOKAHAED = 10;
 
-export interface TableDataProviderItem extends UiTableClientRecordConfig {
+export interface TableDataProviderItem extends DtoTableClientRecord {
 	children: TableDataProviderItem[];
 	depth: number;
 	parentId: number;
 	expanded: boolean;
 }
 
-class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiableClientRecordConfig> {
+class UiInfiniteItemViewDataProvider implements Slick.DataProvider<DtoIdentifiableClientRecord> {
 
 	private availableWidth: number;
 	private timerId: number = null;
 
 	private totalNumberOfRecords = 0;
 
-	constructor(private data: UiIdentifiableClientRecordConfig[], private itemWidthIncludingMargin: number, private dataRequestCallback: (from: number, length: number) => void) {
+	constructor(private data: DtoIdentifiableClientRecord[], private itemWidthIncludingMargin: number, private dataRequestCallback: (from: number, length: number) => void) {
 	}
 
 	/**
@@ -169,7 +169,7 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 	}
 }
 
-export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewConfig> implements UiInfiniteItemViewCommandHandler, UiInfiniteItemViewEventSource {
+export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> implements UiInfiniteItemViewCommandHandler, UiInfiniteItemViewEventSource {
 
 
 	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView_DisplayedRangeChangedEvent> = new TeamAppsEvent();
@@ -188,7 +188,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	private verticalItemAlignment: UiVerticalItemAlignment;
 	private contextMenu: ContextMenu;
 
-	constructor(config: UiInfiniteItemViewConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoInfiniteItemView, context: TeamAppsUiContext) {
 		super(config, context);
 		this.uuid = generateUUID();
 		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.uuid}">
@@ -201,7 +201,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.itemJustification = config.itemJustification;
 		this.verticalItemAlignment = config.verticalItemAlignment;
 		this.dataProvider = new UiInfiniteItemViewDataProvider(config.data || [], 10 /*cannot know item width until component width is known*/, (fromIndex, length) => {
-			this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent(createUiInfiniteItemViewDataRequestConfig(fromIndex, length)));
+			this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent(createDtoInfiniteItemViewDataRequest(fromIndex, length)));
 		});
 		if (config.totalNumberOfRecords) {
 			this.dataProvider.setTotalNumberOfRecords(config.totalNumberOfRecords);
@@ -286,7 +286,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.updateAutoHeight();
 	}
 
-	private createDisplayRangeChangedEvent(dataRequest?: UiInfiniteItemViewDataRequestConfig) {
+	private createDisplayRangeChangedEvent(dataRequest?: DtoInfiniteItemViewDataRequest) {
 		const viewPort = this.grid.getViewport();
 		return {
 			startIndex: Math.max(0, (viewPort.top - ROW_LOOKAHAED) * this.dataProvider.getItemsPerRow()),
@@ -418,7 +418,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.updateStyles();
 	}
 
-	setItemTemplate(itemTemplate: UiTemplateConfig): void {
+	setItemTemplate(itemTemplate: DtoTemplate): void {
 		this.itemTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
 		if (this.grid) {
 			this.redrawGridContents();
@@ -449,4 +449,4 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiInfiniteItemView", UiInfiniteItemView);
+

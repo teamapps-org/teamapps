@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.linkbutton;
 
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoLinkButton;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;

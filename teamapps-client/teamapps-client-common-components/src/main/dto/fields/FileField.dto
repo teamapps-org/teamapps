@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 
 
 /**
@@ -52,15 +54,15 @@ TABLE (editable mode)
  */
 managed class FileField extends Field {
 	required Template itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
-	long maxBytesPerFile = 5000000;
-	String uploadUrl = "/upload"; // May point anywhere.
-	String fileTooLargeMessage = "File too large!";
-	String uploadErrorMessage = "Error while transmitting file...";
-	FileFieldDisplayType displayType = FileFieldDisplayType.LIST;
+	long maxBytesPerFile;
+	String uploadUrl; // May point anywhere.
+	String fileTooLargeMessage;
+	String uploadErrorMessage;
+	FileFieldDisplayType displayType;
 	int maxFiles; // the max number of files to be uploaded in total for this field
 	required Template uploadButtonTemplate;
 	required Object uploadButtonData;
-	boolean showEntriesAsButtonsOnHover = false;
+	boolean showEntriesAsButtonsOnHover;
 
     event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
 	event uploadStarted(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
@@ -89,13 +91,13 @@ enum FileFieldDisplayType {
 
 managed class SimpleFileField extends Field {
 	String browseButtonIcon;
-	String browseButtonCaption = "Select";
-	String uploadUrl = "/upload"; // May point anywhere.
-	long maxBytesPerFile = 5000000;
-	String fileTooLargeMessage = "File too large!";
-	String uploadErrorMessage = "Error while transmitting file...";
-	int maxFiles = 0; // the max number of files to be uploaded in total for this field
-	FileFieldDisplayType displayMode = FileFieldDisplayType.LIST;
+	String browseButtonCaption;
+	String uploadUrl; // May point anywhere.
+	long maxBytesPerFile;
+	String fileTooLargeMessage;
+	String uploadErrorMessage;
+	int maxFiles; // the max number of files to be uploaded in total for this field
+	FileFieldDisplayType displayMode;
 
 	List<FileItem> fileItems;
 

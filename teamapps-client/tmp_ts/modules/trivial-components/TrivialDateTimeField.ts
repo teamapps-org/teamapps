@@ -35,7 +35,7 @@ import {
 import {LocalDateTime} from "../datetime/LocalDateTime";
 import KeyDownEvent = JQuery.KeyDownEvent;
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 
 enum Mode {
 	MODE_CALENDAR,

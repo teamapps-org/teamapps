@@ -19,16 +19,18 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 @TypeScriptFactory
 managed class ToolButton extends Component {
 	required String icon;
     String caption;
 	required String popoverText;
-	boolean grayOutIfNotHovered = true;
+	boolean grayOutIfNotHovered;
 
-	int minDropDownWidth = 450;
-	int minDropDownHeight = 200;
-	boolean openDropDownIfNotSet = false;
+	int minDropDownWidth;
+	int minDropDownHeight;
+	boolean openDropDownIfNotSet;
 	Component* dropDownComponent;
 
     command setIcon(String icon);

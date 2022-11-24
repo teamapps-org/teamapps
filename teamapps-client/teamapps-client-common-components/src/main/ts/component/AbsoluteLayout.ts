@@ -17,38 +17,31 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiAbsoluteLayoutCommandHandler, UiAbsoluteLayoutConfig} from "../generated/UiAbsoluteLayoutConfig";
-import {UiAbsolutePositionedComponent} from "../generated/UiAbsolutePositionedComponent";
-import {UiAnimationEasing} from "../generated/UiAnimationEasing";
-import {parseHtml} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {bind} from "teamapps-client-core";
-import {UiComponent} from "teamapps-client-core";
+import {AbstractComponent, Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent, DtoAnimationEasing} from "../generated";
 
 const animationEasingCssValues = {
-	[UiAnimationEasing.EASE]: "ease",
-	[UiAnimationEasing.LINEAR]: "linear",
-	[UiAnimationEasing.EASE_IN]: "ease-in",
-	[UiAnimationEasing.EASE_OUT]: "ease-out",
-	[UiAnimationEasing.EASE_IN_OUT]: "ease-in-out",
-	[UiAnimationEasing.STEP_START]: "step-start",
-	[UiAnimationEasing.STEP_END]: "step-end"
+	[DtoAnimationEasing.EASE]: "ease",
+	[DtoAnimationEasing.LINEAR]: "linear",
+	[DtoAnimationEasing.EASE_IN]: "ease-in",
+	[DtoAnimationEasing.EASE_OUT]: "ease-out",
+	[DtoAnimationEasing.EASE_IN_OUT]: "ease-in-out",
+	[DtoAnimationEasing.STEP_START]: "step-start",
+	[DtoAnimationEasing.STEP_END]: "step-end"
 };
 
-export class AbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig> implements UiAbsoluteLayoutCommandHandler {
+export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 	private $style: HTMLStyleElement;
-	private components: UiAbsolutePositionedComponent[];
+	private components: DtoAbsolutePositionedComponent[];
 
-	constructor(config: UiAbsoluteLayoutConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoAbsoluteLayout, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<div class="UiAbsoluteLayout" data-teamapps-id="${this.getId()}">
+		this.$main = parseHtml(`<div class="DtoAbsoluteLayout" data-teamapps-id="${this.getId()}">
 	<style></style>
 </div>`);
 		this.$style = this.$main.querySelector(":scope > style");
-		this.update(config.components, 0, UiAnimationEasing.EASE);
+		this.update(config.components, 0, DtoAnimationEasing.EASE);
 	}
 
 	doGetMainElement(): HTMLElement {
@@ -62,13 +55,13 @@ export class AbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig> 
 		this.onResize();
 	};
 
-	update(components: UiAbsolutePositionedComponent[], animationDuration: number, easing: UiAnimationEasing): void {
+	update(components: DtoAbsolutePositionedComponent[], animationDuration: number, easing: DtoAnimationEasing): void {
 		Array.from(this.$main.querySelectorAll(":scope > :not(style)")).forEach(c => c.remove());
 
 		this.components = components;
 		components
 			.map(c => c.component)
-			.forEach((c: UiComponent) => {
+			.forEach((c: Component) => {
 				const mainDomElementElement = c.getMainElement();
 				mainDomElementElement.removeEventListener("transitionend", this.transitionEndEventListener);
 				this.$main.appendChild(mainDomElementElement);
@@ -80,7 +73,7 @@ export class AbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig> 
 	transition: top ${animationDuration}ms ${animationEasingCssValues[easing]}, right ${animationDuration}ms ${animationEasingCssValues[easing]}, bottom ${animationDuration}ms ${animationEasingCssValues[easing]}, left ${animationDuration}ms ${animationEasingCssValues[easing]}, width ${animationDuration}ms ${animationEasingCssValues[easing]}, height ${animationDuration}ms ${animationEasingCssValues[easing]};
 }`;
 		components.forEach(c => {
-			const component = c.component as AbstractUiComponent;
+			const component = c.component as AbstractComponent;
 			component.getMainElement().addEventListener('transitionend', this.transitionEndEventListener);
 			component.getMainElement().setAttribute("data-absolute-positioning-id", component.getId());
 			styles += `[data-teamapps-id=${this.getId()}] > [data-absolute-positioning-id=${component.getId()}] {
@@ -99,4 +92,4 @@ export class AbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig> 
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("DtoAbsoluteLayout", AbsoluteLayout);
+

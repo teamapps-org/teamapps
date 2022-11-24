@@ -18,11 +18,9 @@
  * =========================LICENSE_END==================================
  */
 
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, parseHtml, positionDropDown} from "../Common";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {UiComponent} from "../component/UiComponent";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {Spinner} from "./UiSpinner";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, positionDropDown} from "../Common";
+import {Component, parseHtml, TeamAppsEvent} from "teamapps-client-core";
+import {Spinner} from "./Spinner";
 
 interface OpenConfig {
 	$reference: HTMLElement | Element,
@@ -34,7 +32,7 @@ interface OpenConfig {
 export class DropDown {
 
 	public onClose: TeamAppsEvent<void> = new TeamAppsEvent();
-	public onComponentRemoved: TeamAppsEvent<UiComponent> = new TeamAppsEvent();
+	public onComponentRemoved: TeamAppsEvent<Component> = new TeamAppsEvent();
 
 	protected $dropDown: HTMLElement;
 	protected $contentContainer: HTMLElement;
@@ -42,10 +40,10 @@ export class DropDown {
 	protected spinner = new Spinner({fixedSize: "25%"});
 	protected currentOpenConfig: OpenConfig;
 	private _isOpen = false;
-	private _contentComponent: UiComponent<UiComponentConfig>;
+	private _contentComponent: Component;
 
-	constructor(content?: UiComponent<UiComponentConfig>) {
-		this.$dropDown = parseHtml(`<div class="UiDropDown teamapps-blurredBackgroundImage">
+	constructor(content?: Component) {
+		this.$dropDown = parseHtml(`<div class="DtoDropDown teamapps-blurredBackgroundImage">
                 <div class="background-color-div"></div>
               </div>`);
 		this.$contentContainer = this.$dropDown.querySelector<HTMLElement>(':scope .background-color-div');
@@ -55,7 +53,7 @@ export class DropDown {
 		}
 	}
 
-	setContentComponent(component: UiComponent<UiComponentConfig>) {
+	setContentComponent(component: Component) {
 		this.$contentContainer.innerHTML = '';
 		if (this._contentComponent && this.onComponentRemoved) {
 			this.onComponentRemoved.fire(this._contentComponent);

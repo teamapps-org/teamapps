@@ -21,7 +21,7 @@
 import {DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, TrivialComponent} from "./TrivialCore";
 import {highlightMatches} from "./util/highlight";
 import {addDelegatedEventListener, closestAncestor, insertAfter, insertBefore, parseHtml, toggleElementCollapsed} from "../Common";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 
 export interface TrivialTreeBoxConfig<E> {
 	/**

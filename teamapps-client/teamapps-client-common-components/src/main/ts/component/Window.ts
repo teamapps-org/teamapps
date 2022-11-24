@@ -18,29 +18,30 @@
  * =========================LICENSE_END==================================
  */
 
-import {Panel} from "./UiPanel";
-import {UiPanelHeaderField} from "../generated/UiPanelHeaderField";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {Toolbar} from "./tool-container/toolbar/UiToolbar";
-import {ToolButton} from "./UiToolButton";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
-import {UiWindowButtonType} from "../generated/UiWindowButtonType";
-import {animateCSS, Constants, css, parseHtml} from "../Common";
-import {UiComponent} from "./UiComponent";
-import {UiExitAnimation} from "../generated/UiExitAnimation";
-import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
+import {Panel} from "./Panel";
+import {
+	DtoEntranceAnimation,
+	DtoExitAnimation,
+	DtoPanel_WindowButtonClickedEvent,
+	DtoPanelHeaderField,
+	DtoWindow,
+	DtoWindowButtonType,
+	DtoWindowCommandHandler,
+	DtoWindowEventSource
+} from "../generated";
+import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 
-export interface UiWindowListener {
+import {Toolbar} from "./tool-container/toolbar/Toolbar";
+import {ToolButton} from "./ToolButton";
+import {animateCSS, Constants, css} from "../Common";
+
+export interface DtoWindowListener {
 	onWindowClosed: (window: Window, animationDuration: number) => void;
 }
 
-export class Window extends AbstractUiComponent<UiWindowConfig> implements UiWindowCommandHandler, UiWindowEventSource {
+export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCommandHandler, DtoWindowEventSource {
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $panelWrapper: HTMLElement;
@@ -54,10 +55,10 @@ export class Window extends AbstractUiComponent<UiWindowConfig> implements UiWin
 	private modal: boolean;
 	private modalBackgroundDimmingColor: string;
 
-	constructor(config: UiWindowConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoWindow, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiWindow">
+		this.$main = parseHtml(`<div class="DtoWindow">
 	<div class="panel-wrapper"></div>
 </div>`);
 		this.$panelWrapper = this.$main.querySelector<HTMLElement>(":scope >.panel-wrapper");
@@ -66,9 +67,9 @@ export class Window extends AbstractUiComponent<UiWindowConfig> implements UiWin
 		this.$panelWrapper.appendChild(this.panel.getMainElement());
 
 		if (config.closeable) {
-			this.panel.addWindowButton(UiWindowButtonType.CLOSE);
+			this.panel.addWindowButton(DtoWindowButtonType.CLOSE);
 		}
-		this.panel.getWindowButton(UiWindowButtonType.CLOSE).onClicked.addListener(() => this.close(500));
+		this.panel.getWindowButton(DtoWindowButtonType.CLOSE).onClicked.addListener(() => this.close(500));
 		this.panel.onWindowButtonClicked.addListener(eventObject => {
 			return this.onWindowButtonClicked.fire({
 				windowButton: eventObject.windowButton
@@ -88,7 +89,7 @@ export class Window extends AbstractUiComponent<UiWindowConfig> implements UiWin
 
 		this.$main.classList.remove("hidden");
 		this.$main.classList.add("open");
-		animateCSS(this.$panelWrapper, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[UiEntranceAnimation.ZOOM_IN], animationDuration);
+		animateCSS(this.$panelWrapper, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[DtoEntranceAnimation.ZOOM_IN], animationDuration);
 
 		this.escapeKeyListener = (e) => {
 			if (this.closeOnEscape && e.key === "Escape") {
@@ -121,22 +122,22 @@ export class Window extends AbstractUiComponent<UiWindowConfig> implements UiWin
 	public close(animationDuration: number) {
 		this.setMaximized(false);
 		this.$main.classList.remove("open");
-		animateCSS(this.$panelWrapper, Constants.EXIT_ANIMATION_CSS_CLASSES[UiExitAnimation.ZOOM_OUT], animationDuration, () => {
+		animateCSS(this.$panelWrapper, Constants.EXIT_ANIMATION_CSS_CLASSES[DtoExitAnimation.ZOOM_OUT], animationDuration, () => {
 			this.$main.classList.add("hidden");
 			this.getMainElement().remove();
 		});
 		this.removeBodyClickAndEscapeListeners();
 	}
 
-	public setContent(content: UiComponent) {
+	public setContent(content: Component) {
 		this.panel.setContent(content);
 	}
 
-	public setLeftHeaderField(field: UiPanelHeaderField) {
+	public setLeftHeaderField(field: DtoPanelHeaderField) {
 		this.panel.setLeftHeaderField(field);
 	}
 
-	public setRightHeaderField(field: UiPanelHeaderField) {
+	public setRightHeaderField(field: DtoPanelHeaderField) {
 		this.panel.setRightHeaderField(field);
 	}
 
@@ -171,9 +172,9 @@ export class Window extends AbstractUiComponent<UiWindowConfig> implements UiWin
 	public setCloseable(closeable: boolean): void {
 		this.closeable = closeable;
 		if (closeable) {
-			this.panel.addWindowButton(UiWindowButtonType.CLOSE);
+			this.panel.addWindowButton(DtoWindowButtonType.CLOSE);
 		} else {
-			this.panel.removeWindowButton(UiWindowButtonType.CLOSE);
+			this.panel.removeWindowButton(DtoWindowButtonType.CLOSE);
 		}
 	}
 
@@ -210,8 +211,8 @@ export class Window extends AbstractUiComponent<UiWindowConfig> implements UiWin
 
 
 
-	setWindowButtons(windowButtons: UiWindowButtonType[]): void {
+	setWindowButtons(windowButtons: DtoWindowButtonType[]): void {
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiWindow", Window);
+

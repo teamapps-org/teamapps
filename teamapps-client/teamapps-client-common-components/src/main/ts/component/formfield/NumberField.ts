@@ -17,29 +17,27 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "./AbstractUiField";
+import {AbstractField} from "./AbstractField";
 import {
-	UiFieldEditingMode,
-	UiNumberFieldCommandHandler,
-	UiNumberFieldConfig,
-	UiNumberFieldEventSource,
-	UiNumberFieldSliderMode,
-	UiSpecialKey,
-	UiTextInputHandlingField_SpecialKeyPressedEvent,
-	UiTextInputHandlingField_TextInputEvent
+	DtoFieldEditingMode,
+	DtoNumberField,
+	DtoNumberFieldCommandHandler,
+	DtoNumberFieldEventSource,
+	DtoNumberFieldSliderMode,
+	DtoSpecialKey,
+	DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {TeamAppsEvent} from "teamapps-client-core";
+import {parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {NumberParser} from "../../util/NumberParser";
 
-export class NumberField extends AbstractField<UiNumberFieldConfig, number> implements UiNumberFieldEventSource, UiNumberFieldCommandHandler {
+export class NumberField extends AbstractField<DtoNumberField, number> implements DtoNumberFieldEventSource, DtoNumberFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
+	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent>({
 		throttlingMode: "debounce",
 		delay: 250
 	});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent>({
 		throttlingMode: "debounce",
 		delay: 250
 	});
@@ -53,14 +51,14 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 
 	private minValue: number;
 	private maxValue: number;
-	private sliderMode: UiNumberFieldSliderMode;
+	private sliderMode: DtoNumberFieldSliderMode;
 	private sliderStep: number;
 	private commitOnSliderChange: boolean;
 
 	private numberFormat: Intl.NumberFormat;
 	private numberParser: NumberParser;
 
-	protected initialize(config: UiNumberFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoNumberField, context: TeamAppsUiContext) {
 		this.numberFormat = new Intl.NumberFormat(config.locale, {
 			minimumFractionDigits: this.config.precision,
 			maximumFractionDigits: this.config.precision,
@@ -68,7 +66,7 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 		});
 		this.numberParser = new NumberParser(config.locale);
 
-		this.$wrapper = parseHtml(`<div class="UiNumberField form-control field-border field-border-glow field-background">
+		this.$wrapper = parseHtml(`<div class="DtoNumberField form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
 		<input autocomplete="no" type="text"></input>
 		<div class="clear-button tr-remove-button"></div> 
@@ -101,12 +99,12 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 		});
 
 		this.$field.addEventListener("focus", () => {
-			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
 				this.$field.select();
 			}
 		});
 		this.$field.addEventListener("blur", (e) => {
-			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
@@ -121,7 +119,7 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 				this.fireTextInput();
 				this.$field.select();
 				this.onSpecialKeyPressed.fire({
-					key: UiSpecialKey.ESCAPE
+					key: DtoSpecialKey.ESCAPE
 				});
 			} else if (e.key === "ArrowUp" || e.key == "ArrowDown") {
 				if (this.getTransientValue() != null) {
@@ -134,7 +132,7 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 			} else if (e.key === "Enter") {
 				this.commit();
 				this.onSpecialKeyPressed.fire({
-					key: UiSpecialKey.ENTER
+					key: DtoSpecialKey.ENTER
 				});
 			}
 		});
@@ -160,7 +158,7 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 
 	private handleDrag(e: PointerEvent & TouchEvent) {
 		const isSpecialMouseButton = e.button != null && e.button !== 0;
-		if (isSpecialMouseButton || this.getEditingMode() === UiFieldEditingMode.DISABLED) {
+		if (isSpecialMouseButton || this.getEditingMode() === DtoFieldEditingMode.DISABLED) {
 			return;
 		}
 		if (!this.hasFocus() && !this._context.config.optimizedForTouch) {
@@ -312,7 +310,7 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 		this.$field.select();
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
@@ -323,7 +321,7 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 		} else {
 			formatedValue = "";
 		}
-		return `<div class="static-readonly-UiNumberField">${formatedValue}</div>`;
+		return `<div class="static-readonly-DtoNumberField">${formatedValue}</div>`;
 	}
 
 	getDefaultValue(): number {
@@ -379,12 +377,12 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 		this.setSliderPositionByValue(this.getTransientValue());
 	}
 
-	setSliderMode(sliderMode: UiNumberFieldSliderMode): void {
+	setSliderMode(sliderMode: DtoNumberFieldSliderMode): void {
 		this.sliderMode = sliderMode;
-		this.$wrapper.classList.toggle("slider-mode-disabled", sliderMode === UiNumberFieldSliderMode.DISABLED);
-		this.$wrapper.classList.toggle("slider-mode-visible", sliderMode === UiNumberFieldSliderMode.VISIBLE);
-		this.$wrapper.classList.toggle("slider-mode-visible-if-focused", sliderMode === UiNumberFieldSliderMode.VISIBLE_IF_FOCUSED);
-		this.$wrapper.classList.toggle("slider-mode-slider-only", sliderMode === UiNumberFieldSliderMode.SLIDER_ONLY);
+		this.$wrapper.classList.toggle("slider-mode-disabled", sliderMode === DtoNumberFieldSliderMode.DISABLED);
+		this.$wrapper.classList.toggle("slider-mode-visible", sliderMode === DtoNumberFieldSliderMode.VISIBLE);
+		this.$wrapper.classList.toggle("slider-mode-visible-if-focused", sliderMode === DtoNumberFieldSliderMode.VISIBLE_IF_FOCUSED);
+		this.$wrapper.classList.toggle("slider-mode-slider-only", sliderMode === DtoNumberFieldSliderMode.SLIDER_ONLY);
 	}
 
 	setSliderStep(sliderStep: number): void {
@@ -396,4 +394,4 @@ export class NumberField extends AbstractField<UiNumberFieldConfig, number> impl
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("DtoNumberField", NumberField);
+

@@ -18,21 +18,18 @@
  * =========================LICENSE_END==================================
  */
 import {
-	UiCheckBoxCommandHandler,
-	UiCheckBoxConfig,
-	UiCheckBoxEventSource,
-	UiFieldEditingMode,
-	UiFieldMessage,
-	UiFieldMessageSeverity
+	DtoCheckBox,
+	DtoCheckBoxCommandHandler,
+	DtoCheckBoxEventSource,
+	DtoFieldEditingMode,
+	DtoFieldMessage,
+	DtoFieldMessageSeverity
 } from "../../generated";
-import {AbstractField, getHighestSeverity} from "./AbstractUiField";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {parseHtml} from "teamapps-client-core";
-import {generateUUID} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
+import {AbstractField, getHighestSeverity} from "./AbstractField";
+import {generateUUID, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
 
 
-export class CheckBox extends AbstractField<UiCheckBoxConfig, boolean> implements UiCheckBoxEventSource, UiCheckBoxCommandHandler {
+export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements DtoCheckBoxEventSource, DtoCheckBoxCommandHandler {
 
 	private $main: HTMLElement;
 	private $check: HTMLElement;
@@ -43,9 +40,9 @@ export class CheckBox extends AbstractField<UiCheckBoxConfig, boolean> implement
 	private checkColor: string;
 	private borderColor: string;
 
-	protected initialize(config: UiCheckBoxConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoCheckBox, context: TeamAppsUiContext) {
 		const uuid = "cb-" + generateUUID();
-		this.$main = parseHtml(`<div class="UiCheckBox">
+		this.$main = parseHtml(`<div class="DtoCheckBox">
 				<style></style>
                 <div class="checkbox-check field-border field-border-glow field-background" tabindex="0"></div>
                 <div class="checkbox-label"></div>
@@ -63,7 +60,7 @@ export class CheckBox extends AbstractField<UiCheckBoxConfig, boolean> implement
 			setTimeout(() => this.focus());
 		});
 		this.$main.addEventListener('click', () => {
-			if (this.getEditingMode() === UiFieldEditingMode.DISABLED || this.getEditingMode() === UiFieldEditingMode.READONLY) {
+			if (this.getEditingMode() === DtoFieldEditingMode.DISABLED || this.getEditingMode() === DtoFieldEditingMode.READONLY) {
 				return;
 			}
 			this.toggleCommittedValue();
@@ -112,14 +109,14 @@ export class CheckBox extends AbstractField<UiCheckBoxConfig, boolean> implement
 		this.updateStyles();
 	}
 
-	setFieldMessages(fieldMessageConfigs: UiFieldMessage[]): void {
+	setFieldMessages(fieldMessageConfigs: DtoFieldMessage[]): void {
 		super.setFieldMessages(fieldMessageConfigs);
 		this.updateStyles();
 	}
 
 	private updateStyles() {
 		const highestMessageSeverity = getHighestSeverity(this.getFieldMessages());
-		if (highestMessageSeverity > UiFieldMessageSeverity.INFO) {
+		if (highestMessageSeverity > DtoFieldMessageSeverity.INFO) {
 			this.$style.textContent = ''; // styles are defined by message severity styles
 		} else {
 			this.$style.textContent = `[data-teamapps-id=${this.config.id}] > .checkbox-check {
@@ -143,8 +140,8 @@ export class CheckBox extends AbstractField<UiCheckBoxConfig, boolean> implement
 		return this.getCommittedValue();
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		if (editingMode === UiFieldEditingMode.DISABLED || editingMode === UiFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+		if (editingMode === DtoFieldEditingMode.DISABLED || editingMode === DtoFieldEditingMode.READONLY) {
 			this.$main.classList.add("disabled");
 			this.$check.removeAttribute("tabIndex");
 		} else {
@@ -154,7 +151,7 @@ export class CheckBox extends AbstractField<UiCheckBoxConfig, boolean> implement
 	}
 
 	public getReadOnlyHtml(value: boolean, availableWidth: number): string {
-		return `<div class="UiCheckBox">
+		return `<div class="DtoCheckBox">
                     <div class="checkbox-check">${value ? '\ue013' : '\u200b'}</div>
                     <div class="checkbox-label">${this.config.caption /*TODO make caption a changeable instance field*/ || ""}</div>
                 </div>`;
@@ -170,4 +167,4 @@ export class CheckBox extends AbstractField<UiCheckBoxConfig, boolean> implement
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiCheckBox", CheckBox);
+

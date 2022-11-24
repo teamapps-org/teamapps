@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 class FieldMessage {
 	required FieldMessageSeverity severity;
 	required String message;

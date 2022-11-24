@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class GridForm extends Component {
 	required List<Component*> fields;
 	required List<FormLayoutPolicy> layoutPolicies;
@@ -47,11 +49,11 @@ class FormSection {
     String backgroundColor;
     boolean collapsible;
     boolean collapsed;
-    boolean visible = true;
+    boolean visible;
     Template headerTemplate;
     Object headerData;
-    boolean drawHeaderLine = true;
-    int gridGap = 7; // pixels between fields, labels etc.
+    boolean drawHeaderLine;
+    int gridGap; // pixels between fields, labels etc.
     boolean fillRemainingHeight;
     boolean hideWhenNoVisibleFields;
 }

@@ -30,7 +30,7 @@ import {Instance as Popper} from '@popperjs/core';
 import {getAutoCompleteOffValue, parseHtml} from "../Common";
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {createComboBoxPopper} from "./ComboBoxPopper";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 
 export interface TrivialComboBoxConfig<E> {
 	/**

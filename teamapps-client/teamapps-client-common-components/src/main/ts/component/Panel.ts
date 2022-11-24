@@ -18,25 +18,27 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiPanelHeaderField} from "../generated/UiPanelHeaderField";
-import {Toolbar} from "./tool-container/toolbar/UiToolbar";
-import {ToolButton} from "./UiToolButton";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
+import {
+	createDtoToolButton,
+	DtoPanel,
+	DtoPanel_WindowButtonClickedEvent,
+	DtoPanelCommandHandler,
+	DtoPanelEventSource,
+	DtoPanelHeaderComponentMinimizationPolicy,
+	DtoPanelHeaderField,
+	DtoWindowButtonType
+} from "../generated";
+import {Toolbar} from "./tool-container/toolbar/Toolbar";
+import {ToolButton} from "./ToolButton";
+import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
-import {UiPanel_WindowButtonClickedEvent, UiPanelCommandHandler, UiPanelConfig, UiPanelEventSource,} from "../generated/UiPanelConfig";
-import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+
 import {StaticIcons} from "../util/StaticIcons";
-import {UiWindowButtonType} from "../generated/UiWindowButtonType";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {insertBefore, maximizeComponent, outerWidthIncludingMargins, parseHtml, prependChild} from "../Common";
-import {UiComponent} from "./UiComponent";
-import {UiPanelHeaderComponentMinimizationPolicy} from "../generated/UiPanelHeaderComponentMinimizationPolicy";
+import {insertBefore, maximizeComponent, outerWidthIncludingMargins, prependChild} from "../Common";
 
 interface HeaderField {
-	config: UiPanelHeaderField;
-	field: UiComponent;
+	config: DtoPanelHeaderField;
+	field: Component;
 	$wrapper: HTMLElement;
 	$iconAndFieldWrapper: HTMLElement;
 	$fieldWrapper: HTMLElement;
@@ -46,19 +48,19 @@ interface HeaderField {
 	minExpandedWidth?: number;
 }
 
-export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanelCommandHandler, UiPanelEventSource {
+export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelCommandHandler, DtoPanelEventSource {
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[UiWindowButtonType.MINIMIZE]: new ToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize"}), this._context),
-		[UiWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createUiToolButtonConfig(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize"}), this._context),
-		[UiWindowButtonType.CLOSE]: new ToolButton(createUiToolButtonConfig(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close"}), this._context),
+		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize"}), this._context),
+		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize"}), this._context),
+		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close"}), this._context),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
-		UiWindowButtonType.MINIMIZE,
-		UiWindowButtonType.MAXIMIZE_RESTORE,
-		UiWindowButtonType.CLOSE
+		DtoWindowButtonType.MINIMIZE,
+		DtoWindowButtonType.MAXIMIZE_RESTORE,
+		DtoWindowButtonType.CLOSE
 	];
 
 	private $panel: HTMLElement;
@@ -83,12 +85,12 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 
 	private titleNaturalWidth: number;
 	private toolButtons: ToolButton[] = [];
-	private windowButtons: UiWindowButtonType[];
+	private windowButtons: DtoWindowButtonType[];
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: UiPanelConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoPanel, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = parseHtml(`<div class="UiPanel panel teamapps-blurredBackgroundImage">
+		this.$panel = parseHtml(`<div class="DtoPanel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">
                     <div class="panel-icon"></div>
                     <div class="panel-title"></div>
@@ -130,11 +132,11 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 
 		this.setToolbar(config.toolbar as Toolbar);
 		if (config.content) {
-			this.setContent(config.content as UiComponent);
+			this.setContent(config.content as Component);
 		}
-		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == UiPanelHeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
+		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == DtoPanelHeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
 
-		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
+		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
 			} else {
@@ -161,12 +163,12 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 	}
 
 	public maximize(): void {
-		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
+		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
 		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
-		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
+		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
 		if (this.restoreFunction != null) {
 			this.restoreFunction();
 		}
@@ -187,7 +189,7 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 		this.relayoutHeader();
 	}
 
-	public setWindowButtons(buttonTypes: UiWindowButtonType[]): void {
+	public setWindowButtons(buttonTypes: DtoWindowButtonType[]): void {
 		this.windowButtons = [];
 		this.$windowButtonContainer.innerHTML = '';
 		if (buttonTypes && buttonTypes.length > 0) {
@@ -199,7 +201,7 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 		}
 	}
 
-	public addWindowButton(toolButtonType: UiWindowButtonType) {
+	public addWindowButton(toolButtonType: DtoWindowButtonType) {
 		if (this.windowButtons.filter(tb => tb === toolButtonType).length > 0){
 			this.removeWindowButton(toolButtonType);
 		}
@@ -221,7 +223,7 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 		this.relayoutHeader();
 	}
 
-	public removeWindowButton(uiToolButton: UiWindowButtonType) {
+	public removeWindowButton(uiToolButton: DtoWindowButtonType) {
 		this.defaultToolButtons[uiToolButton].getMainElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
@@ -229,7 +231,7 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 		}
 	}
 
-	public getWindowButton(buttonType: UiWindowButtonType) {
+	public getWindowButton(buttonType: DtoWindowButtonType) {
 		return this.defaultToolButtons[buttonType];
 	}
 
@@ -237,7 +239,7 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 		return this.$panel;
 	}
 
-	public setContent(content: UiComponent) {
+	public setContent(content: Component) {
 		if (content?.getMainElement() !== this.panelBody.firstElementChild) {
 			this.panelBody.innerHTML = '';
 		}
@@ -274,19 +276,19 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 		});
 	}
 
-	public setLeftHeaderField(headerFieldConfig: UiPanelHeaderField) {
+	public setLeftHeaderField(headerFieldConfig: DtoPanelHeaderField) {
 		this.leftHeaderField = this.setHeaderField(headerFieldConfig, this.$leftComponentWrapper, true);
 		this.calculateFieldWrapperSizes();
 		this.relayoutHeader();
 	}
 
-	public setRightHeaderField(headerFieldConfig: UiPanelHeaderField) {
+	public setRightHeaderField(headerFieldConfig: DtoPanelHeaderField) {
 		this.rightHeaderField = this.setHeaderField(headerFieldConfig, this.$rightComponentWrapper, false);
 		this.calculateFieldWrapperSizes();
 		this.relayoutHeader();
 	}
 
-	private setHeaderField(headerFieldConfig: UiPanelHeaderField, $componentWrapper: HTMLElement, isLeft: boolean): HeaderField {
+	private setHeaderField(headerFieldConfig: DtoPanelHeaderField, $componentWrapper: HTMLElement, isLeft: boolean): HeaderField {
 		if (isLeft && this.leftHeaderField) {
 			this.leftHeaderField.$iconAndFieldWrapper.remove();
 		} else if (!isLeft && this.rightHeaderField) {
@@ -306,7 +308,7 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 				this.relayoutHeader();
 			});
 			let $fieldWrapper = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope >.field-wrapper');
-			const field = (headerFieldConfig.field as UiComponent);
+			const field = (headerFieldConfig.field as Component);
 			$fieldWrapper.appendChild(field.getMainElement());
 			field.onVisibilityChanged.addListener(visible => {
 				this.relayoutHeader();
@@ -516,4 +518,4 @@ export class Panel extends AbstractUiComponent<UiPanelConfig> implements UiPanel
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiPanel", Panel);
+

@@ -17,21 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {addDelegatedEventListener, humanReadableFileSize, parseHtml, prependChild, removeDangerousTags} from "./Common";
-import {UiChatMessageConfig} from "../generated/UiChatMessageConfig";
+import {DtoChatMessage} from "../generated/DtoChatMessage";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiChatDisplayCommandHandler, UiChatDisplayConfig,} from "../generated/UiChatDisplayConfig";
+import {UiChatDisplayCommandHandler, DtoChatDisplay,} from "../generated/DtoChatDisplay";
 import {UiSpinner} from "./micro-components/UiSpinner";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {Autolinker} from "autolinker";
 import {ContextMenu} from "./micro-components/ContextMenu";
 import {UiComponent} from "./UiComponent";
-import {UiChatMessageBatchConfig} from "../generated/UiChatMessageBatchConfig";
+import {DtoChatMessageBatch} from "../generated/DtoChatMessageBatch";
 import {debounce, debouncedMethod, DebounceMode} from "./util/debounce";
 
-export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler {
+export class UiChatDisplay extends AbstractComponent<DtoChatDisplay> implements UiChatDisplayCommandHandler {
 
 	private $main: HTMLElement;
 	private gotFirstMessage: boolean = false;
@@ -41,7 +41,7 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 	private $messages: HTMLElement;
 	private contextMenu: ContextMenu;
 
-	constructor(config: UiChatDisplayConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoChatDisplay, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiChatDisplay">
 	<style> [data-teamapps-id=${config.id}] .message.deleted .deleted-icon {
@@ -109,7 +109,7 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 		return this.$main;
 	}
 
-	addMessages(batch: UiChatMessageBatchConfig): void {
+	addMessages(batch: DtoChatMessageBatch): void {
 		batch.messages.forEach(messageConfig => {
 			const chatMessage = new UiChatMessage(messageConfig);
 			this.$messages.appendChild(chatMessage.getMainDomElement());
@@ -121,7 +121,7 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 		this.scrollToBottom();
 	}
 
-	updateMessage(message: UiChatMessageConfig) {
+	updateMessage(message: DtoChatMessage) {
 		this.uiChatMessages.find(m => m.id === message.id)
 			?.update(message);
 	}
@@ -135,7 +135,7 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 		}
 	}
 
-	clearMessages(batch: UiChatMessageBatchConfig): void {
+	clearMessages(batch: DtoChatMessageBatch): void {
 		this.uiChatMessages = [];
 		this.$messages.innerHTML = '';
 		this.gotFirstMessage = false;
@@ -156,7 +156,7 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiChatDisplay", UiChatDisplay);
+
 
 class UiChatMessage {
 
@@ -186,14 +186,14 @@ class UiChatMessage {
 	private $main: HTMLElement;
 	private $photos: HTMLElement;
 	private $files: HTMLElement;
-	private config: UiChatMessageConfig;
+	private config: DtoChatMessage;
 
-	constructor(config: UiChatMessageConfig) {
+	constructor(config: DtoChatMessage) {
 		this.$main = parseHtml(`<div class="message UiChatMessage" data-id="${config.id}"></div>`);
 		this.update(config);
 	}
 
-	public update(config: UiChatMessageConfig) {
+	public update(config: DtoChatMessage) {
 		this.config = config;
 		this.$main.classList.toggle("deleted", config.deleted);
 		this.$main.innerHTML = "";

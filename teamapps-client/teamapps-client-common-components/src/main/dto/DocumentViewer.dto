@@ -19,14 +19,16 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class DocumentViewer extends Component {
 	List<String> pageUrls;
-	PageDisplayMode displayMode = PageDisplayMode.FIT_WIDTH;
-	double zoomFactor = 1f; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
+	PageDisplayMode displayMode;
+	double zoomFactor; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
 	Border pageBorder;
 	Shadow pageShadow;
-	int padding = 0;
-	int pageSpacing = 5;
+	int padding;
+	int pageSpacing;
 
 	command setPageUrls(List<String> pageUrls); //replace all current pages
 	command setDisplayMode(PageDisplayMode displayMode, double zoomFactor);

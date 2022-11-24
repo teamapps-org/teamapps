@@ -18,18 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
-import {Toolbar} from "./tool-container/toolbar/UiToolbar";
-import {NavigationBar} from "./UiNavigationBar";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiMobileLayoutCommandHandler, UiMobileLayoutConfig} from "../generated/UiMobileLayoutConfig";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {pageTransition, pageTransitionAnimationPairs, parseHtml} from "../Common";
-import {UiComponent} from "./UiComponent";
-import {UiPageTransition} from "../generated/UiPageTransition";
+import {Toolbar} from "./tool-container/toolbar/Toolbar";
+import {NavigationBar} from "./NavigationBar";
+import {AbstractComponent, Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoMobileLayout, DtoMobileLayoutCommandHandler, DtoPageTransition} from "../generated";
+
+import {pageTransition} from "../Common";
 
 
-export class MobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> implements UiMobileLayoutCommandHandler {
+export class MobileLayout extends AbstractComponent<DtoMobileLayout> implements DtoMobileLayoutCommandHandler {
 
 	private $mainDiv: HTMLElement;
 	private $toolbarContainer: HTMLElement;
@@ -39,12 +36,12 @@ export class MobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> impl
 	private toolbar: Toolbar;
 	private navBar: NavigationBar;
 
-	private content: UiComponent;
+	private content: Component;
 	private $contentContainer: HTMLElement;
 
-	constructor(config: UiMobileLayoutConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoMobileLayout, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$mainDiv = parseHtml(`<div class="UiMobileLayout">
+		this.$mainDiv = parseHtml(`<div class="DtoMobileLayout">
                              <div class="toolbar-container"></div>
                              <div class="content-container-wrapper"></div>
                              <div class="navigation-bar-container"></div>
@@ -58,11 +55,11 @@ export class MobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> impl
 		this.setNavigationBar(config.navigationBar as NavigationBar);
 
 		if (config.initialView) {
-			this.showView(config.initialView as UiComponent, null);
+			this.showView(config.initialView as Component, null);
 		}
 	}
 
-	public showView(view: UiComponent, transition: UiPageTransition = null, animationDuration = 0) {
+	public showView(view: Component, transition: DtoPageTransition = null, animationDuration = 0) {
 		if (view === this.content) {
 			return;
 		}
@@ -115,4 +112,4 @@ export class MobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> impl
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiMobileLayout", MobileLayout);
+

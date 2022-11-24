@@ -19,27 +19,27 @@
  */
 
 
-import {UiWaitingVideoInfoConfig} from "../generated/UiWaitingVideoInfoConfig";
+import {DtoWaitingVideoInfo} from "../generated/DtoWaitingVideoInfo";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiHttpLiveStreamPlayer} from "./live-stream/UiHttpLiveStreamPlayer";
 import {UiYoutubePlayer} from "./live-stream/UiYoutubePlayer";
 import {UiLiveStreamComPlayer} from "./live-stream/UiLiveStreamComPlayer";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {applyDisplayMode, css, fadeIn, fadeOut, generateUUID, parseHtml} from "./Common";
 import {LiveStreamPlayer} from "./live-stream/LiveStreamPlayer";
 import {
 	UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent,
 	UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent,
 	UiLiveStreamComponentCommandHandler,
-	UiLiveStreamComponentConfig,
+	DtoLiveStreamComponent,
 	UiLiveStreamComponentEventSource
-} from "../generated/UiLiveStreamComponentConfig";
+} from "../generated/DtoLiveStreamComponent";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
 
-export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamComponentConfig> implements UiLiveStreamComponentCommandHandler, UiLiveStreamComponentEventSource {
+export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamComponent> implements UiLiveStreamComponentCommandHandler, UiLiveStreamComponentEventSource {
 
 	public readonly onResultOfRequestInputDeviceAccess: TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent> = new TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent>();
 	public readonly onResultOfRequestInputDeviceInfo: TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent> = new TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent>();
@@ -51,7 +51,7 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 
 	private $waitingVideoContainer: HTMLElement;
 	private waitingVideoPlayer: HTMLVideoElement;
-	private waitingVideoInfos: UiWaitingVideoInfoConfig[];
+	private waitingVideoInfos: DtoWaitingVideoInfo[];
 	private currentWaitingVideoIndex: number;
 
 	private $liveStreamPlayerContainer: HTMLElement;
@@ -68,7 +68,7 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 	private volume: number;
 
 
-	constructor(config: UiLiveStreamComponentConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoLiveStreamComponent, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.volume = config.volume;
@@ -135,7 +135,7 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 
 // TESTING: components.liveStreamPlayer.showWaitingVideos([{url:'Bird-HD.mp4', durationInSeconds: 10}, {url:'Leaf-SD.mp4', durationInSeconds: 25}], 20)
 	// components.liveStreamPlayer.stopWaitingVideos()
-	public showWaitingVideos(waitingVideoInfoConfig: UiWaitingVideoInfoConfig[], offsetSeconds: number, stopLiveStream: Boolean) {
+	public showWaitingVideos(waitingVideoInfoConfig: DtoWaitingVideoInfo[], offsetSeconds: number, stopLiveStream: Boolean) {
 		if (stopLiveStream) {
 			this.stopLiveStream();
 		}
@@ -311,4 +311,4 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiLiveStreamComponent", UiLiveStreamComponent);
+

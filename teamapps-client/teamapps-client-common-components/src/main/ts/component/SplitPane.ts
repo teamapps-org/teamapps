@@ -18,24 +18,23 @@
  * =========================LICENSE_END==================================
  */
 
-import {bind} from "../util/Bind";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {AbstractComponent, bind, capitalizeFirstLetter, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {capitalizeFirstLetter, css, parseHtml} from "../Common";
-import {UiSplitPane_SplitResizedEvent, UiSplitPaneCommandHandler, UiSplitPaneConfig, UiSplitPaneEventSource} from "../generated/UiSplitPaneConfig";
-import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
-import {UiSplitDirection} from "../generated/UiSplitDirection";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiComponent} from "./UiComponent";
+import {css} from "../Common";
+import {
+	DtoSplitDirection,
+	DtoSplitPane,
+	DtoSplitPane_SplitResizedEvent,
+	DtoSplitPaneCommandHandler,
+	DtoSplitPaneEventSource,
+	DtoSplitSizePolicy
+} from "../generated";
 
-export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements Emptyable, UiSplitPaneCommandHandler, UiSplitPaneEventSource {
-	public readonly onSplitResized: TeamAppsEvent<UiSplitPane_SplitResizedEvent> = new TeamAppsEvent<UiSplitPane_SplitResizedEvent>();
+export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptyable, DtoSplitPaneCommandHandler, DtoSplitPaneEventSource {
+	public readonly onSplitResized: TeamAppsEvent<DtoSplitPane_SplitResizedEvent> = new TeamAppsEvent<DtoSplitPane_SplitResizedEvent>();
 
-	private _firstChildComponent: UiComponent<UiComponentConfig>;
-	private _lastChildComponent: UiComponent<UiComponentConfig>;
+	private _firstChildComponent: Component;
+	private _lastChildComponent: Component;
 	private _$splitPane: HTMLElement;
 	private _$firstChildContainerWrapper: HTMLElement;
 	private _$lastChildContainerWrapper: HTMLElement;
@@ -51,20 +50,20 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 	private _offsetSizeAttribute: 'offsetHeight' | 'offsetWidth';
 
 	public referenceChildSize: number;
-	public sizePolicy: UiSplitSizePolicy;
+	public sizePolicy: DtoSplitSizePolicy;
 	private firstChildMinSize: number;
 	private lastChildMinSize: number;
 
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
-	constructor(config: UiSplitPaneConfig,
+	constructor(config: DtoSplitPane,
 	            context: TeamAppsUiContext) {
 		super(config, context);
 		this.referenceChildSize = config.referenceChildSize;
 		this.sizePolicy = config.sizePolicy;
 		const firstChildContainerId = config.id + '_firstChildContainer';
 		const lastChildContainerId = config.id + '_lastChildContainer';
-		this._$splitPane = parseHtml(`<div class="splitpane splitpane-${UiSplitDirection[config.splitDirection].toLowerCase()} splitpane-${UiSplitSizePolicy[this.sizePolicy].toLowerCase()}">
+		this._$splitPane = parseHtml(`<div class="splitpane splitpane-${DtoSplitDirection[config.splitDirection].toLowerCase()} splitpane-${DtoSplitSizePolicy[this.sizePolicy].toLowerCase()}">
 	<div class="splitpane-component-wrapper">
 		<div id="${firstChildContainerId}" class="splitpane-component"></div>
 	</div>
@@ -83,11 +82,11 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 		this._$dividerWrapper = this._$splitPane.querySelector<HTMLElement>(":scope .splitpane-divider-wrapper");
 		this._$divider = this._$splitPane.querySelector<HTMLElement>(":scope .splitpane-divider");
 
-		this._sizeAttribute = config.splitDirection === UiSplitDirection.HORIZONTAL ? 'height' : 'width';
+		this._sizeAttribute = config.splitDirection === DtoSplitDirection.HORIZONTAL ? 'height' : 'width';
 		this._minSizeAttribute = "min" + capitalizeFirstLetter(this._sizeAttribute) as 'minWidth' | 'minHeight';
 		this._maxSizeAttribute = "max" + capitalizeFirstLetter(this._sizeAttribute) as 'maxWidth' | 'maxHeight';
-		this._offsetAttribute = config.splitDirection === UiSplitDirection.HORIZONTAL ? 'top' : 'left';
-		this._offsetSizeAttribute = config.splitDirection === UiSplitDirection.HORIZONTAL ? 'offsetHeight' : 'offsetWidth';
+		this._offsetAttribute = config.splitDirection === DtoSplitDirection.HORIZONTAL ? 'top' : 'left';
+		this._offsetSizeAttribute = config.splitDirection === DtoSplitDirection.HORIZONTAL ? 'offsetHeight' : 'offsetWidth';
 
 		this.firstChildMinSize = config.firstChildMinSize;
 		this.lastChildMinSize = config.lastChildMinSize;
@@ -95,13 +94,13 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 		['mousedown', 'touchstart'].forEach((eventName) => this._$divider.addEventListener(eventName, (e: MouseEvent) => this.mousedownHandler(e)));
 
 		this._updatePositions();
-		this.setFirstChild(config.firstChild as UiComponent);
-		this.setLastChild(config.lastChild as UiComponent);
+		this.setFirstChild(config.firstChild as Component);
+		this.setLastChild(config.lastChild as Component);
 		this._updateChildContainerClasses();
 
 	}
 
-	public get splitDirection(): UiSplitDirection {
+	public get splitDirection(): DtoSplitDirection {
 		return this.config.splitDirection
 	}
 
@@ -125,9 +124,9 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 			this._$divider.classList.remove('dragged', 'touch');
 
 			let referenceChildSize;
-			if (this.sizePolicy === UiSplitSizePolicy.RELATIVE) {
+			if (this.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
 				referenceChildSize = this._$firstChildContainer[this._offsetSizeAttribute] / this._$splitPane[this._offsetSizeAttribute];
-			} else if (this.sizePolicy === UiSplitSizePolicy.FIRST_FIXED) {
+			} else if (this.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
 				referenceChildSize = this._$firstChildContainer[this._offsetSizeAttribute];
 			} else {
 				referenceChildSize = this._$lastChildContainer[this._offsetSizeAttribute];
@@ -147,13 +146,13 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 		const initialFirstContainerWidth = this._$firstChildContainer[this._offsetSizeAttribute];
 		const splitPaneSize = this._$splitPane[this._offsetSizeAttribute];
 		return (event: MouseEvent) => {
-			const diff = (this.config.splitDirection === UiSplitDirection.HORIZONTAL) ? this.pageYof(event) - dragStartY : this.pageXof(event) - dragStartX;
+			const diff = (this.config.splitDirection === DtoSplitDirection.HORIZONTAL) ? this.pageYof(event) - dragStartY : this.pageXof(event) - dragStartX;
 			const newFirstChildSize = initialFirstContainerWidth + diff;
 
-			if (this.sizePolicy === UiSplitSizePolicy.RELATIVE) {
+			if (this.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
 				this.referenceChildSize = newFirstChildSize / splitPaneSize;
 				this._updatePositions();
-			} else if (this.sizePolicy === UiSplitSizePolicy.FIRST_FIXED) {
+			} else if (this.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
 				this.referenceChildSize = newFirstChildSize;
 				this._updatePositions();
 			} else {
@@ -172,7 +171,7 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 		return event.pageY ?? (event as any).touches[0].pageY;
 	}
 
-	public setFirstChild(firstChild: UiComponent<UiComponentConfig>) {
+	public setFirstChild(firstChild: Component) {
 		this._$firstChildContainer.innerHTML = '';
 
 		this._firstChildComponent = firstChild;
@@ -188,7 +187,7 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 		this.updateEmptyState();
 	}
 
-	public setLastChild(lastChild: UiComponent<UiComponentConfig>) {
+	public setLastChild(lastChild: Component) {
 		this._$lastChildContainer.innerHTML = '';
 
 		this._lastChildComponent = lastChild;
@@ -233,7 +232,7 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 	private _updatePositions() {
 		const referenceChildSize = this.referenceChildSize;
 
-		if (this.sizePolicy === UiSplitSizePolicy.RELATIVE) {
+		if (this.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
 			css(this._$firstChildContainerWrapper, {
 				"flex-grow": "" + referenceChildSize,
 				"flex-shrink": "" + referenceChildSize,
@@ -246,7 +245,7 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 				"flex-basis": "1px",
 				[this._minSizeAttribute]: this.lastChildMinSize
 			});
-		} else if (this.sizePolicy === UiSplitSizePolicy.FIRST_FIXED) {
+		} else if (this.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
 			css(this._$firstChildContainerWrapper, {
 				"flex-grow": "0",
 				"flex-shrink": "1",
@@ -259,7 +258,7 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 				"flex-basis": '1px',
 				[this._minSizeAttribute]: this.lastChildMinSize
 			});
-		} else if (this.sizePolicy === UiSplitSizePolicy.LAST_FIXED) {
+		} else if (this.sizePolicy === DtoSplitSizePolicy.LAST_FIXED) {
 			css(this._$firstChildContainerWrapper, {
 				"flex-grow": "1",
 				"flex-shrink": "1",
@@ -299,10 +298,10 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 		return this.isFirstEmpty() && this.isLastEmtpy();
 	}
 
-	public setSize(referenceChildSize: number, sizePolicy: UiSplitSizePolicy) {
+	public setSize(referenceChildSize: number, sizePolicy: DtoSplitSizePolicy) {
 		this.referenceChildSize = referenceChildSize;
 		this.sizePolicy = sizePolicy;
-		this._$divider.classList.add('splitpane-' + UiSplitSizePolicy[this.sizePolicy].toLowerCase());
+		this._$divider.classList.add('splitpane-' + DtoSplitSizePolicy[this.sizePolicy].toLowerCase());
 		this._updatePositions();
 	}
 
@@ -328,4 +327,4 @@ export class SplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiSplitPane", SplitPane);
+

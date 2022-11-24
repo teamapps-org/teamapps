@@ -3,15 +3,15 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoDtoACommandHandler} from "./DtoACommandHandler";
-import {DtoA} from "./DtoA";
-import {DtoDtoICommandHandler} from "./DtoICommandHandler";
 import {DtoCommand} from "teamapps-client-communication";
 import {DtoEvent} from "teamapps-client-communication";
+import {DtoA} from "./DtoA";
 import {DtoI} from "./DtoI";
-import {DtoDtoAEventSource} from "./DtoAEventSource";
-import {DtoDtoIEventSource} from "./DtoIEventSource";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {DtoACommandHandler} from "./DtoA";
+import {DtoICommandHandler} from "./DtoI";
+import {DtoAEventSource} from "./DtoA";
+import {DtoIEventSource} from "./DtoI";
+interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
 export interface DtoB extends DtoA, DtoI {
 	_type?: string;

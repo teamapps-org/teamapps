@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 class CachedImage {
 	required String id;
 	required String imageUrl;
@@ -29,12 +31,12 @@ managed class ImageDisplay extends Component {
 	required int totalNumberOfRecords;
 	List<CachedImage> cachedImages;
 
-	PageDisplayMode displayMode = PageDisplayMode.FIT_WIDTH;
-	double zoomFactor = 1f; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
-	String backgroundColor = "#444";
-	int padding = 0;
-	boolean loop = false; // if true, return to first image from end of image list. If false, hide buttons at end of list.
-	int cacheSize = 2; // the minimum number of images to preload
+	PageDisplayMode displayMode;
+	double zoomFactor; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
+	String backgroundColor;
+	int padding;
+	boolean loop; // if true, return to first image from end of image list. If false, hide buttons at end of list.
+	int cacheSize; // the minimum number of images to preload
 
 	event imagesRequest(int startIndex, int length);
 	event imageDisplayed(String imageId);

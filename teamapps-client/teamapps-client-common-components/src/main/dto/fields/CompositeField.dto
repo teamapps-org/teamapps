@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 /**
 Sub-fields' are evaluated directly against the main Object of the Form/Table.
 */
@@ -26,9 +28,9 @@ managed class CompositeField extends Field { // TODO #ux
 	required List<ColumnDefinition> columnDefinitions;
     required List<Integer> rowHeights;
     required List<CompositeSubField> subFields;
-    int horizontalCellSpacing = 2;
-    int verticalCellSpacing = 2;
-    int padding = 0;
+    int horizontalCellSpacing;
+    int verticalCellSpacing;
+    int padding;
     boolean drawFieldBorders;
 }
 
@@ -42,8 +44,8 @@ class CompositeSubField {
 	required int row;
 	required int col;
 	required Field* field;
-	int rowSpan = 1;
-	int colSpan = 1;
-	int tabIndex = 0; // tab-index within the CompositeField*. Lower values are first. Default is 0. <0: focusable but not reachable via tab; 0: focusable and reachable via tab, ordered by its position; >0: focusable, order defined by tabindex
+	int rowSpan;
+	int colSpan;
+	int tabIndex; // tab-index within the CompositeField*. Lower values are first. Default is 0. <0: focusable but not reachable via tab; 0: focusable and reachable via tab, ordered by its position; >0: focusable, order defined by tabindex
 	String visibilityPropertyName; // nullable; name of a boolean field in the record data which determines whether this subField is to be displayed. If multiple visible subfields are in the same position, the last one must be shown and the others are hidden AND a warning must be written to the console.
 }

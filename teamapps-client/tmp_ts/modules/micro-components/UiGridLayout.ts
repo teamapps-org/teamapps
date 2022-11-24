@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiGridLayoutConfig} from "../../generated/UiGridLayoutConfig";
+import {DtoGridLayout} from "../../generated/DtoGridLayout";
 import {
 	createCssGridRowOrColumnString,
 	createUiBorderCssObject,
@@ -27,19 +27,19 @@ import {
 	cssHorizontalAlignmentByUiVerticalAlignment, cssObjectToString, CssPropertyObject,
 	cssVerticalAlignmentByUiVerticalAlignment
 } from "../util/CssFormatUtil";
-import {UiFormSectionPlacementConfig} from "../../generated/UiFormSectionPlacementConfig";
-import {UiGridPlacementConfig} from "../../generated/UiGridPlacementConfig";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {DtoFormSectionPlacement} from "../../generated/DtoFormSectionPlacement";
+import {DtoGridPlacement} from "../../generated/DtoGridPlacement";
+import {AbstractComponent} from "teamapps-client-core";
 import {generateUUID, parseHtml} from "../Common";
-import {UiComponentGridPlacementConfig} from "../../generated/UiComponentGridPlacementConfig";
-import {UiFloatingComponentGridPlacementConfig} from "../../generated/UiFloatingComponentGridPlacementConfig";
+import {DtoComponentGridPlacement} from "../../generated/DtoComponentGridPlacement";
+import {DtoFloatingComponentGridPlacement} from "../../generated/DtoFloatingComponentGridPlacement";
 import {UiComponent} from "../UiComponent";
 
 export class UiGridLayout {
 
 	private uuid = generateUUID();
 
-	constructor(private config: UiGridLayoutConfig) {
+	constructor(private config: DtoGridLayout) {
 	}
 
 	public applyTo($container: HTMLElement) {
@@ -92,7 +92,7 @@ export class UiGridLayout {
 					"flex-wrap": placement.wrap ? "wrap" : "nowrap"
 				};
 				placement.components.forEach(floatingComponent => {
-					const uiComponent = floatingComponent.component as AbstractUiComponent;
+					const uiComponent = floatingComponent.component as AbstractComponent;
 					cssRules[uiComponent.getId()] = {
 						"min-width": floatingComponent.minWidth ? `${floatingComponent.minWidth}px` : '',
 						"max-width": floatingComponent.maxWidth ? `${floatingComponent.maxWidth}px` : '',
@@ -110,7 +110,7 @@ export class UiGridLayout {
 		return cssRules;
 	}
 
-	private createPlacementStyles(placement: UiGridPlacementConfig): CssPropertyObject {
+	private createPlacementStyles(placement: DtoGridPlacement): CssPropertyObject {
 		return {
 			"grid-column": `${placement.column + 1} / ${placement.column + placement.colSpan + 1}`,
 			"grid-row": `${placement.row + 1} / ${placement.row + placement.rowSpan + 1}`,
@@ -136,11 +136,11 @@ export class UiGridLayout {
 		return containerCss + placementsCss;
 	}
 
-	private isSimplePlacement(placement: UiFormSectionPlacementConfig): placement is UiComponentGridPlacementConfig {
+	private isSimplePlacement(placement: DtoFormSectionPlacement): placement is DtoComponentGridPlacement {
 		return placement._type === "UiComponentGridPlacement";
 	}
 
-	private isFloatingPlacement(placement: UiFormSectionPlacementConfig): placement is UiFloatingComponentGridPlacementConfig {
+	private isFloatingPlacement(placement: DtoFormSectionPlacement): placement is DtoFloatingComponentGridPlacement {
 		return placement._type === "UiFloatingComponentGridPlacement";
 	}
 

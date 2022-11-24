@@ -19,17 +19,16 @@
  */
 import {TeamAppsUiContext} from "teamapps-client-core";
 import md5 from "md5";
-import {UiPasswordFieldCommandHandler, UiPasswordFieldConfig, UiPasswordFieldEventSource} from "../../generated";
-import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {TextField} from "./UiTextField";
+import {DtoPasswordField, DtoPasswordFieldCommandHandler, DtoPasswordFieldEventSource} from "../../generated";
+import {TextField} from "./TextField";
 
 
-export class PasswordField extends TextField<UiPasswordFieldConfig> implements UiPasswordFieldEventSource, UiPasswordFieldCommandHandler {
+export class PasswordField extends TextField<DtoPasswordField> implements DtoPasswordFieldEventSource, DtoPasswordFieldCommandHandler {
 	private salt: string;
 	private sendValueAsMd5: boolean;
 
 
-	protected initialize(config: UiPasswordFieldConfig, context: TeamAppsUiContext): void {
+	protected initialize(config: DtoPasswordField, context: TeamAppsUiContext): void {
 		this.salt = config.salt;
 		this.sendValueAsMd5 = config.sendValueAsMd5;
 		super.initialize(config, context);
@@ -70,8 +69,8 @@ export class PasswordField extends TextField<UiPasswordFieldConfig> implements U
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
-		return `<div class="static-readonly-UiTextField static-readonly-UiPasswordField">${value != null ? "&#8226;".repeat(value.length) : ""}</div>`;
+		return `<div class="static-readonly-DtoTextField static-readonly-DtoPasswordField">${value != null ? "&#8226;".repeat(value.length) : ""}</div>`;
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiPasswordField", PasswordField);
+

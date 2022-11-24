@@ -20,7 +20,11 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.DtoNavigationBar;
+import org.teamapps.dto.DtoNavigationBarButton;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -54,7 +58,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoNavigationBar uiNavigationBar = new DtoNavigationBar(buttonTemplate.createUiTemplate());
 		mapAbstractUiComponentProperties(uiNavigationBar);
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
@@ -64,7 +68,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 			uiNavigationBar.setButtons(uiNavigationBarButtons);
 		}
 		if (fanOutComponents != null) {
-			List<UiClientObjectReference> uiComponents = fanOutComponents.stream()
+			List<DtoClientObjectReference> uiComponents = fanOutComponents.stream()
 					.map(component -> component.createUiReference())
 					.collect(Collectors.toList());
 			uiNavigationBar.setFanOutComponents(uiComponents);

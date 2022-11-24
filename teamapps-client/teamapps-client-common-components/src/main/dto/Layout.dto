@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class ApplicationLayout extends Component {
 	SplitPane* rootSplitPane;
 	Toolbar* toolbar;
@@ -64,7 +66,7 @@ class AccordionPanel {
 	String panelId;
 	String icon;
 	String title;
-	boolean scrollVertical = true;
+	boolean scrollVertical;
 	boolean scrollHorizontal;
 	boolean open; //if false, close the panel
 	Component* content;

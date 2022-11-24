@@ -19,12 +19,14 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class CheckBox extends Field {
 	String caption; // displayed on the right side of the checkbox
-	String backgroundColor = "rgb(255, 255, 255)";
-	String checkColor = "rgb(70, 70, 70)";
-	String borderColor = "rgb(123, 123, 123)";
-	boolean htmlEnabled = false;
+	String backgroundColor;
+	String checkColor;
+	String borderColor;
+	boolean htmlEnabled;
 
 	command setCaption(String caption);
 	command setBackgroundColor(String backgroundColor);

@@ -19,16 +19,16 @@
  */
 
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
-import {UiToolbarConfig} from "../generated/UiToolbarConfig";
-import {UiSplitPaneConfig} from "../generated/UiSplitPaneConfig";
+import {DtoToolbar} from "../generated/DtoToolbar";
+import {DtoSplitPane} from "../generated/DtoSplitPane";
 import {UiSplitPane} from "./UiSplitPane";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {UiApplicationLayoutConfig} from "../generated/UiApplicationLayoutConfig";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {DtoApplicationLayout} from "../generated/DtoApplicationLayout";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
-export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayoutConfig> {
+export class UiApplicationLayout extends AbstractComponent<DtoApplicationLayout> {
 	private $mainDiv: HTMLElement;
 	private _toolbar: UiToolbar;
 	private _rootSplitPane: UiSplitPane;
@@ -36,7 +36,7 @@ export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayout
 	private _$toolbarContainer: HTMLElement;
 	private _$contentContainer: HTMLElement;
 
-	constructor(config: UiApplicationLayoutConfig,
+	constructor(config: DtoApplicationLayout,
 	            context: TeamAppsUiContext) {
 		super(config, context);
 		this.$mainDiv = parseHtml('<div id="' + config.id + '" class="UiApplicationLayout"></div>');
@@ -80,4 +80,4 @@ export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayout
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiApplicationLayout", UiApplicationLayout);
+

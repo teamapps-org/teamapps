@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiAbsoluteLayoutCommandHandler, UiAbsoluteLayoutConfig} from "../generated/UiAbsoluteLayoutConfig";
-import {UiAbsolutePositionedComponentConfig} from "../generated/UiAbsolutePositionedComponentConfig";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {UiAbsoluteLayoutCommandHandler, DtoAbsoluteLayout} from "../generated/DtoAbsoluteLayout";
+import {DtoAbsolutePositionedComponent} from "../generated/DtoAbsolutePositionedComponent";
 import {UiAnimationEasing} from "../generated/UiAnimationEasing";
 import {parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -37,12 +37,12 @@ const animationEasingCssValues = {
 	[UiAnimationEasing.STEP_END]: "step-end"
 };
 
-export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig> implements UiAbsoluteLayoutCommandHandler {
+export class UiAbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements UiAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 	private $style: HTMLStyleElement;
-	private components: UiAbsolutePositionedComponentConfig[];
+	private components: DtoAbsolutePositionedComponent[];
 
-	constructor(config: UiAbsoluteLayoutConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoAbsoluteLayout, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiAbsoluteLayout" data-teamapps-id="${this.getId()}">
 	<style></style>
@@ -62,7 +62,7 @@ export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig
 		this.onResize();
 	};
 
-	update(components: UiAbsolutePositionedComponentConfig[], animationDuration: number, easing: UiAnimationEasing): void {
+	update(components: DtoAbsolutePositionedComponent[], animationDuration: number, easing: UiAnimationEasing): void {
 		Array.from(this.$main.querySelectorAll(":scope > :not(style)")).forEach(c => c.remove());
 
 		this.components = components;
@@ -80,7 +80,7 @@ export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig
 	transition: top ${animationDuration}ms ${animationEasingCssValues[easing]}, right ${animationDuration}ms ${animationEasingCssValues[easing]}, bottom ${animationDuration}ms ${animationEasingCssValues[easing]}, left ${animationDuration}ms ${animationEasingCssValues[easing]}, width ${animationDuration}ms ${animationEasingCssValues[easing]}, height ${animationDuration}ms ${animationEasingCssValues[easing]};
 }`;
 		components.forEach(c => {
-			const component = c.component as AbstractUiComponent;
+			const component = c.component as AbstractComponent;
 			component.getMainElement().addEventListener('transitionend', this.transitionEndEventListener);
 			component.getMainElement().setAttribute("data-absolute-positioning-id", component.getId());
 			styles += `[data-teamapps-id=${this.getId()}] > [data-absolute-positioning-id=${component.getId()}] {
@@ -99,4 +99,4 @@ export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiAbsoluteLayout", UiAbsoluteLayout);
+

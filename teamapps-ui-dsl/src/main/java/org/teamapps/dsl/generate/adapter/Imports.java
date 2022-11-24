@@ -3,14 +3,11 @@ package org.teamapps.dsl.generate.adapter;
 import org.teamapps.dsl.generate.TeamAppsGeneratorException;
 
 import java.security.GeneralSecurityException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Imports {
 
-	private final Map<String, Import> imports = new HashMap<>();
+	private final Map<String, Import> imports = new LinkedHashMap<>();
 
 	public Imports() {
 	}

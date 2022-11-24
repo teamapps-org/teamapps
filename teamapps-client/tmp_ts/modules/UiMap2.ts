@@ -19,9 +19,9 @@
  */
 
 
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {parseHtml, Renderer} from "./Common";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiMap2_LocationChangedEvent,
 	UiMap2_MapClickedEvent,
@@ -29,27 +29,27 @@ import {
 	UiMap2_ShapeDrawnEvent,
 	UiMap2_ZoomLevelChangedEvent,
 	UiMap2CommandHandler,
-	UiMap2Config,
+	DtoMap2,
 	UiMap2EventSource
-} from "../generated/UiMap2Config";
+} from "../generated/DtoMap2";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import mapboxgl, {GeoJSONSource, LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
-import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
-import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
-import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
-import {UiTemplateConfig} from "../generated/UiTemplateConfig";
-import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
+import {createDtoMapLocation, DtoMapLocation} from "../generated/DtoMapLocation";
+import {createDtoMapArea} from "../generated/DtoMapArea";
+import {DtoMapMarkerClientRecord} from "../generated/DtoMapMarkerClientRecord";
+import {DtoTemplate} from "../generated/DtoTemplate";
+import {DtoAbstractMapShapeConfig} from "../generated/DtoAbstractMapShapeConfig";
 import {isUiMapCircle, isUiMapPolygon, isUiMapPolyline, isUiMapRectangle} from "./UiMap";
 import {Feature, Point, Position} from "geojson";
-import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
+import {DtoMapMarkerCluster} from "../generated/DtoMapMarkerCluster";
 import * as d3 from "d3";
 import {DeferredExecutor} from "./util/DeferredExecutor";
-import {AbstractUiMapShapeChangeConfig} from "../generated/AbstractUiMapShapeChangeConfig";
-import {UiPolylineAppendConfig} from "../generated/UiPolylineAppendConfig";
-import {UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
+import {DtoAbstractMapShapeChangeConfig} from "../generated/DtoAbstractMapShapeChangeConfig";
+import {DtoPolylineAppend} from "../generated/DtoPolylineAppend";
+import {DtoMapPolyline} from "../generated/DtoMapPolyline";
 
-export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2EventSource, UiMap2CommandHandler {
+export class UiMap2 extends AbstractComponent<DtoMap2> implements UiMap2EventSource, UiMap2CommandHandler {
 
 	public readonly onZoomLevelChanged: TeamAppsEvent<UiMap2_ZoomLevelChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
 	public readonly onLocationChanged: TeamAppsEvent<UiMap2_LocationChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
@@ -61,11 +61,11 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	private map: MapBoxMap;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 	private markersByClientId: { [id: number]: Marker } = {};
-	private shapesById: Map<string, { config: AbstractUiMapShapeConfig }> = new Map();
+	private shapesById: Map<string, { config: DtoAbstractMapShapeConfig }> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
-	constructor(config: UiMap2Config, context: TeamAppsUiContext) {
+	constructor(config: DtoMap2, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$map = parseHtml('<div class="UiMap2">');
 
@@ -92,12 +92,12 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			let center = this.map.getCenter();
 			let bounds = this.map.getBounds();
 			this.onLocationChanged.fire({
-				center: createUiMapLocationConfig(center.lat, center.lng),
-				displayedArea: createUiMapAreaConfig(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
+				center: createDtoMapLocation(center.lat, center.lng),
+				displayedArea: createDtoMapArea(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
 			});
 		})
 		this.map.on("click", ev => {
-			this.onMapClicked.fire({location: createUiMapLocationConfig(ev.lngLat.lat, ev.lngLat.lng)})
+			this.onMapClicked.fire({location: createDtoMapLocation(ev.lngLat.lat, ev.lngLat.lng)})
 		})
 
 		Object.keys(config.markerTemplates).forEach(templateName => this.registerTemplate(templateName, config.markerTemplates[templateName]));
@@ -116,7 +116,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.map.setStyle(styleUrl);
 	}
 
-	public addShape(shapeId: string, shapeConfig: AbstractUiMapShapeConfig): void {
+	public addShape(shapeId: string, shapeConfig: DtoAbstractMapShapeConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.shapesById.set(shapeId, {config: shapeConfig});
 			if (isUiMapCircle(shapeConfig)) {
@@ -232,7 +232,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	private toGeoJsonFeature(shapeConfig: UiMapPolylineConfig) {
+	private toGeoJsonFeature(shapeConfig: DtoMapPolyline) {
 		let data: GeoJSON.Feature<GeoJSON.Geometry> = {
 			'type': 'Feature',
 			'properties': {},
@@ -244,17 +244,17 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		return data;
 	}
 
-	updateShape(shapeId: string, shape: AbstractUiMapShapeConfig): void {
+	updateShape(shapeId: string, shape: DtoAbstractMapShapeConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.removeShape(shapeId);
 			this.addShape(shapeId, shape);
 		});
 	}
 
-	changeShape(shapeId: string, change: AbstractUiMapShapeChangeConfig): void {
+	changeShape(shapeId: string, change: DtoAbstractMapShapeChangeConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			if (isPolyLineAppend(change)) {
-				let config = this.shapesById.get(shapeId).config as UiMapPolylineConfig;
+				let config = this.shapesById.get(shapeId).config as DtoMapPolyline;
 				config.path = config.path.concat(change.appendedPath);
 				let source = this.map.getSource(shapeId) as GeoJSONSource;
 				source.setData(this.toGeoJsonFeature(config));
@@ -274,7 +274,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.shapesById.forEach((shape, id) => this.removeShape(id))
 	}
 
-	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
+	public setMapMarkerCluster(clusterConfig: DtoMapMarkerCluster): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			if (this.map.getSource('cluster') == null) {
 				this.map.addSource('cluster', {
@@ -407,14 +407,14 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	}
 
 
-	private createMarkersFeatureCollection(markers: UiMapMarkerClientRecordConfig[]): GeoJSON.FeatureCollection {
+	private createMarkersFeatureCollection(markers: DtoMapMarkerClientRecord[]): GeoJSON.FeatureCollection {
 		return {
 			type: "FeatureCollection",
 			features: markers.map(this.createMarkerFeature)
 		};
 	}
 
-	private createMarkerFeature(m: UiMapMarkerClientRecordConfig): Feature {
+	private createMarkerFeature(m: DtoMapMarkerClientRecord): Feature {
 		return {
 			type: "Feature",
 			properties: {
@@ -431,15 +431,15 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		};
 	}
 
-	private convertToPosition(loc: UiMapLocationConfig): Position {
+	private convertToPosition(loc: DtoMapLocation): Position {
 		return [loc.longitude, loc.latitude];
 	}
 
-	private convertToLngLatLike(loc: UiMapLocationConfig): LngLatLike {
+	private convertToLngLatLike(loc: DtoMapLocation): LngLatLike {
 		return this.convertToPosition(loc) as LngLatLike;
 	}
 
-	public addMarker(markerConfig: UiMapMarkerClientRecordConfig): void {
+	public addMarker(markerConfig: DtoMapMarkerClientRecord): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			let marker = this.createMarker(markerConfig);
 			this.markersByClientId[markerConfig.id] = marker;
@@ -461,7 +461,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	private createMarker(markerConfig: UiMapMarkerClientRecordConfig) {
+	private createMarker(markerConfig: DtoMapMarkerClientRecord) {
 		let renderer = this.markerTemplateRenderers[markerConfig.templateId] || this._context.templateRegistry.getTemplateRendererByName(markerConfig.templateId);
 		let marker = new Marker(parseHtml(renderer.render(markerConfig.values)), {
 			anchor: markerConfig.anchor,
@@ -476,12 +476,12 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	};
 
 	// TODO
-	setHeatMap(data: import("../generated/UiHeatMapDataConfig").UiHeatMapDataConfig): void {
+	setHeatMap(data: import("../generated/DtoHeatMapData").DtoHeatMapData): void {
 		throw new Error("Method not implemented.");
 	}
 
 	// TODO
-	startDrawingShape(shapeType: import("../generated/UiMapShapeType").UiMapShapeType, shapeProperties: import("../generated/UiShapePropertiesConfig").UiShapePropertiesConfig): void {
+	startDrawingShape(shapeType: import("../generated/UiMapShapeType").UiMapShapeType, shapeProperties: import("../generated/DtoShapeProperties").DtoShapeProperties): void {
 		throw new Error("Method not implemented.");
 	}
 
@@ -494,7 +494,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.map.zoomTo(zoom)
 	}
 
-	setLocation(location: UiMapLocationConfig, animationDurationMillis: number, targetZoomLevel: number): void {
+	setLocation(location: DtoMapLocation, animationDurationMillis: number, targetZoomLevel: number): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.easeTo({
 				center: [location.longitude, location.latitude],
@@ -504,7 +504,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	fitBounds(southWest: UiMapLocationConfig, northEast: UiMapLocationConfig): void {
+	fitBounds(southWest: DtoMapLocation, northEast: DtoMapLocation): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.fitBounds([
 				[southWest.longitude, southWest.latitude],
@@ -513,7 +513,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	registerTemplate(id: string, template: UiTemplateConfig): void {
+	registerTemplate(id: string, template: DtoTemplate): void {
 		this.markerTemplateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
@@ -526,8 +526,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	}
 }
 
-function isPolyLineAppend(change: AbstractUiMapShapeChangeConfig): change is UiPolylineAppendConfig {
+function isPolyLineAppend(change: DtoAbstractMapShapeChangeConfig): change is DtoPolylineAppend {
 	return change._type === "UiPolylineAppend";
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiMap2", UiMap2);
+

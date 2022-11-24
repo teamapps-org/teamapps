@@ -18,67 +18,61 @@
  * =========================LICENSE_END==================================
  */
 
-import {Toolbar} from "./tool-container/toolbar/UiToolbar";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiTab as UiTabConfig} from "../generated/UiTab";
-import {bind} from "../util/Bind";
+import {Toolbar} from "./tool-container/toolbar/Toolbar";
+import {AbstractComponent, bind, Component, insertAtIndex, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoTab as DtoTab} from "../generated/DtoTab";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
-import {ToolButton} from "./UiToolButton";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {DropDown} from "../micro-components/UiDropDown";
-import {TeamAppsUiContext} from "teamapps-client-core";
+import {ToolButton} from "./ToolButton";
+import {DropDown} from "../micro-components/DropDown";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {
-	UiTabPanel_TabClosedEvent,
-	UiTabPanel_TabNeedsRefreshEvent,
-	UiTabPanel_TabSelectedEvent,
-	UiTabPanel_WindowButtonClickedEvent,
-	UiTabPanelCommandHandler,
-	UiTabPanelConfig,
-	UiTabPanelEventSource
-} from "../generated/UiTabPanelConfig";
-import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiTabPanelTabStyle} from "../generated/UiTabPanelTabStyle";
-import {insertAtIndex, insertBefore, maximizeComponent, parseHtml, prependChild} from "../Common";
-import {UiWindowButtonType} from "../generated/UiWindowButtonType";
+	createDtoToolButton,
+	DtoTabPanel,
+	DtoTabPanel_TabClosedEvent,
+	DtoTabPanel_TabNeedsRefreshEvent,
+	DtoTabPanel_TabSelectedEvent,
+	DtoTabPanel_WindowButtonClickedEvent,
+	DtoTabPanelCommandHandler,
+	DtoTabPanelEventSource,
+	DtoTabPanelTabStyle,
+	DtoWindowButtonType
+} from "../generated";
+import {insertBefore, maximizeComponent, prependChild} from "../Common";
 import {StaticIcons} from "../util/StaticIcons";
-import {UiComponent} from "./UiComponent";
 
 
 interface Tab {
-	config: UiTabConfig;
+	config: DtoTab;
 	$button: HTMLElement;
 	$wrapper: HTMLElement;
 	$dropDownTabButton: HTMLElement;
 	$toolbarContainer: HTMLElement;
 	$contentContainer: HTMLElement;
 	toolbar: Toolbar;
-	contentComponent: UiComponent<UiComponentConfig>;
+	contentComponent: Component;
 	buttonWidth?: number;
 	visible: boolean;
 }
 
-export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements UiTabPanelCommandHandler, UiTabPanelEventSource, Emptyable {
+export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPanelCommandHandler, DtoTabPanelEventSource, Emptyable {
 
-	public readonly onTabSelected: TeamAppsEvent<UiTabPanel_TabSelectedEvent> = new TeamAppsEvent<UiTabPanel_TabSelectedEvent>();
+	public readonly onTabSelected: TeamAppsEvent<DtoTabPanel_TabSelectedEvent> = new TeamAppsEvent<DtoTabPanel_TabSelectedEvent>();
 
-	public readonly onTabNeedsRefresh: TeamAppsEvent<UiTabPanel_TabNeedsRefreshEvent> = new TeamAppsEvent<UiTabPanel_TabNeedsRefreshEvent>();
-	public readonly onTabClosed: TeamAppsEvent<UiTabPanel_TabClosedEvent> = new TeamAppsEvent<UiTabPanel_TabClosedEvent>();
+	public readonly onTabNeedsRefresh: TeamAppsEvent<DtoTabPanel_TabNeedsRefreshEvent> = new TeamAppsEvent<DtoTabPanel_TabNeedsRefreshEvent>();
+	public readonly onTabClosed: TeamAppsEvent<DtoTabPanel_TabClosedEvent> = new TeamAppsEvent<DtoTabPanel_TabClosedEvent>();
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<UiTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onWindowButtonClicked: TeamAppsEvent<DtoTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[UiWindowButtonType.MINIMIZE]: new ToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize"}), this._context),
-		[UiWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createUiToolButtonConfig(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize"}), this._context),
-		[UiWindowButtonType.CLOSE]: new ToolButton(createUiToolButtonConfig(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close"}), this._context),
+		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize"}), this._context),
+		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize"}), this._context),
+		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close"}), this._context),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
-		UiWindowButtonType.MINIMIZE,
-		UiWindowButtonType.MAXIMIZE_RESTORE,
-		UiWindowButtonType.CLOSE
+		DtoWindowButtonType.MINIMIZE,
+		DtoWindowButtonType.MAXIMIZE_RESTORE,
+		DtoWindowButtonType.CLOSE
 	];
 
 	private $tabPanel: HTMLElement;
@@ -102,14 +96,14 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 
 	private toolButtons: { [id: string]: ToolButton } = {};
 	private toolButtonDropDown: DropDown;
-	private windowButtons: UiWindowButtonType[];
+	private windowButtons: DtoWindowButtonType[];
 
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: UiTabPanelConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoTabPanel, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$tabPanel = parseHtml(`<div class="UiTabPanel">
+		this.$tabPanel = parseHtml(`<div class="DtoTabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">
         <div class="background-color-div">
 	        <div class="tab-button-container left"></div>
@@ -176,7 +170,7 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		}
 		this.toolButtonDropDown = new DropDown();
 
-		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
+		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
 			} else {
@@ -202,12 +196,12 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 	}
 
 	public maximize(): void {
-		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
+		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
 		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
-		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
+		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
 		if (this.restoreFunction != null) {
 			this.restoreFunction();
 		}
@@ -227,7 +221,7 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		return this.$tabPanel;
 	}
 
-	private _createTab(tabConfig: UiTabConfig, index: number = Number.MAX_SAFE_INTEGER): Tab {
+	private _createTab(tabConfig: DtoTab, index: number = Number.MAX_SAFE_INTEGER): Tab {
 		const $tabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
 		const $dropDownTabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
 		$tabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.tabId, true));
@@ -317,7 +311,7 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		}
 	}
 
-	public setTabContent(tabId: string, content: UiComponent<UiComponentConfig>, fireLazyLoadEventIfNeeded = false) {
+	public setTabContent(tabId: string, content: Component, fireLazyLoadEventIfNeeded = false) {
 		const tab = this.getTabById(tabId);
 		const $tabContentContainer = tab.$contentContainer;
 		if (tab.contentComponent) {
@@ -369,7 +363,7 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		}
 	}
 
-	public addTab(tabConfig: UiTabConfig, select: boolean, index = Number.MAX_SAFE_INTEGER) {
+	public addTab(tabConfig: DtoTab, select: boolean, index = Number.MAX_SAFE_INTEGER) {
 		this.removeTab(tabConfig.tabId, false);
 		let tab = this._createTab(tabConfig, index);
 		if (tabConfig.rightSide) {
@@ -377,7 +371,7 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		} else {
 			this.leftTabs.push(tab);
 		}
-		this.setTabContent(tabConfig.tabId, tabConfig.content as UiComponent, true);
+		this.setTabContent(tabConfig.tabId, tabConfig.content as Component, true);
 		if (select || this.getAllTabs().length === 1) {
 			this.selectTab(tabConfig.tabId, false);
 		}
@@ -517,7 +511,7 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		return Object.values(this.toolButtons);
 	}
 
-	public setWindowButtons(buttonTypes:UiWindowButtonType[]):void{
+	public setWindowButtons(buttonTypes:DtoWindowButtonType[]):void{
 		this.windowButtons = [];
 		this.$windowButtonContainer.innerHTML = '';
 		if (buttonTypes && buttonTypes.length > 0) {
@@ -529,7 +523,7 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		}
 	}
 
-	private addWindowButton(toolButtonType: UiWindowButtonType) {
+	private addWindowButton(toolButtonType: DtoWindowButtonType) {
 		if (this.windowButtons.filter(tb => tb === toolButtonType).length > 0){
 			this.removeWindowButton(toolButtonType);
 		}
@@ -551,7 +545,7 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		this.relayoutButtons();
 	}
 
-	public removeWindowButton(uiToolButton: UiWindowButtonType) {
+	public removeWindowButton(uiToolButton: DtoWindowButtonType) {
 		this.defaultToolButtons[uiToolButton].getMainElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
@@ -559,10 +553,10 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 		}
 	}
 
-	public setTabStyle(tabStyle: UiTabPanelTabStyle) {
+	public setTabStyle(tabStyle: DtoTabPanelTabStyle) {
 		this.$tabPanel.classList.remove('tab-style-ears', 'tab-style-blocks');
-		this.$tabPanel.classList.add(tabStyle === UiTabPanelTabStyle.EARS ? 'tab-style-ears' : 'tab-style-blocks');
-		this.$tabBar.classList.toggle("teamapps-blurredBackgroundImage", tabStyle === UiTabPanelTabStyle.BLOCKS);
+		this.$tabPanel.classList.add(tabStyle === DtoTabPanelTabStyle.EARS ? 'tab-style-ears' : 'tab-style-blocks');
+		this.$tabBar.classList.toggle("teamapps-blurredBackgroundImage", tabStyle === DtoTabPanelTabStyle.BLOCKS);
 		this.onResize();
 	}
 
@@ -604,4 +598,4 @@ export class TabPanel extends AbstractUiComponent<UiTabPanelConfig> implements U
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiTabPanel", TabPanel);
+

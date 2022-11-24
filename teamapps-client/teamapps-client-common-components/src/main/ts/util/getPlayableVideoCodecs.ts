@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiVideoCodec} from "../generated/UiVideoCodec";
+import {DtoVideoCodec} from "../generated";
 
 export async function getPlayableVideoCodecs() {
 	let peerConnection = new RTCPeerConnection(null);
@@ -139,13 +139,13 @@ a=fmtp:120 apt=124
 
 	const codecs = [];
 	if (sdpAnswer.sdp.toLowerCase().indexOf("vp9") !== -1) {
-		codecs.push(UiVideoCodec.VP9);
+		codecs.push(DtoVideoCodec.VP9);
 	}
 	if (sdpAnswer.sdp.toLowerCase().indexOf("vp8") !== -1) {
-		codecs.push(UiVideoCodec.VP8);
+		codecs.push(DtoVideoCodec.VP8);
 	}
 	if (sdpAnswer.sdp.toLowerCase().indexOf("h264") !== -1) {
-		codecs.push(UiVideoCodec.H264);
+		codecs.push(DtoVideoCodec.H264);
 	}
 	return codecs;
 }

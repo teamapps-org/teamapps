@@ -18,28 +18,28 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {applyDisplayMode, boundSelection, css, Direction, parseHtml} from "./Common";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
 	UiImageCropper_SelectionChangedEvent,
 	UiImageCropperCommandHandler,
-	UiImageCropperConfig,
+	DtoImageCropper,
 	UiImageCropperEventSource
-} from "../generated/UiImageCropperConfig";
+} from "../generated/DtoImageCropper";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {createUiImageCropperSelectionConfig, UiImageCropperSelectionConfig} from "../generated/UiImageCropperSelectionConfig";
+import {createDtoImageCropperSelection, DtoImageCropperSelection} from "../generated/DtoImageCropperSelection";
 import {UiImageCropperSelectionMode} from "../generated/UiImageCropperSelectionMode";
 import {draggable} from "./util/draggable";
 
-type Selection = Omit<UiImageCropperSelectionConfig, '_type'>;
+type Selection = Omit<DtoImageCropperSelection, '_type'>;
 
 type Rect = { x: number, y: number, width: number, height: number }
 
-export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> implements UiImageCropperCommandHandler, UiImageCropperEventSource {
+export class UiImageCropper extends AbstractComponent<DtoImageCropper> implements UiImageCropperCommandHandler, UiImageCropperEventSource {
 
 	public readonly onSelectionChanged: TeamAppsEvent<UiImageCropper_SelectionChangedEvent> = new TeamAppsEvent<UiImageCropper_SelectionChangedEvent>();
 
@@ -51,7 +51,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 	private imageNaturalWidth: number = null;
 	private imageNaturalHeight: number = null;
 
-	constructor(config: UiImageCropperConfig,
+	constructor(config: DtoImageCropper,
 				context: TeamAppsUiContext) {
 		super(config, context);
 
@@ -157,7 +157,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 
 	private resetSelectionFrame(aspectRatio: number) {
 		if (this.imageNaturalWidth != null) {
-			this.selection = createUiImageCropperSelectionConfig(0, 0, 0, 0);
+			this.selection = createDtoImageCropperSelection(0, 0, 0, 0);
 			let naturalImageAspectRatio = this.imageNaturalWidth / this.imageNaturalHeight;
 			if (aspectRatio === 0) {
 				this.selection.width = 0.8 * this.imageNaturalWidth;
@@ -176,7 +176,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 			this.selection = this.boundSelection(this.selection);
 			this.updateCroppingFramePosition(this.selection);
 			this.onSelectionChanged.fire({
-				selection: createUiImageCropperSelectionConfig(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
+				selection: createDtoImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
 			});
 		}
 	}
@@ -189,7 +189,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 		this.selection = selection;
 		this.logger.debug("selection: ", this.selection);
 		this.onSelectionChanged.fire({
-			selection: createUiImageCropperSelectionConfig(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
+			selection: createDtoImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
 		});
 	}
 
@@ -226,7 +226,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 		this.resetSelectionFrame(aspectRatio);
 	}
 
-	setSelection(selection: UiImageCropperSelectionConfig): void {
+	setSelection(selection: DtoImageCropperSelection): void {
 		this.selection = selection;
 		this.updateCroppingFramePosition(this.selection);
 	}
@@ -264,7 +264,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 	private frameRectToSelection(frameSelectionPos: Rect) {
 		let correctionFactor = this.calculateCoordinateCorrectionFactor();
 		// let correctionOffsetX =
-		return createUiImageCropperSelectionConfig(
+		return createDtoImageCropperSelection(
 			(frameSelectionPos.x - this.htmlImageElement.offsetLeft) * correctionFactor,
 			(frameSelectionPos.y - this.htmlImageElement.offsetTop) * correctionFactor,
 			frameSelectionPos.width * correctionFactor,
@@ -288,4 +288,4 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiImageCropper", UiImageCropper);
+

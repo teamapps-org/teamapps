@@ -21,15 +21,19 @@ package org.teamapps.ux.component.tree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoComboBoxTreeRecord;
+import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.DtoTree;
+import org.teamapps.dto.DtoTreeRecord;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.ux.model.TreeModel;
 
 import java.util.*;
@@ -163,7 +167,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoTree uiTree = new DtoTree();
 		mapAbstractUiComponentProperties(uiTree);
 		List<RECORD> records = model.getRecords();

@@ -28,7 +28,7 @@ classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
 <c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsModuleName>";}; separator="\n">
-<if(c.hasEvents)>import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
+<if(c.hasEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface Dto<c.typeScriptIdentifier> <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|Dto<c.typeScriptIdentifier>};  separator=", "> <endif>{
 	_type?: string;
@@ -74,7 +74,7 @@ commandMethodStub(cmd) ::= <<
 >>
 
 teamAppsEventDeclaration(evt) ::= <<
-on<evt.Identifier.text; format="cap">: TeamAppsEvent\<<evt.typeScriptInterfaceName>\>;
+on<evt.Identifier.text; format="cap">: EventEmitter\<<evt.typeScriptInterfaceName>\>;
 >>
 
 eventInterface(evt) ::= <<
@@ -95,7 +95,7 @@ interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
 <c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsModuleName>";}; separator="\n">
-<if(c.hasEvents)>import {TeamAppsEvent} from "../util/TeamAppsEvent";<endif>
+<if(c.hasEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface Dto<c.typeScriptIdentifier> <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|Dto<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
 	_type?: string;

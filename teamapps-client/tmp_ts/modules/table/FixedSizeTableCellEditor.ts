@@ -19,7 +19,7 @@
  */
 import {AbstractTableEditor} from "./AbstractTableEditor";
 import {UiField} from "../formfield/UiField";
-import {UiIdentifiableClientRecordConfig} from "../../generated/UiIdentifiableClientRecordConfig";
+import {DtoIdentifiableClientRecord} from "../../generated/DtoIdentifiableClientRecord";
 import {css} from "../Common";
 
 
@@ -78,7 +78,7 @@ export class FixedSizeTableCellEditor extends AbstractTableEditor {
 		this.uiField.focus();
 	};
 
-	public loadValue(item: UiIdentifiableClientRecordConfig) {
+	public loadValue(item: DtoIdentifiableClientRecord) {
 		this.defaultValue = item.values[this.column.field] || null;
 		this.uiField.setCommittedValue(this.defaultValue);
 		this.focus();
@@ -88,7 +88,7 @@ export class FixedSizeTableCellEditor extends AbstractTableEditor {
 		return this.uiField.getTransientValue();
 	};
 
-	public applyValue(item: UiIdentifiableClientRecordConfig, state: any /*TODO*/) {
+	public applyValue(item: DtoIdentifiableClientRecord, state: any /*TODO*/) {
 		this.uiField.commit();
 		item.values[this.column.field] = this.uiField.getCommittedValue();
 	};

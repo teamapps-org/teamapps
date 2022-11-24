@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {createImageThumbnailUrl, fadeOut, insertAtCursorPosition, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {
@@ -31,17 +31,17 @@ import {
 	UiChatInput_UploadSuccessfulEvent,
 	UiChatInput_UploadTooLargeEvent,
 	UiChatInputCommandHandler,
-	UiChatInputConfig,
+	DtoChatInput,
 	UiChatInputEventSource
-} from "../generated/UiChatInputConfig";
+} from "../generated/DtoChatInput";
 import {FileUploader} from "./util/FileUploader";
 import {ProgressBar} from "./micro-components/ProgressBar";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import * as log from "loglevel";
-import {createUiNewChatMessageConfig} from "../generated/UiNewChatMessageConfig";
-import {createUiChatNewFileConfig} from "../generated/UiChatNewFileConfig";
+import {createDtoNewChatMessage} from "../generated/DtoNewChatMessage";
+import {createDtoChatNewFile} from "../generated/DtoChatNewFile";
 
-export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implements UiChatInputCommandHandler, UiChatInputEventSource {
+export class UiChatInput extends AbstractComponent<DtoChatInput> implements UiChatInputCommandHandler, UiChatInputEventSource {
 
 	onFileItemClicked: TeamAppsEvent<UiChatInput_FileItemClickedEvent> = new TeamAppsEvent();
 	onFileItemRemoved: TeamAppsEvent<UiChatInput_FileItemRemovedEvent> = new TeamAppsEvent();
@@ -59,7 +59,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	private $sendButton: HTMLElement;
 	private $attachmentButton: Element;
 
-	constructor(config: UiChatInputConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoChatInput, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiChatInput drop-zone">
 	<div class="upload-items"></div>
@@ -128,11 +128,11 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		}
 
 		this.onMessageSent.fire({
-			message: createUiNewChatMessageConfig({
+			message: createDtoNewChatMessage({
 				text: this.$textInput.value,
 				uploadedFiles: this.uploadItems
 					.filter(item => item.state === UploadState.SUCCESS)
-					.map(item => createUiChatNewFileConfig({
+					.map(item => createDtoChatNewFile({
 						uploadedFileUuid: item.uploadedFileUuid,
 						fileName: item.file.name
 					}))
@@ -238,5 +238,5 @@ class FileUploadItem {
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiChatInput", UiChatInput);
+
 

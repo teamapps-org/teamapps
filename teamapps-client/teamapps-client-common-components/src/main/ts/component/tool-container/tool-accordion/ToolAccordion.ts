@@ -18,35 +18,37 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractToolContainer} from "../DtoAbstractToolContainer";
-import {TeamAppsEvent} from "../teamapps-client-core";
-import {UiToolbarButtonGroup as UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroup";
-import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
-import {createUiDropDownButtonClickInfo, UiDropDownButtonClickInfo} from "../../../generated/UiDropDownButtonClickInfo";
-import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
-import {defaultSpinnerTemplate, doOnceOnClickOutsideElement, getScrollParent, insertAfter, parseHtml} from "../../../Common";
-import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
-import {AbstractUiToolContainer_ToolbarButtonClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
-import {TeamAppsUiComponentRegistry} from "../teamapps-client-core";
+import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
+import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {defaultSpinnerTemplate, doOnceOnClickOutsideElement, getScrollParent, insertAfter} from "../../../Common";
+import {
+	createDtoDropDownButtonClickInfo,
+	DtoAbstractToolContainer_ToolbarButtonClickEvent,
+	DtoDropDownButtonClickInfo,
+	DtoToolAccordion,
+	DtoToolAccordionCommandHandler,
+	DtoToolAccordionEventSource
+} from "../../../generated";
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
-import {UiComponent} from "../teamapps-client-core";
-import {ToolAccordionButton} from "./UiToolAccordionButton";
+import {AbstractToolContainer} from "../AbstractToolContainer";
+import {ToolAccordionButton} from "./ToolAccordionButton";
 
-export class ToolAccordion extends AbstractToolContainer<UiToolAccordionConfig> implements UiToolAccordionCommandHandler, UiToolAccordionEventSource {
+export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> implements DtoToolAccordionCommandHandler, DtoToolAccordionEventSource {
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
-	public readonly onToolbarButtonClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent>();
+	public readonly onToolbarButtonClick: TeamAppsEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent>();
 
-	private buttonGroupsById: OrderedDictionary<UiButtonGroup> = new OrderedDictionary<UiButtonGroup>();
+	private buttonGroupsById: OrderedDictionary<DtoButtonGroup> = new OrderedDictionary<DtoButtonGroup>();
 
 	private $mainDomElement: HTMLElement;
 	private $backgroundColorDiv: HTMLElement;
 
-	constructor(config: UiToolAccordionConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoToolAccordion, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$mainDomElement = parseHtml(`<div class="UiToolAccordion teamapps-blurredBackgroundImage"></div>`);
+		this.$mainDomElement = parseHtml(`<div class="DtoToolAccordion teamapps-blurredBackgroundImage"></div>`);
 		this.$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this.$mainDomElement.appendChild(this.$backgroundColorDiv);
 		let allButtonGroups = [...config.leftButtonGroups, ...config.rightButtonGroups];
@@ -64,15 +66,15 @@ export class ToolAccordion extends AbstractToolContainer<UiToolAccordionConfig> 
 		return this.$mainDomElement;
 	}
 
-	private createButtonGroup(buttonGroupConfig: UiToolbarButtonGroupConfig): UiButtonGroup {
-		return new UiButtonGroup(buttonGroupConfig, this, this._context, AbstractToolContainer.$sizeTestingContainer);
+	private createButtonGroup(buttonGroupConfig: DtoToolbarButtonGroup): DtoButtonGroup {
+		return new DtoButtonGroup(buttonGroupConfig, this, this._context, AbstractToolContainer.$sizeTestingContainer);
 	}
 
 	public setButtonHasDropDown(groupId: string, buttonId: string, hasDropDown: boolean): void {
 		this.buttonGroupsById.getValue(groupId).setButtonHasDropDown(buttonId, hasDropDown);
 	}
 
-	public setDropDownComponent(groupId: string, buttonId: string, component: UiComponent): void {
+	public setDropDownComponent(groupId: string, buttonId: string, component: Component): void {
 		this.buttonGroupsById.getValue(groupId).setDropDownComponent(buttonId, component);
 	}
 
@@ -90,7 +92,7 @@ export class ToolAccordion extends AbstractToolContainer<UiToolAccordionConfig> 
 		this.refreshEnforcedButtonWidth();
 	}
 
-	public addButtonGroup(buttonGroupConfig: UiToolbarButtonGroupConfig) {
+	public addButtonGroup(buttonGroupConfig: DtoToolbarButtonGroup) {
 		const existingButtonGroup = this.buttonGroupsById.getValue(buttonGroupConfig.groupId);
 		if (existingButtonGroup) {
 			this.removeButtonGroup(buttonGroupConfig.groupId);
@@ -127,7 +129,7 @@ export class ToolAccordion extends AbstractToolContainer<UiToolAccordionConfig> 
 		this.refreshEnforcedButtonWidth();
 	}
 
-	public addButton(groupId: string, buttonConfig: UiToolbarButtonConfig, neighborButtonId: string, beforeNeighbor: boolean) {
+	public addButton(groupId: string, buttonConfig: DtoToolbarButton, neighborButtonId: string, beforeNeighbor: boolean) {
 		this.buttonGroupsById.getValue(groupId).addButton(buttonConfig, neighborButtonId, beforeNeighbor);
 		this.refreshEnforcedButtonWidth();
 	}
@@ -137,7 +139,7 @@ export class ToolAccordion extends AbstractToolContainer<UiToolAccordionConfig> 
 		this.refreshEnforcedButtonWidth();
 	}
 
-	updateButtonGroups(buttonGroups: UiToolbarButtonGroupConfig[]): void {
+	updateButtonGroups(buttonGroups: DtoToolbarButtonGroup[]): void {
 		// TODO implement only if really needed
 	}
 
@@ -154,8 +156,8 @@ export class ToolAccordion extends AbstractToolContainer<UiToolAccordionConfig> 
 
 }
 
-class UiButtonGroup {
-	private config: UiToolbarButtonGroupConfig;
+class DtoButtonGroup {
+	private config: DtoToolbarButtonGroup;
 	private visible: boolean = true;
 	private $buttonGroupWrapper: HTMLElement;
 	private $buttonGroup: HTMLElement;
@@ -164,7 +166,7 @@ class UiButtonGroup {
 	private $buttonRows: HTMLElement[] = [];
 	private enforcedButtonWidth: number = 1;
 
-	constructor(buttonGroupConfig: UiToolbarButtonGroupConfig, private toolAccordion: ToolAccordion, private context: TeamAppsUiContext, private $sizeTestingContainer: HTMLElement) {
+	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolAccordion: ToolAccordion, private context: TeamAppsUiContext, private $sizeTestingContainer: HTMLElement) {
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
 		const $buttonGroup = parseHtml(`<div class="toolbar-button-group" id="${this.toolAccordionId}_${buttonGroupConfig.groupId}">`);
@@ -189,17 +191,17 @@ class UiButtonGroup {
 		return this.config.position;
 	}
 
-	private createButton(buttonConfig: UiToolbarButtonConfig): ToolAccordionButton {
+	private createButton(buttonConfig: DtoToolbarButton): ToolAccordionButton {
 		let button = new ToolAccordionButton(buttonConfig, this.context);
 
 		button.onClick.addListener(eventObject => {
-			let dropdownClickInfo: UiDropDownButtonClickInfo = null;
+			let dropdownClickInfo: DtoDropDownButtonClickInfo = null;
 			if (button.hasDropDown) {
 				if (button.$dropDown == null) {
 					this.createDropDown(button);
 				}
 				let dropdownVisible = $(button.$dropDown).is(":visible");
-				dropdownClickInfo = createUiDropDownButtonClickInfo(!dropdownVisible, button.dropDownComponent != null);
+				dropdownClickInfo = createDtoDropDownButtonClickInfo(!dropdownVisible, button.dropDownComponent != null);
 				if (!dropdownVisible) {
 					if (button.dropDownComponent != null) {
 						button.$dropDown.appendChild(button.dropDownComponent.getMainElement());
@@ -247,7 +249,7 @@ class UiButtonGroup {
 				let buttonHeight = button.getMainDomElement().offsetHeight;
 				let dropDownHeight = button.$dropDown.offsetHeight;
 				let totalInterestingPartHeight = buttonHeight + dropDownHeight;
-				let buttonY = button.getMainDomElement().getBoundingClientRect().top - me.getMainDomElement().closest('.UiToolAccordion').getBoundingClientRect().top;
+				let buttonY = button.getMainDomElement().getBoundingClientRect().top - me.getMainDomElement().closest('.DtoToolAccordion').getBoundingClientRect().top;
 				let $scrollContainer = getScrollParent(me.getMainDomElement(), true);
 				let scrollY = $scrollContainer.scrollTop();
 				let viewPortHeight = $scrollContainer[0].offsetHeight;
@@ -274,7 +276,7 @@ class UiButtonGroup {
 		insertAfter(button.$dropDown, $row);
 	}
 
-	public setDropDownComponent(buttonId: string, component: UiComponent) {
+	public setDropDownComponent(buttonId: string, component: Component) {
 		let button = this.buttonsById[buttonId];
 		this.setButtonDropDownComponent(button, component);
 	}
@@ -286,7 +288,7 @@ class UiButtonGroup {
 		}
 	}
 
-	private setButtonDropDownComponent(button: ToolAccordionButton, component: UiComponent) {
+	private setButtonDropDownComponent(button: ToolAccordionButton, component: Component) {
 		if (button.dropDownComponent != null) {
 			button.dropDownComponent.getMainElement().remove();
 		}
@@ -323,7 +325,7 @@ class UiButtonGroup {
 		}
 	}
 
-	public addButton(buttonConfig: UiToolbarButtonConfig, neighborButtonId?: string, beforeNeighbor?: boolean) {
+	public addButton(buttonConfig: DtoToolbarButton, neighborButtonId?: string, beforeNeighbor?: boolean) {
 		const button = this.createButton(buttonConfig);
 
 		const existingButton = this.buttonsById[buttonConfig.buttonId];
@@ -435,4 +437,4 @@ class UiButtonGroup {
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiToolAccordion", ToolAccordion);
+

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.toolbar;
 
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoToolAccordion;
 import org.teamapps.dto.DtoToolbarButtonGroup;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -35,7 +35,7 @@ public class ToolAccordion extends AbstractToolContainer {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		List<DtoToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
 				.filter(group -> !group.isRightSide())
 				.sorted()

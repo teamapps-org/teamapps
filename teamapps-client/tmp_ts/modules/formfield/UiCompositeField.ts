@@ -17,22 +17,22 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {UiField, ValueChangeEventData} from "./UiField";
 import * as log from "loglevel";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiCompositeSubFieldConfig} from "../../generated/UiCompositeSubFieldConfig";
-import {UiCompositeFieldConfig} from "../../generated/UiCompositeFieldConfig";
+import {DtoCompositeSubField} from "../../generated/DtoCompositeSubField";
+import {DtoCompositeField} from "../../generated/DtoCompositeField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiColumnDefinitionConfig} from "../../generated/UiColumnDefinitionConfig";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {DtoColumnDefinition} from "../../generated/DtoColumnDefinition";
+
 import Logger = log.Logger;
 import {closestAncestor, parseHtml} from "../Common";
 import {TableDataProviderItem} from "../UiInfiniteItemView";
-import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
+import {DtoTableClientRecord} from "../../generated/DtoTableClientRecord";
 
 export type SubField = {
-	config: UiCompositeSubFieldConfig,
+	config: DtoCompositeSubField,
 	field: UiField,
 	$cell: HTMLElement,
 	visible?: boolean
@@ -43,7 +43,7 @@ export /* for testing */ type ColumnWidthConstraints = {
 	minWidth: number;
 };
 
-export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
+export class UiCompositeField extends UiField<DtoCompositeField, any> {
 
 	private static logger: Logger = log.getLogger("UiCompositeField");
 
@@ -53,7 +53,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 	private subFields: SubField[];
 	private $wrapper: HTMLElement;
 
-	protected initialize(config: UiCompositeFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoCompositeField, context: TeamAppsUiContext) {
 		this.logger.debug('initializing');
 		this.subFields = [];
 		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(config);
@@ -95,7 +95,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		return v == null || typeof v === "object";
 	}
 
-	private static validateNumberOfRowHeights(config: UiCompositeFieldConfig) {
+	private static validateNumberOfRowHeights(config: DtoCompositeField) {
 		if (config.rowHeights.length < Math.max.apply(Math, config.subFields.map(f => f.row + f.rowSpan))) {
 			UiCompositeField.logger.error(`The rowHeights configuration for this UiCompositeField (${config.id}) does not contain enough entries!`);
 		}
@@ -247,7 +247,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 
 		subFieldSkeletons.forEach(subfield => {
 			if (subfield.field.getReadOnlyHtml) {
-				return (row: number, cell: number, value: any, columnDef: Slick.Column<UiTableClientRecordConfig>, dataContext: UiTableClientRecordConfig) => {
+				return (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => {
 					return subfield.field.getReadOnlyHtml(dataContext.values[subfield.config.propertyName], columnDef.width);
 				};
 			}
@@ -256,7 +256,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		return $wrapper.outerHTML;
 	}
 
-	private static createDomStructure(config: UiCompositeFieldConfig) {
+	private static createDomStructure(config: DtoCompositeField) {
 		const $wrapper = parseHtml(`<div class="UiCompositeField" style="padding: ${config.padding}px"><div class="padding-wrapper"></div></div>`);
 		const $paddingWrapper = $wrapper.querySelector<HTMLElement>(":scope .padding-wrapper");
 		$paddingWrapper.style.height = config.rowHeights.reduce((sum, height) => sum + height, 0) + "px";
@@ -281,7 +281,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		UiCompositeField.applyLayout(this.subFields, this._config.columnDefinitions, this._config.rowHeights, this._config.horizontalCellSpacing, this._config.verticalCellSpacing, this.getMainInnerDomElement().offsetWidth - this._config.padding);
 	}
 
-	private static applyLayout(subFieldSkeletons: SubField[], columnDefinitions: UiColumnDefinitionConfig[], rowHeights: number[], horizontalCellSpacing: number, verticalCellSpacing: number, availableWidth: number) {
+	private static applyLayout(subFieldSkeletons: SubField[], columnDefinitions: DtoColumnDefinition[], rowHeights: number[], horizontalCellSpacing: number, verticalCellSpacing: number, availableWidth: number) {
 		const colWidths = UiCompositeField.calculateColumnWidths(columnDefinitions, availableWidth);
 
 		const rowTopEdges = [0];
@@ -397,4 +397,4 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiCompositeField", UiCompositeField);
+

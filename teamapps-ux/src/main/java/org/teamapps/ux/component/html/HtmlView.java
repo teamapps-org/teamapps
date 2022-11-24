@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.html;
 
-import org.teamapps.dto.DtoEventWrapper;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoHtmlView;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.*;
 
 import java.util.*;
@@ -49,7 +49,7 @@ public class HtmlView extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoHtmlView ui = new DtoHtmlView();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHtml(html);

@@ -17,21 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiStaticGridLayoutCommandHandler, UiStaticGridLayoutConfig} from "../generated/UiStaticGridLayoutConfig";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {UiStaticGridLayoutCommandHandler, DtoStaticGridLayout} from "../generated/DtoStaticGridLayout";
 import {UiGridLayout} from "./micro-components/UiGridLayout";
-import {UiGridLayoutConfig} from "../generated/UiGridLayoutConfig";
+import {DtoGridLayout} from "../generated/DtoGridLayout";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiResponsiveGridLayout} from "./UiResponsiveGridLayout";
 import {parseHtml} from "./Common";
 
-export class UiStaticGridLayout extends AbstractUiComponent<UiStaticGridLayoutConfig> implements UiStaticGridLayoutCommandHandler{
+export class UiStaticGridLayout extends AbstractComponent<DtoStaticGridLayout> implements UiStaticGridLayoutCommandHandler{
 
 	private $main: HTMLElement;
 	private layout: UiGridLayout;
 
-	constructor(config: UiStaticGridLayoutConfig,
+	constructor(config: DtoStaticGridLayout,
 	            context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiStaticGridLayout"></div>`);
@@ -42,11 +42,11 @@ export class UiStaticGridLayout extends AbstractUiComponent<UiStaticGridLayoutCo
 		return this.$main;
 	}
 
-	updateLayout(descriptor: UiGridLayoutConfig): void {
+	updateLayout(descriptor: DtoGridLayout): void {
 		this.layout = new UiGridLayout(descriptor);
 		this.layout.applyTo(this.$main);
 	}
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiStaticGridLayout", UiStaticGridLayout);
+

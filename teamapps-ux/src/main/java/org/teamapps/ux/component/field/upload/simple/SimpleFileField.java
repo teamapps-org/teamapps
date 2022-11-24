@@ -20,9 +20,9 @@
 
 package org.teamapps.ux.component.field.upload.simple;
 
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.DtoEventWrapper;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoSimpleFileField;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
@@ -107,7 +107,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoSimpleFileField field = new DtoSimpleFileField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));

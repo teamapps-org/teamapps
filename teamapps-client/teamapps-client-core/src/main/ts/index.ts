@@ -1,7 +1,7 @@
 export * from "./generated";
 
-export * from "./component/AbstractUiComponent";
-export * from "./component/AbstractUiWebComponent";
+export * from "./component/AbstractComponent";
+export * from "./component/AbstractWebComponent";
 export * from "./component/Component";
 
 export * from "./DefaultTeamAppsUiContext";

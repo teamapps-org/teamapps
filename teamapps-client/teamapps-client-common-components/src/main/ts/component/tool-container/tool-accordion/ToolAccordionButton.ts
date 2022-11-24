@@ -17,34 +17,39 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponent} from "../teamapps-client-core";
-import {UiToolbarButton as UiToolbarButtonConfig} from "../../../generated/UiToolbarButton";
-import {generateUUID, parseHtml} from "../../../Common";
-import {TeamAppsUiContext} from "../../../TeamAppsUiContext";
-import {AbstractToolContainer} from "../DtoAbstractToolContainer";
-import {UiGridTemplate} from "../../../generated/UiGridTemplate";
-import {ToolAccordion} from "./UiToolAccordion";
-import {TeamAppsEvent} from "../teamapps-client-core";
-import {enterFullScreen, exitFullScreen, isFullScreen} from "../../../util/fullscreen";
+import {
+	Component,
+	enterFullScreen,
+	exitFullScreen,
+	generateUUID,
+	isFullScreen,
+	parseHtml,
+	TeamAppsEvent,
+	TeamAppsUiContext
+} from "teamapps-client-core";
+import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {AbstractToolContainer} from "../AbstractToolContainer";
+import {DtoGridTemplate} from "../../../generated";
+import {ToolAccordion} from "./ToolAccordion";
 
 export class ToolAccordionButton {
 
 	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent();
 
-	private config: UiToolbarButtonConfig;
+	private config: DtoToolbarButton;
 	private $buttonWrapper: HTMLElement;
 	private $button: HTMLElement;
 	private $dropDownCaret: HTMLElement;
 
 	public optimizedWidth: number;
-	public dropDownComponent: UiComponent;
+	public dropDownComponent: Component;
 	public $dropDown: HTMLElement;
 	public $dropDownSourceButtonIndicator: HTMLElement;
 
-	private uuidClass: string = `UiToolbarButton-${generateUUID()}`;
+	private uuidClass: string = `DtoToolbarButton-${generateUUID()}`;
 	private $styleTag: HTMLStyleElement;
 
-	constructor(config: UiToolbarButtonConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoToolbarButton, context: TeamAppsUiContext) {
 		let renderer = context.templateRegistry.createTemplateRenderer(config.template);
 		this.config = config;
 		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.buttonId}" tabindex="0">
@@ -59,7 +64,7 @@ export class ToolAccordionButton {
 		}
 
 		this.$button = this.$buttonWrapper.firstElementChild as HTMLElement;
-		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplate).maxHeight || ToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT);
+		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as DtoGridTemplate).maxHeight || ToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT);
 		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
 		this.$buttonWrapper.classList.toggle("hidden", !config.visible);
 		this.$styleTag = this.$buttonWrapper.querySelector(":scope style");
@@ -70,7 +75,7 @@ export class ToolAccordionButton {
 				if (isFullScreen()) {
 					exitFullScreen();
 				} else {
-					enterFullScreen((this.config.togglesFullScreenOnComponent as UiComponent).getMainElement());
+					enterFullScreen((this.config.togglesFullScreenOnComponent as Component).getMainElement());
 				}
 			}
 			if (this.config.startPlaybackComponent) {

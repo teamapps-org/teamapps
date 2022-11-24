@@ -21,8 +21,8 @@ package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoAbstractToolContainer;
-import org.teamapps.dto.DtoEventWrapper;
 import org.teamapps.dto.DtoToolbar;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;

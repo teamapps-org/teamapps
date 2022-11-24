@@ -21,13 +21,13 @@
 import {
 	UiGridForm_SectionCollapsedStateChangedEvent,
 	UiGridFormCommandHandler,
-	UiGridFormConfig,
+	DtoGridForm,
 	UiGridFormEventSource
-} from "../generated/UiGridFormConfig";
-import {UiFormLayoutPolicyConfig} from "../generated/UiFormLayoutPolicyConfig";
-import {UiFormSectionConfig} from "../generated/UiFormSectionConfig";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+} from "../generated/DtoGridForm";
+import {DtoFormLayoutPolicy} from "../generated/DtoFormLayoutPolicy";
+import {DtoFormSection} from "../generated/DtoFormSection";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
 	createCssGridRowOrColumnString,
@@ -40,15 +40,15 @@ import {
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import * as log from "loglevel";
-import {UiFormSectionFieldPlacementConfig} from "../generated/UiFormSectionFieldPlacementConfig";
-import {UiFormSectionPlacementConfig} from "../generated/UiFormSectionPlacementConfig";
-import {UiFormSectionFloatingFieldsPlacementConfig} from "../generated/UiFormSectionFloatingFieldsPlacementConfig";
+import {DtoFormSectionFieldPlacement} from "../generated/DtoFormSectionFieldPlacement";
+import {DtoFormSectionPlacement} from "../generated/DtoFormSectionPlacement";
+import {DtoFormSectionFloatingFieldsPlacement} from "../generated/DtoFormSectionFloatingFieldsPlacement";
 import {generateUUID, parseHtml} from "./Common";
 import {bind} from "./util/Bind";
 import {UiComponent} from "./UiComponent";
 import {UiField} from "./formfield/UiField";
 
-export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements UiGridFormCommandHandler, UiGridFormEventSource {
+export class UiGridForm extends AbstractComponent<DtoGridForm> implements UiGridFormCommandHandler, UiGridFormEventSource {
 
 	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent>();
 
@@ -56,7 +56,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 
 	private sections: UiFormSection[];
 
-	private layoutPoliciesFromLargeToSmall: UiFormLayoutPolicyConfig[];
+	private layoutPoliciesFromLargeToSmall: DtoFormLayoutPolicy[];
 	private activeLayoutPolicyIndex: number;
 	private uiFields: UiComponent[] = [];
 	private fillRemainingHeightCheckerInterval: number;
@@ -64,7 +64,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 
 	private fieldWrappers = new Map<UiComponent, HTMLDivElement>();
 
-	constructor(config: UiGridFormConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoGridForm, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$mainDiv = parseHtml(`<div class="UiGridForm">
 </div>`);
@@ -110,7 +110,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 	}
 
 	@executeWhenFirstDisplayed(true)
-	private applyLayoutPolicy(layoutPolicy: UiFormLayoutPolicyConfig) {
+	private applyLayoutPolicy(layoutPolicy: DtoFormLayoutPolicy) {
 		this.uiFields.forEach(uiField => {
 			let fieldWrapper = this.fieldWrappers.get(uiField);
 			if (fieldWrapper != null) {
@@ -142,7 +142,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 	}
 
 	@executeWhenFirstDisplayed(true)
-	public updateLayoutPolicies(layoutPolicies: UiFormLayoutPolicyConfig[]): void {
+	public updateLayoutPolicies(layoutPolicies: DtoFormLayoutPolicy[]): void {
 		this.sectionCollapseOverrides = {};
 		this.layoutPoliciesFromLargeToSmall = layoutPolicies.sort((a, b) => b.minWidth - a.minWidth);
 		this.activeLayoutPolicyIndex = this.determineLayoutPolicyIndexToApply();
@@ -200,7 +200,7 @@ class UiFormSection {
 	private $expander: HTMLElement;
 	private collapsed: boolean;
 
-	constructor(public config: UiFormSectionConfig, context: TeamAppsUiContext, collapsedOverride: boolean, private getFieldWrapper : (field: UiComponent) => HTMLDivElement) {
+	constructor(public config: DtoFormSection, context: TeamAppsUiContext, collapsedOverride: boolean, private getFieldWrapper : (field: UiComponent) => HTMLDivElement) {
 		this.uuid = generateUUID();
 
 		const headerLineClass = config.drawHeaderLine ? 'draw-header-line' : '';
@@ -255,7 +255,7 @@ class UiFormSection {
 	}
 
 	public placeFields() {
-		let createSectionPlacementStyles: (placement: UiFormSectionPlacementConfig) => CssDeclarations = (placement: UiFormSectionPlacementConfig) => {
+		let createSectionPlacementStyles: (placement: DtoFormSectionPlacement) => CssDeclarations = (placement: DtoFormSectionPlacement) => {
 			return {
 				"grid-column": `${placement.column + 1} / ${placement.column + placement.colSpan + 1}`,
 				"grid-row": `${placement.row + 1} / ${placement.row + placement.rowSpan + 1}`,
@@ -335,11 +335,11 @@ class UiFormSection {
 		}).join('\n');
 	}
 
-	private isUiFormSectionFieldPlacement(placement: UiFormSectionPlacementConfig): placement is UiFormSectionFieldPlacementConfig {
+	private isUiFormSectionFieldPlacement(placement: DtoFormSectionPlacement): placement is DtoFormSectionFieldPlacement {
 		return placement._type === "UiFormSectionFieldPlacement";
 	}
 
-	private isUiFormSectionFloatingFieldsPlacement(placement: UiFormSectionPlacementConfig): placement is UiFormSectionFloatingFieldsPlacementConfig {
+	private isUiFormSectionFloatingFieldsPlacement(placement: DtoFormSectionPlacement): placement is DtoFormSectionFloatingFieldsPlacement {
 		return placement._type === "UiFormSectionFloatingFieldsPlacement";
 	}
 
@@ -375,4 +375,4 @@ class CssDeclarations {
 	[name: string]: string;
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiGridForm", UiGridForm);
+

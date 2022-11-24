@@ -23,7 +23,7 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoTemplate;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.format.FontStyle;
-import org.teamapps.ux.component.template.gridtemplate.AbstractTemplateElement;
+import org.teamapps.ux.component.template.gridtemplate.AbstractGridTemplateElement;
 import org.teamapps.ux.component.template.gridtemplate.FloatingElement;
 import org.teamapps.ux.component.template.gridtemplate.GridTemplate;
 import org.teamapps.ux.component.template.gridtemplate.TextElement;
@@ -57,13 +57,13 @@ public interface Template {
 			GridTemplate tpl = new GridTemplate(orig.getMinWidth(), orig.getMaxWidth(), orig.getMinHeight(), orig.getMaxHeight(), orig.getPadding(), orig.getGridGap());
 			tpl.setRows(orig.getRows());
 			tpl.setColumns(orig.getColumns());
-			List<AbstractTemplateElement<?>> darkModeElements = new ArrayList<>();
+			List<AbstractGridTemplateElement<?>> darkModeElements = new ArrayList<>();
 			orig.getElements().forEach(element -> {
 				if (element instanceof FloatingElement) {
 					FloatingElement floatingElement = (FloatingElement) element;
-					List<AbstractTemplateElement<?>> elements = floatingElement.getElements();
-					List<AbstractTemplateElement<?>> newElements = new ArrayList<>();
-					for (AbstractTemplateElement<?> fltElement : elements) {
+					List<AbstractGridTemplateElement<?>> elements = floatingElement.getElements();
+					List<AbstractGridTemplateElement<?>> newElements = new ArrayList<>();
+					for (AbstractGridTemplateElement<?> fltElement : elements) {
 						newElements.add(convertElementToDarkMode(fltElement));
 					}
 					FloatingElement newFloatingElement = new FloatingElement(floatingElement.getRow(), floatingElement.getColumn()).setElements(newElements);
@@ -78,7 +78,7 @@ public interface Template {
 		return this;
 	}
 
-	static AbstractTemplateElement<?> convertElementToDarkMode(AbstractTemplateElement<?> element) {
+	static AbstractGridTemplateElement<?> convertElementToDarkMode(AbstractGridTemplateElement<?> element) {
 		if (element instanceof TextElement) {
 			TextElement txt = (TextElement) element;
 			TextElement newTextElement = new TextElement(txt.getProperty(), txt.getRow(), txt.getColumn(), txt.getRowSpan(), txt.getColSpan(), txt.getHorizontalAlignment(), txt.getVerticalAlignment());

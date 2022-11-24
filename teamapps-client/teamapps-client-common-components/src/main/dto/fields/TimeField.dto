@@ -19,16 +19,18 @@
  */
 package org.teamapps.dto;
 
-abstract managed class AbstractUiTimeField extends Field implements TextInputHandlingField {
-    boolean showDropDownButton = true;
+import Component from "teamapps-client-core":org.teamapps.dto;
+
+abstract managed class AbstractTimeField extends Field implements TextInputHandlingField {
+    boolean showDropDownButton;
     boolean showClearButton;
     String locale;
-    DateTimeFormatDescriptor timeFormat = null; // if null, Configuration.timeFormat applies
+    DateTimeFormatDescriptor timeFormat; // if null, Configuration.timeFormat applies
 
     command setShowDropDownButton(boolean showDropDownButton);
     command setShowClearButton(boolean showClearButton);
     command setLocaleAndTimeFormat(String locale, DateTimeFormatDescriptor timeFormat);
 }
 
-managed class LocalTimeField extends AbstractUiTimeField {
+managed class LocalTimeField extends AbstractTimeField {
 }

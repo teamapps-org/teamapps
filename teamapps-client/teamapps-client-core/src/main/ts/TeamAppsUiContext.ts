@@ -17,15 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoClientObject as DtoClientObjectConfig, DtoComponent as DtoComponentConfig, DtoConfiguration} from "./generated";
 import {DtoCommand, DtoEvent} from "teamapps-client-communication";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {ClientObject} from "./ClientObject";
+import {DtoClientObject, DtoComponent, DtoConfiguration} from "./generated";
 
 export interface TeamAppsUiContext {
 	readonly sessionId: string;
 	readonly isHighDensityScreen: boolean;
 	readonly config: DtoConfiguration;
+
+	readonly templateRegistry: any; // TODO remove!!
 
 	getClientObjectById(id: string): Promise<ClientObject>;
 }
@@ -34,9 +36,9 @@ export interface TeamAppsUiContext {
 export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 	readonly onStaticMethodCommandInvocation: TeamAppsEvent<DtoCommand>;
 
-	renderClientObject(libraryUuid: string, config: DtoClientObjectConfig): Promise<ClientObject>;
+	renderClientObject(libraryUuid: string, config: DtoClientObject): Promise<ClientObject>;
 
-	refreshComponent(libraryUuid: string, config: DtoComponentConfig): void;
+	refreshComponent(libraryUuid: string, config: DtoComponent): void;
 
 	destroyClientObject(componentId: string);
 

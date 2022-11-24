@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 /*
 	Layers (in order)
 	 * backgroundImage
@@ -30,8 +32,8 @@ package org.teamapps.dto;
 managed class LiveStreamComponent extends Component {
 
 	String backgroundImage; //display if no live stream of waiting video is available, null == transparent
-	PageDisplayMode backgroundImageDisplayMode = PageDisplayMode.COVER;
-	double volume = 1;
+	PageDisplayMode backgroundImageDisplayMode;
+	double volume;
 
 	/**
 	 * Show these videos looping through them.
@@ -68,16 +70,16 @@ managed class LiveStreamComponent extends Component {
 	event resultOfRequestInputDeviceInfo(AudioInputDeviceInfo audioInputDeviceInfo, VideoInputDeviceInfo videoInputDeviceInfo);
 }
 
-managed class AbstractUiLiveStreamPlayer extends Component {
+managed class AbstractLiveStreamPlayer extends Component {
 	command play(String url);
     command stop();
     command setVolume(double volume);
 }
 
-managed class MpegDashPlayer extends AbstractUiLiveStreamPlayer {}
-managed class HttpLiveStreamPlayer extends AbstractUiLiveStreamPlayer {}
-managed class LiveStreamComPlayer extends AbstractUiLiveStreamPlayer {}
-managed class YoutubePlayer extends AbstractUiLiveStreamPlayer {}
+managed class MpegDashPlayer extends AbstractLiveStreamPlayer {}
+managed class HttpLiveStreamPlayer extends AbstractLiveStreamPlayer {}
+managed class LiveStreamComPlayer extends AbstractLiveStreamPlayer {}
+managed class YoutubePlayer extends AbstractLiveStreamPlayer {}
 
 class WaitingVideoInfo {
 	required String url;
@@ -92,7 +94,7 @@ class VideoInputDeviceInfo {
 }
 
 class MediaInputSettings {
-	boolean audio = true;
+	boolean audio;
 	int audioKiloBitsPerSecond;
 	boolean video;
 	int videoWidth;

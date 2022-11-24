@@ -20,11 +20,11 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoTextElement;
 import org.teamapps.ux.component.format.*;
 
-public class TextElement extends AbstractTemplateElement<TextElement> {
+public class TextElement extends AbstractGridTemplateElement<TextElement> {
 
 	protected FontStyle fontStyle;
 	protected float lineHeight = 1.2f;
@@ -50,9 +50,9 @@ public class TextElement extends AbstractTemplateElement<TextElement> {
 	}
 
 	@Override
-	public DtoAbstractTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createUiTemplateElement() {
 		DtoTextElement uiTextElement = new DtoTextElement(propertyName, row, column);
-		mapAbstractTemplateElementAttributesToUiElement(uiTextElement);
+		mapAbstractGridTemplateElementAttributesToUiElement(uiTextElement);
 		mapTextElementAttributesToUiElement(uiTextElement);
 		return uiTextElement;
 	}

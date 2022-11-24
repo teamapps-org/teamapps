@@ -17,36 +17,34 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {animateCSS, Constants, parseHtml, removeClassesByFunction} from "../Common";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {animateCSS, Constants, removeClassesByFunction} from "../Common";
+
 import {
-	UiNotificationBar_ItemActionLinkClickedEvent,
-	UiNotificationBar_ItemClickedEvent,
-	UiNotificationBar_ItemClosedEvent,
-	UiNotificationBarCommandHandler,
-	UiNotificationBarConfig,
-	UiNotificationBarEventSource
-} from "../generated/UiNotificationBarConfig";
-import {UiNotificationBarItem as UiNotificationBarItemConfig} from "../generated/UiNotificationBarItem";
+	DtoExitAnimation,
+	DtoNotificationBar,
+	DtoNotificationBar_ItemActionLinkClickedEvent,
+	DtoNotificationBar_ItemClickedEvent,
+	DtoNotificationBar_ItemClosedEvent,
+	DtoNotificationBarCommandHandler,
+	DtoNotificationBarEventSource,
+	DtoNotificationBarItem
+} from "../generated";
 import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";
-import {UiExitAnimation} from "../generated/UiExitAnimation";
 
-export class NotificationBar extends AbstractUiComponent<UiNotificationBarConfig> implements UiNotificationBarCommandHandler, UiNotificationBarEventSource {
+export class NotificationBar extends AbstractComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {
 
-	public readonly onItemClicked: TeamAppsEvent<UiNotificationBar_ItemClickedEvent> = new TeamAppsEvent();
-	public readonly onItemActionLinkClicked: TeamAppsEvent<UiNotificationBar_ItemActionLinkClickedEvent> = new TeamAppsEvent();
-	public readonly onItemClosed: TeamAppsEvent<UiNotificationBar_ItemClosedEvent> = new TeamAppsEvent();
+	public readonly onItemClicked: TeamAppsEvent<DtoNotificationBar_ItemClickedEvent> = new TeamAppsEvent();
+	public readonly onItemActionLinkClicked: TeamAppsEvent<DtoNotificationBar_ItemActionLinkClickedEvent> = new TeamAppsEvent();
+	public readonly onItemClosed: TeamAppsEvent<DtoNotificationBar_ItemClosedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
-	private itemsById: { [id: string]: UiNotificationBarItem } = {};
+	private itemsById: { [id: string]: NotificationBarItem } = {};
 
-	constructor(config: UiNotificationBarConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoNotificationBar, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<div class="UiNotificationBar"></div>`);
+		this.$main = parseHtml(`<div class="DtoNotificationBar"></div>`);
 		config.initialItems.forEach(item => this.addItem(item))
 	}
 
@@ -54,9 +52,9 @@ export class NotificationBar extends AbstractUiComponent<UiNotificationBarConfig
 		return this.$main;
 	}
 
-	addItem(itemConfig: UiNotificationBarItemConfig): void {
+	addItem(itemConfig: DtoNotificationBarItem): void {
 		this.removeItem(itemConfig.id, null);
-		let item = new UiNotificationBarItem(itemConfig);
+		let item = new NotificationBarItem(itemConfig);
 		this.itemsById[itemConfig.id] = item;
 		this.$main.appendChild(item.getMainElement());
 		if (itemConfig.entranceAnimation != null) {
@@ -71,14 +69,14 @@ export class NotificationBar extends AbstractUiComponent<UiNotificationBarConfig
 		});
 	}
 
-	updateItem(itemConfig: UiNotificationBarItemConfig): any {
+	updateItem(itemConfig: DtoNotificationBarItem): any {
 		let item = this.itemsById[itemConfig.id];
 		if (item != null) {
 			item.update(itemConfig);
 		}
 	}
 
-	removeItem(id: string, exitAnimation?: UiExitAnimation): void {
+	removeItem(id: string, exitAnimation?: DtoExitAnimation): void {
 		let item = this.itemsById[id];
 		if (item != null) {
 			if (exitAnimation != null || item.config.exitAnimation != null) {
@@ -94,7 +92,7 @@ export class NotificationBar extends AbstractUiComponent<UiNotificationBarConfig
 
 }
 
-class UiNotificationBarItem {
+class NotificationBarItem {
 
 	public readonly onClicked: TeamAppsEvent<void> = new TeamAppsEvent();
 	public readonly onActionLinkClicked: TeamAppsEvent<void> = new TeamAppsEvent();
@@ -109,8 +107,8 @@ class UiNotificationBarItem {
 	private $text: HTMLElement;
 	private $actionLink: HTMLElement;
 
-	constructor(public readonly config: UiNotificationBarItemConfig) {
-		this.$main = parseHtml(`<div class="UiNotificationBarItem">
+	constructor(public readonly config: DtoNotificationBarItem) {
+		this.$main = parseHtml(`<div class="DtoNotificationBarItem">
 	<div class="content-container">
 		<div class="icon img img-20"></div>
 		<div class="text-container">
@@ -137,7 +135,7 @@ class UiNotificationBarItem {
 		this.update(config);
 	}
 
-	public update(config: UiNotificationBarItemConfig) {
+	public update(config: DtoNotificationBarItem) {
 		this.$closeButton.classList.toggle("hidden", !config.dismissible);
 		this.$main.style.backgroundColor = config.backgroundColor;
 		this.$main.style.borderColor = config.borderColor;
@@ -186,4 +184,4 @@ class UiNotificationBarItem {
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiNotificationBar", NotificationBar);
+

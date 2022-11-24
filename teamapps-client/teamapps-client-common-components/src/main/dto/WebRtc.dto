@@ -19,9 +19,11 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class WebRtcPublisher extends Component {
 	WebRtcPublishingSettings publishingSettings;
-	boolean microphoneMuted = false;
+	boolean microphoneMuted;
 	String backgroundImageUrl;
 
     command publish(WebRtcPublishingSettings settings);
@@ -69,18 +71,18 @@ class WebRtcPublishingSettings {
 }
 
 class WebRtcPublishingMediaSettings {
-	boolean audio = true;
-	AudioCodec audioCodec = AudioCodec.OPUS;
-	int audioKiloBitsPerSecond = 64;
+	boolean audio;
+	AudioCodec audioCodec;
+	int audioKiloBitsPerSecond;
 
-	boolean video = true;
-	VideoCodec videoCodec = VideoCodec.H264;
-	int videoWidth = 720;
-	int videoHeight = 480;
-	int videoFps = 25;
-	int videoKiloBitsPerSecond = 400;
+	boolean video;
+	VideoCodec videoCodec;
+	int videoWidth;
+	int videoHeight;
+	int videoFps;
+	int videoKiloBitsPerSecond;
 
-	boolean screen = false;
+	boolean screen;
 }
 
 enum WebRtcPublishingErrorReason {

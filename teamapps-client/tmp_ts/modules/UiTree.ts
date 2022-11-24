@@ -23,34 +23,34 @@ import {
 	UiTree_RequestTreeDataEvent,
 	UiTree_TextInputEvent,
 	UiTreeCommandHandler,
-	UiTreeConfig,
+	DtoTree,
 	UiTreeEventSource
-} from "../generated/UiTreeConfig";
+} from "../generated/DtoTree";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TrivialTree} from "./trivial-components/TrivialTree";
-import {AbstractUiComponent} from "teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "./Common";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiTreeRecordConfig} from "../generated/UiTreeRecordConfig";
-import {UiComboBoxTreeRecordConfig} from "../generated/UiComboBoxTreeRecordConfig";
-import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {DtoTreeRecord} from "../generated/DtoTreeRecord";
+import {DtoComboBoxTreeRecord} from "../generated/DtoComboBoxTreeRecord";
+import {DtoTemplate} from "../generated/DtoTemplate";
 import {loadSensitiveThrottling} from "./util/throttle";
 
 
-export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeCommandHandler, UiTreeEventSource {
+export class UiTree extends AbstractComponent<DtoTree> implements UiTreeCommandHandler, UiTreeEventSource {
 
 	public readonly onTextInput: TeamAppsEvent<UiTree_TextInputEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 500});
 	public readonly onNodeSelected: TeamAppsEvent<UiTree_NodeSelectedEvent> = new TeamAppsEvent();
 	public readonly onRequestTreeData: TeamAppsEvent<UiTree_RequestTreeDataEvent> = new TeamAppsEvent();
 
 	private $panel: HTMLElement;
-	private trivialTree: TrivialTree<UiTreeRecordConfig>;
-	private nodes: UiTreeRecordConfig[];
+	private trivialTree: TrivialTree<DtoTreeRecord>;
+	private nodes: DtoTreeRecord[];
 	private templateRenderers: { [name: string]: Renderer };
 
 
-	constructor(config: UiTreeConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoTree, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$panel = parseHtml('<div class="UiTree">');
 
@@ -58,7 +58,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 
 		this.nodes = config.initialData;
 
-		this.trivialTree = new TrivialTree<UiTreeRecordConfig>({
+		this.trivialTree = new TrivialTree<DtoTreeRecord>({
 			entries: buildObjectTree(config.initialData, "id", "parentId"),
 			selectedEntryId: config.selectedNodeId,
 			childrenProperty: "__children",
@@ -92,7 +92,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		}
 	}
 
-	private renderRecord(record: NodeWithChildren<UiComboBoxTreeRecordConfig>): string {
+	private renderRecord(record: NodeWithChildren<DtoComboBoxTreeRecord>): string {
 		if (record.displayTemplateId != null && this.templateRenderers[record.displayTemplateId] != null) {
 			const renderer = this.templateRenderers[record.displayTemplateId];
 			return renderer.render(record.values);
@@ -106,12 +106,12 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 	}
 
 	@loadSensitiveThrottling(100, 10, 3000)
-	replaceData(nodes: UiTreeRecordConfig[]): void {
+	replaceData(nodes: DtoTreeRecord[]): void {
 		this.nodes = nodes;
 		this.trivialTree.updateEntries(buildObjectTree(nodes, "id", "parentId"));
 	}
 
-	bulkUpdate(nodesToBeRemoved: number[], nodesToBeAdded: UiTreeRecordConfig[]): void {
+	bulkUpdate(nodesToBeRemoved: number[], nodesToBeAdded: DtoTreeRecord[]): void {
 		this.nodes = this.nodes.filter(node => nodesToBeRemoved.indexOf(node.id) === -1);
 		this.nodes.push(...nodesToBeAdded);
 		nodesToBeRemoved.forEach(nodeId => this.trivialTree.removeNode(nodeId));
@@ -122,10 +122,10 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		this.trivialTree.selectNodeById(recordId);
 	}
 
-	registerTemplate(id: string, template: UiTemplateConfig): void {
+	registerTemplate(id: string, template: DtoTemplate): void {
 		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiTree", UiTree);
+

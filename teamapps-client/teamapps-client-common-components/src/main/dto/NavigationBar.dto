@@ -19,10 +19,12 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class NavigationBar extends Component {
 	required Template buttonTemplate;
 	List<NavigationBarButton> buttons;
-	String backgroundColor = "rgba(255, 255, 255, 0.84)";
+	String backgroundColor;
 	String borderColor;
 	List<Component*> fanOutComponents;
 	MultiProgressDisplay* multiProgressDisplay;

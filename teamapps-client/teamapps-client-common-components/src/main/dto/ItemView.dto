@@ -19,13 +19,15 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class ItemView extends Component {
 	Template groupHeaderTemplate;
 	List<ItemViewItemGroup> itemGroups;
-	int horizontalPadding = 10;
-	int verticalPadding = 0;
+	int horizontalPadding;
+	int verticalPadding;
 	int groupSpacing;
-	ItemViewItemBackgroundMode itemBackgroundMode = ItemViewItemBackgroundMode.LIGHT;
+	ItemViewItemBackgroundMode itemBackgroundMode;
 	String filter;
 
 	command setFilter(String filter);
@@ -44,14 +46,14 @@ class ItemViewItemGroup {
 	required Template itemTemplate;
 	IdentifiableClientRecord headerData;
 	List<IdentifiableClientRecord> items;
-	boolean headerVisible = true;
-	ItemViewFloatStyle floatStyle = ItemViewFloatStyle.HORIZONTAL_FLOAT; // if true, the buttons are placed one
-	double buttonWidth = -1; // -1: use natural width, 0: full width, 0<x<1: relative width, >=1: fixed width
-	int horizontalPadding = 0;
-	int verticalPadding = 0;
-	int horizontalItemMargin = 0;
-	int verticalItemMargin = 0;
-	ItemJustification itemJustification = ItemJustification.LEFT;
+	boolean headerVisible;
+	ItemViewFloatStyle floatStyle; // if true, the buttons are placed one
+	double buttonWidth; // -1: use natural width, 0: full width, 0<x<1: relative width, >=1: fixed width
+	int horizontalPadding;
+	int verticalPadding;
+	int horizontalItemMargin;
+	int verticalItemMargin;
+	ItemJustification itemJustification;
 }
 
 enum ItemViewItemBackgroundMode {

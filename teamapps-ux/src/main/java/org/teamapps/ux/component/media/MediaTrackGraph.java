@@ -19,9 +19,9 @@
  */
 package org.teamapps.ux.component.media;
 
-import org.teamapps.dto.DtoEventWrapper;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoMediaTrackGraph;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
@@ -36,7 +36,7 @@ public class MediaTrackGraph extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoMediaTrackGraph uiMediaTrackGraph = new DtoMediaTrackGraph();
 		mapAbstractUiComponentProperties(uiMediaTrackGraph);
 		uiMediaTrackGraph.setTrackCount(data.getTrackCount());

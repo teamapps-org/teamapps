@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.audiolevelindicator;
 
 import org.teamapps.dto.DtoAudioLevelIndicator;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class AudioLevelIndicator extends AbstractComponent {
@@ -29,7 +29,7 @@ public class AudioLevelIndicator extends AbstractComponent {
 	private int barWidth = 1;
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoAudioLevelIndicator ui = new DtoAudioLevelIndicator();
 		mapAbstractUiComponentProperties(ui);
 		ui.setDeviceId(this.deviceId);

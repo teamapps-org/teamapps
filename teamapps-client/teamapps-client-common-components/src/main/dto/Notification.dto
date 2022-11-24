@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 enum NotificationPosition {
 	TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
 }
@@ -27,12 +29,12 @@ managed class Notification extends Component {
 	String backgroundColor;
 	Spacing padding;
 
-	boolean dismissible = true;
-	int displayTimeInMillis = 3000; // 0 = display until user closes it actively
-	boolean progressBarVisible = false;
+	boolean dismissible;
+	int displayTimeInMillis; // 0 = display until user closes it actively
+	boolean progressBarVisible;
 
 	Component* content;
-	int contentHeight = 0; // <= 0: auto
+	int contentHeight; // <= 0: auto
 
     static command showNotification(Notification* notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation);
 
@@ -43,34 +45,3 @@ managed class Notification extends Component {
 	event closed(boolean byUser);
 }
 
-managed class NotificationBar extends Component {
-	List<NotificationBarItem> initialItems;
-
-	command addItem(NotificationBarItem item);
-	command updateItem(NotificationBarItem item);
-	command removeItem(String id, ExitAnimation exitAnimation);
-
-	event itemClicked(String id);
-	event itemActionLinkClicked(String id);
-	event itemClosed(String id, boolean wasTimeout);
-}
-
-class NotificationBarItem {
-	String id;
-
-	String icon;
-	RepeatableAnimation iconAnimation;
-	String text;
-	String actionLinkText;
-	String backgroundColor;
-	String borderColor;
-	String textColor;
-	String actionLinkColor;
-	Spacing padding;
-	EntranceAnimation entranceAnimation;
-	ExitAnimation exitAnimation;
-
-	boolean dismissible = true;
-	int displayTimeInMillis = 3000; // 0 <= display until user closes it actively
-	boolean progressBarVisible = false;
-}

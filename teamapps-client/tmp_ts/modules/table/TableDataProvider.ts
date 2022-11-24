@@ -17,24 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
-import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
-import {UiIdentifiableClientRecordConfig} from "../../generated/UiIdentifiableClientRecordConfig";
+import {DtoTableClientRecord} from "../../generated/DtoTableClientRecord";
+import {DtoFieldMessage} from "../../generated/DtoFieldMessage";
+import {DtoIdentifiableClientRecord} from "../../generated/DtoIdentifiableClientRecord";
 import DataProvider = Slick.DataProvider;
 
-export class TableDataProvider implements DataProvider<UiTableClientRecordConfig> {
+export class TableDataProvider implements DataProvider<DtoTableClientRecord> {
 	public onDataLoading = new Slick.Event();
 
 	private dataStartIndex: number = 0;
-	private data: UiTableClientRecordConfig[] = [];
-	private recordById: Map<number, UiTableClientRecordConfig> = new Map();
+	private data: DtoTableClientRecord[] = [];
+	private recordById: Map<number, DtoTableClientRecord> = new Map();
 	private totalNumberOfRecords: number = 0;
 
 	public getLength(): number {
 		return this.totalNumberOfRecords;
 	}
 
-	public getItem(index: number): UiTableClientRecordConfig {
+	public getItem(index: number): DtoTableClientRecord {
 		return this.data[index - this.dataStartIndex];  // yep, that's ok!
 	}
 
@@ -49,7 +49,7 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 		}
 	}
 
-	updateData(startIndex: number, recordIds: number[], newRecords: UiIdentifiableClientRecordConfig[], totalNumberOfRecords: number): number[] | true {
+	updateData(startIndex: number, recordIds: number[], newRecords: DtoIdentifiableClientRecord[], totalNumberOfRecords: number): number[] | true {
 		const changedRowNumbers = this.calculateChangingRowNumbers(startIndex, recordIds);
 
 		this.dataStartIndex = startIndex;
@@ -98,7 +98,7 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 		return this.dataStartIndex + this.data.findIndex(r => r.id == recordId);
 	}
 
-	setCellMessages(recordId: number, columnName: string, messages: UiFieldMessageConfig[]) {
+	setCellMessages(recordId: number, columnName: string, messages: DtoFieldMessage[]) {
 		let record = this.recordById.get(recordId);
 		if (record == null) {
 			return;

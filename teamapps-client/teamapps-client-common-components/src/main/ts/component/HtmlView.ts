@@ -17,22 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiHtmlViewCommandHandler, UiHtmlViewConfig} from "../generated/UiHtmlViewConfig";
-import {parseHtml} from "../Common";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiComponent} from "./UiComponent";
+import {AbstractComponent, Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {DtoHtmlView, DtoHtmlViewCommandHandler} from "../generated";
 
-export class HtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements UiHtmlViewCommandHandler {
+export class HtmlView extends AbstractComponent<DtoHtmlView> implements DtoHtmlViewCommandHandler {
 
 	private $main: HTMLDivElement;
 
-	constructor(config: UiHtmlViewConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoHtmlView, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<div class="UiHtmlView">${config.html}</div>`);
+		this.$main = parseHtml(`<div class="DtoHtmlView">${config.html}</div>`);
 		for (let selector in config.componentsByContainerElementSelector) {
-			let components = config.componentsByContainerElementSelector[selector] as UiComponent[];
+			let components = config.componentsByContainerElementSelector[selector] as Component[];
 			for (let c of components) {
 				this.addComponent(selector, c, false);
 			}
@@ -52,14 +48,14 @@ export class HtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements U
 			if (clearContainer) {
 				containerElement.innerHTML = '';
 			}
-			containerElement.appendChild((component as UiComponent).getMainElement());
+			containerElement.appendChild((component as Component).getMainElement());
 		} else {
 			console.error(`Could not add child component since selector does not match any element: ${containerElementSelector}`);
 		}
 	}
 
 	removeComponent(component: unknown): void {
-		(component as UiComponent).getMainElement().remove();
+		(component as Component).getMainElement().remove();
 	}
 
 	setContentHtml(containerElementSelector: string, html: string): void {
@@ -78,4 +74,4 @@ export class HtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements U
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiHtmlView", HtmlView);
+

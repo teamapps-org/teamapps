@@ -19,11 +19,13 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class ShakaPlayer extends Component {
     String hlsUrl;
     String dashUrl;
     String posterImageUrl;
-    PosterImageSize posterImageSize = PosterImageSize.CONTAIN;
+    PosterImageSize posterImageSize;
     int timeUpdateEventThrottleMillis;
     String backgroundColor;
     boolean autoplay;

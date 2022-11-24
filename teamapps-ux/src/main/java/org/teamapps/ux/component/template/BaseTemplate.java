@@ -21,7 +21,6 @@ package org.teamapps.ux.component.template;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoTemplate;
-import org.teamapps.dto.UiTemplateReference;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.format.FontStyle;
@@ -623,16 +622,14 @@ public enum BaseTemplate implements Template {
 	}
 
 	private final Template template;
-	private final UiTemplateReference uiTemplateReference;
 
 	BaseTemplate(Template template) {
 		this.template = template;
-		this.uiTemplateReference = new UiTemplateReference(name());
 	}
 
 	@Override
 	public DtoTemplate createUiTemplate() {
-		return uiTemplateReference;
+		return null; // TODO
 	}
 
 	@Override

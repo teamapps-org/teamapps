@@ -1,0 +1,35 @@
+package org.teamapps.dto;
+
+import Component from "teamapps-client-core":org.teamapps.dto;
+
+managed class NotificationBar extends Component {
+	List<NotificationBarItem> initialItems;
+
+	command addItem(NotificationBarItem item);
+	command updateItem(NotificationBarItem item);
+	command removeItem(String id, ExitAnimation exitAnimation);
+
+	event itemClicked(String id);
+	event itemActionLinkClicked(String id);
+	event itemClosed(String id, boolean wasTimeout);
+}
+
+class NotificationBarItem {
+	String id;
+
+	String icon;
+	RepeatableAnimation iconAnimation;
+	String text;
+	String actionLinkText;
+	String backgroundColor;
+	String borderColor;
+	String textColor;
+	String actionLinkColor;
+	Spacing padding;
+	EntranceAnimation entranceAnimation;
+	ExitAnimation exitAnimation;
+
+	boolean dismissible;
+	int displayTimeInMillis; // 0 <= display until user closes it actively
+	boolean progressBarVisible;
+}

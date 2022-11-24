@@ -18,15 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiPageViewBlock_Alignment, UiPageViewBlockConfig} from "../generated/UiPageViewBlockConfig";
-import {UiMessagePageViewBlockConfig} from "../generated/UiMessagePageViewBlockConfig";
+import {AbstractComponent} from "teamapps-client-core";
+import {TeamAppsUiContext} from "teamapps-client-core";
+import {UiPageViewBlock_Alignment, DtoPageViewBlock} from "../generated/DtoPageViewBlock";
+import {DtoMessagePageViewBlock} from "../generated/DtoMessagePageViewBlock";
 import {insertAfter, insertBefore, parseHtml, removeClassesByFunction, removeDangerousTags} from "./Common";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {UiCitationPageViewBlockConfig} from "../generated/UiCitationPageViewBlockConfig";
-import {UiComponentPageViewBlockConfig} from "../generated/UiComponentPageViewBlockConfig";
-import {UiPageViewConfig} from "../generated/UiPageViewConfig";
+import {DtoComponent} from "../generated/DtoComponent";
+import {DtoCitationPageViewBlock} from "../generated/DtoCitationPageViewBlock";
+import {DtoComponentPageViewBlock} from "../generated/DtoComponentPageViewBlock";
+import {DtoPageView} from "../generated/DtoPageView";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPageViewBlockCreatorImageAlignment} from "../generated/UiPageViewBlockCreatorImageAlignment";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
@@ -49,15 +49,15 @@ interface Row {
 interface Block {
 	$blockWrapper: HTMLElement;
 	$blockContentContainer: HTMLElement;
-	block: AbstractBlockComponent<UiPageViewBlockConfig>;
+	block: AbstractBlockComponent<DtoPageViewBlock>;
 }
 
-export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
+export class UiPageView extends AbstractComponent<DtoPageView> {
 
 	private $component: HTMLElement;
 	private rows: Row[] = [];
 
-	constructor(config: UiPageViewConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoPageView, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$component = parseHtml(`<div class="UiPageView"></div>`);
 
@@ -73,7 +73,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
 	}
 
 	@executeWhenFirstDisplayed()
-	public addBlock(blockConfig: UiPageViewBlockConfig, before: boolean, otherBlockId?: string) {
+	public addBlock(blockConfig: DtoPageViewBlock, before: boolean, otherBlockId?: string) {
 		let row;
 		if (this.rows.length == 0) {
 			row = this.addRow(false);
@@ -95,7 +95,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
     <div class="background-color-div"></div>
 </div>`);
 		let $blockContentContainer = $blockWrapper.querySelector<HTMLElement>(':scope .background-color-div');
-		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig, this._context) as AbstractBlockComponent<UiPageViewBlockConfig>;
+		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig, this._context) as AbstractBlockComponent<DtoPageViewBlock>;
 		$blockContentContainer.appendChild(block.getMainDomElement());
 		row.blocks.push({$blockWrapper, $blockContentContainer, block});
 
@@ -157,7 +157,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
 
 }
 
-abstract class AbstractBlockComponent<C extends UiPageViewBlockConfig> {
+abstract class AbstractBlockComponent<C extends DtoPageViewBlock> {
 	constructor(protected config: C, protected context: TeamAppsUiContext) {
 	}
 
@@ -176,7 +176,7 @@ abstract class AbstractBlockComponent<C extends UiPageViewBlockConfig> {
 	}
 }
 
-class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlockConfig> {
+class UiMessagePageViewBlock extends AbstractBlockComponent<DtoMessagePageViewBlock> {
 	private $main: HTMLElement;
 	private $toolButtons: Element;
 	private $topRecord: HTMLElement;
@@ -190,7 +190,7 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 
 	private readonly minIdealImageHeight = 250;
 
-	constructor(config: UiMessagePageViewBlockConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoMessagePageViewBlock, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="pageview-block UiMessagePageViewBlock">
@@ -269,12 +269,12 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 
 }
 
-class UiCitationPageViewBlock extends AbstractBlockComponent<UiCitationPageViewBlockConfig> {
+class UiCitationPageViewBlock extends AbstractBlockComponent<DtoCitationPageViewBlock> {
 
 	private $main: HTMLElement;
 	private $toolButtons: Element;
 
-	constructor(config: UiCitationPageViewBlockConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoCitationPageViewBlock, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="pageview-block UiCitationPageViewBlock">
@@ -312,14 +312,14 @@ class UiCitationPageViewBlock extends AbstractBlockComponent<UiCitationPageViewB
 	}
 }
 
-class UiComponentPageViewBlock extends AbstractBlockComponent<UiComponentPageViewBlockConfig> {
+class UiComponentPageViewBlock extends AbstractBlockComponent<DtoComponentPageViewBlock> {
 
 	private $main: HTMLElement;
-	private component: UiComponent<UiComponentConfig>;
+	private component: UiComponent<DtoComponent>;
 	private $componentWrapper: HTMLElement;
 	private $toolButtons: Element;
 
-	constructor(config: UiComponentPageViewBlockConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoComponentPageViewBlock, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="pageview-block UiComponentPageViewBlock" style="height:${config.height}px">
@@ -356,4 +356,4 @@ var blockTypes = {
 	"UiComponentPageViewBlock": UiComponentPageViewBlock
 };
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiPageView", UiPageView);
+

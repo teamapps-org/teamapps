@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.charting.pie;
 
 import org.teamapps.dto.DtoChartNamedDataPoint;
-import org.teamapps.dto.DtoEventWrapper;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoPieChart;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.charting.ChartLegendStyle;
@@ -55,7 +55,7 @@ public class PieChart extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoPieChart uiPieChart = new DtoPieChart();
 		mapAbstractUiComponentProperties(uiPieChart);
 		uiPieChart.setDataPointWeighting(dataPointWeighting.toUiDataPointWeighting());

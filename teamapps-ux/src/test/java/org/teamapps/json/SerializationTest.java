@@ -22,7 +22,13 @@ package org.teamapps.json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.DtoMultiLineTextField;
+import org.teamapps.dto.DtoObject;
+import org.teamapps.dto.DtoWorkSpaceLayout;
+import org.teamapps.dto.protocol.DtoINIT;
+import org.teamapps.dto.protocol.DtoINIT_NOK;
+import org.teamapps.dto.protocol.DtoSessionClosingReason;
 
 public class SerializationTest {
 
@@ -48,7 +54,7 @@ public class SerializationTest {
 
 	@Test
 	public void serializeCommands() throws Exception {
-		DtoWorkSpaceLayout.RefreshViewComponentCommand o = new DtoWorkSpaceLayout.RefreshViewComponentCommand("viewName", new UiClientObjectReference("asdf"));
+		DtoWorkSpaceLayout.RefreshViewComponentCommand o = new DtoWorkSpaceLayout.RefreshViewComponentCommand("viewName", new DtoClientObjectReference("asdf"));
 		System.out.println(teamAppsObjectMapper.writeValueAsString(o));
 	}
 

@@ -21,10 +21,11 @@ package org.teamapps.ux.component.field.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoComboBox;
+import org.teamapps.dto.DtoComboBoxTreeRecord;
+import org.teamapps.dto.DtoTextInputHandlingField;
+import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.protocol.DtoQueryWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
@@ -33,6 +34,9 @@ import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
+import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyExtractor;
+import org.teamapps.ux.data.extraction.PropertyProvider;
 import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.*;

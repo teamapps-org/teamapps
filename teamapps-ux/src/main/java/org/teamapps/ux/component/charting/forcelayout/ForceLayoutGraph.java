@@ -19,12 +19,13 @@
  */
 package org.teamapps.ux.component.charting.forcelayout;
 
+import org.teamapps.dto.*;
+import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.event.ProjectorEvent;
+import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.*;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,7 +71,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		List<DtoNetworkNode> nodes = createUiNodes(this.nodes);
 		List<DtoNetworkLink> links = createUiLinks(this.links);
 		DtoNetworkGraph ui = new DtoNetworkGraph(nodes, links, Collections.emptyList());

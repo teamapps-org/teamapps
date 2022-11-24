@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class WorkSpaceLayout extends Component {
 	required List<WorkSpaceLayoutView> views;
 	required WorkSpaceLayoutItem initialLayout;
@@ -67,9 +69,9 @@ class WorkSpaceLayoutView {
 	required String tabIcon;
     required String tabCaption;
 	required Component* component;
-    boolean tabCloseable = true;
-    boolean lazyLoading = false;
-    boolean visible = true;
+    boolean tabCloseable;
+    boolean lazyLoading;
+    boolean visible;
 }
 
 enum RelativeWorkSpaceViewPosition {
@@ -87,16 +89,16 @@ abstract class WorkSpaceLayoutItem {
 @TypeScriptFactory
 class WorkSpaceLayoutSplitItem extends WorkSpaceLayoutItem {
     required SplitDirection splitDirection;
-    SplitSizePolicy sizePolicy = SplitSizePolicy.RELATIVE;
-    double referenceChildSize = 0.5f;
+    SplitSizePolicy sizePolicy;
+    double referenceChildSize;
     required WorkSpaceLayoutItem firstChild;
     required WorkSpaceLayoutItem lastChild;
 }
 
 @TypeScriptFactory
 class WorkSpaceLayoutViewGroupItem extends WorkSpaceLayoutItem {
-    required List<String> viewNames = java.util.Collections.emptyList();
+    required List<String> viewNames;
     String selectedViewName;
     boolean persistent; // if true, this viewGroup will never be removed from the tree of items on the client side, even if there are no more views left inside it.
-    ViewGroupPanelState panelState = ViewGroupPanelState.NORMAL;
+    ViewGroupPanelState panelState;
 }

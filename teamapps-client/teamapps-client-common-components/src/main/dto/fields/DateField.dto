@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 @TypeScriptFactory
 class LocalDate {
     required int year;
@@ -27,14 +29,14 @@ class LocalDate {
 }
 
 managed class LocalDateField extends Field implements TextInputHandlingField {
-    boolean showDropDownButton = true;
+    boolean showDropDownButton;
 	boolean showClearButton;
-	boolean favorPastDates = false;
+	boolean favorPastDates;
 	String locale;
-	DateTimeFormatDescriptor dateFormat = null; // if null, Configuration.dateFormat applies
+	DateTimeFormatDescriptor dateFormat; // if null, Configuration.dateFormat applies
 	LocalDate defaultSuggestionDate; // null == today
 	boolean shuffledFormatSuggestionsEnabled;
-	LocalDateFieldDropDownMode dropDownMode = LocalDateFieldDropDownMode.CALENDAR_SUGGESTION_LIST;
+	LocalDateFieldDropDownMode dropDownMode;
 	String placeholderText;
 
     command update(LocalDateField config);

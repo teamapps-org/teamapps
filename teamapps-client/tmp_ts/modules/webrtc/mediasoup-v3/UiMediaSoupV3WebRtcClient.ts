@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "../teamapps-client-core";
+import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {
@@ -34,22 +34,22 @@ import {
 	UiMediaSoupV3WebRtcClient_TrackPublishingSuccessfulEvent,
 	UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent,
 	UiMediaSoupV3WebRtcClientCommandHandler,
-	UiMediaSoupV3WebRtcClientConfig,
+	DtoMediaSoupV3WebRtcClient,
 	UiMediaSoupV3WebRtcClientEventSource
-} from "../../../generated/UiMediaSoupV3WebRtcClientConfig";
+} from "../../../generated/DtoMediaSoupV3WebRtcClient";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
+import {DtoMediaSoupPublishingParameters} from "../../../generated/DtoMediaSoupPublishingParameters";
 import {arraysEqual, calculateDisplayModeInnerSize, deepEquals, findClassesByFunction, parseHtml} from "../../Common";
 import {ContextMenu} from "../../micro-components/ContextMenu";
 import {addVoiceActivityDetection, createVideoConstraints, enumerateDevices, getDisplayStream} from "../MediaUtil";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
 import {UiComponent} from "../../UiComponent";
-import {UiMediaSoupPlaybackParametersConfig} from "../../../generated/UiMediaSoupPlaybackParametersConfig";
-import {UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
+import {DtoMediaSoupPlaybackParameters} from "../../../generated/DtoMediaSoupPlaybackParameters";
+import {DtoMediaDeviceInfo} from "../../../generated/DtoMediaDeviceInfo";
 import {MediaKind} from "mediasoup-client/lib/RtpParameters";
-import {UiAudioTrackConstraintsConfig} from "../../../generated/UiAudioTrackConstraintsConfig";
-import {UiVideoTrackConstraintsConfig} from "../../../generated/UiVideoTrackConstraintsConfig";
-import {UiScreenSharingConstraintsConfig} from "../../../generated/UiScreenSharingConstraintsConfig";
+import {DtoAudioTrackConstraints} from "../../../generated/DtoAudioTrackConstraints";
+import {DtoVideoTrackConstraints} from "../../../generated/DtoVideoTrackConstraints";
+import {DtoScreenSharingConstraints} from "../../../generated/DtoScreenSharingConstraints";
 import {MixSizingInfo, TrackWithMixSizingInfo, VideoTrackMixer} from "../VideoTrackMixer";
 import {determineVideoSize} from "../MultiStreamsMixer";
 import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrievalFailureReason";
@@ -57,7 +57,7 @@ import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType"
 import {ConferenceApi, Utils} from "./lib/avcore.client";
 import {ConferenceInput} from "./lib/avcore";
 
-export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
+export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3WebRtcClient> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent();
 	public readonly onSourceMediaTrackEnded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent> = new TeamAppsEvent();
 
@@ -110,7 +110,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		videoBitrate: 0
 	};
 
-	constructor(config: UiMediaSoupV3WebRtcClientConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoMediaSoupV3WebRtcClient, context: TeamAppsUiContext) {
 		super(config, context);
 
 		// debug.enable(
@@ -235,13 +235,13 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	private updatePromise: Promise<void> = Promise.resolve();
-	update(config: UiMediaSoupV3WebRtcClientConfig): void {
+	update(config: DtoMediaSoupV3WebRtcClient): void {
 		this.updatePromise = this.updatePromise.finally(() => {
 			return this.updateInternal(config);
 		})
 	}
 
-	async updateInternal(config: UiMediaSoupV3WebRtcClientConfig) {
+	async updateInternal(config: DtoMediaSoupV3WebRtcClient) {
 		console.log("update()", config);
 		this.$main.classList.toggle("activity-line-visible", config.activityLineVisible);
 		this.$main.style.setProperty("--activity-line-inactive-color", config.activityInactiveColor);
@@ -275,7 +275,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.onResize();
 	}
 
-	private async updateConferenceClient(config: UiMediaSoupV3WebRtcClientConfig) {
+	private async updateConferenceClient(config: DtoMediaSoupV3WebRtcClient) {
 		if (config.publishingParameters != null && config.playbackParameters != null) {
 			console.error("Cannot publish and playback at the same time. Doing nothing!");
 			return;
@@ -297,7 +297,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this._config.forceRefreshCount = config.forceRefreshCount;
 	}
 
-	async updatePlayback(newParams: UiMediaSoupPlaybackParametersConfig, forceRefresh: boolean) {
+	async updatePlayback(newParams: DtoMediaSoupPlaybackParameters, forceRefresh: boolean) {
 		this.connectionStatus.shouldHaveAudio = newParams.audio;
 		this.connectionStatus.shouldHaveVideo = newParams.video;
 		this.updateStateCssClasses();
@@ -381,7 +381,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}
 	}
 
-	async updatePublishing(newParams: UiMediaSoupPublishingParametersConfig, forceRefresh: boolean) {
+	async updatePublishing(newParams: DtoMediaSoupPublishingParameters, forceRefresh: boolean) {
 		this.connectionStatus.shouldHaveAudio = newParams.audioConstraints != null;
 		this.connectionStatus.shouldHaveVideo = newParams.videoConstraints != null;
 		this.updateStateCssClasses();
@@ -440,9 +440,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	private async updatePublishedTracks(
-		newAudioConstraints: UiAudioTrackConstraintsConfig,
-		newWebcamConstraints: UiVideoTrackConstraintsConfig,
-		newScreenConstraints: UiScreenSharingConstraintsConfig) {
+		newAudioConstraints: DtoAudioTrackConstraints,
+		newWebcamConstraints: DtoVideoTrackConstraints,
+		newScreenConstraints: DtoScreenSharingConstraints) {
 
 		let oldParams = this._config.publishingParameters;
 		const oldAudioConstraints = oldParams?.audioConstraints;
@@ -702,10 +702,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.contextMenu.close(requestId);
 	}
 
-	public static async enumerateDevices(): Promise<UiMediaDeviceInfoConfig[]> {
+	public static async enumerateDevices(): Promise<DtoMediaDeviceInfo[]> {
 		return enumerateDevices();
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiMediaSoupV3WebRtcClient", UiMediaSoupV3WebRtcClient);
+
 

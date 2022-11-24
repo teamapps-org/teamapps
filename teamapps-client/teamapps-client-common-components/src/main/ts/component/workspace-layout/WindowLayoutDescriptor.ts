@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiWorkSpaceLayoutItem} from "../../generated";
+import {DtoWorkSpaceLayoutItem} from "../../generated";
 
 export const typescriptDeclarationFixConstant = 1;
 
-export type WindowLayoutDescriptor = { windowId: string, layout: UiWorkSpaceLayoutItem };
+export type WindowLayoutDescriptor = { windowId: string, layout: DtoWorkSpaceLayoutItem };

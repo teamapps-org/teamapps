@@ -19,9 +19,11 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class ChatDisplay extends Component {
 	ChatMessageBatch initialMessages;
-    boolean contextMenuEnabled = false;
+    boolean contextMenuEnabled;
     String deletedMessageIcon;
 
 	command addMessages(ChatMessageBatch messages);
@@ -36,9 +38,9 @@ managed class ChatDisplay extends Component {
 
 managed class ChatInput extends Component {
 	required String defaultFileIcon;
-	long maxBytesPerUpload = 5000000;
-	String uploadUrl = "/upload";
-	int messageLengthLimit = 10000;
+	long maxBytesPerUpload;
+	String uploadUrl;
+	int messageLengthLimit;
 	boolean attachmentsEnabled;
 
 	command setAttachmentsEnabled(boolean attachmentsEnabled);

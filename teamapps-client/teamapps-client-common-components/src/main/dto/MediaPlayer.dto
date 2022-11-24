@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class MediaTrackGraph extends Component {
 	int trackCount;
 	List<MediaTrackData> trackData;
@@ -51,9 +53,9 @@ managed class VideoPlayer extends Component {
 	boolean autoplay;
 	boolean showControls;
 	String posterImageUrl;
-	PosterImageSize posterImageSize = PosterImageSize.CONTAIN;
-	int sendPlayerProgressEventsEachXSeconds = 1; // if 0, then send NO events
-	String backgroundColor = "rgb(68, 68, 68)";
+	PosterImageSize posterImageSize;
+	int sendPlayerProgressEventsEachXSeconds; // if 0, then send NO events
+	String backgroundColor;
 	MediaPreloadMode preloadMode;
 
 	command setUrl(String url);

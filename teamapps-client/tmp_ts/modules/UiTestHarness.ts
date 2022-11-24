@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
+import {DtoConfiguration} from "../generated/DtoConfiguration";
 import {TemplateRegistry} from "./TemplateRegistry";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {DtoComponent} from "../generated/DtoComponent";
+import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiPictureChooser} from "./formfield/file/UiPictureChooser";
 import {UiFieldGroup} from "./formfield/UiFieldGroup";
 import {UiTextField} from "./formfield/UiTextField";
@@ -64,10 +64,10 @@ class TestTeamAppsUiContext implements TeamAppsUiContext {
 	readonly sessionId: string = "1234567890";
 	readonly isHighDensityScreen: boolean = false;
 	readonly executingCommand: boolean = false;
-	readonly config: UiConfigurationConfig = {};
+	readonly config: DtoConfiguration = {};
 	readonly templateRegistry: TemplateRegistry = new TemplateRegistry(this);
 
-	getClientObjectById(id: string): UiComponent<UiComponentConfig> {
+	getClientObjectById(id: string): UiComponent<DtoComponent> {
 		return null;
 	}
 }

@@ -3,10 +3,10 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoQuery} from "teamapps-client-communication";
 import {DtoCommand} from "teamapps-client-communication";
 import {DtoEvent} from "teamapps-client-communication";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {DtoQuery} from "teamapps-client-communication";
+interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
 export interface DtoA {
 	_type?: string;
@@ -21,7 +21,7 @@ export interface DtoACommandHandler {
 }
 
 export interface DtoAEventSource {
-	onY: TeamAppsEvent<DtoA_YEvent>;
+	onY: EventEmitter<DtoA_YEvent>;
 }
 
 export interface DtoA_YEvent extends DtoEvent {

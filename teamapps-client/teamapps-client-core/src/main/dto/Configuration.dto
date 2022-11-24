@@ -20,9 +20,9 @@
 package org.teamapps.dto;
 
 class Configuration {
-    String locale = "en"; // general locale of the UI
-	String themeClassName = null; // null = default theme, others: "theme-modern", ...
-	boolean optimizedForTouch = false; // @MB #mobile This needs to be set to true if you want touch-friendly ui. I separated this from the naive "inside MobileLayout" approach to be able to support touch interaction in normal-style layout (SplitPanes etc...)
+    String locale; // general locale of the UI
+	String themeClassName; // null = default theme, others: "theme-modern", ...
+	boolean optimizedForTouch; // @MB #mobile This needs to be set to true if you want touch-friendly ui. I separated this from the naive "inside MobileLayout" approach to be able to support touch interaction in normal-style layout (SplitPanes etc...)
 }
 
 

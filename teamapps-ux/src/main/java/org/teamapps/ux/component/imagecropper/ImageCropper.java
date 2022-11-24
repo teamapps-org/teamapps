@@ -19,7 +19,10 @@
  */
 package org.teamapps.ux.component.imagecropper;
 
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.DtoImageCropper;
+import org.teamapps.dto.DtoImageCropperSelectionWrapper;
+import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
@@ -36,7 +39,7 @@ public class ImageCropper extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiClientObject() {
+	public DtoComponent createUiClientObject() {
 		DtoImageCropper uiImageCropper = new DtoImageCropper(imageUrl, selectionMode.toUiImageCropperSelectionMode(), aspectRatio);
 		mapAbstractUiComponentProperties(uiImageCropper);
 		return uiImageCropper;

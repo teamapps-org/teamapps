@@ -17,23 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiLinkButton_ClickedEvent, UiLinkButtonCommandHandler, UiLinkButtonConfig, UiLinkButtonEventSource} from "../generated/UiLinkButtonConfig";
-import {AbstractUiComponent} from "teamapps-client-core";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {parseHtml} from "../Common";
-import {UiLinkTarget} from "../generated/UiLinkTarget";
+import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 
-export class LinkButton extends AbstractUiComponent<UiLinkButtonConfig> implements UiLinkButtonEventSource, UiLinkButtonCommandHandler {
+import {
+	DtoLinkButton,
+	DtoLinkButton_ClickedEvent,
+	DtoLinkButtonCommandHandler,
+	DtoLinkButtonEventSource,
+	DtoLinkTarget
+} from "../generated";
 
-	public readonly onClicked: TeamAppsEvent<UiLinkButton_ClickedEvent> = new TeamAppsEvent();
+export class LinkButton extends AbstractComponent<DtoLinkButton> implements DtoLinkButtonEventSource, DtoLinkButtonCommandHandler {
+
+	public readonly onClicked: TeamAppsEvent<DtoLinkButton_ClickedEvent> = new TeamAppsEvent();
 	
 	private readonly $main: HTMLAnchorElement;
 
-	constructor(config: UiLinkButtonConfig, context: TeamAppsUiContext) {
+	constructor(config: DtoLinkButton, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<a class="UiLinkButton" tabindex="0"></a>`)
+		this.$main = parseHtml(`<a class="DtoLinkButton" tabindex="0"></a>`)
 		this.$main.addEventListener("click", ev => {
 			if (this.config.onClickJavaScript != null) {
 				let context = this._context; // make context available in evaluated javascript
@@ -49,16 +51,16 @@ export class LinkButton extends AbstractUiComponent<UiLinkButtonConfig> implemen
 		return this.$main;
 	}
 
-	public update(config: UiLinkButtonConfig) {
+	public update(config: DtoLinkButton) {
 		this.$main.text = config.text;
 		if (config.url) {
 			this.$main.href= config.url;
 		} else {
 			this.$main.removeAttribute("href");
 		}
-		this.$main.target = '_' + UiLinkTarget[config.target].toLocaleLowerCase();
+		this.$main.target = '_' + DtoLinkTarget[config.target].toLocaleLowerCase();
 
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiLinkButton", LinkButton);
+

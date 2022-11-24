@@ -19,6 +19,8 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 enum EntranceAnimation {
 	BACK_IN_DOWN,
 	BACK_IN_LEFT,

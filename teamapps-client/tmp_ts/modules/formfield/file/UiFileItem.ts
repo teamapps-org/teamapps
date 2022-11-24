@@ -23,7 +23,7 @@ import {TeamAppsEvent} from "teamapps-client-core";
 import {ProgressIndicator} from "../../micro-components/ProgressIndicator";
 import {FileUploader} from "../../util/FileUploader";
 import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
-import {UiFileItemConfig} from "../../../generated/UiFileItemConfig";
+import {DtoFileItem} from "../../../generated/DtoFileItem";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {humanReadableFileSize, parseHtml, removeClassesByFunction} from "../../Common";
 import {StaticIcons} from "../../util/StaticIcons";
@@ -56,7 +56,7 @@ export class UiFileItem {
 		private fileTooLargeMessage: string,
 		private uploadErrorMessage: string,
 		private uploadUrl: string,
-		private config: UiFileItemConfig,
+		private config: DtoFileItem,
 		public state: FileItemState,
 		private context: TeamAppsUiContext
 	) {
@@ -158,7 +158,7 @@ export class UiFileItem {
 		this.getMainDomElement().remove();
 	}
 
-	update(config: UiFileItemConfig) {
+	update(config: DtoFileItem) {
 		this.config = config;
 
 		if (config.thumbnail) {

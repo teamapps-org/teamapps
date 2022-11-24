@@ -20,35 +20,35 @@
 import {defaultListQueryFunctionFactory, keyCodes, QueryFunction} from "../trivial-components/TrivialCore";
 import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "../trivial-components/TrivialUnitBox";
 
-import {createUiCurrencyValueConfig, UiCurrencyValueConfig} from "../../generated/UiCurrencyValueConfig";
+import {createDtoCurrencyValue, DtoCurrencyValue} from "../../generated/DtoCurrencyValue";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiCurrencyFieldCommandHandler, UiCurrencyFieldConfig, UiCurrencyFieldEventSource} from "../../generated/UiCurrencyFieldConfig";
+import {UiCurrencyFieldCommandHandler, DtoCurrencyField, UiCurrencyFieldEventSource} from "../../generated/DtoCurrencyField";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {deepEquals, selectElementContents} from "../Common";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
-} from "../../generated/UiTextInputHandlingFieldConfig";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
+} from "../../generated/DtoTextInputHandlingField";
+import {TeamAppsEvent} from "teamapps-client-core";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
-import {UiCurrencyUnitConfig} from "../../generated/UiCurrencyUnitConfig";
+import {DtoCurrencyUnit} from "../../generated/DtoCurrencyUnit";
 import {BigDecimal} from "../util/BigDecimalString";
 
-export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyValueConfig> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
+export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
 
-	private trivialUnitBox: TrivialUnitBox<UiCurrencyUnitConfig>;
-	private queryFunction: QueryFunction<UiCurrencyUnitConfig>;
+	private trivialUnitBox: TrivialUnitBox<DtoCurrencyUnit>;
+	private queryFunction: QueryFunction<DtoCurrencyUnit>;
 	private numberFormat: Intl.NumberFormat;
 
-	protected initialize(config: UiCurrencyFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoCurrencyField, context: TeamAppsUiContext) {
 		let initialPrecision = config.fixedPrecision >= 0 ? config.fixedPrecision : 2;
 
-		this.trivialUnitBox = new TrivialUnitBox<UiCurrencyUnitConfig>({
+		this.trivialUnitBox = new TrivialUnitBox<DtoCurrencyUnit>({
 			numberFormatFunction: entry => this.getNumberFormat(entry),
 			idFunction: entry => entry.code,
 			unitDisplayPosition: config.showCurrencyBeforeAmount ? 'left' : 'right', // right or left
@@ -105,7 +105,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		this.trivialUnitBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 	}
 
-	private getNumberFormat(entry: UiCurrencyUnitConfig) {
+	private getNumberFormat(entry: DtoCurrencyUnit) {
 		if (entry == null) {
 			let fractionDigits = this._config.fixedPrecision >= 0 ? this._config.fixedPrecision : 2;
 			return new Intl.NumberFormat(this._config.locale, {
@@ -123,7 +123,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		}
 	}
 
-	isValidData(v: UiCurrencyValueConfig): boolean {
+	isValidData(v: DtoCurrencyValue): boolean {
 		return v == null || typeof v === "object";
 	}
 
@@ -156,9 +156,9 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		this.trivialUnitBox.destroy();
 	}
 
-	getTransientValue(): UiCurrencyValueConfig {
+	getTransientValue(): DtoCurrencyValue {
 		let amount = this.trivialUnitBox.getAmount();
-		return createUiCurrencyValueConfig(this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(), this.trivialUnitBox.getAmount()?.value);
+		return createDtoCurrencyValue(this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(), this.trivialUnitBox.getAmount()?.value);
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
@@ -167,7 +167,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		this.trivialUnitBox.setEditingMode(this.convertToTrivialComponentsEditingMode(editingMode));
 	}
 
-	public getReadOnlyHtml(value: UiCurrencyValueConfig, availableWidth: number): string {
+	public getReadOnlyHtml(value: DtoCurrencyValue, availableWidth: number): string {
 		let content: string;
 		if (value != null) {
 			const currency = value.currencyUnit;
@@ -191,10 +191,10 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	}
 
 	getDefaultValue() {
-		return createUiCurrencyValueConfig(null, null);
+		return createDtoCurrencyValue(null, null);
 	}
 
-	setCurrencyUnits(currencyUnits: UiCurrencyUnitConfig[]): void {
+	setCurrencyUnits(currencyUnits: DtoCurrencyUnit[]): void {
 		this._config.currencyUnits = currencyUnits;
 		this.queryFunction = defaultListQueryFunctionFactory(currencyUnits, ["code", "name", "symbol"], {matchingMode: "contains", ignoreCase: true});
 	}
@@ -208,7 +208,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		this.trivialUnitBox.setSelectedEntry(this.trivialUnitBox.getSelectedEntry());
 	}
 
-	public valuesChanged(v1: UiCurrencyValueConfig, v2: UiCurrencyValueConfig): boolean {
+	public valuesChanged(v1: DtoCurrencyValue, v2: DtoCurrencyValue): boolean {
 		return !deepEquals(v1, v2);
 	}
 
@@ -223,4 +223,4 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiCurrencyField", UiCurrencyField);
+

@@ -19,12 +19,14 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 managed class FlexContainer extends Component {
 	List<Component*> components;
 
-	CssFlexDirection flexDirection = CssFlexDirection.ROW;
-	CssAlignItems alignItems = CssAlignItems.STRETCH;
-	CssJustifyContent justifyContent = CssJustifyContent.START;
+	CssFlexDirection flexDirection;
+	CssAlignItems alignItems;
+	CssJustifyContent justifyContent;
 
 	command addComponent(Component* component);
 	command removeComponent(Component* component);

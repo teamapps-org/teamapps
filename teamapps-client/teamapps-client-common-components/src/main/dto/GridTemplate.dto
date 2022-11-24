@@ -19,40 +19,42 @@
  */
 package org.teamapps.dto;
 
+import Component from "teamapps-client-core":org.teamapps.dto;
+
 class GridTemplate implements Template {
     required List<GridColumn> columns;
     required List<GridRow> rows;
-    required List<AbstractUiTemplateElement> elements;
-    int minWidth = 0;
-    int maxWidth = 0;
-	int minHeight = 0;
-    int maxHeight = 0;
+    required List<AbstractGridTemplateElement> elements;
+    int minWidth;
+    int maxWidth;
+	int minHeight;
+    int maxHeight;
     Spacing padding;
-    int gridGap = 0;
+    int gridGap;
     String backgroundColor;
     Border border;
     String ariaLabelProperty;
     String titleProperty;
 }
 
-abstract class AbstractUiTemplateElement {
+abstract class AbstractGridTemplateElement {
 	required String property;
     required int row;
     required int column;
-    int rowSpan = 1;
-    int colSpan = 1;
-    HorizontalElementAlignment horizontalAlignment = HorizontalElementAlignment.LEFT;
-    VerticalElementAlignment verticalAlignment = VerticalElementAlignment.CENTER;
+    int rowSpan;
+    int colSpan;
+    HorizontalElementAlignment horizontalAlignment;
+    VerticalElementAlignment verticalAlignment;
     Spacing margin;
     String backgroundColor;
 }
 
-class TextElement extends AbstractUiTemplateElement {
+class TextElement extends AbstractGridTemplateElement {
 	FontStyle fontStyle;
-	double lineHeight = 1.2f;
+	double lineHeight;
 	boolean wrapLines;
 	Spacing padding;
-	TextAlignment textAlignment = TextAlignment.LEFT;
+	TextAlignment textAlignment;
 }
 
 class BadgeElement extends TextElement {
@@ -60,31 +62,31 @@ class BadgeElement extends TextElement {
 	String borderColor;
 }
 
-class FloatingElement extends AbstractUiTemplateElement {
-	required List<AbstractUiTemplateElement> elements;
+class FloatingElement extends AbstractGridTemplateElement {
+	required List<AbstractGridTemplateElement> elements;
 	boolean wrap;
     CssAlignItems alignItems;
     CssJustifyContent justifyContent;
 }
 
-class ImageElement extends AbstractUiTemplateElement {
+class ImageElement extends AbstractGridTemplateElement {
 	required int width;
 	required int height;
 	Border border;
 	Spacing padding;
 	Shadow shadow;
-	ImageSizing imageSizing = ImageSizing.COVER;
+	ImageSizing imageSizing;
 }
 
 enum ImageSizing {
 	COVER, CONTAIN, ORIGINAL, STRETCH
 }
 
-class IconElement extends AbstractUiTemplateElement {
+class IconElement extends AbstractGridTemplateElement {
 	required int size;
 }
 
-class GlyphIconElement extends AbstractUiTemplateElement {
+class GlyphIconElement extends AbstractGridTemplateElement {
 	required int size;
 	String fontColor;
 }
@@ -118,7 +120,7 @@ class FontStyle {
 	boolean bold;
 	boolean underline;
 	boolean italic;
-	double relativeFontSize = 1;
+	double relativeFontSize;
 }
 
 class SizingPolicy {
@@ -128,10 +130,10 @@ class SizingPolicy {
 }
 
 class Spacing {
-	double top = 0;
-	double right = 0;
-	double bottom = 0;
-	double left = 0;
+	double top;
+	double right;
+	double bottom;
+	double left;
 }
 
 class Border {
@@ -158,9 +160,9 @@ enum SizeType {
 }
 
 class Line {
-	required double thickness;
-	required String color;
-	LineType type = LineType.SOLID;
+	double thickness;
+	String color;
+	LineType type;
 }
 
 enum LineType {

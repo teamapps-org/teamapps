@@ -31,9 +31,9 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.dto.protocol.DtoQuery;
 import org.teamapps.dto.protocol.DtoCommand;
 import org.teamapps.dto.protocol.DtoEvent;
+import org.teamapps.dto.protocol.DtoQuery;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -94,11 +94,11 @@ public interface DtoA extends DtoObject {
 		}
 
 	}
-    public static class YEventEventWrapper extends DtoJsonWrapper {
+    public static class YEventWrapper extends DtoJsonWrapper {
 
         public static final String TYPE_ID = "y";
 
-        public YEventEventWrapper(JsonNode jsonNode) {
+        public YEventWrapper(JsonNode jsonNode) {
             super(jsonNode);
         }
 
@@ -178,11 +178,11 @@ public interface DtoA extends DtoObject {
 		}
 
 	}
-	public static class A.QQueryQueryWrapper extends DtoJsonWrapper {
+	public static class QQueryWrapper extends DtoJsonWrapper {
 
 	    public static final String TYPE_ID = "q";
 
-	    public A.QQueryQueryWrapper(JsonNode jsonNode) {
+	    public QQueryWrapper(JsonNode jsonNode) {
 	        super(jsonNode);
 	    }
 

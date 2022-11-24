@@ -30,7 +30,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.assertj.core.api.Assertions;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.teamapps.dto.DtoCommand;
+import org.teamapps.dto.protocol.DtoCommand;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoAbstractTemplateElement;
+import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoBadgeElement;
 import org.teamapps.ux.component.format.FontStyle;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
@@ -73,9 +73,9 @@ public class BadgeElement extends TextElement {
 	}
 
 	@Override
-	public DtoAbstractTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createUiTemplateElement() {
 		DtoBadgeElement uiBadgeElement = new DtoBadgeElement(propertyName, row, column);
-		mapAbstractTemplateElementAttributesToUiElement(uiBadgeElement);
+		mapAbstractGridTemplateElementAttributesToUiElement(uiBadgeElement);
 		mapTextElementAttributesToUiElement(uiBadgeElement);
 		uiBadgeElement.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
 		return uiBadgeElement;
