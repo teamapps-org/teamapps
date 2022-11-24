@@ -37,7 +37,7 @@ export class TrivialTree<E> implements TrivialComponent{
     private config: TrivialTreeConfig<E>;
 
     public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
-    public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>();
+    public readonly onNodeExpansionStateChanged = new TeamAppsEvent<{node: E, expanded: boolean}>();
 
     private treeBox: TrivialTreeBox<E>;
     private entries: E[];
@@ -95,8 +95,8 @@ export class TrivialTree<E> implements TrivialComponent{
 
         this.treeBox = new TrivialTreeBox(this.config);
         this.$componentWrapper.append(this.treeBox.getMainDomElement());
-        this.treeBox.onNodeExpansionStateChanged.addListener((node: E)=> {
-            this.onNodeExpansionStateChanged.fire(node);
+        this.treeBox.onNodeExpansionStateChanged.addListener((e)=> {
+            this.onNodeExpansionStateChanged.fire(e);
         });
         this.treeBox.onSelectedEntryChanged.addListener(() => {
             const selectedTreeBoxEntry = this.treeBox.getSelectedEntry();
@@ -150,8 +150,8 @@ export class TrivialTree<E> implements TrivialComponent{
         this.onSelectedEntryChanged.fire(unProxyEntry(entry));
     }
 
-    public getSelectedEntry() {
-    	unProxyEntry(this.treeBox.getSelectedEntry());
+    public getSelectedEntry(): E {
+    	return unProxyEntry(this.treeBox.getSelectedEntry());
     };
 
     public updateChildren(parentNodeId: any, children: E[]) {
