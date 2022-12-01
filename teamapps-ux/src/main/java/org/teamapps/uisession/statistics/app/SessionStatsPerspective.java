@@ -185,10 +185,10 @@ public class SessionStatsPerspective {
 	}
 
 	private static class CountStatEntry {
-		private final Class<?> clazz;
+		private final String clazz;
 		private final long count;
 
-		public CountStatEntry(Class<?> clazz, long count) {
+		public CountStatEntry(String clazz, long count) {
 			this.clazz = clazz;
 			this.count = count;
 		}
@@ -196,7 +196,7 @@ public class SessionStatsPerspective {
 
 	private Table<CountStatEntry> createCountStatsTable(CountStatsTableModel model) {
 		Table<CountStatEntry> table = new Table<>();
-		table.addColumn("className", null, "Class", new TextField(), 400).setValueExtractor(entry -> entry.clazz.getName());
+		table.addColumn("className", null, "Class", new TextField(), 400).setValueExtractor(entry -> entry.clazz);
 		table.addColumn("count", null, "Count", new NumberField(0), 80).setMinWidth(80).setMaxWidth(120).setValueExtractor(entry -> entry.count);
 		table.setForceFitWidth(true);
 		table.setModel(model);
@@ -323,7 +323,7 @@ public class SessionStatsPerspective {
 			if (stats == null) {
 				return 0;
 			}
-			return countStatExtractor.apply(stats).getCountByClass().size();
+			return countStatExtractor.apply(stats).getCountByTypeId().size();
 		}
 
 		@Override
@@ -333,12 +333,12 @@ public class SessionStatsPerspective {
 			}
 			Comparator<CountStatEntry> comparator = (o1, o2) -> 0;
 			if (sorting != null) {
-				comparator = Objects.equals(sorting.getFieldName(), "className") ? Comparator.comparing(e -> e.clazz.getName()) : Comparator.comparing(e -> e.count);
+				comparator = Objects.equals(sorting.getFieldName(), "className") ? Comparator.comparing(e -> e.clazz) : Comparator.comparing(e -> e.count);
 				if (sorting.getSortDirection() == SortDirection.DESC || sorting.getFieldName() == null) {
 					comparator = comparator.reversed();
 				}
 			}
-			return countStatExtractor.apply(stats).getCountByClass().object2LongEntrySet().stream()
+			return countStatExtractor.apply(stats).getCountByTypeId().object2LongEntrySet().stream()
 					.map(e -> new CountStatEntry(e.getKey(), e.getLongValue()))
 					.sorted(comparator)
 					.skip(startIndex)

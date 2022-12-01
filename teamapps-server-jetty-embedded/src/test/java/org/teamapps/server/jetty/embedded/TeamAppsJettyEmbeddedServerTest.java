@@ -19,7 +19,6 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
@@ -50,18 +49,13 @@ public class TeamAppsJettyEmbeddedServerTest {
 			div.addComponent(content);
 			Button<?> button = Button.create("re-register");
 			button.onClicked.addListener(() -> {
+				System.out.println("button clicked");
 				content.onClick.addListener((e, d) -> {
-					System.out.println("clicked2!");
+					System.out.println("dummy component clicked!");
 					d.dispose();
 				});
 			});
 			div.addComponent(button);
-
-			Button<?> button2 = Button.create("change location");
-			button2.onClicked.addListener(() -> {
-				
-			});
-			div.addComponent(button2);
 
 			rootPanel.setContent(div);
 
@@ -73,8 +67,10 @@ public class TeamAppsJettyEmbeddedServerTest {
 			});
 		};
 
-		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, 8082);
-		System.out.println(jettyServer.getTeamAppsCore().getComponentLibraryRegistry().registerComponentLibrary(new CoreComponentLibrary()));
+		TeamAppsJettyEmbeddedServer jettyServer = TeamAppsJettyEmbeddedServer.builder(controller)
+				.withPort(8082)
+				.build();
+//		System.out.println(jettyServer.getTeamAppsCore().getComponentLibraryRegistry().registerComponentLibrary(new CoreComponentLibrary()));
 		jettyServer.start();
 
 	}

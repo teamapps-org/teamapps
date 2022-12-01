@@ -1,9 +1,12 @@
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {
-	DtoKeyEventType,
 	DtoComponent as DtoComponentConfig,
 	DtoConfiguration,
-	DtoGenericErrorMessageOption, DtoGlobals_GlobalKeyEventOccurredEvent, DtoGlobals_NavigationStateChangeEvent, DtoGlobals,
+	DtoGenericErrorMessageOption,
+	DtoGlobals,
+	DtoGlobals_GlobalKeyEventOccurredEvent,
+	DtoGlobals_NavigationStateChangeEvent,
+	DtoKeyEventType,
 } from "./generated";
 import * as moment from "moment-timezone";
 import {releaseWakeLock, requestWakeLock} from "./util/wakeLock";
@@ -11,9 +14,8 @@ import {exitFullScreen} from "./util/fullscreen";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {Component} from "./component/Component";
 import {Showable} from "./util/Showable";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./util/parseHtml";
-import {createUiLocation} from "./util/location";
+import {createUiLocation} from "./util/locationUtil";
 
 export class Globals {
 

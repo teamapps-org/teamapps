@@ -21,7 +21,7 @@ package org.teamapps.uisession.commandbuffer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.CMD;
+import org.teamapps.dto.protocol.CMD;
 
 /**
  * NOT THREAD-SAFE! Synchronization must be provided by client code.

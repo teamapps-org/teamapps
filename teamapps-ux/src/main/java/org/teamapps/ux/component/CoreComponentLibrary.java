@@ -1,6 +1,7 @@
 package org.teamapps.ux.component;
 
 import org.teamapps.ux.resource.ByteArrayResource;
+import org.teamapps.ux.resource.ClassPathResource;
 import org.teamapps.ux.resource.Resource;
 
 import java.nio.charset.StandardCharsets;
@@ -8,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 public class CoreComponentLibrary implements ComponentLibrary{
 	@Override
 	public Resource getMainJsResource() {
-		return new ByteArrayResource("console.log('hello from the library index.js!!!'); export var x = 123;".getBytes(StandardCharsets.UTF_8), "index.js");
+		return new ClassPathResource("org/teamapps/client/commoncomponents/resources/dist/index.js", "text/javascript");
 	}
 
 	@Override

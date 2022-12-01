@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.dto.DtoClientObjectReference;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoGlobals;
-import org.teamapps.dto.protocol.DtoCommand;
+import org.teamapps.dto.DtoCommand;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.css.CssStyles;

@@ -38,6 +38,8 @@ import org.teamapps.dto.DtoE;
 public class DtoC implements DtoObject {
 
     public static final String TYPE_ID = "C";
+    public static final List<String> EVENT_NAMES = List.of();
+    public static final List<String> QUERY_NAMES = List.of();
 
 	protected DtoE e = E.A;
 
@@ -61,7 +63,6 @@ public class DtoC implements DtoObject {
 		this.e = e;
 		return this;
 	}
-
 
 
 

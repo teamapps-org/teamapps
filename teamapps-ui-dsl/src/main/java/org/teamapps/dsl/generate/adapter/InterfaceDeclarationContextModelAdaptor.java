@@ -27,7 +27,6 @@ import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -115,6 +114,8 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return getEffectiveImports(interfaceContext, true);
 		} else if ("effectiveJavaImports".equals(propertyName)) {
 			return getEffectiveImports(interfaceContext, false);
+		} else if ("managed".equals(propertyName)) {
+			return model.isManaged(interfaceContext);
 		} else {
 			return super.getProperty(interpreter, seld, o, property, propertyName);
 		}
@@ -140,13 +141,13 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 		Imports imports = new Imports();
 
 		if (hasCommands(classContext)) {
-			imports.add("Command", "teamapps-client-communication", "org.teamapps.dto.protocol");
+			imports.add("Command", "teamapps-client-communication", "org.teamapps.dto");
 		}
 		if (hasEvents(classContext)) {
-			imports.add("Event", "teamapps-client-communication", "org.teamapps.dto.protocol");
+			imports.add("Event", "teamapps-client-communication", "org.teamapps.dto");
 		}
 		if (hasQueries(classContext)) {
-			imports.add("Query", "teamapps-client-communication", "org.teamapps.dto.protocol");
+			imports.add("Query", "teamapps-client-communication", "org.teamapps.dto");
 		}
 
 		model.findAllReferencedClasses(classContext).stream()

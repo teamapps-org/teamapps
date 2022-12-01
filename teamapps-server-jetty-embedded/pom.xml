@@ -64,5 +64,9 @@
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-ux</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-client-common-components</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -31,9 +31,9 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.dto.protocol.DtoCommand;
-import org.teamapps.dto.protocol.DtoEvent;
-import org.teamapps.dto.protocol.DtoQuery;
+import org.teamapps.dto.DtoCommand;
+import org.teamapps.dto.DtoEvent;
+import org.teamapps.dto.DtoQuery;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -211,6 +211,7 @@ public interface DtoA extends DtoObject {
 
 	}
 
+	@JsonTypeName("A.x")
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"x"})
 	public static class XCommand implements DtoCommand<Void> {
@@ -243,6 +244,7 @@ public interface DtoA extends DtoObject {
 
 	}
 
+	@JsonTypeName("A.x2")
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"x2"})
 	public static class X2Command implements DtoCommand<Boolean> {

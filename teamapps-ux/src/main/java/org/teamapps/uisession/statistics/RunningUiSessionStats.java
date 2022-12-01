@@ -21,9 +21,6 @@ package org.teamapps.uisession.statistics;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import org.teamapps.dto.protocol.DtoCommand;
-import org.teamapps.dto.protocol.DtoEvent;
-import org.teamapps.dto.protocol.DtoQuery;
 import org.teamapps.uisession.UiSessionState;
 
 import java.util.ArrayDeque;
@@ -38,12 +35,12 @@ public class RunningUiSessionStats implements UiSessionStats {
 		private final Deque<Long> count10sChunks = new ArrayDeque<>(6); // 1 minute
 		private long countLast10Seconds;
 		private long countLastMinute;
-		private final Object2LongMap<Class<?>> countByClass = new Object2LongOpenHashMap<>();
+		private final Object2LongMap<String> countByTypeId = new Object2LongOpenHashMap<>();
 
-		public void add(Class<?> aClass) {
+		public void add(String eventTypeId) {
 			count.incrementAndGet();
 			currentChunkCount.incrementAndGet();
-			countByClass.computeLong(aClass, (clazz, count) -> count != null ? count + 1 : 1);
+			countByTypeId.computeLong(eventTypeId, (tid, count) -> count != null ? count + 1 : 1);
 		}
 
 		public void flush() {
@@ -72,12 +69,12 @@ public class RunningUiSessionStats implements UiSessionStats {
 		}
 
 		@Override
-		public Object2LongMap<Class<?>> getCountByClass() {
-			return countByClass;
+		public Object2LongMap<String> getCountByTypeId() {
+			return countByTypeId;
 		}
 
 		public ImmutableUiSessionStats.ImmutableCountStats toImmutable() {
-			return new ImmutableUiSessionStats.ImmutableCountStats(count.get(), getCountLastMinute(), getCountLast10Seconds(), countByClass);
+			return new ImmutableUiSessionStats.ImmutableCountStats(count.get(), getCountLastMinute(), getCountLast10Seconds(), countByTypeId);
 		}
 	}
 
@@ -204,24 +201,24 @@ public class RunningUiSessionStats implements UiSessionStats {
 		this.name = name;
 	}
 
-	public void commandSent(Class<? extends DtoCommand> commandClass) {
-		commandStats.add(commandClass);
+	public void commandSent(String commandTypeId) {
+		commandStats.add(commandTypeId);
 	}
 
-	public void commandResultReceivedFor(Class<?> commandClass) {
-		commandResultStats.add(commandClass);
+	public void commandResultReceivedFor(String commandTypeId) {
+		commandResultStats.add(commandTypeId);
 	}
 
-	public void eventReceived(Class<? extends DtoEvent> eventClass) {
-		eventStats.add(eventClass);
+	public void eventReceived(String eventTypeId) {
+		eventStats.add(eventTypeId);
 	}
 
-	public void queryReceived(Class<? extends DtoQuery> queryClass) {
-		queryStats.add(queryClass);
+	public void queryReceived(String queryTypeId) {
+		queryStats.add(queryTypeId);
 	}
 
-	public void queryResultSentFor(Class<? extends DtoQuery> queryClass) {
-		queryResultStats.add(queryClass);
+	public void queryResultSentFor(String queryTypeId) {
+		queryResultStats.add(queryTypeId);
 	}
 
 

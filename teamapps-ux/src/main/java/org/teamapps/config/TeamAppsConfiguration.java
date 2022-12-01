@@ -150,15 +150,6 @@ public class TeamAppsConfiguration {
 	 */
 	private File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
 
-	/**
-	 * Max number of threads that should be used for changing session state.
-	 * Note that you can also choose to write an own {@link org.teamapps.util.threading.SequentialExecutorFactory},
-	 * in which case this
-	 *
-	 * @see org.teamapps.core.TeamAppsUxSessionManager#sessionExecutorFactory
-	 */
-	private int maxNumberOfSessionExecutorThreads = Runtime.getRuntime().availableProcessors() * 2;
-
 	public TeamAppsConfiguration() {
 	}
 
@@ -316,17 +307,4 @@ public class TeamAppsConfiguration {
 		this.uploadDirectory = uploadDirectory;
 	}
 
-	/**
-	 * @see #maxNumberOfSessionExecutorThreads
-	 */
-	public int getMaxNumberOfSessionExecutorThreads() {
-		return maxNumberOfSessionExecutorThreads;
-	}
-
-	/**
-	 * @see #maxNumberOfSessionExecutorThreads
-	 */
-	public void setMaxNumberOfSessionExecutorThreads(int maxNumberOfSessionExecutorThreads) {
-		this.maxNumberOfSessionExecutorThreads = maxNumberOfSessionExecutorThreads;
-	}
 }

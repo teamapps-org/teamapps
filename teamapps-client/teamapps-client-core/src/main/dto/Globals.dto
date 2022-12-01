@@ -10,7 +10,7 @@ managed class Globals {
     static command setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp);
 
     static command registerComponentLibrary(String uuid, String mainJsUrl);
-    static command registerClientObjectType(String libraryUuid, String clientObjectType);
+    static command registerClientObjectType(String libraryUuid, String clientObjectType, List<String> eventNames, List<String> queryNames);
     static command toggleEventListening(String libraryUuid, String clientObjectId, String eventName, boolean listen);
     static command render(String libraryUuid, ClientObject component);
     static command unrender(String id);

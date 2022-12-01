@@ -31,17 +31,15 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String pathInfo = req.getPathInfo();
-		if (pathInfo.startsWith("/")) {
-			pathInfo = pathInfo.substring(1);
-		}
 		String componentLibraryId;
 		String resourcePath;
-		if (pathInfo.contains("/")) {
-			componentLibraryId = pathInfo.substring(0, pathInfo.indexOf('/'));
-			resourcePath = pathInfo.substring(pathInfo.indexOf('/') + 1);
+		String pathInfoWithoutLeadingSlash =  pathInfo.startsWith("/") ? pathInfo.substring(1) : pathInfo;
+		if (pathInfoWithoutLeadingSlash.contains("/")) {
+			componentLibraryId = pathInfoWithoutLeadingSlash.substring(0, pathInfoWithoutLeadingSlash.indexOf('/'));
+			resourcePath = pathInfoWithoutLeadingSlash.substring(pathInfoWithoutLeadingSlash.indexOf('/') + 1);
 		} else {
-			componentLibraryId = pathInfo;
-			resourcePath = null;
+			resp.setStatus(404);
+			return;
 		}
 
 		ComponentLibrary componentLibrary = componentLibraryRegistry.getComponentLibraryById(componentLibraryId);
@@ -52,7 +50,7 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 
 		String fullPath = req.getServletPath() + req.getPathInfo();
 
-		if (resourcePath == null) {
+		if ("".equals(resourcePath)) {
 			streamUniqueResource(fullPath, componentLibrary::getMainJsResource, resp);
 			return;
 		}

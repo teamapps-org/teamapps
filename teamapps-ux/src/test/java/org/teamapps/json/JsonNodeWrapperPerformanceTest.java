@@ -53,7 +53,6 @@ public class JsonNodeWrapperPerformanceTest {
 		int x = 0;
 		JsonNode jsonNode = objectMapper.readTree(e1);
 		DtoEVTWrapper eventWrapper = new DtoEVTWrapper(jsonNode);
-		x += eventWrapper.getSessionId().hashCode();
 		x += eventWrapper.getId();
 		DtoEventWrapper uiEventWrapper = eventWrapper.getUiEvent();
 		DtoTable.CellValueChangedEventWrapper cellValueChangedEventWrapper = uiEventWrapper.as(DtoTable.CellValueChangedEventWrapper.class);

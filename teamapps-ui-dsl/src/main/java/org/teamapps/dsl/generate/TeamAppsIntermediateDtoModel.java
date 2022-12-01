@@ -581,15 +581,6 @@ public class TeamAppsIntermediateDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	private ParserRuleContext findClassOrInterfaceByName(String referencedClassName) {
-		ClassDeclarationContext clazz = findClassByName(referencedClassName, false);
-		if (clazz != null) {
-			return clazz;
-		} else {
-			return findInterfaceByName(referencedClassName, false);
-		}
-	}
-
 	public static ParserRuleContext getDeclaringClassOrInterface(ParserRuleContext element) {
 		if (element instanceof ClassDeclarationContext || element instanceof InterfaceDeclarationContext) {
 			return element;
@@ -822,5 +813,14 @@ public class TeamAppsIntermediateDtoModel {
 		return findReferencedClass(typeContext) != null
 				|| findReferencedInterface(typeContext) != null
 				|| findReferencedEnum(typeContext) != null;
+	}
+
+	public boolean isManaged(ClassDeclarationContext clazz) {
+		return findSelfAndAllSuperClasses(clazz).stream().anyMatch(c -> c.managedModifier() != null)
+				|| findAllImplementedInterfaces(clazz).stream().anyMatch(c -> c.managedModifier() != null);
+	}
+
+	public boolean isManaged(InterfaceDeclarationContext itf) {
+		return findAllSuperInterfaces(itf).stream().anyMatch(c -> c.managedModifier() != null);
 	}
 }

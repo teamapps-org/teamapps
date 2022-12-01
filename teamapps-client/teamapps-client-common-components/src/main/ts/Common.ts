@@ -1297,15 +1297,3 @@ export function getScrollParent(element, includeHidden) {
 
 	return document.body;
 }
-
-export function allUrlParameters() {
-	const query = location.search.substr(1);
-	const result = {};
-	query.split("&").forEach(function (part) {
-		let [key, value] = part.split("=");
-		if (value != null) {
-			result[key] = decodeURIComponent(value);
-		}
-	});
-	return result;
-}

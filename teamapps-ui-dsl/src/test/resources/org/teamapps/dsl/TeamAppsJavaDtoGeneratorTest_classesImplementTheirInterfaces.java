@@ -43,6 +43,8 @@ import org.teamapps.dto.DtoCWrapper;
 public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
 
     public static final String TYPE_ID = "D";
+    public static final List<String> EVENT_NAMES = List.of();
+    public static final List<String> QUERY_NAMES = List.of();
 
 	protected String bProperty;
 	protected List<Integer> cProperty;
@@ -89,7 +91,6 @@ public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
 		this.cProperty = cProperty;
 		return this;
 	}
-
 
 
 

@@ -63,7 +63,7 @@ public class ComponentLibraryRegistry {
 	}
 
 	public String getMainJsUrl(Class<? extends ClientObject> clientObjectClass) {
-		return componentsUrlBasePath + getComponentLibraryForClientObjectClass(clientObjectClass).uuid;
+		return componentsUrlBasePath + getComponentLibraryForClientObjectClass(clientObjectClass).uuid + "/";
 	}
 
 	public static class ComponentLibraryInfo {

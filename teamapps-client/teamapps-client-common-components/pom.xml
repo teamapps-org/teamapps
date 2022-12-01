@@ -134,6 +134,16 @@
             </plugin>
 
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>.</directory>
+                <targetPath>org/teamapps/client/commoncomponents/resources</targetPath>
+                <includes>
+                    <include>dist/**/*</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 

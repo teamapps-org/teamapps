@@ -37,6 +37,8 @@ import org.teamapps.dto.DtoObject;
 public class DtoA implements DtoObject {
 
     public static final String TYPE_ID = "A";
+    public static final List<String> EVENT_NAMES = List.of();
+    public static final List<String> QUERY_NAMES = List.of();
 
 	protected String aasdf;
 	protected String b;
@@ -95,7 +97,6 @@ public class DtoA implements DtoObject {
 		this.c = c;
 		return this;
 	}
-
 
 
 

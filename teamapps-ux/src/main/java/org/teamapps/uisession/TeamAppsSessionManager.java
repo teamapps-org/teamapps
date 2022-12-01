@@ -180,7 +180,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		}
 	}
 
-	public void initSession(
+	public UiSession initSession(
 			String sessionId,
 			ClientInfo clientInfo,
 			HttpSession httpSession,
@@ -219,7 +219,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, null, new DtoGlobals.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
 			}
 			uiSession.close(DtoSessionClosingReason.WRONG_TEAMAPPS_VERSION);
-			return;
+			return uiSession;
 		}
 
 		sessionsById.put(sessionId, new SessionPair(uiSession, sessionContext));
@@ -235,6 +235,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			throw new RuntimeException(e);
 		}
 
+		return uiSession;
 	}
 
 	@Override

@@ -19,57 +19,6 @@
  */
 package org.teamapps.dto.protocol;
 
-abstract class AbstractClientMessage {
-	 required String sessionId;
-}
-
-class INIT extends AbstractClientMessage {
-    required ClientInfo clientInfo;
-    required int maxRequestedCommandId;
-}
-
-class REINIT extends AbstractClientMessage {
-    required int lastReceivedCommandId;
-    required int maxRequestedCommandId;
-}
-
-abstract class AbstractClientPayloadMessage extends AbstractClientMessage {
-	required int id;
-}
-
-class EVT extends AbstractClientPayloadMessage {
-    required Event uiEvent;
-}
-
-interface Event {
-    String componentId;
-}
-
-class QRY extends AbstractClientPayloadMessage {
-    required Query uiQuery;
-}
-
-interface Query {
-   String componentId;
-}
-
-class CMD_RES extends AbstractClientPayloadMessage {
-	required int cmdId;
-	required Object result;
-}
-
-class CMD_REQ extends AbstractClientMessage {
-	required int lastReceivedCommandId;
-	required int maxRequestedCommandId;
-}
-
-
-class KEEPALIVE extends AbstractClientMessage {
-}
-
-class TERMINATE extends AbstractClientMessage {
-}
-
 @TypeScriptFactory
 class ClientInfo {
 	int screenWidth;
@@ -159,35 +108,6 @@ class Location {
 
 }
 
-abstract class AbstractServerMessage { }
-
-class INIT_OK extends AbstractServerMessage {
-	required int minRequestedCommands;
-	required int maxRequestedCommands;
-	required int sentEventsBufferSize;
-	required long keepaliveInterval;
-}
-
-class INIT_NOK extends AbstractServerMessage {
-	required SessionClosingReason reason;
-}
-
-class REINIT_OK extends AbstractServerMessage {
-    required int lastReceivedEventId;
-}
-
-class REINIT_NOK extends AbstractServerMessage {
-    required SessionClosingReason reason;
-}
-
-class PING extends AbstractServerMessage { // Actively request a keepalive message from the client.
-}
-
-class SESSION_CLOSED extends AbstractServerMessage {
-    required SessionClosingReason reason;
-    String message;
-}
-
 enum SessionClosingReason {
 	// EXPIRED
 	SESSION_NOT_FOUND,    			// reacting to unknown client
@@ -205,23 +125,3 @@ enum SessionClosingReason {
 	TERMINATED_BY_APPLICATION 		// SessionContext.destroy() called
 }
 
-class MULTI_CMD extends AbstractServerMessage {
-    required List<Object> cmds; // the CMD class does not get generated!
-}
-
-@NotGenerated
-class CMD {
-    required int id;      // the (sequential) id of this command
-    required String lid;  // libraryUuid
-    required String cid;  // clientObjectId
-    required String c;    // uiCommand
-    required Boolean r;   // awaitsResponse
-}
-
-interface Command<RESULT> {
-}
-
-class QRY_RES extends AbstractServerMessage {
-    required int queryId;
-    required Object result;
-}

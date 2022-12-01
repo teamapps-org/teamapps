@@ -21,14 +21,25 @@ import {TeamAppsConnection, TeamAppsConnectionListener} from "./TeamAppsConnecti
 import {ReconnectingCompressingWebSocketConnection} from "./ReconnectingWebSocketConnection";
 import {
 	DtoAbstractClientPayloadMessage,
-	DtoCMD_REQ, DtoCMD_RES, DtoEVT,
-	DtoINIT, DtoINIT_NOK, DtoINIT_OK, DtoMULTI_CMD, DtoQRY, DtoQRY_RES,
-	DtoREINIT, DtoREINIT_NOK, DtoREINIT_OK, DtoSESSION_CLOSED,
-	DtoClientInfo, DtoEvent,
+	DtoCMD,
+	DtoCMD_REQ,
+	DtoCMD_RES,
+	DtoEvent,
+	DtoEVT,
+	DtoINIT,
+	DtoINIT_NOK,
+	DtoINIT_OK,
+	DtoMULTI_CMD,
+	DtoPING,
+	DtoQRY,
+	DtoQRY_RES,
 	DtoQuery,
-	DtoSessionClosingReason, DtoPING
-} from "../generated";
-import {DtoCMD} from "../dto/DtoCMD";
+	DtoREINIT,
+	DtoREINIT_NOK,
+	DtoREINIT_OK,
+	DtoSESSION_CLOSED
+} from "../protocol/protocol";
+import {DtoClientInfo, DtoSessionClosingReason} from "../generated";
 
 
 enum TeamAppsProtocolStatus {

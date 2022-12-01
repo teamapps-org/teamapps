@@ -31,13 +31,15 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.dto.protocol.DtoCommand;
+import org.teamapps.dto.DtoCommand;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class DtoA implements DtoObject {
 
     public static final String TYPE_ID = "A";
+    public static final List<String> EVENT_NAMES = List.of();
+    public static final List<String> QUERY_NAMES = List.of();
 
 
 	public DtoA() {
@@ -53,7 +55,20 @@ public abstract class DtoA implements DtoObject {
 
 
 
+        @com.fasterxml.jackson.annotation.JsonIgnore
+        public String getTypeId() {
+            return TYPE_ID;
+        }
+        @com.fasterxml.jackson.annotation.JsonIgnore
+        public List<String> getEventNames() {
+            return EVENT_NAMES;
+        }
+        @com.fasterxml.jackson.annotation.JsonIgnore
+        public List<String> getQueryNames() {
+            return QUERY_NAMES;
+        }
 
+	@JsonTypeName("A.a")
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"b"})
 	public static class ACommand implements DtoCommand<Void> {

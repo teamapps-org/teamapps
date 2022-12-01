@@ -3,7 +3,7 @@
   "version": "0.9.155-SNAPSHOT",
   "type": "module",
   "exports": "./dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/lib/index.d.ts",
   "scripts": {
     "sync-pom-version": "node build/sync-pom-version.js",
     "del_dist": "rimraf 'dist/*'",
@@ -14,14 +14,15 @@
     "build": "yarn run del_dist && yarn run tsc && yarn run build:insert-version && yarn run bundle",
     "build-prod": "NODE_ENV=production yarn run build",
     "start": "yarn run watch-build",
-    "watch-build": "concurrently \"npm:watch-tsc\" \"npm:watch-bundle\" \"npm:serve\"",
+    "watch-build": "concurrently --names \"tsc,insert-version,bundle\" \"yarn watch-tsc\" \"onchange 'dist/lib/DefaultTeamAppsUiContext.js' -- yarn build:insert-version\" \"yarn watch-bundle\"",
     "watch-bundle": "yarn run bundle -- --watch",
-    "watch-tsc": "yarn run del_dist && tsc --watch",
-    "serve": "web-dev-server"
+    "watch-tsc": "yarn run tsc --watch"
   },
   "devDependencies": {
+    "concurrently": "^7.6.0",
     "cross-var": "^1.1.0",
     "esbuild": "^0.15.13",
+    "onchange": "^7.1.0",
     "replace-in-file": "^6.3.5",
     "rimraf": "^3.0.2",
     "sync-pom-version-to-package": "^1.6.1",

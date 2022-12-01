@@ -27,6 +27,8 @@ class(c) ::= <<
 public <if(c.abstractModifier)>abstract <endif>class <c.javaClassName> <if(c.superClassDecl)>extends Dto<c.superClassDecl.typeName.text> <endif>implements <if(c.implementsDecl)><c.implementsDecl.classList.typeName:{id|Dto<id.text>}; separator=", ">, <endif>DtoObject {
 
     public static final String TYPE_ID = "<c.Identifier>";
+    public static final List\<String\> EVENT_NAMES = List.of(<c.allEvents:{e|"<e.Identifier.text>"}; separator=", ">);
+    public static final List\<String\> QUERY_NAMES = List.of(<c.allQueries:{q|"<q.Identifier.text>"}; separator=", ">);
 
 	<c.propertiesNotImplementedBySuperClasses:fieldDeclaration(); separator="\n">
 
@@ -44,28 +46,42 @@ public <if(c.abstractModifier)>abstract <endif>class <c.javaClassName> <if(c.sup
 	<c.queryDeclaration:queryClass(); separator="\n\n">
 	<c.queryDeclaration:eventJsonWrapper(); separator="\n\n">
 
-    <queryListGetter(c)>
+    <if(c.managed)>
+        <typeIdGetter(c)>
+        <eventListGetter(c)>
+        <queryListGetter(c)>
+    <endif>
 
 	<c.commandDeclaration:commandClass(); separator="\n\n">
 
 }>>
 
-queryListGetter(c) ::= <<
-<if(c.allQueries)>
-public static final List\<String\> QUERY_NAMES = List.of(<c.allQueries:{q|"<q.Identifier.text>"}; separator=", ">);
+typeIdGetter(c) ::= <<
+@com.fasterxml.jackson.annotation.JsonIgnore
+public String getTypeId() {
+    return TYPE_ID;
+}
+>>
 
-@com.fasterxml.jackson.annotation.JsonGetter("_queries")
+eventListGetter(c) ::= <<
+@com.fasterxml.jackson.annotation.JsonIgnore
+public List\<String\> getEventNames() {
+    return EVENT_NAMES;
+}
+>>
+
+queryListGetter(c) ::= <<
+@com.fasterxml.jackson.annotation.JsonIgnore
 public List\<String\> getQueryNames() {
     return QUERY_NAMES;
 }
-<endif>
 >>
 
 classReference(c) ::= <<
 <javaFilePrelude(c.packageName)>
 @JsonTypeName("<c.Identifier>Reference")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class <c.javaClassName>Reference {
+public class <c.javaClassName>Reference implements DtoObject {
 	<c.referencableProperties:fieldDeclaration(); separator="\n">
 
 	public Dto<c.Identifier.text; format="cap">Reference(<c.referencableProperties:parameter(); separator=", ">) {
@@ -95,6 +111,15 @@ public interface <c.javaClassName><if(c.typeArguments)><c.typeArguments.text><en
 	<c.queryDeclaration:eventJsonWrapper(); separator="\n\n">
 
 	<c.commandDeclaration:commandClass(); separator="\n\n">
+
+    <if(c.managedModifier)>
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public String getTypeId();
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public List\<String\> getEventNames();
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public List\<String\> getQueryNames();
+    <endif>
 
 }>>
 
@@ -282,6 +307,7 @@ public static class <qd.Identifier.text; format="cap">Query implements DtoQuery 
 
 
 commandClass(cmd) ::= <<
+@JsonTypeName("<cmd.declaringClass.Identifier.text>.<cmd.Identifier.text>")
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
 @JsonPropertyOrder({<cmd.allProperties:{p|"<p.Identifier>"}; separator=", ">})
 public static class <cmd.Identifier.text; format="cap">Command implements DtoCommand\<<if(cmd.type)><cmd.type.javaNonPrimitiveTypeString><else>Void<endif>\> {

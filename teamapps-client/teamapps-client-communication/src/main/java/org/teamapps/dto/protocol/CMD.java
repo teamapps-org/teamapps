@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
+package org.teamapps.dto.protocol;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
@@ -62,20 +62,8 @@ public class CMD {
 		return id;
 	}
 
-	public String getLibraryUuid() {
-		return libraryUuid;
-	}
-
-	public String getClientObjectId() {
-		return clientObjectId;
-	}
-
 	public String getUiCommand() {
 		return uiCommand;
-	}
-
-	public Boolean getAwaitsResponse() {
-		return awaitsResponse;
 	}
 
 }

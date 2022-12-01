@@ -41,13 +41,13 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 		private final long count;
 		private final long countLastMinute;
 		private final long countLast10Seconds;
-		private final Object2LongMap<Class<?>> countByClass;
+		private final Object2LongMap<String> countByClass;
 
-		public ImmutableCountStats(long count, long countLastMinute, long countLast10Seconds, Object2LongMap<Class<?>> countByClass) {
+		public ImmutableCountStats(long count, long countLastMinute, long countLast10Seconds, Object2LongMap<String> countByTypeId) {
 			this.count = count;
 			this.countLastMinute = countLastMinute;
 			this.countLast10Seconds = countLast10Seconds;
-			this.countByClass = countByClass;
+			this.countByClass = countByTypeId;
 		}
 
 		@Override
@@ -66,7 +66,7 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 		}
 
 		@Override
-		public Object2LongMap<Class<?>> getCountByClass() {
+		public Object2LongMap<String> getCountByTypeId() {
 			return countByClass;
 		}
 	}

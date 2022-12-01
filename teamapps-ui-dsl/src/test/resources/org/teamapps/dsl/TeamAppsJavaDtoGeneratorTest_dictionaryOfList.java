@@ -39,6 +39,8 @@ import org.teamapps.dto.DtoXWrapper;
 public class DtoA implements DtoObject {
 
     public static final String TYPE_ID = "A";
+    public static final List<String> EVENT_NAMES = List.of();
+    public static final List<String> QUERY_NAMES = List.of();
 
 	protected Map<String, List<DtoX>> x;
 
@@ -62,7 +64,6 @@ public class DtoA implements DtoObject {
 		this.x = x;
 		return this;
 	}
-
 
 
 

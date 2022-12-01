@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes, shrink-to-fit=no">
+    <link rel="stylesheet" href="dist/teamapps-core.css">
+    <title></title>
+
+    <script type="module">
+        import {DefaultTeamAppsUiContext, getAllUrlParameters} from "./dist/index.js"
+
+        window.addEventListener('load', function () {
+            let allUrlParameters = getAllUrlParameters();
+            const port = window.location.port || (window.location.protocol === "https:" ? "443" : "80");
+            let webSocketUrl;webSocketUrl = (window.location.protocol === "https:" ? "wss:" : "ws:") + "//" + window.location.hostname + ':' + port + "/communication";
+            window.teamAppsContext = new DefaultTeamAppsUiContext(webSocketUrl, allUrlParameters);
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>

@@ -12,9 +12,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 esbuild.build({
-    entryPoints: ['dist/index.js'],
+    watch: process.argv.some(a => a === '--watch'),
+    entryPoints: ['dist/lib/index.js'],
     bundle: true,
-    outfile: 'dist/teamapps-core.js',
+    outfile: 'dist/index.js',
     format: 'esm',
     platform: "node",
     mainFields: ["browser", "module", "main"],
@@ -38,7 +39,7 @@ esbuild.build({
 })
     .then(async (result, x, y) => {
         console.log("Compressing result files...");
-        await compressFile("dist/teamapps-core.js");
+        await compressFile("dist/index.js");
         // await compressFile("dist/teamapps-core.css");
         console.log("⚡ esbuild complete! ⚡")
     })

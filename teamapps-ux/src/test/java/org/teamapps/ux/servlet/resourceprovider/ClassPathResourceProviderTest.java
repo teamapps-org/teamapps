@@ -27,10 +27,10 @@ public class ClassPathResourceProviderTest {
 
 	@Test
 	public void testNormalizeClassPathResourcePath() throws Exception {
-		assertEquals("/my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("my.package"));
-		assertEquals("/my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("/my/package/"));
-		assertEquals("/my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("my/package"));
-		assertEquals("/my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("/my/package"));
+		assertEquals("my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("my.package"));
+		assertEquals("my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("/my/package/"));
+		assertEquals("my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("my/package"));
+		assertEquals("my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("/my/package"));
 	}
 
 }

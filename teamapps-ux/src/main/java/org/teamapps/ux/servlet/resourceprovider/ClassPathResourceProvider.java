@@ -28,21 +28,41 @@ import java.util.function.Function;
 public class ClassPathResourceProvider implements ResourceProvider {
 
 	private final String basePackage;
+	private final ClassLoader classLoader = getClass().getClassLoader(); // TODO
 	private final Function<String, String> javaResourceNameToMimeTypeFunction;
+	private final DirectoryResolutionStrategy directoryResolutionStrategy;
 
 	public ClassPathResourceProvider(String basePackage) {
-		this(basePackage, s -> null);
+		this(basePackage, s -> null, DirectoryResolutionStrategy.empty());
+	}
+
+	public ClassPathResourceProvider(String basePackage, DirectoryResolutionStrategy directoryResolutionStrategy) {
+		this(basePackage, s -> null, directoryResolutionStrategy);
 	}
 
 	public ClassPathResourceProvider(String basePackage, Function<String, String> javaResourceNameToMimeTypeFunction) {
+		this(basePackage, javaResourceNameToMimeTypeFunction, DirectoryResolutionStrategy.empty());
+	}
+
+	public ClassPathResourceProvider(String basePackage, Function<String, String> javaResourceNameToMimeTypeFunction, DirectoryResolutionStrategy directoryResolutionStrategy) {
 		this.basePackage = normalizeClassPathResourcePath(basePackage);
 		this.javaResourceNameToMimeTypeFunction = javaResourceNameToMimeTypeFunction;
+		this.directoryResolutionStrategy = directoryResolutionStrategy;
 	}
 
 	@Override
 	public Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId) {
-		return new ClassPathResource(getJavaResourceName(relativeResourcePath),
-				javaResourceNameToMimeTypeFunction.apply(relativeResourcePath));
+		boolean isDirectory = relativeResourcePath.endsWith("/");
+		if (isDirectory) {
+			return directoryResolutionStrategy.resolveDirectory(relativeResourcePath).stream()
+					.filter(path -> classLoader.getResource(getJavaResourceName(relativeResourcePath)) != null)
+					.findFirst()
+					.map(path -> new ClassPathResource(getJavaResourceName(path)))
+					.orElse(null);
+		} else {
+			return new ClassPathResource(getJavaResourceName(relativeResourcePath),
+					javaResourceNameToMimeTypeFunction.apply(relativeResourcePath));
+		}
 	}
 
 	private String getJavaResourceName(String resource) {
@@ -51,11 +71,11 @@ public class ClassPathResourceProvider implements ResourceProvider {
 
 	@VisibleForTesting
 	static String normalizeClassPathResourcePath(String basePackage) {
-		if (!basePackage.contains("/") && basePackage.contains(".")) {
+		if (!basePackage.contains("/") && basePackage.contains(".")) { // package name
 			basePackage = basePackage.replaceAll("\\.", "/");
 		}
-		if (!basePackage.startsWith("/")) {
-			basePackage = "/" + basePackage;
+		if (basePackage.startsWith("/")) {
+			basePackage = basePackage.substring(1);
 		}
 		if (basePackage.endsWith("/")) {
 			basePackage = basePackage.substring(0, basePackage.length() - 1);

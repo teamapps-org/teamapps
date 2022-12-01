@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoComponentCommandHandler, DtoComponent as DtoComponentConfig} from "../generated/DtoComponent";
+import {DtoComponent as DtoComponentConfig, DtoComponentCommandHandler} from "../generated/DtoComponent";
 import {ClientObject} from "../ClientObject";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 

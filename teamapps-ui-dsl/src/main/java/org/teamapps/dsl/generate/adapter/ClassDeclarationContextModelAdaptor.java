@@ -119,6 +119,8 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
 			return getEffectiveImports(classContext, true);
 		} else if ("effectiveJavaImports".equals(propertyName)) {
 			return getEffectiveImports(classContext, false);
+		}  else if ("managed".equals(propertyName)) {
+			return model.isManaged(classContext);
 		} else {
 			return super.getProperty(interpreter, seld, o, property, propertyName);
 		}
@@ -132,13 +134,13 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
 		Imports imports = new Imports();
 
 		if (hasCommands(classContext)) {
-			imports.add("Command", "teamapps-client-communication", "org.teamapps.dto.protocol");
+			imports.add("Command", "teamapps-client-communication", "org.teamapps.dto");
 		}
 		if (hasEvents(classContext)) {
-			imports.add("Event", "teamapps-client-communication", "org.teamapps.dto.protocol");
+			imports.add("Event", "teamapps-client-communication", "org.teamapps.dto");
 		}
 		if (hasQueries(classContext)) {
-			imports.add("Query", "teamapps-client-communication", "org.teamapps.dto.protocol");
+			imports.add("Query", "teamapps-client-communication", "org.teamapps.dto");
 		}
 
 		model.findAllReferencedClasses(classContext).stream()

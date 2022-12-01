@@ -23,12 +23,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.teamapps.dto.DtoClientObjectReference;
-import org.teamapps.dto.DtoMultiLineTextField;
-import org.teamapps.dto.DtoObject;
 import org.teamapps.dto.DtoWorkSpaceLayout;
-import org.teamapps.dto.protocol.DtoINIT;
 import org.teamapps.dto.protocol.DtoINIT_NOK;
 import org.teamapps.dto.protocol.DtoSessionClosingReason;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SerializationTest {
 
@@ -41,32 +40,15 @@ public class SerializationTest {
 	}
 
 	@Test
-	public void serializeViaJsonSimple() throws Exception {
-		DtoINIT init = new DtoINIT("sessionId", null, 123);
-		System.out.println(teamAppsObjectMapper.writeValueAsString(init));
-	}
-
-	@Test
-	public void serializeEnums() throws Exception {
+	public void serialize() throws Exception {
 		DtoINIT_NOK init = new DtoINIT_NOK(DtoSessionClosingReason.SESSION_NOT_FOUND);
-		System.out.println(teamAppsObjectMapper.writeValueAsString(init));
+		assertThat(teamAppsObjectMapper.writeValueAsString(init)).isEqualTo("{\"_type\":\"INIT_NOK\",\"reason\":0}");
 	}
 
 	@Test
 	public void serializeCommands() throws Exception {
 		DtoWorkSpaceLayout.RefreshViewComponentCommand o = new DtoWorkSpaceLayout.RefreshViewComponentCommand("viewName", new DtoClientObjectReference("asdf"));
-		System.out.println(teamAppsObjectMapper.writeValueAsString(o));
+		assertThat(teamAppsObjectMapper.writeValueAsString(o)).isEqualTo("[\"WorkSpaceLayout.refreshViewComponent\",[\"viewName\",{\"_type\":\"ClientObjectReference\",\"id\":\"asdf\"}]]");
 	}
 
-	@Test
-	public void deserializeViaJackson() throws Exception {
-		DtoObject uiObject = teamAppsObjectMapper.readValue("{\"_type\": \"INIT_NOK\", \"reason\":0}", DtoObject.class);
-		System.out.println(uiObject);
-	}
-
-	@Test
-	public void blah() throws Exception {
-		DtoMultiLineTextField.AppendCommand o = new DtoMultiLineTextField.AppendCommand("string", true);
-		System.out.println(teamAppsObjectMapper.writeValueAsString(o));
-	}
 }

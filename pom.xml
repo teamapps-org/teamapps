@@ -105,49 +105,41 @@
                 <artifactId>teamapps-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-icon</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-material-icon-provider</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-ui-dsl</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-client-communication</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-client-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-client-common-components</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-ux</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-server-jetty-embedded</artifactId>
@@ -156,11 +148,6 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-server-undertow-embedded</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-server-tomcat-embedded</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

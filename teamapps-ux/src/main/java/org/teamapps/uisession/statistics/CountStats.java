@@ -29,6 +29,6 @@ public interface CountStats {
 
 	long getCountLast10Seconds();
 
-	Object2LongMap<Class<?>> getCountByClass();
+	Object2LongMap<String> getCountByTypeId();
 
 }

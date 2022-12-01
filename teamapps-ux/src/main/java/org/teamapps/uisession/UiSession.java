@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.dto.CMD;
+import org.teamapps.dto.protocol.CMD;
 import org.teamapps.dto.protocol.*;
 import org.teamapps.uisession.commandbuffer.CommandBuffer;
 import org.teamapps.uisession.commandbuffer.CommandBufferException;
@@ -119,11 +119,11 @@ public class UiSession {
 		this.sessionListeners.add(sessionListener);
 	}
 
-	public int sendCommand(UiCommandWithResultCallback commandWithCallback) {
+	public int sendCommand(UiCommandWithResultCallback<?> commandWithCallback) {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Sending command ({}): {}", sessionId.substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
 		}
-		statistics.commandSent(commandWithCallback.getUiCommand().getClass());
+		statistics.commandSent(commandWithCallback.getUiCommand().getClass().getCanonicalName());
 		CMD cmd = createCMD(commandWithCallback);
 		synchronized (this) {
 			try {
@@ -247,7 +247,7 @@ public class UiSession {
 	}
 
 	public void handleEvent(int clientMessageId, DtoEventWrapper event) {
-		statistics.eventReceived(event.getDtoClass());
+		statistics.eventReceived(event.getTypeId());
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Recieved event ({}): {}", sessionId.substring(0, 8), event.getClass());
@@ -258,7 +258,7 @@ public class UiSession {
 	}
 
 	public void handleQuery(int clientMessageId, DtoQueryWrapper query) {
-		statistics.queryReceived(query.getDtoClass());
+		statistics.queryReceived(query.getTypeId());
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Recieved query ({}): {}", sessionId.substring(0, 8), query.getClass());
@@ -270,7 +270,7 @@ public class UiSession {
 				query,
 				result -> {
 					sendAsyncWithErrorHandler(new DtoQRY_RES(clientMessageId, result));
-					statistics.queryResultSentFor(query.getDtoClass());
+					statistics.queryResultSentFor(query.getTypeId());
 				}
 		));
 	}
@@ -284,7 +284,7 @@ public class UiSession {
 		reviveConnection();
 		ResultCallbackWithCommandClass resultCallback = resultCallbacksByCmdId.remove(cmdId);
 		if (resultCallback != null) {
-			statistics.commandResultReceivedFor(resultCallback.commandClass);
+			statistics.commandResultReceivedFor(resultCallback.commandClass.getCanonicalName());
 			resultCallback.callback.accept(result);
 		} else {
 			LOGGER.error("Could not find result callback for CMD_RESULT! cmdId: " + cmdId);

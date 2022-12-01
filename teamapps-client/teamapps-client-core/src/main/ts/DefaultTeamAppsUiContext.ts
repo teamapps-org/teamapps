@@ -21,16 +21,21 @@
 
 import {capitalizeFirstLetter, generateUUID} from "./util/string-util";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {DtoClientObject as DtoClientObjectConfig, DtoComponent as DtoComponentConfig, DtoConfiguration, DtoGenericErrorMessageOption} from "./generated";
+import {
+	DtoClientObject as DtoClientObjectConfig,
+	DtoComponent as DtoComponentConfig,
+	DtoConfiguration,
+	DtoGenericErrorMessageOption
+} from "./generated";
 import {
 	createDtoClientInfo,
-	TeamAppsConnection,
-	TeamAppsConnectionImpl,
-	TeamAppsConnectionListener,
 	DtoCommand,
 	DtoEvent,
 	DtoQuery,
-	DtoSessionClosingReason
+	DtoSessionClosingReason,
+	TeamAppsConnection,
+	TeamAppsConnectionImpl,
+	TeamAppsConnectionListener
 } from "teamapps-client-communication";
 import * as jstz from "jstz";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -42,12 +47,11 @@ import {ClientObject} from "./ClientObject";
 import {Showable} from "./util/Showable";
 import {Globals} from "./Globals";
 import {logException} from "./util/exception-util";
-import {createUiLocation} from "./util/location";
+import {createUiLocation} from "./util/locationUtil";
 import {AbstractWebComponent} from "./component/AbstractWebComponent";
 import {AbstractComponent} from "./component/AbstractComponent";
 
 type ClientObjectClass<T extends ClientObject = ClientObject> = { new(config: DtoComponentConfig, context: TeamAppsUiContext): T };
-
 
 
 function isClassicComponent(o: ClientObject): o is AbstractComponent {
@@ -276,9 +280,13 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	public async createClientObject(libraryUuid: string, config: DtoClientObjectConfig): Promise<ClientObject> {
 		let componentClass = await this.getClientObjectClass(libraryUuid, config._type);
 		if (componentClass) {
-			
+
 			((config as any)._queries ?? []).forEach(queryName => {
-				(config as any)[queryName] = (queryObject: DtoQuery) => this.sendQuery({...queryObject, _type: config._type + "." + queryName, componentId: config.id});
+				(config as any)[queryName] = (queryObject: DtoQuery) => this.sendQuery({
+					...queryObject,
+					_type: config._type + "." + queryName,
+					componentId: config.id
+				});
 			});
 			delete (config as any)._queries;
 
@@ -334,7 +342,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 
 	private async replaceComponentReferencesWithInstances(o: any) {
 		let replaceOrRecur = async (value: any) => {
-			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("UiClientObjectReference") !== -1) {
+			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("ClientObjectReference") !== -1) {
 				const componentById = await this.getClientObjectById(value.id);
 				if (componentById != null) {
 					return componentById;
@@ -389,10 +397,17 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 				}
 				return await component[methodName].apply(component, parameters);
 			} else {
-				console.debug(`Trying to call static method ${qualifiedMethodName}()`);
-				const classWrapper = await this.getClientObjectClass(libraryUuid, className);
-				const result = await (classWrapper.clazz[methodName].apply(classWrapper.clazz, [...parameters, this]));
+				console.debug(`Trying to call static method ${qualifiedMethodName}(${parameters.join(", ")})`);
+				let result: any;
+				if (libraryUuid != null) {
+					const classWrapper = await this.getClientObjectClass(libraryUuid, className);
+					result = await (classWrapper.clazz[methodName].apply(classWrapper.clazz, [...parameters, this]));
+				} else {
+					// if no libraryUuid was specified, assume the Globals class!
+					result = await (Globals[methodName].apply(Globals, [...parameters, this]));
+				}
 				await this.onStaticMethodCommandInvocation.fire(command);
+				console.debug(`Result of call of  ${qualifiedMethodName}(): ${result}()`);
 				return result;
 			}
 		} catch (e) {
@@ -407,25 +422,13 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		this.libraryModules.set(uuid, module);
 	}
 
-	// TODO temporary hack
-	private coreLibraryUuid: string;
-
 	private async getClientObjectClass(libraryUuid: string, className: string): Promise<ClientObjectClassWrapper> {
 		let key = `${libraryUuid}#${className}`;
 		let clientObjectClassWrapperPromise = this.componentClasses.get(key);
 		if (clientObjectClassWrapperPromise == null) {
 			let promise = new Promise<ClientObjectClassWrapper>(async (resolve, reject) => {
-
-				if (this.coreLibraryUuid == null) {
-					this.coreLibraryUuid = libraryUuid;
-				}
-				let clazz: any;
-				if (libraryUuid === this.coreLibraryUuid || libraryUuid == null) {
-					clazz = TeamAppsUiComponentRegistry.getComponentClassForName(className); // TODO remove legacy case
-				} else {
-					let module = await this.libraryModules.get(libraryUuid);
-					clazz = module[className];
-				}
+				let module = await this.libraryModules.get(libraryUuid);
+				let clazz = module[className];
 
 				if (!clazz) {
 					console.error("Unknown client object type in module: " + className);

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import stringify from "json-stable-stringify";
-import {DtoAbstractClientMessage, DtoAbstractServerMessage} from "../generated";
+import {DtoAbstractClientMessage, DtoAbstractServerMessage} from "../protocol/protocol";
 
 export interface ReconnectingCompressingWebSocketConnectionListener {
 	onConnected: () => void;

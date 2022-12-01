@@ -18,7 +18,8 @@
  * =========================LICENSE_END==================================
  */
 
-import {DtoCommand, DtoEvent, DtoQuery, DtoSessionClosingReason} from "../generated";
+import {DtoSessionClosingReason} from "../generated";
+import {DtoCommand, DtoEvent, DtoQuery} from "../protocol/protocol";
 
 export interface TeamAppsConnection {
 	sendEvent(event: DtoEvent): void;
