@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-abstract managed class AbstractToolContainer extends Component {
+abstract class AbstractToolContainer extends Component {
 	required List<ToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
 	required List<ToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
 	String backgroundColor;
@@ -44,13 +44,13 @@ enum ToolbarButtonGroupPosition {
 	FIRST, RATHER_FIRST, CENTER, RATHER_LAST, LAST
 }
 
-managed class Toolbar extends AbstractToolContainer {
+class Toolbar extends AbstractToolContainer {
 	String logoImage;
 
 	command setLogoImage(String logoImage);
 }
 
-managed class ToolAccordion extends AbstractToolContainer {
+class ToolAccordion extends AbstractToolContainer {
 	// no added funcionality...
 }
 

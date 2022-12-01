@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class TimeGraph extends Component {
+class TimeGraph extends Component {
 	LineChartYScaleZoomMode yScaleZoomMode;
 	required LongInterval intervalX;
 	required List<TimeChartZoomLevel> zoomLevels;

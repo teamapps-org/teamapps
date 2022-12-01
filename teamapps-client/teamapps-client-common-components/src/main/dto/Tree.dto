@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class Tree extends Component {
+class Tree extends Component {
 	Dictionary<Template> templates;
 	String defaultTemplateId; // null: use asString property
 

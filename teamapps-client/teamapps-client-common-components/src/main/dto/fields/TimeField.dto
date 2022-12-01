@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-abstract managed class AbstractTimeField extends Field implements TextInputHandlingField {
+abstract class AbstractTimeField extends Field implements TextInputHandlingField {
     boolean showDropDownButton;
     boolean showClearButton;
     String locale;
@@ -32,5 +32,5 @@ abstract managed class AbstractTimeField extends Field implements TextInputHandl
     command setLocaleAndTimeFormat(String locale, DateTimeFormatDescriptor timeFormat);
 }
 
-managed class LocalTimeField extends AbstractTimeField {
+class LocalTimeField extends AbstractTimeField {
 }

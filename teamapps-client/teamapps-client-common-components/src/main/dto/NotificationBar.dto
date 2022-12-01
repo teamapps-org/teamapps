@@ -2,7 +2,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class NotificationBar extends Component {
+class NotificationBar extends Component {
 	List<NotificationBarItem> initialItems;
 
 	command addItem(NotificationBarItem item);

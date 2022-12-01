@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class TreeGraph extends Component {
+class TreeGraph extends Component {
     List<TreeGraphNode> nodes;
 
 	String backgroundColor;

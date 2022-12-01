@@ -24,14 +24,14 @@ import Component from "teamapps-client-core":org.teamapps.dto;
 //import Abcde from "blah":org.teamapps.dto;
 
 
-managed class AbstractChart extends Component {
+class AbstractChart extends Component {
 	long initialAnimationDuration;
 	ChartLegendStyle legendStyle;
 
 	command setLegendStyle(ChartLegendStyle legendStyle);
 }
 
-managed class PieChart extends AbstractChart {
+class PieChart extends AbstractChart {
 	DataPointWeighting dataPointWeighting;
 	double rotation3D; // degrees from 0 to 90
 	double height3D;
@@ -82,7 +82,7 @@ class ChartDataPoint3D {
 }
 
 
-//managed class AbstractChart extends Component {
+//class AbstractChart extends Component {
 //	Spacing margin; // not pixels! this defines the space available for tick and axis labels
 //	int animationDuration;
 //	boolean showLegend;
@@ -104,7 +104,7 @@ class ChartDataPoint3D {
 //	String[] distinctValues; //e.g. "January, February, March, ..."
 //}
 //
-//managed class BasicChart extends AbstractChart {
+//class BasicChart extends AbstractChart {
 //	boolean useInteractiveGuideline;
 //
 //	boolean stacked;

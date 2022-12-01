@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class TagComboBox extends ComboBox {
+class TagComboBox extends ComboBox {
 	int maxEntries; // if 0, then the list is unbounded
 	TagComboBoxWrappingMode wrappingMode;
 	boolean distinct; // if true, do not allow the same entry to be selected multiple times!

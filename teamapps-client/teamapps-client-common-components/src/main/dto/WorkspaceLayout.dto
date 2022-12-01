@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class WorkSpaceLayout extends Component {
+class WorkSpaceLayout extends Component {
 	required List<WorkSpaceLayoutView> views;
 	required WorkSpaceLayoutItem initialLayout;
 	required String childWindowPageTitle;

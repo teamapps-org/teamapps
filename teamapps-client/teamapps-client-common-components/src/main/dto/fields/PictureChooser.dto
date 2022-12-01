@@ -23,7 +23,7 @@ import Component from "teamapps-client-core":org.teamapps.dto;
 
 
 
-managed class PictureChooser extends Field {
+class PictureChooser extends Field {
 	String uploadUrl; // May point anywhere.
 	long maxFileSize;
 	String fileTooLargeMessage;

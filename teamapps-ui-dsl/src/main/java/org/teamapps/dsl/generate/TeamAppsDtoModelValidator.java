@@ -82,7 +82,7 @@ public class TeamAppsDtoModelValidator {
 
 	private void validateManagedClass(TeamAppsDtoParser.ClassDeclarationContext classDeclaration) {
 		boolean hasCommandOrEvent = !model.getAllCommands(classDeclaration).isEmpty() || !model.getAllEvents(classDeclaration).isEmpty();
-		if (hasCommandOrEvent && classDeclaration.managedModifier() == null) {
+		if (hasCommandOrEvent && !model.isManaged(classDeclaration)) {
 			throw new ModelValidationException("Class " + classDeclaration.Identifier().getText() + " declares a command or event but is not managed!");
 		}
 	}

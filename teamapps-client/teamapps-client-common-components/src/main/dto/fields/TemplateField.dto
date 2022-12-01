@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class TemplateField extends Field {
+class TemplateField extends Field {
 	Template template;
 
 	command update(TemplateField config);

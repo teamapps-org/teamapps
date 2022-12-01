@@ -33,7 +33,7 @@ enum CalendarEventRenderingStyle { // see http://fullcalendar.io/docs/event_rend
 	INVERSE_BACKGROUND // highlight the whole calendar except the time period of the event.
 }
 
-managed class Calendar extends Component {
+class Calendar extends Component {
 	Dictionary<Template> templates;
 	List<CalendarEventClientRecord> initialData;
 	

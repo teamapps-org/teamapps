@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class RootPanel extends Component {
+class RootPanel extends Component {
 	Component* content;
 	command setContent(Component* content, PageTransition transition, long animationDuration);
 }

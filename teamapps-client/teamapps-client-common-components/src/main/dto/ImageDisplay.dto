@@ -27,7 +27,7 @@ class CachedImage {
 }
 
 // TODO drag and drop for scrolling... (nice to have)
-managed class ImageDisplay extends Component {
+class ImageDisplay extends Component {
 	required int totalNumberOfRecords;
 	List<CachedImage> cachedImages;
 

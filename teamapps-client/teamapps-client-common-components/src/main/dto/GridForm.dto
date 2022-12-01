@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class GridForm extends Component {
+class GridForm extends Component {
 	required List<Component*> fields;
 	required List<FormLayoutPolicy> layoutPolicies;
 

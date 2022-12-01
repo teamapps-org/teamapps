@@ -23,7 +23,7 @@ import Component from "teamapps-client-core":org.teamapps.dto;
 
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
 //the value is always a long in cents for accuracy
-managed class CurrencyField extends Field implements TextInputHandlingField {
+class CurrencyField extends Field implements TextInputHandlingField {
 	String locale;
 	List<CurrencyUnit> currencyUnits; //list of ISO 4217 currencies - e.g. "USD", "EUR", etc. to be displayed as dropdown selection if available
 	int fixedPrecision; // if >= 0, this overwrites the corresponding currency unit precision

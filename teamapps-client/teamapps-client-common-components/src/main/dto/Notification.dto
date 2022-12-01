@@ -25,7 +25,7 @@ enum NotificationPosition {
 	TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
 }
 
-managed class Notification extends Component {
+class Notification extends Component {
 	String backgroundColor;
 	Spacing padding;
 

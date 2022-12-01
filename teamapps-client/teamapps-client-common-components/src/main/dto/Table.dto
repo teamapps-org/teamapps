@@ -41,7 +41,7 @@ class TableColumn {
 	TextAlignment headerAlignment;
 }
 
-managed class Table extends AbstractInfiniteListComponent {
+class Table extends AbstractInfiniteListComponent {
 	required List<TableColumn> columns;
 
 	boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection

@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class NavigationBar extends Component {
+class NavigationBar extends Component {
 	required Template buttonTemplate;
 	List<NavigationBarButton> buttons;
 	String backgroundColor;

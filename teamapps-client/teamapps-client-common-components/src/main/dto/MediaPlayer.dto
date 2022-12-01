@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class MediaTrackGraph extends Component {
+class MediaTrackGraph extends Component {
 	int trackCount;
 	List<MediaTrackData> trackData;
 	List<MediaTrackMarker> markers;
@@ -48,7 +48,7 @@ class MediaTrackMarker {
 /**
  * May also be used as audio player...
  */
-managed class VideoPlayer extends Component {
+class VideoPlayer extends Component {
 	required String url; //the url of the video
 	boolean autoplay;
 	boolean showControls;

@@ -23,7 +23,7 @@ import Component from "teamapps-client-core":org.teamapps.dto;
 
 import Showable from "teamapps-client-core":org.teamapps.dto;
 
-managed class Panel extends Component {
+class Panel extends Component {
 	String icon;
 	String title;
 	PanelHeaderField leftHeaderField;
@@ -64,7 +64,7 @@ class PanelHeaderField {
 	int maxWidth;
 }
 
-managed class Window extends Panel implements Showable {
+class Window extends Panel implements Showable {
 	boolean modal;
 	int width; // 0 = full width
 	int height; // 0 = full height, -1 = auto
@@ -84,7 +84,7 @@ managed class Window extends Panel implements Showable {
 	command setSize(int width, int height);
 }
 
-managed class ElegantPanel extends Component {
+class ElegantPanel extends Component {
 	String bodyBackgroundColor;
 	Component* content;
 	Spacing padding;

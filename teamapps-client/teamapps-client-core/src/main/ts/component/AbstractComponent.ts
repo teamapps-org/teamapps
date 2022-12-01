@@ -91,6 +91,7 @@ export abstract class AbstractComponent<C extends DtoComponentConfig = DtoCompon
 	 */
 	public destroy() {
 		this.getMainElement().remove();
+		this.styleManager.destroy();
 	}
 
 	private firstTimeGetMainElementCalled = true;
@@ -111,13 +112,13 @@ export abstract class AbstractComponent<C extends DtoComponentConfig = DtoCompon
 			}
 
 			element.classList.toggle("invisible-component", this.visible == null ? false : !this.visible);
-			if (this.config.stylesBySelector != null) { // might be null when used via JavaScript API!
+			if (this.config.stylesBySelector != null) {
 				Object.keys(this.config.stylesBySelector).forEach(selector => this.setStyle(selector, this.config.stylesBySelector[selector]));
 			}
-			if (this.config.classNamesBySelector != null) { // might be null when used via JavaScript API!
+			if (this.config.classNamesBySelector != null) {
 				Object.keys(this.config.classNamesBySelector).forEach(selector => this.setClassNames(selector, this.config.classNamesBySelector[selector]));
 			}
-			if (this.config.attributesBySelector != null) { // might be null when used via JavaScript API!
+			if (this.config.attributesBySelector != null) {
 				Object.keys(this.config.attributesBySelector).forEach(selector => this.setAttributes(selector, this.config.attributesBySelector[selector]));
 			}
 

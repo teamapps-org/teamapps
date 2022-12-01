@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class ImageCropper extends Component {
+class ImageCropper extends Component {
 	required String imageUrl;
 	required ImageCropperSelectionMode selectionMode;
 	required double aspectRatio; // width/height; 0 = no aspect ratio constraint!

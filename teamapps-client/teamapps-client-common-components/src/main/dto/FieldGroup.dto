@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class FieldGroup extends Component {
+class FieldGroup extends Component {
 	List<Field*> fields;
 
 	command setFields(List<Field*> fields);

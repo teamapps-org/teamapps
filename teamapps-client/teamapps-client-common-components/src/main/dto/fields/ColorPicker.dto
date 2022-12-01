@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class ColorPicker extends Field {
+class ColorPicker extends Field {
 	String defaultColor;
 	String saveButtonCaption;
     String clearButtonCaption;

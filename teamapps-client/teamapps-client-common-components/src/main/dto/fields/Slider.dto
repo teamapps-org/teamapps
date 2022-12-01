@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class Slider extends Field {
+class Slider extends Field {
 	double min;
 	double max;
 	double step;

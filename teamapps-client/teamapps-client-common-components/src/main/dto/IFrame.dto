@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class IFrame extends Component {
+class IFrame extends Component {
 	String url;
 	command setUrl(String url);
 	// event urlChanged(String url); // this would only works for pages with same origin

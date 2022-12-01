@@ -29,7 +29,7 @@ import Component from "teamapps-client-core":org.teamapps.dto;
 	 * image overlay
 	 * info text overlay
 */
-managed class LiveStreamComponent extends Component {
+class LiveStreamComponent extends Component {
 
 	String backgroundImage; //display if no live stream of waiting video is available, null == transparent
 	PageDisplayMode backgroundImageDisplayMode;
@@ -70,16 +70,16 @@ managed class LiveStreamComponent extends Component {
 	event resultOfRequestInputDeviceInfo(AudioInputDeviceInfo audioInputDeviceInfo, VideoInputDeviceInfo videoInputDeviceInfo);
 }
 
-managed class AbstractLiveStreamPlayer extends Component {
+class AbstractLiveStreamPlayer extends Component {
 	command play(String url);
     command stop();
     command setVolume(double volume);
 }
 
-managed class MpegDashPlayer extends AbstractLiveStreamPlayer {}
-managed class HttpLiveStreamPlayer extends AbstractLiveStreamPlayer {}
-managed class LiveStreamComPlayer extends AbstractLiveStreamPlayer {}
-managed class YoutubePlayer extends AbstractLiveStreamPlayer {}
+class MpegDashPlayer extends AbstractLiveStreamPlayer {}
+class HttpLiveStreamPlayer extends AbstractLiveStreamPlayer {}
+class LiveStreamComPlayer extends AbstractLiveStreamPlayer {}
+class YoutubePlayer extends AbstractLiveStreamPlayer {}
 
 class WaitingVideoInfo {
 	required String url;

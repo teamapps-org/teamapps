@@ -46,6 +46,10 @@ export class StyleManager {
 		this.styleElement.innerHTML = styleSheetToString(this.sheet);
 	}
 
+	public destroy() {
+		this.styleElement.remove();
+	}
+
 }
 
 function styleSheetToString(stylesheet: CSSStyleSheet) {

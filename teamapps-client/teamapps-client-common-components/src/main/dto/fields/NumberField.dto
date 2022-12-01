@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class NumberField extends Field implements TextInputHandlingField {
+class NumberField extends Field implements TextInputHandlingField {
   	String locale;
 	int precision; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
 	String placeholderText;

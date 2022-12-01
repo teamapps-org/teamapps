@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class ImageField extends Field {
+class ImageField extends Field {
 	String width; // css
 	String height; // css
     Border border;

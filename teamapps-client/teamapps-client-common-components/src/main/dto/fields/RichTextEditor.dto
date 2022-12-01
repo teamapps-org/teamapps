@@ -25,7 +25,7 @@ enum ToolbarVisibilityMode {
 	HIDDEN, VISIBLE, VISIBLE_IF_FOCUSED
 }
 
-managed class RichTextEditor extends Field implements TextInputHandlingField {
+class RichTextEditor extends Field implements TextInputHandlingField {
     String locale;
     boolean imageUploadEnabled;
 	String uploadUrl;

@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class ChatDisplay extends Component {
+class ChatDisplay extends Component {
 	ChatMessageBatch initialMessages;
     boolean contextMenuEnabled;
     String deletedMessageIcon;
@@ -36,7 +36,7 @@ managed class ChatDisplay extends Component {
     query requestContextMenu(int chatMessageId) returns Component*;
 }
 
-managed class ChatInput extends Component {
+class ChatInput extends Component {
 	required String defaultFileIcon;
 	long maxBytesPerUpload;
 	String uploadUrl;

@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class ApplicationLayout extends Component {
+class ApplicationLayout extends Component {
 	SplitPane* rootSplitPane;
 	Toolbar* toolbar;
 
@@ -29,7 +29,7 @@ managed class ApplicationLayout extends Component {
 	command setRootSplitPane(SplitPane* splitPane);
 }
 
-managed class MobileLayout extends Component {
+class MobileLayout extends Component {
 	Toolbar* toolbar;
 	Component* initialView;
 	NavigationBar* navigationBar;
@@ -49,7 +49,7 @@ interface Emptyable {
 *                                                   A C C O R D I O N
 *
 ***********************************************************************************************************************/
-managed class AccordionLayout extends Component {
+class AccordionLayout extends Component {
 	required List<AccordionPanel> panels;
 	boolean animate;
 	boolean showAllPanels; //if true, opening another panel does not close the current open panel

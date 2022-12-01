@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class ItemView extends Component {
+class ItemView extends Component {
 	Template groupHeaderTemplate;
 	List<ItemViewItemGroup> itemGroups;
 	int horizontalPadding;

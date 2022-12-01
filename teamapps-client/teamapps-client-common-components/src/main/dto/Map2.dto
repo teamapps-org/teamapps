@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class Map2 extends Component {
+class Map2 extends Component {
 	required Dictionary<Template> markerTemplates;
 	String baseApiUrl;
 	String accessToken;

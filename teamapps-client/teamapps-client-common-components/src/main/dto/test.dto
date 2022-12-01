@@ -27,15 +27,15 @@ import Component from "teamapps-client-core":org.teamapps.dto;
 *
 ***********************************************************************************************************************/
 
-managed class FormDesignerFieldChooser extends Component {
+class FormDesignerFieldChooser extends Component {
 
 }
 
-managed class FormDesigner extends Component {
+class FormDesigner extends Component {
 
 }
 
-managed class PropertyEditor extends Component {
+class PropertyEditor extends Component {
 
 }
 
@@ -45,18 +45,18 @@ managed class PropertyEditor extends Component {
 *
 ***********************************************************************************************************************/
 
-managed class DummyComponent extends Component {
+class DummyComponent extends Component {
 	String text;
 	event clicked(int clickCount);
 	command setText(String text);
 }
 
-managed class DummyField extends Field {
+class DummyField extends Field {
 	String text;
 }
 
 
-managed class VerticalLayout extends Component {
+class VerticalLayout extends Component {
 	List<Component*> components;
 	Integer fixedChildHeight; // deprecated. only for testing!
 
@@ -64,7 +64,7 @@ managed class VerticalLayout extends Component {
 	command removeComponent(Component* component);
 }
 
-managed class TemplateTestContainer extends Component {
+class TemplateTestContainer extends Component {
 	required GridTemplate template;
 	required Object data;
 
@@ -82,6 +82,6 @@ managed class TemplateTestContainer extends Component {
 *
 ***********************************************************************************************************************/
 
-//managed class ReactTestComponent extends Component {
+//class ReactTestComponent extends Component {
 //
 //}

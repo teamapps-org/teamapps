@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class WebRtcPublisher extends Component {
+class WebRtcPublisher extends Component {
 	WebRtcPublishingSettings publishingSettings;
 	boolean microphoneMuted;
 	String backgroundImageUrl;
@@ -36,7 +36,7 @@ managed class WebRtcPublisher extends Component {
     static command isChromeExtensionInstalled() returns boolean;
 }
 
-managed class WebRtcPlayer extends Component {
+class WebRtcPlayer extends Component {
 	WebRtcPlayingSettings playingSettings;
 	String backgroundImageUrl;
 

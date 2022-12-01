@@ -22,7 +22,7 @@ package org.teamapps.dto;
 import Component from "teamapps-client-core":org.teamapps.dto;
 
 @TypeScriptFactory
-managed class ToolButton extends Component {
+class ToolButton extends Component {
 	required String icon;
     String caption;
 	required String popoverText;

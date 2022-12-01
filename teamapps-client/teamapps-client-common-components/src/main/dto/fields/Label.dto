@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class Label extends Field {
+class Label extends Field {
 	required String caption; // this is only displayed if value == null
 	String icon;
 	Component* targetComponent; // if != null, this is the field that gets focused when this label gets clicked. This label also appears/disappears synchronously to its target field

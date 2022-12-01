@@ -52,7 +52,7 @@ TABLE (editable mode)
   DnD:
 	- only if not performance breaking --> opens window
  */
-managed class FileField extends Field {
+class FileField extends Field {
 	required Template itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
 	long maxBytesPerFile;
 	String uploadUrl; // May point anywhere.
@@ -89,7 +89,7 @@ enum FileFieldDisplayType {
 	LIST, FLOATING
 }
 
-managed class SimpleFileField extends Field {
+class SimpleFileField extends Field {
 	String browseButtonIcon;
 	String browseButtonCaption;
 	String uploadUrl; // May point anywhere.

@@ -21,13 +21,13 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class StaticGridLayout extends Component {
+class StaticGridLayout extends Component {
 	required GridLayout descriptor;
 
 	command updateLayout(GridLayout descriptor);
 }
 
-managed class ResponsiveGridLayout extends Component {
+class ResponsiveGridLayout extends Component {
 	required List<ResponsiveGridLayoutPolicy> layoutPolicies;
 	boolean fillHeight;
 

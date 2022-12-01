@@ -27,7 +27,7 @@ enum SplitSizePolicy {
 	RELATIVE
 }
 
-managed class SplitPane extends Component implements Emptyable {
+class SplitPane extends Component implements Emptyable {
 	required SplitDirection splitDirection;
 	required SplitSizePolicy sizePolicy;
 	double referenceChildSize; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1

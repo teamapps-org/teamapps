@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class ShakaPlayer extends Component {
+class ShakaPlayer extends Component {
     String hlsUrl;
     String dashUrl;
     String posterImageUrl;

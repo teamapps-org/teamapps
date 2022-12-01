@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class PageView extends Component {
+class PageView extends Component {
 	List<PageViewBlock> blocks;
 
 	command addBlock(PageViewBlock block, boolean before, String otherBlockId);

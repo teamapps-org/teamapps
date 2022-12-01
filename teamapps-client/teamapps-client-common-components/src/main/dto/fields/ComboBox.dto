@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class ComboBox extends Field implements TextInputHandlingField {
+class ComboBox extends Field implements TextInputHandlingField {
 	Dictionary<Template> templates;
 	boolean showDropDownButton;
 	boolean showDropDownAfterResultsArrive;

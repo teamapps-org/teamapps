@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class AbsoluteLayout extends Component {
+class AbsoluteLayout extends Component {
 	List<AbsolutePositionedComponent> components;
 
 	command update(List<AbsolutePositionedComponent> components, int animationDuration, AnimationEasing easing);

@@ -28,7 +28,7 @@ class LocalDate {
     required int day;
 }
 
-managed class LocalDateField extends Field implements TextInputHandlingField {
+class LocalDateField extends Field implements TextInputHandlingField {
     boolean showDropDownButton;
 	boolean showClearButton;
 	boolean favorPastDates;

@@ -24,7 +24,7 @@ import Component from "teamapps-client-core":org.teamapps.dto;
 /**
 Sub-fields' are evaluated directly against the main Object of the Form/Table.
 */
-managed class CompositeField extends Field { // TODO #ux
+class CompositeField extends Field { // TODO #ux
 	required List<ColumnDefinition> columnDefinitions;
     required List<Integer> rowHeights;
     required List<CompositeSubField> subFields;

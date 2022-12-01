@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class CheckBox extends Field {
+class CheckBox extends Field {
 	String caption; // displayed on the right side of the checkbox
 	String backgroundColor;
 	String checkColor;

@@ -21,7 +21,7 @@ package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
 
-managed class InfiniteItemView extends Component {
+class InfiniteItemView extends Component {
 	required Template itemTemplate;
 	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width
 	required int rowHeight;
@@ -48,7 +48,7 @@ managed class InfiniteItemView extends Component {
 	event contextMenuRequested(int requestId, int recordId);
 }
 
-managed class InfiniteItemView2 extends AbstractInfiniteListComponent {
+class InfiniteItemView2 extends AbstractInfiniteListComponent {
 	required Template itemTemplate;
 
 	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width

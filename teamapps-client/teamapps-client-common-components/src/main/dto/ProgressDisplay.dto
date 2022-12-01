@@ -31,7 +31,7 @@ enum ProgressStatus {
 	FAILED = "failed"
 }
 
-managed class ProgressDisplay extends Component {
+class ProgressDisplay extends Component {
 	String icon;
 	String taskName;
 	String statusMessage;
@@ -45,7 +45,7 @@ managed class ProgressDisplay extends Component {
     event cancelButtonClicked();
 }
 
-managed class MultiProgressDisplay extends Component {
+class MultiProgressDisplay extends Component {
 	int runningCount;
 	List<String> statusMessages;
 
@@ -54,6 +54,6 @@ managed class MultiProgressDisplay extends Component {
 	event clicked();
 }
 
-managed class DefaultMultiProgressDisplay extends MultiProgressDisplay {
+class DefaultMultiProgressDisplay extends MultiProgressDisplay {
 
 }
