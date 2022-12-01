@@ -82,15 +82,17 @@ classReference(c) ::= <<
 @JsonTypeName("<c.Identifier>Reference")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class <c.javaClassName>Reference implements DtoObject {
-	<c.referencableProperties:fieldDeclaration(); separator="\n">
+	private final String id;
 
-	public Dto<c.Identifier.text; format="cap">Reference(<c.referencableProperties:parameter(); separator=", ">) {
-    	<c.referencableProperties:propertyAssignment(); separator="\n">
+	public Dto<c.Identifier.text; format="cap">Reference(String id) {
+    	this.id = id;
     }
 
-	<c.referencableProperties:getter(); separator="\n\n">
-
-}>>
+	public String getId() {
+	    return this.id;
+	}
+}
+>>
 
 interface(c) ::= <<
 <javaFilePrelude(c.packageName)>
@@ -112,7 +114,7 @@ public interface <c.javaClassName><if(c.typeArguments)><c.typeArguments.text><en
 
 	<c.commandDeclaration:commandClass(); separator="\n\n">
 
-    <if(c.managedModifier)>
+    <if(c.managedBaseClass)>
     @com.fasterxml.jackson.annotation.JsonIgnore
     public String getTypeId();
     @com.fasterxml.jackson.annotation.JsonIgnore

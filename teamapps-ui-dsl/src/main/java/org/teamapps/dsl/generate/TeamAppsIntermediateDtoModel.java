@@ -653,6 +653,7 @@ public class TeamAppsIntermediateDtoModel {
 				.map(c -> ((ClassDeclarationContext) c))
 				.collect(Collectors.toList());
 	}
+
 	public List<InterfaceDeclarationContext> findAllReferencedInterfaces(ClassDeclarationContext classContext) {
 		return findAllReferencedClassesAndInterfaces(classContext).stream()
 				.filter(c -> c instanceof InterfaceDeclarationContext)
@@ -702,6 +703,7 @@ public class TeamAppsIntermediateDtoModel {
 				.map(c -> ((ClassDeclarationContext) c))
 				.collect(Collectors.toList());
 	}
+
 	public List<InterfaceDeclarationContext> findAllReferencedInterfaces(InterfaceDeclarationContext interfaceContext) {
 		return findAllReferencedClassesAndInterfaces(interfaceContext).stream()
 				.filter(c -> c instanceof InterfaceDeclarationContext)
@@ -763,45 +765,33 @@ public class TeamAppsIntermediateDtoModel {
 		return type.typeReference() != null && type.typeReference().referenceTypeModifier() != null;
 	}
 
-	public boolean isReferencableBaseClass(ClassDeclarationContext clazz) {
-		return Objects.equals(findReferencableBaseClassName(clazz), clazz.Identifier().getText());
+	public boolean isManagedBaseClass(ClassDeclarationContext clazz) {
+		return Objects.equals(findManagedBaseClassOrInterfaceName(clazz), clazz.Identifier().getText());
 	}
 
-	public boolean isReferencableBaseInterface(InterfaceDeclarationContext clazz) {
-		return Objects.equals(findReferencableBaseInterfaceName(clazz), clazz.Identifier().getText());
+	public boolean isManagedBaseInterface(InterfaceDeclarationContext clazz) {
+		return Objects.equals(findManagedBaseInterfaceName(clazz), clazz.Identifier().getText());
 	}
 
-	public String findReferencableBaseClassName(ClassDeclarationContext clazz) {
+	public String findManagedBaseClassOrInterfaceName(ClassDeclarationContext clazz) {
 		return Streams.concat(
 						findSelfAndAllSuperClasses(clazz).stream()
-								.filter(c -> c.propertyDeclaration().stream().anyMatch(p -> p.referencableAnnotation() != null))
+								.filter(c -> c.managedModifier() != null)
 								.map(c -> c.Identifier().getText()),
 						findAllImplementedInterfaces(clazz).stream()
-								.filter(i -> i.propertyDeclaration().stream().anyMatch(p -> p.referencableAnnotation() != null))
+								.filter(i -> i.managedModifier() != null)
 								.map(i -> i.Identifier().getText())
 				)
 				.findFirst().orElse(null);
 	}
 
-	public String findReferencableBaseInterfaceName(InterfaceDeclarationContext interf) {
+	public String findManagedBaseInterfaceName(InterfaceDeclarationContext interf) {
 		return Streams.concat(
 						findSelfAndAllSuperInterfaces(interf).stream()
-								.filter(i -> i.propertyDeclaration().stream().anyMatch(p -> p.referencableAnnotation() != null))
+								.filter(i ->  i.managedModifier() != null)
 								.map(i -> i.Identifier().getText())
 				)
 				.findFirst().orElse(null);
-	}
-
-	public Object getReferencableProperties(ClassDeclarationContext classContext) {
-		return findAllProperties(classContext).stream()
-				.filter(p -> p.referencableAnnotation() != null)
-				.collect(Collectors.toList());
-	}
-
-	public Object getReferencableProperties(InterfaceDeclarationContext interfaceContext) {
-		return findAllProperties(interfaceContext).stream()
-				.filter(p -> p.referencableAnnotation() != null)
-				.collect(Collectors.toList());
 	}
 
 	public boolean isDtoClassOrInterface(TeamAppsDtoParser.TypeContext typeContext) {

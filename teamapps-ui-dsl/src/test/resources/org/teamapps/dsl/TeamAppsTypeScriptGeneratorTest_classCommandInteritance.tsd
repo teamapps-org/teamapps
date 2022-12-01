@@ -18,6 +18,10 @@ export interface DtoC extends DtoB, DtoA {
 	c?: string
 }
 
+export interface CReference {
+	id: string;
+}
+
 export interface DtoCCommandHandler extends DtoBCommandHandler, DtoACommandHandler {
 	x3(y3: string): any;
 }

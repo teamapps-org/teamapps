@@ -103,7 +103,7 @@ public class TeamAppsJavaDtoGenerator {
 			System.out.println("Generating class: " + clazzContext.Identifier());
 			generateClass(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + ".java")));
 			generateClassJsonWrapper(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + "Wrapper.java")));
-			if (model.isReferencableBaseClass(clazzContext)) {
+			if (model.isManagedBaseClass(clazzContext)) {
 				generateClassReference(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + "Reference.java")));
 			}
 		}
@@ -117,7 +117,7 @@ public class TeamAppsJavaDtoGenerator {
 			logger.info("Generating interface: " + interfaceContext.Identifier());
 			generateInterface(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + ".java")));
 			generateInterfaceJsonWrapper(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + "Wrapper.java")));
-			if (model.isReferencableBaseInterface(interfaceContext)) {
+			if (model.isManagedBaseInterface(interfaceContext)) {
 				generateInterfaceReference(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + "Reference.java")));
 			}
 		}

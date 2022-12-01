@@ -27,7 +27,7 @@ superClassDecl: 'extends' typeName;
 superInterfaceDecl: 'extends' classList;
 implementsDecl: 'implements' classList;
 classList: ((typeName ',')* typeName)?;
-propertyDeclaration : referencableAnnotation? (requiredModifier|optionalModifier)? type Identifier (defaultValueAssignment)? ';';
+propertyDeclaration : (requiredModifier|optionalModifier)? type Identifier (defaultValueAssignment)? ';';
 commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ('returns' type)? ';';
 eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
 queryDeclaration : 'query' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' 'returns' type ';';
@@ -62,7 +62,6 @@ primitiveType
 
 typescriptFactoryAnnotation : '@TypeScriptFactory';
 notGeneratedAnnotation : '@NotGenerated';
-referencableAnnotation: '@Referencable';
 abstractModifier : 'abstract';
 requiredModifier : 'required';
 optionalModifier : 'optional';

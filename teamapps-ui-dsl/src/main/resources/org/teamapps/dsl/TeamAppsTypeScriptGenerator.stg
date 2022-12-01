@@ -36,9 +36,9 @@ export interface Dto<c.typeScriptIdentifier> <if(c.superClassAndDirectlyImplemen
 	<c.queryDeclaration:queryDeclaration(); separator=";\n">
 }
 
-<if(c.referencableBaseClass)>
+<if(c.managedBaseClass)>
 export interface <c.Identifier>Reference {
-	<c.referencableProperties:typeScriptPropertyDeclaration(true); separator="\n">
+	id: string;
 }
 <endif>
 
@@ -103,9 +103,9 @@ export interface Dto<c.typeScriptIdentifier> <if(c.superInterfaces)>extends <c.s
 	<c.queryDeclaration:queryDeclaration(); separator=";\n">
 }
 
-<if(c.referencableBaseClass)>
+<if(c.managedBaseClass)>
 export interface Dto<c.Identifier>Reference {
-	<c.referencableProperties:typeScriptPropertyDeclaration(true); separator="\n">
+    id: string;
 }
 <endif>
 

@@ -9,6 +9,10 @@ export interface DtoA {
 	_type?: string;
 }
 
+export interface AReference {
+	id: string;
+}
+
 export interface DtoACommandHandler {
 }
 

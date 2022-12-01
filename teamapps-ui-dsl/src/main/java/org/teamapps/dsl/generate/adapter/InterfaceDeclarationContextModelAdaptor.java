@@ -106,10 +106,8 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return model.getSimplePropertiesSortedByRelevance(model.findAllProperties(interfaceContext));
 		} else if ("propertiesNotImplementedBySuperClasses".equals(propertyName)) {
 			return interfaceContext.propertyDeclaration();
-		} else if ("referencableProperties".equals(propertyName)) {
-			return model.getReferencableProperties(interfaceContext);
-		} else if ("referencableBaseClass".equals(propertyName)) {
-			return model.isReferencableBaseInterface(interfaceContext);
+		} else if ("managedBaseClass".equals(propertyName)) {
+			return model.isManagedBaseInterface(interfaceContext);
 		} else if ("effectiveTypeScriptImports".equals(propertyName)) {
 			return getEffectiveImports(interfaceContext, true);
 		} else if ("effectiveJavaImports".equals(propertyName)) {

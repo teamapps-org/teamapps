@@ -17,6 +17,10 @@ export interface DtoB extends DtoA, DtoI {
 	_type?: string;
 }
 
+export interface BReference {
+	id: string;
+}
+
 export interface DtoBCommandHandler extends DtoACommandHandler, DtoICommandHandler {
 }
 

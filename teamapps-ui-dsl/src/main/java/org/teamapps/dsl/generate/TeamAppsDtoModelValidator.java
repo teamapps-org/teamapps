@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,8 +40,12 @@ public class TeamAppsDtoModelValidator {
 //		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
 //			validateRequiredPropertiesHaveNoDefaultValue(classDeclaration);
 //		}
- 		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
-			validateManagedClass(classDeclaration);
+		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
+			checkClassWithCommandsOrEventsIsManaged(classDeclaration);
+			checkManagedClassDefinesIdProperty(classDeclaration);
+		}
+		for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceDeclaration : model.getInterfaceDeclarations()) {
+			checkManagedInterfaceDefinesIdProperty(interfaceDeclaration);
 		}
 
 		List<TeamAppsDtoParser.EnumDeclarationContext> enumDeclarations = model.getEnumDeclarations();
@@ -80,10 +84,22 @@ public class TeamAppsDtoModelValidator {
 		}
 	}
 
-	private void validateManagedClass(TeamAppsDtoParser.ClassDeclarationContext classDeclaration) {
+	private void checkClassWithCommandsOrEventsIsManaged(TeamAppsDtoParser.ClassDeclarationContext classDeclaration) {
 		boolean hasCommandOrEvent = !model.getAllCommands(classDeclaration).isEmpty() || !model.getAllEvents(classDeclaration).isEmpty();
 		if (hasCommandOrEvent && !model.isManaged(classDeclaration)) {
-			throw new ModelValidationException("Class " + classDeclaration.Identifier().getText() + " declares a command or event but is not managed!");
+			throw new ModelValidationException("Dto class " + classDeclaration.Identifier().getText() + " declares a command or event but is not managed!");
+		}
+	}
+
+	private void checkManagedClassDefinesIdProperty(TeamAppsDtoParser.ClassDeclarationContext classDeclaration) {
+		if (model.isManaged(classDeclaration) && model.findAllProperties(classDeclaration).stream().noneMatch(p -> p.type().getText().equals("String") && p.Identifier().getText().equals("id"))) {
+			throw new ModelValidationException("Dto class " + classDeclaration.Identifier().getText() + " is managed but does not declare an id property (String id)!");
+		}
+	}
+
+	private void checkManagedInterfaceDefinesIdProperty(TeamAppsDtoParser.InterfaceDeclarationContext classDeclaration) {
+		if (model.isManaged(classDeclaration) && model.findAllProperties(classDeclaration).stream().noneMatch(p -> p.type().getText().equals("String") && p.Identifier().getText().equals("id"))) {
+			throw new ModelValidationException("Dto interface " + classDeclaration.Identifier().getText() + " is managed but does not declare an id property (String id)!");
 		}
 	}
 }

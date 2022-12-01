@@ -173,11 +173,11 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			TeamAppsDtoParser.ClassDeclarationContext referencedClass = model.findReferencedClass(typeContext);
 			TeamAppsDtoParser.InterfaceDeclarationContext referencedInterface = model.findReferencedInterface(typeContext);
 			if (referencedClass != null) {
-				return "Dto" + model.findReferencableBaseClassName(referencedClass) + "Reference";
+				return "Dto" + model.findManagedBaseClassOrInterfaceName(referencedClass) + "Reference";
 			} else if (referencedInterface != null) {
-				return "Dto" + model.findReferencableBaseInterfaceName(referencedInterface) + "Reference";
+				return "Dto" + model.findManagedBaseInterfaceName(referencedInterface) + "Reference";
 			} else {
-				throw new TeamAppsGeneratorException("Cannot find referencable class or interface for type " + typeContext.getText() + ". Are you sure it is a referencable class or interface (has @Referencable properties)?");
+				throw new TeamAppsGeneratorException("Cannot find referencable class or interface for type " + typeContext.getText() + ". Are you sure it is a managed class or interface?");
 			}
 		} else if (model.isDtoType(typeContext)) {
 			return "Dto" + typeContext.getText();

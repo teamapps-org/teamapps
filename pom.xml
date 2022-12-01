@@ -41,7 +41,7 @@
         <module>teamapps-client/teamapps-client-common-components</module>
         <module>teamapps-ux</module>
         <module>teamapps-server-jetty-embedded</module>
-        <module>teamapps-server-undertow-embedded</module>
+<!--        <module>teamapps-server-undertow-embedded</module>-->
     </modules>
 
     <properties>

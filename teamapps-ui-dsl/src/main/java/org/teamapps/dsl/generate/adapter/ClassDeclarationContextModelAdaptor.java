@@ -105,10 +105,8 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
 			return model.filterRequiredProperties(model.findPropertiesNotImplementedBySuperClasses(classContext), false);
 		} else if ("simplePropertiesByRelevance".equals(propertyName)) {
 			return model.getSimplePropertiesSortedByRelevance(model.findAllProperties(classContext));
-		} else if ("referencableProperties".equals(propertyName)) {
-			return model.getReferencableProperties(classContext);
-		} else if ("referencableBaseClass".equals(propertyName)) {
-			return model.isReferencableBaseClass(classContext);
+		} else if ("managedBaseClass".equals(propertyName)) {
+			return model.isManagedBaseClass(classContext);
 		} else if ("innerClasses".equals(propertyName)) {
 			List<Object> innerClassDeclarations = new ArrayList<>();
 			innerClassDeclarations.addAll(classContext.eventDeclaration());
