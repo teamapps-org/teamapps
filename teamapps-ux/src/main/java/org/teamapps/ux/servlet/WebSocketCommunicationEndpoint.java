@@ -115,7 +115,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 				DtoAbstractClientMessageWrapper clientMessage = new DtoAbstractClientMessageWrapper(mapper.readTree(payload));
 
 				switch (clientMessage.getTypeId()) {
-					case DtoINIT.TYPE_ID -> {
+					case DtoINITWrapper.TYPE_ID -> {
 						ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
 						DtoINITWrapper init = clientMessage.as(DtoINITWrapper.class);
 
@@ -145,7 +145,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 								new MessageSenderImpl()
 						);
 					}
-					case DtoREINIT.TYPE_ID -> {
+					case DtoREINITWrapper.TYPE_ID -> {
 						DtoREINITWrapper reinit = clientMessage.as(DtoREINITWrapper.class);
 						String uiSessionId = reinit.getSessionId();
 						uiSession = sessionManager.getUiSessionById(uiSessionId);
@@ -156,26 +156,26 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 							send(new DtoREINIT_NOK(DtoSessionClosingReason.SESSION_NOT_FOUND), null, null);
 						}
 					}
-					case DtoTERMINATE.TYPE_ID -> {
+					case DtoTERMINATEWrapper.TYPE_ID -> {
 						uiSession.close(DtoSessionClosingReason.TERMINATED_BY_CLIENT);
 					}
-					case DtoEVT.TYPE_ID -> {
+					case DtoEVTWrapper.TYPE_ID -> {
 						DtoEVTWrapper eventMessage = clientMessage.as(DtoEVTWrapper.class);
 						uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent());
 					}
-					case DtoQRY.TYPE_ID -> {
+					case DtoQRYWrapper.TYPE_ID -> {
 						DtoQRYWrapper queryMessage = clientMessage.as(DtoQRYWrapper.class);
 						uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery());
 					}
-					case DtoCMD_RES.TYPE_ID -> {
+					case DtoCMD_RESWrapper.TYPE_ID -> {
 						DtoCMD_RESWrapper cmdResult = clientMessage.as(DtoCMD_RESWrapper.class);
 						uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult());
 					}
-					case DtoCMD_REQ.TYPE_ID -> {
+					case DtoCMD_REQWrapper.TYPE_ID -> {
 						DtoCMD_REQWrapper cmdRequest = clientMessage.as(DtoCMD_REQWrapper.class);
 						uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId());
 					}
-					case DtoKEEPALIVE.TYPE_ID -> {
+					case DtoKEEPALIVEWrapper.TYPE_ID -> {
 						uiSession.handleKeepAlive();
 					}
 					default -> throw new TeamAppsCommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());

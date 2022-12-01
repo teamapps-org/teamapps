@@ -6,12 +6,10 @@ import org.teamapps.dto.DtoJsonWrapper;
 
 public class DtoCMD_RESWrapper extends DtoAbstractClientPayloadMessageWrapper {
 
+	public static final String TYPE_ID = "CMD_RES";
+
 	public DtoCMD_RESWrapper(JsonNode jsonNode) {
 		super(jsonNode);
-	}
-
-	public Class<? extends DtoCMD_RES> getDtoClass() {
-		return DtoCMD_RES.class;
 	}
 
 	public int getCmdId() {

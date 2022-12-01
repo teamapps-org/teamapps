@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class DtoKEEPALIVEWrapper extends DtoAbstractClientMessageWrapper {
 
+	public static final String TYPE_ID = "KEEPALIVE";
+
 	public DtoKEEPALIVEWrapper(JsonNode jsonNode) {
 		super(jsonNode);
-	}
-
-	public Class<? extends DtoKEEPALIVE> getDtoClass() {
-		return DtoKEEPALIVE.class;
 	}
 
 }

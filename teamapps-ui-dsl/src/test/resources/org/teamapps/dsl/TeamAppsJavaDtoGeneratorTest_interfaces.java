@@ -102,10 +102,6 @@ public interface DtoA extends DtoObject {
             super(jsonNode);
         }
 
-        public Class<? extends YEvent> getDtoClass() {
-            return YEvent.class;
-        }
-
         public String getComponentId() {
             var node = jsonNode.get("componentId");
             if (node == null || node.isNull()) {
@@ -184,10 +180,6 @@ public interface DtoA extends DtoObject {
 
 	    public QQueryWrapper(JsonNode jsonNode) {
 	        super(jsonNode);
-	    }
-
-	    public Class<? extends QQuery> getDtoClass() {
-	        return QQuery.class;
 	    }
 
 	    public String getComponentId() {

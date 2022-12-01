@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class DtoREINITWrapper extends DtoAbstractClientMessageWrapper {
 
+	public static final String TYPE_ID = "REINIT";
+
 	public DtoREINITWrapper(JsonNode jsonNode) {
 		super(jsonNode);
-	}
-
-	public Class<? extends DtoREINIT> getDtoClass() {
-		return DtoREINIT.class;
 	}
 
 	public String getSessionId() {

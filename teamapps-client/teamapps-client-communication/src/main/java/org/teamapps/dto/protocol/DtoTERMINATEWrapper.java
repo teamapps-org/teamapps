@@ -12,8 +12,4 @@ public class DtoTERMINATEWrapper extends DtoAbstractClientMessageWrapper {
 		super(jsonNode);
 	}
 
-	public Class<? extends DtoTERMINATE> getDtoClass() {
-		return DtoTERMINATE.class;
-	}
-
 }

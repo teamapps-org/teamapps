@@ -3,4 +3,4 @@ rename:
  Java: createUiX(UxObject...) -> createDto()
 
  DtoAbstractClientMessage.sessionId -> still needed?
- Check if we can remove more Protocol classes like DtoEVT
+ check if queries actually work

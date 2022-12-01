@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class DtoINITWrapper extends DtoAbstractClientMessageWrapper {
 
+	public static final String TYPE_ID = "INIT";
+
 	public DtoINITWrapper(JsonNode jsonNode) {
 		super(jsonNode);
 	}

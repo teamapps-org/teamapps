@@ -334,10 +334,6 @@ public class <c.javaClassName>Wrapper extends <if(c.superClassDecl)>Dto<c.superC
         super(jsonNode);
     }
 
-    public Class\<? extends <c.javaClassName>\> getDtoClass() {
-        return <c.javaClassName>.class;
-    }
-
     <c.propertiesNotImplementedBySuperClasses:jsonWrapperGetter(); separator="\n\n">
 }
 >>
@@ -349,10 +345,6 @@ public static class <c.javaClassName>Wrapper extends DtoJsonWrapper {
 
     public <c.javaClassName>Wrapper(JsonNode jsonNode) {
         super(jsonNode);
-    }
-
-    public Class\<? extends <c.javaClassName>\> getDtoClass() {
-        return <c.javaClassName>.class;
     }
 
     <c.allProperties:jsonWrapperGetter(); separator="\n\n">

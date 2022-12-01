@@ -10,10 +10,6 @@ public class DtoAbstractClientPayloadMessageWrapper extends DtoAbstractClientMes
 		super(jsonNode);
 	}
 
-	public Class<? extends DtoAbstractClientPayloadMessage> getDtoClass() {
-		return DtoAbstractClientPayloadMessage.class;
-	}
-
 	public int getId() {
 		return jsonNode.get("id").asInt();
 	}

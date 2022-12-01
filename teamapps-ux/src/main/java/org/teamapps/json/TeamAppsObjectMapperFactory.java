@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.teamapps.dto.protocol.*;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 
 public class TeamAppsObjectMapperFactory {
@@ -35,9 +34,6 @@ public class TeamAppsObjectMapperFactory {
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
 		objectMapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
-
-		objectMapper.registerSubtypes(DtoINIT.class, DtoTERMINATE.class, DtoCMD_RES.class, DtoQRY.class, DtoEVT.class, DtoREINIT.class, DtoCMD_REQ.class, DtoKEEPALIVE.class);
-
 		return objectMapper;
 	}
 

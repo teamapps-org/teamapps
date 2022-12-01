@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class DtoEVTWrapper extends DtoAbstractClientPayloadMessageWrapper {
 
+	public static final String TYPE_ID = "EVT";
+
 	public DtoEVTWrapper(JsonNode jsonNode) {
 		super(jsonNode);
 	}
