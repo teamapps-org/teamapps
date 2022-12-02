@@ -32,6 +32,7 @@ import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
+import org.teamapps.uisession.statistics.UiSessionStats;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.EntranceAnimation;
@@ -808,6 +809,10 @@ public class SessionContext implements Router {
 
 	public ParamConverterProvider getRoutingParamConverterProvider() {
 		return baseRouting.getParamConverterProvider();
+	}
+
+	public UiSessionStats getUiSessionStats() {
+		return uiSession.getStatistics().immutableCopy();
 	}
 
 	@Override
