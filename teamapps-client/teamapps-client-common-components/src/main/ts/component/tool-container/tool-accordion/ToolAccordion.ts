@@ -48,7 +48,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 	constructor(config: DtoToolAccordion, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$mainDomElement = parseHtml(`<div class="DtoToolAccordion teamapps-blurredBackgroundImage"></div>`);
+		this.$mainDomElement = parseHtml(`<div class="ToolAccordion teamapps-blurredBackgroundImage"></div>`);
 		this.$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this.$mainDomElement.appendChild(this.$backgroundColorDiv);
 		let allButtonGroups = [...config.leftButtonGroups, ...config.rightButtonGroups];

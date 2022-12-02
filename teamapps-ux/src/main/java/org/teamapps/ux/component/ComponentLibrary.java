@@ -6,6 +6,10 @@ public interface ComponentLibrary {
 
 	Resource getMainJsResource();
 
+	default Resource getMainCssResource() {
+		return null;
+	}
+
 	Resource getResource(String pathInfo);
 
 }

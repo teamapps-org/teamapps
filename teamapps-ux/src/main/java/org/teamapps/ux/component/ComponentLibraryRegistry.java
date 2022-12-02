@@ -59,11 +59,18 @@ public class ComponentLibraryRegistry {
 	}
 
 	public ComponentLibrary getComponentLibraryById(String uuid) {
-		return librariesByUuid.get(uuid).componentLibrary;
+		ComponentLibraryInfo componentLibraryInfo = librariesByUuid.get(uuid);
+		return componentLibraryInfo != null ? componentLibraryInfo.componentLibrary : null;
 	}
 
 	public String getMainJsUrl(Class<? extends ClientObject> clientObjectClass) {
-		return componentsUrlBasePath + getComponentLibraryForClientObjectClass(clientObjectClass).uuid + "/";
+		String libraryUuid = getComponentLibraryForClientObjectClass(clientObjectClass).uuid;
+		return componentsUrlBasePath + libraryUuid + "/";
+	}
+
+	public String getMainCssUrl(Class<? extends ClientObject> clientObjectClass) {
+		String libraryUuid = getComponentLibraryForClientObjectClass(clientObjectClass).uuid;
+		return componentsUrlBasePath + libraryUuid + "/" + libraryUuid + ".css";
 	}
 
 	public static class ComponentLibraryInfo {

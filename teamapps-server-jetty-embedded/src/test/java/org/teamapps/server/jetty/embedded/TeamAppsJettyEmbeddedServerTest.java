@@ -23,6 +23,7 @@ import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.rootpanel.RootPanel;
+import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
@@ -32,19 +33,12 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 		WebController controller = (SessionContext sessionContext) -> {
 			RootPanel rootPanel = sessionContext.addRootPanel();
-			rootPanel.setCssStyle("background-color", "blue");
-			rootPanel.setCssStyle(".DtoDummyComponent", "background-color", "green");
 			DummyComponent content = new DummyComponent();
 			content.onClick.addListener((eventData, disposable) -> {
 				System.out.println("Clicked!");
 				disposable.dispose();
 			});
 			VerticalLayout div = new VerticalLayout();
-			div.setAttribute("blah", "blub");
-			div.toggleCssClass("xxxx", true);
-			div.toggleCssClass("slot", "asdflksjdf", true);
-			div.setCssStyle("font-size", "200%");
-			div.setCssStyle("slot", "color", "red");
 
 			div.addComponent(content);
 			Button<?> button = Button.create("re-register");
@@ -62,9 +56,13 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.onGlobalKeyEventOccurred.addListener((eventData, disposable) -> {
 				System.out.println(eventData);
 			});
-			sessionContext.onNavigationStateChange.addListener(navigationStateChangeEvent -> {
-				System.out.println(navigationStateChangeEvent);
-			});
+
+
+			Window window = new Window(null, "asdf", null, 300, 300, true, true, true);
+			window.enableAutoHeight();
+			window.setMaximizable(true);
+			window.setContent(new DummyComponent());
+			window.show();
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = TeamAppsJettyEmbeddedServer.builder(controller)
@@ -72,7 +70,6 @@ public class TeamAppsJettyEmbeddedServerTest {
 				.build();
 //		System.out.println(jettyServer.getTeamAppsCore().getComponentLibraryRegistry().registerComponentLibrary(new CoreComponentLibrary()));
 		jettyServer.start();
-
 	}
 
 }

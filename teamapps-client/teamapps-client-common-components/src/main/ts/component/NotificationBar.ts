@@ -44,7 +44,7 @@ export class NotificationBar extends AbstractComponent<DtoNotificationBar> imple
 
 	constructor(config: DtoNotificationBar, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<div class="DtoNotificationBar"></div>`);
+		this.$main = parseHtml(`<div class="NotificationBar"></div>`);
 		config.initialItems.forEach(item => this.addItem(item))
 	}
 
@@ -108,7 +108,7 @@ class NotificationBarItem {
 	private $actionLink: HTMLElement;
 
 	constructor(public readonly config: DtoNotificationBarItem) {
-		this.$main = parseHtml(`<div class="DtoNotificationBarItem">
+		this.$main = parseHtml(`<div class="NotificationBarItem">
 	<div class="content-container">
 		<div class="icon img img-20"></div>
 		<div class="text-container">

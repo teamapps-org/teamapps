@@ -66,7 +66,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		});
 		this.numberParser = new NumberParser(config.locale);
 
-		this.$wrapper = parseHtml(`<div class="DtoNumberField form-control field-border field-border-glow field-background">
+		this.$wrapper = parseHtml(`<div class="NumberField form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
 		<input autocomplete="no" type="text"></input>
 		<div class="clear-button tr-remove-button"></div> 
@@ -321,7 +321,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		} else {
 			formatedValue = "";
 		}
-		return `<div class="static-readonly-DtoNumberField">${formatedValue}</div>`;
+		return `<div class="static-readonly-NumberField">${formatedValue}</div>`;
 	}
 
 	getDefaultValue(): number {

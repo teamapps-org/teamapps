@@ -21,23 +21,17 @@
   position: relative;
 
   &:before {
-    .glyphicon();
-    content: "\e198";
     position: absolute;
+    inset: 3px 3px;
     pointer-events: none;
-    top: 3px;
-    left: 3px;
-    width: ~"calc(100% - 6px)";
-    height: ~"calc(100% - 6px)";
     border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 300%;
-    color: rgba(0, 0, 0, .3);
-    border: 3px dashed rgba(0, 0, 0, .3);
+    border: 3px dashed black;
     z-index: 1;
     background-color: var(--ta-bg-color-semi-transparent);
+    .ta-icon-send();
+    background-size: min(50%, 200px);
+    background-position: center;
+    background-repeat: no-repeat;
     opacity: 0;
     transition: opacity .2s, backdrop-filter .2s;
   }

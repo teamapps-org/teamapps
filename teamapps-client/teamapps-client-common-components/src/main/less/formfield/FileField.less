@@ -1,0 +1,179 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.FileField {
+  min-width: var(--ta-input-default-width);
+
+  &.readonly, &.editable-if-focused:not(:focus) {
+  }
+
+  .file-item {
+    position: relative;
+
+    &:hover {
+      background-color: var(--ta-hover-color);
+    }
+
+    &.state-uploading,
+    &.state-success,
+    &.state-error {
+      .template-wrapper {
+        display: none !important;
+      }
+    }
+    &.state-displaying {
+      .progress-indicator, .file-info {
+        display: none !important;
+      }
+    }
+  }
+
+  &.float-style-horizontal {
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+    .file-item {
+      position: relative;
+      margin: 2px;
+
+      .ProgressCircle {
+        margin: auto;
+      }
+
+      .file-info {
+        max-width: 100%;
+
+        .file-name {
+          font-size: 90%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .file-size {
+          font-size: 80%;
+          color: #777;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+    .delete-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+
+  &.float-style-vertical-list {
+    .file-item {
+      display: grid;
+      grid-template-columns: 1fr 20px;
+      grid-template-areas: "info delete" "progress delete";
+      position: relative;
+      padding: 2px;
+
+      .progress-indicator {
+        grid-area: progress;
+      }
+
+      .file-info {
+        grid-area: info;
+        display: flex;
+        justify-content: space-between;
+        order: -1;
+
+        .file-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .file-size {
+          color: #777;
+          white-space: nowrap;
+        }
+      }
+
+      .delete-button {
+        grid-area: delete;
+        align-self: center;
+        justify-self: right;
+      }
+
+    }
+  }
+
+  &.show-entries-as-buttons-on-hover .file-item {
+    border: 1px solid transparent;
+    &:hover {
+      .button-style-item;
+    }
+    &:active {
+      .button-style-item-lowered;
+    }
+  }
+
+  .upload-button-wrapper {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--ta-input-border-color);
+    border-radius: var(--ta-input-border-radius);
+
+    .file-input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+      font-size: 20px;
+      cursor: default;
+      opacity: 0;
+      filter: alpha(opacity=0);
+    }
+  }
+
+}
+
+.static-readonly-FileField {
+  display: flex;
+  padding-left: 2px;
+
+  &.show-as-button-only-on-hover .custom-entry-template-wrapper:not(:hover) {
+    border-color: transparent;
+    background: transparent;
+  }
+  .custom-entry-template-wrapper {
+    margin-right: 3px;
+    .button-style-item();
+    &:hover {
+      .button-style-item-lowered;
+    }
+    &:active {
+      .button-style-item-glow;
+    }
+  }
+  .custom-entry-template {
+    flex: 0 0 auto;
+  }
+}

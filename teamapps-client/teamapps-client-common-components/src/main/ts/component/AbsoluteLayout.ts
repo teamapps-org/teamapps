@@ -37,7 +37,7 @@ export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> impleme
 
 	constructor(config: DtoAbsoluteLayout, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<div class="DtoAbsoluteLayout" data-teamapps-id="${this.getId()}">
+		this.$main = parseHtml(`<div class="AbsoluteLayout" data-teamapps-id="${this.getId()}">
 	<style></style>
 </div>`);
 		this.$style = this.$main.querySelector(":scope > style");

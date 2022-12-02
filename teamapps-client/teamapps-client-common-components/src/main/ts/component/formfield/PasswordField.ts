@@ -69,7 +69,7 @@ export class PasswordField extends TextField<DtoPasswordField> implements DtoPas
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
-		return `<div class="static-readonly-DtoTextField static-readonly-DtoPasswordField">${value != null ? "&#8226;".repeat(value.length) : ""}</div>`;
+		return `<div class="static-readonly-TextField static-readonly-DtoPasswordField">${value != null ? "&#8226;".repeat(value.length) : ""}</div>`;
 	}
 }
 

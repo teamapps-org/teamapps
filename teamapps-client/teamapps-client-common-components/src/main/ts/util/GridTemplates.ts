@@ -53,11 +53,11 @@ function createTextElementRenderer(element: DtoTextElement, additionalCssClass?:
 		if (value == null) {
 			return "";
 		} else if (element.fontStyle != null && element.fontStyle.backgroundColor) {
-			return `<div class="grid-template-element DtoTextElement wrapper ${additionalCssClass || ''}" style="${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">
+			return `<div class="grid-template-element TextElement wrapper ${additionalCssClass || ''}" style="${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">
 	<span data-key="${element.property}" style="${fontStyleCssString}">${value || ''}</span>
 </div>`;
 		} else {
-			return `<span data-key="${element.property}" class="grid-template-element DtoTextElement ${additionalCssClass || ''}" style="${fontStyleCssString} ${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">${value || ''}</span>`;
+			return `<span data-key="${element.property}" class="grid-template-element TextElement ${additionalCssClass || ''}" style="${fontStyleCssString} ${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">${value || ''}</span>`;
 		}
 	};
 }
@@ -90,7 +90,7 @@ function createImageElementRenderer(element: DtoImageElement, additionalCss: str
 		let value = data[element.property];
 		if (value != null) {
 			const backgroundImage = `background-image: url('${value}');`;
-			return `<div data-key="${element.property}" class="grid-template-element DtoImageElement" style="${style} ${backgroundImage} ${additionalCss}"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element ImageElement" style="${style} ${backgroundImage} ${additionalCss}"></div>`;
 		} else {
 			return '';
 		}
@@ -104,7 +104,7 @@ function createIconElementRenderer(element: DtoIconElement, additionalCss: strin
 		let value = data[element.property];
 		if (value != null) {
 			const backgroundImage = value ? `background-image: url('${value}');` : '';
-			return `<div data-key="${element.property}" class="grid-template-element DtoIconElement" style="${style} ${backgroundImage} ${backgroundColorCss} ${additionalCss}"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element IconElement" style="${style} ${backgroundImage} ${backgroundColorCss} ${additionalCss}"></div>`;
 		} else {
 			return '';
 		}
@@ -119,7 +119,7 @@ function createGlyphIconElementRenderer(element: DtoGlyphIconElement, additional
 		if (value == null) {
 			return "";
 		} else {
-			return `<div data-key="${element.property}" class="grid-template-element DtoGlyphIconElement fas fa-${value}" style="${style} ${backgroundColorCss} ${additionalCss}')"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element GlyphIconElement fas fa-${value}" style="${style} ${backgroundColorCss} ${additionalCss}')"></div>`;
 		}
 	};
 }
@@ -224,7 +224,7 @@ export function createGridTemplateRenderer(template: DtoGridTemplate, idProperty
 			} else {
 				let ariaLabel = data[template.ariaLabelProperty];
 				let title = data[template.titleProperty];
-				return `<div class="DtoGridTemplate" style="${gridCss}" ${data[idPropertyName] ? `data-id="${data[idPropertyName]}"` : ''} ${ariaLabel != null ? `aria-label="${ariaLabel}"` : ''} ${title != null ? `title="${title}"` : ""}>
+				return `<div class="GridTemplate" style="${gridCss}" ${data[idPropertyName] ? `data-id="${data[idPropertyName]}"` : ''} ${ariaLabel != null ? `aria-label="${ariaLabel}"` : ''} ${title != null ? `title="${title}"` : ""}>
 	${renderers.map(renderer => renderer(data)).join("")}
 </div>`;
 			}

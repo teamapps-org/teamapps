@@ -20,56 +20,60 @@
 
 @import "variables";
 
-// third party
-@import "bootstrap-imports";
+//// base
+@import "base/mixins.less";
+@import "base/normalize.less";
+@import "base/type.less";
+@import "base/code.less";
+@import "base/forms.less";
+@import "base/progress-bars.less";
 
-// own
 @import "general";
 @import "icons";
 
-@import "components/UiComponent";
-@import "components/UiDummyComponent";
-@import "components/UiRootPanel";
-@import "components/UiSplitPane";
-@import "components/UiPanel";
-@import "components/UiWindow";
-@import "components/UiWorkSpaceLayout";
-@import "components/UiMobileLayout";
-@import "components/UiTabPanel";
-@import "components/UiToolbar";
-@import "components/UiToolAccordion";
-@import "components/UiNavigationBar";
-@import "components/UiTextCellTemplate";
-@import "components/UiGridTemplate";
-@import "components/UiHtmlView";
-@import "components/UiIFrame";
-@import "components/UiFlexContainer";
-@import "components/UiAbsoluteLayout";
-@import "components/UiProgressDisplay";
-@import "components/UiDefaultMultiProgressDisplay";
-@import "components/UiNotification";
-@import "components/UiNotificationBar";
-@import "components/UiLinkButton";
+@import "components/Component";
+@import "components/DummyComponent";
+@import "components/RootPanel";
+@import "components/SplitPane";
+@import "components/Panel";
+@import "components/Window";
+@import "components/WorkSpaceLayout";
+@import "components/MobileLayout";
+@import "components/TabPanel";
+@import "components/Toolbar";
+@import "components/ToolAccordion";
+@import "components/NavigationBar";
+@import "components/TextCellTemplate";
+@import "components/GridTemplate";
+@import "components/HtmlView";
+@import "components/IFrame";
+@import "components/FlexContainer";
+@import "components/AbsoluteLayout";
+@import "components/ProgressDisplay";
+@import "components/DefaultMultiProgressDisplay";
+@import "components/Notification";
+@import "components/NotificationBar";
+@import "components/LinkButton";
 
 // formfield
-@import "formfield/UiField";
-@import "formfield/UiLabel";
-@import "formfield/UiMultiLineTextField";
-@import "formfield/UiTextField";
-@import "formfield/UiPasswordField";
-@import "formfield/UiDisplayField";
-@import "formfield/UiCheckBox";
-@import "formfield/UiButton";
-@import "formfield/UiNumberField";
-@import "formfield/UiComponentField";
+@import "formfield/Field";
+@import "formfield/Label";
+@import "formfield/MultiLineTextField";
+@import "formfield/TextField";
+@import "formfield/PasswordField";
+@import "formfield/DisplayField";
+@import "formfield/CheckBox";
+@import "formfield/Button";
+@import "formfield/NumberField";
+@import "formfield/ComponentField";
 
 // micro-components
 @import "micro-components/ProgressBar";
 @import "micro-components/ProgressCircle";
-@import "micro-components/UiToolButton";
-@import "micro-components/UiSpinner";
-@import "micro-components/UiAudioLevelIndicator";
-@import "micro-components/UiDropDown";
+@import "micro-components/ToolButton";
+@import "micro-components/Spinner";
+@import "micro-components/AudioLevelIndicator";
+@import "micro-components/DropDown";
 @import "micro-components/tooltip";
 @import "micro-components/ContextMenu";
 
@@ -78,6 +82,7 @@
 @import "util/glyphicon-button";
 @import "util/page-transitions";
 @import "util/animations";
+@import "util/clearfix";
 
 // themes
 @import "themes/modern";

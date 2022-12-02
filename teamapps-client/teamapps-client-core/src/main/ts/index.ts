@@ -5,7 +5,6 @@ export * from "./component/AbstractWebComponent";
 export * from "./component/Component";
 
 export * from "./DefaultTeamAppsUiContext";
-export * from "./TeamAppsUiComponentRegistry";
 export * from "./TeamAppsUiContext";
 export * from "./ClientObject";
 export * from "./Globals";

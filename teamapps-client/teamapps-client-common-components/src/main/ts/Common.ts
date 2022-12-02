@@ -192,16 +192,6 @@ export function hasVerticalScrollBar(element: HTMLElement): boolean {
 	return element.scrollWidth < element.offsetWidth;
 }
 
-export function loadScriptAsynchronously(url: string, callback?: EventListener) {
-	const scriptElement = document.createElement('script');
-	scriptElement.src = url;
-	if (callback) {
-		scriptElement.addEventListener('load', callback, false);
-	}
-	const someExistingScriptElement = document.getElementsByTagName('script')[0];
-	someExistingScriptElement.parentNode.insertBefore(scriptElement, someExistingScriptElement);
-}
-
 export interface ClickOutsideHandle {
 	cancel: () => void
 }
@@ -781,15 +771,15 @@ export function insertAfter(newNode: Node, referenceNode: Node) {
 }
 
 export function outerWidthIncludingMargins(el: HTMLElement) {
-	var width = el.offsetWidth;
-	var style = getComputedStyle(el);
+	let width = el.offsetWidth;
+	const style = getComputedStyle(el);
 	width += parseInt(style.marginLeft) + parseInt(style.marginRight);
 	return width;
 }
 
 export function outerHeightIncludingMargins(el: HTMLElement) {
-	var height = el.offsetHeight;
-	var style = getComputedStyle(el);
+	let height = el.offsetHeight;
+	const style = getComputedStyle(el);
 	height += parseInt(style.marginTop) + parseInt(style.marginBottom);
 	return height;
 }
@@ -848,7 +838,7 @@ export function isDescendantOf(child: Element, potentialAncestor: Element, inclu
 export async function createImageThumbnailUrl(file: File): Promise<string> {
 	if (["image/bmp", "image/gif", "image/heic", "image/heic-sequence", "image/heif", "image/heif-sequence", "image/ief", "image/jls", "image/jp2", "image/jpeg", "image/jpm", "image/jpx", "image/ktx", "image/png", "image/sgi", "image/svg+xml", "image/tiff", "image/webp", "image/wmf"].includes(file.type)) {
 		return new Promise<string | ArrayBuffer>((resolve, reject) => {
-			var reader = new FileReader();
+			const reader = new FileReader();
 			reader.onloadend = function () {
 				resolve(reader.result);
 			};
@@ -1267,8 +1257,8 @@ export function getLastPointerCoordinates() {
 
 export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaElement, text: string) {
 	if (input.selectionStart != null) {
-		var startPos = input.selectionStart;
-		var endPos = input.selectionEnd;
+		const startPos = input.selectionStart;
+		const endPos = input.selectionEnd;
 		input.value = input.value.substring(0, startPos)
 			+ text
 			+ input.value.substring(endPos, input.value.length);

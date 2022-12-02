@@ -1,0 +1,179 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.PageView {
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .block-section {
+    .header-container {
+      // nothing to do :-)
+    }
+    .left-column {
+      width: 66%;
+      float: left;
+      padding-right: calc(var(--ta-panel-gap) / 2);
+    }
+    .right-column {
+      width: 34%;
+      float: left;
+      padding-left: calc(var(--ta-panel-gap) / 2);
+    }
+
+  }
+
+  .block-wrapper {
+    border: none;
+    border-radius: var(--ta-border-radius);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+    margin-bottom: var(--ta-panel-gap);
+
+    .background-color-div {
+      background-color: var(--ta-bg-color-semi-transparent);
+    }
+  }
+
+  .creator-image-wrapper {
+    margin: 10px;
+    &.align-left {
+      float: left;
+    }
+    &.align-right {
+      float: right;
+    }
+
+    .creator-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  .MessagePageViewBlock {
+    padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+
+    .tool-buttons {
+      float: right;
+      line-height: 0;
+    }
+
+    .top-record {
+      margin: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+      &.align-left {
+        float: left;
+        clear: left;
+      }
+      &.align-right {
+        float: right;
+        clear: right;
+      }
+      &.align-center {
+        display: flex;
+        justify-content: center;
+      }
+      &.align-stretch {
+        // default behavior
+      }
+    }
+
+    .images {
+      position: relative;
+      clear: both;
+
+      .image {
+        position: absolute;
+      }
+    }
+  }
+
+  .CitationPageViewBlock {
+    padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+    
+    .tool-buttons {
+      float: right;
+      line-height: 0;
+    }
+
+    .flex-container {
+      display: flex;
+      align-items: center;
+
+      .content-wrapper {
+        flex-grow: 1;
+        margin: 0 10px;
+        .citation {
+          margin-top: 1.5em;
+          margin-bottom: .5em;
+          text-align: center;
+          font-size: 150%;
+        }
+
+        .author {
+          font-size: 130%;
+          font-style: italic;
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  .ComponentPageViewBlock {
+    .tool-buttons {
+      display: flex;
+      justify-content: flex-end;
+      line-height: 0;
+
+      &:not(:empty) {
+        padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+      }
+    }
+
+    .title {
+      font-size: 125%;
+      font-weight: 500;
+      height: 28px;
+      position: relative;
+
+      &:before, &:after {
+        position: absolute;
+        display: block;
+        width: 100%;
+        bottom: 1px;
+        left: 0;
+        content: '';
+        height: 1px;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 85%, rgba(0, 0, 0, 0) 100%);
+        margin-left: -8px;
+      }
+      &:after {
+        bottom: 0;
+        background: linear-gradient(to right, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, .5) 85%, rgba(255, 255, 255, 0) 100%);
+      }
+    }
+    .component-wrapper {
+      height: ~"calc(100% - 28px)";
+    }
+  }
+
+  .block-section:last-child {
+    margin-bottom: calc(var(--ta-panel-gap) * -1);
+  }
+
+}

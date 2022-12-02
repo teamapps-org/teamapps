@@ -25,7 +25,7 @@ import org.teamapps.dto.DtoLocalDateField;
 import org.teamapps.dto.DtoLocalDateFieldDropDownMode;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
@@ -35,7 +35,7 @@ import org.teamapps.ux.session.DateTimeFormatDescriptor;
 import java.time.LocalDate;
 import java.util.Locale;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class LocalDateField extends AbstractField<LocalDate> implements TextInputHandlingField {
 
 	public enum DropDownMode {

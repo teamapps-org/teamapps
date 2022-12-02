@@ -1,0 +1,122 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.RichTextEditor {
+  min-width: var(--ta-input-default-width);
+  background-color: var(--ta-input-bg);
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+
+  .tox {
+    .tox-editor-header {
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    .tox-toolbar-overlord {
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      overflow: hidden;
+    }
+  }
+
+  .inline-editor {
+    flex: 1 1 auto;
+    outline: none !important;
+    padding: 5px;
+    overflow: auto;
+
+    .note {
+      display: block;
+
+      padding: var(--ta-half-line-height-computed);
+      border: 1px solid var(--ta-state-info-border);
+      color: var(--ta-state-info-text);
+      background-color: var(--ta-state-info-bg);
+      border-radius: var(--ta-border-radius-large);
+      margin-bottom: var(--ta-half-line-height-computed);
+
+      > *:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    blockquote {
+      font-style: italic;
+    }
+  }
+
+  .mce-container {
+    box-sizing: border-box;
+  }
+
+  .file-upload-button {
+    position: absolute;
+    top: -10000px;
+  }
+
+  .spinner-wrapper {
+    position: absolute;
+    top: 32px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &.editable-if-focused:not(:hover):not(.focus) .toolbar-container {
+    opacity: .5;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, .5);
+    border-radius: var(--ta-input-border-radius);
+
+    > .mce-panel {
+      border-color: transparent;
+
+      .mce-btn-group {
+        border-color: transparent;
+      }
+    }
+  }
+
+  &.readonly,
+  &.disabled {
+    > * {
+      display: none;
+    }
+    > .readonly-view {
+      display: block;
+      overflow-y: scroll;
+    }
+  }
+  &.disabled > .readonly-view {
+    padding: 5px;
+  }
+  &:not(.readonly):not(.disabled) {
+    > .readonly-view {
+      display: none;
+    }
+  }
+
+}
+
+.Field.readonly > .RichTextEditor .toolbar-container {
+  display: none;
+}

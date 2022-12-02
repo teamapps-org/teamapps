@@ -35,7 +35,7 @@ export class LinkButton extends AbstractComponent<DtoLinkButton> implements DtoL
 
 	constructor(config: DtoLinkButton, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<a class="DtoLinkButton" tabindex="0"></a>`)
+		this.$main = parseHtml(`<a class="LinkButton" tabindex="0"></a>`)
 		this.$main.addEventListener("click", ev => {
 			if (this.config.onClickJavaScript != null) {
 				let context = this._context; // make context available in evaluated javascript

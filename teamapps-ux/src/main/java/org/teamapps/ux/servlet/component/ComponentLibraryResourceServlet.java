@@ -36,7 +36,7 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 		String pathInfoWithoutLeadingSlash =  pathInfo.startsWith("/") ? pathInfo.substring(1) : pathInfo;
 		if (pathInfoWithoutLeadingSlash.contains("/")) {
 			componentLibraryId = pathInfoWithoutLeadingSlash.substring(0, pathInfoWithoutLeadingSlash.indexOf('/'));
-			resourcePath = pathInfoWithoutLeadingSlash.substring(pathInfoWithoutLeadingSlash.indexOf('/') + 1);
+			resourcePath = pathInfoWithoutLeadingSlash.substring(pathInfoWithoutLeadingSlash.indexOf('/'));
 		} else {
 			resp.setStatus(404);
 			return;
@@ -50,8 +50,11 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 
 		String fullPath = req.getServletPath() + req.getPathInfo();
 
-		if ("".equals(resourcePath)) {
+		if ("/".equals(resourcePath)) {
 			streamUniqueResource(fullPath, componentLibrary::getMainJsResource, resp);
+			return;
+		} else if (resourcePath.equals("/" + componentLibraryId + ".css")) {
+			streamUniqueResource(fullPath, componentLibrary::getMainCssResource, resp);
 			return;
 		}
 
@@ -79,7 +82,7 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 		} else {
 			Resource resource = inputStreamSupplier.get();
 			try(BufferedInputStream bis = new BufferedInputStream(resource.getInputStream())) {
-				resp.setContentType("text/javascript");
+				resp.setContentType(resource.getMimeType());
 				bis.transferTo(resp.getOutputStream());
 			}
 		}

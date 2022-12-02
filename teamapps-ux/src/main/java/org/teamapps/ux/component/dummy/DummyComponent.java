@@ -24,10 +24,10 @@ import org.teamapps.dto.DtoDummyComponent;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class DummyComponent extends AbstractComponent {
 
 	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(DtoDummyComponent.ClickedEvent.TYPE_ID);

@@ -25,7 +25,7 @@ import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.task.ObservableProgress;
 import org.teamapps.ux.task.ProgressStatus;
@@ -36,7 +36,7 @@ import org.teamapps.ux.task.ProgressStatus;
  * It is typically used to visualize the progress of an {@link ObservableProgress}.
  * However, it can also be used manually, without attaching a progress.
  */
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class ProgressDisplay extends AbstractComponent {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);

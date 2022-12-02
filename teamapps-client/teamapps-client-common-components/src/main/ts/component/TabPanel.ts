@@ -103,7 +103,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 	constructor(config: DtoTabPanel, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$tabPanel = parseHtml(`<div class="DtoTabPanel">
+		this.$tabPanel = parseHtml(`<div class="TabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">
         <div class="background-color-div">
 	        <div class="tab-button-container left"></div>
@@ -272,7 +272,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 
 		if (closeable) {
 			let closeButtonHtml = `<div class="tab-button-close-button">
-                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'} ta-icon-window-close-grey"></div>
+                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'} ta-icon-window-close"></div>
                     </div>`;
 			const $closeButton1 = $tabButton.appendChild(parseHtml(closeButtonHtml));
 			$closeButton1.addEventListener("mousedown", () => {

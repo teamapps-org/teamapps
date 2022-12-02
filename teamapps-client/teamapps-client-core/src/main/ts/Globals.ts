@@ -31,8 +31,8 @@ export class Globals {
 		setGlobalKeyEventsEnabled.call(this, unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp);
 	}
 
-	public static async registerComponentLibrary(uuid: string, mainJsUrl: string, context: TeamAppsUiContextInternalApi) {
-		context.registerComponentLibrary(uuid, mainJsUrl);
+	public static async registerComponentLibrary(uuid: string, mainJsUrl: string, mainCssUrl: string, context: TeamAppsUiContextInternalApi) {
+		context.registerComponentLibrary(uuid, mainJsUrl, mainCssUrl);
 	}
 
 	public static async registerClientObjectType(libraryUuid: string, clientObjectType: string, eventNames: string[], queryNames: string[], context: TeamAppsUiContextInternalApi) {

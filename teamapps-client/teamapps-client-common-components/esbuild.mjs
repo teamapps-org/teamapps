@@ -22,11 +22,7 @@ esbuild.build({
     sourcemap: true,
     loader: {
         ".png": "file",
-        ".eot": "file",
-        ".woff2": "file",
-        ".woff": "file",
-        ".ttf": "file",
-        ".svg": "file",
+        ".svg": "dataurl",
     },
     assetNames: "assets/[name]-[hash]",
     plugins: [

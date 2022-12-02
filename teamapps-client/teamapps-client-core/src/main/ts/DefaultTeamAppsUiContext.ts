@@ -38,7 +38,6 @@ import {
 	TeamAppsConnectionListener
 } from "teamapps-client-communication";
 import * as jstz from "jstz";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {bind} from "./util/bind";
 import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from "./proxy/RefreshableComponentProxyHandle";
@@ -417,9 +416,16 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	async registerComponentLibrary(uuid: string, mainJsUrl: string) {
+	registerComponentLibrary(uuid: string, mainJsUrl: string, mainCssUrl: string) {
 		let module = import(mainJsUrl);
 		this.libraryModules.set(uuid, module);
+		if (mainCssUrl != null) {
+			const link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = mainCssUrl;
+			document.getElementsByTagName('head')[0].appendChild(link);
+		}
 	}
 
 	private async getClientObjectClass(libraryUuid: string, className: string): Promise<ClientObjectClassWrapper> {

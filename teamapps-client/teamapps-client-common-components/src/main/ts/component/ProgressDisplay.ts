@@ -45,7 +45,7 @@ export class ProgressDisplay extends AbstractComponent<DtoProgressDisplay> imple
 	constructor(config: DtoProgressDisplay, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="DtoProgressDisplay">
+		this.$main = parseHtml(`<div class="ProgressDisplay">
 			<div class="title">
 				<div class="icon img img-16"></div>
         		<div class="task-name"></div>

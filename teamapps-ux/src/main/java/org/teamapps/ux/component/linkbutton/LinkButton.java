@@ -23,10 +23,10 @@ import org.teamapps.dto.DtoLinkButton;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class LinkButton extends AbstractComponent {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLinkButton.ClickedEvent.TYPE_ID);

@@ -24,13 +24,13 @@ import org.teamapps.dto.DtoField;
 import org.teamapps.dto.DtoNumberField;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.Locale;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class NumberField extends AbstractField<Number> implements TextInputHandlingField {
 
 	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoNumberField.TextInputEvent.TYPE_ID);

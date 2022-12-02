@@ -34,6 +34,7 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 	public readonly onDropDownOpened: TeamAppsEvent<DtoToolButton_DropDownOpenedEvent> = new TeamAppsEvent();
 
 	private $button: HTMLElement;
+	private $img: HTMLElement;
 
 	private _dropDown: DropDown; // lazy-init!
 	private dropDownComponent: Component;
@@ -48,7 +49,7 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 		this.minDropDownHeight = config.minDropDownHeight;
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
 
-		this.$button = parseHtml(`<div class="DtoToolButton">
+		this.$button = parseHtml(`<div class="ToolButton">
 	<div class="img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url('${config.icon}');"></div>
 	<div class="caption">${config.caption ?? ""}</div>
 </div>`);
@@ -69,6 +70,7 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 			}
 			this.onClicked.fire({});
 		});
+		this.$img = this.$button.querySelector(":scope .img");
 		this.setDropDownComponent(config.dropDownComponent as Component);
 	}
 
@@ -121,7 +123,7 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 	}
 
 	setIcon(icon: string): void {
-		this.$button.style.backgroundImage = `url('${icon}')`;
+		this.$img.style.backgroundImage = `url('${icon}')`;
 	}
 
 	setPopoverText(popoverText: string): void {

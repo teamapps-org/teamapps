@@ -26,7 +26,7 @@ import org.teamapps.dto.DtoComboBoxTreeRecord;
 import org.teamapps.dto.DtoField;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.ux.component.template.Template;
@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ComboBox.class);

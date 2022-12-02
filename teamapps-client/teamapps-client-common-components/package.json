@@ -29,6 +29,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
+    "bootstrap-icons": "^1.10.2",
     "teamapps-client-communication": "workspace:*"
   }
 }

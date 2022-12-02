@@ -25,7 +25,7 @@ export class Spinner {
 
 	constructor(options?: { fixedSize?: number | string }) {
 		options = options || {};
-		this.$mainDomElement = parseHtml(`<div class="DtoSpinner"><div class="teamapps-spinner"></div></div>`);
+		this.$mainDomElement = parseHtml(`<div class="Spinner"><div class="teamapps-spinner"></div></div>`);
 		let fixedSizeCssValue: string = options.fixedSize == null ? "100%" : typeof options.fixedSize === "number" ? options.fixedSize + "px" :  options.fixedSize;
 		const $spinner = this.$mainDomElement.querySelector<HTMLElement>(":scope .teamapps-spinner");
 		$spinner.style.width = fixedSizeCssValue;

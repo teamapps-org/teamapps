@@ -41,7 +41,7 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 	}
 
 	protected initialize(config: DtoTemplateField, context: TeamAppsUiContext): void {
-		this.$main = parseHtml(`<div class="DtoTemplateField"></div>`);
+		this.$main = parseHtml(`<div class="TemplateField"></div>`);
 		this.$main.addEventListener("click", ev => this.onClicked.fire({}));
 		this.update(config);
 	}
@@ -81,7 +81,7 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 
 
 	getReadOnlyHtml(value: DtoClientRecord, availableWidth: number): string {
-		return `<div class="static-readonly-DtoTemplateField">${value != null ? this.templateRenderer.render(value.values) : ""}</div>`;
+		return `<div class="static-readonly-TemplateField">${value != null ? this.templateRenderer.render(value.values) : ""}</div>`;
 	}
 }
 

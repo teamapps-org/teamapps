@@ -25,7 +25,7 @@ import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.DisplayField;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 
 import static org.teamapps.ux.task.ProgressStatus.*;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class DefaultMultiProgressDisplay extends AbstractComponent implements MultiProgressDisplay {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoDefaultMultiProgressDisplay.ClickedEvent.TYPE_ID);

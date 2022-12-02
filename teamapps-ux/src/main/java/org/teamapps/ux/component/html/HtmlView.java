@@ -27,7 +27,7 @@ import org.teamapps.ux.component.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class HtmlView extends AbstractComponent {
 
 	private String html;

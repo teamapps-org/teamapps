@@ -174,26 +174,26 @@
   ::-webkit-scrollbar-corner { background-color: var(--ta-input-border-color);}
   ::-webkit-resizer { background-color: var(--ta-input-border-color);}
 
-  .UiToolbar {
+  .Toolbar {
     > .background-color-div {
       > .inner-container .button-group-wrapper > .toolbar-group-separator {
         border-right: 1px solid rgba(78, 78, 78, 0.5);
       }
     }
-    .toolbar-button-wrapper:hover, .UiToolbar-size-testing-container .toolbar-button-wrapper:hover {
+    .toolbar-button-wrapper:hover, .Toolbar-size-testing-container .toolbar-button-wrapper:hover {
       background-color: @dark-background-color-light;
     }
   }
 
-  .UiToolAccordion {
+  .ToolAccordion {
     .toolbar-button-wrapper:hover {
       background-color: @dark-background-color-light;
     }
   }
 
-  .UiPanel {
+  .Panel {
     .panel-heading {
-      .panel-heading-window-buttons > .UiToolButton {
+      .panel-heading-window-buttons > .ToolButton {
         filter: invert(100%);
       }
 
@@ -203,33 +203,33 @@
     }
   }
 
-  .UiTabPanel {
+  .TabPanel {
     > .tab-panel-header > .background-color-div {
       .tab-button .tab-button-close-button {
         filter: invert(100%);
       }
     }
 
-    .window-button-container .UiToolButton.img {
+    .window-button-container .ToolButton.img {
       filter: invert(100%);
     }
   }
 
-  .UiNotification .close-button {
+  .Notification .close-button {
       filter: invert(100%);
   }
 
-  .UiItemView .item-group .item-group-header:after {
+  .ItemView .item-group .item-group-header:after {
     bottom: 0;
     background: linear-gradient(to right, rgba(78, 78, 78, 0.5) 0%, rgba(78, 78, 78, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
   }
 
-  .UiInfiniteItemView > .slickgrid .item-wrapper > *:hover {
+  .InfiniteItemView > .slickgrid .item-wrapper > *:hover {
     border-color: @dark-border-color;
     background: linear-gradient(to bottom, @dark-background-color 0%, @dark-background-color 62%, @dark-background-color-light 100%);
   }
 
-  .UiInfiniteItemView2 {
+  .InfiniteItemView2 {
     user-select: none;
     overflow: auto;
 

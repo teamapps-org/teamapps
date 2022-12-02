@@ -22,7 +22,7 @@ package org.teamapps.ux.component.dialogue;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldEditingMode;
@@ -40,7 +40,7 @@ import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class Dialogue extends Window {
 	public ProjectorEvent<Boolean> onResult = new ProjectorEvent<>();
 	private final ComboBox<BaseTemplateRecord<?>> comboBox;

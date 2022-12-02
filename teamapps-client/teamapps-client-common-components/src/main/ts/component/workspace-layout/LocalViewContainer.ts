@@ -73,7 +73,7 @@ export class LocalViewContainer implements ViewContainer {
 	            private context: TeamAppsUiContext,
 	            private listener: ViewContainerListener,
 	            multiProgressDisplay: MultiProgressDisplay) {
-		this.$mainDiv = parseHtml(`<div data-id="${this.workSpaceLayoutId}" class="DtoWorkSpaceLayout">
+		this.$mainDiv = parseHtml(`<div data-id="${this.workSpaceLayoutId}" class="WorkSpaceLayout">
     <div class="toolbar-container"></div>
     <div class="content-container-wrapper">
 	    <div class="content-container"></div>
@@ -95,7 +95,7 @@ export class LocalViewContainer implements ViewContainer {
 		
 		this.setMultiProgressDisplay(multiProgressDisplay);
 
-		this.$maximizationContainerWrapper = parseHtml(`<div class="DtoWorkSpaceLayout-maximization-container-wrapper"><div class="DtoWorkSpaceLayout-maximization-container"></div></div>`);
+		this.$maximizationContainerWrapper = parseHtml(`<div class="WorkSpaceLayout-maximization-container-wrapper"><div class="WorkSpaceLayout-maximization-container"></div></div>`);
 		document.body.appendChild(this.$maximizationContainerWrapper);
 		this.$maximizationContainer = this.$maximizationContainerWrapper.querySelector<HTMLElement>(':scope .DtoWorkSpaceLayout-maximization-container');
 

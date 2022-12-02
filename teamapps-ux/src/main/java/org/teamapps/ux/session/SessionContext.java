@@ -479,7 +479,8 @@ public class SessionContext {
 	private void loadComponentLibraryIfNecessary(ClientObject clientObject, ComponentLibraryInfo componentLibraryInfo) {
 		if (!componentLibrariesLoaded.contains(componentLibraryInfo.getComponentLibrary())) {
 			String mainJsUrl = componentLibraryRegistry.getMainJsUrl(clientObject.getClass());
-			sendStaticCommand(null, new DtoGlobals.RegisterComponentLibraryCommand(componentLibraryInfo.getUuid(), mainJsUrl), null);
+			String mainCssUrl = componentLibraryRegistry.getMainCssUrl(clientObject.getClass());
+			sendStaticCommand(null, new DtoGlobals.RegisterComponentLibraryCommand(componentLibraryInfo.getUuid(), mainJsUrl, mainCssUrl), null);
 			componentLibrariesLoaded.add(componentLibraryInfo.getComponentLibrary());
 		}
 	}
@@ -626,7 +627,7 @@ public class SessionContext {
 	}
 
 	public static Window createDefaultSessionMessageWindow(String title, String message, String refreshButtonCaption, String cancelButtonCaption) {
-		Window window = new Window(null, title, null, 300, 300, false, false, false);
+		Window window = new Window(null, title, null, 300, 300, true, true, true);
 		window.setPadding(10);
 
 		VerticalLayout verticalLayout = new VerticalLayout();

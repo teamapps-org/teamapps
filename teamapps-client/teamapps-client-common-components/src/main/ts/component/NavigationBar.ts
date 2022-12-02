@@ -58,7 +58,7 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 
 		this.buttonTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.buttonTemplate, null);
 
-		this.$bar = parseHtml(`<div class="DtoNavigationBar">
+		this.$bar = parseHtml(`<div class="NavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>
                 </div>

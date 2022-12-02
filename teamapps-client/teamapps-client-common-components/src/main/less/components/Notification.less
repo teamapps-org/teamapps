@@ -1,0 +1,130 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+
+.Notification-container {
+  position: fixed;
+  z-index: 1000;
+  padding: 16px 14px 26px 14px;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  > * {
+    pointer-events: all;
+  }
+
+  display: flex;
+  flex-direction: column;
+
+
+  &.top-left {
+    align-items: flex-start;
+  }
+
+  &.top-center {
+    align-items: center;
+  }
+
+  &.top-right {
+    align-items: flex-end;
+  }
+
+  &.bottom-left {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+
+  &.bottom-center {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  &.bottom-right {
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+
+  .notification-wrapper {
+    max-width: 100%;
+    z-index: 1000;
+    overflow: visible;
+    margin-bottom: 5px;
+    transition: height .7s, margin .7s;
+
+    //&.shrink {
+    //  animation: Notification-wrapper-shrink .7s ease-in-out;
+    //}
+  }
+
+  @media (max-width: 400px) {
+    padding-left: 2px;
+    padding-right: 2px;
+    .Notification {
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, .3);
+    }
+  }
+}
+
+@keyframes Notification-wrapper-shrink {
+  0% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 0);
+  }
+}
+
+.Notification {
+  width: 400px;
+  max-width: 100%;
+  border-radius: 3px;
+  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, .5);
+  overflow: hidden;
+  position: relative;
+  background-color: var(--ta-bg-color);
+
+  > .content-container {
+    padding: 4px;
+  }
+
+  > .progress-container .progress {
+    border-radius: 0 0 3px 3px;
+  }
+
+  > .close-button {
+    .ta-icon-window-close();
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 17px;
+    border-left: 1px solid var(--ta-special-button-section-border);
+    border-bottom: 1px solid var(--ta-special-button-section-border);
+    background-color: var(--ta-special-button-section-bg);
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: calc(var(--ta-border-radius) + 2px);
+    background-size: 12px 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+

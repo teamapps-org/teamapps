@@ -26,7 +26,7 @@ export class HtmlView extends AbstractComponent<DtoHtmlView> implements DtoHtmlV
 
 	constructor(config: DtoHtmlView, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = parseHtml(`<div class="DtoHtmlView">${config.html}</div>`);
+		this.$main = parseHtml(`<div class="HtmlView">${config.html}</div>`);
 		for (let selector in config.componentsByContainerElementSelector) {
 			let components = config.componentsByContainerElementSelector[selector] as Component[];
 			for (let c of components) {

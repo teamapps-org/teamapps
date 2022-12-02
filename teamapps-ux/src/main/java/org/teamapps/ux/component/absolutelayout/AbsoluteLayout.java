@@ -25,7 +25,7 @@ import org.teamapps.dto.DtoAbsolutePositioning;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class AbsoluteLayout extends AbstractComponent {
 
 	private Map<Component, AbsolutePosition> positionsByComponent = new HashMap<>();

@@ -43,7 +43,7 @@ export class DropDown {
 	private _contentComponent: Component;
 
 	constructor(content?: Component) {
-		this.$dropDown = parseHtml(`<div class="DtoDropDown teamapps-blurredBackgroundImage">
+		this.$dropDown = parseHtml(`<div class="DropDown teamapps-blurredBackgroundImage">
                 <div class="background-color-div"></div>
               </div>`);
 		this.$contentContainer = this.$dropDown.querySelector<HTMLElement>(':scope .background-color-div');

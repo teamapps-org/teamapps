@@ -202,7 +202,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		let iconSize = this.context.config.optimizedForTouch ? 16 : 12;
 		this.$minimizedTrayButton.innerHTML = '';
 		// noinspection CssUnknownTarget
-		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize} ta-icon-window-restore-grey"></div>`));
+		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize} ta-icon-window-restore"></div>`));
 		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${tab.view.tabIcon}')"></div>`)));
 		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(DtoViewGroupPanelState.NORMAL));
 	}

@@ -1,0 +1,86 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.NavigationBar {
+  overflow: visible; // !!!needed for dropdowns!!!
+
+  user-select: none;
+
+  background-color: var(--ta-bg-color-semi-transparent);
+  border-top: 1px solid var(--ta-panel-border-color);
+
+  position: relative;
+
+  > .buttons-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    > .nav-button-wrapper {
+      flex: 1 1 1px;
+      text-align: center;
+      line-height: 0;
+      transition: background-color var(--ta-color-transition-time);
+
+      &:hover {
+        background-color: var(--ta-hover-color);
+      }
+      &:active {
+        background-color: var(--ta-active-color);
+      }
+
+      > .nav-button-inner-wrapper {
+        display: inline-block;
+      }
+    }
+
+    .progress-container {
+      order: 1000;
+      display: flex;
+      align-items: center;
+
+      > * {
+        margin-right: 10px;
+         &.no-tasks {
+           display: none;
+         }
+      }
+    }
+  }
+
+  .fan-out-container-wrapper {
+    overflow: auto;
+    width: 100%;
+    position: absolute;
+    box-shadow: 0px -5px 20px -3px rgba(0, 0, 0, 0.3);
+    z-index: var(--ta-zindex-dropdown);
+    display:none;
+
+    .open {
+      // currently no styles here...
+    }
+
+    .fan-out-container {
+      background-color: var(--ta-bg-color-semi-transparent);
+    }
+  }
+}
+
+
+
+

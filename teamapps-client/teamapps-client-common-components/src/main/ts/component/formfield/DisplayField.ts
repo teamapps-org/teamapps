@@ -30,7 +30,7 @@ export class DisplayField extends AbstractField<DtoDisplayField, string> impleme
 	private removeStyleTags: boolean;
 
 	protected initialize(config: DtoDisplayField, context: TeamAppsUiContext) {
-		this._$field = parseHtml(`<div class="DtoDisplayField">`);
+		this._$field = parseHtml(`<div class="DisplayField">`);
 
 		this.setShowBorder(config.showBorder);
 		this.setShowHtml(config.showHtml);
@@ -96,7 +96,7 @@ export class DisplayField extends AbstractField<DtoDisplayField, string> impleme
 		} else {
 			content = "";
 		}
-		return `<div class="static-readonly-DtoDisplayField">${content}</div>`;
+		return `<div class="static-readonly-DisplayField">${content}</div>`;
 	}
 
 	getDefaultValue() {

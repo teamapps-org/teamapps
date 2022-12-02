@@ -46,5 +46,5 @@ export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 
 	toggleEventListener(libraryUuid: string | null, clientObjectId: string | null, qualifiedEventName: string, enabled: boolean): any;
 
-	registerComponentLibrary(uuid: string, mainJsUrl: string): void;
+	registerComponentLibrary(uuid: string, mainJsUrl: string, mainCssUrl: string): void;
 }

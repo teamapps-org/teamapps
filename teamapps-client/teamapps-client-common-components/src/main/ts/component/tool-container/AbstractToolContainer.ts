@@ -33,7 +33,7 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 
 	public static initialize() {
 		window.addEventListener("load", () => { // wait until there IS a document.body
-			this.$sizeTestingContainer = parseHtml('<div class="DtoAbstractToolContainer-size-testing-container">');
+			this.$sizeTestingContainer = parseHtml('<div class="AbstractToolContainer-size-testing-container">');
 			document.body.appendChild(this.$sizeTestingContainer);
 		});
 	}

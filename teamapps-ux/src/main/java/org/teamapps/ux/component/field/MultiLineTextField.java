@@ -21,10 +21,10 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoField;
 import org.teamapps.dto.DtoMultiLineTextField;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class MultiLineTextField extends TextField {
 
 	private boolean adjustHeightToContent = false;

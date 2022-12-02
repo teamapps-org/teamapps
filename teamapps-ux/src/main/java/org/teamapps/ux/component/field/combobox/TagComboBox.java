@@ -26,7 +26,7 @@ import org.teamapps.dto.DtoField;
 import org.teamapps.dto.DtoTagComboBox;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
@@ -36,7 +36,7 @@ import org.teamapps.ux.model.ComboBoxModel;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TagComboBox.class);

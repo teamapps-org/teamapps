@@ -110,12 +110,12 @@ export class UiPageView extends AbstractComponent<DtoPageView> {
 	}
 
 	private addRow(before: boolean, otherRowIndex?: number): Row {
-		let $row = parseHtml('<div class="block-section row">');
+		let $row = parseHtml('<div class="block-section clearfix row">');
 		let $headerContainer = parseHtml('<div class="header-container col-md-12">');
 		$row.appendChild($headerContainer);
-		let $leftColumn = parseHtml('<div class="left-column col-md-8">');
+		let $leftColumn = parseHtml('<div class="left-column clearfix col-md-8">');
 		$row.appendChild($leftColumn);
-		let $rightColumn = parseHtml('<div class="right-column col-md-4">');
+		let $rightColumn = parseHtml('<div class="right-column clearfix col-md-4">');
 		$row.appendChild($rightColumn);
 		let row: Row = {
 			$row: $row,

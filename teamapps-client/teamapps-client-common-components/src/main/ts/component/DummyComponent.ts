@@ -44,7 +44,7 @@ export class DummyComponent extends AbstractComponent<DtoDummyComponent> impleme
 
 	constructor(config: DtoDummyComponent, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = parseHtml('<div class="DtoDummyComponent" id="' + config.id + '"></div>');
+		this.$panel = parseHtml('<div class="DummyComponent" id="' + config.id + '"></div>');
 		this.$panel.addEventListener("click", () => {
 			this.clickCount++;
 			this.onClicked.fire({

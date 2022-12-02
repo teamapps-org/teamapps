@@ -3454,10 +3454,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bootstrap@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "bootstrap@npm:3.4.1"
-  checksum: 5742035e8c541cd525780542771e7d56f63e5d4b2d902427bf182d3383e74a17c9074b6809f50d7f3de0585377e673339628b97cfdcde597ad69ecb1d2b562a6
+"bootstrap-icons@npm:^1.10.2":
+  version: 1.10.2
+  resolution: "bootstrap-icons@npm:1.10.2"
+  checksum: 1d73556a70b05c1b219c379243c24ea8186c773990b3bc5e8248825e7eae1c8137be90a2b7dd81fd46060a99558763886a069587a65a7f70a362bf5934e795e7
   languageName: node
   linkType: hard
 
@@ -14083,6 +14083,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "teamapps-client-common-components@workspace:teamapps-client-common-components"
   dependencies:
+    bootstrap-icons: ^1.10.2
     concurrently: ^7.6.0
     cross-var: ^1.1.0
     esbuild: ^0.15.13
@@ -14159,7 +14160,6 @@ __metadata:
     autoprefixer: ^9.6.1
     awesome-typescript-loader: ^5.0.0
     axios: ^0.27.2
-    bootstrap: ^3.4.1
     bower: 1.x
     canvas-gauges: ^2.1.5
     clean-webpack-plugin: ^3.0.0

@@ -22,13 +22,13 @@ package org.teamapps.ux.component.field;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoImageField;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.ImageSizing;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class ImageField extends AbstractField<String> {
 
 	private Length width = Length.AUTO; 

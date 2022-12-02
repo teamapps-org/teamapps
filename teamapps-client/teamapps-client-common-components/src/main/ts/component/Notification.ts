@@ -41,12 +41,12 @@ const containersByPosition: {
 	[DtoNotificationPosition.BOTTOM_CENTER]: HTMLElement,
 	[DtoNotificationPosition.BOTTOM_RIGHT]: HTMLElement
 } = {
-	[DtoNotificationPosition.TOP_LEFT]: parseHtml(`<div class="DtoNotification-container top-left"></div>`),
-	[DtoNotificationPosition.TOP_CENTER]: parseHtml(`<div class="DtoNotification-container top-center"></div>`),
-	[DtoNotificationPosition.TOP_RIGHT]: parseHtml(`<div class="DtoNotification-container top-right"></div>`),
-	[DtoNotificationPosition.BOTTOM_LEFT]: parseHtml(`<div class="DtoNotification-container bottom-left"></div>`),
-	[DtoNotificationPosition.BOTTOM_CENTER]: parseHtml(`<div class="DtoNotification-container bottom-center"></div>`),
-	[DtoNotificationPosition.BOTTOM_RIGHT]: parseHtml(`<div class="DtoNotification-container bottom-right"></div>`)
+	[DtoNotificationPosition.TOP_LEFT]: parseHtml(`<div class="Notification-container top-left"></div>`),
+	[DtoNotificationPosition.TOP_CENTER]: parseHtml(`<div class="Notification-container top-center"></div>`),
+	[DtoNotificationPosition.TOP_RIGHT]: parseHtml(`<div class="Notification-container top-right"></div>`),
+	[DtoNotificationPosition.BOTTOM_LEFT]: parseHtml(`<div class="Notification-container bottom-left"></div>`),
+	[DtoNotificationPosition.BOTTOM_CENTER]: parseHtml(`<div class="Notification-container bottom-center"></div>`),
+	[DtoNotificationPosition.BOTTOM_RIGHT]: parseHtml(`<div class="Notification-container bottom-right"></div>`)
 };
 
 let notifications: {
@@ -133,7 +133,7 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 	constructor(config: DtoNotification, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="DtoNotification">
+		this.$main = parseHtml(`<div class="Notification">
 	<div class="close-button"></div>
 	<div class="content-container"></div>
 	<div class="progress-container"></div>

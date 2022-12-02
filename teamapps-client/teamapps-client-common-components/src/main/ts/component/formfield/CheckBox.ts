@@ -42,7 +42,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 
 	protected initialize(config: DtoCheckBox, context: TeamAppsUiContext) {
 		const uuid = "cb-" + generateUUID();
-		this.$main = parseHtml(`<div class="DtoCheckBox">
+		this.$main = parseHtml(`<div class="CheckBox">
 				<style></style>
                 <div class="checkbox-check field-border field-border-glow field-background" tabindex="0"></div>
                 <div class="checkbox-label"></div>
@@ -151,7 +151,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 	}
 
 	public getReadOnlyHtml(value: boolean, availableWidth: number): string {
-		return `<div class="DtoCheckBox">
+		return `<div class="CheckBox">
                     <div class="checkbox-check">${value ? '\ue013' : '\u200b'}</div>
                     <div class="checkbox-label">${this.config.caption /*TODO make caption a changeable instance field*/ || ""}</div>
                 </div>`;

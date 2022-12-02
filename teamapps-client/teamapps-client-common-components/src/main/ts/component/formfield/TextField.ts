@@ -40,7 +40,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 	private showClearButton: boolean;
 
 	protected initialize(config: C, context: TeamAppsUiContext) {
-		this.$wrapper = parseHtml(`<div class="DtoTextField field-border field-border-glow field-background clearable-field-wrapper form-control">
+		this.$wrapper = parseHtml(`<div class="TextField field-border field-border-glow field-background clearable-field-wrapper form-control">
     <input type="text"></input>
     <div class="clear-button tr-remove-button"></div>  
 </div>`);
@@ -154,7 +154,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
-		return `<div class="static-readonly-DtoTextField">${value == null ? "" : escapeHtml(value)}</div>`;
+		return `<div class="static-readonly-TextField">${value == null ? "" : escapeHtml(value)}</div>`;
 	}
 
 	getDefaultValue(): string {

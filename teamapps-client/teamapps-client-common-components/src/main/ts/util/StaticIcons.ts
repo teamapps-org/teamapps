@@ -17,9 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-export enum StaticIcons {
-	CLOSE = "/assets/window-close-grey.png",
-	MAXIMIZE = "/assets/window-maximize-grey.png",
-	MINIMIZE = "/assets/window-minimize-grey.png",
-	RESTORE = "/assets/window-restore-grey.png"
+
+// @ts-ignore
+import x from "bootstrap-icons/icons/x-lg.svg";
+// @ts-ignore
+import square from "bootstrap-icons/icons/square.svg";
+// @ts-ignore
+import dash from "bootstrap-icons/icons/dash-lg.svg";
+// @ts-ignore
+import windowStack from "bootstrap-icons/icons/window-stack.svg";
+
+export const StaticIcons = {
+	CLOSE: x as string,
+	MAXIMIZE: square as string,
+	MINIMIZE: dash as string,
+	RESTORE: windowStack as string
 }

@@ -28,7 +28,7 @@ import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 

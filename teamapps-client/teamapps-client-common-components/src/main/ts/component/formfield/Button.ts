@@ -169,7 +169,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 	}
 
 	public getReadOnlyHtml(value: void, availableWidth: number): string {
-		return `<div class="DtoButton btn field-border field-border-glow field-background">
+		return `<div class="Button field-border field-border-glow field-background">
 			${this.renderContent()}
         </div>`;
 	}

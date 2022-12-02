@@ -58,7 +58,7 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 	constructor(config: DtoWindow, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="DtoWindow">
+		this.$main = parseHtml(`<div class="Window">
 	<div class="panel-wrapper"></div>
 </div>`);
 		this.$panelWrapper = this.$main.querySelector<HTMLElement>(":scope >.panel-wrapper");

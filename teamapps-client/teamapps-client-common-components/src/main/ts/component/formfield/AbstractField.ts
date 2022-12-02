@@ -82,7 +82,7 @@ export abstract class AbstractField<C extends DtoField = DtoField, V = any> exte
 		super(_config, _context);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
-		this.$fieldWrapper = parseHtml(`<div class="DtoField"></div>`);
+		this.$fieldWrapper = parseHtml(`<div class="Field"></div>`);
 		this.initialize(_config, _context);
 		this.$fieldWrapper.appendChild(this.$messagesContainerAbove);
 		this.$fieldWrapper.appendChild(this.getMainInnerDomElement());

@@ -1,0 +1,138 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.LiveStreamComponent {
+  position: relative;
+  overflow: hidden;
+
+  > .background-image-container,
+  > .livestream-player-container,
+  > .waiting-video-container,
+  > .image-overlay-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  > .livestream-player-container {
+    pointer-events: none;
+    > * {
+      pointer-events: all;
+    }
+  }
+
+  .background-image,
+  .image-overlay {
+    position: absolute;
+  }
+
+  .image-overlay-container,
+  .info-text-container {
+    pointer-events: none;
+  }
+
+  .waiting-video-player {
+    width: 100%;
+    height: 100%;
+  }
+
+  > .livestream-player-container {
+    > * {
+      position: absolute;
+      top: -100000px;
+    }
+  }
+
+  > .info-text-container {
+    position: absolute;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 1), -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    font-size: 110%;
+    bottom: 30px;
+    left: 5px;
+    right: 5px;
+    min-height: 2em;
+
+    //@media (min-width: @screen-sm-min) {
+    //  font-size: 160%;
+    //  left: 10px;
+    //  right: 10px;
+    //}
+    //@media (min-width: @screen-md-min) {
+    //  font-size: 200%;
+    //  left: 20px;
+    //  right: 20px;
+    //}
+    //@media (min-width: @screen-lg-min) {
+    //  font-size: 250%;
+    //  left: 30px;
+    //  right: 30px;
+    //}
+  }
+}
+
+.HttpLiveStreamPlayer {
+  .video-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .spinner-container {
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-color: var(--ta-bg-dim-overlay);
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      background-color: #ddd;
+    }
+  }
+}
+
+.MpegDashPlayer {
+  .video-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .spinner-container {
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-color: var(--ta-bg-dim-overlay);
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      background-color: #ddd;
+    }
+  }
+}
+

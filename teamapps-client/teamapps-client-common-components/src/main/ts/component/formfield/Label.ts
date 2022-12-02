@@ -31,7 +31,7 @@ export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEv
 	private targetFieldVisibilityChangeHandler: (visible: boolean) => void;
 
 	protected initialize(config: DtoLabel, context: TeamAppsUiContext): void {
-		this.$main = parseHtml(`<div class="DtoLabel"><div class="icon img img-16 hidden"></div><span class="caption">${config.caption}</span></div>`);
+		this.$main = parseHtml(`<div class="Label"><div class="icon img img-16 hidden"></div><span class="caption">${config.caption}</span></div>`);
 		this.$icon = this.$main.querySelector<HTMLElement>(":scope .icon");
 		this.$caption = this.$main.querySelector<HTMLElement>(":scope .caption");
 		this.setIcon(config.icon);

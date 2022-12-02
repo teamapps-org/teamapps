@@ -68,7 +68,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 
 	constructor(config: DtoToolbar, context: TeamAppsUiContext) {
 		super(config, context);
-		this._$toolbar = parseHtml(`<div class="DtoToolbar teamapps-blurredBackgroundImage"></div>`);
+		this._$toolbar = parseHtml(`<div class="Toolbar teamapps-blurredBackgroundImage"></div>`);
 		this._$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this._$toolbar.appendChild(this._$backgroundColorDiv);
 		this._$innerContainer = parseHtml('<div class="inner-container">');

@@ -26,10 +26,10 @@ import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public class ToolButton extends AbstractComponent {
 
 	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(DtoToolButton.DropDownOpenedEvent.TYPE_ID);
