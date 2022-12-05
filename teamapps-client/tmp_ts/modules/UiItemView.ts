@@ -23,7 +23,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {DEFAULT_TEMPLATES, trivialMatch} from "./trivial-components/TrivialCore";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {AbstractComponent} from "teamapps-client-core";
-import {generateUUID, parseHtml, Renderer} from "./Common";
+import {generateUUID, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiItemView_ItemClickedEvent, UiItemViewCommandHandler, DtoItemView, UiItemViewEventSource} from "../generated/DtoItemView";
 import {UiItemViewFloatStyle} from "../generated/UiItemViewFloatStyle";

@@ -20,6 +20,7 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class GridForm extends Component {
 	required List<Component*> fields;
@@ -50,7 +51,7 @@ class FormSection {
     boolean collapsible;
     boolean collapsed;
     boolean visible;
-    Template headerTemplate;
+    Template* headerTemplate;
     Object headerData;
     boolean drawHeaderLine;
     int gridGap; // pixels between fields, labels etc.

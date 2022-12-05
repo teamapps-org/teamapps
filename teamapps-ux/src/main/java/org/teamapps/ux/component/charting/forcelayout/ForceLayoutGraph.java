@@ -71,7 +71,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		List<DtoNetworkNode> nodes = createUiNodes(this.nodes);
 		List<DtoNetworkLink> links = createUiLinks(this.links);
 		DtoNetworkGraph ui = new DtoNetworkGraph(nodes, links, Collections.emptyList());
@@ -98,7 +98,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		uiNode.setBorderColor(node.getBorderColor() != null ? node.getBorderColor().toHtmlColorString() : null);
 		uiNode.setBorderWidth(node.getBorderWidth());
 		uiNode.setBorderRadius(node.getBorderRadius());
-		uiNode.setTemplate(node.getTemplate() != null ? node.getTemplate().createUiTemplate() : null);
+		uiNode.setTemplate(node.getTemplate() != null ? node.getTemplate().createDtoReference() : null);
 		uiNode.setRecord(node.getRecord() != null ? createUiRecord(node) : null);
 		uiNode.setExpandState(node.getExpandedState().toExpandState());
 		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createUiTreeGraphNodeIcon() : null);

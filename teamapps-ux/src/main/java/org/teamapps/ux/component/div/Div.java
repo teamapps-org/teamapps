@@ -44,10 +44,10 @@ public class Div extends AbstractComponent {
 	}
 
 	@Override
-	public DtoDiv createUiClientObject() {
+	public DtoDiv createDto() {
 		DtoDiv ui = new DtoDiv();
 		mapAbstractUiComponentProperties(ui);
-		ui.setContent(content != null ? content.createUiReference() : null);
+		ui.setContent(content != null ? content.createDtoReference() : null);
 		ui.setInnerHtml(innerHtml);
 		return ui;
 	}
@@ -58,7 +58,7 @@ public class Div extends AbstractComponent {
 
 	public void setContent(Component content) {
 		this.content = content;
-		sendCommandIfRendered(() -> new DtoDiv.SetContentCommand(content != null ? content.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoDiv.SetContentCommand(content != null ? content.createDtoReference() : null));
 	}
 
 	public String getInnerHtml() {

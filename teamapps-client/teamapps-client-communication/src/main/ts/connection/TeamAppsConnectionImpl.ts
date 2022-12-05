@@ -68,7 +68,9 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 	private maxRequestedCommandId = 0;
 	private lastReceivedCommandId: number;
 
-	constructor(url: string, private sessionId: string, clientInfo: DtoClientInfo, commandHandler: TeamAppsConnectionListener) {
+	private currentCommandExecutionPromise: Promise<any> = Promise.resolve();
+
+	constructor(url: string, private sessionId: string, clientInfo: DtoClientInfo, private commandHandler: TeamAppsConnectionListener) {
 		if (sessionId == null) {
 			throw "sessionId may not be null!!";
 		}
@@ -87,16 +89,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					let cmds = message.cmds as DtoCMD[];
 					for (let cmd of cmds) {
 						this.lastReceivedCommandId = cmd.id;
-						try {
-							let result = await commandHandler.executeCommand(cmd.lid, cmd.cid, cmd.c);
-							if (cmd.r) {
-								this.sendResult(cmd.id, result);
-							}
-						} catch (reason) {
-							this.logException(reason);
-						} finally {
-							this.ensureEnoughCommandsRequested();
-						}
+						this.enchainCommandExecution(cmd);
 					}
 					this.lastReceivedCommandId = cmds[cmds.length - 1].id;
 				} else if (TeamAppsConnectionImpl.isQUERY_RESULT(message)) {
@@ -292,5 +285,23 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 
 	private logException(e: any, additionalString?: string) {
 		console.error(e, e.stack, additionalString);
+	}
+
+	private enchainCommandExecution(cmd: DtoCMD) {
+		this.currentCommandExecutionPromise = this.currentCommandExecutionPromise.finally(async () => {
+			try {
+				console.log(cmd.id);
+				let result = await this.commandHandler.executeCommand(cmd.lid, cmd.cid, cmd.c);
+				console.log(cmd.id + " finished");
+				if (cmd.r) {
+					this.sendResult(cmd.id, result);
+				}
+			} catch (reason) {
+				console.log(cmd.id + ": Error...");
+				this.logException(reason);
+			} finally {
+				this.ensureEnoughCommandsRequested();
+			}
+		});
 	}
 }

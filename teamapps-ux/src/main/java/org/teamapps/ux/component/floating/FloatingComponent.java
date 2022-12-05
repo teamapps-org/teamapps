@@ -51,10 +51,10 @@ public class FloatingComponent extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoFloatingComponent ui = new DtoFloatingComponent();
 		mapAbstractUiComponentProperties(ui);
-		ui.setContainerComponent(containerComponent.createUiReference());
+		ui.setContainerComponent(containerComponent.createDtoReference());
 		ui.setContentComponent(Component.createUiClientObjectReference(contentComponent));
 		ui.setWidth(width);
 		ui.setHeight(height);
@@ -154,7 +154,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setContentComponent(Component contentComponent) {
 		this.contentComponent = contentComponent;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetContentComponentCommand(contentComponent != null ? contentComponent.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoFloatingComponent.SetContentComponentCommand(contentComponent != null ? contentComponent.createDtoReference() : null));
 	}
 
 	@Override

@@ -20,9 +20,10 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class TemplateField extends Field {
-	Template template;
+	Template* template;
 
 	command update(TemplateField config);
 

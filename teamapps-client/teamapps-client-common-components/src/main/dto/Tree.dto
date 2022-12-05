@@ -20,10 +20,10 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class Tree extends Component {
-	Dictionary<Template> templates;
-	String defaultTemplateId; // null: use asString property
+	Template* defaultTemplate; // null: use asString property
 
 	List<TreeRecord> initialData; //if available, use this as data source
 	Integer selectedNodeId;
@@ -38,9 +38,12 @@ class Tree extends Component {
 	command replaceData(List<TreeRecord> nodes);
 	command bulkUpdate(List<Integer> nodesToBeRemoved, List<TreeRecord> nodesToBeAdded);
 	command setSelectedNode(Integer recordId); // null = none selected
-	command registerTemplate(String id, Template template);
 
 	event textInput(String text);
 	event nodeSelected(int nodeId); // TODO boolean isRightMouseButton, boolean isDoubleClick
 	event requestTreeData(int parentNodeId);
+}
+
+class TreeRecord extends HierarchicalClientRecord {
+	Template* displayTemplate; // null == use asString
 }

@@ -58,8 +58,6 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	private Template defaultTemplate;
 	private TemplateDecider<Marker<RECORD>> templateDecider = m -> defaultTemplate;
-	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
-	private int templateIdCounter = 0;
 	private DtoMapConfig mapConfig;
 
 	private PropertyProvider<RECORD> markerPropertyProvider = new BeanPropertyExtractor<>();
@@ -88,9 +86,8 @@ public class MapView<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
-		DtoMap uiMap = new DtoMap(templateIdsByTemplate.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
+	public DtoComponent createDto() {
+		DtoMap uiMap = new DtoMap();
 		mapAbstractUiComponentProperties(uiMap);
 		uiMap.setMapConfig(mapConfig);
 		uiMap.setMapType(mapType.toUiMapType());
@@ -119,7 +116,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		clientRecord.setLocation(marker.getLocation().createUiLocation());
 		Template template = getTemplateForRecord(marker, templateDecider);
 		if (template != null) {
-			clientRecord.setTemplateId(templateIdsByTemplate.get(template));
+			clientRecord.setTemplate(template.createDtoReference());
 			clientRecord.setValues(markerPropertyProvider.getValues(marker.getData(), template.getPropertyNames()));
 		} else {
 			clientRecord.setAsString("" + marker.getData());
@@ -248,13 +245,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
-		Template template = templateDecider.getTemplate(record);
-		if (template != null && !templateIdsByTemplate.containsKey(template)) {
-			String uuid = "" + templateIdCounter++;
-			this.templateIdsByTemplate.put(template, uuid);
-			sendCommandIfRendered(() -> new DtoMap.RegisterTemplateCommand(uuid, template.createUiTemplate()));
-		}
-		return template;
+		return templateDecider.getTemplate(record);
 	}
 
 	public MapType getMapType() {
@@ -300,7 +291,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		int clientId = clientIdCounter++;
 		this.markersByClientId.put(clientId, marker);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new DtoMap.AddMarkerCommand(createUiMarkerRecord(marker, clientId)));
+			getSessionContext().sendCommandIfRendered(this, new DtoMap.AddMarkerCommand(createUiMarkerRecord(marker, clientId)));
 		}
 	}
 
@@ -308,7 +299,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		Integer clientId = markersByClientId.removeValue(marker);
 		if (clientId != null) {
 			if (isRendered()) {
-				getSessionContext().sendCommand(getId(), new DtoMap.RemoveMarkerCommand(clientId));
+				getSessionContext().sendCommandIfRendered(this, new DtoMap.RemoveMarkerCommand(clientId));
 			}
 		}
 	}

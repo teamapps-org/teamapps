@@ -95,7 +95,7 @@ public interface Component extends ClientObject {
 		if (component == null) {
 			return null;
 		}
-		return component.createUiReference();
+		return component.createDtoReference();
 	}
 
 }

@@ -79,7 +79,7 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoNotificationBar ui = new DtoNotificationBar();
 		mapAbstractUiComponentProperties(ui);
 		ui.setInitialItems(itemsByUiId.values().stream()

@@ -78,16 +78,6 @@ export class ChildWindowViewContainer implements ViewContainer {
 	private handlePortMessage(e: MessageEvent, port: MessagePort, childWindowId: string) {
 		ChildWindowViewContainer.logger.debug(e.data);
 
-		(this.context as any as TeamAppsUiContextInternalApi).onStaticMethodCommandInvocation
-			.addListener(uiCommand => {
-				let c = uiCommand as any;
-				if (uiCommand._type === "DtoRootPanel.registerTemplate") {
-					this.sendCommandToWindow(null, uiCommand._type, [c.id, c.template])
-				} else if (uiCommand._type === "DtoRootPanel.registerTemplates") {
-					this.sendCommandToWindow(null, uiCommand._type, [c.templates]);
-				}
-			});
-
 		if (e.data._type === 'INIT') {
 			const initOkMessage: DtoWorkspaceLayoutSubWindowProtocol_INIT_OK = {
 				_type: 'INIT_OK',
@@ -99,7 +89,6 @@ export class ChildWindowViewContainer implements ViewContainer {
 				},
 				backgroundImage: this.newWindowBackgroundImage,
 				blurredBackgroundImage: this.newWindowBlurredBackgroundImage,
-				registeredTemplates: this.context.templateRegistry.getRegisteredTemplates(),
 				childWindowPageTitle: 'Application subview' // TODO
 			};
 			port.postMessage(JSON.stringify(initOkMessage));

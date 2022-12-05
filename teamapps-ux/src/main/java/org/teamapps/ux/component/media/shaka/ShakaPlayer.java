@@ -65,7 +65,7 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoShakaPlayer ui = new DtoShakaPlayer();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHlsUrl(hlsUrl);

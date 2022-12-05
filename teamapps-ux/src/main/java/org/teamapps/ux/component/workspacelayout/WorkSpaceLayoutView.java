@@ -127,7 +127,7 @@ public class WorkSpaceLayoutView {
 
 		DtoClientObjectReference uiPanel = null;
 		if (!lazyLoading) {
-			uiPanel = panel.createUiReference();
+			uiPanel = panel.createDtoReference();
 		}
 		DtoWorkSpaceLayoutView view = new DtoWorkSpaceLayoutView(getId(), icon, title, uiPanel);
 		view.setTabCloseable(closeable);

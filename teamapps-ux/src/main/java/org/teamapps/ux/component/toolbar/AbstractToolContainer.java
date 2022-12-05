@@ -58,8 +58,8 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 					if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
 						Component dropdownComponent = button.getDropDownComponent();
 						if (dropdownComponent != null) {
-							getSessionContext().sendCommand(getId(), new DtoToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
-									clickEvent.getButtonId(), dropdownComponent.createUiReference()));
+							getSessionContext().sendCommandIfRendered(this, new DtoToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
+									clickEvent.getButtonId(), dropdownComponent.createDtoReference()));
 						}
 					}
 					button.onClick.fire(new ToolbarButtonClickEvent(clickEvent.getDropDownClickInfo().getIsOpening(), clickEvent.getDropDownClickInfo().getIsContentSet()));
@@ -121,7 +121,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	protected void handleButtonSetDropDownComponent(ToolbarButtonGroup group, ToolbarButton button, Component component) {
-		sendCommandIfRendered(() -> new DtoToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createUiReference()));
+		sendCommandIfRendered(() -> new DtoToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createDtoReference()));
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {

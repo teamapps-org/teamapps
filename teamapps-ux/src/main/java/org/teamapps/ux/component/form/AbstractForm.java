@@ -81,15 +81,15 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	protected void addComponent(Component component) {
 		children.add(component);
 		component.setParent(this);
-		sendCommandIfRendered(() -> new DtoGridForm.AddOrReplaceFieldCommand(component.createUiReference()));
+		sendCommandIfRendered(() -> new DtoGridForm.AddOrReplaceFieldCommand(component.createDtoReference()));
 	}
 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		List<DtoClientObjectReference> uiFields = logicalForm.getFields().values().stream()
-				.map(field -> field != null ? field.createUiReference() : null)
+				.map(field -> field != null ? field.createDtoReference() : null)
 				.collect(Collectors.toList());
 		List<DtoFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();
 		DtoGridForm uiForm = new DtoGridForm(uiFields, uiLayoutPolicies);

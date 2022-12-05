@@ -34,10 +34,10 @@ public class RootPanel extends AbstractComponent implements Component {
 	private Component content;
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoRootPanel uiRootPanel = new DtoRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
-		uiRootPanel.setContent(content != null ? content.createUiReference() : null);
+		uiRootPanel.setContent(content != null ? content.createDtoReference() : null);
 		return uiRootPanel;
 	}
 
@@ -46,23 +46,16 @@ public class RootPanel extends AbstractComponent implements Component {
 		// no ui events for this component
 	}
 
-	public void preloadContent(Component component) {
-		component.render();
-	}
-
 	public void setContent(Component component) {
 		setContent(component, null, 0);
 	}
 
 	public void setContent(Component component, PageTransition animation, long animationDuration) {
-		if (component != null) {
-			preloadContent(component);
-		}
 		content = component;
 		if (component != null) {
 			component.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoRootPanel.SetContentCommand(component != null ? component.createUiReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
+		sendCommandIfRendered(() -> new DtoRootPanel.SetContentCommand(component != null ? component.createDtoReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
 	}
 
 	public Component getContent() {

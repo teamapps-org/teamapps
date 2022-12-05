@@ -92,9 +92,9 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		Object uiRecord = createUiRecord();
-		DtoButton ui = new DtoButton(template != null ? template.createUiTemplate() : null, uiRecord);
+		DtoButton ui = new DtoButton(template != null ? template.createDtoReference() : null, uiRecord);
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
 		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
@@ -135,7 +135,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setTemplate(Template template) {
 		this.template = template;
-		sendCommandIfRendered(() -> new DtoButton.SetTemplateCommand(template.createUiTemplate(), createUiRecord()));
+		sendCommandIfRendered(() -> new DtoButton.SetTemplateCommand(template.createDtoReference(), createUiRecord()));
 		return this;
 	}
 

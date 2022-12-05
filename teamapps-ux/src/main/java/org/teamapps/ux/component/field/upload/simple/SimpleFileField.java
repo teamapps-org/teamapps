@@ -107,7 +107,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoSimpleFileField field = new DtoSimpleFileField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));

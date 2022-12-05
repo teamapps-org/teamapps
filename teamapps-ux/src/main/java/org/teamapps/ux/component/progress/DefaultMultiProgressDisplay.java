@@ -76,7 +76,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public DtoDefaultMultiProgressDisplay createUiClientObject() {
+	public DtoDefaultMultiProgressDisplay createDto() {
 		DtoDefaultMultiProgressDisplay ui = new DtoDefaultMultiProgressDisplay();
 		mapAbstractUiComponentProperties(ui);
 		ui.setRunningCount(progresses.size());
@@ -144,7 +144,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoDefaultMultiProgressDisplay.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoDefaultMultiProgressDisplay.UpdateCommand(createDto()));
 	}
 
 	public boolean isShowNotificationOnProgressAdded() {

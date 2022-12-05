@@ -63,15 +63,15 @@ public class SplitPane extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoSplitPane uiSplitPane = new DtoSplitPane(splitDirection.toUiSplitDirection(), sizePolicy.toUiSplitSizePolicy());
 		mapAbstractUiComponentProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);
 		if (firstChild != null) {
-			uiSplitPane.setFirstChild(firstChild.createUiReference());
+			uiSplitPane.setFirstChild(firstChild.createDtoReference());
 		}
 		if (lastChild != null) {
-			uiSplitPane.setLastChild(lastChild.createUiReference());
+			uiSplitPane.setLastChild(lastChild.createDtoReference());
 		}
 		uiSplitPane.setFirstChildMinSize(firstChildMinSize);
 		uiSplitPane.setLastChildMinSize(lastChildMinSize);
@@ -99,7 +99,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setFirstChild(Component firstChild) {
 		this.firstChild = firstChild;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createDtoReference() : null));
 	}
 
 	public Component getLastChild() {
@@ -108,7 +108,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setLastChild(Component lastChild) {
 		this.lastChild = lastChild;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createDtoReference() : null));
 	}
 
 	public void setSize(float referenceChildSize, SplitSizePolicy sizePolicy) {

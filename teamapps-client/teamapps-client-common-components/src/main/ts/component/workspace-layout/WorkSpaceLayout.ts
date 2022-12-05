@@ -21,6 +21,7 @@ import {
 	AbstractComponent,
 	Component,
 	DtoConfiguration,
+	DtoTemplate,
 	TeamAppsEvent,
 	TeamAppsUiContext,
 	TeamAppsUiContextInternalApi
@@ -28,7 +29,6 @@ import {
 import {
 	DtoRelativeWorkSpaceViewPosition,
 	DtoSplitSizePolicy,
-	DtoTemplate,
 	DtoViewGroupPanelState,
 	DtoWorkSpaceLayout,
 	DtoWorkSpaceLayout_ChildWindowClosedEvent,
@@ -64,7 +64,6 @@ export type DtoWorkspaceLayoutSubWindowProtocol_INIT_OK = {
 	uiConfiguration: DtoConfiguration,
 	backgroundImage: string,
 	blurredBackgroundImage: string,
-	registeredTemplates: { [name: string]: DtoTemplate },
 	childWindowPageTitle: string
 }
 

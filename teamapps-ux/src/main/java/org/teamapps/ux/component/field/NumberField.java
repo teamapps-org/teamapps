@@ -54,7 +54,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		DtoNumberField field = new DtoNumberField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setPrecision(precision);

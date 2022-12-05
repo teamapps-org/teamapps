@@ -36,7 +36,7 @@ public class MediaTrackGraph extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoMediaTrackGraph uiMediaTrackGraph = new DtoMediaTrackGraph();
 		mapAbstractUiComponentProperties(uiMediaTrackGraph);
 		uiMediaTrackGraph.setTrackCount(data.getTrackCount());

@@ -21,7 +21,7 @@
 
 
 import {AbstractComponent} from "teamapps-client-core";
-import {generateUUID, parseHtml, Renderer} from "./Common";
+import {generateUUID, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {createDtoMapPolyline, DtoMapPolyline} from "../generated/DtoMapPolyline";
 import {DtoMapMarkerCluster} from "../generated/DtoMapMarkerCluster";

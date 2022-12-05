@@ -49,12 +49,12 @@ public class HtmlView extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoHtmlView ui = new DtoHtmlView();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHtml(html);
 		ui.setComponentsByContainerElementSelector(componentsByContainerElementSelector.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(ClientObject::createUiReference).collect(Collectors.toList()))));
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(ClientObject::createDtoReference).collect(Collectors.toList()))));
 		ui.setContentHtmlByContainerElementSelector(contentHtmlByContainerElementSelector.entrySet().stream()
 				.filter(entry -> entry.getValue() != null) // Map.copyOf() does not support null values!
 				.collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue)));
@@ -81,12 +81,12 @@ public class HtmlView extends AbstractComponent {
 	public void addComponent(String containerSelector, Component component, boolean clearContainer) {
 		this.componentsByContainerElementSelector.computeIfAbsent(containerSelector, s -> new ArrayList<>())
 				.add(component);
-		this.sendCommandIfRendered(() -> new DtoHtmlView.AddComponentCommand(containerSelector, component.createUiReference(), clearContainer));
+		this.sendCommandIfRendered(() -> new DtoHtmlView.AddComponentCommand(containerSelector, component.createDtoReference(), clearContainer));
 	}
 
 	public void removeComponent(Component component) {
 		componentsByContainerElementSelector.entrySet().removeIf(entry -> entry.getValue() == component);
-		this.sendCommandIfRendered(() -> new DtoHtmlView.RemoveComponentCommand(component.createUiReference()));
+		this.sendCommandIfRendered(() -> new DtoHtmlView.RemoveComponentCommand(component.createDtoReference()));
 	}
 
 	public void setContentHtml(String containerElementSelector, String html) {

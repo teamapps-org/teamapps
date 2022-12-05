@@ -29,7 +29,7 @@ import {
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TrivialTree} from "./trivial-components/TrivialTree";
 import {AbstractComponent} from "teamapps-client-core";
-import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "./Common";
+import {buildObjectTree, NodeWithChildren, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {DtoTreeRecord} from "../generated/DtoTreeRecord";

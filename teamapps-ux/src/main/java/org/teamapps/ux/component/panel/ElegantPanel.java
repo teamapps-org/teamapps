@@ -45,11 +45,11 @@ public class ElegantPanel extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoElegantPanel uiElegantPanel = new DtoElegantPanel();
 		mapAbstractUiComponentProperties(uiElegantPanel);
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);
-		uiElegantPanel.setContent(content.createUiReference());
+		uiElegantPanel.setContent(content.createDtoReference());
 		uiElegantPanel.setMaxContentWidth(maxContentWidth);
 		uiElegantPanel.setPadding(padding.createUiSpacing());
 		uiElegantPanel.setHorizontalContentAlignment(horizontalContentAlignment.toUiHorizontalElementAlignment());

@@ -22,5 +22,4 @@ package org.teamapps.dto;
 managed interface ClientObject {
 	String id;
     List<String> listeningEvents;
-    List<String> listeningQueries;
 }

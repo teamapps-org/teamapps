@@ -20,9 +20,10 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class InfiniteItemView extends Component {
-	required Template itemTemplate;
+	required Template* itemTemplate;
 	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width
 	required int rowHeight;
 	List<IdentifiableClientRecord> data;
@@ -35,7 +36,7 @@ class InfiniteItemView extends Component {
 
 	command addData(int startIndex, List<IdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
 	command removeData(List<Integer> ids);
-	command setItemTemplate(Template itemTemplate);
+	command setItemTemplate(Template* itemTemplate);
     command setItemWidth(double itemWidth);
     command setHorizontalItemMargin(int horizontalItemMargin);
     command setItemJustification(ItemJustification itemJustification);
@@ -49,7 +50,7 @@ class InfiniteItemView extends Component {
 }
 
 class InfiniteItemView2 extends AbstractInfiniteListComponent {
-	required Template itemTemplate;
+	required Template* itemTemplate;
 
 	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width
 	double itemHeight;
@@ -65,7 +66,7 @@ class InfiniteItemView2 extends AbstractInfiniteListComponent {
 	
 	command setData(int startIndex, List<Integer> recordIds, List<IdentifiableClientRecord> newRecords, int totalNumberOfRecords);
 
-	command setItemTemplate(Template itemTemplate);
+	command setItemTemplate(Template* itemTemplate);
     command setItemWidth(double itemWidth);
     command setItemHeight(double itemHeight);
     command setHorizontalSpacing(double horizontalSpacing);

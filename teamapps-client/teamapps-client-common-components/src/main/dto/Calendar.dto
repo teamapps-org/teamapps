@@ -20,6 +20,7 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 enum CalendarViewMode {
 	YEAR, MONTH, WEEK, DAY
@@ -34,7 +35,6 @@ enum CalendarEventRenderingStyle { // see http://fullcalendar.io/docs/event_rend
 }
 
 class Calendar extends Component {
-	Dictionary<Template> templates;
 	List<CalendarEventClientRecord> initialData;
 	
 	CalendarViewMode activeViewMode;
@@ -63,7 +63,6 @@ class Calendar extends Component {
 	command removeEvent(int eventId);
 	command setCalendarData(List<CalendarEventClientRecord> events);
 	command clearCalendar();
-	command registerTemplate(String id, Template template);
 	command setTimeZoneId(String timeZoneId);
 
 	event eventClicked(int eventId, boolean isDoubleClick);
@@ -79,4 +78,22 @@ class Calendar extends Component {
 		long displayedIntervalStart, long displayedIntervalEnd // the interval the calendar displays. (e.g. 28. December 2015 0:00 to 8 February 2016 0:00)
 	);
 	event dataNeeded(long requestIntervalStart, long requestIntervalEnd); // interval of missing calendar data
+}
+
+class CalendarEventClientRecord extends IdentifiableClientRecord {
+    Template* timeGridTemplate;   // null = use default
+    Template* dayGridTemplate;    // null = use default
+    Template* monthGridTemplate;  // null = use default
+
+	long start;
+    long end;
+    boolean allDay;
+    boolean allowDragOperations;
+
+    String icon;
+    String title;
+
+    String backgroundColor;
+    String borderColor;
+    CalendarEventRenderingStyle rendering;
 }

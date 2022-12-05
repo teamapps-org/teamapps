@@ -42,7 +42,7 @@ public class DisplayField extends AbstractField<String> {
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		DtoDisplayField uiDisplayField = new DtoDisplayField();
 		mapAbstractFieldAttributesToUiField(uiDisplayField);
 		uiDisplayField.setShowBorder(showBorder);

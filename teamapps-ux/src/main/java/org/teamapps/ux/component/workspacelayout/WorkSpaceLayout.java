@@ -101,7 +101,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoWorkSpaceLayoutItem uiInitialLayout = getMainRootItem().createUiItem();
 		List<DtoWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
 				.map(WorkSpaceLayoutView::createUiView)
@@ -109,7 +109,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 		DtoWorkSpaceLayout uiLayout = new DtoWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
 		mapAbstractUiComponentProperties(uiLayout);
 		if (toolbar != null) {
-			uiLayout.setToolbar(toolbar.createUiReference());
+			uiLayout.setToolbar(toolbar.createDtoReference());
 		}
 		uiLayout.setNewWindowBackgroundImage(newWindowBackgroundImage);
 		uiLayout.setNewWindowBlurredBackgroundImage(newWindowBlurredBackgroundImage);
@@ -135,7 +135,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 				var needsRefreshEvent = event.as(DtoWorkSpaceLayout.ViewNeedsRefreshEventWrapper.class);
 				String viewName = needsRefreshEvent.getViewName();
 				WorkSpaceLayoutView view = getViewById(viewName);
-				getSessionContext().sendCommand(getId(), new DtoWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()));
+				getSessionContext().sendCommandIfRendered(this, new DtoWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()));
 			}
 			case DtoWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID -> {
 				var windowCreationFailedEvent = event.as(DtoWorkSpaceLayout.ChildWindowCreationFailedEventWrapper.class);
@@ -326,7 +326,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
+		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createDtoReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

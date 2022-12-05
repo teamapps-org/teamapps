@@ -33,8 +33,9 @@ import {
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {DtoComboBoxTreeRecord} from "../../generated/DtoComboBoxTreeRecord";
 import {DtoTemplate} from "../../generated/DtoTemplate";
-import {buildObjectTree, NodeWithChildren, Renderer} from "../Common";
+import {buildObjectTree, NodeWithChildren} from "../Common";
 import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
+import {Template} from "teamapps-client-core";
 
 export function isFreeTextEntry(o: DtoComboBoxTreeRecord): boolean {
 	return o != null && o.id < 0;
@@ -45,12 +46,12 @@ export class UiComboBox extends UiField<DtoComboBox, DtoComboBoxTreeRecord> impl
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 250});
 
 	private trivialComboBox: TrivialComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
-	private templateRenderers: { [name: string]: Renderer };
+	private templateRenderers: { [name: string]: Template };
 
 	private freeTextIdEntryCounter = -1;
 
 	protected initialize(config: DtoComboBox, context: TeamAppsUiContext) {
-		this.templateRenderers = config.templates != null ? context.templateRegistry.createTemplateRenderers(config.templates) : {};
+		this.templateRenderers = config.templates;
 
 		this.trivialComboBox = new TrivialComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>({
 			selectedEntryRenderingFunction: entry => {

@@ -24,8 +24,8 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoWindow;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.panel.Panel;
 
@@ -65,7 +65,7 @@ public class Window extends Panel {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoWindow window = new DtoWindow();
 		mapUiPanelProperties(window);
 		window.setModal(modal);
@@ -133,7 +133,7 @@ public class Window extends Panel {
 	}
 
 	public void show(int animationDuration) {
-		render();
+		getSessionContext().renderClientObject(this);
 		sendCommandIfRendered(() -> new DtoWindow.ShowCommand(animationDuration));
 	}
 

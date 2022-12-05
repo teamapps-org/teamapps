@@ -74,9 +74,6 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 					BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
 			);
 
-	private int templateIdCounter = 0;
-	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
-
 	private CalendarViewMode activeViewMode = CalendarViewMode.MONTH;
 	private LocalDate displayedDate = LocalDate.now();
 	private boolean showHeader = false;
@@ -131,9 +128,9 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		DtoCalendarEventClientRecord uiRecord = new DtoCalendarEventClientRecord();
 		uiRecord.setValues(values);
 
-		uiRecord.setTimeGridTemplateId(templateIdsByTemplate.get(timeGridTemplate));
-		uiRecord.setDayGridTemplateId(templateIdsByTemplate.get(dayGridTemplate));
-		uiRecord.setMonthGridTemplateId(templateIdsByTemplate.get(monthGridTemplate));
+		uiRecord.setTimeGridTemplate(timeGridTemplate != null ? timeGridTemplate.createDtoReference(): null);
+		uiRecord.setDayGridTemplate(dayGridTemplate != null ? dayGridTemplate.createDtoReference(): null);
+		uiRecord.setMonthGridTemplate(monthGridTemplate != null ? monthGridTemplate.createDtoReference(): null);
 
 		uiRecord.setIcon(getSessionContext().resolveIcon(calendarEvent.getIcon()));
 		uiRecord.setTitle(calendarEvent.getTitle());
@@ -151,13 +148,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	private Template getTemplateForRecord(CEVENT record, CalendarViewMode viewMode) {
-		Template template = templateDecider.getTemplate(record, viewMode);
-		if (template != null && !templateIdsByTemplate.containsKey(template)) {
-			String id = "" + templateIdCounter++;
-			this.templateIdsByTemplate.put(template, id);
-			sendCommandIfRendered(() -> new DtoCalendar.RegisterTemplateCommand(id, template.createUiTemplate()));
-		}
-		return template;
+		return templateDecider.getTemplate(record, viewMode);
 	}
 
 	public void setModel(CalendarModel<CEVENT> model) {
@@ -178,7 +169,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoCalendar uiCalendar = new DtoCalendar();
 		mapAbstractUiComponentProperties(uiCalendar);
 		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());
@@ -203,9 +194,6 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		CacheManipulationHandle<List<DtoCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(initialCalendarEvents);
 		cacheResponse.commit();
 		uiCalendar.setInitialData(cacheResponse.getAndClearResult());
-
-		uiCalendar.setTemplates(templateIdsByTemplate.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 
 		return uiCalendar;
 	}
@@ -289,7 +277,8 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		List<CEVENT> calendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<DtoCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new DtoCalendar.SetCalendarDataCommand(cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+			final DtoCalendar.SetCalendarDataCommand setCalendarDataCommand = new DtoCalendar.SetCalendarDataCommand(cacheResponse.getAndClearResult());
+			getSessionContext().sendCommandIfRendered(this, aVoid -> cacheResponse.commit(), () -> setCalendarDataCommand);
 		} else {
 			cacheResponse.commit();
 		}

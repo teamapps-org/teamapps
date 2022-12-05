@@ -29,7 +29,7 @@ public class AudioLevelIndicator extends AbstractComponent {
 	private int barWidth = 1;
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoAudioLevelIndicator ui = new DtoAudioLevelIndicator();
 		mapAbstractUiComponentProperties(ui);
 		ui.setDeviceId(this.deviceId);

@@ -43,7 +43,7 @@ public class DummyComponent extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoDummyComponent dummyComponent = new DtoDummyComponent();
 		mapAbstractUiComponentProperties(dummyComponent);
 		dummyComponent.setText(text);

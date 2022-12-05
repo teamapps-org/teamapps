@@ -39,7 +39,7 @@ import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {DtoComboBoxTreeRecord} from "../../generated/DtoComboBoxTreeRecord";
 import {DtoTemplate} from "../../generated/DtoTemplate";
 import {isFreeTextEntry} from "./UiComboBox";
-import {buildObjectTree, getAutoCompleteOffValue, NodeWithChildren, parseHtml, Renderer} from "../Common";
+import {buildObjectTree, getAutoCompleteOffValue, NodeWithChildren, parseHtml} from "../Common";
 import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 

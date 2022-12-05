@@ -20,6 +20,7 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 abstract class AbstractToolContainer extends Component {
 	required List<ToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
@@ -66,7 +67,7 @@ class ToolbarButtonGroup {
 class ToolbarButton {
 	required String buttonId;
 	String debuggingId;
-	required Template template;
+	required Template* template;
 	boolean visible;
 	required Object recordData;
 	String openNewTabWithUrl; // If this is set, when the user clicks this button, the specified URL is navigated to in a new tab. The button still sends events to the server.

@@ -42,7 +42,7 @@ public class ComponentField extends AbstractField<Void> {
     }
 
     @Override
-    public DtoField createUiClientObject() {
+    public DtoField createDto() {
         DtoComponentField uiField = new DtoComponentField();
         mapAbstractFieldAttributesToUiField(uiField);
         uiField.setComponent(Component.createUiClientObjectReference(component));

@@ -36,7 +36,7 @@ public class ResponsiveGridLayout extends AbstractComponent {
 	private final Map<Integer, GridLayoutDefinition> layoutDefinitionsByMinWidth = new HashMap<>();
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		List<DtoResponsiveGridLayoutPolicy> layoutPolicies = createUiLayoutPolicies();
 		DtoResponsiveGridLayout uiResponsiveGridLayout = new DtoResponsiveGridLayout(layoutPolicies);
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);

@@ -46,7 +46,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	@Override
-	public DtoLinkButton createUiClientObject() {
+	public DtoLinkButton createDto() {
 		DtoLinkButton ui = new DtoLinkButton();
 		mapAbstractUiComponentProperties(ui);
 		ui.setText(text);
@@ -66,7 +66,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoLinkButton.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLinkButton.UpdateCommand(createDto()));
 	}
 
 	public String getText() {

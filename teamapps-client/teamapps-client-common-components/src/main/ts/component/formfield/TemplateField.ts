@@ -26,15 +26,14 @@ import {
 	DtoTemplateFieldCommandHandler,
 	DtoTemplateFieldEventSource
 } from "../../generated";
-import {parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
-import {Renderer} from "../../Common";
+import {parseHtml, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
+
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {
 
     public readonly onClicked: TeamAppsEvent<DtoTemplateField_ClickedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
-	private templateRenderer: Renderer;
 
 	constructor(config: DtoTemplateField, context: TeamAppsUiContext) {
 		super(config, context);
@@ -47,7 +46,7 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 	}
 
 	update(config: DtoTemplateField): void {
-		this.templateRenderer = this._context.templateRegistry.createTemplateRenderer(config.template);
+		this.config = config;
 		this.displayCommittedValue();
 	}
 
@@ -56,7 +55,7 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 	}
 
 	protected displayCommittedValue(): void {
-		this.$main.innerHTML = this.templateRenderer.render(this.getCommittedValue() && this.getCommittedValue().values);
+		this.$main.innerHTML = (this.config.template as Template).render(this.getCommittedValue() && this.getCommittedValue().values);
 	}
 
 	focus() {
@@ -81,7 +80,7 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 
 
 	getReadOnlyHtml(value: DtoClientRecord, availableWidth: number): string {
-		return `<div class="static-readonly-TemplateField">${value != null ? this.templateRenderer.render(value.values) : ""}</div>`;
+		return `<div class="static-readonly-TemplateField">${value != null ? (this.config.template as Template).render(value.values) : ""}</div>`;
 	}
 }
 

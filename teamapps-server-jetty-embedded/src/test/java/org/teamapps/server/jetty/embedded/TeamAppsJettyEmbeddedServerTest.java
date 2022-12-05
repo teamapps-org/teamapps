@@ -19,6 +19,7 @@
  */
 package org.teamapps.server.jetty.embedded;
 
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
@@ -38,10 +39,9 @@ public class TeamAppsJettyEmbeddedServerTest {
 				System.out.println("Clicked!");
 				disposable.dispose();
 			});
-			VerticalLayout div = new VerticalLayout();
-
-			div.addComponent(content);
-			Button<?> button = Button.create("re-register");
+			VerticalLayout verticalLayout = new VerticalLayout();
+			verticalLayout.addComponent(content);
+			Button<?> button = Button.create(MaterialIcon.CLOSED_CAPTION, "re-register");
 			button.onClicked.addListener(() -> {
 				System.out.println("button clicked");
 				content.onClick.addListener((e, d) -> {
@@ -49,9 +49,9 @@ public class TeamAppsJettyEmbeddedServerTest {
 					d.dispose();
 				});
 			});
-			div.addComponent(button);
+			verticalLayout.addComponent(button);
 
-			rootPanel.setContent(div);
+			rootPanel.setContent(verticalLayout);
 
 			sessionContext.onGlobalKeyEventOccurred.addListener((eventData, disposable) -> {
 				System.out.println(eventData);

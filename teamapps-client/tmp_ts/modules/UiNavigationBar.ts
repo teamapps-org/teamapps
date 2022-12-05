@@ -22,7 +22,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {DtoComponent} from "../generated/DtoComponent";
 import {DtoNavigationBarButton} from "../generated/DtoNavigationBarButton";
 import {AbstractComponent} from "teamapps-client-core";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml, Renderer} from "./Common";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiNavigationBar_ButtonClickedEvent,
@@ -48,7 +48,7 @@ export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> impleme
 	private $bar: HTMLElement;
 	private $buttonsContainer: HTMLElement;
 	private buttons: { [id: string]: Button } = {};
-	private buttonTemplateRenderer: Renderer;
+	private buttonTemplateRenderer: Template;
 	private $fanOutContainerWrapper: HTMLElement;
 	private $fanOutContainer: HTMLElement;
 	private fanOutComponents: UiComponent[] = [];

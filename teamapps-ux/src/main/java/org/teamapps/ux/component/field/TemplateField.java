@@ -59,10 +59,10 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 	}
 
 	@Override
-	public DtoTemplateField createUiClientObject() {
+	public DtoTemplateField createDto() {
 		DtoTemplateField ui = new DtoTemplateField();
 		mapAbstractFieldAttributesToUiField(ui);
-		ui.setTemplate(template.createUiTemplate());
+		ui.setTemplate(template.createDtoReference());
 		ui.setValue(createUiRecord(getValue()));
 		return ui;
 	}
@@ -94,7 +94,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setTemplate(Template template) {
 		this.template = template;
-		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -104,7 +104,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
-		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createDto()));
 		return this;
 	}
 

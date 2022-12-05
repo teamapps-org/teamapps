@@ -163,7 +163,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			field.setParent(this);
 		});
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new DtoTable.AddColumnsCommand(newColumns.stream()
+			getSessionContext().sendCommandIfRendered(this, new DtoTable.AddColumnsCommand(newColumns.stream()
 					.map(TableColumn::createUiTableColumn)
 					.collect(Collectors.toList()), index));
 			// TODO #table resend data
@@ -184,7 +184,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	public void removeColumns(List<TableColumn<RECORD, ?>> obsoleteColumns) {
 		this.columns.removeAll(obsoleteColumns);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new DtoTable.RemoveColumnsCommand(obsoleteColumns.stream()
+			getSessionContext().sendCommandIfRendered(this, new DtoTable.RemoveColumnsCommand(obsoleteColumns.stream()
 					.map(TableColumn::getPropertyName)
 					.collect(Collectors.toList())));
 		}
@@ -197,7 +197,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		List<DtoTableColumn> columns = this.columns.stream()
 				.map(TableColumn::createUiTableColumn)
 				.collect(Collectors.toList());
@@ -222,11 +222,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		uiTable.setShowHeaderRow(showHeaderRow);
 		uiTable.setHeaderRowHeight(headerRowHeight);
 		uiTable.setHeaderRowFields(this.headerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference())));
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createDtoReference())));
 		uiTable.setShowFooterRow(showFooterRow);
 		uiTable.setFooterRowHeight(footerRowHeight);
 		uiTable.setFooterRowFields(this.footerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference())));
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createDtoReference())));
 		uiTable.setContextMenuEnabled(contextMenuProvider != null);
 		return uiTable;
 	}
@@ -333,7 +333,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
 					} else {
 						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 					}

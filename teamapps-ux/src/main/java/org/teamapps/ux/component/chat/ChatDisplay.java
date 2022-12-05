@@ -71,7 +71,7 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public DtoChatDisplay createUiClientObject() {
+	public DtoChatDisplay createDto() {
 		DtoChatDisplay uiChatDisplay = new DtoChatDisplay();
 		mapAbstractUiComponentProperties(uiChatDisplay);
 		ChatMessageBatch modelResponse = model.getLastChatMessages(messagesFetchSize);
@@ -100,7 +100,7 @@ public class ChatDisplay extends AbstractComponent {
 				ChatMessage chatMessage = model.getChatMessageById(q.getChatMessageId());
 				if (chatMessage != null) {
 					Component component = contextMenuProvider.apply(chatMessage);
-					return component != null ? component.createUiReference() : null;
+					return component != null ? component.createDtoReference() : null;
 				}
 			}
 		}

@@ -38,7 +38,7 @@ public class FloatingComponentGridPlacementItem {
 	}
 
 	public DtoFloatingComponentGridPlacementItem createUiFloatingComponentGridPlacementItem() {
-		DtoFloatingComponentGridPlacementItem uiItem = new DtoFloatingComponentGridPlacementItem(component.createUiReference());
+		DtoFloatingComponentGridPlacementItem uiItem = new DtoFloatingComponentGridPlacementItem(component.createDtoReference());
 		uiItem.setMinWidth(minWidth);
 		uiItem.setMaxWidth(maxWidth);
 		uiItem.setMinHeight(minHeight);

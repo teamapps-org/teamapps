@@ -101,7 +101,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		DtoComboBox comboBox = new DtoComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		return comboBox;

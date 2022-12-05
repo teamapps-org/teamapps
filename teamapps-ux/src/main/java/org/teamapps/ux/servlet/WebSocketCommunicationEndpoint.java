@@ -203,6 +203,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 				}
 				sendCount.addAndGet(messageAsString.length());
 				totalSendCount.addAndGet(messageAsString.length());
+				System.out.println(messageAsString);
 				//noinspection Convert2Lambda
 				wsSession.getAsyncRemote().sendText(messageAsString, new SendHandler() {
 					@Override

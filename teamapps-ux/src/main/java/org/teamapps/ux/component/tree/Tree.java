@@ -53,8 +53,6 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	private Template entryTemplate = null; // null: use toString()
 	private TemplateDecider<RECORD> templateDecider = record -> entryTemplate;
-	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
-	private int templateIdCounter = 0;
 
 	private int indentation = 15;
 	private boolean animated = true;
@@ -83,7 +81,7 @@ public class Tree<RECORD> extends AbstractComponent {
 						.map(key -> uiRecordsByRecord.remove(key).getId())
 						.collect(Collectors.toList());
 				List<DtoTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
-				getSessionContext().sendCommand(getId(), new DtoTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords));
+				getSessionContext().sendCommandIfRendered(this, new DtoTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords));
 			}
 		});
 	}
@@ -129,7 +127,7 @@ public class Tree<RECORD> extends AbstractComponent {
 			uiTreeRecord.setId(++clientRecordIdCounter);
 		}
 		uiTreeRecord.setValues(values);
-		uiTreeRecord.setDisplayTemplateId(templateIdsByTemplate.get(template));
+		uiTreeRecord.setDisplayTemplate(template != null ? template.createDtoReference() : null);
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
@@ -158,16 +156,11 @@ public class Tree<RECORD> extends AbstractComponent {
 	private Template getTemplateForRecord(RECORD record) {
 		Template templateFromDecider = templateDecider.getTemplate(record);
 		Template template = templateFromDecider != null ? templateFromDecider : entryTemplate;
-		if (template != null && !templateIdsByTemplate.containsKey(template)) {
-			String uuid = "" + templateIdCounter++;
-			this.templateIdsByTemplate.put(template, uuid);
-			sendCommandIfRendered(() -> new DtoTree.RegisterTemplateCommand(uuid, template.createUiTemplate()));
-		}
 		return template;
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoTree uiTree = new DtoTree();
 		mapAbstractUiComponentProperties(uiTree);
 		List<RECORD> records = model.getRecords();
@@ -179,11 +172,7 @@ public class Tree<RECORD> extends AbstractComponent {
 			uiTree.setSelectedNodeId(uiRecordsByRecord.get(this.selectedNode).getId());
 		}
 
-		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
-		uiTree.setTemplates(templateIdsByTemplate.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
-
-		uiTree.setDefaultTemplateId(templateIdsByTemplate.get(entryTemplate));
+		uiTree.setDefaultTemplate(entryTemplate.createDtoReference());
 		uiTree.setAnimate(animated);
 		uiTree.setShowExpanders(showExpanders);
 		uiTree.setOpenOnSelection(openOnSelection);
@@ -210,7 +199,7 @@ public class Tree<RECORD> extends AbstractComponent {
 					List<RECORD> children = model.getChildRecords(parentNode);
 					List<DtoTreeRecord> uiChildren = createOrUpdateUiRecords(children);
 					if (isRendered()) {
-						getSessionContext().sendCommand(getId(), new DtoTree.BulkUpdateCommand(Collections.emptyList(), uiChildren));
+						getSessionContext().sendCommandIfRendered(this, new DtoTree.BulkUpdateCommand(Collections.emptyList(), uiChildren));
 					}
 				}
 			}
@@ -242,7 +231,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (isRendered()) {
 			uiRecordsByRecord.clear();
 			List<DtoTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
-			getSessionContext().sendCommand(getId(), new DtoTree.ReplaceDataCommand(uiRecords));
+			getSessionContext().sendCommandIfRendered(this, new DtoTree.ReplaceDataCommand(uiRecords));
 		}
 	}
 

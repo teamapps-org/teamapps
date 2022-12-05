@@ -25,7 +25,7 @@ import {
 	isFullScreen,
 	parseHtml,
 	TeamAppsEvent,
-	TeamAppsUiContext
+	TeamAppsUiContext, Template
 } from "teamapps-client-core";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {AbstractToolContainer} from "../AbstractToolContainer";
@@ -50,10 +50,9 @@ export class ToolAccordionButton {
 	private $styleTag: HTMLStyleElement;
 
 	constructor(config: DtoToolbarButton, context: TeamAppsUiContext) {
-		let renderer = context.templateRegistry.createTemplateRenderer(config.template);
 		this.config = config;
 		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.buttonId}" tabindex="0">
-	${renderer.render(config.recordData)}
+	${(this.config.template as Template).render(config.recordData)}
 	<div class="toolbar-button-caret ${config.hasDropDown ? '' : 'hidden'}">
 	  <div class="caret"></div>
 	</div>

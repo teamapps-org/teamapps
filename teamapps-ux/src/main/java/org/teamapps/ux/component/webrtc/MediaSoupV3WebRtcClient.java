@@ -76,7 +76,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	@Override
-	public DtoMediaSoupV3WebRtcClient createUiClientObject() {
+	public DtoMediaSoupV3WebRtcClient createDto() {
 		DtoMediaSoupV3WebRtcClient ui = new DtoMediaSoupV3WebRtcClient();
 		mapAbstractUiComponentProperties(ui);
 		ui.setPublishingParameters(publishingParameters);
@@ -149,7 +149,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 				if (contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.get();
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
 					} else {
 						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 					}
@@ -217,7 +217,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoMediaSoupV3WebRtcClient.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoMediaSoupV3WebRtcClient.UpdateCommand(createDto()));
 	}
 
 	public boolean isActivityLineVisible() {

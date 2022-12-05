@@ -20,6 +20,7 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class PageView extends Component {
 	List<PageViewBlock> blocks;
@@ -39,7 +40,7 @@ enum PageViewBlockAlignment {
 }
 
 class MessagePageViewBlock extends PageViewBlock {
-	Template topTemplate;
+	Template* topTemplate;
 	ClientRecord topRecord;
 	HorizontalElementAlignment topRecordAlignment;
 	String html;

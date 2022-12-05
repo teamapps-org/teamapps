@@ -27,14 +27,11 @@ export interface TeamAppsUiContext {
 	readonly isHighDensityScreen: boolean;
 	readonly config: DtoConfiguration;
 
-	readonly templateRegistry: any; // TODO remove!!
-
 	getClientObjectById(id: string): Promise<ClientObject>;
 }
 
 // TeamAppsUiContext implementations should implement this too. See usages.
 export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
-	readonly onStaticMethodCommandInvocation: TeamAppsEvent<DtoCommand>;
 
 	renderClientObject(libraryUuid: string, config: DtoClientObject): Promise<ClientObject>;
 
@@ -47,4 +44,5 @@ export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 	toggleEventListener(libraryUuid: string | null, clientObjectId: string | null, qualifiedEventName: string, enabled: boolean): any;
 
 	registerComponentLibrary(uuid: string, mainJsUrl: string, mainCssUrl: string): void;
+
 }

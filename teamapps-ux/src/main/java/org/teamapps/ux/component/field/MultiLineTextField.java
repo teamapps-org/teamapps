@@ -34,7 +34,7 @@ public class MultiLineTextField extends TextField {
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		DtoMultiLineTextField uiField = new DtoMultiLineTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
@@ -47,7 +47,8 @@ public class MultiLineTextField extends TextField {
 	public void append(String s, boolean scrollToBottom) {
 		MultiWriteLockableValue.Lock lock = setAndLockValue(s);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new DtoMultiLineTextField.AppendCommand(s, scrollToBottom), aVoid -> lock.release());
+			final DtoMultiLineTextField.AppendCommand appendCommand = new DtoMultiLineTextField.AppendCommand(s, scrollToBottom);
+			getSessionContext().sendCommandIfRendered(this, aVoid -> lock.release(), () -> appendCommand);
 		} else {
 			lock.release();
 		}

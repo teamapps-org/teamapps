@@ -21,12 +21,10 @@ package org.teamapps.ux.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.DtoCommand;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoGlobals;
-import org.teamapps.dto.DtoCommand;
 import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
@@ -38,32 +36,21 @@ public abstract class AbstractComponent implements Component {
 
 	public static final String DELETED_ATTRIBUTE = "__ta-deleted-attribute__";
 
-	private enum RenderingState {
-		NOT_RENDERED,
-		RENDERING,
-		RENDERED
-	}
-
 	private final static Logger LOGGER = LoggerFactory.getLogger(AbstractComponent.class);
 
-	public final ProjectorEvent<Void> onRendered = new ProjectorEvent<>();
-
 	private String debuggingId = "";
-	private final String id;
+	private final String id = getClass().getSimpleName() + "-" + UUID.randomUUID();
 	private final SessionContext sessionContext;
-	private RenderingState renderingState = RenderingState.NOT_RENDERED;
 	private Component parent;
 
 	private boolean visible = true;
 	private Set<String> listeningEventNames = new HashSet<>();
-	private Set<String> listeningQueryNames = new HashSet<>();
 	private final Map<String, Map<String, Boolean>> cssClassesBySelector = new HashMap<>(0);
 	private final Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
 	private final Map<String, Map<String, String>> attributesBySelector = new HashMap<>(0);
 
 	public AbstractComponent() {
 		this.sessionContext = CurrentSessionContext.get();
-		id = getClass().getSimpleName() + "-" + UUID.randomUUID().toString();
 	}
 
 	protected void mapAbstractUiComponentProperties(DtoComponent uiComponent) {
@@ -88,7 +75,7 @@ public abstract class AbstractComponent implements Component {
 			changed = listeningEventNames.remove(name);
 		}
 		if (changed) {
-			sendCommandIfRendered(null, () -> new DtoGlobals.ToggleEventListeningCommand(null, getId(), name, listen));
+			sendGlobalStaticCommandIfRendered(() -> new DtoGlobals.ToggleEventListeningCommand(null, getId(), name, listen));
 		}
 	}
 
@@ -99,11 +86,6 @@ public abstract class AbstractComponent implements Component {
 
 	public SessionContext getSessionContext() {
 		return sessionContext;
-	}
-
-	@Override
-	public boolean isRendered() {
-		return renderingState == RenderingState.RENDERED;
 	}
 
 	@Override
@@ -120,62 +102,23 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
-	@Override
-	public final void render() {
-		if (renderingState == RenderingState.RENDERED || renderingState == RenderingState.RENDERING) {
-			return; // already rendered!
-		}
-
-		this.renderingState = RenderingState.RENDERING;
-		LOGGER.debug("rendering: " + getId());
-		sessionContext.renderClientObject(this);
-		this.renderingState = RenderingState.RENDERED; // NOTE: after queuing creation! otherwise commands might be queued for this component before it creation is queued!
-		onRendered.fire(null);
-	}
-
-	@Override
-	public final void unrender() {
-		sessionContext.unrenderClientObject(this);
-		renderingState = RenderingState.NOT_RENDERED;
-	}
-
-	@Override
-	public DtoClientObjectReference createUiReference() {
-		LOGGER.debug("createUiClientObjectReference: " + getId());
-		if (!isRendered()) {
-			render();
-		}
-		return new DtoClientObjectReference(getId());
-	}
-
+	@Deprecated
 	public void reRenderIfRendered() {
-		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.sendStaticCommand(RootPanel.class, new DtoGlobals.RefreshComponentCommand(createUiClientObject()));
+			sendGlobalStaticCommandIfRendered(() -> new DtoGlobals.RefreshComponentCommand(createDto()));
+	}
+
+	private void sendGlobalStaticCommandIfRendered(Supplier<DtoCommand<?>> commandSupplier) {
+		SessionContext sessionContext = getSessionContext();
+		if (sessionContext.isRendering(this)) {
+			// wait until finished rendering for sending this command!
+			sessionContext.runWithContext(() -> sessionContext.sendStaticCommand(null, commandSupplier.get()), false);
+		} else if (sessionContext.isRendered(this)) {
+			sessionContext.sendStaticCommand(null, commandSupplier.get());
 		}
 	}
 
 	protected void sendCommandIfRendered(Supplier<DtoCommand<?>> commandSupplier) {
-		this.sendCommandIfRendered(getId(), commandSupplier);
-	}
-
-	protected void sendCommandIfRendered(String clientObjectId, Supplier<DtoCommand<?>> commandSupplier) {
-		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.sendCommand(clientObjectId, commandSupplier.get());
-		} else if (renderingState == RenderingState.RENDERING) {
-			/*
-			This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a thrown event. This change must be transported to the client
-			as command (since the corresponding setter of the parent's DtoComponent has possibly already been set). However, this command must be enqueued after the component is rendered on the client
-			side! Therefore, sending the command must be forcibly enqueued.
-
-			Example: A panel contains a table. The panel's title is bound to the table's "count" ObservableValue. When the panel is rendered, the table also is rendered (as part of rendering the
-			panel). While rendering, the table sets its "count" value, so the panel's title is changed. However, the DtoPanel's setTitle() method already has been invoked, so the change will not have
-			any effect on the initialization of the DtoPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
-			the panel was rendered (which is only after completing its createUiComponent() method).
-			 */
-			sessionContext.runWithContext(() -> {
-				sessionContext.sendCommand(clientObjectId, commandSupplier.get());
-			}, true);
-		}
+		sessionContext.sendCommandIfRendered(this, commandSupplier.get());
 	}
 
 	@Override

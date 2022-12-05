@@ -2,9 +2,7 @@ package org.teamapps.dto;
 
 import Location from "teamapps-client-communication":org.teamapps.dto.protocol;
 
-managed class Globals {
-
-	String id; // enforced by generator but not needed, since Global will not be instantiated!
+class Globals implements ClientObject {
 
     static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
     static event navigationStateChange(Location location, boolean triggeredByUser);

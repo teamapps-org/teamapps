@@ -39,7 +39,7 @@ public class ImageCropper extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoImageCropper uiImageCropper = new DtoImageCropper(imageUrl, selectionMode.toUiImageCropperSelectionMode(), aspectRatio);
 		mapAbstractUiComponentProperties(uiImageCropper);
 		return uiImageCropper;

@@ -36,29 +36,3 @@ class HierarchicalClientRecord extends IdentifiableClientRecord {
 	boolean lazyChildren;
 	boolean selectable;
 }
-
-class TreeRecord extends HierarchicalClientRecord {
-	String displayTemplateId; // null == use asString
-}
-
-class ComboBoxTreeRecord extends TreeRecord {
-	String dropDownTemplateId; // null == use asString
-}
-
-class CalendarEventClientRecord extends IdentifiableClientRecord {
-    String timeGridTemplateId;   // null = use default
-    String dayGridTemplateId;    // null = use default
-    String monthGridTemplateId;  // null = use default
-
-	long start;
-    long end;
-    boolean allDay;
-    boolean allowDragOperations;
-
-    String icon;
-    String title;
-
-    String backgroundColor;
-    String borderColor;
-    CalendarEventRenderingStyle rendering;
-}

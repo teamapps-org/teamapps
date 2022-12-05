@@ -20,7 +20,7 @@
 
 
 import {AbstractComponent} from "teamapps-client-core";
-import {parseHtml, Renderer} from "./Common";
+import {parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {
 	UiMap2_LocationChangedEvent,

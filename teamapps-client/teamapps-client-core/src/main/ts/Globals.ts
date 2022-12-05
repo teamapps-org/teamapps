@@ -16,8 +16,9 @@ import {Component} from "./component/Component";
 import {Showable} from "./util/Showable";
 import {parseHtml} from "./util/parseHtml";
 import {createUiLocation} from "./util/locationUtil";
+import {ClientObject} from "./ClientObject";
 
-export class Globals {
+export class Globals implements ClientObject<DtoGlobals> {
 
 	public static readonly onGlobalKeyEventOccurred: TeamAppsEvent<DtoGlobals_GlobalKeyEventOccurredEvent> = new TeamAppsEvent();
 	public static readonly onNavigationStateChange: TeamAppsEvent<DtoGlobals_NavigationStateChangeEvent> = new TeamAppsEvent();
@@ -26,6 +27,10 @@ export class Globals {
 	constructor(config: DtoGlobals, context: TeamAppsUiContext){
 		throw new Error("Globals should never be instantiated!");
 	}
+
+	destroy(): void {
+        // will not get instantiated anyway...
+    }
 
 	public static setGlobalKeyEventsEnabled(unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean, keyDown: boolean, keyUp: boolean) {
 		setGlobalKeyEventsEnabled.call(this, unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp);

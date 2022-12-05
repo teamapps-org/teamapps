@@ -58,8 +58,8 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
-		DtoNavigationBar uiNavigationBar = new DtoNavigationBar(buttonTemplate.createUiTemplate());
+	public DtoComponent createDto() {
+		DtoNavigationBar uiNavigationBar = new DtoNavigationBar(buttonTemplate.createDtoReference());
 		mapAbstractUiComponentProperties(uiNavigationBar);
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiNavigationBar.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
@@ -69,11 +69,11 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		}
 		if (fanOutComponents != null) {
 			List<DtoClientObjectReference> uiComponents = fanOutComponents.stream()
-					.map(component -> component.createUiReference())
+					.map(component -> component.createDtoReference())
 					.collect(Collectors.toList());
 			uiNavigationBar.setFanOutComponents(uiComponents);
 		}
-		uiNavigationBar.setMultiProgressDisplay(multiProgressDisplay.createUiReference());
+		uiNavigationBar.setMultiProgressDisplay(multiProgressDisplay.createDtoReference());
 		return uiNavigationBar;
 	}
 
@@ -137,7 +137,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		if (component != null) {
 			component.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoNavigationBar.AddFanOutComponentCommand(component != null ? component.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoNavigationBar.AddFanOutComponentCommand(component != null ? component.createDtoReference() : null));
 	}
 
 	public void showFanOutComponent(Component component) {
@@ -145,7 +145,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 			preloadFanOutComponent(component);
 		}
 		activeFanOutComponent = component;
-		sendCommandIfRendered(() -> new DtoNavigationBar.ShowFanOutComponentCommand(component != null ? component.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoNavigationBar.ShowFanOutComponentCommand(component != null ? component.createDtoReference() : null));
 	}
 
 	public void hideFanOutComponent() {
@@ -209,7 +209,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		sendCommandIfRendered(() -> new DtoNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
+		sendCommandIfRendered(() -> new DtoNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createDtoReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

@@ -63,7 +63,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	}
 
 	@Override
-	public DtoLocalDateField createUiClientObject() {
+	public DtoLocalDateField createDto() {
 		DtoLocalDateField dateField = new DtoLocalDateField();
 		mapAbstractFieldAttributesToUiField(dateField);
 		dateField.setShowDropDownButton(showDropDownButton);
@@ -105,7 +105,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 
 	public boolean isFavorPastDates() {
@@ -114,7 +114,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setFavorPastDates(boolean favorPastDates) {
 		this.favorPastDates = favorPastDates;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 
 	public Locale getLocale() {
@@ -131,7 +131,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -140,7 +140,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 
 	public boolean isShowClearButton() {
@@ -149,7 +149,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDefaultSuggestionDate(LocalDate defaultSuggestionDate) {
 		this.defaultSuggestionDate = defaultSuggestionDate;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 
 	public boolean isShuffledFormatSuggestionsEnabled() {
@@ -177,7 +177,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShuffledFormatSuggestionsEnabled(boolean shuffledFormatSuggestionsEnabled) {
 		this.shuffledFormatSuggestionsEnabled = shuffledFormatSuggestionsEnabled;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 
 	public DropDownMode getDropDownMode() {
@@ -186,7 +186,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDropDownMode(DropDownMode dropDownMode) {
 		this.dropDownMode = dropDownMode;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 
 	public String getEmptyText() {
@@ -195,6 +195,6 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
 	}
 }

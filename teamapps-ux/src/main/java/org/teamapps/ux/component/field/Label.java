@@ -48,11 +48,11 @@ public class Label extends AbstractField<String> {
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		DtoLabel uiLabel = new DtoLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));
-		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createUiReference() : null);
+		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createDtoReference() : null);
 		return uiLabel;
 	}
 

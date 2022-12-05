@@ -150,7 +150,7 @@ public class PictureChooser extends AbstractField<Resource> {
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		DtoPictureChooser uiField = new DtoPictureChooser();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setUploadUrl(uploadUrl);

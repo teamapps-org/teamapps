@@ -21,20 +21,19 @@ package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
-import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.SizeType;
 import org.teamapps.ux.component.format.SizingPolicy;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.grid.layout.GridColumn;
 import org.teamapps.ux.component.grid.layout.GridRow;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.component.template.AbstractTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GridTemplate implements Template {
+public class GridTemplate extends AbstractTemplate {
 
 	private int minWidth = 0;
 	private int maxWidth = 0;
@@ -241,7 +240,7 @@ public class GridTemplate implements Template {
 	}
 
 	@Override
-	public DtoTemplate createUiTemplate() {
+	public DtoTemplate createDto() {
 		List<DtoGridColumn> uiColumns = columns.stream()
 				.map(column -> column != null ? column.createUiGridColumn() : null)
 				.collect(Collectors.toList());
@@ -252,6 +251,7 @@ public class GridTemplate implements Template {
 				.map(element -> element != null ? element.createUiTemplateElement() : null)
 				.collect(Collectors.toList());
 		DtoGridTemplate uiGridTemplate = new DtoGridTemplate(uiColumns, uiRows, uiTemplateElements);
+		uiGridTemplate.setId(getId());
 		uiGridTemplate.setMinWidth(minWidth);
 		uiGridTemplate.setMaxWidth(maxWidth);
 		uiGridTemplate.setMinHeight(minHeight);

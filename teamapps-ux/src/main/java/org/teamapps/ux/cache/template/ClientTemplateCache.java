@@ -22,15 +22,10 @@ package org.teamapps.ux.cache.template;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.template.Template;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ClientTemplateCache<RECORD> {
 
 	private final Listener listener;
 
-	private final Map<Template, Integer> templateIdsByTemplate = new HashMap<>();
-	private int templateIdCounter = 0;
 	private Template defaultTemplate;
 	private TemplateDecider<RECORD> templateDecider = record -> defaultTemplate;
 
@@ -41,22 +36,6 @@ public class ClientTemplateCache<RECORD> {
 
 	public ClientTemplateCache(Listener listener) {
 		this.listener = listener;
-	}
-
-	public TemplateWithClientId getTemplateIdForRecord(RECORD record) {
-		return getTemplateIdForRecord(record, null);
-	}
-
-	public TemplateWithClientId getTemplateIdForRecord(RECORD record, Template defaultTemplate) {
-		Template templateFromDecider = templateDecider.getTemplate(record);
-		Template template = templateFromDecider != null ? templateFromDecider : defaultTemplate != null ? defaultTemplate : this.defaultTemplate;
-		if (template != null && !templateIdsByTemplate.containsKey(template)) {
-			int id = ++templateIdCounter;
-			this.templateIdsByTemplate.put(template, id);
-			listener.onNewTemplate(id, template);
-		}
-		Integer clientId = template != null ? this.templateIdsByTemplate.get(template) : null;
-		return new TemplateWithClientId(template, clientId);
 	}
 
 	public interface Listener {

@@ -17,21 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Renderer} from "../Common";
-import {DtoHtmlTemplate} from "../generated";
+package org.teamapps.dto;
 
-export function createHtmlTemplateRenderer(template: DtoHtmlTemplate, idPropertyName: string): Renderer {
-	return {
-		render: (data: any) => {
-			if (data == null) {
-				return '';
-			} else {
-				let html = template.html.replace(/\{\{(\w+)\}\}/g, (substring, propertyName) => {
-					return data[propertyName] || "";
-				});
-				return html;
-			}
-		},
-		template
-	};
+interface Template extends ClientObject {
+
 }

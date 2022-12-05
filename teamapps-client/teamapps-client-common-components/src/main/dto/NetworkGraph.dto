@@ -20,6 +20,7 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class NetworkGraph extends Component{
 	required List<NetworkNode> nodes;
@@ -63,7 +64,7 @@ class NetworkNode {
 	TreeGraphNodeImage image;
 	TreeGraphNodeIcon icon;
 
-	Template template;     // will get embedded using foreignObject
+	Template* template;     // will get embedded using foreignObject
 	ClientRecord record;   // will get embedded using foreignObject
 
 	NetworkNodeExpandState expandState;

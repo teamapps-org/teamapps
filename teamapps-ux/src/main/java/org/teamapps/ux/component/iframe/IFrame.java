@@ -40,7 +40,7 @@ public class IFrame extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoIFrame uiIFrame = new DtoIFrame().setUrl(url);
 		mapAbstractUiComponentProperties(uiIFrame);
 		return uiIFrame;

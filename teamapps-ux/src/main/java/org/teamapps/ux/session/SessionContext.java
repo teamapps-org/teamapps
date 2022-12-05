@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.DtoClientObject;
+import org.teamapps.dto.DtoCommand;
 import org.teamapps.dto.DtoGlobals;
 import org.teamapps.dto.DtoNotification;
-import org.teamapps.dto.DtoCommand;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.dto.protocol.DtoQueryWrapper;
 import org.teamapps.dto.protocol.DtoSessionClosingReason;
@@ -53,7 +53,6 @@ import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.rootpanel.WakeLock;
-import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.i18n.ResourceBundleTranslationProvider;
 import org.teamapps.ux.i18n.TranslationProvider;
@@ -68,9 +67,9 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
@@ -103,11 +102,11 @@ public class SessionContext {
 	private final SessionIconProvider iconProvider;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
 	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
+	private Set<ClientObject> renderingClientObjects = new HashSet<>();
 	private final SessionContextResourceManager sessionResourceProvider;
 
 	private TranslationProvider translationProvider;
 
-	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration;
 
 	private final Map<String, Icon<?, ?>> bundleIconByKey = new HashMap<>();
@@ -202,7 +201,6 @@ public class SessionContext {
 	public Event<DtoSessionClosingReason> onDestroyed() {
 		return onDestroyed;
 	}
-
 
 	public void pushNavigationState(String relativeUrl) {
 		sendStaticCommand(null, new DtoGlobals.PushHistoryStateCommand(relativeUrl));
@@ -301,16 +299,35 @@ public class SessionContext {
 		sendStaticCommand(clientObjectClass, command, null);
 	}
 
-	public <RESULT> void sendCommand(String clientObjectId, DtoCommand<RESULT> command, Consumer<RESULT> resultCallback) {
+	public void sendCommandIfRendered(ClientObject clientObject, DtoCommand<?> command) {
+		sendCommandIfRendered(clientObject, null, (Supplier) () -> command);
+	}
+
+	public <RESULT> void sendCommandIfRendered(ClientObject clientObject, Consumer<RESULT> resultCallback, Supplier<DtoCommand<RESULT>> commandSupplier) {
+		Objects.requireNonNull(clientObject, "clientObject must not be null!");
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
 
-		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(null, clientObjectId, command, wrappedCallback)));
+		if (isRendering(clientObject)) {
+			/*
+			This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a thrown event. This change must be transported to the client
+			as command (since the corresponding setter of the parent's DtoComponent has possibly already been set). However, this command must be enqueued after the component is rendered on the client
+			side! Therefore, sending the command must be forcibly enqueued.
+
+			Example: A panel contains a table. The panel's title is bound to the table's "count" ObservableValue. When the panel is rendered, the table also is rendered (as part of rendering the
+			panel). While rendering, the table sets its "count" value, so the panel's title is changed. However, the DtoPanel's setTitle() method already has been invoked, so the change will not have
+			any effect on the initialization of the DtoPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
+			the panel was rendered (which is only after completing its createUiComponent() method).
+			 */
+			runWithContext(() -> sendCommandInternal(clientObject.getId(), commandSupplier.get(), wrappedCallback), true);
+		} else if (isRendered(clientObject)) {
+			sendCommandInternal(clientObject.getId(), commandSupplier.get(), wrappedCallback);
+		}
 	}
 
-	public void sendCommand(String clientObjectId, DtoCommand<?> command) {
-		this.sendCommand(clientObjectId, command, null);
+	private <RESULT> void sendCommandInternal(String clientObjectId, DtoCommand<RESULT> command, Consumer<RESULT> wrappedCallback) {
+		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(null, clientObjectId, command, wrappedCallback)));
 	}
 
 	public ClientInfo getClientInfo() {
@@ -339,10 +356,6 @@ public class SessionContext {
 
 	public File getUploadedFileByUuid(String uuid) {
 		return this.serverContext.getUploadedFileByUuid(uuid);
-	}
-
-	public Template getTemplate(String id) {
-		return registeredTemplates.get(id);
 	}
 
 	public CompletableFuture<Void> runWithContext(Runnable runnable) {
@@ -461,19 +474,32 @@ public class SessionContext {
 
 	public void renderClientObject(ClientObject clientObject) {
 		CurrentSessionContext.throwIfNotSameAs(this);
-
-		clientObjectsById.put(clientObject.getId(), clientObject);
-		DtoClientObject uiClientObject = clientObject.createUiClientObject();
-
-		ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
-		loadComponentLibraryIfNecessary(clientObject, componentLibraryInfo);
-
-		if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
-			sendStaticCommand(null, new DtoGlobals.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiClientObject.getTypeId(), uiClientObject.getEventNames(), uiClientObject.getQueryNames()));
-			clientObjectTypesKnownToClient.add(clientObject.getClass());
+		if (clientObjectsById.containsKey(clientObject.getId())) {
+			return; // already rendered or currently rendering!
 		}
 
-		sendStaticCommand(null, new DtoGlobals.RenderCommand(componentLibraryInfo.getUuid(), uiClientObject));
+		LOGGER.debug("Rendering: " + clientObject.getId());
+
+		this.renderingClientObjects.add(clientObject);
+		try {
+			clientObjectsById.put(clientObject.getId(), clientObject);
+			DtoClientObject uiClientObject = clientObject.createDto();
+			if (uiClientObject.getId() == null) {
+				throw new IllegalArgumentException("DtoClientObject must not have id == null!");
+			}
+
+			ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
+			loadComponentLibraryIfNecessary(clientObject, componentLibraryInfo);
+
+			if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
+				sendStaticCommand(null, new DtoGlobals.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiClientObject.getTypeId(), uiClientObject.getEventNames(), uiClientObject.getQueryNames()));
+				clientObjectTypesKnownToClient.add(clientObject.getClass());
+			}
+
+			sendStaticCommand(null, new DtoGlobals.RenderCommand(componentLibraryInfo.getUuid(), uiClientObject));
+		} finally {
+			renderingClientObjects.remove(clientObject);
+		}
 	}
 
 	private void loadComponentLibraryIfNecessary(ClientObject clientObject, ComponentLibraryInfo componentLibraryInfo) {
@@ -486,9 +512,16 @@ public class SessionContext {
 	}
 
 	public void unrenderClientObject(ClientObject clientObject) {
-		sendStaticCommand(null,
-				// unregister only after the ui destroyed the object!
-				new DtoGlobals.UnrenderCommand(clientObject.getId()), unused -> clientObjectsById.remove(clientObject.getId()));
+		sendStaticCommand(null, new DtoGlobals.UnrenderCommand(clientObject.getId()));
+		clientObjectsById.remove(clientObject.getId());
+	}
+
+	public boolean isRendering(ClientObject clientObject) {
+		return renderingClientObjects.contains(clientObject);
+	}
+
+	public boolean isRendered(ClientObject clientObject) {
+		return clientObjectsById.containsKey(clientObject.getId());
 	}
 
 	public ClientObject getClientObject(String clientObjectId) {
@@ -528,7 +561,7 @@ public class SessionContext {
 	}
 
 	public void addRootPanel(String containerElementSelector, Component rootPanel) {
-		sendStaticCommand(null, new DtoGlobals.AddRootComponentCommand(containerElementSelector, rootPanel.createUiReference()));
+		sendStaticCommand(null, new DtoGlobals.AddRootComponentCommand(containerElementSelector, rootPanel.createDtoReference()));
 	}
 
 	public RootPanel addRootPanel(String containerElementSelector) {
@@ -558,7 +591,7 @@ public class SessionContext {
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			sendStaticCommand(null, new DtoNotification.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+			sendStaticCommand(null, new DtoNotification.ShowNotificationCommand(notification.createDtoReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
 	}
@@ -615,15 +648,16 @@ public class SessionContext {
 	}
 
 	private void updateSessionMessageWindows() {
-		sendCommand(null,
-				new DtoGlobals.SetSessionMessageWindowsCommand(
-						sessionExpiredWindow != null ? sessionExpiredWindow.createUiReference()
-								: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
-								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
-						sessionErrorWindow != null ? sessionErrorWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
-								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
-						sessionTerminatedWindow != null ? sessionTerminatedWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
-								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference()));
+		// TODO uncomment:
+//		sendStaticCommand(null,
+//				new DtoGlobals.SetSessionMessageWindowsCommand(
+//						sessionExpiredWindow != null ? sessionExpiredWindow.createDtoReference()
+//								: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
+//								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createDtoReference(),
+//						sessionErrorWindow != null ? sessionErrorWindow.createDtoReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
+//								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createDtoReference(),
+//						sessionTerminatedWindow != null ? sessionTerminatedWindow.createDtoReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
+//								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createDtoReference()));
 	}
 
 	public static Window createDefaultSessionMessageWindow(String title, String message, String refreshButtonCaption, String cancelButtonCaption) {
@@ -648,7 +682,7 @@ public class SessionContext {
 		if (cancelButtonCaption != null) {
 			LinkButton cancelLink = new LinkButton(cancelButtonCaption);
 			cancelLink.setCssStyle("text-align", "center");
-			cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.createUiReference().getId() + "\").close();");
+			cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.createDtoReference().getId() + "\").close();");
 			verticalLayout.addComponentAutoSize(cancelLink);
 		}
 

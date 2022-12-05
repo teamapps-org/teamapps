@@ -20,6 +20,7 @@
 
 import "@less/teamapps.less";
 import {ContextMenu} from "./micro-components/ContextMenu";
+import {MustacheTemplate} from "./template/MustacheTemplate";
 
 export * from "./Common";
 
@@ -57,3 +58,6 @@ export {ComponentField} from "./component/formfield/ComponentField";
 
 export {ContextMenu} from "./micro-components/ContextMenu";
 export {draggable} from "./util/draggable";
+
+export * from "./template/MustacheTemplate";
+export * from "./template/GridTemplate";

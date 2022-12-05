@@ -41,25 +41,21 @@ public class MobileLayout extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoMobileLayout uiMobileLayout = new DtoMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (content != null) {
-			uiMobileLayout.setInitialView(content.createUiReference());
+			uiMobileLayout.setInitialView(content.createDtoReference());
 		}
 		if (toolbar != null) {
-			uiMobileLayout.setToolbar(toolbar.createUiReference());
+			uiMobileLayout.setToolbar(toolbar.createDtoReference());
 		}
-		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createUiReference() : null);
+		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createDtoReference() : null);
 		return uiMobileLayout;
 	}
 
 	@Override
 	public void handleUiEvent(DtoEventWrapper event) {
-	}
-
-	public void preloadView(Component component) {
-		component.render();
 	}
 
 	public void setContent(Component component) {
@@ -70,7 +66,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 		if (this.content != component) {
 			content = component;
 			component.setParent(this);
-			sendCommandIfRendered(() -> new DtoMobileLayout.ShowViewCommand(component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
+			sendCommandIfRendered(() -> new DtoMobileLayout.ShowViewCommand(component.createDtoReference(), animation != null ? animation.toUiPageTransition() : null,
 					animationDuration));
 		}
 	}
@@ -96,7 +92,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 		if (navigationBar != null) {
 			navigationBar.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createDtoReference() : null));
 	}
 
 }

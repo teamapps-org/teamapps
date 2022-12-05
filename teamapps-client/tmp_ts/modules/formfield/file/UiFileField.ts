@@ -21,7 +21,7 @@ import {UiField} from "../UiField";
 import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {generateUUID, humanReadableFileSize, parseHtml, prependChild, removeClassesByFunction, Renderer} from "../../Common";
+import {generateUUID, humanReadableFileSize, parseHtml, prependChild, removeClassesByFunction} from "../../Common";
 import {
 	UiFileField_FileItemClickedEvent,
 	UiFileField_FileItemRemoveButtonClickedEvent,
@@ -134,7 +134,7 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 		return v == null || Array.isArray(v);
 	}
 
-	public setItemTemplate(itemTemplate: DtoTemplate): void {
+	public setItemTemplate(template: Template): void {
 		this.itemRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
 		this.displayCommittedValue();
 	}

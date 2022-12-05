@@ -146,7 +146,6 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		if (applicationLauncher == null) {
 			applicationLauncherButton.setVisible(false);
 		} else {
-			mobileLayout.preloadView(applicationLauncher.getPanel());
 			applicationLauncherButton.setVisible(true);
 		}
 		this.applicationLauncher = applicationLauncher;
@@ -255,7 +254,6 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	@Override
 	public void handlePerspectiveChange(ResponsiveApplication application, Perspective perspective, Perspective previousPerspective, List<View> activeViews, List<View> addedViews,
                                         List<View> removedViews) {
-		addedViews.forEach(view -> mobileLayout.preloadView(view.getPanel()));
 		perspectiveViews = activeViews;
 
 		viewsItemView.removeAllGroups();
@@ -290,7 +288,6 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	@Override
 	public void handleViewAdded(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view) {
 		if (isActivePerspective) {
-			mobileLayout.preloadView(view.getPanel());
 			perspectiveViews.add(view);
 		}
 	}

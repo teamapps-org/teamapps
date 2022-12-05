@@ -110,7 +110,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	private void updateToolButtons() {
 		sendCommandIfRendered(() -> new DtoPanel.SetToolButtonsCommand(this.toolButtons.stream()
-				.map(toolButton -> toolButton.createUiReference())
+				.map(toolButton -> toolButton.createDtoReference())
 				.collect(Collectors.toList())));
 	}
 
@@ -135,7 +135,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoPanel uiPanel = new DtoPanel();
 		mapUiPanelProperties(uiPanel);
 		return uiPanel;
@@ -150,12 +150,12 @@ public class Panel extends AbstractComponent implements Component {
 		uiPanel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy.toUiHeaderComponentMinimizationPolicy());
 		uiPanel.setHideTitleBar(hideTitleBar);
 		uiPanel.setToolbar(Component.createUiClientObjectReference(toolbar));
-		uiPanel.setContent(content != null ? content.createUiReference() : null);
+		uiPanel.setContent(content != null ? content.createDtoReference() : null);
 		uiPanel.setPadding(padding);
 		uiPanel.setWindowButtons(windowButtons.stream()
 				.map(b -> b.toUiWindowButtonType()).collect(Collectors.toList()));
 		uiPanel.setToolButtons(toolButtons.stream()
-				.map(toolButton -> toolButton.createUiReference())
+				.map(toolButton -> toolButton.createDtoReference())
 				.collect(Collectors.toList()));
 		uiPanel.setAlwaysShowHeaderFieldIcons(alwaysShowHeaderFieldIcons);
 		uiPanel.setStretchContent(stretchContent);
@@ -165,7 +165,7 @@ public class Panel extends AbstractComponent implements Component {
 		if (field == null) {
 			return null;
 		}
-		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField(field.createUiReference());
+		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField(field.createDtoReference());
 		uiPanelHeaderField.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanelHeaderField.setMinWidth(minWidth);
 		uiPanelHeaderField.setMaxWidth(maxWidth);
@@ -210,7 +210,7 @@ public class Panel extends AbstractComponent implements Component {
 		if (content != null) {
 			content.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoPanel.SetContentCommand(content != null ? content.createUiReference() : null));
+		sendCommandIfRendered(() -> new DtoPanel.SetContentCommand(content != null ? content.createDtoReference() : null));
 	}
 
 	@Override

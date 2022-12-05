@@ -86,7 +86,8 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		itemCache.setPurgeListener(operationHandle -> {
 			if (isRendered()) {
 				List<Integer> removedItemIds = operationHandle.getAndClearResult();
-				getSessionContext().sendCommand(getId(), new DtoInfiniteItemView.RemoveDataCommand(removedItemIds), aVoid -> operationHandle.commit());
+				final DtoInfiniteItemView.RemoveDataCommand removeDataCommand = new DtoInfiniteItemView.RemoveDataCommand(removedItemIds);
+				getSessionContext().sendCommandIfRendered(this, aVoid -> operationHandle.commit(), () -> removeDataCommand);
 			} else {
 				operationHandle.commit();
 			}
@@ -102,8 +103,8 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
-		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
+	public DtoComponent createDto() {
+		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate.createDtoReference(), rowHeight);
 		mapAbstractUiComponentProperties(ui);
 		int recordCount = model.getCount();
 		CacheManipulationHandle<List<DtoIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(model.getRecords(0, Math.min(recordCount, numberOfInitialRecords)));
@@ -148,7 +149,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
 					} else {
 						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 					}
@@ -188,7 +189,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate.createDtoReference()));
 		return this;
 	}
 
@@ -296,7 +297,8 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 			} else {
 				cacheResponse = itemCache.addRecords(records);
 			}
-			getSessionContext().sendCommand(getId(), new DtoInfiniteItemView.AddDataCommand(startIndex, cacheResponse.getAndClearResult(), totalCount, clear), aVoid -> cacheResponse.commit());
+			final DtoInfiniteItemView.AddDataCommand addDataCommand = new DtoInfiniteItemView.AddDataCommand(startIndex, cacheResponse.getAndClearResult(), totalCount, clear);
+			getSessionContext().sendCommandIfRendered(this, aVoid -> cacheResponse.commit(), () -> addDataCommand);
 		}
 	}
 

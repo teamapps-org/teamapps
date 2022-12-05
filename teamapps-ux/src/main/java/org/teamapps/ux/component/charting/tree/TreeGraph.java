@@ -56,7 +56,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoTreeGraph createUiClientObject() {
+	public DtoTreeGraph createDto() {
 		DtoTreeGraph ui = new DtoTreeGraph();
 		mapAbstractUiComponentProperties(ui);
 		ui.setNodes(createUiNodes(nodesById.values()));
@@ -102,7 +102,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		uiNode.setBorderRadius(node.getBorderRadius());
 		uiNode.setImage(node.getImage() != null ? node.getImage().createUiTreeGraphNodeImage() : null);
 		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createUiTreeGraphNodeIcon() : null);
-		uiNode.setTemplate(node.getTemplate() != null ? node.getTemplate().createUiTemplate() : null);
+		uiNode.setTemplate(node.getTemplate() != null ? node.getTemplate().createDtoReference() : null);
 		uiNode.setRecord(node.getRecord() != null ? createUiRecord(node.getRecord(), node.getTemplate()) : null);
 		uiNode.setConnectorLineColor(node.getConnectorLineColor() != null ? node.getConnectorLineColor().toHtmlColorString() : null);
 		uiNode.setConnectorLineWidth(node.getConnectorLineWidth());
@@ -194,7 +194,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoTreeGraph.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoTreeGraph.UpdateCommand(createDto()));
 	}
 
 	public void moveToRootNode() {

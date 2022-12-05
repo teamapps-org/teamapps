@@ -23,19 +23,11 @@ import {
 	DtoPageDisplayMode,
 	DtoPageTransition,
 	DtoRepeatableAnimation,
-	DtoTemplate
 } from "./generated";
 import rgba from "color-rgba";
-import {Component, parseHtml} from "teamapps-client-core";
+import {Component, DtoTemplate, parseHtml} from "teamapps-client-core";
 
 export const defaultSpinnerTemplate = `<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`;
-
-export type RenderingFunction = (data: any) => string;
-
-export type Renderer = {
-	render: RenderingFunction,
-	template: DtoTemplate
-};
 
 export class Constants {
 	private static _SCROLLBAR_WIDTH: number;

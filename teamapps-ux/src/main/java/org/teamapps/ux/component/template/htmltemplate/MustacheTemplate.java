@@ -21,13 +21,16 @@ package org.teamapps.ux.component.template.htmltemplate;
 
 import org.teamapps.dto.DtoMustacheTemplate;
 import org.teamapps.dto.DtoTemplate;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.template.AbstractTemplate;
 
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class MustacheTemplate implements Template {
+@TeamAppsComponent(library = CommonComponentLibrary.class)
+public class MustacheTemplate extends AbstractTemplate {
 
 	private static final Pattern PLACE_HOLDER_REGEX = Pattern.compile("\\{\\{#?(\\w+)\\}\\}");
 
@@ -42,8 +45,10 @@ public class MustacheTemplate implements Template {
 	}
 
 	@Override
-	public DtoTemplate createUiTemplate() {
-		return new DtoMustacheTemplate(templateString);
+	public DtoTemplate createDto() {
+		DtoMustacheTemplate dto = new DtoMustacheTemplate(templateString);
+		dto.setId(getId());
+		return dto;
 	}
 
 	@Override

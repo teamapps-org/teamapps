@@ -40,7 +40,7 @@ import {UiCalendarViewMode} from "../generated/UiCalendarViewMode";
 import {UiCalendarEventRenderingStyle} from "../generated/UiCalendarEventRenderingStyle";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {Interval, IntervalManager} from "./util/IntervalManager";
-import {parseHtml, prependChild, Renderer} from "./Common";
+import {parseHtml, prependChild} from "./Common";
 import {DtoCalendarEventClientRecord} from "../generated/DtoCalendarEventClientRecord";
 import {DtoTemplate} from "../generated/DtoTemplate";
 
@@ -85,7 +85,6 @@ export class UiCalendar extends AbstractComponent<DtoCalendar> implements UiCale
 
 	private $main: HTMLElement;
 	private eventSource: UiCalendarFullCalendarEventSource;
-	private templateRenderers: { [name: string]: Renderer };
 	private calendar: Calendar;
 
 	constructor(config: DtoCalendar, context: TeamAppsUiContext) {
@@ -95,8 +94,6 @@ export class UiCalendar extends AbstractComponent<DtoCalendar> implements UiCale
 	<div class="calendar"></div>
 </div>`);
 		let $fullCalendarElement: HTMLElement = this.$main.querySelector(':scope > .calendar');
-
-		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
 
 		this.eventSource = new UiCalendarFullCalendarEventSource(context, config.id, () => this.calendar);
 		this.calendar = new Calendar($fullCalendarElement, {

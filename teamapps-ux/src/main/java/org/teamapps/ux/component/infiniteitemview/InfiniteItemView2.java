@@ -82,8 +82,8 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
-		DtoInfiniteItemView2 ui = new DtoInfiniteItemView2(itemTemplate.createUiTemplate());
+	public DtoComponent createDto() {
+		DtoInfiniteItemView2 ui = new DtoInfiniteItemView2(itemTemplate.createDtoReference());
 		mapAbstractUiComponentProperties(ui);
 		ui.setItemWidth(itemWidth);
 		ui.setItemHeight(itemHeight);
@@ -128,7 +128,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 					if (record != null) {
 						Component contextMenuContent = contextMenuProvider.apply(record);
 						if (contextMenuContent != null) {
-							sendCommandIfRendered(() -> new DtoInfiniteItemView2.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
+							sendCommandIfRendered(() -> new DtoInfiniteItemView2.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
 						} else {
 							sendCommandIfRendered(() -> new DtoInfiniteItemView2.CloseContextMenuCommand(e.getRequestId()));
 						}
@@ -187,7 +187,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView2.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView2.SetItemTemplateCommand(itemTemplate.createDtoReference()));
 		return this;
 	}
 

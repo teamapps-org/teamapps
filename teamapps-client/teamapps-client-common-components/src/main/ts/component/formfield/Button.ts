@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {bind, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {bind, Component, DtoTemplate, parseHtml, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
 import {DropDown} from "../../micro-components/DropDown";
 import {
 	DtoButton,
@@ -26,8 +26,7 @@ import {
 	DtoButtonCommandHandler,
 	DtoButtonEventSource,
 	DtoFieldEditingMode,
-	DtoFieldMessage,
-	DtoTemplate
+	DtoFieldMessage
 } from "../../generated";
 import {AbstractField} from "./AbstractField";
 
@@ -36,7 +35,6 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 	public readonly onClicked: TeamAppsEvent<DtoButton_ClickedEvent> = new TeamAppsEvent();
 	public readonly onDropDownOpened: TeamAppsEvent<DtoButton_DropDownOpenedEvent> = new TeamAppsEvent();
 
-	private template: DtoTemplate;
 	private templateRecord: any;
 
 	private $main: HTMLElement;
@@ -49,7 +47,6 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 	private onClickJavaScript: string;
 
 	protected initialize(config: DtoButton, context: TeamAppsUiContext) {
-		this.template = config.template;
 		this.templateRecord = config.templateRecord;
 
 		this.$main = parseHtml(this.getReadOnlyHtml(this.templateRecord, -1));
@@ -62,7 +59,11 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 				if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
 					if (!this.dropDown.isOpen) {
 						const width = this.getMainInnerDomElement().offsetWidth;
-						this.dropDown.open({$reference: this.getMainInnerDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
+						this.dropDown.open({
+							$reference: this.getMainInnerDomElement(),
+							width: Math.max(this.minDropDownWidth, width),
+							minHeight: this.minDropDownHeight
+						});
 						this.onDropDownOpened.fire({});
 						this.getMainInnerDomElement().classList.add("open");
 					} else {
@@ -133,8 +134,8 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 		return this.$main;
 	}
 
-	setTemplate(template: DtoTemplate, templateRecord: any): void {
-		this.template = template;
+	setTemplate(template: Template, templateRecord: any): void {
+		this.config.template = template;
 		this.setTemplateRecord(templateRecord);
 	}
 
@@ -145,7 +146,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 	}
 
 	private renderContent(): string {
-		return this.template != null ? this._context.templateRegistry.createTemplateRenderer(this.template).render(this.templateRecord) : this.templateRecord;
+		return (this.config.template as Template)?.render(this.templateRecord) ?? this.templateRecord;
 	}
 
 	setFieldMessages(fieldMessageConfigs: DtoFieldMessage[]): void {

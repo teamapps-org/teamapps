@@ -68,7 +68,7 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public DtoProgressDisplay createUiClientObject() {
+	public DtoProgressDisplay createDto() {
 		DtoProgressDisplay ui = new DtoProgressDisplay();
 		mapAbstractUiComponentProperties(ui);
 		ui.setIcon(getSessionContext().resolveIcon(icon));
@@ -81,7 +81,7 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	private void updateUi() {
-		sendCommandIfRendered(() -> new DtoProgressDisplay.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoProgressDisplay.UpdateCommand(createDto()));
 	}
 
 	@Override

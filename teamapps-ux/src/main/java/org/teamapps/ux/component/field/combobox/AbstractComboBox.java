@@ -55,7 +55,6 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	private ComboBoxModel<RECORD> model;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
-	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
 	private int templateIdCounter = 0;
 	private Template selectedEntryTemplate = null; // null: use recordToStringFunction;
 	private Template dropDownTemplate = null; // null: use recordToStringFunction;
@@ -100,11 +99,6 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	protected void mapCommonUiComboBoxProperties(DtoComboBox ui) {
 		mapAbstractFieldAttributesToUiField(ui);
-
-		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
-		ui.setTemplates(templateIdsByTemplate.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
-
 		ui.setShowDropDownButton(dropDownButtonVisible);
 		ui.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
 		ui.setHighlightFirstResultEntry(highlightFirstResultEntry);
@@ -202,8 +196,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		DtoComboBoxTreeRecord uiTreeRecord = new DtoComboBoxTreeRecord();
 		uiTreeRecord.setValues(values);
 
-		uiTreeRecord.setDisplayTemplateId(templateIdsByTemplate.get(displayTemplate));
-		uiTreeRecord.setDropDownTemplateId(templateIdsByTemplate.get(dropdownTemplate));
+		uiTreeRecord.setDisplayTemplate(displayTemplate != null ? displayTemplate.createDtoReference(): null);
+		uiTreeRecord.setDropDownTemplate(dropdownTemplate != null ? dropdownTemplate.createDtoReference(): null);
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
@@ -236,13 +230,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	private Template getTemplateForRecord(RECORD record, TemplateDecider<RECORD> templateDecider, Template defaultTemplate) {
 		Template templateFromDecider = templateDecider.getTemplate(record);
-		Template template = templateFromDecider != null ? templateFromDecider : defaultTemplate;
-		if (template != null && !templateIdsByTemplate.containsKey(template)) {
-			String uuid = "" + templateIdCounter++;
-			this.templateIdsByTemplate.put(template, uuid);
-			sendCommandIfRendered(() -> new DtoComboBox.RegisterTemplateCommand(uuid, template.createUiTemplate()));
-		}
-		return template;
+		return templateFromDecider != null ? templateFromDecider : defaultTemplate;
 	}
 
 	protected boolean isFreeTextEntry(DtoComboBoxTreeRecord uiTreeRecord) {
@@ -345,17 +333,11 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setSelectedEntryTemplate(Template selectedEntryTemplate) {
 		this.selectedEntryTemplate = selectedEntryTemplate;
-		if (selectedEntryTemplate != null) {
-			this.templateIdsByTemplate.put(selectedEntryTemplate, "" + templateIdCounter++);
-		}
 		reRenderIfRendered();
 	}
 
 	public void setDropDownTemplate(Template dropDownTemplate) {
 		this.dropDownTemplate = dropDownTemplate;
-		if (dropDownTemplate != null) {
-			this.templateIdsByTemplate.put(dropDownTemplate, "" + templateIdCounter++);
-		}
 		reRenderIfRendered();
 	}
 

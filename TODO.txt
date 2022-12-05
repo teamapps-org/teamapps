@@ -1,3 +1,10 @@
+
+NEXT: make templates render on the client side!!!! (now client objects, but no client-side implementation yet!)
+also: fix client-side usages of templates
+
+
+fix queries
+
 rename:
  clicked -> click
  Java: createUiX(UxObject...) -> createDto()

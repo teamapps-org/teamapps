@@ -34,7 +34,7 @@ public class FieldGroup extends AbstractComponent {
 	private final List<AbstractField> fields = new ArrayList<>();
 
 	@Override
-	public DtoFieldGroup createUiClientObject() {
+	public DtoFieldGroup createDto() {
 		DtoFieldGroup uiFieldGroup = new DtoFieldGroup();
 		mapAbstractUiComponentProperties(uiFieldGroup);
 		uiFieldGroup.setFields(createUiFieldReferences());
@@ -43,7 +43,7 @@ public class FieldGroup extends AbstractComponent {
 
 	private List<DtoClientObjectReference> createUiFieldReferences() {
 		return fields.stream()
-				.map(c -> c.createUiReference())
+				.map(c -> c.createDtoReference())
 				.collect(Collectors.toList());
 	}
 

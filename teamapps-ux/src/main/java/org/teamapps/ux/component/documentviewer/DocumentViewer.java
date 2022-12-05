@@ -48,7 +48,7 @@ public class DocumentViewer extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoDocumentViewer documentViewer = new DtoDocumentViewer();
 		mapAbstractUiComponentProperties(documentViewer);
 		documentViewer.setPageUrls(pageUrls);

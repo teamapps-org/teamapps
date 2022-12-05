@@ -114,7 +114,7 @@ public class TabPanel extends AbstractComponent implements Component {
 
 	private void updateToolButtons() {
 		sendCommandIfRendered(() -> new DtoTabPanel.SetToolButtonsCommand(this.toolButtons.stream()
-				.map(toolButton -> toolButton.createUiReference())
+				.map(toolButton -> toolButton.createDtoReference())
 				.collect(Collectors.toList())));
 	}
 
@@ -141,7 +141,7 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoTabPanel uiTabPanel = new DtoTabPanel();
 		mapAbstractUiComponentProperties(uiTabPanel);
 		List<DtoTab> uiTabs = tabs.stream()
@@ -152,7 +152,7 @@ public class TabPanel extends AbstractComponent implements Component {
 		uiTabPanel.setHideTabBarIfSingleTab(hideTabBarIfSingleTab);
 		uiTabPanel.setTabStyle(tabStyle.toUiTabPanelTabStyle());
 		uiTabPanel.setToolButtons(toolButtons.stream()
-				.map(toolButton -> (toolButton.createUiReference()))
+				.map(toolButton -> (toolButton.createDtoReference()))
 				.collect(Collectors.toList()));
 		return uiTabPanel;
 	}

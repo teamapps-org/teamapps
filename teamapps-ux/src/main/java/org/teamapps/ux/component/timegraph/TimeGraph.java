@@ -127,7 +127,7 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		List<DtoTimeChartZoomLevel> uiZoomLevels = createUiZoomlevels();
 
 		Interval domainX = retrieveDomainX();
@@ -215,7 +215,8 @@ public class TimeGraph extends AbstractComponent {
 
 	public void zoomTo(long minX, long maxX) {
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new DtoTimeGraph.ZoomToCommand(new DtoLongInterval(minX, maxX)), aVoid -> this.displayedInterval = new Interval(minX, maxX));
+			final DtoTimeGraph.ZoomToCommand zoomToCommand = new DtoTimeGraph.ZoomToCommand(new DtoLongInterval(minX, maxX));
+			getSessionContext().sendCommandIfRendered(this, aVoid -> this.displayedInterval = new Interval(minX, maxX), () -> zoomToCommand);
 		} else {
 			this.displayedInterval = new Interval(minX, maxX);
 		}

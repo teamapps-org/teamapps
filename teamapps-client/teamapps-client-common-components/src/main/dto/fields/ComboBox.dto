@@ -20,9 +20,9 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class ComboBox extends Field implements TextInputHandlingField {
-	Dictionary<Template> templates;
 	boolean showDropDownButton;
 	boolean showDropDownAfterResultsArrive;
 	boolean highlightFirstResultEntry;
@@ -40,6 +40,9 @@ class ComboBox extends Field implements TextInputHandlingField {
 	query lazyChildren(int parentId) returns List<ComboBoxTreeRecord>;
 	query retrieveDropdownEntries(String queryString) returns List<ComboBoxTreeRecord>;
 
-	command registerTemplate(String id, Template template);
 	command replaceFreeTextEntry(String freeText, ComboBoxTreeRecord newEntry);
+}
+
+class ComboBoxTreeRecord extends TreeRecord {
+	Template* dropDownTemplate; // null == use asString
 }

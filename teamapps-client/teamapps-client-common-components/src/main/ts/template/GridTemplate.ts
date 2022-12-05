@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Renderer, RenderingFunction} from "../Common";
+
 import {
 	createCssGridRowOrColumnString,
 	createImageSizingCssObject,
@@ -29,7 +29,7 @@ import {
 	cssHorizontalAlignmentByUiVerticalAlignment,
 	cssObjectToString,
 	cssVerticalAlignmentByUiVerticalAlignment
-} from "./CssFormatUtil";
+} from "../util/CssFormatUtil";
 import {
 	DtoAbstractGridTemplateElement,
 	DtoBadgeElement,
@@ -40,6 +40,69 @@ import {
 	DtoImageElement,
 	DtoTextElement
 } from "../generated";
+import {Template} from "teamapps-client-core";
+
+type RenderingFunction = (data: any) => string;
+
+export class GridTemplate implements Template<DtoGridTemplate> {
+	private renderers: ((data: any) => string)[];
+	private gridCss: string;
+
+	constructor(private config: DtoGridTemplate) {
+		this.renderers = config.elements.map(element => {
+
+			let startColumn = config.columns[element.column];
+			let endColumn = config.columns[element.column + element.colSpan - 1];
+			let startRow = config.rows[element.row];
+			let endRow = config.rows[element.row + element.rowSpan - 1];
+
+			let marginCss: string;
+			if (startColumn == null || endColumn == null || startRow == null || endRow == null) {
+				console.error(`Element is placed (or spans) out of defined rows: col:${element.column};span:${element.colSpan}, row:${element.row};span:${element.rowSpan}.
+			The resulting template renderer will skip some formattings for this element!`);
+			} else {
+				let marginTop = (element.margin && element.margin.top || 0) + (startRow.topPadding || 0);
+				let marginRight = (element.margin && element.margin.right || 0) + (endColumn.rightPadding || 0);
+				let marginBottom = (element.margin && element.margin.bottom || 0) + (endRow.bottomPadding || 0);
+				let marginLeft = (element.margin && element.margin.left || 0) + (startColumn.leftPadding || 0);
+				marginCss = `margin: ${marginTop}px ${marginRight}px ${marginBottom}px ${marginLeft}px;`;
+			}
+
+			// TODO handle element's own padding!!!
+
+			return createElementRenderer(element, marginCss);
+		});
+
+		const gridTemplateColumnsString = 'grid-template-columns:' + config.columns.map(column => createCssGridRowOrColumnString(column.widthPolicy)).join(" ") + ';';
+		const gridTemplateRowsString = 'grid-template-rows:' + config.rows.map(row => createCssGridRowOrColumnString(row.heightPolicy)).join(" ") + ';';
+		const paddingCss = createUiSpacingCssString("padding", config.padding);
+		const gridGapCss = 'grid-gap:' + config.gridGap + 'px;';
+		const maxWidthCss = config.maxWidth ? `max-width: ${config.maxWidth}px;` : '';
+		const maxHeightCss = config.maxHeight ? `max-height: ${config.maxHeight}px;` : '';
+		const minWidthCss = config.minWidth ? `min-width: ${config.minWidth}px;` : '';
+		const minHeightCss = config.minHeight ? `min-height: ${config.minHeight}px;` : '';
+		const backgroundColorCss = config.backgroundColor ? (`background-color: ${(config.backgroundColor ?? '')};`) : '';
+		const borderCss = createUiBorderCssString(config.border);
+		this.gridCss = `${gridTemplateColumnsString} ${gridTemplateRowsString} ${paddingCss} ${gridGapCss} ${minWidthCss} ${minHeightCss} ${maxWidthCss} ${maxHeightCss} ${backgroundColorCss} ${borderCss}`;
+	}
+
+	render(data: any) {
+		if (data == null) {
+			return '';
+		} else {
+			let ariaLabel = data[this.config.ariaLabelProperty];
+			let title = data[this.config.titleProperty];
+			return `<div class="GridTemplate" style="${this.gridCss}" ${ariaLabel != null ? `aria-label="${ariaLabel}"` : ''} ${title != null ? `title="${title}"` : ""}>
+	${this.renderers.map(renderer => renderer(data)).join("")}
+</div>`;
+		}
+	}
+
+	destroy(): void {
+		// nothing to do
+	}
+
+}
 
 function createTextElementRenderer(element: DtoTextElement, additionalCssClass?: string, additionalStyles?: string): RenderingFunction {
 	const fontStyleCssString = createUiFontStyleCssString(element.fontStyle);
@@ -157,78 +220,25 @@ function createElementRenderer(element: DtoAbstractGridTemplateElement, addition
 }
 
 export function isUiTextElement(element: DtoAbstractGridTemplateElement): element is DtoTextElement {
-	return element._type === "DtoTextElement";
+	return element._type === "TextElement";
 }
 
 export function isUiBadgeElement(element: DtoAbstractGridTemplateElement): element is DtoBadgeElement {
-	return element._type === "DtoBadgeElement";
+	return element._type === "BadgeElement";
 }
 
 export function isUiFloatingElement(element: DtoAbstractGridTemplateElement): element is DtoFloatingElement {
-	return element._type === "DtoFloatingElement";
+	return element._type === "FloatingElement";
 }
 
 export function isUiImageElement(element: DtoAbstractGridTemplateElement): element is DtoImageElement {
-	return element._type === "DtoImageElement";
+	return element._type === "ImageElement";
 }
 
 export function isUiIconElement(element: DtoAbstractGridTemplateElement): element is DtoIconElement {
-	return element._type === "DtoIconElement";
+	return element._type === "IconElement";
 }
 
 export function isUiGlyphIconElement(element: DtoAbstractGridTemplateElement): element is DtoGlyphIconElement {
-	return element._type === "DtoGlyphIconElement";
-}
-
-export function createGridTemplateRenderer(template: DtoGridTemplate, idPropertyName: string): Renderer {
-	const renderers = template.elements.map(element => {
-
-		let startColumn = template.columns[element.column];
-		let endColumn = template.columns[element.column + element.colSpan - 1];
-		let startRow = template.rows[element.row];
-		let endRow = template.rows[element.row + element.rowSpan - 1];
-
-		let marginCss: string;
-		if (startColumn == null || endColumn == null || startRow == null || endRow == null) {
-			console.error(`Element is placed (or spans) out of defined rows: col:${element.column};span:${element.colSpan}, row:${element.row};span:${element.rowSpan}.
-			The resulting template renderer will skip some formattings for this element!`);
-		} else {
-			let marginTop = (element.margin && element.margin.top || 0) + (startRow.topPadding || 0);
-			let marginRight = (element.margin && element.margin.right || 0) + (endColumn.rightPadding || 0);
-			let marginBottom = (element.margin && element.margin.bottom || 0) + (endRow.bottomPadding || 0);
-			let marginLeft = (element.margin && element.margin.left || 0) + (startColumn.leftPadding || 0);
-			marginCss = `margin: ${marginTop}px ${marginRight}px ${marginBottom}px ${marginLeft}px;`;
-		}
-
-		// TODO handle element's own padding!!!
-
-		return createElementRenderer(element, marginCss);
-	});
-
-	const gridTemplateColumnsString = 'grid-template-columns:' + template.columns.map(column => createCssGridRowOrColumnString(column.widthPolicy)).join(" ") + ';';
-	const gridTemplateRowsString = 'grid-template-rows:' + template.rows.map(row => createCssGridRowOrColumnString(row.heightPolicy)).join(" ") + ';';
-	const paddingCss = createUiSpacingCssString("padding", template.padding);
-	const gridGapCss = 'grid-gap:' + template.gridGap + 'px;';
-	const maxWidthCss = template.maxWidth ? `max-width: ${template.maxWidth}px;` : '';
-	const maxHeightCss = template.maxHeight ? `max-height: ${template.maxHeight}px;` : '';
-	const minWidthCss = template.minWidth ? `min-width: ${template.minWidth}px;` : '';
-	const minHeightCss = template.minHeight ? `min-height: ${template.minHeight}px;` : '';
-	const backgroundColorCss = template.backgroundColor ? (`background-color: ${(template.backgroundColor ?? '')};`) : '';
-	const borderCss = createUiBorderCssString(template.border);
-	const gridCss = `${gridTemplateColumnsString} ${gridTemplateRowsString} ${paddingCss} ${gridGapCss} ${minWidthCss} ${minHeightCss} ${maxWidthCss} ${maxHeightCss} ${backgroundColorCss} ${borderCss}`;
-
-	return {
-		render: (data: any) => {
-			if (data == null) {
-				return '';
-			} else {
-				let ariaLabel = data[template.ariaLabelProperty];
-				let title = data[template.titleProperty];
-				return `<div class="GridTemplate" style="${gridCss}" ${data[idPropertyName] ? `data-id="${data[idPropertyName]}"` : ''} ${ariaLabel != null ? `aria-label="${ariaLabel}"` : ''} ${title != null ? `title="${title}"` : ""}>
-	${renderers.map(renderer => renderer(data)).join("")}
-</div>`;
-			}
-		},
-		template
-	};
+	return element._type === "GlyphIconElement";
 }

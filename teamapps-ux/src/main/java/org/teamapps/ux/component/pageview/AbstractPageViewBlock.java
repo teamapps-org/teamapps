@@ -46,7 +46,7 @@ public abstract class AbstractPageViewBlock {
 		uiBlock.setId(clientId);
 		uiBlock.setAlignment(alignment.toUiAlignment());
 		uiBlock.setToolButtons(toolButtons.stream()
-				.map(button -> button.createUiReference())
+				.map(button -> button.createDtoReference())
 				.collect(Collectors.toList()));
 	}
 

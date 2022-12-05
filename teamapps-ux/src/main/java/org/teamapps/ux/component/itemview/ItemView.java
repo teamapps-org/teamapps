@@ -114,7 +114,8 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			@Override
 			public void handleAddItem(DtoIdentifiableClientRecord itemClientRecord, Consumer<Void> uiCommandCallback) {
 				if (isRendered()) {
-					getSessionContext().sendCommand(getId(), new DtoItemView.AddItemCommand(group.getClientId(), itemClientRecord), uiCommandCallback);
+					final DtoItemView.AddItemCommand addItemCommand = new DtoItemView.AddItemCommand(group.getClientId(), itemClientRecord);
+					getSessionContext().sendCommandIfRendered(ItemView.this, uiCommandCallback, () -> addItemCommand);
 				} else {
 					uiCommandCallback.accept(null);
 				}
@@ -123,7 +124,8 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			@Override
 			public void handleRemoveItem(int itemClientRecordId, Consumer<Void> uiCommandCallback) {
 				if (isRendered()) {
-					getSessionContext().sendCommand(getId(), new DtoItemView.RemoveItemCommand(group.getClientId(), itemClientRecordId), uiCommandCallback);
+					final DtoItemView.RemoveItemCommand removeItemCommand = new DtoItemView.RemoveItemCommand(group.getClientId(), itemClientRecordId);
+					getSessionContext().sendCommandIfRendered(ItemView.this, uiCommandCallback, () -> removeItemCommand);
 				}
 			}
 
@@ -203,10 +205,10 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoItemView uiItemView = new DtoItemView();
 		mapAbstractUiComponentProperties(uiItemView);
-		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate.createUiTemplate() : null);
+		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate.createDtoReference() : null);
 		uiItemView.setItemGroups(this.itemGroups.stream()
 				.map(group -> group.createUiItemViewItemGroup())
 				.collect(Collectors.toList()));

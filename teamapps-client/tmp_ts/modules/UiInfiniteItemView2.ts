@@ -20,7 +20,7 @@
 
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {addDelegatedEventListener, parseHtml, Renderer} from "./Common";
+import {addDelegatedEventListener, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {

@@ -35,7 +35,7 @@ public class ComponentPageViewBlock extends AbstractPageViewBlock {
 	public DtoComponentPageViewBlock createUiBlock() {
 		DtoComponentPageViewBlock uiBlock = new DtoComponentPageViewBlock();
 		mapAbstractPageViewBlockAttributes(uiBlock);
-		uiBlock.setComponent(component != null ? component.createUiReference() : null);
+		uiBlock.setComponent(component != null ? component.createDtoReference() : null);
 		uiBlock.setHeight(height);
 		uiBlock.setTitle(title);
 		return uiBlock;

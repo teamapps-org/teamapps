@@ -93,7 +93,8 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		MultiWriteLockableValue.Lock lock = this.value.writeAndLock(value);
 		Object uiValue = this.convertUxValueToUiValue(value);
 		if (isRendered()) {
-			getSessionContext().sendCommand(getId(), new DtoField.SetValueCommand(uiValue), aVoid -> lock.release());
+			final DtoField.SetValueCommand setValueCommand = new DtoField.SetValueCommand(uiValue);
+			getSessionContext().sendCommandIfRendered(this, aVoid -> lock.release(), () -> setValueCommand);
 		} else {
 			lock.release();
 		}

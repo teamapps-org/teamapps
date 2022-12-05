@@ -112,7 +112,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		DtoTagComboBox comboBox = new DtoTagComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		comboBox.setMaxEntries(maxEntries);
@@ -165,10 +165,11 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 					records.add(record);
 
 					if (isRendered()) {
-						getSessionContext().sendCommand(getId(), new DtoTagComboBox.ReplaceFreeTextEntryCommand(newFreeText, cacheResponse.getAndClearResult()),
+						final DtoTagComboBox.ReplaceFreeTextEntryCommand replaceFreeTextEntryCommand = new DtoTagComboBox.ReplaceFreeTextEntryCommand(newFreeText, cacheResponse.getAndClearResult());
+						getSessionContext().sendCommandIfRendered(this,
 								aVoid -> {
 									cacheResponse.commit();
-								});
+								}, () -> replaceFreeTextEntryCommand);
 					} else {
 						cacheResponse.commit();
 					}

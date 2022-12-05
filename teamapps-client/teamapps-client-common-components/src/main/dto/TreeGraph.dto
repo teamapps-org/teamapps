@@ -20,6 +20,7 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class TreeGraph extends Component {
     List<TreeGraphNode> nodes;
@@ -64,7 +65,7 @@ class BaseTreeGraphNode {
     TreeGraphNodeImage image;
     TreeGraphNodeIcon icon;
 
-    Template template;     // will get embedded using foreignObject
+    Template* template;     // will get embedded using foreignObject
     ClientRecord record;   // will get embedded using foreignObject
 
     String connectorLineColor; // line to parent node

@@ -85,9 +85,9 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		Map uploadButtonData = uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getPropertyNames());
-		DtoFileField uiField = new DtoFileField(fileItemTemplate.createUiTemplate(), uploadButtonTemplate.createUiTemplate(), uploadButtonData);
+		DtoFileField uiField = new DtoFileField(fileItemTemplate.createDtoReference(), uploadButtonTemplate.createDtoReference(), uploadButtonData);
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
 		uiField.setUploadUrl(uploadUrl);
@@ -187,7 +187,8 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 				RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
 				CacheManipulationHandle<DtoIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
 				if (isRendered()) {
-					getSessionContext().sendCommand(getId(), new DtoFileField.ReplaceFileItemCommand(uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+					final DtoFileField.ReplaceFileItemCommand replaceFileItemCommand = new DtoFileField.ReplaceFileItemCommand(uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult());
+					getSessionContext().sendCommandIfRendered(this, aVoid -> cacheResponse.commit(), () -> replaceFileItemCommand);
 				} else {
 					cacheResponse.commit();
 				}
@@ -223,7 +224,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setFileItemTemplate(Template fileItemTemplate) {
 		this.fileItemTemplate = fileItemTemplate;
-		sendCommandIfRendered(() -> new DtoFileField.SetItemTemplateCommand(fileItemTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new DtoFileField.SetItemTemplateCommand(fileItemTemplate.createDtoReference()));
 	}
 
 	public long getMaxBytesPerFile() {
@@ -250,7 +251,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonTemplate(Template uploadButtonTemplate) {
 		this.uploadButtonTemplate = uploadButtonTemplate;
-		sendCommandIfRendered(() -> new DtoFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate.createUiTemplate()));
+		sendCommandIfRendered(() -> new DtoFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate.createDtoReference()));
 	}
 
 	public Object getUploadButtonData() {

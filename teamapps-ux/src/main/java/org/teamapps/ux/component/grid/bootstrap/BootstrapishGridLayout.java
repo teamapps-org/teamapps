@@ -64,7 +64,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 	}
 
 	@Override
-	public DtoComponent createUiClientObject() {
+	public DtoComponent createDto() {
 		DtoResponsiveGridLayout uiResponsiveGridLayout = new DtoResponsiveGridLayout(createUiLayoutPolicies());
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);
 		uiResponsiveGridLayout.setFillHeight(this.fillHeight);
@@ -115,7 +115,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 					uiRowIndex++;
 					currentColumnIndex = 0;
 				}
-				uiPlacements.add(new DtoComponentGridPlacement(placement.getComponent().createUiReference())
+				uiPlacements.add(new DtoComponentGridPlacement(placement.getComponent().createDtoReference())
 						.setRow(uiRowIndex)
 						.setColumn(currentColumnIndex + sizing.getOffset())
 						.setColSpan(colSpan)

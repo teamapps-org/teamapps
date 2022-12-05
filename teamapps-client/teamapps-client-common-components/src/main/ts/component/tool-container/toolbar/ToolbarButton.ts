@@ -27,7 +27,7 @@ import {
 	isFullScreen,
 	parseHtml,
 	TeamAppsEvent,
-	TeamAppsUiContext
+	TeamAppsUiContext, Template
 } from "teamapps-client-core";
 import {Toolbar} from "./Toolbar";
 import {AbstractToolContainer} from "../AbstractToolContainer";
@@ -61,8 +61,7 @@ export class ToolbarButton {
 		if (this.config.debuggingId != null) {
 			this.$buttonWrapper.setAttribute("data-teamapps-debugging-id", this.config.debuggingId);
 		}
-		let renderer = context.templateRegistry.createTemplateRenderer(config.template);
-		this.$button = parseHtml(renderer.render(config.recordData));
+		this.$button = parseHtml((config.template as Template).render(config.recordData));
 		prependChild(this.$buttonWrapper, this.$button);
 		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
 		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as DtoGridTemplate).maxHeight || Toolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);

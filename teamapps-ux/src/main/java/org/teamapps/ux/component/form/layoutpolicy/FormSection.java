@@ -284,7 +284,7 @@ public class FormSection {
 		uiSection.setCollapsible(this.collapsible);
 		uiSection.setCollapsed(this.collapsed);
 		uiSection.setVisible(this.visible);
-		uiSection.setHeaderTemplate(this.headerTemplate != null ? this.headerTemplate.createUiTemplate() : null);
+		uiSection.setHeaderTemplate(this.headerTemplate != null ? this.headerTemplate.createDtoReference() : null);
 		uiSection.setHeaderData(this.headerData);
 		uiSection.setGridGap(this.gridGap);
 		uiSection.setFillRemainingHeight(fillRemainingHeight);

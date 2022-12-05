@@ -20,9 +20,9 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class Map2 extends Component {
-	required Dictionary<Template> markerTemplates;
 	String baseApiUrl;
 	String accessToken;
 	String styleUrl;
@@ -34,7 +34,6 @@ class Map2 extends Component {
 	List<MapMarkerClientRecord> markers;
 	MapMarkerCluster markerCluster;
 
-	command registerTemplate(String id, Template template);
 	command addMarker(MapMarkerClientRecord marker);
 	command removeMarker(int id);
 	command clearMarkers();

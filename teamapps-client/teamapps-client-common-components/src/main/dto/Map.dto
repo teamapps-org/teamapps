@@ -20,9 +20,9 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 class Map extends Component {
-	required Dictionary<Template> markerTemplates;
 	String accessToken;
 	MapConfig mapConfig;
 
@@ -33,7 +33,6 @@ class Map extends Component {
 	List<MapMarkerClientRecord> markers;
 	MapMarkerCluster markerCluster;
 
-	command registerTemplate(String id, Template template);
 	command addMarker(MapMarkerClientRecord marker);
 	command removeMarker(int id);
 	command setMapMarkerCluster(MapMarkerCluster cluster);
@@ -107,7 +106,7 @@ class MapArea {
 
 class MapMarkerClientRecord extends IdentifiableClientRecord {
 	MapLocation location;
-    String templateId; // null == use asString
+    Template* template; // null == use asString
     MapMarkerAnchor anchor;
     int offsetPixelsX;
     int offsetPixelsY;

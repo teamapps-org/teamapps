@@ -22,7 +22,6 @@ package org.teamapps.ux.component.toolbar;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.DtoToolbar;
 import org.teamapps.dto.DtoToolbarButton;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -130,16 +129,16 @@ public class ToolbarButton {
 		Template template = getAppliedTemplate();
 		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getPropertyNames());
 
-		DtoToolbarButton ui = new DtoToolbarButton(clientId, template.createUiTemplate(), values);
+		DtoToolbarButton ui = new DtoToolbarButton(clientId, template.createDtoReference(), values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
-			ui.setDropDownComponent(dropDownComponentSupplier.get().createUiReference());
+			ui.setDropDownComponent(dropDownComponentSupplier.get().createDtoReference());
 		}
 		ui.setHasDropDown(this.dropDownComponentSupplier != null);
 		ui.setDropDownPanelWidth(droDownPanelWidth > 0 ? droDownPanelWidth : 450);
 		ui.setVisible(visible);
 		ui.setOpenNewTabWithUrl(openNewTabWithUrl);
-		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.createUiReference() : null);
-		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createUiReference() : null);
+		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.createDtoReference() : null);
+		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createDtoReference() : null);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setHoverBackgroundColor(hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null);
 		ui.setDebuggingId(debuggingId);

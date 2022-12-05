@@ -17,10 +17,27 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
 
-import Component from "teamapps-client-core":org.teamapps.dto;
+import {DtoMustacheTemplate} from "../generated";
+import {default as mustache} from "mustache";
+import {Template} from "teamapps-client-core";
 
-interface Template {
+export class MustacheTemplate implements Template<DtoMustacheTemplate> {
+
+	constructor(private config: DtoMustacheTemplate) {
+		mustache.parse(config.templateString);
+	}
+
+	render(data: any): string {
+		if (data == null) {
+			return '';
+		} else {
+			return mustache.render(this.config.templateString, data);
+		}
+	}
+
+	destroy(): void {
+		// nothing to do
+	}
 
 }

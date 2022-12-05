@@ -70,7 +70,7 @@ public class AbsoluteLayout extends AbstractComponent {
 				.map(entry -> {
 					Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
-					return new DtoAbsolutePositionedComponent(component.createUiReference(), new DtoAbsolutePositioning(
+					return new DtoAbsolutePositionedComponent(component.createDtoReference(), new DtoAbsolutePositioning(
 							position.getTop() != null ? position.getTop().toCssString(): null,
 							position.getRight() != null ? position.getRight().toCssString(): null,
 							position.getBottom() != null ? position.getBottom().toCssString(): null,
@@ -84,7 +84,7 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	@Override
-	public DtoAbsoluteLayout createUiClientObject() {
+	public DtoAbsoluteLayout createDto() {
 		DtoAbsoluteLayout uiAbsoluteLayout = new DtoAbsoluteLayout();
 		mapAbstractUiComponentProperties(uiAbsoluteLayout);
 		uiAbsoluteLayout.setComponents(createUiAbsolutePositionedComponents());

@@ -35,7 +35,7 @@ public class LocalTimeField extends AbstractTimeField<LocalTime> {
 	}
 
 	@Override
-	public DtoField createUiClientObject() {
+	public DtoField createDto() {
 		DtoLocalTimeField uiTimeField = new DtoLocalTimeField();
 		mapAbstractTimeFieldUiValues(uiTimeField);
 		return uiTimeField;

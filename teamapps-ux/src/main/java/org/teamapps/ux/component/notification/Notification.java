@@ -71,7 +71,7 @@ public class Notification extends AbstractComponent {
 		return notification;
 	}
 
-	public DtoNotification createUiClientObject() {
+	public DtoNotification createDto() {
 		DtoNotification ui = new DtoNotification();
 		mapAbstractUiComponentProperties(ui);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
@@ -79,7 +79,7 @@ public class Notification extends AbstractComponent {
 		ui.setDisplayTimeInMillis(displayTimeInMillis);
 		ui.setDismissible(dismissible);
 		ui.setProgressBarVisible(showProgressBar);
-		ui.setContent(content != null ? content.createUiReference() : null);
+		ui.setContent(content != null ? content.createDtoReference() : null);
 		return ui;
 	}
 
@@ -108,7 +108,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -118,7 +118,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setPadding(Spacing padding) {
 		this.padding = padding;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -128,7 +128,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDisplayTimeInMillis(int displayTimeInMillis) {
 		this.displayTimeInMillis = displayTimeInMillis;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -138,7 +138,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDismissible(boolean dismissible) {
 		this.dismissible = dismissible;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -148,7 +148,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setShowProgressBar(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -158,7 +158,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setContent(Component content) {
 		this.content = content;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
 		return this;
 	}
 

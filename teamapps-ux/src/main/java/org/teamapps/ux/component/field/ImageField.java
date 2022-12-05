@@ -42,7 +42,7 @@ public class ImageField extends AbstractField<String> {
 	}
 
 	@Override
-	public DtoImageField createUiClientObject() {
+	public DtoImageField createDto() {
 		DtoImageField uiImageField = new DtoImageField();
 		mapAbstractFieldAttributesToUiField(uiImageField);
 		uiImageField.setWidth(width.toCssString());
@@ -59,7 +59,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setWidth(Length width) {
 		this.width = width;
-		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -69,7 +69,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setHeight(Length height) {
 		this.height = height;
-		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -79,7 +79,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setBorder(Border border) {
 		this.border = border;
-		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -89,7 +89,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setImageSizing(ImageSizing imageSizing) {
 		this.imageSizing = imageSizing;
-		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createDto()));
 		return this;
 	}
 
@@ -99,6 +99,6 @@ public class ImageField extends AbstractField<String> {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createUiClientObject()));
+		sendCommandIfRendered(() -> new DtoImageField.UpdateCommand(createDto()));
 	}
 }

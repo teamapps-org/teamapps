@@ -20,25 +20,18 @@
 package org.teamapps.ux.component.template;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoTemplate;
-import org.teamapps.ux.component.format.Border;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.ux.component.format.FontStyle;
-import org.teamapps.ux.component.format.HorizontalElementAlignment;
-import org.teamapps.ux.component.format.Line;
-import org.teamapps.ux.component.format.LineType;
-import org.teamapps.ux.component.format.Shadow;
-import org.teamapps.ux.component.format.SizeType;
-import org.teamapps.ux.component.format.SizingPolicy;
-import org.teamapps.ux.component.format.Spacing;
-import org.teamapps.ux.component.format.TextAlignment;
-import org.teamapps.ux.component.format.VerticalElementAlignment;
+import org.teamapps.dto.DtoClientObject;
+import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.format.*;
 import org.teamapps.ux.component.template.gridtemplate.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@TeamAppsComponent(library = CommonComponentLibrary.class)
 public enum BaseTemplate implements Template {
 
 	TOOL_BUTTON(createToolButtonTemplate()),
@@ -628,11 +621,6 @@ public enum BaseTemplate implements Template {
 	}
 
 	@Override
-	public DtoTemplate createUiTemplate() {
-		return null; // TODO
-	}
-
-	@Override
 	public List<String> getPropertyNames() {
 		return template.getPropertyNames();
 	}
@@ -641,4 +629,13 @@ public enum BaseTemplate implements Template {
 		return template;
 	}
 
+	@Override
+	public String getId() {
+		return this.template.getId();
+	}
+
+	@Override
+	public DtoClientObject createDto() {
+		return this.template.createDto();
+	}
 }

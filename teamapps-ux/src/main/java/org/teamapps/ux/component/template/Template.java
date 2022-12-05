@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.template;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoTemplate;
 import org.teamapps.common.format.RgbaColor;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.format.FontStyle;
 import org.teamapps.ux.component.template.gridtemplate.AbstractGridTemplateElement;
 import org.teamapps.ux.component.template.gridtemplate.FloatingElement;
@@ -30,22 +30,13 @@ import org.teamapps.ux.component.template.gridtemplate.TextElement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-public interface Template {
-
-	DtoTemplate createUiTemplate();
+public interface Template extends ClientObject {
 
 	List<String> getPropertyNames();
 
 
-	// === static methods ===
-
-	static Map<String, DtoTemplate> createUiTemplates(Map<String, ? extends Template> templates) {
-		return templates.entrySet().stream()
-				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().createUiTemplate()));
-	}
+	// === TODO better alternatives for the following: ===
 
 	default Template createDarkThemeTemplate() {
 		if (this instanceof BaseTemplate) {

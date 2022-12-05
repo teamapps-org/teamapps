@@ -14,7 +14,7 @@
     "build": "yarn run del_dist && yarn run tsc && yarn run build:insert-version && yarn run bundle",
     "build-prod": "NODE_ENV=production yarn run build",
     "start": "yarn run watch-build",
-    "watch-build": "concurrently --names \"tsc,insert-version,bundle\" \"yarn watch-tsc\" \"onchange 'dist/lib/DefaultTeamAppsUiContext.js' -- yarn build:insert-version\" \"yarn watch-bundle\"",
+    "watch-build": "concurrently --names \"tsc,insert-version,bundle\" \"yarn watch-tsc\" \"onchange 'dist/lib/DefaultUiContext.js' -- yarn build:insert-version\" \"yarn watch-bundle\"",
     "watch-bundle": "yarn run bundle -- --watch",
     "watch-tsc": "yarn run tsc --watch"
   },

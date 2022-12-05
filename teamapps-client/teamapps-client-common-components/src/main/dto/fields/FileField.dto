@@ -20,8 +20,7 @@
 package org.teamapps.dto;
 
 import Component from "teamapps-client-core":org.teamapps.dto;
-
-
+import Template from "teamapps-client-core":org.teamapps.dto;
 
 /**
 TODO:
@@ -53,14 +52,14 @@ TABLE (editable mode)
 	- only if not performance breaking --> opens window
  */
 class FileField extends Field {
-	required Template itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
+	required Template* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
 	long maxBytesPerFile;
 	String uploadUrl; // May point anywhere.
 	String fileTooLargeMessage;
 	String uploadErrorMessage;
 	FileFieldDisplayType displayType;
 	int maxFiles; // the max number of files to be uploaded in total for this field
-	required Template uploadButtonTemplate;
+	required Template* uploadButtonTemplate;
 	required Object uploadButtonData;
 	boolean showEntriesAsButtonsOnHover;
 
@@ -73,12 +72,12 @@ class FileField extends Field {
 	event fileItemRemoveButtonClicked(int clientId);
 
 	command replaceFileItem(String fileItemUuid, IdentifiableClientRecord data);
-	command setItemTemplate(Template itemTemplate);
+	command setItemTemplate(Template* itemTemplate);
 	command setMaxBytesPerFile(long maxBytesPerFile);
 	command setUploadUrl(String uploadUrl);
 	command setDisplayType (FileFieldDisplayType displayType);
 	command setMaxFiles(int maxFiles);
-	command setUploadButtonTemplate(Template uploadButtonTemplate);
+	command setUploadButtonTemplate(Template* uploadButtonTemplate);
     command setUploadButtonData(Object uploadButtonData);
     command setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover);
     command cancelAllUploads();

@@ -18,8 +18,8 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, Renderer} from "../Common";
+import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins} from "../Common";
 import {
 	DtoNavigationBar,
 	DtoNavigationBar_ButtonClickedEvent,
@@ -44,7 +44,6 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 	private $bar: HTMLElement;
 	private $buttonsContainer: HTMLElement;
 	private buttons: { [id: string]: Button } = {};
-	private buttonTemplateRenderer: Renderer;
 	private $fanOutContainerWrapper: HTMLElement;
 	private $fanOutContainer: HTMLElement;
 	private fanOutComponents: Component[] = [];
@@ -55,9 +54,6 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 
 	constructor(config: DtoNavigationBar, context: TeamAppsUiContext) {
 		super(config, context);
-
-		this.buttonTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.buttonTemplate, null);
-
 		this.$bar = parseHtml(`<div class="NavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>
@@ -103,7 +99,7 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 	private addButton(button: DtoNavigationBarButton) {
 		let $button = parseHtml(`<div class="nav-button-wrapper"><div class="nav-button-inner-wrapper"></div></div>`);
 		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper");
-		$innerWrapper.appendChild(parseHtml(this.buttonTemplateRenderer.render(button.data)));
+		$innerWrapper.appendChild(parseHtml((this.config.buttonTemplate as Template).render(button.data)));
 		$button.addEventListener("click", () => {
 			this.onButtonClicked.fire({
 				buttonId: button.id,

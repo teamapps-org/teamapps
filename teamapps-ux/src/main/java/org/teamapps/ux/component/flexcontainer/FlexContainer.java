@@ -43,11 +43,11 @@ public class FlexContainer extends AbstractComponent {
 	private CssJustifyContent justifyContent = CssJustifyContent.START;
 
 	@Override
-	public DtoFlexContainer createUiClientObject() {
+	public DtoFlexContainer createDto() {
 		DtoFlexContainer uiFlexContainer = new DtoFlexContainer();
 		mapAbstractUiComponentProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()
-				.map(c -> c.createUiReference())
+				.map(c -> c.createDtoReference())
 				.collect(Collectors.toList()));
 		uiFlexContainer.setFlexDirection(flexDirection.toUiCssFlexDirection());
 		uiFlexContainer.setAlignItems(alignItems.toCssAlignItems());
@@ -57,7 +57,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void addComponent(Component component) {
 		this.components.add(component);
-		sendCommandIfRendered(() -> new DtoFlexContainer.AddComponentCommand(component.createUiReference()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.AddComponentCommand(component.createDtoReference()));
 	}
 
 	public void addComponent(Component component, FlexSizingPolicy sizingPolicy) {
@@ -67,11 +67,11 @@ public class FlexContainer extends AbstractComponent {
 
 	public void removeComponent(Component component) {
 		this.components.remove(component);
-		sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(component.createUiReference()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(component.createDtoReference()));
 	}
 
 	public void removeAllComponents() {
-		this.components.forEach(c -> sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(c.createUiReference())));
+		this.components.forEach(c -> sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(c.createDtoReference())));
 		this.components.clear();
 	}
 
