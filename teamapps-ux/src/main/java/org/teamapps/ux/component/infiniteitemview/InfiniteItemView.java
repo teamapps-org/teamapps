@@ -104,7 +104,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	@Override
 	public DtoComponent createDto() {
-		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate.createDtoReference(), rowHeight);
+		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate != null ? itemTemplate.createDtoReference() : null, rowHeight);
 		mapAbstractUiComponentProperties(ui);
 		int recordCount = model.getCount();
 		CacheManipulationHandle<List<DtoIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(model.getRecords(0, Math.min(recordCount, numberOfInitialRecords)));
@@ -189,7 +189,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate != null ? itemTemplate.createDtoReference() : null));
 		return this;
 	}
 

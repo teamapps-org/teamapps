@@ -83,7 +83,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	@Override
 	public DtoComponent createDto() {
-		DtoInfiniteItemView2 ui = new DtoInfiniteItemView2(itemTemplate.createDtoReference());
+		DtoInfiniteItemView2 ui = new DtoInfiniteItemView2(itemTemplate != null ? itemTemplate.createDtoReference() : null);
 		mapAbstractUiComponentProperties(ui);
 		ui.setItemWidth(itemWidth);
 		ui.setItemHeight(itemHeight);
@@ -187,7 +187,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView2.SetItemTemplateCommand(itemTemplate.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView2.SetItemTemplateCommand(itemTemplate != null ? itemTemplate.createDtoReference() : null));
 		return this;
 	}
 

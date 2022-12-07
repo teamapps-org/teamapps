@@ -59,7 +59,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	@Override
 	public DtoComponent createDto() {
-		DtoNavigationBar uiNavigationBar = new DtoNavigationBar(buttonTemplate.createDtoReference());
+		DtoNavigationBar uiNavigationBar = new DtoNavigationBar(buttonTemplate != null ? buttonTemplate.createDtoReference() : null);
 		mapAbstractUiComponentProperties(uiNavigationBar);
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiNavigationBar.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);

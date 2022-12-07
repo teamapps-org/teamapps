@@ -56,7 +56,7 @@ public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 	public DtoMessagePageViewBlock createUiBlock() {
 		DtoMessagePageViewBlock uiBlock = new DtoMessagePageViewBlock();
 		mapAbstractPageViewBlockAttributes(uiBlock);
-		uiBlock.setTopTemplate(topTemplate.createDtoReference());
+		uiBlock.setTopTemplate(topTemplate != null ? topTemplate.createDtoReference() : null);
 		uiBlock.setTopRecord(topRecord != null ? new DtoClientRecord().setValues(topRecordPropertyProvider.getValues(topRecord, topTemplate.getPropertyNames())) : null);
 		uiBlock.setTopRecordAlignment(topRecordAlignment.toUiHorizontalElementAlignment());
 		uiBlock.setHtml(html);

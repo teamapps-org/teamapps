@@ -172,7 +172,7 @@ public class Tree<RECORD> extends AbstractComponent {
 			uiTree.setSelectedNodeId(uiRecordsByRecord.get(this.selectedNode).getId());
 		}
 
-		uiTree.setDefaultTemplate(entryTemplate.createDtoReference());
+		uiTree.setDefaultTemplate(entryTemplate != null ? entryTemplate.createDtoReference() : null);
 		uiTree.setAnimate(animated);
 		uiTree.setShowExpanders(showExpanders);
 		uiTree.setOpenOnSelection(openOnSelection);

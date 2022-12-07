@@ -87,7 +87,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	@Override
 	public DtoField createDto() {
 		Map uploadButtonData = uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getPropertyNames());
-		DtoFileField uiField = new DtoFileField(fileItemTemplate.createDtoReference(), uploadButtonTemplate.createDtoReference(), uploadButtonData);
+		DtoFileField uiField = new DtoFileField(fileItemTemplate != null ? fileItemTemplate.createDtoReference() : null, uploadButtonTemplate != null ? uploadButtonTemplate.createDtoReference() : null, uploadButtonData);
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
 		uiField.setUploadUrl(uploadUrl);
@@ -224,7 +224,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setFileItemTemplate(Template fileItemTemplate) {
 		this.fileItemTemplate = fileItemTemplate;
-		sendCommandIfRendered(() -> new DtoFileField.SetItemTemplateCommand(fileItemTemplate.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoFileField.SetItemTemplateCommand(fileItemTemplate != null ? fileItemTemplate.createDtoReference() : null));
 	}
 
 	public long getMaxBytesPerFile() {
@@ -251,7 +251,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonTemplate(Template uploadButtonTemplate) {
 		this.uploadButtonTemplate = uploadButtonTemplate;
-		sendCommandIfRendered(() -> new DtoFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate != null ? uploadButtonTemplate.createDtoReference() : null));
 	}
 
 	public Object getUploadButtonData() {
