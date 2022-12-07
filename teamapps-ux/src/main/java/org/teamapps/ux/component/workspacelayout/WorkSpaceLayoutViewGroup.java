@@ -117,11 +117,11 @@ public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 		return Collections.unmodifiableList(views);
 	}
 
-	public WorkSpaceLayoutView addView(Icon icon, String title, Component component) {
+	public WorkSpaceLayoutView addView(Icon<?, ?> icon, String title, Component component) {
 		return addView(icon, title, component, views.size(), false);
 	}
 
-	public WorkSpaceLayoutView addView(Icon icon, String title, Component component, int index, boolean select) {
+	public WorkSpaceLayoutView addView(Icon<?, ?> icon, String title, Component component, int index, boolean select) {
 		WorkSpaceLayoutView view = new WorkSpaceLayoutView(getWorkSpaceLayout(), icon, title, component);
 		addView(view, index, select);
 		return view;

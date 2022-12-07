@@ -37,7 +37,7 @@ public class FileItem {
 	private FileItemState state;
 	private SimpleFileField fileField;
 
-	private Icon icon;
+	private Icon<?, ?> icon;
 	private String thumbnailUrl;
 	private String fileName;
 	private String description;
@@ -60,11 +60,11 @@ public class FileItem {
 		this.size = size;
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		updateClientSideDisplay();
 	}

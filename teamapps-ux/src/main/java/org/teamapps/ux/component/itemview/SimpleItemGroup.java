@@ -24,36 +24,36 @@ import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 
-public class SimpleItemGroup<PAYLOAD> extends ItemGroup<BaseTemplateRecord, SimpleItem<PAYLOAD>> {
+public class SimpleItemGroup<PAYLOAD> extends ItemGroup<BaseTemplateRecord<?>, SimpleItem<PAYLOAD>> {
 
-	public static SimpleItemGroup singleColumnGroup(Icon icon, String title) {
+	public static SimpleItemGroup singleColumnGroup(Icon<?, ?> icon, String title) {
 		SimpleItemGroup group = new SimpleItemGroup<>(icon, title);
 		group.setButtonWidth(0);
 		return group;
 	}
 
-	public static SimpleItemGroup twoColumnGroup(Icon icon, String title) {
+	public static SimpleItemGroup twoColumnGroup(Icon<?, ?> icon, String title) {
 		SimpleItemGroup group = new SimpleItemGroup<>(icon, title);
 		group.setButtonWidth(0.5f);
 		return group;
 	}
 
-	public SimpleItemGroup(Icon icon, String title) {
+	public SimpleItemGroup(Icon<?, ?> icon, String title) {
 		this(icon, title, BaseTemplate.MENU_ITEM);
 	}
 
-	public SimpleItemGroup(Icon icon, String title, Template template) {
-		super(new BaseTemplateRecord(icon, title), template);
+	public SimpleItemGroup(Icon<?, ?> icon, String title, Template template) {
+		super(new BaseTemplateRecord<>(icon, title), template);
 	}
 
 
-	public SimpleItem<PAYLOAD> addItem(Icon icon, String title, String caption) {
+	public SimpleItem<PAYLOAD> addItem(Icon<?, ?> icon, String title, String caption) {
 		SimpleItem<PAYLOAD> item = new SimpleItem<>(icon, title, caption);
 		addItem(item);
 		return item;
 	}
 
-	public SimpleItem<PAYLOAD> addItem(Icon icon, String title, String caption, PAYLOAD payload) {
+	public SimpleItem<PAYLOAD> addItem(Icon<?, ?> icon, String title, String caption, PAYLOAD payload) {
 		SimpleItem<PAYLOAD> item = new SimpleItem<>(icon, title, caption, payload);
 		addItem(item);
 		return item;

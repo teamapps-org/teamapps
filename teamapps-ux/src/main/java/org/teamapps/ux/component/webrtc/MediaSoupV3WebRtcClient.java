@@ -54,7 +54,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	private Color activityActiveColor;
 	private boolean active;
 
-	private List<Icon> icons = Collections.emptyList();
+	private List<Icon<?, ?>> icons = Collections.emptyList();
 	private String caption;
 	private String noVideoImageUrl;
 
@@ -258,11 +258,11 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		}
 	}
 
-	public List<Icon> getIcons() {
+	public List<Icon<?, ?>> getIcons() {
 		return icons;
 	}
 
-	public void setIcons(List<Icon> icons) {
+	public void setIcons(List<Icon<?, ?>> icons) {
 		if (icons == null) {
 			icons = Collections.emptyList();
 		}

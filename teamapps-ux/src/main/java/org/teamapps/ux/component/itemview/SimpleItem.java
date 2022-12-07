@@ -35,7 +35,7 @@ public class SimpleItem<PAYLOAD> extends BaseTemplateRecord<PAYLOAD>{
 		this(null, null, caption, null, (String) null);
 	}
 
-	public SimpleItem(Icon icon) {
+	public SimpleItem(Icon<?, ?> icon) {
 		this(icon, null);
 	}
 
@@ -43,23 +43,23 @@ public class SimpleItem<PAYLOAD> extends BaseTemplateRecord<PAYLOAD>{
 		this(null, null, caption, null, null, payload);
 	}
 
-	public SimpleItem(Icon icon, String caption) {
+	public SimpleItem(Icon<?, ?> icon, String caption) {
 		this(icon, null, caption, null, null);
 	}
 
-	public SimpleItem(Icon icon, String caption, PAYLOAD payload) {
+	public SimpleItem(Icon<?, ?> icon, String caption, PAYLOAD payload) {
 		this(icon, null, caption, null, null, payload);
 	}
 
-	public SimpleItem(Icon icon, String caption, String description) {
+	public SimpleItem(Icon<?, ?> icon, String caption, String description) {
 		this(icon, null, caption, description, null);
 	}
 
-	public SimpleItem(Icon icon, String caption, String description, PAYLOAD payload) {
+	public SimpleItem(Icon<?, ?> icon, String caption, String description, PAYLOAD payload) {
 		this(icon, null, caption, description, null, payload);
 	}
 
-	public SimpleItem(Icon icon, String caption, String description, String badge) {
+	public SimpleItem(Icon<?, ?> icon, String caption, String description, String badge) {
 		this(icon, null, caption, description, badge);
 	}
 
@@ -87,11 +87,11 @@ public class SimpleItem<PAYLOAD> extends BaseTemplateRecord<PAYLOAD>{
 		this(null, image, caption, description, null, payload);
 	}
 
-	public SimpleItem(Icon icon, String image, String caption, String description, String badge) {
+	public SimpleItem(Icon<?, ?> icon, String image, String caption, String description, String badge) {
 		this(icon, image, caption, description, badge, null);
 	}
 
-	public SimpleItem(Icon icon, String image, String caption, String description, String badge, PAYLOAD payload) {
+	public SimpleItem(Icon<?, ?> icon, String image, String caption, String description, String badge, PAYLOAD payload) {
 		super(icon, image, caption, description, badge, payload);
 	}
 

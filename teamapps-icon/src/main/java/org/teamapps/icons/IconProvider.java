@@ -74,7 +74,7 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 		String libraryName = getLibraryName(qualifiedEncodedIcon);
 		IconDecoder iconDecoder = iconLibraryRegistry.getIconDecoder(libraryName);
 		String encodedIconString = qualifiedEncodedIcon.substring(libraryName.length() + 1);
-		Icon icon = iconDecoder.decodeIcon(encodedIconString, this);
+		Icon<?, ?> icon = iconDecoder.decodeIcon(encodedIconString, this);
 
 		IconResource iconResource = loadIconWithoutCaching(icon, size);
 		if (iconResource == null) {
@@ -116,7 +116,7 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 		return iconLibraryRegistry.getIconDecoder(libraryName);
 	}
 
-	public <I extends Icon<I, S>, S> String getLibraryName(Icon icon) {
+	public <I extends Icon<I, S>, S> String getLibraryName(Icon<?, ?> icon) {
 		return iconLibraryRegistry.getLibraryName(icon);
 	}
 

@@ -60,19 +60,19 @@ public class FormDialogue extends Window {
 
 	private boolean autoCloseOnOk = true;
 
-	public static FormDialogue create(Icon icon, String title, String text) {
+	public static FormDialogue create(Icon<?, ?> icon, String title, String text) {
 		return new FormDialogue(icon, title, text);
 	}
 
-	public FormDialogue(Icon icon, String title, String text) {
+	public FormDialogue(Icon<?, ?> icon, String title, String text) {
 		this(icon, null, title, text);
 	}
 
-	public FormDialogue(Icon icon, String imageUrl, String title, String text) {
+	public FormDialogue(Icon<?, ?> icon, String imageUrl, String title, String text) {
 		this(icon, imageUrl, title, text, ResponsiveFormConfigurationTemplate.createDefaultTwoColumnTemplate(0, 200, 0));
 	}
 
-	public FormDialogue(Icon icon, String imageUrl, String title, String text, ResponsiveFormConfigurationTemplate configurationTemplate) {
+	public FormDialogue(Icon<?, ?> icon, String imageUrl, String title, String text, ResponsiveFormConfigurationTemplate configurationTemplate) {
 		setIcon(icon);
 		setTitle(title);
 		setWidth(550);
@@ -89,7 +89,7 @@ public class FormDialogue extends Window {
 		return formLayout.addSection(icon, caption);
 	}
 
-	public void addField(Icon icon, String caption, AbstractField<?> field) {
+	public void addField(Icon<?, ?> icon, String caption, AbstractField<?> field) {
 		formLayout.addLabelAndField(icon, caption, field).field.setColSpan(2);
 		this.fields.add(field);
 	}
@@ -99,7 +99,7 @@ public class FormDialogue extends Window {
 		addCancelButton(cancelCaption);
 	}
 
-	public void addOkCancelButtons(Icon okIcon, String okCaption, Icon cancelIcon, String cancelCaption) {
+	public void addOkCancelButtons(Icon<?, ?> okIcon, String okCaption, Icon<?, ?> cancelIcon, String cancelCaption) {
 		addOkButton(okIcon, okCaption);
 		addCancelButton(cancelIcon, cancelCaption);
 	}
@@ -108,7 +108,7 @@ public class FormDialogue extends Window {
 		return addOkButton(MaterialIcon.CHECK, caption);
 	}
 
-	public Button<?> addOkButton(Icon icon, String caption) {
+	public Button<?> addOkButton(Icon<?, ?> icon, String caption) {
 		createButtonRowIfNotExists();
 
 		Button<?> okButton = Button.create(icon, caption);
@@ -141,7 +141,7 @@ public class FormDialogue extends Window {
 		return addCancelButton(MaterialIcon.CANCEL, caption);
 	}
 
-	public Button<?> addCancelButton(Icon icon, String caption) {
+	public Button<?> addCancelButton(Icon<?, ?> icon, String caption) {
 		createButtonRowIfNotExists();
 
 		Button<?> cancelButton = Button.create(icon, caption);

@@ -25,30 +25,30 @@ import java.time.Instant;
 
 public class SimpleCalendarEvent<PAYLOAD> extends AbstractCalendarEvent {
 
-	private Icon icon;
+	private Icon<?, ?> icon;
 	private String image;
 	private String caption;
 	private String badge;
 
 	private PAYLOAD payload;
 
-	public SimpleCalendarEvent(Instant start, Instant end, Icon icon, String caption) {
+	public SimpleCalendarEvent(Instant start, Instant end, Icon<?, ?> icon, String caption) {
 		super(start, end);
 		this.icon = icon;
 		this.caption = caption;
 	}
 
-	public SimpleCalendarEvent(long start, long end, Icon icon, String caption) {
+	public SimpleCalendarEvent(long start, long end, Icon<?, ?> icon, String caption) {
 		super(start, end);
 		this.icon = icon;
 		this.caption = caption;
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 	}
 

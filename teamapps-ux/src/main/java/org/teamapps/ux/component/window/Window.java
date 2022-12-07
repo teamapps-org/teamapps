@@ -51,11 +51,11 @@ public class Window extends Panel {
 		this(null, null, width, height, content);
 	}
 
-	public Window(Icon icon, String title, int width, int height, Component content) {
+	public Window(Icon<?, ?> icon, String title, int width, int height, Component content) {
 		this(icon, title, content, width, height, false, false, false);
 	}
 
-	public Window(Icon icon, String title, Component content, int width, int height, boolean closeable, boolean closeOnEscape, boolean closeOnClickOutside) {
+	public Window(Icon<?, ?> icon, String title, Component content, int width, int height, boolean closeable, boolean closeOnEscape, boolean closeOnClickOutside) {
 		super(icon, title, content);
 		this.width = width;
 		this.height = height;

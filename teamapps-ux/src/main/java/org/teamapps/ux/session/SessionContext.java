@@ -465,11 +465,11 @@ public class SessionContext {
 		});
 	}
 
-	public String resolveIcon(Icon icon) {
+	public String resolveIcon(Icon<?, ?> icon) {
 		if (icon == null) {
 			return null;
 		}
-		return sessionConfiguration.getIconPath() + "/" + iconProvider.encodeIcon(icon, true);
+		return sessionConfiguration.getIconPath() + "/" + iconProvider.encodeIcon((Icon) icon, true);
 	}
 
 	public void renderClientObject(ClientObject clientObject) {
@@ -602,7 +602,7 @@ public class SessionContext {
 		});
 	}
 
-	public void showNotification(Icon icon, String caption) {
+	public void showNotification(Icon<?, ?> icon, String caption) {
 		runWithContext(() -> {
 			Notification notification = Notification.createWithIconAndCaption(icon, caption);
 			notification.setDismissible(true);
@@ -612,7 +612,7 @@ public class SessionContext {
 		});
 	}
 
-	public void showNotification(Icon icon, String caption, String description) {
+	public void showNotification(Icon<?, ?> icon, String caption, String description) {
 		runWithContext(() -> {
 			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
 			notification.setDismissible(true);
@@ -622,7 +622,7 @@ public class SessionContext {
 		});
 	}
 
-	public void showNotification(Icon icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
+	public void showNotification(Icon<?, ?> icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
 		runWithContext(() -> {
 			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
 			notification.setDismissible(dismissable);

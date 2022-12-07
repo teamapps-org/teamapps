@@ -38,7 +38,7 @@ public class Tab {
 	private final String clientId = UUID.randomUUID().toString();
 	private TabPanel tabPanel;
 
-	private Icon icon;
+	private Icon<?, ?> icon;
 	private String title;
 	private boolean closeable;
 	private boolean lazyLoading;
@@ -52,11 +52,11 @@ public class Tab {
 		this(null, null, null, false);
 	}
 
-	public Tab(Icon icon, String title, Component content) {
+	public Tab(Icon<?, ?> icon, String title, Component content) {
 		this(icon, title, content, false);
 	}
 
-	public Tab(Icon icon, String title, Component content, boolean lazyLoading) {
+	public Tab(Icon<?, ?> icon, String title, Component content, boolean lazyLoading) {
 		this.title = title;
 		this.icon = icon;
 		this.content = content;
@@ -99,11 +99,11 @@ public class Tab {
 		return this;
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public Tab setIcon(Icon icon) {
+	public Tab setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		if (tabPanel != null) {
 			tabPanel.handleTabConfigurationChanged(this);

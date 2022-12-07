@@ -25,7 +25,7 @@ import org.teamapps.ux.resolvable.Resolvable;
 public interface ChatFile {
 
 	String getName();
-	Icon getIcon();
+	Icon<?, ?> getIcon();
 	long getLength();
 	Resolvable getThumbnail();
 	Resolvable getDownload();

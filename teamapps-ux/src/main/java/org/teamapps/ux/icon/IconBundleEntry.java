@@ -25,6 +25,6 @@ public interface IconBundleEntry {
 
 	String getKey();
 
-	Icon getIcon();
+	Icon<?, ?> getIcon();
 
 }

@@ -61,9 +61,9 @@ public enum TeamAppsIconBundle implements IconBundleEntry {
 		return IconBundle.create(values());
 	}
 
-	private final Icon icon;
+	private final Icon<?, ?> icon;
 
-	TeamAppsIconBundle(Icon icon) {
+	TeamAppsIconBundle(Icon<?, ?> icon) {
 		this.icon = icon;
 	}
 
@@ -73,7 +73,7 @@ public enum TeamAppsIconBundle implements IconBundleEntry {
 	}
 
 	@Override
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 

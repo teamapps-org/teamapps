@@ -43,7 +43,7 @@ public interface CalendarEvent {
 	/**
 	 * In case the event is rendered without a template, use this icon.
  	 */
-	default Icon getIcon() {
+	default Icon<?, ?> getIcon() {
 		return null;
 	}
 

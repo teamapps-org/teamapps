@@ -47,7 +47,7 @@ public class Dialogue extends Window {
 	private final Button<?> okButton;
 	private final Button<?> cancelButton;
 
-	public static ProjectorEvent<Boolean> showOkCancel(Icon icon, String title, String text) {
+	public static ProjectorEvent<Boolean> showOkCancel(Icon<?, ?> icon, String title, String text) {
 		return showOkCancel(new BaseTemplateRecord<>(icon, title, text));
 	}
 
@@ -61,11 +61,11 @@ public class Dialogue extends Window {
 		return dialogue.onResult;
 	}
 
-	public static Dialogue createOkCancel(Icon icon, String title) {
+	public static Dialogue createOkCancel(Icon<?, ?> icon, String title) {
 		return createOkCancel(icon, title, title);
 	}
 
-	public static Dialogue createOkCancel(Icon icon, String title, String text) {
+	public static Dialogue createOkCancel(Icon<?, ?> icon, String title, String text) {
 		Dialogue dialogue = new Dialogue();
 		dialogue.setValues(icon, title, text);
 		dialogue.setIcon(icon);
@@ -74,11 +74,11 @@ public class Dialogue extends Window {
 		return dialogue;
 	}
 
-	public static ProjectorEvent<Boolean> showOk(Icon icon, String title) {
+	public static ProjectorEvent<Boolean> showOk(Icon<?, ?> icon, String title) {
 		return showOk(icon, title, title);
 	}
 
-	public static ProjectorEvent<Boolean> showOk(Icon icon, String title, String text) {
+	public static ProjectorEvent<Boolean> showOk(Icon<?, ?> icon, String title, String text) {
 		Dialogue dialogue = new Dialogue();
 		dialogue.getCancelButton().setVisible(false);
 		dialogue.setValues(icon, title, text);
@@ -121,7 +121,7 @@ public class Dialogue extends Window {
 		comboBox.setValue(record);
 	}
 
-	public void setValues(Icon icon, String title, String text) {
+	public void setValues(Icon<?, ?> icon, String title, String text) {
 		comboBox.setValue(new BaseTemplateRecord<>(icon, title, text));
 	}
 

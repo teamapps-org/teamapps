@@ -23,17 +23,17 @@ import org.teamapps.icons.Icon;
 
 public class AdditionalNavigationButton {
 
-	private final Icon icon;
+	private final Icon<?, ?> icon;
 	private final String caption;
 	private final Runnable handler;
 
-	public AdditionalNavigationButton(Icon icon, String caption, Runnable handler) {
+	public AdditionalNavigationButton(Icon<?, ?> icon, String caption, Runnable handler) {
 		this.icon = icon;
 		this.caption = caption;
 		this.handler = handler;
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 

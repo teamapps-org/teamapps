@@ -48,14 +48,14 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
 	private static final int PAGE_TRANSITION_ANIMATION_DURATION = 300;
 
-	private final NavigationBarButton<BaseTemplateRecord> applicationLauncherButton;
-	private final NavigationBarButton<BaseTemplateRecord> applicationTreeButton;
-	private final NavigationBarButton<BaseTemplateRecord> applicationViewsButton;
-	private final NavigationBarButton<BaseTemplateRecord> applicationToolbarButton;
-	private final NavigationBarButton<BaseTemplateRecord> applicationBackButton;
+	private final NavigationBarButton<BaseTemplateRecord<?>> applicationLauncherButton;
+	private final NavigationBarButton<BaseTemplateRecord<?>> applicationTreeButton;
+	private final NavigationBarButton<BaseTemplateRecord<?>> applicationViewsButton;
+	private final NavigationBarButton<BaseTemplateRecord<?>> applicationToolbarButton;
+	private final NavigationBarButton<BaseTemplateRecord<?>> applicationBackButton;
 
 	private final MobileLayout mobileLayout;
-	private final NavigationBar<BaseTemplateRecord> navigationBar;
+	private final NavigationBar<BaseTemplateRecord<?>> navigationBar;
 	private final SimpleItemView<Void> viewsItemView;
 	private AbstractToolContainer mainToolbar;
 
@@ -76,7 +76,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 				null);
 	}
 
-	public MobileApplicationAssembler(Icon launcherIcon, Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
+	public MobileApplicationAssembler(Icon<?, ?> launcherIcon, Icon<?, ?> treeIcon, Icon<?, ?> viewsIcon, Icon<?, ?> toolbarIcon, Icon<?, ?> backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
 		this.mobileLayout = new MobileLayout();
 		this.navigationBar = new NavigationBar<>();
 		this.viewsItemView = new SimpleItemView<>();
@@ -97,7 +97,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
 		if (additionalLeftButtons != null) {
 			for (AdditionalNavigationButton leftButton : additionalLeftButtons) {
-				NavigationBarButton<BaseTemplateRecord> button = NavigationBarButton.create(leftButton.getIcon(), leftButton.getCaption());
+				NavigationBarButton<BaseTemplateRecord<?>> button = NavigationBarButton.create(leftButton.getIcon(), leftButton.getCaption());
 				navigationBar.addButton(button);
 				button.onClick.addListener(aVoid -> leftButton.getHandler().run());
 			}

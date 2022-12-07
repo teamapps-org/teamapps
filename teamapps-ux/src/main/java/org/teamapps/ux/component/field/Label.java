@@ -34,7 +34,7 @@ public class Label extends AbstractField<String> {
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLabel.ClickedEvent.TYPE_ID);
 
 	private String caption;
-	private Icon icon;
+	private Icon<?, ?> icon;
 	private Component targetComponent;
 
 	public Label(String caption) {
@@ -42,7 +42,7 @@ public class Label extends AbstractField<String> {
 		this.caption = caption;
 	}
 
-	public Label(String caption, Icon icon) {
+	public Label(String caption, Icon<?, ?> icon) {
 		this(caption);
 		this.icon = icon;
 	}
@@ -75,11 +75,11 @@ public class Label extends AbstractField<String> {
 		sendCommandIfRendered(() -> new DtoLabel.SetCaptionCommand(caption));
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		sendCommandIfRendered(() -> new DtoLabel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}

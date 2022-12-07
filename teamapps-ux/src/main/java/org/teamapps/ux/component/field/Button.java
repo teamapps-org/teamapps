@@ -63,31 +63,31 @@ public class Button<RECORD> extends AbstractField<Void> {
 		this(template, templateRecord, null);
 	}
 
-	public static Button<BaseTemplateRecord> create(BaseTemplate template, Icon icon, String caption, Component dropDownComponent) {
-		return new Button<>(template, new BaseTemplateRecord(icon, caption), dropDownComponent);
+	public static Button<BaseTemplateRecord<?>> create(BaseTemplate template, Icon<?, ?> icon, String caption, Component dropDownComponent) {
+		return new Button<>(template, new BaseTemplateRecord<>(icon, caption), dropDownComponent);
 	}
 
-	public static Button<BaseTemplateRecord> create(BaseTemplate template, Icon icon, String caption) {
+	public static Button<BaseTemplateRecord<?>> create(BaseTemplate template, Icon<?, ?> icon, String caption) {
 		return create(template, icon, caption, null);
 	}
 
-	public static Button<BaseTemplateRecord> create(BaseTemplate template, String caption) {
+	public static Button<BaseTemplateRecord<?>> create(BaseTemplate template, String caption) {
 		return create(template, null, caption, null);
 	}
 
-	public static Button<BaseTemplateRecord> create(Icon icon, String caption, Component dropDownComponent) {
+	public static Button<BaseTemplateRecord<?>> create(Icon<?, ?> icon, String caption, Component dropDownComponent) {
 		return create(BaseTemplate.BUTTON, icon, caption, dropDownComponent);
 	}
 
-	public static Button<BaseTemplateRecord> create(String caption, Component dropDownComponent) {
+	public static Button<BaseTemplateRecord<?>> create(String caption, Component dropDownComponent) {
 		return create(BaseTemplate.BUTTON, null, caption, dropDownComponent);
 	}
 
-	public static Button<BaseTemplateRecord> create(Icon icon, String caption) {
+	public static Button<BaseTemplateRecord<?>> create(Icon<?, ?> icon, String caption) {
 		return create(BaseTemplate.BUTTON, icon, caption, null);
 	}
 
-	public static Button<BaseTemplateRecord> create(String caption) {
+	public static Button<BaseTemplateRecord<?>> create(String caption) {
 		return create(BaseTemplate.BUTTON, null, caption, null);
 	}
 

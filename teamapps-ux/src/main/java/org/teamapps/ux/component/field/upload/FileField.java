@@ -67,7 +67,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Template uploadButtonTemplate = BaseTemplate.BUTTON;
-	private Object uploadButtonData = new BaseTemplateRecord(getSessionContext().getIcon(TeamAppsIconBundle.UPLOAD.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey()));
+	private Object uploadButtonData = new BaseTemplateRecord<>(getSessionContext().getIcon(TeamAppsIconBundle.UPLOAD.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey()));
 	private PropertyProvider uploadButtonPropertyProvider = new BeanPropertyExtractor<>();
 
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;

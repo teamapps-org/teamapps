@@ -103,23 +103,23 @@ public class ResponsiveFormLayout {
 		return addLabelAndField(null, null, propertyName, field, newRow, 0);
 	}
 
-	public LabelAndField addLabelAndField(Icon icon, String caption, String propertyName, AbstractField field) {
+	public LabelAndField addLabelAndField(Icon<?, ?> icon, String caption, String propertyName, AbstractField field) {
 		return addLabelAndField(icon, caption, propertyName, field, true, 0);
 	}
 
-	public LabelAndField addLabelAndField(Icon icon, String caption, AbstractField field) {
+	public LabelAndField addLabelAndField(Icon<?, ?> icon, String caption, AbstractField field) {
 		return addLabelAndField(icon, caption, UUID.randomUUID().toString(), field, true, 0);
 	}
 
-	public LabelAndField addLabelAndField(Icon icon, String caption, String propertyName, AbstractField field, boolean newRow) {
+	public LabelAndField addLabelAndField(Icon<?, ?> icon, String caption, String propertyName, AbstractField field, boolean newRow) {
 		return addLabelAndField(icon, caption, propertyName, field, newRow, 0);
 	}
 
-	public LabelAndField addLabelAndField(Icon icon, String caption, AbstractField field, boolean newRow) {
+	public LabelAndField addLabelAndField(Icon<?, ?> icon, String caption, AbstractField field, boolean newRow) {
 		return addLabelAndField(icon, caption, UUID.randomUUID().toString(), field, newRow, 0);
 	}
 
-	public LabelAndField addLabelAndField(Icon icon, String caption, String propertyName, AbstractField field, boolean newRow, int columnOffset) {
+	public LabelAndField addLabelAndField(Icon<?, ?> icon, String caption, String propertyName, AbstractField field, boolean newRow, int columnOffset) {
 		Label label = null;
 		if (icon != null || caption != null) {
 			label = new Label(caption, icon);
@@ -178,15 +178,15 @@ public class ResponsiveFormLayout {
 		return addLabelAndComponent(null, null, field, newRow, 0);
 	}
 
-	public LabelAndField addLabelAndComponent(Icon icon, String caption, Component field) {
+	public LabelAndField addLabelAndComponent(Icon<?, ?> icon, String caption, Component field) {
 		return addLabelAndComponent(icon, caption, field, true, 0);
 	}
 
-	public LabelAndField addLabelAndComponent(Icon icon, String caption, Component field, boolean newRow) {
+	public LabelAndField addLabelAndComponent(Icon<?, ?> icon, String caption, Component field, boolean newRow) {
 		return addLabelAndComponent(icon, caption, field, newRow, 0);
 	}
 
-	public LabelAndField addLabelAndComponent(Icon icon, String caption, Component field, boolean newRow, int columnOffset) {
+	public LabelAndField addLabelAndComponent(Icon<?, ?> icon, String caption, Component field, boolean newRow, int columnOffset) {
 		Label label = null;
 		if (icon != null || caption != null) {
 			label = new Label(caption, icon);
@@ -238,11 +238,11 @@ public class ResponsiveFormLayout {
 		return addSection(null, null);
 	}
 
-	public ResponsiveFormSection addSection(Icon icon, String caption) {
+	public ResponsiveFormSection addSection(Icon<?, ?> icon, String caption) {
 		return addSection(icon, caption, null);
 	}
 
-	public ResponsiveFormSection addSection(Icon icon, String caption, ResponsiveFormConfigurationTemplate configurationTemplate) {
+	public ResponsiveFormSection addSection(Icon<?, ?> icon, String caption, ResponsiveFormConfigurationTemplate configurationTemplate) {
 		if (configurationTemplate == null) {
 			configurationTemplate = responsiveForm.getConfigurationTemplate();
 		}
@@ -251,7 +251,7 @@ public class ResponsiveFormLayout {
 			responsiveFormSection.setHeaderTemplate(BaseTemplate.FORM_SECTION_HEADER);
 		}
 		if (icon != null || caption != null) {
-			responsiveFormSection.setHeaderData(new BaseTemplateRecord(icon, caption));
+			responsiveFormSection.setHeaderData(new BaseTemplateRecord<>(icon, caption));
 		}
 		responsiveFormSections.add(responsiveFormSection);
 		return responsiveFormSection;

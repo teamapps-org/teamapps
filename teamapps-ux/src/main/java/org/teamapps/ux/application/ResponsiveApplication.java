@@ -52,7 +52,7 @@ public interface ResponsiveApplication {
 				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()));
 	}
 
-	static ResponsiveApplication createApplication(View applicationLauncher, Icon launcherIcon, Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon) {
+	static ResponsiveApplication createApplication(View applicationLauncher, Icon<?, ?> launcherIcon, Icon<?, ?> treeIcon, Icon<?, ?> viewsIcon, Icon<?, ?> toolbarIcon, Icon<?, ?> backIcon) {
 		boolean mobileDevice = CurrentSessionContext.get().getClientInfo().isMobileDevice();
 		if (mobileDevice) {
 			MobileApplicationAssembler mobileAssembler = new MobileApplicationAssembler(launcherIcon, treeIcon, viewsIcon, toolbarIcon, backIcon, null);
@@ -63,7 +63,7 @@ public interface ResponsiveApplication {
 		}
 	}
 
-	static ResponsiveApplication createApplication(Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
+	static ResponsiveApplication createApplication(Icon<?, ?> treeIcon, Icon<?, ?> viewsIcon, Icon<?, ?> toolbarIcon, Icon<?, ?> backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
 		boolean mobileDevice = CurrentSessionContext.get().getClientInfo().isMobileDevice();
 		if (mobileDevice) {
 			MobileApplicationAssembler mobileAssembler = new MobileApplicationAssembler(null, treeIcon, viewsIcon, toolbarIcon, backIcon, additionalLeftButtons);

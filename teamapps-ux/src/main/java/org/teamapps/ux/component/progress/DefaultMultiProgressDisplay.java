@@ -106,7 +106,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public void addProgress(Icon icon, String taskName, ObservableProgress progress) {
+	public void addProgress(Icon<?, ?> icon, String taskName, ObservableProgress progress) {
 		this.progresses.add(progress);
 		progressListVerticalLayout.removeComponent(noEntriesDisplayField);
 		ProgressDisplay progressDisplay = new ProgressDisplay(icon, taskName, progress);

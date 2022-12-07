@@ -45,14 +45,14 @@ public class Panel extends AbstractComponent implements Component {
 	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(DtoPanel.WindowButtonClickedEvent.TYPE_ID);
 
 	private String title;
-	private Icon icon;
+	private Icon<?, ?> icon;
 
 	private AbstractField<?> leftHeaderField;
-	private Icon leftHeaderFieldIcon;
+	private Icon<?, ?> leftHeaderFieldIcon;
 	private int leftHeaderFieldMinWidth = 100;
 	private int leftHeaderFieldMaxWidth = 300;
 	private AbstractField<?> rightHeaderField;
-	private Icon rightHeaderFieldIcon;
+	private Icon<?, ?> rightHeaderFieldIcon;
 	private int rightHeaderFieldMinWidth = 100;
 	private int rightHeaderFieldMaxWidth = 300;
 	private HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy = HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
@@ -77,11 +77,11 @@ public class Panel extends AbstractComponent implements Component {
 		this(null, null, null);
 	}
 
-	public Panel(Icon icon, String title) {
+	public Panel(Icon<?, ?> icon, String title) {
 		this(icon, title, null);
 	}
 
-	public Panel(Icon icon, String title, Component content) {
+	public Panel(Icon<?, ?> icon, String title, Component content) {
 		this.icon = icon;
 		this.title = title;
 		setContent(content);
@@ -161,7 +161,7 @@ public class Panel extends AbstractComponent implements Component {
 		uiPanel.setStretchContent(stretchContent);
 	}
 
-	public DtoPanelHeaderField createUiPanelHeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
+	public DtoPanelHeaderField createUiPanelHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		if (field == null) {
 			return null;
 		}
@@ -172,7 +172,7 @@ public class Panel extends AbstractComponent implements Component {
 		return uiPanelHeaderField;
 	}
 
-	public Panel setLeftHeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
+	public Panel setLeftHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		if (field != null) {
 			field.setParent(this);
 		}
@@ -188,7 +188,7 @@ public class Panel extends AbstractComponent implements Component {
 		return leftHeaderField;
 	}
 
-	public Panel setRightHeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
+	public Panel setRightHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		if (field != null) {
 			field.setParent(this);
 		}
@@ -232,11 +232,11 @@ public class Panel extends AbstractComponent implements Component {
 		sendCommandIfRendered(() -> new DtoPanel.SetTitleCommand(title));
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		sendCommandIfRendered(() -> new DtoPanel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
@@ -315,11 +315,11 @@ public class Panel extends AbstractComponent implements Component {
 		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
-	public Icon getLeftHeaderFieldIcon() {
+	public Icon<?, ?> getLeftHeaderFieldIcon() {
 		return leftHeaderFieldIcon;
 	}
 
-	public void setLeftHeaderFieldIcon(Icon leftHeaderFieldIcon) {
+	public void setLeftHeaderFieldIcon(Icon<?, ?> leftHeaderFieldIcon) {
 		this.leftHeaderFieldIcon = leftHeaderFieldIcon;
 		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
@@ -352,11 +352,11 @@ public class Panel extends AbstractComponent implements Component {
 				rightHeaderFieldMaxWidth)));
 	}
 
-	public Icon getRightHeaderFieldIcon() {
+	public Icon<?, ?> getRightHeaderFieldIcon() {
 		return rightHeaderFieldIcon;
 	}
 
-	public void setRightHeaderFieldIcon(Icon rightHeaderFieldIcon) {
+	public void setRightHeaderFieldIcon(Icon<?, ?> rightHeaderFieldIcon) {
 		this.rightHeaderFieldIcon = rightHeaderFieldIcon;
 		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
@@ -401,7 +401,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 
-	public void setIcon(ObservableValue<Icon> observableIcon) {
+	public void setIcon(ObservableValue<Icon<?, ?>> observableIcon) {
 		if (iconChangeListenerDisposable != null) {
 			iconChangeListenerDisposable.dispose();
 		}

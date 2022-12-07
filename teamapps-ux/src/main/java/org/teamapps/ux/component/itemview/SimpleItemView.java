@@ -22,7 +22,7 @@ package org.teamapps.ux.component.itemview;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 
-public class SimpleItemView<PAYLOAD> extends ItemView<BaseTemplateRecord, SimpleItem<PAYLOAD>> {
+public class SimpleItemView<PAYLOAD> extends ItemView<BaseTemplateRecord<?>, SimpleItem<PAYLOAD>> {
 
 
 	public SimpleItemView() {
@@ -35,13 +35,13 @@ public class SimpleItemView<PAYLOAD> extends ItemView<BaseTemplateRecord, Simple
 		setGroupSpacing(2);
 	}
 
-	public SimpleItemGroup<PAYLOAD> addSingleColumnGroup(Icon icon, String title) {
+	public SimpleItemGroup<PAYLOAD> addSingleColumnGroup(Icon<?, ?> icon, String title) {
 		SimpleItemGroup<PAYLOAD> group = SimpleItemGroup.singleColumnGroup(icon, title);
 		addGroup(group);
 		return group;
 	}
 
-	public SimpleItemGroup<PAYLOAD> addTwoColumnGroup(Icon icon, String title) {
+	public SimpleItemGroup<PAYLOAD> addTwoColumnGroup(Icon<?, ?> icon, String title) {
 		SimpleItemGroup<PAYLOAD> group = SimpleItemGroup.twoColumnGroup(icon, title);
 		addGroup(group);
 		return group;

@@ -42,7 +42,7 @@ public class ProgressDisplay extends AbstractComponent {
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);
 	public final ProjectorEvent<Void> onCancelButtonClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);
 
-	private Icon icon;
+	private Icon<?, ?> icon;
 	private String taskName;
 	private String statusMessage;
 	private double progress;
@@ -57,11 +57,11 @@ public class ProgressDisplay extends AbstractComponent {
 		this(null, null, null);
 	}
 
-	public ProgressDisplay(Icon icon, String taskName) {
+	public ProgressDisplay(Icon<?, ?> icon, String taskName) {
 		this(icon, taskName, null);
 	}
 
-	public ProgressDisplay(Icon icon, String taskName, ObservableProgress progress) {
+	public ProgressDisplay(Icon<?, ?> icon, String taskName, ObservableProgress progress) {
 		this.icon = icon;
 		this.taskName = taskName;
 		setObservedProgress(progress);
@@ -129,11 +129,11 @@ public class ProgressDisplay extends AbstractComponent {
 		return observedProgress;
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		updateUi();
 	}

@@ -56,8 +56,8 @@ public class PictureChooser extends AbstractField<Resource> {
 	private String fileTooLargeMessage;
 	private String uploadErrorMessage;
 
-	private Icon browseButtonIcon = MaterialIcon.EDIT;
-	private Icon deleteButtonIcon = MaterialIcon.DELETE;
+	private Icon<?, ?> browseButtonIcon = MaterialIcon.EDIT;
+	private Icon<?, ?> deleteButtonIcon = MaterialIcon.DELETE;
 
 	private int targetImageWidth = 240;
 	private int targetImageHeight = 240;
@@ -75,11 +75,11 @@ public class PictureChooser extends AbstractField<Resource> {
 		imageCropper.setAspectRatio(targetImageWidth / (float) targetImageHeight);
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.addComponentFillRemaining(imageCropper);
-		Button<BaseTemplateRecord> cancelButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.CANCEL.getKey()));
+		Button<BaseTemplateRecord<?>> cancelButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.CANCEL.getKey()));
 		cancelButton.setCssStyle("margin-right", "5px");
-		Button<BaseTemplateRecord> rotateButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.ROTATE.getKey()));
+		Button<BaseTemplateRecord<?>> rotateButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.ROTATE.getKey()));
 		rotateButton.setCssStyle("margin-right", "5px");
-		Button<BaseTemplateRecord> okButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.OK.getKey()));
+		Button<BaseTemplateRecord<?>> okButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.OK.getKey()));
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.addComponentAutoSize(cancelButton);
 		horizontalLayout.addComponentAutoSize(rotateButton);
@@ -249,19 +249,19 @@ public class PictureChooser extends AbstractField<Resource> {
 		sendCommandIfRendered(() -> new DtoPictureChooser.SetUploadErrorMessageCommand(uploadErrorMessage));
 	}
 
-	public Icon getBrowseButtonIcon() {
+	public Icon<?, ?> getBrowseButtonIcon() {
 		return browseButtonIcon;
 	}
 
-	public void setBrowseButtonIcon(Icon browseButtonIcon) {
+	public void setBrowseButtonIcon(Icon<?, ?> browseButtonIcon) {
 		this.browseButtonIcon = browseButtonIcon;
 	}
 
-	public Icon getDeleteButtonIcon() {
+	public Icon<?, ?> getDeleteButtonIcon() {
 		return deleteButtonIcon;
 	}
 
-	public void setDeleteButtonIcon(Icon deleteButtonIcon) {
+	public void setDeleteButtonIcon(Icon<?, ?> deleteButtonIcon) {
 		this.deleteButtonIcon = deleteButtonIcon;
 	}
 

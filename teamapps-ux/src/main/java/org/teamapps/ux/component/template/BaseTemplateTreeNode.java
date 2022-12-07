@@ -41,15 +41,15 @@ public class BaseTemplateTreeNode<PAYLOAD> extends BaseTemplateRecord<PAYLOAD> i
 		super(caption);
 	}
 
-	public BaseTemplateTreeNode(Icon icon, String caption) {
+	public BaseTemplateTreeNode(Icon<?, ?> icon, String caption) {
 		super(icon, caption);
 	}
 
-	public BaseTemplateTreeNode(Icon icon, String caption, String description) {
+	public BaseTemplateTreeNode(Icon<?, ?> icon, String caption, String description) {
 		super(icon, caption, description);
 	}
 
-	public BaseTemplateTreeNode(Icon icon, String caption, String description, String badge) {
+	public BaseTemplateTreeNode(Icon<?, ?> icon, String caption, String description, String badge) {
 		super(icon, caption, description, badge);
 	}
 
@@ -65,11 +65,11 @@ public class BaseTemplateTreeNode<PAYLOAD> extends BaseTemplateRecord<PAYLOAD> i
 		super(image, caption, description, badge);
 	}
 
-	public BaseTemplateTreeNode(Icon icon, String image, String caption, String description, String badge) {
+	public BaseTemplateTreeNode(Icon<?, ?> icon, String image, String caption, String description, String badge) {
 		super(icon, image, caption, description, badge);
 	}
 
-	public BaseTemplateTreeNode(Icon icon, String image, String caption, String description, String badge, PAYLOAD payload) {
+	public BaseTemplateTreeNode(Icon<?, ?> icon, String image, String caption, String description, String badge, PAYLOAD payload) {
 		super(icon, image, caption, description, badge, payload);
 	}
 

@@ -38,19 +38,19 @@ public class NavigationBarButton<RECORD> {
 		this.data = data;
 	}
 
-	public static NavigationBarButton<BaseTemplateRecord> create(Icon icon) {
+	public static NavigationBarButton<BaseTemplateRecord<?>> create(Icon<?, ?> icon) {
 		return new NavigationBarButton<>(new BaseTemplateRecord<Void>(icon, null));
 	}
 
-	public static NavigationBarButton<BaseTemplateRecord> create(Icon icon, String caption) {
+	public static NavigationBarButton<BaseTemplateRecord<?>> create(Icon<?, ?> icon, String caption) {
 		return new NavigationBarButton<>(new BaseTemplateRecord<>(icon, caption));
 	}
 
-	public static <PAYLOAD> NavigationBarButton<BaseTemplateRecord<PAYLOAD>> create(Icon icon, PAYLOAD payload) {
+	public static <PAYLOAD> NavigationBarButton<BaseTemplateRecord<PAYLOAD>> create(Icon<?, ?> icon, PAYLOAD payload) {
 		return new NavigationBarButton<>(new BaseTemplateRecord<PAYLOAD>(icon, null, payload));
 	}
 
-	public static <PAYLOAD> NavigationBarButton<BaseTemplateRecord<PAYLOAD>> create(Icon icon, String caption, PAYLOAD payload) {
+	public static <PAYLOAD> NavigationBarButton<BaseTemplateRecord<PAYLOAD>> create(Icon<?, ?> icon, String caption, PAYLOAD payload) {
 		return new NavigationBarButton<>(new BaseTemplateRecord<PAYLOAD>(icon, caption, payload));
 	}
 

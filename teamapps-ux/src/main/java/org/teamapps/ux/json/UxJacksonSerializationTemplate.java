@@ -56,7 +56,7 @@ public class UxJacksonSerializationTemplate {
 	public static class UxSerializersJacksonModule extends SimpleModule {
 		public UxSerializersJacksonModule() {
 			super();
-			this.addSerializer(Icon.class, new JsonSerializer<Icon>() {
+			this.addSerializer(Icon.class, new JsonSerializer<>() {
 				@Override
 				public void serialize(Icon icon, JsonGenerator gen, SerializerProvider serializers) throws IOException {
 					SessionContext currentSessionContext = getSessionContext();

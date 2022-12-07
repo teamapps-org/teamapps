@@ -35,7 +35,7 @@ public class ChatInput extends AbstractComponent {
 
 	private long maxBytesPerUpload = 5000000;
 	private String uploadUrl = "/upload";
-	private Icon defaultAttachmentIcon = MaterialIcon.ATTACHMENT;
+	private Icon<?, ?> defaultAttachmentIcon = MaterialIcon.ATTACHMENT;
 	private int messageLengthLimit = 10_000; // 10k characters, < 0 for no limit
 	private boolean attachmentsEnabled = true;
 
@@ -91,11 +91,11 @@ public class ChatInput extends AbstractComponent {
 		reRenderIfRendered(); // TODO
 	}
 
-	public Icon getDefaultAttachmentIcon() {
+	public Icon<?, ?> getDefaultAttachmentIcon() {
 		return defaultAttachmentIcon;
 	}
 
-	public void setDefaultAttachmentIcon(Icon defaultAttachmentIcon) {
+	public void setDefaultAttachmentIcon(Icon<?, ?> defaultAttachmentIcon) {
 		this.defaultAttachmentIcon = defaultAttachmentIcon;
 	}
 

@@ -23,7 +23,7 @@ import org.teamapps.icons.Icon;
 
 public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 
-	private Icon icon;
+	private Icon<?, ?> icon;
 	private String image;
 	private String caption;
 	private String description;
@@ -40,7 +40,7 @@ public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 		this(null, null, caption, null, (String) null);
 	}
 
-	public BaseTemplateRecord(Icon icon) {
+	public BaseTemplateRecord(Icon<?, ?> icon) {
 		this(icon, null);
 	}
 
@@ -48,23 +48,23 @@ public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 		this(null, null, caption, null, null, payload);
 	}
 
-	public BaseTemplateRecord(Icon icon, String caption) {
+	public BaseTemplateRecord(Icon<?, ?> icon, String caption) {
 		this(icon, null, caption, null, null);
 	}
 
-	public BaseTemplateRecord(Icon icon, String caption, PAYLOAD payload) {
+	public BaseTemplateRecord(Icon<?, ?> icon, String caption, PAYLOAD payload) {
 		this(icon, null, caption, null, null, payload);
 	}
 
-	public BaseTemplateRecord(Icon icon, String caption, String description) {
+	public BaseTemplateRecord(Icon<?, ?> icon, String caption, String description) {
 		this(icon, null, caption, description, null);
 	}
 
-	public BaseTemplateRecord(Icon icon, String caption, String description, PAYLOAD payload) {
+	public BaseTemplateRecord(Icon<?, ?> icon, String caption, String description, PAYLOAD payload) {
 		this(icon, null, caption, description, null, payload);
 	}
 
-	public BaseTemplateRecord(Icon icon, String caption, String description, String badge) {
+	public BaseTemplateRecord(Icon<?, ?> icon, String caption, String description, String badge) {
 		this(icon, null, caption, description, badge);
 	}
 
@@ -92,11 +92,11 @@ public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 		this(null, image, caption, description, null, payload);
 	}
 
-	public BaseTemplateRecord(Icon icon, String image, String caption, String description, String badge) {
+	public BaseTemplateRecord(Icon<?, ?> icon, String image, String caption, String description, String badge) {
 		this(icon, image, caption, description, badge, null);
 	}
 
-	public BaseTemplateRecord(Icon icon, String image, String caption, String description, String badge, PAYLOAD payload) {
+	public BaseTemplateRecord(Icon<?, ?> icon, String image, String caption, String description, String badge, PAYLOAD payload) {
 		this.icon = icon;
 		this.image = image;
 		this.caption = caption;
@@ -110,11 +110,11 @@ public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 		return caption != null ? caption : "<no caption>";
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public BaseTemplateRecord<PAYLOAD> setIcon(Icon icon) {
+	public BaseTemplateRecord<PAYLOAD> setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		return this;
 	}

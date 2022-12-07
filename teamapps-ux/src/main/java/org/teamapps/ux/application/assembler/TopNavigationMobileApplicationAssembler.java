@@ -87,7 +87,7 @@ public class TopNavigationMobileApplicationAssembler implements ApplicationAssem
 
 		leftGroup = navigationToolbar.addButtonGroup(new ToolbarButtonGroup());
 		ButtonData backButtonData = navigationController.getButtonData(ButtonDataType.BACK);
-		ToolbarButton backButton = new ToolbarButton(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE, new BaseTemplateRecord(backButtonData.getIcon(), backButtonData.getTitle()));
+		ToolbarButton backButton = new ToolbarButton(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE, new BaseTemplateRecord<>(backButtonData.getIcon(), backButtonData.getTitle()));
 		leftGroup.addButton(backButton);
 		leftGroup.setShowGroupSeparator(false);
 		backButton.onClick.addListener(() -> {
@@ -100,10 +100,10 @@ public class TopNavigationMobileApplicationAssembler implements ApplicationAssem
 
 		centerGroup = navigationToolbar.addButtonGroup(new ToolbarButtonGroup());
 		//todo workaround until distribute option is available
-		centerGroup.addButton(new ToolbarButton(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE, new BaseTemplateRecord("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")));
+		centerGroup.addButton(new ToolbarButton(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE, new BaseTemplateRecord<>("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")));
 		centerGroup.setShowGroupSeparator(false);
 		ButtonData viewButtonData = navigationController.getButtonData(ButtonDataType.VIEWS);
-		ToolbarButton viewsButton = new ToolbarButton(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE, new BaseTemplateRecord(viewButtonData.getIcon(), viewButtonData.getTitle()));
+		ToolbarButton viewsButton = new ToolbarButton(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE, new BaseTemplateRecord<>(viewButtonData.getIcon(), viewButtonData.getTitle()));
 		viewsButton.setDropDownComponent(viewsItemView);
 		viewsButton.setDroDownPanelWidth(450);
 		centerGroup.addButton(viewsButton);
@@ -112,7 +112,7 @@ public class TopNavigationMobileApplicationAssembler implements ApplicationAssem
 		rightGroup.setRightSide(true);
 		rightGroup.setShowGroupSeparator(false);
 		ButtonData menuButtonData = navigationController.getButtonData(ButtonDataType.MENU);
-		navigationToolbarMenuButton = new ToolbarButton(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE, new BaseTemplateRecord(menuButtonData.getIcon(), menuButtonData.getTitle()));
+		navigationToolbarMenuButton = new ToolbarButton(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE, new BaseTemplateRecord<>(menuButtonData.getIcon(), menuButtonData.getTitle()));
 		rightGroup.addButton(navigationToolbarMenuButton);
 
 		setNavigationToolbarVisible(false);
@@ -269,7 +269,7 @@ public class TopNavigationMobileApplicationAssembler implements ApplicationAssem
 		} else {
 			buttonData = navigationController.getButtonData(getViewType(panel.getContent()));
 		}
-		Icon icon = buttonData != null ? buttonData.getIcon() : panel.getIcon();
+		Icon<?, ?> icon = buttonData != null ? buttonData.getIcon() : panel.getIcon();
 		String title = buttonData != null ? buttonData.getTitle() : panel.getTitle();
 		String description = buttonData != null ? panel.getTitle() : null;
 		SimpleItem<Void> item = new SimpleItem<>(icon, title, description);

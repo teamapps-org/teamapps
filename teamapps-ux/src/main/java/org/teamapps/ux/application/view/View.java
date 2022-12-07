@@ -37,15 +37,15 @@ public interface View {
         return new ViewImpl(layoutPosition);
     }
 
-    static View createView(Icon icon, String title, Component component) {
+    static View createView(Icon<?, ?> icon, String title, Component component) {
         return new ViewImpl(icon, title, component);
     }
 
-    static View createView(String layoutPosition, Icon icon, String title, Component component) {
+    static View createView(String layoutPosition, Icon<?, ?> icon, String title, Component component) {
         return new ViewImpl(layoutPosition, icon, title, component);
     }
 
-    static View createView(String layoutPosition, Icon icon, String title, Component component, boolean closable) {
+    static View createView(String layoutPosition, Icon<?, ?> icon, String title, Component component, boolean closable) {
         return new ViewImpl(layoutPosition, icon, title, component, closable);
     }
 

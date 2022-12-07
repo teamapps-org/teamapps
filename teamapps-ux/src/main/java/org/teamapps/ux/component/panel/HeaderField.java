@@ -25,15 +25,15 @@ import org.teamapps.ux.component.field.AbstractField;
 public class HeaderField {
 
 	private final AbstractField<?> field;
-	private final Icon icon;
+	private final Icon<?, ?> icon;
 	private final int minWidth;
 	private final int maxWidth;
 
-	public HeaderField(AbstractField<?> field, Icon icon) {
+	public HeaderField(AbstractField<?> field, Icon<?, ?> icon) {
 		this(field, icon, 50, 200);
 	}
 
-	public HeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
+	public HeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		this.field = field;
 		this.icon = icon;
 		this.minWidth = minWidth;
@@ -44,7 +44,7 @@ public class HeaderField {
 		return field;
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 

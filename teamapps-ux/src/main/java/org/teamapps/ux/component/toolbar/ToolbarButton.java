@@ -85,43 +85,43 @@ public class ToolbarButton {
 		this.droDownPanelWidth = droDownPanelWidth;
 	}
 
-	public static ToolbarButton create(Icon icon, String caption, String description) {
-		return new ToolbarButton(null, new BaseTemplateRecord(icon, caption, description));
+	public static ToolbarButton create(Icon<?, ?> icon, String caption, String description) {
+		return new ToolbarButton(null, new BaseTemplateRecord<>(icon, caption, description));
 	}
 
-	public static ToolbarButton createLarge(Icon icon, String caption, String description) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON, new BaseTemplateRecord(icon, caption, description));
+	public static ToolbarButton createLarge(Icon<?, ?> icon, String caption, String description) {
+		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON, new BaseTemplateRecord<>(icon, caption, description));
 	}
 
-	public static ToolbarButton createLargeDarkTheme(Icon icon, String caption, String description) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON.createDarkThemeTemplate(), new BaseTemplateRecord(icon, caption, description));
+	public static ToolbarButton createLargeDarkTheme(Icon<?, ?> icon, String caption, String description) {
+		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON.createDarkThemeTemplate(), new BaseTemplateRecord<>(icon, caption, description));
 	}
 
-	public static ToolbarButton createSmall(Icon icon, String caption) {
+	public static ToolbarButton createSmall(Icon<?, ?> icon, String caption) {
 		return createSmall(icon, caption, null);
 	}
 
-	public static ToolbarButton createSmall(Icon icon, String caption, String description) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_SMALL, new BaseTemplateRecord(icon, caption, description));
+	public static ToolbarButton createSmall(Icon<?, ?> icon, String caption, String description) {
+		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_SMALL, new BaseTemplateRecord<>(icon, caption, description));
 	}
 
-	public static ToolbarButton createSmallDarkTheme(Icon icon, String caption, String description) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_SMALL.createDarkThemeTemplate(), new BaseTemplateRecord(icon, caption, description));
+	public static ToolbarButton createSmallDarkTheme(Icon<?, ?> icon, String caption, String description) {
+		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_SMALL.createDarkThemeTemplate(), new BaseTemplateRecord<>(icon, caption, description));
 	}
 
-	public static ToolbarButton createTiny(Icon icon, String caption) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(icon, caption));
+	public static ToolbarButton createTiny(Icon<?, ?> icon, String caption) {
+		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord<>(icon, caption));
 	}
 
-	public static ToolbarButton createOpenNewTabButton(Template template, BaseTemplateRecord Object, String newTabUrl) {
+	public static ToolbarButton createOpenNewTabButton(Template template, BaseTemplateRecord<?> Object, String newTabUrl) {
 		return new ToolbarButton(template, Object, newTabUrl, null, null, 0);
 	}
 
-	public static ToolbarButton createFullScreenToggleButton(BaseTemplateRecord Object, Component togglesFullScreenOnComponent) {
+	public static ToolbarButton createFullScreenToggleButton(BaseTemplateRecord<?> Object, Component togglesFullScreenOnComponent) {
 		return new ToolbarButton(null, Object, null, togglesFullScreenOnComponent, null, 0);
 	}
 
-	public static ToolbarButton createFullScreenToggleButton(Template template, BaseTemplateRecord Object, Component togglesFullScreenOnComponent) {
+	public static ToolbarButton createFullScreenToggleButton(Template template, BaseTemplateRecord<?> Object, Component togglesFullScreenOnComponent) {
 		return new ToolbarButton(template, Object, null, togglesFullScreenOnComponent, null, 0);
 	}
 
