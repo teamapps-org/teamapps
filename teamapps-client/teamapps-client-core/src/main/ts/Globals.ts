@@ -17,6 +17,7 @@ import {Showable} from "./util/Showable";
 import {parseHtml} from "./util/parseHtml";
 import {createUiLocation} from "./util/locationUtil";
 import {ClientObject} from "./ClientObject";
+import {loadJavaScript} from "./util/resourceLoading";
 
 export class Globals implements ClientObject<DtoGlobals> {
 
@@ -63,15 +64,14 @@ export class Globals implements ClientObject<DtoGlobals> {
 	public static setConfig(config: DtoConfiguration, context: TeamAppsUiContext) {
 		let oldConfig = context.config;
 		if ((!oldConfig || oldConfig.locale !== config.locale) && config.locale !== 'en') {
-			$.getScript("runtime-resources/moment-locales/" + config.locale + ".js");
-			$.getScript("runtime-resources/fullcalendar-locales/" + config.locale + ".js");
+			loadJavaScript("runtime-resources/moment-locales/" + config.locale + ".js"); // TODO
 		}
 		moment.locale(config.locale);
 		this.setThemeClassName(config.themeClassName);
 
 		document.body.classList.toggle("optimized-for-touch", config.optimizedForTouch);
 
-		// this.LOGGER.warn("TODO Setting configuration on context. This should be implemented using an event instead!");
+		// console.warn("TODO Setting configuration on context. This should be implemented using an event instead!");
 		(context as any).config = config; // TODO change this to firing an event to the context!!!!
 	}
 

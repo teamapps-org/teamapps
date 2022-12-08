@@ -150,7 +150,7 @@ export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> impleme
 			this.currentFanOutComponent.getMainElement().classList.remove("pseudo-hidden");
 			this.$fanOutContainerWrapper.classList.add("open");
 			this.$fanOutContainerWrapper.style.bottom = outerHeightIncludingMargins(this.$bar) + "px";
-			$(this.$fanOutContainerWrapper).slideDown(200);
+			slideDown(this.$fanOutContainerWrapper);
 			this.onResize();
 			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement([this.getMainElement(), this.$fanOutContainerWrapper], e => {
 				this.hideFanOutComponent();
@@ -167,7 +167,7 @@ export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> impleme
 
 	public hideFanOutComponent() {
 		this.$fanOutContainerWrapper.classList.remove("open");
-		$(this.$fanOutContainerWrapper).slideUp(200);
+		slideUp(this.$fanOutContainerWrapper);
 		this.currentFanOutComponent = null;
 		this.fanoutClickOutsideHandle.cancel();
 	}
@@ -178,7 +178,7 @@ export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> impleme
 			
 			let maxFanOutHeight = this.$bar.offsetTop - $clippingParent.offsetTop;
 			if (maxFanOutHeight <= 0) {
-				this.logger.warn("Fanout height is 0 due to clipping parent component...");
+				console.warn("Fanout height is 0 due to clipping parent component...");
 			}
 			this.$fanOutContainerWrapper.style.maxHeight = maxFanOutHeight + "px";
 			this.$fanOutContainerWrapper.offsetHeight; // reflow

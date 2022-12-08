@@ -18,19 +18,13 @@
  * =========================LICENSE_END==================================
  */
 import {TeamAppsUiContext} from "teamapps-client-core";
-import md5 from "md5";
 import {DtoPasswordField, DtoPasswordFieldCommandHandler, DtoPasswordFieldEventSource} from "../../generated";
 import {TextField} from "./TextField";
 
 
 export class PasswordField extends TextField<DtoPasswordField> implements DtoPasswordFieldEventSource, DtoPasswordFieldCommandHandler {
-	private salt: string;
-	private sendValueAsMd5: boolean;
-
 
 	protected initialize(config: DtoPasswordField, context: TeamAppsUiContext): void {
-		this.salt = config.salt;
-		this.sendValueAsMd5 = config.sendValueAsMd5;
 		super.initialize(config, context);
 		this.$field.type = "password";
 		if (!config.autofill) {
@@ -42,30 +36,8 @@ export class PasswordField extends TextField<DtoPasswordField> implements DtoPas
 		}
 	}
 
-	setSalt(salt: string): void {
-		this.salt = salt;
-	}
-
-	setSendValueAsMd5(sendValueAsMd5: boolean): void {
-		this.sendValueAsMd5 = sendValueAsMd5;
-	}
-
 	getTransientValue(): string {
-		return this.calculateValueString(this.$field.value);
-	}
-
-	private calculateValueString(value: any) {
-		let valueString: string;
-		if (this.sendValueAsMd5) {
-			if (this.salt) {
-				valueString = md5(this.salt + md5(value));
-			} else {
-				valueString = md5(value);
-			}
-		} else {
-			valueString = value;
-		}
-		return valueString;
+		return this.$field.value;
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {

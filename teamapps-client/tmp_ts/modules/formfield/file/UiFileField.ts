@@ -257,7 +257,7 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 			correspondingItem.data = data;
 			this.commit();
 		} else {
-			this.logger.warn("Could not replace non-existing file item: " + uuid);
+			console.warn("Could not replace non-existing file item: " + uuid);
 		}
 	}
 
@@ -356,7 +356,7 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 			correspondingItem.cancelUpload(false);
 			this.removeItem(correspondingItem);
 		} else {
-			this.logger.warn("Could not cancel upload of non-existing file item");
+			console.warn("Could not cancel upload of non-existing file item");
 		}
 	}
 }

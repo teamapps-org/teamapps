@@ -23,6 +23,9 @@ public class ComponentLibraryRegistry {
 	public ComponentLibraryInfo getComponentLibraryForClientObjectClass(Class<? extends ClientObject> clientObjectClass) {
 		return componentLibraryByClientObjectClass.computeIfAbsent(clientObjectClass, c -> {
 			TeamAppsComponent annotation = c.getAnnotation(TeamAppsComponent.class);
+			if (annotation == null) {
+				throw new IllegalArgumentException("ClientObject class " + clientObjectClass + " is not annotated with @" + TeamAppsComponent.class.getSimpleName());
+			}
 			Class<? extends ComponentLibrary> componentLibraryClass = annotation.library();
 			return getComponentLibraryInternal(componentLibraryClass, () -> {
 				ComponentLibrary componentLibrary1;

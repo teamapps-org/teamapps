@@ -29,13 +29,10 @@ import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {TabPanelItem} from "./TabPanelItem";
 import {LocalViewContainer} from "./LocalViewContainer";
-import * as log from "loglevel";
 import {Component, TeamAppsUiContext} from "teamapps-client-core";
 import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./WorkSpaceLayout";
 
 export class LayoutDescriptorApplyer {
-
-	private static logger: log.Logger = log.getLogger("LocalViewContainer");
 
 	private descriptorItemById: { [itemId: string]: DtoWorkSpaceLayoutItem } = {};
 	private descriptorViewNames: string[] = [];
@@ -221,7 +218,7 @@ export class LayoutDescriptorApplyer {
 					let view = new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component as Component);
 					tabPanelItem.addTab(view, selected);
 				} else {
-					LayoutDescriptorApplyer.logger.error("View item references non-existing view: " + viewName);
+					console.error("View item references non-existing view: " + viewName);
 					return;
 				}
 			}

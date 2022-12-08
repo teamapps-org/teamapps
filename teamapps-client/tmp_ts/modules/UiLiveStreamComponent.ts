@@ -266,11 +266,11 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 	}
 
 	startCustomEmbeddedLiveStreamPlayer(playerEmbedHtml: string, embedContainerId: string): void {
-		this.logger.error("TODO: startCustomEmbeddedLiveStreamPlayer() not yet implemented"); // TODO startCustomEmbeddedLiveStreamPlayer()
+		console.error("TODO: startCustomEmbeddedLiveStreamPlayer() not yet implemented"); // TODO startCustomEmbeddedLiveStreamPlayer()
 	}
 
 	requestInputDeviceInfo(): void {
-		this.logger.error("TODO: requestInputDeviceInfo() not yet implemented"); // TODO requestInputDeviceInfo()
+		console.error("TODO: requestInputDeviceInfo() not yet implemented"); // TODO requestInputDeviceInfo()
 	}
 
 	public setVolume(volume: number) {
@@ -291,7 +291,7 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 		this.doWithAllPlayers(p => {
 			if (p.isPlaying()) {
 				// full size
-				css(p.getMainElement(), {
+				applyCss(p.getMainElement(), {
 					top: "0px",
 					left: "0px",
 					width: "100%",
@@ -299,7 +299,7 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 				});
 			} else {
 				// hide
-				css(p.getMainElement(), {
+				applyCss(p.getMainElement(), {
 					top: "0px",
 					left: "-100000px",
 					right: "500px",

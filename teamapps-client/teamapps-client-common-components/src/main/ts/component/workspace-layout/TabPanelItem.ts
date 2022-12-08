@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as log from "loglevel";
 import {Component, generateUUID, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoTabPanelTabStyle, DtoViewGroupPanelState, DtoWindowButtonType} from "../../generated";
 import {TabPanel} from "../TabPanel";
@@ -40,7 +39,6 @@ class MinimizableTabPanel extends TabPanel {
 }
 
 export class TabPanelItem implements ItemTreeItem<TabPanel> {
-	private static logger = log.getLogger("DtoWorkSpaceLayout.TabPanelItem");
 
 	public readonly id: string;
 	public readonly persistent: boolean;

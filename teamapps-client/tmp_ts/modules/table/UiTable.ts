@@ -230,7 +230,7 @@ export class UiTable extends AbstractComponent<DtoTable> implements UiTableComma
 		}
 
 		if (config.hideHeaders) {
-			css($table.querySelector<HTMLElement>(":scope .slick-header-columns"), {
+			applyCss($table.querySelector<HTMLElement>(":scope .slick-header-columns"), {
 				height: 0,
 				border: "none"
 			});
@@ -298,7 +298,7 @@ export class UiTable extends AbstractComponent<DtoTable> implements UiTableComma
 				if (item) { // may be undefined if this is a new row!
 					let $buttonElement = $(e.target).closest(".UiButton");
 					if (uiField && uiField instanceof UiButton && $buttonElement.length > 0) {
-						this.logger.warn("TODO: handle button click, especially in case of a dropdown...");
+						console.warn("TODO: handle button click, especially in case of a dropdown...");
 						// uiField.onValueChanged.fire(null);
 						// this.dropDown.setContentComponent(null);
 						// this.dropDown.open($buttonElement, {
@@ -309,7 +309,7 @@ export class UiTable extends AbstractComponent<DtoTable> implements UiTableComma
 						let $templateWrapper = $((<any>e).target).closest(".custom-entry-template-wrapper");
 						if ($templateWrapper.length > 0) {
 							let index = $templateWrapper.parent().index($templateWrapper);
-							this.logger.warn("TODO: handle file field click");
+							console.warn("TODO: handle file field click");
 						}
 					}
 					if (UiField) {
@@ -368,7 +368,7 @@ export class UiTable extends AbstractComponent<DtoTable> implements UiTableComma
 
 		if (config.selectionFrame) {
 			this.$selectionFrame = parseHtml(`<div class="UiTable-selection-frame">`);
-			css(this.$selectionFrame, {
+			applyCss(this.$selectionFrame, {
 				border: `${this._config.selectionFrame.borderWidth}px solid ${(this._config.selectionFrame.color)}`,
 				boxShadow: `0 0 ${this._config.selectionFrame.shadowWidth}px 0 rgba(0, 0, 0, .5), 0 0 ${this._config.selectionFrame.glowingWidth}px 0 ${(this._config.selectionFrame.color)}`,
 				transition: `top ${this._config.selectionFrame.animationDuration}ms, left ${this._config.selectionFrame.animationDuration}ms, right ${this._config.selectionFrame.animationDuration}ms, width ${this._config.selectionFrame.animationDuration}ms, height ${this._config.selectionFrame.animationDuration}ms`
@@ -590,7 +590,7 @@ export class UiTable extends AbstractComponent<DtoTable> implements UiTableComma
 	private createCellFormatter(field: UiField) {
 		const createInnerCellFormatter = () => {
 			if (field instanceof UiCompositeField) {
-				this.logger.warn("TODO: create cell formatter for UiCompositeField!");
+				console.warn("TODO: create cell formatter for UiCompositeField!");
 				return null;
 				// return (row: number, cell: number, value: any, columnDef: Slick.Column<TableDataProviderItem>, dataContext: TableDataProviderItem) => {
 				// return field.getReadOnlyHtml(field as DtoCompositeField, {_type: "UiRecordValue", value: dataContext}, this._context, columnDef.width + 1);
@@ -909,7 +909,7 @@ export class UiTable extends AbstractComponent<DtoTable> implements UiTableComma
 		let activeCellNode = this._grid.getActiveCellNode();
 		if (activeCellNode == null) {
 			manipulateWithoutTransitions(this.$selectionFrame, () => {
-				css(this.$selectionFrame, {
+				applyCss(this.$selectionFrame, {
 					top: -10000,
 					left: -10000
 				});
@@ -926,7 +926,7 @@ export class UiTable extends AbstractComponent<DtoTable> implements UiTableComma
 					width: (selectionFrame.fullRow ? $($cell.parentElement).width() + 2 * selectionFrame.borderWidth + 1 : $($cell.parentElement).width() - parseInt(computedStyle.left) - parseInt(computedStyle.right) + 2 * selectionFrame.borderWidth - 1) + "px",
 					height: ($cell.offsetHeight + 2 * selectionFrame.borderWidth - this._config.rowBorderWidth) + "px"
 				};
-				css(this.$selectionFrame, cssValues);
+				applyCss(this.$selectionFrame, cssValues);
 			}, animate);
 		}
 	}

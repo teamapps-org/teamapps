@@ -42,26 +42,7 @@ public class PasswordField extends TextField {
 		uiField.setShowClearButton(isShowClearButton());
 		uiField.setPlaceholderText(getEmptyText());
 		uiField.setAutofill(isAutofill());
-		uiField.setSendValueAsMd5(sendValueAsMd5);
-		uiField.setSalt(salt);
 		return uiField;
 	}
 
-	public boolean isSendValueAsMd5() {
-		return sendValueAsMd5;
-	}
-
-	public void setSendValueAsMd5(boolean sendValueAsMd5) {
-		this.sendValueAsMd5 = sendValueAsMd5;
-		sendCommandIfRendered(() -> new DtoPasswordField.SetSendValueAsMd5Command(sendValueAsMd5));
-	}
-
-	public String getSalt() {
-		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
-		sendCommandIfRendered(() -> new DtoPasswordField.SetSaltCommand(salt));
-	}
 }

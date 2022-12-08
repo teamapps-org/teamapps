@@ -29,6 +29,7 @@ import {
 	DtoNavigationBarEventSource
 } from "../generated";
 import {MultiProgressDisplay} from "./MultiProgressDisplay";
+import {slideDown, slideUp} from "../util/slide";
 
 
 interface Button {
@@ -142,7 +143,7 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 			this.currentFanOutComponent.getMainElement().classList.remove("pseudo-hidden");
 			this.$fanOutContainerWrapper.classList.add("open");
 			this.$fanOutContainerWrapper.style.bottom = outerHeightIncludingMargins(this.$bar) + "px";
-			$(this.$fanOutContainerWrapper).slideDown(200);
+			slideDown(this.$fanOutContainerWrapper);
 			this.onResize();
 			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement([this.getMainElement(), this.$fanOutContainerWrapper], e => {
 				this.hideFanOutComponent();
@@ -159,7 +160,7 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 
 	public hideFanOutComponent() {
 		this.$fanOutContainerWrapper.classList.remove("open");
-		$(this.$fanOutContainerWrapper).slideUp(200);
+		slideUp(this.$fanOutContainerWrapper);
 		this.currentFanOutComponent = null;
 		this.fanoutClickOutsideHandle.cancel();
 	}

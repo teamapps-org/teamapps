@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as log from "loglevel";
 import {AbstractComponent, bind, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoField,
@@ -34,12 +33,6 @@ import {
 } from "../../generated";
 import {createPopper, Instance as Popper} from '@popperjs/core';
 import {prependChild} from "../../Common";
-import Logger = log.Logger;
-
-
-export interface ValueChangeEventData {
-	value: any
-}
 
 interface FieldMessage {
 	message: DtoFieldMessage,
@@ -59,8 +52,6 @@ export abstract class AbstractField<C extends DtoField = DtoField, V = any> exte
 		[DtoFieldEditingMode.DISABLED]: "disabled",
 		[DtoFieldEditingMode.READONLY]: "readonly"
 	};
-
-	protected logger: Logger = log.getLogger(((<any>(this.constructor)).name || this.constructor.toString().match(/\w+/g)[1]));
 
 	private committedValue: V;
 
@@ -202,10 +193,10 @@ export abstract class AbstractField<C extends DtoField = DtoField, V = any> exte
 
 	public setCommittedValue(v: V): void {
 		if (!this.isValidData(v)) {
-			this.logger.error(this.constructor.toString().match(/\w+/g)[1] + ": Invalid data: " + JSON.stringify(v));
+			console.error(this.constructor.toString().match(/\w+/g)[1] + ": Invalid data: " + JSON.stringify(v));
 			return;
 		}
-		this.logger.debug("setCommittedValue(): " + JSON.stringify(v));
+		console.debug("setCommittedValue(): " + JSON.stringify(v));
 		this.committedValue = v != null ? v : this.getDefaultValue();
 		this.displayCommittedValue();
 	}
@@ -215,7 +206,7 @@ export abstract class AbstractField<C extends DtoField = DtoField, V = any> exte
 	}
 
 	private fireCommittedChangeEvent(): void {
-		this.logger.trace("firing committed change event: " + JSON.stringify(this.committedValue));
+		console.trace("firing committed change event: " + JSON.stringify(this.committedValue));
 		this.onValueChanged.fire({
 			value: this.convertValueForSendingToServer(this.committedValue)
 		});
@@ -278,7 +269,7 @@ export abstract class AbstractField<C extends DtoField = DtoField, V = any> exte
 					$focusableElement.setAttribute("tabindex", "-1");
 					break;
 				default:
-					log.getLogger("DtoField").error("unknown editing mode! " + field.getEditingMode());
+					console.error("unknown editing mode! " + field.getEditingMode());
 			}
 		}
 	}

@@ -20,8 +20,5 @@
   },
   "include": [
     "src/main/ts/**/*"
-  ],
-//  "references": [
-//    {"teamapps-client-communication": "../teamapps-client-communication"}
-//  ]
+  ]
 }

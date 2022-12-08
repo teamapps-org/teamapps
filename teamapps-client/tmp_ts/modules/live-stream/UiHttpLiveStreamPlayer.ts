@@ -58,7 +58,7 @@ export class UiHttpLiveStreamPlayer extends AbstractComponent<DtoHttpLiveStreamP
 		this.video.addEventListener("load", () => this.video.play());
 		['loadedmetadata', 'loadstart', 'loadeddata', 'playing', 'stalled', 'suspend', 'waiting', 'canplay', 'canplaythrough'].forEach(eventName => {
 			this.video.addEventListener(eventName, () => {
-				// this.logger.debug(eventName + "; videoTracks: " + this.video.videoTracks.length + "; audioTracks: " + this.video.audioTracks.length);
+				// console.debug(eventName + "; videoTracks: " + this.video.videoTracks.length + "; audioTracks: " + this.video.audioTracks.length);
 				this.updateState();
 			})
 		});
@@ -84,7 +84,7 @@ export class UiHttpLiveStreamPlayer extends AbstractComponent<DtoHttpLiveStreamP
 		clearTimeout(this.resetTimer);
 		this.resetTimer = null;
 		let shouldRetry = this.shouldBePlayingUnlessUserPressedPause && !this.isActuallyReadyToPlay();
-		this.logger.debug("retryPlaying: " + shouldRetry);
+		console.debug("retryPlaying: " + shouldRetry);
 		if (shouldRetry) {
 			// this.video.pause();
 			// $(this.video)[0].innerHTML = '';
@@ -126,22 +126,22 @@ export class UiHttpLiveStreamPlayer extends AbstractComponent<DtoHttpLiveStreamP
 	}
 
 	private failed(e: ErrorEvent) {
-		this.logger.warn('Error while playing video: ' + this.video.error.code);
+		console.warn('Error while playing video: ' + this.video.error.code);
 		switch (this.video.error.code) {
 			case MediaError.MEDIA_ERR_ABORTED:
-				this.logger.error('Video playback was aborted.');
+				console.error('Video playback was aborted.');
 				break;
 			case MediaError.MEDIA_ERR_NETWORK:
-				this.logger.error('A network error caused the video download to fail part-way.');
+				console.error('A network error caused the video download to fail part-way.');
 				break;
 			case MediaError.MEDIA_ERR_DECODE:
-				this.logger.error('The video playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+				console.error('The video playback was aborted due to a corruption problem or because the video used features your browser did not support.');
 				break;
 			case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
-				this.logger.error('The video could not be loaded, either because the server or network failed or because the format is not supported.');
+				console.error('The video could not be loaded, either because the server or network failed or because the format is not supported.');
 				break;
 			default:
-				this.logger.error('An unknown error occurred.');
+				console.error('An unknown error occurred.');
 				break;
 		}
 		clearTimeout(this.resetTimer);

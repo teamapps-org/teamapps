@@ -345,7 +345,7 @@ export class UiCalendar extends AbstractComponent<DtoCalendar> implements UiCale
 	}
 
 	public clearCalendar() {
-		this.logger.debug(`clearCalendar()`);
+		console.debug(`clearCalendar()`);
 		this.eventSource.removeAllEvents();
 		this.refreshEventsDisplay();
 	}
@@ -431,7 +431,7 @@ class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 		// 	queryEnd = 0;
 		// }
 		// if (queryStart !== queryEnd) {
-		// this.logger.debug("DataNeededEvent: " + query.start.toUTCString() + " - " + query.start.toUTCString());
+		// console.debug("DataNeededEvent: " + query.start.toUTCString() + " - " + query.start.toUTCString());
 		// this.onDataNeeded.fire(EventFactory.createUiCalendar_DataNeededEvent(this.componentId, queryStart, queryEnd));
 		// }
 
@@ -443,26 +443,26 @@ class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 		}
 
 		let displayedInterval: Interval = [+query.start, +query.end];
-		this.logger.debug(`displayed: ${displayedInterval}`);
+		console.debug(`displayed: ${displayedInterval}`);
 		let events = this.cachedEvents.filter(event => {
 			let eventInterval: Interval = [+event.start, +event.end];
 			let matches = IntervalManager.intervalsOverlap(displayedInterval, eventInterval);
 			if (matches) {
-				this.logger.debug(`matching: ${eventInterval}`);
+				console.debug(`matching: ${eventInterval}`);
 			}
 			return matches;
 		});
-		this.logger.debug(`Returning ${events.length} events`);
+		console.debug(`Returning ${events.length} events`);
 		successCallback(events);
 	}
 
 	public addEvents(start: number, end: number, newEvents: EventInput[]) {
 		newEvents.forEach(e => {
 			if (e.end < start || e.start > end) {
-				this.logger.error(`Event ${e.id} (${e.start}-${e.end}) is outside of specified start/end range (${new Date(start).toUTCString()}-${new Date(end).toUTCString()})! This will very probably lead to inconsistent client-side behaviour!`)
+				console.error(`Event ${e.id} (${e.start}-${e.end}) is outside of specified start/end range (${new Date(start).toUTCString()}-${new Date(end).toUTCString()})! This will very probably lead to inconsistent client-side behaviour!`)
 			}
 			if (e.end.valueOf() <= e.start.valueOf()) {
-				this.logger.warn(`Event ${e.id} has zero or negative duration! Changing to one millisecond!`);
+				console.warn(`Event ${e.id} has zero or negative duration! Changing to one millisecond!`);
 				e.end = new Date(+(e.start) + 1);
 			}
 		});
@@ -475,7 +475,7 @@ class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 	}
 
 	public addEvent(newEvent: EventInput) {
-		this.logger.debug("Adding 1 event");
+		console.debug("Adding 1 event");
 		this.addEvents(null, null, [newEvent]);
 	}
 

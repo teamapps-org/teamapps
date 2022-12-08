@@ -33,7 +33,8 @@ import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContex
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
-import {animateCSS, Constants, css} from "../Common";
+import {animateCSS, Constants} from "../Common";
+import {applyCss} from "../util/cssUtil";
 
 export interface DtoWindowListener {
 	onWindowClosed: (window: Window, animationDuration: number) => void;
@@ -193,7 +194,7 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 	}
 
 	public setSize(width: number, height: number): void {
-		css(this.$panelWrapper, {
+		applyCss(this.$panelWrapper, {
 			width: width ? width + "px" : "100%",
 			height: height === 0 ? "100%" : height < 0 ? "auto" : height + "px"
 		});

@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as log from "loglevel";
 import {Component} from "teamapps-client-core";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
@@ -33,8 +32,6 @@ export interface ItemTreeItem<C extends Component = Component> {
 }
 
 export class ItemTree {
-	private static logger: log.Logger = log.getLogger("ItemTree");
-
 	private _rootItem: ItemTreeItem<Component>;
 	private _viewsByName: { [viewName: string]: View } = {};
 
@@ -71,7 +68,7 @@ export class ItemTree {
 	getViewByName(viewName: string): View {
 		let view = this._viewsByName[viewName];
 		if (view == null) {
-			ItemTree.logger.warn(`Cannot find view with name ${viewName}.`);
+			console.warn(`Cannot find view with name ${viewName}.`);
 		}
 		return view;
 	}

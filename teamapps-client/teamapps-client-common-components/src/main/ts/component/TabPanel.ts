@@ -39,6 +39,8 @@ import {
 } from "../generated";
 import {insertBefore, maximizeComponent, prependChild} from "../Common";
 import {StaticIcons} from "../util/StaticIcons";
+import {positionDropdown, positionDropdownWithAutoUpdate} from "../util/dropdownPosition";
+import {contentWidth} from "../util/cssUtil";
 
 
 interface Tab {
@@ -150,15 +152,11 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 		}
 
 		this.$dropDownButton.addEventListener("click", () => {
-			if ($(this.$dropDown).is(':visible')) {
+			if (!this.$dropDown.classList.contains('hidden')) {
 				this.$dropDown.classList.add("hidden");
 			} else {
 				this.$dropDown.classList.remove("hidden");
-				$(this.$dropDown).position({
-					my: "right top",
-					at: "right bottom",
-					of: this.$dropDownButton
-				});
+				positionDropdown(this.$dropDownButton, this.$dropDown);
 			}
 		});
 		this.$dropDownButton.addEventListener("blur", () => {
@@ -570,7 +568,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 		if (this.$tabBar.classList.contains('hidden')) {
 			return;
 		}
-		let availableWidth = $(this.$tabsContainer).width() - this.$dropDownButton.offsetWidth - this.$toolTabButton.offsetWidth;
+		let availableWidth = contentWidth(this.$tabsContainer) - this.$dropDownButton.offsetWidth - this.$toolTabButton.offsetWidth;
 		let sumOfButtonWidths = 0;
 		this.getAllTabs().forEach(tab => {
 			let tabFilled = !this.tabIsDeFactoEmpty(tab);

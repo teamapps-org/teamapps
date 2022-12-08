@@ -21,7 +21,7 @@
 import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
-import {defaultSpinnerTemplate, doOnceOnClickOutsideElement, getScrollParent, insertAfter} from "../../../Common";
+import {defaultSpinnerTemplate, doOnceOnClickOutsideElement, insertAfter} from "../../../Common";
 import {
 	createDtoDropDownButtonClickInfo,
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
@@ -33,6 +33,7 @@ import {
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
 import {AbstractToolContainer} from "../AbstractToolContainer";
 import {ToolAccordionButton} from "./ToolAccordionButton";
+import {slideDown, slideUp} from "../../../util/slide";
 
 export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> implements DtoToolAccordionCommandHandler, DtoToolAccordionEventSource {
 
@@ -204,14 +205,14 @@ class DtoButtonGroup {
 				if (button.$dropDown == null) {
 					this.createDropDown(button);
 				}
-				let dropdownVisible = $(button.$dropDown).is(":visible");
+				let dropdownVisible = !button.$dropDown.classList.contains('hidden');
 				dropdownClickInfo = createDtoDropDownButtonClickInfo(!dropdownVisible, button.dropDownComponent != null);
 				if (!dropdownVisible) {
 					if (button.dropDownComponent != null) {
 						button.$dropDown.appendChild(button.dropDownComponent.getMainElement());
 					}
 					this.showDropDown(button);
-					doOnceOnClickOutsideElement(button.getMainDomElement(), e => $(button.$dropDown).slideUp(200))
+					doOnceOnClickOutsideElement(button.getMainDomElement(), e => slideUp(button.$dropDown))
 				} else {
 					this.hideDropDown(button)
 				}
@@ -244,43 +245,19 @@ class DtoButtonGroup {
 	private showDropDown(button: ToolAccordionButton) {
 		console.debug(button.$dropDown.offsetHeight);
 		const me = this;
-		button.$dropDown.style.display = "none";
 		this.insertDropdownUnderButtonRow(button);
 
-		$(button.$dropDown).slideDown({
-			duration: 200,
-			progress: (animation, progress: number, remainingMs: number) => {
-				let buttonHeight = button.getMainDomElement().offsetHeight;
-				let dropDownHeight = button.$dropDown.offsetHeight;
-				let totalInterestingPartHeight = buttonHeight + dropDownHeight;
-				let buttonY = button.getMainDomElement().getBoundingClientRect().top - me.getMainDomElement().closest('.DtoToolAccordion').getBoundingClientRect().top;
-				let $scrollContainer = getScrollParent(me.getMainDomElement(), true);
-				let scrollY = $scrollContainer.scrollTop();
-				let viewPortHeight = $scrollContainer[0].offsetHeight;
-
-				if (scrollY < buttonY + totalInterestingPartHeight - viewPortHeight) {
-					scrollY = buttonY + totalInterestingPartHeight - viewPortHeight;
-					$scrollContainer.scrollTop(scrollY);
-					console.debug(scrollY);
-				}
-				if (buttonY < scrollY) { // TODO scrollY
-					$scrollContainer.scrollTop(buttonY);
-				}
-			}
-		});
-		$(button.$dropDownSourceButtonIndicator).position({
-			my: "center bottom",
-			at: "center bottom",
-			of: button.getMainDomElement()
+		slideDown(button.$dropDown).finally(() => {
+			button.$dropDown.scrollIntoView({behavior: "smooth", block: "nearest"})
 		});
 	}
 
 	private hideDropDown(button: ToolAccordionButton) {
-		$(button.$dropDown).slideUp(200);
+		slideUp(button.$dropDown);
 	}
 
 	private insertDropdownUnderButtonRow(button: ToolAccordionButton) {
-		let $row = this.$buttonRows.filter($row => $.contains($row, button.getMainDomElement()))[0];
+		let $row = this.$buttonRows.filter($row => $row.contains(button.getMainDomElement()))[0];
 		insertAfter(button.$dropDown, $row);
 	}
 
@@ -306,7 +283,7 @@ class DtoButtonGroup {
 		if (component != null) {
 			if (button.$dropDown != null) {
 				button.$dropDown.querySelectorAll<HTMLElement>(":scope :not(.source-button-indicator)").forEach(b => b.remove()); // remove spinner or old component, if present...
-				if ($(button.$dropDown).is(":visible")) {
+				if (!button.$dropDown.classList.contains('hidden')) {
 					button.$dropDown.appendChild(component.getMainElement());
 				}
 			}

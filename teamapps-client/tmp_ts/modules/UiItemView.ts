@@ -104,7 +104,7 @@ export class UiItemView extends AbstractComponent<DtoItemView> implements UiItem
 	public refreshItemGroup(itemGroupConfig: DtoItemViewItemGroup): void {
 		let oldGroup = this.groupsByGroupId[itemGroupConfig.id];
 		if (!oldGroup) {
-			this.logger.error(`Could not refresh non-existing group "${itemGroupConfig.id}"!`);
+			console.error(`Could not refresh non-existing group "${itemGroupConfig.id}"!`);
 			return;
 		}
 		const newGroup = this.createItemGroup(itemGroupConfig);
@@ -122,7 +122,7 @@ export class UiItemView extends AbstractComponent<DtoItemView> implements UiItem
 	public addItem(groupId: string, item: DtoIdentifiableClientRecord): void {
 		const itemGroup = this.groupsByGroupId[groupId];
 		if (!itemGroup) {
-			this.logger.error(`Cannot find group ${groupId} in UiItemView ` + this._config.id);
+			console.error(`Cannot find group ${groupId} in UiItemView ` + this._config.id);
 			return;
 		}
 		itemGroup.addItem(item);
@@ -131,7 +131,7 @@ export class UiItemView extends AbstractComponent<DtoItemView> implements UiItem
 	public removeItem(groupId: string, itemId: number): void {
 		const itemGroup = this.groupsByGroupId[groupId];
 		if (!itemGroup) {
-			this.logger.error(`Cannot find group ${groupId} in UiItemView ` + this._config.id);
+			console.error(`Cannot find group ${groupId} in UiItemView ` + this._config.id);
 			return;
 		}
 		itemGroup.removeItem(itemId);

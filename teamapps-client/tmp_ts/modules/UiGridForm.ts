@@ -103,7 +103,7 @@ export class UiGridForm extends AbstractComponent<DtoGridForm> implements UiGrid
 		const availableWidth = this.getWidth();
 		const policyIndex = this.layoutPoliciesFromLargeToSmall.findIndex(p => p.minWidth <= availableWidth);
 		if (policyIndex === -1) {
-			this.logger.warn(`No applicable layout policy found for width ${availableWidth}. Applying layout with the largest minWidth.`);
+			console.warn(`No applicable layout policy found for width ${availableWidth}. Applying layout with the largest minWidth.`);
 			return this.layoutPoliciesFromLargeToSmall.length - 1;
 		}
 		return policyIndex;
@@ -361,9 +361,9 @@ class UiFormSection {
 		if (animate) {
 			if (!this.collapsed) {
 				this.$body.classList.remove('hidden');
-				$(this.$body).slideDown(200);
+				slideDown(this.$body);
 			} else {
-				$(this.$body).slideUp(200);
+				slideUp(this.$body);
 			}
 		} else {
 			this.$body.classList.toggle('hidden', collapsed);

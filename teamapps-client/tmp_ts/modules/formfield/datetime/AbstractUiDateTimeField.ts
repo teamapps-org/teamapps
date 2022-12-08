@@ -130,12 +130,12 @@ export abstract class DtoAbstractDateTimeField<C extends DtoAbstractDateTimeFiel
 
 	setFavorPastDates(favorPastDates: boolean): void {
 		// TODO
-		this.logger.warn("TODO: implement DtoAbstractDateTimeField.setFavorPastDates()")
+		console.warn("TODO: implement DtoAbstractDateTimeField.setFavorPastDates()")
 	}
 
 	setShowDropDownButton(showDropDownButton: boolean): void {
 		// TODO
-		this.logger.warn("TODO: implement DtoAbstractDateTimeField.setShowDropDownButton()")
+		console.warn("TODO: implement DtoAbstractDateTimeField.setShowDropDownButton()")
 	}
 
 }

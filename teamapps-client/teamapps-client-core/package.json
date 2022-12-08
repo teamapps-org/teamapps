@@ -22,6 +22,8 @@
     "concurrently": "^7.6.0",
     "cross-var": "^1.1.0",
     "esbuild": "^0.15.13",
+    "esbuild-plugin-alias": "^0.2.1",
+    "esbuild-plugin-less": "^1.1.11",
     "onchange": "^7.1.0",
     "replace-in-file": "^6.3.5",
     "rimraf": "^3.0.2",
@@ -29,6 +31,9 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
+    "jstz": "^2.1.1",
+    "moment-timezone": "^0.5.39",
+    "nosleep.js": "^0.12.0",
     "teamapps-client-communication": "workspace:*"
   }
 }

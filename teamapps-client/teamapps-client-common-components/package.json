@@ -29,8 +29,12 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.0.9",
+    "@popperjs/core": "^2.11.6",
     "animate.css": "^4.1.1",
     "bootstrap-icons": "^1.10.2",
-    "teamapps-client-communication": "workspace:*"
+    "mustache": "^4.2.0",
+    "teamapps-client-communication": "workspace:*",
+    "teamapps-client-core": "workspace:*"
   }
 }

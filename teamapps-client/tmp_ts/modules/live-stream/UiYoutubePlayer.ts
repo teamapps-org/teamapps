@@ -124,7 +124,7 @@ export class UiYoutubePlayer extends AbstractComponent<DtoYoutubePlayer> impleme
 
 	private onPlayerStateChange(event: YT.OnStateChangeEvent) {
 		if (event.data == YT.PlayerState.PLAYING) {
-			this.logger.debug("Youtube playing...")
+			console.debug("Youtube playing...")
 		}
 	}
 

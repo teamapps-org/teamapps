@@ -20,7 +20,6 @@
 
 import {AbstractComponent, bind, capitalizeFirstLetter, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
-import {css} from "../Common";
 import {
 	DtoSplitDirection,
 	DtoSplitPane,
@@ -29,6 +28,7 @@ import {
 	DtoSplitPaneEventSource,
 	DtoSplitSizePolicy
 } from "../generated";
+import {applyCss} from "../util/cssUtil";
 
 export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptyable, DtoSplitPaneCommandHandler, DtoSplitPaneEventSource {
 	public readonly onSplitResized: TeamAppsEvent<DtoSplitPane_SplitResizedEvent> = new TeamAppsEvent<DtoSplitPane_SplitResizedEvent>();
@@ -233,39 +233,39 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 		const referenceChildSize = this.referenceChildSize;
 
 		if (this.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
-			css(this._$firstChildContainerWrapper, {
+			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "" + referenceChildSize,
 				"flex-shrink": "" + referenceChildSize,
 				"flex-basis": "1px",
 				[this._minSizeAttribute]: this.firstChildMinSize
 			});
-			css(this._$lastChildContainerWrapper, {
+			applyCss(this._$lastChildContainerWrapper, {
 				"flex-grow": "" + (1 - referenceChildSize),
 				"flex-shrink": "" + (1 - referenceChildSize),
 				"flex-basis": "1px",
 				[this._minSizeAttribute]: this.lastChildMinSize
 			});
 		} else if (this.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
-			css(this._$firstChildContainerWrapper, {
+			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "0",
 				"flex-shrink": "1",
 				"flex-basis": referenceChildSize + 'px',
 				[this._minSizeAttribute]: this.firstChildMinSize
 			});
-			css(this._$lastChildContainerWrapper, {
+			applyCss(this._$lastChildContainerWrapper, {
 				"flex-grow": "1",
 				"flex-shrink": "1",
 				"flex-basis": '1px',
 				[this._minSizeAttribute]: this.lastChildMinSize
 			});
 		} else if (this.sizePolicy === DtoSplitSizePolicy.LAST_FIXED) {
-			css(this._$firstChildContainerWrapper, {
+			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "1",
 				"flex-shrink": "1",
 				"flex-basis": '1px',
 				[this._minSizeAttribute]: this.firstChildMinSize
 			});
-			css(this._$lastChildContainerWrapper, {
+			applyCss(this._$lastChildContainerWrapper, {
 				"flex-grow": "0",
 				"flex-shrink": "1",
 				"flex-basis": referenceChildSize + 'px',

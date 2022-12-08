@@ -98,17 +98,17 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 		this.signalingWsConnection = new WebSocket(this.settings.signalingUrl);
 		this.signalingWsConnection.binaryType = 'arraybuffer';
 		this.signalingWsConnection.onopen = () => {
-			this.logger.debug("this.playingSignalingWsConnection.onopen");
+			console.debug("this.playingSignalingWsConnection.onopen");
 			this.peerConnection = new RTCPeerConnection(UiWebRtcPlayer.PEER_CONNECTION_CONFIG);
 			this.peerConnection.onicecandidate = this.gotIceCandidate.bind(this);
 			this.peerConnection.oniceconnectionstatechange = this.onPlayingIceConnectionStateChange.bind(this);
 			(this.peerConnection as any).onaddstream = this.gotRemoteStream.bind(this);
 			(this.peerConnection as any).ontrack = this.gotRemoteTrack.bind(this);
-			this.logger.debug("wsURL: " + this.settings.signalingUrl);
+			console.debug("wsURL: " + this.settings.signalingUrl);
 			this.sendPlayGetOffer(this.settings.wowzaApplicationName, this.settings.streamName);
 		};
 		this.signalingWsConnection.onmessage = (evt) => {
-			this.logger.debug("this.playingSignalingWsConnection.onmessage: " + evt.data);
+			console.debug("this.playingSignalingWsConnection.onmessage: " + evt.data);
 			const msgJSON = JSON.parse(evt.data);
 			const msgStatus = Number(msgJSON['status']);
 
@@ -120,7 +120,7 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 				}
 
 				if (msgJSON.sdp !== undefined) {
-					this.logger.debug('sdp: ' + JSON.stringify(msgJSON.sdp));
+					console.debug('sdp: ' + JSON.stringify(msgJSON.sdp));
 					this.peerConnection.setRemoteDescription(new RTCSessionDescription(msgJSON.sdp))
 						.then(() => {
 							this.peerConnection.createAnswer()
@@ -130,12 +130,12 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 				const iceCandidates = msgJSON['iceCandidates'];
 				if (iceCandidates !== undefined) {
 					for (let index in iceCandidates) {
-						this.logger.debug('iceCandidates: ' + JSON.stringify(iceCandidates[index]));
+						console.debug('iceCandidates: ' + JSON.stringify(iceCandidates[index]));
 						this.peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidates[index]));
 					}
 				}
 			} else {
-				this.logger.error(msgJSON.statusDescription);
+				console.error(msgJSON.statusDescription);
 				setTimeout(() => this.sendPlayGetOffer(this.settings.wowzaApplicationName, this.settings.streamName), 1000);
 			}
 
@@ -146,13 +146,13 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 		};
 
 		this.signalingWsConnection.onclose = () => {
-			this.logger.debug("this.playingSignalingWsConnection.onclose");
+			console.debug("this.playingSignalingWsConnection.onclose");
 			this.signalingWsConnection = null;
 		};
 
 		this.signalingWsConnection.onerror = (evt) => {
-			this.logger.error("this.playingSignalingWsConnection.onerror: ", evt);
-			this.logger.error('WebSocket connection failed: ' + this.settings.signalingUrl);
+			console.error("this.playingSignalingWsConnection.onerror: ", evt);
+			console.error('WebSocket connection failed: ' + this.settings.signalingUrl);
 			this.signalingWsConnection = null;
 			setTimeout(() => this.reconnectForPlaying(), 1000)
 		};
@@ -174,12 +174,12 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 		this.remoteVideo.src && (this.remoteVideo.src = "");
 		this.remoteVideo.srcObject = null;
 
-		this.logger.debug("stopPlay");
+		console.debug("stopPlay");
 	}
 
 	private sendPlayGetOffer(wowzaApplicationName: string, streamName: string) {
 		this.userData = {param1: "value1"}; // TODO delete or make use of...
-		this.logger.debug("sendPlayGetOffer: " + JSON.stringify(this.streamInfo));
+		console.debug("sendPlayGetOffer: " + JSON.stringify(this.streamInfo));
 		if (this.signalingWsConnection != null) { // TODO make this "thread-safe"
 			this.signalingWsConnection.send('{"direction":"play", "command":"getOffer", "streamInfo":' + JSON.stringify(this.streamInfo) + ', "userData":' + JSON.stringify(this.userData) + '}');
 		}
@@ -187,7 +187,7 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 
 	private gotIceCandidate(event: RTCPeerConnectionIceEvent) {
 		if (event.candidate != null) {
-			this.logger.debug('gotIceCandidate: ' + JSON.stringify({'ice': event.candidate}));
+			console.debug('gotIceCandidate: ' + JSON.stringify({'ice': event.candidate}));
 		}
 	}
 
@@ -195,7 +195,7 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 		let peerConnection = event.currentTarget as RTCPeerConnection;
 		let state = peerConnection.iceConnectionState;
 		this.iceConnectionState = state;
-		this.logger.debug("playingIceConnectionState: " + state);
+		console.debug("playingIceConnectionState: " + state);
 
 		if (state === "failed") {
 			setTimeout(() => this.reconnectForPlaying(), 1000);
@@ -211,20 +211,20 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 	}
 
 	private gotDescriptionForPlaying(description: RTCSessionDescription) {
-		this.logger.debug('gotDescription');
+		console.debug('gotDescription');
 		this.peerConnection.setLocalDescription(description)
 			.then(() => {
-				this.logger.debug('sendAnswer');
+				console.debug('sendAnswer');
 
 				this.signalingWsConnection.send('{"direction":"play", "command":"sendResponse", "streamInfo":' + JSON.stringify(this.streamInfo) + ', "sdp":' + JSON.stringify(description) + ', "userData":' + JSON.stringify(this.userData) + '}');
 
 			}, () => {
-				this.logger.debug('set description error')
+				console.debug('set description error')
 			});
 	}
 
 	private gotRemoteTrack(event: any) {
-		this.logger.debug('gotRemoteTrack: kind:' + event.track.kind + ' stream:' + event.streams[0]);
+		console.debug('gotRemoteTrack: kind:' + event.track.kind + ' stream:' + event.streams[0]);
 		this.remoteVideo.muted = false;
 		try {
 			this.remoteVideo.srcObject = event.streams[0];
@@ -234,7 +234,7 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 	}
 
 	private gotRemoteStream(event: any) {
-		// this.logger.debug('gotRemoteStream: ' + event.stream);
+		// console.debug('gotRemoteStream: ' + event.stream);
 		// this.remoteVideo.muted = false;
 		// try {
 		// 	this.remoteVideo.srcObject = event.stream;
@@ -244,7 +244,7 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 	}
 
 	private errorHandler(error: any) {
-		this.logger.error(error);
+		console.error(error);
 	}
 
 	public setBackgroundImageUrl(backgroundImageUrl: string) {

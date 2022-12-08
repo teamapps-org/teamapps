@@ -54,7 +54,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 	private $wrapper: HTMLElement;
 
 	protected initialize(config: DtoCompositeField, context: TeamAppsUiContext) {
-		this.logger.debug('initializing');
+		console.debug('initializing');
 		this.subFields = [];
 		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(config);
 		subFieldSkeletons.forEach(subFieldSkeleton => {
@@ -79,10 +79,10 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 				let nextFocusableField = this.getNextFocusableField(e.shiftKey ? -1 : 1);
 				if (nextFocusableField != null) {
 					nextFocusableField.focus();
-					this.logger.trace("navigated to " + nextFocusableField.getMainInnerDomElement());
+					console.trace("navigated to " + nextFocusableField.getMainInnerDomElement());
 					return false;
 				} else {
-					this.logger.trace("not navigated");
+					console.trace("not navigated");
 				}
 			}
 		});
@@ -112,10 +112,10 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 		let currentIndex = sortedFocusableSubFields.indexOf(activeField);
 		let newIndex = currentIndex + navDirection;
 		if (newIndex >= 0 && newIndex < sortedFocusableSubFields.length) {
-			this.logger.trace(`currentIndex: ${currentIndex}; current: ${this.subFieldToString(sortedFocusableSubFields[currentIndex])}; newIndex: ${newIndex}; new: ${this.subFieldToString(sortedFocusableSubFields[newIndex])}`);
+			console.trace(`currentIndex: ${currentIndex}; current: ${this.subFieldToString(sortedFocusableSubFields[currentIndex])}; newIndex: ${newIndex}; new: ${this.subFieldToString(sortedFocusableSubFields[newIndex])}`);
 			return sortedFocusableSubFields[newIndex].field;
 		} else {
-			this.logger.trace(`currentIndex: ${currentIndex}; current: ${this.subFieldToString(sortedFocusableSubFields[currentIndex])}; navDirection: ${navDirection}; --> jumping out of composite field`);
+			console.trace(`currentIndex: ${currentIndex}; current: ${this.subFieldToString(sortedFocusableSubFields[currentIndex])}; navDirection: ${navDirection}; --> jumping out of composite field`);
 			return null;
 		}
 	}
@@ -133,7 +133,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 				&& f.visible === true);
 		return allFocusableSubFields
 			.sort((sf1: SubField, sf2: SubField) => {
-				this.logger.trace(`compare ${this.subFieldToString(sf1)} with ${this.subFieldToString(sf2)}`);
+				console.trace(`compare ${this.subFieldToString(sf1)} with ${this.subFieldToString(sf2)}`);
 				if (sf1.config.tabIndex !== sf2.config.tabIndex) {
 					return sf1.config.tabIndex - sf2.config.tabIndex
 				}
@@ -362,7 +362,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 	 */
 
 	public setFieldValue(fieldName: string, value: any) {
-		this.logger.debug("setFieldValue: " + fieldName + " = " + JSON.stringify(value));
+		console.debug("setFieldValue: " + fieldName + " = " + JSON.stringify(value));
 		let subField = this.getSubFieldByFieldName(fieldName);
 		if (subField != null) {
 			subField.field.setCommittedValue(value);
@@ -370,7 +370,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 		if (typeof value === "boolean") {
 			let affectedSubFields = this.subFields
 				.filter(subField => subField.config.visibilityPropertyName === fieldName);
-			this.logger.debug("This value change affects the visibilities of the following fields: " + affectedSubFields.map(f => "TODO!" /*f.config.field.fieldName*/).join(', '));
+			console.debug("This value change affects the visibilities of the following fields: " + affectedSubFields.map(f => "TODO!" /*f.config.field.fieldName*/).join(', '));
 			affectedSubFields
 				.forEach(subField => subField.visible = value);
 			UiCompositeField.updateSubFieldVisibilities(this.subFields);

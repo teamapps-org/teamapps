@@ -123,44 +123,44 @@ export class UiDocumentViewer extends AbstractComponent<DtoDocumentViewer> imple
 
 		this.pages.forEach((p) => {
 			let imageAspectRatio = p.naturalWidth / p.naturalHeight;
-			this.logger.trace("image: " + p.naturalWidth + "/" + p.naturalHeight + " = " + imageAspectRatio);
-			this.logger.trace("viewport: " + viewPortWidth + "/" + viewPortHeight + " = " + viewPortAspectRatio);
+			console.trace("image: " + p.naturalWidth + "/" + p.naturalHeight + " = " + imageAspectRatio);
+			console.trace("viewport: " + viewPortWidth + "/" + viewPortHeight + " = " + viewPortAspectRatio);
 			if (this.displayMode === UiPageDisplayMode.FIT_WIDTH) {
-				css(p.$img, {
+				applyCss(p.$img, {
 					width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
 					height: "auto"
 				});
 			} else if (this.displayMode === UiPageDisplayMode.FIT_HEIGHT) {
-				css(p.$img, {
+				applyCss(p.$img, {
 					width: "auto",
 					height: Math.floor(viewPortHeight * this.zoomFactor) + "px"
 				});
 			} else if (this.displayMode === UiPageDisplayMode.FIT_SIZE) {
 				if (imageAspectRatio > viewPortAspectRatio) {
-					css(p.$img, {
+					applyCss(p.$img, {
 						width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
 						height: "auto"
 					});
 				} else {
-					css(p.$img, {
+					applyCss(p.$img, {
 						width: "auto",
 						height: Math.floor(viewPortHeight * this.zoomFactor) + "px"
 					});
 				}
 			} else if (this.displayMode === UiPageDisplayMode.COVER) {
 				if (imageAspectRatio < viewPortAspectRatio) {
-					css(p.$img, {
+					applyCss(p.$img, {
 						width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
 						height: "auto"
 					});
 				} else {
-					css(p.$img, {
+					applyCss(p.$img, {
 						width: "auto",
 						height: Math.floor(viewPortHeight * this.zoomFactor) + "px"
 					});
 				}
 			} else {
-				css(p.$img, {
+				applyCss(p.$img, {
 					width: (p.naturalWidth * this.zoomFactor) + "px",
 					height: "auto"
 				});

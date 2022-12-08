@@ -225,7 +225,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	removeShape(shapeId: string): void {
 		let shape = this.shapesById[shapeId];
 		if (shape == null) {
-			this.logger.warn(`There is no shape with id ${shapeId}`);
+			console.warn(`There is no shape with id ${shapeId}`);
 			return;
 		}
 		this.leaflet.removeLayer(shape);
@@ -235,7 +235,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	updateShape(shapeId: string, shapeConfig: DtoAbstractMapShapeConfig): void {
 		let shape = this.shapesById[shapeId];
 		if (shape == null) {
-			this.logger.warn(`There is no shape with id ${shapeId}`);
+			console.warn(`There is no shape with id ${shapeId}`);
 			return;
 		}
 		this.removeShape(shapeId);
@@ -246,7 +246,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	public addPolylinePoints(lineId: string, points: DtoMapLocation[]): void {
 		let polyline = this.shapesById[lineId] as Polyline;
 		if (polyline == null) {
-			this.logger.warn(`There is no polyline with id ${lineId}`);
+			console.warn(`There is no polyline with id ${lineId}`);
 			return;
 		}
 		points.forEach(p => polyline.addLatLng(this.convertToLatLng(p)));

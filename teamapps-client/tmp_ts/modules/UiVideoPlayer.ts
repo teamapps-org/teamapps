@@ -162,7 +162,7 @@ export class UiVideoPlayer extends AbstractComponent<DtoVideoPlayer> implements 
 			this.mediaPlayer.setSrc("");
 			this.mediaPlayer.load();
 		} catch (e) {
-			this.logger.error("Error while destroying video player: " + e.toString());
+			console.error("Error while destroying video player: " + e.toString());
 		}
 	}
 

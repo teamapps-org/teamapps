@@ -107,7 +107,7 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 		this.calculateFinalNodePositions();
 
 		if (this.svg) {
-			this.logger.debug("remove svg-container");
+			console.debug("remove svg-container");
 			this.svg.remove();
 		}
 
@@ -234,12 +234,12 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 
 	public setZoomFactor(zoomFactor: number): void {
 		this.zoom.scaleTo(this.svg, zoomFactor);
-		this.logger.debug(zoomFactor);
+		console.debug(zoomFactor);
 	}
 
 	public setGravity(gravity: number): void {
 		// this.force.gravity(gravity).start();
-		this.logger.debug(gravity);
+		console.debug(gravity);
 	}
 
 	public setDistance(linkDistance: number, nodeDistance: number): void {
@@ -259,12 +259,12 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 		this.updateNodes(this._config.animationDuration);
 		this.updateLinks(this._config.animationDuration);
 
-		this.logger.debug("distance:" + linkDistance + ", " + nodeDistance);
+		console.debug("distance:" + linkDistance + ", " + nodeDistance);
 	}
 
 	public setCharge(charge: number, overrideNodeCharge: boolean): void {
 		// this.force.charge(charge).start();
-		this.logger.debug("charge:" + charge);
+		console.debug("charge:" + charge);
 	}
 
 	private updateLinks(animationDuration: number = 0) {

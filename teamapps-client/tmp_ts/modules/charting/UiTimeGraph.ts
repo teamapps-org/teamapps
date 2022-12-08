@@ -304,7 +304,7 @@ export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements UiTi
 		let domain = this.restrictDomainXToConfiguredInterval([+transformedScaleX.domain()[0], +transformedScaleX.domain()[1]]);
 
 		const zoomLevel = this.getCurrentZoomLevel();
-		// this.logger.debug("millisecondsPerPixel: " + millisecondsPerPixel + " zoomLevel: " + zoomLevel + " at scale: " + zoomTransform.k);
+		// console.debug("millisecondsPerPixel: " + millisecondsPerPixel + " zoomLevel: " + zoomLevel + " at scale: " + zoomTransform.k);
 
 
 		let uncoveredIntervalsByGraphId: { [graphId: string]: DtoLongInterval[] } = {};
@@ -320,7 +320,7 @@ export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements UiTi
 			}
 		}
 		if (Object.keys(uncoveredIntervalsByGraphId).length > 0) {
-			this.logger.debug("firing onDataNeeded: " + uncoveredIntervalsByGraphId);
+			console.debug("firing onDataNeeded: " + uncoveredIntervalsByGraphId);
 			this.onZoomed.fire({
 				zoomLevelIndex: zoomLevel,
 				millisecondsPerPixel: this.getMillisecondsPerPixel(),

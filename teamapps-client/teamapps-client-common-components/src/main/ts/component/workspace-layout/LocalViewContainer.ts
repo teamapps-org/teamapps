@@ -31,7 +31,7 @@ import {
 } from "../../generated";
 import {Panel} from "../Panel";
 import {DtoWorkspaceLayoutDndDataTransfer, WorkSpaceLayout} from "./WorkSpaceLayout";
-import {css, getMicrosoftBrowserVersion} from "../../Common";
+import {getMicrosoftBrowserVersion} from "../../Common";
 import {bind, Component, generateUUID, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
 import {Toolbar} from "../tool-container/toolbar/Toolbar";
 import {SplitPaneItem} from "./SplitPaneItem";
@@ -43,6 +43,8 @@ import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {MultiProgressDisplay} from "../MultiProgressDisplay";
+import {applyCss} from "../../util/cssUtil";
+import {computePosition, size} from "@floating-ui/dom";
 
 export class LocalViewContainer implements ViewContainer {
 
@@ -169,73 +171,28 @@ export class LocalViewContainer implements ViewContainer {
 					let tabPanelContentRect = $tabPanelContentWrapper.getBoundingClientRect();
 
 					if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
-						$(this.$dndActiveRectangle).position({
-							my: "left top",
-							at: "left top",
-							of: $tabPanelContentWrapper
-						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width + "px", height: tabPanelContentRect.height + "px"});
+						this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "top", 1);
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.LEFT) {
-						$(this.$dndActiveRectangle).position({
-							my: "left top",
-							at: "left top",
-							of: $tabPanelContentWrapper
-						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width / 2 + "px", height: tabPanelContentRect.height + "px"});
+						this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "left", .5);
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.RIGHT) {
-						$(this.$dndActiveRectangle).position({
-							my: "right top",
-							at: "right top",
-							of: $tabPanelContentWrapper
-						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width / 2 + "px", height: tabPanelContentRect.height + "px"});
+						this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "right", .5);
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.TOP) {
-						$(this.$dndActiveRectangle).position({
-							my: "left top",
-							at: "left top",
-							of: $tabPanelContentWrapper
-						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width + "px", height: tabPanelContentRect.height / 2 + "px"});
+						this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "top", .5);
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.BOTTOM) {
-						$(this.$dndActiveRectangle).position({
-							my: "left bottom",
-							at: "left bottom",
-							of: $tabPanelContentWrapper
-						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width + "px", height: tabPanelContentRect.height / 2 + "px"});
+						this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "bottom", .5);
 					}
 				} else {
 					let $workSpaceLayout = this.$contentContainer;
 					let workSpaceLayoutRect = $workSpaceLayout.getBoundingClientRect();
 
 					if (dropPosition.relativeDropPosition === RelativeDropPosition.LEFT) {
-						$(this.$dndActiveRectangle).position({
-							my: "left top",
-							at: "left top",
-							of: $workSpaceLayout
-						});
-						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width / 3 + "px", height: workSpaceLayoutRect.height + "px"});
+						this.cover($workSpaceLayout, this.$dndActiveRectangle, "left", .33);
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.RIGHT) {
-						$(this.$dndActiveRectangle).position({
-							my: "right top",
-							at: "right top",
-							of: $workSpaceLayout
-						});
-						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width / 3 + "px", height: workSpaceLayoutRect.height + "px"});
+						this.cover($workSpaceLayout, this.$dndActiveRectangle, "right", .33);
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.TOP) {
-						$(this.$dndActiveRectangle).position({
-							my: "left top",
-							at: "left top",
-							of: $workSpaceLayout
-						});
-						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width + "px", height: workSpaceLayoutRect.height / 3 + "px"});
+						this.cover($workSpaceLayout, this.$dndActiveRectangle, "top", .33);
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.BOTTOM) {
-						$(this.$dndActiveRectangle).position({
-							my: "left bottom",
-							at: "left bottom",
-							of: $workSpaceLayout
-						});
-						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width + "px", height: workSpaceLayoutRect.height / 3 + "px"});
+						this.cover($workSpaceLayout, this.$dndActiveRectangle, "bottom", .33);
 					}
 				}
 
@@ -310,6 +267,33 @@ export class LocalViewContainer implements ViewContainer {
 			}
 			this.lastDndEventType = 'dragend';
 		}, false);
+	}
+
+	private cover($tabPanelContentWrapper: HTMLElement, $floating: HTMLElement, alignment: "top" | "left" | "bottom" | "right", coverSize: number) {
+		if (coverSize < 0 || coverSize > 1) {
+			throw "size needs to be between 0 and 1";
+		}
+		let topOrBottom = alignment === 'top' || alignment === 'bottom';
+		let leftOrRight = alignment === 'left' || alignment === 'right';
+		computePosition($tabPanelContentWrapper, $floating, {
+			placement: topOrBottom ? 'top-start' : 'left-start',
+			strategy: 'absolute',
+			middleware: [
+				size({
+					apply: ({rects, availableHeight, placement}) => {
+						Object.assign($floating.style, {
+							width: `${topOrBottom ? rects.reference.width : rects.reference.width * coverSize}px`,
+							height: `${topOrBottom ? rects.reference.height * coverSize : rects.reference.height}px`,
+						});
+					}
+				}),
+			],
+		}).then((values) => {
+			Object.assign($floating.style, {
+				left: `${values.x + (topOrBottom ? 0 : alignment === 'left' ? $floating.offsetWidth : $tabPanelContentWrapper.offsetWidth)}px`,
+				top: `${values.y + (leftOrRight ? 0 : alignment === 'top' ? $floating.offsetHeight : $tabPanelContentWrapper.offsetHeight)}px`
+			});
+		});
 	}
 
 	private get workSpaceLayoutId() {

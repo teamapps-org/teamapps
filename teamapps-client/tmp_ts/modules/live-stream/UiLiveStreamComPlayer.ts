@@ -51,7 +51,7 @@ export class UiLiveStreamComPlayer extends AbstractComponent<DtoLiveStreamComPla
 	}
 
 	setVolume(volume: number): void {
-		this.logger.warn("LiveStreamComPlayer: setVolume() not supported on livestream.com iframe player...")
+		console.warn("LiveStreamComPlayer: setVolume() not supported on livestream.com iframe player...")
 	}
 
 	doGetMainElement(): HTMLElement {

@@ -96,7 +96,7 @@ export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> imp
 	private createBrush(w: number, h: number, data: DataPoint[], markers: Marker[], tracks: number) {
 		var width = w - UiMediaTrackGraph.MARGINS.left - UiMediaTrackGraph.MARGINS.right;
 		var height = h - UiMediaTrackGraph.MARGINS.top - UiMediaTrackGraph.MARGINS.bottom;
-		this.logger.debug("create graph:" + w + ":" + h + ", width:" + width + ", height:" + height + ", tracks:" + tracks);
+		console.debug("create graph:" + w + ":" + h + ", width:" + width + ", height:" + height + ", tracks:" + tracks);
 		this.trackCount = tracks;
 		this.x = d3.time.scale().range([0, width]);
 		var y: d3.scale.Linear<number, number> = d3.scale.linear().range([height, 0]);
@@ -127,11 +127,11 @@ export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> imp
 		this.brushExtent = this.brush.extent();
 
 		if (this.svg) {
-			this.logger.debug("remove old svg..");
+			console.debug("remove old svg..");
 			this.svg.remove();
 		}
 
-		this.logger.debug("id:" + this.getId() + ", el:" + d3.select("#" + this.getId()));
+		console.debug("id:" + this.getId() + ", el:" + d3.select("#" + this.getId()));
 		this.svg = d3.select("#" + this.getId()).append("svg")
 			.attr("width", width + UiMediaTrackGraph.MARGINS.left + UiMediaTrackGraph.MARGINS.right)
 			.attr("height", height + UiMediaTrackGraph.MARGINS.top + UiMediaTrackGraph.MARGINS.bottom);
@@ -219,7 +219,7 @@ export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> imp
 				.attr("class", "marker")
 				.style("stroke", marker.color)
 				.style("fill", marker.bg);
-			this.logger.debug("marker:" + marker.color + ", bg:" + marker.bg);
+			console.debug("marker:" + marker.color + ", bg:" + marker.bg);
 		}
 
 		this.lines = [];
@@ -263,8 +263,8 @@ export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> imp
 			.attr("y1", y(0))
 			.attr("y2", y(tracks * 200))
 			.attr("class", "cursor");
-		//this.logger.debug(y(tracks * 200));
-		//this.logger.debug(y(0));
+		//console.debug(y(tracks * 200));
+		//console.debug(y(0));
 
 
 		this.xAxisElement = focus.append("g")

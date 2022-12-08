@@ -52,7 +52,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
-	private buttonGroupsById: {[id:string]: ToolbarButtonGroup} = {};
+	private buttonGroupsById: { [id: string]: ToolbarButtonGroup } = {};
 	private leftButtonGroups: ToolbarButtonGroup[] = [];
 	private rightButtonGroups: ToolbarButtonGroup[] = [];
 
@@ -88,7 +88,10 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 		this.overflowDropDown.setContentComponent(this.overflowToolAccordion);
 		this.$overflowDropDownButton.addEventListener("mousedown", () => {
 			if (!this.overflowDropDown.isOpen) {
-				this.overflowDropDown.open({$reference: this.$overflowDropDownButton, width: Math.min(400, this.totalWidthOfOverflowButtons * 1.2)});
+				this.overflowDropDown.open({
+					$reference: this.$overflowDropDownButton,
+					width: Math.min(400, this.totalWidthOfOverflowButtons * 1.2)
+				});
 				this.updateButtonOverflow();
 			}
 		});
@@ -98,9 +101,12 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	private createDropDownAccordion(): ToolAccordion {
-		let accordionConfig = $.extend({}, this.config, {
-			buttonGroups: [...this.leftButtonGroups, ...this.rightButtonGroups].map(group => $.extend({}, group.getConfig(), {buttons: group.getButtonConfigs()}))
-		});
+		let accordionConfig = {
+			...this.config,
+			buttonGroups: [...this.leftButtonGroups, ...this.rightButtonGroups].map(group => {
+				return {...group.getConfig(), buttons: group.getButtonConfigs()}
+			})
+		};
 		let toolAccordion = new ToolAccordion(accordionConfig, this._context);
 		toolAccordion.onToolbarButtonClick.addListener(eventObject => {
 			if (!eventObject.dropDownClickInfo) { //
@@ -196,7 +202,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	private insertGroupAtCorrectSortingPosition(buttonGroup: ToolbarButtonGroup, position: DtoToolbarButtonGroupPosition, rightSide: boolean) {
-		let otherButtonGroups = (rightSide ? this.rightButtonGroups: this.leftButtonGroups).sort((group1, group2) => group1.position - group2.position);
+		let otherButtonGroups = (rightSide ? this.rightButtonGroups : this.leftButtonGroups).sort((group1, group2) => group1.position - group2.position);
 		let otherGroupIndex = 0;
 		for (; otherGroupIndex < otherButtonGroups.length; otherGroupIndex++) {
 			let otherGroup = otherButtonGroups[otherGroupIndex];

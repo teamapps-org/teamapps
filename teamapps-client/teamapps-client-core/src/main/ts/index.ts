@@ -27,3 +27,4 @@ export * from "./util/StyleManager";
 export * from "./util/TeamAppsEvent";
 export * from "./util/throttle";
 export * from "./util/wakeLock";
+export * from "./util/resourceLoading";

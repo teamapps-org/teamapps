@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as log from "loglevel";
 import {DtoRelativeWorkSpaceViewPosition, DtoSplitSizePolicy, DtoWorkSpaceLayoutItem} from "../../generated";
 import {Component, DeferredExecutor, generateUUID, TeamAppsUiContext, TeamAppsUiContextInternalApi} from "teamapps-client-core";
 import {DtoWorkSpaceLayoutView as DtoWorkSpaceLayoutView} from "../../generated/DtoWorkSpaceLayoutView";
@@ -42,8 +41,6 @@ interface RemoteMethodInvocationCallback {
 }
 
 export class ChildWindowViewContainer implements ViewContainer {
-
-	private static logger: log.Logger = log.getLogger("DtoWorkSpaceLayout.ChildWindowViewContainer");
 
 	private _viewInfos: { [viewName: string]: ViewInfo } = {};
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
@@ -76,7 +73,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 	}
 
 	private handlePortMessage(e: MessageEvent, port: MessagePort, childWindowId: string) {
-		ChildWindowViewContainer.logger.debug(e.data);
+		console.debug(e.data);
 
 		if (e.data._type === 'INIT') {
 			const initOkMessage: DtoWorkspaceLayoutSubWindowProtocol_INIT_OK = {
@@ -136,12 +133,12 @@ export class ChildWindowViewContainer implements ViewContainer {
 	}
 
 	refreshViewComponent(viewName: string, component: Component): void {
-		ChildWindowViewContainer.logger.error("TODO #componentRef introduce windowIds..."); // TODO #componentRef
+		console.error("TODO #componentRef introduce windowIds..."); // TODO #componentRef
 		// this.sendCommandToWindow(this.owner.getId(), "refreshViewComponent", arguments);
 	}
 
 	refreshViewAttributes(viewName: string, tabIcon: string, tabCaption: string, tabCloseable: boolean, visible: boolean): void {
-		ChildWindowViewContainer.logger.error("TODO #componentRef introduce windowIds..."); // TODO #componentRef
+		console.error("TODO #componentRef introduce windowIds..."); // TODO #componentRef
 		// this.sendCommandToWindow(this.owner.getId(), "refreshView", arguments);
 	}
 
@@ -206,10 +203,10 @@ export class ChildWindowViewContainer implements ViewContainer {
 
 	private sendCommandToWindow(targetComponentId: string, methodName: string, args: IArguments | any[]) {
 		if (!this.deferredExecutor.ready) {
-			ChildWindowViewContainer.logger.debug(`Enqueueing method invocation to child window (${this.windowId}): ${methodName}(${args})`)
+			console.debug(`Enqueueing method invocation to child window (${this.windowId}): ${methodName}(${args})`)
 		}
 		this.deferredExecutor.invokeWhenReady(() => {
-			ChildWindowViewContainer.logger.debug(`Sending method invocation to child window (${this.windowId}): ${methodName}(${args})`);
+			console.debug(`Sending method invocation to child window (${this.windowId}): ${methodName}(${args})`);
 			this.port.postMessage(JSON.stringify({
 				_type: "COMMAND",
 				componentId: targetComponentId,

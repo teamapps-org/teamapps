@@ -112,3 +112,17 @@ tmp/
 *.~vsd*
 # Excel Backup File
 *.xlk
+
+# JavaScript
+node/
+node_modules/
+npm-debug.log
+ts/**/*.map
+generated/
+dist/
+stats.json
+
+### yarn
+.pnp.*
+.yarn/*
+yarn-error.log

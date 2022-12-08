@@ -187,7 +187,7 @@ export class UiImageCropper extends AbstractComponent<DtoImageCropper> implement
 		selection = this.boundSelection(selection);
 		this.updateCroppingFramePosition(selection);
 		this.selection = selection;
-		this.logger.debug("selection: ", this.selection);
+		console.debug("selection: ", this.selection);
 		this.onSelectionChanged.fire({
 			selection: createDtoImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
 		});
@@ -251,7 +251,7 @@ export class UiImageCropper extends AbstractComponent<DtoImageCropper> implement
 	private updateCroppingFramePosition(selection: Selection) {
 		if (selection != null) {
 			let frameRect = this.selectionToFrameRect(selection);
-			css(this.$selectionFrame, {
+			applyCss(this.$selectionFrame, {
 				left: frameRect.x + "px",
 				top: frameRect.y + "px",
 				width: frameRect.width + "px",

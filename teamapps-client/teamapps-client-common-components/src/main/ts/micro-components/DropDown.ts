@@ -18,9 +18,10 @@
  * =========================LICENSE_END==================================
  */
 
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, positionDropDown} from "../Common";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement} from "../Common";
 import {Component, parseHtml, TeamAppsEvent} from "teamapps-client-core";
 import {Spinner} from "./Spinner";
+import {positionDropdownWithAutoUpdate} from "../util/dropdownPosition";
 
 interface OpenConfig {
 	$reference: HTMLElement | Element,
@@ -41,6 +42,7 @@ export class DropDown {
 	protected currentOpenConfig: OpenConfig;
 	private _isOpen = false;
 	private _contentComponent: Component;
+	private cleanupPositionAutoUpdate: () => void = () => {};
 
 	constructor(content?: Component) {
 		this.$dropDown = parseHtml(`<div class="DropDown teamapps-blurredBackgroundImage">
@@ -88,7 +90,8 @@ export class DropDown {
 			this.$dropDown.style.width = config.width + "px";
 			document.body.appendChild(this.$dropDown);
 			this.$dropDown.classList.add('open');
-			positionDropDown(this.currentOpenConfig.$reference, this.$dropDown, this.currentOpenConfig);
+
+			this.cleanupPositionAutoUpdate = positionDropdownWithAutoUpdate(this.currentOpenConfig.$reference, this.$dropDown);
 
 			this._isOpen = true;
 			this.clickOutsideHandle = doOnceOnClickOutsideElement(this.$dropDown, () => {
@@ -107,6 +110,7 @@ export class DropDown {
 			this.$dropDown.classList.remove('open');
 			this.$dropDown.remove();
 			this.onClose && this.onClose.fire(null);
+			this.cleanupPositionAutoUpdate();
 		}
 		this._isOpen = false;
 	}

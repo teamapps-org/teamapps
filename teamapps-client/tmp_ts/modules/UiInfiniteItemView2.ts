@@ -152,7 +152,7 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 				startIndex: newRenderedRange[0],
 				length: newRenderedRange[1] - newRenderedRange[0] // send the uncut value, so the server will send new records if some are added user scrolled to the end
 			};
-			this.logger.debug("onRenderedItemRangeChanged ", eventObject);
+			console.debug("onRenderedItemRangeChanged ", eventObject);
 			this.onDisplayedRangeChanged.fire(eventObject);
 		}
 	}
@@ -237,7 +237,7 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 	}
 
 	setData(startIndex: number, recordIds: number[], newRecords: DtoIdentifiableClientRecord[], totalNumberOfRecords: number): void {
-		this.logger.debug("got data ", startIndex, recordIds.length, newRecords.length, totalNumberOfRecords);
+		console.debug("got data ", startIndex, recordIds.length, newRecords.length, totalNumberOfRecords);
 		this.totalNumberOfRecords = totalNumberOfRecords;
 		this.updateGridHeight();
 		let recordIdsAsSet: Set<number> = new Set(recordIds);
@@ -263,7 +263,7 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
-		this.logger.debug("onResize ", this.getWidth(), this.getHeight());
+		console.debug("onResize ", this.getWidth(), this.getHeight());
 		this.updateGridHeight();
 		this.updateItemPositions();
 		this.requestDataIfNeededDebounced();

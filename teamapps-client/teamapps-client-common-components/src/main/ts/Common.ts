@@ -17,15 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {
-	DtoEntranceAnimation,
-	DtoExitAnimation,
-	DtoPageDisplayMode,
-	DtoPageTransition,
-	DtoRepeatableAnimation,
-} from "./generated";
+import {DtoEntranceAnimation, DtoExitAnimation, DtoPageDisplayMode, DtoPageTransition, DtoRepeatableAnimation,} from "./generated";
 import rgba from "color-rgba";
-import {Component, DtoTemplate, parseHtml} from "teamapps-client-core";
+import {Component, parseHtml} from "teamapps-client-core";
+import {applyCss, extractCssValues} from "./util/cssUtil";
 
 export const defaultSpinnerTemplate = `<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`;
 
@@ -453,35 +448,6 @@ export function boundSelection(
 	return newSelection;
 }
 
-export function positionDropDown($button: Element, $dropDown: HTMLElement, {
-	viewPortPadding = 10,
-	minHeightBeforeFlipping = 200
-}) {
-	$dropDown.classList.remove("pseudo-hidden");
-
-	let boundingClientRect = $button.getBoundingClientRect();
-	let maxHeight = window.innerHeight - (boundingClientRect.top + boundingClientRect.height) - viewPortPadding;
-	let maxFlippedHeight = boundingClientRect.top - viewPortPadding;
-	let flip = maxHeight < minHeightBeforeFlipping && maxFlippedHeight > maxHeight;
-
-	$($dropDown).position({
-		my: "left " + (flip ? "bottom" : "top"),
-		at: "left " + (flip ? "top" : "bottom"),
-		of: $button,
-		collision: "fit none"
-	});
-	$dropDown.querySelector<HTMLElement>(':scope > .background-color-div').style.maxHeight = (flip ? maxFlippedHeight : maxHeight) + "px";
-	$dropDown.querySelector<HTMLElement>(':scope > .background-color-div > *').style.maxHeight = (flip ? maxFlippedHeight : maxHeight) + "px";
-	if ($dropDown.offsetWidth > window.innerWidth - 2 * viewPortPadding) {
-		$dropDown.style.width = "auto";
-		$dropDown.style.left = viewPortPadding + "px";
-		$dropDown.style.right = viewPortPadding + "px";
-	} else if ($dropDown.offsetLeft + $dropDown.offsetWidth > window.innerWidth - viewPortPadding) {
-		$dropDown.style.left = "auto";
-		$dropDown.style.right = viewPortPadding + "px";
-	}
-}
-
 export function manipulateWithoutTransitions($element: HTMLElement, action: Function, transitionEnabled = false) {
 	if (!transitionEnabled) {
 		$element.classList.add('notransition');
@@ -608,11 +574,7 @@ export function maximizeComponent(component: Component, animationDuration: numbe
 	const scrollTop = window.scrollY;
 	const scrollLeft = window.scrollX;
 	const offset = component.getMainElement().getBoundingClientRect();
-
-	const originalCssValues = ["top", "left", "width", "height"].reduce((properties, cssPropertyName) => {
-		properties[cssPropertyName] = (component.getMainElement().style as CSSStyleDeclaration)[cssPropertyName];
-		return properties;
-	}, {} as { [x: string]: string });
+	const originalCssValues = extractCssValues(component.getMainElement(), ["top", "left", "width", "height"]);
 
 	const animationStartCssValues = {
 		top: (offset.top - scrollTop) + "px",
@@ -633,7 +595,7 @@ export function maximizeComponent(component: Component, animationDuration: numbe
 		width: (window.innerWidth - 10) + "px",
 		height: (window.innerHeight - 10) + "px"
 	}, animationDuration, () => {
-		css(component.getMainElement(), {
+		applyCss(component.getMainElement(), {
 			width: "calc(100% - 10px)",
 			height: "calc(100% - 10px)"
 		});
@@ -686,19 +648,23 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 	sel.addRange(range);
 }
 
-
-
 export function parseSvg<E extends Element>(htmlString: string): E {
-	// let tagStartCount = (htmlString.match(/<\w+/g) || []).length;
-	// let tagEndCount = (htmlString.match(/<\//g) || []).length;
-	// if (tagStartCount !== tagEndCount) {
-	// 	throw "SVG strings need to have explicit closing tags! " + htmlString;
-	// }
-	// const node: E = new DOMParser().parseFromString(htmlString, 'application/xml').getRootNode() as E;
-	// node.remove(); // detach from DOMParser <body>!
-	// return node;
-
-	return $(htmlString)[0] as unknown as E;
+	const svgPrefix = "<svg ";
+	if (!htmlString.startsWith("<svg ")) {
+		throw "svg string needs to start with '" + svgPrefix + "'";
+	}
+	let tagStartCount = (htmlString.match(/<\w+/g) || []).length;
+	let tagEndCount = (htmlString.match(/<\//g) || []).length;
+	if (tagStartCount !== tagEndCount) {
+		throw "SVG strings need to have explicit closing tags! " + htmlString;
+	}
+	if (htmlString.indexOf("xmlns=\"") === -1) {
+		// for browser compatibility reasons, make sure to add the SVG namespace!
+		htmlString = htmlString.substring(0, svgPrefix.length) + 'xmlns="http://www.w3.org/2000/svg" ' + htmlString.substring(svgPrefix.length);
+	}
+	const node: E = new DOMParser().parseFromString(htmlString, 'image/svg+xml').getRootNode() as E;
+	node.remove(); // detach from DOMParser <body>!
+	return node;
 }
 
 export function elementIndex(node: Element) {
@@ -1219,10 +1185,6 @@ export function animateCollapse(element: HTMLElement, collapsed: boolean, durati
 	element.toggleAttribute("ta-collapsed", collapsed);
 }
 
-export function css(el: HTMLElement, values: object) {
-	Object.assign(el.style, values);
-}
-
 let lastPointerCoordinates: [number, number] = [0, 0];
 document.body.addEventListener("pointermove", ev => lastPointerCoordinates = [ev.clientX, ev.clientY], {capture: true});
 
@@ -1240,10 +1202,6 @@ export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaEle
 	} else {
 		input.value += text;
 	}
-}
-
-export function isVisibleColor(c: string) {
-	return c != null && rgba(c)[3] > 0;
 }
 
 export function getScrollParent(element, includeHidden) {

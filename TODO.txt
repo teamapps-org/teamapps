@@ -7,3 +7,5 @@ rename:
 check if queries actually work
 TeamAppsUndertowEmbeddedServer
 get rid of required keyword in dto dsl
+
+remove unused stuff from Common.ts
