@@ -60,7 +60,7 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-common-components</artifactId>
+            <artifactId>teamapps-client-core-components</artifactId>
         </dependency>
 
         <dependency>

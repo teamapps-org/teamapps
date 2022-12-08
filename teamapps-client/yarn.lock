@@ -3066,9 +3066,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"teamapps-client-common-components@workspace:teamapps-client-common-components":
+"teamapps-client-communication@workspace:*, teamapps-client-communication@workspace:teamapps-client-communication":
   version: 0.0.0-use.local
-  resolution: "teamapps-client-common-components@workspace:teamapps-client-common-components"
+  resolution: "teamapps-client-communication@workspace:teamapps-client-communication"
+  dependencies:
+    "@types/json-stable-stringify": ^1.0.34
+    cross-var: ^1.1.0
+    esbuild: ^0.15.13
+    json-stable-stringify: ^1.0.2
+    replace-in-file: ^6.3.5
+    sync-pom-version-to-package: ^1.6.1
+    typescript: ^4.8.4
+  languageName: unknown
+  linkType: soft
+
+"teamapps-client-core-components@workspace:teamapps-client-core-components":
+  version: 0.0.0-use.local
+  resolution: "teamapps-client-core-components@workspace:teamapps-client-core-components"
   dependencies:
     "@floating-ui/dom": ^1.0.9
     "@popperjs/core": ^2.11.6
@@ -3084,20 +3098,6 @@ __metadata:
     sync-pom-version-to-package: ^1.6.1
     teamapps-client-communication: "workspace:*"
     teamapps-client-core: "workspace:*"
-    typescript: ^4.8.4
-  languageName: unknown
-  linkType: soft
-
-"teamapps-client-communication@workspace:*, teamapps-client-communication@workspace:teamapps-client-communication":
-  version: 0.0.0-use.local
-  resolution: "teamapps-client-communication@workspace:teamapps-client-communication"
-  dependencies:
-    "@types/json-stable-stringify": ^1.0.34
-    cross-var: ^1.1.0
-    esbuild: ^0.15.13
-    json-stable-stringify: ^1.0.2
-    replace-in-file: ^6.3.5
-    sync-pom-version-to-package: ^1.6.1
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
