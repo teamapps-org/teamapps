@@ -56,6 +56,8 @@ import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrieval
 import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType";
 import {ConferenceApi, Utils} from "./lib/avcore.client";
 import {ConferenceInput} from "./lib/avcore";
+import {GainController} from "../GainController";
+import {UiToolButton} from "../../micro-components/UiToolButton";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent();
@@ -82,6 +84,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private $bitrateDisplayWrapper: HTMLElement;
 	private $audioBitrateDisplay: HTMLElement;
 	private $videoBitrateDisplay: HTMLElement;
+	private $toolsAndIconsBar: HTMLElement;
+	private $toolButtons: HTMLElement;
 	private $icons: HTMLImageElement;
 	private $caption: HTMLElement;
 	private $spinner: HTMLElement;
@@ -90,7 +94,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private contextMenu: ContextMenu;
 	private conferenceClient: ConferenceApi;
 
-	private audioTrack: MediaStreamTrack;
+	private gainController: GainController;
 	private webcamTrack: MediaStreamTrack;
 	private screenTrack: MediaStreamTrack;
 	private videoTrackMixer: VideoTrackMixer;
@@ -122,7 +126,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	<div class="video-container">
 		<img class="image"></img>
 		<video class="video" playsinline></video>
-		<div class="icons"></div>
+		<div class="tools-and-icons-bar">
+		    <div class="tool-buttons"></div>
+			<div class="icons"></div>
+		</div>
 		<div class="bitrate-display hidden">
 			<div class="bitrate-audio"></div>
 			<div class="bitrate-video"></div>
@@ -144,6 +151,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.$bitrateDisplayWrapper = this.$main.querySelector(":scope .bitrate-display");
 		this.$audioBitrateDisplay = this.$main.querySelector(":scope .bitrate-audio");
 		this.$videoBitrateDisplay = this.$main.querySelector(":scope .bitrate-video");
+		this.$toolsAndIconsBar = this.$main.querySelector(":scope .tools-and-icons-bar");
+		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 		this.$icons = this.$main.querySelector(":scope .icons");
 		this.$caption = this.$main.querySelector(":scope .caption");
 		this.$spinner = this.$main.querySelector(":scope .spinner");
@@ -187,7 +196,13 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			});
 		});
 
-		this._config = {}; // make sure everything is regarded as new! _config will get set at the end again...
+		this._config = {
+			toolButtons: config.toolButtons
+		}; // make sure everything is regarded as new! _config will get set at the end again...
+
+		this.gainController = new GainController(1);
+		addVoiceActivityDetection(this.gainController.outputTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
+
 		this.update(config);
 	}
 
@@ -235,6 +250,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	private updatePromise: Promise<void> = Promise.resolve();
+
 	update(config: UiMediaSoupV3WebRtcClientConfig): void {
 		this.updatePromise = this.updatePromise.finally(() => {
 			return this.updateInternal(config);
@@ -249,6 +265,12 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		this.$bitrateDisplayWrapper.classList.toggle('hidden', !config.bitrateDisplayEnabled);
 
+		if (!arraysEqual(config.toolButtons, this._config.toolButtons)) {
+			this.$toolButtons.innerHTML = '';
+			(config.toolButtons as UiToolButton[]).forEach(toolButton => {
+				this.$toolButtons.append(toolButton.getMainElement());
+			});
+		}
 		if (!arraysEqual(config.icons, this._config.icons)) {
 			this.$icons.innerHTML = '';
 			config.icons.forEach(iconUrl => {
@@ -407,7 +429,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						url: newParams.server.url,
 						worker: newParams.server.worker,
 						simulcast: newParams.simulcast,
-						stopTracks: true,
+						stopTracks: false, // never stop the gainController's output track!
 						keyFrameRequestDelay: newParams.keyFrameRequestDelay
 					};
 					console.log("ConferenceApi config: ", conferenceApiConfig);
@@ -420,7 +442,11 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					if (e.statusCode) {
 						console.error("HTTP status code: " + e.statusCode);
 					}
-					this.onTrackPublishingFailed.fire({audio: newParams.audioConstraints != null, video: newParams.videoConstraints != null, errorMessage: e.toString()});
+					this.onTrackPublishingFailed.fire({
+						audio: newParams.audioConstraints != null,
+						video: newParams.videoConstraints != null,
+						errorMessage: e.toString()
+					});
 					await this.stop();
 					this.updateStateCssClasses();
 				}
@@ -453,38 +479,32 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		const webcamConstraintsChanged = !deepEquals(oldWebcamConstraints, newWebcamConstraints);
 		const screenConstraintsChanged = !deepEquals(oldScreenConstraints, newScreenConstraints);
 
-		let minorAudioChange = false;
 		if (audioConstraintsChanged) {
 			console.log("updatePublishedTracks() --> audioConstraintsChanged", newAudioConstraints);
-			if (this.audioTrack != null && newAudioConstraints != null && oldAudioConstraints?.deviceId === newAudioConstraints?.deviceId && oldAudioConstraints?.channelCount === newAudioConstraints?.channelCount) {
-				this.audioTrack.applyConstraints(newAudioConstraints);
-				minorAudioChange = true;
-			} else {
-				if (this.audioTrack != null) {
-					this.audioTrack.stop();
-					this.audioTrack = null;
-				}
-				if (newAudioConstraints != null) {
-					try {
-						let audioTracks = (await window.navigator.mediaDevices.getUserMedia({audio: newAudioConstraints, video: false})) // rejected if user denies!
-							.getAudioTracks();
-						this.audioTrack = audioTracks[0];
-						for (let i = 1; i < audioTracks.length; i++) {
-							audioTracks[i].stop(); // stop all but the first (should never be more than one actually!)
-						}
-						this.audioTrack.addEventListener("ended", () => {
-							if (this.audioTrack != null) { // not intended stopping!
-								this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.MIC});
-							}
-						});
-						addVoiceActivityDetection(this.audioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
-					} catch (e) {
-						console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
-						this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
+			this.gainController.inputTrack?.stop(); // this will release the microphone access
+			if (newAudioConstraints != null) {
+				try {
+					let audioTracks = (await window.navigator.mediaDevices.getUserMedia({audio: newAudioConstraints, video: false})) // rejected if user denies!
+						.getAudioTracks();
+					const firstAudioTrack = audioTracks[0];
+					for (let i = 1; i < audioTracks.length; i++) {
+						audioTracks[i].stop(); // stop all but the first (should never be more than one actually!)
 					}
+					firstAudioTrack.addEventListener("ended", () => {
+						if (this.gainController.inputTrack == firstAudioTrack) { // not intended stopping!
+							this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.MIC});
+						}
+					});
+					this.gainController.inputTrack = firstAudioTrack;
+				} catch (e) {
+					console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
 				}
+			} else {
+				this.gainController.inputTrack = null;
 			}
 		}
+		this.gainController.gain = newAudioConstraints?.gainFactor ?? 0;
 
 		if (webcamConstraintsChanged) {
 			console.log("updatePublishedTracks() --> webcamConstraintsChanged", newWebcamConstraints);
@@ -494,7 +514,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			}
 			if (newWebcamConstraints != null) {
 				try {
-					let videoTracks = (await window.navigator.mediaDevices.getUserMedia({audio: false, video: createVideoConstraints(newWebcamConstraints)})) // rejected if user denies!
+					let videoTracks = (await window.navigator.mediaDevices.getUserMedia({
+						audio: false,
+						video: createVideoConstraints(newWebcamConstraints)
+					})) // rejected if user denies!
 						.getVideoTracks();
 					this.webcamTrack = videoTracks[0];
 					for (let i = 1; i < videoTracks.length; i++) {
@@ -577,18 +600,18 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}
 
 		if (this.conferenceClient != null) {
-			if (audioConstraintsChanged && !minorAudioChange) {
+			if (oldAudioConstraints == null && newAudioConstraints != null) {
+				try {
+					await this.conferenceClient.addTrack(this.gainController.outputTrack);
+					this.onTrackPublishingSuccessful.fire({audio: true, video: false});
+				} catch (e) {
+					console.error("Could not add audio track!", e);
+					this.onTrackPublishingFailed.fire({audio: true, video: false, errorMessage: e.toString()})
+				}
+			} else if (oldAudioConstraints != null && newAudioConstraints == null) {
 				this.targetStream.getAudioTracks().forEach(t => {
 					this.conferenceClient.removeTrack(t);
 				});
-				if (this.audioTrack != null) {
-					try {
-						await this.conferenceClient.addTrack(this.audioTrack);
-						this.onTrackPublishingSuccessful.fire({audio: true, video: false});
-					} catch (e) {
-						this.onTrackPublishingFailed.fire({audio: true, video: false, errorMessage: e.toString()})
-					}
-				}
 			}
 			if (webcamConstraintsChanged || screenConstraintsChanged) {
 				try {
@@ -692,6 +715,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		let spinnerSize = Math.min(this.getWidth(), this.getHeight()) / 4;
 		this.$spinner.style.width = spinnerSize + "px";
 		this.$spinner.style.height = spinnerSize + "px";
+
+		(this._config.toolButtons as UiToolButton[]).forEach(tb => tb.setIconSize(this.$toolsAndIconsBar.offsetHeight))
 	}
 
 	setContextMenuContent(requestId: number, component: UiComponent): void {
