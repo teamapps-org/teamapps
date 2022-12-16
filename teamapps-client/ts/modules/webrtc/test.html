@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<audio id="audio1" controls></audio>
+<audio id="audio2" controls></audio>
+<button id="switch">switch</button>
+<button id="stopInputTrack">stop input track (for testing)</button>
+
+<script type="module">
+
+    class GainController {
+
+        #context;
+        #inputTrack;
+        #inputStream;
+        #micStreamSource;
+        #gainFilter;
+        #destination;
+        #outputStream;
+        #outputTrack;
+
+        constructor(inputTrack, initialGain) {
+            this.#inputTrack = inputTrack;
+            this.#context = new AudioContext();
+            this.#inputStream = new MediaStream([inputTrack]);
+            this.#micStreamSource = this.#context.createMediaStreamSource(this.#inputStream);
+            this.#gainFilter = this.#context.createGain();
+            this.#gainFilter.gain.value = initialGain;
+            this.#destination = this.#context.createMediaStreamDestination();
+            this.#outputStream = this.#destination.stream;
+            this.#outputTrack = this.#outputStream.getAudioTracks()[0];
+
+            this.#micStreamSource.connect(this.#gainFilter);
+            this.#gainFilter.connect(this.#destination);
+        }
+
+        set inputTrack(inputTrack) {
+            this.#micStreamSource.disconnect();
+            if (this.#inputTrack != null) {
+                this.#inputStream.removeTrack(this.#inputTrack);
+            }
+
+            this.#inputTrack = inputTrack;
+            if (inputTrack != null) {
+                this.#inputStream = new MediaStream([inputTrack]);
+                this.#micStreamSource = this.#context.createMediaStreamSource(this.#inputStream);
+                this.#micStreamSource.connect(this.#gainFilter);
+            }
+        }
+
+        get outputTrack() {
+            return this.#outputTrack;
+        }
+
+        get gain() {
+            return this.#gainFilter.gain.value;
+        }
+
+        set gain(value) {
+            this.#gainFilter.gain.value = value;
+        }
+
+        close() {
+            // just make 100% sure everything is closed and released!
+            this.#micStreamSource.disconnect();
+            this.#inputStream.removeTrack(this.#inputTrack);
+            this.#context.close();
+            this.#gainFilter.disconnect();
+            this.#destination.disconnect();
+            this.#outputStream.removeTrack(this.#outputTrack);
+            this.#outputTrack.dispatchEvent(new Event("ended"));
+        }
+    }
+
+
+    let mediaStream = await window.navigator.mediaDevices.getUserMedia({
+        audio: {
+            autoGainControl: true,
+            channelCount: 1,
+            noiseSuppression: true,
+            echoCancellation: true
+        }, video: false
+    });
+
+
+    // =========
+
+    let audioTrack = mediaStream.getAudioTracks()[0];
+
+    // =========
+
+    let gainController = new GainController(audioTrack, 1);
+    gainController.outputTrack.addEventListener("ended", () => console.log("gainController.outputTrack ended"))
+    gainController.outputTrack.addEventListener("", () => console.log("gainController.outputTrack ended"))
+
+    audioTrack.addEventListener("ended", () => gainController.close());
+
+    document.getElementById("audio1").srcObject = mediaStream;
+    let resultMediaStream = new MediaStream([gainController.outputTrack]);
+    let audio2 = document.getElementById("audio2");
+    audio2.srcObject = resultMediaStream;
+
+
+    ["abort", "canplay", "canplaythrough", "durationchange", "emptied", "ended", "error", "loadeddata", "loadedmetadata", "loadstart", "pause", "play", "playing", "progress", "ratechange", "seeked", "seeking", "stalled", "suspend", "timeupdate", "volumechange", "waiting",]
+        .forEach(name => audio2.addEventListener(name, () => console.log("audio2." + name)));
+    ["abort", "canplay", "canplaythrough", "durationchange", "emptied", "ended", "error", "loadeddata", "loadedmetadata", "loadstart", "pause", "play", "playing", "progress", "ratechange", "seeked", "seeking", "stalled", "suspend", "timeupdate", "volumechange", "waiting",]
+        .forEach(name => resultMediaStream.addEventListener(name, () => console.log("resultMediaStream." + name)));
+    ["ended", "mute", "overconstrained", "unmute",]
+        .forEach(name => gainController.outputTrack.addEventListener(name, () => console.log("outputTrack." + name)));
+
+
+
+    document.getElementById("switch").addEventListener("click", async () => {
+        mediaStream.removeTrack(audioTrack);
+        audioTrack.stop()
+        audioTrack.enabled = false;
+        let newMediaStream = await window.navigator.mediaDevices.getUserMedia({
+            audio: {
+                autoGainControl: false,
+                channelCount: 1,
+                noiseSuppression: false,
+                echoCancellation: false
+            }, video: false
+        });
+        audio2.srcObject = null;
+        
+        gainController.inputTrack = null;
+
+            gainController.inputTrack = newMediaStream.getAudioTracks()[0];            
+
+        audio2.srcObject = new MediaStream([gainController.outputTrack]);
+    });
+    document.getElementById("stopInputTrack").addEventListener("click", async () => {
+        audioTrack.stop();
+    });
+
+</script>
+
+
+<div style="position:relative; background-color: #eeeeee; height: 10vh; display: flex;">
+    <div style="height: 100%; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAElJREFUKFNjZGBg+M8AAYxQGp0Cy4MkQQxcimCa/iMrQDcZhU/IJLgzKFKI1XMwE/F5CCyH7hl0p8ANQA8emLUwT8BthCkkGOAAtNAQByJdFWoAAAAASUVORK5CYII='); background-size: contain; background-repeat: no-repeat">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC"
+             style="height: 100%; width: auto"/>
+    </div>
+</div>
+
+</body>
+</html>

@@ -22,6 +22,7 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 	boolean activityLineVisible;
 	String activityInactiveColor;
 	String activityActiveColor;
+	List<UiToolButton*> toolButtons;
 	List<String> icons;
 	String caption;
 	String noVideoImageUrl;
@@ -129,6 +130,7 @@ class UiAudioTrackConstraints {
 	String deviceId;
     int channelCount = 1;
     boolean autoGainControl = true;
+    double gainFactor;
     boolean echoCancellation = true;
     boolean noiseSuppression = true;
 }

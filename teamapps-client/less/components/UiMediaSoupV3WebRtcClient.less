@@ -93,21 +93,37 @@
       }
     }
 
-    > .icons {
+    > .tools-and-icons-bar {
       position: absolute;
       bottom: 5px;
       right: 3px;
-      height: 10%;
+      height: 11%;
       min-height: 16px;
       max-height: 50px;
       display: flex;
       width: 100%; // firefox...
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: end;
       z-index: 1;
 
-      > .icon {
+      > .tool-buttons {
+        flex: 0 0 auto;
+        display:flex;
+
+        .UiToolButton .img:hover:not(:active) {
+          filter: drop-shadow(1px 1px 3px #0005);
+        }
+      }
+
+      > .icons {
+        flex: 0 0 auto;
         height: 100%;
-        width: auto;
+        display:flex;
+
+        > .icon {
+          height: 100%;
+          width: auto;
+        }
       }
     }
 

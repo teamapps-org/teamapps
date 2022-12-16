@@ -20,17 +20,12 @@
 package org.teamapps.ux.component.webrtc;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiInfiniteItemView;
-import org.teamapps.dto.UiMediaDeviceInfo;
-import org.teamapps.dto.UiMediaServerUrlAndToken;
-import org.teamapps.dto.UiMediaSoupPlaybackParameters;
-import org.teamapps.dto.UiMediaSoupPublishingParameters;
-import org.teamapps.dto.UiMediaSoupV3WebRtcClient;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.toolbutton.ToolButton;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.Collections;
@@ -61,6 +56,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	private Color activityActiveColor;
 	private boolean active;
 
+	private List<ToolButton> toolButtons = Collections.emptyList();
 	private List<Icon> icons = Collections.emptyList();
 	private String caption;
 	private String noVideoImageUrl;
@@ -91,6 +87,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		ui.setActivityLineVisible(activityLineVisible);
 		ui.setActivityInactiveColor(activityInactiveColor != null ? activityInactiveColor.toHtmlColorString() : null);
 		ui.setActivityActiveColor(activityActiveColor != null ? activityActiveColor.toHtmlColorString() : null);
+		ui.setToolButtons(toolButtons.stream().map(AbstractComponent::createUiReference).collect(Collectors.toList()));
 		ui.setIcons(icons.stream().map(icon -> getSessionContext().resolveIcon(icon)).collect(Collectors.toList()));
 		ui.setBitrateDisplayEnabled(bitrateDisplayEnabled);
 		ui.setCaption(caption);
@@ -271,7 +268,21 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			icons = Collections.emptyList();
 		}
 		if (!Objects.equals(icons, this.icons)) {
-			this.icons = icons;
+			this.icons = List.copyOf(icons);
+			update();
+		}
+	}
+
+	public List<ToolButton> getToolButtons() {
+		return toolButtons;
+	}
+
+	public void setToolButtons(List<ToolButton> toolButtons) {
+		if (toolButtons == null) {
+			toolButtons = Collections.emptyList();
+		}
+		if (!Objects.equals(toolButtons, this.toolButtons)) {
+			this.toolButtons = List.copyOf(toolButtons);
 			update();
 		}
 	}
