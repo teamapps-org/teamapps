@@ -32,7 +32,7 @@ import {UiDropDown} from "./UiDropDown";
 import {UiItemView} from "../UiItemView";
 import {bind} from "../util/Bind";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {parseHtml} from "../Common";
+import {parseHtml, stopEventPropagations} from "../Common";
 import {UiComponent} from "../UiComponent";
 
 export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implements UiToolButtonEventSource, UiToolButtonCommandHandler {
@@ -80,6 +80,8 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 			}
 			this.onClicked.fire({});
 		});
+		stopEventPropagations(this.$button, "mousedown", "pointerdown", "click")
+		this.setIconSize(config.iconSize);
 		this.setDropDownComponent(config.dropDownComponent as UiComponent);
 	}
 
@@ -88,7 +90,7 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 		if (this._dropDown == null) {
 			this._dropDown = new UiDropDown();
 			this._dropDown.getMainDomElement().classList.add("UiButton-dropdown");
-			this._dropDown.onClose.addListener(eventObject => this.getMainElement().classList.remove("open"))
+			this._dropDown.onClose.addListener(() => this.getMainElement().classList.remove("open"))
 		}
 		return this._dropDown;
 	}
