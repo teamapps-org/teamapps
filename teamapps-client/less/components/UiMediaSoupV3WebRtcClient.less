@@ -88,6 +88,7 @@
       > .bitrate-audio:before {
         content: 'audio: '
       }
+
       > .bitrate-video:before {
         content: 'video: '
       }
@@ -108,17 +109,18 @@
 
       > .tool-buttons {
         flex: 0 0 auto;
-        display:flex;
+        display: flex;
 
         .UiToolButton .img:hover:not(:active) {
-          filter: drop-shadow(1px 1px 3px #0005);
+          filter: drop-shadow(1px 1px 3px #0007);
         }
       }
 
       > .icons {
-        flex: 0 0 auto;
+        flex: 1 0 auto;
         height: 100%;
-        display:flex;
+        display: flex;
+        justify-content: flex-end;
 
         > .icon {
           height: 100%;
@@ -183,6 +185,7 @@
       display: none;
     }
   }
+
   &.state-connecting {
     .spinner-wrapper {
       // default display
