@@ -204,7 +204,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_TREE_NODE_SELECTED:  {
+			case UI_TREE_NODE_SELECTED: {
 				UiTree.NodeSelectedEvent nodeSelectedEvent = (UiTree.NodeSelectedEvent) event;
 				RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
 				selectedNode = record;

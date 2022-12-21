@@ -1412,6 +1412,6 @@ export function createUiLocation() {
 	};
 }
 
-export function stopEventPropagations(element: HTMLElement, ...eventNames:string[]) {
+export function stopEventPropagations(element: HTMLElement, ...eventNames: string[]) {
 	eventNames.forEach(name => element.addEventListener(name, (e) => e.stopPropagation()));
 }

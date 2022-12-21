@@ -182,7 +182,7 @@ public class ReflectionUtil {
 		}
 	}
 
-	public static void readField(Object object, String fieldName, boolean makeAccessibleIfNecessary)  {
+	public static void readField(Object object, String fieldName, boolean makeAccessibleIfNecessary) {
 		Field field = ReflectionUtil.findField(object.getClass(), fieldName);
 		ReflectionUtil.readField(object, field, makeAccessibleIfNecessary);
 	}
@@ -198,7 +198,7 @@ public class ReflectionUtil {
 		}
 	}
 
-	public static void setField(Object object, String fieldName, Object value, boolean makeAccessibleIfNecessary)  {
+	public static void setField(Object object, String fieldName, Object value, boolean makeAccessibleIfNecessary) {
 		Field field = ReflectionUtil.findField(object.getClass(), fieldName);
 		ReflectionUtil.setField(object, field, value, makeAccessibleIfNecessary);
 	}
