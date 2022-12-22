@@ -29,7 +29,7 @@ export class GainController {
 	public readonly outputTrack: MediaStreamTrack;
 
 	constructor(initialGain: number) {
-		this.context = new AudioContext();
+		this.context = new ((window as any).AudioContext || (window as any).webkitAudioContext)()
 		this.inputStream = new MediaStream();
 		this.gainFilter = this.context.createGain();
 		this.gainFilter.gain.value = initialGain;

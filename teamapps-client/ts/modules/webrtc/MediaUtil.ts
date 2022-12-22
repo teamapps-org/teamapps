@@ -41,8 +41,8 @@ export function addVoiceActivityDetectionToMediaStream(mediaStream: MediaStream,
 }
 
 export function addVoiceActivityDetection(audioTrack: MediaStreamTrack, onVoiceStart: () => void, onVoiceStop: () => void): VoiceActivityDetectionHandle {
-	if (window.AudioContext) {
-		let audioContext = new window.AudioContext();
+	if ((window as any).AudioContext || (window as any).webkitAudioContext) {
+		let audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
 		let mediaStream = new MediaStream([audioTrack]);
 		let vadHandle = vad(audioContext, mediaStream, {onVoiceStart, onVoiceStop});
 		console.log("VAD attached");
