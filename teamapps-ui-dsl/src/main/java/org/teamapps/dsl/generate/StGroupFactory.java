@@ -19,9 +19,12 @@
  */
 package org.teamapps.dsl.generate;
 
+import org.stringtemplate.v4.ModelAdaptor;
 import org.stringtemplate.v4.STGroupFile;
 import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.generate.adapter.*;
+import org.teamapps.dsl.generate.wrapper.ClassOrInterfaceWrapper;
+import org.teamapps.dsl.generate.wrapper.EnumWrapper;
 
 public class StGroupFactory {
     public static STGroupFile createStGroup(
@@ -31,15 +34,15 @@ public class StGroupFactory {
         STGroupFile stGroup = new STGroupFile(StGroupFactory.class.getResource(templateFileResourcePath), "UTF-8", '<', '>');
         stGroup.registerRenderer(String.class, new StringRenderer());
 
-        stGroup.registerModelAdaptor(Object.class, new PojoModelAdaptor());
-        stGroup.registerModelAdaptor(TeamAppsDtoParser.ClassDeclarationContext.class, new ClassDeclarationContextModelAdaptor(model));
-        stGroup.registerModelAdaptor(TeamAppsDtoParser.InterfaceDeclarationContext.class, new InterfaceDeclarationContextModelAdaptor(model));
-        stGroup.registerModelAdaptor(TeamAppsDtoParser.EnumDeclarationContext.class, new EnumDeclarationContextModelAdapter());
+        stGroup.registerModelAdaptor(Object.class, new PojoModelAdaptor<>());
+        stGroup.registerModelAdaptor(ClassOrInterfaceWrapper.class, (ModelAdaptor) new ClassOrInterfaceWrapperModelAdaptor(model));
+        stGroup.registerModelAdaptor(EnumWrapper.class, new EnumWrapperModelAdapter());
         stGroup.registerModelAdaptor(TeamAppsDtoParser.EventDeclarationContext.class, new EventDeclarationContextModelAdaptor(model));
         stGroup.registerModelAdaptor(TeamAppsDtoParser.CommandDeclarationContext.class, new CommandDeclarationContextModelAdaptor(model));
         stGroup.registerModelAdaptor(TeamAppsDtoParser.QueryDeclarationContext.class, new QueryDeclarationContextModelAdaptor(model));
         stGroup.registerModelAdaptor(TeamAppsDtoParser.PropertyDeclarationContext.class, new PropertyDeclarationContextModelAdaptor());
         stGroup.registerModelAdaptor(TeamAppsDtoParser.TypeContext.class, new TypeContextModelAdaptor(model));
+        stGroup.registerModelAdaptor(TeamAppsDtoParser.FormalParameterWithDefaultContext.class, new FormalParameterWithDefaultModelAdaptor());
         return stGroup;
     }
 }

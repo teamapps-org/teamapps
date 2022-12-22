@@ -27,54 +27,54 @@ typeScriptFilePrelude() ::= <<
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsModuleName>";}; separator="\n">
-<if(c.hasEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
+<c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsPackageName>";}; separator="\n">
+<if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
-export interface Dto<c.typeScriptIdentifier> <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|Dto<c.typeScriptIdentifier>};  separator=", "> <endif>{
+export interface Dto<c.typeScriptIdentifier> <if(c.superTypes)>extends <c.superTypes:{c|Dto<c.typeScriptIdentifier>};  separator=", "> <endif>{
 	_type?: string;
-	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
-	<c.queryDeclaration:queryDeclaration(); separator=";\n">
+	<c.properties:typeScriptPropertyDeclaration(false); separator=";\n">
+	<c.queries:queryDeclaration(); separator=";\n">
 }
 
-<if(c.managedBaseClass)>
-export interface <c.Identifier>Reference {
+<if(c.managedBaseType)>
+export interface <c.name>Reference {
 	id: string;
 }
 <endif>
 
-<if(c.typescriptFactoryAnnotation)>
+<if(c.parserRuleContext.typescriptFactoryAnnotation)>
 export function createDto<c.typeScriptIdentifier; format="cap">(<c.allRequiredProperties:parameter(false); separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>, <endif><if(c.allNonRequiredProperties)>nonRequiredProperties?: {<c.allNonRequiredProperties:parameter(true); separator=", ">}<endif>): Dto<c.typeScriptIdentifier> {
 	return {
-		_type: "<c.Identifier.text>"<if(c.allProperties)>,<endif>
-		<c.allRequiredProperties:{p|<p.Identifier>}; separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>,<endif>
+		_type: "<c.name>"<if(c.allProperties)>,<endif>
+		<c.allRequiredProperties:{p|<p.name>}; separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>,<endif>
 		<if(c.allNonRequiredProperties)>...(nonRequiredProperties||{})<endif>
 	};
 }
 <endif>
 
-<if(c.hasCommands)>
-export interface Dto<c.Identifier.text>CommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|Dto<c.Identifier.text>CommandHandler}; separator=", "> <endif>{
-	<c.nonStaticCommandDeclarations:commandMethodStub(); separator="\n">
+<if(c.allCommands)>
+export interface Dto<c.name>CommandHandler <if(c.superTypesWithCommands)>extends <c.superTypesWithCommands:{c|Dto<c.name>CommandHandler}; separator=", "> <endif>{
+	<c.nonStaticCommands:commandMethodStub(); separator="\n">
 }
 <endif>
 
-<if(c.hasEvents)>
-export interface Dto<c.Identifier>EventSource <if(c.superClassAndDirectlyImplementedInterfacesWithEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|Dto<c.Identifier>EventSource}; separator=", "> <endif>{
-	<c.nonStaticEventDeclarations:teamAppsEventDeclaration(); separator="\n">
+<if(c.allEvents)>
+export interface Dto<c.name>EventSource <if(c.superTypesWithEvents)>extends <c.superTypesWithEvents:{c|Dto<c.name>EventSource}; separator=", "> <endif>{
+	<c.nonStaticEvents:teamAppsEventDeclaration(); separator="\n">
 }
 <endif>
 
-<c.eventDeclaration:eventInterface(); separator="\n\n">
+<c.events:eventInterface(); separator="\n\n">
 
-<c.queryDeclaration:queryInterface(); separator="\n\n">
+<c.queries:queryInterface(); separator="\n\n">
 >>
 
 commandMethodStub(cmd) ::= <<
-<cmd.Identifier>(<cmd.formalParameterWithDefault:parameter(false); separator=", ">): <if(cmd.type)>Promise\<<cmd.type.typeScriptType>\>|<cmd.type.typeScriptType><else>any<endif>;
+<cmd.name>(<cmd.formalParameterWithDefault:parameter(false); separator=", ">): <if(cmd.type)>Promise\<<cmd.type.typeScriptType>\>|<cmd.type.typeScriptType><else>any<endif>;
 >>
 
 teamAppsEventDeclaration(evt) ::= <<
-on<evt.Identifier.text; format="cap">: EventEmitter\<<evt.typeScriptInterfaceName>\>;
+on<evt.name; format="cap">: EventEmitter\<<evt.typeScriptInterfaceName>\>;
 >>
 
 eventInterface(evt) ::= <<
@@ -89,64 +89,64 @@ export interface <q.typeScriptInterfaceName> extends DtoQuery {
 }
 >>
 
-parameter(p, optional) ::= "<p.Identifier><if(optional)>?<endif>: <p.type.typeScriptType>"
+parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptType>"
 
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsModuleName>";}; separator="\n">
-<if(c.hasEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
+<c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsPackageName>";}; separator="\n">
+<if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
-export interface Dto<c.typeScriptIdentifier> <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|Dto<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
+export interface Dto<c.typeScriptIdentifier> <if(c.interfaces)>extends <c.interfaces:{superInterface|Dto<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
 	_type?: string;
-	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
-	<c.queryDeclaration:queryDeclaration(); separator=";\n">
+	<c.properties:typeScriptPropertyDeclaration(false); separator=";\n">
+	<c.queries:queryDeclaration(); separator=";\n">
 }
 
-<if(c.managedBaseClass)>
-export interface Dto<c.Identifier>Reference {
+<if(c.managedBaseType)>
+export interface Dto<c.name>Reference {
     id: string;
 }
 <endif>
 
-<if(c.hasCommands)>
-export interface Dto<c.Identifier.text>CommandHandler <if(c.superInterfacesWithCommands)>extends <c.superInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
-	<c.nonStaticCommandDeclarations:commandMethodStub(); separator="\n">
+<if(c.allCommands)>
+export interface Dto<c.name>CommandHandler <if(c.superTypesWithCommands)>extends <c.superInterfacesWithCommands:{c|<c.name>CommandHandler}; separator=", "> <endif>{
+	<c.nonStaticCommands:commandMethodStub(); separator="\n">
 }
 <endif>
 
-<if(c.hasEvents)>
-export interface Dto<c.Identifier>EventSource <if(c.superInterfacesWithEvents)>extends <c.superInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
-	<c.eventDeclaration:teamAppsEventDeclaration(); separator="\n">
+<if(c.allEvents)>
+export interface Dto<c.name>EventSource <if(c.superTypesWithEvents)>extends <c.superInterfacesWithEvents:{c|<c.name>EventSource}; separator=", "> <endif>{
+	<c.events:teamAppsEventDeclaration(); separator="\n">
 }
 <endif>
 
-<c.eventDeclaration:eventInterface(); separator="\n\n">
+<c.events:eventInterface(); separator="\n\n">
 
-<c.queryDeclaration:queryInterface(); separator="\n\n">
+<c.queries:queryInterface(); separator="\n\n">
 >>
 
 typeScriptPropertyDeclaration(p, forceRequired) ::= <<
-<p.Identifier.text><if(!p.requiredModifier && !forceRequired)>?<endif>: <p.type.typeScriptType>
+<p.name><if(!p.requiredModifier && !forceRequired)>?<endif>: <p.type.typeScriptType>
 >>
 
 queryDeclaration(q) ::= <<
-<q.Identifier.text>: (query: <q.typeScriptInterfaceName>) => Promise\<<q.type.typeScriptType>\>
+<q.name>: (query: <q.typeScriptInterfaceName>) => Promise\<<q.type.typeScriptType>\>
 >>
 
 enum(e) ::= <<
 <typeScriptFilePrelude()>
-export enum Dto<e.Identifier> {
-	<if(e.hasStringValues)>
-	<e.enumConstant:{ec|<ec.Identifier> = <ec.StringLiteral>}; separator=", ">
+export enum Dto<e.name> {
+	<if(e.stringEnum)>
+	<e.enumConstants:{ec|<ec.Identifier> = <ec.StringLiteral>}; separator=", ">
 	<else>
-	<e.enumConstant:{ec|<ec.Identifier>}; separator=", ">
+	<e.enumConstants:{ec|<ec.Identifier>}; separator=", ">
 	<endif>
 }
 >>
 
 eventNamesObject(c, static) ::= <<
-<if(static)>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<else>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<endif>
+<if(static)>{ componentType: "<c.name>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.name>", _type: "<e._type>"\}}; separator=", ">] }<else>{ componentType: "<c.name>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.name>", _type: "<e._type>"\}}; separator=", ">] }<endif>
 >>
 
 indexTs(classes, interfaces, enums) ::= <<

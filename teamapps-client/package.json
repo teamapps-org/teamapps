@@ -13,7 +13,8 @@
   "workspaces": [
     "teamapps-client-communication",
     "teamapps-client-core",
-    "teamapps-client-core-components"
+    "teamapps-client-core-components",
+    "teamapps-client-common-components"
   ],
   "comments": {},
   "engines": {

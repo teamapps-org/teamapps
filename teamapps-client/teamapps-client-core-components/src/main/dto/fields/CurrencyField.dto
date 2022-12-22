@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
+package "teamapps-client-core-components":org.teamapps.dto;
 
-import Component from "teamapps-client-core":org.teamapps.dto;
+import org.teamapps.dto.Component;
 
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
 //the value is always a long in cents for accuracy

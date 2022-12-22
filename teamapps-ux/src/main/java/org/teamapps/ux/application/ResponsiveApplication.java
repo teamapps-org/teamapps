@@ -73,15 +73,6 @@ public interface ResponsiveApplication {
 		}
 	}
 
-	static ResponsiveApplication createTopNavigationApplication(MobileApplicationNavigationController navigationController) {
-		boolean mobileDevice = CurrentSessionContext.get().getClientInfo().isMobileDevice();
-		if (mobileDevice) {
-			return new ResponsiveApplicationImpl(new TopNavigationMobileApplicationAssembler(navigationController));
-		} else {
-			return new ResponsiveApplicationImpl(new DesktopApplicationAssembler());
-		}
-	}
-
 	Component getUi();
 
 	void addApplicationChangeHandler(ApplicationChangeHandler changeHandler);

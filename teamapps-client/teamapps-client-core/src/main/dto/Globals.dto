@@ -1,6 +1,6 @@
-package org.teamapps.dto;
+package "teamapps-client-core":org.teamapps.dto;
 
-import Location from "teamapps-client-communication":org.teamapps.dto.protocol;
+import org.teamapps.dto.protocol.Location;
 
 class Globals implements ClientObject {
 

@@ -44,4 +44,5 @@ public interface DtoB extends DtoA, DtoObject {
 
 
 
+
 }

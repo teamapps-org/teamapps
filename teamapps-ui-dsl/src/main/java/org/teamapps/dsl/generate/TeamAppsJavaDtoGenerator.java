@@ -25,15 +25,16 @@ import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.AutoIndentWriter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.generate.wrapper.ClassWrapper;
+import org.teamapps.dsl.generate.wrapper.EnumWrapper;
+import org.teamapps.dsl.generate.wrapper.InterfaceWrapper;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
+
+import static org.teamapps.dsl.generate.ErrorMessageUtil.runWithExceptionMessagePrefix;
 
 public class TeamAppsJavaDtoGenerator {
 	private final static Logger logger = LoggerFactory.getLogger(TeamAppsJavaDtoGenerator.class);
@@ -41,7 +42,7 @@ public class TeamAppsJavaDtoGenerator {
 	private final STGroupFile stGroup;
 	private final TeamAppsIntermediateDtoModel model;
 
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws Exception {
 		Options options = new Options();
 		options.addOption(Option.builder()
 				.option("p")
@@ -51,23 +52,29 @@ public class TeamAppsJavaDtoGenerator {
 				.desc("Package name for generated classes")
 				.build());
 		options.addOption(Option.builder()
-						.option("i")
-						.longOpt("import")
-						.hasArg(true)
-						.desc("Additional directory with model files to include")
-						.build());
+				.option("i")
+				.longOpt("import")
+				.hasArg(true)
+				.desc("Additional directory with model files to include")
+				.build());
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
 
-		TeamAppsIntermediateDtoModel[] importedModels = Optional.ofNullable(cmd.getOptionValues('i')).stream().flatMap(Arrays::stream)
-				.map(dir -> {
-					try {
-						return new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(dir)));
-					} catch (IOException e) {
-						throw new RuntimeException(e);
+		String[] importedModelDirs = cmd.getOptionValues('i');
+		TeamAppsIntermediateDtoModel importedModel = null;
+		if (importedModelDirs != null) {
+			for (String importedModelDir : importedModelDirs) {
+				try {
+					if (importedModel != null) {
+						importedModel = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModel);
+					} else {
+						importedModel = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(importedModelDir)));
 					}
-				}).toArray(TeamAppsIntermediateDtoModel[]::new);
-
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 
 		if (cmd.getArgs().length < 2) {
 			new HelpFormatter().printHelp("generator", options);
@@ -81,7 +88,12 @@ public class TeamAppsJavaDtoGenerator {
 		System.out.println("Generating Java from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath());
 
 
-		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModels);
+		TeamAppsIntermediateDtoModel model;
+		if (importedModel != null) {
+			model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModel);
+		} else {
+			model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir));
+		}
 		new TeamAppsDtoModelValidator(model).validate();
 		new TeamAppsJavaDtoGenerator(model).generate(targetDir);
 	}
@@ -93,121 +105,110 @@ public class TeamAppsJavaDtoGenerator {
 
 	public void generate(File targetDir) throws IOException {
 		FileUtils.deleteDirectory(targetDir);
-		for (TeamAppsDtoParser.ClassDeclarationContext clazzContext : model.getOwnClassDeclarations()) {
-			String packageName = TeamAppsIntermediateDtoModel.getPackageName(clazzContext);
-			File packageDir = FileUtils.createDirectory(new File(targetDir, packageName.replace('.', '/')));
-			if (clazzContext.notGeneratedAnnotation() != null) {
-				System.out.println("Skipping @NotGenerated class: " + clazzContext.Identifier());
+		for (ClassWrapper classWrapper : model.getOwnClassDeclarations()) {
+			File packageDir = FileUtils.createDirectory(new File(targetDir, classWrapper.getPackageName().replace('.', '/')));
+			if (classWrapper.getParserRuleContext().notGeneratedAnnotation() != null) {
+				System.out.println("Skipping @NotGenerated class: " + classWrapper.getName());
 				continue;
 			}
-			System.out.println("Generating class: " + clazzContext.Identifier());
-			generateClass(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + ".java")));
-			generateClassJsonWrapper(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + "Wrapper.java")));
-			if (model.isManagedBaseClass(clazzContext)) {
-				generateClassReference(clazzContext, new FileWriter(new File(packageDir, "Dto" + clazzContext.Identifier() + "Reference.java")));
+			System.out.println("Generating class: " + classWrapper.getName());
+			generateClass(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + ".java")));
+			generateClassJsonWrapper(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + "Wrapper.java")));
+			if (classWrapper.isManaged()) {
+				generateClassReference(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + "Reference.java")));
 			}
 		}
-		for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getOwnInterfaceDeclarations()) {
-			String packageName = TeamAppsIntermediateDtoModel.getPackageName(interfaceContext);
-			File packageDir = FileUtils.createDirectory(new File(targetDir, packageName.replace('.', '/')));
-			if (interfaceContext.notGeneratedAnnotation() != null) {
-				System.out.println("Skipping @NotGenerated interface: " + interfaceContext.Identifier());
+		for (InterfaceWrapper interfaceWrapper : model.getOwnInterfaceDeclarations()) {
+			File packageDir = FileUtils.createDirectory(new File(targetDir, interfaceWrapper.getPackageName().replace('.', '/')));
+			if (interfaceWrapper.getParserRuleContext().notGeneratedAnnotation() != null) {
+				System.out.println("Skipping @NotGenerated interface: " + interfaceWrapper.getName());
 				continue;
 			}
-			logger.info("Generating interface: " + interfaceContext.Identifier());
-			generateInterface(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + ".java")));
-			generateInterfaceJsonWrapper(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + "Wrapper.java")));
-			if (model.isManagedBaseInterface(interfaceContext)) {
-				generateInterfaceReference(interfaceContext, new FileWriter(new File(packageDir, "Dto" + interfaceContext.Identifier() + "Reference.java")));
+			logger.info("Generating interface: " + interfaceWrapper.getName());
+			generateInterface(interfaceWrapper, new FileWriter(new File(packageDir, "Dto" + interfaceWrapper.getName() + ".java")));
+			generateInterfaceJsonWrapper(interfaceWrapper, new FileWriter(new File(packageDir, "Dto" + interfaceWrapper.getName() + "Wrapper.java")));
+			if (interfaceWrapper.isManaged()) {
+				generateInterfaceReference(interfaceWrapper, new FileWriter(new File(packageDir, "Dto" + interfaceWrapper.getName() + "Reference.java")));
 			}
 		}
-		for (TeamAppsDtoParser.EnumDeclarationContext enumContext : model.getOwnEnumDeclarations()) {
-			String packageName = TeamAppsIntermediateDtoModel.getPackageName(enumContext);
-			File packageDir = FileUtils.createDirectory(new File(targetDir, packageName.replace('.', '/')));
-			if (enumContext.notGeneratedAnnotation() != null) {
-				System.out.println("Skipping @NotGenerated enum: " + enumContext.Identifier());
+		for (EnumWrapper enumWrapper : model.getOwnEnumDeclarations()) {
+			File packageDir = FileUtils.createDirectory(new File(targetDir, enumWrapper.getPackageName().replace('.', '/')));
+			if (enumWrapper.getParserRuleContext().notGeneratedAnnotation() != null) {
+				System.out.println("Skipping @NotGenerated enum: " + enumWrapper.getName());
 				continue;
 			}
-			generateEnum(enumContext, new FileWriter(new File(packageDir, "Dto" + enumContext.Identifier() + ".java")));
+			generateEnum(enumWrapper, new FileWriter(new File(packageDir, "Dto" + enumWrapper.getName() + ".java")));
 		}
 	}
 
-	private void generateClassJsonWrapper(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("jsonWrapper")
-				.add("c", clazzContext);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
+	private void generateClassJsonWrapper(ClassWrapper clazzContext, Writer writer) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("jsonWrapper")
+					.add("c", clazzContext);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating JsonWrapper for " + clazzContext.getName());
 	}
 
-	private void generateInterfaceJsonWrapper(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext, Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("jsonWrapper")
-				.add("c", interfaceContext);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
+	private void generateInterfaceJsonWrapper(InterfaceWrapper interfaceWrapper, Writer writer) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("jsonWrapper")
+					.add("c", interfaceWrapper);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating JsonWrapper for " + interfaceWrapper.getName());
 	}
 
-	private void generateEventJsonWrapper(TeamAppsDtoParser.EventDeclarationContext interfaceContext, Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("jsonWrapper")
-				.add("c", interfaceContext);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
+	void generateClass(ClassWrapper clazzContext, Writer writer) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("class")
+					.add("c", clazzContext);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating class " + clazzContext.getName());
 	}
 
-	void generateClass(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("class")
-				.add("c", clazzContext);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
+	void generateClassReference(ClassWrapper clazzContext, Writer writer) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("classReference")
+					.add("c", clazzContext);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating class reference for " + clazzContext.getName());
 	}
 
-	void generateClassReference(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("classReference")
-				.add("c", clazzContext);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
+	void generateInterfaceReference(InterfaceWrapper interfaceWrapper, Writer writer) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("classReference")
+					.add("c", interfaceWrapper);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating interface reference for " + interfaceWrapper.getName());
 	}
 
-	void generateInterfaceReference(TeamAppsDtoParser.InterfaceDeclarationContext clazzContext, Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("classReference")
-				.add("c", clazzContext);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
+	void generateInterface(InterfaceWrapper interfaceWrapper, Writer writer) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("interface")
+					.add("c", interfaceWrapper);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating interface " + interfaceWrapper.getName());
 	}
 
-	void generateInterface(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext, Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("interface")
-				.add("c", interfaceContext);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
-	}
-
-	void generateEnum(TeamAppsDtoParser.EnumDeclarationContext enumContext, Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("enumClass")
-				.add("e", enumContext);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
-	}
-
-	void generateJacksonTypeIdMaps(Writer writer) throws IOException {
-		ArrayList<Object> allJsonSerializableClasses = new ArrayList<>();
-		allJsonSerializableClasses.addAll(model.getOwnClassDeclarations());
-		allJsonSerializableClasses.addAll(model.getOwnInterfaceDeclarations());
-		allJsonSerializableClasses.addAll(model.getOwnCommandDeclarations());
-		allJsonSerializableClasses.addAll(model.getOwnEventDeclarations());
-		allJsonSerializableClasses.addAll(model.getOwnQueryDeclarations());
-		ST template = stGroup.getInstanceOf("jacksonTypeIdMaps")
-				.add("allJsonSerializableClasses", allJsonSerializableClasses);
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
+	void generateEnum(EnumWrapper enumWrapper, Writer writer) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("enumClass")
+					.add("e", enumWrapper);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating enum " + enumWrapper.getName());
 	}
 
 }

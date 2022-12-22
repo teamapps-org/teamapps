@@ -19,31 +19,30 @@
  */
 package org.teamapps.dsl.generate;
 
-import com.google.common.collect.Streams;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.TeamAppsDtoParser.*;
+import org.teamapps.dsl.generate.adapter.Import;
+import org.teamapps.dsl.generate.adapter.Imports;
+import org.teamapps.dsl.generate.wrapper.*;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TeamAppsIntermediateDtoModel {
 
-	private final List<ClassDeclarationContext> classDeclarations = new ArrayList<>();
-	private final List<InterfaceDeclarationContext> interfaceDeclarations = new ArrayList<>();
-	private final List<EnumDeclarationContext> enumDeclarations = new ArrayList<>();
+	private final List<ClassWrapper> classDeclarations = new ArrayList<>();
+	private final List<InterfaceWrapper> interfaceDeclarations = new ArrayList<>();
+	private final List<EnumWrapper> enumDeclarations = new ArrayList<>();
 	private final List<EventDeclarationContext> eventDeclarations = new ArrayList<>();
 	private final List<QueryDeclarationContext> queryDeclarations = new ArrayList<>();
 	private final List<CommandDeclarationContext> commandDeclarations = new ArrayList<>();
 
-	private final List<ClassDeclarationContext> ownClassDeclarations;
-	private final List<InterfaceDeclarationContext> ownInterfaceDeclarations;
-	private final List<EnumDeclarationContext> ownEnumDeclarations;
+	private final List<ClassWrapper> ownClassDeclarations;
+	private final List<InterfaceWrapper> ownInterfaceDeclarations;
+	private final List<EnumWrapper> ownEnumDeclarations;
 	private final List<EventDeclarationContext> ownEventDeclarations;
 	private final List<QueryDeclarationContext> ownQueryDeclarations;
 	private final List<CommandDeclarationContext> ownCommandDeclarations;
@@ -52,7 +51,7 @@ public class TeamAppsIntermediateDtoModel {
 		this(Collections.singletonList(classCollectionContext));
 	}
 
-	public TeamAppsIntermediateDtoModel(List<ClassCollectionContext> classCollectionContexts, TeamAppsIntermediateDtoModel... delegates) {
+	public TeamAppsIntermediateDtoModel(List<ClassCollectionContext> classCollectionContexts, TeamAppsIntermediateDtoModel... importedModels) {
 		classCollectionContexts.forEach(classCollectionContext -> {
 			List<TypeDeclarationContext> typeDeclarations = classCollectionContext.typeDeclaration();
 			classDeclarations.addAll(extractClassDeclarations(typeDeclarations));
@@ -70,7 +69,7 @@ public class TeamAppsIntermediateDtoModel {
 		ownQueryDeclarations = List.copyOf(queryDeclarations);
 		ownCommandDeclarations = List.copyOf(commandDeclarations);
 
-		for (TeamAppsIntermediateDtoModel delegate : delegates) {
+		for (TeamAppsIntermediateDtoModel delegate : importedModels) {
 			classDeclarations.addAll(delegate.classDeclarations);
 			interfaceDeclarations.addAll(delegate.interfaceDeclarations);
 			enumDeclarations.addAll(delegate.enumDeclarations);
@@ -80,57 +79,57 @@ public class TeamAppsIntermediateDtoModel {
 		}
 	}
 
-	private List<ClassDeclarationContext> extractClassDeclarations(List<TypeDeclarationContext> types) {
+	private List<ClassWrapper> extractClassDeclarations(List<TypeDeclarationContext> types) {
 		return types.stream()
 				.filter(typeContext -> typeContext.classDeclaration() != null)
-				.map(typeContext -> typeContext.classDeclaration())
+				.map(typeContext -> new ClassWrapper(typeContext.classDeclaration(), this))
 				.collect(Collectors.toList());
 	}
 
-	private List<InterfaceDeclarationContext> extractInterfaceDeclarations(List<TypeDeclarationContext> types) {
+	private List<InterfaceWrapper> extractInterfaceDeclarations(List<TypeDeclarationContext> types) {
 		return types.stream()
 				.filter(typeContext -> typeContext.interfaceDeclaration() != null)
-				.map(typeContext -> typeContext.interfaceDeclaration())
+				.map(typeContext -> new InterfaceWrapper(typeContext.interfaceDeclaration(), this))
 				.collect(Collectors.toList());
 	}
 
-	private List<EnumDeclarationContext> extractEnumDeclarations(List<TypeDeclarationContext> types) {
+	private List<EnumWrapper> extractEnumDeclarations(List<TypeDeclarationContext> types) {
 		return types.stream()
 				.filter(typeContext -> typeContext.enumDeclaration() != null)
-				.map(typeContext -> typeContext.enumDeclaration())
+				.map(typeContext -> new EnumWrapper(typeContext.enumDeclaration(), this))
 				.collect(Collectors.toList());
 	}
 
 	private List<EventDeclarationContext> extractEventDeclarations() {
 		return Stream.concat(
-				classDeclarations.stream().flatMap(c -> c.eventDeclaration().stream()),
-				interfaceDeclarations.stream().flatMap(i -> i.eventDeclaration().stream())
+				classDeclarations.stream().flatMap(c -> c.getEvents().stream()),
+				interfaceDeclarations.stream().flatMap(i -> i.getEvents().stream())
 		).collect(Collectors.toList());
 	}
 
 	private List<QueryDeclarationContext> extractQueryDeclarations() {
 		return Stream.concat(
-				classDeclarations.stream().flatMap(c -> c.queryDeclaration().stream()),
-				interfaceDeclarations.stream().flatMap(i -> i.queryDeclaration().stream())
+				classDeclarations.stream().flatMap(c -> c.getQueries().stream()),
+				interfaceDeclarations.stream().flatMap(i -> i.getQueries().stream())
 		).collect(Collectors.toList());
 	}
 
 	private List<CommandDeclarationContext> extractCommandDeclarations() {
 		return Stream.concat(
-				classDeclarations.stream().flatMap(c -> c.commandDeclaration().stream()),
-				interfaceDeclarations.stream().flatMap(i -> i.commandDeclaration().stream())
+				classDeclarations.stream().flatMap(c -> c.getCommands().stream()),
+				interfaceDeclarations.stream().flatMap(i -> i.getCommands().stream())
 		).collect(Collectors.toList());
 	}
 
-	public List<ClassDeclarationContext> getOwnClassDeclarations() {
+	public List<ClassWrapper> getOwnClassDeclarations() {
 		return ownClassDeclarations;
 	}
 
-	public List<InterfaceDeclarationContext> getOwnInterfaceDeclarations() {
+	public List<InterfaceWrapper> getOwnInterfaceDeclarations() {
 		return ownInterfaceDeclarations;
 	}
 
-	public List<EnumDeclarationContext> getOwnEnumDeclarations() {
+	public List<EnumWrapper> getOwnEnumDeclarations() {
 		return ownEnumDeclarations;
 	}
 
@@ -146,15 +145,15 @@ public class TeamAppsIntermediateDtoModel {
 		return ownCommandDeclarations;
 	}
 
-	public List<ClassDeclarationContext> getClassDeclarations() {
+	public List<ClassWrapper> getClassDeclarations() {
 		return classDeclarations;
 	}
 
-	public List<InterfaceDeclarationContext> getInterfaceDeclarations() {
+	public List<InterfaceWrapper> getInterfaceDeclarations() {
 		return interfaceDeclarations;
 	}
 
-	public List<EnumDeclarationContext> getEnumDeclarations() {
+	public List<EnumWrapper> getEnumDeclarations() {
 		return enumDeclarations;
 	}
 
@@ -170,127 +169,112 @@ public class TeamAppsIntermediateDtoModel {
 		return commandDeclarations;
 	}
 
-	public ClassDeclarationContext findReferencedClass(TypeContext typeContext) {
+	public Optional<ClassWrapper> findReferencedClass(TypeContext typeContext) {
 		TypeReferenceContext typeReferenceContext = typeContext.typeReference();
 		if (typeReferenceContext == null) {
-			return null;
+			return Optional.empty();
 		}
-
-		String fqTypename = getQualifiedTypeName(typeContext, typeReferenceContext);
-
-		return classDeclarations.stream()
-				.filter(classDeclaration -> {
-					String fqClassName = getQualifiedClassName(classDeclaration);
-					return fqClassName.equals(fqTypename);
-				})
-				.findFirst()
-				.orElseGet(() -> {
+		String qualifiedTypeName = getQualifiedTypeName(typeContext);
+		return findClassByQualifiedName(qualifiedTypeName)
+				.or(() -> {
 					if (typeReferenceContext.typeArguments() != null && !typeReferenceContext.typeArguments().typeArgument().isEmpty()) {
 						return findReferencedClass(typeReferenceContext.typeArguments().typeArgument(0).type());
 					} else {
-						return null;
+						return Optional.empty();
 					}
 				});
 	}
 
-	private static String getQualifiedClassName(ClassDeclarationContext classDeclaration) {
-		String packageName = getPackageName(classDeclaration);
-		return packageName + "." + classDeclaration.Identifier().getText();
+	public Optional<TypeWrapper<?>> findTypeByQualifiedName(String qualifiedName) {
+		return Optional.<TypeWrapper<?>>empty()
+				.or(() -> findClassByQualifiedName(qualifiedName))
+				.or(() -> findInterfaceByQualifiedName(qualifiedName))
+				.or(() -> findEnumByQualifiedName(qualifiedName));
 	}
 
-	public static String getPackageName(ParserRuleContext parserRuleContext) {
-		return findAncestorOfType(parserRuleContext, ClassCollectionContext.class).map(ccc -> ccc.packageDeclaration().packageName().getText()).orElse(null);
+	public Optional<ClassWrapper> findClassByQualifiedName(String qualifiedName) {
+		return classDeclarations.stream()
+				.filter(classDeclaration -> classDeclaration.getQualifiedName().equals(qualifiedName))
+				.findFirst();
 	}
 
-	private static String getQualifiedInterfaceName(InterfaceDeclarationContext interfaceDeclaration) {
-		String packageName = getPackageName(interfaceDeclaration);
-		return packageName + "." + interfaceDeclaration.Identifier().getText();
+	public Optional<InterfaceWrapper> findInterfaceByQualifiedName(String qualifiedName) {
+		return interfaceDeclarations.stream()
+				.filter(interfaceDeclaration -> interfaceDeclaration.getQualifiedName().equals(qualifiedName))
+				.findFirst();
 	}
 
-	private static String getQualifiedTypeName(TypeContext typeContext, TypeReferenceContext typeReferenceContext) {
+	public Optional<EnumWrapper> findEnumByQualifiedName(String qualifiedTypeName) {
+		return enumDeclarations.stream()
+				.filter(interfaceDeclaration -> interfaceDeclaration.getQualifiedName().equals(qualifiedTypeName))
+				.findFirst();
+	}
+
+	private static String getQualifiedTypeName(TypeContext typeContext) {
 		if (typeContext.primitiveType() != null) {
-			return typeReferenceContext.getText();
+			return typeContext.typeReference().getText();
 		}
 
-		String simpleTypeName = typeContext.typeReference().typeName().getText();
+		String typeName = typeContext.typeReference().typeName().getText();
+		return getQualifiedTypeName(typeName, typeContext);
+	}
 
-		return findImport(typeContext, simpleTypeName)
-				.map(i -> i.packageName().getText() + "." + simpleTypeName)
-				.or(() -> findAncestorOfType(typeContext, ClassCollectionContext.class)
-						.map(ccc -> ccc.packageDeclaration().packageName().getText() + "." + typeContext.typeReference().typeName().getText()))
-				.orElse(typeReferenceContext.getText());
+	public static String getQualifiedTypeName(String potentiallyImportedTypeName, ParserRuleContext context) {
+		return findImport(context, potentiallyImportedTypeName)
+				.map(i -> i.qualifiedTypeName().getText())
+				.or(() -> findAncestorOfType(context, ClassCollectionContext.class, false)
+						.map(ccc -> ccc.packageDeclaration().packageName().getText() + "." + potentiallyImportedTypeName))
+				.orElse(potentiallyImportedTypeName);
 	}
 
 	private static Optional<ImportDeclarationContext> findImport(ParserRuleContext parserRuleContext, String simpleTypeName) {
-		return findAncestorOfType(parserRuleContext, ClassCollectionContext.class).stream()
+		return findAncestorOfType(parserRuleContext, ClassCollectionContext.class, false).stream()
 				.flatMap(ccc -> ccc.importDeclaration().stream())
-				.filter(i -> i.Identifier().getText().equals(simpleTypeName))
+				.filter(i -> i.qualifiedTypeName().Identifier().getText().equals(simpleTypeName))
 				.findFirst();
 	}
 
 	public List<ImportDeclarationContext> getAllImports(ParserRuleContext context) {
-		return findAncestorOfType(context, ClassCollectionContext.class).stream()
+		return findAncestorOfType(context, ClassCollectionContext.class, false).stream()
 				.flatMap(ccc -> ccc.importDeclaration().stream())
 				.collect(Collectors.toList());
 	}
 
-	public InterfaceDeclarationContext findReferencedInterface(TypeContext typeContext) {
+	public Optional<InterfaceWrapper> findReferencedInterface(TypeContext typeContext) {
 		TypeReferenceContext typeReferenceContext = typeContext.typeReference();
 		if (typeReferenceContext == null) {
-			return null;
+			return Optional.empty();
 		}
-
-		String fqTypename = getQualifiedTypeName(typeContext, typeReferenceContext);
-
-		return interfaceDeclarations.stream()
-				.filter(interfaceDecl -> {
-					String fqClassName = getQualifiedInterfaceName(interfaceDecl);
-					return fqClassName.equals(fqTypename);
-				})
-				.findFirst()
-				.orElseGet(() -> {
+		return findInterfaceByQualifiedName(getQualifiedTypeName(typeContext))
+				.or(() -> {
 					if (typeReferenceContext.typeArguments() != null && !typeReferenceContext.typeArguments().typeArgument().isEmpty()) {
 						return findReferencedInterface(typeReferenceContext.typeArguments().typeArgument(0).type());
 					} else {
-						return null;
+						return Optional.empty();
 					}
 				});
 	}
 
-	public ClassDeclarationContext findClassByName(String className, boolean throwExceptionIfNotFound) {
-		return classDeclarations.stream()
-				.filter(otherClassDeclarationContext -> {
-					return otherClassDeclarationContext.Identifier().getText().equals(className)
-							|| getQualifiedClassName(otherClassDeclarationContext).equals(className);
-				})
-				.findFirst().orElseGet(() -> {
-					if (throwExceptionIfNotFound) {
-						throw new IllegalArgumentException("Could not find class " + className);
-					} else {
-						return null;
-					}
-				});
-	}
-
-	public EnumDeclarationContext findReferencedEnum(TypeContext typeContext) {
+	public Optional<EnumWrapper> findReferencedEnum(TypeContext typeContext) {
 		TypeReferenceContext typeRef = typeContext.typeReference();
 		if (typeRef == null) {
-			return null;
+			return Optional.empty();
 		}
 
-		return enumDeclarations.stream()
-				.filter(e -> e.Identifier().getText().equals(typeRef.getText()))
-				.findFirst()
-				.orElseGet(() -> {
+		return findEnumByQualifiedName(getQualifiedTypeName(typeContext))
+				.or(() -> {
 					if (typeRef.typeArguments() != null && !typeRef.typeArguments().typeArgument().isEmpty()) {
 						return findReferencedEnum(typeRef.typeArguments().typeArgument(0).type());
 					} else {
-						return null;
+						return Optional.empty();
 					}
 				});
 	}
 
-	public static <T extends RuleContext> Optional<T> findAncestorOfType(RuleContext ruleContext, Class<? extends T> ancestorType) {
+	public static <T extends RuleContext> Optional<T> findAncestorOfType(RuleContext ruleContext, Class<? extends T> ancestorType, boolean includeSelf) {
+		if (includeSelf && ancestorType.isInstance(ruleContext)) {
+			return Optional.of((T) ruleContext);
+		}
 		while (ruleContext != null) {
 			ruleContext = ruleContext.getParent();
 			if (ancestorType.isInstance(ruleContext)) {
@@ -300,517 +284,85 @@ public class TeamAppsIntermediateDtoModel {
 		return Optional.empty();
 	}
 
-	public List<ClassDeclarationContext> findAllSuperClasses(ClassDeclarationContext clazzContext) {
-		List<ClassDeclarationContext> superClasses = new ArrayList<>();
-		clazzContext = findSuperClass(clazzContext);
-		while (clazzContext != null) {
-			superClasses.add(clazzContext);
-			clazzContext = findSuperClass(clazzContext);
-		}
-		return superClasses;
+	public InterfaceWrapper findInterface(TypeNameContext typeNameContext) {
+		String qualifiedTypeName = getQualifiedTypeName(typeNameContext.Identifier().getText(), typeNameContext);
+		return findInterfaceByQualifiedName(qualifiedTypeName)
+				.orElseThrow(() -> new TeamAppsGeneratorException("Cannot find interface " + qualifiedTypeName));
 	}
 
-	public List<ClassDeclarationContext> findSelfAndAllSuperClasses(ClassDeclarationContext clazzContext) {
-		List<ClassDeclarationContext> allSuperClasses = findAllSuperClasses(clazzContext);
-		allSuperClasses.add(0, clazzContext);
-		return allSuperClasses;
-	}
-
-	public List<ClassDeclarationContext> findAllSubClasses(ClassDeclarationContext clazzContext) {
-		return classDeclarations.stream()
-				.filter(otherClass -> findAllSuperClasses(otherClass).contains(clazzContext))
-				.collect(Collectors.toList());
-	}
-
-	public List<ClassDeclarationContext> findAllSubClasses(InterfaceDeclarationContext interfaceContext) {
-		return classDeclarations.stream()
-				.filter(classContext -> findAllImplementedInterfaces(classContext).contains(interfaceContext))
-				.collect(Collectors.toList());
-	}
-
-	public List<InterfaceDeclarationContext> findAllSubInterfaces(InterfaceDeclarationContext interfaceContext) {
-		return interfaceDeclarations.stream()
-				.filter(interf -> findSuperInterfaces(interf).contains(interfaceContext))
-				.collect(Collectors.toList());
-	}
-
-	public List<PropertyDeclarationContext> findAllProperties(ClassDeclarationContext clazzContext) {
-		List<ClassDeclarationContext> selfAndAllSuperClasses = findSelfAndAllSuperClasses(clazzContext);
-		Collections.reverse(selfAndAllSuperClasses);
-		return Stream.concat(
-						selfAndAllSuperClasses.stream()
-								.flatMap(classContext -> classContext.propertyDeclaration().stream())
-								.filter(distinctByKey(property -> property.Identifier().getText())),
-						findAllImplementedInterfaces(clazzContext).stream()
-								.flatMap(interfaceContext -> interfaceContext.propertyDeclaration().stream())
-								.filter(distinctByKey(property -> property.Identifier().getText()))
-				)
-				.distinct() // interfaces may be implemented multiple times in class hierarchy
-				.collect(Collectors.toList());
-	}
-
-	public List<PropertyDeclarationContext> findAllProperties(InterfaceDeclarationContext interfaceContext) {
-		return findSelfAndAllSuperInterfaces(interfaceContext).stream()
-				.flatMap(interf -> interf.propertyDeclaration().stream())
-				.filter(distinctByKey(property -> property.Identifier().getText()))
-				.collect(Collectors.toList());
-	}
-
-	public <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
-		Set<Object> seen = ConcurrentHashMap.newKeySet();
-		return t -> seen.add(keyExtractor.apply(t));
-	}
-
-	public List<PropertyDeclarationContext> filterRequiredProperties(List<PropertyDeclarationContext> propertyDeclarations, boolean required) {
-		return propertyDeclarations.stream()
-				.filter(p -> required ^ p.requiredModifier() == null)
-				.collect(Collectors.toList());
-	}
-
-	public ClassDeclarationContext findSuperClass(ClassDeclarationContext clazzContext) {
-		if (clazzContext.superClassDecl() != null) {
-			String superClassName = clazzContext.superClassDecl().typeName().getText();
-			ClassDeclarationContext superClass = findClassByName(superClassName, true);
-			if (superClass == null) {
-				throw new IllegalArgumentException("Cannot find super class of " + clazzContext.Identifier().getText() + " with name: " + superClassName);
-			}
-			return superClass;
-		} else {
-			return null;
-		}
-	}
-
-	public List<InterfaceDeclarationContext> findAllSuperInterfaces(InterfaceDeclarationContext interfaceContext) {
-		if (interfaceContext.superInterfaceDecl() != null) {
-			List<InterfaceDeclarationContext> superInterfaces = findSuperInterfaces(interfaceContext);
-			superInterfaces.addAll(superInterfaces.stream().flatMap(si -> findAllSuperInterfaces(si).stream()).collect(Collectors.toList()));
-			return superInterfaces.stream().distinct().collect(Collectors.toList());
-		} else {
-			return new ArrayList<>();
-		}
-	}
-
-	public List<InterfaceDeclarationContext> findSuperInterfaces(InterfaceDeclarationContext interfaceContext) {
-		if (interfaceContext.superInterfaceDecl() != null) {
-			return interfaceContext.superInterfaceDecl().classList().typeName().stream()
-					.map(typeName -> typeName.getText())
-					.map(name -> findInterfaceByName(name, false))
-					.collect(Collectors.toList());
-		} else {
-			return new ArrayList<>();
-		}
-	}
-
-	public List<InterfaceDeclarationContext> findAllImplementedInterfaces(ClassDeclarationContext classContext) {
-		return findSelfAndAllSuperClasses(classContext).stream()
-				.flatMap(clazz -> clazz.implementsDecl() != null ? clazz.implementsDecl().classList().typeName().stream()
-						.map(typeName -> findInterfaceByName(typeName.getText(), true))
-						.flatMap(interfaceContext -> findSelfAndAllSuperInterfaces(interfaceContext).stream()) : Stream.empty())
-				.collect(Collectors.toList());
-	}
-
-	public List<InterfaceDeclarationContext> getDirectlyImplementedInterfaces(ClassDeclarationContext classContext) {
-		if (classContext.implementsDecl() != null) {
-			return classContext.implementsDecl().classList().typeName().stream()
-					.map(typeName -> findInterfaceByName(typeName.getText(), true))
-					.collect(Collectors.toList());
-		} else {
-			return new ArrayList<>();
-		}
-	}
-
-	public InterfaceDeclarationContext findInterfaceByName(String name, boolean throwExceptionIfNotFound) {
-		return interfaceDeclarations.stream()
-				.filter(interfaceDeclaration -> interfaceDeclaration.Identifier().getText().equals(name))
-				.findAny().orElseGet(() -> {
-					if (throwExceptionIfNotFound) {
-						throw new IllegalArgumentException("Could not find interface " + name);
-					} else {
-						return null;
-					}
-				});
-	}
-
-	public List<ClassDeclarationContext> findAllImplementingClasses(InterfaceDeclarationContext interfaceContext) {
-		return classDeclarations.stream()
-				.filter(clazz -> findAllImplementedInterfaces(clazz).contains(interfaceContext)).collect(Collectors.toList());
-	}
-
-	public List<InterfaceDeclarationContext> findSelfAndAllSuperInterfaces(InterfaceDeclarationContext interfaceContext) {
-		List<InterfaceDeclarationContext> superInterfacesAndSelf = findAllSuperInterfaces(interfaceContext);
-		superInterfacesAndSelf.add(0, interfaceContext);
-		return superInterfacesAndSelf;
-	}
-
-	public List<PropertyDeclarationContext> getSimplePropertiesSortedByRelevance(List<PropertyDeclarationContext> properties) {
-		return properties.stream()
-				.sorted((p1, p2) -> {
-					Function<PropertyDeclarationContext, Integer> getPriority = (p) -> {
-						if (p.Identifier().getText().equals("id")) {
-							return 50;
-						} else if (p.Identifier().getText().equals("name")) {
-							return 40;
-						} else if (p.Identifier().getText().contains("Id")) {
-							return 30;
-						} else if (p.Identifier().getText().contains("Name")) {
-							return 20;
-						} else if (findReferencedClass(p.type()) == null) {
-							return 10;
-						} else {
-							return 0;
-						}
-					};
-					return getPriority.apply(p2) - getPriority.apply(p1);
-				})
-				.collect(Collectors.toList());
-	}
-
-	public List<PropertyDeclarationContext> findPropertiesNotImplementedBySuperClasses(ClassDeclarationContext classContext) {
-		List<PropertyDeclarationContext> properties = findAllProperties(classContext);
-		ClassDeclarationContext superClass = findSuperClass(classContext);
-		if (superClass != null) {
-			properties.removeAll(findAllProperties(superClass));
-		}
-		return properties;
-	}
-
-	public List<ParserRuleContext> findSuperClassAndDirectlyImplementedInterfaces(ClassDeclarationContext classContext) {
-		ClassDeclarationContext superClass = findSuperClass(classContext);
-		List<InterfaceDeclarationContext> directlyImplementedInterfaces = getDirectlyImplementedInterfaces(classContext);
-
-		List<ParserRuleContext> result = new ArrayList<>();
-		if (superClass != null) {
-			result.add(superClass);
-		}
-		result.addAll(directlyImplementedInterfaces);
-		return result;
-	}
-
-	public List<CommandDeclarationContext> getAllCommands(ClassDeclarationContext classContext) {
-		List<CommandDeclarationContext> commands = Stream.concat(
-						findSelfAndAllSuperClasses(classContext).stream()
-								.flatMap(clazz -> clazz.commandDeclaration().stream()),
-						findAllImplementedInterfaces(classContext).stream()
-								.flatMap(interf -> interf.commandDeclaration().stream())
-
-				)
-				.filter(distinctByKey(command -> command.Identifier().getText()))
-				.collect(Collectors.toList());
-		Collections.reverse(commands);
-		return commands;
-	}
-
-	public List<CommandDeclarationContext> getAllCommands(InterfaceDeclarationContext interfaceContext) {
-		return findSelfAndAllSuperInterfaces(interfaceContext).stream()
-				.flatMap(interf -> interf.commandDeclaration().stream())
-				.filter(distinctByKey(command -> command.Identifier().getText()))
-				.collect(Collectors.toList());
-	}
-
-	public List<EventDeclarationContext> getAllEvents(ClassDeclarationContext classContext) {
-		List<EventDeclarationContext> events = Stream.concat(
-						findSelfAndAllSuperClasses(classContext).stream()
-								.flatMap(clazz -> clazz.eventDeclaration().stream()),
-						findAllImplementedInterfaces(classContext).stream()
-								.flatMap(interf -> interf.eventDeclaration().stream())
-
-				)
-				.filter(distinctByKey(event -> event.Identifier().getText()))
-				.collect(Collectors.toList());
-		Collections.reverse(events);
-		return events;
-	}
-
-	public List<EventDeclarationContext> getAllEvents(InterfaceDeclarationContext interfaceContext) {
-		return findSelfAndAllSuperInterfaces(interfaceContext).stream()
-				.flatMap(interf -> interf.eventDeclaration().stream())
-				.filter(distinctByKey(event -> event.Identifier().getText()))
-				.collect(Collectors.toList());
-	}
-
-	public List<QueryDeclarationContext> getAllQueries(ClassDeclarationContext classContext) {
-		List<QueryDeclarationContext> queries = Stream.concat(
-						findSelfAndAllSuperClasses(classContext).stream()
-								.flatMap(clazz -> clazz.queryDeclaration().stream()),
-						findAllImplementedInterfaces(classContext).stream()
-								.flatMap(interf -> interf.queryDeclaration().stream())
-
-				)
-				.filter(distinctByKey(query -> query.Identifier().getText()))
-				.collect(Collectors.toList());
-		Collections.reverse(queries);
-		return queries;
-	}
-
-	public List<QueryDeclarationContext> getAllQueries(InterfaceDeclarationContext interfaceContext) {
-		return findSelfAndAllSuperInterfaces(interfaceContext).stream()
-				.flatMap(interf -> interf.queryDeclaration().stream())
-				.filter(distinctByKey(query -> query.Identifier().getText()))
-				.collect(Collectors.toList());
-	}
-
-	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithCommands(ClassDeclarationContext classContext) {
-		return Stream.concat(
-				Optional.ofNullable(findSuperClass(classContext))
-						.filter(clazz -> !getAllCommands(clazz).isEmpty())
-						.map(Stream::of).orElseGet(Stream::empty),
-				getDirectlyImplementedInterfaces(classContext).stream()
-						.filter(interf -> !getAllCommands(interf).isEmpty())
-		).collect(Collectors.toList());
-	}
-
-	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithEvents(ClassDeclarationContext classContext) {
-		return Stream.concat(
-				Optional.ofNullable(findSuperClass(classContext))
-						.filter(clazz -> !getAllEvents(clazz).isEmpty())
-						.map(Stream::of).orElseGet(Stream::empty),
-				getDirectlyImplementedInterfaces(classContext).stream()
-						.filter(interf -> !getAllEvents(interf).isEmpty())
-		).collect(Collectors.toList());
-	}
-
-	public List<InterfaceDeclarationContext> getSuperInterfacesWithCommands(InterfaceDeclarationContext interfaceContext) {
-		return findSuperInterfaces(interfaceContext).stream()
-				.filter(itf -> !getAllCommands(itf).isEmpty())
-				.collect(Collectors.toList());
-	}
-
-	public List<InterfaceDeclarationContext> getSuperInterfacesWithEvents(InterfaceDeclarationContext interfaceContext) {
-		return findSuperInterfaces(interfaceContext).stream()
-				.filter(itf -> !getAllEvents(itf).isEmpty())
-				.collect(Collectors.toList());
-	}
-
-	public static ParserRuleContext getDeclaringClassOrInterface(ParserRuleContext element) {
-		if (element instanceof ClassDeclarationContext || element instanceof InterfaceDeclarationContext) {
-			return element;
-		}
-		return TeamAppsIntermediateDtoModel.<ParserRuleContext>findAncestorOfType(element, ClassDeclarationContext.class)
-				.or(() -> findAncestorOfType(element, InterfaceDeclarationContext.class))
+	public ClassOrInterfaceWrapper<?> getDeclaringClassOrInterface(ParserRuleContext element) {
+		return Optional.<ClassOrInterfaceWrapper<?>>empty()
+				.or(() -> findAncestorOfType(element, ClassDeclarationContext.class, true)
+						.map(c -> new ClassWrapper(c, this)))
+				.or(() -> findAncestorOfType(element, InterfaceDeclarationContext.class, true)
+						.map(i -> new InterfaceWrapper(i, this)))
 				.orElse(null);
 	}
 
-	public static String getDeclaringClassOrInterfaceName(ParserRuleContext element) {
-		ParserRuleContext declaringClassOrInterface = getDeclaringClassOrInterface(element);
-		if (declaringClassOrInterface instanceof ClassDeclarationContext) {
-			return ((ClassDeclarationContext) declaringClassOrInterface).Identifier().getText();
-		} else if (declaringClassOrInterface instanceof InterfaceDeclarationContext) {
-			return ((InterfaceDeclarationContext) declaringClassOrInterface).Identifier().getText();
-		} else {
-			return null;
-		}
+	public Optional<TypeWrapper<?>> findReferencedType(TypeContext type) {
+		return Optional.<TypeWrapper<?>>empty()
+				.or(() -> findReferencedClass(type))
+				.or(() -> findReferencedInterface(type))
+				.or(() -> findReferencedEnum(type));
 	}
 
-	public List<ParserRuleContext> getAllClassesAndInterfacesWithEvents() {
-		return Stream.concat(
-				classDeclarations.stream()
-						.filter(classDeclarationContext -> !getAllEvents(classDeclarationContext).isEmpty()),
-				interfaceDeclarations.stream()
-						.filter(interfaceDeclarationContext -> !getAllEvents(interfaceDeclarationContext).isEmpty())
-		).collect(Collectors.toList());
-	}
-
-	public List<ParserRuleContext> getAllClassesAndInterfacesWithQueries() {
-		return Stream.concat(
-				classDeclarations.stream()
-						.filter(classDeclarationContext -> !getAllQueries(classDeclarationContext).isEmpty()),
-				interfaceDeclarations.stream()
-						.filter(interfaceDeclarationContext -> !getAllQueries(interfaceDeclarationContext).isEmpty())
-		).collect(Collectors.toList());
-	}
-
-	private ParserRuleContext findReferencedClassOrInterface(TypeContext type) {
-		ClassDeclarationContext referencedClass = findReferencedClass(type);
-		return referencedClass != null ? referencedClass : findReferencedInterface(type);
-	}
-
-	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(ClassDeclarationContext classContext) {
-		return Stream.of(
-						findSuperClassAndDirectlyImplementedInterfaces(classContext).stream(),
-//						findSuperClassAndDirectlyImplementedInterfaces(classContext).stream()
-//								.flatMap(c -> c instanceof ClassDeclarationContext
-//										? findAllReferencedClassesAndInterfaces(((ClassDeclarationContext) c)).stream()
-//										: findAllReferencedClassesAndInterfaces(((InterfaceDeclarationContext) c)).stream()),
-						classContext.propertyDeclaration().stream()
-								.map(p -> findReferencedClassOrInterface(p.type())),
-						classContext.commandDeclaration().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.map(fp -> findReferencedClassOrInterface(fp.type())),
-						classContext.eventDeclaration().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.map(fp -> findReferencedClassOrInterface(fp.type()))
-				)
-				.flatMap(Function.identity())
-				.filter(Objects::nonNull)
-				.filter(c -> c != classContext)
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
-	public List<ClassDeclarationContext> findAllReferencedClasses(ClassDeclarationContext classContext) {
-		return findAllReferencedClassesAndInterfaces(classContext).stream()
-				.filter(c -> c instanceof ClassDeclarationContext)
-				.map(c -> ((ClassDeclarationContext) c))
-				.collect(Collectors.toList());
-	}
-
-	public List<InterfaceDeclarationContext> findAllReferencedInterfaces(ClassDeclarationContext classContext) {
-		return findAllReferencedClassesAndInterfaces(classContext).stream()
-				.filter(c -> c instanceof InterfaceDeclarationContext)
-				.map(c -> ((InterfaceDeclarationContext) c))
-				.collect(Collectors.toList());
-	}
-
-	public List<EnumDeclarationContext> findAllReferencedEnums(ClassDeclarationContext classContext) {
-		return Stream.of(
-						classContext.propertyDeclaration().stream()
-								.map(p -> findReferencedEnum(p.type())),
-						classContext.commandDeclaration().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.map(fp -> findReferencedEnum(fp.type())),
-						classContext.eventDeclaration().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.map(fp -> findReferencedEnum(fp.type()))
-				).flatMap(Function.identity())
-				.filter(Objects::nonNull)
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
-	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(InterfaceDeclarationContext interfaceContext) {
-		return Stream.of(
-						findAllSuperInterfaces(interfaceContext).stream()
-								.map(interfDecl -> (ParserRuleContext) interfDecl),
-						interfaceContext.propertyDeclaration().stream()
-								.map(p -> findReferencedClassOrInterface(p.type())),
-						interfaceContext.commandDeclaration().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.map(fp -> findReferencedClassOrInterface(fp.type())),
-						interfaceContext.eventDeclaration().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.map(fp -> findReferencedClassOrInterface(fp.type()))
-				)
-				.flatMap(Function.identity())
-				.filter(Objects::nonNull)
-				.filter(c -> c != interfaceContext)
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
-	public List<ClassDeclarationContext> findAllReferencedClasses(InterfaceDeclarationContext interfaceContext) {
-		return findAllReferencedClassesAndInterfaces(interfaceContext).stream()
-				.filter(c -> c instanceof ClassDeclarationContext)
-				.map(c -> ((ClassDeclarationContext) c))
-				.collect(Collectors.toList());
-	}
-
-	public List<InterfaceDeclarationContext> findAllReferencedInterfaces(InterfaceDeclarationContext interfaceContext) {
-		return findAllReferencedClassesAndInterfaces(interfaceContext).stream()
-				.filter(c -> c instanceof InterfaceDeclarationContext)
-				.map(c -> ((InterfaceDeclarationContext) c))
-				.collect(Collectors.toList());
-	}
-
-	public List<EnumDeclarationContext> findAllReferencedEnums(InterfaceDeclarationContext interfaceContext) {
-		return Stream.of(
-						interfaceContext.propertyDeclaration().stream()
-								.map(p -> findReferencedEnum(p.type())),
-						interfaceContext.commandDeclaration().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.map(fp -> findReferencedEnum(fp.type())),
-						interfaceContext.eventDeclaration().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.map(fp -> findReferencedEnum(fp.type()))
-				).flatMap(Function.identity())
-				.filter(Objects::nonNull)
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
-	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(EventDeclarationContext eventContext) {
-		return eventContext.formalParameterWithDefault().stream()
-				.map(p -> findReferencedClassOrInterface(p.type()))
-				.filter(Objects::nonNull)
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
-	public List<EnumDeclarationContext> findAllReferencedEnums(EventDeclarationContext eventDeclarationContext) {
-		return eventDeclarationContext.formalParameterWithDefault().stream()
-				.map(p -> findReferencedEnum(p.type()))
-				.filter(Objects::nonNull)
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
-	public List<ParserRuleContext> findAllClassesInterfacesAndEnumsReferencedByEvents() {
-		return eventDeclarations.stream().flatMap(ed -> Stream.concat(
-						findAllReferencedClassesAndInterfaces(ed).stream(),
-						findAllReferencedEnums(ed).stream()
-				))
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
-	public List<PropertyDeclarationContext> findAllNotYetImplementedProperties(ClassDeclarationContext classContext) {
-		return Streams.concat(
-						classContext.propertyDeclaration().stream(),
-						findAllImplementedInterfaces(classContext).stream()
-								.flatMap(interf -> interf.propertyDeclaration().stream())
-				).filter(distinctByKey(PropertyDeclarationContext::Identifier))
-				.collect(Collectors.toList());
-	}
-
-	public static boolean isReferenceType(TypeContext type) {
-		return type.typeReference() != null && type.typeReference().referenceTypeModifier() != null;
-	}
-
-	public boolean isManagedBaseClass(ClassDeclarationContext clazz) {
-		return Objects.equals(findManagedBaseClassOrInterfaceName(clazz), clazz.Identifier().getText());
-	}
-
-	public boolean isManagedBaseInterface(InterfaceDeclarationContext clazz) {
-		return Objects.equals(findManagedBaseInterfaceName(clazz), clazz.Identifier().getText());
-	}
-
-	public String findManagedBaseClassOrInterfaceName(ClassDeclarationContext clazz) {
-		return Streams.concat(
-						findSelfAndAllSuperClasses(clazz).stream()
-								.filter(c -> c.managedModifier() != null)
-								.map(c -> c.Identifier().getText()),
-						findAllImplementedInterfaces(clazz).stream()
-								.filter(i -> i.managedModifier() != null)
-								.map(i -> i.Identifier().getText())
-				)
-				.findFirst().orElse(null);
-	}
-
-	public String findManagedBaseInterfaceName(InterfaceDeclarationContext interf) {
-		return Streams.concat(
-						findSelfAndAllSuperInterfaces(interf).stream()
-								.filter(i ->  i.managedModifier() != null)
-								.map(i -> i.Identifier().getText())
-				)
-				.findFirst().orElse(null);
+	public Optional<ClassOrInterfaceWrapper<?>> findReferencedClassOrInterface(TypeContext type) {
+		return Optional.<ClassOrInterfaceWrapper<?>>empty()
+				.or(() -> findReferencedClass(type))
+				.or(() -> findReferencedInterface(type));
 	}
 
 	public boolean isDtoClassOrInterface(TeamAppsDtoParser.TypeContext typeContext) {
-		return findReferencedClass(typeContext) != null
-				|| findReferencedInterface(typeContext) != null;
+		return Optional.empty()
+				.or(() -> findReferencedClass(typeContext))
+				.or(() -> findReferencedInterface(typeContext))
+				.isPresent();
 	}
 
 	public boolean isDtoType(TeamAppsDtoParser.TypeContext typeContext) {
-		return findReferencedClass(typeContext) != null
-				|| findReferencedInterface(typeContext) != null
-				|| findReferencedEnum(typeContext) != null;
+		return Optional.empty()
+				.or(() -> findReferencedClass(typeContext))
+				.or(() -> findReferencedInterface(typeContext))
+				.or(() -> findReferencedEnum(typeContext))
+				.isPresent();
 	}
 
-	public boolean isManaged(ClassDeclarationContext clazz) {
-		return findSelfAndAllSuperClasses(clazz).stream().anyMatch(c -> c.managedModifier() != null)
-				|| findAllImplementedInterfaces(clazz).stream().anyMatch(c -> c.managedModifier() != null);
+	public Collection<Import> getEffectiveImports(ClassOrInterfaceWrapper<?> classOrInterface, boolean typescript) {
+		Imports imports = new Imports();
+
+		if (!classOrInterface.getAllCommands().isEmpty()) {
+			imports.add("Command", "teamapps-client-communication", "org.teamapps.dto");
+		}
+		if (!classOrInterface.getAllEvents().isEmpty()) {
+			imports.add("Event", "teamapps-client-communication", "org.teamapps.dto");
+		}
+		if (!classOrInterface.getAllQueries().isEmpty()) {
+			imports.add("Query", "teamapps-client-communication", "org.teamapps.dto");
+		}
+
+		classOrInterface.getReferencedTypes().stream()
+				.forEach(t -> {
+					imports.add(t.getName(), classOrInterface.getJsPackageName().equals(t.getJsPackageName()) ? "./Dto" + t.getName() : t.getJsPackageName(), t.getPackageName());
+					if (!typescript && t instanceof ClassOrInterfaceWrapper<?> referencedClassOrInterface) {
+						imports.add(referencedClassOrInterface.getName() + "Wrapper", null, t.getPackageName());
+						if (referencedClassOrInterface.isManaged()) {
+							ClassOrInterfaceWrapper<?> managedBaseClass = referencedClassOrInterface.getManagedBaseType(true);
+							imports.add(managedBaseClass.getName() + "Reference", null, managedBaseClass.getPackageName());
+						}
+					}
+				});
+
+
+		if (typescript) {
+			classOrInterface.getSuperTypes().stream()
+					.filter(c -> !c.getAllCommands().isEmpty())
+					.forEach(c -> imports.add(c.getName() + "CommandHandler", classOrInterface.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName(), c.getPackageName()));
+			classOrInterface.getSuperTypes().stream()
+					.filter(c -> !c.getAllEvents().isEmpty())
+					.forEach(c -> imports.add(c.getName() + "EventSource", classOrInterface.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName(), c.getPackageName()));
+		}
+
+		return imports.getAll();
 	}
 
-	public boolean isManaged(InterfaceDeclarationContext itf) {
-		return findAllSuperInterfaces(itf).stream().anyMatch(c -> c.managedModifier() != null);
-	}
 }

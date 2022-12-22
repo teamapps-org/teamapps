@@ -31,14 +31,14 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void classProperties() throws Exception {
 		executeClassTest(
-				"package org.teamapps.dto222; " +
-						"import DtoComponent from \"blah\":org.teamapps.dto.blah; " +
+				"package \"x\":org.teamapps.dto222; " +
+						"import org.teamapps.dto.blah.DtoComponent; " +
 						"class A { "
 						+ " required String aasdf; "
 						+ " String b; "
 						+ " List<Long> c; "
 						+ "}",
-				"A",
+				"org.teamapps.dto222.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_classProperties.java"
 		);
 	}
@@ -46,11 +46,11 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void classesImplementTheirInterfaces() throws Exception {
 		executeClassTest(
-				"package org.teamapps.dto; class A {}"
+				"package \"x\":org.teamapps.dto; class A {}"
 						+ "interface B { String bProperty; }"
 						+ "interface C { required List<Integer> cProperty; }"
 						+ "class D extends A implements B, C {}",
-				"D",
+				"org.teamapps.dto.D",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_classesImplementTheirInterfaces.java"
 		);
 	}
@@ -58,11 +58,11 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void doubleInheritedInterfaceProperties() throws Exception {
 		executeClassTest(
-				"package org.teamapps.dto; interface B { String bProperty; }"
+				"package \"x\":org.teamapps.dto; interface B { String bProperty; }"
 						+ "interface C { required List<Integer> cProperty; }"
 						+ "class A implements B {} "
 						+ "class D extends A implements B, C {}",
-				"D",
+				"org.teamapps.dto.D",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_doubleInheritedInterfaceProperties.java"
 		);
 	}
@@ -70,7 +70,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void interfaces() throws Exception {
 		executeInterfaceTest(
-				"package org.teamapps.dto; " +
+				"package \"x\":org.teamapps.dto; " +
 						"interface A { "
 						+ " required String a;"
 						+ " String b;"
@@ -79,7 +79,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 						+ " event y(String y);"
 						+ " query q(String y) returns int;"
 						+ "}",
-				"A",
+				"org.teamapps.dto.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_interfaces.java"
 		);
 	}
@@ -87,9 +87,9 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void interfaceInteritance() throws Exception {
 		executeInterfaceTest(
-				"package org.teamapps.dto; interface A { String a; }"
+				"package \"x\":org.teamapps.dto; interface A { String a; }"
 						+ "interface B extends A { String b; }",
-				"B",
+				"org.teamapps.dto.B",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_interfaceInteritance.java"
 		);
 	}
@@ -97,70 +97,98 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void fromJsonWithEnums() throws Exception {
 		executeClassTest(
-				"package org.teamapps.dto; enum E { "
+				"package \"x\":org.teamapps.dto; enum E { "
 						+ " A, B "
 						+ "} "
 						+ "class C { "
 						+ "    E e = E.A; "
 						+ "}",
-				"C",
+				"org.teamapps.dto.C",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_fromJsonWithEnums.java"
 		);
 	}
 
 	@Test
 	public void staticCommands() throws Exception {
-		String dslString = "package org.teamapps.dto; abstract managed class A { static command a(String b); }";
+		String dslString = "package \"x\":org.teamapps.dto; abstract managed class A { static command a(String b); }";
 		executeClassTest(
 				dslString,
-				"A",
+				"org.teamapps.dto.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_staticCommands.java"
 		);
 	}
 
 	@Test
 	public void dictionaryOfList() throws Exception {
-		String dslString = "package org.teamapps.dto; interface X {}"
+		String dslString = "package \"x\":org.teamapps.dto; interface X {}"
 				+ "class A { Dictionary<List<X>> x; }";
 		executeClassTest(
 				dslString,
-				"A",
+				"org.teamapps.dto.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_dictionaryOfList.java"
 		);
 	}
 
 	@Test
 	public void plainObjects() throws Exception {
-		String dslString = "package org.teamapps.dto; interface X {}"
+		String dslString = "package \"x\":org.teamapps.dto; interface X {}"
 				+ "class A { Object x; List<Object> y; Dictionary<Object> z; }";
 		executeClassTest(
 				dslString,
-				"A",
+				"org.teamapps.dto.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_plainObjects.java"
 		);
 	}
 
-	private void executeClassTest(String dslString, String className, String expectedResultResourceName) throws IOException {
-		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(
-				dslString
-		)).classCollection();
-		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(classCollectionContext);
+	@Test
+	public void enums() throws Exception {
+		executeEnumTest(
+				"package \"x\":org.teamapps.dto; enum E { "
+						+ " A, B "
+						+ "} ",
+				"org.teamapps.dto.E",
+				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_enums.java"
+		);
+	}
+
+	@Test
+	public void stringEnums() throws Exception {
+		executeEnumTest(
+				"package \"x\":org.teamapps.dto; enum E { "
+						+ " A = \"a\", B = \"b\" "
+						+ "} ",
+				"org.teamapps.dto.E",
+				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_stringEnums.java"
+		);
+	}
+
+	private void executeClassTest(String dslString, String qualifiedClassName, String expectedResultResourceName) throws IOException {
+		TeamAppsIntermediateDtoModel model = createModel(dslString);
 
 		StringWriter stringWriter = new StringWriter();
-		new TeamAppsJavaDtoGenerator(model).generateClass(model.findClassByName(className, false), stringWriter);
-
+		new TeamAppsJavaDtoGenerator(model).generateClass(model.findClassByQualifiedName(qualifiedClassName).orElseThrow(), stringWriter);
 		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
 	}
 
-	private void executeInterfaceTest(String dslString, String interfaceName, String expectedResultResourceName) throws IOException {
-		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(
-				dslString
-		)).classCollection();
-		TeamAppsIntermediateDtoModel model = new TeamAppsIntermediateDtoModel(classCollectionContext);
+	private void executeInterfaceTest(String dslString, String qualifiedInterfaceName, String expectedResultResourceName) throws IOException {
+		TeamAppsIntermediateDtoModel model = createModel(dslString);
 
 		StringWriter stringWriter = new StringWriter();
-		new TeamAppsJavaDtoGenerator(model).generateInterface(model.findInterfaceByName(interfaceName, false), stringWriter);
-
+		new TeamAppsJavaDtoGenerator(model).generateInterface(model.findInterfaceByQualifiedName(qualifiedInterfaceName).orElseThrow(), stringWriter);
 		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
+	}
+
+	private void executeEnumTest(String dslString, String qualifiedEnumName, String expectedResultResourceName) throws IOException {
+		TeamAppsIntermediateDtoModel model = createModel(dslString);
+
+		StringWriter stringWriter = new StringWriter();
+		new TeamAppsJavaDtoGenerator(model).generateEnum(model.findEnumByQualifiedName(qualifiedEnumName).orElseThrow(), stringWriter);
+		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
+	}
+
+	private static TeamAppsIntermediateDtoModel createModel(String dslString) throws IOException {
+		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(dslString))
+				.classCollection();
+		return new TeamAppsIntermediateDtoModel(classCollectionContext);
 	}
 }

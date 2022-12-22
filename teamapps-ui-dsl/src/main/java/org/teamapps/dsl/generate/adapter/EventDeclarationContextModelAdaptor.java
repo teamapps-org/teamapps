@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
+import org.teamapps.dsl.TeamAppsDtoParser.EventDeclarationContext;
 import org.teamapps.dsl.generate.ParserFactory;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 import org.teamapps.dsl.TeamAppsDtoParser;
@@ -34,12 +35,10 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.teamapps.dsl.generate.adapter.ModelUtil.getDeclaringTypeScriptFileBaseName;
-
-public class EventDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.EventDeclarationContext> {
+public class EventDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<EventDeclarationContext> {
 
     private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
-    private final TeamAppsIntermediateDtoModel astUtil;
+    private final TeamAppsIntermediateDtoModel model;
 
     static {
         try {
@@ -49,32 +48,31 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
         }
     }
 
-    public EventDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
+    public EventDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel model) {
 		super();
-		this.astUtil = astUtil;
+		this.model = model;
     }
 
     @Override
-    public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
-        TeamAppsDtoParser.EventDeclarationContext eventContext = (TeamAppsDtoParser.EventDeclarationContext) o;
-        if ("declaringClass".equals(propertyName)) {
-            return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterface(eventContext);
+    public Object getProperty(Interpreter interpreter, ST seld, EventDeclarationContext context, Object property, String propertyName) throws STNoSuchPropertyException {
+        if ("name".equals(propertyName)) {
+            return context.Identifier().getText();
+        } else if ("declaringClass".equals(propertyName)) {
+            return model.getDeclaringClassOrInterface(context);
         } else if ("typeScriptInterfaceName".equals(propertyName)) {
-            return "Dto" + TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(eventContext) + "_" + StringUtils.capitalize(eventContext.Identifier().getText()) + "Event";
+            return "Dto" + model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Event";
         } else if ("allProperties".equals(propertyName)) {
-            return getAllParameters(eventContext);
+            return getAllParameters(context);
         } else if ("allRequiredProperties".equals(propertyName)) {
-            return getAllParameters(eventContext);
+            return getAllParameters(context);
         } else if ("requiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return getAllParameters(eventContext);
+            return getAllParameters(context);
         } else if ("superClassDecl".equals(propertyName)) {
-            return null;
-        } else if ("allSubClasses".equals(propertyName)) {
             return null;
         } else if ("allNonRequiredProperties".equals(propertyName)) {
             return null;
-        } else if ("simplePropertiesByRelevance".equals(propertyName)) {
-            return getAllParameters(eventContext).stream()
+        } else if ("simplePropertiesSortedByRelevance".equals(propertyName)) {
+            return getAllParameters(context).stream()
                     .sorted((p1, p2) -> {
                         Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
@@ -85,7 +83,7 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
                                 return 30;
                             } else if (p.Identifier().getText().contains("Name")) {
                                 return 20;
-                            } else if (astUtil.findReferencedClass(p.type()) == null)  {
+                            } else if (model.findReferencedClass(p.type()) == null)  {
                                 return 10;
                             } else {
                                 return 0;
@@ -94,31 +92,27 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
                         return getPriority.apply(p2) - getPriority.apply(p1);
                     })
                     .collect(Collectors.toList());
-        } else if ("allReferencedClassesAndInterfaces".equals(propertyName)) {
-            return astUtil.findAllReferencedClassesAndInterfaces(eventContext);
-        } else if ("allReferencedEnums".equals(propertyName)) {
-            return astUtil.findAllReferencedEnums(eventContext);
         } else {
-            return super.getProperty(interpreter, seld, o, property, propertyName);
+            return super.getProperty(interpreter, seld, context, property, propertyName);
         }
     }
 
     @Override
-    protected String getTypeScriptIdentifier(TeamAppsDtoParser.EventDeclarationContext node) {
-        return getDeclaringTypeScriptFileBaseName(node) + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Event";
+    protected String getTypeScriptIdentifier(EventDeclarationContext node) {
+        return model.getDeclaringClassOrInterface(node).getName() + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Event";
     }
 
     @Override
-    protected String getJsonIdentifier(TeamAppsDtoParser.EventDeclarationContext node) {
-        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
+    protected String getJsonIdentifier(EventDeclarationContext node) {
+        return model.getDeclaringClassOrInterface(node).getName() + "." + node.Identifier().getText();
     }
 
 	@Override
-	protected String getJavaClassName(TeamAppsDtoParser.EventDeclarationContext node) {
+	protected String getJavaClassName(EventDeclarationContext node) {
         return StringUtils.capitalize(node.Identifier().getText()) + "Event";
     }
 
-	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.EventDeclarationContext eventContext) {
+	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(EventDeclarationContext eventContext) {
         ArrayList<TeamAppsDtoParser.FormalParameterWithDefaultContext> allProperties = new ArrayList<>(eventContext.formalParameterWithDefault());
         if (eventContext.staticModifier() == null) {
 			allProperties.add(0, COMPONENT_ID_PARAMETER);

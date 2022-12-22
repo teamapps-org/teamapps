@@ -24,6 +24,7 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.TeamAppsDtoParser.QueryDeclarationContext;
 import org.teamapps.dsl.generate.ParserFactory;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
@@ -34,12 +35,10 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.teamapps.dsl.generate.adapter.ModelUtil.getDeclaringTypeScriptFileBaseName;
-
-public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.QueryDeclarationContext> {
+public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<QueryDeclarationContext> {
 
     private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
-    private final TeamAppsIntermediateDtoModel astUtil;
+    private final TeamAppsIntermediateDtoModel model;
 
     static {
         try {
@@ -49,26 +48,27 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
         }
     }
 
-    public QueryDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
+    public QueryDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel model) {
         super();
-        this.astUtil = astUtil;
+        this.model = model;
     }
 
     @Override
-    public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
-        TeamAppsDtoParser.QueryDeclarationContext queryContext = (TeamAppsDtoParser.QueryDeclarationContext) o;
-        if ("declaringClass".equals(propertyName)) {
-            return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterface(queryContext);
+    public Object getProperty(Interpreter interpreter, ST seld, QueryDeclarationContext context, Object property, String propertyName) throws STNoSuchPropertyException {
+        if ("name".equals(propertyName)) {
+            return context.Identifier().getText();
+        } else if ("declaringClass".equals(propertyName)) {
+            return model.getDeclaringClassOrInterface(context);
         } else if ("typeScriptInterfaceName".equals(propertyName)) {
-            return "Dto" + TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(queryContext) + "_" + StringUtils.capitalize(queryContext.Identifier().getText()) + "Query";
+            return "Dto" + model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Query";
         } else if ("allProperties".equals(propertyName)) {
-            return getAllParameters(queryContext);
+            return getAllParameters(context);
         } else if ("allRequiredProperties".equals(propertyName)) {
-            return getAllParameters(queryContext);
+            return getAllParameters(context);
         } else if ("requiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return getAllParameters(queryContext);
-        } else if ("simplePropertiesByRelevance".equals(propertyName)) {
-            return getAllParameters(queryContext).stream()
+            return getAllParameters(context);
+        } else if ("simplePropertiesSortedByRelevance".equals(propertyName)) {
+            return getAllParameters(context).stream()
                     .sorted((p1, p2) -> {
                         Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
@@ -79,7 +79,7 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
                                 return 30;
                             } else if (p.Identifier().getText().contains("Name")) {
                                 return 20;
-                            } else if (astUtil.findReferencedClass(p.type()) == null)  {
+                            } else if (model.findReferencedClass(p.type()) == null)  {
                                 return 10;
                             } else {
                                 return 0;
@@ -89,26 +89,26 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
                     })
                     .collect(Collectors.toList());
         } else {
-            return super.getProperty(interpreter, seld, o, property, propertyName);
+            return super.getProperty(interpreter, seld, context, property, propertyName);
         }
     }
 
     @Override
-    protected String getTypeScriptIdentifier(TeamAppsDtoParser.QueryDeclarationContext node) {
-        return getDeclaringTypeScriptFileBaseName(node) + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Query";
+    protected String getTypeScriptIdentifier(QueryDeclarationContext node) {
+        return model.getDeclaringClassOrInterface(node).getName() + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Query";
     }
 
     @Override
-    protected String getJsonIdentifier(TeamAppsDtoParser.QueryDeclarationContext node) {
-        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
+    protected String getJsonIdentifier(QueryDeclarationContext node) {
+        return model.getDeclaringClassOrInterface(node).getName() + "." + node.Identifier().getText();
     }
 
 	@Override
-	protected String getJavaClassName(TeamAppsDtoParser.QueryDeclarationContext node) {
+	protected String getJavaClassName(QueryDeclarationContext node) {
         return StringUtils.capitalize(node.Identifier().getText()) + "Query";
     }
 
-	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.QueryDeclarationContext commandContext) {
+	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(QueryDeclarationContext commandContext) {
         ArrayList<TeamAppsDtoParser.FormalParameterWithDefaultContext> allProperties = new ArrayList<>(commandContext.formalParameterWithDefault());
         allProperties.add(0, COMPONENT_ID_PARAMETER);
         return allProperties;

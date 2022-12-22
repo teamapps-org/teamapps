@@ -43,6 +43,7 @@ public interface DtoA extends DtoObject {
 	public String getB();
 	public DtoA setB(String b);
 
+
 	public static class YEvent implements DtoEvent {
 
 	    public static final String TYPE_ID = "A.y";

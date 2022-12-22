@@ -6,11 +6,11 @@ package org.teamapps.dsl;
 
 classCollection : packageDeclaration importDeclaration* typeDeclaration*;
 
-packageDeclaration : 'package' packageName ';' ;
+packageDeclaration : 'package' StringLiteral ':' packageName ';' ;
 
 packageName : Identifier | packageName '.' Identifier;
 
-importDeclaration : 'import' Identifier 'from' StringLiteral ':' packageName ';';
+importDeclaration : 'import' qualifiedTypeName ';';
 
 typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 
@@ -31,7 +31,6 @@ propertyDeclaration : (requiredModifier|optionalModifier)? type Identifier (defa
 commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ('returns' type)? ';';
 eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
 queryDeclaration : 'query' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' 'returns' type ';';
-formalParameter : type Identifier;
 formalParameterWithDefault : type Identifier (defaultValueAssignment)?;
 
 defaultValueAssignment : '=' expression;
@@ -42,6 +41,7 @@ typeReference : typeName referenceTypeModifier? typeArguments?;
 referenceTypeModifier : '*';
 
 typeName : Identifier ;
+qualifiedTypeName : packageName '.' Identifier ;
 
 typeArguments
     :   '<' typeArgument (',' typeArgument)* '>'

@@ -61,3 +61,5 @@ export {draggable} from "./util/draggable";
 
 export * from "./template/MustacheTemplate";
 export * from "./template/GridTemplate";
+
+export * from "./generated";

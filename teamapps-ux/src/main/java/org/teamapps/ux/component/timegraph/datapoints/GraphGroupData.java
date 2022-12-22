@@ -43,6 +43,6 @@ public interface GraphGroupData extends GraphData {
 		final Map<String, DtoGraphData> uiGraphDataMap = getGraphData().entrySet().stream()
 				.filter(Objects::nonNull)
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toUiGraphData()));
-		return new DtoGraphGroupData(uiGraphDataMap, getInterval().toUiLongInterval());
+		return new DtoGraphGroupData(getInterval().toUiLongInterval(), uiGraphDataMap);
 	}
 }

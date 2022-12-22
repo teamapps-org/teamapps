@@ -38,13 +38,21 @@ public class Label extends AbstractField<String> {
 	private Component targetComponent;
 
 	public Label(String caption) {
-		super();
-		this.caption = caption;
+		this(caption, null, null);
+	}
+
+	public Label(String caption, Component targetComponent) {
+		this(caption, null, targetComponent);
 	}
 
 	public Label(String caption, Icon<?, ?> icon) {
-		this(caption);
+		this(caption, icon, null);
+	}
+
+	public Label(String caption, Icon<?, ?> icon, Component targetComponent) {
+		this.caption = caption;
 		this.icon = icon;
+		this.targetComponent = targetComponent;
 	}
 
 	@Override

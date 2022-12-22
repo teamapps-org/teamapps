@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
+package "teamapps-client-core-components":org.teamapps.dto;
 
-import Component from "teamapps-client-core":org.teamapps.dto;
-import Template from "teamapps-client-core":org.teamapps.dto;
+import org.teamapps.dto.Component;
+import org.teamapps.dto.Template;
 
 class NavigationBar extends Component {
 	required Template* buttonTemplate;

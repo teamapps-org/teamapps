@@ -19,11 +19,16 @@
  */
 package org.teamapps.dsl.generate;
 
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.generate.wrapper.ClassWrapper;
+import org.teamapps.dsl.generate.wrapper.EnumWrapper;
+import org.teamapps.dsl.generate.wrapper.InterfaceWrapper;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.teamapps.dsl.generate.ErrorMessageUtil.runWithExceptionMessagePrefix;
 
 public class TeamAppsDtoModelValidator {
 
@@ -33,44 +38,32 @@ public class TeamAppsDtoModelValidator {
 		this.model = model;
 	}
 
-	public void validate() {
-		List<TeamAppsDtoParser.ClassDeclarationContext> classDeclarations = model.getClassDeclarations();
+	public void validate() throws Exception {
+		List<ClassWrapper> classDeclarations = model.getClassDeclarations();
 
 		validateNoDuplicateClassDeclarations(classDeclarations);
-//		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
-//			validateRequiredPropertiesHaveNoDefaultValue(classDeclaration);
-//		}
-		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
+		for (ClassWrapper classDeclaration : classDeclarations) {
 			checkClassWithCommandsOrEventsIsManaged(classDeclaration);
 			checkManagedClassDefinesIdProperty(classDeclaration);
 		}
-		for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceDeclaration : model.getInterfaceDeclarations()) {
+		for (InterfaceWrapper interfaceDeclaration : model.getInterfaceDeclarations()) {
 			checkManagedInterfaceDefinesIdProperty(interfaceDeclaration);
 		}
 
-		List<TeamAppsDtoParser.EnumDeclarationContext> enumDeclarations = model.getEnumDeclarations();
+		List<EnumWrapper> enumDeclarations = model.getEnumDeclarations();
 
 		validateNoDuplicateEnumDeclarations(enumDeclarations);
 	}
 
-	private void validateNoDuplicateClassDeclarations(List<TeamAppsDtoParser.ClassDeclarationContext> classDeclarations) {
+	private void validateNoDuplicateClassDeclarations(List<ClassWrapper> classDeclarations) {
 		Map<String, Long> cardinalities = classDeclarations.stream()
-				.collect(Collectors.groupingBy(classDeclarationContext -> classDeclarationContext.Identifier().getText(), Collectors.counting()));
+				.collect(Collectors.groupingBy(classDeclarationContext -> classDeclarationContext.getName(), Collectors.counting()));
 		validateNoMultipleEntries(cardinalities);
 	}
 
-	private void validateRequiredPropertiesHaveNoDefaultValue(TeamAppsDtoParser.ClassDeclarationContext classDeclaration) {
-		for (TeamAppsDtoParser.PropertyDeclarationContext pd : classDeclaration.propertyDeclaration()) {
-			if (pd.requiredModifier() != null && pd.defaultValueAssignment() != null) {
-				throw new IllegalArgumentException("A required property declaration may not have a default value! Erroneous declaration: " + ((TeamAppsDtoParser.ClassDeclarationContext) pd
-						.getParent()).Identifier().getText() + "." + pd.Identifier().getText());
-			}
-		}
-	}
-
-	private void validateNoDuplicateEnumDeclarations(List<TeamAppsDtoParser.EnumDeclarationContext> enumDeclarations) {
+	private void validateNoDuplicateEnumDeclarations(List<EnumWrapper> enumDeclarations) {
 		Map<String, Long> cardinalities = enumDeclarations.stream()
-				.collect(Collectors.groupingBy(classDeclarationContext -> classDeclarationContext.Identifier().getText(), Collectors.counting()));
+				.collect(Collectors.groupingBy(classDeclarationContext -> classDeclarationContext.getName(), Collectors.counting()));
 		validateNoMultipleEntries(cardinalities);
 	}
 
@@ -84,22 +77,28 @@ public class TeamAppsDtoModelValidator {
 		}
 	}
 
-	private void checkClassWithCommandsOrEventsIsManaged(TeamAppsDtoParser.ClassDeclarationContext classDeclaration) {
-		boolean hasCommandOrEvent = !model.getAllCommands(classDeclaration).isEmpty() || !model.getAllEvents(classDeclaration).isEmpty();
-		if (hasCommandOrEvent && !model.isManaged(classDeclaration)) {
-			throw new ModelValidationException("Dto class " + classDeclaration.Identifier().getText() + " declares a command or event but is not managed!");
-		}
+	private void checkClassWithCommandsOrEventsIsManaged(ClassWrapper classDeclaration) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			boolean hasCommandOrEvent = !classDeclaration.getAllCommands().isEmpty() || !classDeclaration.getAllEvents().isEmpty();
+			if (hasCommandOrEvent && !classDeclaration.isManaged()) {
+				throw new ModelValidationException("Dto class " + classDeclaration.getName() + " declares a command or event but is not managed!");
+			}
+		}, "Error while validating class " + classDeclaration.getName());
 	}
 
-	private void checkManagedClassDefinesIdProperty(TeamAppsDtoParser.ClassDeclarationContext classDeclaration) {
-		if (model.isManaged(classDeclaration) && model.findAllProperties(classDeclaration).stream().noneMatch(p -> p.type().getText().equals("String") && p.Identifier().getText().equals("id"))) {
-			throw new ModelValidationException("Dto class " + classDeclaration.Identifier().getText() + " is managed but does not declare an id property (String id)!");
-		}
+	private void checkManagedClassDefinesIdProperty(ClassWrapper classDeclaration) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			if (classDeclaration.isManaged() && classDeclaration.getAllProperties().stream().noneMatch(p -> p.type().getText().equals("String") && p.Identifier().getText().equals("id"))) {
+				throw new ModelValidationException("Dto class " + classDeclaration.getName() + " is managed but does not declare an id property (String id)!");
+			}
+		}, "Error while validating class " + classDeclaration.getName());
 	}
 
-	private void checkManagedInterfaceDefinesIdProperty(TeamAppsDtoParser.InterfaceDeclarationContext classDeclaration) {
-		if (model.isManaged(classDeclaration) && model.findAllProperties(classDeclaration).stream().noneMatch(p -> p.type().getText().equals("String") && p.Identifier().getText().equals("id"))) {
-			throw new ModelValidationException("Dto interface " + classDeclaration.Identifier().getText() + " is managed but does not declare an id property (String id)!");
-		}
+	private void checkManagedInterfaceDefinesIdProperty(InterfaceWrapper classDeclaration) throws IOException {
+		runWithExceptionMessagePrefix(() -> {
+			if (classDeclaration.isManaged() && classDeclaration.getAllProperties().stream().noneMatch(p -> p.type().getText().equals("String") && p.Identifier().getText().equals("id"))) {
+				throw new ModelValidationException("Dto interface " + classDeclaration.getName() + " is managed but does not declare an id property (String id)!");
+			}
+		}, "Error while validating interface " + classDeclaration.getName());
 	}
 }

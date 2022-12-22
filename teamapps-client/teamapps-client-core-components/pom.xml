@@ -113,15 +113,6 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>sync version to package.json</id>
-                        <goals>
-                            <goal>yarn</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>sync-pom-version</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>build</id>
                         <goals>
                             <goal>yarn</goal>

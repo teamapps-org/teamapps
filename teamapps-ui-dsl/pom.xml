@@ -39,6 +39,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-common</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4</artifactId>
             <version>${antlr.version}</version>

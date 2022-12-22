@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
+package "teamapps-client-core":org.teamapps.dto;
 
 interface Template extends ClientObject {
 

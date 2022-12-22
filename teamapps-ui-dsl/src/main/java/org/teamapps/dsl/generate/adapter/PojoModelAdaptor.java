@@ -28,36 +28,44 @@ import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 
 import java.lang.reflect.Method;
 
-public class PojoModelAdaptor implements ModelAdaptor {
+public class PojoModelAdaptor<T> implements ModelAdaptor<T> {
 
     @Override
-    public Object getProperty(Interpreter interpreter, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
+    public Object getProperty(Interpreter interpreter, ST self, T context, Object property, String propertyName) throws STNoSuchPropertyException {
         Method m = null;
+        if (propertyName.equals("fullText")) {
+            ParserRuleContext parserRuleContext = (ParserRuleContext) context;
+            return parserRuleContext.getStart().getInputStream().getText(Interval.of(parserRuleContext.getStart().getStartIndex(), parserRuleContext.getStop().getStopIndex()));
+        }
         try {
             String mn = "get" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-            m = o.getClass().getMethod(mn);
+            m = context.getClass().getMethod(mn);
         } catch (Exception e) {
-        }
-        if (propertyName.equals("fullText")) {
-            ParserRuleContext parserRuleContext = (ParserRuleContext) o;
-            return parserRuleContext.getStart().getInputStream().getText(Interval.of(parserRuleContext.getStart().getStartIndex(), parserRuleContext.getStop().getStopIndex()));
         }
         if (m == null) {
             try {
-                m = o.getClass().getDeclaredMethod(propertyName);
+                String mn = "is" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+                m = context.getClass().getMethod(mn);
+
             } catch (Exception e) {
             }
         }
-
+        if (m == null) {
+            try {
+                m = context.getClass().getDeclaredMethod(propertyName);
+            } catch (Exception e) {
+            }
+        }
         if (m != null) {
             try {
-                return m.invoke(o);
+                return m.invoke(context);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new STNoSuchPropertyException(e, o, propertyName);
+                throw new STNoSuchPropertyException(e, context, propertyName);
             }
         } else {
-            throw new STNoSuchPropertyException(null, o, propertyName);
+            throw new STNoSuchPropertyException(null, context, propertyName);
         }
     }
+
 }

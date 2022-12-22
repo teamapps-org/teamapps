@@ -9,3 +9,18 @@ TeamAppsUndertowEmbeddedServer
 get rid of required keyword in dto dsl
 
 remove unused stuff from Common.ts
+
+
+requirements for the maven plugin:
+* copy DTO files to JAR
+* import all DTO models from dependencies while generating
+* generate DTOs (Java and Typescript)
+    * make TypeScript output path configurable
+* delete them on maven clean (TypeScript)
+* add generated sources to compilation path
+* add result of JavaScript build process to JAR
+* sync pom version to package (optionally)
+
+make generated DtoClientObjectReference properties typesafe
+
+

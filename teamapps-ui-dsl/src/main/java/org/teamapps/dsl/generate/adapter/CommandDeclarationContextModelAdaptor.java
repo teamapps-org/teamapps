@@ -24,37 +24,37 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.TeamAppsDtoParser.CommandDeclarationContext;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.teamapps.dsl.generate.adapter.ModelUtil.getDeclaringTypeScriptFileBaseName;
+public class CommandDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<CommandDeclarationContext> {
 
-public class CommandDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.CommandDeclarationContext> {
+    private final TeamAppsIntermediateDtoModel model;
 
-    private final TeamAppsIntermediateDtoModel astUtil;
-
-    public CommandDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel astUtil) {
-        this.astUtil = astUtil;
+    public CommandDeclarationContextModelAdaptor(TeamAppsIntermediateDtoModel model) {
+        this.model = model;
     }
 
     @Override
-    public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
-        TeamAppsDtoParser.CommandDeclarationContext commandContext = (TeamAppsDtoParser.CommandDeclarationContext) o;
-        if ("declaringClass".equals(propertyName)) {
-            return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterface(commandContext);
+    public Object getProperty(Interpreter interpreter, ST seld, CommandDeclarationContext context, Object property, String propertyName) throws STNoSuchPropertyException {
+        if ("name".equals(propertyName)) {
+            return context.Identifier().getText();
+        } else if ("declaringClass".equals(propertyName)) {
+            return model.getDeclaringClassOrInterface(context);
         } else if ("allProperties".equals(propertyName)) {
-            return new ArrayList<>(commandContext.formalParameterWithDefault());
+            return new ArrayList<>(context.formalParameterWithDefault());
         } else if ("allRequiredProperties".equals(propertyName)) {
-            return new ArrayList<>(commandContext.formalParameterWithDefault());
+            return new ArrayList<>(context.formalParameterWithDefault());
         } else if ("requiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return new ArrayList<>(commandContext.formalParameterWithDefault());
+            return new ArrayList<>(context.formalParameterWithDefault());
         } else if ("superClassDecl".equals(propertyName)) {
             return null;
-        } else if ("simplePropertiesByRelevance".equals(propertyName)) {
-            return new ArrayList<>(commandContext.formalParameterWithDefault()).stream()
+        } else if ("simplePropertiesSortedByRelevance".equals(propertyName)) {
+            return new ArrayList<>(context.formalParameterWithDefault()).stream()
                     .sorted((p1, p2) -> {
                         Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
@@ -65,7 +65,7 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
                                 return 30;
                             } else if (p.Identifier().getText().contains("Name")) {
                                 return 20;
-                            } else if (astUtil.findReferencedClass(p.type()) == null)  {
+                            } else if (model.findReferencedClass(p.type()) == null)  {
                                 return 10;
                             } else {
                                 return 0;
@@ -75,22 +75,22 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
                     })
                     .collect(Collectors.toList());
         } else {
-            return super.getProperty(interpreter, seld, o, property, propertyName);
+            return super.getProperty(interpreter, seld, context, property, propertyName);
         }
     }
 
     @Override
-    protected String getTypeScriptIdentifier(TeamAppsDtoParser.CommandDeclarationContext node) {
-	    return getDeclaringTypeScriptFileBaseName(node) + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Command";
+    protected String getTypeScriptIdentifier(CommandDeclarationContext node) {
+	    return model.getDeclaringClassOrInterface(node).getName() + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Command";
     }
 
     @Override
-    protected String getJsonIdentifier(TeamAppsDtoParser.CommandDeclarationContext node) {
-        return TeamAppsIntermediateDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
+    protected String getJsonIdentifier(CommandDeclarationContext node) {
+        return model.getDeclaringClassOrInterface(node).getName() + "." + node.Identifier().getText();
     }
 
 	@Override
-	protected String getJavaClassName(TeamAppsDtoParser.CommandDeclarationContext node) {
+	protected String getJavaClassName(CommandDeclarationContext node) {
         return StringUtils.capitalize(node.Identifier().getText()) + "Command";
     }
 }

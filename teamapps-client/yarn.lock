@@ -3066,6 +3066,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"teamapps-client-common-components@workspace:teamapps-client-common-components":
+  version: 0.0.0-use.local
+  resolution: "teamapps-client-common-components@workspace:teamapps-client-common-components"
+  dependencies:
+    concurrently: ^7.6.0
+    cross-var: ^1.1.0
+    esbuild: ^0.15.13
+    onchange: ^7.1.0
+    replace-in-file: ^6.3.5
+    rimraf: ^3.0.2
+    sync-pom-version-to-package: ^1.6.1
+    typescript: ^4.8.4
+  languageName: unknown
+  linkType: soft
+
 "teamapps-client-communication@workspace:*, teamapps-client-communication@workspace:teamapps-client-communication":
   version: 0.0.0-use.local
   resolution: "teamapps-client-communication@workspace:teamapps-client-communication"

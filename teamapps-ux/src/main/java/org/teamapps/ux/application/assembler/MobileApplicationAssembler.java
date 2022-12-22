@@ -36,7 +36,6 @@ import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.toolbar.AbstractToolContainer;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.component.tree.Tree;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.session.SessionContext;
@@ -241,9 +240,6 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	@Override
 	public void handleApplicationViewAdded(ResponsiveApplication application, View view) {
 		applicationViews.add(view);
-		if (view.getComponent() instanceof Tree) {
-			setApplicationTree(view);
-		}
 	}
 
 	@Override

@@ -22,7 +22,7 @@ package org.teamapps.ux.cache.record.legacy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.DtoIdentifiableClientRecord;
-import org.teamapps.util.StreamUtil;
+import org.teamapps.common.util.StreamUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

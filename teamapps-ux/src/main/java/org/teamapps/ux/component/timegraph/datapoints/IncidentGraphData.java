@@ -40,8 +40,8 @@ public interface IncidentGraphData extends GraphData {
 
 	@Override
 	default DtoGraphData toUiGraphData() {
-		return new DtoIncidentGraphData(streamDataPoints()
+		return new DtoIncidentGraphData(getInterval().toUiLongInterval(), streamDataPoints()
 				.map(d -> new DtoIncidentGraphDataPoint(d.getX1(), d.getX2(), d.getY(), d.getColor().toHtmlColorString(), d.getTooltipHtml()))
-				.collect(Collectors.toList()), getInterval().toUiLongInterval());
+				.collect(Collectors.toList()));
 	}
 }

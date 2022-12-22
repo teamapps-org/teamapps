@@ -36,7 +36,7 @@ esbuild.build({
     .then(async (result, x, y) => {
         console.log("Compressing result files...");
         await compressFile("dist/index.js");
-        // await compressFile("dist/teamapps-core.css");
+        await compressFile("dist/index.css");
         console.log("⚡ esbuild complete! ⚡")
     })
     .catch(() => process.exit(1));

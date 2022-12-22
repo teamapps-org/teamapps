@@ -1,0 +1,12 @@
+package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
+
+import org.teamapps.dto.Template;
+import org.teamapps.dto.IdentifiableClientRecord;
+
+class TreeRecord extends IdentifiableClientRecord {
+	Integer parentId;
+	boolean expanded;
+	boolean lazyChildren;
+	boolean selectable;
+	Template* displayTemplate; // null == use toString()
+}

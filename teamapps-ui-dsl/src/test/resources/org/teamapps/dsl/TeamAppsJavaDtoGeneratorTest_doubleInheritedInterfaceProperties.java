@@ -64,8 +64,8 @@ public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
 	@SuppressWarnings("unchecked")
 	public String toString() {
 		return new StringBuilder(getClass().getSimpleName()).append(": ")
-				.append("bProperty=" + bProperty).append(", ")
-				.append("cProperty=" + cProperty)
+				.append("cProperty=" + cProperty).append(", ")
+				.append("bProperty=" + bProperty)
 				.toString();
 	}
 
@@ -79,6 +79,7 @@ public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
 		this.cProperty = cProperty;
 		return this;
 	}
+
 
 
 

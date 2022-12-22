@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
+package "teamapps-client-core-components":org.teamapps.dto;
 
-import Component from "teamapps-client-core":org.teamapps.dto;
+import org.teamapps.dto.Component;
 
 class ClientRecord {
     Dictionary<Object> values;
@@ -30,9 +30,3 @@ class IdentifiableClientRecord extends ClientRecord {
 	int id;
 }
 
-class HierarchicalClientRecord extends IdentifiableClientRecord {
-	Integer parentId;
-	boolean expanded;
-	boolean lazyChildren;
-	boolean selectable;
-}

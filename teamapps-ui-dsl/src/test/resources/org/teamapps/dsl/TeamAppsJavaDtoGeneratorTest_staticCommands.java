@@ -53,6 +53,10 @@ public abstract class DtoA implements DtoObject {
 
 
 
+	public DtoAReference createReference() {
+	    return new DtoAReference(getId());
+	}
+
 
 
         @com.fasterxml.jackson.annotation.JsonIgnore

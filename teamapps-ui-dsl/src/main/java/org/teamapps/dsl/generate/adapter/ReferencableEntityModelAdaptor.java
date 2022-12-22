@@ -19,35 +19,22 @@
  */
 package org.teamapps.dsl.generate.adapter;
 
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
-import org.teamapps.dsl.TeamAppsDtoParser;
 
-import static org.teamapps.dsl.generate.adapter.ModelUtil.getDeclaringTypeScriptFileBaseName;
-
-public abstract class ReferencableEntityModelAdaptor<N extends ParserRuleContext> extends PojoModelAdaptor {
+public abstract class ReferencableEntityModelAdaptor<N> extends PojoModelAdaptor<N> {
 
 	@Override
-	public Object getProperty(Interpreter interpreter, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
-		N node = (N) o;
-		if ("declaringTypeScriptFileBaseName".equals(propertyName)) {
-			return getDeclaringTypeScriptFileBaseName(node);
-		} else if ("typeScriptIdentifier".equals(propertyName)) {
-			return getTypeScriptIdentifier(node);
+	public Object getProperty(Interpreter interpreter, ST self, N context, Object property, String propertyName) throws STNoSuchPropertyException {
+		if ("typeScriptIdentifier".equals(propertyName)) {
+			return getTypeScriptIdentifier(context);
 		} else if ("_type".equals(propertyName)) {
-			return getJsonIdentifier(node);
+			return getJsonIdentifier(context);
 		} else if ("javaClassName".equals(propertyName)) {
-			return getJavaClassName(node);
-		} else if ("isInterface".equals(propertyName)) {
-			return o instanceof TeamAppsDtoParser.InterfaceDeclarationContext;
-		} else if ("isClass".equals(propertyName)) {
-			return o instanceof TeamAppsDtoParser.ClassDeclarationContext;
-		} else if ("isEnum".equals(propertyName)) {
-			return o instanceof TeamAppsDtoParser.EnumDeclarationContext;
+			return getJavaClassName(context);
 		} else {
-			return super.getProperty(interpreter, self, o, property, propertyName);
+			return super.getProperty(interpreter, self, context, property, propertyName);
 		}
 	}
 

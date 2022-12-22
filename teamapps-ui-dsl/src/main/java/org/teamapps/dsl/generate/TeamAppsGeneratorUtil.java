@@ -38,7 +38,7 @@ public class TeamAppsGeneratorUtil {
 				.map(dtoFile -> {
 					try {
 						InputStreamReader reader = new InputStreamReader(new FileInputStream(dtoFile.toFile()), StandardCharsets.UTF_8);
-						return ParserFactory.createParser(reader).classCollection();
+						return ParserFactory.createParser(reader, dtoFile.toAbsolutePath().toString()).classCollection();
 					} catch (Exception e1) {
 						throw new IllegalArgumentException("Exception while parsing " + dtoFile + ": " + e1.getMessage(), e1);
 					}

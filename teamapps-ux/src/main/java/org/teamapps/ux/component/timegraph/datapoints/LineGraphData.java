@@ -56,8 +56,8 @@ public interface LineGraphData extends GraphData {
 
 	@Override
 	default DtoLineGraphData toUiGraphData() {
-		return new DtoLineGraphData(streamDataPoints()
+		return new DtoLineGraphData(getInterval().toUiLongInterval(), streamDataPoints()
 				.map(dp -> new DtoLineGraphDataPoint(dp.getX(), dp.getY()))
-				.collect(Collectors.toList()), getInterval().toUiLongInterval());
+				.collect(Collectors.toList()));
 	}
 }

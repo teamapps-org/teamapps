@@ -25,7 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.AutoIndentWriter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.generate.wrapper.ClassWrapper;
+import org.teamapps.dsl.generate.wrapper.EnumWrapper;
+import org.teamapps.dsl.generate.wrapper.InterfaceWrapper;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -84,29 +86,29 @@ public class TeamAppsTypeScriptGenerator {
         FileUtils.deleteDirectory(targetDir);
         File parentDir = FileUtils.createDirectory(targetDir);
 
-        for (TeamAppsDtoParser.EnumDeclarationContext enumContext : model.getOwnEnumDeclarations()) {
-            if (enumContext.notGeneratedAnnotation() != null) {
-                System.out.println("Skipping @NotGenerated enum: " + enumContext.Identifier());
+        for (EnumWrapper enumContext : model.getOwnEnumDeclarations()) {
+            if (enumContext.getParserRuleContext().notGeneratedAnnotation() != null) {
+                System.out.println("Skipping @NotGenerated enum: " + enumContext.getName());
                 continue;
             }
-            generateEnum(enumContext, new FileWriter(new File(parentDir, "Dto" + enumContext.Identifier() + ".ts")));
+            generateEnum(enumContext, new FileWriter(new File(parentDir, "Dto" + enumContext.getName() + ".ts")));
         }
-        for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getOwnInterfaceDeclarations()) {
-            if (interfaceContext.notGeneratedAnnotation() != null) {
-                System.out.println("Skipping @NotGenerated interface: " + interfaceContext.Identifier());
+        for (InterfaceWrapper interfaceContext : model.getOwnInterfaceDeclarations()) {
+            if (interfaceContext.getParserRuleContext().notGeneratedAnnotation() != null) {
+                System.out.println("Skipping @NotGenerated interface: " + interfaceContext.getName());
                 continue;
             }
-            logger.info("Generating typescript definitions for interface: " + interfaceContext.Identifier());
-            System.out.println("Generating typescript definitions for interface: " + interfaceContext.Identifier());
-            generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, "Dto" + interfaceContext.Identifier() + ".ts")));
+            logger.info("Generating typescript definitions for interface: " + interfaceContext.getName());
+            System.out.println("Generating typescript definitions for interface: " + interfaceContext.getName());
+            generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, "Dto" + interfaceContext.getName() + ".ts")));
         }
-        for (TeamAppsDtoParser.ClassDeclarationContext classContext : model.getOwnClassDeclarations()) {
-            if (classContext.notGeneratedAnnotation() != null) {
-                System.out.println("Skipping @NotGenerated class: " + classContext.Identifier());
+        for (ClassWrapper classContext : model.getOwnClassDeclarations()) {
+            if (classContext.getParserRuleContext().notGeneratedAnnotation() != null) {
+                System.out.println("Skipping @NotGenerated class: " + classContext.getName());
                 continue;
             }
-            logger.info("Generating typescript definitions for class: " + classContext.Identifier());
-            generateClassDefinition(classContext, new FileWriter(new File(parentDir, "Dto" + classContext.Identifier() + ".ts")));
+            logger.info("Generating typescript definitions for class: " + classContext.getName());
+            generateClassDefinition(classContext, new FileWriter(new File(parentDir, "Dto" + classContext.getName() + ".ts")));
         }
 
         generateIndexTs(new FileWriter(new File(parentDir, "index.ts")));
@@ -114,15 +116,15 @@ public class TeamAppsTypeScriptGenerator {
 
     private void generateIndexTs(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("indexTs")
-                .add("classes", model.getOwnClassDeclarations().stream().filter(c -> c.notGeneratedAnnotation() == null).collect(Collectors.toList()))
-                .add("interfaces", model.getOwnInterfaceDeclarations().stream().filter(c -> c.notGeneratedAnnotation() == null).collect(Collectors.toList()))
-                .add("enums", model.getOwnEnumDeclarations().stream().filter(e -> e.notGeneratedAnnotation() == null).collect(Collectors.toList()));
+                .add("classes", model.getOwnClassDeclarations().stream().filter(c -> c.getParserRuleContext().notGeneratedAnnotation() == null).collect(Collectors.toList()))
+                .add("interfaces", model.getOwnInterfaceDeclarations().stream().filter(c -> c.getParserRuleContext().notGeneratedAnnotation() == null).collect(Collectors.toList()))
+                .add("enums", model.getOwnEnumDeclarations().stream().filter(e -> e.getParserRuleContext().notGeneratedAnnotation() == null).collect(Collectors.toList()));
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
     }
 
-    public void generateEnum(TeamAppsDtoParser.EnumDeclarationContext enumContext, Writer writer) throws IOException {
+    public void generateEnum(EnumWrapper enumContext, Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("enum")
                 .add("e", enumContext);
         AutoIndentWriter out = new AutoIndentWriter(writer);
@@ -130,7 +132,7 @@ public class TeamAppsTypeScriptGenerator {
         writer.close();
     }
 
-    public void generateClassDefinition(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
+    public void generateClassDefinition(ClassWrapper clazzContext, Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("classConfigDefinition")
                 .add("c", clazzContext);
         AutoIndentWriter out = new AutoIndentWriter(writer);
@@ -138,7 +140,7 @@ public class TeamAppsTypeScriptGenerator {
         writer.close();
     }
 
-    public void generateInterfaceDefinition(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext, Writer writer) throws IOException {
+    public void generateInterfaceDefinition(InterfaceWrapper interfaceContext, Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("interfaceConfigDefinition")
                 .add("c", interfaceContext);
         AutoIndentWriter out = new AutoIndentWriter(writer);

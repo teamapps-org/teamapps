@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.dto;
+package "teamapps-client-core-components":org.teamapps.dto;
 
-import Component from "teamapps-client-core":org.teamapps.dto;
+import org.teamapps.dto.Component;
 
 // TODO IMHO, this should be removed. It is not touch-friendly and very strange to implement the way we initially designed it.
 
