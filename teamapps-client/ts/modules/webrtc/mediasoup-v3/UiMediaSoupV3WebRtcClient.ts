@@ -58,6 +58,7 @@ import {ConferenceApi, Utils} from "./lib/avcore.client";
 import {ConferenceInput} from "./lib/avcore";
 import {GainController} from "../GainController";
 import {UiToolButton} from "../../micro-components/UiToolButton";
+import {VoiceActivityDetectionHandle} from "voice-activity-detection";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent();
@@ -113,6 +114,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		audioBitrate: 0,
 		videoBitrate: 0
 	};
+	private vad: VoiceActivityDetectionHandle;
 
 	constructor(config: UiMediaSoupV3WebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -201,7 +203,6 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}; // make sure everything is regarded as new! _config will get set at the end again...
 
 		this.gainController = new GainController(1);
-		addVoiceActivityDetection(this.gainController.outputTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 
 		this.update(config);
 	}
@@ -238,6 +239,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					console.error("Error while closing conference client! Retrying the hard way.", e);
 					conferenceClient.close(true);
 				});
+			this.vad?.destroy();
+			this.gainController.inputTrack?.stop();
 			this.conferenceClient = null;
 			this.$video.classList.remove("mirrored");
 		}
@@ -481,6 +484,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		if (audioConstraintsChanged) {
 			console.log("updatePublishedTracks() --> audioConstraintsChanged", newAudioConstraints);
+			this.vad?.destroy();
 			this.gainController.inputTrack?.stop(); // this will release the microphone access
 			if (newAudioConstraints != null) {
 				try {
@@ -496,6 +500,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						}
 					});
 					this.gainController.inputTrack = firstAudioTrack;
+					this.vad = addVoiceActivityDetection(firstAudioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 				} catch (e) {
 					console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
 					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
