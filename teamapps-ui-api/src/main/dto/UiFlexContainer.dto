@@ -23,6 +23,7 @@ class UiFlexContainer extends UiComponent {
 	UiCssFlexDirection flexDirection = UiCssFlexDirection.ROW;
 	UiCssAlignItems alignItems = UiCssAlignItems.STRETCH;
 	UiCssJustifyContent justifyContent = UiCssJustifyContent.START;
+	String gap;
 
 	command addComponent(UiComponent* component);
 	command removeComponent(UiComponent* component);
