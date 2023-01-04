@@ -116,11 +116,15 @@ public class Button<RECORD> extends AbstractField<Void> {
 		super.handleUiEvent(event);
 		switch (event.getUiEventType()) {
 			case UI_BUTTON_CLICKED: {
-				this.onClicked.fire();
+				if (isVisible()) {
+					this.onClicked.fire();
+				}
 				break;
 			}
 			case UI_BUTTON_DROP_DOWN_OPENED: {
-				this.onDropDownOpened.fire(null);
+				if (isVisible()) {
+					this.onDropDownOpened.fire(null);
+				}
 				break;
 			}
 		}

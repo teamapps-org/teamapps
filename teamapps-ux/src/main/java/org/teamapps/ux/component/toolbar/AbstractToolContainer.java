@@ -54,7 +54,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 			case ABSTRACT_UI_TOOL_CONTAINER_TOOLBAR_BUTTON_CLICK: {
 				UiToolbar.ToolbarButtonClickEvent clickEvent = (UiToolbar.ToolbarButtonClickEvent) event;
 				ToolbarButton button = getButtonByClientId(clickEvent.getGroupId(), clickEvent.getButtonId());
-				if (button != null) {
+				if (button != null && button.isVisible()) {
 					UiDropDownButtonClickInfo uiDropDownButtonClickInfo = clickEvent.getDropDownClickInfo();
 					if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
 						Component dropdownComponent = button.getDropDownComponent();
