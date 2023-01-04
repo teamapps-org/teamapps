@@ -23,6 +23,7 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFlexContainer;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.css.CssAlignItems;
 import org.teamapps.ux.css.CssFlexDirection;
 import org.teamapps.ux.css.CssJustifyContent;
@@ -38,6 +39,7 @@ public class FlexContainer extends AbstractComponent {
 	private CssFlexDirection flexDirection = CssFlexDirection.ROW;
 	private CssAlignItems alignItems = CssAlignItems.STRETCH;
 	private CssJustifyContent justifyContent = CssJustifyContent.START;
+	private Length gap = Length.ofPixels(0);
 
 	@Override
 	public UiFlexContainer createUiComponent() {
@@ -49,6 +51,7 @@ public class FlexContainer extends AbstractComponent {
 		uiFlexContainer.setFlexDirection(flexDirection.toUiCssFlexDirection());
 		uiFlexContainer.setAlignItems(alignItems.toCssAlignItems());
 		uiFlexContainer.setJustifyContent(justifyContent.toUiCssJustifyContent());
+		uiFlexContainer.setGap(gap.toCssString());
 		return uiFlexContainer;
 	}
 
@@ -115,5 +118,14 @@ public class FlexContainer extends AbstractComponent {
 
 	public List<Component> getComponents() {
 		return Collections.unmodifiableList(components);
+	}
+
+	public Length getGap() {
+		return gap;
+	}
+
+	public void setGap(Length gap) {
+		this.gap = gap;
+		reRenderIfRendered();
 	}
 }

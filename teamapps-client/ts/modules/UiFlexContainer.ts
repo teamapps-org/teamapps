@@ -39,6 +39,7 @@ export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> 
 		this.$main.style.flexDirection = config.flexDirection;
 		this.$main.style.alignItems = config.alignItems;
 		this.$main.style.justifyContent = config.justifyContent;
+		this.$main.style.gap = config.gap;
 
 		config.components.forEach(c => this.addComponent(c as UiComponent));
 	}
