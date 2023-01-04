@@ -86,11 +86,15 @@ public class ToolButton extends AbstractComponent {
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
 			case UI_TOOL_BUTTON_CLICKED: {
-				this.onClick.fire(null);
+				if (isVisible()) {
+					this.onClick.fire(null);
+				}
 				break;
 			}
 			case UI_BUTTON_DROP_DOWN_OPENED:
-				this.onDropDownOpened.fire(null);
+				if (isVisible()) {
+					this.onDropDownOpened.fire(null);
+				}
 				break;
 		}
 	}
