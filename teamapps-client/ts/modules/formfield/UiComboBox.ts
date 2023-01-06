@@ -128,7 +128,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	protected initFocusHandling() {
-		this.trivialComboBox.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialComboBox.onFocus.addListener(() => this.onFocusGained.fire({}));
 		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 

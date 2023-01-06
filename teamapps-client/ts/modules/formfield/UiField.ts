@@ -21,7 +21,7 @@ import * as log from "loglevel";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {
 	UiField_BlurEvent,
-	UiField_FocusEvent,
+	UiField_FocusGainedEvent,
 	UiField_ValueChangedEvent,
 	UiFieldCommandHandler,
 	UiFieldConfig,
@@ -52,7 +52,7 @@ interface FieldMessage {
 export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> extends AbstractUiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
 
 	public readonly onValueChanged: TeamAppsEvent<UiField_ValueChangedEvent> = new TeamAppsEvent();
-	public readonly onFocus: TeamAppsEvent<UiField_FocusEvent> = new TeamAppsEvent();
+	public readonly onFocusGained: TeamAppsEvent<UiField_FocusGainedEvent> = new TeamAppsEvent();
 	public readonly onBlur: TeamAppsEvent<UiField_BlurEvent> = new TeamAppsEvent();
 	public readonly onUserManipulation: TeamAppsEvent<void> = new TeamAppsEvent();
 
@@ -97,7 +97,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		this.onValueChanged.addListener(() => this.onUserManipulation.fire(null));
 		this.initFocusHandling();
 
-		this.onFocus.addListener(() => {
+		this.onFocusGained.addListener(() => {
 			this.focused = true;
 			this.getMainElement().classList.add("focus");
 			this.updateFieldMessageVisibilities();
@@ -116,7 +116,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	}
 
 	protected initFocusHandling() {
-		this.getMainElement()?.addEventListener("focusin", () => this.onFocus.fire(null));
+		this.getMainElement()?.addEventListener("focusin", () => this.onFocusGained.fire(null));
 		this.getMainElement()?.addEventListener("focusout", () => this.onBlur.fire(null));
 	}
 

@@ -130,7 +130,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 
 	protected initFocusHandling() {
-		this.trivialTagComboBox.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialTagComboBox.onFocus.addListener(() => this.onFocusGained.fire({}));
 		this.trivialTagComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 

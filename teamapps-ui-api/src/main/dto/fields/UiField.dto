@@ -30,7 +30,7 @@ abstract class UiField extends UiComponent {
 	List<UiFieldMessage> fieldMessages;
 
 	event valueChanged(Object value);
-	event focus();
+	event focusGained(); // I'd love to just call this focus, but the current state of communication protocol does not allow for duplicate names (even vs command).
 	event blur();
 
 	command setEditingMode(UiFieldEditingMode editingMode);
