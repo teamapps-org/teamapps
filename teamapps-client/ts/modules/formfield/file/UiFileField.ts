@@ -128,6 +128,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		this.setUploadUrl(config.uploadUrl);
 		this.setDisplayType(config.displayType);
 		this.setMaxFiles(config.maxFiles);
+		this.setAcceptedFileTypes(config.acceptedFileTypes);
 	}
 
 	isValidData(v: any[]): boolean {
@@ -148,6 +149,10 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	setMaxFiles(maxFiles: number): void {
 		this.maxFiles = maxFiles || Number.MAX_SAFE_INTEGER;
 		this.updateVisibilities();
+	}
+
+	setAcceptedFileTypes(acceptedFileTypes: string[]) {
+		this.$fileInput.accept = acceptedFileTypes != null ? (acceptedFileTypes.join(',')) : null;
 	}
 
 	public setMaxBytesPerFile(maxBytesPerFile: number): void {

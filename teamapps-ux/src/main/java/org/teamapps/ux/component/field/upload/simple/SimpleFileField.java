@@ -22,6 +22,7 @@ package org.teamapps.ux.component.field.upload.simple;
 
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiFileField;
 import org.teamapps.dto.UiSimpleFileField;
 import org.teamapps.event.Event;
 import org.teamapps.formatter.FileSizeFormatter;
@@ -54,6 +55,12 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	private FileFieldDisplayType displayType = FileFieldDisplayType.FLOATING;
 	private int maxFiles = Integer.MAX_VALUE;
+	/**
+	 * List of "unique file type specifiers".
+	 * Examples: ".png", "image/png", "image/*"
+	 * See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/accept#unique_file_type_specifiers
+	 */
+	private List<String> acceptedFileTypes = List.of();
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Icon browseButtonIcon = MaterialIcon.FILE_UPLOAD;
@@ -114,6 +121,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 		field.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsDictionary.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
 		field.setUploadErrorMessage(getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD_ERROR_MESSAGE.getKey()));
 		field.setMaxFiles(maxFiles);
+		field.setAcceptedFileTypes(acceptedFileTypes);
 		field.setDisplayMode(displayType.toUiFileFieldDisplayType());
 		field.setFileItems(fileItems.stream()
 				.map(fi -> fi.createUiFileItem())
@@ -258,5 +266,14 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	public void setBrowseButtonCaption(String browseButtonCaption) {
 		this.browseButtonCaption = browseButtonCaption;
 		queueCommandIfRendered(() -> new UiSimpleFileField.SetBrowseButtonCaptionCommand(getId(), browseButtonCaption));
+	}
+
+	public List<String> getAcceptedFileTypes() {
+		return acceptedFileTypes;
+	}
+
+	public void setAcceptedFileTypes(List<String> acceptedFileTypes) {
+		this.acceptedFileTypes = List.copyOf(acceptedFileTypes);
+		queueCommandIfRendered(() -> new UiFileField.SetAcceptedFileTypesCommand(getId(), acceptedFileTypes));
 	}
 }

@@ -56,6 +56,7 @@ class UiFileField extends UiField {
 	String uploadErrorMessage = "Error while transmitting file...";
 	UiFileFieldDisplayType displayType = UiFileFieldDisplayType.LIST;
 	int maxFiles; // the max number of files to be uploaded in total for this field
+	List<String> acceptedFileTypes;
 	required UiTemplate uploadButtonTemplate;
 	required Object uploadButtonData;
 	boolean showEntriesAsButtonsOnHover = false;
@@ -74,6 +75,7 @@ class UiFileField extends UiField {
 	command setUploadUrl(String uploadUrl);
 	command setDisplayType (UiFileFieldDisplayType displayType);
 	command setMaxFiles(int maxFiles);
+	command setAcceptedFileTypes(List<String> acceptedFileTypes);
 	command setUploadButtonTemplate(UiTemplate uploadButtonTemplate);
     command setUploadButtonData(Object uploadButtonData);
     command setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover);
@@ -93,6 +95,7 @@ class UiSimpleFileField extends UiField {
 	String fileTooLargeMessage = "File too large!";
 	String uploadErrorMessage = "Error while transmitting file...";
 	int maxFiles = 0; // the max number of files to be uploaded in total for this field
+    List<String> acceptedFileTypes;
 	UiFileFieldDisplayType displayMode = UiFileFieldDisplayType.LIST;
 
 	List<UiFileItem> fileItems;
@@ -117,6 +120,7 @@ class UiSimpleFileField extends UiField {
 	command setFileTooLargeMessage(String fileTooLargeMessage);
 	command setUploadErrorMessage(String uploadErrorMessage);
 	command setMaxFiles(int maxFiles);
+	command setAcceptedFileTypes(List<String> acceptedFileTypes);
 	command setDisplayMode(UiFileFieldDisplayType displayType);
 }
 
