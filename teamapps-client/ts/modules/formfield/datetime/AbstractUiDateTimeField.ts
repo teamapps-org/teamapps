@@ -90,7 +90,7 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 	}
 
 	protected initFocusHandling() {
-		this.trivialDateTimeField.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialDateTimeField.onFocus.addListener(() => this.onFocusGained.fire({}));
 		this.trivialDateTimeField.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 

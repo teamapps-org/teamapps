@@ -94,7 +94,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 	}
 
 	protected initFocusHandling() {
-		this.trivialComboBox.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialComboBox.onFocus.addListener(() => this.onFocusGained.fire({}));
 		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 

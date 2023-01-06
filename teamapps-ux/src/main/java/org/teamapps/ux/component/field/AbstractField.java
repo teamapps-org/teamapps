@@ -138,7 +138,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 					LOGGER.warn("Got valueChanged event from non-editable field {} {}", this.getClass().getSimpleName(), getDebuggingId());
 				}
 				break;
-			case UI_FIELD_FOCUS:
+			case UI_FIELD_FOCUS_GAINED:
 				onFocus.fire();
 				break;
 			case UI_FIELD_BLUR:

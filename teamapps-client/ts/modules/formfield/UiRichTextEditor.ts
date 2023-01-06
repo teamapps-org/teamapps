@@ -422,7 +422,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			if (!this.getMainElement().contains(e.relatedTarget as Node)) { // make sure we REALLY lost the focus
 				this._hasFocus = true;
 				this.getMainElement().classList.add('focus');
-				this.onFocus.fire(null);
+				this.onFocusGained.fire(null);
 				this.updateToolbarVisiblity();
 			}
 		});
