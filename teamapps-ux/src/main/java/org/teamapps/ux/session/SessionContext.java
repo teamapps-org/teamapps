@@ -68,8 +68,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
+import static org.teamapps.ux.session.navigation.NavigationHistoryOperation.PUSH;
+import static org.teamapps.ux.session.navigation.NavigationHistoryOperation.REPLACE;
+import static org.teamapps.ux.session.navigation.RoutingUtil.normalizePath;
 
-public class SessionContext implements Router {
+public class SessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
 	private static final String DEFAULT_BACKGROUND_NAME = "defaultBackground";
@@ -115,7 +118,11 @@ public class SessionContext implements Router {
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
 
-	private final BaseRouting baseRouting;
+	private final ParamConverterProvider navigationParamConverterProvider;
+	private final String navigationPathPrefix;
+
+	private boolean routingEnabled = false;
+	private final Map<String, Router> routersByPathPrefix = new ConcurrentHashMap<>();
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
@@ -190,12 +197,13 @@ public class SessionContext implements Router {
 		this.sessionConfiguration = sessionConfiguration;
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
+		this.navigationPathPrefix = navigationPathPrefix;
+		this.navigationParamConverterProvider = navigationParamConverterProvider;
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
-		this.baseRouting = new BaseRouting(navigationPathPrefix, navigationParamConverterProvider, currentLocation);
 	}
 
 
@@ -211,14 +219,52 @@ public class SessionContext implements Router {
 		queueCommand(new UiRootPanel.NavigateForwardCommand(steps));
 	}
 
-	@Override
-	public RoutingHandlerRegistration registerRoutingHandler(String pathTemplate, boolean exact, RoutingHandler handler, boolean applyImmediately) {
-		return baseRouting.registerRoutingHandler(pathTemplate, false, handler, applyImmediately);
+	public Router getBaseRouter() {
+		return getRouter("/");
 	}
 
-	@Override
-	public Router createSubRouter(String relativePath) {
-		return baseRouting.createSubRouter(relativePath);
+	public Router getRouter(String pathPrefix) {
+		pathPrefix = normalizePath(pathPrefix);
+		return this.routersByPathPrefix.computeIfAbsent(pathPrefix, Router::new);
+	}
+
+	public void updateNavigationHistoryState() {
+		Router baseRouter = this.routersByPathPrefix.get("/");
+		if (baseRouter == null) {
+			// no base router registered, so do not fiddle around with the route!
+			return;
+		}
+
+		Route currentRoute = Route.fromLocation(getCurrentLocation());
+
+		Router router = baseRouter;
+		Route route = Route.create();
+
+		NavigationHistoryOperation pathChangeOperation = REPLACE;
+		Set<String> queryParamNamesWorthStatePush = new HashSet<>();
+
+		while (router != null) {
+			RouteInfo routeChangeInfo = router.calculateRouteInfo();
+			route = route.withPathSuffix(routeChangeInfo.getRoute().getPath())
+					.withQueryParams(routeChangeInfo.getRoute().getQueryParams());
+			if (routeChangeInfo.isPathChangeWorthStatePush()) {
+				pathChangeOperation = PUSH;
+			}
+			queryParamNamesWorthStatePush.addAll(routeChangeInfo.getQueryParamNamesWorthStatePush());
+			String pathPrefix = routeChangeInfo.getRoute().getPath();
+			boolean addsToPath = pathPrefix != null && !pathPrefix.equals("/");
+			router = addsToPath ? this.routersByPathPrefix.get(pathPrefix) : null;
+		}
+
+		if (!route.equals(currentRoute)) {
+			Route r = route;
+			if (pathChangeOperation == PUSH && !currentRoute.getPath().equals(route.getPath())
+					|| queryParamNamesWorthStatePush.stream().anyMatch(pName -> Objects.equals(r.getQueryParam(pName), currentRoute.getQueryParam(pName)))) {
+				pushNavigationHistoryState(route.toString(), false);
+			} else {
+				replaceNavigationHistoryState(route.toString(), false);
+			}
+		}
 	}
 
 	/**
@@ -253,7 +299,7 @@ public class SessionContext implements Router {
 	 * @see #pushNavigationHistoryState(String, boolean)
 	 */
 	public void replaceNavigationHistoryState(String pathWithQueryParams, boolean fireEvent) {
-		changeNavigationHistoryState(pathWithQueryParams, fireEvent, NavigationHistoryOperation.REPLACE);
+		changeNavigationHistoryState(pathWithQueryParams, fireEvent, REPLACE);
 	}
 
 	/**
@@ -439,6 +485,9 @@ public class SessionContext implements Router {
 					executionDecorators
 							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(callable))
 							.run();
+					if (routingEnabled) {
+						updateNavigationHistoryState();
+					}
 					return ((R) resultHolder[0]);
 				} catch (Throwable t) {
 					LOGGER.error("Exception while executing within session context", t);
@@ -782,7 +831,9 @@ public class SessionContext implements Router {
 				Location location = Location.fromUiLocation(e.getLocation());
 				this.currentLocation = location;
 				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredBrowserNavigation()));
-				baseRouting.route(location);
+				if (routingEnabled) {
+					route();
+				}
 				break;
 			}
 			default:
@@ -790,8 +841,30 @@ public class SessionContext implements Router {
 		}
 	}
 
-	public void reApplyRouters() {
-		baseRouting.route(getCurrentLocation());
+	public void route() {
+		Location location = getCurrentLocation();
+		Route route = Route.fromLocation(location)
+				.subRoute(navigationPathPrefix);
+
+		List<PathPrefixAndRouter> matchingRouters = routersByPathPrefix.entrySet().stream()
+				.filter(entry -> route.getPath().startsWith(entry.getKey()))
+				.sorted(Comparator.comparing(e -> e.getKey().length()))
+				.map(e -> new PathPrefixAndRouter(e.getKey(), e.getValue()))
+				.collect(Collectors.toList());
+
+		for (PathPrefixAndRouter ppr : matchingRouters) {
+			ppr.router.route(route.subRoute(ppr.pathPrefix));
+		}
+	}
+
+	private static class PathPrefixAndRouter {
+		private final String pathPrefix;
+		private final Router router;
+
+		public PathPrefixAndRouter(String pathPrefix, Router router) {
+			this.pathPrefix = pathPrefix;
+			this.router = router;
+		}
 	}
 
 
@@ -808,7 +881,7 @@ public class SessionContext implements Router {
 	}
 
 	public ParamConverterProvider getRoutingParamConverterProvider() {
-		return baseRouting.getParamConverterProvider();
+		return navigationParamConverterProvider;
 	}
 
 	public UiSessionStats getUiSessionStats() {
@@ -818,5 +891,13 @@ public class SessionContext implements Router {
 	@Override
 	public String toString() {
 		return "SessionContext: " + getName();
+	}
+
+	public boolean isRoutingEnabled() {
+		return routingEnabled;
+	}
+
+	public void setRoutingEnabled(boolean routingEnabled) {
+		this.routingEnabled = routingEnabled;
 	}
 }

@@ -22,6 +22,7 @@ package org.teamapps.ux.session.navigation;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 public class RoutingUtilTest {
@@ -61,5 +62,15 @@ public class RoutingUtilTest {
 		assertThat(RoutingUtil.concatenatePaths("/prefix", "suffix")).isEqualTo("/prefix/suffix");
 		assertThat(RoutingUtil.concatenatePaths("prefix", "/suffix")).isEqualTo("/prefix/suffix");
 		assertThat(RoutingUtil.concatenatePaths("/prefix", "/suffix")).isEqualTo("/prefix/suffix");
+	}
+
+	@Test
+	public void removePrefix() {
+		assertThat(RoutingUtil.removePrefix("/a/b/c", "/a")).isEqualTo("/b/c");
+		assertThat(RoutingUtil.removePrefix("/a/b/c", "/a/b")).isEqualTo("/c");
+		assertThat(RoutingUtil.removePrefix("/a/b/c", "/a/b/c")).isEqualTo("/");
+		assertThat(RoutingUtil.removePrefix("a/b/c", "/a")).isEqualTo("/b/c");
+		assertThat(RoutingUtil.removePrefix("/a/b/c", "a")).isEqualTo("/b/c");
+		assertThatThrownBy(() -> RoutingUtil.removePrefix("/a/b/c", "/x")).isInstanceOf(IllegalArgumentException.class);
 	}
 }
