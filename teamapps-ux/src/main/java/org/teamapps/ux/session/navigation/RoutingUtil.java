@@ -20,19 +20,13 @@
 package org.teamapps.ux.session.navigation;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class RoutingUtil {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public static Map<String, String> parseQueryParams(String query) {
 		if (StringUtils.isBlank(query)) {
@@ -86,11 +80,15 @@ public class RoutingUtil {
 		return normalizePath(prefix + suffix);
 	}
 
-	private static String concatenatePathAndParams(String absolutePath, Map<String, String> queryParams) {
-		absolutePath = withSingleLeadingSlash(absolutePath);
-		return absolutePath + (queryParams.isEmpty() ? "" : "?" + queryParams.entrySet().stream()
-				.map(e -> e.getKey() + "=" + e.getValue())
-				.collect(Collectors.joining("&")));
+	public static String removePrefix(String path, String prefix) {
+		path = normalizePath(path);
+		prefix = normalizePath(prefix);
+		if (prefix.equals("/")) {
+			return path;
+		} else if (path.startsWith(prefix)) {
+			return normalizePath(path.substring(prefix.length()));
+		} else {
+			throw new IllegalArgumentException("Cannot remove prefix " + prefix + " from path " + path);
+		}
 	}
-
 }

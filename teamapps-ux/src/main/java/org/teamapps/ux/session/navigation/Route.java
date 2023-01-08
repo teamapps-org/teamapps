@@ -28,48 +28,56 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class NavigationState {
+public class Route {
 
-	private static final NavigationState EMPTY = new NavigationState("/", Map.of());
+	public static final Route EMPTY = new Route("/", Map.of());
 
 	private static final Pattern RELATIVE_URL_PATTERN = Pattern.compile("(.*?)?(\\?.*?)?(#.*)?");
 
 	private final String relativePath;
 	private final Map<String, String> queryParams;
 
-	public static NavigationState create() {
+	public static Route create() {
 		return EMPTY;
 	}
 
-	public static NavigationState parse(String relativeUrl) {
+	public static Route parse(String relativeUrl) {
 		if (StringUtils.isBlank(relativeUrl)) {
-			return new NavigationState("/", Map.of());
+			return new Route("/", Map.of());
 		}
 		Matcher matcher = RELATIVE_URL_PATTERN.matcher(relativeUrl);
 		if (matcher.matches()) {
 			String path = matcher.group(1);
 			path = RoutingUtil.normalizePath(path);
 			Map<String, String> queryParams = RoutingUtil.parseQueryParams(matcher.group(2));
-			return new NavigationState(path, queryParams);
+			return new Route(path, queryParams);
 		} else {
 			throw new IllegalArgumentException("Unparsable relative URL: " + relativeUrl);
 		}
 	}
 
-	public NavigationState(String relativePath, Map<String, String> queryParams) {
-		this.relativePath = relativePath;
+	public Route(String relativePath, Map<String, String> queryParams) {
+		this.relativePath = RoutingUtil.normalizePath(relativePath);
 		this.queryParams = queryParams;
 	}
 
-	public NavigationState withPrefix(String pathPrefix) {
-		return new NavigationState(RoutingUtil.concatenatePaths(pathPrefix, relativePath), queryParams);
+	public static Route fromLocation(Location location) {
+		return parse(location.getPathname() + location.getSearch());
 	}
 
-	public NavigationState withPath(String path) {
-		return new NavigationState(path, queryParams);
+	public Route subRoute(String pathPrefixToRemove) {
+		return new Route(RoutingUtil.removePrefix(relativePath, pathPrefixToRemove), queryParams);
 	}
 
-	public NavigationState withQueryParam(String key, String value) {
+	public Route withPathSuffix(String pathSuffix) {
+		return new Route(RoutingUtil.concatenatePaths(relativePath, pathSuffix), queryParams);
+	}
+
+	public Route withPath(String path) {
+		return new Route(path, queryParams);
+	}
+
+	public Route withQueryParam(String key, String value) {
 		if (StringUtils.isBlank(key)) {
 			return this;
 		}
@@ -79,15 +87,36 @@ public class NavigationState {
 		} else {
 			newQueryParams.remove(key);
 		}
-		return new NavigationState(relativePath, newQueryParams);
+		return new Route(relativePath, newQueryParams);
 	}
 
-	public String getRelativePath() {
+	public Route withQueryParams(Map<String, String> queryParams) {
+		if (queryParams == null || queryParams.isEmpty()) {
+			return new Route(relativePath, Map.of());
+		}
+
+		HashMap<String, String> newQueryParams = new HashMap<>(this.queryParams);
+		queryParams.forEach((key, value) -> {
+			if (StringUtils.isNotBlank(value)) {
+				newQueryParams.put(key, value);
+			} else {
+				newQueryParams.remove(key);
+			}
+		});
+
+		return new Route(relativePath, newQueryParams);
+	}
+
+	public String getPath() {
 		return relativePath;
 	}
 
 	public Map<String, String> getQueryParams() {
 		return queryParams;
+	}
+
+	public String getQueryParam(String name) {
+		return queryParams.get(name);
 	}
 
 	@Override
@@ -105,7 +134,7 @@ public class NavigationState {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		NavigationState that = (NavigationState) o;
+		Route that = (Route) o;
 		return Objects.equals(relativePath, that.relativePath) && Objects.equals(queryParams, that.queryParams);
 	}
 
