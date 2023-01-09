@@ -73,6 +73,10 @@ public class Route {
 		return new Route(RoutingUtil.concatenatePaths(relativePath, pathSuffix), queryParams);
 	}
 
+	public Route withPathPrefix(String pathPrefix) {
+		return new Route(RoutingUtil.concatenatePaths(pathPrefix, relativePath), queryParams);
+	}
+
 	public Route withPath(String path) {
 		return new Route(path, queryParams);
 	}

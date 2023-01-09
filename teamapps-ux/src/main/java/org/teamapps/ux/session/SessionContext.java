@@ -259,6 +259,7 @@ public class SessionContext {
 			router = addsToPath ? this.routers.stream().filter(r -> r.matchesPathPrefix(pathPrefix)).findFirst().orElse(null) : null;
 		}
 
+		route = route.withPathPrefix(navigationPathPrefix);
 		if (!route.equals(currentRoute)) {
 			Route r = route;
 			if (pathChangeOperation == PUSH && !currentRoute.getPath().equals(route.getPath())
