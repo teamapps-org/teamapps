@@ -62,7 +62,6 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -70,6 +69,7 @@ import java.util.stream.Collectors;
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 import static org.teamapps.ux.session.navigation.NavigationHistoryOperation.PUSH;
 import static org.teamapps.ux.session.navigation.NavigationHistoryOperation.REPLACE;
+import static org.teamapps.ux.session.navigation.RoutingUtil.isEmptyPath;
 import static org.teamapps.ux.session.navigation.RoutingUtil.normalizePath;
 
 public class SessionContext {
@@ -107,7 +107,7 @@ public class SessionContext {
 
 	private TranslationProvider translationProvider;
 
-	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
+	private final Map<String, Template> registeredTemplates = new HashMap<>();
 	private SessionConfiguration sessionConfiguration;
 
 	private final Map<String, Icon<?, ?>> bundleIconByKey = new HashMap<>();
@@ -122,7 +122,9 @@ public class SessionContext {
 	private final String navigationPathPrefix;
 
 	private boolean routingEnabled = false;
-	private final Map<String, Router> routersByPathPrefix = new ConcurrentHashMap<>();
+	private final Map<String, Router> routersByPathPrefix = new HashMap<>();
+	private final List<Router> routers = new ArrayList<>();
+	private boolean routeHandlingDirty = false; // indicates whether the routers changed during routing
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
@@ -225,19 +227,19 @@ public class SessionContext {
 
 	public Router getRouter(String pathPrefix) {
 		pathPrefix = normalizePath(pathPrefix);
-		return this.routersByPathPrefix.computeIfAbsent(pathPrefix, Router::new);
+		return this.routersByPathPrefix.computeIfAbsent(pathPrefix, prefix -> {
+			Router router = new Router(prefix);
+			routers.add(router);
+			router.addChangeListener(() -> routeHandlingDirty = true);
+			routeHandlingDirty = true;
+			return router;
+		});
 	}
 
 	public void updateNavigationHistoryState() {
-		Router baseRouter = this.routersByPathPrefix.get("/");
-		if (baseRouter == null) {
-			// no base router registered, so do not fiddle around with the route!
-			return;
-		}
-
 		Route currentRoute = Route.fromLocation(getCurrentLocation());
 
-		Router router = baseRouter;
+		Router router = getBaseRouter();
 		Route route = Route.create();
 
 		NavigationHistoryOperation pathChangeOperation = REPLACE;
@@ -252,8 +254,9 @@ public class SessionContext {
 			}
 			queryParamNamesWorthStatePush.addAll(routeChangeInfo.getQueryParamNamesWorthStatePush());
 			String pathPrefix = routeChangeInfo.getRoute().getPath();
-			boolean addsToPath = pathPrefix != null && !pathPrefix.equals("/");
-			router = addsToPath ? this.routersByPathPrefix.get(pathPrefix) : null;
+			boolean addsToPath = !isEmptyPath(pathPrefix);
+			// TODO #performance check efficiency and improve
+			router = addsToPath ? this.routers.stream().filter(r -> r.matchesPathPrefix(pathPrefix)).findFirst().orElse(null) : null;
 		}
 
 		if (!route.equals(currentRoute)) {
@@ -846,27 +849,18 @@ public class SessionContext {
 		Route route = Route.fromLocation(location)
 				.subRoute(navigationPathPrefix);
 
-		List<PathPrefixAndRouter> matchingRouters = routersByPathPrefix.entrySet().stream()
-				.filter(entry -> route.getPath().startsWith(entry.getKey()))
-				.sorted(Comparator.comparing(e -> e.getKey().length()))
-				.map(e -> new PathPrefixAndRouter(e.getKey(), e.getValue()))
-				.collect(Collectors.toList());
-
-		for (PathPrefixAndRouter ppr : matchingRouters) {
-			ppr.router.route(route.subRoute(ppr.pathPrefix));
-		}
+		do {
+			routeHandlingDirty = false;
+			// TODO #performance check efficiency and improve
+			List<Router> matchingRouters = routers.stream()
+					.filter(r -> r.matchesPath(route.getPath()))
+					.sorted(Comparator.comparing(e -> e.getPathPrefix().length()))
+					.collect(Collectors.toList());
+			for (Router router : matchingRouters) {
+				router.route(route.subRoute(router.getPathPrefix()));
+			}
+		} while (routeHandlingDirty); // routers or routeHandlers have been added during this execution!
 	}
-
-	private static class PathPrefixAndRouter {
-		private final String pathPrefix;
-		private final Router router;
-
-		public PathPrefixAndRouter(String pathPrefix, Router router) {
-			this.pathPrefix = pathPrefix;
-			this.router = router;
-		}
-	}
-
 
 	public UiSessionListener getAsUiSessionListenerInternal() {
 		return uiSessionListener;
@@ -899,5 +893,8 @@ public class SessionContext {
 
 	public void setRoutingEnabled(boolean routingEnabled) {
 		this.routingEnabled = routingEnabled;
+		if (routingEnabled) {
+			route();
+		}
 	}
 }

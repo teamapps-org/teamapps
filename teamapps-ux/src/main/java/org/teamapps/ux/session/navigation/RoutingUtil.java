@@ -51,7 +51,7 @@ public class RoutingUtil {
 	}
 
 	public static String normalizePath(String prefix) {
-		if (StringUtils.isBlank(prefix) || prefix.equals("/")) {
+		if (isEmptyPath(prefix)) {
 			return "/";
 		}
 		prefix = withSingleLeadingSlash(prefix);
@@ -59,6 +59,10 @@ public class RoutingUtil {
 			prefix = prefix.substring(0, prefix.length() - 1);
 		}
 		return prefix;
+	}
+
+	public static boolean isEmptyPath(String prefix) {
+		return StringUtils.isBlank(prefix) || prefix.equals("/");
 	}
 
 	public static String withSingleLeadingSlash(String path) {
@@ -91,4 +95,5 @@ public class RoutingUtil {
 			throw new IllegalArgumentException("Cannot remove prefix " + prefix + " from path " + path);
 		}
 	}
+
 }

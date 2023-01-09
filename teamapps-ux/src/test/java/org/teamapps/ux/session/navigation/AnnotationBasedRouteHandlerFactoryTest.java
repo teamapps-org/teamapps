@@ -30,14 +30,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AnnotationBasedRoutingHandlerFactoryTest {
+public class AnnotationBasedRouteHandlerFactoryTest {
 
 	@Test
 	public void annotatedMethod() {
 		AtomicBoolean wasInvoked = new AtomicBoolean();
-		AnnotationBasedRoutingHandlerFactory factory = new AnnotationBasedRoutingHandlerFactory(new ParameterConverterProvider());
+		AnnotationBasedRouteHandlerFactory factory = new AnnotationBasedRouteHandlerFactory(new ParameterConverterProvider());
 
-		List<AnnotationBasedRoutingHandlerFactory.AnnotationBasedRoutingHandler> routers = factory.createRouters(new Object() {
+		List<AnnotationBasedRouteHandlerFactory.AnnotationBasedRouteHandler> routers = factory.createRouteHandlers(new Object() {
 
 			@RoutingPath("/apps/{appName}/item/{itemId}")
 			public void myMethod(
@@ -60,16 +60,29 @@ public class AnnotationBasedRoutingHandlerFactoryTest {
 
 	@Test
 	public void classLevelPathAnnotation() {
-		AnnotationBasedRoutingHandlerFactory factory = new AnnotationBasedRoutingHandlerFactory(new ParameterConverterProvider());
+		AnnotationBasedRouteHandlerFactory factory = new AnnotationBasedRouteHandlerFactory(new ParameterConverterProvider());
 
 		MyRouter router = new MyRouter();
-		List<AnnotationBasedRoutingHandlerFactory.AnnotationBasedRoutingHandler> routers = factory.createRouters(router);
+		List<AnnotationBasedRouteHandlerFactory.AnnotationBasedRouteHandler> routers = factory.createRouteHandlers(router);
 
 		assertThat(routers).extracting(r -> r.getPathTemplate()).containsExactlyInAnyOrder("/foo/{x}/bar/{y}");
 
 		routers.get(0).handle("/foo/111/bar/yyy", Map.of("x", "111", "y", "yyy"), Map.of());
 
 		assertThat(router.wasInvoked).isTrue();
+	}
+
+	@Test
+	public void shouldMakeMethodsAccessible() {
+		AtomicBoolean wasInvoked = new AtomicBoolean();
+		var routeHandlers = new AnnotationBasedRouteHandlerFactory(new ParameterConverterProvider()).createRouteHandlers(new Object() {
+			@RoutingPath("/")
+			private void myMethod() {
+				wasInvoked.set(true);
+			}
+		});
+
+		routeHandlers.get(0).handle("/", Map.of(), Map.of()); // should not throw an exception!
 	}
 
 	@RoutingPath("foo/{x}")
