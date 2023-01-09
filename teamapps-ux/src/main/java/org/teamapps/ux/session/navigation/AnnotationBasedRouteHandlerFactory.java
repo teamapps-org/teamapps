@@ -35,25 +35,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AnnotationBasedRoutingHandlerFactory {
+public class AnnotationBasedRouteHandlerFactory {
 
 	private final ParamConverterProvider converterProvider;
 
-	public AnnotationBasedRoutingHandlerFactory() {
+	public AnnotationBasedRouteHandlerFactory() {
 		this(new ParameterConverterProvider());
 	}
 
-	public AnnotationBasedRoutingHandlerFactory(ParamConverterProvider converterProvider) {
+	public AnnotationBasedRouteHandlerFactory(ParamConverterProvider converterProvider) {
 		this.converterProvider = converterProvider;
 	}
 
-	public List<AnnotationBasedRoutingHandler> createRouters(Object annotatedClassInstance) {
+	public List<AnnotationBasedRouteHandler> createRouteHandlers(Object annotatedClassInstance) {
 		RoutingPath classLevelPathAnnotation = annotatedClassInstance.getClass().getAnnotation(RoutingPath.class);
 		String pathPrefix = classLevelPathAnnotation != null ? classLevelPathAnnotation.value() : "";
 		List<Method> routingMethods = ReflectionUtil.findMethods(annotatedClassInstance.getClass(), method -> method.isAnnotationPresent(RoutingPath.class));
 		return routingMethods.stream()
+				.peek(m -> {
+					if (!m.trySetAccessible()) {
+						throw new RuntimeException("Cannot make method " + m + " accessible!");
+					}
+				})
 				.map(m -> createRoutingMethodInfo(m, pathPrefix))
-				.map(routingMethodInfo -> new AnnotationBasedRoutingHandler(routingMethodInfo, annotatedClassInstance))
+				.map(routingMethodInfo -> new AnnotationBasedRouteHandler(routingMethodInfo, annotatedClassInstance))
 				.collect(Collectors.toList());
 	}
 
@@ -119,11 +124,11 @@ public class AnnotationBasedRoutingHandlerFactory {
 		}
 	}
 
-	public static class AnnotationBasedRoutingHandler implements RoutingHandler {
+	public static class AnnotationBasedRouteHandler implements RouteHandler {
 		private final RoutingMethodInfo routingMethodInfo;
 		private final Object annotatedClassInstance;
 
-		public AnnotationBasedRoutingHandler(RoutingMethodInfo routingMethodInfo, Object annotatedClassInstance) {
+		public AnnotationBasedRouteHandler(RoutingMethodInfo routingMethodInfo, Object annotatedClassInstance) {
 			this.routingMethodInfo = routingMethodInfo;
 			this.annotatedClassInstance = annotatedClassInstance;
 		}

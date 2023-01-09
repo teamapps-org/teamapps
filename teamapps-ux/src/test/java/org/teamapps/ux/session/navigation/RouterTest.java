@@ -82,7 +82,7 @@ public class RouterTest {
 		router.setQueryParameter("x", "xValue", PUSH);
 
 		router.setQueryParameterSupplier("x", () -> "fromSupplier", REPLACE);
-		router.setQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), REPLACE);
+		router.addQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), REPLACE);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), REPLACE);
 
 		RouteInfo routeInfo = router.calculateRouteInfo();
@@ -95,7 +95,7 @@ public class RouterTest {
 		router.setQueryParameter("x", "xValue", REPLACE);
 
 		router.setQueryParameterSupplier("x", () -> "fromSupplier", PUSH);
-		router.setQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), PUSH);
+		router.addQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), PUSH);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), PUSH);
 
 		RouteInfo routeInfo = router.calculateRouteInfo();
@@ -132,7 +132,7 @@ public class RouterTest {
 		Router router = new Router("/");
 		router.setQueryParameterSupplier("x", () -> "fromSupplier", PUSH);
 
-		router.setQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), REPLACE);
+		router.addQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), REPLACE);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), REPLACE);
 
 		RouteInfo routeInfo = router.calculateRouteInfo();
@@ -144,7 +144,7 @@ public class RouterTest {
 		Router router = new Router("/");
 		router.setQueryParameterSupplier("x", () -> "fromSupplier", REPLACE);
 
-		router.setQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), PUSH);
+		router.addQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), PUSH);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), PUSH);
 
 		RouteInfo routeInfo = router.calculateRouteInfo();
@@ -155,7 +155,7 @@ public class RouterTest {
 	@Test
 	public void setQueryParametersSupplier() {
 		Router router = new Router("/");
-		router.setQueryParametersSupplier(() -> Map.of("x", "fromParametersSupplier"), PUSH);
+		router.addQueryParametersSupplier(() -> Map.of("x", "fromParametersSupplier"), PUSH);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), REPLACE);
 
 		RouteInfo routeInfo = router.calculateRouteInfo();
@@ -166,7 +166,7 @@ public class RouterTest {
 	@Test
 	public void setQueryParametersSupplier2() {
 		Router router = new Router("/");
-		router.setQueryParametersSupplier(() -> Map.of("x", "fromParametersSupplier"), REPLACE);
+		router.addQueryParametersSupplier(() -> Map.of("x", "fromParametersSupplier"), REPLACE);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), PUSH);
 
 		RouteInfo routeInfo = router.calculateRouteInfo();
@@ -192,5 +192,42 @@ public class RouterTest {
 		RouteInfo routeInfo = router.calculateRouteInfo();
 		assertThat(routeInfo.getRoute().getPath()).isEqualTo("/fromRouteSupplier");
 		assertThat(routeInfo.isPathChangeWorthStatePush()).isFalse();
+	}
+
+	@Test
+	public void matchesPath() throws Exception {
+		assertThat(new Router("").matchesPath("/a/b/c")).isTrue();
+		assertThat(new Router("/").matchesPath("/a/b/c")).isTrue();
+		assertThat(new Router("a").matchesPath("/a/b/c")).isTrue();
+		assertThat(new Router("/a").matchesPath("/a/b/c")).isTrue();
+		assertThat(new Router("a/b").matchesPath("/a/b/c")).isTrue();
+		assertThat(new Router("/a/b").matchesPath("/a/b/c")).isTrue();
+		assertThat(new Router("/a/{v}/b").matchesPath("/a/xxx/b")).isTrue();
+		assertThat(new Router("/a/{v}/b").matchesPath("/a/xxx/b/c")).isTrue();
+
+		assertThat(new Router("x").matchesPath("/a/b/c")).isFalse();
+		assertThat(new Router("/x").matchesPath("/a/b/c")).isFalse();
+		assertThat(new Router("a/x").matchesPath("/a/b/c")).isFalse();
+		assertThat(new Router("/a/x").matchesPath("/a/b/c")).isFalse();
+		assertThat(new Router("/a/b/c/d").matchesPath("/a/b/c")).isFalse();
+		assertThat(new Router("/a/{v}/b").matchesPath("/a/xxx/c")).isFalse();
+		assertThat(new Router("/a/{v}/b").matchesPath("/a/xxx")).isFalse();
+	}
+
+	@Test
+	public void matchesPathPrefix() {
+		assertThat(new Router("").matchesPathPrefix("/a/b")).isFalse();
+		assertThat(new Router("/").matchesPathPrefix("/a/b")).isFalse();
+		assertThat(new Router("a").matchesPathPrefix("/a/b")).isFalse();
+		assertThat(new Router("/a").matchesPathPrefix("/a/b")).isFalse();
+		assertThat(new Router("x").matchesPathPrefix("/a/b")).isFalse();
+		assertThat(new Router("/a/x").matchesPathPrefix("/a/b")).isFalse();
+		assertThat(new Router("/a/{v}/b").matchesPathPrefix("/a")).isFalse();
+		assertThat(new Router("/a/{v}/b").matchesPathPrefix("/a/b")).isFalse();
+		assertThat(new Router("/a/{v}/b").matchesPathPrefix("/a/b/c")).isFalse();
+
+		assertThat(new Router("a/b").matchesPathPrefix("/a/b")).isTrue();
+		assertThat(new Router("/a/b").matchesPathPrefix("/a/b")).isTrue();
+		assertThat(new Router("/a/{v}/b").matchesPathPrefix("/a/xxx/b")).isTrue();
 	}
 }

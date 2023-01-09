@@ -21,7 +21,7 @@ package org.teamapps.ux.session.navigation;
 
 import java.util.Map;
 
-public interface RoutingHandler {
+public interface RouteHandler {
 
 	/**
 	 * @param path        full path

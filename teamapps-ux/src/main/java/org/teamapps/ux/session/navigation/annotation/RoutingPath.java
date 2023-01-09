@@ -19,13 +19,15 @@
  */
 package org.teamapps.ux.session.navigation.annotation;
 
+import org.teamapps.ux.session.navigation.RouteHandler;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a method as {@link org.teamapps.ux.session.navigation.RoutingHandler} method.
+ * Marks a method as {@link RouteHandler} method.
  * The specified path template needs to match in order to apply the method.
  * <p>
  * Path templates are relative, since every router has a path prefix (including SessionContext).

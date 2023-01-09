@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 
 import static org.teamapps.ux.session.navigation.NavigationHistoryOperation.PUSH;
 import static org.teamapps.ux.session.navigation.NavigationHistoryOperation.REPLACE;
-import static org.teamapps.ux.session.navigation.RoutingUtil.concatenatePaths;
-import static org.teamapps.ux.session.navigation.RoutingUtil.normalizePath;
+import static org.teamapps.ux.session.navigation.RoutingUtil.*;
 
 public class Router {
 
@@ -19,6 +18,8 @@ public class Router {
 	static final String PATH_REMAINDER_SUFFIX = "{" + PATH_REMAINDER_VARNAME + ":(/.*)?}";
 
 	private final String pathPrefix;
+	private final UriTemplate pathPrefixTemplate;
+	private final UriTemplate pathPrefixExactTemplate;
 	private final List<UriTemplateAndHandler> handlers = new CopyOnWriteArrayList<>(); // handler execution might add more handlers => prevent ConcurrentModificationException
 
 	private String path;
@@ -29,14 +30,28 @@ public class Router {
 	private NavigationHistoryOperation pathSupplierChangeOperation;
 
 	private final Map<String, WithNavigationHistoryChangeOperation<Supplier<String>>> queryParameterSuppliers = new HashMap<>();
-	private Supplier<Map<String, String>> queryParametersSupplier;
-	private NavigationHistoryOperation queryParametersSupplierChangeOperation;
+	private final List<WithNavigationHistoryChangeOperation<Supplier<Map<String, String>>>> queryParametersSuppliers = new ArrayList<>();
 
 	private Supplier<Route> routeSupplier;
 	private NavigationHistoryOperation routeSupplierChangeOperation;
 
+	private final List<Runnable> routeHandlingChangeListeners = new ArrayList<>();
+
 	public Router(String pathPrefix) {
 		this.pathPrefix = normalizePath(pathPrefix);
+		this.pathPrefixTemplate = createUriTemplate(this.pathPrefix, false);
+		this.pathPrefixExactTemplate = createUriTemplate(this.pathPrefix, true);
+	}
+
+	private UriTemplate createUriTemplate(String path, boolean exact) {
+		path = normalizePath(path);
+		String templateString;
+		if (exact) {
+			templateString = path;
+		} else {
+			templateString = isEmptyPath(path) ? PATH_REMAINDER_SUFFIX : path + PATH_REMAINDER_SUFFIX;
+		}
+		return new UriTemplate(templateString);
 	}
 
 	public RouteInfo calculateRouteInfo() {
@@ -50,10 +65,10 @@ public class Router {
 				queryParameterNamesTriggeringPush.addAll(route.getQueryParams().keySet());
 			}
 		}
-		if (queryParametersSupplier != null) {
-			Map<String, String> queryParameters = queryParametersSupplier.get();
+		for (WithNavigationHistoryChangeOperation<Supplier<Map<String, String>>> supplierAndOperation : queryParametersSuppliers) {
+			Map<String, String> queryParameters = supplierAndOperation.getValue().get();
 			route = route.withQueryParams(queryParameters);
-			if (queryParametersSupplierChangeOperation == PUSH) {
+			if (supplierAndOperation.getNavigationHistoryOperation() == PUSH) {
 				queryParameterNamesTriggeringPush.addAll(queryParameters.keySet());
 			} else {
 				queryParameterNamesTriggeringPush.removeAll(queryParameters.keySet());
@@ -93,24 +108,25 @@ public class Router {
 		return new RouteInfo(route, pathChangeOperation == PUSH, queryParameterNamesTriggeringPush);
 	}
 
-	public Registration registerRoutingHandler(String pathTemplate, RoutingHandler handler) {
-		return registerRoutingHandler(pathTemplate, false, handler);
+	public Registration registerRouteHandler(String pathTemplate, RouteHandler handler) {
+		return registerRouteHandler(pathTemplate, false, handler);
 	}
 
-	public Registration registerRoutingHandler(String pathTemplate, boolean exact, RoutingHandler handler) {
-		var uriTemplate = new UriTemplate(concatenatePaths(pathPrefix, pathTemplate) + (exact ? "" : PATH_REMAINDER_SUFFIX));
+	public Registration registerRouteHandler(String pathTemplate, boolean exact, RouteHandler handler) {
+		var uriTemplate = createUriTemplate(pathTemplate, exact);
 		UriTemplateAndHandler templateAndRouter = new UriTemplateAndHandler(uriTemplate, handler);
 		handlers.add(templateAndRouter);
+		fireRouteHandlingChange();
 		return () -> handlers.remove(templateAndRouter);
 	}
 
-	public Map<String, Registration> registerRoutingHandlers(Object annotatedClassInstance) {
-		return new AnnotationBasedRoutingHandlerFactory(SessionContext.current().getRoutingParamConverterProvider())
-				.createRouters(annotatedClassInstance).stream()
-				.collect(Collectors.toMap(
-						handler -> handler.getPathTemplate(),
-						handler -> registerRoutingHandler(handler.getPathTemplate(), handler.isExact(), handler))
-				);
+	public Registration registerRouteHandlers(Object annotatedClassInstance) {
+		List<Registration> registrations = new AnnotationBasedRouteHandlerFactory(SessionContext.current().getRoutingParamConverterProvider())
+				.createRouteHandlers(annotatedClassInstance).stream()
+				.map(handler -> registerRouteHandler(handler.getPathTemplate(), handler.isExact(), handler))
+				.collect(Collectors.toList());
+		fireRouteHandlingChange();
+		return () -> registrations.forEach(Registration::dispose);
 	}
 
 	public Router getSubRouter(String relativePath) {
@@ -171,17 +187,14 @@ public class Router {
 		};
 	}
 
-	public Registration setQueryParametersSupplier(Supplier<Map<String, String>> supplier) {
-		return setQueryParametersSupplier(supplier, PUSH);
+	public Registration addQueryParametersSupplier(Supplier<Map<String, String>> supplier) {
+		return addQueryParametersSupplier(supplier, PUSH);
 	}
 
-	public Registration setQueryParametersSupplier(Supplier<Map<String, String>> supplier, NavigationHistoryOperation changeOperation) {
-		this.queryParametersSupplier = supplier;
-		queryParametersSupplierChangeOperation = changeOperation;
+	public Registration addQueryParametersSupplier(Supplier<Map<String, String>> supplier, NavigationHistoryOperation changeOperation) {
+		this.queryParametersSuppliers.add(new WithNavigationHistoryChangeOperation<>(supplier, changeOperation));
 		return () -> {
-			if (this.queryParametersSupplier == supplier) {
-				this.queryParametersSupplier = null;
-			}
+			this.queryParametersSuppliers.removeIf(sao -> sao.getValue() == supplier && sao.getNavigationHistoryOperation() == changeOperation);
 		};
 	}
 
@@ -199,11 +212,32 @@ public class Router {
 		};
 	}
 
+	public boolean matchesPath(String path) {
+		return pathPrefixTemplate.match(path, new HashMap<>());
+	}
+
+	public boolean matchesPathPrefix(String pathPrefix) {
+		return pathPrefixExactTemplate.match(pathPrefix, new HashMap<>());
+	}
+
+	public String getPathPrefix() {
+		return pathPrefix;
+	}
+
+	public Registration addChangeListener(Runnable listener) {
+		routeHandlingChangeListeners.add(listener);
+		return () -> routeHandlingChangeListeners.remove(listener);
+	}
+
+	private void fireRouteHandlingChange() {
+		routeHandlingChangeListeners.forEach(Runnable::run);
+	}
+
 	private static class UriTemplateAndHandler {
 		private final UriTemplate uriTemplate;
-		private final RoutingHandler handler;
+		private final RouteHandler handler;
 
-		public UriTemplateAndHandler(UriTemplate uriTemplate, RoutingHandler handler) {
+		public UriTemplateAndHandler(UriTemplate uriTemplate, RouteHandler handler) {
 			this.uriTemplate = uriTemplate;
 			this.handler = handler;
 		}
@@ -212,7 +246,7 @@ public class Router {
 			return uriTemplate;
 		}
 
-		public RoutingHandler getHandler() {
+		public RouteHandler getHandler() {
 			return handler;
 		}
 	}
