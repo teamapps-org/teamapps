@@ -263,7 +263,7 @@ public class SessionContext {
 		if (!route.equals(currentRoute)) {
 			Route r = route;
 			if (pathChangeOperation == PUSH && !currentRoute.getPath().equals(route.getPath())
-					|| queryParamNamesWorthStatePush.stream().anyMatch(pName -> Objects.equals(r.getQueryParam(pName), currentRoute.getQueryParam(pName)))) {
+					|| queryParamNamesWorthStatePush.stream().anyMatch(pName -> !Objects.equals(r.getQueryParam(pName), currentRoute.getQueryParam(pName)))) {
 				pushNavigationHistoryState(route.toString(), false);
 			} else {
 				replaceNavigationHistoryState(route.toString(), false);
