@@ -40,8 +40,6 @@ public <if(c.abstract)>abstract <endif>class <c.javaClassName> <if(c.superClass)
 
 	<c.propertiesNotImplementedBySuperClasses:setter(c.javaClassName); separator="\n\n">
 
-	<if(c.managed)><referenceGetter(c)><endif>
-
 	<c.events:eventClass(); separator="\n\n">
 	<c.events:eventJsonWrapper(); separator="\n\n">
 
@@ -57,12 +55,6 @@ public <if(c.abstract)>abstract <endif>class <c.javaClassName> <if(c.superClass)
 	<c.commands:commandClass(); separator="\n\n">
 
 }>>
-
-referenceGetter(c) ::= <<
-public Dto<c.name>Reference createReference() {
-    return new Dto<c.name>Reference(getId());
-}
->>
 
 typeIdGetter(c) ::= <<
 @com.fasterxml.jackson.annotation.JsonIgnore
@@ -85,26 +77,6 @@ public List\<String\> getQueryNames() {
 }
 >>
 
-classReference(c) ::= <<
-<javaFilePrelude(c.packageName)>
-@JsonTypeName("<c.name>Reference")
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class <c.javaClassName>Reference <if(c.managedSuperType)>extends Dto<c.managedSuperType.name>Reference<endif> implements DtoObject {
-
-	<if(!c.managedSuperType)>private final String id;<endif>
-
-	public Dto<c.name; format="cap">Reference(String id) {
-	    <if(c.managedSuperType)>super(id);<else>this.id = id;<endif>
-    }
-
-	<if(!c.managedSuperType)>
-	public String getId() {
-        return this.id;
-    }
-    <endif>
-}
->>
-
 interface(c) ::= <<
 <javaFilePrelude(c.packageName)>
 
@@ -117,8 +89,6 @@ public interface <c.javaClassName><if(c.typeArguments)><c.typeArguments.text><en
 	<c.properties:getterStub(); separator="\n">
 	<c.nonRequiredProperties:setterStub(c); separator="\n">
 
-    <if(c.managedBaseType)>default <referenceGetter(c)><endif>
-	
 	<c.events:eventClass(); separator="\n\n">
     <c.events:eventJsonWrapper(); separator="\n\n">
 
@@ -159,7 +129,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;

@@ -22,6 +22,7 @@ package org.teamapps.ux.component.tabpanel;
 import org.teamapps.dto.DtoTab;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.session.CurrentSessionContext;
@@ -69,8 +70,8 @@ public class Tab {
 		uiTab.setCloseable(closeable);
 		uiTab.setLazyLoading(this.isLazyLoading());
 		uiTab.setRightSide(this.rightSide);
-		uiTab.setToolbar(Component.createUiClientObjectReference(this.toolbar));
-		uiTab.setContent(Component.createUiClientObjectReference(content));
+		uiTab.setToolbar(ClientObject.createDtoReference(this.toolbar));
+		uiTab.setContent(ClientObject.createDtoReference(content));
 		uiTab.setVisible(visible);
 		return uiTab;
 	}

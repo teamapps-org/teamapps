@@ -22,7 +22,7 @@ package org.teamapps.ux.component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.DtoClientObject;
-import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.DtoReference;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.dto.protocol.DtoQueryWrapper;
 import org.teamapps.ux.session.SessionContext;
@@ -60,10 +60,14 @@ public interface ClientObject {
 	 * Creates a ui reference to a client object.
 	 * Ui references are just a simple way to reference objects on the client side.
 	 */
-	default DtoClientObjectReference createDtoReference() {
-		LOGGER.debug("createDtoClientObjectReference: " + getId());
+	default DtoReference createDtoReference() {
+		LOGGER.debug("createDtoReference: " + getId());
 		SessionContext.current().renderClientObject(this);
-		return new DtoClientObjectReference(getId());
+		return new DtoReference(getId());
+	}
+
+	static DtoReference createDtoReference(Component component) {
+		return component == null ? null : component.createDtoReference();
 	}
 
 	default void handleUiEvent(DtoEventWrapper event) {

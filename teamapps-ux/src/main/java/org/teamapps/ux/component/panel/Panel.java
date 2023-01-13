@@ -28,10 +28,7 @@ import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.CommonComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
@@ -149,7 +146,7 @@ public class Panel extends AbstractComponent implements Component {
 		uiPanel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
 		uiPanel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy.toUiHeaderComponentMinimizationPolicy());
 		uiPanel.setHideTitleBar(hideTitleBar);
-		uiPanel.setToolbar(Component.createUiClientObjectReference(toolbar));
+		uiPanel.setToolbar(ClientObject.createDtoReference(toolbar));
 		uiPanel.setContent(content != null ? content.createDtoReference() : null);
 		uiPanel.setPadding(padding);
 		uiPanel.setWindowButtons(windowButtons.stream()

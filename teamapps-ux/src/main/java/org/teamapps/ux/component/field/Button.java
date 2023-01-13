@@ -25,8 +25,9 @@ import org.teamapps.dto.DtoField;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
@@ -96,7 +97,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 		Object uiRecord = createUiRecord();
 		DtoButton ui = new DtoButton(template != null ? template.createDtoReference() : null, uiRecord);
 		mapAbstractFieldAttributesToUiField(ui);
-		ui.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
+		ui.setDropDownComponent(ClientObject.createDtoReference(dropDownComponent));
 		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		ui.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		ui.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
@@ -209,7 +210,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		sendCommandIfRendered(() -> new DtoButton.SetDropDownComponentCommand(Component.createUiClientObjectReference(dropDownComponent)));
+		sendCommandIfRendered(() -> new DtoButton.SetDropDownComponentCommand(ClientObject.createDtoReference(dropDownComponent)));
 		return this;
 	}
 

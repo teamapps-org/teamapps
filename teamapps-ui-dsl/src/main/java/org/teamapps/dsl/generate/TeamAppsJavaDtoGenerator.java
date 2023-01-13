@@ -45,13 +45,6 @@ public class TeamAppsJavaDtoGenerator {
 	public static void main(String[] args) throws Exception {
 		Options options = new Options();
 		options.addOption(Option.builder()
-				.option("p")
-				.longOpt("package")
-				.hasArg(true)
-				.required(true)
-				.desc("Package name for generated classes")
-				.build());
-		options.addOption(Option.builder()
 				.option("i")
 				.longOpt("import")
 				.hasArg(true)
@@ -62,13 +55,14 @@ public class TeamAppsJavaDtoGenerator {
 
 		String[] importedModelDirs = cmd.getOptionValues('i');
 		TeamAppsIntermediateDtoModel importedModel = null;
+		System.out.println(importedModelDirs);
 		if (importedModelDirs != null) {
 			for (String importedModelDir : importedModelDirs) {
 				try {
 					if (importedModel != null) {
-						importedModel = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModel);
+						importedModel = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModelDir.toString(), importedModel);
 					} else {
-						importedModel = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(importedModelDir)));
+						importedModel = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModelDir.toString());
 					}
 				} catch (IOException e) {
 					throw new RuntimeException(e);
@@ -90,9 +84,9 @@ public class TeamAppsJavaDtoGenerator {
 
 		TeamAppsIntermediateDtoModel model;
 		if (importedModel != null) {
-			model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModel);
+			model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), sourceDir.toString(), importedModel);
 		} else {
-			model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir));
+			model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), sourceDir.toString());
 		}
 		new TeamAppsDtoModelValidator(model).validate();
 		new TeamAppsJavaDtoGenerator(model).generate(targetDir);
@@ -114,9 +108,6 @@ public class TeamAppsJavaDtoGenerator {
 			System.out.println("Generating class: " + classWrapper.getName());
 			generateClass(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + ".java")));
 			generateClassJsonWrapper(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + "Wrapper.java")));
-			if (classWrapper.isManaged()) {
-				generateClassReference(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + "Reference.java")));
-			}
 		}
 		for (InterfaceWrapper interfaceWrapper : model.getOwnInterfaceDeclarations()) {
 			File packageDir = FileUtils.createDirectory(new File(targetDir, interfaceWrapper.getPackageName().replace('.', '/')));
@@ -127,9 +118,6 @@ public class TeamAppsJavaDtoGenerator {
 			logger.info("Generating interface: " + interfaceWrapper.getName());
 			generateInterface(interfaceWrapper, new FileWriter(new File(packageDir, "Dto" + interfaceWrapper.getName() + ".java")));
 			generateInterfaceJsonWrapper(interfaceWrapper, new FileWriter(new File(packageDir, "Dto" + interfaceWrapper.getName() + "Wrapper.java")));
-			if (interfaceWrapper.isManaged()) {
-				generateInterfaceReference(interfaceWrapper, new FileWriter(new File(packageDir, "Dto" + interfaceWrapper.getName() + "Reference.java")));
-			}
 		}
 		for (EnumWrapper enumWrapper : model.getOwnEnumDeclarations()) {
 			File packageDir = FileUtils.createDirectory(new File(targetDir, enumWrapper.getPackageName().replace('.', '/')));
@@ -169,26 +157,6 @@ public class TeamAppsJavaDtoGenerator {
 			template.write(out, new StringTemplatesErrorListener());
 			writer.close();
 		}, "Error while generating class " + clazzContext.getName());
-	}
-
-	void generateClassReference(ClassWrapper clazzContext, Writer writer) throws IOException {
-		runWithExceptionMessagePrefix(() -> {
-			ST template = stGroup.getInstanceOf("classReference")
-					.add("c", clazzContext);
-			AutoIndentWriter out = new AutoIndentWriter(writer);
-			template.write(out, new StringTemplatesErrorListener());
-			writer.close();
-		}, "Error while generating class reference for " + clazzContext.getName());
-	}
-
-	void generateInterfaceReference(InterfaceWrapper interfaceWrapper, Writer writer) throws IOException {
-		runWithExceptionMessagePrefix(() -> {
-			ST template = stGroup.getInstanceOf("classReference")
-					.add("c", interfaceWrapper);
-			AutoIndentWriter out = new AutoIndentWriter(writer);
-			template.write(out, new StringTemplatesErrorListener());
-			writer.close();
-		}, "Error while generating interface reference for " + interfaceWrapper.getName());
 	}
 
 	void generateInterface(InterfaceWrapper interfaceWrapper, Writer writer) throws IOException {

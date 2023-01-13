@@ -33,8 +33,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TeamAppsTypeScriptGenerator {
@@ -43,7 +41,7 @@ public class TeamAppsTypeScriptGenerator {
     private final STGroupFile stGroup;
     private final TeamAppsIntermediateDtoModel model;
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws Exception {
         Options options = new Options();
         options.addOption(Option.builder()
                 .option("i")
@@ -54,14 +52,22 @@ public class TeamAppsTypeScriptGenerator {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
 
-        TeamAppsIntermediateDtoModel[] importedModels = Optional.ofNullable(cmd.getOptionValues('i')).stream().flatMap(Arrays::stream)
-                .map(dir -> {
+		String[] importedModelDirs = cmd.getOptionValues('i');
+		TeamAppsIntermediateDtoModel importedModel = null;
+		System.out.println(importedModelDirs);
+		if (importedModelDirs != null) {
+			for (String importedModelDir : importedModelDirs) {
                     try {
-                        return new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(dir)));
+					if (importedModel != null) {
+						importedModel = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModelDir.toString(), importedModel);
+					} else {
+						importedModel = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModelDir.toString());
+					}
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                }).toArray(TeamAppsIntermediateDtoModel[]::new);
+			}
+		}
 
         if (cmd.getArgs().length < 2) {
             new HelpFormatter().printHelp("generator", options);
@@ -73,8 +79,15 @@ public class TeamAppsTypeScriptGenerator {
 
         System.out.println("Generating TypeScript from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath());
 
-        new TeamAppsTypeScriptGenerator(new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModels))
-                .generate(targetDir);
+
+		TeamAppsIntermediateDtoModel model;
+		if (importedModel != null) {
+			model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), sourceDir.toString(), importedModel);
+		} else {
+			model = new TeamAppsIntermediateDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), sourceDir.toString());
+		}
+		new TeamAppsDtoModelValidator(model).validate();
+		new TeamAppsTypeScriptGenerator(model).generate(targetDir);
     }
 
     public TeamAppsTypeScriptGenerator(TeamAppsIntermediateDtoModel model) {

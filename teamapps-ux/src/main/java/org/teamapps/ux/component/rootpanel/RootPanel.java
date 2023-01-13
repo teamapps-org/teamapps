@@ -22,10 +22,7 @@ package org.teamapps.ux.component.rootpanel;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoRootPanel;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.CommonComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.animation.PageTransition;
 
 @TeamAppsComponent(library = CommonComponentLibrary.class)

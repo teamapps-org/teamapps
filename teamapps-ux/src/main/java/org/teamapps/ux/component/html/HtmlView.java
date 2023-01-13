@@ -54,7 +54,7 @@ public class HtmlView extends AbstractComponent {
 		mapAbstractUiComponentProperties(ui);
 		ui.setHtml(html);
 		ui.setComponentsByContainerElementSelector(componentsByContainerElementSelector.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(ClientObject::createDtoReference).collect(Collectors.toList()))));
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(c -> c.createDtoReference()).collect(Collectors.toList()))));
 		ui.setContentHtmlByContainerElementSelector(contentHtmlByContainerElementSelector.entrySet().stream()
 				.filter(entry -> entry.getValue() != null) // Map.copyOf() does not support null values!
 				.collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue)));

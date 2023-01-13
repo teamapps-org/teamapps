@@ -338,7 +338,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 
 	private async replaceComponentReferencesWithInstances(o: any) {
 		let replaceOrRecur = async (value: any) => {
-			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("ClientObjectReference") !== -1) {
+			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("_ref") !== -1) {
 				const componentById = await this.getClientObjectById(value.id);
 				if (componentById != null) {
 					return componentById;

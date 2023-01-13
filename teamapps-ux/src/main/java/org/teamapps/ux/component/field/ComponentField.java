@@ -21,8 +21,9 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoComponentField;
 import org.teamapps.dto.DtoField;
-import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.TeamAppsComponent;
 
 @TeamAppsComponent(library = CommonComponentLibrary.class)
@@ -45,7 +46,7 @@ public class ComponentField extends AbstractField<Void> {
     public DtoField createDto() {
         DtoComponentField uiField = new DtoComponentField();
         mapAbstractFieldAttributesToUiField(uiField);
-        uiField.setComponent(Component.createUiClientObjectReference(component));
+        uiField.setComponent(ClientObject.createDtoReference(component));
         uiField.setHeight(height);
         uiField.setBordered(bordered);
         return uiField;
@@ -57,7 +58,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setComponent(Component component) {
         this.component = component;
-        sendCommandIfRendered(() -> new DtoComponentField.SetComponentCommand(Component.createUiClientObjectReference(component)));
+        sendCommandIfRendered(() -> new DtoComponentField.SetComponentCommand(ClientObject.createDtoReference(component)));
     }
 
     public int getHeight() {

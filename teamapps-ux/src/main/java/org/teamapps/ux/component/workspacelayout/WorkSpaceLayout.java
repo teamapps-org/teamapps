@@ -26,10 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.dto.*;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.CommonComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
@@ -113,7 +110,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 		}
 		uiLayout.setNewWindowBackgroundImage(newWindowBackgroundImage);
 		uiLayout.setNewWindowBlurredBackgroundImage(newWindowBlurredBackgroundImage);
-		uiLayout.setMultiProgressDisplay(Component.createUiClientObjectReference(multiProgressDisplay));
+		uiLayout.setMultiProgressDisplay(ClientObject.createDtoReference(multiProgressDisplay));
 		return uiLayout;
 	}
 

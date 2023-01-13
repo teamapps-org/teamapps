@@ -25,9 +25,7 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser.TypeContext;
-import org.teamapps.dsl.generate.TeamAppsGeneratorException;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
-import org.teamapps.dsl.generate.wrapper.ClassOrInterfaceWrapper;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -169,10 +167,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor<TypeContext> {
 		} else if (isDictionary(typeContext)) {
 			return "Map<String, " + getJavaTypeString(typeContext.typeReference().typeArguments().typeArgument(0).type(), true) + ">";
 		} else if (isUiClientObjectReference(typeContext)) {
-			ClassOrInterfaceWrapper<?> referencedClass = model.findReferencedClassOrInterface(typeContext)
-					.map(ci -> ci.getManagedBaseType(true))
-					.orElseThrow(()-> new TeamAppsGeneratorException("Cannot find referencable class or interface for type " + typeContext.getText() + ". Are you sure it is a managed class or interface?"));
-			return "Dto" + referencedClass.getName() + "Reference";
+			return "DtoReference";
 		} else if (model.isDtoType(typeContext)) {
 			return "Dto" + typeContext.getText();
 		} else if (isPrimitiveType(typeContext) && forceNonPrimitive) {

@@ -21,10 +21,7 @@ package org.teamapps.ux.component.form;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoClientObjectReference;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoFormLayoutPolicy;
-import org.teamapps.dto.DtoGridForm;
+import org.teamapps.dto.*;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -88,7 +85,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 
 	@Override
 	public DtoComponent createDto() {
-		List<DtoClientObjectReference> uiFields = logicalForm.getFields().values().stream()
+		List<DtoReference> uiFields = logicalForm.getFields().values().stream()
 				.map(field -> field != null ? field.createDtoReference() : null)
 				.collect(Collectors.toList());
 		List<DtoFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();

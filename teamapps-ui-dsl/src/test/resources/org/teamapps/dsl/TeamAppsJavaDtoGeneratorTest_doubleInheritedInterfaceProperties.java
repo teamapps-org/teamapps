@@ -18,7 +18,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -31,6 +30,7 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
+import org.teamapps.dto.DtoReference;
 import org.teamapps.dto.DtoA;
 import org.teamapps.dto.DtoAWrapper;
 import org.teamapps.dto.DtoB;
@@ -79,7 +79,6 @@ public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
 		this.cProperty = cProperty;
 		return this;
 	}
-
 
 
 

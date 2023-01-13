@@ -24,8 +24,9 @@ import org.teamapps.dto.DtoLabel;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.TeamAppsComponent;
 
 @TeamAppsComponent(library = CommonComponentLibrary.class)
@@ -101,7 +102,7 @@ public class Label extends AbstractField<String> {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetComponent = targetComponent;
-		sendCommandIfRendered(() -> new DtoLabel.SetTargetComponentCommand(Component.createUiClientObjectReference(targetComponent)));
+		sendCommandIfRendered(() -> new DtoLabel.SetTargetComponentCommand(ClientObject.createDtoReference(targetComponent)));
 		return this;
 	}
 }

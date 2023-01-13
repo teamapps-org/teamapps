@@ -46,12 +46,16 @@ public class TeamAppsIntermediateDtoModel {
 	private final List<EventDeclarationContext> ownEventDeclarations;
 	private final List<QueryDeclarationContext> ownQueryDeclarations;
 	private final List<CommandDeclarationContext> ownCommandDeclarations;
+	private final String debugName;
+	private final TeamAppsIntermediateDtoModel[] importedModels;
 
 	public TeamAppsIntermediateDtoModel(ClassCollectionContext classCollectionContext) {
-		this(Collections.singletonList(classCollectionContext));
+		this(Collections.singletonList(classCollectionContext), "test");
 	}
 
-	public TeamAppsIntermediateDtoModel(List<ClassCollectionContext> classCollectionContexts, TeamAppsIntermediateDtoModel... importedModels) {
+	public TeamAppsIntermediateDtoModel(List<ClassCollectionContext> classCollectionContexts, String debugName, TeamAppsIntermediateDtoModel... importedModels) {
+		this.debugName = debugName;
+		this.importedModels = importedModels;
 		classCollectionContexts.forEach(classCollectionContext -> {
 			List<TypeDeclarationContext> typeDeclarations = classCollectionContext.typeDeclaration();
 			classDeclarations.addAll(extractClassDeclarations(typeDeclarations));
@@ -330,14 +334,16 @@ public class TeamAppsIntermediateDtoModel {
 	public Collection<Import> getEffectiveImports(ClassOrInterfaceWrapper<?> classOrInterface, boolean typescript) {
 		Imports imports = new Imports();
 
+		imports.add("Reference", classOrInterface.getJsPackageName().equals("teamapps-client-communication") ? ".." : "teamapps-client-communication", "org.teamapps.dto");
+
 		if (!classOrInterface.getAllCommands().isEmpty()) {
-			imports.add("Command", "teamapps-client-communication", "org.teamapps.dto");
+			imports.add("Command", classOrInterface.getJsPackageName().equals("teamapps-client-communication") ? ".." : "teamapps-client-communication", "org.teamapps.dto");
 		}
 		if (!classOrInterface.getAllEvents().isEmpty()) {
-			imports.add("Event", "teamapps-client-communication", "org.teamapps.dto");
+			imports.add("Event", classOrInterface.getJsPackageName().equals("teamapps-client-communication") ? ".." : "teamapps-client-communication", "org.teamapps.dto");
 		}
 		if (!classOrInterface.getAllQueries().isEmpty()) {
-			imports.add("Query", "teamapps-client-communication", "org.teamapps.dto");
+			imports.add("Query", classOrInterface.getJsPackageName().equals("teamapps-client-communication") ? ".." : "teamapps-client-communication", "org.teamapps.dto");
 		}
 
 		classOrInterface.getReferencedTypes().stream()
@@ -345,13 +351,8 @@ public class TeamAppsIntermediateDtoModel {
 					imports.add(t.getName(), classOrInterface.getJsPackageName().equals(t.getJsPackageName()) ? "./Dto" + t.getName() : t.getJsPackageName(), t.getPackageName());
 					if (!typescript && t instanceof ClassOrInterfaceWrapper<?> referencedClassOrInterface) {
 						imports.add(referencedClassOrInterface.getName() + "Wrapper", null, t.getPackageName());
-						if (referencedClassOrInterface.isManaged()) {
-							ClassOrInterfaceWrapper<?> managedBaseClass = referencedClassOrInterface.getManagedBaseType(true);
-							imports.add(managedBaseClass.getName() + "Reference", null, managedBaseClass.getPackageName());
-						}
 					}
 				});
-
 
 		if (typescript) {
 			classOrInterface.getSuperTypes().stream()

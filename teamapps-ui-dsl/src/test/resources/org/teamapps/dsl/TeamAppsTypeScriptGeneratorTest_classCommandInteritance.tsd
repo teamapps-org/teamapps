@@ -3,6 +3,7 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
+import {DtoReference} from "teamapps-client-communication";
 import {DtoCommand} from "teamapps-client-communication";
 import {DtoEvent} from "teamapps-client-communication";
 import {DtoB} from "./DtoB";

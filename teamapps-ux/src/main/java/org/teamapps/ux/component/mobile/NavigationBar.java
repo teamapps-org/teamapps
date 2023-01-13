@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.DtoReference;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoNavigationBar;
 import org.teamapps.dto.DtoNavigationBarButton;
@@ -68,7 +68,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 			uiNavigationBar.setButtons(uiNavigationBarButtons);
 		}
 		if (fanOutComponents != null) {
-			List<DtoClientObjectReference> uiComponents = fanOutComponents.stream()
+			List<DtoReference> uiComponents = fanOutComponents.stream()
 					.map(component -> component.createDtoReference())
 					.collect(Collectors.toList());
 			uiNavigationBar.setFanOutComponents(uiComponents);

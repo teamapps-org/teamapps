@@ -21,6 +21,10 @@ requirements for the maven plugin:
 * add result of JavaScript build process to JAR
 * sync pom version to package (optionally)
 
-make generated DtoClientObjectReference properties typesafe
 
+Low prio:
+Table:
+* column builder; return one when invoking addColumn() and listen to build() method.
+* setHideHeaders() WTF...
+BaseTemplate: icon and image are technically the same thing. so remove one of them (image)
 

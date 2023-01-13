@@ -21,7 +21,7 @@ package org.teamapps.ux.component.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoClientObjectReference;
+import org.teamapps.dto.DtoReference;
 import org.teamapps.dto.DtoWorkSpaceLayoutView;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -125,7 +125,7 @@ public class WorkSpaceLayoutView {
 			title = panel.getTitle();
 		}
 
-		DtoClientObjectReference uiPanel = null;
+		DtoReference uiPanel = null;
 		if (!lazyLoading) {
 			uiPanel = panel.createDtoReference();
 		}

@@ -218,6 +218,6 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 		List<TeamAppsDtoParser.ClassCollectionContext> classCollectionContexts = Arrays.stream(dslString)
 				.map(s -> ExceptionUtil.softenExceptions(() -> ParserFactory.createParser(new StringReader(s), s.substring(0, Math.min(50, s.length())) + "...").classCollection()))
 				.toList();
-		return new TeamAppsIntermediateDtoModel(classCollectionContexts);
+		return new TeamAppsIntermediateDtoModel(classCollectionContexts, "test");
 	}
 }

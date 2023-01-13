@@ -24,10 +24,7 @@ import org.teamapps.dto.DtoTab;
 import org.teamapps.dto.DtoTabPanel;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.CommonComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.ArrayList;
@@ -186,7 +183,7 @@ public class TabPanel extends AbstractComponent implements Component {
 			case DtoTabPanel.TabNeedsRefreshEvent.TYPE_ID -> {
 				var tabNeedsRefreshEvent = event.as(DtoTabPanel.TabNeedsRefreshEventWrapper.class);
 				Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
-				sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
+				sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createDtoReference(tab.getContent())));
 			}
 			case DtoTabPanel.TabClosedEvent.TYPE_ID -> {
 				var tabClosedEvent = event.as(DtoTabPanel.TabClosedEventWrapper.class);
@@ -206,11 +203,11 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	/*package-private*/ void handleTabToolbarChanged(Tab tab) {
-		sendCommandIfRendered(() -> new DtoTabPanel.SetTabToolbarCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getToolbar())));
+		sendCommandIfRendered(() -> new DtoTabPanel.SetTabToolbarCommand(tab.getClientId(), ClientObject.createDtoReference(tab.getToolbar())));
 	}
 
 	/*package-private*/ void handleTabContentChanged(Tab tab) {
-		sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
+		sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createDtoReference(tab.getContent())));
 	}
 
 	/*package-private*/ void handleTabConfigurationChanged(Tab tab) {
