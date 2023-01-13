@@ -108,7 +108,7 @@ public class Location {
 		this.hostname = hostname;
 		this.port = port;
 		this.pathname = pathname;
-		this.search = search;
+		this.search = StringUtils.isBlank(search) ? "" : search.startsWith("?") ? search : "?" + search;
 		this.hash = hash;
 	}
 
@@ -120,7 +120,7 @@ public class Location {
 		this.hostname = hostname;
 		this.port = port;
 		this.pathname = pathname;
-		this.search = search;
+		this.search = StringUtils.isBlank(search) ? "" : search.startsWith("?") ? search : "?" + search;
 		this.hash = hash;
 	}
 
@@ -198,7 +198,7 @@ public class Location {
 		String search;
 		if (questionMarkIndex >= 0) {
 			pathName = pathNameAndQueryParams.substring(0, questionMarkIndex);
-			search = pathNameAndQueryParams.substring(questionMarkIndex + 1);
+			search = pathNameAndQueryParams.substring(questionMarkIndex);
 		} else {
 			pathName = pathNameAndQueryParams;
 			search = "";
