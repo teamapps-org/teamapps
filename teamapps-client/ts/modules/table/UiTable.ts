@@ -313,7 +313,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 							this.logger.warn("TODO: handle file field click");
 						}
 					}
-					if (UiField) {
+					if (uiField) {
 						this.onCellClicked.fire({columnPropertyName: fieldName, recordId: item.id})
 					}
 				}
