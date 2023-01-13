@@ -121,10 +121,11 @@ public class SessionContext {
 	private final ParamConverterProvider navigationParamConverterProvider;
 	private final String navigationPathPrefix;
 
-	private boolean routingEnabled = false;
+	private RoutingMode routingMode = RoutingMode.DISABLED;
 	private final Map<String, Router> routersByPathPrefix = new HashMap<>();
 	private final List<Router> routers = new ArrayList<>();
 	private boolean routeHandlingDirty = false; // indicates whether the routers changed during routing
+	private boolean skipAutoUpdateNavigationHistoryStateOnce = false;
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
@@ -319,6 +320,7 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.ChangeNavigationHistoryStateCommand(pathWithQueryParams, fireEvent, operation == NavigationHistoryOperation.PUSH), unused -> {
 			// make sure this is the location after the browser applied it. The user might have clicked on the back button in the meantime.
 			currentLocation = newLocation;
+			skipAutoUpdateNavigationHistoryStateOnce = true;
 		});
 	}
 
@@ -489,9 +491,10 @@ public class SessionContext {
 					executionDecorators
 							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(callable))
 							.run();
-					if (routingEnabled) {
+					if (routingMode == RoutingMode.AUTO && !skipAutoUpdateNavigationHistoryStateOnce) {
 						updateNavigationHistoryState();
 					}
+					skipAutoUpdateNavigationHistoryStateOnce = false;
 					return ((R) resultHolder[0]);
 				} catch (Throwable t) {
 					LOGGER.error("Exception while executing within session context", t);
@@ -835,7 +838,7 @@ public class SessionContext {
 				Location location = Location.fromUiLocation(e.getLocation());
 				this.currentLocation = location;
 				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredBrowserNavigation()));
-				if (routingEnabled) {
+				if (routingMode != RoutingMode.DISABLED) {
 					route();
 				}
 				break;
@@ -888,14 +891,15 @@ public class SessionContext {
 		return "SessionContext: " + getName();
 	}
 
-	public boolean isRoutingEnabled() {
-		return routingEnabled;
+	public RoutingMode getRoutingMode() {
+		return routingMode;
 	}
 
-	public void setRoutingEnabled(boolean routingEnabled) {
-		this.routingEnabled = routingEnabled;
-		if (routingEnabled) {
+	public void setRoutingMode(RoutingMode routingMode) {
+		this.routingMode = routingMode;
+		if (routingMode != RoutingMode.DISABLED) {
 			route();
 		}
 	}
+
 }
