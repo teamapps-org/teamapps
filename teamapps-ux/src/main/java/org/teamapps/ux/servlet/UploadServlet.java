@@ -70,11 +70,11 @@ public class UploadServlet extends HttpServlet {
 		ArrayList<String> uuids = new ArrayList<>();
 
 		try {
-			for (Part file : parts) {
+			for (Part part : parts) {
 				String uuidString = UUID.randomUUID().toString();
 				File tempFile = new File(uploadDirectory, uuidString);
 
-				try (InputStream in = file.getInputStream();
+				try (InputStream in = part.getInputStream();
 				     OutputStream out = new FileOutputStream(tempFile)) {
 					IOUtils.copy(in, out);
 				}
