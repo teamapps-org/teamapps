@@ -310,6 +310,8 @@ public static class <cmd.name; format="cap">Command implements DtoCommand\<<if(c
 jsonWrapper(c) ::= <<
 <javaFilePrelude(c.packageName)>
 
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.dtoName>;}; separator="\n">
+
 public class <c.javaClassName>Wrapper extends <if(c.superClass)>Dto<c.superClass.name>Wrapper<else>DtoJsonWrapper<endif> {
 
     public static final String TYPE_ID = "<c.name>";
