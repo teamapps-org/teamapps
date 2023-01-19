@@ -73,7 +73,9 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
 		this.$componentWrapper = parseHtml(
 			`<div class="UiShakaPlayer" style="background-color: ${config.backgroundColor}">
-				<video id="video" poster="${config.posterImageUrl}" class="${posterImageSizeCssClass}"></video>
+				<div class="video-wrapper">
+					<video id="video" poster="${config.posterImageUrl}" class="${posterImageSizeCssClass}"></video>				
+				</div>
 			</div>`);
 		this.$video = this.$componentWrapper.querySelector(":scope video");
 
@@ -92,7 +94,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 
 			this.ui = new shaka.ui.Overlay(this.player, this.$componentWrapper, this.$video);
 			const uiConfig: Partial<UIConfiguration> = {
-				addBigPlayButton: true,
+				addBigPlayButton: config.bigPlayButtonEnabled,
 				controlPanelElements: [
 					"play_pause",
 					"time_and_duration",
@@ -105,7 +107,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 				doubleClickForFullscreen: true,
 				enableFullscreenOnRotation: false,
 				enableKeyboardPlaybackControls: true,
-				fadeDelay: 0,
+				fadeDelay: config.controlFadeDelaySeconds,
 				forceLandscapeOnFullscreen: true,
 				overflowMenuButtons: this.getOverflowMenuButtonsConfig(),
 				seekBarColors: undefined,

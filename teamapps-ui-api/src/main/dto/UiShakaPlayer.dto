@@ -29,6 +29,8 @@ class UiShakaPlayer extends UiComponent {
     boolean videoDisabled;
     long timeMillis;
     String preferredAudioLanguage;
+    boolean bigPlayButtonEnabled;
+    int controlFadeDelaySeconds;
 
 	command setUrls(String hlsUrl, String dashUrl);
 	command setTime(long timeMillis);

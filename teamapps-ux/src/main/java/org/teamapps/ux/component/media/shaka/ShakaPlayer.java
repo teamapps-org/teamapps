@@ -38,21 +38,21 @@ public class ShakaPlayer extends AbstractComponent {
 	public final Event<UiShakaManifest> onManifestLoaded = new Event<>();
 	public final Event<Long> onTimeUpdate = new Event<>();
 	public final Event<Void> onEnded = new Event<>();
-
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
 		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
 
-
 	private String hlsUrl;
 	private String dashUrl;
 	private String posterImageUrl;
-	private PosterImageSize posterImageSize = PosterImageSize.COVER;
+	private PosterImageSize posterImageSize = PosterImageSize.CONTAIN;
 	private int timeUpdateEventThrottleMillis = 1000;
 	private Color backgroundColor = Color.BLACK;
 	private TrackLabelFormat trackLabelFormat = TrackLabelFormat.LABEL;
 	private boolean videoDisabled = false;
 	private String audioLanguage;
+	private boolean bigPlayButtonEnabled = true;
+	private int controlFadeDelaySeconds = 0; // 0 = default value (see shaka docs)
 
 	private long timeMillis = 0;
 
@@ -78,6 +78,8 @@ public class ShakaPlayer extends AbstractComponent {
 		ui.setVideoDisabled(videoDisabled);
 		ui.setTimeMillis(timeMillis);
 		ui.setPreferredAudioLanguage(audioLanguage);
+		ui.setBigPlayButtonEnabled(bigPlayButtonEnabled);
+		ui.setControlFadeDelaySeconds(controlFadeDelaySeconds);
 		return ui;
 	}
 
@@ -217,5 +219,23 @@ public class ShakaPlayer extends AbstractComponent {
 	public void selectAudioLanguage(String language, String role) {
 		this.audioLanguage = language;
 		queueCommandIfRendered(() -> new UiShakaPlayer.SelectAudioLanguageCommand(getId(), language, role));
+	}
+
+	public boolean isBigPlayButtonEnabled() {
+		return bigPlayButtonEnabled;
+	}
+
+	public void setBigPlayButtonEnabled(boolean bigPlayButtonEnabled) {
+		this.bigPlayButtonEnabled = bigPlayButtonEnabled;
+		reRenderIfRendered();
+	}
+
+	public int getControlFadeDelaySeconds() {
+		return controlFadeDelaySeconds;
+	}
+
+	public void setControlFadeDelaySeconds(int controlFadeDelaySeconds) {
+		this.controlFadeDelaySeconds = controlFadeDelaySeconds;
+		reRenderIfRendered();
 	}
 }
