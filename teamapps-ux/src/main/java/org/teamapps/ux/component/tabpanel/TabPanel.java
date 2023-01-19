@@ -26,6 +26,7 @@ import org.teamapps.dto.UiTabPanel;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class TabPanel extends AbstractComponent implements Component {
 	private final List<Tab> tabs = new ArrayList<>();
 	private Tab selectedTab;
 	private final List<ToolButton> toolButtons = new ArrayList<>();
+	private Length tabBarHeight; // null == use default from CSS
+	private boolean fillTabBarWidth;
 	private boolean hideTabBarIfSingleTab = false;
 	private TabPanelTabStyle tabStyle = TabPanelTabStyle.BLOCKS;
 
@@ -128,6 +131,24 @@ public class TabPanel extends AbstractComponent implements Component {
 		this.queueCommandIfRendered(() -> new UiTabPanel.SetHideTabBarIfSingleTabCommand(getId(), hideTabBarIfSingleTab));
 	}
 
+	public Length getTabBarHeight() {
+		return tabBarHeight;
+	}
+
+	public void setTabBarHeight(Length tabBarHeight) {
+		this.tabBarHeight = tabBarHeight;
+		this.queueCommandIfRendered(() -> new UiTabPanel.SetTabBarHeightCommand(getId(), tabBarHeight != null ? tabBarHeight.toCssString() : null));
+	}
+
+	public boolean isFillTabBarWidth() {
+		return fillTabBarWidth;
+	}
+
+	public void setFillTabBarWidth(boolean fillTabBarWidth) {
+		this.fillTabBarWidth = fillTabBarWidth;
+		this.queueCommandIfRendered(() -> new UiTabPanel.SetFillTabBarWidthCommand(getId(), hideTabBarIfSingleTab));
+	}
+
 	public TabPanelTabStyle getTabStyle() {
 		return tabStyle;
 	}
@@ -146,6 +167,8 @@ public class TabPanel extends AbstractComponent implements Component {
 				.collect(Collectors.toList());
 		uiTabPanel.setTabs(uiTabs);
 		uiTabPanel.setSelectedTabId(this.getSelectedTab() != null ? this.getSelectedTab().getClientId() : null);
+		uiTabPanel.setTabBarHeight(tabBarHeight != null ? tabBarHeight.toCssString() : null);
+		uiTabPanel.setFillTabBarWidth(fillTabBarWidth);
 		uiTabPanel.setHideTabBarIfSingleTab(hideTabBarIfSingleTab);
 		uiTabPanel.setTabStyle(tabStyle.toUiTabPanelTabStyle());
 		uiTabPanel.setToolButtons(toolButtons.stream()
