@@ -20,11 +20,15 @@
 class UiTabPanel extends UiComponent implements Emptyable {
 	List<UiTab> tabs;
 	String selectedTabId; // TODO
+	String tabBarHeight;
+    boolean fillTabBarWidth;
 	boolean hideTabBarIfSingleTab = false; // if true and there is only one tab, then the tab bar is hidden. Tool buttons pop up when hovering over the top 50px of the tab panel.
 	UiTabPanelTabStyle tabStyle = UiTabPanelTabStyle.BLOCKS; // if true and there is only one tab, then the tab bar is hidden.
 	List<UiToolButton*> toolButtons; // shown inside a right-aligned space in the tab bar
 	List<UiWindowButtonType> windowButtons;
 
+    command setTabBarHeight(String tabBarHeight);
+    command setFillTabBarWidth(boolean fillTabBarWidth);
 	command setHideTabBarIfSingleTab(boolean hideTabBarIfSingleTab);
 	command setTabStyle(UiTabPanelTabStyle tabStyle);
 	command setToolButtons(List<UiToolButton*> toolButtons);
