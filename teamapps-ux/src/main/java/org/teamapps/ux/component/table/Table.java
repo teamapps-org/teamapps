@@ -1251,4 +1251,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
+	public List<RECORD> getRenderedRecords() {
+		return renderedRecords.getRecords();
+	}
+
 }
