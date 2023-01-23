@@ -19,14 +19,10 @@
  */
 package org.teamapps.ux.css;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CssStyles implements Map<String, String> {
 
@@ -55,7 +51,7 @@ public class CssStyles implements Map<String, String> {
 
 	@Override
 	public boolean containsKey(Object propertyName) {
-		return properties.containsKey(kebabToCamelCase((String) propertyName));
+		return properties.containsKey((String) propertyName);
 	}
 
 	@Override
@@ -65,22 +61,22 @@ public class CssStyles implements Map<String, String> {
 
 	@Override
 	public String get(Object propertyName) {
-		return properties.get(kebabToCamelCase((String) propertyName));
+		return properties.get((String) propertyName);
 	}
 
 	@Override
 	public String put(String propertyName, String value) {
-		return properties.put(kebabToCamelCase(propertyName), value);
+		return properties.put(propertyName, value);
 	}
 
 	@Override
 	public String remove(Object propertyName) {
-		return properties.remove(kebabToCamelCase((String) propertyName));
+		return properties.remove((String) propertyName);
 	}
 
 	@Override
 	public void putAll(Map<? extends String, ? extends String> m) {
-		m.forEach((propertyName, value) -> properties.put(kebabToCamelCase((String) propertyName), value));
+		m.forEach((propertyName, value) -> properties.put((String) propertyName, value));
 	}
 
 	@Override
@@ -113,15 +109,4 @@ public class CssStyles implements Map<String, String> {
 		return properties.hashCode();
 	}
 
-	public static String kebabToCamelCase(String kebab) {
-		if (kebab == null) {
-			return null;
-		}
-		if (!kebab.contains("-")) {
-			return kebab;
-		}
-		return StringUtils.uncapitalize(Arrays.stream(kebab.split("-"))
-				.map(part -> StringUtils.capitalize(part))
-				.collect(Collectors.joining()));
-	}
 }

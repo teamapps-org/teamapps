@@ -167,11 +167,15 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 	// TODO change this implementation to generate style sheets instead of setting styles!
 	public setStyle(selector:string, style: {[property: string]: string}) {
-		let targetElement = this.getElementForSelector(selector);
-		if (targetElement.length === 0) {
+		let targetElements = this.getElementForSelector(selector);
+		if (targetElements.length === 0) {
 			this.logger.error("Cannot set style on non-existing element. Selector: " + selector);
 		} else {
-			targetElement.forEach(t => Object.assign(t.style, style));
+			targetElements.forEach(tel => {
+				for (const [name, value] of Object.entries(style)) {
+					tel.style.setProperty(name, value);
+				}
+			});
 		}
 	}
 
