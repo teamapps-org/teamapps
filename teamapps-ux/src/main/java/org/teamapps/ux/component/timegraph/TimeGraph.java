@@ -159,6 +159,9 @@ public class TimeGraph extends AbstractComponent {
 		switch (event.getUiEventType()) {
 			case UI_TIME_GRAPH_ZOOMED: {
 				UiTimeGraph.ZoomedEvent zoomedEvent = (UiTimeGraph.ZoomedEvent) event;
+				if (zoomedEvent.getMillisecondsPerPixel() <= 0) {
+					return; // this is an erroneous request, probably sent from a component that has not enough space to render graphs anyway!
+				}
 
 				Interval displayedInterval = new Interval(zoomedEvent.getDisplayedInterval().getMin(), zoomedEvent.getDisplayedInterval().getMax());
 				TimePartitioning timePartitioning = zoomLevels.get(zoomedEvent.getZoomLevelIndex());
