@@ -45,7 +45,11 @@ export abstract class AbstractUiGraph<C extends UiGraphConfig = UiGraphConfig,
 		config: C,
 		protected timeGraphId: string
 	) {
-		this.yAxis = new YAxis(config.yAxisColor, config.yAxisLabel, config.maxTickDigits);
+		this.yAxis = new YAxis({
+			color: config.yAxisColor,
+			label: config.yAxisLabel,
+			maxTickDigits: config.maxTickDigits
+		});
 		this.setConfig(config)
 		this.$main = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement)
 			.attr("data-series-id", `${this.timeGraphId}-${this.config.id}`);
@@ -163,6 +167,11 @@ export abstract class AbstractUiGraph<C extends UiGraphConfig = UiGraphConfig,
 
 	public setConfig(config: C) {
 		this.config = config;
+		this.yAxis.setConfig({
+			color: config.yAxisColor,
+			label: config.yAxisLabel,
+			maxTickDigits: config.maxTickDigits
+		})
 		this.updateYScale();
 	}
 
