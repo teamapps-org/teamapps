@@ -67,6 +67,8 @@ interface UiGraph {
 	String id;
 	boolean yAxisVisible;
 	String yAxisColor;
+	String yAxisLabel;
+	int maxTickDigits;
 	UiScaleType yScaleType;
 	UiLongInterval intervalY;
 	UiLineChartYScaleZoomMode yScaleZoomMode;

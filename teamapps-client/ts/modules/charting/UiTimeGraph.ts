@@ -55,10 +55,6 @@ import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
 import {UiGraphConfig} from "../../generated/UiGraphConfig";
 import {AbstractUiGraph} from "./AbstractUiGraph";
 import {GraphContext, PopperHandle} from "./GraphContext";
-import {UiLineGraphDataConfig} from "../../generated/UiLineGraphDataConfig";
-import {UiHoseGraphDataConfig} from "../../generated/UiHoseGraphDataConfig";
-
-export const yTickFormat = d3.format("-,.2s");
 
 export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implements UiTimeGraphCommandHandler, UiTimeGraphEventSource {
 
@@ -111,7 +107,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	}
 
 	private get marginLeft() {
-		return this.getAllSeries().reduce((sum, s) => sum + (s.getYAxis()?.getWidth() ?? 0), 0);
+		let marginLeft = this.getAllSeries().reduce((sum, s) => sum + (s.getYAxis()?.getWidth() ?? 0), 0);return marginLeft;
 	}
 
 	constructor(config: UiTimeGraphConfig, context: TeamAppsUiContext) {
@@ -149,6 +145,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.setIntervalX(config.intervalX);
 
 		this.$xAxis = this.$rootG.append<SVGGElement>("g")
+			.classed("axis", true)
 			.classed("x-axis", true);
 		this.$horizontalPanRect = this.$xAxis.append<SVGRectElement>("rect")
 			.classed("horizontal-pan-rect", true)
