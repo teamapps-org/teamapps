@@ -51,8 +51,7 @@
 
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
         <slf4j-version>1.7.36</slf4j-version>
-        <jackson-version>2.13.2</jackson-version>
-        <jackson-version-patched>2.13.2.2</jackson-version-patched>
+        <jackson-version>2.14.1</jackson-version>
         <guava-version>31.1-jre</guava-version>
         <apache-commons-io>2.11.0</apache-commons-io>
         <junit.version>4.13.2</junit.version>
@@ -191,7 +190,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson-version-patched}</version>
+                <version>${jackson-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
