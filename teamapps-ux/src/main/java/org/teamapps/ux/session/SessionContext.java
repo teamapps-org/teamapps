@@ -902,4 +902,11 @@ public class SessionContext {
 		}
 	}
 
+	/**
+	 * Same as {@link #onDestroyed} but mockable.
+	 */
+	public Event<UiSessionClosingReason> onDestroyed() {
+		return onDestroyed;
+	}
+
 }
