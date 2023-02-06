@@ -133,9 +133,10 @@ export abstract class AbstractUiGraph<C extends UiGraphConfig = UiGraphConfig,
 					break;
 				} else if (numberOfSignificantDigits > this.config.maxTickDigits) {
 					const delta = maxY - minY;
-					console.debug(`Increasing dy from (${minY}:${maxY}) to (${minY - (delta / this.config.maxTickDigits)}:${maxY + (delta / this.config.maxTickDigits)})`)
-					minY = minY - (delta / this.config.maxTickDigits);
-					maxY = maxY + (delta / this.config.maxTickDigits);
+					let boundaryExpansion = Math.max(delta / 4, 1e-14);
+					console.debug(`Increasing dy from (${minY}:${maxY}) to (${minY - boundaryExpansion}:${maxY + boundaryExpansion})`)
+					minY = minY - boundaryExpansion;
+					maxY = maxY + boundaryExpansion;
 				} else {
 					break;
 				}
