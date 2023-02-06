@@ -34,7 +34,7 @@
     </developers>
 
     <properties>
-        <undertow.version>2.2.17.Final</undertow.version>
+        <undertow.version>2.2.20.Final</undertow.version>
     </properties>
 
     <dependencies>
