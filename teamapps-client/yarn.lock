@@ -1089,10 +1089,10 @@
   dependencies:
     "@types/jquery" "*"
 
-"@types/slickgrid@^2.1.31":
-  version "2.1.31"
-  resolved "https://registry.npmjs.org/@types/slickgrid/-/slickgrid-2.1.31.tgz"
-  integrity sha512-t/LodOkh8yP+o2jKcHsC0hAjDh1kl4RSFXKWmR9+U5FwXE7VpipqiAkE1W3NnGNA3ni5xnKQJt/CNXurJWTQ6w==
+"@types/slickgrid@^2.1.32":
+  version "2.1.32"
+  resolved "https://registry.yarnpkg.com/@types/slickgrid/-/slickgrid-2.1.32.tgz#94a64f6e76b2f9542d43c1ae033640e9e3289708"
+  integrity sha512-TeILZVW3Gc+LX9s5BbRxfK3GVOaX+jCRMYAJv9puFY+FLbCqmMGB/AbrHvlLU4k/JwaEWtzbVCNO5H/v1inA+g==
   dependencies:
     "@types/jquery" "*"
 
@@ -5665,27 +5665,20 @@ jest@^26.5.3:
     import-local "^3.0.2"
     jest-cli "^26.5.3"
 
-jquery-ui@>=1.8.0:
-  version "1.13.1"
-  resolved "https://registry.npmjs.org/jquery-ui/-/jquery-ui-1.13.1.tgz"
-  integrity sha512-2VlU59N5P4HaumDK1Z3XEVjSvegFbEOQRgpHUBaB2Ak98Axl3hFhJ6RFcNQNuk9SfL6WxIbuLst8dW/U56NSiA==
-  dependencies:
-    jquery ">=1.8.0 <4.0.0"
-
 jquery-ui@^1.12.1:
   version "1.12.1"
   resolved "https://registry.npmjs.org/jquery-ui/-/jquery-ui-1.12.1.tgz"
   integrity sha1-vLQEXI3QU5wTS8FIjN0+dop6nlE=
 
-jquery@>=1.8.0, jquery@^3.5.1:
+jquery@>=3.0.0:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.3.tgz#23ed2ffed8a19e048814f13391a19afcdba160e6"
+  integrity sha512-bZ5Sy3YzKo9Fyc8wH2iIQK4JImJ6R0GWI9kL1/k7Z91ZBNgkRXE6U0JfHIizZbort8ZunhSI3jw9I6253ahKfg==
+
+jquery@^3.5.1:
   version "3.5.1"
   resolved "https://registry.npmjs.org/jquery/-/jquery-3.5.1.tgz"
   integrity sha512-XwIBPqcMn57FxfT+Go5pzySnm4KWkT1Tv7gjrpT1srtf8Weynl6R273VJ5GjkRb51IzMp5nbaPjJXMWeju2MKg==
-
-"jquery@>=1.8.0 <4.0.0":
-  version "3.6.0"
-  resolved "https://registry.npmjs.org/jquery/-/jquery-3.6.0.tgz"
-  integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -8357,13 +8350,12 @@ slick-carousel@^1.8.1:
   resolved "https://registry.npmjs.org/slick-carousel/-/slick-carousel-1.8.1.tgz"
   integrity sha512-XB9Ftrf2EEKfzoQXt3Nitrt/IPbT+f1fgqBdoxO3W/+JYvtEOW6EgxnWfr9GH6nmULv7Y2tPmEX3koxThVmebA==
 
-slickgrid@^2.4.44:
-  version "2.4.44"
-  resolved "https://registry.npmjs.org/slickgrid/-/slickgrid-2.4.44.tgz"
-  integrity sha512-DF7ePE5bwitJrRdJSNrV+qAnQsfds0GbRA02ywy6TQrQewkm9DSHGDUxJaoJk2WUMlyQ7Odrf2o1PCZM50BcSg==
+slickgrid@yamass/SlickGrid:
+  version "3.0.4"
+  resolved "https://codeload.github.com/yamass/SlickGrid/tar.gz/fe73a2ba35675f5ca360eddc343b35ffc683b644"
   dependencies:
-    jquery ">=1.8.0"
-    jquery-ui ">=1.8.0"
+    jquery ">=3.0.0"
+    sortablejs "^1.15.0"
 
 snapdragon-node@^2.0.1:
   version "2.1.1"
@@ -8439,6 +8431,11 @@ sort-keys@^1.0.0:
   integrity sha1-RBttTTRnmPG05J6JIK37oOVD+a0=
   dependencies:
     is-plain-obj "^1.0.0"
+
+sortablejs@^1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.15.0.tgz#53230b8aa3502bb77a29e2005808ffdb4a5f7e2a"
+  integrity sha512-bv9qgVMjUMf89wAvM6AxVvS/4MX3sPeN0+agqShejLU5z5GX4C75ow1O2e5k4L6XItUyAK3gH6AxSbXrOM5e8w==
 
 source-list-map@^2.0.0:
   version "2.0.1"

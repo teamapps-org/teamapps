@@ -27,7 +27,6 @@ require("jquery-ui/ui/position.js");
 
 (window as any).moment = require("moment"); // needs to be a global variable for fullcalendar
 
-require("../lib/jquery.event.drag-2.3.0-fixed.js");
 require("slickgrid/slick.core");
 require("slickgrid/plugins/slick.checkboxselectcolumn");
 require("slickgrid/plugins/slick.autotooltips");
@@ -37,6 +36,7 @@ require("slickgrid/controls/slick.columnpicker");
 require("slickgrid/slick.formatters");
 require("slickgrid/slick.editors");
 require("slickgrid/slick.grid");
+require("slickgrid/slick.interactions");
 
 require("webui-popover");
 
