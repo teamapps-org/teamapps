@@ -26,6 +26,7 @@ public class PasswordField extends TextField {
 
 	private boolean sendValueAsMd5;
 	private String salt; // if sendValueAsMd5 == true and salt != null, then submit md5(salt + md5(fieldValue))
+	private boolean passwordVisibilityToggleEnabled;
 
 	public PasswordField() {
 		super();
@@ -41,6 +42,7 @@ public class PasswordField extends TextField {
 		uiField.setAutofill(isAutofill());
 		uiField.setSendValueAsMd5(sendValueAsMd5);
 		uiField.setSalt(salt);
+		uiField.setPasswordVisibilityToggleEnabled(passwordVisibilityToggleEnabled);
 		return uiField;
 	}
 
@@ -60,5 +62,14 @@ public class PasswordField extends TextField {
 	public void setSalt(String salt) {
 		this.salt = salt;
 		queueCommandIfRendered(() -> new UiPasswordField.SetSaltCommand(getId(), salt));
+	}
+
+	public boolean isPasswordVisibilityToggleEnabled() {
+		return passwordVisibilityToggleEnabled;
+	}
+
+	public void setPasswordVisibilityToggleEnabled(boolean enabled) {
+		this.passwordVisibilityToggleEnabled = enabled;
+		queueCommandIfRendered(() -> new UiPasswordField.SetPasswordVisibilityToggleEnabledCommand(getId(), enabled));
 	}
 }

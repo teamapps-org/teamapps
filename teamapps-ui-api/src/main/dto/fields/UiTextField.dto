@@ -41,9 +41,11 @@ class UiPasswordField extends UiTextField {
 	boolean sendValueAsMd5;
 	String salt; // if sendValueAsMd5 == true and salt != null, then submit md5(salt + md5(fieldValue))
 	boolean autofill = false;
+	boolean passwordVisibilityToggleEnabled;
 
 	command setSendValueAsMd5(boolean sendValueAsMd5);
 	command setSalt(String salt);
+	command setPasswordVisibilityToggleEnabled(boolean enabled);
 }
 
 class UiMultiLineTextField extends UiTextField {
