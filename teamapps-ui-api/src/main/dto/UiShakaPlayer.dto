@@ -31,6 +31,7 @@ class UiShakaPlayer extends UiComponent {
     String preferredAudioLanguage;
     boolean bigPlayButtonEnabled;
     int controlFadeDelaySeconds;
+    List<UiShakaPlayerControlPanelElementType> controlPanelElements;
 
 	command setUrls(String hlsUrl, String dashUrl);
 	command setTime(long timeMillis);
@@ -40,8 +41,23 @@ class UiShakaPlayer extends UiComponent {
 	event manifestLoaded(UiShakaManifest manifest);
 	event timeUpdate(long timeMillis);
 	event ended();
+	event skipClicked(boolean forward, long playbackTimeMillis);
 
 	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
+}
+
+enum UiShakaPlayerControlPanelElementType {
+      REWIND                  = "rewind"                ,
+      FAST_FORWARD            = "fast_forward"          ,
+      SKIP_BACK               = "skip_back"             ,
+      SKIP_FORWARD            = "skip_forward"          ,
+      PLAY_PAUSE              = "play_pause"            ,
+      TIME_AND_DURATION       = "time_and_duration"     ,
+      SPACER                  = "spacer"                ,
+      MUTE                    = "mute"                  ,
+      VOLUME                  = "volume"                ,
+      FULLSCREEN              = "fullscreen"            ,
+      OVERFLOW_MENU           = "overflow_menu"
 }
 
 enum UiTrackLabelFormat {

@@ -1,6 +1,6 @@
 {
   "name": "teamapps-client",
-  "version": "0.9.168-SNAPSHOT",
+  "version": "0.9.169-SNAPSHOT",
   "description": "teamapps",
   "author": "TeamApps.org",
   "main": "dist/js/main.js",

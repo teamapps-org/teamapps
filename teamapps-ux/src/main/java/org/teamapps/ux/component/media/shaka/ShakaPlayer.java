@@ -30,7 +30,9 @@ import org.teamapps.ux.component.media.PosterImageSize;
 import org.teamapps.ux.component.media.TrackLabelFormat;
 import org.teamapps.ux.session.SessionContext;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ShakaPlayer extends AbstractComponent {
 
@@ -38,6 +40,7 @@ public class ShakaPlayer extends AbstractComponent {
 	public final Event<UiShakaManifest> onManifestLoaded = new Event<>();
 	public final Event<Long> onTimeUpdate = new Event<>();
 	public final Event<Void> onEnded = new Event<>();
+	public final Event<SkipClickedEvent> onSkipClicked = new Event<>();
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
 		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
@@ -53,6 +56,15 @@ public class ShakaPlayer extends AbstractComponent {
 	private String audioLanguage;
 	private boolean bigPlayButtonEnabled = true;
 	private int controlFadeDelaySeconds = 0; // 0 = default value (see shaka docs)
+	private List<ControlPanelElementType> controlPanelElements = List.of(
+			ControlPanelElementType.PLAY_PAUSE,
+			ControlPanelElementType.TIME_AND_DURATION,
+			ControlPanelElementType.SPACER,
+			ControlPanelElementType.MUTE,
+			ControlPanelElementType.VOLUME,
+			ControlPanelElementType.FULLSCREEN,
+			ControlPanelElementType.OVERFLOW_MENU
+	);
 
 	private long timeMillis = 0;
 
@@ -80,6 +92,7 @@ public class ShakaPlayer extends AbstractComponent {
 		ui.setPreferredAudioLanguage(audioLanguage);
 		ui.setBigPlayButtonEnabled(bigPlayButtonEnabled);
 		ui.setControlFadeDelaySeconds(controlFadeDelaySeconds);
+		ui.setControlPanelElements(controlPanelElements.stream().map(t -> t.toUiShakaPlayerControlPanelElementType()).collect(Collectors.toList()));
 		return ui;
 	}
 
@@ -103,6 +116,11 @@ public class ShakaPlayer extends AbstractComponent {
 			}
 			case UI_SHAKA_PLAYER_ENDED: {
 				onEnded.fire();
+				break;
+			}
+			case UI_SHAKA_PLAYER_SKIP_CLICKED: {
+				UiShakaPlayer.SkipClickedEvent e = (UiShakaPlayer.SkipClickedEvent) event;
+				onSkipClicked.fire(new SkipClickedEvent(e.getForward(), e.getPlaybackTimeMillis()));
 				break;
 			}
 		}
@@ -236,6 +254,15 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setControlFadeDelaySeconds(int controlFadeDelaySeconds) {
 		this.controlFadeDelaySeconds = controlFadeDelaySeconds;
+		reRenderIfRendered();
+	}
+
+	public List<ControlPanelElementType> getControlPanelElements() {
+		return controlPanelElements;
+	}
+
+	public void setControlPanelElements(List<ControlPanelElementType> controlPanelElements) {
+		this.controlPanelElements = controlPanelElements;
 		reRenderIfRendered();
 	}
 }

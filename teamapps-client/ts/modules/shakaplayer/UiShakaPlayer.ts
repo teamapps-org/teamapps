@@ -21,26 +21,29 @@
 import "shaka-player/dist/controls.css"
 import "@less/components/UiShakaPlayer.less"
 
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
+import {AbstractUiComponent} from "../AbstractUiComponent";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {
 	UiShakaPlayer_EndedEvent,
-	UiShakaPlayer_ErrorLoadingEvent, UiShakaPlayer_ManifestLoadedEvent,
+	UiShakaPlayer_ErrorLoadingEvent, UiShakaPlayer_ManifestLoadedEvent, UiShakaPlayer_SkipClickedEvent,
 	UiShakaPlayer_TimeUpdateEvent,
 	UiShakaPlayerCommandHandler,
 	UiShakaPlayerConfig,
 	UiShakaPlayerEventSource,
-} from "../generated/UiShakaPlayerConfig";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {parseHtml} from "./Common";
-import {UiPosterImageSize} from "../generated/UiPosterImageSize";
-import {throttle} from "./util/throttle";
-import {UiTrackLabelFormat} from "../generated/UiTrackLabelFormat";
+} from "../../generated/UiShakaPlayerConfig";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {addDelegatedEventListener, parseHtml} from "../Common";
+import {UiPosterImageSize} from "../../generated/UiPosterImageSize";
+import {throttle} from "../util/throttle";
+import {UiTrackLabelFormat} from "../../generated/UiTrackLabelFormat";
 
 (window as any).shaka = require("shaka-player");
-(window as any).shaka = require("../../node_modules/shaka-player/dist/shaka-player.ui");
+(window as any).shaka = require("shaka-player/dist/shaka-player.ui");
+
+import "./SkipBackButton";
+import "./SkipForwardButton";
 
 import Player = shaka.Player;
 import UIConfiguration = shaka.extern.UIConfiguration;
@@ -49,7 +52,7 @@ import ManifestConfiguration = shaka.extern.ManifestConfiguration;
 import ManifestParser = shaka.extern.ManifestParser;
 import PlayerInterface = shaka.extern.ManifestParser.PlayerInterface;
 import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
-import {UiShakaManifestConfig} from "../generated/UiShakaManifestConfig";
+import {UiShakaManifestConfig} from "../../generated/UiShakaManifestConfig";
 import Manifest = shaka.extern.Manifest;
 
 export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> implements UiShakaPlayerCommandHandler, UiShakaPlayerEventSource {
@@ -58,6 +61,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 	public readonly onTimeUpdate: TeamAppsEvent<UiShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
 	public readonly onEnded: TeamAppsEvent<UiShakaPlayer_EndedEvent> = new TeamAppsEvent();
 	public readonly onErrorLoading: TeamAppsEvent<UiShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent();
+	public readonly onSkipClicked: TeamAppsEvent<UiShakaPlayer_SkipClickedEvent> = new TeamAppsEvent();
 
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLMediaElement;
@@ -95,15 +99,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 			this.ui = new shaka.ui.Overlay(this.player, this.$componentWrapper, this.$video);
 			const uiConfig: Partial<UIConfiguration> = {
 				addBigPlayButton: config.bigPlayButtonEnabled,
-				controlPanelElements: [
-					"play_pause",
-					"time_and_duration",
-					"spacer",
-					"mute",
-					"volume",
-					"fullscreen",
-					"overflow_menu",
-				],
+				controlPanelElements: config.controlPanelElements,
 				doubleClickForFullscreen: true,
 				enableFullscreenOnRotation: false,
 				enableKeyboardPlaybackControls: true,
@@ -121,6 +117,13 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 				addSeekBar: true
 			};
 			this.ui.configure(uiConfig as UIConfiguration);
+
+			addDelegatedEventListener(this.ui.getControls().getControlsContainer(), '.shaka-skip-button', 'click', (el, ev) => {
+				this.onSkipClicked.fire({
+					forward: el.classList.contains('shaka-skip-forward-button'),
+					playbackTimeMillis: this.player.getMediaElement().currentTime * 1000
+				})
+			}, {capture: true})
 		});
 
 		this.setUrls(config.hlsUrl, config.dashUrl);
