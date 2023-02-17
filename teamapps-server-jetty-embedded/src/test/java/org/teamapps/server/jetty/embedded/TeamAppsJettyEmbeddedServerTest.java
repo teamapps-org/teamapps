@@ -19,15 +19,10 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.TextField;
+import org.teamapps.ux.component.field.PasswordField;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.table.ListTableModel;
-import org.teamapps.ux.component.table.Table;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
-
-import java.util.Arrays;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -37,17 +32,11 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.onDestroyed.addListener(uiSessionClosingReason -> System.out.println("Session destroyed: " + uiSessionClosingReason));
 			RootPanel rootPanel = sessionContext.addRootPanel();
 
-			Table<String> table = new Table<>();
-			table.addColumn("a", MaterialIcon.TITLE, "ASDF", new TextField()).setValueExtractor(s -> s);
-
-			table.setModel(new ListTableModel<>(Arrays.asList("a", "b", "c", "d")));
-			table.setAllowMultiRowSelection(true);
-
-//			table.onRowsSelected.addListener((eventData) -> System.out.println("rows: " + eventData.size()));
-			table.onSingleRowSelected.addListener((eventData) -> System.out.println("single"));
-			table.onMultipleRowsSelected.addListener((eventData) -> System.out.println("multi: " + eventData.size()));
-
-			rootPanel.setContent(table);
+			PasswordField passwordField = new PasswordField();
+			passwordField.setShowClearButton(true);
+			passwordField.setPasswordVisibilityToggleEnabled(true);
+			
+			rootPanel.setContent(passwordField);
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, 8082);

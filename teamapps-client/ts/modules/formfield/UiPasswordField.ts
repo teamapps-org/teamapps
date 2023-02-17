@@ -22,16 +22,13 @@ import md5 from "md5";
 import {UiPasswordFieldCommandHandler, UiPasswordFieldConfig, UiPasswordFieldEventSource} from "../../generated/UiPasswordFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextField} from "./UiTextField";
-import {getAutoCompleteOffValue} from "../Common";
+import {getAutoCompleteOffValue, insertBefore, parseHtml} from "../Common";
+import {parseHTML} from "jquery";
 
 
 export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implements UiPasswordFieldEventSource, UiPasswordFieldCommandHandler {
-	private salt: string;
-	private sendValueAsMd5: boolean;
 
 	protected initialize(config: UiPasswordFieldConfig, context: TeamAppsUiContext): void {
-		this.salt = config.salt;
-		this.sendValueAsMd5 = config.sendValueAsMd5;
 		super.initialize(config, context);
 		this.$field.type = "password";
 		if (!config.autofill) {
@@ -41,15 +38,23 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 			this.$field.setAttribute("autocapitalize", "off");
 			this.$field.setAttribute("spellcheck", "off");
 		}
-		this.getMainElement().classList.add("UiPasswordField")
+		this.getMainInnerDomElement().classList.add("UiPasswordField");
+		let $passwordVisibilityToggleButton: HTMLElement = parseHtml('<div class="password-visibility-button"></div>');
+		this.setPasswordVisibilityToggleEnabled(config.passwordVisibilityToggleEnabled);
+		insertBefore($passwordVisibilityToggleButton, this.getMainInnerDomElement().querySelector(':scope .clear-button'));
+
+		$passwordVisibilityToggleButton.addEventListener('click', ev => {
+			let visible = this.getMainInnerDomElement().classList.toggle('password-visible');
+			this.$field.type = visible ? 'text' : 'password';
+		})
 	}
 
 	setSalt(salt: string): void {
-		this.salt = salt;
+		this._config.salt = salt;
 	}
 
 	setSendValueAsMd5(sendValueAsMd5: boolean): void {
-		this.sendValueAsMd5 = sendValueAsMd5;
+		this._config.sendValueAsMd5 = sendValueAsMd5;
 	}
 
 	getTransientValue(): string {
@@ -58,9 +63,9 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 
 	private calculateValueString(value: any) {
 		let valueString: string;
-		if (this.sendValueAsMd5) {
-			if (this.salt) {
-				valueString = md5(this.salt + md5(value));
+		if (this._config.sendValueAsMd5) {
+			if (this._config.salt) {
+				valueString = md5(this._config.salt + md5(value));
 			} else {
 				valueString = md5(value);
 			}
@@ -72,6 +77,11 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
 		return `<div class="static-readonly-UiTextField static-readonly-UiPasswordField">${value != null ? "&#8226;".repeat(value.length) : ""}</div>`;
+	}
+
+	setPasswordVisibilityToggleEnabled(enabled: boolean): any {
+		this._config.passwordVisibilityToggleEnabled = enabled; 
+		this.getMainInnerDomElement().classList.toggle("password-visibility-toggle-enabled", enabled);
 	}
 }
 
