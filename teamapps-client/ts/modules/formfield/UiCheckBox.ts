@@ -141,12 +141,11 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.$check);
 		if (editingMode === UiFieldEditingMode.DISABLED || editingMode === UiFieldEditingMode.READONLY) {
 			this.$main.classList.add("disabled");
-			this.$check.removeAttribute("tabIndex");
 		} else {
 			this.$main.classList.remove("disabled");
-			this.$check.tabIndex = 0;
 		}
 	}
 
