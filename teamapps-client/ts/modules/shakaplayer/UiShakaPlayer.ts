@@ -92,7 +92,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 			this.player.addEventListener('error', () => this.onErrorLoading.fire({}));
 			this.player.addEventListener('streaming', () => {
 				this.reconfigureUi();
-				this.setTime(this._config.timeMillis);
+				this.jumpTo(this._config.timeMillis);
 				this.onManifestLoaded.fire({manifest: this.createUiManifest(this.player.getManifest())});
 			});
 
@@ -200,7 +200,16 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 		return this.$componentWrapper;
 	}
 
-	public setTime(timeMillis: number) {
+
+	public play(): any {
+		this.$video.play();
+	}
+
+	public pause(): any {
+		this.$video.pause();
+	}
+
+	public jumpTo(timeMillis: number) {
 		this.$video.currentTime = timeMillis / 1000;
 	}
 

@@ -126,9 +126,9 @@ public class ShakaPlayer extends AbstractComponent {
 		}
 	}
 
-	public void setTime(long timeMillis) {
+	public void jumpTo(long timeMillis) {
 		this.timeMillis = timeMillis;
-		queueCommandIfRendered(() -> new UiShakaPlayer.SetTimeCommand(getId(), timeMillis));
+		queueCommandIfRendered(() -> new UiShakaPlayer.JumpToCommand(getId(), timeMillis));
 	}
 
 	public long getTime() {

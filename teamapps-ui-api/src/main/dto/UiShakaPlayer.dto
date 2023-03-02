@@ -34,7 +34,9 @@ class UiShakaPlayer extends UiComponent {
     List<UiShakaPlayerControlPanelElementType> controlPanelElements;
 
 	command setUrls(String hlsUrl, String dashUrl);
-	command setTime(long timeMillis);
+    command play();
+    command pause();
+    command jumpTo(long timeMillis);
 	command selectAudioLanguage(String language, String role);
 
 	event errorLoading();
