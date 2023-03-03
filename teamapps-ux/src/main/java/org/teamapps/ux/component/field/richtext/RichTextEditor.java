@@ -23,10 +23,10 @@ import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiRichTextEditor;
+import org.teamapps.dto.UiTextInputHandlingField;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
-import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.ux.component.field.upload.UploadedFile;
 import org.teamapps.ux.component.field.upload.UploadedFileAccessException;
 
@@ -35,7 +35,7 @@ import java.io.FileNotFoundException;
 import java.util.Locale;
 import java.util.Objects;
 
-public class RichTextEditor extends AbstractField<String> implements TextInputHandlingField {
+public class RichTextEditor extends AbstractField<String> {
 
 	public final Event<String> onTextInput = new Event<>();
 	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
@@ -75,7 +75,6 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
-		if (!defaultHandleTextInputEvent(event)) {
 			switch (event.getUiEventType()) {
 				case UI_RICH_TEXT_EDITOR_IMAGE_UPLOAD_TOO_LARGE:
 					UiRichTextEditor.ImageUploadTooLargeEvent tooLargeEvent = (UiRichTextEditor.ImageUploadTooLargeEvent) event;
@@ -108,8 +107,17 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 					onImageUploadFailed.fire(new ImageUploadFailedEventData(uploadFailedEvent.getName(), uploadFailedEvent.getMimeType(), uploadFailedEvent.getSizeInBytes(), uploadFailedEvent
 							.getIncompleteUploadsCount()));
 					break;
+				case UI_TEXT_INPUT_HANDLING_FIELD_TEXT_INPUT:
+					if (!this.isValueLocked()) { // Check if this is a stale event since the server already set a new value, but this event is from before applying it on the client side!!
+						UiTextInputHandlingField.TextInputEvent keyStrokeEvent = (UiTextInputHandlingField.TextInputEvent) event;
+						onTextInput.fire(keyStrokeEvent.getEnteredString());
+						break;
+					}
+				case UI_TEXT_INPUT_HANDLING_FIELD_SPECIAL_KEY_PRESSED:
+					UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
+					onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
+					break;
 			}
-		}
 	}
 
 	public ToolbarVisibilityMode getToolbarVisibilityMode() {
@@ -170,16 +178,6 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 		this.maxHeight = height;
 		queueCommandIfRendered(() -> new UiRichTextEditor.SetMinHeightCommand(getId(), height));
 		queueCommandIfRendered(() -> new UiRichTextEditor.SetMaxHeightCommand(getId(), height));
-	}
-
-	@Override
-	public Event<String> onTextInput() {
-		return onTextInput;
-	}
-
-	@Override
-	public Event<SpecialKey> onSpecialKeyPressed() {
-		return onSpecialKeyPressed;
 	}
 
 	public Locale getLocale() {
