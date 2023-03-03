@@ -20,6 +20,7 @@
 class UiPanel extends UiComponent {
 	String icon;
 	String title;
+	String badge;
 	UiPanelHeaderField leftHeaderField;
 	UiPanelHeaderField rightHeaderField;
 	enum {LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST} headerComponentMinimizationPolicy = HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
@@ -38,6 +39,7 @@ class UiPanel extends UiComponent {
 	command setRightHeaderField(UiPanelHeaderField field);
 	command setTitle(String title);
 	command setIcon(String icon);
+	command setBadge(String badge);
 	command setToolbar(UiToolbar* toolbar); //if null, remove toolbar
 	command setMaximized(boolean maximized);
 	command setWindowButtons(List<UiWindowButtonType> windowButtons);

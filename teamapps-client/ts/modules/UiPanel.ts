@@ -74,6 +74,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	private $windowButtonContainer: HTMLElement;
 	private $icon: HTMLElement;
 	private $title: HTMLElement;
+	private $badge: HTMLElement;
 
 	private leftHeaderField: HeaderField;
 	private rightHeaderField: HeaderField;
@@ -81,9 +82,10 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	private alwaysShowHeaderFieldIcons: boolean;
 	private toolbar: UiToolbar;
 	private icon: string;
-	private title: string;
 
 	private titleNaturalWidth: number;
+	private badgeNaturalWidth: number;
+
 	private toolButtons: UiToolButton[] = [];
 	private windowButtons: UiWindowButtonType[];
 	private restoreFunction: (animationCallback?: () => void) => void;
@@ -94,6 +96,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
                 <div class="panel-heading">
                     <div class="panel-icon"></div>
                     <div class="panel-title"></div>
+                    <div class="panel-badge"></div>
                     <div class="panel-component-wrapper panel-left-component-wrapper"></div>
                     <div class="panel-heading-spacer"></div>
                     <div class="panel-component-wrapper panel-right-component-wrapper"></div>
@@ -109,6 +112,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		this.$heading = this.$panel.querySelector(':scope >.panel-heading');
 		this.$icon = this.$heading.querySelector(':scope >.panel-icon');
 		this.$title = this.$heading.querySelector(':scope >.panel-title');
+		this.$badge = this.$heading.querySelector(':scope >.panel-badge');
 		this.$leftComponentWrapper = this.$heading.querySelector(':scope >.panel-left-component-wrapper');
 		this.$headingSpacer = this.$heading.querySelector(':scope >.panel-heading-spacer');
 		this.$rightComponentWrapper = this.$heading.querySelector(':scope >.panel-right-component-wrapper');
@@ -118,6 +122,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		this.alwaysShowHeaderFieldIcons = config.alwaysShowHeaderFieldIcons;
 		this.setIcon(config.icon);
 		this.setTitle(config.title);
+		this.setBadge(config.badge);
 		this.setLeftHeaderField(config.leftHeaderField);
 		this.setRightHeaderField(config.rightHeaderField);
 		this.setToolButtons(config.toolButtons as UiToolButton[]);
@@ -345,24 +350,31 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	}
 
 	public setTitle(title: string) {
-		this.title = title;
+		this._config.title = title;
 		this.$title.textContent = title;
-		this.recalculateTitleNaturalWidth();
-		this.$title.classList.toggle('hidden', !title);
+		this.titleNaturalWidth = null;
 		this.relayoutHeader();
 	}
 
-	private recalculateTitleNaturalWidth() {
-		if (!this.title) {
-			this.titleNaturalWidth = 0;
+	setBadge(badge: string) {
+		this._config.badge = badge;
+		this.$badge.textContent = badge;
+		this.badgeNaturalWidth = null;
+		this.relayoutHeader();
+	}
+
+	private recalculateNaturalWidth(value: string, element: HTMLElement) {
+		if (!value) {
+			return 0;
 		} else {
-			this.$title.style.position = "absolute";
-			this.$title.style.display = "inline-block";
-			this.titleNaturalWidth = this.$title.offsetWidth;
-			this.$title.style.position = null;
-			this.$title.style.display = null;
+			element.style.position = "absolute";
+			element.style.display = "inline-block";
+			let width = element.offsetWidth;
+			element.style.position = null;
+			element.style.display = null;
+			return width;
 		}
-	};
+	}
 
 	public setToolbar(toolbar: UiToolbar) {
 		if (this.toolbar != null) {
@@ -392,10 +404,12 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	private relayoutHeader() {
 		const computedHeadingStyle = getComputedStyle(this.$heading);
 		let availableHeaderContentWidth = this.$heading.offsetWidth - parseInt(computedHeadingStyle.paddingLeft) - parseInt(computedHeadingStyle.paddingRight);
-		if (this.title && this.titleNaturalWidth == 0) this.recalculateTitleNaturalWidth();
+		if (this._config.title && this.titleNaturalWidth == null) this.titleNaturalWidth = this.recalculateNaturalWidth(this._config.title, this.$title);
+		if (this._config.badge && this.badgeNaturalWidth == null) this.badgeNaturalWidth = this.recalculateNaturalWidth(this._config.badge, this.$badge);
 		if (this.headerFields.some(headerField => !headerField.minimizedWidth)) this.calculateFieldWrapperSizes();
 
-		let titleWidth = Math.ceil(this.title ? this.titleNaturalWidth : 0);
+		let titleWidth = Math.ceil(this._config.title ? this.titleNaturalWidth + parseInt(getComputedStyle(this.$title).marginRight) : 0);
+		let badgeWidth = Math.ceil(this._config.badge ? this.badgeNaturalWidth + parseInt(getComputedStyle(this.$title).marginRight) : 0);
 		let iconComputedStyle = getComputedStyle(this.$icon);
 		let iconWidth = (this.icon ? this.$icon.offsetWidth + parseInt(iconComputedStyle.marginLeft) + parseInt(iconComputedStyle.marginRight) : 0);
 		let minSpacerWidth = parseInt(getComputedStyle(this.$headingSpacer).flexBasis);
@@ -405,12 +419,24 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		let minAllExpandedWidth =
 			iconWidth
 			+ titleWidth
+			+ badgeWidth
 			+ minSpacerWidth
 			+ buttonContainerWidth
 			+ windowButtonContainerWidth
 			+ this.headerFields
 				.map(headerField => this.alwaysShowHeaderFieldIcons ? headerField.minExpandedWidthWithIcon : headerField.minExpandedWidth)
 				.reduce((totalWidth, fieldWidth) => (totalWidth + fieldWidth), 0);
+		console.log(
+`availableHeaderContentWidth: ${availableHeaderContentWidth}
+iconWidth: ${iconWidth}
+titleWidth: ${titleWidth}
+badgeWidth: ${badgeWidth}
+minSpacerWidth: ${minSpacerWidth}
+buttonContainerWidth: ${buttonContainerWidth}
+windowButtonContainerWidth: ${windowButtonContainerWidth}
+minAllExpandedWidth: ${minAllExpandedWidth}`
+
+		);
 
 		if (this.numberOfVisibleHeaderFields() == 2) {
 			let firstFieldToGetMinified = this.leftComponentFirstMinimized ? this.leftHeaderField : this.rightHeaderField;
@@ -418,14 +444,16 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 			let minFirstMinimizedWidth =
 				+ iconWidth
 				+ titleWidth
+				+ badgeWidth
 				+ minSpacerWidth
 				+ buttonContainerWidth
 				+ windowButtonContainerWidth
 				+ firstFieldToGetMinified.minimizedWidth
 				+ alwaysMaximizedField.minExpandedWidthWithIcon;
-			let minWidthNeededWithHiddenHeaderAndOneMinimizedField = minFirstMinimizedWidth - titleWidth;
+			let minWidthNeededWithHiddenTitleAndOneMinimizedField = minFirstMinimizedWidth - titleWidth;
 
 			if (availableHeaderContentWidth >= minAllExpandedWidth) {
+				console.log("availableHeaderContentWidth >= minAllExpandedWidth")
 				this.$title.classList.remove("hidden");
 				this.$title.style.width = null;
 				this.$heading.classList.remove("has-minimized-header-component");
@@ -443,9 +471,11 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 						headerField.config.minWidth + availableAdditionalSpace * ((headerField.config.maxWidth - headerField.config.minWidth) / minMaxFieldWidthDeltaSum),
 						headerField.config.maxWidth
 					);
+					console.log(availableAdditionalSpace);
 					headerField.$fieldWrapper.style.width = newFieldWidth + "px";
 				});
 			} else if (availableHeaderContentWidth >= minFirstMinimizedWidth) {
+				console.log("availableHeaderContentWidth >= minFirstMinimizedWidth")
 				this.$title.classList.remove("hidden");
 				this.$title.style.width = null;
 				this.$heading.classList.add("has-minimized-header-component");
@@ -453,17 +483,19 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 				let availableAdditionalSpace = availableHeaderContentWidth - minFirstMinimizedWidth;
 				let newMaximizedFieldWidth = Math.min(alwaysMaximizedField.config.minWidth + availableAdditionalSpace, alwaysMaximizedField.config.maxWidth);
 				alwaysMaximizedField.$fieldWrapper.style.width = newMaximizedFieldWidth + "px";
-			} else if (availableHeaderContentWidth >= minWidthNeededWithHiddenHeaderAndOneMinimizedField + 30 /* less does not make sense for title */) {
+			} else if (availableHeaderContentWidth >= minWidthNeededWithHiddenTitleAndOneMinimizedField + 30 /* less does not make sense for title */) {
+				console.log("availableHeaderContentWidth >= minWidthNeededWithHiddenHeaderAndOneMinimizedField + 30")
 				this.$title.classList.remove("hidden");
 				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
 				alwaysMaximizedField.$fieldWrapper.style.width = alwaysMaximizedField.config.minWidth + "px";
 				this.$title.style.width = (this.titleNaturalWidth - (minFirstMinimizedWidth - availableHeaderContentWidth)) + "px";
 			} else {
+				console.log("else!")
 				this.$title.classList.add("hidden");
 				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
-				const width = alwaysMaximizedField.config.minWidth + (availableHeaderContentWidth - minWidthNeededWithHiddenHeaderAndOneMinimizedField);
+				const width = alwaysMaximizedField.config.minWidth + (availableHeaderContentWidth - minWidthNeededWithHiddenTitleAndOneMinimizedField);
 				alwaysMaximizedField.$fieldWrapper.style.width = width + "px";
 			}
 		} else if (this.numberOfVisibleHeaderFields() == 1) {

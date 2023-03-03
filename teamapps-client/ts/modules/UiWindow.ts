@@ -161,6 +161,10 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		this.panel.setTitle(title);
 	}
 
+	public setBadge(badge: string) {
+		this.panel.setBadge(badge);
+	}
+
 	public setCloseOnClickOutside(closeOnClickOutside: boolean): void {
 		this.closeOnClickOutside = closeOnClickOutside;
 	}

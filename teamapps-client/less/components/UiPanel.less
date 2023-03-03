@@ -55,9 +55,24 @@
 
     .panel-title {
       flex: 0 0 auto;
-      padding-right: 7px;
+      margin-right: 7px;
       font-size: 15px;
       .single-line-snipper();
+      &:empty {
+        display: none;
+      }
+    }
+
+    .panel-badge {
+      flex: 0 0 auto;
+      margin-right: 7px;
+      border-radius: 1000px;
+      padding: 1px 4px;
+      border: 1px solid var(--ta-color-info);
+      .single-line-snipper();
+      &:empty {
+        display: none;
+      }
     }
 
     > .panel-component-wrapper {
