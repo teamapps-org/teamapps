@@ -158,6 +158,10 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		}
 	}
 
+	protected boolean isValueLocked() {
+		return this.value.isLocked();
+	}
+
 	public VALUE convertUiValueToUxValue(Object value) {
 		return (VALUE) value;
 	}

@@ -56,14 +56,12 @@ import {
 } from "../../generated/UiTextInputHandlingFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {parseHtml, removeTags} from "../Common";
+import {throttledMethod} from "../util/throttle";
 
 
 export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> implements UiRichTextEditorEventSource, UiRichTextEditorCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
-		throttlingMode: "throttle",
-		delay: 5000
-	});
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>();
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({
 		throttlingMode: "debounce",
 		delay: 250
@@ -449,6 +447,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		return v == null || typeof v === "string";
 	}
 
+	@throttledMethod(5000)
 	private fireTextInputEvent() {
 		if (this.mayFireChangeEvents()) {
 			this.onTextInput.fire({
