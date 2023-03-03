@@ -439,6 +439,7 @@ minAllExpandedWidth: ${minAllExpandedWidth}`
 		);
 
 		if (this.numberOfVisibleHeaderFields() == 2) {
+			this.$heading.classList.remove("no-header-fields");
 			let firstFieldToGetMinified = this.leftComponentFirstMinimized ? this.leftHeaderField : this.rightHeaderField;
 			let alwaysMaximizedField = this.leftComponentFirstMinimized ? this.rightHeaderField : this.leftHeaderField;
 			let minFirstMinimizedWidth =
@@ -499,6 +500,7 @@ minAllExpandedWidth: ${minAllExpandedWidth}`
 				alwaysMaximizedField.$fieldWrapper.style.width = width + "px";
 			}
 		} else if (this.numberOfVisibleHeaderFields() == 1) {
+			this.$heading.classList.remove("no-header-fields");
 			this.$heading.classList.remove("has-minimized-header-component");
 			let headerField = this.leftHeaderField || this.rightHeaderField;
 			this.setMinimizedFields();
@@ -524,10 +526,11 @@ minAllExpandedWidth: ${minAllExpandedWidth}`
 				headerField.$fieldWrapper.style.width = (headerField.config.minWidth + widthLessThanNeeded) + "px";
 			}
 		} else {
+			this.$heading.classList.add("no-header-fields");
 			this.$heading.classList.remove("has-minimized-header-component");
 			this.$title.classList.remove("hidden");
 			let availableAdditionalSpace = availableHeaderContentWidth - minAllExpandedWidth;
-			this.$title.style.width = (this.titleNaturalWidth + availableAdditionalSpace) + "px";
+			this.$title.style.width = null;
 		}
 	};
 
