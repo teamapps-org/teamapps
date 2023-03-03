@@ -46,15 +46,16 @@ public class Panel extends AbstractComponent implements Component {
 
 	public final Event<WindowButtonType> onWindowButtonClicked = new Event<>();
 
+	private Icon<?, ?> icon;
 	private String title;
-	private Icon icon;
+	private String badge;
 
 	private AbstractField<?> leftHeaderField;
-	private Icon leftHeaderFieldIcon;
+	private Icon<?, ?> leftHeaderFieldIcon;
 	private int leftHeaderFieldMinWidth = 100;
 	private int leftHeaderFieldMaxWidth = 300;
 	private AbstractField<?> rightHeaderField;
-	private Icon rightHeaderFieldIcon;
+	private Icon<?, ?> rightHeaderFieldIcon;
 	private int rightHeaderFieldMinWidth = 100;
 	private int rightHeaderFieldMaxWidth = 300;
 	private HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy = HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
@@ -69,8 +70,8 @@ public class Panel extends AbstractComponent implements Component {
 	private final List<ToolButton> toolButtons = new ArrayList<>();
 	private final Set<WindowButtonType> windowButtons = new HashSet<>();
 
-	private ObservableValue<Icon> observableIcon;
-	private final Consumer<Icon> iconChangeListener = this::setIcon;
+	private ObservableValue<Icon<?, ?>> observableIcon;
+	private final Consumer<Icon<?, ?>> iconChangeListener = this::setIcon;
 	private ObservableValue<String> observableTitle;
 	private final Consumer<String> titleChangeListener = this::setTitle;
 	private ObservableValue<AbstractField<?>> observableLeftHeaderField;
@@ -83,11 +84,11 @@ public class Panel extends AbstractComponent implements Component {
 		this(null, null, null);
 	}
 
-	public Panel(Icon icon, String title) {
+	public Panel(Icon<?, ?> icon, String title) {
 		this(icon, title, null);
 	}
 
-	public Panel(Icon icon, String title, Component content) {
+	public Panel(Icon<?, ?> icon, String title, Component content) {
 		this.icon = icon;
 		this.title = title;
 		setContent(content);
@@ -150,6 +151,7 @@ public class Panel extends AbstractComponent implements Component {
 	protected void mapUiPanelProperties(UiPanel uiPanel) {
 		mapAbstractUiComponentProperties(uiPanel);
 		uiPanel.setTitle(title);
+		uiPanel.setBadge(badge);
 		uiPanel.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanel.setLeftHeaderField(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth));
 		uiPanel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
@@ -167,7 +169,7 @@ public class Panel extends AbstractComponent implements Component {
 		uiPanel.setStretchContent(stretchContent);
 	}
 
-	public UiPanelHeaderField createUiPanelHeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
+	public UiPanelHeaderField createUiPanelHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		if (field == null) {
 			return null;
 		}
@@ -178,7 +180,7 @@ public class Panel extends AbstractComponent implements Component {
 		return uiPanelHeaderField;
 	}
 
-	public Panel setLeftHeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
+	public Panel setLeftHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		if (field != null) {
 			field.setParent(this);
 		}
@@ -194,7 +196,7 @@ public class Panel extends AbstractComponent implements Component {
 		return leftHeaderField;
 	}
 
-	public Panel setRightHeaderField(AbstractField<?> field, Icon icon, int minWidth, int maxWidth) {
+	public Panel setRightHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		if (field != null) {
 			field.setParent(this);
 		}
@@ -239,11 +241,20 @@ public class Panel extends AbstractComponent implements Component {
 		queueCommandIfRendered(() -> new UiPanel.SetTitleCommand(getId(), title));
 	}
 
-	public Icon getIcon() {
+	public String getBadge() {
+		return badge;
+	}
+
+	public void setBadge(String badge) {
+		this.badge = badge;
+		queueCommandIfRendered(() -> new UiPanel.SetBadgeCommand(getId(), badge));
+	}
+
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		queueCommandIfRendered(() -> new UiPanel.SetIconCommand(getId(), getSessionContext().resolveIcon(icon)));
 	}
@@ -331,11 +342,11 @@ public class Panel extends AbstractComponent implements Component {
 		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(getId(), createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
-	public Icon getLeftHeaderFieldIcon() {
+	public Icon<?, ?> getLeftHeaderFieldIcon() {
 		return leftHeaderFieldIcon;
 	}
 
-	public void setLeftHeaderFieldIcon(Icon leftHeaderFieldIcon) {
+	public void setLeftHeaderFieldIcon(Icon<?, ?> leftHeaderFieldIcon) {
 		this.leftHeaderFieldIcon = leftHeaderFieldIcon;
 		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(getId(), createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
@@ -368,11 +379,11 @@ public class Panel extends AbstractComponent implements Component {
 				rightHeaderFieldMaxWidth)));
 	}
 
-	public Icon getRightHeaderFieldIcon() {
+	public Icon<?, ?> getRightHeaderFieldIcon() {
 		return rightHeaderFieldIcon;
 	}
 
-	public void setRightHeaderFieldIcon(Icon rightHeaderFieldIcon) {
+	public void setRightHeaderFieldIcon(Icon<?, ?> rightHeaderFieldIcon) {
 		this.rightHeaderFieldIcon = rightHeaderFieldIcon;
 		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(getId(), createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
@@ -420,7 +431,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 
-	public void setIcon(ObservableValue<Icon> observableIcon) {
+	public void setIcon(ObservableValue<Icon<?, ?>> observableIcon) {
 		if (this.observableIcon != null) {
 			this.observableIcon.onChanged().removeListener(iconChangeListener);
 		}
