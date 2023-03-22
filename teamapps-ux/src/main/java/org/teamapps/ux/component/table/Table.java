@@ -29,6 +29,7 @@ import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
+import org.teamapps.ux.cache.record.EqualsAndHashCode;
 import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
@@ -77,9 +78,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private List<RECORD> selectedRecords = List.of();
 	private TableCellCoordinates<RECORD> activeEditorCell;
 
-	private final Map<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new HashMap<>();
-	private final Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
-	private final Map<RECORD, Set<String>> markedCells = new HashMap<>();
+	private CustomEqualsAndHashCodeMap<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+	private CustomEqualsAndHashCodeMap<RECORD, Map<String, List<FieldMessage>>> cellMessages = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+	private CustomEqualsAndHashCodeMap<RECORD, Set<String>> markedCells = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
 
 	private final List<TableColumn<RECORD, ?>> columns = new ArrayList<>();
 
@@ -767,14 +768,6 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		}
 	}
 
-
-	private void applyTransientChangesToClientRecord(UiTableClientRecord uiRecord) {
-		Map<String, Object> changes = transientChangesByRecordAndPropertyName.get(renderedRecords.getRecord(uiRecord.getId()));
-		if (changes != null) {
-			changes.forEach((key, value) -> uiRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertUxValueToUiValue(value)));
-		}
-	}
-
 	public void cancelEditing() {
 		TableCellCoordinates<RECORD> activeEditorCell = getActiveEditorCell();
 		UiIdentifiableClientRecord uiRecord = renderedRecords.getUiRecord(activeEditorCell.getRecord());
@@ -804,7 +797,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		clientRecord.setSelected(selectedRecords.stream().anyMatch(r -> customEqualsAndHashCode.getEquals().test(r, record)));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
 		clientRecord.setMarkings(new ArrayList<>(markedCells.getOrDefault(record, Collections.emptySet())));
-		applyTransientChangesToClientRecord(clientRecord);
+		transientChangesByRecordAndPropertyName.getOrDefault(record, Map.of())
+				.forEach((key, value) -> clientRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertUxValueToUiValue(value)));
 		return clientRecord;
 	}
 
@@ -1229,4 +1223,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return renderedRecords.getRecords();
 	}
 
+	@Override
+	public void setCustomEqualsAndHashCode(EqualsAndHashCode<RECORD> customEqualsAndHashCode) {
+		super.setCustomEqualsAndHashCode(customEqualsAndHashCode);
+		transientChangesByRecordAndPropertyName = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+		cellMessages = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+		markedCells = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+	}
 }

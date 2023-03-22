@@ -22,6 +22,7 @@ package org.teamapps.ux.cache.record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiIdentifiableClientRecord;
+import org.teamapps.ux.component.table.CustomEqualsAndHashCodeMap;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -31,7 +32,7 @@ import java.util.stream.IntStream;
 public class RenderedRecordsCache<RECORD> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final Map<EqualsHashCodeWrapper<RECORD>, UiIdentifiableClientRecord> uiRecordsByRecord = new HashMap<>();
+	private final CustomEqualsAndHashCodeMap<RECORD, UiIdentifiableClientRecord> uiRecordsByRecord;
 	private final List<RecordAndClientRecord<RECORD>> recordPairs = new ArrayList<>();
 	private final EqualsAndHashCode<RECORD> customEqualsAndHashCode;
 	private int startIndex = 0;
@@ -42,10 +43,11 @@ public class RenderedRecordsCache<RECORD> {
 
 	public RenderedRecordsCache(EqualsAndHashCode<RECORD> customEqualsAndHashCode) {
 		this.customEqualsAndHashCode = customEqualsAndHashCode;
+		this.uiRecordsByRecord = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
 	}
 
 	public UiIdentifiableClientRecord getUiRecord(RECORD record) {
-		return uiRecordsByRecord.get(withCustomEqualsHashCode(record));
+		return uiRecordsByRecord.get(record);
 	}
 
 	public int getIndex(RECORD record) {
@@ -116,12 +118,12 @@ public class RenderedRecordsCache<RECORD> {
 			throw new IllegalArgumentException(errorMessage);
 		}
 		int listInsertIndex = Math.max(0, startIndex - this.startIndex);
-		if (newClientRecordPairs.stream().anyMatch(rp -> uiRecordsByRecord.containsKey(withCustomEqualsHashCode(rp.getRecord())))) {
+		if (newClientRecordPairs.stream().anyMatch(rp -> uiRecordsByRecord.containsKey(rp.getRecord()))) {
 			throw new DuplicateEntriesException("List components MUST NOT contains the same item several times!");
 		}
 		recordPairs.addAll(listInsertIndex, newClientRecordPairs);
 		for (RecordAndClientRecord<RECORD> rr : newClientRecordPairs) {
-			uiRecordsByRecord.put(withCustomEqualsHashCode(rr.getRecord()), rr.getUiRecord());
+			uiRecordsByRecord.put(rr.getRecord(), rr.getUiRecord());
 		}
 		this.startIndex = Math.min(this.startIndex, startIndex);
 	}
@@ -133,12 +135,12 @@ public class RenderedRecordsCache<RECORD> {
 			throw new IllegalArgumentException(errorMessage);
 		}
 		int listInsertIndex = startIndex - this.startIndex;
-		if (newClientRecordPairs.stream().anyMatch(rp -> uiRecordsByRecord.containsKey(withCustomEqualsHashCode(rp.getRecord())))) {
+		if (newClientRecordPairs.stream().anyMatch(rp -> uiRecordsByRecord.containsKey(rp.getRecord()))) {
 			throw new DuplicateEntriesException("List components MUST NOT contains the same item several times! ");
 		}
 		recordPairs.addAll(listInsertIndex, newClientRecordPairs);
 		for (RecordAndClientRecord<RECORD> rr : newClientRecordPairs) {
-			uiRecordsByRecord.put(withCustomEqualsHashCode(rr.getRecord()), rr.getUiRecord());
+			uiRecordsByRecord.put(rr.getRecord(), rr.getUiRecord());
 		}
 	}
 
@@ -166,7 +168,7 @@ public class RenderedRecordsCache<RECORD> {
 	private void removeNoShiftInternal(int startIndex, int endIndex) {
 		List<RecordAndClientRecord<RECORD>> recordsToBeRemoved = recordPairs.subList(startIndex, endIndex);
 		for (RecordAndClientRecord<RECORD> rr : recordsToBeRemoved) {
-			uiRecordsByRecord.remove(withCustomEqualsHashCode(rr.getRecord()));
+			uiRecordsByRecord.remove(rr.getRecord());
 		}
 		recordsToBeRemoved.clear();
 	}
