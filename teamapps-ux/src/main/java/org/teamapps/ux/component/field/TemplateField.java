@@ -58,7 +58,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 		UiTemplateField ui = new UiTemplateField();
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setTemplate(template.createUiTemplate());
-		ui.setValue(createUiRecord(getValue()));
+		ui.setValue(convertUxValueToUiValue(getValue()));
 		return ui;
 	}
 
@@ -67,11 +67,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 	}
 
 	public Object convertUxValueToUiValue(RECORD record) {
-		if (record == null) {
-			return null;
-		} else {
-			return createUiRecord(record);
-		}
+		return createUiRecord(record);
 	}
 
 	private UiClientRecord createUiRecord(RECORD record) {
