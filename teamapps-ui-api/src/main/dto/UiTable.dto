@@ -81,7 +81,6 @@ class UiTable extends UiComponent {
 	command setRecordBold(int recordId, boolean bold); //TODO
 	command selectRecords(List<Integer> recordIds, boolean scrollToFirstRecord);
 	command selectRows(List<Integer> rowIndexes, boolean scrollToFirstRowIndex);
-	command editCellIfAvailable(int recordId, String propertyName);
 	command cancelEditingCell(int recordId, String propertyName);
 	command focusCell(int recordId, String columnPropertyName);
     command setSingleCellMessages(int recordId, String columnPropertyName, List<UiFieldMessage> messages);

@@ -642,34 +642,42 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	@executeWhenFirstDisplayed()
 	updateData(startIndex: number, recordIds: number[], newRecords: UiTableClientRecordConfig[], totalNumberOfRecords: number): any {
-		let editorCoordinates: { recordId: any; fieldName: any };
+		let editorCoordinates: { row: number, recordId: any; fieldName: any };
 		editorCoordinates = this._grid.getCellEditor() != null ? {
+			row: this._grid.getActiveCell().row,
 			recordId: this.getActiveCellRecordId(),
 			fieldName: this.getActiveCellFieldName()
 		} : null;
-		// TODO necessary: this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
+		let editorRowChanged = false;
+		const countChanged = this.dataProvider.getLength() != totalNumberOfRecords;
 
+		// TODO necessary: this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
 		let changedRowNumbers = this.dataProvider.updateData(startIndex, recordIds, newRecords, totalNumberOfRecords);
 		if (changedRowNumbers === true) {
 			this._grid.invalidateAllRows();
+			editorRowChanged = editorCoordinates != null;
 		} else {
 			this._grid.invalidateRows(changedRowNumbers);
+			editorRowChanged = editorCoordinates != null && changedRowNumbers.indexOf(editorCoordinates.row) >= 0;
 		}
 
-		this._grid.updateRowCount();
-		this._grid.render();
+		if (countChanged) {
+			this._grid.updateRowCount(); // this will make the editor lose focus
+		}
+		this._grid.render(); // this will make the editor lose focus, if its row changed (and therefore was invalidated)
 		this.toggleColumnsThatAreHiddenWhenTheyContainNoVisibleNonEmptyCells();
-
 		this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(this.dataProvider.getSelectedRowsIndexes()));
-
 		clearTimeout(this.loadingIndicatorFadeInTimer);
+
 		fadeOut(this._$loadingIndicator);
 
-		this._grid.resizeCanvas();
+		if (countChanged) {
+			this._grid.resizeCanvas(); // this will make the editor lose focus
+		}
 		this.updateSelectionFramePosition();
 
-		if (editorCoordinates != null) {
-			this.editCellIfAvailable(editorCoordinates.recordId, editorCoordinates.fieldName);
+		if (editorCoordinates != null && (editorRowChanged || countChanged)) {
+			this.editCellIfVisible(editorCoordinates.recordId, editorCoordinates.fieldName);
 		}
 	}
 
@@ -816,9 +824,9 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 	}
 
-	editCellIfAvailable(recordId: number, propertyName: string): void {
+	editCellIfVisible(recordId: number, propertyName: string): void {
 		const rowNumber = this.dataProvider.getRowIndexByRecordId(recordId);
-		if (rowNumber != null) {
+		if (rowNumber != null && rowNumber >= this._grid.getViewport().top && rowNumber <= this._grid.getViewport().bottom) {
 			this._grid.setActiveCell(rowNumber, this._grid.getColumns().findIndex(c => c.id === propertyName));
 			this._grid.editActiveCell(null);
 		}
@@ -900,7 +908,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this.fieldMessagePopper.destroy();
 	}
 
-	public updateRefreshableConfig(config:UiRefreshableTableConfigUpdateConfig) {
+	public updateRefreshableConfig(config: UiRefreshableTableConfigUpdateConfig) {
 		let options = {
 			...this._grid.getOptions(),
 			forceFitColumns: config.forceFitWidth,
