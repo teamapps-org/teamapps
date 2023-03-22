@@ -41,6 +41,8 @@ public class TableColumn<RECORD, VALUE> {
 	private Icon<?, ?> icon;
 	private String title;
 	private AbstractField<VALUE> field;
+	private AbstractField<?> headerRowField;
+	private AbstractField<?> footerRowField;
 	private int minWidth;
 	private int defaultWidth;
 	private int maxWidth;
@@ -93,6 +95,8 @@ public class TableColumn<RECORD, VALUE> {
 		uiTableColumn.setHeaderAlignment(headerAlignment.toUiTextAlignment());
 		uiTableColumn.setHiddenIfOnlyEmptyCellsVisible(hiddenIfOnlyEmptyCellsVisible);
 		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
+		uiTableColumn.setHeaderRowField(headerRowField != null ? headerRowField.createUiReference() : null);
+		uiTableColumn.setFooterRowField(footerRowField != null ? footerRowField.createUiReference() : null);
 		return uiTableColumn;
 	}
 
@@ -250,5 +254,23 @@ public class TableColumn<RECORD, VALUE> {
 	public TableColumn<RECORD, VALUE> setValueInjector(ValueInjector<RECORD, VALUE> valueInjector) {
 		this.valueInjector = valueInjector;
 		return this;
+	}
+
+	public AbstractField<?> getHeaderRowField() {
+		return headerRowField;
+	}
+
+	public void setHeaderRowField(AbstractField<?> headerRowField) {
+		this.headerRowField = headerRowField;
+		table.updateHeaderRowField(this);
+	}
+
+	public AbstractField<?> getFooterRowField() {
+		return footerRowField;
+	}
+
+	public void setFooterRowField(AbstractField<?> footerRowField) {
+		this.footerRowField = footerRowField;
+		table.updateFooterRowField(this);
 	}
 }

@@ -22,7 +22,7 @@ enum UiSortDirection {
 }
 
 class UiTableColumn {
-	required String propertyName;
+	required String name;
 	required String icon;
 	required String title;
 	required UiField* field;
@@ -35,6 +35,8 @@ class UiTableColumn {
 	boolean hiddenIfOnlyEmptyCellsVisible = false;
 	List<UiFieldMessage> messages;
 	UiTextAlignment headerAlignment;
+	UiField* headerRowField;
+	UiField* footerRowField;
 }
 
 class UiTable extends UiComponent {
@@ -109,16 +111,14 @@ class UiTable extends UiComponent {
     String headerRowBorderColor = "rgb(204, 204, 204)";
     int headerRowHeight = 28;
     String headerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
-    Dictionary<UiField*> headerRowFields;
-    command setHeaderRowFields(Dictionary<UiField*> headerRowFields);
+    command setHeaderRowField(String columnName, UiField* field);
 
 	boolean showFooterRow = false;
     int footerRowBorderWidth = 1; // even in list mode! the border will be there but transparent!
     String footerRowBorderColor = "rgb(204, 204, 204)";
     int footerRowHeight = 28;
     String footerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
-    Dictionary<UiField*> footerRowFields;
-    command setFooterRowFields(Dictionary<UiField*> footerRowFields);
+    command setFooterRowField(String columnName, UiField* field);
 }
 
 class UiRefreshableTableConfigUpdate {
