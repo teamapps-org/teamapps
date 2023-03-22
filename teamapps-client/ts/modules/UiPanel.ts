@@ -426,17 +426,6 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 			+ this.headerFields
 				.map(headerField => this.alwaysShowHeaderFieldIcons ? headerField.minExpandedWidthWithIcon : headerField.minExpandedWidth)
 				.reduce((totalWidth, fieldWidth) => (totalWidth + fieldWidth), 0);
-		console.log(
-`availableHeaderContentWidth: ${availableHeaderContentWidth}
-iconWidth: ${iconWidth}
-titleWidth: ${titleWidth}
-badgeWidth: ${badgeWidth}
-minSpacerWidth: ${minSpacerWidth}
-buttonContainerWidth: ${buttonContainerWidth}
-windowButtonContainerWidth: ${windowButtonContainerWidth}
-minAllExpandedWidth: ${minAllExpandedWidth}`
-
-		);
 
 		if (this.numberOfVisibleHeaderFields() == 2) {
 			this.$heading.classList.remove("no-header-fields");
@@ -454,7 +443,6 @@ minAllExpandedWidth: ${minAllExpandedWidth}`
 			let minWidthNeededWithHiddenTitleAndOneMinimizedField = minFirstMinimizedWidth - titleWidth;
 
 			if (availableHeaderContentWidth >= minAllExpandedWidth) {
-				console.log("availableHeaderContentWidth >= minAllExpandedWidth")
 				this.$title.classList.remove("hidden");
 				this.$title.style.width = null;
 				this.$heading.classList.remove("has-minimized-header-component");
@@ -472,11 +460,9 @@ minAllExpandedWidth: ${minAllExpandedWidth}`
 						headerField.config.minWidth + availableAdditionalSpace * ((headerField.config.maxWidth - headerField.config.minWidth) / minMaxFieldWidthDeltaSum),
 						headerField.config.maxWidth
 					);
-					console.log(availableAdditionalSpace);
 					headerField.$fieldWrapper.style.width = newFieldWidth + "px";
 				});
 			} else if (availableHeaderContentWidth >= minFirstMinimizedWidth) {
-				console.log("availableHeaderContentWidth >= minFirstMinimizedWidth")
 				this.$title.classList.remove("hidden");
 				this.$title.style.width = null;
 				this.$heading.classList.add("has-minimized-header-component");
@@ -485,14 +471,12 @@ minAllExpandedWidth: ${minAllExpandedWidth}`
 				let newMaximizedFieldWidth = Math.min(alwaysMaximizedField.config.minWidth + availableAdditionalSpace, alwaysMaximizedField.config.maxWidth);
 				alwaysMaximizedField.$fieldWrapper.style.width = newMaximizedFieldWidth + "px";
 			} else if (availableHeaderContentWidth >= minWidthNeededWithHiddenTitleAndOneMinimizedField + 30 /* less does not make sense for title */) {
-				console.log("availableHeaderContentWidth >= minWidthNeededWithHiddenHeaderAndOneMinimizedField + 30")
 				this.$title.classList.remove("hidden");
 				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
 				alwaysMaximizedField.$fieldWrapper.style.width = alwaysMaximizedField.config.minWidth + "px";
 				this.$title.style.width = (this.titleNaturalWidth - (minFirstMinimizedWidth - availableHeaderContentWidth)) + "px";
 			} else {
-				console.log("else!")
 				this.$title.classList.add("hidden");
 				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
