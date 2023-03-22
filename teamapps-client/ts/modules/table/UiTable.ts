@@ -221,14 +221,12 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 		this._grid = new Slick.Grid($table, this.dataProvider, this.getVisibleColumns(), options);
 
-		if (config.headerRowFields) {
-			this.headerRowFields = config.headerRowFields as FieldsByName;
-			this.configureOuterFields(config.headerRowFields as FieldsByName, true);
-		}
-		if (config.footerRowFields) {
-			this.footerRowFields = config.footerRowFields as FieldsByName;
-			this.configureOuterFields(config.footerRowFields as FieldsByName, false);
-		}
+		config.columns.forEach(c => {
+			this.headerRowFields[c.name] = c.headerRowField as UiField;
+			this.footerRowFields[c.name] = c.footerRowField as UiField;
+		});
+		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
+		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
 
 		if (config.hideHeaders) {
 			css($table.querySelector<HTMLElement>(":scope .slick-header-columns"), {
@@ -512,7 +510,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private createSlickColumnConfig(columnConfig: UiTableColumnConfig): Column {
 		const uiField = columnConfig.field as UiField;
-		this.prepareEditorField(columnConfig.propertyName, uiField);
+		this.prepareEditorField(columnConfig.name, uiField);
 
 		let editorFactory;
 		if (uiField instanceof UiCompositeField) {
@@ -524,8 +522,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 
 		const slickColumnConfig: Column = {
-			id: columnConfig.propertyName,
-			field: columnConfig.propertyName,
+			id: columnConfig.name,
+			field: columnConfig.name,
 			uiField: uiField,
 			name: `<div class="column-header-icon img img-16 ${columnConfig.icon == null ? "hidden" : ""}" style="background-image: url('${columnConfig.icon}')"></div>
 <div class="column-header-title">${columnConfig.title}</div>`,
@@ -996,15 +994,17 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this.contextMenu.close(requestId);
 	}
 
-	setHeaderRowFields(headerRowFields: { [p: string]: unknown }): any {
-		this.configureOuterFields(headerRowFields as FieldsByName, true);
+	setHeaderRowField(columnName: string, field: unknown): any {
+		this.headerRowFields[columnName] = field as UiField;
+		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
 		if (this._grid != null) {
 			this._grid.setColumns(this._grid.getColumns());
 		}
 	}
 
-	setFooterRowFields(footerRowFields: { [p: string]: unknown }): any {
-		this.configureOuterFields(footerRowFields as FieldsByName, false);
+	setFooterRowField(columnName: string, field: unknown): any {
+		this.footerRowFields[columnName] = field as UiField;
+		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
 		if (this._grid != null) {
 			this._grid.setColumns(this._grid.getColumns());
 		}

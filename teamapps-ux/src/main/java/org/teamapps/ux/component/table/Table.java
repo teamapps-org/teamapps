@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -108,13 +108,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private boolean showHeaderRow = false;
 	private int headerRowHeight = 28;
-	private final Map<String, AbstractField<?>> headerRowFields = new HashMap<>(0);
 
 	// ----- footer -----
 
 	private boolean showFooterRow = false;
 	private int footerRowHeight = 28;
-	private final Map<String, AbstractField<?>> footerRowFields = new HashMap<>(0);
 
 	private final List<RECORD> topNonModelRecords = new ArrayList<>();
 	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
@@ -228,12 +226,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		uiTable.setIndentation(indentation);
 		uiTable.setShowHeaderRow(showHeaderRow);
 		uiTable.setHeaderRowHeight(headerRowHeight);
-		uiTable.setHeaderRowFields(this.headerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference())));
 		uiTable.setShowFooterRow(showFooterRow);
 		uiTable.setFooterRowHeight(footerRowHeight);
-		uiTable.setFooterRowFields(this.footerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference())));
 		uiTable.setContextMenuEnabled(contextMenuProvider != null);
 		return uiTable;
 	}
@@ -1089,22 +1083,16 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setCssStyle(".slick-headerrow", "background-color", headerRowBackgroundColor != null ? headerRowBackgroundColor.toHtmlColorString() : null);
 	}
 
-	public Map<String, AbstractField<?>> getHeaderRowFields() {
-		return Collections.unmodifiableMap(headerRowFields);
-	}
-
-	public void setHeaderRowFields(Map<String, AbstractField<?>> headerRowFields) {
-		this.headerRowFields.clear();
-		this.headerRowFields.putAll(headerRowFields);
-		this.headerRowFields.values().forEach(field -> field.setParent(this));
-		queueCommandIfRendered(() -> new UiTable.SetHeaderRowFieldsCommand(getId(), this.headerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference()))));
-	}
-
+	/**
+	 * Use {@link TableColumn#setHeaderRowField(AbstractField)} instead!
+	 */
+	@Deprecated
 	public void setHeaderRowField(String columnName, AbstractField<?> field) {
-		this.headerRowFields.put(columnName, field);
-		queueCommandIfRendered(() -> new UiTable.SetHeaderRowFieldsCommand(getId(), this.headerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference()))));
+		getColumnByPropertyName(columnName).setHeaderRowField(field);
+	}
+
+	void updateHeaderRowField(TableColumn<RECORD, ?> column) {
+		queueCommandIfRendered(() -> new UiTable.SetHeaderRowFieldCommand(getId(), column.getPropertyName(), column.getHeaderRowField() != null ? column.getHeaderRowField().createUiReference() : null));
 	}
 
 	public boolean isShowFooterRow() {
@@ -1143,22 +1131,16 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setCssStyle(".slick-footerrow", "background-color", footerRowBackgroundColor != null ? footerRowBackgroundColor.toHtmlColorString() : null);
 	}
 
-	public Map<String, AbstractField<?>> getFooterRowFields() {
-		return footerRowFields;
-	}
-
-	public void setFooterRowFields(Map<String, AbstractField<?>> footerRowFields) {
-		this.footerRowFields.clear();
-		this.footerRowFields.putAll(footerRowFields);
-		this.headerRowFields.values().forEach(field -> field.setParent(this));
-		queueCommandIfRendered(() -> new UiTable.SetFooterRowFieldsCommand(getId(), this.footerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference()))));
-	}
-
+	/**
+	 * Use {@link TableColumn#setFooterRowField(AbstractField)} instead!
+	 */
+	@Deprecated
 	public void setFooterRowField(String columnName, AbstractField<?> field) {
-		this.footerRowFields.put(columnName, field);
-		queueCommandIfRendered(() -> new UiTable.SetFooterRowFieldsCommand(getId(), this.footerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference()))));
+		getColumnByPropertyName(columnName).setFooterRowField(field);
+	}
+
+	void updateFooterRowField(TableColumn<RECORD, ?> column) {
+		queueCommandIfRendered(() -> new UiTable.SetFooterRowFieldCommand(getId(), column.getPropertyName(), column.getFooterRowField() != null ? column.getFooterRowField().createUiReference() : null));
 	}
 
 	public <VALUE> TableColumn<RECORD, VALUE> getColumnByPropertyName(String propertyName) {
@@ -1166,14 +1148,6 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				.filter(column -> column.getPropertyName().equals(propertyName))
 				.map(c -> (TableColumn<RECORD, VALUE>) c)
 				.findFirst().orElse(null);
-	}
-
-	public AbstractField<?> getHeaderRowFieldByName(String propertyName) {
-		return headerRowFields.get(propertyName);
-	}
-
-	public AbstractField<?> getFooterRowFieldByName(String propertyName) {
-		return footerRowFields.get(propertyName);
 	}
 
 	public List<RECORD> getRecordsWithChangedCellValues() {
