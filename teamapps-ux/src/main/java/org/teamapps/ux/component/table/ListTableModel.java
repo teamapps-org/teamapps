@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,18 +19,24 @@
  */
 package org.teamapps.ux.component.table;
 
+import org.teamapps.data.extract.BeanPropertyExtractor;
+import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.value.SortDirection;
 import org.teamapps.ux.component.infiniteitemview.RecordsAddedEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 
 	private List<RECORD> list = new ArrayList<>();
 	private Predicate<RECORD> filter = record -> true;
+	private PropertyExtractor<RECORD> sortingPropertyExtractor = new BeanPropertyExtractor<>();
 
 	public ListTableModel() {
 	}
@@ -74,15 +80,49 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 
 	@Override
 	public List<RECORD> getRecords(int startIndex, int length) {
-		if (filter == null) {
+		if (filter == null && sorting == null) {
 			return list.subList(startIndex, Math.min(list.size(), startIndex + length));
 		} else {
-			return list.stream()
-					.filter(filter)
+			Stream<RECORD> stream = list.stream();
+			if (filter != null) {
+				stream = stream.filter(filter);
+			}
+			if (sorting != null && sortingPropertyExtractor != null) {
+				stream = stream.sorted(valueExtractingComparator());
+			}
+			return stream
 					.skip(startIndex)
 					.limit(length)
 					.collect(Collectors.toList());
 		}
+	}
+
+	private Comparator<RECORD> valueExtractingComparator() {
+		Comparator<RECORD> comparator = (o1, o2) -> {
+			Object v1 = sortingPropertyExtractor.getValue(o1, sorting.getFieldName());
+			Object v2 = sortingPropertyExtractor.getValue(o2, sorting.getFieldName());
+			if (v1 == null && v2 == null) {
+				return 0;
+			} else if (v1 == null) {
+				return 1;
+			} else if (v2 == null) {
+				return -1;
+			} else { // both are not null
+				if (!(v1 instanceof Comparable) && !(v2 instanceof Comparable)) {
+					return 0;
+				} else if (!(v1 instanceof Comparable)) {
+					return 1;
+				} else if (!(v2 instanceof Comparable)) {
+					return -1;
+				} else {
+					return ((Comparable) v1).compareTo(v2);
+				}
+			}
+		};
+		if (sorting.getSortDirection() == SortDirection.DESC) {
+			comparator = comparator.reversed();
+		}
+		return comparator;
 	}
 
 	public List<RECORD> getAllRecords() {
@@ -96,5 +136,13 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 	public void setFilter(Predicate<RECORD> filter) {
 		this.filter = filter;
 		onAllDataChanged.fire(null);
+	}
+
+	public PropertyExtractor<RECORD> getSortingPropertyExtractor() {
+		return sortingPropertyExtractor;
+	}
+
+	public void setSortingPropertyExtractor(PropertyExtractor<RECORD> sortingPropertyExtractor) {
+		this.sortingPropertyExtractor = sortingPropertyExtractor;
 	}
 }
