@@ -28,10 +28,25 @@ public class ByteArrayResource implements Resource {
 
 	private final byte[] data;
 	private final String name;
+	private final String mimeType;
 
 	public ByteArrayResource(byte[] data, String name) {
+		this(data, name, null);
+	}
+
+	public ByteArrayResource(byte[] data, String name, String mimeType) {
 		this.data = data;
 		this.name = name;
+		this.mimeType = mimeType;
+	}
+
+	@Override
+	public String getMimeType() {
+		if (mimeType != null) {
+			return mimeType;
+		} else {
+			return Resource.super.getMimeType();
+		}
 	}
 
 	@Override
