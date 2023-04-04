@@ -5,7 +5,7 @@
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.170-SNAPSHOT</version>
+    <version>0.9.170</version>
 
     <name>TeamApps</name>
     <description>A Java web application framework</description>
@@ -408,7 +408,7 @@
         <url>https://github.com/teamapps-org/teamapps</url>
         <connection>scm:git:git@github.com:teamapps-org/teamapps.git</connection>
         <developerConnection>scm:git:git@github.com:teamapps-org/teamapps.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>teamapps-0.9.170</tag>
     </scm>
 
 </project>
