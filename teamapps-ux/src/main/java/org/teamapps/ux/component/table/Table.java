@@ -1082,7 +1082,12 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	 */
 	@Deprecated
 	public void setHeaderRowField(String columnName, AbstractField<?> field) {
-		getColumnByPropertyName(columnName).setHeaderRowField(field);
+		TableColumn<RECORD, Object> column = getColumnByPropertyName(columnName);
+		if (column != null) {
+			column.setHeaderRowField(field);
+		} else {
+			
+		}
 	}
 
 	void updateHeaderRowField(TableColumn<RECORD, ?> column) {
