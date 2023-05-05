@@ -26,6 +26,7 @@ import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -88,15 +89,23 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	public void addItem(NotificationBarItem item) {
+		if (itemsByUiId.containsValue(item)) {
+			return;
+		}
 		itemsByUiId.put(item.getUiId(), item);
 		item.setListener(() -> queueCommandIfRendered(() -> new UiNotificationBar.UpdateItemCommand(getId(), item.toUiNotificationBarItem())));
 		queueCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(getId(), item.toUiNotificationBarItem()));
 	}
 
 	public void removeItem(NotificationBarItem item) {
-		itemsByUiId.remove(item.getUiId());
-		item.setListener(null);
-		queueCommandIfRendered(() -> new UiNotificationBar.RemoveItemCommand(getId(), item.getUiId(), null));
+		if (itemsByUiId.remove(item.getUiId()) != null) {
+			item.setListener(null);
+			queueCommandIfRendered(() -> new UiNotificationBar.RemoveItemCommand(getId(), item.getUiId(), null));
+		}
+	}
+
+	public List<NotificationBarItem> getItems() {
+		return List.copyOf(itemsByUiId.values());
 	}
 
 }
