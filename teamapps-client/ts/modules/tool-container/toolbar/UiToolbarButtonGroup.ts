@@ -67,7 +67,8 @@ export class UiToolbarButtonGroup implements Emptyable {
 
 		this.setVisible(buttonGroupConfig.visible);
 
-
+		this.onEmptyStateChanged.addListener(empty => this.$buttonGroupWrapper.classList.toggle("empty", empty));
+		this.$buttonGroupWrapper.classList.toggle("empty", this.empty);
 	}
 
 	public get empty(): boolean {
@@ -152,11 +153,6 @@ export class UiToolbarButtonGroup implements Emptyable {
 	}
 
 	private updateVisibility() {
-		let hasVisibleButton = this.buttons.values.some(button => {
-			return button.isVisible() && this.buttonsShiftedToOverflowDropDown.indexOf(button) === -1;
-		});
-		this.$buttonGroupWrapper.classList.toggle("pseudo-hidden", !(this.visible && hasVisibleButton));
-
 		this.onEmptyStateChanged.fireIfChanged(this.empty);
 	}
 

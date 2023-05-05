@@ -95,6 +95,11 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 
 		config.leftButtonGroups && config.leftButtonGroups.forEach(bg => this.addButtonGroup(bg, false))
 		config.rightButtonGroups && config.rightButtonGroups.forEach(bg => this.addButtonGroup(bg, true))
+
+		this.onEmptyStateChanged.addListener(empty =>  {
+			this.getMainElement().classList.toggle("empty", empty)
+		})
+		this.getMainElement().classList.toggle("empty", this.empty);
 	}
 
 	private createDropDownAccordion(): UiToolAccordion {

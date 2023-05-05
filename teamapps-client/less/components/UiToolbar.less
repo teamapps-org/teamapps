@@ -38,6 +38,9 @@
       .button-group-wrapper {
         flex: 1 0 auto;
         display: flex;
+        &.empty {
+          display: none;
+        }
         > .toolbar-button-group {
           flex: 1 0 auto;
           display: flex;
@@ -81,6 +84,10 @@
         flex-grow: 0;
       }
     }
+  }
+
+  &.empty {
+    display: none;
   }
 }
 
