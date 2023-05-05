@@ -265,4 +265,12 @@ public class ShakaPlayer extends AbstractComponent {
 		this.controlPanelElements = controlPanelElements;
 		reRenderIfRendered();
 	}
+
+	public void play() {
+		queueCommandIfRendered(() -> new UiShakaPlayer.PlayCommand(getId()));
+	}
+
+	public void pause() {
+		queueCommandIfRendered(() -> new UiShakaPlayer.PauseCommand(getId()));
+	}
 }
