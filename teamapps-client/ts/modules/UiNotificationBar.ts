@@ -101,6 +101,8 @@ class UiNotificationBarItem {
 	public readonly onActionLinkClicked: TeamAppsEvent<void> = new TeamAppsEvent();
 	public readonly onClosed: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
+	public config: UiNotificationBarItemConfig;
+
 	private $main: HTMLElement;
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
@@ -110,7 +112,7 @@ class UiNotificationBarItem {
 	private $text: HTMLElement;
 	private $actionLink: HTMLElement;
 
-	constructor(public readonly config: UiNotificationBarItemConfig) {
+	constructor(config: UiNotificationBarItemConfig) {
 		this.$main = parseHtml(`<div class="UiNotificationBarItem">
 	<div class="content-container">
 		<div class="icon img img-20"></div>
@@ -139,6 +141,9 @@ class UiNotificationBarItem {
 	}
 
 	public update(config: UiNotificationBarItemConfig) {
+		const oldConfig = this.config;
+		this.config = config;
+		
 		this.$closeButton.classList.toggle("hidden", !config.dismissible);
 		this.$main.style.backgroundColor = config.backgroundColor;
 		this.$main.style.borderColor = config.borderColor;
@@ -153,12 +158,18 @@ class UiNotificationBarItem {
 
 		this.$main.classList.toggle("with-progress", config.displayTimeInMillis > 0 && config.progressBarVisible)
 
-		this.$icon.classList.toggle("hidden", config.icon == null)
-		this.$icon.style.backgroundImage = `url('${config.icon}')`;
-		removeClassesByFunction(this.$icon.classList, className => className.startsWith("animate__"));
+		if (oldConfig?.icon !== config.icon) {
+			console.log("updating icon", oldConfig?.icon, config.icon);
+			this.$icon.classList.toggle("hidden", config.icon == null)
+			this.$icon.style.backgroundImage = `url('${config.icon}')`;
+		}
 
-		if (config.iconAnimation != null) {
-			this.$icon.classList.add(...Constants.REPEATABLE_ANIMATION_CSS_CLASSES[config.iconAnimation].split(/ +/));
+		if (oldConfig?.iconAnimation !== config.iconAnimation) {
+			console.log("updating icon animation", oldConfig?.iconAnimation, config.iconAnimation	);
+			removeClassesByFunction(this.$icon.classList, className => className.startsWith("animate__"));
+			if (config.iconAnimation != null) {
+				this.$icon.classList.add(...Constants.REPEATABLE_ANIMATION_CSS_CLASSES[config.iconAnimation].split(/ +/));
+			}
 		}
 	}
 
