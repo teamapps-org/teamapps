@@ -1,7 +1,0 @@
-package org.teamapps.custom.dto;
-
-class MyComponent extends org.teamapps.dto.Component {
-
-    String text;
-
-}
