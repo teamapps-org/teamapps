@@ -37,7 +37,6 @@ import {
 	TeamAppsConnectionImpl,
 	TeamAppsConnectionListener
 } from "teamapps-client-communication";
-import * as jstz from "jstz";
 import {bind} from "./util/bind";
 import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from "./proxy/RefreshableComponentProxyHandle";
 import {Component} from "./component/Component";
@@ -144,7 +143,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 			screenHeight: window.screen.height,
 			highDensityScreen: this.isHighDensityScreen,
 			timezoneOffsetMinutes: new Date().getTimezoneOffset(),
-			timezoneIana: jstz.determine().name(),
+			timezoneIana: Intl.DateTimeFormat().resolvedOptions().timeZone,
 			clientTokens: Globals.getClientTokens(),
 			location: createUiLocation(),
 			clientParameters: clientParameters,

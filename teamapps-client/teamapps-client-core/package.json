@@ -31,8 +31,6 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "jstz": "^2.1.1",
-    "moment-timezone": "^0.5.39",
     "nosleep.js": "^0.12.0",
     "teamapps-client-communication": "workspace:*"
   }

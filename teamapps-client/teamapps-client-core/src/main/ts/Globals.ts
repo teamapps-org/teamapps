@@ -8,7 +8,6 @@ import {
 	DtoGlobals_NavigationStateChangeEvent,
 	DtoKeyEventType,
 } from "./generated";
-import * as moment from "moment-timezone";
 import {releaseWakeLock, requestWakeLock} from "./util/wakeLock";
 import {exitFullScreen} from "./util/fullscreen";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
@@ -62,11 +61,6 @@ export class Globals implements ClientObject<DtoGlobals> {
 	}
 
 	public static setConfig(config: DtoConfiguration, context: TeamAppsUiContext) {
-		let oldConfig = context.config;
-		if ((!oldConfig || oldConfig.locale !== config.locale) && config.locale !== 'en') {
-			loadJavaScript("runtime-resources/moment-locales/" + config.locale + ".js"); // TODO
-		}
-		moment.locale(config.locale);
 		this.setThemeClassName(config.themeClassName);
 
 		document.body.classList.toggle("optimized-for-touch", config.optimizedForTouch);

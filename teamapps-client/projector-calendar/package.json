@@ -9,9 +9,8 @@
     "del_dist": "rimraf 'dist/*'",
     "clean": "yarn run del_dist",
     "tsc": "tsc",
-    "build:insert-version": "cross-var replace-in-file \"__TEAMAPPS_VERSION__\" \"$npm_package_version\" \"dist/**/*.js\"",
     "bundle": "node esbuild.mjs",
-    "build": "yarn run del_dist && yarn run tsc && yarn run build:insert-version && yarn run bundle",
+    "build": "yarn run del_dist && yarn run tsc && yarn run bundle",
     "build-prod": "NODE_ENV=production yarn run build",
     "start": "yarn run watch-build",
     "watch-build": "concurrently --names \"yarn:watch-tsc\" \"yarn:watch-bundle\"",
@@ -36,6 +35,7 @@
     "@fullcalendar/moment-timezone": "4.4.2",
     "@fullcalendar/timegrid": "4.4.2",
     "d3": "^5.9.7",
-    "d3-luxon": "^1.0.2"
+    "d3-luxon": "^1.0.2",
+    "moment-timezone": "^0.5.43"
   }
 }
