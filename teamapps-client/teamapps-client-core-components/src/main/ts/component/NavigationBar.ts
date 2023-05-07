@@ -53,8 +53,8 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 	private multiProgressDisplay: MultiProgressDisplay;
 	private $multiProgressDisplayContainer: HTMLElement;
 
-	constructor(config: DtoNavigationBar, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoNavigationBar) {
+		super(config);
 		this.$bar = parseHtml(`<div class="NavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>

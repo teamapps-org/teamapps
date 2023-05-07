@@ -36,8 +36,8 @@ export class UiPieChart extends AbstractComponent<DtoPieChart> implements UiPieC
 	config: DtoPieChart;
 
 
-	constructor(config: DtoPieChart, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoPieChart) {
+		super(config);
 		this.config = config;
 		this.createChart();
 	}

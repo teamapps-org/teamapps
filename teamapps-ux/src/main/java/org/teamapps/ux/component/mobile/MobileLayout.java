@@ -24,12 +24,12 @@ import org.teamapps.dto.DtoMobileLayout;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.toolbar.Toolbar;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class MobileLayout extends AbstractComponent implements Component {
 
 	protected Toolbar toolbar;

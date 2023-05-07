@@ -59,8 +59,8 @@ export class UiItemView extends AbstractComponent<DtoItemView> implements UiItem
 	private groupsByGroupId: { [index: string]: ItemGroup } = {};
 	private filterString: string = "";
 
-	constructor(config: DtoItemView, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoItemView) {
+		super(config);
 
 		this.$itemView = parseHtml('<div class="UiItemView"></div>');
 		this.$itemView.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";
@@ -91,12 +91,12 @@ export class UiItemView extends AbstractComponent<DtoItemView> implements UiItem
 	}
 
 	private createItemGroup(itemGroupConfig: DtoItemViewItemGroup) {
-		const itemGroup = new ItemGroup(this, this._context, itemGroupConfig, this.groupHeaderTemplateRenderer);
+		const itemGroup = new ItemGroup(this, itemGroupConfig, this.groupHeaderTemplateRenderer);
 		itemGroup.onItemClicked.addListener(item => this.onItemClicked.fire({
 			groupId: itemGroupConfig.id,
 			itemId: item.id
 		}));
-		itemGroup.getMainDomElement().style.paddingBottom = this._config.groupSpacing + "px";
+		itemGroup.getMainDomElement().style.paddingBottom = this.config.groupSpacing + "px";
 		itemGroup.setFilter(this.filterString);
 		return itemGroup;
 	}
@@ -122,7 +122,7 @@ export class UiItemView extends AbstractComponent<DtoItemView> implements UiItem
 	public addItem(groupId: string, item: DtoIdentifiableClientRecord): void {
 		const itemGroup = this.groupsByGroupId[groupId];
 		if (!itemGroup) {
-			console.error(`Cannot find group ${groupId} in UiItemView ` + this._config.id);
+			console.error(`Cannot find group ${groupId} in UiItemView ` + this.config.id);
 			return;
 		}
 		itemGroup.addItem(item);
@@ -131,7 +131,7 @@ export class UiItemView extends AbstractComponent<DtoItemView> implements UiItem
 	public removeItem(groupId: string, itemId: number): void {
 		const itemGroup = this.groupsByGroupId[groupId];
 		if (!itemGroup) {
-			console.error(`Cannot find group ${groupId} in UiItemView ` + this._config.id);
+			console.error(`Cannot find group ${groupId} in UiItemView ` + this.config.id);
 			return;
 		}
 		itemGroup.removeItem(itemId);
@@ -169,7 +169,7 @@ class ItemGroup {
 
 	public readonly onItemClicked: TeamAppsEvent<DtoIdentifiableClientRecord> = new TeamAppsEvent<DtoIdentifiableClientRecord>();
 
-	constructor(private itemView: UiItemView, private context: TeamAppsUiContext, private config: DtoItemViewItemGroup, groupHeaderTemplateRenderer: Renderer) {
+	constructor(private itemView: UiItemView, private config: DtoItemViewItemGroup, groupHeaderTemplateRenderer: Renderer) {
 		this.items = config.items;
 
 		const groupHtmlId = `item-group-${generateUUID()}`;

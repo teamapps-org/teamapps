@@ -21,7 +21,7 @@ package org.teamapps.projector.components.common.tree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoComponent;
+import org.teamapps.projector.components.common.dto.DtoComponent;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;

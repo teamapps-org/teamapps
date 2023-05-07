@@ -35,8 +35,8 @@ export class UiHttpLiveStreamPlayer extends AbstractComponent<DtoHttpLiveStreamP
 	private $spinnerContainer: HTMLElement;
 	private resetTimer: number = null;
 
-	constructor(config: DtoHttpLiveStreamPlayer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoHttpLiveStreamPlayer) {
+		super(config);
 		this.$main = parseHtml(`
 <div class="HttpLiveStreamPlayer">
     <div class="not-supported-message">

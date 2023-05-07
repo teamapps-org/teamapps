@@ -32,7 +32,7 @@ export class UiImageField extends UiField<DtoImageField, string> implements UiIm
 
 	private _$field: HTMLElement;
 
-	protected initialize(config: DtoImageField, context: TeamAppsUiContext) {
+	protected initialize(config: DtoImageField) {
 		this._$field = parseHtml(`<div class="UiImageField">`);
 
 		this.update(config);
@@ -66,7 +66,7 @@ export class UiImageField extends UiField<DtoImageField, string> implements UiIm
 	}
 
 	update(config: DtoImageField) {
-		this._config = config;
+		this.config = config;
 		this.setSize(config.width, config.height);
 		this.setBorder(config.border);
 		this.setShadow(config.shadow);
@@ -100,11 +100,11 @@ export class UiImageField extends UiField<DtoImageField, string> implements UiIm
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
 		let css = cssObjectToString({
-			width: `${this._config.width}px`,
-			height: `${this._config.height}px`,
-			...createUiBorderCssObject(this._config.border),
-			...createUiShadowCssObject(this._config.shadow),
-			...createImageSizingCssObject(this._config.imageSizing),
+			width: `${this.config.width}px`,
+			height: `${this.config.height}px`,
+			...createUiBorderCssObject(this.config.border),
+			...createUiShadowCssObject(this.config.shadow),
+			...createImageSizingCssObject(this.config.imageSizing),
 			'background-image': value ? `url('${value}')` : 'none'
 		});
 		return `<div class="static-readonly-UiImageField" style="${css}"></div>`;

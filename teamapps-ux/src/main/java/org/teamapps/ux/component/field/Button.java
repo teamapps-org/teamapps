@@ -26,7 +26,7 @@ import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.ClientObject;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -36,7 +36,7 @@ import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Button<RECORD> extends AbstractField<Void> {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoButton.ClickedEvent.TYPE_ID);

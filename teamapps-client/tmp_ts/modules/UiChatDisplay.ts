@@ -41,8 +41,8 @@ export class UiChatDisplay extends AbstractComponent<DtoChatDisplay> implements 
 	private $messages: HTMLElement;
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoChatDisplay, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoChatDisplay) {
+		super(config);
 		this.$main = parseHtml(`<div class="UiChatDisplay">
 	<style> [data-teamapps-id=${config.id}] .message.deleted .deleted-icon {
 		background-image: url('${config.deletedMessageIcon}');				
@@ -68,7 +68,7 @@ export class UiChatDisplay extends AbstractComponent<DtoChatDisplay> implements 
 
 		this.contextMenu = new ContextMenu();
 		addDelegatedEventListener(this.$messages, ".message", "contextmenu", (element, ev) => {
-			if (this._config.contextMenuEnabled) {
+			if (this.config.contextMenuEnabled) {
 				let chatMessageId = Number(element.getAttribute("data-id"));
 				this.contextMenu.open(ev, async requestId => {
 					let contentComponent = await config.requestContextMenu({chatMessageId}) as UiComponent;
@@ -86,7 +86,7 @@ export class UiChatDisplay extends AbstractComponent<DtoChatDisplay> implements 
 	private requestPreviousMessages() {
 		if (!this.requestingPreviousMessages) {
 			this.requestingPreviousMessages = true;
-			this._config.requestPreviousMessages({}).then(batch => {
+			this.config.requestPreviousMessages({}).then(batch => {
 				const heightBefore = this.$messages.offsetHeight;
 				batch.messages.reverse().forEach(messageConfig => {
 					const uiChatMessage = new UiChatMessage(messageConfig);

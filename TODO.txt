@@ -1,5 +1,9 @@
 fix queries
 
+make parseHtml return an array (not NodeList!!) of elements, since the current api leads error-prone usage of NodeList. See comment in HtmlView.setContentHtml()
+
+make Field an interfaces, so people can implement them more freely and creatively
+
 rename:
  clicked -> click
  Java: createUiX(UxObject...) -> createDto()
@@ -27,4 +31,5 @@ Table:
 * column builder; return one when invoking addColumn() and listen to build() method.
 * setHideHeaders() WTF...
 BaseTemplate: icon and image are technically the same thing. so remove one of them (image)
+* make count long! (see aviloo raw data perspective problem)
 

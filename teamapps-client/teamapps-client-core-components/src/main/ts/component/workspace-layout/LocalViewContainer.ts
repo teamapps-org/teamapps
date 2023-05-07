@@ -43,7 +43,6 @@ import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {MultiProgressDisplay} from "../MultiProgressDisplay";
-import {applyCss} from "../../util/cssUtil";
 import {computePosition, size} from "@floating-ui/dom";
 
 export class LocalViewContainer implements ViewContainer {
@@ -437,7 +436,7 @@ export class LocalViewContainer implements ViewContainer {
 
 	@bind
 	private createTabPanelItem(config: DtoWorkSpaceLayoutViewGroupItem, parent: SplitPaneItem) {
-		let tabPanelItem = new TabPanelItem(config.id, config.persistent, parent, this.context);
+		let tabPanelItem = new TabPanelItem(config.id, config.persistent, parent);
 		tabPanelItem.onTabSelected.addListener(eventObject => this.tabSelected(eventObject, tabPanelItem));
 		tabPanelItem.onTabNeedsRefresh.addListener(this.tabNeedsRefresh);
 		tabPanelItem.onPanelStateChangeTriggered.addListener(panelState => this.setViewGroupPanelState2(tabPanelItem, panelState, true));
@@ -508,7 +507,7 @@ export class LocalViewContainer implements ViewContainer {
 			let newItemWillBeFirstChild = [DtoRelativeWorkSpaceViewPosition.LEFT, DtoRelativeWorkSpaceViewPosition.TOP].indexOf(relativePosition) !== -1;
 
 			let isVerticalSplit = [DtoRelativeWorkSpaceViewPosition.LEFT, DtoRelativeWorkSpaceViewPosition.RIGHT].indexOf(relativePosition) !== -1;
-			let newSplitPaneItem = new SplitPaneItem(generateUUID(), oldParent, isVerticalSplit ? DtoSplitDirection.VERTICAL : DtoSplitDirection.HORIZONTAL, sizePolicy, referenceChildSize, this.context);
+			let newSplitPaneItem = new SplitPaneItem(generateUUID(), oldParent, isVerticalSplit ? DtoSplitDirection.VERTICAL : DtoSplitDirection.HORIZONTAL, sizePolicy, referenceChildSize);
 			let newTabPanelItem = this.createTabPanelItem({id: generateUUID(), viewNames: []}, newSplitPaneItem);
 			newTabPanelItem.addTab(view, true);
 
@@ -533,7 +532,7 @@ export class LocalViewContainer implements ViewContainer {
 				rootTabPanelItem.addTab(view, true);
 			} else {
 				let isVerticalSplit = [DtoRelativeWorkSpaceViewPosition.LEFT, DtoRelativeWorkSpaceViewPosition.RIGHT].indexOf(relativePosition) !== -1;
-				let splitPaneItem = new SplitPaneItem(generateUUID(), null, isVerticalSplit ? DtoSplitDirection.VERTICAL : DtoSplitDirection.HORIZONTAL, sizePolicy, referenceChildSize, this.context);
+				let splitPaneItem = new SplitPaneItem(generateUUID(), null, isVerticalSplit ? DtoSplitDirection.VERTICAL : DtoSplitDirection.HORIZONTAL, sizePolicy, referenceChildSize);
 				let oldRootItem = this.itemTree.rootItem;
 				oldRootItem.component.getMainElement().remove();
 				this.setRootItem(splitPaneItem);
@@ -645,8 +644,7 @@ export class LocalViewContainer implements ViewContainer {
 		let newRootItem = new LayoutDescriptorApplyer(
 			this.$contentContainer,
 			this.createTabPanelItem,
-			(viewGroupItem, panelState) => this.setViewGroupPanelState(viewGroupItem.id, panelState),
-			this.context
+			(viewGroupItem, panelState) => this.setViewGroupPanelState(viewGroupItem.id, panelState)
 		).apply(this.itemTree.rootItem, newLayout, addedViewConfigs);
 		this.setRootItem(newRootItem)
 	}

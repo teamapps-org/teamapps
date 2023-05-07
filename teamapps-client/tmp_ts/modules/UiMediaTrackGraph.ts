@@ -68,8 +68,8 @@ export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> imp
 	private markerData: Marker[];
 
 
-	constructor(config: DtoMediaTrackGraph, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoMediaTrackGraph) {
+		super(config);
 		this.$graph = parseHtml('<div class="UiMediaTrackGraph" id="' + this.getId() + '">');
 
 		this.trackCount = config.trackCount;

@@ -141,7 +141,7 @@
             </resource>
             <resource>
                 <directory>.</directory>
-                <targetPath>org/teamapps/client/core/resources</targetPath>
+                <targetPath>org/teamapps/projector/core/resources</targetPath>
                 <includes>
                     <include>index.html</include>
                     <include>dist/**/*</include>

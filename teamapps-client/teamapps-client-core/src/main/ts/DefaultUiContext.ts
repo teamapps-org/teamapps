@@ -44,12 +44,11 @@ import {Component} from "./component/Component";
 import {ClientObject} from "./ClientObject";
 import {Showable} from "./util/Showable";
 import {Globals} from "./Globals";
-import {logException} from "./util/exception-util";
 import {createUiLocation} from "./util/locationUtil";
 import {AbstractWebComponent} from "./component/AbstractWebComponent";
 import {AbstractComponent} from "./component/AbstractComponent";
 
-type ClientObjectClass<T extends ClientObject = ClientObject> = { new(config: DtoClientObjectConfig, context: TeamAppsUiContext): T };
+type ClientObjectClass<T extends ClientObject = ClientObject> = { new(config: DtoClientObjectConfig): T };
 
 
 function isClassicComponent(o: ClientObject): o is AbstractComponent {
@@ -129,7 +128,6 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 	private libraryModules: Map<string, Promise<any>> = new Map();
 	private componentClasses: Map<string, Promise<ClientObjectClassWrapper>> = new Map();
 	private components: Map<string, Promise<ClientObjectWrapper>> = new Map();
-	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
 	private expiredMessageWindow: Showable;
@@ -171,21 +169,21 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 						this.expiredMessageWindow.show(500);
 					} else {
 						Globals.createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							false, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD], this).show(500);
+							false, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD]).show(500);
 					}
 				} else if (reason == DtoSessionClosingReason.TERMINATED_BY_APPLICATION) {
 					if (this.terminatedMessageWindow != null) {
 						this.terminatedMessageWindow.show(500);
 					} else {
 						Globals.createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							true, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD], this).show(500);
+							true, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD]).show(500);
 					}
 				} else {
 					if (this.errorMessageWindow != null) {
 						this.errorMessageWindow.show(500);
 					} else {
 						Globals.createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							true, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD], this).show(500);
+							true, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD]).show(500);
 					}
 				}
 			},
@@ -292,7 +290,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 				(webComponent as any).setConfig(config);
 				return webComponent as unknown as Component;
 			} else {
-				return new (await componentClass).clazz(config, this);
+				return new (await componentClass).clazz(config);
 			}
 		} else {
 			console.error("Unknown component type: " + config._type);
@@ -376,10 +374,10 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 	private async executeCommand(libraryUuid: string | null, clientObjectId: string | null, command: DtoCommand): Promise<any> {
 		try {
 			command = await this.replaceComponentReferencesWithInstances(command);
-			this._executingCommand = true;
 			const qualifiedMethodName = command[0];
 			const className = qualifiedMethodName.substring(0, qualifiedMethodName.indexOf('.'));
 			const methodName = qualifiedMethodName.substring(qualifiedMethodName.lastIndexOf('.') + 1);
+			console.log("Attempting to call", qualifiedMethodName, "on", clientObjectId, "in library", libraryUuid);
 			const parameters = command[1];
 			if (clientObjectId != null) {
 				console.debug(`Trying to call ${clientObjectId}.${methodName}()`);
@@ -395,12 +393,15 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 			} else {
 				console.debug(`Trying to call static method ${qualifiedMethodName}(${parameters.join(", ")})`);
 				const classWrapper = await this.getClientObjectClassWrapper(libraryUuid, className);
-				return await (classWrapper.clazz[methodName].apply(classWrapper.clazz, [...parameters, this]));
+				let method = classWrapper.clazz[methodName];
+				if (method == null) {
+					console.error(`Cannot find method ${method} in ${className}`)
+				}
+				let methodParameters = (libraryUuid == null && className == "Globals") ? [...parameters, this] : [...parameters];
+				return await (method.apply(classWrapper.clazz, methodParameters));
 			}
 		} catch (e) {
-			logException(e);
-		} finally {
-			this._executingCommand = false;
+			console.error(e, e.stack);
 		}
 	}
 
@@ -426,7 +427,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 					let clazz = module[className];
 
 					if (!clazz) {
-						console.error("Unknown client object type in module: " + className);
+						console.error(`Unknown client object type ${className} in library ${libraryUuid}`);
 						reject();
 					} else {
 						resolve(new ClientObjectClassWrapper(clazz))

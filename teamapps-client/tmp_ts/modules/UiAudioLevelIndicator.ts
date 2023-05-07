@@ -37,8 +37,8 @@ export class UiAudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndica
 	private maxLevel2 = 0;
 	private lastDrawingTimestamp = 0;
 
-	constructor(config: DtoAudioLevelIndicator, context: TeamAppsUiContext) {
-		super(config, context)
+	constructor(config: DtoAudioLevelIndicator) {
+		super(config)
 
 		this.$main = parseHtml(`
 <div class="UiAudioLevelIndicator">
@@ -98,9 +98,9 @@ export class UiAudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndica
 		let canvasWidth = this.canvasContext.canvas.width;
 		let canvasHeight = this.canvasContext.canvas.height;
 
-		var imageData = this.canvasContext.getImageData(this._config.barWidth, 0, canvasWidth - this._config.barWidth, canvasHeight);
+		var imageData = this.canvasContext.getImageData(this.config.barWidth, 0, canvasWidth - this.config.barWidth, canvasHeight);
 		this.canvasContext.putImageData(imageData, 0, 0);
-		this.canvasContext.clearRect(canvasWidth - this._config.barWidth, 0, this._config.barWidth, canvasHeight);
+		this.canvasContext.clearRect(canvasWidth - this.config.barWidth, 0, this.config.barWidth, canvasHeight);
 
 		var grd = this.canvasContext.createLinearGradient(0, canvasHeight, 0, 0);
 		grd.addColorStop(0, "#192e83")
@@ -112,7 +112,7 @@ export class UiAudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndica
 
 		// draw a bar based on the current volume
 		let volumeBarSize = canvasHeight * level;
-		this.canvasContext.fillRect(canvasWidth - this._config.barWidth, canvasHeight - volumeBarSize, this._config.barWidth, volumeBarSize);
+		this.canvasContext.fillRect(canvasWidth - this.config.barWidth, canvasHeight - volumeBarSize, this.config.barWidth, volumeBarSize);
 
 		this.lastDrawingTimestamp = Date.now();
 	}

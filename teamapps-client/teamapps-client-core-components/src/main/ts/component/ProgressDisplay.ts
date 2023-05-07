@@ -42,8 +42,8 @@ export class ProgressDisplay extends AbstractComponent<DtoProgressDisplay> imple
 	private $cancelButton: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: DtoProgressDisplay, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoProgressDisplay) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="ProgressDisplay">
 			<div class="title">

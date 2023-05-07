@@ -25,13 +25,12 @@ import {
 	exitFullScreen,
 	generateUUID,
 	isFullScreen,
-	parseHtml,
+	parseHtml, prependChild,
 	TeamAppsEvent,
 	TeamAppsUiContext, Template
 } from "teamapps-client-core";
 import {Toolbar} from "./Toolbar";
 import {AbstractToolContainer} from "../AbstractToolContainer";
-import {prependChild} from "../../../Common";
 import {createDtoDropDownButtonClickInfo, DtoDropDownButtonClickInfo, DtoGridTemplate} from "../../../generated";
 
 export class ToolbarButton {
@@ -51,7 +50,7 @@ export class ToolbarButton {
 	private uuidClass: string = `DtoToolbarButton-${generateUUID()}`;
 	private $styleTag: HTMLStyleElement;
 
-	constructor(public config: DtoToolbarButton, private context: TeamAppsUiContext) {
+	constructor(public config: DtoToolbarButton) {
 		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.buttonId}">
 	<div class="toolbar-button-caret ${config.hasDropDown ? '' : 'hidden'}">
 	  <div class="caret"></div>

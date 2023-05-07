@@ -40,7 +40,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 	private checkColor: string;
 	private borderColor: string;
 
-	protected initialize(config: DtoCheckBox, context: TeamAppsUiContext) {
+	protected initialize(config: DtoCheckBox) {
 		const uuid = "cb-" + generateUUID();
 		this.$main = parseHtml(`<div class="CheckBox">
 				<style></style>

@@ -33,8 +33,8 @@ export class UiGauge extends AbstractComponent<DtoGauge> implements UiGaugeComma
 	private gauge: LinearGauge;
 	private value: number;
 
-	constructor(config: DtoGauge, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoGauge) {
+		super(config);
 		this.$main = parseHtml(`<div class="UiGauge" data-teamapps-id="${this.getId()}"><canvas></canvas></div>`);
 		this.value = config.options.value;
 		this.createGauge();
@@ -43,9 +43,9 @@ export class UiGauge extends AbstractComponent<DtoGauge> implements UiGaugeComma
 	@executeWhenFirstDisplayed()
 	private createGauge() {
 		if (this.getWidth() > 0 && this.getHeight() > 0) {
-			let options = this.createOptions(this._config.options);
+			let options = this.createOptions(this.config.options);
 			options.renderTo = this.$main.querySelector<HTMLElement>(":scope canvas");
-			if (this._config.options.linearGauge) {
+			if (this.config.options.linearGauge) {
 				this.gauge = new LinearGauge(options);
 			} else {
 				this.gauge = new RadialGauge(options);

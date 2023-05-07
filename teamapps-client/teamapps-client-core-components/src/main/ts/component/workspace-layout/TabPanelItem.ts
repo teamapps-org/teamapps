@@ -62,7 +62,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 
 	private _state: DtoViewGroupPanelState = DtoViewGroupPanelState.NORMAL;
 
-	constructor(id: string, persistent: boolean, parent: SplitPaneItem, private context: TeamAppsUiContext) {
+	constructor(id: string, persistent: boolean, parent: SplitPaneItem) {
 		this.id = id;
 		this.persistent = persistent;
 		this.parent = parent;
@@ -72,7 +72,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 			id: uuid,
 			hideTabBarIfSingleTab: true,
 			tabStyle: DtoTabPanelTabStyle.EARS
-		}, context);
+		});
 		this.component.setWindowButtons(this.createWindowButtonList());
 		this.component.onWindowButtonClicked.addListener(eventObject => {
 			if (eventObject.windowButton === DtoWindowButtonType.MINIMIZE) {
@@ -197,7 +197,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	}
 
 	private updateMinimizedButton() {
-		let iconSize = this.context.config.optimizedForTouch ? 16 : 12;
+		let iconSize = 12; // TODO this.context.config.optimizedForTouch ? 16 : 12
 		this.$minimizedTrayButton.innerHTML = '';
 		// noinspection CssUnknownTarget
 		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize} ta-icon-window-restore"></div>`));

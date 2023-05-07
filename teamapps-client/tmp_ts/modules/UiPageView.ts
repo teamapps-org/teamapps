@@ -57,8 +57,8 @@ export class UiPageView extends AbstractComponent<DtoPageView> {
 	private $component: HTMLElement;
 	private rows: Row[] = [];
 
-	constructor(config: DtoPageView, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoPageView) {
+		super(config);
 		this.$component = parseHtml(`<div class="UiPageView"></div>`);
 
 		if (config.blocks) {
@@ -95,7 +95,7 @@ export class UiPageView extends AbstractComponent<DtoPageView> {
     <div class="background-color-div"></div>
 </div>`);
 		let $blockContentContainer = $blockWrapper.querySelector<HTMLElement>(':scope .background-color-div');
-		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig, this._context) as AbstractBlockComponent<DtoPageViewBlock>;
+		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig) as AbstractBlockComponent<DtoPageViewBlock>;
 		$blockContentContainer.appendChild(block.getMainDomElement());
 		row.blocks.push({$blockWrapper, $blockContentContainer, block});
 
@@ -158,7 +158,7 @@ export class UiPageView extends AbstractComponent<DtoPageView> {
 }
 
 abstract class AbstractBlockComponent<C extends DtoPageViewBlock> {
-	constructor(protected config: C, protected context: TeamAppsUiContext) {
+	constructor(protected config: C) {
 	}
 
 	public getAlignment() {
@@ -190,8 +190,8 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<DtoMessagePageViewBl
 
 	private readonly minIdealImageHeight = 250;
 
-	constructor(config: DtoMessagePageViewBlock, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoMessagePageViewBlock) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="pageview-block UiMessagePageViewBlock">
 	<div class="tool-buttons"></div>
@@ -274,8 +274,8 @@ class UiCitationPageViewBlock extends AbstractBlockComponent<DtoCitationPageView
 	private $main: HTMLElement;
 	private $toolButtons: Element;
 
-	constructor(config: DtoCitationPageViewBlock, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoCitationPageViewBlock) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="pageview-block UiCitationPageViewBlock">
     <div class="tool-buttons"></div>
@@ -319,8 +319,8 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<DtoComponentPageVi
 	private $componentWrapper: HTMLElement;
 	private $toolButtons: Element;
 
-	constructor(config: DtoComponentPageViewBlock, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoComponentPageViewBlock) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="pageview-block UiComponentPageViewBlock" style="height:${config.height}px">
 	<div class="tool-buttons"></div>

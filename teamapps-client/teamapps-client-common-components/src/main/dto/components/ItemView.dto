@@ -1,0 +1,75 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
+
+import org.teamapps.dto.Component;
+import org.teamapps.dto.Template;
+import org.teamapps.dto.IdentifiableClientRecord;
+
+class ItemView extends Component {
+	Template* groupHeaderTemplate;
+	List<ItemViewItemGroup> itemGroups;
+	int horizontalPadding;
+	int verticalPadding;
+	int groupSpacing;
+	ItemViewItemBackgroundMode itemBackgroundMode;
+	String filter;
+
+	command setFilter(String filter);
+	command addItemGroup(ItemViewItemGroup itemGroup); // if a group with this id already exists, it is first removed.
+	command refreshItemGroup(ItemViewItemGroup itemGroup); // reconfigure in-place!
+	command removeItemGroup(String groupId);
+
+	command addItem(String groupId, IdentifiableClientRecord item);
+	command removeItem(String groupId, int itemId);
+
+	event itemClicked(String groupId, int itemId);
+}
+
+class ItemViewItemGroup {
+	String id;
+	required Template* itemTemplate;
+	IdentifiableClientRecord headerData;
+	List<IdentifiableClientRecord> items;
+	boolean headerVisible;
+	ItemViewFloatStyle floatStyle; // if true, the buttons are placed one
+	double buttonWidth; // -1: use natural width, 0: full width, 0<x<1: relative width, >=1: fixed width
+	int horizontalPadding;
+	int verticalPadding;
+	int horizontalItemMargin;
+	int verticalItemMargin;
+	ItemJustification itemJustification;
+}
+
+enum ItemViewItemBackgroundMode {
+	LIGHT, OPAQUE, DARK
+}
+
+enum ItemViewFloatStyle {
+	VERTICAL_LIST, HORIZONTAL_FLOAT
+}
+
+enum ItemJustification {
+	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN, SPACE_EVENLY
+}
+
+enum VerticalItemAlignment {
+	TOP, CENTER, BOTTOM, STRETCH
+}

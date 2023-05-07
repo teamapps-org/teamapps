@@ -56,9 +56,8 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
-	constructor(config: DtoSplitPane,
-	            context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoSplitPane) {
+		super(config);
 		this.referenceChildSize = config.referenceChildSize;
 		this.sizePolicy = config.sizePolicy;
 		const firstChildContainerId = config.id + '_firstChildContainer';

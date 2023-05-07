@@ -38,8 +38,8 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 		});
 	}
 
-	constructor(config: C, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: C) {
+		super(config);
 	}
 
 	public static optimizeButtonWidth($buttonWrapper: HTMLElement, $button: HTMLElement, maxHeight: number): number {

@@ -56,15 +56,15 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 	private modal: boolean;
 	private modalBackgroundDimmingColor: string;
 
-	constructor(config: DtoWindow, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoWindow) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="Window">
 	<div class="panel-wrapper"></div>
 </div>`);
 		this.$panelWrapper = this.$main.querySelector<HTMLElement>(":scope >.panel-wrapper");
 
-		this.panel = new Panel(config, context);
+		this.panel = new Panel(config);
 		this.$panelWrapper.appendChild(this.panel.getMainElement());
 
 		if (config.closeable) {

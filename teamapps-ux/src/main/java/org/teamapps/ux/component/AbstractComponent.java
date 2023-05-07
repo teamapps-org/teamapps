@@ -27,6 +27,7 @@ import org.teamapps.dto.DtoGlobals;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.ux.session.Globals;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.*;
@@ -67,15 +68,15 @@ public abstract class AbstractComponent implements Component {
 		return new ProjectorEvent<>(hasListeners -> toggleEventListening(qualifiedEventName, hasListeners));
 	}
 
-	protected void toggleEventListening(String name, boolean listen) {
+	protected void toggleEventListening(String name, boolean shouldListen) {
 		boolean changed;
-		if (listen) {
+		if (shouldListen) {
 			changed = listeningEventNames.add(name);
 		} else {
 			changed = listeningEventNames.remove(name);
 		}
 		if (changed) {
-			sendGlobalStaticCommandIfRendered(() -> new DtoGlobals.ToggleEventListeningCommand(null, getId(), name, listen));
+			sendGlobalStaticCommandIfRendered(() -> new DtoGlobals.ToggleEventListeningCommand(null, getId(), name, shouldListen));
 		}
 	}
 
@@ -102,8 +103,13 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
+	/**
+	 * @deprecated destroys and rerenders this component on the client side. This might have strange side effects if client-side components
+	 * interact with each other (e.g. by directly listening to events on the client side). Try to avoid making use of this method
+	 * at any cost. It will be removed in a later version of Projector.
+	 */
 	@Deprecated
-	public void reRenderIfRendered() {
+	protected void reRenderIfRendered() {
 			sendGlobalStaticCommandIfRendered(() -> new DtoGlobals.RefreshComponentCommand(createDto()));
 	}
 
@@ -111,9 +117,9 @@ public abstract class AbstractComponent implements Component {
 		SessionContext sessionContext = getSessionContext();
 		if (sessionContext.isRendering(this)) {
 			// wait until finished rendering for sending this command!
-			sessionContext.runWithContext(() -> sessionContext.sendStaticCommand(null, commandSupplier.get()), false);
+			sessionContext.runWithContext(() -> sessionContext.sendStaticCommand(Globals.class, commandSupplier.get()), true);
 		} else if (sessionContext.isRendered(this)) {
-			sessionContext.sendStaticCommand(null, commandSupplier.get());
+			sessionContext.sendStaticCommand(Globals.class, commandSupplier.get());
 		}
 	}
 

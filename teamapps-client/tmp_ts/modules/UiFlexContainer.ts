@@ -33,8 +33,8 @@ export class UiFlexContainer extends AbstractComponent<DtoFlexContainer> impleme
 	private $main: HTMLDivElement;
 	private components: UiComponent[] = [];
 
-	constructor(config: DtoFlexContainer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoFlexContainer) {
+		super(config);
 		this.$main = parseHtml(`<div class="UiFlexContainer"></div>`);
 		this.$main.style.flexDirection = config.flexDirection;
 		this.$main.style.alignItems = config.alignItems;

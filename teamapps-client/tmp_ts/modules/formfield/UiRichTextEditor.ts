@@ -135,8 +135,8 @@ export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> impleme
 	private $spinnerWrapper: HTMLElement;
 	private destroying: boolean;
 
-	protected initialize(config: DtoRichTextEditor, context: TeamAppsUiContext) {
-		this._config.toolbarVisibilityMode = config.toolbarVisibilityMode;
+	protected initialize(config: DtoRichTextEditor) {
+		this.config.toolbarVisibilityMode = config.toolbarVisibilityMode;
 		this.setMaxImageFileSizeInBytes(config.maxImageFileSizeInBytes);
 		this.setUploadUrl(config.uploadUrl);
 
@@ -182,7 +182,7 @@ export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> impleme
 
 	@executeWhenFirstDisplayed()
 	private initTinyMce() {
-		const translationFileName = UiRichTextEditor.TRANSLATION_FILES[this._config.locale];
+		const translationFileName = UiRichTextEditor.TRANSLATION_FILES[this.config.locale];
 		tinymce.init({
 			// theme: 'mobile',
 			// skin: 'oxide',
@@ -196,8 +196,8 @@ export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> impleme
 			branding: false,
 			menubar: false,
 			inline: true,
-			toolbar: `undo redo | styleselect | bold italic underline forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | ${this._config.imageUploadEnabled ? 'insertimage' : ''} table | overflowbutton`,
-			plugins: `lists table link autolink contextmenu searchreplace textcolor ${this._config.imageUploadEnabled ? 'image imagetools' : ''}`,
+			toolbar: `undo redo | styleselect | bold italic underline forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | ${this.config.imageUploadEnabled ? 'insertimage' : ''} table | overflowbutton`,
+			plugins: `lists table link autolink contextmenu searchreplace textcolor ${this.config.imageUploadEnabled ? 'image imagetools' : ''}`,
 			contextmenu: "openlink link unlink searchreplace",
 			language_url: translationFileName != null ? "/runtime-resources/tinymce/langs/" + translationFileName : undefined,
 			entity_encoding: "raw",
@@ -321,7 +321,7 @@ export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> impleme
 					icon: 'numlist',
 					onAction: () => editor.execCommand('InsertOrderedList')
 				});
-				if (this._config.imageUploadEnabled) {
+				if (this.config.imageUploadEnabled) {
 					editor.ui.registry.addMenuItem('insertimage', {
 						icon: 'image',
 						text: 'Insert image',
@@ -517,7 +517,7 @@ export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> impleme
 	private updateToolbar() { // both visibility and content (+overflow) are updated on show()
 		if (this.editor != null) {
 			if (this.isEditable() &&
-				(this._config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE || (this._config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED && this.hasFocus()))) {
+				(this.config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE || (this.config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED && this.hasFocus()))) {
 				this.editor.ui.show();
 			} else {
 				this.editor.ui.hide();
@@ -530,7 +530,7 @@ export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> impleme
 	}
 
 	setToolbarVisibilityMode(toolbarVisibilityMode: UiToolbarVisibilityMode): void {
-		this._config.toolbarVisibilityMode = toolbarVisibilityMode;
+		this.config.toolbarVisibilityMode = toolbarVisibilityMode;
 		this.updateToolbar();
 	}
 

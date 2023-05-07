@@ -33,12 +33,11 @@ export class LinkButton extends AbstractComponent<DtoLinkButton> implements DtoL
 	
 	private readonly $main: HTMLAnchorElement;
 
-	constructor(config: DtoLinkButton, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoLinkButton) {
+		super(config);
 		this.$main = parseHtml(`<a class="LinkButton" tabindex="0"></a>`)
 		this.$main.addEventListener("click", ev => {
 			if (this.config.onClickJavaScript != null) {
-				let context = this._context; // make context available in evaluated javascript
 				eval(this.config.onClickJavaScript);
 			}
 			this.onClicked.fire({});

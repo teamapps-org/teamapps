@@ -23,7 +23,7 @@ import {AbstractComponent, DtoComponent} from "teamapps-client-core";
 export class ElementUiComponentAdapter extends AbstractComponent<DtoComponent> {
 
 	constructor(private element: HTMLElement) {
-		super({_type: "ElementUiComponentAdapter", id: ""}, null);
+		super({});
 	}
 
 	doGetMainElement(): HTMLElement {

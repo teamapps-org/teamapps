@@ -69,7 +69,7 @@ export class UiSimpleFileField extends UiField<DtoSimpleFileField, DtoFileItem[]
 	private uploadErrorMessage: string;
 	private uploadUrl: string;
 
-	protected initialize(config: DtoSimpleFileField, context: TeamAppsUiContext): void {
+	protected initialize(config: DtoSimpleFileField): void {
 		this.fileItems = {};
 
 		this.$main = parseHtml(`<div class="UiSimpleFileField drop-zone form-control field-border field-border-glow field-background">
@@ -183,7 +183,7 @@ export class UiSimpleFileField extends UiField<DtoSimpleFileField, DtoFileItem[]
 	}
 
 	addFileItem(itemConfig: DtoFileItem, state: FileItemState = FileItemState.DONE): void {
-		const fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state, this._context);
+		const fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state);
 		this.fileItems[itemConfig.uuid] = fileItem;
 		this.$fileList.appendChild(fileItem.getMainDomElement());
 	}
@@ -285,7 +285,7 @@ export class UiSimpleFileField extends UiField<DtoSimpleFileField, DtoFileItem[]
 	private createUploadFileItem() {
 		let fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, {
 			uuid: generateUUID()
-		}, FileItemState.INITIATING, this._context);
+		}, FileItemState.INITIATING);
 		fileItem.onClick.addListener(() => {
 			this.onFileItemClicked.fire({
 				fileItemUuid: fileItem.uuid

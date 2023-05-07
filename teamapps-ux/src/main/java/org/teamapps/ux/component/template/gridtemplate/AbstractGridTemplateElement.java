@@ -21,9 +21,9 @@ package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoAbstractGridTemplateElement;
-import org.teamapps.ux.component.format.HorizontalElementAlignment;
-import org.teamapps.ux.component.format.Spacing;
-import org.teamapps.ux.component.format.VerticalElementAlignment;
+import org.teamapps.ux.format.HorizontalElementAlignment;
+import org.teamapps.ux.format.Spacing;
+import org.teamapps.ux.format.VerticalElementAlignment;
 
 import java.util.Collections;
 import java.util.List;

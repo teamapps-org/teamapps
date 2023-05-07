@@ -54,8 +54,8 @@ export class UiVideoPlayer extends AbstractComponent<DtoVideoPlayer> implements 
 	private autoplay: boolean;
 	private playState: "initial" | "playing" | "paused" = "initial";
 
-	constructor(config: DtoVideoPlayer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoVideoPlayer) {
+		super(config);
 
 		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
 		let preload = `${config.preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : config.preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`;

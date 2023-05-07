@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, insertAfter, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
-import {defaultSpinnerTemplate, doOnceOnClickOutsideElement, insertAfter} from "../../../Common";
+import {defaultSpinnerTemplate, doOnceOnClickOutsideElement} from "../../../Common";
 import {
 	createDtoDropDownButtonClickInfo,
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
@@ -46,8 +46,8 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 	private $mainDomElement: HTMLElement;
 	private $backgroundColorDiv: HTMLElement;
 
-	constructor(config: DtoToolAccordion, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoToolAccordion) {
+		super(config);
 
 		this.$mainDomElement = parseHtml(`<div class="ToolAccordion teamapps-blurredBackgroundImage"></div>`);
 		this.$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
@@ -68,7 +68,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 	}
 
 	private createButtonGroup(buttonGroupConfig: DtoToolbarButtonGroup): DtoButtonGroup {
-		return new DtoButtonGroup(buttonGroupConfig, this, this._context, AbstractToolContainer.$sizeTestingContainer);
+		return new DtoButtonGroup(buttonGroupConfig, this, AbstractToolContainer.$sizeTestingContainer);
 	}
 
 	public setButtonHasDropDown(groupId: string, buttonId: string, hasDropDown: boolean): void {
@@ -171,7 +171,7 @@ class DtoButtonGroup {
 	private $buttonRows: HTMLElement[] = [];
 	private enforcedButtonWidth: number = 1;
 
-	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolAccordion: ToolAccordion, private context: TeamAppsUiContext, private $sizeTestingContainer: HTMLElement) {
+	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolAccordion: ToolAccordion, private $sizeTestingContainer: HTMLElement) {
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
 		const $buttonGroup = parseHtml(`<div class="toolbar-button-group" id="${this.toolAccordionId}_${buttonGroupConfig.groupId}">`);
@@ -197,7 +197,7 @@ class DtoButtonGroup {
 	}
 
 	private createButton(buttonConfig: DtoToolbarButton): ToolAccordionButton {
-		let button = new ToolAccordionButton(buttonConfig, this.context);
+		let button = new ToolAccordionButton(buttonConfig);
 
 		button.onClick.addListener(eventObject => {
 			let dropdownClickInfo: DtoDropDownButtonClickInfo = null;

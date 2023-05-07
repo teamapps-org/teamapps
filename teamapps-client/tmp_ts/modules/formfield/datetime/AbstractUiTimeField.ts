@@ -48,7 +48,7 @@ export abstract class DtoAbstractTimeField<C extends DtoAbstractTimeFieldConfig,
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected timeRenderer: (time: LocalDateTime) => string;
 
-	protected initialize(config: DtoAbstractTimeFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoAbstractTimeFieldConfig) {
 		let timeSuggestionEngine = new TimeSuggestionEngine();
 		this.timeRenderer = this.createTimeRenderer();
 
@@ -124,8 +124,8 @@ export abstract class DtoAbstractTimeField<C extends DtoAbstractTimeFieldConfig,
 	}
 
 	setLocaleAndTimeFormat(locale: string, timeFormat: DtoDateTimeFormatDescriptor): void {
-		this._config.locale = locale;
-		this._config.timeFormat = timeFormat;
+		this.config.locale = locale;
+		this.config.timeFormat = timeFormat;
 		this.timeRenderer = this.createTimeRenderer();
 		this.trivialComboBox.setValue(this.trivialComboBox.getValue());
 	}

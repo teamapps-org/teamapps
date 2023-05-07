@@ -130,8 +130,8 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: DtoNotification, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoNotification) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="Notification">
 	<div class="close-button"></div>
@@ -171,7 +171,7 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 		}
 	}
 
-	public static showNotification(notification: Notification, position: DtoNotificationPosition, entranceAnimation: DtoEntranceAnimation, exitAnimation: DtoExitAnimation, context: TeamAppsUiContext) {
+	public static showNotification(notification: Notification, position: DtoNotificationPosition, entranceAnimation: DtoEntranceAnimation, exitAnimation: DtoExitAnimation) {
 		showNotification(notification, position, entranceAnimation, exitAnimation);
 	}
 

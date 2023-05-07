@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class TabPanel extends AbstractComponent implements Component {
 
 	public final ProjectorEvent<Tab> onTabSelected = createProjectorEventBoundToUiEvent(DtoTabPanel.TabSelectedEvent.TYPE_ID);

@@ -51,9 +51,8 @@ export class UiImageCropper extends AbstractComponent<DtoImageCropper> implement
 	private imageNaturalWidth: number = null;
 	private imageNaturalHeight: number = null;
 
-	constructor(config: DtoImageCropper,
-				context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoImageCropper) {
+		super(config);
 
 		this.$element = parseHtml(`<div data-id="' + config.id + '" class="UiImageCropper">
     <img></img>
@@ -206,7 +205,7 @@ export class UiImageCropper extends AbstractComponent<DtoImageCropper> implement
 		return boundSelection(selection, {
 			width: this.imageNaturalWidth,
 			height: this.imageNaturalHeight
-		}, this._config.aspectRatio, fixedAt);
+		}, this.config.aspectRatio, fixedAt);
 	}
 
 	private calculateCoordinateCorrectionFactor() {
@@ -221,7 +220,7 @@ export class UiImageCropper extends AbstractComponent<DtoImageCropper> implement
 	}
 
 	setAspectRatio(aspectRatio: number): void {
-		this._config.aspectRatio = aspectRatio;
+		this.config.aspectRatio = aspectRatio;
 		// $(this.$selectionFrame).resizable("option", "aspectRatio", aspectRatio);      TODO
 		this.resetSelectionFrame(aspectRatio);
 	}

@@ -50,8 +50,8 @@ export class UiTree extends AbstractComponent<DtoTree> implements UiTreeCommandH
 	private templateRenderers: { [name: string]: Renderer };
 
 
-	constructor(config: DtoTree, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoTree) {
+		super(config);
 		this.$panel = parseHtml('<div class="UiTree">');
 
 		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
@@ -120,10 +120,6 @@ export class UiTree extends AbstractComponent<DtoTree> implements UiTreeCommandH
 
 	public setSelectedNode(recordId: number | null): void {
 		this.trivialTree.selectNodeById(recordId);
-	}
-
-	registerTemplate(id: string, template: DtoTemplate): void {
-		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
 }

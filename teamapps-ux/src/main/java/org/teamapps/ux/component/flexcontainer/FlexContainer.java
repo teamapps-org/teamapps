@@ -22,7 +22,7 @@ package org.teamapps.ux.component.flexcontainer;
 import org.teamapps.dto.DtoFlexContainer;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.css.CssAlignItems;
@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class FlexContainer extends AbstractComponent {
 
 	private List<Component> components = new ArrayList<>();

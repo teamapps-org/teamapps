@@ -1,0 +1,235 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+@import (less) "../node_modules/@fullcalendar/core/main.css";
+@import (less) "../node_modules/@fullcalendar/daygrid/main.css";
+@import (less) "../node_modules/@fullcalendar/timegrid/main.css";
+
+.Calendar {
+
+  overflow: hidden;
+  position: relative;
+  
+  > .calendar {
+    height: 100%;
+
+    .fc-toolbar {
+      margin-bottom: 3px;
+    }
+
+    .fc-view-container {
+      overflow: hidden;
+    }
+
+    &.table-border .fc-view-container {
+      border: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    .fc-icon-left-single-arrow:after,
+    .fc-icon-right-single-arrow:after {
+      top: -1px;
+      left: -2px;
+    }
+
+    .fc-icon:after {
+      position: relative;
+      margin: 0;
+    }
+
+    th.fc-week-number.fc-widget-header,
+    th.fc-day-header.fc-widget-header {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    .fc-event-container {
+      margin: 0 0 0 0 !important;
+    }
+
+    .fc-day-grid-event {
+      margin: 1px 0 0 0 !important;
+    }
+
+    .fc-day-header, .fc-week-number {
+      background-color: transparent;
+    }
+
+    .fc-day-header a,
+    .fc-week-number a,
+    .fc-day-number {
+      color: var(--ta-text-color);
+    }
+
+    th,
+    td,
+    thead,
+    tbody,
+    .fc-divider,
+    .fc-row,
+    .fc-popover
+    {
+      border-color: var(--ta-calendar-grid-border-color);
+    }
+
+    .fc-divider {
+      background-color: transparent;
+    }
+
+    .fc-nonbusiness {
+      background-color: var(--ta-calendar-grid-non-business-bg-color);
+    }
+
+    .fc-row.fc-week.fc-widget-content {
+      overflow: hidden;
+    }
+
+    .fc-row.fc-widget-header {
+      font-size: 15px;
+      position: relative;
+    }
+
+    .fc-agenda-view .fc-week-number,
+    .fc-agenda-view .fc-axis {
+      border-right-width: 2px !important;
+    }
+
+    .fc-week-number,
+    .fc-day-number,
+    .fc-widget-header,
+    .fc-axis {
+      font-weight: var(--ta-font-weight-light);
+    }
+
+    .fc-head .fc-widget-header {
+      border-top-width: 0;
+      border-right-width: 0;
+    }
+
+    td.fc-widget-header,
+    td.fc-week-number {
+      border-left-width: 0 !important;
+    }
+
+    .fc-body > * > td.fc-widget-content {
+      border-width: 0px;
+    }
+
+    .fc-bg {
+      background-color: transparent;
+    }
+
+    .fc-today {
+      //box-shadow: inset 0 0 0 2px orange;
+      //border-width: 0 0 0 1px;
+      background-color: rgba(240, 220, 78, 0.2);
+    }
+
+    .fc-day-number {
+      padding-right: 3px;
+      float: none !important;
+    }
+
+    .fc-day-top {
+      padding: 2px;
+    }
+
+    .fc-day-top, .fc-week-number {
+      font-size: 15px;
+    }
+
+    .fc-day-grid {
+      .fc-not-end {
+        clip-path: polygon(0 0, 100% 0, calc(100% - 4px) 25%, 100% 50%, calc(100% - 4px) 75%, 100% 100%, 0 100%);
+      }
+
+      .fc-not-start {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 4px 75%, 0% 50%, 4px 25%);
+      }
+
+      .fc-not-start.fc-not-end {
+        clip-path: polygon(0 0, 100% 0, calc(100% - 4px) 25%, 100% 50%, calc(100% - 4px) 75%, 100% 100%, 0 100%, 4px 75%, 0% 50%, 4px 25%);
+      }
+    }
+
+    .fc-time-grid {
+      .fc-not-end {
+        clip-path: polygon(0 0, 0 100%, 16.6% calc(100% - 4px), 33.3% 100%, 50% calc(100% - 4px), 66.6% 100% , 83.3% calc(100% - 4px), 100% 100%, 100% 0);
+      }
+
+      .fc-not-start {
+        clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0, 83.3% 4px, 66.6% 0, 50% 4px, 33.3% 0, 16.6% 4px);
+      }
+
+      .fc-not-start.fc-not-end {
+        clip-path: polygon(0 0, 0 100%, 16.6% calc(100% - 4px), 33.3% 100%, 50% calc(100% - 4px), 66.6% 100% , 83.3% calc(100% - 4px), 100% 100%, 100% 0, 83.3% 4px, 66.6% 0, 50% 4px, 33.3% 0, 16.6% 4px);
+      }
+
+      .fc-event .fc-time {
+        display: inline-block;
+      }
+    }
+
+    .fc-h-event.fc-allow-mouse-resize .fc-resizer {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      &:after {
+        content: 'ǁ';
+        display: block;
+        position: relative;
+        left: -2px;
+      }
+    }
+  }
+}
+
+.fc-event {
+  border-radius: 0;
+  overflow: hidden;
+  font-size: 1em;
+
+  .fc-time {
+    font-weight: 500;
+  }
+
+  .fc-icon {
+    margin-top: 1px;
+  }
+
+  &.template-content .fc-content {
+    padding: 0;
+  }
+}
+
+.fc-day-grid-event, .fc-time-grid-event {
+  .fc-icon {
+    margin-right: 2px;
+  }
+}
+
+.fc-content {
+  padding: 0 2px;
+}
+
+.fc-event.all-day {
+  border-left-width: 3px;
+}
+
+@import "FullCalendarMonthGrid";
+

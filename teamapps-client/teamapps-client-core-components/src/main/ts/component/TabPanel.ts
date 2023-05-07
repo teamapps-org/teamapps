@@ -37,7 +37,8 @@ import {
 	DtoTabPanelTabStyle,
 	DtoWindowButtonType
 } from "../generated";
-import {insertBefore, maximizeComponent, prependChild} from "../Common";
+import {maximizeComponent} from "../Common";
+import {insertBefore, prependChild} from "teamapps-client-core";
 import {StaticIcons} from "../util/StaticIcons";
 import {positionDropdown, positionDropdownWithAutoUpdate} from "../util/dropdownPosition";
 import {contentWidth} from "../util/cssUtil";
@@ -67,9 +68,9 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "tab-button-minimize", iconSize: 16}), this._context),
-		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "tab-button-maximize", iconSize: 16}), this._context),
-		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "tab-button-close", iconSize: 16}), this._context),
+		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "tab-button-minimize", iconSize: 16})),
+		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "tab-button-maximize", iconSize: 16})),
+		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "tab-button-close", iconSize: 16})),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		DtoWindowButtonType.MINIMIZE,
@@ -102,8 +103,8 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: DtoTabPanel, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoTabPanel) {
+		super(config);
 
 		this.$tabPanel = parseHtml(`<div class="TabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">
@@ -270,7 +271,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 
 		if (closeable) {
 			let closeButtonHtml = `<div class="tab-button-close-button">
-                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'} ta-icon-window-close"></div>
+                        <div class="img img-12 ta-icon-window-close"></div>
                     </div>`;
 			const $closeButton1 = $tabButton.appendChild(parseHtml(closeButtonHtml));
 			$closeButton1.addEventListener("mousedown", () => {
@@ -430,7 +431,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 
 	private selectFirstVisibleTab() {
 		if (this.getVisibleTabs().length > 0) {
-			this.selectTab(this.getVisibleTabs()[0].config.tabId, true); // was !this._context.executingCommand
+			this.selectTab(this.getVisibleTabs()[0].config.tabId, true);
 		} else if (this.selectedTab != null) {
 			this.selectedTab = null;
 			this.onTabSelected.fire({

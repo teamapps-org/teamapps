@@ -43,8 +43,8 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 	private minDropDownHeight: number;
 	private openDropDownIfNotSet: boolean;
 
-	constructor(config: DtoToolButton, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoToolButton) {
+		super(config);
 
 		this.minDropDownWidth = config.minDropDownWidth;
 		this.minDropDownHeight = config.minDropDownHeight;

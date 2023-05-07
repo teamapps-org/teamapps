@@ -23,10 +23,10 @@ import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoIFrame;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class IFrame extends AbstractComponent {
 
 	private String url;

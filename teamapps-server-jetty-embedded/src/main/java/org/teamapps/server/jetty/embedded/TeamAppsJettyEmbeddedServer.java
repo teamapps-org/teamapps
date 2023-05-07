@@ -35,7 +35,6 @@ import java.util.List;
 
 public class TeamAppsJettyEmbeddedServer {
 
-	private final TeamAppsCore teamAppsCore;
 	private final Server server;
 	private final WebAppContext webapp;
 
@@ -44,7 +43,6 @@ public class TeamAppsJettyEmbeddedServer {
 	}
 
 	TeamAppsJettyEmbeddedServer(TeamAppsCore teamAppsCore, int port, ResourceProvider baseResourceProvider, List<ServletContextListener> additionalServletContextListeners) {
-		this.teamAppsCore = teamAppsCore;
 		server = new Server(port);
 		webapp = new WebAppContext();
 		webapp.setClassLoader(TeamAppsJettyEmbeddedServer.class.getClassLoader());
@@ -69,10 +67,6 @@ public class TeamAppsJettyEmbeddedServer {
 
 	public WebAppContext getWebapp() {
 		return webapp;
-	}
-
-	public TeamAppsCore getTeamAppsCore() {
-		return teamAppsCore;
 	}
 
 	public void start() throws Exception {

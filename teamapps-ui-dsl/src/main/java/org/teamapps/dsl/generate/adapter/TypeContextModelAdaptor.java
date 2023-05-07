@@ -30,7 +30,8 @@ import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+
+import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.*;
 
 public class TypeContextModelAdaptor extends PojoModelAdaptor<TypeContext> {
 
@@ -125,7 +126,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor<TypeContext> {
 				throw new IllegalArgumentException(context.getText() + " is not a primitive type!");
 			}
 		} else if ("isUiClientObjectReferenceOrCollectionOfThese".equals(propertyName)) {
-			return isUiClientObjectReferenceOrCollectionOfThese(context);
+			return isClientObjectReferenceOrCollectionOfThese(context);
 		} else if ("objectType".equals(propertyName)) {
 			if (isPrimitiveType(context)) {
 				return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(context.getText());
@@ -196,7 +197,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor<TypeContext> {
 		return typeContext.typeReference() != null && typeContext.typeReference().referenceTypeModifier() != null;
 	}
 
-	private boolean isUiClientObjectReferenceOrCollectionOfThese(TypeContext typeContext) {
+	private boolean isClientObjectReferenceOrCollectionOfThese(TypeContext typeContext) {
 		while (typeContext != null) {
 			if (isUiClientObjectReference(typeContext)) {
 				return true;
@@ -224,19 +225,6 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor<TypeContext> {
 		} else {
 			return typeContext.getText();
 		}
-	}
-
-	private boolean isObject(TypeContext typeContext) {
-		return typeContext.typeReference() != null && Set.of("Object", "java.lang.Object").contains(typeContext.typeReference().typeName().getText());
-	}
-
-	private boolean isList(TypeContext typeContext) {
-		return typeContext.typeReference() != null && Set.of("List", "java.util.List").contains(typeContext.typeReference().typeName().getText());
-	}
-
-	private boolean isDictionary(TypeContext typeContext) {
-		return typeContext.typeReference() != null
-				&& ("Dictionary".equals(typeContext.typeReference().typeName().getText()));
 	}
 
 	private TypeContext getFirstTypeArgument(TypeContext typeContext) {

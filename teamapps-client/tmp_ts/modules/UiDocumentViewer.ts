@@ -49,8 +49,8 @@ export class UiDocumentViewer extends AbstractComponent<DtoDocumentViewer> imple
 	private pageSpacing: number;
 	private pageShadow: DtoShadow;
 
-	constructor(config: DtoDocumentViewer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoDocumentViewer) {
+		super(config);
 
 		this.uuidClass = `UiDocumentViewer-${generateUUID()}`;
 
@@ -117,8 +117,8 @@ export class UiDocumentViewer extends AbstractComponent<DtoDocumentViewer> imple
 	}
 
 	private updateImageSizes() {
-		let viewPortWidth = $(this.$pagesContainerWrapper).width() - 2 * this._config.padding;
-		let viewPortHeight = $(this.$pagesContainerWrapper).height() - 2 * this._config.padding;
+		let viewPortWidth = $(this.$pagesContainerWrapper).width() - 2 * this.config.padding;
+		let viewPortHeight = $(this.$pagesContainerWrapper).height() - 2 * this.config.padding;
 		let viewPortAspectRatio = viewPortWidth / viewPortHeight;
 
 		this.pages.forEach((p) => {

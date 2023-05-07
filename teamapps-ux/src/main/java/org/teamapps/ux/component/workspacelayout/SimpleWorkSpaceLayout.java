@@ -19,11 +19,11 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class SimpleWorkSpaceLayout extends WorkSpaceLayout {
 
 	private final WorkSpaceLayoutViewGroup leftViewGroup;

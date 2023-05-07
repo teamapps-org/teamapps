@@ -21,18 +21,19 @@ package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
-import org.teamapps.ux.component.format.Border;
-import org.teamapps.ux.component.format.SizeType;
-import org.teamapps.ux.component.format.SizingPolicy;
-import org.teamapps.ux.component.format.Spacing;
-import org.teamapps.ux.component.grid.layout.GridColumn;
-import org.teamapps.ux.component.grid.layout.GridRow;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.format.Border;
+import org.teamapps.ux.format.SizeType;
+import org.teamapps.ux.format.SizingPolicy;
+import org.teamapps.ux.format.Spacing;
 import org.teamapps.ux.component.template.AbstractTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class GridTemplate extends AbstractTemplate {
 
 	private int minWidth = 0;

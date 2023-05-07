@@ -42,8 +42,8 @@ export class UiAbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> imple
 	private $style: HTMLStyleElement;
 	private components: DtoAbsolutePositionedComponent[];
 
-	constructor(config: DtoAbsoluteLayout, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoAbsoluteLayout) {
+		super(config);
 		this.$main = parseHtml(`<div class="UiAbsoluteLayout" data-teamapps-id="${this.getId()}">
 	<style></style>
 </div>`);

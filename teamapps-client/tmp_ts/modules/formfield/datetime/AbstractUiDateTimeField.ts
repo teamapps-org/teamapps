@@ -38,7 +38,7 @@ export abstract class DtoAbstractDateTimeField<C extends DtoAbstractDateTimeFiel
 	protected dateRenderer: (time: DateTime) => string;
 	protected timeRenderer: (time: DateTime) => string;
 
-	protected initialize(config: DtoAbstractDateTimeFieldConfig, context: TeamAppsUiContext) {
+	protected initialize(config: DtoAbstractDateTimeFieldConfig) {
 		this.updateDateSuggestionEngine();
 		this.dateRenderer = this.createDateRenderer();
 		this.timeRenderer = this.createTimeRenderer();
@@ -63,25 +63,25 @@ export abstract class DtoAbstractDateTimeField<C extends DtoAbstractDateTimeFiel
 	protected abstract getTimeZone(): string;
 
 	protected createDateRenderer(): (time: DateTime) => string {
-		return createDateRenderer(this._config.locale, this._config.dateFormat);
+		return createDateRenderer(this.config.locale, this.config.dateFormat);
 	}
 
 	protected createTimeRenderer(): (time: DateTime) => string {
-		return createTimeRenderer(this._config.locale, this._config.timeFormat);
+		return createTimeRenderer(this.config.locale, this.config.timeFormat);
 	}
 
 	protected dateTimeToDateString(dateTime: DateTime): string {
-		return dateTime.setLocale(this._config.locale).toLocaleString(this._config.dateFormat);
+		return dateTime.setLocale(this.config.locale).toLocaleString(this.config.dateFormat);
 	}
 
 	protected dateTimeToTimeString(dateTime: DateTime): string {
-		return dateTime.setLocale(this._config.locale).toLocaleString(this._config.timeFormat);
+		return dateTime.setLocale(this.config.locale).toLocaleString(this.config.timeFormat);
 	}
 
 	private updateDateSuggestionEngine() {
 		this.dateSuggestionEngine = new DateSuggestionEngine({
-			locale: this._config.locale,
-			favorPastDates: this._config.favorPastDates
+			locale: this.config.locale,
+			favorPastDates: this.config.favorPastDates
 		});
 	}
 
@@ -120,9 +120,9 @@ export abstract class DtoAbstractDateTimeField<C extends DtoAbstractDateTimeFiel
 	}
 
 	setLocaleAndFormats(locale: string, dateFormat: DtoDateTimeFormatDescriptor, timeFormat: DtoDateTimeFormatDescriptor): void {
-		this._config.locale = locale;
-		this._config.dateFormat = dateFormat;
-		this._config.timeFormat = timeFormat;
+		this.config.locale = locale;
+		this.config.dateFormat = dateFormat;
+		this.config.timeFormat = timeFormat;
 		this.updateDateSuggestionEngine();
 		this.dateRenderer = this.createDateRenderer();
 		this.trivialDateTimeField.setLocaleAndFormats(locale, dateFormat, timeFormat);

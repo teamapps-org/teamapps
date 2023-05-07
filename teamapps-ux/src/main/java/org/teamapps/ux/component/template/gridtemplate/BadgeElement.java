@@ -22,10 +22,10 @@ package org.teamapps.ux.component.template.gridtemplate;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoBadgeElement;
-import org.teamapps.ux.component.format.FontStyle;
-import org.teamapps.ux.component.format.HorizontalElementAlignment;
-import org.teamapps.ux.component.format.Spacing;
-import org.teamapps.ux.component.format.VerticalElementAlignment;
+import org.teamapps.ux.format.FontStyle;
+import org.teamapps.ux.format.HorizontalElementAlignment;
+import org.teamapps.ux.format.Spacing;
+import org.teamapps.ux.format.VerticalElementAlignment;
 
 public class BadgeElement extends TextElement {
 

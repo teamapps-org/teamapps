@@ -41,7 +41,7 @@ export abstract class AbstractComponent<C extends DtoComponentConfig = DtoCompon
 
 	protected styleManager: StyleManager;
 
-	constructor(protected config: C, protected _context: TeamAppsUiContext) {
+	constructor(protected config: C) {
 		if (config.id == null) {
 			config.id = generateUUID();
 		}

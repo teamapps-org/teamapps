@@ -21,8 +21,8 @@ package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoIconElement;
-import org.teamapps.ux.component.format.HorizontalElementAlignment;
-import org.teamapps.ux.component.format.VerticalElementAlignment;
+import org.teamapps.ux.format.HorizontalElementAlignment;
+import org.teamapps.ux.format.VerticalElementAlignment;
 
 public class IconElement extends AbstractGridTemplateElement<IconElement> {
 

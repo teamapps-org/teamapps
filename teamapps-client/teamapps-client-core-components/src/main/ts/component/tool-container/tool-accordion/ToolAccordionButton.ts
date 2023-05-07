@@ -49,7 +49,7 @@ export class ToolAccordionButton {
 	private uuidClass: string = `DtoToolbarButton-${generateUUID()}`;
 	private $styleTag: HTMLStyleElement;
 
-	constructor(config: DtoToolbarButton, context: TeamAppsUiContext) {
+	constructor(config: DtoToolbarButton) {
 		this.config = config;
 		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.buttonId}" tabindex="0">
 	${(this.config.template as Template).render(config.recordData)}

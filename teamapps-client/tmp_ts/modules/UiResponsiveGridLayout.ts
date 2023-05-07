@@ -33,9 +33,8 @@ export class UiResponsiveGridLayout extends AbstractComponent<DtoResponsiveGridL
 	private layoutsFromSmallToLargeMinApplicableWidth: { minApplicableWidth: number, layout: UiGridLayout }[];
 	private currentLayout: UiGridLayout;
 
-	constructor(config: DtoResponsiveGridLayout,
-	            context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoResponsiveGridLayout) {
+		super(config);
 		this.$main = parseHtml(`<div class="UiResponsiveGridLayout">
 	<div class="UiGridLayout"></div>
 </div>`);

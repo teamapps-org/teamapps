@@ -21,15 +21,15 @@ package org.teamapps.projector.components.common.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoField;
+import org.teamapps.projector.components.common.dto.DtoField;
 import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.components.common.CommonComponentLibrary;
 import org.teamapps.projector.components.common.dto.DtoComboBoxTreeRecord;
 import org.teamapps.projector.components.common.dto.DtoTagComboBox;
 import org.teamapps.projector.components.common.model.ComboBoxModel;
 import org.teamapps.projector.components.common.tree.TreeNodeInfo;
 import org.teamapps.projector.components.common.tree.TreeNodeInfoExtractor;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.ux.component.CommonComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.template.Template;
 

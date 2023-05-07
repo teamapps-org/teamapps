@@ -29,7 +29,7 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 	private _firstChild: ItemTreeItem<Component>;
 	private _lastChild: ItemTreeItem<Component>;
 
-	constructor(id: string, parent: SplitPaneItem, splitDirection: DtoSplitDirection, sizePolicy: DtoSplitSizePolicy, firstChildRelativeSize: number, context: TeamAppsUiContext) {
+	constructor(id: string, parent: SplitPaneItem, splitDirection: DtoSplitDirection, sizePolicy: DtoSplitSizePolicy, firstChildRelativeSize: number) {
 		this.id = id;
 		this.parent = parent;
 		this.component = new SplitPane({
@@ -40,7 +40,7 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 			resizable: true,
 			fillIfSingleChild: true,
 			collapseEmptyChildren: true
-		}, context);
+		});
 	}
 
 	public get itemIds() {

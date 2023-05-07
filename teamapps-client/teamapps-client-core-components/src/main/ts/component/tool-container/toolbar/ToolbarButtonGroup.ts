@@ -20,12 +20,12 @@
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
 import {ToolbarButton} from "./ToolbarButton";
-import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, insertAfter, insertBefore, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {ButtonVisibilities, Toolbar} from "./Toolbar";
 import {DtoDropDownButtonClickInfo} from "../../../generated";
-import {insertAfter, insertBefore, outerWidthIncludingMargins} from "../../../Common";
+import {outerWidthIncludingMargins} from "../../../Common";
 
 export class ToolbarButtonGroup {
 	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: DtoDropDownButtonClickInfo}> = new TeamAppsEvent();
@@ -38,7 +38,7 @@ export class ToolbarButtonGroup {
 	private $separator: HTMLElement;
 	private buttonsShiftedToOverflowDropDown: ToolbarButton[] = [];
 
-	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolbar: Toolbar, private context: TeamAppsUiContext) {
+	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolbar: Toolbar) {
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
 		const $buttonGroup = parseHtml(`<div class="toolbar-button-group" id="${this.toolbarId}_${buttonGroupConfig.groupId}"></div>`);
@@ -79,7 +79,7 @@ export class ToolbarButtonGroup {
 	}
 
 	private createButton(buttonConfig: DtoToolbarButton) {
-		const button = new ToolbarButton(buttonConfig, this.context);
+		const button = new ToolbarButton(buttonConfig);
 		button.onClicked.addListener(dropDownButtonClickInfo => this.onButtonClicked.fire({buttonId: buttonConfig.buttonId, dropDownButtonClickInfo}));
 		return button;
 	}

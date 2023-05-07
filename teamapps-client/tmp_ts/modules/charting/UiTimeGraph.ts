@@ -114,8 +114,8 @@ export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements UiTi
 		return this.getAllSeries().reduce((sum, s) => sum + (s.getYAxis()?.getWidth() ?? 0), 0);
 	}
 
-	constructor(config: DtoTimeGraph, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoTimeGraph) {
+		super(config);
 
 		const me = this;
 		this.graphContext = {
@@ -176,7 +176,7 @@ export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements UiTi
 			formatYear = (dateTime: DateTime) => dateTime.toFormat("yyyy");
 
 		const multiFormat = (date: Date) => {
-			let dateTime = DateTime.fromJSDate(date).setZone(this._config.timeZoneId);
+			let dateTime = DateTime.fromJSDate(date).setZone(this.config.timeZoneId);
 			let formatter = dateTime.startOf("second") < dateTime ? formatMillisecond
 				: dateTime.startOf("minute") < dateTime ? formatSecond
 					: dateTime.startOf("hour") < dateTime ? formatMinute
@@ -184,7 +184,7 @@ export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements UiTi
 							: dateTime.startOf("month") < dateTime ? formatDay
 								: dateTime.startOf("year") < dateTime ? formatMonth
 									: formatYear;
-			return formatter(dateTime.setLocale(this._config.locale));
+			return formatter(dateTime.setLocale(this.config.locale));
 		}
 
 		this.xAxis.tickFormat(multiFormat);
@@ -254,7 +254,7 @@ export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements UiTi
 	}
 
 	private createGraph(lineFormat: DtoGraph): DtoAbstractGraph {
-		let display = UiTimeGraph.createDataDisplay(this._config.id, lineFormat, this.dropShadowFilterId, this.graphContext);
+		let display = UiTimeGraph.createDataDisplay(this.config.id, lineFormat, this.dropShadowFilterId, this.graphContext);
 		this.$graphClipContainer.node().appendChild(display.getMainSelection().node());
 		display.setYRange([this.drawableHeight, 0]);
 		if (display.getYAxis() != null) {

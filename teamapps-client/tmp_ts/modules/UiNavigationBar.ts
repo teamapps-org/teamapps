@@ -57,8 +57,8 @@ export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> impleme
 	private multiProgressDisplay: UiMultiProgressDisplay;
 	private $multiProgressDisplayContainer: HTMLElement;
 
-	constructor(config: DtoNavigationBar, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoNavigationBar) {
+		super(config);
 
 		this.buttonTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.buttonTemplate, null);
 

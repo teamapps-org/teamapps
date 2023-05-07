@@ -39,10 +39,12 @@
         <module>teamapps-client/teamapps-client-communication</module>
         <module>teamapps-client/teamapps-client-core</module>
         <module>teamapps-client/teamapps-client-core-components</module>
-        <module>teamapps-client/teamapps-client-common-components</module>
         <module>teamapps-ux</module>
+        <module>teamapps-client/projector-calendar</module>
+<!--        <module>teamapps-client/teamapps-client-common-components</module>-->
+<!--        <module>teamapps-session-stats-app</module>-->
         <module>teamapps-server-jetty-embedded</module>
-<!--        <module>teamapps-server-undertow-embedded</module>-->
+        <module>teamapps-server-undertow-embedded</module>
     </modules>
 
     <properties>
@@ -52,7 +54,7 @@
 
         <slf4j-version>1.7.36</slf4j-version>
         <jackson-version>2.13.2</jackson-version>
-        <jackson-version-patched>2.13.2.2</jackson-version-patched>
+        <jackson-version-patched>2.14.1</jackson-version-patched>
         <guava-version>31.1-jre</guava-version>
         <apache-commons-io>2.11.0</apache-commons-io>
         <junit.version>4.13.2</junit.version>
@@ -134,6 +136,11 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-client-core-components</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>teamapps-client-common-components</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

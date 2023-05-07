@@ -50,7 +50,6 @@ import {ViewInfo} from "./ViewInfo";
 import {ViewContainer} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {LocalViewContainer} from "./LocalViewContainer";
-import {ChildWindowViewContainer} from "./ChildWindowViewContainer";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {Toolbar} from "../tool-container/toolbar/Toolbar";
 import {ProgressDisplay} from "../ProgressDisplay";
@@ -101,13 +100,9 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 
 	constructor(config: DtoWorkSpaceLayout,
 	            context: TeamAppsUiContext,
-	            windowId = WorkSpaceLayout.ROOT_WINDOW_ID,
-	            rootWindowMessagePort?: MessagePort) {
-		super(config, context);
-
-		this.windowId = windowId;
-		this.rootWindowMessagePort = rootWindowMessagePort;
-
+				windowId = WorkSpaceLayout.ROOT_WINDOW_ID,
+				rootWindowMessagePort?: MessagePort) {
+		super(config);
 		this.localViewContainer = new LocalViewContainer(this, this.windowId, config.views, config.initialLayout, context, {
 			handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),
 			handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
@@ -121,43 +116,43 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 	}
 
 	private handleChildWindowCreated(childWindowId: string, messagePort: MessagePort, initialViewInfo: ViewInfo) {
-		if (this.isRootWindow) {
-			let childWindow = window.open("", childWindowId);
-			let childWindowViewContainer = new ChildWindowViewContainer(childWindow, childWindowId, messagePort, initialViewInfo, this,
-				this._context, this.config.newWindowBackgroundImage, this.config.newWindowBlurredBackgroundImage, {
-					handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),
-					handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
-					handleViewDroppedFromOtherWindow: (sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition) => this.handleViewDroppedFromOtherWindow(sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition),
-					handleLocalLayoutChangedByUser: (windowId: string) => this.handleLocalLayoutChangedByUser(windowId),
-					handleInitialized: async (windowId: string, initialViewInfo: ViewInfo) => {
-						await this.moveViewToTopLevel(initialViewInfo.viewName, childWindowId, null, null, null);
-						const layout = await this.getCurrentLayout();
-						this.onViewDraggedToNewWindow.fire({
-							windowId: windowId,
-							viewName: initialViewInfo.viewName,
-							layoutsByWindowId: layout
-						});
-					},
-					handleClosed: (childWindowViewContainer: ChildWindowViewContainer) => {
-						this.onChildWindowClosed.fire({
-							windowId: childWindowId
-						});
-						delete this.viewContainersByWindowId[childWindowViewContainer.windowId];
-					},
-					handleUiEvent: (uiEvent) => {
-						// On the one hand, this is an event that gets emitted by (or at least bypassed through) the workspaceLayout.
-						// But the workspace layout should not be seen as the emitter!
-						(this._context as any as TeamAppsUiContextInternalApi).sendEvent(uiEvent);
-					}
-				});
-			this.viewContainersByWindowId[childWindowId] = childWindowViewContainer;
-		} else {
-			this.rootWindowMessagePort.postMessage({
-				_type: 'CHILD_WINDOW_CREATED',
-				childWindowId: childWindowId,
-				viewInfo: initialViewInfo
-			}, [messagePort]);
-		}
+		// if (this.isRootWindow) {
+		// 	let childWindow = window.open("", childWindowId);
+		// 	let childWindowViewContainer = new ChildWindowViewContainer(childWindow, childWindowId, messagePort, initialViewInfo, this,
+		// 		this.config.newWindowBackgroundImage, this.config.newWindowBlurredBackgroundImage, {
+		// 			handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),
+		// 			handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
+		// 			handleViewDroppedFromOtherWindow: (sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition) => this.handleViewDroppedFromOtherWindow(sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition),
+		// 			handleLocalLayoutChangedByUser: (windowId: string) => this.handleLocalLayoutChangedByUser(windowId),
+		// 			handleInitialized: async (windowId: string, initialViewInfo: ViewInfo) => {
+		// 				await this.moveViewToTopLevel(initialViewInfo.viewName, childWindowId, null, null, null);
+		// 				const layout = await this.getCurrentLayout();
+		// 				this.onViewDraggedToNewWindow.fire({
+		// 					windowId: windowId,
+		// 					viewName: initialViewInfo.viewName,
+		// 					layoutsByWindowId: layout
+		// 				});
+		// 			},
+		// 			handleClosed: (childWindowViewContainer: ChildWindowViewContainer) => {
+		// 				this.onChildWindowClosed.fire({
+		// 					windowId: childWindowId
+		// 				});
+		// 				delete this.viewContainersByWindowId[childWindowViewContainer.windowId];
+		// 			},
+		// 			handleUiEvent: (uiEvent) => {
+		// 				// On the one hand, this is an event that gets emitted by (or at least bypassed through) the workspaceLayout.
+		// 				// But the workspace layout should not be seen as the emitter!
+		// 				(this._context as any as TeamAppsUiContextInternalApi).sendEvent(uiEvent);
+		// 			}
+		// 		});
+		// 	this.viewContainersByWindowId[childWindowId] = childWindowViewContainer;
+		// } else {
+		// 	this.rootWindowMessagePort.postMessage({
+		// 		_type: 'CHILD_WINDOW_CREATED',
+		// 		childWindowId: childWindowId,
+		// 		viewInfo: initialViewInfo
+		// 	}, [messagePort]);
+		// }
 	}
 
 	private handleChildWindowCreationFailed(viewName: string) {
@@ -443,11 +438,11 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 }
 
 export function isTabPanelDescriptor(item: DtoWorkSpaceLayoutItem): item is DtoWorkSpaceLayoutViewGroupItem {
-	return item._type === 'DtoWorkSpaceLayoutViewGroupItem';
+	return item._type === 'WorkSpaceLayoutViewGroupItem';
 }
 
 export function isSplitPanelDescriptor(item: DtoWorkSpaceLayoutItem): item is DtoWorkSpaceLayoutSplitItem {
-	return item._type === 'DtoWorkSpaceLayoutSplitItem';
+	return item._type === 'WorkSpaceLayoutSplitItem';
 }
 
 

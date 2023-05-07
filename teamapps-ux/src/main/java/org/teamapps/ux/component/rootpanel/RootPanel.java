@@ -25,7 +25,7 @@ import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.animation.PageTransition;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class RootPanel extends AbstractComponent implements Component {
 
 	private Component content;

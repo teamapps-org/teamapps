@@ -21,10 +21,10 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoDisplayField;
 import org.teamapps.dto.DtoField;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DisplayField extends AbstractField<String> {
 
 	private boolean showBorder;

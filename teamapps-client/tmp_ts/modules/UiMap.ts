@@ -98,8 +98,8 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	private drawPolylineFeature: L.Draw.Polyline;
 	private drawRectangleFeature: L.Draw.Rectangle;
 
-	constructor(config: DtoMap, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoMap) {
+		super(config);
 		this.$map = parseHtml('<div class="UiMap">');
 		this.id = this.getId();
 		this.createLeafletMap();
@@ -124,14 +124,14 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 		});
 
 		let center: LatLngExpression = [51.505, -0.09];
-		if (this._config.mapPosition != null) {
-			center = [this._config.mapPosition.latitude, this._config.mapPosition.longitude];
+		if (this.config.mapPosition != null) {
+			center = [this.config.mapPosition.latitude, this.config.mapPosition.longitude];
 		}
-		this.leaflet.setView(center, this._config.zoomLevel);
-		if (this._config.mapConfig != null) {
-			this.setMapConfig(this._config.mapConfig);
+		this.leaflet.setView(center, this.config.zoomLevel);
+		if (this.config.mapConfig != null) {
+			this.setMapConfig(this.config.mapConfig);
 		} else {
-			this.setMapType(this._config.mapType);
+			this.setMapType(this.config.mapType);
 		}
 		this.leaflet.on('click', (event) => {
 			this.onMapClicked.fire({
@@ -285,7 +285,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	}
 
 	private createMarker(markerConfig: DtoMapMarkerClientRecord) {
-		let renderer = this.markerTemplateRenderers[markerConfig.templateId] || this._context.templateRegistry.getTemplateRendererByName(markerConfig.templateId);
+		let renderer = markerConfig.template;
 		let iconWidth: number = 0;
 		if (isGridTemplate(renderer.template)) {
 			let iconElement = renderer.template.elements.filter(e => isUiGlyphIconElement(e) || isUiImageElement(e) || isUiIconElement(e))[0];
@@ -326,7 +326,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	}
 
 	public setMapConfig(mapConfig: DtoMapConfig): void {
-		const token = this._config.accessToken;
+		const token = this.config.accessToken;
 		let removeLayer = true;
 		let layer = L.tileLayer(mapConfig.urlTemplate, {
 			minZoom: mapConfig.minZoom,
@@ -341,7 +341,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	}
 
 	public setMapType(mapType: UiMapType): void {
-		const token = this._config.accessToken;
+		const token = this.config.accessToken;
 		let layer;
 		let removeLayer = true;
 		switch (mapType) {
@@ -537,10 +537,6 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 		if (this.heatMapLayer) {
 			this.leaflet.removeLayer(this.heatMapLayer);
 		}
-	}
-
-	registerTemplate(id: string, template: DtoTemplate): void {
-		this.markerTemplateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
 	fitBounds(southWest: DtoMapLocation, northEast: DtoMapLocation): void {

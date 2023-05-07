@@ -65,8 +65,8 @@ export class UiMap2 extends AbstractComponent<DtoMap2> implements UiMap2EventSou
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
-	constructor(config: DtoMap2, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoMap2) {
+		super(config);
 		this.$map = parseHtml('<div class="UiMap2">');
 
 		mapboxgl.baseApiUrl = config.baseApiUrl;
@@ -462,7 +462,7 @@ export class UiMap2 extends AbstractComponent<DtoMap2> implements UiMap2EventSou
 	}
 
 	private createMarker(markerConfig: DtoMapMarkerClientRecord) {
-		let renderer = this.markerTemplateRenderers[markerConfig.templateId] || this._context.templateRegistry.getTemplateRendererByName(markerConfig.templateId);
+		let renderer = markerConfig.template;
 		let marker = new Marker(parseHtml(renderer.render(markerConfig.values)), {
 			anchor: markerConfig.anchor,
 			offset: [markerConfig.offsetPixelsX, markerConfig.offsetPixelsY]
@@ -511,10 +511,6 @@ export class UiMap2 extends AbstractComponent<DtoMap2> implements UiMap2EventSou
 				[northEast.longitude, northEast.latitude],
 			]);
 		});
-	}
-
-	registerTemplate(id: string, template: DtoTemplate): void {
-		this.markerTemplateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
 	public doGetMainElement(): HTMLElement {

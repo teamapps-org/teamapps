@@ -54,8 +54,8 @@ export class UiYoutubePlayer extends AbstractComponent<DtoYoutubePlayer> impleme
 		}
 	}
 
-	constructor(config: DtoYoutubePlayer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoYoutubePlayer) {
+		super(config);
 		this.$wrapper = parseHtml("<div>");
 		let elementUuid = generateUUID();
 		// 1. The <iframe> (and video player) will replace this <div> tag.

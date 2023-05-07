@@ -1,0 +1,185 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "teamapps-client-core-components":org.teamapps.dto;
+
+import org.teamapps.dto.Template;
+
+class GridTemplate implements Template {
+    required List<GridColumn> columns;
+    required List<GridRow> rows;
+    required List<AbstractGridTemplateElement> elements;
+    int minWidth;
+    int maxWidth;
+	int minHeight;
+    int maxHeight;
+    Spacing padding;
+    int gridGap;
+    String backgroundColor;
+    Border border;
+    String ariaLabelProperty;
+    String titleProperty;
+}
+
+class GridColumn {
+	SizingPolicy widthPolicy;
+	int leftPadding;
+	int rightPadding;
+}
+
+class GridRow {
+	SizingPolicy heightPolicy;
+    int topPadding;
+    int bottomPadding;
+}
+
+abstract class AbstractGridTemplateElement {
+	required String property;
+    required int row;
+    required int column;
+    int rowSpan;
+    int colSpan;
+    HorizontalElementAlignment horizontalAlignment;
+    VerticalElementAlignment verticalAlignment;
+    Spacing margin;
+    String backgroundColor;
+}
+
+class TextElement extends AbstractGridTemplateElement {
+	FontStyle fontStyle;
+	double lineHeight;
+	boolean wrapLines;
+	Spacing padding;
+	TextAlignment textAlignment;
+}
+
+class BadgeElement extends TextElement {
+	// the badge background color is defined by the font background color. This only makes the element look like a badge.
+	String borderColor;
+}
+
+class FloatingElement extends AbstractGridTemplateElement {
+	required List<AbstractGridTemplateElement> elements;
+	boolean wrap;
+    CssAlignItems alignItems;
+    CssJustifyContent justifyContent;
+}
+
+class ImageElement extends AbstractGridTemplateElement {
+	required int width;
+	required int height;
+	Border border;
+	Spacing padding;
+	Shadow shadow;
+	ImageSizing imageSizing;
+}
+
+enum ImageSizing {
+	COVER, CONTAIN, ORIGINAL, STRETCH
+}
+
+class IconElement extends AbstractGridTemplateElement {
+	required int size;
+}
+
+class GlyphIconElement extends AbstractGridTemplateElement {
+	required int size;
+	String fontColor;
+}
+
+enum HorizontalElementAlignment {
+	LEFT,
+	CENTER,
+	RIGHT,
+	STRETCH
+}
+
+enum VerticalElementAlignment {
+	TOP,
+	CENTER,
+	BOTTOM,
+	STRETCH
+}
+
+enum TextAlignment {
+	LEFT,
+	CENTER,
+	RIGHT,
+	JUSTIFY
+}
+
+// ========== Format =============
+
+class FontStyle {
+	String fontColor;
+	String backgroundColor;
+	boolean bold;
+	boolean underline;
+	boolean italic;
+	double relativeFontSize;
+}
+
+class SizingPolicy {
+	required SizeType type;
+    double value;
+    int minAbsoluteSize;
+}
+
+class Spacing {
+	double top;
+	double right;
+	double bottom;
+	double left;
+}
+
+class Border {
+	Line top;
+	Line left;
+	Line bottom;
+	Line right;
+	double borderRadius;
+}
+
+class Shadow {
+	required String color;
+	required double blur;
+	double offsetX;
+	double offsetY;
+	double spread;
+}
+
+enum SizeType {
+	FIXED,
+	RELATIVE,
+	AUTO,
+	FRACTION
+}
+
+class Line {
+	double thickness;
+	String color;
+	LineType type;
+}
+
+enum LineType {
+	SOLID,
+	DOTTED,
+	DASHED,
+	DOUBLE
+}

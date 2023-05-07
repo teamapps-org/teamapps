@@ -32,8 +32,8 @@ type LocalDateTimeArray = [number, number, number, number, number, number, numbe
 
 export class UiLocalDateTimeField extends DtoAbstractDateTimeField<DtoLocalDateTimeField, LocalDateTimeArray> implements UiLocalDateTimeFieldEventSource, UiLocalDateTimeFieldCommandHandler {
 
-	protected initialize(config: DtoLocalDateTimeField, context: TeamAppsUiContext) {
-		super.initialize(config, context);
+	protected initialize(config: DtoLocalDateTimeField) {
+		super.initialize(config);
 		this.getMainInnerDomElement().classList.add("UiDateTimeField");
 	}
 

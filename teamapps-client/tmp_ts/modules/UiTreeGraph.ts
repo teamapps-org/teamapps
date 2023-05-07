@@ -49,8 +49,8 @@ export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements UiTr
 	private chart: TreeChart;
 	private $main: HTMLElement;
 
-	constructor(config: DtoTreeGraph, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoTreeGraph) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="UiTreeGraph">`);
 		this.chart = new TreeChart(context)
@@ -316,7 +316,7 @@ class TreeChart {
 	private chart: Selection<SVGGElement, void, SVGElement, void>;
 	private zoomBehavior: ZoomBehavior<SVGElement, void>;
 
-	constructor(private context: TeamAppsUiContext) {
+	constructor() {
 		// Exposed variables
 		const attrs: TreeChartAttributes = {
 			id: `ID${Math.floor(Math.random() * 1000000)}`, // Id for event handlings

@@ -20,8 +20,8 @@
 package org.teamapps.dsl.generate;
 
 import org.teamapps.dsl.generate.wrapper.ClassWrapper;
-import org.teamapps.dsl.generate.wrapper.EnumWrapper;
 import org.teamapps.dsl.generate.wrapper.InterfaceWrapper;
+import org.teamapps.dsl.generate.wrapper.TypeWrapper;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +41,7 @@ public class TeamAppsDtoModelValidator {
 	public void validate() throws Exception {
 		List<ClassWrapper> classDeclarations = model.getClassDeclarations();
 
-		validateNoDuplicateClassDeclarations(classDeclarations);
+		validateNoDuplicateClassDeclarations(model.getAllTypeDeclarations());
 		for (ClassWrapper classDeclaration : classDeclarations) {
 			checkClassWithCommandsOrEventsIsManaged(classDeclaration);
 			checkManagedClassDefinesIdProperty(classDeclaration);
@@ -49,25 +49,11 @@ public class TeamAppsDtoModelValidator {
 		for (InterfaceWrapper interfaceDeclaration : model.getInterfaceDeclarations()) {
 			checkManagedInterfaceDefinesIdProperty(interfaceDeclaration);
 		}
-
-		List<EnumWrapper> enumDeclarations = model.getEnumDeclarations();
-
-		validateNoDuplicateEnumDeclarations(enumDeclarations);
 	}
 
-	private void validateNoDuplicateClassDeclarations(List<ClassWrapper> classDeclarations) {
-		Map<String, Long> cardinalities = classDeclarations.stream()
-				.collect(Collectors.groupingBy(classDeclarationContext -> classDeclarationContext.getName(), Collectors.counting()));
-		validateNoMultipleEntries(cardinalities);
-	}
-
-	private void validateNoDuplicateEnumDeclarations(List<EnumWrapper> enumDeclarations) {
-		Map<String, Long> cardinalities = enumDeclarations.stream()
-				.collect(Collectors.groupingBy(classDeclarationContext -> classDeclarationContext.getName(), Collectors.counting()));
-		validateNoMultipleEntries(cardinalities);
-	}
-
-	private void validateNoMultipleEntries(Map<String, Long> cardinalities) {
+	private void validateNoDuplicateClassDeclarations(List<TypeWrapper<?>> typeDeclarations) {
+		Map<String, Long> cardinalities = typeDeclarations.stream()
+				.collect(Collectors.groupingBy(TypeWrapper::getQualifiedName, Collectors.counting()));
 		String errorMessage = cardinalities.entrySet().stream()
 				.filter(e -> e.getValue() > 1)
 				.map(e -> e.getKey() + " is declared " + e.getValue() + " times.")

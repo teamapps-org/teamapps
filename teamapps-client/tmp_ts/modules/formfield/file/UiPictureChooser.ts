@@ -68,7 +68,7 @@ export class UiPictureChooser extends UiField<DtoPictureChooser, string> impleme
 	private uploader: FileUploader;
 	private progressIndicator: ProgressIndicator;
 
-	protected initialize(config: DtoPictureChooser, context: TeamAppsUiContext): void {
+	protected initialize(config: DtoPictureChooser): void {
 		this.$main = parseHtml(`<div class="UiPictureChooser drop-zone form-control field-border field-border-glow field-background">
     <div class="picture-wrapper">
     	<div class="picture hidden"></div>

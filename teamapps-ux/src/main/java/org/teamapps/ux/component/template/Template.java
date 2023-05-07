@@ -22,7 +22,7 @@ package org.teamapps.ux.component.template;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.ClientObject;
-import org.teamapps.ux.component.format.FontStyle;
+import org.teamapps.ux.format.FontStyle;
 import org.teamapps.ux.component.template.gridtemplate.AbstractGridTemplateElement;
 import org.teamapps.ux.component.template.gridtemplate.FloatingElement;
 import org.teamapps.ux.component.template.gridtemplate.GridTemplate;

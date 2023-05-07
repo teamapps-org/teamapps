@@ -24,8 +24,8 @@ import {TextField} from "./TextField";
 
 export class PasswordField extends TextField<DtoPasswordField> implements DtoPasswordFieldEventSource, DtoPasswordFieldCommandHandler {
 
-	protected initialize(config: DtoPasswordField, context: TeamAppsUiContext): void {
-		super.initialize(config, context);
+	protected initialize(config: DtoPasswordField): void {
+		super.initialize(config);
 		this.$field.type = "password";
 		if (!config.autofill) {
 			this.$field.autocomplete = "new-password";

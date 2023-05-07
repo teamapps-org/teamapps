@@ -32,7 +32,7 @@ import {
 	DtoFieldMessageVisibilityMode
 } from "../../generated";
 import {createPopper, Instance as Popper} from '@popperjs/core';
-import {prependChild} from "../../Common";
+import {prependChild} from "teamapps-client-core";
 
 interface FieldMessage {
 	message: DtoFieldMessage,
@@ -68,13 +68,12 @@ export abstract class AbstractField<C extends DtoField = DtoField, V = any> exte
 	private hovering: boolean;
 	private focused: boolean;
 
-	constructor(_config: C,
-				_context: TeamAppsUiContext) {
-		super(_config, _context);
+	constructor(_config: C) {
+		super(_config);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
 		this.$fieldWrapper = parseHtml(`<div class="Field"></div>`);
-		this.initialize(_config, _context);
+		this.initialize(_config);
 		this.$fieldWrapper.appendChild(this.$messagesContainerAbove);
 		this.$fieldWrapper.appendChild(this.getMainInnerDomElement());
 		this.$fieldWrapper.appendChild(this.$messagesContainerBelow);
@@ -145,7 +144,7 @@ export abstract class AbstractField<C extends DtoField = DtoField, V = any> exte
 		return highestVisibilityByPosition;
 	}
 
-	protected abstract initialize(config: C, context: TeamAppsUiContext): void;
+	protected abstract initialize(config: C): void;
 
 	public getTeamAppsType(): string {
 		return this.config._type;

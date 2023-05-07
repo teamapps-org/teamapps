@@ -53,7 +53,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 	private subFields: SubField[];
 	private $wrapper: HTMLElement;
 
-	protected initialize(config: DtoCompositeField, context: TeamAppsUiContext) {
+	protected initialize(config: DtoCompositeField) {
 		console.debug('initializing');
 		this.subFields = [];
 		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(config);
@@ -239,9 +239,9 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 	}
 
 	public getReadOnlyHtml(value: any, availableWidth: number): string {
-		UiCompositeField.validateNumberOfRowHeights(this._config);
-		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(this._config);
-		UiCompositeField.applyLayout(subFieldSkeletons, this._config.columnDefinitions, this._config.rowHeights, this._config.horizontalCellSpacing, this._config.verticalCellSpacing, availableWidth - 2 * this._config.padding);
+		UiCompositeField.validateNumberOfRowHeights(this.config);
+		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(this.config);
+		UiCompositeField.applyLayout(subFieldSkeletons, this.config.columnDefinitions, this.config.rowHeights, this.config.horizontalCellSpacing, this.config.verticalCellSpacing, availableWidth - 2 * this.config.padding);
 		UiCompositeField.updateDeclaredSubfieldVisibilities(subFieldSkeletons, value);
 		UiCompositeField.updateSubFieldVisibilities(subFieldSkeletons);
 
@@ -278,7 +278,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 	}
 
 	public onResize(): void {
-		UiCompositeField.applyLayout(this.subFields, this._config.columnDefinitions, this._config.rowHeights, this._config.horizontalCellSpacing, this._config.verticalCellSpacing, this.getMainInnerDomElement().offsetWidth - this._config.padding);
+		UiCompositeField.applyLayout(this.subFields, this.config.columnDefinitions, this.config.rowHeights, this.config.horizontalCellSpacing, this.config.verticalCellSpacing, this.getMainInnerDomElement().offsetWidth - this.config.padding);
 	}
 
 	private static applyLayout(subFieldSkeletons: SubField[], columnDefinitions: DtoColumnDefinition[], rowHeights: number[], horizontalCellSpacing: number, verticalCellSpacing: number, availableWidth: number) {

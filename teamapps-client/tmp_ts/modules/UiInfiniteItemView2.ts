@@ -80,9 +80,9 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
 	private totalNumberOfRecords: number = null;
 
-	constructor(config: DtoInfiniteItemView2, context: TeamAppsUiContext) {
-		super(config, context);
-		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this._config.id}">
+	constructor(config: DtoInfiniteItemView2) {
+		super(config);
+		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this.config.id}">
                 <div class="grid"></div>
                 <style></style>
             </div>`);
@@ -111,7 +111,7 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 		});
 		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", "contextmenu", (element, ev) => {
 			let recordId = parseInt(element.getAttribute("data-id"));
-			if (!isNaN(recordId) && this._config.contextMenuEnabled) {
+			if (!isNaN(recordId) && this.config.contextMenuEnabled) {
 				this.contextMenu.open(ev, requestId => this.onContextMenuRequested.fire({
 					recordId: recordId,
 					requestId
@@ -139,7 +139,7 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 	private requestDataIfNeeded() {
 		let visibleItemRange = this.getVisibleItemRange();
 		let visibleItemRangeLength = visibleItemRange[1] - visibleItemRange[0];
-		if (this._config.visible && visibleItemRangeLength === 0) {
+		if (this.config.visible && visibleItemRangeLength === 0) {
 			visibleItemRangeLength = this.getItemsPerRow(); // even if this component has zero height, it should at least query one row in order to be able to auto-size!
 		}
 		const newRenderedRange: [number, number] = [
@@ -160,8 +160,8 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 	private getVisibleItemRange() {
 		const itemsPerRow = this.getItemsPerRow();
 		const viewportTop = this.$mainDomElement.scrollTop;
-		const visibleStartRowIndex = Math.floor(viewportTop / this._config.itemHeight);
-		const numberOfVisibleRows = Math.ceil(this.getHeight() / this._config.itemHeight); // exclusive
+		const visibleStartRowIndex = Math.floor(viewportTop / this.config.itemHeight);
+		const numberOfVisibleRows = Math.ceil(this.getHeight() / this.config.itemHeight); // exclusive
 		let startIndex = Math.max(0, visibleStartRowIndex * itemsPerRow);
 		let endIndex = startIndex + numberOfVisibleRows * itemsPerRow;
 		return [startIndex, endIndex];
@@ -169,12 +169,12 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 
 	private getItemsPerRow() {
 		let itemsPerRow: number;
-		if (this._config.itemWidth <= 0) {
+		if (this.config.itemWidth <= 0) {
 			itemsPerRow = 1;
-		} else if (this._config.itemWidth < 1) {
-			itemsPerRow = Math.floor(1 / this._config.itemWidth);
+		} else if (this.config.itemWidth < 1) {
+			itemsPerRow = Math.floor(1 / this.config.itemWidth);
 		} else {
-			itemsPerRow = Math.floor(this.$mainDomElement.clientWidth / this._config.itemWidth);
+			itemsPerRow = Math.floor(this.$mainDomElement.clientWidth / this.config.itemWidth);
 		}
 		return itemsPerRow;
 	}
@@ -182,8 +182,8 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 	private updateItemPositions() {
 		const itemsPerRow = this.getItemsPerRow();
 		const availableWidth = this.$mainDomElement.clientWidth;
-		const itemWidth = this._config.itemWidth <= 0 ? availableWidth : this._config.itemWidth < 1 ? availableWidth * this._config.itemWidth : this._config.itemWidth;
-		const itemHeight = this._config.itemHeight;
+		const itemWidth = this.config.itemWidth <= 0 ? availableWidth : this.config.itemWidth < 1 ? availableWidth * this.config.itemWidth : this.config.itemWidth;
+		const itemHeight = this.config.itemHeight;
 		for (let i = 0; i < this.renderedIds.length; i++) {
 			const absoluteIndex = i + this.renderedRange[0];
 			const item = this.renderedItems.get(this.renderedIds[i]);
@@ -258,7 +258,7 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 	}
 
 	private updateGridHeight() {
-		this.$grid.style.height = this._config.itemHeight * Math.ceil(this.totalNumberOfRecords / this.getItemsPerRow()) + "px";
+		this.$grid.style.height = this.config.itemHeight * Math.ceil(this.totalNumberOfRecords / this.getItemsPerRow()) + "px";
 	}
 
 	@executeWhenFirstDisplayed(true)
@@ -275,36 +275,36 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 
 	private updateStyles() {
 		this.$styles.textContent = `
-            .grid-${this._config.id} .item-wrapper {
-                 align-items: ${cssAlignItems[this._config.itemContentVerticalAlignment]};
-                 justify-content: ${cssJustifyContent[this._config.itemContentHorizontalAlignment]};
+            .grid-${this.config.id} .item-wrapper {
+                 align-items: ${cssAlignItems[this.config.itemContentVerticalAlignment]};
+                 justify-content: ${cssJustifyContent[this.config.itemContentHorizontalAlignment]};
             }
-            .grid-${this._config.id} .item-wrapper > * {
-                 flex: ${this._config.itemContentHorizontalAlignment == UiHorizontalElementAlignment.STRETCH ? "1 1 auto" : "0 1 auto"};
+            .grid-${this.config.id} .item-wrapper > * {
+                 flex: ${this.config.itemContentHorizontalAlignment == UiHorizontalElementAlignment.STRETCH ? "1 1 auto" : "0 1 auto"};
             }`;
 	}
 
 	setItemTemplate(itemTemplate: DtoTemplate): void {
-		this.itemTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
+		this.itemTemplateRenderer = itemTemplate;
 		this.rerenderAllItems();
 	}
 
 	setItemWidth(itemWidth: number): void {
-		this._config.itemWidth = itemWidth;
+		this.config.itemWidth = itemWidth;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
 	}
 
 	setItemHeight(itemHeight: number): void {
-		this._config.itemHeight = itemHeight;
+		this.config.itemHeight = itemHeight;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
 	}
 
 	setHorizontalSpacing(horizontalSpacing: number): void {
-		this._config.horizontalSpacing = horizontalSpacing;
+		this.config.horizontalSpacing = horizontalSpacing;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
@@ -312,27 +312,27 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 
 	setVerticalSpacing(verticalSpacing: number): void {
 		this.updateStyles();
-		this._config.verticalSpacing = verticalSpacing;
+		this.config.verticalSpacing = verticalSpacing;
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
 	}
 
 	setItemContentHorizontalAlignment(itemContentHorizontalAlignment: UiHorizontalElementAlignment): void {
-		this._config.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
+		this.config.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
 	}
 
 	setItemContentVerticalAlignment(itemContentVerticalAlignment: UiVerticalElementAlignment): void {
-		this._config.itemContentVerticalAlignment = itemContentVerticalAlignment;
+		this.config.itemContentVerticalAlignment = itemContentVerticalAlignment;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
 	}
 
 	setRowHorizontalAlignment(rowHorizontalAlignment: UiItemJustification): void {
-		this._config.rowHorizontalAlignment = rowHorizontalAlignment;
+		this.config.rowHorizontalAlignment = rowHorizontalAlignment;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();

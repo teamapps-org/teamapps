@@ -37,7 +37,7 @@ import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition
 import java.util.*;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";

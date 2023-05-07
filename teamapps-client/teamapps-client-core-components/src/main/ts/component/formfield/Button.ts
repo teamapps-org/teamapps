@@ -46,7 +46,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 	private openDropDownIfNotSet: boolean;
 	private onClickJavaScript: string;
 
-	protected initialize(config: DtoButton, context: TeamAppsUiContext) {
+	protected initialize(config: DtoButton) {
 		this.templateRecord = config.templateRecord;
 
 		this.$main = parseHtml(this.getReadOnlyHtml(this.templateRecord, -1));
@@ -78,7 +78,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
 				if (this.getEditingMode() === DtoFieldEditingMode.EDITABLE || this.getEditingMode() === DtoFieldEditingMode.EDITABLE_IF_FOCUSED) {
 					if (this.onClickJavaScript != null) {
-						let context = this._context; // make context available in evaluated javascript
+						// TODO let context = this._context; // make context available in evaluated javascript
 						eval(this.onClickJavaScript);
 					}
 					this.onClicked.fire({});

@@ -34,7 +34,8 @@ import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContex
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 import {StaticIcons} from "../util/StaticIcons";
-import {insertBefore, maximizeComponent, outerWidthIncludingMargins, prependChild} from "../Common";
+import {maximizeComponent, outerWidthIncludingMargins} from "../Common";
+import {insertBefore, prependChild} from "teamapps-client-core";
 
 interface HeaderField {
 	config: DtoPanelHeaderField;
@@ -53,9 +54,9 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize", visible: true, iconSize: 16}), this._context),
-		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize", visible: true, iconSize: 16}), this._context),
-		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close", visible: true, iconSize: 16}), this._context),
+		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize", visible: true, iconSize: 16})),
+		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize", visible: true, iconSize: 16})),
+		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close", visible: true, iconSize: 16})),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		DtoWindowButtonType.MINIMIZE,
@@ -88,8 +89,8 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	private windowButtons: DtoWindowButtonType[];
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: DtoPanel, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoPanel) {
+		super(config);
 		this.$panel = parseHtml(`<div class="Panel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">
                     <div class="panel-icon"></div>

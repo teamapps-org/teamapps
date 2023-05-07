@@ -27,7 +27,7 @@ export class ComponentField extends AbstractField<DtoComponentField, void> imple
 	private component: Component;
 	private $componentWrapper: HTMLElement;
 
-	protected initialize(config: DtoComponentField, context: TeamAppsUiContext) {
+	protected initialize(config: DtoComponentField) {
 		this.$componentWrapper = parseHtml('<div class="ComponentField"></div>');
 		this.setHeight(config.height);
 		this.setComponent(config.component as Component);

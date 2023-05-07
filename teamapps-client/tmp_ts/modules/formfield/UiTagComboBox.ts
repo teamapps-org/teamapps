@@ -54,7 +54,7 @@ export class UiTagComboBox extends UiField<DtoTagComboBox, DtoComboBoxTreeRecord
 
 	private freeTextIdEntryCounter = -1;
 
-	protected initialize(config: DtoTagComboBox, context: TeamAppsUiContext) {
+	protected initialize(config: DtoTagComboBox) {
 		this.$originalInput = parseHtml(`<input type="text" autocomplete="${getAutoCompleteOffValue()}">`);
 
 		this.templateRenderers = config.templates != null ? context.templateRegistry.createTemplateRenderers(config.templates) : {};
@@ -83,7 +83,7 @@ export class UiTagComboBox extends UiField<DtoTagComboBox, DtoComboBoxTreeRecord
 				const violatesFreeTextSetting = !config.allowAnyText && isFreeTextEntry(entry);
 				return !violatesDistinctSetting && !violatesMaxEntriesSetting && !violatesFreeTextSetting;
 			},
-			twoStepDeletion: this._config.twoStepDeletion,
+			twoStepDeletion: this.config.twoStepDeletion,
 			preselectFirstQueryResult: config.highlightFirstResultEntry,
 			placeholderText: config.placeholderText,
 			dropDownMaxHeight: config.dropDownMaxHeight,
@@ -106,7 +106,7 @@ export class UiTagComboBox extends UiField<DtoTagComboBox, DtoComboBoxTreeRecord
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			selectableDecider: entry => entry.selectable,
 			selectOnHover: true,
-			animationDuration: this._config.animate ? 120 : 0
+			animationDuration: this.config.animate ? 120 : 0
 		})));
 		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox");
 		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_LINE);
@@ -179,10 +179,6 @@ export class UiTagComboBox extends UiField<DtoTagComboBox, DtoComboBoxTreeRecord
 		} else {
 			this.trivialTagComboBox.setEditingMode("editable");
 		}
-	}
-
-	registerTemplate(id: string, template: DtoTemplate): void {
-		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
 	replaceFreeTextEntry(freeText: string, record: DtoComboBoxTreeRecord): void {

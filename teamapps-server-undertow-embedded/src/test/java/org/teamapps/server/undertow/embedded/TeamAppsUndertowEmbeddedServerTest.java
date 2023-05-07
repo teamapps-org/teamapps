@@ -27,7 +27,8 @@ public class TeamAppsUndertowEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 		WebController controller = (SessionContext context) -> context.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		new TeamAppsUndertowEmbeddedServer(controller)
+		TeamAppsUndertowEmbeddedServer.builder(controller)
+				.build()
 				.start();
 	}
 

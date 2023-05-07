@@ -36,7 +36,7 @@ import org.teamapps.ux.component.toolbutton.ToolButton;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Panel extends AbstractComponent implements Component {
 
 	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(DtoPanel.WindowButtonClickedEvent.TYPE_ID);

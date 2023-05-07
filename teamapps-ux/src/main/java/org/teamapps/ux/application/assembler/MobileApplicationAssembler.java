@@ -27,14 +27,14 @@ import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.PageTransition;
-import org.teamapps.ux.component.itemview.SimpleItemGroup;
-import org.teamapps.ux.component.itemview.SimpleItemView;
 import org.teamapps.ux.component.mobile.MobileLayout;
 import org.teamapps.ux.component.mobile.NavigationBar;
 import org.teamapps.ux.component.mobile.NavigationBarButton;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.toolbar.AbstractToolContainer;
+import org.teamapps.ux.component.toolbar.ToolAccordion;
+import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
@@ -55,7 +55,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
 	private final MobileLayout mobileLayout;
 	private final NavigationBar<BaseTemplateRecord<?>> navigationBar;
-	private final SimpleItemView<Void> viewsItemView;
+	private final ToolAccordion viewsItemView;
 	private AbstractToolContainer mainToolbar;
 
 
@@ -78,7 +78,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	public MobileApplicationAssembler(Icon<?, ?> launcherIcon, Icon<?, ?> treeIcon, Icon<?, ?> viewsIcon, Icon<?, ?> toolbarIcon, Icon<?, ?> backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
 		this.mobileLayout = new MobileLayout();
 		this.navigationBar = new NavigationBar<>();
-		this.viewsItemView = new SimpleItemView<>();
+		this.viewsItemView = new ToolAccordion();
 
 		navigationBar.preloadFanOutComponent(viewsItemView);
 		mobileLayout.setNavigationBar(navigationBar);
@@ -136,7 +136,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 			goBack();
 		});
 
-		viewsItemView.onItemClicked.addListener(data -> {
+		viewsItemView.onButtonClick.addListener(data -> {
 			navigationBar.hideFanOutComponent();
 		});
 	}
@@ -252,20 +252,28 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
                                         List<View> removedViews) {
 		perspectiveViews = activeViews;
 
-		viewsItemView.removeAllGroups();
-		SimpleItemGroup<Void> itemGroup = viewsItemView.addSingleColumnGroup(null, null);
+		viewsItemView.removeAllToolbarButtonGroups();
+		ToolbarButtonGroup applicationViewsButtonGroup = new ToolbarButtonGroup();
+		viewsItemView.addButtonGroup(applicationViewsButtonGroup);
 		if (!applicationViews.isEmpty()) {
 			applicationViews.forEach(view -> {
-				itemGroup.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+				ToolbarButton toolbarButton = ToolbarButton.create(view.getPanel().getIcon(), view.getPanel().getTitle(), null);
+				toolbarButton.onClick.addListener(aVoid -> {
 					showView(view);
 				});
+				applicationViewsButtonGroup.addButton(toolbarButton);
 			});
 		}
+
+		ToolbarButtonGroup perspectiveViewsButtonGroup = new ToolbarButtonGroup();
+		viewsItemView.addButtonGroup(perspectiveViewsButtonGroup);
 		if (!perspectiveViews.isEmpty()) {
 			perspectiveViews.forEach(view -> {
-				itemGroup.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+				ToolbarButton toolbarButton = ToolbarButton.create(view.getPanel().getIcon(), view.getPanel().getTitle(), null);
+				toolbarButton.onClick.addListener(aVoid -> {
 					showView(view);
 				});
+				perspectiveViewsButtonGroup.addButton(toolbarButton);
 			});
 		}
 

@@ -32,7 +32,7 @@ export class UiColorPicker extends UiField<DtoColorPicker, string> implements Ui
 	private pickr: Pickr;
 	private doNotCommit: boolean;
 
-	protected initialize(config: DtoColorPicker, context: TeamAppsUiContext) {
+	protected initialize(config: DtoColorPicker) {
 		this.$main = parseHtml(`<div class="UiColorPicker" tabindex="-1"><div class="pickr"></div></div>`);
 		this.doNotCommit = true;
 		this.pickr = createPickr({
@@ -108,7 +108,7 @@ export class UiColorPicker extends UiField<DtoColorPicker, string> implements Ui
 	}
 
 	getDefaultValue(): string {
-		return this._config.defaultColor;
+		return this.config.defaultColor;
 	}
 
 	focus(): void {

@@ -63,8 +63,8 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 
 	private lastDraggedNode: any;
 
-	constructor(config: DtoNetworkGraph, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoNetworkGraph) {
+		super(config);
 		this.$graph = parseHtml('<div class="UiNetworkGraph" id="' + this.getId() + '">');
 
 		this.links = config.links;
@@ -160,9 +160,9 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 			d3.zoomIdentity.scale(1).translate(this.getWidth()/2, this.getHeight()/2)
 		);
 
-		this.updateLinks(this._config.animationDuration);
-		this.updateNodes(this._config.animationDuration);
-		this.zoomAllNodesIntoView(this._config.animationDuration);
+		this.updateLinks(this.config.animationDuration);
+		this.updateNodes(this.config.animationDuration);
+		this.zoomAllNodesIntoView(this.config.animationDuration);
 	}
 
 	private calculateFinalNodePositions() {
@@ -256,8 +256,8 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 		this.simulation.alphaTarget(0.3).restart()
 			.stop();
 		this.calculateFinalNodePositions();
-		this.updateNodes(this._config.animationDuration);
-		this.updateLinks(this._config.animationDuration);
+		this.updateNodes(this.config.animationDuration);
+		this.updateLinks(this.config.animationDuration);
 
 		console.debug("distance:" + linkDistance + ", " + nodeDistance);
 	}
@@ -396,7 +396,7 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 			.enter()
 			.append('xhtml:div')
 			.classed('node-foreign-object-div', true)
-			.html((d: DtoNetworkNode) => this._context.templateRegistry.createTemplateRenderer(d.template).render(d.record.values));
+			.html((d: DtoNetworkNode) => d.template.render(d.record.values));
 		foreignObjectInner.exit().remove();
 
 		this.restyleForeignObjectElements();
@@ -532,8 +532,8 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 		this.simulation.alphaTarget(0.3).restart()
 			.stop();
 		this.calculateFinalNodePositions();
-		this.updateNodes(this._config.animationDuration);
-		this.updateLinks(this._config.animationDuration);
+		this.updateNodes(this.config.animationDuration);
+		this.updateLinks(this.config.animationDuration);
 	}
 
 	private placeNewNodesNearExistingParentsOnes(newLinks: DtoNetworkLink[], newNodes: DtoNetworkNode[]) {
@@ -585,8 +585,8 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 		this.simulation.alphaTarget(0.3).restart()
 			.stop();
 		this.calculateFinalNodePositions();
-		this.updateNodes(this._config.animationDuration);
-		this.updateLinks(this._config.animationDuration);
+		this.updateNodes(this.config.animationDuration);
+		this.updateLinks(this.config.animationDuration);
 	}
 }
 

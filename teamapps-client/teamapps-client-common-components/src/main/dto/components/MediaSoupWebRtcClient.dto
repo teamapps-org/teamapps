@@ -1,0 +1,159 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
+
+import org.teamapps.dto.Component;
+
+class MediaSoupV3WebRtcClient extends Component {
+	Double displayAreaAspectRatio;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
+	boolean activityLineVisible;
+	String activityInactiveColor;
+	String activityActiveColor;
+	List<String> icons;
+	String caption;
+	String noVideoImageUrl;
+	WebRtcClientSpinnerPolicy spinnerPolicy;
+	double playbackVolume; // 0-1
+	boolean contextMenuEnabled;
+	boolean bitrateDisplayEnabled;
+	int forceRefreshCount;
+	
+	// only one (or none) of the following must be set:
+	MediaSoupPublishingParameters publishingParameters;
+    MediaSoupPlaybackParameters playbackParameters;
+	
+	command update(MediaSoupV3WebRtcClient config);
+	command setActive(boolean active);
+	command setContextMenuContent(int requestId, Component* component);
+	command closeContextMenu(int requestId);
+
+	event sourceMediaTrackRetrievalFailed(MediaRetrievalFailureReason reason);
+	event sourceMediaTrackEnded(SourceMediaTrackType trackType); // otherwise cam/mic
+	event trackPublishingSuccessful(boolean audio, boolean video);
+	event trackPublishingFailed(boolean audio, boolean video, String errorMessage);
+	event connectionStateChanged(boolean connected);
+	event subscribingSuccessful();
+	event subscribingFailed(String errorMessage);
+	event subscriptionPlaybackFailed(String errorMessage);
+	event voiceActivityChanged(boolean active);
+	event clicked();
+	event contextMenuRequested(int requestId);
+
+	static command enumerateDevices() returns List<MediaDeviceInfo>;
+}
+
+@TypeScriptFactory
+class MediaDeviceInfo {
+	 String deviceId;
+	 String groupId;
+	 MediaDeviceKind kind;
+	 String label;
+}
+
+enum MediaDeviceKind {
+    AUDIO_INPUT, AUDIO_OUTPUT, VIDEO_INPUT
+}
+
+enum WebRtcPublishingFailureReason {
+	MIC_MEDIA_RETRIEVAL_FAILED,
+	CAM_MEDIA_RETRIEVAL_FAILED,
+	CAM_MIC_MEDIA_RETRIEVAL_FAILED,
+	DISPLAY_MEDIA_RETRIEVAL_FAILED,
+	VIDEO_MIXING_FAILED,
+	CONNECTION_ESTABLISHMENT_FAILED
+}
+
+enum SourceMediaTrackType {
+	CAM, MIC, SCREEN;
+}
+
+enum MediaRetrievalFailureReason {
+	MIC_MEDIA_RETRIEVAL_FAILED,
+	CAM_MEDIA_RETRIEVAL_FAILED,
+	DISPLAY_MEDIA_RETRIEVAL_FAILED,
+	VIDEO_MIXING_FAILED
+}
+
+enum WebRtcClientSpinnerPolicy {
+	NEVER,
+	WHILE_CONNECTING,
+	WHEN_NOT_STREAMING
+}
+
+class MediaSoupPublishingParameters {
+	String streamUuid;
+	MediaServerUrlAndToken server;
+
+	AudioTrackConstraints audioConstraints;
+	VideoTrackConstraints videoConstraints;
+	ScreenSharingConstraints screenSharingConstraints;
+
+	boolean simulcast;
+	long minBitrate;
+	long maxBitrate;
+	long keyFrameRequestDelay; // milliseconds
+}
+
+class MediaServerUrlAndToken {
+	required String url;
+	required int worker;
+    required String token;
+}
+
+class MediaSoupPlaybackParameters {
+	String streamUuid;
+	MediaServerUrlAndToken server; // the server/worker from which to receive the stream
+	MediaServerUrlAndToken origin; // the origin server/worker, if the stream is cascaded (scaling via origin/edge); may be null
+
+	boolean audio;
+	boolean video;
+
+	long minBitrate;
+	long maxBitrate;
+}
+
+class AudioTrackConstraints {
+	String deviceId;
+    int channelCount;
+    boolean autoGainControl;
+    boolean echoCancellation;
+    boolean noiseSuppression;
+}
+
+class VideoTrackConstraints {
+	String deviceId;
+    Double aspectRatio;
+	Integer width;
+	Integer height;
+    VideoFacingMode facingMode;
+    double frameRate;
+}
+
+class ScreenSharingConstraints {
+	Integer maxWidth;
+	Integer maxHeight;
+}
+
+enum VideoFacingMode {
+	USER, // The video source is facing toward the user; this includes, for example, the front-facing camera on a smartphone.
+	ENVIRONMENT, // The video source is facing away from the user, thereby viewing their environment. This is the back camera on a smartphone.
+	LEFT, // The video source is facing toward the user but to their left, such as a camera aimed toward the user but over their left shoulder.
+	RIGHT; // The video source is facing toward the user but to their right, such as a camera aimed toward the user but over their right shoulder.
+}

@@ -68,8 +68,8 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 	private volume: number;
 
 
-	constructor(config: DtoLiveStreamComponent, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoLiveStreamComponent) {
+		super(config);
 
 		this.volume = config.volume;
 
@@ -116,7 +116,7 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 
 	private applyDisplayModes() {
 		if ($(this.$backgroundImage).is(":visible")) {
-			applyDisplayMode(this.$backgroundImageContainer, this.$backgroundImage, this._config.backgroundImageDisplayMode);
+			applyDisplayMode(this.$backgroundImageContainer, this.$backgroundImage, this.config.backgroundImageDisplayMode);
 			$(this.$backgroundImage).position({
 				my: "center",
 				at: "center",
@@ -174,7 +174,7 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 	}
 
 	public stopWaitingVideos() {
-		if (this._config.backgroundImage) {
+		if (this.config.backgroundImage) {
 			fadeIn(this.$backgroundImageContainer);
 		}
 		$(this.waitingVideoPlayer).animate({volume: 0, opacity: 0}, 1000, 'swing', () => {
@@ -191,7 +191,7 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 			this.hlsPlayer = new UiHttpLiveStreamPlayer({
 				_type: "UiHttpLiveStreamPlayer",
 				id: generateUUID()
-			}, this._context);
+			});
 			this.$liveStreamPlayerContainer.append(this.hlsPlayer.getMainElement());
 		}
 		this.hlsPlayer.setVolume(this.volume);
@@ -208,7 +208,7 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 			this.liveStreamComPlayer = new UiLiveStreamComPlayer({
 				_type: "UiLiveStreamComPlayer",
 				id: generateUUID()
-			}, this._context);
+			});
 			this.$liveStreamPlayerContainer.append(this.liveStreamComPlayer.getMainElement())
 		}
 		this.liveStreamComPlayer.getMainElement().classList.remove("hidden");
@@ -227,7 +227,7 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 			this.youtubePlayer = new UiYoutubePlayer({
 				_type: "UiYoutubePlayer",
 				id: generateUUID()
-			}, this._context);
+			});
 			this.$liveStreamPlayerContainer.append(this.youtubePlayer.getMainElement());
 		}
 

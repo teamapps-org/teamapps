@@ -58,7 +58,6 @@ export class UiFileItem {
 		private uploadUrl: string,
 		private config: DtoFileItem,
 		public state: FileItemState,
-		private context: TeamAppsUiContext
 	) {
 		this.$main = parseHtml(`<a class="file-item">
 			<div class="delete-button-wrapper">

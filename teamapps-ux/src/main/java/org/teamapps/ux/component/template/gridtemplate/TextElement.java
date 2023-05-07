@@ -22,7 +22,7 @@ package org.teamapps.ux.component.template.gridtemplate;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoTextElement;
-import org.teamapps.ux.component.format.*;
+import org.teamapps.ux.format.*;
 
 public class TextElement extends AbstractGridTemplateElement<TextElement> {
 

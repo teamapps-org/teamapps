@@ -22,16 +22,16 @@ package org.teamapps.ux.component.template;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.DtoClientObject;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
-import org.teamapps.ux.component.format.*;
 import org.teamapps.ux.component.template.gridtemplate.*;
+import org.teamapps.ux.format.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public enum BaseTemplate implements Template {
 
 	TOOL_BUTTON(createToolButtonTemplate()),

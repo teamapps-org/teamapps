@@ -39,8 +39,8 @@ export class MobileLayout extends AbstractComponent<DtoMobileLayout> implements 
 	private content: Component;
 	private $contentContainer: HTMLElement;
 
-	constructor(config: DtoMobileLayout, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoMobileLayout) {
+		super(config);
 		this.$mainDiv = parseHtml(`<div class="MobileLayout">
                              <div class="toolbar-container"></div>
                              <div class="content-container-wrapper"></div>

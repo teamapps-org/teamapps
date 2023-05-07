@@ -45,8 +45,7 @@ export class LayoutDescriptorApplyer {
 	constructor(
 		private $rootItemContainer: HTMLElement,
 		private viewGroupFactory: (config: DtoWorkSpaceLayoutViewGroupItem, parent: SplitPaneItem) => TabPanelItem,
-		private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: DtoViewGroupPanelState) => void,
-		private context: TeamAppsUiContext
+		private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: DtoViewGroupPanelState) => void
 	) {
 	}
 
@@ -193,7 +192,7 @@ export class LayoutDescriptorApplyer {
 			this.addViews(tabPanelItem, descriptor, newViewConfigs);
 			return tabPanelItem;
 		} else if (isSplitPanelDescriptor(descriptor)) {
-			let splitPaneItem = new SplitPaneItem(descriptor.id, parent, descriptor.splitDirection, descriptor.sizePolicy, descriptor.referenceChildSize, this.context);
+			let splitPaneItem = new SplitPaneItem(descriptor.id, parent, descriptor.splitDirection, descriptor.sizePolicy, descriptor.referenceChildSize);
 			splitPaneItem.firstChild = this.addNewStructure(descriptor.firstChild, splitPaneItem, true, newViewConfigs);
 			splitPaneItem.lastChild = this.addNewStructure(descriptor.lastChild, splitPaneItem, false, newViewConfigs);
 			return splitPaneItem;

@@ -1,7 +1,10 @@
 package org.teamapps.ux.component;
 
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class ComponentLibraryRegistry {
@@ -48,7 +51,7 @@ public class ComponentLibraryRegistry {
 	private ComponentLibraryInfo getComponentLibraryInternal(Class<? extends ComponentLibrary> componentLibraryClass, Supplier<ComponentLibrary> componentLibrarySupplier) {
 		if (!registeredComponentLibraries.containsKey(componentLibraryClass)) {
 			ComponentLibrary componentLibrary = componentLibrarySupplier.get();
-			String uuid = UUID.randomUUID().toString();
+			String uuid = componentLibraryClass.getSimpleName() + "-" + UUID.randomUUID();
 			ComponentLibraryInfo componentLibraryInfo = new ComponentLibraryInfo(componentLibrary, uuid);
 			registeredComponentLibraries.put(componentLibraryClass, componentLibraryInfo);
 			librariesByUuid.put(uuid, componentLibraryInfo);

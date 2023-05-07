@@ -50,7 +50,7 @@ export class UiComboBox extends UiField<DtoComboBox, DtoComboBoxTreeRecord> impl
 
 	private freeTextIdEntryCounter = -1;
 
-	protected initialize(config: DtoComboBox, context: TeamAppsUiContext) {
+	protected initialize(config: DtoComboBox) {
 		this.templateRenderers = config.templates;
 
 		this.trivialComboBox = new TrivialComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>({
@@ -98,7 +98,7 @@ export class UiComboBox extends UiField<DtoComboBox, DtoComboBoxTreeRecord> impl
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			selectableDecider: entry => entry.selectable,
 			selectOnHover: true,
-			animationDuration: this._config.animate ? 120 : 0
+			animationDuration: this.config.animate ? 120 : 0
 		})));
 		this.trivialComboBox.getMainDomElement().classList.add("UiComboBox");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
@@ -175,10 +175,6 @@ export class UiComboBox extends UiField<DtoComboBox, DtoComboBoxTreeRecord> impl
 		} else {
 			this.trivialComboBox.setEditingMode("editable");
 		}
-	}
-
-	registerTemplate(id: string, template: DtoTemplate): void {
-		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
 	replaceFreeTextEntry(freeText: string, record: DtoComboBoxTreeRecord): void {

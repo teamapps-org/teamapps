@@ -21,7 +21,7 @@ public class TeamAppsJettyEmbeddedServerBuilder {
 	private int port = 8080;
 	private TeamAppsConfiguration config = new TeamAppsConfiguration();
 	private ResourceProvider baseResourceProvider = new ClassPathResourceProvider(
-			"/org/teamapps/client/core/resources",
+			"org/teamapps/projector/core/resources",
 			path -> {
 				if (path.endsWith(".js") || path.endsWith(".mjs")) {
 					return "text/javascript";

@@ -110,8 +110,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 		videoBitrate: 0
 	};
 
-	constructor(config: DtoMediaSoupV3WebRtcClient, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoMediaSoupV3WebRtcClient) {
+		super(config);
 
 		// debug.enable(
 		// 	'conference-api* mediasoup-client*' //enable conference api and mediasoup client logs
@@ -155,7 +155,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 			this.onClicked.fire({})
 		}));
 		[this.$videoContainer, this.$caption].forEach($element => $element.addEventListener("contextmenu", (e) => {
-			if (this._config.contextMenuEnabled) {
+			if (this.config.contextMenuEnabled) {
 				this.contextMenu.open(e, requestId => this.onContextMenuRequested.fire({requestId}))
 			}
 		}));
@@ -187,7 +187,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 			});
 		});
 
-		this._config = {}; // make sure everything is regarded as new! _config will get set at the end again...
+		this.config = {}; // make sure everything is regarded as new! _config will get set at the end again...
 		this.update(config);
 	}
 
@@ -230,8 +230,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 		await this.updatePublishedTracks(null, null, null);
 		this.updateStateCssClasses();
 		this.$video.srcObject = null;
-		this._config.publishingParameters = null;
-		this._config.playbackParameters = null;
+		this.config.publishingParameters = null;
+		this.config.playbackParameters = null;
 	}
 
 	private updatePromise: Promise<void> = Promise.resolve();
@@ -249,7 +249,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 
 		this.$bitrateDisplayWrapper.classList.toggle('hidden', !config.bitrateDisplayEnabled);
 
-		if (!arraysEqual(config.icons, this._config.icons)) {
+		if (!arraysEqual(config.icons, this.config.icons)) {
 			this.$icons.innerHTML = '';
 			config.icons.forEach(iconUrl => {
 				const $img = document.createElement("img");
@@ -269,7 +269,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 		this.$video.volume = config.playbackVolume;
 		await this.updateConferenceClient(config);
 
-		this._config = config;
+		this.config = config;
 
 		this.updateVideoVisibility();
 		this.onResize();
@@ -280,21 +280,21 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 			console.error("Cannot publish and playback at the same time. Doing nothing!");
 			return;
 		}
-		const roleChange = this._config.publishingParameters != null && config.playbackParameters != null
-			|| this._config.playbackParameters != null && config.publishingParameters != null;
+		const roleChange = this.config.publishingParameters != null && config.playbackParameters != null
+			|| this.config.playbackParameters != null && config.publishingParameters != null;
 		if (roleChange) {
 			await this.stop();
 		}
 		if (config.playbackParameters != null) {
-			await this.updatePlayback(config.playbackParameters, this._config.forceRefreshCount != config.forceRefreshCount);
+			await this.updatePlayback(config.playbackParameters, this.config.forceRefreshCount != config.forceRefreshCount);
 		} else if (config.publishingParameters != null) {
-			await this.updatePublishing(config.publishingParameters, this._config.forceRefreshCount != config.forceRefreshCount);
+			await this.updatePublishing(config.publishingParameters, this.config.forceRefreshCount != config.forceRefreshCount);
 		} else {
 			this.connectionStatus.shouldHaveAudio = false;
 			this.connectionStatus.shouldHaveVideo = false;
 			await this.stop();
 		}
-		this._config.forceRefreshCount = config.forceRefreshCount;
+		this.config.forceRefreshCount = config.forceRefreshCount;
 	}
 
 	async updatePlayback(newParams: DtoMediaSoupPlaybackParameters, forceRefresh: boolean) {
@@ -302,7 +302,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 		this.connectionStatus.shouldHaveVideo = newParams.video;
 		this.updateStateCssClasses();
 
-		const oldParams = this._config.playbackParameters;
+		const oldParams = this.config.playbackParameters;
 		const needsReset = forceRefresh
 			|| oldParams?.server?.url !== newParams?.server?.url || oldParams?.server?.worker !== newParams?.server?.worker
 			|| oldParams?.origin?.url !== newParams?.origin?.url || oldParams?.origin?.worker !== newParams?.origin?.worker
@@ -386,7 +386,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 		this.connectionStatus.shouldHaveVideo = newParams.videoConstraints != null;
 		this.updateStateCssClasses();
 
-		let oldParams = this._config.publishingParameters;
+		let oldParams = this.config.publishingParameters;
 
 		const needsReset = forceRefresh
 			|| oldParams?.server?.url != newParams?.server?.url
@@ -444,7 +444,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 		newWebcamConstraints: DtoVideoTrackConstraints,
 		newScreenConstraints: DtoScreenSharingConstraints) {
 
-		let oldParams = this._config.publishingParameters;
+		let oldParams = this.config.publishingParameters;
 		const oldAudioConstraints = oldParams?.audioConstraints;
 		const oldWebcamConstraints = oldParams?.videoConstraints;
 		const oldScreenConstraints = oldParams?.screenSharingConstraints;
@@ -639,7 +639,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 
 
 	private updateVideoVisibility() {
-		if (this.isVideoShown() || this._config.noVideoImageUrl == null) {
+		if (this.isVideoShown() || this.config.noVideoImageUrl == null) {
 			this.$image.classList.add('hidden');
 			this.$video.classList.remove('hidden');
 		} else {
@@ -666,8 +666,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 		}
 
 		let displayAreaAspectRatio: number;
-		if (this._config.displayAreaAspectRatio != null) {
-			displayAreaAspectRatio = this._config.displayAreaAspectRatio;
+		if (this.config.displayAreaAspectRatio != null) {
+			displayAreaAspectRatio = this.config.displayAreaAspectRatio;
 		} else if (this.isVideoShown() && this.$video.videoWidth > 0) {
 			displayAreaAspectRatio = this.$video.videoWidth / this.$video.videoHeight;
 		} else if (this.$image.naturalWidth) {

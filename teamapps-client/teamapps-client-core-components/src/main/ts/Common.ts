@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoEntranceAnimation, DtoExitAnimation, DtoPageDisplayMode, DtoPageTransition, DtoRepeatableAnimation,} from "./generated";
+import {DtoEntranceAnimation, DtoExitAnimation, DtoPageTransition, DtoRepeatableAnimation,} from "./generated";
 import rgba from "color-rgba";
 import {Component, parseHtml} from "teamapps-client-core";
 import {applyCss, extractCssValues} from "./util/cssUtil";
@@ -320,11 +320,9 @@ export function formatDecimalNumber(integerNumber: number, precision: number, de
 	return (integerNumber < 0 ? '-' : '') + formattedIntegerPart + decimalSeparator + fractionalPart;
 }
 
-
-
 export function calculateDisplayModeInnerSize(containerDimensions: { width: number, height: number },
 											  innerPreferredDimensions: { width: number, height: number },
-											  displayMode: DtoPageDisplayMode | any,
+											  displayMode: "FIT_WIDTH" | "FIT_HEIGHT" | "FIT_SIZE" | "COVER" | "ORIGINAL_SIZE",
 											  zoomFactor: number = 1,
 											  considerScrollbars = false
 ): { width: number, height: number } {
@@ -333,9 +331,9 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 
 	console.debug(`outer dimensions: ${containerDimensions.width}x${containerDimensions.height}`);
 	console.debug(`inner dimensions: ${innerPreferredDimensions.width}x${innerPreferredDimensions.height}`);
-	console.debug(`displayMode: ${DtoPageDisplayMode[displayMode]}`);
+	console.debug(`displayMode: ${displayMode}`);
 
-	if (displayMode === DtoPageDisplayMode.FIT_WIDTH) {
+	if (displayMode === "FIT_WIDTH") {
 		let width = Math.floor(containerDimensions.width * zoomFactor);
 		if (considerScrollbars && zoomFactor <= 1 && Math.ceil(width / imageAspectRatio) > containerDimensions.height) {
 			// There will be a vertical scroll bar, so make sure the width will not result in a horizontal scrollbar, too
@@ -343,7 +341,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			width = Math.min(width, containerDimensions.width - Constants.SCROLLBAR_WIDTH);
 		}
 		return {width: width, height: width / imageAspectRatio};
-	} else if (displayMode === DtoPageDisplayMode.FIT_HEIGHT) {
+	} else if (displayMode === "FIT_HEIGHT") {
 		let height = Math.floor(containerDimensions.height * zoomFactor);
 		if (considerScrollbars && zoomFactor <= 1 && height * imageAspectRatio > containerDimensions.width) {
 			// There will be a horizontal scroll bar, so make sure the width will not result in a vertical scrollbar, too
@@ -351,7 +349,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			height = Math.min(height, containerDimensions.height - Constants.SCROLLBAR_WIDTH);
 		}
 		return {width: height * imageAspectRatio, height: height};
-	} else if (displayMode === DtoPageDisplayMode.FIT_SIZE) {
+	} else if (displayMode === "FIT_SIZE") {
 		if (imageAspectRatio > viewPortAspectRatio) {
 			let width = Math.floor(containerDimensions.width * zoomFactor);
 			return {width: width, height: width / imageAspectRatio};
@@ -359,7 +357,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			let height = Math.floor(containerDimensions.height * zoomFactor);
 			return {width: height * imageAspectRatio, height: height};
 		}
-	} else if (displayMode === DtoPageDisplayMode.COVER) {
+	} else if (displayMode === "COVER") {
 		if (imageAspectRatio < viewPortAspectRatio) {
 			let width = Math.floor(containerDimensions.width * zoomFactor);
 			return {width: width, height: width / imageAspectRatio};
@@ -646,49 +644,6 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 		// ignore (ie 11 problem, can be ignored even in ie 11)
 	}
 	sel.addRange(range);
-}
-
-export function parseSvg<E extends Element>(htmlString: string): E {
-	const svgPrefix = "<svg ";
-	if (!htmlString.startsWith("<svg ")) {
-		throw "svg string needs to start with '" + svgPrefix + "'";
-	}
-	let tagStartCount = (htmlString.match(/<\w+/g) || []).length;
-	let tagEndCount = (htmlString.match(/<\//g) || []).length;
-	if (tagStartCount !== tagEndCount) {
-		throw "SVG strings need to have explicit closing tags! " + htmlString;
-	}
-	if (htmlString.indexOf("xmlns=\"") === -1) {
-		// for browser compatibility reasons, make sure to add the SVG namespace!
-		htmlString = htmlString.substring(0, svgPrefix.length) + 'xmlns="http://www.w3.org/2000/svg" ' + htmlString.substring(svgPrefix.length);
-	}
-	const node: E = new DOMParser().parseFromString(htmlString, 'image/svg+xml').getRootNode() as E;
-	node.remove(); // detach from DOMParser <body>!
-	return node;
-}
-
-export function elementIndex(node: Element) {
-	let i = 0;
-	while ((node = node.previousElementSibling) != null) {
-		i++;
-	}
-	return i;
-}
-
-export function prependChild(parent: Node, child: Node) {
-	if (parent.childNodes.length > 0) {
-		parent.insertBefore(child, parent.firstChild);
-	} else {
-		parent.appendChild(child);
-	}
-}
-
-export function insertBefore(newNode: Node, referenceNode: Node) {
-	referenceNode.parentNode.insertBefore(newNode, referenceNode);
-}
-
-export function insertAfter(newNode: Node, referenceNode: Node) {
-	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling /* may be null ==> inserted at end!*/);
 }
 
 export function outerWidthIncludingMargins(el: HTMLElement) {

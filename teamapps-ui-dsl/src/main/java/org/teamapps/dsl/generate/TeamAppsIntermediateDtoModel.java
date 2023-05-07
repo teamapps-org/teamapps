@@ -161,6 +161,14 @@ public class TeamAppsIntermediateDtoModel {
 		return enumDeclarations;
 	}
 
+	public List<TypeWrapper<?>> getAllTypeDeclarations() {
+		ArrayList<TypeWrapper<?>> l = new ArrayList<>();
+		l.addAll(getClassDeclarations());
+		l.addAll(getInterfaceDeclarations());
+		l.addAll(getEnumDeclarations());
+		return l;
+	}
+
 	public List<EventDeclarationContext> getEventDeclarations() {
 		return eventDeclarations;
 	}
@@ -303,11 +311,51 @@ public class TeamAppsIntermediateDtoModel {
 				.orElse(null);
 	}
 
-	public Optional<TypeWrapper<?>> findReferencedType(TypeContext type) {
+	public boolean shouldReferenceDtoType(TypeContext type) {
+		List<String> knownJavaTypes = List.of(
+				"Object", "java.lang.Object",
+				"String", "java.lang.String",
+				"boolean", "char", "byte", "short", "int", "long", "float", "double",
+				"Boolean", "Character", "Byte", "Short", "Integer", "Long", "Float", "Double"
+		);
+		boolean isKnownJavaType = knownJavaTypes.contains(type.getText());
+		return !isKnownJavaType && (!isCollection(type) || shouldReferenceDtoType(getCollectionType(type)));
+	}
+
+	public boolean isCollection(TypeContext typeContext) {
+		return isList(typeContext) || isDictionary(typeContext);
+	}
+
+	public static boolean isList(TypeContext typeContext) {
+		return typeContext.typeReference() != null && Set.of("List", "java.util.List").contains(typeContext.typeReference().typeName().getText());
+	}
+
+	public static boolean isDictionary(TypeContext typeContext) {
+		return typeContext.typeReference() != null
+				&& ("Dictionary".equals(typeContext.typeReference().typeName().getText()));
+	}
+
+	private TypeContext getCollectionType(TypeContext typeContext) {
+		if (typeContext.typeReference() != null && typeContext.typeReference().typeArguments() != null && !typeContext.typeReference().typeArguments().typeArgument().isEmpty()) {
+			return typeContext.typeReference().typeArguments().typeArgument(0).type();
+		} else {
+			throw new IllegalArgumentException(typeContext.typeReference().typeName().getText() + " must have a generic parameter!");
+		}
+	}
+
+	public static boolean isObject(TypeContext typeContext) {
+		return typeContext.typeReference() != null && Set.of("Object", "java.lang.Object").contains(typeContext.typeReference().typeName().getText());
+	}
+
+	public TypeWrapper<?> findReferencedDtoType(TypeContext type) {
+		if (isCollection(type)) {
+			return findReferencedDtoType(getCollectionType(type));
+		}
 		return Optional.<TypeWrapper<?>>empty()
 				.or(() -> findReferencedClass(type))
 				.or(() -> findReferencedInterface(type))
-				.or(() -> findReferencedEnum(type));
+				.or(() -> findReferencedEnum(type))
+				.orElseThrow(() -> new TeamAppsGeneratorException("Cannot find type of name " + type.typeReference().typeName().getText() + ". Did you forget to import it?"));
 	}
 
 	public Optional<ClassOrInterfaceWrapper<?>> findReferencedClassOrInterface(TypeContext type) {

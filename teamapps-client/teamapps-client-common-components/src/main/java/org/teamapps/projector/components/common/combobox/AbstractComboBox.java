@@ -21,7 +21,7 @@ package org.teamapps.projector.components.common.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.components.common.dto.DtoTextInputHandlingField;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.dto.protocol.DtoQueryWrapper;
 import org.teamapps.event.ProjectorEvent;

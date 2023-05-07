@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, insertAfter, insertBefore, parseHtml, TeamAppsEvent} from "teamapps-client-core";
 import {
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
 	DtoToolbar,
@@ -34,7 +34,7 @@ import {DropDown} from "../../../micro-components/DropDown";
 import {Emptyable} from "../../../util/Emptyable";
 import {ToolbarButton} from "./ToolbarButton";
 import {ToolbarButtonGroup} from "./ToolbarButtonGroup";
-import {insertAfter, insertBefore, outerWidthIncludingMargins} from "../../../Common";
+import {outerWidthIncludingMargins} from "../../../Common";
 
 interface FQButtonId {
 	groupId: string,
@@ -66,8 +66,8 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	private $overflowDropDownButton: HTMLElement;
 	private totalWidthOfOverflowButtons: number;
 
-	constructor(config: DtoToolbar, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoToolbar) {
+		super(config);
 		this._$toolbar = parseHtml(`<div class="Toolbar teamapps-blurredBackgroundImage"></div>`);
 		this._$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this._$toolbar.appendChild(this._$backgroundColorDiv);
@@ -107,7 +107,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 				return {...group.getConfig(), buttons: group.getButtonConfigs()}
 			})
 		};
-		let toolAccordion = new ToolAccordion(accordionConfig, this._context);
+		let toolAccordion = new ToolAccordion(accordionConfig);
 		toolAccordion.onToolbarButtonClick.addListener(eventObject => {
 			if (!eventObject.dropDownClickInfo) { //
 				this.overflowDropDown.close();
@@ -173,7 +173,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 		}
 		let emptyStateChanges = this.empty;
 
-		const buttonGroup = new ToolbarButtonGroup(groupConfig, this, this._context);
+		const buttonGroup = new ToolbarButtonGroup(groupConfig, this);
 		buttonGroup.getMainDomElement().classList.toggle("right-side", rightSide);
 		buttonGroup.onButtonClicked.addListener(e => {
 			return this.onToolbarButtonClick.fire({

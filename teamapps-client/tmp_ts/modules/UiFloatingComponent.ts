@@ -38,8 +38,8 @@ export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent>
 
 	private $expanderHandle: HTMLElement;
 
-	constructor(config: DtoFloatingComponent, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoFloatingComponent) {
+		super(config);
 		this.containerComponent = config.containerComponent as UiComponent;
 
 		this.$main = parseHtml(`<div class="UiFloatingComponent"></div>`);
@@ -47,8 +47,8 @@ export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent>
 		this.setContentComponent(config.contentComponent);
 		this.$expanderHandle = parseHtml(`<div class="expander-handle"></div>`);
 		this.$expanderHandle.addEventListener("click", evt => {
-			this.setExpanded(!this._config.expanded);
-			this.onExpandedOrCollapsed.fire({expanded: this._config.expanded});
+			this.setExpanded(!this.config.expanded);
+			this.onExpandedOrCollapsed.fire({expanded: this.config.expanded});
 		});
 		this.$main.appendChild(this.$expanderHandle);
 
@@ -81,20 +81,20 @@ export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent>
 
 	private updateFloatingPosition() {
 		removeClassesByFunction(this.$expanderHandle.classList, className => className.startsWith("position-"));
-		this.$expanderHandle.classList.add("position-" + this._config.position);
+		this.$expanderHandle.classList.add("position-" + this.config.position);
 
 		let containerWidth = this.containerComponent.getMainElement().offsetWidth;
 		let containerHeight = this.containerComponent.getMainElement().offsetHeight;
 
 		// width
-		if (this._config.width === -1) {
+		if (this.config.width === -1) {
 			this.getMainElement().style.width = null;
-			this.getMainElement().style.maxWidth = (containerWidth - 2 * this._config.marginX) + "px";
-		} else if (this._config.width === 0) {
-			this.getMainElement().style.width = (containerWidth - 2 * this._config.marginX) + "px";
+			this.getMainElement().style.maxWidth = (containerWidth - 2 * this.config.marginX) + "px";
+		} else if (this.config.width === 0) {
+			this.getMainElement().style.width = (containerWidth - 2 * this.config.marginX) + "px";
 			this.getMainElement().style.maxWidth = null;
 		} else {
-			this.getMainElement().style.width = this._config.width + "px";
+			this.getMainElement().style.width = this.config.width + "px";
 			this.getMainElement().style.maxWidth = null;
 		}
 
@@ -102,42 +102,42 @@ export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent>
 		let contentHeight = this.contentComponent.getMainElement().offsetHeight;
 
 		// position X
-		if (this._config.expanded) {
-			if (this._config.position === UiFloatingComponentPosition.TOP_LEFT || this._config.position === UiFloatingComponentPosition.BOTTOM_LEFT) {
-				this.getMainElement().style.left = this._config.marginX + "px";
+		if (this.config.expanded) {
+			if (this.config.position === UiFloatingComponentPosition.TOP_LEFT || this.config.position === UiFloatingComponentPosition.BOTTOM_LEFT) {
+				this.getMainElement().style.left = this.config.marginX + "px";
 				this.getMainElement().style.right = null;
-			} else if (this._config.position === UiFloatingComponentPosition.TOP_RIGHT || this._config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
+			} else if (this.config.position === UiFloatingComponentPosition.TOP_RIGHT || this.config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
 				this.getMainElement().style.left = null;
-				this.getMainElement().style.right = this._config.marginX + "px";
+				this.getMainElement().style.right = this.config.marginX + "px";
 			}
 		} else {
-			if (this._config.position === UiFloatingComponentPosition.TOP_LEFT || this._config.position === UiFloatingComponentPosition.BOTTOM_LEFT) {
+			if (this.config.position === UiFloatingComponentPosition.TOP_LEFT || this.config.position === UiFloatingComponentPosition.BOTTOM_LEFT) {
 				this.getMainElement().style.left = `-${contentWidth}px`;
 				this.getMainElement().style.right = null;
-			} else if (this._config.position === UiFloatingComponentPosition.TOP_RIGHT || this._config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
+			} else if (this.config.position === UiFloatingComponentPosition.TOP_RIGHT || this.config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
 				this.getMainElement().style.left = null;
 				this.getMainElement().style.right = `-${contentWidth}px`;
 			}
 		}
 
 		// position Y
-		if (this._config.position === UiFloatingComponentPosition.TOP_LEFT || this._config.position === UiFloatingComponentPosition.TOP_RIGHT) {
-			this.getMainElement().style.top = this._config.marginY + "px";
+		if (this.config.position === UiFloatingComponentPosition.TOP_LEFT || this.config.position === UiFloatingComponentPosition.TOP_RIGHT) {
+			this.getMainElement().style.top = this.config.marginY + "px";
 			this.getMainElement().style.bottom = null;
-		} else if (this._config.position === UiFloatingComponentPosition.BOTTOM_LEFT || this._config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
+		} else if (this.config.position === UiFloatingComponentPosition.BOTTOM_LEFT || this.config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
 			this.getMainElement().style.top = null;
-			this.getMainElement().style.bottom = this._config.marginY + "px";
+			this.getMainElement().style.bottom = this.config.marginY + "px";
 		}
 		// height
-		if (this._config.height === -1) {
+		if (this.config.height === -1) {
 			this.getMainElement().style.height = null;
-			this.getMainElement().style.maxHeight = (containerHeight - 2 * this._config.marginY) + "px";
-		} else if (this._config.height === 0) {
-			this.getMainElement().style.height = (containerHeight - 2 * this._config.marginY) + "px";
+			this.getMainElement().style.maxHeight = (containerHeight - 2 * this.config.marginY) + "px";
+		} else if (this.config.height === 0) {
+			this.getMainElement().style.height = (containerHeight - 2 * this.config.marginY) + "px";
 			this.getMainElement().style.maxHeight = null;
 		} else {
-			this.getMainElement().style.height = this._config.height + "px";
-			this.getMainElement().style.maxHeight = (containerHeight - 2 * this._config.marginY) + "px";
+			this.getMainElement().style.height = this.config.height + "px";
+			this.getMainElement().style.maxHeight = (containerHeight - 2 * this.config.marginY) + "px";
 		}
 	}
 
@@ -155,25 +155,25 @@ export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent>
 	}
 
 	setExpanded(expanded: boolean): void {
-		this._config.expanded = expanded;
+		this.config.expanded = expanded;
 		this.$main.classList.toggle("expanded", expanded);
 		this.updateFloatingPosition();
 	}
 
 	setPosition(position: UiFloatingComponentPosition): void {
-		this._config.position = position;
+		this.config.position = position;
 		this.updateFloatingPosition();
 	}
 
 	setDimensions(width: number, height: number): void {
-		this._config.width = width;
-		this._config.height = height;
+		this.config.width = width;
+		this.config.height = height;
 		this.updateFloatingPosition();
 	}
 
 	setMargins(marginX: number, marginY: number): void {
-		this._config.marginX = marginX;
-		this._config.marginY = marginY;
+		this.config.marginX = marginX;
+		this.config.marginY = marginY;
 		this.updateFloatingPosition();
 	}
 

@@ -25,8 +25,8 @@ export class IFrame extends AbstractComponent<DtoIFrame> implements DtoIFrameCom
 
 	private $iframe: HTMLIFrameElement;
 
-	constructor(config: DtoIFrame, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoIFrame) {
+		super(config);
 		this.$iframe = parseHtml(`<iframe class="IFrame" src="${config.url}"></iframe>`);
 		// this.$iframe.addEventListener("load", e => {
 		// 	console.log(`load: ${this.$iframe.src}`);

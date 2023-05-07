@@ -25,8 +25,8 @@ import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoElegantPanel;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.format.HorizontalElementAlignment;
-import org.teamapps.ux.component.format.Spacing;
+import org.teamapps.ux.format.HorizontalElementAlignment;
+import org.teamapps.ux.format.Spacing;
 
 public class ElegantPanel extends AbstractComponent {
 

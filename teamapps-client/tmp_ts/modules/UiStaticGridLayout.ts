@@ -31,9 +31,8 @@ export class UiStaticGridLayout extends AbstractComponent<DtoStaticGridLayout> i
 	private $main: HTMLElement;
 	private layout: UiGridLayout;
 
-	constructor(config: DtoStaticGridLayout,
-	            context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoStaticGridLayout,) {
+		super(config);
 		this.$main = parseHtml(`<div class="UiStaticGridLayout"></div>`);
 		this.updateLayout(config.descriptor);
 	}

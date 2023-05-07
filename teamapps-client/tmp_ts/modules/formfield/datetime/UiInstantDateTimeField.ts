@@ -29,13 +29,13 @@ import {DateTime} from "luxon";
 
 export class UiInstantDateTimeField extends DtoAbstractDateTimeField<DtoInstantDateTimeField, number> implements UiInstantDateTimeFieldEventSource, UiInstantDateTimeFieldCommandHandler {
 
-	protected initialize(config: DtoInstantDateTimeField, context: TeamAppsUiContext) {
-		super.initialize(config, context);
+	protected initialize(config: DtoInstantDateTimeField) {
+		super.initialize(config);
 		this.getMainInnerDomElement().classList.add("UiDateTimeField");
 	}
 
 	protected getTimeZone(): string {
-		return this._config.timeZoneId;
+		return this.config.timeZoneId;
 	}
 
 	isValidData(v: number): boolean {
@@ -52,7 +52,7 @@ export class UiInstantDateTimeField extends DtoAbstractDateTimeField<DtoInstantD
 	}
 
 	private toDateTime(uiValue: number) {
-		return DateTime.fromMillis(uiValue).setZone(this._config.timeZoneId);
+		return DateTime.fromMillis(uiValue).setZone(this.config.timeZoneId);
 	}
 
 	public getTransientValue(): number {
@@ -84,7 +84,7 @@ export class UiInstantDateTimeField extends DtoAbstractDateTimeField<DtoInstantD
 	}
 
 	setTimeZoneId(timeZoneId: string): void {
-		this._config.timeZoneId = timeZoneId;
+		this.config.timeZoneId = timeZoneId;
 		this.displayCommittedValue();
 	}
 

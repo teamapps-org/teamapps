@@ -29,8 +29,8 @@ export class RootPanel extends AbstractComponent<DtoRootPanel> implements DtoRoo
 	private $contentWrapper: HTMLElement;
 	private $imagePreloadDiv: HTMLElement;
 
-	constructor(config: DtoRootPanel, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoRootPanel) {
+		super(config);
 
 		this.$root = parseHtml(`<div data-background-container-id="${config.id}" class="RootPanel">
               <div class="image-preload-div"></div>

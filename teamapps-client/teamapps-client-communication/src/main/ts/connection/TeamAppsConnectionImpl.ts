@@ -290,14 +290,11 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 	private enchainCommandExecution(cmd: DtoCMD) {
 		this.currentCommandExecutionPromise = this.currentCommandExecutionPromise.finally(async () => {
 			try {
-				console.log(cmd.id);
 				let result = await this.commandHandler.executeCommand(cmd.lid, cmd.cid, cmd.c);
-				console.log(cmd.id + " finished");
 				if (cmd.r) {
 					this.sendResult(cmd.id, result);
 				}
 			} catch (reason) {
-				console.log(cmd.id + ": Error...");
 				this.logException(reason);
 			} finally {
 				this.ensureEnoughCommandsRequested();

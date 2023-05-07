@@ -65,8 +65,8 @@ export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements 
 
 	private ui: Overlay;
 
-	constructor(config: DtoShakaPlayer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoShakaPlayer) {
+		super(config);
 
 		console.log(config.hlsUrl, config.dashUrl, config.posterImageUrl)
 
@@ -86,7 +86,7 @@ export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements 
 			this.player.addEventListener('error', () => this.onErrorLoading.fire({}));
 			this.player.addEventListener('streaming', () => {
 				this.reconfigureUi();
-				this.setTime(this._config.timeMillis);
+				this.setTime(this.config.timeMillis);
 				this.onManifestLoaded.fire({manifest: this.createUiManifest(this.player.getManifest())});
 			});
 
@@ -163,9 +163,9 @@ export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements 
 	private reconfigurePlayer() {
 		this.player.configure({
 			manifest: {
-				disableVideo: this._config.videoDisabled // will advice the manifest parser to set all videos to null. Note that the quality selection button must be removed!
+				disableVideo: this.config.videoDisabled // will advice the manifest parser to set all videos to null. Note that the quality selection button must be removed!
 			},
-			preferredAudioLanguage: this._config.preferredAudioLanguage
+			preferredAudioLanguage: this.config.preferredAudioLanguage
 		} );
 	}
 
@@ -200,7 +200,7 @@ export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements 
 	}
 
 	public selectAudioLanguage(language: string, role: string): any {
-		this._config.preferredAudioLanguage = language;
+		this.config.preferredAudioLanguage = language;
 		this.player.selectAudioLanguage(language, role);
 	}
 

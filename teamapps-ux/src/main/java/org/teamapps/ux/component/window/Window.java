@@ -24,12 +24,12 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoWindow;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.TeamAppsComponent;
 import org.teamapps.ux.component.panel.Panel;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class Window extends Panel {
 
 	private boolean modal = false;

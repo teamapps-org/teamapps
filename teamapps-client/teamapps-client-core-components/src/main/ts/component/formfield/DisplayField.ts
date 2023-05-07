@@ -29,7 +29,7 @@ export class DisplayField extends AbstractField<DtoDisplayField, string> impleme
 	private showHtml: boolean;
 	private removeStyleTags: boolean;
 
-	protected initialize(config: DtoDisplayField, context: TeamAppsUiContext) {
+	protected initialize(config: DtoDisplayField) {
 		this._$field = parseHtml(`<div class="DisplayField">`);
 
 		this.setShowBorder(config.showBorder);

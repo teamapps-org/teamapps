@@ -14,6 +14,7 @@
     "teamapps-client-communication",
     "teamapps-client-core",
     "teamapps-client-core-components",
+    "projector-calendar",
     "teamapps-client-common-components"
   ],
   "comments": {},

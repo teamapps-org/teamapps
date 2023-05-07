@@ -59,8 +59,8 @@ export class UiChatInput extends AbstractComponent<DtoChatInput> implements UiCh
 	private $sendButton: HTMLElement;
 	private $attachmentButton: Element;
 
-	constructor(config: DtoChatInput, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoChatInput) {
+		super(config);
 		this.$main = parseHtml(`<div class="UiChatInput drop-zone">
 	<div class="upload-items"></div>
 	<textarea class="text-input" maxlength="${config.messageLengthLimit}"></textarea>
@@ -95,7 +95,7 @@ export class UiChatInput extends AbstractComponent<DtoChatInput> implements UiCh
 		this.$sendButton.addEventListener("click", () => this.send());
 
 		this.$main.addEventListener("dragover", (e) => {
-			if (!this._config.attachmentsEnabled) {
+			if (!this.config.attachmentsEnabled) {
 				return;
 			}
 			this.$main.classList.add("drop-zone-active");
@@ -149,12 +149,12 @@ export class UiChatInput extends AbstractComponent<DtoChatInput> implements UiCh
 	}
 
 	private upload(files: FileList) {
-		if (!this._config.attachmentsEnabled) {
+		if (!this.config.attachmentsEnabled) {
 			return;
 		}
 		for (let i = 0; i < files.length; i++) {
 			const file = files[i];
-			const uploadItem = new FileUploadItem(file, this._config.defaultFileIcon, this._config.uploadUrl, this._context);
+			const uploadItem = new FileUploadItem(file, this.config.defaultFileIcon, this.config.uploadUrl);
 			const $itemWrapper = parseHtml(`<div class="upload-item-wrapper">
 	<div class="delete-button glyphicon glyphicon-remove glyphicon-button"></div>
 </div>`);
@@ -185,7 +185,7 @@ export class UiChatInput extends AbstractComponent<DtoChatInput> implements UiCh
 	}
 
 	public setAttachmentsEnabled(enabled: boolean) {
-		this._config.attachmentsEnabled = enabled;
+		this.config.attachmentsEnabled = enabled;
 		this.$attachmentButton.classList.toggle("hidden", !enabled);
 	}
 }
@@ -203,7 +203,7 @@ class FileUploadItem {
 	public state: UploadState = UploadState.IN_PROGRESS;
 	public uploadedFileUuid: string;
 
-	constructor(public file: File, defaultFileIcon: string, uploadUrl: string, context: TeamAppsUiContext) {
+	constructor(public file: File, defaultFileIcon: string, uploadUrl: string) {
 		this.$main = parseHtml(`<div class="upload-item">
 	<div class="icon img img-24" style="background-image: url('${defaultFileIcon}')"></div>
 	<div class="name">${file.name}</div>

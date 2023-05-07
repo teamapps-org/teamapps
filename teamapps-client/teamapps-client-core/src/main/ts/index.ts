@@ -16,7 +16,6 @@ export * from "./util/debounce";
 export * from "./util/deepEquals";
 export * from "./util/DeferredExecutor";
 export * from "./util/domUtil";
-export * from "./util/exception-util";
 export * from "./util/fullscreen";
 export * from "./util/locationUtil";
 export * from "./util/nonRecursive";

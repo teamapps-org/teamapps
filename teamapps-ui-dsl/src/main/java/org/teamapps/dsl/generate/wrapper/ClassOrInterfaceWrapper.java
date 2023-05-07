@@ -171,16 +171,24 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 		return Stream.<Stream<TypeWrapper<?>>>of(
 						getSuperTypes().stream().map(t -> (TypeWrapper<?>) t),
 						getProperties().stream()
-								.flatMap(p -> getModel().findReferencedType(p.type()).stream()),
+								.map(p -> p.type())
+								.filter(t -> getModel().shouldReferenceDtoType(t))
+								.map(t -> getModel().findReferencedDtoType(t)),
 						getCommands().stream()
 								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.flatMap(fp -> getModel().findReferencedType(fp.type()).stream()),
+								.map(p -> p.type())
+								.filter(t -> getModel().shouldReferenceDtoType(t))
+								.map(t -> getModel().findReferencedDtoType(t)),
 						getEvents().stream()
 								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.flatMap(fp -> getModel().findReferencedType(fp.type()).stream()),
+								.map(p -> p.type())
+								.filter(t -> getModel().shouldReferenceDtoType(t))
+								.map(t -> getModel().findReferencedDtoType(t)),
 						getQueries().stream()
 								.flatMap(cd -> cd.formalParameterWithDefault().stream())
-								.flatMap(fp -> getModel().findReferencedType(fp.type()).stream())
+								.map(p -> p.type())
+								.filter(t -> getModel().shouldReferenceDtoType(t))
+								.map(t -> getModel().findReferencedDtoType(t))
 				)
 				.flatMap(Function.identity())
 				.filter(c -> c != this)

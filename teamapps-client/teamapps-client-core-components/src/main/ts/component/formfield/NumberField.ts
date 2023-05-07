@@ -58,7 +58,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 	private numberFormat: Intl.NumberFormat;
 	private numberParser: NumberParser;
 
-	protected initialize(config: DtoNumberField, context: TeamAppsUiContext) {
+	protected initialize(config: DtoNumberField) {
 		this.numberFormat = new Intl.NumberFormat(config.locale, {
 			minimumFractionDigits: this.config.precision,
 			maximumFractionDigits: this.config.precision,
@@ -161,7 +161,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		if (isSpecialMouseButton || this.getEditingMode() === DtoFieldEditingMode.DISABLED) {
 			return;
 		}
-		if (!this.hasFocus() && !this._context.config.optimizedForTouch) {
+		if (!this.hasFocus()) { // TODO && !this._context.config.optimizedForTouch
 			this.focus();
 		}
 		e.preventDefault(); // do not lose the focus!
@@ -176,9 +176,8 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 			let newValue = this.coerceToSteppedValue(aPrioriNewValue);
 			this.setSliderPositionByValue(newValue);
 			this.$field.value = this.formatNumber(newValue);
-			if (!this._context.config.optimizedForTouch) {
+			// TODO if (!this._context.config.optimizedForTouch) {
 				this.$field.select();
-			}
 			this.ensureDecimalInput();
 			this.updateClearButton();
 		};
@@ -187,9 +186,9 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		let endHandler = () => {
 			document.removeEventListener(`pointermove`, moveHandler);
 			document.removeEventListener(`pointerup`, endHandler);
-			if (!this._context.config.optimizedForTouch) {
+			// TODO if (!this._context.config.optimizedForTouch) {
 				this.focus();
-			}
+			//}
 			if (this.commitOnSliderChange) {
 				this.commit();
 			}

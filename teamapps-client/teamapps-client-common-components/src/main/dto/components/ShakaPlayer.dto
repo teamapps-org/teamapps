@@ -1,0 +1,88 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
+
+import org.teamapps.dto.Component;
+
+class ShakaPlayer extends Component {
+    String hlsUrl;
+    String dashUrl;
+    String posterImageUrl;
+    PosterImageSize posterImageSize;
+    int timeUpdateEventThrottleMillis;
+    String backgroundColor;
+    boolean autoplay;
+    TrackLabelFormat trackLabelFormat;
+    boolean videoDisabled;
+    long timeMillis;
+    String preferredAudioLanguage;
+
+	command setUrls(String hlsUrl, String dashUrl);
+	command setTime(long timeMillis);
+	command selectAudioLanguage(String language, String role);
+
+	event errorLoading();
+	event manifestLoaded(ShakaManifest manifest);
+	event timeUpdate(long timeMillis);
+	event ended();
+
+	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
+}
+
+enum TrackLabelFormat {
+	LABEL,
+	LANGUAGE,
+	LANGUAGE_ROLE,
+	ROLE;
+}
+
+class ShakaManifest {
+    required List<ShakaManifestVariant> variants;
+}
+
+class ShakaManifestVariant {
+	int id;
+	ShakaAudioStream audio;
+	ShakaVideoStream video;
+	int bandwidth;
+}
+
+abstract class AbstractShakaStream {
+	int id;
+	String originalId;
+	String mimeType;
+	String codecs;
+	int bandwidth;
+	String label;
+	List<String> roles;
+}
+
+class ShakaAudioStream extends AbstractShakaStream {
+    String language;
+    int channelsCount;
+    int audioSamplingRate;
+}
+
+class ShakaVideoStream extends AbstractShakaStream {
+    int frameRate;
+    String pixelAspectRatio;
+    int width;
+    int height;
+}

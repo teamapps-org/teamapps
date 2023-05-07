@@ -188,8 +188,8 @@ export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> i
 	private verticalItemAlignment: UiVerticalItemAlignment;
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoInfiniteItemView, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoInfiniteItemView) {
+		super(config);
 		this.uuid = generateUUID();
 		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.uuid}">
                 <div class="slickgrid"></div>
@@ -265,7 +265,7 @@ export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> i
 			enableColumnReorder: false,
 			forceFitColumns: true,
 			fullWidthRows: true,
-			rowHeight: this._config.rowHeight,
+			rowHeight: this.config.rowHeight,
 			enableTextSelectionOnCells: false,
 			editable: false,
 			enableAddRow: false
@@ -318,15 +318,15 @@ export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> i
 		if (this.itemWidth === 0) {
 			return availableWidth;
 		} else if (this.itemWidth < 1) {
-			let widthIncludingMargins = availableWidth * this.itemWidth + this._config.horizontalItemMargin * 2;
+			let widthIncludingMargins = availableWidth * this.itemWidth + this.config.horizontalItemMargin * 2;
 			if (widthIncludingMargins > availableWidth) {
-				return availableWidth - this._config.horizontalItemMargin * 2;
+				return availableWidth - this.config.horizontalItemMargin * 2;
 			} else {
-				return availableWidth * this.itemWidth + (includeMargins ? this._config.horizontalItemMargin * 2 : 0);
+				return availableWidth * this.itemWidth + (includeMargins ? this.config.horizontalItemMargin * 2 : 0);
 			}
 			return Math.min(widthIncludingMargins, availableWidth);
 		} else if (this.itemWidth >= 1) {
-			return Math.min(this.itemWidth + (includeMargins ? this._config.horizontalItemMargin * 2 : 0), availableWidth);
+			return Math.min(this.itemWidth + (includeMargins ? this.config.horizontalItemMargin * 2 : 0), availableWidth);
 		}
 	}
 
@@ -358,9 +358,9 @@ export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> i
 	}
 
 	private updateAutoHeight() {
-		if (this._config.autoHeight) {
+		if (this.config.autoHeight) {
 			let computedStyle = getComputedStyle(this.$mainDomElement);
-			let newHeight = Math.min(parseFloat(computedStyle.maxHeight) || Number.MAX_SAFE_INTEGER, this.dataProvider.getLength() * this._config.rowHeight
+			let newHeight = Math.min(parseFloat(computedStyle.maxHeight) || Number.MAX_SAFE_INTEGER, this.dataProvider.getLength() * this.config.rowHeight
 				+ parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom)) + "px";
 			if (newHeight != this.$grid.style.height) {
 				this.$grid.style.height = newHeight;
@@ -418,8 +418,8 @@ export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> i
 		this.updateStyles();
 	}
 
-	setItemTemplate(itemTemplate: DtoTemplate): void {
-		this.itemTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
+	setItemTemplate(itemTemplate: Template): void {
+		this.itemTemplateRenderer = itemTemplate;
 		if (this.grid) {
 			this.redrawGridContents();
 		}

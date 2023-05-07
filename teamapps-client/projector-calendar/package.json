@@ -1,0 +1,41 @@
+{
+  "name": "projector-calendar",
+  "version": "0.9.155-SNAPSHOT",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "dist/lib/index.d.ts",
+  "scripts": {
+    "sync-pom-version": "node build/sync-pom-version.js",
+    "del_dist": "rimraf 'dist/*'",
+    "clean": "yarn run del_dist",
+    "tsc": "tsc",
+    "build:insert-version": "cross-var replace-in-file \"__TEAMAPPS_VERSION__\" \"$npm_package_version\" \"dist/**/*.js\"",
+    "bundle": "node esbuild.mjs",
+    "build": "yarn run del_dist && yarn run tsc && yarn run build:insert-version && yarn run bundle",
+    "build-prod": "NODE_ENV=production yarn run build",
+    "start": "yarn run watch-build",
+    "watch-build": "concurrently --names \"yarn:watch-tsc\" \"yarn:watch-bundle\"",
+    "watch-bundle": "yarn run bundle -- --watch",
+    "watch-tsc": "yarn run tsc --watch"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "cross-var": "^1.1.0",
+    "esbuild": "^0.15.13",
+    "onchange": "^7.1.0",
+    "replace-in-file": "^6.3.5",
+    "rimraf": "^3.0.2",
+    "sync-pom-version-to-package": "^1.6.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "4.4.2",
+    "@fullcalendar/daygrid": "4.4.2",
+    "@fullcalendar/interaction": "4.4.2",
+    "@fullcalendar/moment": "4.4.2",
+    "@fullcalendar/moment-timezone": "4.4.2",
+    "@fullcalendar/timegrid": "4.4.2",
+    "d3": "^5.9.7",
+    "d3-luxon": "^1.0.2"
+  }
+}

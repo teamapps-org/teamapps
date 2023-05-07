@@ -1,0 +1,166 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
+
+import org.teamapps.dto.Component;
+
+class TimeGraph extends Component {
+	LineChartYScaleZoomMode yScaleZoomMode;
+	required LongInterval intervalX;
+	required List<TimeChartZoomLevel> zoomLevels;
+	required int maxPixelsBetweenDataPoints;  // ... before switching to higher zoom level
+	required List<Graph> graphs;
+	ScaleType yScaleType;
+	LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode;
+	String locale;
+	String timeZoneId;
+
+	command setIntervalX(LongInterval intervalX);
+	command setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints);
+	command addData(int zoomLevel, Dictionary<GraphData> data);
+	command resetGraphData(String graphId); // client will request data again (corresponding to zoom and component size)
+	command resetAllData(LongInterval intervalX, List<TimeChartZoomLevel> newZoomLevels); // resets all data
+	command setMouseScrollZoomPanMode(LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode);
+	command setSelectedInterval(LongInterval intervalX);
+
+	command setGraphs(List<Graph> graphs);
+	command addOrUpdateGraph(Graph graph);
+
+	command zoomTo(LongInterval intervalX);
+
+	event zoomed(LongInterval displayedInterval, int zoomLevelIndex, double millisecondsPerPixel, Dictionary<List<LongInterval>> neededIntervalsByGraphId);
+	event intervalSelected(LongInterval intervalX);
+}
+
+enum LineChartYScaleZoomMode {
+    FIXED,
+    DYNAMIC,
+    DYNAMIC_INCLUDING_ZERO
+}
+
+enum LineChartMouseScrollZoomPanMode {
+	ENABLED,
+	WITH_MODIFIER_KEY,
+	DISABLED
+}
+
+class TimeChartZoomLevel {
+	required long approximateMillisecondsPerDataPoint;
+}
+
+// ==== GRAPHS
+
+interface Graph {
+	String id;
+	boolean yAxisVisible;
+	String yAxisColor;
+	ScaleType yScaleType;
+	LongInterval intervalY;
+	LineChartYScaleZoomMode yScaleZoomMode;
+	boolean yZeroLineVisible;
+}
+
+class LineGraph implements Graph {
+	String dataSeriesId;
+	LineChartCurveType graphType;
+    double dataDotRadius;
+    String lineColorScaleMin;
+    String lineColorScaleMax;
+    String areaColorScaleMin;
+    String areaColorScaleMax;
+}
+
+class HoseGraph implements Graph {
+	String upperBoundDataSeriesId;
+	String middleLineDataSeriesId;
+	String lowerBoundDataSeriesId;
+	LineChartCurveType graphType;
+    double dataDotRadius;
+    String areaColor;
+    boolean stripedArea;
+    String middleLineColor;
+	String lowerLineColor;
+	String upperLineColor;
+}
+
+class IncidentGraph implements Graph {
+    // no config at the moment...
+}
+
+class GraphGroup implements Graph {
+	List<Graph> graphs;
+}
+
+// ==== DATA
+
+interface GraphData {
+     required LongInterval interval;
+}
+class LineGraphData implements GraphData {
+    required List<LineGraphDataPoint> dataPoints;
+}
+class LineGraphDataPoint {
+	required double x;
+	required double y;
+}
+class IncidentGraphData implements GraphData {
+    required List<IncidentGraphDataPoint> dataPoints;
+}
+class IncidentGraphDataPoint {
+    required double x1;
+	required double x2;
+	required double y;
+	required String color;
+	required String tooltipHtml;
+}
+class HoseGraphData implements GraphData {
+    required LineGraphData lowerLineData;
+    required LineGraphData middleLineData;
+    required LineGraphData upperLineData;
+}
+class GraphGroupData implements GraphData {
+    required Dictionary<GraphData> graphDataByGraphId;
+}
+
+
+
+@TypeScriptFactory
+class LongInterval {
+ 	required long min;
+ 	required long max;
+}
+
+enum LineChartCurveType {
+	LINEAR,
+    STEP,
+    STEPBEFORE,
+    STEPAFTER,
+    BASIS,
+    CARDINAL,
+	MONOTONE,
+    CATMULLROM
+}
+
+enum ScaleType {
+	LINEAR,
+	LOG10,
+	SYMLOG // see https://github.com/d3/d3-scale/blob/main/README.md#symlog-scales
+}
+

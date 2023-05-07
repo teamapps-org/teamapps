@@ -21,7 +21,7 @@ package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoImageElement;
-import org.teamapps.ux.component.format.*;
+import org.teamapps.ux.format.*;
 
 public class ImageElement extends AbstractGridTemplateElement {
 

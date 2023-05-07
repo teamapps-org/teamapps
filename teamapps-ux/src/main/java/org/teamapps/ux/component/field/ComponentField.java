@@ -22,11 +22,11 @@ package org.teamapps.ux.component.field;
 import org.teamapps.dto.DtoComponentField;
 import org.teamapps.dto.DtoField;
 import org.teamapps.ux.component.ClientObject;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.TeamAppsComponent;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class ComponentField extends AbstractField<Void> {
 
     private Component component;

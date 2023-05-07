@@ -22,8 +22,8 @@ package org.teamapps.ux.component.template.gridtemplate;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoAbstractGridTemplateElement;
 import org.teamapps.dto.DtoGlyphIconElement;
-import org.teamapps.ux.component.format.HorizontalElementAlignment;
-import org.teamapps.ux.component.format.VerticalElementAlignment;
+import org.teamapps.ux.format.HorizontalElementAlignment;
+import org.teamapps.ux.format.VerticalElementAlignment;
 
 public class GlyphIconElement extends AbstractGridTemplateElement<GlyphIconElement> {
 

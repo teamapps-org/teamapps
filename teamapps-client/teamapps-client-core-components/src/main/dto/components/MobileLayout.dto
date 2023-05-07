@@ -1,0 +1,11 @@
+package "teamapps-client-core-components":org.teamapps.dto;
+
+class MobileLayout extends Component {
+	Toolbar* toolbar;
+	Component* initialView;
+	NavigationBar* navigationBar;
+
+	command setToolbar(Toolbar* toolbar); // null removes the toolbar
+	command setNavigationBar(NavigationBar* navBar); // null removes the navigation bar
+	command showView(Component* component, PageTransition animation, int animationDuration);
+}

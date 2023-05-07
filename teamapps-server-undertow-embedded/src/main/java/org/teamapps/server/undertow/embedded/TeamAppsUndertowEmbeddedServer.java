@@ -21,108 +21,65 @@ package org.teamapps.server.undertow.embedded;
 
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import io.undertow.server.handlers.resource.FileResourceManager;
 import io.undertow.servlet.Servlets;
-import io.undertow.servlet.api.*;
+import io.undertow.servlet.api.DeploymentInfo;
+import io.undertow.servlet.api.DeploymentManager;
+import io.undertow.servlet.api.ListenerInfo;
+import io.undertow.servlet.api.ServletContainer;
 import io.undertow.servlet.util.ImmediateInstanceHandle;
 import io.undertow.websockets.extensions.PerMessageDeflateHandshake;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
-import org.teamapps.config.TeamAppsConfiguration;
+import jakarta.servlet.ServletContextListener;
 import org.teamapps.core.TeamAppsCore;
-import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFactory;
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
+import org.teamapps.ux.servlet.TeamAppsServletUtil;
+import org.teamapps.ux.servlet.resourceprovider.ResourceProvider;
 import org.teamapps.webcontroller.WebController;
 
-import jakarta.servlet.ServletContextListener;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class TeamAppsUndertowEmbeddedServer {
 
 	private final TeamAppsCore teamAppsCore;
-	private final File webAppDirectory;
-	private final List<ServletContextListener> customServletContextListeners = new ArrayList<>();
-	private Function<DeploymentInfo, DeploymentInfo> deploymentInfoManipulator;
-
 	private final int port;
+	private final ResourceProvider baseResourceProvider;
+	private final List<ServletContextListener> additionalServletContextListeners;
+
 	private Undertow server;
 	private boolean started;
 
-	public TeamAppsUndertowEmbeddedServer(WebController webController) throws IOException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration());
+	public static TeamAppsUndertowEmbeddedServerBuilder builder(WebController webController) {
+		return new TeamAppsUndertowEmbeddedServerBuilder(webController);
 	}
 
-	public TeamAppsUndertowEmbeddedServer(WebController webController, int port) throws IOException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration(), port);
-	}
-
-	public TeamAppsUndertowEmbeddedServer(WebController webController, TeamAppsConfiguration config) throws IOException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), config, 8080);
-	}
-
-	public TeamAppsUndertowEmbeddedServer(WebController webController, TeamAppsConfiguration config, int port) throws IOException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), config, port);
-	}
-
-	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, int port) throws IOException {
-		this(webController, webAppDirectory, new TeamAppsConfiguration(), port);
-	}
-
-	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) throws IOException {
-		this(webController, webAppDirectory, config, 8080);
-	}
-
-	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) throws IOException {
-		this.teamAppsCore = new TeamAppsCore(config, new CompletableFutureChainSequentialExecutorFactory(config.getMaxNumberOfSessionExecutorThreads()), webController);
-		this.webAppDirectory = webAppDirectory.toPath().toRealPath().toFile();
+	public TeamAppsUndertowEmbeddedServer(TeamAppsCore teamAppsCore, int port, ResourceProvider baseResourceProvider, List<ServletContextListener> additionalServletContextListeners) {
+		this.teamAppsCore = teamAppsCore;
 		this.port = port;
-	}
-
-	public TeamAppsCore getTeamAppsCore() {
-		return teamAppsCore;
-	}
-
-	public void addServletContextListener(ServletContextListener servletContextListener) {
-		if (started) {
-			throw new IllegalStateException("ServletContextListeners need to be registered before the server is started!");
-		}
-		this.customServletContextListeners.add(servletContextListener);
-	}
-
-	public void setDeploymentInfoCallback(Function<DeploymentInfo, DeploymentInfo> deploymentInfoCallback) {
-		if (started) {
-			throw new IllegalStateException("deploymentInfoManipulator need to be registered before the server is started!");
-		}
-		this.deploymentInfoManipulator = deploymentInfoCallback;
+		this.baseResourceProvider = baseResourceProvider;
+		this.additionalServletContextListeners = additionalServletContextListeners;
 	}
 
 	public void start() throws Exception {
+		if (started) {
+			throw new IllegalStateException("Server already started!");
+		}
 		this.started = true;
-		ClientCodeExtractor.initializeWebserverDirectory(webAppDirectory);
-
-		TeamAppsServletContextListener servletContextListener = new TeamAppsServletContextListener(teamAppsCore);
 
 		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 		DeploymentInfo deploymentInfo = new DeploymentInfo()
 				.setContextPath("/")
 				.addWelcomePage("index.html")
 				.setDeploymentName("teamapps")
-				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(servletContextListener)))
-				.setResourceManager(new FileResourceManager(webAppDirectory.getAbsoluteFile()))
+				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(
+						new TeamAppsServletContextListener(teamAppsCore))))
+				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(
+						TeamAppsServletUtil.createResourceProviderServletContextListener("teamapps-base-resources-servlet", baseResourceProvider, "/*"))))
 				.setAllowNonStandardWrappers(true)
 				.addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo()
 						.addExtension(new PerMessageDeflateHandshake(false, 6)))
 				.setClassLoader(classLoader);
 
-		if (deploymentInfoManipulator != null ) {
-			deploymentInfoManipulator.apply(deploymentInfo);
-		}
-
-		customServletContextListeners.forEach(l ->
+		additionalServletContextListeners.forEach(l ->
 				deploymentInfo.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(l))));
 
 		ServletContainer servletContainer = Servlets.defaultContainer();
@@ -142,6 +99,7 @@ public class TeamAppsUndertowEmbeddedServer {
 
 	public void stop() throws Exception {
 		server.stop();
+		this.started = false;
 	}
 
 }

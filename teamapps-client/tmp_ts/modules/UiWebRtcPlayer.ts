@@ -48,8 +48,8 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 	private userData: object;
 	private iceConnectionState: WebRtcState;
 
-	constructor(config: DtoWebRtcPlayer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoWebRtcPlayer) {
+		super(config);
 
 		this.$main = parseHtml(`
 <div class="UiWebRtcPlayer">

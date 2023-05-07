@@ -76,8 +76,8 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
-	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(null, new DtoGlobals.ToggleEventListeningCommand(null, null, DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID, hasListeners)));
-	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(null, new DtoGlobals.ToggleEventListeningCommand(null, null, DtoGlobals.NavigationStateChangeEvent.TYPE_ID, hasListeners)));
+	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(Globals.class, new DtoGlobals.ToggleEventListeningCommand(null, null, DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID, hasListeners)));
+	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(Globals.class, new DtoGlobals.ToggleEventListeningCommand(null, null, DtoGlobals.NavigationStateChangeEvent.TYPE_ID, hasListeners)));
 	public final ProjectorEvent<UiSessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
 	public final Event<DtoSessionClosingReason> onDestroyed = new Event<>();
 
@@ -200,7 +200,7 @@ public class SessionContext {
 	}
 
 	public void pushNavigationState(String relativeUrl) {
-		sendStaticCommand(null, new DtoGlobals.PushHistoryStateCommand(relativeUrl));
+		sendStaticCommand(Globals.class, new DtoGlobals.PushHistoryStateCommand(relativeUrl));
 	}
 
 	public void navigateBack(int steps) {
@@ -208,7 +208,7 @@ public class SessionContext {
 	}
 
 	public void navigateForward(int steps) {
-		sendStaticCommand(null, new DtoGlobals.NavigateForwardCommand(steps));
+		sendStaticCommand(Globals.class, new DtoGlobals.NavigateForwardCommand(steps));
 	}
 
 	public static SessionContext current() {
@@ -276,24 +276,25 @@ public class SessionContext {
 		uiSession.close(reason);
 	}
 
+	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, DtoCommand<RESULT> command) {
+		sendStaticCommand(clientObjectClass, command, null);
+	}
+
 	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, DtoCommand<RESULT> command, Consumer<RESULT> resultCallback) {
+		Objects.requireNonNull(clientObjectClass);
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
 
 		String componentLibraryUuid;
-		if (clientObjectClass != null) {
+		if (clientObjectClass == Globals.class) {
+			componentLibraryUuid = null;
+		} else {
 			ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObjectClass(clientObjectClass);
 			componentLibraryUuid = componentLibraryInfo.getUuid();
-		} else {
-			componentLibraryUuid = null;
 		}
 
 		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(componentLibraryUuid, null, command, wrappedCallback)));
-	}
-
-	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, DtoCommand<RESULT> command) {
-		sendStaticCommand(clientObjectClass, command, null);
 	}
 
 	public void sendCommandIfRendered(ClientObject clientObject, DtoCommand<?> command) {
@@ -444,7 +445,7 @@ public class SessionContext {
 
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
-		sendStaticCommand(null, new DtoGlobals.SetConfigCommand(config.createUiConfiguration()));
+		sendStaticCommand(Globals.class, new DtoGlobals.SetConfigCommand(config.createUiConfiguration()));
 		updateSessionMessageWindows();
 	}
 
@@ -489,11 +490,11 @@ public class SessionContext {
 			loadComponentLibraryIfNecessary(clientObject, componentLibraryInfo);
 
 			if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
-				sendStaticCommand(null, new DtoGlobals.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiClientObject.getTypeId(), uiClientObject.getEventNames(), uiClientObject.getQueryNames()));
+				sendStaticCommand(Globals.class, new DtoGlobals.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiClientObject.getTypeId(), uiClientObject.getEventNames(), uiClientObject.getQueryNames()));
 				clientObjectTypesKnownToClient.add(clientObject.getClass());
 			}
 
-			sendStaticCommand(null, new DtoGlobals.RenderCommand(componentLibraryInfo.getUuid(), uiClientObject));
+			sendStaticCommand(Globals.class, new DtoGlobals.RenderCommand(componentLibraryInfo.getUuid(), uiClientObject));
 		} finally {
 			renderingClientObjects.remove(clientObject);
 		}
@@ -503,13 +504,13 @@ public class SessionContext {
 		if (!componentLibrariesLoaded.contains(componentLibraryInfo.getComponentLibrary())) {
 			String mainJsUrl = componentLibraryRegistry.getMainJsUrl(clientObject.getClass());
 			String mainCssUrl = componentLibraryRegistry.getMainCssUrl(clientObject.getClass());
-			sendStaticCommand(null, new DtoGlobals.RegisterComponentLibraryCommand(componentLibraryInfo.getUuid(), mainJsUrl, mainCssUrl), null);
+			sendStaticCommand(Globals.class, new DtoGlobals.RegisterComponentLibraryCommand(componentLibraryInfo.getUuid(), mainJsUrl, mainCssUrl), null);
 			componentLibrariesLoaded.add(componentLibraryInfo.getComponentLibrary());
 		}
 	}
 
 	public void unrenderClientObject(ClientObject clientObject) {
-		sendStaticCommand(null, new DtoGlobals.UnrenderCommand(clientObject.getId()));
+		sendStaticCommand(Globals.class, new DtoGlobals.UnrenderCommand(clientObject.getId()));
 		clientObjectsById.remove(clientObject.getId());
 	}
 
@@ -542,15 +543,15 @@ public class SessionContext {
 	}
 
 	public void download(String url, String downloadFileName) {
-		runWithContext(() -> sendStaticCommand(null, new DtoGlobals.DownloadFileCommand(url, downloadFileName)));
+		runWithContext(() -> sendStaticCommand(Globals.class, new DtoGlobals.DownloadFileCommand(url, downloadFileName)));
 	}
 
 	public void setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, Duration animationDuration) {
-		sendStaticCommand(null, new DtoGlobals.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()));
+		sendStaticCommand(Globals.class, new DtoGlobals.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()));
 	}
 
 	public void exitFullScreen() {
-		sendStaticCommand(null, new DtoGlobals.ExitFullScreenCommand());
+		sendStaticCommand(Globals.class, new DtoGlobals.ExitFullScreenCommand());
 	}
 
 	public void addRootComponent(String containerElementSelector, Component component) {
@@ -558,7 +559,7 @@ public class SessionContext {
 	}
 
 	public void addRootPanel(String containerElementSelector, Component rootPanel) {
-		sendStaticCommand(null, new DtoGlobals.AddRootComponentCommand(containerElementSelector, rootPanel.createDtoReference()));
+		sendStaticCommand(Globals.class, new DtoGlobals.AddRootComponentCommand(containerElementSelector, rootPanel.createDtoReference()));
 	}
 
 	public RootPanel addRootPanel(String containerElementSelector) {
@@ -573,22 +574,22 @@ public class SessionContext {
 
 	public void addClientToken(String token) {
 		getClientInfo().getClientTokens().add(token);
-		sendStaticCommand(null, new DtoGlobals.AddClientTokenCommand(token));
+		sendStaticCommand(Globals.class, new DtoGlobals.AddClientTokenCommand(token));
 	}
 
 	public void removeClientToken(String token) {
 		getClientInfo().getClientTokens().remove(token);
-		sendStaticCommand(null, new DtoGlobals.RemoveClientTokenCommand(token));
+		sendStaticCommand(Globals.class, new DtoGlobals.RemoveClientTokenCommand(token));
 	}
 
 	public void clearClientTokens() {
 		getClientInfo().getClientTokens().clear();
-		sendStaticCommand(null, new DtoGlobals.ClearClientTokensCommand());
+		sendStaticCommand(Globals.class, new DtoGlobals.ClearClientTokensCommand());
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			sendStaticCommand(null, new DtoNotification.ShowNotificationCommand(notification.createDtoReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+			sendStaticCommand(Notification.class, new DtoNotification.ShowNotificationCommand(notification.createDtoReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
 	}
@@ -692,9 +693,9 @@ public class SessionContext {
 		String uuid = UUID.randomUUID().toString();
 		CompletableFuture<WakeLock> completableFuture = new CompletableFuture<>();
 		runWithContext(() -> {
-			sendStaticCommand(null, new DtoGlobals.RequestWakeLockCommand(uuid), successful -> {
+			sendStaticCommand(Globals.class, new DtoGlobals.RequestWakeLockCommand(uuid), successful -> {
 				if (successful) {
-					completableFuture.complete(() -> sendStaticCommand(null, new DtoGlobals.ReleaseWakeLockCommand(uuid)));
+					completableFuture.complete(() -> sendStaticCommand(Globals.class, new DtoGlobals.ReleaseWakeLockCommand(uuid)));
 				} else {
 					completableFuture.completeExceptionally(new RuntimeException("Could not acquire WakeLock"));
 				}
@@ -704,7 +705,7 @@ public class SessionContext {
 	}
 
 	public void goToUrl(String url, boolean blankPage) {
-		sendStaticCommand(null, new DtoGlobals.GoToUrlCommand(url, blankPage));
+		sendStaticCommand(Globals.class, new DtoGlobals.GoToUrlCommand(url, blankPage));
 	}
 
 	public void setFavicon(Icon<?, ?> icon) {
@@ -716,15 +717,15 @@ public class SessionContext {
 	}
 
 	public void setFavicon(String url) {
-		sendStaticCommand(null, new DtoGlobals.SetFaviconCommand(url));
+		sendStaticCommand(Globals.class, new DtoGlobals.SetFaviconCommand(url));
 	}
 
 	public void setTitle(String title) {
-		sendStaticCommand(null, new DtoGlobals.SetTitleCommand(title));
+		sendStaticCommand(Globals.class, new DtoGlobals.SetTitleCommand(title));
 	}
 
 	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		sendStaticCommand(null, new DtoGlobals.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
+		sendStaticCommand(Globals.class, new DtoGlobals.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
 	}
 
 	public String getSessionId() {

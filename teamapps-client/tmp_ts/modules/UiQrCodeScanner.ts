@@ -38,8 +38,8 @@ export class UiQrCodeScanner extends AbstractComponent<DtoQrCodeScanner> impleme
 
 	private selectedCameraIndex: number = 0;
 
-	constructor(config: DtoQrCodeScanner, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoQrCodeScanner) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="UiQrCodeScanner">
 	<video></video>
@@ -67,10 +67,10 @@ export class UiQrCodeScanner extends AbstractComponent<DtoQrCodeScanner> impleme
 			this.stopScanning();
 		}
 
-		this._config.stopsScanningAtFirstResult = stopScanningAtFirstResult;
+		this.config.stopsScanningAtFirstResult = stopScanningAtFirstResult;
 		this.qrScanner = new QrScanner(this.$video, (result: string) => {
 			this.onQrCodeDetected.fire({code: result});
-			if (this._config.stopsScanningAtFirstResult) {
+			if (this.config.stopsScanningAtFirstResult) {
 				this.stopScanning();
 			}
 		});

@@ -60,8 +60,8 @@ export class UiImageDisplay extends AbstractComponent<DtoImageDisplay> implement
 	private displayMode: UiPageDisplayMode;
 	private currentImageIndex: number;
 
-	constructor(config: DtoImageDisplay, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoImageDisplay) {
+		super(config);
 
 		this.$componentWrapper = parseHtml(
 			`<div id=${config.id}" class="UiImageDisplay" tabindex="-1">
@@ -116,10 +116,10 @@ export class UiImageDisplay extends AbstractComponent<DtoImageDisplay> implement
 		this.onImageDisplayed.fire({
 			imageId: this.cachedImages[this.currentImageIndex].id
 		});
-		if (this.cachedImages.length - this.currentImageIndex - 1 < this._config.cacheSize) {
+		if (this.cachedImages.length - this.currentImageIndex - 1 < this.config.cacheSize) {
 			this.onImagesRequest.fire({
 				startIndex: this.cachedImages.length,
-				length: Math.min(this.totalNumberOfRecords - this.cachedImages.length, this._config.cacheSize)
+				length: Math.min(this.totalNumberOfRecords - this.cachedImages.length, this.config.cacheSize)
 			});
 		}
 	};
@@ -198,7 +198,7 @@ export class UiImageDisplay extends AbstractComponent<DtoImageDisplay> implement
 
 		let $container = this.$imageContainerWrapper;
 		applyDisplayMode($container, currentImage.$img, this.displayMode, {
-			padding: this._config.padding,
+			padding: this.config.padding,
 			zoomFactor: this.zoomFactor,
 			considerScrollbars: true
 		});

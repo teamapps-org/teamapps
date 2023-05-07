@@ -26,8 +26,8 @@ export class FlexContainer extends AbstractComponent<DtoFlexContainer> implement
 	private $main: HTMLDivElement;
 	private components: Component[] = [];
 
-	constructor(config: DtoFlexContainer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoFlexContainer) {
+		super(config);
 		this.$main = parseHtml(`<div class="FlexContainer"></div>`);
 		this.$main.style.flexDirection = config.flexDirection;
 		this.$main.style.alignItems = config.alignItems;

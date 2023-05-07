@@ -25,7 +25,7 @@ export class Globals implements ClientObject<DtoGlobals> {
 	public static readonly onNavigationStateChange: TeamAppsEvent<DtoGlobals_NavigationStateChangeEvent> = new TeamAppsEvent();
 
 	// dummy constructor
-	constructor(config: DtoGlobals, context: TeamAppsUiContext){
+	constructor(config: DtoGlobals){
 		throw new Error("Globals should never be instantiated!");
 	}
 
@@ -42,7 +42,7 @@ export class Globals implements ClientObject<DtoGlobals> {
 	}
 
 	public static async registerClientObjectType(libraryUuid: string, clientObjectType: string, eventNames: string[], queryNames: string[], context: TeamAppsUiContextInternalApi) {
-		console.log("TODO registerClientObjectType:", libraryUuid, clientObjectType);
+		console.log("TODO registerClientObjectType - need to do something here??:", libraryUuid, clientObjectType, eventNames, queryNames);
 	}
 
 	public static async toggleEventListening(libraryUuid: string, clientObjectId: string, eventName: string, enabled: boolean, context: TeamAppsUiContextInternalApi) {
@@ -154,7 +154,7 @@ export class Globals implements ClientObject<DtoGlobals> {
 		exitFullScreen();
 	}
 
-	public static createGenericErrorMessageShowable(title: string, message: string, showErrorIcon: boolean, options: DtoGenericErrorMessageOption[], context: TeamAppsUiContext): Showable {
+	public static createGenericErrorMessageShowable(title: string, message: string, showErrorIcon: boolean, options: DtoGenericErrorMessageOption[]): Showable {
 		let $div = parseHtml(`
 <div data-teamapps-id="ad352268-6d6b-473a-8c8d-316df8375361"
      style="position: absolute; inset: 0 0 0 0; z-index: 1000000; display: flex; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5);">
@@ -174,7 +174,7 @@ export class Globals implements ClientObject<DtoGlobals> {
 		$div.querySelector<HTMLElement>(':scope .ok').addEventListener('click', () => $div.remove());
 		$div.querySelector<HTMLElement>(':scope .reload').addEventListener('click', () => window.location.reload());
 		return {
-			show: () => document.append($div)
+			show: () => document.body.append($div)
 		};
 	}
 

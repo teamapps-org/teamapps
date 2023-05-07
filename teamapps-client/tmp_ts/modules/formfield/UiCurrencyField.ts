@@ -45,7 +45,7 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 	private queryFunction: QueryFunction<DtoCurrencyUnit>;
 	private numberFormat: Intl.NumberFormat;
 
-	protected initialize(config: DtoCurrencyField, context: TeamAppsUiContext) {
+	protected initialize(config: DtoCurrencyField) {
 		let initialPrecision = config.fixedPrecision >= 0 ? config.fixedPrecision : 2;
 
 		this.trivialUnitBox = new TrivialUnitBox<DtoCurrencyUnit>({
@@ -64,7 +64,7 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 			selectedEntryRenderingFunction: (entry) => {
 				if (entry == null) {
 					return `<div class="tr-template-currency-single-line-short">-</div>`
-				} else if (this._config.showCurrencySymbol && entry.symbol) {
+				} else if (this.config.showCurrencySymbol && entry.symbol) {
 					return `<div class="tr-template-currency-single-line-short">${entry.symbol} (${entry.code})</div>`;
 				} else {
 					return `<div class="tr-template-currency-single-line-short">${entry.code}</div>`;
@@ -107,15 +107,15 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 
 	private getNumberFormat(entry: DtoCurrencyUnit) {
 		if (entry == null) {
-			let fractionDigits = this._config.fixedPrecision >= 0 ? this._config.fixedPrecision : 2;
-			return new Intl.NumberFormat(this._config.locale, {
+			let fractionDigits = this.config.fixedPrecision >= 0 ? this.config.fixedPrecision : 2;
+			return new Intl.NumberFormat(this.config.locale, {
 				useGrouping: true,
 				minimumFractionDigits: fractionDigits,
 				maximumFractionDigits: fractionDigits
 			});
 		} else {
-			let fractionDigits = this._config.fixedPrecision >= 0 ? this._config.fixedPrecision : entry.fractionDigits >= 0 ? entry.fractionDigits : 4;
-			return new Intl.NumberFormat(this._config.locale, {
+			let fractionDigits = this.config.fixedPrecision >= 0 ? this.config.fixedPrecision : entry.fractionDigits >= 0 ? entry.fractionDigits : 4;
+			return new Intl.NumberFormat(this.config.locale, {
 				minimumFractionDigits: fractionDigits,
 				maximumFractionDigits: fractionDigits,
 				useGrouping: true
@@ -173,13 +173,13 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 			const currency = value.currencyUnit;
 			let displayedCurrency: string;
 			if (currency != null) {
-				displayedCurrency = this._config.showCurrencySymbol ? `${currency?.symbol} (${currency?.code})` : currency?.code;
+				displayedCurrency = this.config.showCurrencySymbol ? `${currency?.symbol} (${currency?.code})` : currency?.code;
 			} else {
 				displayedCurrency = null;
 			}
 			let amount = BigDecimal.of(value.amount);
 			let formattedAmount = amount?.format(this.getNumberFormat(currency));
-			if (this._config.showCurrencyBeforeAmount) {
+			if (this.config.showCurrencyBeforeAmount) {
 				content = [displayedCurrency, formattedAmount].filter(x => x != null).join(' ');
 			} else {
 				content = [formattedAmount, displayedCurrency].filter(x => x != null).join(' ');
@@ -195,7 +195,7 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 	}
 
 	setCurrencyUnits(currencyUnits: DtoCurrencyUnit[]): void {
-		this._config.currencyUnits = currencyUnits;
+		this.config.currencyUnits = currencyUnits;
 		this.queryFunction = defaultListQueryFunctionFactory(currencyUnits, ["code", "name", "symbol"], {matchingMode: "contains", ignoreCase: true});
 	}
 
@@ -204,7 +204,7 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 	}
 
 	setShowCurrencySymbol(showCurrencySymbol: boolean): void {
-		this._config.showCurrencySymbol = showCurrencySymbol;
+		this.config.showCurrencySymbol = showCurrencySymbol;
 		this.trivialUnitBox.setSelectedEntry(this.trivialUnitBox.getSelectedEntry());
 	}
 
@@ -213,12 +213,12 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 	}
 
 	setLocale(locale: string): void {
-		this._config.locale = locale;
+		this.config.locale = locale;
 		this.trivialUnitBox.setSelectedEntry(this.trivialUnitBox.getSelectedEntry()); // update format
 	}
 
 	setFixedPrecision(fixedPrecision: number): void {
-		this._config.fixedPrecision = fixedPrecision;
+		this.config.fixedPrecision = fixedPrecision;
 		this.trivialUnitBox.setSelectedEntry(this.trivialUnitBox.getSelectedEntry()); // update format
 	}
 }

@@ -26,7 +26,7 @@ import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.animation.RepeatableAnimation;
-import org.teamapps.ux.component.format.Spacing;
+import org.teamapps.ux.format.Spacing;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.UUID;

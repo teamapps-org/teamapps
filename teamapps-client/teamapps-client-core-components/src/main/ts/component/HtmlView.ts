@@ -24,8 +24,8 @@ export class HtmlView extends AbstractComponent<DtoHtmlView> implements DtoHtmlV
 
 	private $main: HTMLDivElement;
 
-	constructor(config: DtoHtmlView, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoHtmlView) {
+		super(config);
 		this.$main = parseHtml(`<div class="HtmlView">${config.html}</div>`);
 		for (let selector in config.componentsByContainerElementSelector) {
 			let components = config.componentsByContainerElementSelector[selector] as Component[];
@@ -64,7 +64,9 @@ export class HtmlView extends AbstractComponent<DtoHtmlView> implements DtoHtmlV
 			containerElement.innerHTML = '';
 			if (html != null) {
 				let childNodes = parseHtml(`<div>${html}</div>`).childNodes;
-				childNodes.forEach(cn => containerElement.appendChild(cn))
+				// Note that we need to copy childNodes, since childNodes is going to change on containerElement.appendChild(),
+				// since this effectively removes one child from the childNodes NodeList.
+				Array.from(childNodes).forEach(cn => containerElement.appendChild(cn))
 			}
 		} else {
 			console.error(`Could not set content HTML since selector does not match any element: ${containerElementSelector}`);

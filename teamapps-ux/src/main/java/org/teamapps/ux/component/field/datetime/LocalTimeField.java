@@ -21,13 +21,13 @@ package org.teamapps.ux.component.field.datetime;
 
 import org.teamapps.dto.DtoField;
 import org.teamapps.dto.DtoLocalTimeField;
-import org.teamapps.ux.component.CommonComponentLibrary;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.TeamAppsComponent;
 
 import java.time.LocalTime;
 import java.util.List;
 
-@TeamAppsComponent(library = CommonComponentLibrary.class)
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class LocalTimeField extends AbstractTimeField<LocalTime> {
 
 	public LocalTimeField() {

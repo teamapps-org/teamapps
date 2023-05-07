@@ -64,8 +64,8 @@ export class UiGridForm extends AbstractComponent<DtoGridForm> implements UiGrid
 
 	private fieldWrappers = new Map<UiComponent, HTMLDivElement>();
 
-	constructor(config: DtoGridForm, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoGridForm) {
+		super(config);
 		this.$mainDiv = parseHtml(`<div class="UiGridForm">
 </div>`);
 
@@ -122,7 +122,7 @@ export class UiGridForm extends AbstractComponent<DtoGridForm> implements UiGrid
 			section.getMainDomElement().remove();
 		});
 		this.sections = layoutPolicy.sections.map(sectionConfig => {
-			const section = new UiFormSection(sectionConfig, this._context, this.sectionCollapseOverrides[sectionConfig.id], field => this.getFieldWrapper(field));
+			const section = new UiFormSection(sectionConfig, this.sectionCollapseOverrides[sectionConfig.id], field => this.getFieldWrapper(field));
 			this.$mainDiv.appendChild(section.getMainDomElement());
 			section.placeFields();
 			section.onCollapsedStateChanged.addListener((collapsed) => {
@@ -200,7 +200,7 @@ class UiFormSection {
 	private $expander: HTMLElement;
 	private collapsed: boolean;
 
-	constructor(public config: DtoFormSection, context: TeamAppsUiContext, collapsedOverride: boolean, private getFieldWrapper : (field: UiComponent) => HTMLDivElement) {
+	constructor(public config: DtoFormSection, collapsedOverride: boolean, private getFieldWrapper : (field: UiComponent) => HTMLDivElement) {
 		this.uuid = generateUUID();
 
 		const headerLineClass = config.drawHeaderLine ? 'draw-header-line' : '';

@@ -33,8 +33,8 @@ type LocalTime = [number, number, number, number];
 
 export class UiLocalTimeField extends DtoAbstractTimeField<DtoLocalTimeField, LocalTime> implements UiLocalTimeFieldEventSource, UiLocalTimeFieldCommandHandler {
 
-	protected initialize(config: DtoLocalTimeField, context: TeamAppsUiContext) {
-		super.initialize(config, context);
+	protected initialize(config: DtoLocalTimeField) {
+		super.initialize(config);
 		this.getMainInnerDomElement().classList.add("UiLocalTimeField");
 	}
 
@@ -77,11 +77,11 @@ export class UiLocalTimeField extends DtoAbstractTimeField<DtoLocalTimeField, Lo
 	}
 
 	protected localDateTimeToString(entry: LocalDateTime): string {
-		return entry.setLocale(this._config.locale).toLocaleString(this._config.timeFormat);
+		return entry.setLocale(this.config.locale).toLocaleString(this.config.timeFormat);
 	}
 
 	protected createTimeRenderer(): (time: LocalDateTime) => string {
-		let timeRenderer = createTimeRenderer(this._config.locale, this._config.timeFormat);
+		let timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat);
 		return entry => timeRenderer(entry?.toUTC());
 	}
 }

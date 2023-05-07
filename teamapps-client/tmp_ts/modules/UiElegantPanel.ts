@@ -34,8 +34,8 @@ export class UiElegantPanel extends AbstractComponent<DtoElegantPanel> implement
 	private $contentContainer: HTMLElement;
 	private contentComponent: UiComponent<DtoComponent>;
 
-	constructor(config: DtoElegantPanel, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoElegantPanel) {
+		super(config);
 		this.$element = parseHtml(`<div class="UiElegantPanel">
                 <div class="flex-container">
                     <div class="background-image-div teamapps-blurredBackgroundImage">

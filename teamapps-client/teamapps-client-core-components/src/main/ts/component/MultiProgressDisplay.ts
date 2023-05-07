@@ -40,8 +40,8 @@ export class DefaultMultiProgressDisplay extends MultiProgressDisplay<DtoDefault
 	private $spinner: HTMLElement;
 	private $runningCount: HTMLElement;
 
-	constructor(config: DtoDefaultMultiProgressDisplay, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoDefaultMultiProgressDisplay) {
+		super(config);
 
 		this.$main = parseHtml(`<div class="DefaultMultiProgressDisplay">
 	<div class="spinner teamapps-spinner"></div>					

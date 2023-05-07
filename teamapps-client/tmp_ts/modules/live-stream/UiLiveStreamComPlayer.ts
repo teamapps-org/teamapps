@@ -30,8 +30,8 @@ export class UiLiveStreamComPlayer extends AbstractComponent<DtoLiveStreamComPla
 	private $wrapper: HTMLElement;
 	private player: Element;
 
-	constructor(config: DtoLiveStreamComPlayer, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoLiveStreamComPlayer) {
+		super(config);
 		this.$wrapper = parseHtml('<div class="livestreamcom-player-wrapper">');
 	}
 

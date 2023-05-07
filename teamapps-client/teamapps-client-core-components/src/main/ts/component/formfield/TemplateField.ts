@@ -19,14 +19,13 @@
  */
 import {AbstractField} from "./AbstractField";
 import {
-	DtoClientRecord,
 	DtoFieldEditingMode,
 	DtoTemplateField,
 	DtoTemplateField_ClickedEvent,
 	DtoTemplateFieldCommandHandler,
 	DtoTemplateFieldEventSource
 } from "../../generated";
-import {parseHtml, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
+import {DtoClientRecord, parseHtml, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
 
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {
@@ -35,11 +34,11 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 
 	private $main: HTMLElement;
 
-	constructor(config: DtoTemplateField, context: TeamAppsUiContext) {
-		super(config, context);
+	constructor(config: DtoTemplateField) {
+		super(config);
 	}
 
-	protected initialize(config: DtoTemplateField, context: TeamAppsUiContext): void {
+	protected initialize(config: DtoTemplateField): void {
 		this.$main = parseHtml(`<div class="TemplateField"></div>`);
 		this.$main.addEventListener("click", ev => this.onClicked.fire({}));
 		this.update(config);

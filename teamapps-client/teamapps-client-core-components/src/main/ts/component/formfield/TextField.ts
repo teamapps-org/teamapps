@@ -39,7 +39,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 	protected $field: HTMLInputElement;
 	private showClearButton: boolean;
 
-	protected initialize(config: C, context: TeamAppsUiContext) {
+	protected initialize(config: C) {
 		this.$wrapper = parseHtml(`<div class="TextField field-border field-border-glow field-background clearable-field-wrapper form-control">
     <input type="text"></input>
     <div class="clear-button tr-remove-button"></div>  

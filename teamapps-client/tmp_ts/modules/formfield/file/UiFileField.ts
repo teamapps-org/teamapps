@@ -68,11 +68,11 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 	private maxFiles: number;
 	private maxBytesPerFile: number;
 	private uploadButtonData: any;
-	private uploadButtonTemplate: DtoTemplate;
+	private uploadButtonTemplate: Template;
 	private uploadUrl: string;
 	private $fileList: HTMLElement;
 
-	protected initialize(config: DtoFileField, context: TeamAppsUiContext) {
+	protected initialize(config: DtoFileField) {
 		this.fileItems = [];
 		let uuid = "ui-file-field" + generateUUID();
 		this.$wrapper = parseHtml(`<div class="UiFileField drop-zone" id="${uuid}">
@@ -135,7 +135,7 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 	}
 
 	public setItemTemplate(template: Template): void {
-		this.itemRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
+		this.itemRenderer = template;
 		this.displayCommittedValue();
 	}
 
@@ -162,7 +162,7 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 		this.uploadButtonData = uploadButtonData;
 		this.$uploadButtonTemplate.innerHTML = '';
 		if (this.uploadButtonTemplate && this.uploadButtonData) {
-			this.$uploadButtonTemplate.appendChild(parseHtml(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData)));
+			this.$uploadButtonTemplate.appendChild(parseHtml(this.uploadButtonTemplate.render(this.uploadButtonData)));
 		}
 	}
 
@@ -170,7 +170,7 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 		this.uploadButtonTemplate = uploadButtonTemplate;
 		this.$uploadButtonTemplate.innerHTML = '';
 		if (this.uploadButtonTemplate && this.uploadButtonData) {
-			this.$uploadButtonTemplate.appendChild(parseHtml(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData)));
+			this.$uploadButtonTemplate.appendChild(parseHtml(this.uploadButtonTemplate.render(this.uploadButtonData)));
 		}
 	}
 
@@ -271,7 +271,7 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 	}
 
 	private createFileItem() {
-		let fileItem = new UploadItem(this.displayType === UiFileFieldDisplayType.FLOATING, this.maxBytesPerFile, this._config.fileTooLargeMessage, this._config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.getId());
+		let fileItem = new UploadItem(this.displayType === UiFileFieldDisplayType.FLOATING, this.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.getId());
 		fileItem.onClick.addListener((eventObject) => {
 			this.onFileItemClicked.fire({
 				clientId: fileItem.data.id
