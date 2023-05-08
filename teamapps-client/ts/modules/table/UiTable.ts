@@ -222,8 +222,12 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this._grid = new Slick.Grid($table, this.dataProvider, this.getVisibleColumns(), options);
 
 		config.columns.forEach(c => {
-			this.headerRowFields[c.name] = c.headerRowField as UiField;
-			this.footerRowFields[c.name] = c.footerRowField as UiField;
+			if (c.headerRowField != null) {
+				this.headerRowFields[c.name] = c.headerRowField as UiField;
+			}
+			if (c.footerRowField != null) {
+				this.footerRowFields[c.name] = c.footerRowField as UiField;
+			}
 		});
 		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
 		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
@@ -1003,7 +1007,11 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	setHeaderRowField(columnName: string, field: unknown): any {
-		this.headerRowFields[columnName] = field as UiField;
+		if (field == null) {
+			delete this.headerRowFields[columnName];
+		} else {
+			this.headerRowFields[columnName] = field as UiField;
+		}
 		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
 		if (this._grid != null) {
 			this._grid.setColumns(this._grid.getColumns());
@@ -1011,7 +1019,11 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	setFooterRowField(columnName: string, field: unknown): any {
-		this.footerRowFields[columnName] = field as UiField;
+		if (field == null) {
+			delete this.footerRowFields[columnName];
+		} else {
+			this.footerRowFields[columnName] = field as UiField;
+		}
 		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
 		if (this._grid != null) {
 			this._grid.setColumns(this._grid.getColumns());
