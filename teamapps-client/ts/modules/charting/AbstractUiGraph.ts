@@ -27,6 +27,7 @@ import {UiGraph} from "./UiGraph";
 import {maxTickIntegerPartLength, YAxis} from "./YAxis";
 import {UiGraphConfig} from "../../generated/UiGraphConfig";
 import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
+import * as ulp from "ulp";
 
 export abstract class AbstractUiGraph<C extends UiGraphConfig = UiGraphConfig,
 	D extends UiGraphDataConfig = UiGraphDataConfig>
@@ -134,9 +135,11 @@ export abstract class AbstractUiGraph<C extends UiGraphConfig = UiGraphConfig,
 				} else if (numberOfSignificantDigits > this.config.maxTickDigits) {
 					const delta = maxY - minY;
 					let boundaryExpansion = Math.max(delta / 4, 1e-14);
-					console.debug(`Increasing dy from (${minY}:${maxY}) to (${minY - boundaryExpansion}:${maxY + boundaryExpansion})`)
-					minY = minY - boundaryExpansion;
-					maxY = maxY + boundaryExpansion;
+					const nextMinY = Math.min(minY - boundaryExpansion, ulp.nextDown(minY))
+					const nextMaxY = Math.max(maxY + boundaryExpansion, ulp.nextUp(maxY))
+					console.debug(`Increasing dy from (${minY}:${maxY}) to (${nextMinY}:${nextMaxY})`)
+					minY = nextMinY;
+					maxY = nextMaxY;
 				} else {
 					break;
 				}

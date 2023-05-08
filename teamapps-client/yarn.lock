@@ -9227,6 +9227,11 @@ uglify-js@3.4.x:
     commander "~2.19.0"
     source-map "~0.6.1"
 
+ulp@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ulp/-/ulp-1.0.1.tgz#e3a4a5b4de9bd0faae63e4544ee63a0d9bd34bc5"
+  integrity sha512-fXPzKroJ6XJXrepjd4AIHfeN84qUtZfLojIPYExlF/rm/BWb8/2o64lsGEKSMSwjH9X6VKmDv9+zbd+ZNHa4nw==
+
 union-value@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/union-value/-/union-value-1.0.1.tgz"
