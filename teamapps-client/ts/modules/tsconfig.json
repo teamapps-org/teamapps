@@ -28,6 +28,7 @@
     "../custom-declarations/voice-activity-detection.d.ts",
     "../custom-declarations/mediasoup-v3-client.d.ts",
     "../custom-declarations/levenshtein.d.ts",
+    "../custom-declarations/ulp.d.ts",
     "../../node_modules/shaka-player/dist/shaka-player.compiled.debug.d.ts",
     "../../node_modules/shaka-player/dist/shaka-player.ui.debug.d.ts"
 //    "../../node_modules/@types/node/index.d.ts"
