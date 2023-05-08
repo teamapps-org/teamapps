@@ -159,13 +159,13 @@ class UiNotificationBarItem {
 		this.$main.classList.toggle("with-progress", config.displayTimeInMillis > 0 && config.progressBarVisible)
 
 		if (oldConfig?.icon !== config.icon) {
-			console.log("updating icon", oldConfig?.icon, config.icon);
+			console.debug("updating icon", oldConfig?.icon, config.icon);
 			this.$icon.classList.toggle("hidden", config.icon == null)
 			this.$icon.style.backgroundImage = `url('${config.icon}')`;
 		}
 
 		if (oldConfig?.iconAnimation !== config.iconAnimation) {
-			console.log("updating icon animation", oldConfig?.iconAnimation, config.iconAnimation	);
+			console.debug("updating icon animation", oldConfig?.iconAnimation, config.iconAnimation	);
 			removeClassesByFunction(this.$icon.classList, className => className.startsWith("animate__"));
 			if (config.iconAnimation != null) {
 				this.$icon.classList.add(...Constants.REPEATABLE_ANIMATION_CSS_CLASSES[config.iconAnimation].split(/ +/));
