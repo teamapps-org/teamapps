@@ -26,6 +26,7 @@ class UiTableColumn {
 	required String icon;
 	required String title;
 	required UiField* field;
+	UiTemplate displayTemplate;
 	int minWidth;
 	int defaultWidth;
 	int maxWidth;
@@ -160,4 +161,5 @@ class UiTableClientRecord extends UiIdentifiableClientRecord {
 	List<String> markings;
 	boolean selected;
 	boolean bold;
+	Dictionary<Dictionary<Object>> displayTemplateValues;
 }

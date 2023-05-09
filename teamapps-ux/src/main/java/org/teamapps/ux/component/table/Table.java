@@ -38,6 +38,7 @@ import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteListComponent;
 import org.teamapps.ux.component.infiniteitemview.RecordsChangedEvent;
 import org.teamapps.ux.component.infiniteitemview.RecordsRemovedEvent;
+import org.teamapps.ux.component.template.Template;
 
 import java.util.*;
 import java.util.function.Function;
@@ -153,6 +154,12 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field, int defaultWidth) {
 		TableColumn<RECORD, VALUE> column = new TableColumn<>(propertyName, icon, title, field, defaultWidth);
+		addColumn(column);
+		return column;
+	}
+
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, Template displayTemplate) {
+		TableColumn<RECORD, VALUE> column = new TableColumn<>(propertyName, icon, title, displayTemplate);
 		addColumn(column);
 		return column;
 	}
@@ -793,7 +800,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		Map<String, Object> uxValues = extractRecordProperties(record);
 		Map<String, Object> uiValues = columns.stream()
 				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), ((AbstractField) column.getField()).convertUxValueToUiValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
+		Map<String, Map<String, Object>> displayTemplateValues = columns.stream()
+				.filter(c -> c.getDisplayTemplate() != null)
+				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), column.getDisplayPropertyProvider().getValues(record, column.getDisplayTemplate().getPropertyNames())), HashMap::putAll);
 		clientRecord.setValues(uiValues);
+		clientRecord.setDisplayTemplateValues(displayTemplateValues);
 		clientRecord.setSelected(selectedRecords.stream().anyMatch(r -> customEqualsAndHashCode.getEquals().test(r, record)));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
 		clientRecord.setMarkings(new ArrayList<>(markedCells.getOrDefault(record, Collections.emptySet())));

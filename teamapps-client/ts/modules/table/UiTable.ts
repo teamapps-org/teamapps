@@ -46,7 +46,7 @@ import {AbstractUiComponent} from "../AbstractUiComponent";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
-import {arraysEqual, closestAncestor, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml} from "../Common";
+import {arraysEqual, closestAncestor, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml, Renderer} from "../Common";
 import {UiSortDirection} from "../../generated/UiSortDirection";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiGenericTableCellEditor} from "./UiGenericTableCellEditor";
@@ -525,6 +525,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			editorFactory = UiGenericTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		}
 
+		var displayTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(columnConfig.displayTemplate);
+
 		const slickColumnConfig: Column = {
 			id: columnConfig.name,
 			field: columnConfig.name,
@@ -534,7 +536,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			width: columnConfig.defaultWidth || ((columnConfig.minWidth + columnConfig.maxWidth) / 2) || undefined,
 			minWidth: columnConfig.minWidth || 30,
 			maxWidth: columnConfig.maxWidth || undefined,
-			formatter: this.createCellFormatter(uiField),
+			formatter: this.createCellFormatter(uiField, displayTemplateRenderer),
 			editor: editorFactory,
 			asyncEditorLoading: false,
 			autoEdit: true,
@@ -590,7 +592,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 	}
 
-	private createCellFormatter(field: UiField) {
+	private createCellFormatter(field: UiField, displayTemplate: Renderer) {
 		const createInnerCellFormatter = () => {
 			if (field instanceof UiCompositeField) {
 				this.logger.warn("TODO: create cell formatter for UiCompositeField!");
@@ -598,7 +600,11 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				// return (row: number, cell: number, value: any, columnDef: Slick.Column<TableDataProviderItem>, dataContext: TableDataProviderItem) => {
 				// return field.getReadOnlyHtml(field as UiCompositeFieldConfig, {_type: "UiRecordValue", value: dataContext}, this._context, columnDef.width + 1);
 				// };
-			} else if (field.getReadOnlyHtml) {
+			} else if (displayTemplate != null) {
+				return (row: number, cell: number, value: any, columnDef: Slick.Column<UiTableClientRecordConfig>, dataContext: UiTableClientRecordConfig) => {
+					return displayTemplate.render(dataContext.displayTemplateValues[columnDef.id]);
+				};
+			} else if (field.getReadOnlyHtml != null) {
 				return (row: number, cell: number, value: any, columnDef: Slick.Column<UiTableClientRecordConfig>, dataContext: UiTableClientRecordConfig) => {
 					return field.getReadOnlyHtml(dataContext.values[columnDef.id], columnDef.width);
 				};
