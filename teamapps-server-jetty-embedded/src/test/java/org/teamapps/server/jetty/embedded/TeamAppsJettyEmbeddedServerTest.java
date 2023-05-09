@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,10 +19,17 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import org.teamapps.ux.component.field.PasswordField;
+import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.rootpanel.RootPanel;
+import org.teamapps.ux.component.table.ListTableModel;
+import org.teamapps.ux.component.table.Table;
+import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
+
+import java.util.List;
+import java.util.Map;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -32,11 +39,17 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.onDestroyed.addListener(uiSessionClosingReason -> System.out.println("Session destroyed: " + uiSessionClosingReason));
 			RootPanel rootPanel = sessionContext.addRootPanel();
 
-			PasswordField passwordField = new PasswordField();
-			passwordField.setShowClearButton(true);
-			passwordField.setPasswordVisibilityToggleEnabled(true);
-			
-			rootPanel.setContent(passwordField);
+			Table<String> table = new Table<>();
+			table.addColumn("x", "hello", new TextField())
+					.setDisplayTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES)
+					.setDisplayPropertyProvider((s, propertyNames) -> Map.of("icon", MaterialIcon.BLOCK, "caption", s))
+					.setValueExtractor(object -> object);
+
+			table.setModel(new ListTableModel<>(List.of("a", "b", "c")));
+
+			table.setEditable(true);
+
+			rootPanel.setContent(table);
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, 8082);
