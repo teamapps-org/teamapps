@@ -525,7 +525,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			editorFactory = UiGenericTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		}
 
-		var displayTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(columnConfig.displayTemplate);
+		var displayTemplateRenderer = columnConfig.displayTemplate != null ? this._context.templateRegistry.createTemplateRenderer(columnConfig.displayTemplate) : null;
 
 		const slickColumnConfig: Column = {
 			id: columnConfig.name,
@@ -592,7 +592,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 	}
 
-	private createCellFormatter(field: UiField, displayTemplate: Renderer) {
+	private createCellFormatter(field: UiField, displayTemplate: Renderer | null | undefined) {
 		const createInnerCellFormatter = () => {
 			if (field instanceof UiCompositeField) {
 				this.logger.warn("TODO: create cell formatter for UiCompositeField!");
