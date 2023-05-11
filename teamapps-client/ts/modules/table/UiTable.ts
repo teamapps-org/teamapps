@@ -687,7 +687,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this.updateSelectionFramePosition();
 
 		if (editorCoordinates != null && (editorRowChanged || countChanged)) {
-			this.editCellIfVisible(editorCoordinates.recordId, editorCoordinates.fieldName);
+			this.editCellIfVisible(editorCoordinates.recordId, editorCoordinates.row, editorCoordinates.fieldName);
 		}
 	}
 
@@ -834,9 +834,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 	}
 
-	editCellIfVisible(recordId: number, propertyName: string): void {
-		const rowNumber = this.dataProvider.getRowIndexByRecordId(recordId);
-		if (rowNumber != null && rowNumber >= this._grid.getViewport().top && rowNumber <= this._grid.getViewport().bottom) {
+	editCellIfVisible(recordId: number, row: number, propertyName: string): void {
+		let rowNumberFromRecordId = this.dataProvider.getRowIndexByRecordId(recordId);
+		const rowNumber = rowNumberFromRecordId != -1 ? rowNumberFromRecordId : row;
+		if (rowNumber >= this._grid.getViewport().top && rowNumber <= this._grid.getViewport().bottom) {
 			this._grid.setActiveCell(rowNumber, this._grid.getColumns().findIndex(c => c.id === propertyName));
 			this._grid.editActiveCell(null);
 		}

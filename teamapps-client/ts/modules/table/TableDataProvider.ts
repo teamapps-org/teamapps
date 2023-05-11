@@ -95,7 +95,8 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 	}
 
 	getRowIndexByRecordId(recordId: number) {
-		return this.dataStartIndex + this.data.findIndex(r => r.id == recordId);
+		let dataIndex = this.data.findIndex(r => r.id == recordId);
+		return dataIndex < 0 ? -1 : this.dataStartIndex + dataIndex;
 	}
 
 	setCellMessages(recordId: number, columnName: string, messages: UiFieldMessageConfig[]) {

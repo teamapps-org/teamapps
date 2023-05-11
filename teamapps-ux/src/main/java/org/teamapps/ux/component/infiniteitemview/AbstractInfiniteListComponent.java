@@ -92,6 +92,20 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		sendFullDisplayedRange();
 	}
 
+	public void rerenderRecord(RECORD record) {
+		if (!isRendered()) {
+			return;
+		}
+		int recordIndex = renderedRecords.getIndex(record);
+		if (recordIndex >= 0) {
+			List<RECORD> changedRecords = List.of(record);
+			UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(changedRecords);
+			RecordAndClientRecord<RECORD> recordRecordAndClientRecord = uiRecordMappingResult.recordAndClientRecords.get(0);
+			renderedRecords.updateRecord(recordRecordAndClientRecord.getRecord(), recordRecordAndClientRecord.getUiRecord());
+			updateClientRenderData(List.of(recordRecordAndClientRecord.getUiRecord()));
+		}
+	}
+
 	private void sendFullDisplayedRange() {
 		if (!isRendered()) {
 			return;
