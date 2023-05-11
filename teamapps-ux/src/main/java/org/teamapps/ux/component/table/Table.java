@@ -1179,15 +1179,18 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void applyCellValuesToRecord(RECORD record) {
-		Map<String, Object> changedCellValues = getChangedCellValues(record);
-		changedCellValues.forEach((propertyName, value) -> {
-			ValueInjector<RECORD, Object> columnValueInjector = getColumnByPropertyName(propertyName).getValueInjector();
-			if (columnValueInjector != null) {
-				columnValueInjector.inject(record, value);
-			} else {
-				propertyInjector.setValue(record, propertyName, value);
-			}
-		});
+		Map<String, Object> changedCellValues = transientChangesByRecordAndPropertyName.remove(record);
+		if (changedCellValues != null) {
+			changedCellValues.forEach((propertyName, value) -> {
+				ValueInjector<RECORD, Object> columnValueInjector = getColumnByPropertyName(propertyName).getValueInjector();
+				if (columnValueInjector != null) {
+					columnValueInjector.inject(record, value);
+				} else {
+					propertyInjector.setValue(record, propertyName, value);
+				}
+			});
+			rerenderRecord(record);
+		}
 	}
 
 	public void revertChanges() {

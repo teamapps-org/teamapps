@@ -173,6 +173,12 @@ public class RenderedRecordsCache<RECORD> {
 		recordsToBeRemoved.clear();
 	}
 
+	public void updateRecord(RECORD record, UiIdentifiableClientRecord clientRecord) {
+		int index = getIndex(record);
+		recordPairs.set(index, new RecordAndClientRecord<>(record, clientRecord));
+		uiRecordsByRecord.put(record, clientRecord);
+	}
+
 	private EqualsHashCodeWrapper<RECORD> withCustomEqualsHashCode(RECORD rp) {
 		return new EqualsHashCodeWrapper<>(rp, customEqualsAndHashCode);
 	}
