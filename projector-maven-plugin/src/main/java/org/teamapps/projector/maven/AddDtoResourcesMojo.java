@@ -11,26 +11,19 @@ import org.apache.maven.project.MavenProject;
 
 
 @Mojo(name = "add-dto-resources",
-		defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
+		defaultPhase = LifecyclePhase.INITIALIZE)
 public class AddDtoResourcesMojo extends AbstractMojo {
 
 	@Component
 	private MavenProject mavenProject;
 
-	@Parameter(defaultValue = "${project.build.directory}/js-dist")
-	private String javaScriptDistDir;
-
-	@Parameter
-	private String jsResourcesTargetClassPath;
+	@Parameter(defaultValue = "${project.basedir}/src/main/dto")
+	private String dtoDir;
 
 	public void execute() throws MojoExecutionException {
-		if (jsResourcesTargetClassPath == null || jsResourcesTargetClassPath.isEmpty()) {
-			throw new MojoExecutionException("Please specify jsResourcesTargetClassPath");
-		}
-
 		Resource resource = new Resource();
-		resource.setDirectory(javaScriptDistDir);
-		resource.setTargetPath(jsResourcesTargetClassPath);
+		resource.setDirectory(dtoDir);
+		resource.setTargetPath("projector-dto");
 		resource.addInclude("**/*");
 		mavenProject.addResource(resource);
 	}

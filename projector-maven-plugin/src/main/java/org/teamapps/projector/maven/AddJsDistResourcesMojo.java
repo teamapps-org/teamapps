@@ -11,7 +11,7 @@ import org.apache.maven.project.MavenProject;
 
 
 @Mojo(name = "add-js-dist-resources",
-		defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
+		defaultPhase = LifecyclePhase.INITIALIZE)
 public class AddJsDistResourcesMojo extends AbstractMojo {
 
 	@Component
@@ -20,14 +20,10 @@ public class AddJsDistResourcesMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.directory}/js-dist")
 	private String javaScriptDistDir;
 
-	@Parameter
+	@Parameter(required = true)
 	private String jsResourcesTargetClassPath;
 
 	public void execute() throws MojoExecutionException {
-		if (jsResourcesTargetClassPath == null || jsResourcesTargetClassPath.isEmpty()) {
-			throw new MojoExecutionException("Please specify jsResourcesTargetClassPath");
-		}
-
 		Resource resource = new Resource();
 		resource.setDirectory(javaScriptDistDir);
 		resource.setTargetPath(jsResourcesTargetClassPath);

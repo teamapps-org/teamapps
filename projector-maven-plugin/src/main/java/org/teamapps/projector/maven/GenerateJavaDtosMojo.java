@@ -6,10 +6,14 @@ import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuilder;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.teamapps.projector.maven.Util.checkMavenVersion;
+import static org.teamapps.projector.maven.Util.extractDtoDependencies;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 
@@ -27,6 +31,9 @@ public class GenerateJavaDtosMojo extends AbstractMojo {
 	@Component
 	private BuildPluginManager pluginManager;
 
+	@Component
+	private ProjectBuilder projectBuilder;
+
 	@Parameter(property = "maven.version", readonly = true)
 	private String mavenVersion;
 
@@ -36,8 +43,11 @@ public class GenerateJavaDtosMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.directory}/generated-sources/teamapps-dto")
 	private String javaTargetDir;
 
-	@Parameter(property = "projector.version")
+	@Parameter(required = true, defaultValue = "${projector.version}")
 	private String projectorVersion;
+
+	@Parameter
+	private List<String> dtoDependencies;
 
 	public void execute() throws MojoExecutionException {
 		checkMavenVersion(mavenVersion, getLog());
@@ -49,13 +59,9 @@ public class GenerateJavaDtosMojo extends AbstractMojo {
 	private void executeModelGenerator() throws MojoExecutionException {
 		getLog().info("Generating DTOs");
 
-		if (projectorVersion == null || projectorVersion.isEmpty()) {
-			throw new MojoExecutionException("Please specify projectorVersion in the plugin configuration!");
-		}
-
-		String commandlineArgs = "-i \"" + mavenProject.getBasedir() + "/../teamapps-client-core/src/main/dto\" "
-								 + "-i \"" + mavenProject.getBasedir() + "/../teamapps-client-core-components/src/main/dto\" "
-								 + "\"" + dtoDir + "\" \"" + javaTargetDir + "\"";
+		List<Path> dtoDependencyPaths = dtoDependencies != null ? extractDtoDependencies(mavenProject, dtoDependencies) : List.of();
+		String commandlineArgs = dtoDependencyPaths.stream().map(p -> "-i \"" + p.toAbsolutePath() + "\"").collect(Collectors.joining(" "))
+				+ " \"" + dtoDir + "\" \"" + javaTargetDir + "\"";
 
 		getLog().debug("commandlineArgs: " + commandlineArgs);
 

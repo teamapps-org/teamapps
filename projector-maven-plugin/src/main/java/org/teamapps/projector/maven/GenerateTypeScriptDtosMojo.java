@@ -7,9 +7,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.teamapps.projector.maven.Util.checkMavenVersion;
+import static org.teamapps.projector.maven.Util.extractDtoDependencies;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 
@@ -36,12 +39,11 @@ public class GenerateTypeScriptDtosMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.basedir}/src/main/ts/generated")
 	private String typeScriptTargetDir;
 
-	@Parameter(defaultValue = "${projector.version}")
+	@Parameter(required = true, defaultValue = "${projector.version}")
 	private String projectorVersion;
 
-	public GenerateTypeScriptDtosMojo() {
-		System.out.println("here");
-	}
+	@Parameter
+	private List<String> dtoDependencies;
 
 	public void execute() throws MojoExecutionException {
 		checkMavenVersion(mavenVersion, getLog());
@@ -51,13 +53,9 @@ public class GenerateTypeScriptDtosMojo extends AbstractMojo {
 	private void executeModelGenerator() throws MojoExecutionException {
 		getLog().info("Generating DTOs.");
 
-		if (projectorVersion == null || projectorVersion.isEmpty()) {
-			throw new MojoExecutionException("Please specify projectorVersion in the plugin configuration!");
-		}
-
-		String commandlineArgs = "-i \"" + mavenProject.getBasedir() + "/../teamapps-client-core/src/main/dto\" "
-								 + "-i \"" + mavenProject.getBasedir() + "/../teamapps-client-core-components/src/main/dto\" " // TODO configure explicitely / automatically (based on dependencies!)
-								 + "\"" + dtoDir + "\" \"" + typeScriptTargetDir + "\"";
+		List<Path> dtoDependencyPaths = dtoDependencies != null ? extractDtoDependencies(mavenProject, dtoDependencies) : List.of();
+		String commandlineArgs = dtoDependencyPaths.stream().map(p -> "-i \"" + p.toAbsolutePath() + "\"").collect(Collectors.joining(" "))
+								 + " \"" + dtoDir + "\" \"" + typeScriptTargetDir + "\"";
 
 		getLog().debug("commandlineArgs: " + commandlineArgs);
 		

@@ -128,6 +128,13 @@
                     <include>dist/**/*</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>src/main/dto</directory>
+                <targetPath>projector-dto</targetPath>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 

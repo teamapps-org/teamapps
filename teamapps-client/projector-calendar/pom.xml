@@ -26,32 +26,23 @@
                 <version>0.9.155-SNAPSHOT</version>
                 <executions>
                     <execution>
-                        <id>clean</id>
-                        <goals><goal>clean</goal></goals>
-                    </execution>
-                    <execution>
-                        <id>generate</id>
                         <goals>
+                            <goal>clean</goal>
                             <goal>generate-java-dtos</goal>
                             <goal>generate-typescript-dtos</goal>
+                            <goal>add-js-dist-resources</goal>
+                            <goal>add-dto-resources</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>dist-resources</id>
-                        <goals><goal>add-js-dist-resources</goal></goals>
                     </execution>
                 </executions>
                 <configuration>
-<!--                    <typeScriptGeneratorTargetDir></typeScriptGeneratorTargetDir>-->
-<!--                    <javaScriptDistDir></javaScriptDistDir>-->
-<!--                    <dtoDir></dtoDir>-->
-<!--                    <javaTargetDir></javaTargetDir>-->
-<!--                    <projectorVersion></projectorVersion>-->
-<!--                    <typeScriptTargetDir></typeScriptTargetDir>-->
                     <jsResourcesTargetClassPath>org/teamapps/projector/components/calendar/resources</jsResourcesTargetClassPath>
+                    <dtoDependencies>
+                        <dependency>org.teamapps:teamapps-client-core:${project.version}</dependency>
+                        <dependency>org.teamapps:teamapps-client-core-components:${project.version}</dependency>
+                    </dtoDependencies>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
@@ -93,7 +84,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
