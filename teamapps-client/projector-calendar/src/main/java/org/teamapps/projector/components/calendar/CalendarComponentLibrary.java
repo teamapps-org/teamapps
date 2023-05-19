@@ -15,12 +15,12 @@ public class CalendarComponentLibrary implements ComponentLibrary {
 
 	@Override
 	public Resource getMainJsResource() {
-		return new ClassPathResource("org/teamapps/projector/components/calendar/resources/dist/index.js", "text/javascript");
+		return new ClassPathResource("org/teamapps/projector/components/calendar/resources/index.js", "text/javascript");
 	}
 
 	@Override
 	public Resource getMainCssResource() {
-		return new ClassPathResource("org/teamapps/projector/components/calendar/resources/dist/index.css", "text/css");
+		return new ClassPathResource("org/teamapps/projector/components/calendar/resources/index.css", "text/css");
 	}
 
 	@Override

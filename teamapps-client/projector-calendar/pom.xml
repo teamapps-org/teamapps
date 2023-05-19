@@ -11,17 +11,7 @@
 
     <artifactId>projector-calendar</artifactId>
 
-    <properties>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.target>18</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ui-dsl</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-ux</artifactId>
@@ -31,64 +21,35 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.6.1</version>
+                <groupId>org.teamapps</groupId>
+                <artifactId>projector-maven-plugin</artifactId>
+                <version>0.9.155-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>clean</id>
+                        <goals><goal>clean</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>generate-java-dtos</goal>
+                            <goal>generate-typescript-dtos</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>dist-resources</id>
+                        <goals><goal>add-js-dist-resources</goal></goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>src/main/ts/generated</directory>
-                        </fileset>
-                    </filesets>
+<!--                    <typeScriptGeneratorTargetDir></typeScriptGeneratorTargetDir>-->
+<!--                    <javaScriptDistDir></javaScriptDistDir>-->
+<!--                    <dtoDir></dtoDir>-->
+<!--                    <javaTargetDir></javaTargetDir>-->
+<!--                    <projectorVersion></projectorVersion>-->
+<!--                    <typeScriptTargetDir></typeScriptTargetDir>-->
+                    <jsResourcesTargetClassPath>org/teamapps/projector/components/calendar/resources</jsResourcesTargetClassPath>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>generate DTOs</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>org.teamapps.dsl.generate.TeamAppsJavaDtoGenerator</mainClass>
-                            <commandlineArgs>-i ${project.basedir}/../teamapps-client-core/src/main/dto -i ${project.basedir}/../teamapps-client-core-components/src/main/dto "${project.basedir}/src/main/dto" "${project.basedir}/target/generated-sources/dto"</commandlineArgs>
-                            <classpathScope>test</classpathScope>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>generate TypeScript</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>org.teamapps.dsl.generate.TeamAppsTypeScriptGenerator</mainClass>
-                            <commandlineArgs>-i ${project.basedir}/../teamapps-client-core/src/main/dto -i ${project.basedir}/../teamapps-client-core-components/src/main/dto  "${project.basedir}/src/main/dto" "${project.basedir}/src/main/ts/generated"</commandlineArgs>
-                            <classpathScope>test</classpathScope>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-sources/dto</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -134,16 +95,6 @@
             </plugin>
 
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>.</directory>
-                <targetPath>org/teamapps/projector/components/calendar/resources</targetPath>
-                <includes>
-                    <include>dist/**/*</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
 
 

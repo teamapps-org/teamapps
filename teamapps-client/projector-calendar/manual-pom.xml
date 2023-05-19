@@ -9,7 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>teamapps-client-core-components</artifactId>
+    <artifactId>projector-calendar</artifactId>
+
+    <properties>
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -18,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-core</artifactId>
+            <artifactId>teamapps-ux</artifactId>
         </dependency>
     </dependencies>
 
@@ -48,7 +54,7 @@
                         </goals>
                         <configuration>
                             <mainClass>org.teamapps.dsl.generate.TeamAppsJavaDtoGenerator</mainClass>
-                            <commandlineArgs>-i ${project.basedir}/../teamapps-client-communication/src/main/dto -i ${project.basedir}/../teamapps-client-core/src/main/dto "${project.basedir}/src/main/dto" "${project.basedir}/target/generated-sources/dto"</commandlineArgs>
+                            <commandlineArgs>-i ${project.basedir}/../teamapps-client-core/src/main/dto -i ${project.basedir}/../teamapps-client-core-components/src/main/dto "${project.basedir}/src/main/dto" "${project.basedir}/target/generated-sources/dto"</commandlineArgs>
                             <classpathScope>test</classpathScope>
                         </configuration>
                     </execution>
@@ -60,7 +66,7 @@
                         </goals>
                         <configuration>
                             <mainClass>org.teamapps.dsl.generate.TeamAppsTypeScriptGenerator</mainClass>
-                            <commandlineArgs>-i ${project.basedir}/../teamapps-client-communication/src/main/dto -i ${project.basedir}/../teamapps-client-core/src/main/dto "${project.basedir}/src/main/dto" "${project.basedir}/src/main/ts/generated"</commandlineArgs>
+                            <commandlineArgs>-i ${project.basedir}/../teamapps-client-core/src/main/dto -i ${project.basedir}/../teamapps-client-core-components/src/main/dto  "${project.basedir}/src/main/dto" "${project.basedir}/src/main/ts/generated"</commandlineArgs>
                             <classpathScope>test</classpathScope>
                         </configuration>
                     </execution>
@@ -107,6 +113,15 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>sync version to package.json</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>sync-pom-version</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>build</id>
                         <goals>
                             <goal>yarn</goal>
@@ -123,7 +138,7 @@
         <resources>
             <resource>
                 <directory>.</directory>
-                <targetPath>org/teamapps/projector/components/core/resources</targetPath>
+                <targetPath>org/teamapps/projector/components/calendar/resources</targetPath>
                 <includes>
                     <include>dist/**/*</include>
                 </includes>

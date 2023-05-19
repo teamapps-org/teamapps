@@ -32,6 +32,7 @@
     </developers>
 
     <modules>
+        <module>projector-maven-plugin</module>
         <module>teamapps-common</module>
         <module>teamapps-icon</module>
         <module>teamapps-material-icon-provider</module>
@@ -48,8 +49,8 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <slf4j-version>1.7.36</slf4j-version>

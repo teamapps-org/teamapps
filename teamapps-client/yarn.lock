@@ -3130,6 +3130,7 @@ __metadata:
     replace-in-file: ^6.3.5
     rimraf: ^3.0.2
     sync-pom-version-to-package: ^1.6.1
+    teamapps-client-core: "workspace:*"
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft

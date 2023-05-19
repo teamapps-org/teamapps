@@ -4,12 +4,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.ux.component.ComponentLibrary;
 import org.teamapps.ux.component.ComponentLibraryRegistry;
 import org.teamapps.ux.resource.Resource;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -17,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class ComponentLibraryResourceServlet extends HttpServlet {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private static final String NOT_FOUND_HASH = "?NOT:FOUND";
 
@@ -30,6 +35,7 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		LOGGER.info("{}", req.getPathInfo());
 		String pathInfo = req.getPathInfo();
 		String componentLibraryId;
 		String resourcePath;

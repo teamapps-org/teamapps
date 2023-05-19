@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 
 import static org.teamapps.dsl.generate.ErrorMessageUtil.runWithExceptionMessagePrefix;
 
@@ -55,7 +56,6 @@ public class TeamAppsJavaDtoGenerator {
 
 		String[] importedModelDirs = cmd.getOptionValues('i');
 		TeamAppsIntermediateDtoModel importedModel = null;
-		System.out.println(importedModelDirs);
 		if (importedModelDirs != null) {
 			for (String importedModelDir : importedModelDirs) {
 				try {
@@ -79,7 +79,7 @@ public class TeamAppsJavaDtoGenerator {
 		File targetDir = new File(cmd.getArgs()[1]);
 
 
-		System.out.println("Generating Java from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath());
+		System.out.println("Generating Java from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath() + " with imported models from: " + Arrays.toString(importedModelDirs));
 
 
 		TeamAppsIntermediateDtoModel model;
