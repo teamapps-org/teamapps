@@ -19,27 +19,28 @@
  */
 package org.teamapps.ux.servlet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.teamapps.core.TeamAppsCore;
-import org.teamapps.icons.IconProvider;
-import org.teamapps.ux.servlet.component.ComponentLibraryResourceServlet;
-import org.teamapps.ux.servlet.resourceprovider.TeamAppsSessionResourceProvider;
-import org.teamapps.ux.servlet.resourceprovider.IconResourceProvider;
-import org.teamapps.ux.servlet.resourceprovider.ResourceProviderServlet;
-import org.teamapps.ux.session.SessionContextResourceManager;
-
 import jakarta.servlet.*;
 import jakarta.servlet.ServletRegistration.Dynamic;
 import jakarta.websocket.Extension;
 import jakarta.websocket.server.ServerContainer;
 import jakarta.websocket.server.ServerEndpointConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teamapps.core.TeamAppsCore;
+import org.teamapps.icons.IconProvider;
+import org.teamapps.ux.servlet.component.ComponentLibraryResourceServlet;
+import org.teamapps.ux.servlet.resourceprovider.IconResourceProvider;
+import org.teamapps.ux.servlet.resourceprovider.ResourceProviderServlet;
+import org.teamapps.ux.servlet.resourceprovider.TeamAppsSessionResourceProvider;
+import org.teamapps.ux.session.SessionContextResourceManager;
+
+import java.lang.invoke.MethodHandles;
 import java.util.EnumSet;
 import java.util.List;
 
 public class TeamAppsServletContextListener implements ServletContextListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsServletContextListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final TeamAppsCore teamAppsCore;
 

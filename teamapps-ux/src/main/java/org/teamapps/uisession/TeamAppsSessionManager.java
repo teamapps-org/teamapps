@@ -44,6 +44,7 @@ import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ import static org.teamapps.uisession.UiSessionState.*;
  */
 public class TeamAppsSessionManager implements HttpSessionListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsSessionManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public static final String TEAMAPPS_VERSION_REFRESH_PARAMETER = "teamappsRefresh"; // keep in-sync with JavaScript!!!
 
 	public final Event<SessionStatsUpdatedEventData> onStatsUpdated = new Event<>();

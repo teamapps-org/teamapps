@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractForm<RECORD> extends AbstractComponent implements Component {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractForm.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final ProjectorEvent<FieldChangeEventData> onFieldValueChanged = new ProjectorEvent<>();
 

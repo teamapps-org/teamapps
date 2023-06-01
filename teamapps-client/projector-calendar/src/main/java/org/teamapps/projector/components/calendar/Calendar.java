@@ -47,6 +47,7 @@ import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.session.CurrentSessionContext;
 
+import java.lang.invoke.MethodHandles;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -57,7 +58,7 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CalendarComponentLibrary.class)
 public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(Calendar.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final ProjectorEvent<EventClickedEventData<CEVENT>> onEventClicked = createProjectorEventBoundToUiEvent(DtoCalendar.EventClickedEvent.TYPE_ID);
 	public final ProjectorEvent<EventMovedEventData<CEVENT>> onEventMoved = createProjectorEventBoundToUiEvent(DtoCalendar.EventMovedEvent.TYPE_ID);

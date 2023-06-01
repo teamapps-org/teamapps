@@ -25,7 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoClientObject;
+import org.teamapps.dto.DtoCommand;
+import org.teamapps.dto.DtoGlobals;
+import org.teamapps.dto.DtoNotification;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.dto.protocol.DtoQueryWrapper;
 import org.teamapps.dto.protocol.DtoSessionClosingReason;
@@ -59,6 +62,7 @@ import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.util.*;
@@ -72,7 +76,7 @@ import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
 public class SessionContext {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final ExecutorService sessionExecutor;
 

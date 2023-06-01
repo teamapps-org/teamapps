@@ -34,6 +34,7 @@ import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.definition.ViewDefinition;
 import org.teamapps.ux.session.SessionContext;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +42,7 @@ import java.util.UUID;
 
 public class WorkSpaceLayoutView {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSpaceLayout.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final WorkSpaceLayout workSpaceLayout;
 	private final ProjectorEvent<Void> onRemoved = new ProjectorEvent<>();

@@ -33,11 +33,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class TeamAppsTypeScriptGenerator {
-	private final static Logger logger = LoggerFactory.getLogger(TeamAppsTypeScriptGenerator.class);
+	private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final STGroupFile stGroup;
     private final TeamAppsIntermediateDtoModel model;

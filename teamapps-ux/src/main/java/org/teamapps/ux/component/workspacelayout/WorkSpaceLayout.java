@@ -34,6 +34,7 @@ import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
 public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
-	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSpaceLayout.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final ProjectorEvent<ViewSelectedEventData> onViewSelected = createProjectorEventBoundToUiEvent(DtoWorkSpaceLayout.ViewSelectedEvent.TYPE_ID);
 	public final ProjectorEvent<WorkSpaceLayoutView> onChildWindowCreationFailed = createProjectorEventBoundToUiEvent(DtoWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID);

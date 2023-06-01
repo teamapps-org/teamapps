@@ -21,17 +21,11 @@ package org.teamapps.ux.cache.record.legacy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoIdentifiableClientRecord;
 import org.teamapps.common.util.StreamUtil;
+import org.teamapps.dto.DtoIdentifiableClientRecord;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.invoke.MethodHandles;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,7 +34,7 @@ import static java.util.function.Function.identity;
 
 public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRecord> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ClientRecordCache.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final UiIdentifiableClientRecordFactory<RECORD, UIRECORD> clientRecordFactory;
 	private final UiIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> postProcessor;

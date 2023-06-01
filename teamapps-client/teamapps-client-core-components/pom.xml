@@ -25,66 +25,29 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.6.1</version>
+                <groupId>org.teamapps</groupId>
+                <artifactId>projector-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>sync-pom-version</goal>
+                            <goal>generate-java-dtos</goal>
+                            <goal>generate-typescript-dtos</goal>
+                            <goal>add-js-dist-resources</goal>
+                            <goal>add-dto-resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>src/main/ts/generated</directory>
-                        </fileset>
-                    </filesets>
+                    <jsResourcesTargetClassPath>org/teamapps/projector/components/core/resources/js</jsResourcesTargetClassPath>
+                    <dtoDependencies>
+                        <dependency>org.teamapps:teamapps-client-communication:${project.version}</dependency>
+                        <dependency>org.teamapps:teamapps-client-core:${project.version}</dependency>
+                    </dtoDependencies>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>generate DTOs</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>org.teamapps.dsl.generate.TeamAppsJavaDtoGenerator</mainClass>
-                            <commandlineArgs>-i ${project.basedir}/../teamapps-client-communication/src/main/dto -i ${project.basedir}/../teamapps-client-core/src/main/dto "${project.basedir}/src/main/dto" "${project.basedir}/target/generated-sources/dto"</commandlineArgs>
-                            <classpathScope>test</classpathScope>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>generate TypeScript</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>org.teamapps.dsl.generate.TeamAppsTypeScriptGenerator</mainClass>
-                            <commandlineArgs>-i ${project.basedir}/../teamapps-client-communication/src/main/dto -i ${project.basedir}/../teamapps-client-core/src/main/dto "${project.basedir}/src/main/dto" "${project.basedir}/src/main/ts/generated"</commandlineArgs>
-                            <classpathScope>test</classpathScope>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-sources/dto</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
@@ -117,26 +80,8 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
 
-        <resources>
-            <resource>
-                <directory>.</directory>
-                <targetPath>org/teamapps/projector/components/core/resources</targetPath>
-                <includes>
-                    <include>dist/**/*</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/dto</directory>
-                <targetPath>projector-dto</targetPath>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
-
 
 </project>

@@ -13,9 +13,9 @@ const __dirname = path.dirname(__filename);
 
 esbuild.build({
     watch: process.argv.some(a => a === '--watch'),
-    entryPoints: ['dist/lib/index.js'],
+    entryPoints: ['target/js-dist/lib/index.js'],
     bundle: true,
-    outfile: 'dist/index.js',
+    outfile: 'target/js-dist/index.js',
     format: 'esm',
     platform: "node",
     mainFields: ["browser", "module", "main"],
@@ -38,27 +38,6 @@ esbuild.build({
     minify: process.env.NODE_ENV === 'production'
 })
     .then(async (result, x, y) => {
-        console.log("Compressing result files...");
-        await compressFile("dist/index.js");
-        // await compressFile("dist/teamapps-core.css");
         console.log("⚡ esbuild complete! ⚡")
     })
     .catch(() => process.exit(1));
-
-
-function compressFile(filePath) {
-    return new Promise((resolve, reject) => {
-        const stream = createReadStream(filePath);
-        let resultFilePath = `${filePath}.gz`;
-        stream
-            .pipe(createGzip())
-            .pipe(createWriteStream(resultFilePath))
-            .on("finish", () => {
-                console.log(`Compressed ${filePath} to ${resultFilePath}`);
-                resolve();
-            })
-            .on("error", () => {
-                reject();
-            });
-    });
-}

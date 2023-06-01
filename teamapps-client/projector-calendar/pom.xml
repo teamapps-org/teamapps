@@ -23,11 +23,12 @@
             <plugin>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-maven-plugin</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>${project.version}</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>clean</goal>
+                            <goal>sync-pom-version</goal>
                             <goal>generate-java-dtos</goal>
                             <goal>generate-typescript-dtos</goal>
                             <goal>add-js-dist-resources</goal>
@@ -36,7 +37,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jsResourcesTargetClassPath>org/teamapps/projector/components/calendar/resources</jsResourcesTargetClassPath>
+                    <jsResourcesTargetClassPath>org/teamapps/projector/components/calendar/resources/js</jsResourcesTargetClassPath>
                     <dtoDependencies>
                         <dependency>org.teamapps:teamapps-client-core:${project.version}</dependency>
                         <dependency>org.teamapps:teamapps-client-core-components:${project.version}</dependency>
@@ -63,15 +64,6 @@
                         <goals>
                             <goal>yarn</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>sync version to package.json</id>
-                        <goals>
-                            <goal>yarn</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>sync-pom-version</arguments>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>build</id>

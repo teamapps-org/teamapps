@@ -22,9 +22,11 @@ package org.teamapps.ux.session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
+
 public class CurrentSessionContext {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CurrentSessionContext.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private static final ThreadLocal<SessionContext> CURRENT_CONTEXT = new ThreadLocal<>();
 
 	public static SessionContext get() {

@@ -13,9 +13,9 @@ const __dirname = path.dirname(__filename);
 
 esbuild.build({
     watch: process.argv.some(a => a === '--watch'),
-    entryPoints: ['dist/lib/index.js'],
+    entryPoints: ['target/js-dist/lib/index.js'],
     bundle: true,
-    outfile: 'dist/index.js',
+    outfile: 'target/js-dist/index.js',
     format: 'esm',
     platform: "node",
     mainFields: ["browser", "module", "main"],
@@ -35,8 +35,8 @@ esbuild.build({
 })
     .then(async (result, x, y) => {
         console.log("Compressing result files...");
-        await compressFile("dist/index.js");
-        await compressFile("dist/index.css");
+        await compressFile("target/js-dist/index.js");
+        await compressFile("target/js-dist/index.css");
         console.log("⚡ esbuild complete! ⚡")
     })
     .catch(() => process.exit(1));

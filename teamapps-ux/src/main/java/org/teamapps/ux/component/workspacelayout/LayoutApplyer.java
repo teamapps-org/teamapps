@@ -21,18 +21,21 @@ package org.teamapps.ux.component.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.*;
+import org.teamapps.dto.DtoWorkSpaceLayoutItemWrapper;
+import org.teamapps.dto.DtoWorkSpaceLayoutSplitItem;
+import org.teamapps.dto.DtoWorkSpaceLayoutViewGroupItem;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.ux.component.workspacelayout.definition.SplitPaneDefinition;
 import org.teamapps.ux.component.workspacelayout.definition.ViewGroupDefinition;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.stream.Collectors;
 
 class LayoutApplyer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LayoutApplyer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final WorkSpaceLayout workSpaceLayout;
 

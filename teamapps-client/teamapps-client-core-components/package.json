@@ -2,11 +2,10 @@
   "name": "teamapps-client-core-components",
   "version": "0.9.155-SNAPSHOT",
   "type": "module",
-  "exports": "./dist/index.js",
-  "types": "dist/lib/index.d.ts",
+  "exports": "./target/js-dist/index.js",
+  "types": "./target/js-dist/lib/index.d.ts",
   "scripts": {
-    "sync-pom-version": "node build/sync-pom-version.js",
-    "del_dist": "rimraf 'dist/*'",
+    "del_dist": "rimraf 'target/js-dist/*'",
     "clean": "yarn run del_dist",
     "tsc": "tsc",
     "bundle": "node esbuild.mjs",
@@ -24,7 +23,6 @@
     "onchange": "^7.1.0",
     "replace-in-file": "^6.3.5",
     "rimraf": "^3.0.2",
-    "sync-pom-version-to-package": "^1.6.1",
     "typescript": "^4.8.4"
   },
   "dependencies": {

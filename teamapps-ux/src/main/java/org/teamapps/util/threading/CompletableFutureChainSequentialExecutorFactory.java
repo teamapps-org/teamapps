@@ -22,6 +22,7 @@ package org.teamapps.util.threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,7 +32,7 @@ import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
 public class CompletableFutureChainSequentialExecutorFactory implements SequentialExecutorFactory {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CompletableFutureChainSequentialExecutorFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final AtomicReference<MinMaxAverageStats> delayStats = new AtomicReference<>(new MinMaxAverageStats());
 	private final AtomicReference<MinMaxAverageStats> executionTimeStats= new AtomicReference<>(new MinMaxAverageStats());

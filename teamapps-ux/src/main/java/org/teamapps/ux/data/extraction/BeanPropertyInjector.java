@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.util.ReflectionUtil;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -32,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BeanPropertyInjector<RECORD> implements PropertyInjector<RECORD> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(BeanPropertyInjector.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private static final Map<ClassAndPropertyName, ValueInjector> settersByClassAndPropertyName = new ConcurrentHashMap<>();
 
 	private final Map<String, ValueInjector> customInjectors = new HashMap<>(0);

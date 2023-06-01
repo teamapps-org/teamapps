@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 public class Tree<RECORD> extends AbstractComponent {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(Tree.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final ProjectorEvent<RECORD> onNodeSelected = createProjectorEventBoundToUiEvent(DtoTree.NodeSelectedEvent.TYPE_ID);
 	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoTree.TextInputEvent.TYPE_ID);

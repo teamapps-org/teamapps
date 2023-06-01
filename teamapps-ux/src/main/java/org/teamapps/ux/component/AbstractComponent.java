@@ -30,6 +30,7 @@ import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.Globals;
 import org.teamapps.ux.session.SessionContext;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -37,7 +38,7 @@ public abstract class AbstractComponent implements Component {
 
 	public static final String DELETED_ATTRIBUTE = "__ta-deleted-attribute__";
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(AbstractComponent.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private String debuggingId = "";
 	private final String id = getClass().getSimpleName() + "-" + UUID.randomUUID();

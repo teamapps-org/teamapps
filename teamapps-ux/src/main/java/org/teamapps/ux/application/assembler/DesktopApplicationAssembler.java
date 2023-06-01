@@ -21,7 +21,8 @@ package org.teamapps.ux.application.assembler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.ux.application.*;
+import org.teamapps.ux.application.ResponsiveApplication;
+import org.teamapps.ux.application.ResponsiveApplicationToolbar;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
@@ -34,11 +35,12 @@ import org.teamapps.ux.component.workspacelayout.WorkSpaceLayoutView;
 import org.teamapps.ux.component.workspacelayout.WorkSpaceLayoutViewGroup;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 public class DesktopApplicationAssembler implements ApplicationAssembler {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(DesktopApplicationAssembler.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private ResponsiveApplicationToolbar responsiveApplicationToolbar;
     private WorkSpaceLayout workSpaceLayout;

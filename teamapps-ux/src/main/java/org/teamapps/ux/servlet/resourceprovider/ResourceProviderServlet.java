@@ -19,19 +19,19 @@
  */
 package org.teamapps.ux.servlet.resourceprovider;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.ux.resource.Resource;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +45,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class ResourceProviderServlet extends HttpServlet {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceProviderServlet.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private static final long ONE_SECOND_IN_MILLIS = TimeUnit.SECONDS.toMillis(1);
 	private static final String ETAG = "W/\"%s-%s\"";

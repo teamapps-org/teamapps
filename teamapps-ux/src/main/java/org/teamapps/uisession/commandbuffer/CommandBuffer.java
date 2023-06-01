@@ -23,12 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.protocol.CMD;
 
+import java.lang.invoke.MethodHandles;
+
 /**
  * NOT THREAD-SAFE! Synchronization must be provided by client code.
  */
 public class CommandBuffer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommandBuffer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final int maxFillableCapacity;
 	/**

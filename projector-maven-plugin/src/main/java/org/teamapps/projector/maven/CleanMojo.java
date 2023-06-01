@@ -29,14 +29,10 @@ public class CleanMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.basedir}/src/main/ts/generated")
 	private String typeScriptGeneratorTargetDir;
 
-	@Parameter(defaultValue = "${project.basedir}/target/dist")
+	@Parameter(defaultValue = "${project.basedir}/target/js-dist") // by default not necessary to delete (twice), but could be overwritten
 	private String javaScriptDistDir;
 
 	public void execute() throws MojoExecutionException {
-		compileModel();
-	}
-
-	private void compileModel() throws MojoExecutionException {
 		getLog().info("Cleaning: "
 					  + "\n\t" + typeScriptGeneratorTargetDir
 					  + "\n\t" + javaScriptDistDir
@@ -63,4 +59,5 @@ public class CleanMojo extends AbstractMojo {
 				)
 		);
 	}
+
 }

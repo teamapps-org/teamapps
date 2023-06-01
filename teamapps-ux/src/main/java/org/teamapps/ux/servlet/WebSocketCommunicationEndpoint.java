@@ -32,6 +32,7 @@ import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.Location;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -39,7 +40,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class WebSocketCommunicationEndpoint extends Endpoint {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketCommunicationEndpoint.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * This is needed due to https://github.com/eclipse/jetty.project/issues/8151.
@@ -203,7 +204,6 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 				}
 				sendCount.addAndGet(messageAsString.length());
 				totalSendCount.addAndGet(messageAsString.length());
-				System.out.println(messageAsString);
 				//noinspection Convert2Lambda
 				wsSession.getAsyncRemote().sendText(messageAsString, new SendHandler() {
 					@Override

@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 
 public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Table.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final ProjectorEvent<CellEditingStartedEvent<RECORD, ?>> onCellEditingStarted = createProjectorEventBoundToUiEvent(DtoTable.CellEditingStartedEvent.TYPE_ID);
 	public final ProjectorEvent<CellEditingStoppedEvent<RECORD, ?>> onCellEditingStopped = createProjectorEventBoundToUiEvent(DtoTable.CellEditingStoppedEvent.TYPE_ID);

@@ -29,7 +29,6 @@ esbuild.build({
     minify: process.env.NODE_ENV === 'production'
 })
     .then(async (result, x, y) => {
-        console.log("Compressing result files...");
         console.log("⚡ esbuild complete! ⚡")
     })
     .catch(() => process.exit(1));

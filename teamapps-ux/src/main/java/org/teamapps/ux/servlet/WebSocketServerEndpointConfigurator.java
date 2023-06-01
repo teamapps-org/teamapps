@@ -19,19 +19,20 @@
  */
 package org.teamapps.ux.servlet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.HandshakeResponse;
 import jakarta.websocket.server.HandshakeRequest;
 import jakarta.websocket.server.ServerEndpointConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 
 public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Configurator {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketServerEndpointConfigurator.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public static final String SERVLET_CONTEXT_PROPERTY_NAME = "SERVLET_CONTEXT";
 	public static final String HTTP_SESSION_PROPERTY_NAME = "HTTP_SESSION";

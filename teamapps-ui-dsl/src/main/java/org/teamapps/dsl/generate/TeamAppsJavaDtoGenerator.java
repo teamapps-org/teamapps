@@ -33,12 +33,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
 import static org.teamapps.dsl.generate.ErrorMessageUtil.runWithExceptionMessagePrefix;
 
 public class TeamAppsJavaDtoGenerator {
-	private final static Logger logger = LoggerFactory.getLogger(TeamAppsJavaDtoGenerator.class);
+	private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final STGroupFile stGroup;
 	private final TeamAppsIntermediateDtoModel model;

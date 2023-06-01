@@ -22,6 +22,7 @@ package org.teamapps.event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -38,7 +39,7 @@ import java.util.function.Function;
  */
 public class Event<EVENT_DATA> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Event.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private final String source; // for debugging
 
 	protected final List<Consumer<EVENT_DATA>> listeners = new CopyOnWriteArrayList<>();

@@ -29,12 +29,13 @@ import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.session.CurrentSessionContext;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
 			this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,

@@ -19,21 +19,18 @@
  */
 package org.teamapps.ux.servlet;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -43,7 +40,7 @@ import java.util.stream.Collectors;
 @MultipartConfig(location="/tmp", fileSizeThreshold=1000_000, maxFileSize=-1L, maxRequestSize=-1L)
 public class UploadServlet extends HttpServlet {
 
-	private static final Logger LOGGER  = LoggerFactory.getLogger(UploadServlet.class);
+	private static final Logger LOGGER  = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final File uploadDirectory;
 

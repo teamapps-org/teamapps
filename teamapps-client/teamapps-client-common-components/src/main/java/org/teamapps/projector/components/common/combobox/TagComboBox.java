@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @TeamAppsComponent(library = CommonComponentLibrary.class)
 public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TagComboBox.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final ProjectorEvent<String> onFreeTextEntered = new ProjectorEvent<>();
 	public final ProjectorEvent<String> onFreeTextRemoved = new ProjectorEvent<>();
