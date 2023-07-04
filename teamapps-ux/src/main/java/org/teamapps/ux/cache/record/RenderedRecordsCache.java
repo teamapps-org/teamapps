@@ -51,14 +51,18 @@ public class RenderedRecordsCache<RECORD> {
 	}
 
 	public int getIndex(RECORD record) {
-		int index = IntStream.range(0, recordPairs.size())
-				.filter(i -> customEqualsAndHashCode.getEquals().test(record, recordPairs.get(i).getRecord()))
-				.findFirst().orElse(-1);
+		int index = getRelativeIndex(record);
 		if (index >= 0) {
 			return startIndex + index;
 		} else {
 			return -1;
 		}
+	}
+
+	private int getRelativeIndex(RECORD record) {
+		return IntStream.range(0, recordPairs.size())
+				.filter(i -> customEqualsAndHashCode.getEquals().test(record, recordPairs.get(i).getRecord()))
+				.findFirst().orElse(-1);
 	}
 
 	public List<RECORD> getRecords() {
@@ -174,7 +178,7 @@ public class RenderedRecordsCache<RECORD> {
 	}
 
 	public void updateRecord(RECORD record, UiIdentifiableClientRecord clientRecord) {
-		int index = getIndex(record);
+		int index = getRelativeIndex(record);
 		recordPairs.set(index, new RecordAndClientRecord<>(record, clientRecord));
 		uiRecordsByRecord.put(record, clientRecord);
 	}
