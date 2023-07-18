@@ -247,13 +247,13 @@ public class SessionContext {
 		Set<String> queryParamNamesWorthStatePush = new HashSet<>();
 
 		while (router != null) {
-			RouteInfo routeChangeInfo = router.calculateRouteInfo();
-			route = route.withPathSuffix(routeChangeInfo.getRoute().getPath())
-					.withQueryParams(routeChangeInfo.getRoute().getQueryParams());
-			if (routeChangeInfo.isPathChangeWorthStatePush()) {
+			RelativeRouteInfo relativeRouteInfo = router.calculateRelativeRouteInfo();
+			route = route.withPathSuffix(relativeRouteInfo.getRoute().getPath())
+					.withQueryParams(relativeRouteInfo.getRoute().getQueryParams());
+			if (relativeRouteInfo.isPathChangeWorthStatePush()) {
 				pathChangeOperation = PUSH;
 			}
-			queryParamNamesWorthStatePush.addAll(routeChangeInfo.getQueryParamNamesWorthStatePush());
+			queryParamNamesWorthStatePush.addAll(relativeRouteInfo.getQueryParamNamesWorthStatePush());
 			String pathPrefix = route.getPath();
 			boolean addsToPath = !isEmptyPath(pathPrefix);
 			// TODO #performance check efficiency and improve

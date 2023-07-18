@@ -58,7 +58,7 @@ public class RouterTest {
 		router.setPathSupplier(() -> "fromSupplier", REPLACE);
 		router.setRouteSupplier(() -> new Route("fromRouteSupplier", Map.of()), REPLACE);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getPath()).isEqualTo("/x");
 		assertThat(routeInfo.isPathChangeWorthStatePush()).isTrue();
 	}
@@ -71,7 +71,7 @@ public class RouterTest {
 		router.setPathSupplier(() -> "fromSupplier", PUSH);
 		router.setRouteSupplier(() -> new Route("fromRouteSupplier", Map.of()), PUSH);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getPath()).isEqualTo("/x");
 		assertThat(routeInfo.isPathChangeWorthStatePush()).isFalse();
 	}
@@ -85,7 +85,7 @@ public class RouterTest {
 		router.addQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), REPLACE);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), REPLACE);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getQueryParam("x")).isEqualTo("xValue");
 		assertThat(routeInfo.getQueryParamNamesWorthStatePush()).contains("x");
 	}
@@ -98,7 +98,7 @@ public class RouterTest {
 		router.addQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), PUSH);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), PUSH);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getQueryParam("x")).isEqualTo("xValue");
 		assertThat(routeInfo.getQueryParamNamesWorthStatePush()).doesNotContain("x");
 	}
@@ -110,7 +110,7 @@ public class RouterTest {
 
 		router.setRouteSupplier(() -> new Route("fromRouteSupplier", Map.of()), REPLACE);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getPath()).isEqualTo("/fromPathSupplier");
 		assertThat(routeInfo.isPathChangeWorthStatePush()).isTrue();
 	}
@@ -122,7 +122,7 @@ public class RouterTest {
 
 		router.setRouteSupplier(() -> new Route("fromRouteSupplier", Map.of()), PUSH);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getPath()).isEqualTo("/fromPathSupplier");
 		assertThat(routeInfo.isPathChangeWorthStatePush()).isFalse();
 	}
@@ -135,7 +135,7 @@ public class RouterTest {
 		router.addQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), REPLACE);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), REPLACE);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getQueryParam("x")).isEqualTo("fromSupplier");
 		assertThat(routeInfo.getQueryParamNamesWorthStatePush()).contains("x");
 	}
@@ -147,7 +147,7 @@ public class RouterTest {
 		router.addQueryParametersSupplier(() -> Map.of("x", "fromSupplier2"), PUSH);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), PUSH);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getQueryParam("x")).isEqualTo("fromSupplier");
 		assertThat(routeInfo.getQueryParamNamesWorthStatePush()).doesNotContain("x");
 	}
@@ -158,7 +158,7 @@ public class RouterTest {
 		router.addQueryParametersSupplier(() -> Map.of("x", "fromParametersSupplier"), PUSH);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), REPLACE);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getQueryParam("x")).isEqualTo("fromParametersSupplier");
 		assertThat(routeInfo.getQueryParamNamesWorthStatePush()).contains("x");
 	}
@@ -169,7 +169,7 @@ public class RouterTest {
 		router.addQueryParametersSupplier(() -> Map.of("x", "fromParametersSupplier"), REPLACE);
 		router.setRouteSupplier(() -> new Route("/", Map.of("x", "fromRouteSupplier")), PUSH);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getQueryParam("x")).isEqualTo("fromParametersSupplier");
 		assertThat(routeInfo.getQueryParamNamesWorthStatePush()).doesNotContain("x");
 	}
@@ -179,7 +179,7 @@ public class RouterTest {
 		Router router = new Router("/");
 		router.setRouteSupplier(() -> new Route("fromRouteSupplier", Map.of()), PUSH);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getPath()).isEqualTo("/fromRouteSupplier");
 		assertThat(routeInfo.isPathChangeWorthStatePush()).isTrue();
 	}
@@ -189,7 +189,7 @@ public class RouterTest {
 		Router router = new Router("/");
 		router.setRouteSupplier(() -> new Route("fromRouteSupplier", Map.of()), REPLACE);
 
-		RouteInfo routeInfo = router.calculateRouteInfo();
+		RelativeRouteInfo routeInfo = router.calculateRelativeRouteInfo();
 		assertThat(routeInfo.getRoute().getPath()).isEqualTo("/fromRouteSupplier");
 		assertThat(routeInfo.isPathChangeWorthStatePush()).isFalse();
 	}

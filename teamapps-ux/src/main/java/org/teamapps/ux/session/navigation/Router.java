@@ -73,7 +73,7 @@ public class Router {
 		return new UriTemplate(templateString);
 	}
 
-	public RouteInfo calculateRouteInfo() {
+	public RelativeRouteInfo calculateRelativeRouteInfo() {
 		Route route = Route.create();
 		NavigationHistoryOperation pathChangeOperation = REPLACE;
 		Set<String> queryParameterNamesTriggeringPush = new HashSet<>();
@@ -124,7 +124,7 @@ public class Router {
 			route = route.withPath(path);
 			pathChangeOperation = this.pathChangeOperation;
 		}
-		return new RouteInfo(route, pathChangeOperation == PUSH, queryParameterNamesTriggeringPush);
+		return new RelativeRouteInfo(route, pathChangeOperation == PUSH, queryParameterNamesTriggeringPush);
 	}
 
 	public Registration registerRouteHandler(String pathTemplate, RouteHandler handler) {

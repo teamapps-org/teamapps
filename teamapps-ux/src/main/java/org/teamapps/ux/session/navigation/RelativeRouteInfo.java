@@ -21,13 +21,13 @@ package org.teamapps.ux.session.navigation;
 
 import java.util.Set;
 
-public class RouteInfo {
+public class RelativeRouteInfo {
 
 	private final Route route;
 	private final boolean pathChangeWorthStatePush;
 	private final Set<String> queryParamNamesWorthStatePush;
 
-	public RouteInfo(Route route, boolean pathChangeWorthStatePush, Set<String> queryParamNamesWorthStatePush) {
+	public RelativeRouteInfo(Route route, boolean pathChangeWorthStatePush, Set<String> queryParamNamesWorthStatePush) {
 		this.route = route;
 		this.pathChangeWorthStatePush = pathChangeWorthStatePush;
 		this.queryParamNamesWorthStatePush = queryParamNamesWorthStatePush;
