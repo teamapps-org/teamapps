@@ -254,7 +254,7 @@ public class SessionContext {
 				pathChangeOperation = PUSH;
 			}
 			queryParamNamesWorthStatePush.addAll(routeChangeInfo.getQueryParamNamesWorthStatePush());
-			String pathPrefix = routeChangeInfo.getRoute().getPath();
+			String pathPrefix = route.getPath();
 			boolean addsToPath = !isEmptyPath(pathPrefix);
 			// TODO #performance check efficiency and improve
 			router = addsToPath ? this.routers.stream().filter(r -> r.matchesPathPrefix(pathPrefix)).findFirst().orElse(null) : null;
