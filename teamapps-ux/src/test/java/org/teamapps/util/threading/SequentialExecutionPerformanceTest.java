@@ -25,7 +25,6 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -36,25 +35,25 @@ public class SequentialExecutionPerformanceTest {
 	@Test
 	@Ignore
 	public void testA() throws Exception {
-		SequentialExecutorFactory factory = name -> Executors.newSingleThreadExecutor();
+		SequentialExecutorFactory factory = name -> CloseableExecutor.fromExecutorService(Executors.newSingleThreadExecutor());
 
 		int numberOfThreads = 10_000;
 
 		// will fail on OSX!
-		List<ExecutorService> executors = IntStream.range(0, numberOfThreads)
+		List<CloseableExecutor> executors = IntStream.range(0, numberOfThreads)
 				.mapToObj(i -> factory.createExecutor("" + i))
 				.collect(Collectors.toList());
 
 		for (int i = 0; i < numberOfThreads; i++) {
 			AtomicInteger atomicInteger = new AtomicInteger();
 			for (int j = 0; j < 1000; j++) {
-				executors.get(i).submit((Runnable) atomicInteger::incrementAndGet);
+				executors.get(i).execute(atomicInteger::incrementAndGet);
 			}
 		}
 
 		CyclicBarrier cyclicBarrier = new CyclicBarrier(numberOfThreads + 1);
 		for (int i = 0; i < numberOfThreads; i++) {
-			executors.get(i).submit(() -> {
+			executors.get(i).execute(() -> {
 				try {
 					cyclicBarrier.await();
 				} catch (InterruptedException e) {
