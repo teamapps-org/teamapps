@@ -23,13 +23,11 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.teamapps.common.util.ExceptionUtil;
 
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CyclicBarrier;
 import java.util.stream.IntStream;
 
 public class CompletableFutureChainSequentialExecutorFactoryTest {
@@ -42,15 +40,19 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 
 		IntList executionOrderCheckingList = new IntArrayList();
 
-		Future<Boolean> lastFuture = null;
-		ExecutorService executor = executorFactory.createExecutor();
+		CyclicBarrier barrier = new CyclicBarrier(2);
+		CloseableExecutor executor = executorFactory.createExecutor();
 		for (int i = 0; i < numberOfExecutions; i++) {
 			final int iFinal = i;
-			lastFuture = executor
-					.submit(() -> executionOrderCheckingList.add(iFinal));
+			executor.execute(() -> {
+				executionOrderCheckingList.add(iFinal);
+				if (iFinal == numberOfExecutions - 1) {
+					ExceptionUtil.softenExceptions(() -> barrier.await());
+				}
+			});
 		}
 
-		lastFuture.get();
+		barrier.await();
 		checkIntListContents(executionOrderCheckingList, numberOfExecutions);
 	}
 
@@ -67,9 +69,9 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 		CompletableFuture<Boolean> lastFuture1 = null;
 		CompletableFuture<Boolean> lastFuture2 = null;
 		CompletableFuture<Boolean> lastFuture3 = null;
-		ExecutorService executor1 = executor.createExecutor();
-		ExecutorService executor2 = executor.createExecutor();
-		ExecutorService executor3 = executor.createExecutor();
+		CloseableExecutor executor1 = executor.createExecutor();
+		CloseableExecutor executor2 = executor.createExecutor();
+		CloseableExecutor executor3 = executor.createExecutor();
 		for (int i = 0; i < numberOfExecutions; i++) {
 			final int iFinal = i;
 			lastFuture1 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList1.add(iFinal), executor1);
@@ -95,68 +97,19 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 	public void executionContinuesAfterException() throws Exception {
 		CompletableFutureChainSequentialExecutorFactory executor = new CompletableFutureChainSequentialExecutorFactory(2);
 
-		executor.createExecutor().submit(() -> {
+		executor.createExecutor().execute(() -> {
 			throw new RuntimeException();
 		});
 
+		CyclicBarrier barrier = new CyclicBarrier(2);
 		boolean[] secondWasExecuted = new boolean[]{false};
-		executor.createExecutor().submit(() -> {
+		executor.createExecutor().execute(() -> {
 			secondWasExecuted[0] = true;
-		})
-				.get();
+			ExceptionUtil.softenExceptions(() -> barrier.await());
+		});
 
+		barrier.await();
 		Assert.assertTrue(secondWasExecuted[0]);
-	}
-
-	@Test
-	@Ignore
-	public void performance() throws InterruptedException, ExecutionException {
-		CompletableFutureChainSequentialExecutorFactory executorFactory = new CompletableFutureChainSequentialExecutorFactory(20);
-		long now = System.currentTimeMillis();
-		long in5seconds = now + 3000;
-		AtomicBoolean shutdown = new AtomicBoolean(false);
-		AtomicBoolean done = new AtomicBoolean(false);
-
-		Runnable task = () -> {
-			while (System.currentTimeMillis() < in5seconds) {
-
-			}
-			if (done.get()) {
-				System.err.println("AFTER DONE!");
-			}
-		};
-
-		List<ExecutorService> executors = IntStream.range(0, 10)
-				.mapToObj(i -> executorFactory.createExecutor())
-				.collect(Collectors.toList());
-
-		ExecutorService x = Executors.newFixedThreadPool(20);
-		for (int i = 0; i < 1000_000; i++) {
-			x.submit(() -> {
-				executors.get(ThreadLocalRandom.current().nextInt(0, 10))
-						.submit(task);
-				if (shutdown.get()) {
-					System.err.println("After shutdown??");
-				}
-			});
-		}
-		x.shutdown();
-		x.awaitTermination(10_000, TimeUnit.MILLISECONDS);
-		System.out.println("Shutdown = true");
-		shutdown.set(true);
-
-		CompletableFuture[] completionFutures = IntStream.range(0, 10)
-				.mapToObj(i -> executors.get(i)
-						.submit(task))
-				.toArray(CompletableFuture[]::new);
-		CompletableFuture.allOf(completionFutures)
-				.thenRun(() -> {
-					done.set(true);
-					System.err.println("Done after " + (System.currentTimeMillis() - in5seconds) + "ms");
-				})
-				.get();
-
-		Thread.sleep(1000);
 	}
 
 	private void checkIntListContents(IntList executionOrderCheckingList, int rangeMax) {

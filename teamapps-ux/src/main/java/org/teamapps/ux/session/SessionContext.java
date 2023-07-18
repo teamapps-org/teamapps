@@ -33,6 +33,7 @@ import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.uisession.statistics.UiSessionStats;
+import org.teamapps.util.threading.CloseableExecutor;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.EntranceAnimation;
@@ -62,7 +63,6 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -78,7 +78,7 @@ public class SessionContext {
 	private static final String DEFAULT_BACKGROUND_NAME = "defaultBackground";
 	private static final String DEFAULT_BACKGROUND_URL = "/resources/backgrounds/default-bl.jpg";
 
-	private final ExecutorService sessionExecutor;
+	private CloseableExecutor sessionExecutor;
 
 	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
 
@@ -126,6 +126,8 @@ public class SessionContext {
 	private final List<Router> routers = new ArrayList<>();
 	private boolean routeHandlingDirty = false; // indicates whether the routers changed during routing
 	private boolean skipAutoUpdateNavigationHistoryStateOnce = false;
+
+	private boolean destroyed;
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
@@ -176,14 +178,19 @@ public class SessionContext {
 		public void onClosed(String sessionId, UiSessionClosingReason reason) {
 			runWithContext(() -> {
 				onDestroyed.fireIgnoringExceptions(reason);
-				// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
-				sessionExecutor.submit(sessionExecutor::shutdown);
+
+				synchronized (SessionContext.this) {
+					SessionContext.this.destroyed = true;
+					// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
+					sessionExecutor.execute(sessionExecutor::close);
+					sessionExecutor = null; // GC (relevant only in case the sessionContext is retained in a memory leak)
+				}
 			});
 		}
 	};
 
 	public SessionContext(UiSession uiSession,
-						  ExecutorService sessionExecutor,
+						  CloseableExecutor sessionExecutor,
 						  ClientInfo clientInfo,
 						  SessionConfiguration sessionConfiguration,
 						  HttpSession httpSession,
@@ -264,7 +271,7 @@ public class SessionContext {
 		if (!route.equals(currentRoute)) {
 			Route r = route;
 			if (pathChangeOperation == PUSH && !currentRoute.getPath().equals(route.getPath())
-					|| queryParamNamesWorthStatePush.stream().anyMatch(pName -> !Objects.equals(r.getQueryParam(pName), currentRoute.getQueryParam(pName)))) {
+				|| queryParamNamesWorthStatePush.stream().anyMatch(pName -> !Objects.equals(r.getQueryParam(pName), currentRoute.getQueryParam(pName)))) {
 				pushNavigationHistoryState(route.toString(), false);
 			} else {
 				replaceNavigationHistoryState(route.toString(), false);
@@ -387,12 +394,13 @@ public class SessionContext {
 
 	private void destroy(UiSessionClosingReason reason) {
 		uiSession.close(reason);
+		// the UiSession will call us back (onStateChanged(), onClosed())
 	}
 
 	public <RESULT> void queueCommand(UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
 		if (CurrentSessionContext.get() != this) {
 			String errorMessage = "Trying to queue a command for foreign/null SessionContext (CurrentSessionContext.get() != this)."
-					+ " Please use SessionContext.runWithContext(Runnable). NOTE: The command will not get queued!";
+								  + " Please use SessionContext.runWithContext(Runnable). NOTE: The command will not get queued!";
 			LOGGER.error(errorMessage);
 			throw new IllegalStateException(errorMessage);
 		}
@@ -484,26 +492,32 @@ public class SessionContext {
 				throw new FastLaneExecutionException("Exception during fast lane execution!", t);
 			}
 		} else {
-			return CompletableFuture.supplyAsync(() -> {
-				CurrentSessionContext.set(this);
-				try {
-					Object[] resultHolder = new Object[1];
-					executionDecorators
-							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(callable))
-							.run();
-					if (routingMode == RoutingMode.AUTO && !skipAutoUpdateNavigationHistoryStateOnce) {
-						updateNavigationHistoryState();
-					}
-					skipAutoUpdateNavigationHistoryStateOnce = false;
-					return ((R) resultHolder[0]);
-				} catch (Throwable t) {
-					LOGGER.error("Exception while executing within session context", t);
-					this.destroy(UiSessionClosingReason.SERVER_SIDE_ERROR);
-					throw t;
-				} finally {
-					CurrentSessionContext.unset();
+			synchronized (this) {
+				if (destroyed) {
+					return CompletableFuture.failedFuture(new SessionDestroyedException("Session " + getName() + " is already destroyed!"));
+				} else {
+					return CompletableFuture.supplyAsync(() -> {
+						CurrentSessionContext.set(this);
+						try {
+							Object[] resultHolder = new Object[1];
+							executionDecorators
+									.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(callable))
+									.run();
+							if (routingMode == RoutingMode.AUTO && !skipAutoUpdateNavigationHistoryStateOnce) {
+								updateNavigationHistoryState();
+							}
+							skipAutoUpdateNavigationHistoryStateOnce = false;
+							return ((R) resultHolder[0]);
+						} catch (Throwable t) {
+							LOGGER.error("Exception while executing within session context", t);
+							this.destroy(UiSessionClosingReason.SERVER_SIDE_ERROR);
+							throw t;
+						} finally {
+							CurrentSessionContext.unset();
+						}
+					}, sessionExecutor);
 				}
-			}, sessionExecutor);
+			}
 		}
 	}
 
