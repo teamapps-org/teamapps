@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,10 +26,12 @@ import org.teamapps.util.ReflectionUtil;
 import org.teamapps.ux.session.navigation.annotation.PathParameter;
 import org.teamapps.ux.session.navigation.annotation.QueryParameter;
 import org.teamapps.ux.session.navigation.annotation.RoutingPath;
+import org.teamapps.ux.session.navigation.annotation.RoutingPaths;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -50,20 +52,36 @@ public class AnnotationBasedRouteHandlerFactory {
 	public List<AnnotationBasedRouteHandler> createRouteHandlers(Object annotatedClassInstance) {
 		RoutingPath classLevelPathAnnotation = annotatedClassInstance.getClass().getAnnotation(RoutingPath.class);
 		String pathPrefix = classLevelPathAnnotation != null ? classLevelPathAnnotation.value() : "";
-		List<Method> routingMethods = ReflectionUtil.findMethods(annotatedClassInstance.getClass(), method -> method.isAnnotationPresent(RoutingPath.class));
-		return routingMethods.stream()
+		List<Method> routingHandlerMethods = ReflectionUtil.findMethods(annotatedClassInstance.getClass(),
+				method -> method.isAnnotationPresent(RoutingPath.class) || method.isAnnotationPresent(RoutingPaths.class));
+		return routingHandlerMethods.stream()
 				.peek(m -> {
 					if (!m.trySetAccessible()) {
 						throw new RuntimeException("Cannot make method " + m + " accessible!");
 					}
 				})
-				.map(m -> createRoutingMethodInfo(m, pathPrefix))
+				.flatMap(m -> createRoutingHandlerMethodInfos(m, pathPrefix).stream())
 				.map(routingMethodInfo -> new AnnotationBasedRouteHandler(routingMethodInfo, annotatedClassInstance))
 				.collect(Collectors.toList());
 	}
 
-	private RoutingMethodInfo createRoutingMethodInfo(Method m, String pathPrefix) {
+	private List<RoutingHandlerMethodInfo> createRoutingHandlerMethodInfos(Method m, String pathPrefix) {
+		List<RoutingPath> pathAnnotations = new ArrayList<>();
 		RoutingPath pathAnnotation = m.getAnnotation(RoutingPath.class);
+		if (pathAnnotation != null) {
+			pathAnnotations.add(pathAnnotation);
+		}
+		RoutingPaths pathsAnnotation = m.getAnnotation(RoutingPaths.class);
+		if (pathsAnnotation != null) {
+			pathAnnotations.addAll(Arrays.asList(pathsAnnotation.value()));
+		}
+
+		return pathAnnotations.stream()
+				.map(a -> getRoutingHandlerMethodInfo(m, pathPrefix, a))
+				.collect(Collectors.toList());
+	}
+
+	private RoutingHandlerMethodInfo getRoutingHandlerMethodInfo(Method m, String pathPrefix, RoutingPath pathAnnotation) {
 		String pathTemplate = RoutingUtil.concatenatePaths(pathPrefix, pathAnnotation.value());
 
 		Class<?>[] parameterTypes = m.getParameterTypes();
@@ -72,35 +90,38 @@ public class AnnotationBasedRouteHandlerFactory {
 		ParameterValueExtractor[] methodParameterExtractors = new ParameterValueExtractor[methodParameters.length];
 		for (int i = 0; i < methodParameters.length; i++) {
 			Parameter parameter = methodParameters[i];
-			PathParameter pathParam = parameter.getAnnotation(PathParameter.class);
-			QueryParameter queryParam = parameter.getAnnotation(QueryParameter.class);
+			PathParameter pathParamAnnotation = parameter.getAnnotation(PathParameter.class);
+			QueryParameter queryParamAnnotation = parameter.getAnnotation(QueryParameter.class);
 			ParamConverter<?> converter = converterProvider.getConverter(parameterTypes[i], genericParameterTypes[i], parameter.getAnnotations());
 
-			if (pathParam != null) {
-				methodParameterExtractors[i] = (path, pathParams, queryParams) -> converter.fromString(pathParams.get(pathParam.value()));
-			} else if (queryParam != null) {
+			if (pathParamAnnotation != null) {
 				methodParameterExtractors[i] = (path, pathParams, queryParams) -> {
-					String paramValue = queryParams.get(queryParam.value());
+					String paramValue = pathParams.get(pathParamAnnotation.value());
+					return paramValue != null ? converter.fromString(paramValue) : null;
+				};
+			} else if (queryParamAnnotation != null) {
+				methodParameterExtractors[i] = (path, pathParams, queryParams) -> {
+					String paramValue = queryParams.get(queryParamAnnotation.value());
 					return StringUtils.isNotBlank(paramValue) ? converter.fromString(paramValue) : null;
 				};
 			} else {
 				methodParameterExtractors[i] = (path, pathParams, queryParams) -> null;
 			}
 		}
-		return new RoutingMethodInfo(pathTemplate, pathAnnotation.exact(), m, methodParameterExtractors);
+		return new RoutingHandlerMethodInfo(pathTemplate, pathAnnotation.exact(), m, methodParameterExtractors);
 	}
 
 	interface ParameterValueExtractor {
 		Object extract(String path, Map<String, String> pathParams, Map<String, String> queryParams);
 	}
 
-	private static class RoutingMethodInfo {
+	private static class RoutingHandlerMethodInfo {
 		private final String pathTemplate;
 		private final boolean exact;
 		private final Method method;
 		private final ParameterValueExtractor[] methodParameterExtractors;
 
-		public RoutingMethodInfo(String pathTemplate, boolean exact, Method method, ParameterValueExtractor[] methodParameterExtractors) {
+		public RoutingHandlerMethodInfo(String pathTemplate, boolean exact, Method method, ParameterValueExtractor[] methodParameterExtractors) {
 			this.pathTemplate = pathTemplate;
 			this.exact = exact;
 			this.method = method;
@@ -125,10 +146,10 @@ public class AnnotationBasedRouteHandlerFactory {
 	}
 
 	public static class AnnotationBasedRouteHandler implements RouteHandler {
-		private final RoutingMethodInfo routingMethodInfo;
+		private final RoutingHandlerMethodInfo routingMethodInfo;
 		private final Object annotatedClassInstance;
 
-		public AnnotationBasedRouteHandler(RoutingMethodInfo routingMethodInfo, Object annotatedClassInstance) {
+		public AnnotationBasedRouteHandler(RoutingHandlerMethodInfo routingMethodInfo, Object annotatedClassInstance) {
 			this.routingMethodInfo = routingMethodInfo;
 			this.annotatedClassInstance = annotatedClassInstance;
 		}
