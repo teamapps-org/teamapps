@@ -190,12 +190,12 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	}
 
 	/**
-     * Checks whether any of the form fields have been mutated by the client.
-     *
-     * @return true if any of the form fields' values have been changed, false otherwise
-     */
-    public boolean isChangedByClient() {
-        //calling #getFields() here instead of iterating over logicalForm directly, since that method is overridable. (shouldn't it be final though? 🤔)
-        return getFields().stream().anyMatch(AbstractField::isValueChangedByClient);
-    }
+	 * Checks whether any of the form fields have been mutated by the client.
+	 *
+	 * @return true if any of the form fields' values have been changed, false otherwise
+	 */
+	public boolean isChangedByClient() {
+		//calling #getFields() here instead of iterating over logicalForm directly, since that method is overridable. (shouldn't it be final though? 🤔)
+		return getFields().stream().anyMatch(AbstractField::isValueChangedByClient);
+	}
 }
