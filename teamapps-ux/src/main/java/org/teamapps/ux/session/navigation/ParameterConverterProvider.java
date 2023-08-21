@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,11 +25,15 @@ import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.glassfish.jersey.internal.inject.ParamConverters;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ParameterConverterProvider implements ParamConverterProvider {
@@ -38,18 +42,54 @@ public class ParameterConverterProvider implements ParamConverterProvider {
 
 	@Inject
 	public ParameterConverterProvider() {
-		this.providers = new ArrayList<>(List.of(
-				// ordering is important (e.g. Date provider must be executed before String Constructor
-				// as Date has a deprecated String constructor
-				new ParamConverters.DateProvider(),
-				new ParamConverters.TypeFromStringEnum(),
-				new ParamConverters.TypeValueOf(),
-				new ParamConverters.CharacterProvider(),
-				new ParamConverters.TypeFromString(),
-				new ParamConverters.StringConstructor(),
-				new ParamConverters.OptionalProvider(),
-				new ListParamConverterProvider()
-		));
+		try {
+			this.providers = new ArrayList<>(List.of(
+					// ordering is important (e.g. Date provider must be executed before String Constructor
+					// as Date has a deprecated String constructor
+					createInternalJerseyParameterConverter(ParamConverters.DateProvider.class),
+					createInternalJerseyParameterConverter(ParamConverters.TypeFromStringEnum.class),
+					createInternalJerseyParameterConverter(ParamConverters.TypeValueOf.class),
+					createInternalJerseyParameterConverter(ParamConverters.CharacterProvider.class),
+					createInternalJerseyParameterConverter(ParamConverters.TypeFromString.class),
+					createInternalJerseyParameterConverter(ParamConverters.StringConstructor.class),
+					//OptionalCustomProvider intentionally omitted
+					createInternalJerseyParameterConverter(ParamConverters.OptionalProvider.class),
+					new ListParamConverterProvider()
+			));
+		} catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+    }
+
+	/**
+	 * Most (but not all) of the ParameterConverters in Jersey 3.0.11+ and 3.1.x now have a private constructor
+	 * and a configurable toggle specified by property {@code "jersey.config.paramconverters.throw.iae"}.
+	 * This method uses reflection to create an instance of the specified converter with a default
+	 * value of "false" for the toggle.
+	 *
+	 * @param paramConverterClass class to instantiate
+	 * @return instantiated ParameterConverterProvider
+	 * @throws NoSuchMethodException     when the instantiation fails
+	 * @throws InvocationTargetException when the instantiation fails
+	 * @throws InstantiationException    when the instantiation fails
+	 * @throws IllegalAccessException    when the instantiation fails
+	 */
+	private static ParamConverterProvider createInternalJerseyParameterConverter(Class<? extends ParamConverterProvider> paramConverterClass)
+			throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+		//noinspection unchecked
+		Constructor<? extends ParamConverterProvider>[] declaredConstructors = (Constructor<? extends ParamConverterProvider>[]) paramConverterClass.getDeclaredConstructors();
+		Optional<Constructor<? extends ParamConverterProvider>> noArgConstructor = Arrays.stream(declaredConstructors).filter(constructor -> constructor.getParameterCount() == 0).findFirst();
+		if (noArgConstructor.isPresent()) {
+			return noArgConstructor.get().newInstance();
+		}
+		Constructor<? extends ParamConverterProvider> throwOnNullConstructor = Arrays.stream(declaredConstructors)
+				.filter(constructor -> Arrays.equals(constructor.getParameterTypes(), new Class[]{boolean.class}))
+				.findFirst()
+				.orElseThrow(InstantiationError::new);
+		if (Modifier.isPrivate(throwOnNullConstructor.getModifiers())) {
+			throwOnNullConstructor.setAccessible(true);
+		}
+		return throwOnNullConstructor.newInstance(false); //"false" is the default of "jersey.config.paramconverters.throw.iae" in Jersey 3.1.3
 	}
 
 	@Override
