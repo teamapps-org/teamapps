@@ -24,6 +24,7 @@ class UiToolButton extends UiComponent {
     String caption;
 	required String popoverText;
 	boolean grayOutIfNotHovered = true;
+	String title;
 
 	int minDropDownWidth = 450;
 	int minDropDownHeight = 200;
@@ -33,7 +34,7 @@ class UiToolButton extends UiComponent {
     command setIcon(String icon);
     command setIconSize(Integer iconSize);
     command setCaption(String caption);
-    command setPopoverText(String popoverText);
+    command setTitle(String title);
     command setGrayOutIfNotHovered(boolean grayOutIfNotHovered);
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);

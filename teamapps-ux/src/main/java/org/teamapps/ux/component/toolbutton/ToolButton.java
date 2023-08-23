@@ -34,7 +34,7 @@ public class ToolButton extends AbstractComponent {
 	private Icon<?, ?> icon;
 	private Integer iconSize = null; // null = default defined by CSS
 	private String caption;
-	private String popoverText;
+	private String title;
 	private boolean grayOutIfNotHovered;
 
 	private boolean openDropDownIfNotSet = false;
@@ -48,14 +48,14 @@ public class ToolButton extends AbstractComponent {
 		this(icon, null, null);
 	}
 
-	public ToolButton(Icon<?, ?> icon, String popoverText) {
-		this(icon, popoverText, null);
+	public ToolButton(Icon<?, ?> icon, String title) {
+		this(icon, title, null);
 	}
 
-	public ToolButton(Icon<?, ?> icon, String popoverText, Component dropDownComponent) {
+	public ToolButton(Icon<?, ?> icon, String title, Component dropDownComponent) {
 		super();
 		this.icon = icon;
-		this.popoverText = popoverText;
+		this.title = title;
 		this.dropDownComponent = dropDownComponent;
 	}
 
@@ -70,7 +70,7 @@ public class ToolButton extends AbstractComponent {
 	@Override
 	public UiComponent createUiComponent() {
 		String icon = getSessionContext().resolveIcon(this.icon);
-		UiToolButton uiToolButton = new UiToolButton(icon, popoverText);
+		UiToolButton uiToolButton = new UiToolButton(icon, title);
 		uiToolButton.setIconSize(iconSize);
 		uiToolButton.setCaption(caption);
 		mapAbstractUiComponentProperties(uiToolButton);
@@ -79,6 +79,7 @@ public class ToolButton extends AbstractComponent {
 		uiToolButton.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight);
+		uiToolButton.setTitle(title);
 		return uiToolButton;
 	}
 
@@ -126,13 +127,13 @@ public class ToolButton extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiToolButton.SetCaptionCommand(getId(), caption));
 	}
 
-	public String getPopoverText() {
-		return popoverText;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setPopoverText(String popoverText) {
-		this.popoverText = popoverText;
-		queueCommandIfRendered(() -> new UiToolButton.SetPopoverTextCommand(getId(), popoverText));
+	public void setTitle(String title) {
+		this.title = title;
+		queueCommandIfRendered(() -> new UiToolButton.SetTitleCommand(getId(), title));
 	}
 
 	public boolean isOpenDropDownIfNotSet() {
