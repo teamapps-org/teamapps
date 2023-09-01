@@ -30,15 +30,15 @@ export class ContextMenu {
 	private content: UiComponent;
 
 	private $main: HTMLElement;
-	private $spinner: HTMLElement;
 
 	private currentRequestId = 0;
+	private lastMouseEvent: PointerEvent | MouseEvent;
+	private isOpen: boolean = false;
 
 	constructor() {
 		this.$main = parseHtml(`<div class="ContextMenu empty">
 	<div class="teamapps-spinner"></div>
 </div>`);
-		this.$spinner = this.$main.querySelector(":scope .teamapps-spinner")
 
 		this.updateSize();
 	}
@@ -47,7 +47,7 @@ export class ContextMenu {
 		if (requestId != null && requestId !== this.currentRequestId) {
 			return;
 		}
-		
+
 		if (this.content != null) {
 			this.content.getMainElement().remove();
 		}
@@ -58,9 +58,14 @@ export class ContextMenu {
 			this.$main.classList.remove("empty");
 			this.$main.appendChild(content.getMainElement());
 		}
+		if (this.lastMouseEvent != null && this.isOpen) {
+			this.updatePosition(this.lastMouseEvent);
+		}
 	}
 
 	public open(e: PointerEvent | MouseEvent, contextMenuRequestCallback: (requestId: number) => any) {
+		this.isOpen = true;
+		this.lastMouseEvent = e;
 		e.preventDefault();
 		this.setContent(null);
 
@@ -68,7 +73,14 @@ export class ContextMenu {
 		document.body.appendChild(this.$main);
 		this.$main.offsetHeight; // force css layout
 		this.$main.style.opacity = "1";
+		this.updatePosition(e);
 
+		doOnceOnClickOutsideElement(this.$main, e => this.close(), false);
+
+		contextMenuRequestCallback(++this.currentRequestId);
+	}
+
+	private updatePosition(e: PointerEvent | MouseEvent) {
 		let rect = this.$main.getBoundingClientRect();
 		let {pageX, pageY} = e;
 		pageX = Math.min(pageX, window.innerWidth - rect.width - this.viewPortPadding);
@@ -78,16 +90,13 @@ export class ContextMenu {
 
 		this.$main.style.left = pageX + "px";
 		this.$main.style.top = pageY + "px";
-
-		doOnceOnClickOutsideElement(this.$main, e => this.close(), false);
-
-		contextMenuRequestCallback(++this.currentRequestId);
 	}
 
 	public close(requestId?: number) {
 		if (requestId != null && requestId !== this.currentRequestId) {
 			return;
 		}
+		this.isOpen = false;
 		this.setContent(null);
 		this.$main.remove();
 	}
