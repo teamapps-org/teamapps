@@ -45,8 +45,8 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
@@ -208,13 +208,6 @@
                 <artifactId>annotations</artifactId>
                 <version>13.0</version>
             </dependency>
-
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-web-api</artifactId>
-                <version>8.0</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
