@@ -188,7 +188,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 			});
 		});
 		this.setWindowButtons(config.windowButtons);
-		this.setFillTabBarWidth(config.fillTabBarWidth);
+		this.setFillTabBarWidth(config.fillTabBarWidth ?? false);
 		this.setTabBarHeight(config.tabBarHeight);
 	}
 
@@ -531,7 +531,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		return Object.values(this.toolButtons);
 	}
 
-	public setWindowButtons(buttonTypes:UiWindowButtonType[]):void{
+	public setWindowButtons(buttonTypes: UiWindowButtonType[]): void {
 		this.windowButtons = [];
 		this.$windowButtonContainer.innerHTML = '';
 		buttonTypes?.forEach(toolButton => {
@@ -540,7 +540,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	}
 
 	private addWindowButton(toolButtonType: UiWindowButtonType) {
-		if (this.windowButtons.filter(tb => tb === toolButtonType).length > 0){
+		if (this.windowButtons.filter(tb => tb === toolButtonType).length > 0) {
 			this.removeWindowButton(toolButtonType);
 		}
 		this.$windowButtonContainer.classList.remove("hidden");
@@ -550,7 +550,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 			prependChild(this.$windowButtonContainer, button.getMainElement());
 		} else {
 			let index = this.windowButtons
-				.sort((a, b) =>this.orderedDefaultToolButtonTypes.indexOf(a) - this.orderedDefaultToolButtonTypes.indexOf(b))
+				.sort((a, b) => this.orderedDefaultToolButtonTypes.indexOf(a) - this.orderedDefaultToolButtonTypes.indexOf(b))
 				.indexOf(toolButtonType);
 			if (index >= this.$windowButtonContainer.childNodes.length) {
 				this.$windowButtonContainer.appendChild(button.getMainElement());
