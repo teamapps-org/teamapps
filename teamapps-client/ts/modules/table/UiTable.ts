@@ -309,11 +309,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 						// 	minHeight: uiButtonConfig.minDropDownHeight
 						// });
 					} else if (uiField instanceof UiFileField) {
-						let $templateWrapper = $((<any>e).target).closest(".custom-entry-template-wrapper");
-						if ($templateWrapper.length > 0) {
-							let index = $templateWrapper.parent().index($templateWrapper);
-							this.logger.warn("TODO: handle file field click");
-						}
+						// TODO handle click?
 					}
 					if (uiField) {
 						this.onCellClicked.fire({columnPropertyName: fieldName, recordId: item.id})

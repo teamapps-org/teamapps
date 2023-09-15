@@ -26,18 +26,17 @@ import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
 import {createUiDropDownButtonClickInfoConfig, UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
 import {DEFAULT_TEMPLATES} from "../../trivial-components/TrivialCore";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {doOnceOnClickOutsideElement, insertAfter, parseHtml} from "../../Common";
+import {deepEquals, doOnceOnClickOutsideElement, insertAfter, parseHtml} from "../../Common";
 import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiComponent} from "../../UiComponent";
 import {UiToolAccordionButton} from "./UiToolAccordionButton";
+import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 require("jquery-ui/ui/scroll-parent.js")
 
 export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConfig> implements UiToolAccordionCommandHandler, UiToolAccordionEventSource {
-
-	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
 	public readonly onToolbarButtonClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent>();
 
@@ -60,7 +59,7 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 			this.$backgroundColorDiv.appendChild(buttonGroup.getMainDomElement());
 		}
 
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public doGetMainElement(): HTMLElement {
@@ -85,7 +84,7 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
 		this.buttonGroupsById.getValue(groupId).setButtonVisible(buttonId, visible);
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	setButtonColors(groupId: string, buttonId: string, backgroundColor: string, hoverBackgroundColor: string): void {
@@ -94,7 +93,7 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 
 	public setButtonGroupVisible(groupId: string, visible: boolean) {
 		this.buttonGroupsById.getValue(groupId).setVisible(visible);
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public addButtonGroup(buttonGroupConfig: UiToolbarButtonGroupConfig) {
@@ -121,7 +120,7 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 			this.$backgroundColorDiv.appendChild(buttonGroup.getMainDomElement());
 		}
 
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public removeButtonGroup(groupId: string): void {
@@ -131,28 +130,37 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 			this.buttonGroupsById.remove(groupId);
 			buttonGroup.getMainDomElement().remove();
 		}
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public addButton(groupId: string, buttonConfig: UiToolbarButtonConfig, neighborButtonId: string, beforeNeighbor: boolean) {
 		this.buttonGroupsById.getValue(groupId).addButton(buttonConfig, neighborButtonId, beforeNeighbor);
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public removeButton(groupId: string, buttonId: string): void {
 		this.buttonGroupsById.getValue(groupId).removeButton(buttonId);
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	updateButtonGroups(buttonGroups: UiToolbarButtonGroupConfig[]): void {
 		// TODO implement only if really needed
 	}
 
-	public refreshEnforcedButtonWidth() {
+	@executeWhenFirstDisplayed()
+	public refreshforcedButtonWidth() {
 		let maxButtonWidth = this.buttonGroupsById.values
 			.filter(group => group.isVisible())
 			.reduce((maxButtonWidth, buttonGroup) => Math.max(maxButtonWidth, buttonGroup.getMaxOptimizedButtonWidth()), 1);
-		this.buttonGroupsById.values.forEach(group => group.setEnforcedButtonWidth(maxButtonWidth));
+
+		const computedStyle = getComputedStyle(this.getMainElement());
+		const availableWidth = this.getWidth() - parseInt(computedStyle.paddingLeft) - parseInt(computedStyle.paddingRight);
+		const numberOfColumns = Math.max(1, Math.floor(availableWidth / maxButtonWidth));
+
+		this.buttonGroupsById.values.forEach(group => {
+			group.setForcedNumberOfColumns(numberOfColumns);
+			group.updateRows();
+		});
 	}
 
 	public onResize(): void {
@@ -171,7 +179,8 @@ class UiButtonGroup {
 	private buttonsById: { [index: string]: UiToolAccordionButton } = {};
 	private buttons: UiToolAccordionButton[] = [];
 	private $buttonRows: HTMLElement[] = [];
-	private enforcedButtonWidth: number = 1;
+	private forcedButtonWidth: number = 1;
+	private forcedNumberOfColumns: number = 1;
 
 	constructor(buttonGroupConfig: UiToolbarButtonGroupConfig, private toolAccordion: UiToolAccordion, private context: TeamAppsUiContext, private $sizeTestingContainer: HTMLElement) {
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
@@ -327,9 +336,12 @@ class UiButtonGroup {
 			.reduce((maxWidth, button) => Math.max(maxWidth, button.optimizedWidth), 0);
 	}
 
-	public setEnforcedButtonWidth(enforcedButtonWidth: number) {
-		this.enforcedButtonWidth = enforcedButtonWidth;
-		this.updateRows();
+	public setForcedButtonWidth(forcedButtonWidth: number) {
+		this.forcedButtonWidth = forcedButtonWidth;
+	}
+
+	public setForcedNumberOfColumns(forcedNumberOfColumns: number) {
+		this.forcedNumberOfColumns = forcedNumberOfColumns;
 	}
 
 	public setButtonVisible(buttonId: string, visible: boolean) {
@@ -380,21 +392,25 @@ class UiButtonGroup {
 		this.updateRows();
 	}
 
+	private lastParameters: {forcedButtonWidth: number, forcedNumberOfColumns: number, availableWidth: number} = null;
 	public updateRows() {
 		let availableWidth = this.$buttonGroupWrapper.offsetWidth;
 		if (availableWidth == 0) {
 			return;
 		}
+		let newParams = {availableWidth, forcedButtonWidth: this.forcedButtonWidth, forcedNumberOfColumns: this.forcedNumberOfColumns};
+		if (deepEquals(this.lastParameters, newParams)) {
+			return;
+		}
+		this.lastParameters = newParams;
 
 		this.$buttonRows.forEach($row => {
 			$row.remove();
 			$row.innerHTML = '';
 		});
-		let buttonsPerRow = Math.floor(availableWidth / Math.max(16, this.enforcedButtonWidth));
-
-		if (buttonsPerRow === 0) {
-			buttonsPerRow = 1;
-		}
+		let buttonsPerRow = this.forcedNumberOfColumns ?? Math.max(1, Math.floor(availableWidth / Math.max(16, this.forcedButtonWidth)));
+		let buttonWidth = this.forcedNumberOfColumns != null ? availableWidth / this.forcedNumberOfColumns : this.forcedButtonWidth ?? null;
+		
 
 		let visibleButtonsCount = 0;
 		for (let i = 0; i < this.buttons.length; i++) {
@@ -402,7 +418,7 @@ class UiButtonGroup {
 			if (button.visible) {
 				let rowIndex = Math.floor(visibleButtonsCount / buttonsPerRow);
 				let $row = this.$buttonRows[rowIndex] || (this.$buttonRows[rowIndex] = parseHtml(`<div class="button-row">`));
-				button.getMainDomElement().style.flexBasis = this.enforcedButtonWidth + "px";
+				button.getMainDomElement().style.flexBasis = buttonWidth + "px";
 				$row.appendChild(button.getMainDomElement());
 				visibleButtonsCount++;
 			}
@@ -413,7 +429,7 @@ class UiButtonGroup {
 			for (let i = visibleButtonsCount; i % buttonsPerRow != 0; i++) {
 				let rowIndex = Math.floor(i / buttonsPerRow);
 				let $row = this.$buttonRows[rowIndex];
-				$row.appendChild(parseHtml(`<div class="row-filler" style="flex-basis: ${this.enforcedButtonWidth}px">`));
+				$row.appendChild(parseHtml(`<div class="row-filler" style="flex-basis: ${buttonWidth}px">`));
 			}
 		}
 
