@@ -61,7 +61,7 @@ export class UiToolbarButton {
 		this.$button = parseHtml(renderer.render(config.recordData));
 		prependChild(this.$buttonWrapper, this.$button);
 		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
-		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplateConfig).maxHeight || UiToolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
+		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplateConfig).maxHeight);
 		this.$styleTag = this.$buttonWrapper.querySelector(":scope style");
 		this.updateStyles();
 		this.setVisible(config.visible);

@@ -58,7 +58,7 @@ export class UiToolAccordionButton {
 		}
 
 		this.$button = this.$buttonWrapper.firstElementChild as HTMLElement;
-		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplateConfig).maxHeight || UiToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT);
+		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplateConfig).maxHeight);
 		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
 		this.$buttonWrapper.classList.toggle("hidden", !config.visible);
 		this.$styleTag = this.$buttonWrapper.querySelector(":scope style");
