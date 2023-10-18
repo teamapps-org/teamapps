@@ -34,6 +34,7 @@
     -webkit-box-orient: vertical;
     height: auto;
   }
+
   .line-clamp-2:after {
     display: none;
   }
@@ -57,6 +58,10 @@
   overflow: hidden;
   height: auto;
 
+  .file-item:not(.deletable) .delete-button {
+    display: none;
+  }
+
   &.float-style-horizontal {
     .file-list {
       display: grid;
@@ -75,7 +80,7 @@
         .delete-button-wrapper {
           position: relative;
           height: 0;
-          
+
           .delete-button {
             position: absolute;
             left: 13px;
@@ -85,6 +90,7 @@
             box-shadow: 0 0 0 2px #ffffff99;
           }
         }
+
         .file-icon {
           margin: 4px 5px 0 5px;
         }
@@ -94,6 +100,7 @@
             display: none;
           }
         }
+
         &.state-done {
           .progress-indicator {
             display: none;
@@ -105,10 +112,12 @@
           line-height: 1.2em;
           word-break: break-all;
         }
+
         .file-description {
           font-size: 80%;
           color: var(--ta-text-color-gray);
         }
+
         .file-size {
           font-size: 80%;
           font-weight: var(--ta-font-weight-bold);
@@ -136,39 +145,46 @@
 
         .progress-indicator {
           grid-area: progress;
+
           .progress {
             margin: 2px 0 3px 0;
             height: 8px;
+
             .progress-bar {
               color: transparent;
             }
           }
         }
+
         &.state-done {
           .progress-indicator {
             display: none;
           }
         }
+
         .delete-button-wrapper {
           grid-area: delete;
           align-self: center;
           margin-left: 5px;
-          
+
           .delete-button {
             background-color: #ffffff99;
             border-radius: 50%;
             box-shadow: 0 0 0 2px #ffffff99;
           }
         }
+
         .file-icon {
           grid-area: icon;
           margin-right: 5px;
         }
+
         &:not(.state-done) {
           .file-icon {
             display: none;
           }
         }
+
         .file-name {
           grid-area: name;
           align-self: end;
@@ -178,11 +194,13 @@
           text-overflow: ellipsis;
           overflow: hidden;
         }
+
         .file-description {
           grid-area: description;
           font-size: 80%;
           color: var(--ta-text-color-gray);
         }
+
         .file-size {
           grid-area: size;
           font-size: 80%;

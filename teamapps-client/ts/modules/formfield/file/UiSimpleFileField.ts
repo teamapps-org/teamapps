@@ -113,7 +113,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 			}
 		}));
 		this.$fileInput = this.$main.querySelector<HTMLInputElement>(':scope .file-input');
-		this.$fileInput.addEventListener('change',() => {
+		this.$fileInput.addEventListener('change', () => {
 			const files = (<HTMLInputElement>this.$fileInput).files;
 			this.handleFiles(files);
 		});
@@ -152,13 +152,14 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 	focus(): void {
 		this.$uploadButton.focus();
 	}
+
 	getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
 
 	getTransientValue(): UiFileItemConfig[] {
 		return Object.values(this.fileItems)
-		// .filter(item => item.state === FileItemState.DONE)
+			// .filter(item => item.state === FileItemState.DONE)
 			.map(item => createUiFileItemConfig({
 				uuid: item.uuid,
 				icon: item.icon,
@@ -176,6 +177,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
 		UiField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+		Object.values(this.fileItems).forEach(fi => fi.deletable = this.isEditable());
 		this.updateVisibilities();
 	}
 
@@ -184,7 +186,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 	}
 
 	addFileItem(itemConfig: UiFileItemConfig, state: FileItemState = FileItemState.DONE): void {
-		const fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state, this._context);
+		const fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state, this.isEditable());
 		this.fileItems[itemConfig.uuid] = fileItem;
 		this.$fileList.appendChild(fileItem.getMainDomElement());
 	}
@@ -290,7 +292,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 	private createUploadFileItem() {
 		let fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, {
 			uuid: generateUUID()
-		}, FileItemState.INITIATING, this._context);
+		}, FileItemState.INITIATING, this.isEditable());
 		fileItem.onClick.addListener(() => {
 			this.onFileItemClicked.fire({
 				fileItemUuid: fileItem.uuid
@@ -333,8 +335,6 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 	}
 
 }
-
-
 
 
 TeamAppsUiComponentRegistry.registerFieldClass("UiSimpleFileField", UiSimpleFileField);
