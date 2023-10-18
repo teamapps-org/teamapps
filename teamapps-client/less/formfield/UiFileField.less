@@ -36,10 +36,15 @@
         display: none !important;
       }
     }
+
     &.state-displaying {
       .progress-indicator, .file-info {
         display: none !important;
       }
+    }
+
+    &:not(.deletable) .delete-button {
+      display: none;
     }
   }
 
@@ -49,6 +54,7 @@
       flex-wrap: wrap;
       text-align: center;
     }
+
     .file-item {
       position: relative;
       margin: 2px;
@@ -65,6 +71,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
         }
+
         .file-size {
           font-size: 80%;
           color: #777;
@@ -73,6 +80,7 @@
         }
       }
     }
+
     .delete-button {
       position: absolute;
       top: 0;
@@ -103,6 +111,7 @@
           text-overflow: ellipsis;
           white-space: nowrap;
         }
+
         .file-size {
           color: #777;
           white-space: nowrap;
@@ -120,9 +129,11 @@
 
   &.show-entries-as-buttons-on-hover .file-item {
     border: 1px solid transparent;
+
     &:hover {
       .button-style-item;
     }
+
     &:active {
       .button-style-item-lowered;
     }
@@ -162,16 +173,20 @@
     border-color: transparent;
     background: transparent;
   }
+
   .custom-entry-template-wrapper {
     margin-right: 3px;
     .button-style-item();
+
     &:hover {
       .button-style-item-lowered;
     }
+
     &:active {
       .button-style-item-glow;
     }
   }
+
   .custom-entry-template {
     flex: 0 0 auto;
   }

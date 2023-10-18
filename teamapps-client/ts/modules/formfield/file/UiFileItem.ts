@@ -58,9 +58,9 @@ export class UiFileItem {
 		private uploadUrl: string,
 		private config: UiFileItemConfig,
 		public state: FileItemState,
-		private context: TeamAppsUiContext
+		private _deletable: boolean
 	) {
-		this.$main = parseHtml(`<a class="file-item">
+		this.$main = parseHtml(`<a class="file-item ${this._deletable ? 'deletable' : ''}">
 			<div class="delete-button-wrapper">
 				<img class="delete-button img img-16" alt="delete" tabindex="0" src="${StaticIcons.CLOSE}"></img>
 			</div>
@@ -171,7 +171,7 @@ export class UiFileItem {
 		this.$fileSize.textContent = humanReadableFileSize(config.size);
 		this.$main.classList.toggle("no-link", config.linkUrl == null);
 		this.$main.classList.toggle("no-link", config.linkUrl == null);
-		this.$main.setAttribute("href",  config.linkUrl);
+		this.$main.setAttribute("href", config.linkUrl);
 	}
 
 	public get uuid() {
@@ -200,6 +200,11 @@ export class UiFileItem {
 
 	public get linkUrl() {
 		return this.config.linkUrl
+	}
+
+	public set deletable(deletable: boolean) {
+		this._deletable = deletable;
+		this.$main.classList.toggle("deletable", deletable)
 	}
 }
 

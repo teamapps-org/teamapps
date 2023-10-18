@@ -20,6 +20,8 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.ux.component.field.FieldEditingMode;
+import org.teamapps.ux.component.field.upload.FileField;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.toolbutton.ToolButton;
@@ -36,12 +38,14 @@ public class TeamAppsJettyEmbeddedServerTest {
 			RootPanel rootPanel = sessionContext.addRootPanel();
 
 			Panel panel = new Panel();
+
+//			SimpleFileField fileField = new SimpleFileField();
+			FileField<Object> fileField = new FileField<>(file -> new Object());
+			panel.setContent(fileField);
+
 			ToolButton toolButton = new ToolButton(MaterialIcon.ALARM_ON, "asdf");
+			toolButton.onClick.addListener(() ->fileField.setEditingMode(fileField.getEditingMode() == FieldEditingMode.EDITABLE ? FieldEditingMode.READONLY : FieldEditingMode.EDITABLE));
 			panel.addToolButton(toolButton);
-
-			toolButton.onClick.addListener((eventData, disposable) -> toolButton.setTitle("222"));
-
-			panel.addToolButton(new ToolButton(MaterialIcon.ALARM_ON));
 
 			rootPanel.setContent(panel);
 		}, 8082).start();

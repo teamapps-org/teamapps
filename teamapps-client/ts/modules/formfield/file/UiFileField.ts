@@ -228,6 +228,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
+
 	focus(): void {
 		this.$uploadButton.focus();
 	}
@@ -276,7 +277,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	}
 
 	private createFileItem() {
-		let fileItem = new UploadItem(this.displayType === UiFileFieldDisplayType.FLOATING, this.maxBytesPerFile, this._config.fileTooLargeMessage, this._config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.getId());
+		let fileItem = new UploadItem(this.displayType === UiFileFieldDisplayType.FLOATING, this.maxBytesPerFile, this._config.fileTooLargeMessage, this._config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.isEditable());
 		fileItem.onClick.addListener((eventObject) => {
 			this.onFileItemClicked.fire({
 				clientId: fileItem.data.id
@@ -328,6 +329,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
 		UiField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+		this.fileItems.forEach(fi => fi.deletable = this.isEditable());
 		this.updateVisibilities();
 	}
 
@@ -405,9 +407,9 @@ class UploadItem {
 		private uploadErrorMessage: string,
 		private uploadUrl: string,
 		private renderer: Renderer,
-		private componentId: string
+		private _deletable: boolean
 	) {
-		this.$main = parseHtml(`<div class="file-item">
+		this.$main = parseHtml(`<div class="file-item ${this._deletable ? 'deletable' : ''}">
 			<div class="progress-indicator"></div>
 			<div class="file-info">
 				<div class="file-name"></div>
@@ -524,6 +526,11 @@ class UploadItem {
 
 	public getMainDomElement() {
 		return this.$main;
+	}
+
+	public set deletable(deletable: boolean) {
+		this._deletable = deletable;
+		this.$main.classList.toggle("deletable", deletable)
 	}
 
 }
