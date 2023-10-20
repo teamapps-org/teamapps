@@ -20,14 +20,16 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.TextField;
+import org.teamapps.ux.component.infiniteitemview.InfiniteItemView2;
+import org.teamapps.ux.component.infiniteitemview.ListInfiniteItemViewModel;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.table.ListTableModel;
-import org.teamapps.ux.component.table.Table;
+import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.component.toolbutton.ToolButton;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
+import java.util.Map;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -39,18 +41,39 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 			Panel panel = new Panel();
 
-			Table<User> table = new Table<>();
-			table.addColumn("name", "Name", new TextField()).setValueExtractor(User::getFirstName);
-			table.setModel(new ListTableModel<>(List.of(
+//			Table<User> table = new Table<>();
+//			table.addColumn("name", "Name", new TextField()).setValueExtractor(User::getFirstName);
+//			table.setModel(new ListTableModel<>(List.of(
+//					new User(null, "Heinz", null),
+//					new User(null, "Jens", null),
+//					new User(null, "George", null),
+//					new User(null, "John", null)
+//			)));
+//			table.setAutoHeight(true);
+
+			InfiniteItemView2<User> infiniteItemView2 = new InfiniteItemView2<>();
+			User john = new User(null, "John", null);
+			infiniteItemView2.setModel(new ListInfiniteItemViewModel<>(List.of(
 					new User(null, "Heinz", null),
 					new User(null, "Jens", null),
 					new User(null, "George", null),
-					new User(null, "John", null)
+					john
 			)));
-			table.setAutoHeight(true);
+			infiniteItemView2.setItemTemplate(BaseTemplate.ITEM_VIEW_ITEM);
+			infiniteItemView2.setItemPropertyProvider((o, propertyNames) -> Map.of("icon", MaterialIcon.TV, "caption", o.getFirstName()));
+			infiniteItemView2.setSelectionEnabled(true);
 
-			panel.setContent(table);
+			infiniteItemView2.onItemSelected.addListener((eventData, disposable) -> {
+				System.out.println(eventData.getFirstName());
+				System.out.println(infiniteItemView2.getSelectedRecord());
+			});
+
+			panel.setContent(infiniteItemView2);
 			panel.setStretchContent(false);
+
+			ToolButton toolButton = new ToolButton(MaterialIcon.ALARM_ON);
+			toolButton.onClick.addListener((eventData, disposable) -> infiniteItemView2.setSelectedRecord(john));
+			panel.addToolButton(toolButton);
 
 			rootPanel.setContent(panel);
 		}, 8082).start();

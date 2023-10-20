@@ -796,7 +796,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	protected UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+	protected UiIdentifiableClientRecord createClientRecord(RECORD record) {
 		UiTableClientRecord clientRecord = new UiTableClientRecord();
 		clientRecord.setId(++clientRecordIdCounter);
 		Map<String, Object> uxValues = extractRecordProperties(record);

@@ -39,6 +39,7 @@ import {UiComponent} from "./UiComponent";
 import {debouncedMethod, DebounceMode} from "./util/debounce";
 import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
 import {UiVerticalElementAlignment} from "../generated/UiVerticalElementAlignment";
+import {UiInfiniteItemViewClientRecordConfig} from "../generated/UiInfiniteItemViewClientRecordConfig";
 
 type RenderedItem = {
 	item: UiIdentifiableClientRecordConfig,
@@ -82,7 +83,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 
 	constructor(config: UiInfiniteItemView2Config, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this._config.id}">
+		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this._config.id} ${config.selectionEnabled ? 'selection-enabled' : ''}">
                 <div class="grid"></div>
                 <style></style>
             </div>`);
@@ -104,6 +105,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 
 		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", ["click"], (element, ev) => {
 			let recordId = parseInt(element.getAttribute("data-id"));
+			this.setSelectedItem(this.renderedItems.get(recordId));
 			this.onItemClicked.fire({
 				recordId: recordId,
 				isDoubleClick: false
@@ -193,10 +195,11 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		}
 	}
 
-	private createRenderedItem(item: UiIdentifiableClientRecordConfig): RenderedItem {
+	private createRenderedItem(item: UiInfiniteItemViewClientRecordConfig): RenderedItem {
 		let $wrapper = document.createElement("div");
 		let $element = parseHtml(this.itemTemplateRenderer.render(item.values));
 		$wrapper.classList.add("item-wrapper");
+		$wrapper.classList.toggle("selected", item.selected);
 		$wrapper.setAttribute("data-id", "" + item.id);
 		$wrapper.appendChild($element);
 		return {
@@ -208,6 +211,13 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 			width: -1,
 			height: -1
 		};
+	}
+
+	private setSelectedItem(item: RenderedItem) {
+		this.renderedItems.forEach(item => item.$wrapper.classList.remove("selected"));
+		if (item != null) {
+			item.$wrapper.classList.add("selected");
+		}
 	}
 
 	private updateItemPosition(renderedItem: RenderedItem, positionX: number, positionY: number, itemWidth: number, itemHeight: number, absoluteIndex: number) {
@@ -344,6 +354,16 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 
 	closeContextMenu(requestId: number): void {
 		this.contextMenu.close(requestId);
+	}
+
+	setSelectionEnabled(selectionEnabled: boolean): any {
+		this._config.selectionEnabled = selectionEnabled;
+		this.getMainElement().classList.toggle("selection-enabled", selectionEnabled);
+	}
+
+	setSelectedRecord(uiRecordId: number): any {
+		let item = this.renderedItems.get(uiRecordId);
+		this.setSelectedItem(item);
 	}
 
 }
