@@ -217,6 +217,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			createFooterRow: true,
 			showFooterRow: config.showFooterRow,
 			footerRowHeight: config.footerRowHeight,
+			autoHeight: config.autoHeight
 		};
 
 		this._grid = new Slick.Grid($table, this.dataProvider, this.getVisibleColumns(), options);
@@ -927,6 +928,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			headerRowHeight: config.headerRowHeight,
 			showFooterRow: config.showFooterRow,
 			footerRowHeight: config.footerRowHeight,
+			autoHeight: config.autoHeight
 		};
 		this._grid.setOptions(options);
 	}
