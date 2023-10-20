@@ -58,6 +58,7 @@ class UiTable extends UiComponent {
 	boolean showRowCheckBoxes; //if true, show check boxes on the left
 	boolean showNumbering; //if true, show numbering on the left
 	boolean textSelectionEnabled;
+	boolean autoHeight;
 
 	String sortField; //if available the table is initially sorted by this field
 	UiSortDirection sortDirection = UiSortDirection.ASC;
@@ -132,6 +133,7 @@ class UiRefreshableTableConfigUpdate {
     int headerRowHeight;
     boolean showFooterRow;
     int footerRowHeight;
+    boolean autoHeight;
 }
 
 @TypeScriptFactory

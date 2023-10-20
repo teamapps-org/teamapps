@@ -20,11 +20,11 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.FieldEditingMode;
-import org.teamapps.ux.component.field.upload.FileField;
+import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.toolbutton.ToolButton;
+import org.teamapps.ux.component.table.ListTableModel;
+import org.teamapps.ux.component.table.Table;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
@@ -39,13 +39,18 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 			Panel panel = new Panel();
 
-//			SimpleFileField fileField = new SimpleFileField();
-			FileField<Object> fileField = new FileField<>(file -> new Object());
-			panel.setContent(fileField);
+			Table<User> table = new Table<>();
+			table.addColumn("name", "Name", new TextField()).setValueExtractor(User::getFirstName);
+			table.setModel(new ListTableModel<>(List.of(
+					new User(null, "Heinz", null),
+					new User(null, "Jens", null),
+					new User(null, "George", null),
+					new User(null, "John", null)
+			)));
+			table.setAutoHeight(true);
 
-			ToolButton toolButton = new ToolButton(MaterialIcon.ALARM_ON, "asdf");
-			toolButton.onClick.addListener(() ->fileField.setEditingMode(fileField.getEditingMode() == FieldEditingMode.EDITABLE ? FieldEditingMode.READONLY : FieldEditingMode.EDITABLE));
-			panel.addToolButton(toolButton);
+			panel.setContent(table);
+			panel.setStretchContent(false);
 
 			rootPanel.setContent(panel);
 		}, 8082).start();

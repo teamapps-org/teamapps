@@ -94,6 +94,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private boolean showRowCheckBoxes; //if true, show check boxes on the left
 	private boolean showNumbering; //if true, show numbering on the left
 	private boolean textSelectionEnabled = true;
+	private boolean autoHeight = false;
 
 	private Sorting sorting; // nullable
 
@@ -237,6 +238,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		uiTable.setShowFooterRow(showFooterRow);
 		uiTable.setFooterRowHeight(footerRowHeight);
 		uiTable.setContextMenuEnabled(contextMenuProvider != null);
+		uiTable.setAutoHeight(autoHeight);
 		return uiTable;
 	}
 
@@ -852,6 +854,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		ui.setHeaderRowHeight(headerRowHeight);
 		ui.setShowFooterRow(showFooterRow);
 		ui.setFooterRowHeight(footerRowHeight);
+		ui.setAutoHeight(autoHeight);
 		return ui;
 	}
 
@@ -1235,11 +1238,23 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void closeContextMenu() {
-		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
+		queueCommandIfRendered(() -> new UiTable.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
 	public List<RECORD> getRenderedRecords() {
 		return renderedRecords.getRecords();
+	}
+
+	public boolean isAutoHeight() {
+		return autoHeight;
+	}
+
+	public void setAutoHeight(boolean autoHeight) {
+		boolean changed = autoHeight != this.autoHeight;
+		this.autoHeight = autoHeight;
+		if (changed) {
+			queueCommandIfRendered(() -> new UiTable.UpdateRefreshableConfigCommand(getId(), createUiRefreshableTableConfigUpdate()));
+		}
 	}
 
 	@Override
