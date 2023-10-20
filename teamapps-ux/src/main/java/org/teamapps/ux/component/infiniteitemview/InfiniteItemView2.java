@@ -24,10 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiIdentifiableClientRecord;
-import org.teamapps.dto.UiInfiniteItemView2;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
@@ -47,15 +44,13 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final Event<ItemClickedEventData<RECORD>> onItemClicked = new Event<>();
+	public final Event<RECORD> onItemSelected = new Event<>();
 
 	private Template itemTemplate;
 	private float itemWidth;
 	private float itemHeight;
-	// private float horizontalSpacing; // TODO
-	// private float verticalSpacing; // TODO
 	private HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.STRETCH;
 	private VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
-	// private ItemViewRowJustification rowHorizontalAlignment = ItemViewRowJustification.LEFT; // TODO
 
 	private int itemPositionAnimationTime = 200;
 
@@ -65,6 +60,9 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
+
+	private boolean selectionEnabled;
+	private RECORD selectedRecord;
 
 	public InfiniteItemView2(Template itemTemplate, float itemWidth, int itemHeight) {
 		super(new ListInfiniteItemViewModel<>());
@@ -94,6 +92,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 		// ui.setRowHorizontalAlignment(rowHorizontalAlignment.toUiItemJustification());
 		ui.setItemPositionAnimationTime(itemPositionAnimationTime);
 		ui.setContextMenuEnabled(contextMenuProvider != null);
+		ui.setSelectionEnabled(selectionEnabled);
 		return ui;
 	}
 
@@ -116,6 +115,10 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null) {
 					onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick()));
+				}
+				if (this.selectionEnabled) {
+					this.selectedRecord = record;
+					this.onItemSelected.fire(record);
 				}
 				break;
 			}
@@ -159,17 +162,18 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 					getId(),
 					start,
 					uiRecordIds,
-					newUiRecords,
+					(List) newUiRecords,
 					totalNumberOfRecords
 			);
 		});
 	}
 
 	@Override
-	protected UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
-		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
+	protected UiInfiniteItemViewClientRecord createClientRecord(RECORD record) {
+		UiInfiniteItemViewClientRecord clientRecord = new UiInfiniteItemViewClientRecord();
 		clientRecord.setId(++clientRecordIdCounter);
 		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));
+		clientRecord.setSelected(record.equals(selectedRecord));
 		return clientRecord;
 	}
 
@@ -286,4 +290,22 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 		this.setItemPropertyProvider(propertyExtractor);
 	}
 
+	public boolean isSelectionEnabled() {
+		return selectionEnabled;
+	}
+
+	public void setSelectionEnabled(boolean selectionEnabled) {
+		this.selectionEnabled = selectionEnabled;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetSelectionEnabledCommand(getId(), selectionEnabled));
+	}
+
+	public RECORD getSelectedRecord() {
+		return selectedRecord;
+	}
+
+	public void setSelectedRecord(RECORD record) {
+		this.selectedRecord = record;
+		UiIdentifiableClientRecord uiRecord = renderedRecords.getUiRecord(record);
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetSelectedRecordCommand(getId(), uiRecord != null ? uiRecord.getId(): null));
+	}
 }

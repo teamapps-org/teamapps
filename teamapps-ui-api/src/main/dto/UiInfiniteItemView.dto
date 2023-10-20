@@ -28,6 +28,7 @@ class UiInfiniteItemView extends UiComponent {
 	UiItemJustification itemJustification = UiItemJustification.LEFT;
 	UiVerticalItemAlignment verticalItemAlignment = UiVerticalItemAlignment.STRETCH;
 	boolean contextMenuEnabled = false;
+	boolean selectionEnabled;
 
 	command addData(int startIndex, List<UiIdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
 	command removeData(List<Integer> ids);
@@ -57,9 +58,10 @@ class UiInfiniteItemView2 extends UiComponent {
 	UiItemJustification rowHorizontalAlignment = UiItemJustification.SPACE_AROUND;
 //	boolean autoHeight = false; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 
-	boolean contextMenuEnabled = false;
-	
-	command setData(int startIndex, List<Integer> recordIds, List<UiIdentifiableClientRecord> newRecords, int totalNumberOfRecords);
+	boolean contextMenuEnabled;
+	boolean selectionEnabled;
+
+	command setData(int startIndex, List<Integer> recordIds, List<UiInfiniteItemViewClientRecord> newRecords, int totalNumberOfRecords);
 
 	command setItemTemplate(UiTemplate itemTemplate);
     command setItemWidth(float itemWidth);
@@ -70,6 +72,8 @@ class UiInfiniteItemView2 extends UiComponent {
     command setItemContentVerticalAlignment(UiVerticalElementAlignment itemContentVerticalAlignment);
     command setRowHorizontalAlignment(UiItemJustification rowHorizontalAlignment);
     command setItemPositionAnimationTime(int animationMillis);
+    command setSelectionEnabled(boolean selectionEnabled);
+    command setSelectedRecord(Integer uiRecordId);
 
     command setContextMenuContent(int requestId, UiComponent* component);
     command closeContextMenu(int requestId);
@@ -83,4 +87,8 @@ class UiInfiniteItemView2 extends UiComponent {
 class UiInfiniteItemViewDataRequest {
 	required int startIndex;
 	required int length;
+}
+
+class UiInfiniteItemViewClientRecord extends UiIdentifiableClientRecord {
+	boolean selected;
 }
