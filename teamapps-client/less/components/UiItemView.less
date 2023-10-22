@@ -27,10 +27,12 @@
         position: absolute;
         display: block;
         width: 100%;
-        bottom: 1px;
         left: 0;
         content: '';
         height: 1px;
+      }
+      &:before {
+        bottom: 1px;
         background: linear-gradient(to right, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 85%, rgba(0, 0, 0, 0) 100%);;
       }
       &:after {

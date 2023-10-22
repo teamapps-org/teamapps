@@ -20,16 +20,14 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.infiniteitemview.InfiniteItemView2;
-import org.teamapps.ux.component.infiniteitemview.ListInfiniteItemViewModel;
+import org.teamapps.ux.component.collapsible.Collapsible;
+import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
-import java.util.Map;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -51,28 +49,13 @@ public class TeamAppsJettyEmbeddedServerTest {
 //			)));
 //			table.setAutoHeight(true);
 
-			InfiniteItemView2<User> infiniteItemView2 = new InfiniteItemView2<>();
-			User john = new User(null, "John", null);
-			infiniteItemView2.setModel(new ListInfiniteItemViewModel<>(List.of(
-					new User(null, "Heinz", null),
-					new User(null, "Jens", null),
-					new User(null, "George", null),
-					john
-			)));
-			infiniteItemView2.setItemTemplate(BaseTemplate.ITEM_VIEW_ITEM);
-			infiniteItemView2.setItemPropertyProvider((o, propertyNames) -> Map.of("icon", MaterialIcon.TV, "caption", o.getFirstName()));
-			infiniteItemView2.setSelectionEnabled(true);
+			Collapsible collapsible = new Collapsible(MaterialIcon.ALARM_ON, "Hallo", new DummyComponent());
 
-			infiniteItemView2.onItemSelected.addListener((eventData, disposable) -> {
-				System.out.println(eventData.getFirstName());
-				System.out.println(infiniteItemView2.getSelectedRecord());
-			});
-
-			panel.setContent(infiniteItemView2);
+			panel.setContent(collapsible);
 			panel.setStretchContent(false);
 
 			ToolButton toolButton = new ToolButton(MaterialIcon.ALARM_ON);
-			toolButton.onClick.addListener((eventData, disposable) -> infiniteItemView2.setSelectedRecord(john));
+			toolButton.onClick.addListener((eventData, disposable) -> collapsible.setCollapsed(!collapsible.isCollapsed()));
 			panel.addToolButton(toolButton);
 
 			rootPanel.setContent(panel);
