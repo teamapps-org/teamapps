@@ -48,7 +48,7 @@ export abstract class AbstractUiToolContainer<C extends AbstractUiToolContainerC
 		this.$sizeTestingContainer.appendChild($buttonWrapper);
 		const $templateDiv = $button.querySelector<HTMLElement>(':scope > :first-child');
 
-		maxHeight = maxHeight ?? $button.offsetHeight;
+		maxHeight = maxHeight >= 0 ? maxHeight : $button.offsetHeight;
 		let optimizedWidth;
 		if ($templateDiv != null) {
 			const oldHeightAttribute = $templateDiv.style.height; // read the style attribute of the templateDiv! (not the computed css!)
