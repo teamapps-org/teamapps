@@ -1,11 +1,15 @@
 package org.teamapps.ux.component.collapsible;
 
 import org.teamapps.dto.UiCollapsible;
+import org.teamapps.dto.UiEvent;
+import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 
 public class Collapsible extends AbstractComponent {
+
+	public final Event<Boolean> onCollapseStateChanged = new Event<>();
 
 	private Icon<?, ?> icon;
 	private String caption;
@@ -35,6 +39,16 @@ public class Collapsible extends AbstractComponent {
 		ui.setContent(content != null ? content.createUiReference() : null);
 		ui.setCollapsed(collapsed);
 		return ui;
+	}
+
+	@Override
+	public void handleUiEvent(UiEvent event) {
+		switch (event.getUiEventType()) {
+			case UI_COLLAPSIBLE_COLLAPSE_STATE_CHANGED: {
+				UiCollapsible.CollapseStateChangedEvent ce = (UiCollapsible.CollapseStateChangedEvent) event;
+				onCollapseStateChanged.fire(ce.getCollapsed());
+			}
+		}
 	}
 
 	public Component getContent() {

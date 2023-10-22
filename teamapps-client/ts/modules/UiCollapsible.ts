@@ -69,7 +69,11 @@ export class UiCollapsible extends AbstractUiComponent<UiCollapsibleConfig> impl
 		this._config.collapsed = collapsed;
 		this.$main.classList.toggle("collapsed", collapsed);
 		this.$expander.classList.toggle("expanded", !collapsed);
-		toggleElementCollapsed(this.$body, collapsed, 300);
+
+		this.$main.classList.add("expanding")
+		toggleElementCollapsed(this.$body, collapsed, 300, "hidden", () => {
+			this.$main.classList.remove("expanding");
+		});
 	}
 
 	setIconAndCaption(icon: string, caption: string): any {

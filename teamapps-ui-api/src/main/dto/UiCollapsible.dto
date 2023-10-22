@@ -26,4 +26,6 @@ class UiCollapsible extends UiComponent {
     command setContent(UiComponent* content);
     command setIconAndCaption(String icon, String caption);
     command setCollapsed(boolean collapsed);
+
+    event collapseStateChanged(boolean collapsed);
 }
