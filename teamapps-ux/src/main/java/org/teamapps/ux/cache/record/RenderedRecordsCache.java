@@ -47,7 +47,7 @@ public class RenderedRecordsCache<RECORD> {
 	}
 
 	public UiIdentifiableClientRecord getUiRecord(RECORD record) {
-		return uiRecordsByRecord.get(record);
+		return record != null ? uiRecordsByRecord.get(record) : null;
 	}
 
 	public int getIndex(RECORD record) {
