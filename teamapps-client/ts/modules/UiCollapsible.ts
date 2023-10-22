@@ -22,9 +22,17 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {parseHtml, toggleElementCollapsed} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
-import {UiCollapsibleCommandHandler, UiCollapsibleConfig} from "../generated/UiCollapsibleConfig";
+import {
+	UiCollapsible_CollapseStateChangedEvent,
+	UiCollapsibleCommandHandler,
+	UiCollapsibleConfig,
+	UiCollapsibleEventSource
+} from "../generated/UiCollapsibleConfig";
+import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
-export class UiCollapsible extends AbstractUiComponent<UiCollapsibleConfig> implements UiCollapsibleCommandHandler {
+export class UiCollapsible extends AbstractUiComponent<UiCollapsibleConfig> implements UiCollapsibleCommandHandler, UiCollapsibleEventSource {
+	
+	readonly onCollapseStateChanged: TeamAppsEvent<UiCollapsible_CollapseStateChangedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLDivElement;
 	private $icon: HTMLElement;
@@ -51,7 +59,11 @@ export class UiCollapsible extends AbstractUiComponent<UiCollapsibleConfig> impl
 		this.setContent(config.content);
 		this.setCollapsed(config.collapsed);
 
-		this.$expander.addEventListener("click", evt => this.setCollapsed(!this._config.collapsed));
+		this.$expander.addEventListener("click", evt => {
+			let collapsed = !this._config.collapsed;
+			this.setCollapsed(collapsed);
+			this.onCollapseStateChanged.fire({collapsed});
+		});
 	}
 
 	public doGetMainElement(): HTMLElement {
