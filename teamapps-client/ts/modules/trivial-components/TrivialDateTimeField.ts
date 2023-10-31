@@ -554,13 +554,9 @@ export class TrivialDateTimeField implements TrivialComponent {
 	}
 
 	private getNonSelectedEditorValue() {
-		const editorText = this.getActiveEditor().text().replace(String.fromCharCode(160), " ");
+		const editorText = this.getActiveEditor().text();
 		const selection = window.getSelection();
-		if (selection.anchorOffset != selection.focusOffset) {
-			return editorText.substring(0, Math.min(selection.anchorOffset, selection.focusOffset));
-		} else {
-			return editorText;
-		}
+		return editorText.substring(0, Math.min(selection.anchorOffset, selection.focusOffset)).replace(String.fromCharCode(160), " ");
 	}
 
 	private autoCompleteIfPossible(delay: number) {
