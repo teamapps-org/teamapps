@@ -20,6 +20,7 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.ux.component.field.datetime.InstantDateTimeField;
 import org.teamapps.ux.component.field.datetime.LocalDateField;
 import org.teamapps.ux.component.field.datetime.LocalTimeField;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
@@ -43,7 +44,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 		new TeamAppsJettyEmbeddedServer((SessionContext sessionContext) -> {
-			sessionContext.setLocale(Locale.CHINA);
+			sessionContext.setLocale(Locale.US);
 
 
 			RootPanel rootPanel = sessionContext.addRootPanel();
@@ -82,6 +83,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 			verticalLayout.addComponentFillRemaining(table);
 			verticalLayout.addComponent(dateField2);
 			verticalLayout.addComponent(timeField2);
+			verticalLayout.addComponent(new InstantDateTimeField());
 
 			panel.setContent(verticalLayout);
 
