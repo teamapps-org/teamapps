@@ -17,18 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-abstract class AbstractUiTimeField extends UiField implements UiTextInputHandlingField {
-    boolean showDropDownButton = true;
-    boolean showClearButton;
-    String locale;
-    UiDateTimeFormatDescriptor timeFormat = null; // if null, UiConfiguration.timeFormat applies
-    boolean clockIconEnabled;
+.static-readonly-UiTimeField {
+  font-size: var(--ta-font-size);
 
-    command setShowDropDownButton(boolean showDropDownButton);
-    command setShowClearButton(boolean showClearButton);
-    command setLocaleAndTimeFormat(String locale, UiDateTimeFormatDescriptor timeFormat);
-    command setClockIconEnabled(boolean clockIconEnabled);
-}
-
-class UiLocalTimeField extends AbstractUiTimeField {
+  .clock-icon {
+    flex: 0 0 auto;
+  }
+  .content-wrapper {
+    flex: 1 1 auto;
+    margin-left: 3px;
+  }
 }

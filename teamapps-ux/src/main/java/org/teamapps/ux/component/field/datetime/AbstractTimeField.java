@@ -38,6 +38,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 	private boolean showClearButton = false;
 	private ULocale locale;
 	private DateTimeFormatDescriptor timeFormat;
+	private boolean clockIconEnabled = true;
 
 	public AbstractTimeField() {
 		super();
@@ -57,6 +58,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 		uiTimeField.setLocale(locale.toLanguageTag());
 		uiTimeField.setTimeFormat(timeFormat.toDateTimeFormatDescriptor());
 		uiTimeField.setShowClearButton(isShowClearButton());
+		uiTimeField.setClockIconEnabled(this.clockIconEnabled);
 	}
 
 	public boolean isShowDropDownButton() {
@@ -112,5 +114,15 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 	@Override
 	public Event<SpecialKey> onSpecialKeyPressed() {
 		return onSpecialKeyPressed;
+	}
+
+
+	public void setClockIconEnabled(boolean clockIconEnabled) {
+		this.clockIconEnabled = clockIconEnabled;
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetClockIconEnabledCommand(getId(), this.clockIconEnabled));
+	}
+
+	public boolean isClockIconEnabled() {
+		return clockIconEnabled;
 	}
 }

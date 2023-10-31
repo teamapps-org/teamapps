@@ -138,4 +138,10 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		this.trivialComboBox.setShowClearButton(showClearButton);
 	}
 
+	setClockIconEnabled(clockIconEnabled: boolean) {
+		this._config.clockIconEnabled = clockIconEnabled;
+		this.timeRenderer = this.createTimeRenderer();
+		this.trivialComboBox.setValue(this.trivialComboBox.getValue());
+	}
+
 }

@@ -52,6 +52,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	private boolean shuffledFormatSuggestionsEnabled = false;
 	private DropDownMode dropDownMode = DropDownMode.CALENDAR_SUGGESTION_LIST;
 	private String emptyText;
+	private boolean calendarIconEnabled = true;
 
 	public LocalDateField() {
 		this.locale = getSessionContext().getULocale();
@@ -71,6 +72,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 		dateField.setShuffledFormatSuggestionsEnabled(shuffledFormatSuggestionsEnabled);
 		dateField.setDropDownMode(UiLocalDateField.DropDownMode.valueOf(dropDownMode.name()));
 		dateField.setPlaceholderText(this.emptyText);
+		dateField.setCalendarIconEnabled(this.calendarIconEnabled);
 		return dateField;
 	}
 
@@ -192,5 +194,14 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	public void setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
 		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(getId(), this.createUiComponent()));
+	}
+
+	public void setCalendarIconEnabled(boolean calendarIconEnabled) {
+		this.calendarIconEnabled = calendarIconEnabled;
+		queueCommandIfRendered(() -> new UiLocalDateField.UpdateCommand(getId(), this.createUiComponent()));
+	}
+
+	public boolean isCalendarIconEnabled() {
+		return calendarIconEnabled;
 	}
 }
