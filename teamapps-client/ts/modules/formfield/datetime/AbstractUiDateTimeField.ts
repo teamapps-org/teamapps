@@ -63,11 +63,11 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 	protected abstract getTimeZone(): string;
 
 	protected createDateRenderer(): (time: DateTime) => string {
-		return createDateRenderer(this._config.locale, this._config.dateFormat);
+		return createDateRenderer(this._config.locale, this._config.dateFormat, true);
 	}
 
 	protected createTimeRenderer(): (time: DateTime) => string {
-		return createTimeRenderer(this._config.locale, this._config.timeFormat);
+		return createTimeRenderer(this._config.locale, this._config.timeFormat, true);
 	}
 
 	protected dateTimeToDateString(dateTime: DateTime): string {

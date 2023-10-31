@@ -144,7 +144,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 	}
 
 	protected createDateRenderer(): (time: LocalDateTime) => string {
-		let dateRenderer = createDateRenderer(this._config.locale, this._config.dateFormat);
+		let dateRenderer = createDateRenderer(this._config.locale, this._config.dateFormat, this._config.calendarIconEnabled, "static-readonly-UiDateField");
 		return entry => dateRenderer(entry?.toUTC());
 	}
 
@@ -230,6 +230,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 		this.setLocaleAndDateFormat(config.locale, config.dateFormat);
 		this.trivialComboBox.setPlaceholderText(config.placeholderText);
 		this.calendarBoxDropdown.defaultDate = UiLocalDateField.UiLocalDateToLocalDateTime(config.defaultSuggestionDate);
+		this.setCalendarIconEnabled(config.calendarIconEnabled);
 		this._config = config;
 	}
 
@@ -256,6 +257,11 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 		this.trivialComboBox.setShowClearButton(showClearButton);
 	}
 
+	setCalendarIconEnabled(calendarIconEnabled: boolean) {
+		this._config.calendarIconEnabled = calendarIconEnabled;
+		this.dateRenderer = this.createDateRenderer();
+		this.trivialComboBox.setValue(this.trivialComboBox.getValue());
+	}
 }
 
 TeamAppsUiComponentRegistry.registerFieldClass("UiLocalDateField", UiLocalDateField);

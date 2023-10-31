@@ -380,8 +380,8 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private updateRenderers() {
 		this.dateIconRenderer = createDateIconRenderer(this.config.locale);
 		this.timeIconRenderer = createClockIconRenderer();
-		this.dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat);
-		this.timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat);
+		this.dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat, true);
+		this.timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat, true);
 	}
 
 	private isDropDownNeeded() {

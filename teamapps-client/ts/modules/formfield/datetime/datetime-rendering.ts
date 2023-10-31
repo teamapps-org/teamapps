@@ -48,15 +48,15 @@ export function createDateIconRenderer(locale: string): (time: DateTime) => stri
 	}
 }
 
-export function createDateRenderer(locale: string, dateFormat: DateTimeFormatOptions): (time: DateTime) => string {
+export function createDateRenderer(locale: string, dateFormat: DateTimeFormatOptions, withIcon: boolean, additionalClass?: string): (time: DateTime) => string {
 	let dateIconRenderer = createDateIconRenderer(locale);
 	return (dateTime: DateTime) => {
 		if (dateTime == null) {
 			return "";
 		}
 		let dateTimeWithLocale = dateTime.setLocale(locale);
-		return `<div class="tr-template-icon-single-line">
-					${dateIconRenderer(dateTime)}
+		return `<div class="tr-template-icon-single-line ${additionalClass ?? ''}">
+					${withIcon ? dateIconRenderer(dateTime) : ''}
 					<div class="content-wrapper tr-editor-area">${dateTimeWithLocale.toLocaleString(dateFormat)}</div>
 				</div>`;
 	};
@@ -77,14 +77,14 @@ export function createClockIconRenderer(): (time: DateTime) => string {
 	}
 }
 
-export function createTimeRenderer(locale: string, timeFormat: DateTimeFormatOptions): (time: DateTime) => string {
+export function createTimeRenderer(locale: string, timeFormat: DateTimeFormatOptions, withIcon: boolean, additionalClass?: string): (time: DateTime) => string {
 	let clockIconRenderer = createClockIconRenderer();
 	return (dateTime: DateTime) => {
 		if (dateTime == null) {
 			return "";
 		}
-		return `<div class="tr-template-icon-single-line">
-					${clockIconRenderer(dateTime)}
+		return `<div class="tr-template-icon-single-line ${additionalClass ?? ''}">
+					${withIcon ? clockIconRenderer(dateTime) : ''}
 					<div class="content-wrapper tr-editor-area">${dateTime.setLocale(locale).toLocaleString(timeFormat)}</div>
 				</div>`;
 	};

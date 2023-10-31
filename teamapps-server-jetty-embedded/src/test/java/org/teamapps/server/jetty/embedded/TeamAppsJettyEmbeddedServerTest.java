@@ -20,14 +20,22 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.collapsible.Collapsible;
-import org.teamapps.ux.component.dummy.DummyComponent;
+import org.teamapps.ux.component.field.datetime.LocalDateField;
+import org.teamapps.ux.component.field.datetime.LocalTimeField;
+import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
+import org.teamapps.ux.component.table.ListTableModel;
+import org.teamapps.ux.component.table.Table;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 import org.teamapps.ux.session.SessionContext;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -35,28 +43,47 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 		new TeamAppsJettyEmbeddedServer((SessionContext sessionContext) -> {
+			sessionContext.setLocale(Locale.CHINA);
+
+
 			RootPanel rootPanel = sessionContext.addRootPanel();
 
-			Panel panel = new Panel();
+			Panel panel = new Panel(MaterialIcon.ALARM_ON, "Panel");
 
-//			Table<User> table = new Table<>();
-//			table.addColumn("name", "Name", new TextField()).setValueExtractor(User::getFirstName);
-//			table.setModel(new ListTableModel<>(List.of(
-//					new User(null, "Heinz", null),
-//					new User(null, "Jens", null),
-//					new User(null, "George", null),
-//					new User(null, "John", null)
-//			)));
-//			table.setAutoHeight(true);
+			Table<User> table = new Table<>();
+			LocalDateField dateField = new LocalDateField();
+			LocalDateField dateField2 = new LocalDateField();
+			table.addColumn("x", "halo", dateField).setValueExtractor(user -> LocalDate.now());
+			LocalTimeField timeField = new LocalTimeField();
+			LocalTimeField timeField2 = new LocalTimeField();
+			table.addColumn("y", "ad", timeField).setValueExtractor(user -> LocalTime.now());
+			table.setModel(new ListTableModel<>(IntStream.range(0, 100)
+					.mapToObj(i -> new User(null, null, null))
+					.collect(Collectors.toList())));
 
-			Collapsible collapsible = new Collapsible(MaterialIcon.ALARM_ON, "Hallo", new DummyComponent());
+			ToolButton toolButton1 = new ToolButton(MaterialIcon.HELP);
+			toolButton1.onClick.addListener(() -> {
+				dateField.setCalendarIconEnabled(!dateField.isCalendarIconEnabled());
+				table.refresh();
+				dateField2.setCalendarIconEnabled(!dateField2.isCalendarIconEnabled());
+			});
+			panel.addToolButton(toolButton1);
 
-			panel.setContent(collapsible);
-			panel.setStretchContent(false);
+			ToolButton toolButton2 = new ToolButton(MaterialIcon.HELP);
+			toolButton2.onClick.addListener(() -> {
+				timeField.setClockIconEnabled(!timeField.isClockIconEnabled());
+				table.refresh();
+				timeField2.setClockIconEnabled(!timeField2.isClockIconEnabled());
+			});
+			panel.addToolButton(toolButton2);
 
-			ToolButton toolButton = new ToolButton(MaterialIcon.ALARM_ON);
-			toolButton.onClick.addListener((eventData, disposable) -> collapsible.setCollapsed(!collapsible.isCollapsed()));
-			panel.addToolButton(toolButton);
+
+			VerticalLayout verticalLayout = new VerticalLayout();
+			verticalLayout.addComponentFillRemaining(table);
+			verticalLayout.addComponent(dateField2);
+			verticalLayout.addComponent(timeField2);
+
+			panel.setContent(verticalLayout);
 
 			rootPanel.setContent(panel);
 		}, 8082).start();

@@ -34,6 +34,7 @@ class UiLocalDateField extends UiField {
 	boolean shuffledFormatSuggestionsEnabled;
 	enum {CALENDAR, CALENDAR_SUGGESTION_LIST, SUGGESTION_LIST} dropDownMode = DropDownMode.CALENDAR_SUGGESTION_LIST;
 	String placeholderText;
+	boolean calendarIconEnabled;
 
     command update(UiLocalDateField config);
 }
