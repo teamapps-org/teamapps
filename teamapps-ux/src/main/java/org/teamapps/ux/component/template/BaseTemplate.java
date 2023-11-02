@@ -20,25 +20,13 @@
 package org.teamapps.ux.component.template;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiTemplate;
 import org.teamapps.dto.UiTemplateReference;
-import org.teamapps.ux.component.format.Border;
-import org.teamapps.common.format.RgbaColor;
-import org.teamapps.ux.component.format.FontStyle;
-import org.teamapps.ux.component.format.HorizontalElementAlignment;
-import org.teamapps.ux.component.format.Line;
-import org.teamapps.ux.component.format.LineType;
-import org.teamapps.ux.component.format.Shadow;
-import org.teamapps.ux.component.format.SizeType;
-import org.teamapps.ux.component.format.SizingPolicy;
-import org.teamapps.ux.component.format.Spacing;
-import org.teamapps.ux.component.format.TextAlignment;
-import org.teamapps.ux.component.format.VerticalElementAlignment;
+import org.teamapps.ux.component.format.*;
 import org.teamapps.ux.component.template.gridtemplate.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public enum BaseTemplate implements Template {
 
@@ -79,44 +67,13 @@ public enum BaseTemplate implements Template {
 
 	NAVIGATION_BAR_ICON_ONLY(createNavigationBarIconOnlyTemplate());
 
-	public static final String PROPERTY_ID = "id";
 	public static final String PROPERTY_ICON = "icon";
 	public static final String PROPERTY_IMAGE = "image";
 	public static final String PROPERTY_CAPTION = "caption";
 	public static final String PROPERTY_DESCRIPTION = "description";
 	public static final String PROPERTY_BADGE = "badge";
-
-	public static final String PROPERTY_CAPTION_ICON = "captionIcon";
-	public static final String PROPERTY_RIGHT_ICON = "rightIcon";
-	public static final String PROPERTY_SUB_TEXT1 = "setText1";
-	public static final String PROPERTY_SUB_TEXT2 = "setText2";
-	public static final String PROPERTY_SUB_ICON1 = "subIcon1";
-	public static final String PROPERTY_SUB_ICON2 = "subIcon2";
 	public static final String PROPERTY_ARIA_LABEL = "ariaLabel";
 	public static final String PROPERTY_TITLE = "title";
-
-	public static Map<String, Template> createTemplateMap(BaseTemplate... templates) {
-		Map<String, Template> templateMap = new HashMap<>();
-		for (BaseTemplate template : templates) {
-			templateMap.put(template.name(), template);
-		}
-		return templateMap;
-	}
-
-	/*
-		int iconSize, int imageSize, int imageBorderWidth, int imageShadowWidth, float captionSize, float caption2Size, Color badgeColor
-
-		Base list template:
-			lines: 1 - 3
-
-
-		left: icon, image
-		line1: line1Icon, line1Caption1, line1Caption2, (-->right:) line1RightCaption, line1Badge
-		line2: line2Icon, line2Caption1, line2Caption2
-		line3: ...
-
-
-	 */
 
 	private static Template createToolbarButtonTemplate(int minWidth, int iconSize, float captionFontSize, float descriptionFontSize) {
 		return new GridTemplate()
@@ -197,7 +154,6 @@ public enum BaseTemplate implements Template {
 		return new GridTemplate()
 				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
 				.setTitleProperty(PROPERTY_TITLE)
-				.setMinWidth(0).setMaxWidth(0)
 				.setMinHeight(44).setMaxHeight(100)
 				.setGridGap(0)
 				.setPadding(new Spacing(4))
@@ -256,93 +212,6 @@ public enum BaseTemplate implements Template {
 						.setMargin(new Spacing(0, 0, 0, 3)));
 	}
 
-	public static GridTemplate createTemplate(int minWidth, int maxWidth, int minHeight, int maxHeight, Spacing padding, int gridGap, boolean horizontalCenterAlignment,
-											  int mainIconSize, boolean mainIconAlignTop, Color mainImageBorderColor,
-											  int captionIconSize, float captionSize, Color captionColor, boolean wrapCaption,
-											  float badgeSize, Color badgeTextColor, Color badgeBackgroundColor, int rightIconSize,
-											  int subIcon1Size, float subText1Size, Color subText1Color, int subIcon2Size, float subText2Size, Color subText2Color,
-											  float descriptionTextSize, Color descriptionTextColor) {
-		VerticalElementAlignment mainIconVerticalAlignment = mainIconAlignTop ? VerticalElementAlignment.TOP : VerticalElementAlignment.CENTER;
-
-		HorizontalElementAlignment horizontalElementAlignment = horizontalCenterAlignment ? HorizontalElementAlignment.CENTER : HorizontalElementAlignment.LEFT;
-		HorizontalElementAlignment horizontalElementAlignment2 = horizontalCenterAlignment ? HorizontalElementAlignment.CENTER : HorizontalElementAlignment.RIGHT;
-
-		return new GridTemplate(minWidth, maxWidth, minHeight, maxHeight, padding, gridGap)
-				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
-				.setTitleProperty(PROPERTY_TITLE)
-				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
-				.addColumn(SizingPolicy.FRACTION)
-				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
-				.addRow(SizeType.AUTO, 0, 0, 1, 0)
-				.addRow(SizeType.AUTO, 0, 0, 1, 0)
-				.addRow(SizeType.AUTO, 0, 0, 1, 1)
-
-				.addElement(new IconElement(PROPERTY_ICON, 0, 0, mainIconSize)
-						.setRowSpan(3)
-						.setVerticalAlignment(mainIconVerticalAlignment)
-						.setMargin(new Spacing(0, 3, 0, 0)))
-				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, mainIconSize, mainIconSize)
-						.setRowSpan(3)
-						.setBorder(new Border(new Line(mainImageBorderColor, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(0.5f))
-						.setVerticalAlignment(mainIconVerticalAlignment)
-						.setMargin(new Spacing(0, 3, 0, 0)))
-
-				.addElement(new FloatingElement(0, 1)
-						.addElement(new IconElement(PROPERTY_CAPTION_ICON, captionIconSize)
-								.setMargin(new Spacing(0, 2, 0, 0)))
-						.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
-								.setWrapLines(wrapCaption)
-								.setFontStyle(captionSize, captionColor)
-								.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
-								.setHorizontalAlignment(horizontalElementAlignment))
-						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
-						.setHorizontalAlignment(horizontalElementAlignment)
-				)
-				.addElement(new FloatingElement(0, 2)
-						.addElement(new BadgeElement(PROPERTY_BADGE)
-								.setFontStyle(new FontStyle(badgeSize, badgeTextColor).setBackgroundColor(badgeBackgroundColor))
-								.setWrapLines(true)
-								.setHorizontalAlignment(horizontalElementAlignment2)
-								.setMargin(new Spacing(0, 1, 0, 3))
-						)
-						.addElement(new IconElement(PROPERTY_RIGHT_ICON, rightIconSize)
-								.setMargin(new Spacing(0, 1, 0, 3)))
-
-						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
-						.setHorizontalAlignment(horizontalElementAlignment2)
-				)
-
-				.addElement(new FloatingElement(1, 1)
-						.addElement(new IconElement(PROPERTY_SUB_ICON1, subIcon1Size)
-								.setMargin(new Spacing(0, 2, 0, 0)))
-						.addElement(new TextElement(PROPERTY_SUB_TEXT1)
-								.setWrapLines(wrapCaption)
-								.setFontStyle(subText1Size, subText1Color)
-								.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
-								.setHorizontalAlignment(horizontalElementAlignment))
-						.addElement(new IconElement(PROPERTY_SUB_ICON2, subIcon2Size)
-								.setMargin(new Spacing(0, 2, 0, 0)))
-						.addElement(new TextElement(PROPERTY_SUB_TEXT2)
-								.setWrapLines(wrapCaption)
-								.setFontStyle(subText2Size, subText2Color)
-								.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
-								.setHorizontalAlignment(horizontalElementAlignment))
-
-						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
-						.setHorizontalAlignment(horizontalElementAlignment)
-						.setColSpan(2)
-				)
-
-				.addElement(new TextElement(PROPERTY_DESCRIPTION, 2, 1)
-						.setColSpan(2)
-						.setWrapLines(true)
-						.setFontStyle(descriptionTextSize, descriptionTextColor)
-						.setVerticalAlignment(VerticalElementAlignment.TOP)
-						.setHorizontalAlignment(horizontalElementAlignment))
-				;
-	}
-
 	public static Template createTreeSingleLineNodeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight) {
 		return createTreeSingleLineNodeTemplate(iconSize, verticalIconAlignment, maxHeight, false);
 	}
@@ -383,7 +252,6 @@ public enum BaseTemplate implements Template {
 		return new GridTemplate()
 				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
 				.setTitleProperty(PROPERTY_TITLE)
-				.setMinWidth(0).setMaxWidth(0)
 				.setMinHeight(28).setMaxHeight(28)
 				.setGridGap(4)
 				.setPadding(new Spacing(0))
@@ -481,8 +349,6 @@ public enum BaseTemplate implements Template {
 		return new GridTemplate()
 				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
 				.setTitleProperty(PROPERTY_TITLE)
-				.setMinWidth(0).setMaxWidth(0)
-				.setMinHeight(0).setMaxHeight(0)
 				.setGridGap(0)
 				.setPadding(new Spacing(0))
 				.addColumn(SizeType.AUTO, 0, 40, 2, 2)
@@ -518,8 +384,7 @@ public enum BaseTemplate implements Template {
 		return new GridTemplate()
 				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
 				.setTitleProperty(PROPERTY_TITLE)
-				.setMinWidth(0).setMaxWidth(140)
-				.setMinHeight(0).setMaxHeight(0)
+				.setMaxWidth(140)
 				.setGridGap(0)
 				.setPadding(new Spacing(0))
 				.addColumn(SizeType.AUTO, 0, 40, 2, 2)
@@ -550,8 +415,6 @@ public enum BaseTemplate implements Template {
 		return new GridTemplate()
 				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
 				.setTitleProperty(PROPERTY_TITLE)
-				.setMinWidth(0).setMaxWidth(0)
-				.setMinHeight(0).setMaxHeight(0)
 				.setGridGap(0)
 				.setPadding(new Spacing(0))
 				.addColumn(SizeType.FIXED, 32, 0, 0, 0)
