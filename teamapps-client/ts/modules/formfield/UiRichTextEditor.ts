@@ -57,6 +57,7 @@ import {
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {parseHtml, removeTags} from "../Common";
 import {throttledMethod} from "../util/throttle";
+import {xhr} from "d3v3";
 
 
 export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> implements UiRichTextEditorEventSource, UiRichTextEditorCommandHandler {
@@ -332,7 +333,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					});
 				}
 				editor.on('change undo redo keypress', (e) => {
-					this.fireTextInputEvent();
+					this.fireTextInputEventThrottled();
 				});
 				editor.on('keydown', (e) => {
 					if (e.keyCode === keyCodes.escape) {
@@ -448,12 +449,22 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	}
 
 	@throttledMethod(5000)
-	private fireTextInputEvent() {
+	private fireTextInputEventThrottled() {
+		this.fireTextinputEvent();
+	}
+
+	private fireTextinputEvent() {
 		if (this.mayFireChangeEvents()) {
 			this.onTextInput.fire({
 				enteredString: this.getTransientValue()
 			});
 		}
+	}
+
+	async commitTransientValue() {
+		this.fireTextinputEvent();
+		this.commit(false);
+		return this.getCommittedValue();
 	}
 
 	private updateSpinnerVisibility() {
@@ -464,7 +475,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		let successCallback = this.imageUploadSuccessCallbacksByUuid[fileUuid];
 		if (successCallback != null) {
 			successCallback(url);
-			this.fireTextInputEvent(); // the html has changed at this point with the replacement of the data URL with the server-side URL
+			this.fireTextInputEventThrottled(); // the html has changed at this point with the replacement of the data URL with the server-side URL
 		}
 	}
 

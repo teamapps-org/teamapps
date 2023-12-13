@@ -41,4 +41,5 @@ class UiRichTextEditor extends UiField implements UiTextInputHandlingField {
 	command setMaxImageFileSizeInBytes(long maxImageFileSizeInBytes);
 	command setUploadedImageUrl(String fileUuid, String url);
 	command setToolbarVisibilityMode(UiToolbarVisibilityMode toolbarVisibilityMode);
+	command commitTransientValue() returns String;
 }
