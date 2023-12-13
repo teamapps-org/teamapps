@@ -34,6 +34,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class RichTextEditor extends AbstractField<String> {
 
@@ -209,6 +210,17 @@ public class RichTextEditor extends AbstractField<String> {
 		this.imageUploadEnabled = imageUploadEnabled;
 		if (changed) {
 			reRenderIfRendered();
+		}
+	}
+
+	/**
+	 * Commits and returns (via callback) the transient value from the client side.
+	 */
+	public void commitTransientValue(Consumer<String> callback) {
+		if (isRendered()) {
+			getSessionContext().queueCommand(new UiRichTextEditor.CommitTransientValueCommand(getId()), value -> callback.accept(convertUiValueToUxValue(value)));
+		} else {
+			callback.accept(getValue());
 		}
 	}
 }
