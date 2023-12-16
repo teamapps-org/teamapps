@@ -47,6 +47,7 @@ import 'tinymce/plugins/contextmenu';
 import 'tinymce/plugins/searchreplace';
 import 'tinymce/plugins/spellchecker';
 import 'tinymce/plugins/textcolor';
+import 'tinymce/plugins/print';
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiToolbarVisibilityMode} from "../../generated/UiToolbarVisibilityMode";
 import {UiSpinner} from "../micro-components/UiSpinner";
@@ -195,8 +196,8 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			branding: false,
 			menubar: false,
 			inline: true,
-			toolbar: `undo redo | styleselect | bold italic underline forecolor backcolor removeformat | ${this._config.imageUploadEnabled ? 'insertimagefromdisk |' : ' |'} alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | table | overflowbutton`,
-			plugins: `lists table link autolink contextmenu searchreplace textcolor ${this._config.imageUploadEnabled ? 'image imagetools' : ''}`,
+			toolbar: `undo redo | styleselect | bold italic underline forecolor backcolor removeformat | ${this._config.imageUploadEnabled ? 'insertimagefromdisk |' : ' |'} alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | table | ${this._config.printPluginEnabled ? 'print |' : ''} overflowbutton`,
+			plugins: `lists table link autolink contextmenu searchreplace textcolor ${this._config.printPluginEnabled ? 'print' : ''} ${this._config.imageUploadEnabled ? 'image imagetools' : ''}`,
 			contextmenu: "openlink link unlink searchreplace",
 			language_url: translationFileName != null ? "/runtime-resources/tinymce/langs/" + translationFileName : undefined,
 			entity_encoding: "raw",

@@ -51,6 +51,7 @@ public class RichTextEditor extends AbstractField<String> {
 	private String uploadUrl = "/upload";
 	private int maxImageFileSizeInBytes = 5000000;
 	private boolean imageUploadEnabled = false;
+	private boolean printPluginEnabled = false;
 	private ULocale locale = getSessionContext().getULocale();
 
 	private UploadedFileToUrlConverter uploadedFileToUrlConverter = (file) -> getSessionContext().createFileLink(getSessionContext().getUploadedFileByUuid(file.getUuid()));
@@ -70,6 +71,7 @@ public class RichTextEditor extends AbstractField<String> {
 		field.setMinHeight(minHeight);
 		field.setMaxHeight(maxHeight);
 		field.setLocale(locale.toLanguageTag());
+		field.setPrintPluginEnabled(printPluginEnabled);
 		return field;
 	}
 
@@ -222,5 +224,9 @@ public class RichTextEditor extends AbstractField<String> {
 		} else {
 			callback.accept(getValue());
 		}
+	}
+
+	public void setPrintPluginEnabled(boolean printPluginEnabled) {
+		this.printPluginEnabled = printPluginEnabled;
 	}
 }
