@@ -29,6 +29,7 @@ class UiRichTextEditor extends UiField implements UiTextInputHandlingField {
 	UiToolbarVisibilityMode toolbarVisibilityMode = UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED;
 	int minHeight = 150;
 	int maxHeight = 150;
+	boolean printPluginEnabled;
 
 	event imageUploadTooLarge(String fileName, String mimeType, long sizeInBytes);
 	event imageUploadStarted(String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
