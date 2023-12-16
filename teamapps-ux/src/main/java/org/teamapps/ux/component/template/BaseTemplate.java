@@ -93,11 +93,13 @@ public enum BaseTemplate implements Template {
 						.setShadow(Shadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_CAPTION, 1, 0)
+						.setTextAlignment(TextAlignment.CENTER)
 						.setWrapLines(true)
 						.setFontStyle(captionFontSize)
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.CENTER))
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 2, 0)
+						.setTextAlignment(TextAlignment.CENTER)
 						.setWrapLines(true)
 						.setFontStyle(descriptionFontSize, Color.fromVariableName("ta-text-color-gray"))
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
@@ -119,6 +121,7 @@ public enum BaseTemplate implements Template {
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT)
 						.setMargin(new Spacing(0, 2, 0, 0)))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
+						.setTextAlignment(TextAlignment.CENTER)
 						.setWrapLines(false)
 						.setPadding(new Spacing(0, 2, 0, 0)));
 	}
