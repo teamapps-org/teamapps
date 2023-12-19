@@ -106,4 +106,9 @@ public class CheckBox extends AbstractField<Boolean> {
 		}
 		return this;
 	}
+
+	@Override
+	public void setValue(Boolean value) {
+		super.setValue(value != null && value); // null -> false
+	}
 }
