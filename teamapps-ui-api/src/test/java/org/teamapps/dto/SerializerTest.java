@@ -21,6 +21,7 @@ package org.teamapps.dto;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.teamapps.dto.testpojo.MyEnum;
@@ -33,6 +34,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SerializerTest {
 
@@ -84,7 +87,7 @@ public class SerializerTest {
 	@Test
 	public void serializeEnum() throws Exception {
 		String json = new ObjectMapper().writeValueAsString(new ObjectReferencePojo(MyEnum.A));
-		Assert.assertEquals("{\"o\":{\"_type\":\"org.teamapps.dto.testpojo.MyEnum\",\"_name\":\"A\",\"i\":111,\"s\":\"a\"}}", json);
+		assertThat(json).isEqualTo("{\"o\":{\"_type\":\"org.teamapps.dto.testpojo.MyEnum\",\"_name\":\"A\",\"i\":111,\"s\":\"a\"}}");
 	}
 
 	// ===========
