@@ -21,18 +21,14 @@ package org.teamapps.dto;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;
 import com.fasterxml.jackson.databind.ser.std.EnumSerializer;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 
@@ -107,7 +103,8 @@ public class ObjectSerializer extends JsonSerializer<Object> {
 		});
 
 		for (BeanPropertyDefinition property : beanDescription.findProperties()) {
-			if (property.getName().equals("declaringClass")) {
+			if (Modifier.isStatic(property.getField().getModifiers())
+				|| property.getName().equals("declaringClass")) {
 				continue;
 			}
 			Object propertyValue = property.getAccessor().getValue(value);
