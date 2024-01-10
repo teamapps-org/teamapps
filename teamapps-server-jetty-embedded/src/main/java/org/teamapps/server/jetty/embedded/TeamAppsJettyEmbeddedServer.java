@@ -25,6 +25,7 @@ import org.eclipse.jetty.ee10.webapp.WebAppContext;
 import org.eclipse.jetty.ee10.webapp.WebXmlConfiguration;
 import org.eclipse.jetty.ee10.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 import org.teamapps.client.ClientCodeExtractor;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsCore;
@@ -49,31 +50,7 @@ public class TeamAppsJettyEmbeddedServer {
 	private final Server server;
 	private final WebAppContext webapp;
 
-	public TeamAppsJettyEmbeddedServer(WebController webController) throws IOException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration());
-	}
-
-	public TeamAppsJettyEmbeddedServer(WebController webController, int port) throws IOException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration(), port);
-	}
-
-	public TeamAppsJettyEmbeddedServer(WebController webController, TeamAppsConfiguration config) throws IOException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), config, DEFAULT_PORT);
-	}
-
-	public TeamAppsJettyEmbeddedServer(WebController webController, TeamAppsConfiguration config, int port) throws IOException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), config, port);
-	}
-
-	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, int port) {
-		this(webController, webAppDirectory, new TeamAppsConfiguration(), port);
-	}
-
-	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) {
-		this(webController, webAppDirectory, config, DEFAULT_PORT);
-	}
-
-	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) {
+	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port, boolean globalGzipCompression) {
 		teamAppsCore = new TeamAppsCore(config, new CompletableFutureChainSequentialExecutorFactory(config.getMaxNumberOfSessionExecutorThreads()), webController);
 		this.webAppDirectory = webAppDirectory;
 
@@ -89,7 +66,14 @@ public class TeamAppsJettyEmbeddedServer {
 		// The following will not actually set the secure flag on the cookie if the session is started without encryption.
 		// Use getWebapp().getSessionHandler().getSessionCookieConfig().setSecure(true) if you want to force secure cookies.
 		webapp.getSessionHandler().setSecureRequestOnly(true);
-		server.setHandler(webapp);
+		if (globalGzipCompression) {
+			GzipHandler gzipHandler = new GzipHandler();
+			gzipHandler.setInflateBufferSize(32 * 1024);
+			server.setHandler(gzipHandler); // GZIP handler set at the server level will apply compression to everything, including resources and dynamic content
+			gzipHandler.setHandler(webapp);
+		} else {
+			server.setHandler(webapp);
+		}
 		JakartaWebSocketServletContainerInitializer.configure(webapp, null);
 	}
 
@@ -121,6 +105,47 @@ public class TeamAppsJettyEmbeddedServer {
 
 	public void stop() throws Exception {
 		server.stop();
+	}
+
+	public static class Builder {
+
+		private WebController webController;
+		private File webAppDirectory;
+		private TeamAppsConfiguration config = new TeamAppsConfiguration();
+		private int port = DEFAULT_PORT;
+		private boolean globalGzipCompression;
+
+		public Builder setWebController(WebController webController) {
+			this.webController = webController;
+			return this;
+		}
+
+		public Builder setWebAppDirectory(File webAppDirectory) {
+			this.webAppDirectory = webAppDirectory;
+			return this;
+		}
+
+		public Builder setConfig(TeamAppsConfiguration config) {
+			this.config = config;
+			return this;
+		}
+
+		public Builder setPort(int port) {
+			this.port = port;
+			return this;
+		}
+
+		public Builder setGlobalGzipCompression(boolean globalGzipCompression) {
+			this.globalGzipCompression = globalGzipCompression;
+			return this;
+		}
+
+		public TeamAppsJettyEmbeddedServer build() throws IOException {
+			if (webAppDirectory == null) {
+				webAppDirectory = Files.createTempDirectory("teamapps").toFile();
+			}
+			return new TeamAppsJettyEmbeddedServer(webController, webAppDirectory, config, port, globalGzipCompression);
+		}
 	}
 
 }
