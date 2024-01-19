@@ -63,6 +63,7 @@ public class TeamAppsJettyEmbeddedServer {
 		webapp.addEventListener(new TeamAppsServletContextListener(teamAppsCore));
 		webapp.setBaseResourceAsPath(webAppDirectory.getAbsoluteFile().toPath());
 		webapp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
+		webapp.setInitParameter("org.eclipse.jetty.servlet.Default.precompressed", "true");
 		// The following will not actually set the secure flag on the cookie if the session is started without encryption.
 		// Use getWebapp().getSessionHandler().getSessionCookieConfig().setSecure(true) if you want to force secure cookies.
 		webapp.getSessionHandler().setSecureRequestOnly(true);
