@@ -92,7 +92,7 @@
     "@types/maplibre-gl": "^1.13.0",
     "animate.css": "^4.1.0",
     "autolinker": "^3.11.1",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "bootstrap": "^3.4.1",
     "canvas-gauges": "^2.1.5",
     "color-rgba": "^2.1.1",
