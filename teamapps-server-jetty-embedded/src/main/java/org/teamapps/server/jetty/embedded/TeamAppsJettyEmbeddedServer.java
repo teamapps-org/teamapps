@@ -108,17 +108,20 @@ public class TeamAppsJettyEmbeddedServer {
 		server.stop();
 	}
 
+	public static Builder builder(WebController webController) {
+		return new Builder(webController);
+	}
+
 	public static class Builder {
 
-		private WebController webController;
+		private final WebController webController;
 		private File webAppDirectory;
 		private TeamAppsConfiguration config = new TeamAppsConfiguration();
 		private int port = DEFAULT_PORT;
 		private boolean globalGzipCompression;
 
-		public Builder setWebController(WebController webController) {
+		public Builder(WebController webController) {
 			this.webController = webController;
-			return this;
 		}
 
 		public Builder setWebAppDirectory(File webAppDirectory) {
