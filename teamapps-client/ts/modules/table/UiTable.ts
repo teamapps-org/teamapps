@@ -271,6 +271,11 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				sortDirection: args.sortAsc ? UiSortDirection.ASC : UiSortDirection.DESC
 			});
 		});
+		this._grid.getCanvasNode().addEventListener("mousedown", ev => {
+			if (ev.shiftKey && this._config.allowMultiRowSelection) {
+				document.getSelection().removeAllRanges(); // make sure, no text is selected
+			}
+		});
 		this._grid.onSelectedRowsChanged.subscribe((eventData, args) => {
 			if (args.rows.some((row) => !this.dataProvider.getItem(row))) {
 				return; // TODO one of the selected rows has no id. How to handle this? What if the user wants to select a huge range?

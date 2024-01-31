@@ -61,6 +61,11 @@ public class TeamAppsJettyEmbeddedServerTest {
 					table.setModel(new ListTableModel<>(IntStream.range(0, 100)
 							.mapToObj(i -> new User(null, null, null))
 							.collect(Collectors.toList())));
+					table.setAllowMultiRowSelection(true);
+
+					table.onRowsSelected.addListener((eventData, disposable) -> {
+						System.out.println(eventData.size());
+					});
 
 					ToolButton toolButton1 = new ToolButton(MaterialIcon.HELP);
 					toolButton1.onClick.addListener(() -> {
