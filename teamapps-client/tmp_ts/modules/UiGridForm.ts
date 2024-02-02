@@ -28,7 +28,7 @@ import {DtoFormLayoutPolicy} from "../generated/DtoFormLayoutPolicy";
 import {DtoFormSection} from "../generated/DtoFormSection";
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {
 	createCssGridRowOrColumnString,
 	createUiBorderCssString,

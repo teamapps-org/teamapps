@@ -37,7 +37,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/DtoTreeGraphNodeImage";
 import {parseHtml} from "./Common";
 import {flextree, FlexTreeLayout} from "d3-flextree";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 
 export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
 

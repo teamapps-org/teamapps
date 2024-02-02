@@ -1,3 +1,5 @@
+Remove necessity for displayedDeferredExecutor, and thereby @executeWhenFirstDisplayed()
+
 fix queries
 
 make parseHtml return an array (not NodeList!!) of elements, since the current api leads error-prone usage of NodeList. See comment in HtmlView.setContentHtml()

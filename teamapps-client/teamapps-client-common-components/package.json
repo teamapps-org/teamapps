@@ -9,20 +9,11 @@
     "clean": "yarn run del_dist",
     "tsc": "tsc",
     "bundle": "node esbuild.mjs",
-    "build": "yarn run del_dist && yarn run tsc && yarn run bundle",
-    "build-prod": "NODE_ENV=production yarn run build",
-    "start": "yarn run watch-build",
-    "watch-build": "concurrently --names \"yarn:watch-tsc\" \"yarn:watch-bundle\"",
-    "watch-bundle": "yarn run bundle -- --watch",
-    "watch-tsc": "yarn run tsc --watch"
+    "build": "yarn run del_dist && yarn run tsc && yarn run bundle"
   },
   "devDependencies": {
-    "concurrently": "^7.6.0",
-    "cross-var": "^1.1.0",
     "esbuild": "^0.15.13",
-    "onchange": "^7.1.0",
-    "replace-in-file": "^6.3.5",
     "rimraf": "^3.0.2",
-    "typescript": "^4.8.4"
+    "typescript": "^5.1"
   }
 }

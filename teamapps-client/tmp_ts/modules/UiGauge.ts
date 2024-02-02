@@ -22,7 +22,7 @@ import {UiGaugeCommandHandler, DtoGauge} from "../generated/DtoGauge";
 import {DtoGaugeOptions} from "../generated/DtoGaugeOptions";
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {LinearGauge, RadialGauge} from "canvas-gauges";
 import {debouncedMethod, DebounceMode} from "./util/debounce";

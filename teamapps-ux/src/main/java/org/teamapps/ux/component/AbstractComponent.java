@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,7 +66,16 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	protected <T> ProjectorEvent<T> createProjectorEventBoundToUiEvent(String qualifiedEventName) {
-		return new ProjectorEvent<>(hasListeners -> toggleEventListening(qualifiedEventName, hasListeners));
+		return createProjectorEventBoundToUiEvent(qualifiedEventName, false);
+	}
+
+	protected <T> ProjectorEvent<T> createProjectorEventBoundToUiEvent(String qualifiedEventName, boolean registerAlways) {
+		if (registerAlways) {
+			toggleEventListening(qualifiedEventName, true);
+			return new ProjectorEvent<>();
+		} else {
+			return new ProjectorEvent<>(hasListeners -> toggleEventListening(qualifiedEventName, hasListeners));
+		}
 	}
 
 	protected void toggleEventListening(String name, boolean shouldListen) {
@@ -102,16 +111,6 @@ public abstract class AbstractComponent implements Component {
 		if (changed) {
 			sendCommandIfRendered(() -> new DtoComponent.SetVisibleCommand(visible));
 		}
-	}
-
-	/**
-	 * @deprecated destroys and rerenders this component on the client side. This might have strange side effects if client-side components
-	 * interact with each other (e.g. by directly listening to events on the client side). Try to avoid making use of this method
-	 * at any cost. It will be removed in a later version of Projector.
-	 */
-	@Deprecated
-	protected void reRenderIfRendered() {
-			sendGlobalStaticCommandIfRendered(() -> new DtoGlobals.RefreshComponentCommand(createDto()));
 	}
 
 	private void sendGlobalStaticCommandIfRendered(Supplier<DtoCommand<?>> commandSupplier) {

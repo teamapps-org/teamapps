@@ -20,7 +20,6 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.components.calendar.Calendar;
 import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
@@ -51,7 +50,6 @@ public class TeamAppsJettyEmbeddedServerTest {
 				});
 			});
 			verticalLayout.addComponent(button);
-			verticalLayout.addComponentFillRemaining(new Calendar<>());
 
 			rootPanel.setContent(verticalLayout);
 

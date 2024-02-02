@@ -439,7 +439,7 @@ class DtoCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 
 	public addEvents(start: number, end: number, newEvents: EventInput[]) {
 		newEvents.forEach(e => {
-			if (e.end < start || e.start > end) {
+			if ((e.end as number) < start || (e.start as number) > end) {
 				console.error(`Event ${e.id} (${e.start}-${e.end}) is outside of specified start/end range (${new Date(start).toUTCString()}-${new Date(end).toUTCString()})! This will very probably lead to inconsistent client-side behaviour!`)
 			}
 			if (e.end.valueOf() <= e.start.valueOf()) {

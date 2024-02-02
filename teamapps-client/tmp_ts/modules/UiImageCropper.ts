@@ -22,7 +22,7 @@ import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {applyDisplayMode, boundSelection, css, Direction, parseHtml} from "./Common";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {
 	UiImageCropper_SelectionChangedEvent,
 	UiImageCropperCommandHandler,

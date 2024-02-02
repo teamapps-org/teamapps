@@ -18,19 +18,16 @@
  * =========================LICENSE_END==================================
  */
 
-export function nonRecursive(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-	let oldMethod = descriptor.value;
-	descriptor.value = function () {
-		if (!this["__insideMethod_" + propertyKey]) {
-			this["__insideMethod_" + propertyKey] = true;
-			try {
-				oldMethod.apply(this, arguments);
-			} finally {
-				this["__insideMethod_" + propertyKey] = false;
-			}
+export function nonRecursive<This, Args extends any[], Return>(
+	originalMethod: (this: This, ...args: Args) => Return,
+	context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
+) {
+	let inside = false;
+	return function () {
+		if (!inside) {
+			inside = true;
+			return originalMethod.apply(this, arguments);
 		}
-	}
+	};
 }
-
-
 

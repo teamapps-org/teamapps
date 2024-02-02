@@ -86,7 +86,13 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 		return this.$main;
 	}
 
+	setHtmlEnabled(enabled: boolean): any {
+		this.config.htmlEnabled = enabled;
+		this.setCaption(this.config.caption);
+	}
+
 	setCaption(caption: string): void {
+		this.config.caption = caption;
 		if (!this.config.htmlEnabled) {
 			this.$label.textContent = caption || '';
 		} else {

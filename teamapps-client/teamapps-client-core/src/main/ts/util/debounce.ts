@@ -17,8 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {throttle} from "./throttle";
-
 export enum DebounceMode {
 	// trigger the function on the leading edge
 	IMMEDIATE,
@@ -29,15 +27,13 @@ export enum DebounceMode {
 }
 
 export function debouncedMethod(delay: number, mode = DebounceMode.LATER) {
-	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		let oldMethod = descriptor.value;
-		descriptor.value = function () {
-			if (this['__debounced_' + propertyKey] == null) {
-				this['__debounced_' + propertyKey] = debounce(oldMethod, delay, mode);
-			}
-			this['__debounced_' + propertyKey].apply(this, arguments);
-		}
-	};
+
+	return function<This, Args extends any[], Return>(
+		originalMethod: (this: This, ...args: Args) => Return,
+		context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
+	): (...args: Args) => void {
+		 return debounce(originalMethod, delay, mode);
+	}
 }
 
 /**
@@ -46,7 +42,7 @@ export function debouncedMethod(delay: number, mode = DebounceMode.LATER) {
  *
  *  @see throttle
  */
-export function debounce(func: (...args: any[]) => any, delay: number, mode = DebounceMode.LATER): ((...args: any[]) => void) {
+export function debounce<Args extends any[]>(func: (...args: Args) => any, delay: number, mode = DebounceMode.LATER): (...args: Args) => void {
 	let timeout: any;
 	let needsToBeCalledLater: boolean;
 	if (delay <= 0) {

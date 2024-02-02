@@ -23,7 +23,7 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
-import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "../util/executeWhenFirstDisplayed";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {parseHtml} from "../Common";
 

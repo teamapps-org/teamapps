@@ -56,10 +56,6 @@ export class Globals implements ClientObject<DtoGlobals> {
 		context.destroyClientObject(componentId);
 	}
 
-	public static refreshComponent(libraryUuid: string, config: DtoComponentConfig, context: TeamAppsUiContextInternalApi) {
-		context.refreshComponent(libraryUuid, config);
-	}
-
 	public static setConfig(config: DtoConfiguration, context: TeamAppsUiContext) {
 		this.setThemeClassName(config.themeClassName);
 

@@ -355,7 +355,7 @@ public class TeamAppsIntermediateDtoModel {
 				.or(() -> findReferencedClass(type))
 				.or(() -> findReferencedInterface(type))
 				.or(() -> findReferencedEnum(type))
-				.orElseThrow(() -> new TeamAppsGeneratorException("Cannot find type of name " + type.typeReference().typeName().getText() + ". Did you forget to import it?"));
+				.orElseThrow(() -> new TeamAppsGeneratorException("Cannot find type with name " + type.typeReference().typeName().getText() + ". Did you forget to import it?"));
 	}
 
 	public Optional<ClassOrInterfaceWrapper<?>> findReferencedClassOrInterface(TypeContext type) {

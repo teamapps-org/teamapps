@@ -31,7 +31,7 @@ import {
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
 import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "teamapps-client-core";
 
 import {StaticIcons} from "../util/StaticIcons";
 import {maximizeComponent, outerWidthIncludingMargins} from "../Common";

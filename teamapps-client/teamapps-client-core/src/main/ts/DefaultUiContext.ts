@@ -20,13 +20,8 @@
 "use strict";
 
 import {capitalizeFirstLetter, generateUUID} from "./util/string-util";
-import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {
-	DtoClientObject as DtoClientObjectConfig,
-	DtoComponent as DtoComponentConfig,
-	DtoConfiguration,
-	DtoGenericErrorMessageOption
-} from "./generated";
+import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
+import {DtoClientObject as DtoClientObjectConfig, DtoConfiguration, DtoGenericErrorMessageOption} from "./generated";
 import {
 	createDtoClientInfo,
 	DtoCommand,
@@ -38,7 +33,6 @@ import {
 	TeamAppsConnectionListener
 } from "teamapps-client-communication";
 import {bind} from "./util/bind";
-import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from "./proxy/RefreshableComponentProxyHandle";
 import {Component} from "./component/Component";
 import {ClientObject} from "./ClientObject";
 import {Showable} from "./util/Showable";
@@ -84,21 +78,21 @@ class ClientObjectClassWrapper {
 }
 
 class ClientObjectWrapper {
-	clientObject: ClientObject | RefreshableComponentProxyHandle;
+	clientObject: ClientObject;
 	eventListeners: { [qualifiedName: string]: (any) => void } = {};
 	queryListeners: { [qualifiedName: string]: (any) => void } = {};
 
-	constructor(component: ClientObject | RefreshableComponentProxyHandle) {
+	constructor(component: ClientObject) {
 		this.clientObject = component;
 	}
 
 	getUnwrappedComponent() {
-		return isRefreshableComponentProxyHandle(this.clientObject) ? this.clientObject.proxy : this.clientObject
+		return this.clientObject
 	}
 
 	toggleEventListener(qualifiedEventName: string, listener?: (x: DtoEvent) => void) {
 		const eventName = capitalizeFirstLetter(qualifiedEventName.substring(qualifiedEventName.indexOf('.') + 1));
-		const event = this.getUnwrappedComponent()["on" + eventName];
+		const event = this.clientObject["on" + eventName];
 		const oldListener = this.eventListeners[qualifiedEventName];
 		if (oldListener) {
 			console.debug("Removing old listener", qualifiedEventName, this.eventListeners[qualifiedEventName])
@@ -221,11 +215,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 
 		const getClientComponentWrapper = async (clientObjectPromise: Promise<ClientObject>) => {
 			let clientObject = await clientObjectPromise;
-			if (isClassicComponent(clientObject)) {
-				return new ClientObjectWrapper(new RefreshableComponentProxyHandle(clientObject));
-			} else {
-				return new ClientObjectWrapper(clientObject);
-			}
+			return new ClientObjectWrapper(clientObject);
 		}
 
 		let clientComponentWrapper = getClientComponentWrapper(clientObjectPromise);
@@ -297,21 +287,9 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	async refreshComponent(libraryUuid: string, config: DtoComponentConfig) {
-		let clientObject = (await this.createClientObject(libraryUuid, config)) as Component;
-		if (this.components[config.id] != null) {
-			(this.components[config.id].clientObject as RefreshableComponentProxyHandle).component = clientObject;
-		} else {
-			await this.registerClientObject(Promise.resolve(clientObject), config.id, config._type, config.listeningEvents);
-		}
-	}
-
 	async destroyClientObject(id: string) {
 		let o: any = (await this.components.get(id)).clientObject;
 		if (o != null) {
-			if (isRefreshableComponentProxyHandle(o)) {
-				o = o.component;
-			}
 			if (isClassicComponent(o)) {
 				o.getMainElement().remove();
 			}
@@ -328,8 +306,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 			console.error(`Cannot find component with id ${id}`);
 			return null;
 		} else {
-			const clientObject = (await promise).clientObject;
-			return isRefreshableComponentProxyHandle(clientObject) ? clientObject.proxy : clientObject;
+			return (await promise).clientObject;
 		}
 	}
 

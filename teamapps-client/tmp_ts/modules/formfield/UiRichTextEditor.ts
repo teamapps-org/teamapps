@@ -33,7 +33,7 @@ import {
 import tinymce, {Editor} from 'tinymce';
 import 'tinymce/themes/silver';
 import 'tinymce/icons/default';
-import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "../util/executeWhenFirstDisplayed";
 import {DeferredExecutor} from "../util/DeferredExecutor";
 import {generateUUID, keyCodes} from "../trivial-components/TrivialCore";
 // Any plugins you want to use has to be imported

@@ -17,20 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-export function bind(target: any, property: string, descriptor: PropertyDescriptor) {
-	if (!descriptor || (typeof descriptor.value !== 'function')) {
-		throw new TypeError("Cannot bind " + property + " since it is not a method!");
+export function bind<This, Args extends any[], Return>(
+	originalMethod: (this: This, ...args: Args) => Return,
+	context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
+) {
+	const methodName = context.name;
+	if (context.private) {
+		throw new Error(`'@bind' cannot decorate private properties like ${methodName as string}.`);
 	}
-	return {
-		configurable: true,
-		get: function () {
-			const bound = descriptor.value.bind(this);
-			Object.defineProperty(this, property, {
-				value: bound,
-				configurable: true,
-				writable: true
-			});
-			return bound;
-		}
-	};
+	context.addInitializer(function () {
+		this[methodName] = this[methodName].bind(this);
+	});
 }

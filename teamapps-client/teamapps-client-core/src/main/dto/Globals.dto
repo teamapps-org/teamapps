@@ -14,7 +14,6 @@ class Globals implements ClientObject {
     static command toggleEventListening(String libraryUuid, String clientObjectId, String eventName, boolean listen);
     static command render(String libraryUuid, ClientObject component);
     static command unrender(String id);
-    static command refreshComponent(ClientObject component);
 
     static command setConfig(Configuration config);
     static command setThemeClassName(String theme);

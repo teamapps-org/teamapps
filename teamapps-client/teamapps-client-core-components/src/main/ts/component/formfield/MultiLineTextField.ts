@@ -27,8 +27,7 @@ import {
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
 import {Constants, escapeHtml, hasVerticalScrollBar} from "../../Common";
-import {parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
+import {parseHtml, TeamAppsEvent, executeWhenFirstDisplayed} from "teamapps-client-core";
 import {AbstractField} from "./AbstractField";
 
 export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, string> implements DtoMultiLineTextFieldEventSource, DtoMultiLineTextFieldCommandHandler {

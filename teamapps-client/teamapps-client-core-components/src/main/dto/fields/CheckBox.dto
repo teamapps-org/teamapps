@@ -32,4 +32,5 @@ class CheckBox extends Field {
 	command setBackgroundColor(String backgroundColor);
 	command setCheckColor(String checkColor);
 	command setBorderColor(String borderColor);
+	command setHtmlEnabled(boolean enabled);
 }

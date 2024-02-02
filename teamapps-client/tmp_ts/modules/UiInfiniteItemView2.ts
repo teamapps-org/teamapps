@@ -22,7 +22,7 @@ import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {addDelegatedEventListener, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {
 	UiInfiniteItemView2_ContextMenuRequestedEvent, UiInfiniteItemView2_DisplayedRangeChangedEvent,
 	UiInfiniteItemView2_ItemClickedEvent,

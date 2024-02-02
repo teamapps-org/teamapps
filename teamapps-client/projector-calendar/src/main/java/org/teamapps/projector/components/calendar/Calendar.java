@@ -110,6 +110,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	public Calendar(CalendarModel<CEVENT> model) {
+		toggleEventListening(DtoCalendar.DataNeededEvent.TYPE_ID, true);
 		if (model != null) {
 			setModel(model);
 		}

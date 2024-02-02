@@ -43,7 +43,7 @@ import "leaflet.heat";
 import "leaflet-draw";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {DtoTemplate} from "../generated/DtoTemplate";
 import {isGridTemplate} from "./TemplateRegistry";
 import {isUiGlyphIconElement, isUiIconElement, isUiImageElement} from "./util/UiGridTemplates";

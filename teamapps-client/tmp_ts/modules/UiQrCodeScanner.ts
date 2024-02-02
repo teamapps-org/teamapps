@@ -24,7 +24,7 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {calculateDisplayModeInnerSize, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {QrScanner} from './qr-code-scanner/qr-scanner';
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 
 export class UiQrCodeScanner extends AbstractComponent<DtoQrCodeScanner> implements UiQrCodeScannerCommandHandler, UiQrCodeScannerEventSource {

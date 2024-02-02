@@ -35,7 +35,7 @@ import {
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 import {UiNetworkNode_ExpandState, DtoNetworkNode} from "../generated/DtoNetworkNode";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {patternify} from "./UiTreeGraph";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/DtoTreeGraphNodeImage";

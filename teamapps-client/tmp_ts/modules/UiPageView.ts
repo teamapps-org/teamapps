@@ -29,7 +29,7 @@ import {DtoComponentPageViewBlock} from "../generated/DtoComponentPageViewBlock"
 import {DtoPageView} from "../generated/DtoPageView";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPageViewBlockCreatorImageAlignment} from "../generated/UiPageViewBlockCreatorImageAlignment";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {UiComponent} from "./UiComponent";
 import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
 import {UiToolButton} from "./micro-components/UiToolButton";

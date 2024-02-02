@@ -24,7 +24,7 @@ import {DtoChatMessage} from "../generated/DtoChatMessage";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiChatDisplayCommandHandler, DtoChatDisplay,} from "../generated/DtoChatDisplay";
 import {UiSpinner} from "./micro-components/UiSpinner";
-import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {Autolinker} from "autolinker";
 import {ContextMenu} from "./micro-components/ContextMenu";
 import {UiComponent} from "./UiComponent";

@@ -61,49 +61,44 @@ public class CheckBox extends AbstractField<Boolean> {
 		return caption;
 	}
 
-	public CheckBox setCaption(String caption) {
+	public void setCaption(String caption) {
 		this.caption = caption;
 		sendCommandIfRendered(() -> new DtoCheckBox.SetCaptionCommand(caption));
-		return this;
 	}
 
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 
-	public CheckBox setBackgroundColor(Color backgroundColor) {
+	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 		sendCommandIfRendered(() -> new DtoCheckBox.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
-		return this;
 	}
 
 	public Color getCheckColor() {
 		return checkColor;
 	}
 
-	public CheckBox setCheckColor(Color checkColor) {
+	public void setCheckColor(Color checkColor) {
 		this.checkColor = checkColor;
 		sendCommandIfRendered(() -> new DtoCheckBox.SetCheckColorCommand(checkColor != null ? checkColor.toHtmlColorString() : null));
-		return this;
 	}
 
 	public Color getBorderColor() {
 		return borderColor;
 	}
 
-	public CheckBox setBorderColor(Color borderColor) {
+	public void setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
 		sendCommandIfRendered(() -> new DtoCheckBox.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null));
-		return this;
 	}
 
 	public boolean isHtmlEnabled() {
 		return htmlEnabled;
 	}
 
-	public CheckBox setHtmlEnabled(boolean htmlEnabled) {
+	public void setHtmlEnabled(boolean htmlEnabled) {
 		this.htmlEnabled = htmlEnabled;
-		reRenderIfRendered();
-		return this;
+		sendCommandIfRendered(() -> new DtoCheckBox.SetHtmlEnabledCommand(htmlEnabled));
 	}
 }

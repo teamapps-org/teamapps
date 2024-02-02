@@ -20,26 +20,20 @@
 import {debounce} from "./debounce";
 
 export function throttledMethod(delay: number) {
-	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		let oldMethod = descriptor.value;
-		descriptor.value = function () {
-			if (this['__throttled_' + propertyKey] == null) {
-				this['__throttled_' + propertyKey] = throttle(oldMethod, delay);
-			}
-			this['__throttled_' + propertyKey].apply(this, arguments);
-		}
-	};
+	return function <This, Args extends any[], Return>(
+		originalMethod: (this: This, ...args: Args) => Return,
+		context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
+	) {
+		return throttle(originalMethod, delay);
+	}
 }
 
 export function loadSensitiveThrottling(minDelay: number, executionTimeDelayFactor: number, maxDelay = Number.MAX_SAFE_INTEGER) {
-	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		let oldMethod = descriptor.value;
-		descriptor.value = function () {
-			if (this['__dynamicallyThrottled2_' + propertyKey] == null) {
-				this['__dynamicallyThrottled2_' + propertyKey] = loadSensitiveThrottle(oldMethod, minDelay, executionTimeDelayFactor, maxDelay);
-			}
-			this['__dynamicallyThrottled2_' + propertyKey].apply(this, arguments);
-		}
+	return function<This, Args extends any[], Return>(
+		originalMethod: (this: This, ...args: Args) => Return,
+		context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
+	) {
+		return loadSensitiveThrottle(originalMethod, minDelay, executionTimeDelayFactor, maxDelay);
 	};
 }
 
@@ -130,5 +124,3 @@ export function loadSensitiveThrottle(func: (...args: any[]) => any, minDelay: n
 
 	return runWrapped;
 }
-
-

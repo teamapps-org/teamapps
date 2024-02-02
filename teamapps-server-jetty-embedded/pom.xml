@@ -70,11 +70,5 @@
             <artifactId>teamapps-client-core-components</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>projector-calendar</artifactId>
-            <version>0.9.155-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>

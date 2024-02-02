@@ -27,11 +27,10 @@ import {
 	DtoNotificationEventSource,
 	DtoNotificationPosition
 } from "../generated";
-import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractComponent, Component, parseHtml, TeamAppsEvent, executeWhenFirstDisplayed} from "teamapps-client-core";
 import {animateCSS, Constants} from "../Common";
 import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";
-import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 const containersByPosition: {
 	[DtoNotificationPosition.TOP_LEFT]: HTMLElement,

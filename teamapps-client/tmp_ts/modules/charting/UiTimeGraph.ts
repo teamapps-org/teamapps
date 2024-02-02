@@ -21,7 +21,7 @@
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "../util/executeWhenFirstDisplayed";
 
 import * as d3 from "d3";
 import {Selection} from "d3-selection";

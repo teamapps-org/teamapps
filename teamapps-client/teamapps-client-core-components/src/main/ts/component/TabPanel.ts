@@ -24,7 +24,7 @@ import {DtoTab as DtoTab} from "../generated/DtoTab";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {ToolButton} from "./ToolButton";
 import {DropDown} from "../micro-components/DropDown";
-import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
+import {executeWhenFirstDisplayed} from "teamapps-client-core";
 import {
 	createDtoToolButton,
 	DtoTabPanel,

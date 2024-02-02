@@ -35,8 +35,6 @@ export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 
 	renderClientObject(libraryUuid: string, config: DtoClientObject): Promise<ClientObject>;
 
-	refreshComponent(libraryUuid: string, config: DtoComponent): void;
-
 	destroyClientObject(componentId: string);
 
 	sendEvent(eventObject: DtoEvent): void;
