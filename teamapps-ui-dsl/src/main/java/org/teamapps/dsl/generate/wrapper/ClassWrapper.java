@@ -1,12 +1,17 @@
 package org.teamapps.dsl.generate.wrapper;
 
+import org.apache.commons.lang3.StringUtils;
+import org.teamapps.common.util.ExceptionUtil;
 import org.teamapps.dsl.TeamAppsDtoParser.*;
+import org.teamapps.dsl.generate.ParserFactory;
 import org.teamapps.dsl.generate.TeamAppsGeneratorException;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.getQualifiedTypeName;
@@ -74,7 +79,20 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 
 	@Override
 	public List<CommandDeclarationContext> getCommands() {
-		return context.commandDeclaration();
+		List<CommandDeclarationContext> explicitDeclarations = context.commandDeclaration();
+
+		List<CommandDeclarationContext> mutablePropertyDeclarations = context.propertyDeclaration().stream()
+				.filter(property -> property.mutableModifier() != null)
+				.map(property -> ExceptionUtil.softenExceptions(
+						() -> ParserFactory.createParser(new StringReader("command set" + StringUtils.capitalize(property.Identifier().toString())
+																		  + "(" + property.type().getText() + " " + property.Identifier().toString() + ");")).commandDeclaration()
+				))
+				.collect(Collectors.toList());
+
+		ArrayList<CommandDeclarationContext> allCommandDeclarations = new ArrayList<>(explicitDeclarations);
+		allCommandDeclarations.addAll(mutablePropertyDeclarations);
+
+		return allCommandDeclarations;
 	}
 
 	public List<PropertyDeclarationContext> getPropertiesNotImplementedBySuperClasses() {

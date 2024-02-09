@@ -141,6 +141,16 @@ public class TeamAppsJavaDtoGeneratorTest {
 	}
 
 	@Test
+	public void mutableProperties() throws Exception {
+		executeClassTest(
+				"package \"x\":org.teamapps.dto;"
+								   + "class A { mutable String a; }",
+				"org.teamapps.dto.A",
+				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_mutableProperties.java"
+		);
+	}
+
+	@Test
 	public void enums() throws Exception {
 		executeEnumTest(
 				"package \"x\":org.teamapps.dto; enum E { "

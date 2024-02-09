@@ -32,7 +32,7 @@ public class GeneratorTestUtil {
 	public static void compareCodeWithResource(String expectedResultResourceName, String actual) {
 		String expected = readResourceToString(expectedResultResourceName);
 
-		System.out.println(actual);
+//		System.out.println(actual);
 //		Assert.assertEquals(expected, actual);
 
 		try {

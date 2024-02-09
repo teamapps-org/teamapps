@@ -43,6 +43,24 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 	}
 
 	@Test
+	public void commandsAndEvents() throws Exception {
+		executeClassTest(
+				"org.teamapps.dto.A",
+				"org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_commandsAndEvents.tsd",
+				"package \"x\":org.teamapps.dto; class A { command c(String s, int x); event z3(int a, long b);}"
+		);
+	}
+
+	@Test
+	public void mutableProperties() throws Exception {
+		executeClassTest(
+				"org.teamapps.dto.A",
+				"org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_mutableProperties.tsd",
+				"package \"x\":org.teamapps.dto; class A { mutable String s;}"
+		);
+	}
+
+	@Test
 	public void classesImplementTheirInterfaces() throws Exception {
 		executeClassTest(
 				"org.teamapps.dto.D", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classesImplementTheirInterfaces.tsd", "package \"x\":org.teamapps.dto; class A {}"
