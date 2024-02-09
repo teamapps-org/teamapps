@@ -47,6 +47,8 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 		this.$activityDisplay = this.$main;
 		this.$canvas = this.$main.querySelector<HTMLElement>(':scope canvas') as HTMLCanvasElement;
 		this.canvasContext = this.$canvas.getContext("2d");
+
+		this.setDeviceId(config.deviceId);
 	}
 
 	private analyserNode: AnalyserNode;
