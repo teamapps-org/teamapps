@@ -24,11 +24,10 @@ import org.teamapps.dto.DtoSplitPane;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class SplitPane extends AbstractComponent {
 
 	public ProjectorEvent<Double> onResized = createProjectorEventBoundToUiEvent(DtoSplitPane.SplitResizedEvent.TYPE_ID);
@@ -36,8 +35,8 @@ public class SplitPane extends AbstractComponent {
 	private SplitDirection splitDirection;
 	private SplitSizePolicy sizePolicy;
 	private double referenceChildSize;
-	private Component firstChild;
-	private Component lastChild;
+	private org.teamapps.ux.component.Component firstChild;
+	private org.teamapps.ux.component.Component lastChild;
 	private int firstChildMinSize = 10;
 	private int lastChildMinSize = 10;
 	private boolean resizable = true;
@@ -93,20 +92,20 @@ public class SplitPane extends AbstractComponent {
 		}
 	}
 
-	public Component getFirstChild() {
+	public org.teamapps.ux.component.Component getFirstChild() {
 		return firstChild;
 	}
 
-	public void setFirstChild(Component firstChild) {
+	public void setFirstChild(org.teamapps.ux.component.Component firstChild) {
 		this.firstChild = firstChild;
 		sendCommandIfRendered(() -> new DtoSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createDtoReference() : null));
 	}
 
-	public Component getLastChild() {
+	public org.teamapps.ux.component.Component getLastChild() {
 		return lastChild;
 	}
 
-	public void setLastChild(Component lastChild) {
+	public void setLastChild(org.teamapps.ux.component.Component lastChild) {
 		this.lastChild = lastChild;
 		sendCommandIfRendered(() -> new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createDtoReference() : null));
 	}

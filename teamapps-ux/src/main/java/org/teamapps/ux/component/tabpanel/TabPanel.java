@@ -25,6 +25,7 @@ import org.teamapps.dto.DtoTabPanel;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.*;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.ArrayList;
@@ -32,8 +33,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
-public class TabPanel extends AbstractComponent implements Component {
+@ProjectorComponent(library = CoreComponentLibrary.class)
+public class TabPanel extends AbstractComponent implements org.teamapps.ux.component.Component {
 
 	public final ProjectorEvent<Tab> onTabSelected = createProjectorEventBoundToUiEvent(DtoTabPanel.TabSelectedEvent.TYPE_ID);
 	public final ProjectorEvent<Tab> onTabClosed = createProjectorEventBoundToUiEvent(DtoTabPanel.TabClosedEvent.TYPE_ID);

@@ -23,21 +23,20 @@ import org.teamapps.dto.DtoComponentField;
 import org.teamapps.dto.DtoField;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class ComponentField extends AbstractField<Void> {
 
-    private Component component;
+    private org.teamapps.ux.component.Component component;
     private int height; // 0 = auto-height
     private boolean bordered = true;
 
-    public ComponentField(Component component) {
+    public ComponentField(org.teamapps.ux.component.Component component) {
        this(component, 0);
     }
 
-    public ComponentField(Component component, int height) {
+    public ComponentField(org.teamapps.ux.component.Component component, int height) {
         this.component = component;
         this.height = height;
     }
@@ -52,11 +51,11 @@ public class ComponentField extends AbstractField<Void> {
         return uiField;
     }
 
-    public Component getComponent() {
+    public org.teamapps.ux.component.Component getComponent() {
         return component;
     }
 
-    public void setComponent(Component component) {
+    public void setComponent(org.teamapps.ux.component.Component component) {
         this.component = component;
         sendCommandIfRendered(() -> new DtoComponentField.SetComponentCommand(ClientObject.createDtoReference(component)));
     }

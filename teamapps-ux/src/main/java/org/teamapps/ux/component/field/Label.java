@@ -26,23 +26,22 @@ import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class Label extends AbstractField<String> {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLabel.ClickedEvent.TYPE_ID);
 
 	private String caption;
 	private Icon<?, ?> icon;
-	private Component targetComponent;
+	private org.teamapps.ux.component.Component targetComponent;
 
 	public Label(String caption) {
 		this(caption, null, null);
 	}
 
-	public Label(String caption, Component targetComponent) {
+	public Label(String caption, org.teamapps.ux.component.Component targetComponent) {
 		this(caption, null, targetComponent);
 	}
 
@@ -50,7 +49,7 @@ public class Label extends AbstractField<String> {
 		this(caption, icon, null);
 	}
 
-	public Label(String caption, Icon<?, ?> icon, Component targetComponent) {
+	public Label(String caption, Icon<?, ?> icon, org.teamapps.ux.component.Component targetComponent) {
 		this.caption = caption;
 		this.icon = icon;
 		this.targetComponent = targetComponent;
@@ -93,11 +92,11 @@ public class Label extends AbstractField<String> {
 		sendCommandIfRendered(() -> new DtoLabel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
-	public Component getTargetComponent() {
+	public org.teamapps.ux.component.Component getTargetComponent() {
 		return targetComponent;
 	}
 
-	public Label setTargetComponent(Component targetComponent) {
+	public Label setTargetComponent(org.teamapps.ux.component.Component targetComponent) {
 		if (targetComponent == this) {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}

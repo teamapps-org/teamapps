@@ -25,9 +25,9 @@ import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class DummyComponent extends AbstractComponent {
 
 	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(DtoDummyComponent.ClickedEvent.TYPE_ID);
@@ -67,4 +67,5 @@ public class DummyComponent extends AbstractComponent {
 		this.text = text;
 		sendCommandIfRendered(() -> new DtoDummyComponent.SetTextCommand(text));
 	}
+
 }

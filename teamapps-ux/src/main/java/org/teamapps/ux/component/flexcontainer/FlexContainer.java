@@ -23,8 +23,7 @@ import org.teamapps.dto.DtoFlexContainer;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.css.CssAlignItems;
 import org.teamapps.ux.css.CssFlexDirection;
 import org.teamapps.ux.css.CssJustifyContent;
@@ -34,10 +33,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class FlexContainer extends AbstractComponent {
 
-	private List<Component> components = new ArrayList<>();
+	private List<org.teamapps.ux.component.Component> components = new ArrayList<>();
 	private CssFlexDirection flexDirection = CssFlexDirection.ROW;
 	private CssAlignItems alignItems = CssAlignItems.STRETCH;
 	private CssJustifyContent justifyContent = CssJustifyContent.START;
@@ -55,17 +54,17 @@ public class FlexContainer extends AbstractComponent {
 		return uiFlexContainer;
 	}
 
-	public void addComponent(Component component) {
+	public void addComponent(org.teamapps.ux.component.Component component) {
 		this.components.add(component);
 		sendCommandIfRendered(() -> new DtoFlexContainer.AddComponentCommand(component.createDtoReference()));
 	}
 
-	public void addComponent(Component component, FlexSizingPolicy sizingPolicy) {
+	public void addComponent(org.teamapps.ux.component.Component component, FlexSizingPolicy sizingPolicy) {
 		component.setCssStyle("flex", sizingPolicy.toCssValue());
 		addComponent(component);
 	}
 
-	public void removeComponent(Component component) {
+	public void removeComponent(org.teamapps.ux.component.Component component) {
 		this.components.remove(component);
 		sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(component.createDtoReference()));
 	}
@@ -107,7 +106,7 @@ public class FlexContainer extends AbstractComponent {
 		reRenderIfRendered(); // TODO
 	}
 
-	public List<Component> getComponents() {
+	public List<org.teamapps.ux.component.Component> getComponents() {
 		return Collections.unmodifiableList(components);
 	}
 }

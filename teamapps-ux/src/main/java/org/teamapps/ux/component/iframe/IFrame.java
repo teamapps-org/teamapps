@@ -24,9 +24,9 @@ import org.teamapps.dto.DtoIFrame;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class IFrame extends AbstractComponent {
 
 	private String url;

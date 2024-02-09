@@ -22,9 +22,9 @@ package org.teamapps.ux.component.field;
 import org.teamapps.dto.DtoDisplayField;
 import org.teamapps.dto.DtoField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class DisplayField extends AbstractField<String> {
 
 	private boolean showBorder;

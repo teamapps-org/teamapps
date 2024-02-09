@@ -24,11 +24,12 @@ import org.teamapps.dto.DtoRootPanel;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.animation.PageTransition;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
-public class RootPanel extends AbstractComponent implements Component {
+@ProjectorComponent(library = CoreComponentLibrary.class)
+public class RootPanel extends AbstractComponent implements org.teamapps.ux.component.Component {
 
-	private Component content;
+	private org.teamapps.ux.component.Component content;
 
 	@Override
 	public DtoComponent createDto() {
@@ -43,11 +44,11 @@ public class RootPanel extends AbstractComponent implements Component {
 		// no ui events for this component
 	}
 
-	public void setContent(Component component) {
+	public void setContent(org.teamapps.ux.component.Component component) {
 		setContent(component, null, 0);
 	}
 
-	public void setContent(Component component, PageTransition animation, long animationDuration) {
+	public void setContent(org.teamapps.ux.component.Component component, PageTransition animation, long animationDuration) {
 		content = component;
 		if (component != null) {
 			component.setParent(this);
@@ -55,7 +56,7 @@ public class RootPanel extends AbstractComponent implements Component {
 		sendCommandIfRendered(() -> new DtoRootPanel.SetContentCommand(component != null ? component.createDtoReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
 	}
 
-	public Component getContent() {
+	public org.teamapps.ux.component.Component getContent() {
 		return content;
 	}
 

@@ -24,31 +24,30 @@ import org.teamapps.dto.DtoAbsolutePositionedComponent;
 import org.teamapps.dto.DtoAbsolutePositioning;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class AbsoluteLayout extends AbstractComponent {
 
-	private Map<Component, AbsolutePosition> positionsByComponent = new HashMap<>();
+	private Map<org.teamapps.ux.component.Component, AbsolutePosition> positionsByComponent = new HashMap<>();
 	private AnimationEasing animationEasing = AnimationEasing.EASE;
 	private int animationDuration = 200;
 
 	public AbsoluteLayout() {
 	}
 
-	public void putComponent(Component component, AbsolutePosition positioning) {
+	public void putComponent(org.teamapps.ux.component.Component component, AbsolutePosition positioning) {
 		positionsByComponent.put(component, positioning);
 		updateUiLayout();
 	}
 
-	public void putComponents(Map<Component, AbsolutePosition> positioningByComponent, boolean removeExisting) {
+	public void putComponents(Map<org.teamapps.ux.component.Component, AbsolutePosition> positioningByComponent, boolean removeExisting) {
 		if (removeExisting) {
 			this.positionsByComponent.clear();
 		}
@@ -56,7 +55,7 @@ public class AbsoluteLayout extends AbstractComponent {
 		updateUiLayout();
 	}
 
-	public void removeComponent(Component component) {
+	public void removeComponent(org.teamapps.ux.component.Component component) {
 		positionsByComponent.remove(component);
 		updateUiLayout();
 	}
@@ -68,7 +67,7 @@ public class AbsoluteLayout extends AbstractComponent {
 	private List<DtoAbsolutePositionedComponent> createUiAbsolutePositionedComponents() {
 		return positionsByComponent.entrySet().stream()
 				.map(entry -> {
-					Component component = entry.getKey();
+					org.teamapps.ux.component.Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
 					return new DtoAbsolutePositionedComponent(component.createDtoReference(), new DtoAbsolutePositioning(
 							position.getTop() != null ? position.getTop().toCssString(): null,

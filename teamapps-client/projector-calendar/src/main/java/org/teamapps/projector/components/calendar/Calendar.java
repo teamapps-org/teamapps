@@ -35,7 +35,7 @@ import org.teamapps.projector.components.calendar.dto.DtoWeekDay;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
@@ -55,7 +55,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CalendarComponentLibrary.class)
+@ProjectorComponent(library = CalendarComponentLibrary.class)
 public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

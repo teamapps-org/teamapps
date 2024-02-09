@@ -25,15 +25,14 @@ import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.format.Spacing;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class Notification extends AbstractComponent {
 	public final ProjectorEvent<Void> onOpened = createProjectorEventBoundToUiEvent(DtoNotification.OpenedEvent.TYPE_ID);
 	public final ProjectorEvent<Boolean> onClosed = createProjectorEventBoundToUiEvent(DtoNotification.ClosedEvent.TYPE_ID);
@@ -46,12 +45,12 @@ public class Notification extends AbstractComponent {
 	private boolean dismissible = true;
 	private boolean showProgressBar = true;
 
-	private Component content;
+	private org.teamapps.ux.component.Component content;
 
 	public Notification() {
 	}
 
-	public Notification(Component content) {
+	public Notification(org.teamapps.ux.component.Component content) {
 		this.content = content;
 	}
 
@@ -152,11 +151,11 @@ public class Notification extends AbstractComponent {
 		return this;
 	}
 
-	public Component getContent() {
+	public org.teamapps.ux.component.Component getContent() {
 		return content;
 	}
 
-	public Notification setContent(Component content) {
+	public Notification setContent(org.teamapps.ux.component.Component content) {
 		this.content = content;
 		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
 		return this;

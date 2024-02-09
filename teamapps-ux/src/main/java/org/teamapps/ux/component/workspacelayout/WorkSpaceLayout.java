@@ -27,6 +27,7 @@ import org.teamapps.dto.*;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.*;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
@@ -38,8 +39,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
-public class WorkSpaceLayout extends AbstractComponent implements Component {
+@ProjectorComponent(library = CoreComponentLibrary.class)
+public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.ux.component.Component {
 
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

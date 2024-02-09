@@ -22,17 +22,16 @@ package org.teamapps.ux.component.div;
 
 import org.teamapps.dto.DtoDiv;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class Div extends AbstractComponent {
 
-	private Component content;
+	private org.teamapps.ux.component.Component content;
 	private String innerHtml;
 
-	public Div(Component content) {
+	public Div(org.teamapps.ux.component.Component content) {
 		this.content = content;
 	}
 
@@ -52,11 +51,11 @@ public class Div extends AbstractComponent {
 		return ui;
 	}
 
-	public Component getContent() {
+	public org.teamapps.ux.component.Component getContent() {
 		return content;
 	}
 
-	public void setContent(Component content) {
+	public void setContent(org.teamapps.ux.component.Component content) {
 		this.content = content;
 		sendCommandIfRendered(() -> new DtoDiv.SetContentCommand(content != null ? content.createDtoReference() : null));
 	}

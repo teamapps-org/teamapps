@@ -22,7 +22,7 @@ package org.teamapps.ux.component.template.gridtemplate;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.format.Border;
 import org.teamapps.ux.format.SizeType;
 import org.teamapps.ux.format.SizingPolicy;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class GridTemplate extends AbstractTemplate {
 
 	private int minWidth = 0;

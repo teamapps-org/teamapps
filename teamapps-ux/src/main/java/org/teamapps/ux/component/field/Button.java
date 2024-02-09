@@ -27,8 +27,7 @@ import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
@@ -36,7 +35,7 @@ import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class Button<RECORD> extends AbstractField<Void> {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoButton.ClickedEvent.TYPE_ID);
@@ -47,13 +46,13 @@ public class Button<RECORD> extends AbstractField<Void> {
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	private boolean openDropDownIfNotSet = false;
-	private Component dropDownComponent;
+	private org.teamapps.ux.component.Component dropDownComponent;
 	private Integer minDropDownWidth = null;
 	private Integer minDropDownHeight = 300;
 
 	private String onClickJavaScript;
 
-	public Button(Template template, RECORD templateRecord, Component dropDownComponent) {
+	public Button(Template template, RECORD templateRecord, org.teamapps.ux.component.Component dropDownComponent) {
 		super();
 		this.template = template;
 		this.templateRecord = templateRecord;
@@ -64,7 +63,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 		this(template, templateRecord, null);
 	}
 
-	public static Button<BaseTemplateRecord<?>> create(BaseTemplate template, Icon<?, ?> icon, String caption, Component dropDownComponent) {
+	public static Button<BaseTemplateRecord<?>> create(BaseTemplate template, Icon<?, ?> icon, String caption, org.teamapps.ux.component.Component dropDownComponent) {
 		return new Button<>(template, new BaseTemplateRecord<>(icon, caption), dropDownComponent);
 	}
 
@@ -76,11 +75,11 @@ public class Button<RECORD> extends AbstractField<Void> {
 		return create(template, null, caption, null);
 	}
 
-	public static Button<BaseTemplateRecord<?>> create(Icon<?, ?> icon, String caption, Component dropDownComponent) {
+	public static Button<BaseTemplateRecord<?>> create(Icon<?, ?> icon, String caption, org.teamapps.ux.component.Component dropDownComponent) {
 		return create(BaseTemplate.BUTTON, icon, caption, dropDownComponent);
 	}
 
-	public static Button<BaseTemplateRecord<?>> create(String caption, Component dropDownComponent) {
+	public static Button<BaseTemplateRecord<?>> create(String caption, org.teamapps.ux.component.Component dropDownComponent) {
 		return create(BaseTemplate.BUTTON, null, caption, dropDownComponent);
 	}
 
@@ -204,11 +203,11 @@ public class Button<RECORD> extends AbstractField<Void> {
 		return this;
 	}
 
-	public Component getDropDownComponent() {
+	public org.teamapps.ux.component.Component getDropDownComponent() {
 		return dropDownComponent;
 	}
 
-	public Button<RECORD> setDropDownComponent(Component dropDownComponent) {
+	public Button<RECORD> setDropDownComponent(org.teamapps.ux.component.Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
 		sendCommandIfRendered(() -> new DtoButton.SetDropDownComponentCommand(ClientObject.createDtoReference(dropDownComponent)));
 		return this;

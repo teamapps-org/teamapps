@@ -27,9 +27,8 @@ import org.teamapps.dto.DtoNavigationBarButton;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -39,8 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
-public class NavigationBar<RECORD> extends AbstractComponent implements Component {
+@ProjectorComponent(library = CoreComponentLibrary.class)
+public class NavigationBar<RECORD> extends AbstractComponent implements org.teamapps.ux.component.Component {
 
 	public ProjectorEvent<NavigationBarButton> onButtonClick = createProjectorEventBoundToUiEvent(DtoNavigationBar.ButtonClickedEvent.TYPE_ID);
 
@@ -48,8 +47,8 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 	private List<NavigationBarButton<RECORD>> buttons = new ArrayList<>();
 	private Color backgroundColor;
 	private Color borderColor;
-	private final List<Component> fanOutComponents = new ArrayList<>();
-	private Component activeFanOutComponent;
+	private final List<org.teamapps.ux.component.Component> fanOutComponents = new ArrayList<>();
+	private org.teamapps.ux.component.Component activeFanOutComponent;
 	private int buttonClientIdCounter = 0;
 	private MultiProgressDisplay multiProgressDisplay = new DefaultMultiProgressDisplay();
 
@@ -132,7 +131,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 	 * May be used for client-side performance reasons.
 	 */
 	// TODO #componentRef still needed after component reference implementation??
-	public void preloadFanOutComponent(Component component) {
+	public void preloadFanOutComponent(org.teamapps.ux.component.Component component) {
 		fanOutComponents.add(component);
 		if (component != null) {
 			component.setParent(this);
@@ -140,7 +139,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		sendCommandIfRendered(() -> new DtoNavigationBar.AddFanOutComponentCommand(component != null ? component.createDtoReference() : null));
 	}
 
-	public void showFanOutComponent(Component component) {
+	public void showFanOutComponent(org.teamapps.ux.component.Component component) {
 		if (!fanOutComponents.contains(component)) {
 			preloadFanOutComponent(component);
 		}
@@ -156,7 +155,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		sendCommandIfRendered(() -> new DtoNavigationBar.HideFanOutComponentCommand());
 	}
 
-	public void showOrHideFanoutComponent(Component component) {
+	public void showOrHideFanoutComponent(org.teamapps.ux.component.Component component) {
 		if (activeFanOutComponent == component) {
 			hideFanOutComponent();
 		} else {
@@ -199,11 +198,11 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		sendCommandIfRendered(() -> new DtoNavigationBar.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null));
 	}
 
-	public List<Component> getFanOutComponents() {
+	public List<org.teamapps.ux.component.Component> getFanOutComponents() {
 		return fanOutComponents;
 	}
 
-	public Component getActiveFanOutComponent() {
+	public org.teamapps.ux.component.Component getActiveFanOutComponent() {
 		return activeFanOutComponent;
 	}
 

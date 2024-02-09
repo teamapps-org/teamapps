@@ -25,11 +25,10 @@ import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class ToolButton extends AbstractComponent {
 
 	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(DtoToolButton.DropDownOpenedEvent.TYPE_ID);
@@ -41,7 +40,7 @@ public class ToolButton extends AbstractComponent {
 	private boolean grayOutIfNotHovered;
 
 	private boolean openDropDownIfNotSet = false;
-	private Component dropDownComponent;
+	private org.teamapps.ux.component.Component dropDownComponent;
 	private Integer minDropDownWidth = 300;
 	private Integer minDropDownHeight = 300;
 
@@ -55,7 +54,7 @@ public class ToolButton extends AbstractComponent {
 		this(icon, popoverText, null);
 	}
 
-	public ToolButton(Icon<?, ?> icon, String popoverText, Component dropDownComponent) {
+	public ToolButton(Icon<?, ?> icon, String popoverText, org.teamapps.ux.component.Component dropDownComponent) {
 		super();
 		this.icon = icon;
 		this.popoverText = popoverText;
@@ -144,11 +143,11 @@ public class ToolButton extends AbstractComponent {
 		sendCommandIfRendered(() -> new DtoToolButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet));
 	}
 
-	public Component getDropDownComponent() {
+	public org.teamapps.ux.component.Component getDropDownComponent() {
 		return dropDownComponent;
 	}
 
-	public void setDropDownComponent(Component dropDownComponent) {
+	public void setDropDownComponent(org.teamapps.ux.component.Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
 		sendCommandIfRendered(() -> new DtoToolButton.SetDropDownComponentCommand(dropDownComponent != null ? dropDownComponent.createDtoReference() : null));
 	}

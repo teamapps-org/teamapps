@@ -29,6 +29,7 @@ import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.*;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
@@ -36,8 +37,8 @@ import org.teamapps.ux.component.toolbutton.ToolButton;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
-public class Panel extends AbstractComponent implements Component {
+@ProjectorComponent(library = CoreComponentLibrary.class)
+public class Panel extends AbstractComponent implements org.teamapps.ux.component.Component {
 
 	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(DtoPanel.WindowButtonClickedEvent.TYPE_ID);
 
@@ -55,7 +56,7 @@ public class Panel extends AbstractComponent implements Component {
 	private HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy = HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
 	private boolean alwaysShowHeaderFieldIcons = false;
 
-	private Component content;
+	private org.teamapps.ux.component.Component content;
 	private boolean stretchContent = true;
 
 	private boolean hideTitleBar;
@@ -78,7 +79,7 @@ public class Panel extends AbstractComponent implements Component {
 		this(icon, title, null);
 	}
 
-	public Panel(Icon<?, ?> icon, String title, Component content) {
+	public Panel(Icon<?, ?> icon, String title, org.teamapps.ux.component.Component content) {
 		this.icon = icon;
 		this.title = title;
 		setContent(content);
@@ -202,7 +203,7 @@ public class Panel extends AbstractComponent implements Component {
 		return rightHeaderField;
 	}
 
-	public void setContent(Component content) {
+	public void setContent(org.teamapps.ux.component.Component content) {
 		this.content = content;
 		if (content != null) {
 			content.setParent(this);
@@ -238,7 +239,7 @@ public class Panel extends AbstractComponent implements Component {
 		sendCommandIfRendered(() -> new DtoPanel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
-	public Component getContent() {
+	public org.teamapps.ux.component.Component getContent() {
 		return content;
 	}
 

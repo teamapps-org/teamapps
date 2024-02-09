@@ -25,7 +25,7 @@ import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 import static org.teamapps.ux.component.notification.NotificationBarItemClosedEvent.ClosingReason.TIMEOUT;
 import static org.teamapps.ux.component.notification.NotificationBarItemClosedEvent.ClosingReason.USER;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class NotificationBar extends AbstractComponent {
 
 	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = createProjectorEventBoundToUiEvent(DtoNotificationBar.ItemClosedEvent.TYPE_ID);

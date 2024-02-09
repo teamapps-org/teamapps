@@ -19,23 +19,22 @@
  */
 package org.teamapps.ux.component.flexcontainer;
 
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.css.CssFlexDirection;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class HorizontalLayout extends FlexContainer {
 
 	public HorizontalLayout() {
 		setFlexDirection(CssFlexDirection.ROW);
 	}
 
-	public void addComponentFillRemaining(Component component) {
+	public void addComponentFillRemaining(org.teamapps.ux.component.Component component) {
 		addComponent(component, new FlexSizingPolicy(1, FlexSizeUnit.PIXEL, 1, 1));
 	}
 
-	public void addComponentAutoSize(Component component) {
+	public void addComponentAutoSize(org.teamapps.ux.component.Component component) {
 		addComponent(component, new FlexSizingPolicy( 0, 0));
 	}
 

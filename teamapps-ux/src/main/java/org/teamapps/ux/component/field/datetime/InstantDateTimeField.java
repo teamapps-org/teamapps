@@ -22,12 +22,12 @@ package org.teamapps.ux.component.field.datetime;
 import org.teamapps.dto.DtoField;
 import org.teamapps.dto.DtoInstantDateTimeField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
 import java.time.Instant;
 import java.time.ZoneId;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 
 	protected ZoneId timeZoneId;

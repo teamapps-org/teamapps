@@ -29,8 +29,7 @@ import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
 import org.teamapps.projector.components.infinitescroll.table.InfiniteScrollingComponentLibrary;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
@@ -44,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-@TeamAppsComponent(library = InfiniteScrollingComponentLibrary.class)
+@ProjectorComponent(library = InfiniteScrollingComponentLibrary.class)
 public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECORD, InfiniteItemViewModel<RECORD>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -66,7 +65,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	private int clientRecordIdCounter = 0;
 
-	private Function<RECORD, Component> contextMenuProvider = null;
+	private Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
 	public InfiniteItemView(Template itemTemplate, float itemWidth, int itemHeight) {
@@ -129,7 +128,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 				} else {
 					RECORD record = renderedRecords.getRecord(e.getRecordId());
 					if (record != null) {
-						Component contextMenuContent = contextMenuProvider.apply(record);
+						org.teamapps.ux.component.Component contextMenuContent = contextMenuProvider.apply(record);
 						if (contextMenuContent != null) {
 							sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
 						} else {
@@ -172,11 +171,11 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 		return clientRecord;
 	}
 
-	public Function<RECORD, Component> getContextMenuProvider() {
+	public Function<RECORD, org.teamapps.ux.component.Component> getContextMenuProvider() {
 		return contextMenuProvider;
 	}
 
-	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
+	public void setContextMenuProvider(Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider) {
 		this.contextMenuProvider = contextMenuProvider;
 	}
 

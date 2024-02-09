@@ -1,5 +1,7 @@
 package org.teamapps.ux.component;
 
+import org.teamapps.ux.component.annotations.ProjectorComponent;
+
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +27,9 @@ public class ComponentLibraryRegistry {
 
 	public ComponentLibraryInfo getComponentLibraryForClientObjectClass(Class<? extends ClientObject> clientObjectClass) {
 		return componentLibraryByClientObjectClass.computeIfAbsent(clientObjectClass, c -> {
-			TeamAppsComponent annotation = c.getAnnotation(TeamAppsComponent.class);
+			ProjectorComponent annotation = c.getAnnotation(ProjectorComponent.class);
 			if (annotation == null) {
-				throw new IllegalArgumentException("ClientObject class " + clientObjectClass + " is not annotated with @" + TeamAppsComponent.class.getSimpleName());
+				throw new IllegalArgumentException("ClientObject class " + clientObjectClass + " is not annotated with @" + ProjectorComponent.class.getSimpleName());
 			}
 			Class<? extends ComponentLibrary> componentLibraryClass = annotation.library();
 			return getComponentLibraryInternal(componentLibraryClass, () -> {

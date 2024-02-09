@@ -23,17 +23,16 @@ import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoMobileLayout;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.toolbar.Toolbar;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
-public class MobileLayout extends AbstractComponent implements Component {
+@ProjectorComponent(library = CoreComponentLibrary.class)
+public class MobileLayout extends AbstractComponent implements org.teamapps.ux.component.Component {
 
 	protected Toolbar toolbar;
-	protected Component content;
+	protected org.teamapps.ux.component.Component content;
 	protected NavigationBar navigationBar;
 
 	public MobileLayout() {
@@ -58,11 +57,11 @@ public class MobileLayout extends AbstractComponent implements Component {
 	public void handleUiEvent(DtoEventWrapper event) {
 	}
 
-	public void setContent(Component component) {
+	public void setContent(org.teamapps.ux.component.Component component) {
 		setContent(component, null, 0);
 	}
 
-	public void setContent(Component component, PageTransition animation, int animationDuration) {
+	public void setContent(org.teamapps.ux.component.Component component, PageTransition animation, int animationDuration) {
 		if (this.content != component) {
 			content = component;
 			component.setParent(this);
@@ -79,7 +78,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 		this.toolbar = toolbar;
 	}
 
-	public Component getContent() {
+	public org.teamapps.ux.component.Component getContent() {
 		return content;
 	}
 

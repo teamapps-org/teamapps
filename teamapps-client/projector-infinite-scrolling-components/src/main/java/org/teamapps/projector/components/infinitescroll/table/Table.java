@@ -37,8 +37,7 @@ import org.teamapps.projector.components.infinitescroll.infiniteitemview.Records
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.RecordsRemovedEvent;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.validator.FieldValidator;
@@ -50,8 +49,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@TeamAppsComponent(library = InfiniteScrollingComponentLibrary.class)
-public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component {
+@ProjectorComponent(library = InfiniteScrollingComponentLibrary.class)
+public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements org.teamapps.ux.component.Component {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -126,7 +125,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private final List<RECORD> topNonModelRecords = new ArrayList<>();
 	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
 
-	private Function<RECORD, Component> contextMenuProvider = null;
+	private Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
 	public Table() {
@@ -340,7 +339,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				lastSeenContextMenuRequestId = e.getRequestId();
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null && contextMenuProvider != null) {
-					Component contextMenuContent = contextMenuProvider.apply(record);
+					org.teamapps.ux.component.Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
 						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
 					} else {
@@ -1149,11 +1148,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.propertyInjector = propertyInjector;
 	}
 
-	public Function<RECORD, Component> getContextMenuProvider() {
+	public Function<RECORD, org.teamapps.ux.component.Component> getContextMenuProvider() {
 		return contextMenuProvider;
 	}
 
-	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
+	public void setContextMenuProvider(Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider) {
 		this.contextMenuProvider = contextMenuProvider;
 	}
 

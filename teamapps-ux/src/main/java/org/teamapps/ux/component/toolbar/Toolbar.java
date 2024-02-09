@@ -23,12 +23,12 @@ import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoToolbar;
 import org.teamapps.dto.DtoToolbarButtonGroup;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class Toolbar extends AbstractToolContainer {
 
 	private String logoImageUrl;

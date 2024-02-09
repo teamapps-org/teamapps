@@ -25,11 +25,10 @@ import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoWindow;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.panel.Panel;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class Window extends Panel {
 
 	private boolean modal = false;
@@ -43,19 +42,19 @@ public class Window extends Panel {
 	public Window() {
 	}
 
-	public Window(Component content) {
+	public Window(org.teamapps.ux.component.Component content) {
 		this(0, 0, content);
 	}
 
-	public Window(int width, int height, Component content) {
+	public Window(int width, int height, org.teamapps.ux.component.Component content) {
 		this(null, null, width, height, content);
 	}
 
-	public Window(Icon<?, ?> icon, String title, int width, int height, Component content) {
+	public Window(Icon<?, ?> icon, String title, int width, int height, org.teamapps.ux.component.Component content) {
 		this(icon, title, content, width, height, false, false, false);
 	}
 
-	public Window(Icon<?, ?> icon, String title, Component content, int width, int height, boolean closeable, boolean closeOnEscape, boolean closeOnClickOutside) {
+	public Window(Icon<?, ?> icon, String title, org.teamapps.ux.component.Component content, int width, int height, boolean closeable, boolean closeOnEscape, boolean closeOnClickOutside) {
 		super(icon, title, content);
 		this.width = width;
 		this.height = height;

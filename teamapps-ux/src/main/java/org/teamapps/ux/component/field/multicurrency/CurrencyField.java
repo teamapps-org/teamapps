@@ -27,7 +27,7 @@ import org.teamapps.dto.DtoField;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
@@ -41,7 +41,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class CurrencyField extends AbstractField<CurrencyValue> implements TextInputHandlingField {
 
 	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoCurrencyField.TextInputEvent.TYPE_ID);
