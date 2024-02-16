@@ -307,7 +307,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		CacheManipulationHandle<List<DtoCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
 			final DtoCalendar.SetCalendarDataCommand setCalendarDataCommand = new DtoCalendar.SetCalendarDataCommand(cacheResponse.getAndClearResult());
-			getSessionContext().sendCommandIfRendered(this, aVoid -> cacheResponse.commit(), () -> setCalendarDataCommand);
+			getSessionContext().sendCommandIfRendered(this, () -> setCalendarDataCommand, aVoid -> cacheResponse.commit());
 		} else {
 			cacheResponse.commit();
 		}

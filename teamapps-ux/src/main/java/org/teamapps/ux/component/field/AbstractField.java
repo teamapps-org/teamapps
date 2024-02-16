@@ -95,7 +95,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		Object uiValue = this.convertUxValueToUiValue(value);
 		if (isRendered()) {
 			final DtoField.SetValueCommand setValueCommand = new DtoField.SetValueCommand(uiValue);
-			getSessionContext().sendCommandIfRendered(this, aVoid -> lock.release(), () -> setValueCommand);
+			getSessionContext().sendCommandIfRendered(this, () -> setValueCommand, aVoid -> lock.release());
 		} else {
 			lock.release();
 		}

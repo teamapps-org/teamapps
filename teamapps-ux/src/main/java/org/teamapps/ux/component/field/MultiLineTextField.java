@@ -48,7 +48,7 @@ public class MultiLineTextField extends TextField {
 		MultiWriteLockableValue.Lock lock = setAndLockValue(s);
 		if (isRendered()) {
 			final DtoMultiLineTextField.AppendCommand appendCommand = new DtoMultiLineTextField.AppendCommand(s, scrollToBottom);
-			getSessionContext().sendCommandIfRendered(this, aVoid -> lock.release(), () -> appendCommand);
+			getSessionContext().sendCommandIfRendered(this, () -> appendCommand, aVoid -> lock.release());
 		} else {
 			lock.release();
 		}

@@ -3,7 +3,7 @@ package org.teamapps.dto.protocol;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.teamapps.dto.DtoJsonWrapper;
 
-public class DtoQueryWrapper extends DtoJsonWrapper {
+public class DtoQueryWrapper extends DtoAbstractClientMessageWrapper {
 
 	public DtoQueryWrapper(JsonNode jsonNode) {
 		super(jsonNode);

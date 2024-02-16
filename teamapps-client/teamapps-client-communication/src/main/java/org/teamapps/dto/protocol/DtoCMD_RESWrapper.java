@@ -18,8 +18,11 @@ public class DtoCMD_RESWrapper extends DtoAbstractClientPayloadMessageWrapper {
 	}
 
 	public DtoJsonWrapper getResult() {
-		return new DtoJsonWrapper(jsonNode.get("result"));
-
+		var node = jsonNode.get("result");
+		if (node == null || node.isNull()) {
+			return null;
+		}
+		return new DtoJsonWrapper(node);
 	}
 
 }

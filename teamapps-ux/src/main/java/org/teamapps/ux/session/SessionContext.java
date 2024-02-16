@@ -302,10 +302,10 @@ public class SessionContext {
 	}
 
 	public void sendCommandIfRendered(ClientObject clientObject, DtoCommand<?> command) {
-		sendCommandIfRendered(clientObject, null, (Supplier) () -> command);
+		sendCommandIfRendered(clientObject, (Supplier) () -> command, null);
 	}
 
-	public <RESULT> void sendCommandIfRendered(ClientObject clientObject, Consumer<RESULT> resultCallback, Supplier<DtoCommand<RESULT>> commandSupplier) {
+	public <RESULT> void sendCommandIfRendered(ClientObject clientObject, Supplier<DtoCommand<RESULT>> commandSupplier, Consumer<RESULT> resultCallback) {
 		Objects.requireNonNull(clientObject, "clientObject must not be null!");
 		CurrentSessionContext.throwIfNotSameAs(this);
 

@@ -2,10 +2,9 @@ package org.teamapps.dto.protocol;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.teamapps.dto.DtoEvent;
-import org.teamapps.dto.DtoJsonWrapper;
 
 
-public class DtoEventWrapper extends DtoJsonWrapper {
+public class DtoEventWrapper extends DtoAbstractClientMessageWrapper {
 
 	public DtoEventWrapper(JsonNode jsonNode) {
 		super(jsonNode);

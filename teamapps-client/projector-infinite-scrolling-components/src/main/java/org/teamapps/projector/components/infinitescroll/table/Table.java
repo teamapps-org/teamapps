@@ -872,8 +872,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setCssStyle(".slick-cell.selected", "background-color", selectionColor != null ? selectionColor.toHtmlColorString() : null);
 	}
 
-	public void setRowBorderWidth(int rowBorderWidth) {
-		this.setCssStyle(".slick-cell", "border-bottom-width", rowBorderWidth + "px");
+	public void setRowBorderWidth(Integer rowBorderWidth) {
+		this.setCssStyle(".slick-cell", "border-bottom-width", rowBorderWidth != null ? rowBorderWidth + "px" : null);
 	}
 
 	public void setRowBorderColor(Color rowBorderColor) {
@@ -920,8 +920,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return headerFieldsRowEnabled;
 	}
 
-	public void setHeaderFieldsRowBorderWidth(int headerFieldsRowBorderWidth) {
-		this.setCssStyle(".slick-headerrow", "border-bottom-width", headerFieldsRowBorderWidth + "px");
+	public void setHeaderFieldsRowBorderWidth(Integer headerFieldsRowBorderWidth) {
+		this.setCssStyle(".slick-headerrow", "border-bottom-width", headerFieldsRowBorderWidth != null ? headerFieldsRowBorderWidth + "px" : null);
 	}
 
 	public void setHeaderFieldsRowBorderColor(Color headerFieldsRowBorderColor) {
@@ -956,8 +956,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return footerFieldsRowEnabled;
 	}
 
-	public void setFooterFieldsRowBorderWidth(int footerFieldsRowBorderWidth) {
-		this.setCssStyle(".slick-footerrow", "border-top-width", footerFieldsRowBorderWidth + "px");
+	public void setFooterFieldsRowBorderWidth(Integer footerFieldsRowBorderWidth) {
+		this.setCssStyle(".slick-footerrow", "border-top-width", footerFieldsRowBorderWidth != null ? footerFieldsRowBorderWidth + "px" : null);
 	}
 
 	public void setFooterFieldsRowBorderColor(Color footerFieldsRowBorderColor) {

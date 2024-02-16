@@ -32,6 +32,7 @@ export class FlexContainer extends AbstractComponent<DtoFlexContainer> implement
 		this.setAlignItems(config.alignItems);
 		this.setFlexDirection(config.flexDirection);
 		this.setJustifyContent(config.justifyContent);
+		this.setComponents(config.components as Component[]);
 	}
 
 	doGetMainElement(): HTMLElement {

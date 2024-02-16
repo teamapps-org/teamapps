@@ -200,8 +200,4 @@ public abstract class AbstractComponent implements Component {
 		this.debuggingId = debuggingId;
 	}
 
-	@Deprecated
-	protected void reRenderIfRendered() {
-		throw new RuntimeException("Not supported anymore!");
-	}
 }
