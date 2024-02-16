@@ -111,6 +111,7 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, string> implemen
 		return this._config.defaultColor;
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		return this.$main.focus();
 	}

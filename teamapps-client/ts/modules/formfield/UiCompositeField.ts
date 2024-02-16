@@ -30,6 +30,7 @@ import Logger = log.Logger;
 import {closestAncestor, parseHtml} from "../Common";
 import {TableDataProviderItem} from "../UiInfiniteItemView";
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export type SubField = {
 	config: UiCompositeSubFieldConfig,
@@ -200,6 +201,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		return this.getCommittedValue(); // we might want to overwrite the values contained in this composite field...
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		if (window.event instanceof MouseEvent) {
 			let $cell = closestAncestor(window.event.target as HTMLElement, ".subfield-wrapper");

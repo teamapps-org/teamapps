@@ -27,6 +27,7 @@ import {keyCodes} from "../trivial-components/TrivialCore";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 
 export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements UiCheckBoxEventSource, UiCheckBoxCommandHandler {
@@ -132,6 +133,7 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 		this.$check.textContent = v ? "\ue013" : "";
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.$check.focus();
 	}

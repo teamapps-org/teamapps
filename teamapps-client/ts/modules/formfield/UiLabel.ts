@@ -25,6 +25,7 @@ import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
 	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>();
@@ -80,6 +81,7 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 		return this.$main;
 	}
 
+	@executeWhenFirstDisplayed()
 	focus() {
 		// do nothing
 	}

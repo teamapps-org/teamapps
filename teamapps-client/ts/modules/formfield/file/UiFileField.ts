@@ -46,6 +46,7 @@ import {Logger} from "loglevel";
 import {keyCodes} from "../../trivial-components/TrivialCore";
 import {UiIdentifiableClientRecordConfig} from "../../../generated/UiIdentifiableClientRecordConfig";
 import {FileUploader} from "../../util/FileUploader";
+import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 
 export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClientRecordConfig[]> implements UiFileFieldEventSource, UiFileFieldCommandHandler {
 
@@ -229,6 +230,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		return this.$wrapper;
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.$uploadButton.focus();
 	}

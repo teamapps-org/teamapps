@@ -30,6 +30,7 @@ import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFor
 import {DateTime} from "luxon";
 import {DateSuggestionEngine} from "./DateSuggestionEngine";
 import {createDateRenderer, createTimeRenderer} from "./datetime-rendering";
+import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 
 export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiDateTimeFieldEventSource, AbstractUiDateTimeFieldCommandHandler {
 
@@ -94,6 +95,7 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		this.trivialDateTimeField.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.trivialDateTimeField.focus();
 	}

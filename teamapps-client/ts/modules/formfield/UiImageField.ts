@@ -27,6 +27,7 @@ import {UiShadowConfig} from "../../generated/UiShadowConfig";
 import {UiImageSizing} from "../../generated/UiImageSizing";
 import {createImageSizingCssObject, createUiBorderCssObject, createUiShadowCssObject, cssObjectToString} from "../util/CssFormatUtil";
 import {parseHtml} from "../Common";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiImageField extends UiField<UiImageFieldConfig, string> implements UiImageFieldEventSource, UiImageFieldCommandHandler {
 
@@ -86,6 +87,7 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 		this._$field.style.backgroundImage = uiValue ? `url('${uiValue}')` : 'none';
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		// do nothing
 	}

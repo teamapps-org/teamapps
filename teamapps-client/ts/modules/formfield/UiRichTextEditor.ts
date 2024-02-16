@@ -492,6 +492,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		});
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.editor && this.editor.focus(false);
 	}

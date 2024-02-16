@@ -25,6 +25,7 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {parseHtml, Renderer} from "../Common";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientRecordConfig> implements UiTemplateFieldCommandHandler, UiTemplateFieldEventSource {
 
@@ -56,6 +57,7 @@ export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientReco
 		this.$main.innerHTML = this.templateRenderer.render(this.getCommittedValue() && this.getCommittedValue().values);
 	}
 
+	@executeWhenFirstDisplayed()
 	focus() {
 		// do nothing
 	}

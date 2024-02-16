@@ -30,6 +30,7 @@ import {
 	UiTextInputHandlingField_TextInputEvent
 } from "../../generated/UiTextInputHandlingFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends UiField<C, string> implements UiTextFieldEventSource, UiTextFieldCommandHandler {
 
@@ -146,6 +147,7 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 		return this.$field.value;
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.$field.focus();
 	}

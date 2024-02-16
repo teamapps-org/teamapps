@@ -32,6 +32,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiNumberFieldSliderMode} from "../../generated/UiNumberFieldSliderMode";
 import {NumberParser} from "../util/NumberParser";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiNumberField extends UiField<UiNumberFieldConfig, number> implements UiNumberFieldEventSource, UiNumberFieldCommandHandler {
 
@@ -308,6 +309,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		}
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.$field.select();
 	}

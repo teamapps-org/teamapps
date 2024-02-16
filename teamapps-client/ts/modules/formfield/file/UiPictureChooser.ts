@@ -39,6 +39,7 @@ import {
 import {FileUploader} from "../../util/FileUploader";
 import {ProgressIndicator} from "../../micro-components/ProgressIndicator";
 import {ProgressCircle} from "../../micro-components/ProgressCircle";
+import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 
 /**
  * @author Yann Massard (yamass@gmail.com)
@@ -166,6 +167,7 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
 		return null;
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.$uploadButton.focus();
 	}

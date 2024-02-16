@@ -42,6 +42,7 @@ import {isFreeTextEntry} from "./UiComboBox";
 import {buildObjectTree, getAutoCompleteOffValue, NodeWithChildren, parseHtml, Renderer} from "../Common";
 import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRecordConfig[]> implements UiTagComboBoxEventSource, UiTagComboBoxCommandHandler {
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 250});
@@ -165,6 +166,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		return values.map(value => isFreeTextEntry(value) ? value.asString : value.id);
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.trivialTagComboBox.focus(); // TODO
 	}

@@ -35,6 +35,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiCurrencyUnitConfig} from "../../generated/UiCurrencyUnitConfig";
 import {BigDecimal} from "../util/BigDecimalString";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyValueConfig> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
 
@@ -146,6 +147,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		}
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.trivialUnitBox.focus();
 		selectElementContents(this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor"));

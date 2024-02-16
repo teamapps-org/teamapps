@@ -25,6 +25,7 @@ import {UiComponentFieldCommandHandler, UiComponentFieldConfig, UiComponentField
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 
 export class UiComponentField extends UiField<UiComponentFieldConfig, void> implements UiComponentFieldEventSource, UiComponentFieldCommandHandler {
@@ -69,6 +70,7 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		// do nothing
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		// do nothing
 	}
