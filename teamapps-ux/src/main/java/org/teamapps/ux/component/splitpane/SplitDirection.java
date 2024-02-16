@@ -25,7 +25,7 @@ public enum SplitDirection {
 
 	HORIZONTAL, VERTICAL;
 
-	DtoSplitDirection toUiSplitDirection() {
+	DtoSplitDirection toDto() {
 		return DtoSplitDirection.valueOf(this.name());
 	}
 }

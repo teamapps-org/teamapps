@@ -26,16 +26,24 @@ import {
 	DtoPanelEventSource,
 	DtoPanelHeaderComponentMinimizationPolicy,
 	DtoPanelHeaderField,
+	DtoPanelHeaderFieldIconVisibilityPolicy,
 	DtoWindowButtonType
 } from "../generated";
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
-import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "teamapps-client-core";
+import {
+	AbstractComponent,
+	Component,
+	executeWhenFirstDisplayed,
+	insertBefore,
+	parseHtml,
+	prependChild,
+	TeamAppsEvent
+} from "teamapps-client-core";
 
 import {StaticIcons} from "../util/StaticIcons";
 import {maximizeComponent, outerWidthIncludingMargins} from "../Common";
-import {insertBefore, prependChild} from "teamapps-client-core";
+import getComputedStyle from "@popperjs/core/lib/dom-utils/getComputedStyle";
 
 interface HeaderField {
 	config: DtoPanelHeaderField;
@@ -67,7 +75,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	private $panel: HTMLElement;
 	private $heading: HTMLElement;
 	private $toolbarContainer: HTMLElement;
-	private panelBody: HTMLElement;
+	private $panelBody: HTMLElement;
 	private $leftComponentWrapper: HTMLElement;
 	private $headingSpacer: HTMLElement;
 	private $rightComponentWrapper: HTMLElement;
@@ -78,8 +86,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 
 	private leftHeaderField: HeaderField;
 	private rightHeaderField: HeaderField;
-	private leftComponentFirstMinimized: boolean;
-	private alwaysShowHeaderFieldIcons: boolean;
+	private leftComponentFirstMinimized: boolean; // defined by config, but then by user interaction!
 	private toolbar: Toolbar;
 	private icon: string;
 	private title: string;
@@ -102,11 +109,11 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
                     <div class="panel-heading-window-buttons hidden"></div>
                 </div>
                 <div class="toolbar-container"></div>
-                <div class="panel-body" style="padding: ${config.padding}px"></div>
+                <div class="panel-body"></div>
             </div>`);
 
 		this.$toolbarContainer = this.$panel.querySelector(':scope .toolbar-container');
-		this.panelBody = this.$panel.querySelector(':scope .panel-body');
+		this.$panelBody = this.$panel.querySelector(':scope .panel-body');
 		this.$heading = this.$panel.querySelector(':scope >.panel-heading');
 		this.$icon = this.$heading.querySelector(':scope >.panel-icon');
 		this.$title = this.$heading.querySelector(':scope >.panel-title');
@@ -116,26 +123,19 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 		this.$buttonContainer = this.$heading.querySelector(':scope >.panel-heading-buttons');
 		this.$windowButtonContainer = this.$heading.querySelector(':scope >.panel-heading-window-buttons');
 
-		this.alwaysShowHeaderFieldIcons = config.alwaysShowHeaderFieldIcons;
+		this.setPadding(config.padding);
 		this.setIcon(config.icon);
 		this.setTitle(config.title);
 		this.setLeftHeaderField(config.leftHeaderField);
 		this.setRightHeaderField(config.rightHeaderField);
 		this.setToolButtons(config.toolButtons as ToolButton[]);
-
-		if (config.hideTitleBar) {
-			this.$heading.classList.add('hidden');
-			this.$panel.classList.add("empty-heading");
-		} else {
-			this.$heading.classList.remove('hidden');
-			this.$panel.classList.remove("empty-heading");
-		}
+		this.setTitleBarHidden(config.titleBarHidden);
 
 		this.setToolbar(config.toolbar as Toolbar);
 		if (config.content) {
 			this.setContent(config.content as Component);
 		}
-		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == DtoPanelHeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
+		this.setHeaderComponentMinimizationPolicy(config.headerComponentMinimizationPolicy);
 
 		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {
@@ -152,7 +152,22 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 			});
 		});
 		this.setWindowButtons(config.windowButtons);
-		this.setStretchContent(config.stretchContent);
+		this.setContentStretchingEnabled(config.contentStretchingEnabled);
+	}
+
+	public setTitleBarHidden(titleBarHidden:boolean) {
+		if (titleBarHidden) {
+			this.$heading.classList.add('hidden');
+			this.$panel.classList.add("empty-heading");
+		} else {
+			this.$heading.classList.remove('hidden');
+			this.$panel.classList.remove("empty-heading");
+		}
+	}
+
+	setPadding(padding: number): any {
+		this.config.padding = padding;
+		this.$panelBody.style.padding = `${this.config.padding}px`;
 	}
 
 	public setMaximized(maximized: boolean) {
@@ -241,11 +256,11 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	}
 
 	public setContent(content: Component) {
-		if (content?.getMainElement() !== this.panelBody.firstElementChild) {
-			this.panelBody.innerHTML = '';
+		if (content?.getMainElement() !== this.$panelBody.firstElementChild) {
+			this.$panelBody.innerHTML = '';
 		}
 		if (content != null) {
-			this.panelBody.appendChild(content.getMainElement());
+			this.$panelBody.appendChild(content.getMainElement());
 		}
 	}
 
@@ -273,7 +288,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	private setMinimizedFields(...minimizedHeaderFields: HeaderField[]) {
 		this.headerFields.forEach(headerField => {
 			headerField.$wrapper.classList.toggle("minimized", minimizedHeaderFields.indexOf(headerField) != -1);
-			headerField.$wrapper.classList.toggle("display-icon", minimizedHeaderFields.length > 0 || this.alwaysShowHeaderFieldIcons);
+			headerField.$wrapper.classList.toggle("display-icon", minimizedHeaderFields.length > 0 || this.config.headerFieldIconVisibilityPolicy == DtoPanelHeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED);
 		});
 	}
 
@@ -372,7 +387,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 		this.updateToolbarVisibility();
 	}
 
-	public setStretchContent(stretch: boolean): void {
+	public setContentStretchingEnabled(stretch: boolean): void {
 		this.getMainElement().classList.toggle("stretch-content", stretch);
 	}
 
@@ -406,7 +421,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 			+ buttonContainerWidth
 			+ windowButtonContainerWidth
 			+ this.headerFields
-				.map(headerField => this.alwaysShowHeaderFieldIcons ? headerField.minExpandedWidthWithIcon : headerField.minExpandedWidth)
+				.map(headerField => this.config.headerFieldIconVisibilityPolicy == DtoPanelHeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED ? headerField.minExpandedWidthWithIcon : headerField.minExpandedWidth)
 				.reduce((totalWidth, fieldWidth) => (totalWidth + fieldWidth), 0);
 
 		if (this.numberOfVisibleHeaderFields() == 2) {
@@ -515,6 +530,18 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 			|| target.classList.contains('panel-icon')
 			|| target.classList.contains('panel-title')
 			|| target.classList.contains('panel-heading-spacer');
+	}
+
+
+	setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy: DtoPanelHeaderComponentMinimizationPolicy) {
+		this.config.headerComponentMinimizationPolicy = headerComponentMinimizationPolicy;
+		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == DtoPanelHeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST
+		this.relayoutHeader();
+	}
+
+	setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy: DtoPanelHeaderFieldIconVisibilityPolicy) {
+		this.config.headerFieldIconVisibilityPolicy = headerFieldIconVisibilityPolicy;
+		this.relayoutHeader();
 	}
 
 }

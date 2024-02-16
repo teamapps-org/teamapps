@@ -24,37 +24,31 @@ import org.teamapps.dto.Component;
 import org.teamapps.dto.Showable;
 
 class Panel extends Component {
-	String icon;
-	String title;
-	PanelHeaderField leftHeaderField;
-	PanelHeaderField rightHeaderField;
-	PanelHeaderComponentMinimizationPolicy headerComponentMinimizationPolicy;
-	boolean alwaysShowHeaderFieldIcons;
-	boolean hideTitleBar;
+	mutable String icon;
+	mutable String title;
+	mutable PanelHeaderField leftHeaderField;
+	mutable PanelHeaderField rightHeaderField;
+	mutable PanelHeaderComponentMinimizationPolicy headerComponentMinimizationPolicy;
+	mutable PanelHeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy;
+	mutable boolean titleBarHidden;
+	mutable Toolbar* toolbar;
+	mutable Component* content;
+	mutable boolean contentStretchingEnabled;
+	mutable int padding;
+	mutable List<WindowButtonType> windowButtons;
+	mutable List<ToolButton*> toolButtons;
 
-	Toolbar* toolbar;
-	Component* content;
-	boolean stretchContent;
-	int padding;
-	List<WindowButtonType> windowButtons;
-	List<ToolButton*> toolButtons;
-
-	command setContent(Component* content);
-	command setLeftHeaderField(PanelHeaderField field);
-	command setRightHeaderField(PanelHeaderField field);
-	command setTitle(String title);
-	command setIcon(String icon);
-	command setToolbar(Toolbar* toolbar); //if null, remove toolbar
 	command setMaximized(boolean maximized);
-	command setWindowButtons(List<WindowButtonType> windowButtons);
-	command setToolButtons(List<ToolButton*> toolButtons);
-	command setStretchContent(boolean stretch);
 
 	event windowButtonClicked(WindowButtonType windowButton);
 }
 
 enum PanelHeaderComponentMinimizationPolicy {
     LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST
+}
+
+enum PanelHeaderFieldIconVisibilityPolicy {
+    DISPLAYED_WHEN_MINIMIZED, ALWAYS_DISPLAYED
 }
 
 class PanelHeaderField {

@@ -24,7 +24,7 @@ import org.teamapps.dto.DtoPanelHeaderComponentMinimizationPolicy;
 public enum HeaderComponentMinimizationPolicy {
 	LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST;
 
-	public DtoPanelHeaderComponentMinimizationPolicy toUiHeaderComponentMinimizationPolicy() {
+	public DtoPanelHeaderComponentMinimizationPolicy toDto() {
 		return DtoPanelHeaderComponentMinimizationPolicy.valueOf(this.name());
 	}
 }

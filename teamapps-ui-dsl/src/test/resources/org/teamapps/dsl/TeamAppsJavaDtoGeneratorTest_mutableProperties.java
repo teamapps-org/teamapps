@@ -66,7 +66,7 @@ public class DtoA implements DtoObject {
 
 
 
-	@JsonTypeName(".setA")
+	@JsonTypeName("A.setA")
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"a"})
 	public static class SetACommand implements DtoCommand<Void> {

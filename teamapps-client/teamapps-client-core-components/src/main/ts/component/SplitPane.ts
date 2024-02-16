@@ -21,6 +21,7 @@
 import {AbstractComponent, bind, capitalizeFirstLetter, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {
+	DtoChildCollapsingPolicy,
 	DtoSplitDirection,
 	DtoSplitPane,
 	DtoSplitPane_SplitResizedEvent,
@@ -43,26 +44,20 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 	private _$dividerWrapper: HTMLElement;
 	private _$divider: HTMLElement;
 
-	private _sizeAttribute: 'height' | 'width';
 	private _minSizeAttribute: 'minWidth' | 'minHeight';
-	private _maxSizeAttribute: 'maxWidth' | 'maxHeight';
-	private _offsetAttribute: 'top' | 'left';
 	private _offsetSizeAttribute: 'offsetHeight' | 'offsetWidth';
 
 	public referenceChildSize: number;
-	public sizePolicy: DtoSplitSizePolicy;
-	private firstChildMinSize: number;
-	private lastChildMinSize: number;
 
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
 	constructor(config: DtoSplitPane) {
 		super(config);
 		this.referenceChildSize = config.referenceChildSize;
-		this.sizePolicy = config.sizePolicy;
+		this.config.sizePolicy = config.sizePolicy;
 		const firstChildContainerId = config.id + '_firstChildContainer';
 		const lastChildContainerId = config.id + '_lastChildContainer';
-		this._$splitPane = parseHtml(`<div class="splitpane splitpane-${DtoSplitDirection[config.splitDirection].toLowerCase()} splitpane-${DtoSplitSizePolicy[this.sizePolicy].toLowerCase()}">
+		this._$splitPane = parseHtml(`<div class="splitpane">
 	<div class="splitpane-component-wrapper">
 		<div id="${firstChildContainerId}" class="splitpane-component"></div>
 	</div>
@@ -81,20 +76,16 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 		this._$dividerWrapper = this._$splitPane.querySelector<HTMLElement>(":scope .splitpane-divider-wrapper");
 		this._$divider = this._$splitPane.querySelector<HTMLElement>(":scope .splitpane-divider");
 
-		this._sizeAttribute = config.splitDirection === DtoSplitDirection.HORIZONTAL ? 'height' : 'width';
-		this._minSizeAttribute = "min" + capitalizeFirstLetter(this._sizeAttribute) as 'minWidth' | 'minHeight';
-		this._maxSizeAttribute = "max" + capitalizeFirstLetter(this._sizeAttribute) as 'maxWidth' | 'maxHeight';
-		this._offsetAttribute = config.splitDirection === DtoSplitDirection.HORIZONTAL ? 'top' : 'left';
-		this._offsetSizeAttribute = config.splitDirection === DtoSplitDirection.HORIZONTAL ? 'offsetHeight' : 'offsetWidth';
+		this.setSplitDirection(config.splitDirection);
 
-		this.firstChildMinSize = config.firstChildMinSize;
-		this.lastChildMinSize = config.lastChildMinSize;
+		this.config.firstChildMinSize = config.firstChildMinSize;
+		this.config.lastChildMinSize = config.lastChildMinSize;
 
 		['mousedown', 'touchstart'].forEach((eventName) => this._$divider.addEventListener(eventName, (e: MouseEvent) => this.mousedownHandler(e)));
 
-		this._updatePositions();
 		this.setFirstChild(config.firstChild as Component);
 		this.setLastChild(config.lastChild as Component);
+		this.setSizePolicy(this.config.sizePolicy)
 		this._updateChildContainerClasses();
 
 	}
@@ -123,9 +114,9 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 			this._$divider.classList.remove('dragged', 'touch');
 
 			let referenceChildSize;
-			if (this.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
+			if (this.config.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
 				referenceChildSize = this._$firstChildContainer[this._offsetSizeAttribute] / this._$splitPane[this._offsetSizeAttribute];
-			} else if (this.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
+			} else if (this.config.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
 				referenceChildSize = this._$firstChildContainer[this._offsetSizeAttribute];
 			} else {
 				referenceChildSize = this._$lastChildContainer[this._offsetSizeAttribute];
@@ -148,10 +139,10 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 			const diff = (this.config.splitDirection === DtoSplitDirection.HORIZONTAL) ? this.pageYof(event) - dragStartY : this.pageXof(event) - dragStartX;
 			const newFirstChildSize = initialFirstContainerWidth + diff;
 
-			if (this.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
+			if (this.config.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
 				this.referenceChildSize = newFirstChildSize / splitPaneSize;
 				this._updatePositions();
-			} else if (this.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
+			} else if (this.config.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
 				this.referenceChildSize = newFirstChildSize;
 				this._updatePositions();
 			} else {
@@ -203,19 +194,19 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 	}
 
 	private _updateChildContainerClasses() {
-		const firstEmpty = this.isFirstEmpty();
-		const lastEmpty = this.isLastEmtpy();
+		const firstChildCollapsible = this.isChildCollapsible(this.firstChildComponent);
+		const lastChildCollapsible = this.isChildCollapsible(this.lastChildComponent);
 
-		if (firstEmpty && lastEmpty) {
+		if (firstChildCollapsible && lastChildCollapsible) {
 			this._$firstChildContainerWrapper.classList.add("empty-child");
 			this._$firstChildContainerWrapper.classList.remove("single-child");
 			this._$lastChildContainerWrapper.classList.add("empty-child");
 			this._$lastChildContainerWrapper.classList.remove("single-child");
-		} else if (firstEmpty && this.config.fillIfSingleChild) {
+		} else if (firstChildCollapsible) {
 			this._$firstChildContainerWrapper.classList.add("empty-child");
 			this._$lastChildContainerWrapper.classList.add("single-child");
 			this._$lastChildContainerWrapper.classList.remove("empty-child");
-		} else if (lastEmpty && this.config.fillIfSingleChild) {
+		} else if (lastChildCollapsible) {
 			this._$firstChildContainerWrapper.classList.add("single-child");
 			this._$firstChildContainerWrapper.classList.remove("empty-child");
 			this._$lastChildContainerWrapper.classList.add("empty-child");
@@ -223,7 +214,7 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 			this._$firstChildContainerWrapper.classList.remove("single-child", "empty-child");
 			this._$lastChildContainerWrapper.classList.remove("single-child", "empty-child");
 		}
-		this._$dividerWrapper.classList.toggle("hidden", firstEmpty || lastEmpty);
+		this._$dividerWrapper.classList.toggle("hidden", firstChildCollapsible || lastChildCollapsible);
 		this._$divider.classList.toggle("hidden", !this.config.resizable);
 		this.onResize(); // yes!! Maybe this splitpane does not need it for itself, but we want the children to relayout if necessary!
 	}
@@ -231,54 +222,57 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 	private _updatePositions() {
 		const referenceChildSize = this.referenceChildSize;
 
-		if (this.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
+		if (this.config.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
 			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "" + referenceChildSize,
 				"flex-shrink": "" + referenceChildSize,
 				"flex-basis": "1px",
-				[this._minSizeAttribute]: this.firstChildMinSize
+				[this._minSizeAttribute]: this.config.firstChildMinSize
 			});
 			applyCss(this._$lastChildContainerWrapper, {
 				"flex-grow": "" + (1 - referenceChildSize),
 				"flex-shrink": "" + (1 - referenceChildSize),
 				"flex-basis": "1px",
-				[this._minSizeAttribute]: this.lastChildMinSize
+				[this._minSizeAttribute]: this.config.lastChildMinSize
 			});
-		} else if (this.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
+		} else if (this.config.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
 			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "0",
 				"flex-shrink": "1",
 				"flex-basis": referenceChildSize + 'px',
-				[this._minSizeAttribute]: this.firstChildMinSize
+				[this._minSizeAttribute]: this.config.firstChildMinSize
 			});
 			applyCss(this._$lastChildContainerWrapper, {
 				"flex-grow": "1",
 				"flex-shrink": "1",
 				"flex-basis": '1px',
-				[this._minSizeAttribute]: this.lastChildMinSize
+				[this._minSizeAttribute]: this.config.lastChildMinSize
 			});
-		} else if (this.sizePolicy === DtoSplitSizePolicy.LAST_FIXED) {
+		} else if (this.config.sizePolicy === DtoSplitSizePolicy.LAST_FIXED) {
 			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "1",
 				"flex-shrink": "1",
 				"flex-basis": '1px',
-				[this._minSizeAttribute]: this.firstChildMinSize
+				[this._minSizeAttribute]: this.config.firstChildMinSize
 			});
 			applyCss(this._$lastChildContainerWrapper, {
 				"flex-grow": "0",
 				"flex-shrink": "1",
 				"flex-basis": referenceChildSize + 'px',
-				[this._minSizeAttribute]: this.lastChildMinSize
+				[this._minSizeAttribute]: this.config.lastChildMinSize
 			});
 		}
 	}
 
-	private isFirstEmpty() {
-		return (!this._firstChildComponent || this.config.collapseEmptyChildren && isEmptyable(this._firstChildComponent) && this._firstChildComponent.empty);
-	}
-
-	private isLastEmtpy() {
-		return (!this._lastChildComponent || this.config.collapseEmptyChildren && isEmptyable(this._lastChildComponent) && this._lastChildComponent.empty);
+	private isChildCollapsible(childComponent: Component) {
+		switch (this.config.childCollapsingPolicy) {
+			case DtoChildCollapsingPolicy.NEVER:
+				return false;
+			case DtoChildCollapsingPolicy.IF_NULL:
+				return childComponent == null;
+			case DtoChildCollapsingPolicy.IF_EMPTY:
+				return isEmptyable(childComponent) && childComponent.empty;
+		}
 	}
 
 	get firstChildComponent() {
@@ -294,23 +288,16 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 	}
 
 	get empty() {
-		return this.isFirstEmpty() && this.isLastEmtpy();
-	}
-
-	public setSize(referenceChildSize: number, sizePolicy: DtoSplitSizePolicy) {
-		this.referenceChildSize = referenceChildSize;
-		this.sizePolicy = sizePolicy;
-		this._$divider.classList.add('splitpane-' + DtoSplitSizePolicy[this.sizePolicy].toLowerCase());
-		this._updatePositions();
+		return this.isChildCollapsible(this._firstChildComponent) && this.isChildCollapsible(this._lastChildComponent);
 	}
 
 	setFirstChildMinSize(firstChildMinSize: number): void {
-		this.firstChildMinSize = firstChildMinSize;
+		this.config.firstChildMinSize = firstChildMinSize;
 		this._updatePositions();
 	}
 
 	setLastChildMinSize(lastChildMinSize: number): void {
-		this.lastChildMinSize = lastChildMinSize;
+		this.config.lastChildMinSize = lastChildMinSize;
 		this._updatePositions();
 	}
 
@@ -322,6 +309,42 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 
 	private updateEmptyState() {
 		this.onEmptyStateChanged.fireIfChanged(this.empty);
+	}
+
+	setChildCollapsingPolicy(childCollapsingPolicy: DtoChildCollapsingPolicy): any {
+		this.config.childCollapsingPolicy = childCollapsingPolicy;
+		this._updateChildContainerClasses();
+	}
+
+	setResizable(resizable: boolean): any {
+		this.config.resizable = resizable;
+		this._updateChildContainerClasses()
+	}
+
+	setSizePolicy(sizePolicy: DtoSplitSizePolicy): any {
+		this._$divider.classList.add('splitpane-' + DtoSplitSizePolicy[this.config.sizePolicy].toLowerCase());
+		this._updatePositions();
+	}
+
+	public get sizePolicy() {
+		return this.config.sizePolicy;
+	}
+
+	setReferenceChildSize(referenceChildSize: number): any {
+		this.config.referenceChildSize = referenceChildSize;
+		this.referenceChildSize = referenceChildSize;
+		this._updatePositions();
+	}
+
+	public setSplitDirection(splitDirection: DtoSplitDirection) {
+		this._$splitPane.classList.remove('splitpane-horizontal', 'splitpane-vertical')
+		this._$splitPane.classList.add(`splitpane-${DtoSplitDirection[splitDirection].toLowerCase()}`)
+
+		this._offsetSizeAttribute = splitDirection === DtoSplitDirection.HORIZONTAL ? 'offsetHeight' : 'offsetWidth';
+		const sizeAttribute = splitDirection === DtoSplitDirection.HORIZONTAL ? 'height' : 'width';
+		this._minSizeAttribute = "min" + capitalizeFirstLetter(sizeAttribute) as 'minWidth' | 'minHeight';
+
+		this._updatePositions();
 	}
 
 }

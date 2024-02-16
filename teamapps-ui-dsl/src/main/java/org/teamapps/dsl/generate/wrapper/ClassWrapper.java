@@ -84,8 +84,13 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 		List<CommandDeclarationContext> mutablePropertyDeclarations = context.propertyDeclaration().stream()
 				.filter(property -> property.mutableModifier() != null)
 				.map(property -> ExceptionUtil.softenExceptions(
-						() -> ParserFactory.createParser(new StringReader("command set" + StringUtils.capitalize(property.Identifier().toString())
-																		  + "(" + property.type().getText() + " " + property.Identifier().toString() + ");")).commandDeclaration()
+						() -> {
+							CommandDeclarationContext command =
+									ParserFactory.createParser(new StringReader("command set" + StringUtils.capitalize(property.Identifier().toString())
+																				+ "(" + property.type().getText() + " " + property.Identifier().toString() + ");")).commandDeclaration();
+							command.setParent(property.getParent());
+							return command;
+						}
 				))
 				.collect(Collectors.toList());
 

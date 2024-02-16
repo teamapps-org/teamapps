@@ -22,8 +22,8 @@ import {Panel} from "./Panel";
 import {
 	DtoEntranceAnimation,
 	DtoExitAnimation,
-	DtoPanel_WindowButtonClickedEvent,
-	DtoPanelHeaderField,
+	DtoPanel_WindowButtonClickedEvent, DtoPanelHeaderComponentMinimizationPolicy,
+	DtoPanelHeaderField, DtoPanelHeaderFieldIconVisibilityPolicy,
 	DtoWindow,
 	DtoWindowButtonType,
 	DtoWindowCommandHandler,
@@ -162,6 +162,22 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 		this.panel.setTitle(title);
 	}
 
+	public setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy: DtoPanelHeaderComponentMinimizationPolicy): any {
+		this.panel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy);
+	}
+
+	public setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy: DtoPanelHeaderFieldIconVisibilityPolicy): any {
+		this.panel.setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy);
+	}
+
+	public setPadding(padding: number): any {
+		this.panel.setPadding(padding);
+	}
+
+	public setTitleBarHidden(titleBarHidden: boolean): any {
+		this.panel.setTitleBarHidden(titleBarHidden);
+	}
+
 	public setCloseOnClickOutside(closeOnClickOutside: boolean): void {
 		this.closeOnClickOutside = closeOnClickOutside;
 	}
@@ -200,8 +216,8 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 		});
 	}
 
-	public setStretchContent(stretch: boolean): void {
-		this.panel.setStretchContent(stretch);
+	public setContentStretchingEnabled(stretch: boolean): void {
+		this.panel.setContentStretchingEnabled(stretch);
 	}
 
 	public destroy(): void {

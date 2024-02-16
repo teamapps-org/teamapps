@@ -61,6 +61,15 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 	}
 
 	@Test
+	public void mutablePropertiesReferencingOtherClasses() throws Exception {
+		executeClassTest(
+				"org.teamapps.dto.A",
+				"org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_mutablePropertiesReferencingOtherClasses.tsd",
+				"package \"x\":org.teamapps.dto; class X {} class A { mutable X x;}"
+		);
+	}
+
+	@Test
 	public void classesImplementTheirInterfaces() throws Exception {
 		executeClassTest(
 				"org.teamapps.dto.D", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classesImplementTheirInterfaces.tsd", "package \"x\":org.teamapps.dto; class A {}"

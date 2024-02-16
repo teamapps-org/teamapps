@@ -32,22 +32,19 @@ enum SplitDirection {
 }
 
 class SplitPane extends Component {
-	required SplitDirection splitDirection;
-	required SplitSizePolicy sizePolicy;
-	double referenceChildSize; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
-	Component* firstChild;
-	Component* lastChild;
-	int firstChildMinSize; // in pixels
-	int lastChildMinSize;  // in pixels
-	boolean resizable;
-	boolean fillIfSingleChild; // if one element is missing the other takes the whole place
-	boolean collapseEmptyChildren; // if true, empty children (implementing Emptyable) will be collapsed
-
-	command setFirstChild(Component* firstChild);
-	command setLastChild(Component* lastChild);
-	command setSize(double referenceChildSize, SplitSizePolicy sizePolicy);
-	command setFirstChildMinSize(int firstChildMinSize);
-	command setLastChildMinSize(int lastChildMinSize);
+	mutable SplitDirection splitDirection;
+	mutable SplitSizePolicy sizePolicy;
+	mutable double referenceChildSize; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
+	mutable Component* firstChild;
+	mutable Component* lastChild;
+	mutable int firstChildMinSize; // in pixels
+	mutable int lastChildMinSize;  // in pixels
+	mutable boolean resizable;
+	mutable ChildCollapsingPolicy childCollapsingPolicy;
 
 	event splitResized(double referenceChildSize);
+}
+
+enum ChildCollapsingPolicy {
+    NEVER, IF_NULL, IF_EMPTY
 }

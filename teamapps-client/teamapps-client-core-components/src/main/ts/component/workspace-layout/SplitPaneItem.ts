@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoSplitDirection, DtoSplitSizePolicy} from "../../generated";
+import {DtoChildCollapsingPolicy, DtoSplitDirection, DtoSplitSizePolicy} from "../../generated";
 import {SplitPane} from "../SplitPane";
-import {Component, generateUUID, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, generateUUID} from "teamapps-client-core";
 import {ItemTreeItem} from "./ItemTree";
 
 export class SplitPaneItem implements ItemTreeItem<SplitPane> {
@@ -38,8 +38,7 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 			sizePolicy: sizePolicy,
 			referenceChildSize: firstChildRelativeSize,
 			resizable: true,
-			fillIfSingleChild: true,
-			collapseEmptyChildren: true
+			childCollapsingPolicy: DtoChildCollapsingPolicy.IF_EMPTY
 		});
 	}
 

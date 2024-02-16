@@ -22,14 +22,10 @@ package "teamapps-client-core-components":org.teamapps.dto;
 import org.teamapps.dto.Component;
 
 class FlexContainer extends Component {
-	List<Component*> components;
-
-	CssFlexDirection flexDirection;
-	CssAlignItems alignItems;
-	CssJustifyContent justifyContent;
-
-	command addComponent(Component* component);
-	command removeComponent(Component* component);
+	mutable List<Component*> components;
+	mutable CssFlexDirection flexDirection;
+	mutable CssAlignItems alignItems;
+	mutable CssJustifyContent justifyContent;
 }
 
 enum CssFlexDirection {

@@ -36,7 +36,7 @@ import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {DtoCurrencyUnit} from "../../generated/DtoCurrencyUnit";
 import {BigDecimal} from "../util/BigDecimalString";
 
-export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
+export class CurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
@@ -70,7 +70,7 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 					return `<div class="tr-template-currency-single-line-short">${entry.code}</div>`;
 				}
 			},
-			queryOnNonNumberCharacters: config.alphaKeysQueryForCurrency,
+			queryOnNonNumberCharacters: config.alphabeticKeysQueryEnabled,
 			editingMode: this.convertToTrivialComponentsEditingMode(config.editingMode),
 			queryFunction: (queryString) => this.queryFunction(queryString)
 		});
@@ -220,6 +220,11 @@ export class UiCurrencyField extends UiField<DtoCurrencyField, DtoCurrencyValue>
 	setFixedPrecision(fixedPrecision: number): void {
 		this.config.fixedPrecision = fixedPrecision;
 		this.trivialUnitBox.setSelectedEntry(this.trivialUnitBox.getSelectedEntry()); // update format
+	}
+
+	setAlphabeticKeysQueryEnabled(alphabeticKeysQueryEnabled: boolean) {
+		this.config.alphabeticKeysQueryEnabled = alphabeticKeysQueryEnabled;
+		this.trivialUnitBox.setQueryOnNonNumberCharacters(alphabeticKeysQueryEnabled);
 	}
 }
 

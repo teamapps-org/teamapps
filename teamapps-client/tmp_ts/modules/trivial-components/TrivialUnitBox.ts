@@ -474,6 +474,10 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		this.$unitBox.classList.toggle('unit-display-right', unitDisplayPosition === 'right');
 	}
 
+	public setQueryOnNonNumberCharacters(queryOnNonNumberCharacters: boolean) {
+		this.config.queryOnNonNumberCharacters = queryOnNonNumberCharacters;
+	}
+
 	public isDropDownOpen(): boolean {
 		return this.dropDownOpen;
 	}

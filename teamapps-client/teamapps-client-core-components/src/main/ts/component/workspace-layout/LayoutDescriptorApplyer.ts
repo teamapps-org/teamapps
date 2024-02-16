@@ -179,7 +179,8 @@ export class LayoutDescriptorApplyer {
 		}
 
 		if (item instanceof SplitPaneItem && isSplitPanelDescriptor(descriptor)) {
-			item.component.setSize(descriptor.referenceChildSize, descriptor.sizePolicy);
+			item.component.setSizePolicy(descriptor.sizePolicy);
+			item.component.setReferenceChildSize(descriptor.referenceChildSize);
 		} else if (item instanceof TabPanelItem && isTabPanelDescriptor(descriptor)) {
 			this.setViewGroupPanelStateFunction(item, descriptor.panelState);
 		}

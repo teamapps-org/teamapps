@@ -25,7 +25,7 @@ public enum CssAlignItems {
 
 	STRETCH, CENTER, FLEX_START, FLEX_END, BASELINE, INITIAL, INHERIT;
 
-	public DtoCssAlignItems toCssAlignItems() {
+	public DtoCssAlignItems toDto() {
 		return DtoCssAlignItems.valueOf(this.name());
 	}
 

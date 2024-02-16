@@ -19,8 +19,8 @@
  */
 package org.teamapps.dsl.generate;
 
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,14 +32,14 @@ public class GeneratorTestUtil {
 	public static void compareCodeWithResource(String expectedResultResourceName, String actual) {
 		String expected = readResourceToString(expectedResultResourceName);
 
-//		System.out.println(actual);
-//		Assert.assertEquals(expected, actual);
-
-		try {
-			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName).getAbsoluteFile(), StandardCharsets.UTF_8).write(actual);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		System.out.println(actual);
+		Assert.assertEquals(expected, actual);
+//
+//		try {
+//			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName).getAbsoluteFile(), StandardCharsets.UTF_8).write(actual);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}       
 
 	public static String readResourceToString(String resourceName) {

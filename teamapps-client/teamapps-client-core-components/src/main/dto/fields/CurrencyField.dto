@@ -24,18 +24,12 @@ import org.teamapps.dto.Component;
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
 //the value is always a long in cents for accuracy
 class CurrencyField extends Field implements TextInputHandlingField {
-	String locale;
-	List<CurrencyUnit> currencyUnits; //list of ISO 4217 currencies - e.g. "USD", "EUR", etc. to be displayed as dropdown selection if available
-	int fixedPrecision; // if >= 0, this overwrites the corresponding currency unit precision
-	boolean showCurrencyBeforeAmount; // If true, the currency indicator is on the left of the amount. If false, it is on the right of the amount.
-	boolean showCurrencySymbol; // If false, show "EUR", "USD", etc. as selected value of dropdown button. If true, show "$" for "USD", "€" for "EUR". The dopdown list shows always both ISO code and currency symbol (e.g. "$ (USD)" or "€ (EUR)"). Use "¤" as generic symbol (as defined in ISO standard).
-	boolean alphaKeysQueryForCurrency; //if true a hit on e will query all currencies starting with e; autocomplete
-
-	command setLocale(String locale);
-	command setCurrencyUnits(List<CurrencyUnit> currencyUnits);
-	command setFixedPrecision(int fixedPrecision);
-	command setShowCurrencyBeforeAmount(boolean showCurrencyBeforeAmount);
-	command setShowCurrencySymbol(boolean showCurrencySymbol);
+	mutable String locale;
+	mutable List<CurrencyUnit> currencyUnits; //list of ISO 4217 currencies - e.g. "USD", "EUR", etc. to be displayed as dropdown selection if available
+	mutable int fixedPrecision; // if >= 0, this overwrites the corresponding currency unit precision
+	mutable boolean showCurrencyBeforeAmount; // If true, the currency indicator is on the left of the amount. If false, it is on the right of the amount.
+	mutable boolean showCurrencySymbol; // If false, show "EUR", "USD", etc. as selected value of dropdown button. If true, show "$" for "USD", "€" for "EUR". The dopdown list shows always both ISO code and currency symbol (e.g. "$ (USD)" or "€ (EUR)"). Use "¤" as generic symbol (as defined in ISO standard).
+	mutable boolean alphabeticKeysQueryEnabled; //if true a hit on e will query all currencies starting with e; autocomplete
 }
 
 class CurrencyUnit {

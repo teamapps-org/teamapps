@@ -22,6 +22,7 @@ package org.teamapps.ux.component.flexcontainer;
 import org.teamapps.dto.DtoFlexContainer;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.css.CssAlignItems;
@@ -48,15 +49,15 @@ public class FlexContainer extends AbstractComponent {
 		uiFlexContainer.setComponents(components.stream()
 				.map(c -> c.createDtoReference())
 				.collect(Collectors.toList()));
-		uiFlexContainer.setFlexDirection(flexDirection.toUiCssFlexDirection());
-		uiFlexContainer.setAlignItems(alignItems.toCssAlignItems());
-		uiFlexContainer.setJustifyContent(justifyContent.toUiCssJustifyContent());
+		uiFlexContainer.setFlexDirection(flexDirection.toDto());
+		uiFlexContainer.setAlignItems(alignItems.toDto());
+		uiFlexContainer.setJustifyContent(justifyContent.toDto());
 		return uiFlexContainer;
 	}
 
 	public void addComponent(org.teamapps.ux.component.Component component) {
 		this.components.add(component);
-		sendCommandIfRendered(() -> new DtoFlexContainer.AddComponentCommand(component.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createDtoReference()).toList()));
 	}
 
 	public void addComponent(org.teamapps.ux.component.Component component, FlexSizingPolicy sizingPolicy) {
@@ -66,12 +67,17 @@ public class FlexContainer extends AbstractComponent {
 
 	public void removeComponent(org.teamapps.ux.component.Component component) {
 		this.components.remove(component);
-		sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(component.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createDtoReference()).toList()));
 	}
 
 	public void removeAllComponents() {
-		this.components.forEach(c -> sendCommandIfRendered(() -> new DtoFlexContainer.RemoveComponentCommand(c.createDtoReference())));
 		this.components.clear();
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(List.of()));
+	}
+
+	public void setComponents(List<Component> components) {
+		this.components = new ArrayList<>(components);
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createDtoReference()).toList()));
 	}
 
 	@Override
@@ -85,7 +91,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void setFlexDirection(CssFlexDirection flexDirection) {
 		this.flexDirection = flexDirection;
-		reRenderIfRendered(); // TODO
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetFlexDirectionCommand(flexDirection.toDto()));
 	}
 
 	public CssAlignItems getAlignItems() {
@@ -94,7 +100,8 @@ public class FlexContainer extends AbstractComponent {
 
 	public void setAlignItems(CssAlignItems alignItems) {
 		this.alignItems = alignItems;
-		reRenderIfRendered(); // TODO
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetAlignItemsCommand(alignItems.toDto()));
+
 	}
 
 	public CssJustifyContent getJustifyContent() {
@@ -103,7 +110,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void setJustifyContent(CssJustifyContent justifyContent) {
 		this.justifyContent = justifyContent;
-		reRenderIfRendered(); // TODO
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetJustifyContentCommand(justifyContent.toDto()));
 	}
 
 	public List<org.teamapps.ux.component.Component> getComponents() {

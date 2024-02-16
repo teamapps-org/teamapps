@@ -86,7 +86,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 		field.setFixedPrecision(fixedPrecision);
 		field.setShowCurrencyBeforeAmount(currencyBeforeAmount);
 		field.setShowCurrencySymbol(currencySymbolsEnabled);
-		field.setAlphaKeysQueryForCurrency(alphabeticKeysQueryEnabled);
+		field.setAlphabeticKeysQueryEnabled(alphabeticKeysQueryEnabled);
 		field.setLocale(locale.toLanguageTag());
 		return field;
 	}
@@ -194,7 +194,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public void setAlphabeticKeysQueryEnabled(boolean alphabeticKeysQueryEnabled) {
 		this.alphabeticKeysQueryEnabled = alphabeticKeysQueryEnabled;
-		reRenderIfRendered();
+		sendCommandIfRendered(() -> new DtoCurrencyField.SetAlphabeticKeysQueryEnabledCommand(alphabeticKeysQueryEnabled));
 	}
 
 	public Locale getLocale() {

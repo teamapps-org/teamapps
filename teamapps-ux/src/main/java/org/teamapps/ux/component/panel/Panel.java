@@ -54,12 +54,12 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 	private int rightHeaderFieldMinWidth = 100;
 	private int rightHeaderFieldMaxWidth = 300;
 	private HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy = HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
-	private boolean alwaysShowHeaderFieldIcons = false;
+	private HeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy = HeaderFieldIconVisibilityPolicy.DISPLAYED_WHEN_MINIMIZED;
 
 	private org.teamapps.ux.component.Component content;
-	private boolean stretchContent = true;
+	private boolean contentStretchingEnabled = true;
 
-	private boolean hideTitleBar;
+	private boolean titleBarHidden;
 	private Toolbar toolbar;
 	private int padding = 0;
 	private final List<ToolButton> toolButtons = new ArrayList<>();
@@ -145,8 +145,8 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		uiPanel.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanel.setLeftHeaderField(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth));
 		uiPanel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
-		uiPanel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy.toUiHeaderComponentMinimizationPolicy());
-		uiPanel.setHideTitleBar(hideTitleBar);
+		uiPanel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy.toDto());
+		uiPanel.setTitleBarHidden(titleBarHidden);
 		uiPanel.setToolbar(ClientObject.createDtoReference(toolbar));
 		uiPanel.setContent(content != null ? content.createDtoReference() : null);
 		uiPanel.setPadding(padding);
@@ -155,8 +155,8 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		uiPanel.setToolButtons(toolButtons.stream()
 				.map(toolButton -> toolButton.createDtoReference())
 				.collect(Collectors.toList()));
-		uiPanel.setAlwaysShowHeaderFieldIcons(alwaysShowHeaderFieldIcons);
-		uiPanel.setStretchContent(stretchContent);
+		uiPanel.setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy.toDto());
+		uiPanel.setContentStretchingEnabled(contentStretchingEnabled);
 	}
 
 	public DtoPanelHeaderField createUiPanelHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
@@ -261,16 +261,16 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setHeaderComponentMinimizationPolicy(HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy) {
 		this.headerComponentMinimizationPolicy = headerComponentMinimizationPolicy;
-		reRenderIfRendered();
+		sendCommandIfRendered(() -> new DtoPanel.SetHeaderComponentMinimizationPolicyCommand(headerComponentMinimizationPolicy.toDto()));
 	}
 
-	public boolean isHideTitleBar() {
-		return hideTitleBar;
+	public boolean isTitleBarHidden() {
+		return titleBarHidden;
 	}
 
-	public void setHideTitleBar(boolean hideTitleBar) {
-		this.hideTitleBar = hideTitleBar;
-		reRenderIfRendered();
+	public void setTitleBarHidden(boolean titleBarHidden) {
+		this.titleBarHidden = titleBarHidden;
+		sendCommandIfRendered(() -> new DtoPanel.SetTitleBarHiddenCommand(this.titleBarHidden));
 	}
 
 	public Toolbar getToolbar() {
@@ -279,7 +279,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setToolbar(Toolbar toolbar) {
 		this.toolbar = toolbar;
-		reRenderIfRendered();
+		sendCommandIfRendered(() -> new DtoPanel.SetToolbarCommand(toolbar.createDtoReference()));
 	}
 
 	public int getPadding() {
@@ -288,7 +288,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setPadding(int padding) {
 		this.padding = padding;
-		reRenderIfRendered();
+		sendCommandIfRendered(() -> new DtoPanel.SetPaddingCommand(this.padding));
 	}
 
 	public boolean isMaximizable() {
@@ -380,22 +380,22 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 				rightHeaderFieldMaxWidth)));
 	}
 
-	public boolean isAlwaysShowHeaderFieldIcons() {
-		return alwaysShowHeaderFieldIcons;
+	public HeaderFieldIconVisibilityPolicy getHeaderFieldIconVisibilityPolicy() {
+		return headerFieldIconVisibilityPolicy;
 	}
 
-	public void setAlwaysShowHeaderFieldIcons(boolean alwaysShowHeaderFieldIcons) {
-		this.alwaysShowHeaderFieldIcons = alwaysShowHeaderFieldIcons;
-		reRenderIfRendered();
+	public void setHeaderFieldIconVisibilityPolicy(HeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy) {
+		this.headerFieldIconVisibilityPolicy = headerFieldIconVisibilityPolicy;
+		sendCommandIfRendered(() -> new DtoPanel.SetHeaderFieldIconVisibilityPolicyCommand(this.headerFieldIconVisibilityPolicy.toDto()));
 	}
 
-	public boolean isStretchContent() {
-		return stretchContent;
+	public boolean isContentStretchingEnabled() {
+		return contentStretchingEnabled;
 	}
 
-	public void setStretchContent(boolean stretchContent) {
-		this.stretchContent = stretchContent;
-		sendCommandIfRendered(() -> new DtoPanel.SetStretchContentCommand(stretchContent));
+	public void setContentStretchingEnabled(boolean contentStretchingEnabled) {
+		this.contentStretchingEnabled = contentStretchingEnabled;
+		sendCommandIfRendered(() -> new DtoPanel.SetContentStretchingEnabledCommand(contentStretchingEnabled));
 	}
 
 

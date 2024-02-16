@@ -113,7 +113,7 @@ public class Window extends Panel {
 		this.width = width;
 		this.height = height;
 		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
-			this.setStretchContent(false);
+			this.setContentStretchingEnabled(false);
 		}
 		sendCommandIfRendered(() -> new DtoWindow.SetSizeCommand(width, height));
 	}

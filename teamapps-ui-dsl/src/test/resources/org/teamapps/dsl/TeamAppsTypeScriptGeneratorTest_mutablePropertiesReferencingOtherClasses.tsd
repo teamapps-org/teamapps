@@ -1,0 +1,19 @@
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+
+import {DtoReference} from "teamapps-client-communication";
+import {DtoCommand} from "teamapps-client-communication";
+import {DtoX} from "./DtoX";
+
+export interface DtoA {
+	_type?: string;
+	x?: DtoX
+}
+
+export interface DtoACommandHandler {
+	setX(x: DtoX): any;
+}
+
+

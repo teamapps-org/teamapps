@@ -25,7 +25,7 @@ public enum CssFlexDirection {
 
 	ROW, ROW_REVERSE, COLUMN, COLUMN_REVERSE;
 
-	public DtoCssFlexDirection toUiCssFlexDirection() {
+	public DtoCssFlexDirection toDto() {
 		return DtoCssFlexDirection.valueOf(this.name());
 	}
 

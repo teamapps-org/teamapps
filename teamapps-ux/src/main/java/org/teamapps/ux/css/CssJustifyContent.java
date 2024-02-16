@@ -25,7 +25,7 @@ public enum CssJustifyContent {
 
 	START, END, CENTER, SPACE_BETWEEN, SPACE_AROUND, SPACE_EVENLY, INITIAL, INHERIT;
 
-	public DtoCssJustifyContent toUiCssJustifyContent() {
+	public DtoCssJustifyContent toDto() {
 		return DtoCssJustifyContent.valueOf(this.name());
 	}
 

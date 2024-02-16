@@ -40,8 +40,7 @@ public class SplitPane extends AbstractComponent {
 	private int firstChildMinSize = 10;
 	private int lastChildMinSize = 10;
 	private boolean resizable = true;
-	private boolean fillIfSingleChild = true;
-	private boolean collapseEmptyChildren = true;
+	private ChildCollapsingPolicy childCollapsingPolicy = ChildCollapsingPolicy.IF_EMPTY;
 
 	public static SplitPane createHorizontalSplitPane() {
 		return new SplitPane(SplitDirection.HORIZONTAL);
@@ -63,7 +62,7 @@ public class SplitPane extends AbstractComponent {
 
 	@Override
 	public DtoComponent createDto() {
-		DtoSplitPane uiSplitPane = new DtoSplitPane(splitDirection.toUiSplitDirection(), sizePolicy.toUiSplitSizePolicy());
+		DtoSplitPane uiSplitPane = new DtoSplitPane(splitDirection.toDto(), sizePolicy.toUiSplitSizePolicy());
 		mapAbstractUiComponentProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);
 		if (firstChild != null) {
@@ -110,22 +109,13 @@ public class SplitPane extends AbstractComponent {
 		sendCommandIfRendered(() -> new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createDtoReference() : null));
 	}
 
-	public void setSize(float referenceChildSize, SplitSizePolicy sizePolicy) {
-		if (sizePolicy == null) {
-			return;
-		}
-		this.referenceChildSize = referenceChildSize;
-		this.sizePolicy = sizePolicy;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
-	}
-
 	public SplitDirection getSplitDirection() {
 		return splitDirection;
 	}
 
 	public void setSplitDirection(SplitDirection splitDirection) {
 		this.splitDirection = splitDirection;
-		reRenderIfRendered();
+		this.sendCommandIfRendered(() -> new DtoSplitPane.SetSplitDirectionCommand(splitDirection.toDto()));
 	}
 
 	public SplitSizePolicy getSizePolicy() {
@@ -134,7 +124,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setSizePolicy(SplitSizePolicy sizePolicy) {
 		this.sizePolicy = sizePolicy;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
+		sendCommandIfRendered(() -> new DtoSplitPane.SetSizePolicyCommand(sizePolicy.toUiSplitSizePolicy()));
 	}
 
 	public double getReferenceChildSize() {
@@ -143,7 +133,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setReferenceChildSize(float referenceChildSize) {
 		this.referenceChildSize = referenceChildSize;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetSizeCommand(referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
+		sendCommandIfRendered(() -> new DtoSplitPane.SetReferenceChildSizeCommand(referenceChildSize));
 	}
 
 	public int getFirstChildMinSize() {
@@ -170,24 +160,15 @@ public class SplitPane extends AbstractComponent {
 
 	public void setResizable(boolean resizable) {
 		this.resizable = resizable;
-		this.reRenderIfRendered();
+		this.sendCommandIfRendered(() -> new DtoSplitPane.SetResizableCommand(resizable));
 	}
 
-	public boolean isFillIfSingleChild() {
-		return fillIfSingleChild;
+	public ChildCollapsingPolicy getChildCollapsingPolicy() {
+		return childCollapsingPolicy;
 	}
 
-	public void setFillIfSingleChild(boolean fillIfSingleChild) {
-		this.fillIfSingleChild = fillIfSingleChild;
-		this.reRenderIfRendered();
-	}
-
-	public boolean isCollapseEmptyChildren() {
-		return collapseEmptyChildren;
-	}
-
-	public void setCollapseEmptyChildren(boolean collapseEmptyChildren) {
-		this.collapseEmptyChildren = collapseEmptyChildren;
-		this.reRenderIfRendered();
+	public void setChildCollapsingPolicy(ChildCollapsingPolicy childCollapsingPolicy) {
+		this.childCollapsingPolicy = childCollapsingPolicy;
+		this.sendCommandIfRendered(() -> new DtoSplitPane.SetChildCollapsingPolicyCommand(childCollapsingPolicy.toDto()));
 	}
 }
