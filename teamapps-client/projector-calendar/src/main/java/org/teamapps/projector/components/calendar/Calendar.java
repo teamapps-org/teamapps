@@ -105,15 +105,36 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private Disposable onCalendarDataChangedListener;
 
-	public Calendar() {
-		this(null);
+	Calendar(
+			boolean showHeader,
+			boolean tableBorder,
+			boolean showWeekNumbers,
+			int businessHoursStart,
+			int businessHoursEnd,
+			DayOfWeek firstDayOfWeek,
+			List<DayOfWeek> workingDays,
+			Color tableHeaderBackgroundColor,
+			ULocale locale,
+			int minYearViewMonthTileWidth,
+			int maxYearViewMonthTileWidth
+	) {
+		toggleEventListening(DtoCalendar.DataNeededEvent.TYPE_ID, true);
+
+		this.showHeader = showHeader;
+		this.tableBorder = tableBorder;
+		this.showWeekNumbers = showWeekNumbers;
+		this.businessHoursStart = businessHoursStart;
+		this.businessHoursEnd = businessHoursEnd;
+		this.firstDayOfWeek = firstDayOfWeek;
+		this.workingDays = workingDays;
+		this.tableHeaderBackgroundColor = tableHeaderBackgroundColor;
+		this.locale = locale;
+		this.minYearViewMonthTileWidth = minYearViewMonthTileWidth;
+		this.maxYearViewMonthTileWidth = maxYearViewMonthTileWidth;
 	}
 
-	public Calendar(CalendarModel<CEVENT> model) {
-		toggleEventListening(DtoCalendar.DataNeededEvent.TYPE_ID, true);
-		if (model != null) {
-			setModel(model);
-		}
+	public static <CEVENT extends CalendarEvent> CalendarBuilder<CEVENT> builder() {
+		return new CalendarBuilder<>();
 	}
 
 	private DtoCalendarEventClientRecord createUiCalendarEventClientRecord(CEVENT calendarEvent) {
@@ -136,9 +157,9 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		DtoCalendarEventClientRecord uiRecord = new DtoCalendarEventClientRecord();
 		uiRecord.setValues(values);
 
-		uiRecord.setTimeGridTemplate(timeGridTemplate != null ? timeGridTemplate.createDtoReference(): null);
-		uiRecord.setDayGridTemplate(dayGridTemplate != null ? dayGridTemplate.createDtoReference(): null);
-		uiRecord.setMonthGridTemplate(monthGridTemplate != null ? monthGridTemplate.createDtoReference(): null);
+		uiRecord.setTimeGridTemplate(timeGridTemplate != null ? timeGridTemplate.createDtoReference() : null);
+		uiRecord.setDayGridTemplate(dayGridTemplate != null ? dayGridTemplate.createDtoReference() : null);
+		uiRecord.setMonthGridTemplate(monthGridTemplate != null ? monthGridTemplate.createDtoReference() : null);
 
 		uiRecord.setIcon(getSessionContext().resolveIcon(calendarEvent.getIcon()));
 		uiRecord.setTitle(calendarEvent.getTitle());
@@ -396,72 +417,32 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		return showHeader;
 	}
 
-	public void setShowHeader(boolean showHeader) {
-		this.showHeader = showHeader;
-		reRenderIfRendered();
-	}
-
 	public boolean isTableBorder() {
 		return tableBorder;
-	}
-
-	public void setTableBorder(boolean tableBorder) {
-		this.tableBorder = tableBorder;
-		reRenderIfRendered();
 	}
 
 	public boolean isShowWeekNumbers() {
 		return showWeekNumbers;
 	}
 
-	public void setShowWeekNumbers(boolean showWeekNumbers) {
-		this.showWeekNumbers = showWeekNumbers;
-		reRenderIfRendered();
-	}
-
 	public int getBusinessHoursStart() {
 		return businessHoursStart;
-	}
-
-	public void setBusinessHoursStart(int businessHoursStart) {
-		this.businessHoursStart = businessHoursStart;
-		reRenderIfRendered();
 	}
 
 	public int getBusinessHoursEnd() {
 		return businessHoursEnd;
 	}
 
-	public void setBusinessHoursEnd(int businessHoursEnd) {
-		this.businessHoursEnd = businessHoursEnd;
-		reRenderIfRendered();
-	}
-
 	public DayOfWeek getFirstDayOfWeek() {
 		return firstDayOfWeek;
-	}
-
-	public void setFirstDayOfWeek(DayOfWeek firstDayOfWeek) {
-		this.firstDayOfWeek = firstDayOfWeek;
-		reRenderIfRendered();
 	}
 
 	public List<DayOfWeek> getWorkingDays() {
 		return workingDays;
 	}
 
-	public void setWorkingDays(List<DayOfWeek> workingDays) {
-		this.workingDays = workingDays;
-		reRenderIfRendered();
-	}
-
 	public Color getTableHeaderBackgroundColor() {
 		return tableHeaderBackgroundColor;
-	}
-
-	public void setTableHeaderBackgroundColor(Color tableHeaderBackgroundColor) {
-		this.tableHeaderBackgroundColor = tableHeaderBackgroundColor;
-		reRenderIfRendered();
 	}
 
 	public Color getDefaultBackgroundColor() {
@@ -504,7 +485,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		this.templateDecider = createStaticTemplateDecider(timeGridTemplate, dayGridTemplate, monthGridTemplate);
 	}
 
-	private CalendarEventTemplateDecider<CEVENT> createStaticTemplateDecider(Template timeGridTemplate, Template dayGridTemplate, Template monthGridTemplate) {
+	static <CEVENT extends CalendarEvent> CalendarEventTemplateDecider<CEVENT> createStaticTemplateDecider(Template timeGridTemplate, Template dayGridTemplate, Template monthGridTemplate) {
 		return (record, viewMode) -> {
 			switch (viewMode) {
 				case DAY:
@@ -529,15 +510,6 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		return locale;
 	}
 
-	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
-		this.locale = locale;
-		reRenderIfRendered();
-	}
-
 	public ZoneId getTimeZone() {
 		return timeZone;
 	}
@@ -551,18 +523,8 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		return minYearViewMonthTileWidth;
 	}
 
-	public void setMinYearViewMonthTileWidth(int minYearViewMonthTileWidth) {
-		this.minYearViewMonthTileWidth = minYearViewMonthTileWidth;
-		reRenderIfRendered();
-	}
-
 	public int getMaxYearViewMonthTileWidth() {
 		return maxYearViewMonthTileWidth;
-	}
-
-	public void setMaxYearViewMonthTileWidth(int maxYearViewMonthTileWidth) {
-		this.maxYearViewMonthTileWidth = maxYearViewMonthTileWidth;
-		reRenderIfRendered();
 	}
 
 	public boolean isNavigateOnHeaderClicks() {

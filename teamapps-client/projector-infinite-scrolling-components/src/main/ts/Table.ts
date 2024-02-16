@@ -22,22 +22,33 @@
 ///<reference types="slickgrid/slick.rowselectionmodel"/>
 
 
-import {Component, debouncedMethod, DebounceMode, nonRecursive, parseHtml, TeamAppsEvent} from "teamapps-client-core";
-import {AbstractComponent} from "teamapps-client-core";
+import {
+	AbstractComponent,
+	Component,
+	debouncedMethod,
+	DebounceMode,
+	executeWhenFirstDisplayed,
+	nonRecursive,
+	parseHtml,
+	TeamAppsEvent
+} from "teamapps-client-core";
 
 import {GenericTableCellEditor} from "./GenericTableCellEditor";
 import {TableDataProvider} from "./TableDataProvider";
 import {
 	AbstractField,
-	applyCss, arraysEqual,
+	applyCss,
+	arraysEqual,
 	ContextMenu,
+	DropDown,
 	DtoFieldMessage,
-	DtoFieldMessageSeverity, DtoTextAlignment, fadeIn, fadeOut,
-	getHighestSeverity, manipulateWithoutTransitions
+	DtoFieldMessageSeverity,
+	DtoTextAlignment,
+	fadeIn,
+	fadeOut,
+	getHighestSeverity,
+	manipulateWithoutTransitions
 } from "teamapps-client-core-components";
-import {
-	executeWhenFirstDisplayed
-} from "teamapps-client-core";
 import {
 	DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent,
 	DtoSortDirection,
@@ -54,12 +65,12 @@ import {
 	DtoTableClientRecord,
 	DtoTableColumn,
 	DtoTableCommandHandler,
+	DtoTableDisplayStyle,
 	DtoTableEventSource
 } from "./generated";
-import {DropDown} from "teamapps-client-core-components";
 import {TableRowSelectionModel} from "./TableRowSelectionModel";
-import EventData = Slick.EventData;
 import {FieldMessagesPopper} from "./FieldMessagesPopper";
+import EventData = Slick.EventData;
 
 interface Column extends Slick.Column<any> {
 	id: string;
@@ -92,6 +103,7 @@ const backgroundColorCssClassesByMessageSeverity = {
 	[DtoFieldMessageSeverity.ERROR]: "bg-danger",
 };
 
+type ElementsByName = { [fieldName: string]: HTMLElement };
 type FieldsByName = { [fieldName: string]: AbstractField };
 
 export class Table extends AbstractComponent<DtoTable> implements DtoTableCommandHandler, DtoTableEventSource {
@@ -121,14 +133,15 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 
 	private dropDown: DropDown;
 	private $selectionFrame: HTMLElement;
-	private headerRowFields: FieldsByName = {};
-	private footerRowFields: FieldsByName = {};
+
+	private headerRowFieldWrappers: ElementsByName = {};
+	private headerFields: FieldsByName = {};
+	private footerRowFieldWrappers: ElementsByName = {};
+	private footerFields: FieldsByName = {};
 
 	private $editorFieldTempContainer: HTMLElement;
 
 	private contextMenu: ContextMenu;
-
-	private rowSelectionCausedByApiCall: boolean;
 
 	constructor(config: DtoTable) {
 		super(config);
@@ -138,7 +151,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
     <div class="editor-field-temp-container hidden"></div>
 </div>`);
 		const $table = this.$component.querySelector<HTMLElement>(":scope .slick-table");
-		if (config.stripedRows) {
+		if (config.stripedRowsEnabled) {
 			$table.classList.add("striped-rows");
 		}
 		this.$editorFieldTempContainer = this.$component.querySelector<HTMLElement>(":scope .editor-field-temp-container");
@@ -163,12 +176,12 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		console.log("createGrid");
 		this.allColumns = this._createColumns();
 
-		if (config.showRowCheckBoxes) {
+		if (config.rowCheckBoxesEnabled) {
 			var checkboxSelector = new Slick.CheckboxSelectColumn({});
 			this.allColumns.unshift(checkboxSelector.getColumnDefinition() as Column);
 		}
 		console.log("createGrid 2");
-		if (config.showNumbering) {
+		if (config.numberingColumnEnabled) {
 			const RowNumberFormatter: Slick.Formatter<DtoTableClientRecord> = (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => {
 				return "" + (row + 1);
 			};
@@ -198,33 +211,33 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			fullWidthRows: true,
 			rowHeight: config.rowHeight + config.rowBorderWidth,
 			multiColumnSort: false,
-			multiSelect: config.allowMultiRowSelection,
+			multiSelect: config.multiRowSelectionEnabled,
 			enableTextSelectionOnCells: config.textSelectionEnabled, // see also CSS style user-select: none
 			editable: config.editable,
 			// editCommandHandler: (item: TableDataProviderItem, column: Column, editCommand: any) => {
 			// 	column.uiField.commit();
 			// 	editCommand.execute();
 			// },
-			showHeaderRow: config.showHeaderRow,
-			headerRowHeight: config.headerRowHeight,
+			showHeaderRow: config.headerFieldsRowEnabled,
+			headerRowHeight: config.headerFieldsRowHeight,
 			createFooterRow: true,
-			showFooterRow: config.showFooterRow,
-			footerRowHeight: config.footerRowHeight,
+			showFooterRow: config.footerFieldsRowEnabled,
+			footerRowHeight: config.footerFieldsRowHeight,
 		};
 		console.log("createGrid 4");
 		this._grid = new Slick.Grid($table, this.dataProvider, this.getVisibleColumns(), options);
 		console.log("createGrid 5");
 
-		if (config.headerRowFields) {
-			this.configureOuterFields(config.headerRowFields as FieldsByName, true);
-			this.headerRowFields = config.headerRowFields as FieldsByName;
+		if (config.headerFields) {
+			this.initializeOuterFieldWrappers(true);
+			this.headerFields = config.headerFields as FieldsByName;
 		}
-		if (config.footerRowFields) {
-			this.configureOuterFields(config.footerRowFields as FieldsByName, false);
-			this.footerRowFields = config.footerRowFields as FieldsByName;
+		if (config.footerFields) {
+			this.initializeOuterFieldWrappers(false);
+			this.footerFields = config.footerFields as FieldsByName;
 		}
 
-		if (config.hideHeaders) {
+		if (config.columnHeadersVisible) {
 			applyCss($table.querySelector<HTMLElement>(":scope .slick-header-columns"), {
 				height: 0,
 				border: "none"
@@ -232,11 +245,11 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			//this._grid.resizeCanvas();
 		}
 
-		$table.classList.add(config.displayAsList ? 'list-mode' : 'table-mode');
+		$table.classList.add(config.displayStyle == DtoTableDisplayStyle.LIST ? 'list-mode' : 'table-mode');
 
 		this._grid.setSelectionModel(new TableRowSelectionModel());
 
-		if (config.showRowCheckBoxes) {
+		if (config.rowCheckBoxesEnabled) {
 			this._grid.registerPlugin(checkboxSelector);
 		}
 
@@ -454,16 +467,56 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	private configureOuterFields(fieldsByColumnId: { [columnName: string]: AbstractField }, header: boolean) {
-		let renderedEvent: Slick.Event<Slick.OnHeaderRowCellRenderedEventArgs<any>> = header ? this._grid.onHeaderRowCellRendered : (this._grid as any).onFooterRowCellRendered;
+	private initializeOuterFieldWrappers(header: boolean) {
+		const fieldsByColumnId: { [columnName: string]: AbstractField } = header ? this.headerFields : this.footerFields;
+		const wrapperElementsMap = header ? this.headerRowFieldWrappers : this.footerRowFieldWrappers;
+		const renderedEvent: Slick.Event<Slick.OnHeaderRowCellRenderedEventArgs<any>> = header ? this._grid.onHeaderRowCellRendered : (this._grid as any).onFooterRowCellRendered;
 		renderedEvent.subscribe((e, args) => {
 			args.node.innerHTML = '';
 			const columnName = args.column.id;
+
+			let wrapperElement = parseHtml(`<div class="outer-field-wrapper ${header ? 'header' : 'footer'}-field-wrapper"></div>`);
+			wrapperElementsMap[columnName] = wrapperElement;
+			args.node.appendChild(wrapperElement);
+
 			let field = fieldsByColumnId[columnName];
 			if (field) {
-				args.node.appendChild(field.getMainElement());
+				this.setOuterRowField(columnName, header, field);
 			}
 		});
+	}
+
+	private setOuterRowField(columnName: string, header: boolean, field: AbstractField) {
+		const fieldsByColumnId: { [columnName: string]: AbstractField } = header ? this.headerFields : this.footerFields;
+		fieldsByColumnId[columnName] = field;
+		let wrapperElementsMap = header ? this.headerRowFieldWrappers : this.footerRowFieldWrappers;
+		let wrapper = wrapperElementsMap[columnName];
+		if (wrapper == null) {
+			console.error(`Could not set ${header ? 'header' : 'footer'} field for column ${columnName}`);
+			return;
+		}
+		wrapper.innerHTML = '';
+		wrapper.appendChild(field.getMainElement());
+	}
+
+	public setHeaderFields(headerFields: { [p: string]: unknown }): any {
+		Object.entries(this.headerRowFieldWrappers).forEach(e => e[1].innerHTML = '');
+		this.headerFields = {}
+		Object.entries(this.headerFields).forEach(e => this.setHeaderRowField(e[0], e[1]));
+	}
+
+	public setHeaderRowField(columnName: string, field: AbstractField) {
+		this.setOuterRowField(columnName, true, field);
+	}
+
+	public setFooterFields(footerFields: { [p: string]: unknown }): any {
+		Object.entries(this.footerRowFieldWrappers).forEach(e => e[1].innerHTML = '');
+		this.footerFields = {}
+		Object.entries(this.footerFields).forEach(e => this.setFooterRowField(e[0], e[1]));
+	}
+
+	public setFooterRowField(columnName: string, field: AbstractField) {
+		this.setOuterRowField(columnName, false, field);
 	}
 
 	private getCurrentlyDisplayedRecordIds() {
@@ -500,7 +553,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		// if (uiField instanceof UiRichTextEditor || uiField instanceof UiMultiLineTextField) {
 		// 	editorFactory = FixedSizeTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		// } else {
-			editorFactory = GenericTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
+		editorFactory = GenericTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		// }
 
 		const slickColumnConfig: Column = {
@@ -516,7 +569,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			editor: editorFactory,
 			asyncEditorLoading: false,
 			autoEdit: true,
-			focusable: this.config.displayAsList || uiField.isEditable(),
+			focusable: this.config.displayStyle == DtoTableDisplayStyle.LIST || uiField.isEditable(),
 			sortable: columnConfig.sortable,
 			resizable: columnConfig.resizeable,
 			hiddenIfOnlyEmptyCellsVisible: columnConfig.hiddenIfOnlyEmptyCellsVisible,
@@ -887,8 +940,8 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 	}
 
 	private setSlickGridColumns(columns: Column[]) {
-		Object.values(this.headerRowFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
-		Object.values(this.footerRowFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
+		Object.values(this.headerFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
+		Object.values(this.footerFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
 		this._grid.setColumns(columns);
 	}
 

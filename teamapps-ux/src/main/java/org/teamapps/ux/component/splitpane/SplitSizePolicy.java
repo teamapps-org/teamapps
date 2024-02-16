@@ -25,7 +25,7 @@ public enum SplitSizePolicy {
 
 	FIRST_FIXED, LAST_FIXED, RELATIVE;
 
-	public DtoSplitSizePolicy toUiSplitSizePolicy() {
+	public DtoSplitSizePolicy toDto() {
 		return DtoSplitSizePolicy.valueOf(this.name());
 	}
 }

@@ -105,7 +105,7 @@ public class WorkSpaceLayoutSplitPane extends WorkSpaceLayoutItem {
 				firstChild != null ? firstChild.createUiItem() : null,
 				lastChild != null ? lastChild.createUiItem() : null
 		);
-		item.setSizePolicy(sizePolicy.toUiSplitSizePolicy());
+		item.setSizePolicy(sizePolicy.toDto());
 		item.setReferenceChildSize(referenceChildSize);
 		return item;
 	}

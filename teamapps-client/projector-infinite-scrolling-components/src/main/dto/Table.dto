@@ -45,23 +45,27 @@ class TableColumn {
 	TextAlignment headerAlignment;
 }
 
+enum TableDisplayStyle {
+	TABLE, LIST;
+}
+
 class Table extends AbstractInfiniteListComponent {
 	required List<TableColumn> columns;
 
-	boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
+	TableDisplayStyle displayStyle;
 	boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
 	int rowHeight;
-	boolean stripedRows;
-	String stripedRowColorEven;
+	boolean stripedRowsEnabled;
+	String rowColor;
 	String stripedRowColorOdd;
-	boolean hideHeaders; //if true, do not show any headers
-	boolean allowMultiRowSelection;
+	boolean columnHeadersVisible; //if false, do not show any headers
+	boolean multiRowSelectionEnabled;
 	String selectionColor; // null = default color
 	int rowBorderWidth; // even in list mode! the border will be there but transparent!
 	String rowBorderColor;
 
-	boolean showRowCheckBoxes; //if true, show check boxes on the left
-	boolean showNumbering; //if true, show numbering on the left
+	boolean rowCheckBoxesEnabled; //if true, show check boxes on the left
+	boolean numberingColumnEnabled; //if true, show numbering on the left
 	boolean textSelectionEnabled;
 
 	String sortField; //if available the table is initially sorted by this field
@@ -69,13 +73,27 @@ class Table extends AbstractInfiniteListComponent {
 
 	boolean editable; //only valid for tables
 
-	boolean treeMode; //if true, use the parent id property of record to display the table as tree
-	String indentedColumnName; // if set, indent this column depending on the depth in the data hierarchy
-	int indentation; // in pixels
-
 	SelectionFrame selectionFrame;
 
 	boolean contextMenuEnabled;
+
+    // =========== header/footer row ("outerRow") ===========
+    boolean headerFieldsRowEnabled;
+    int headerFieldsRowBorderWidth; // even in list mode! the border will be there but transparent!
+    String headerFieldsRowBorderColor;
+    int headerFieldsRowHeight;
+    String headerFieldsRowBackgroundColor;
+    mutable Dictionary<Field*> headerFields;
+
+    boolean footerFieldsRowEnabled;
+    int footerFieldsRowBorderWidth; // even in list mode! the border will be there but transparent!
+    String footerFieldsRowBorderColor;
+    int footerFieldsRowHeight;
+    String footerFieldsRowBackgroundColor;
+    mutable Dictionary<Field*> footerFields;
+
+    command setHeaderRowField(String columnName, Field* field);
+    command setFooterRowField(String columnName, Field* field);
 
 	command clearTable();
 	command updateData(int startIndex, List<Integer> recordIds, List<TableClientRecord> newRecords, int totalNumberOfRecords);
@@ -108,21 +126,6 @@ class Table extends AbstractInfiniteListComponent {
 
 	event fieldOrderChange(String columnPropertyName, int position); //zero based
 	event columnSizeChange(String columnPropertyName, int size);
-
-	// =========== header/footer row ("outerRow") ===========
-	boolean showHeaderRow;
-    int headerRowBorderWidth; // even in list mode! the border will be there but transparent!
-    String headerRowBorderColor;
-    int headerRowHeight;
-    String headerRowBackgroundColor;
-    Dictionary<Field*> headerRowFields;
-
-	boolean showFooterRow;
-    int footerRowBorderWidth; // even in list mode! the border will be there but transparent!
-    String footerRowBorderColor;
-    int footerRowHeight;
-    String footerRowBackgroundColor;
-    Dictionary<Field*> footerRowFields;
 }
 
 @TypeScriptFactory

@@ -62,7 +62,9 @@ public class SplitPane extends AbstractComponent {
 
 	@Override
 	public DtoComponent createDto() {
-		DtoSplitPane uiSplitPane = new DtoSplitPane(splitDirection.toDto(), sizePolicy.toUiSplitSizePolicy());
+		DtoSplitPane uiSplitPane = new DtoSplitPane();
+		uiSplitPane.setSplitDirection(splitDirection.toDto());
+		uiSplitPane.setSizePolicy(sizePolicy.toDto());
 		mapAbstractUiComponentProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);
 		if (firstChild != null) {
@@ -74,8 +76,7 @@ public class SplitPane extends AbstractComponent {
 		uiSplitPane.setFirstChildMinSize(firstChildMinSize);
 		uiSplitPane.setLastChildMinSize(lastChildMinSize);
 		uiSplitPane.setResizable(resizable);
-		uiSplitPane.setFillIfSingleChild(fillIfSingleChild);
-		uiSplitPane.setCollapseEmptyChildren(collapseEmptyChildren);
+		uiSplitPane.setChildCollapsingPolicy(childCollapsingPolicy.toDto());
 
 		return uiSplitPane;
 	}
@@ -124,7 +125,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setSizePolicy(SplitSizePolicy sizePolicy) {
 		this.sizePolicy = sizePolicy;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetSizePolicyCommand(sizePolicy.toUiSplitSizePolicy()));
+		sendCommandIfRendered(() -> new DtoSplitPane.SetSizePolicyCommand(sizePolicy.toDto()));
 	}
 
 	public double getReferenceChildSize() {

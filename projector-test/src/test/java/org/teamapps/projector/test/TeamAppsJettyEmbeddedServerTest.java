@@ -57,8 +57,8 @@ public class TeamAppsJettyEmbeddedServerTest {
 				});
 			});
 			verticalLayout.addComponent(button);
-			verticalLayout.addComponentFillRemaining(new Calendar<>());
-			Table<Object> table = new Table<>();
+			verticalLayout.addComponentFillRemaining(Calendar.builder().build());
+			Table<Object> table = Table.builder().build();
 			table.addColumn("x", "Hello", new TextField()).setValueExtractor(x -> "Hey!");
 			table.setModel(new ListTableModel<>(List.of("a", "", "")));
 			verticalLayout.addComponentFillRemaining(table);

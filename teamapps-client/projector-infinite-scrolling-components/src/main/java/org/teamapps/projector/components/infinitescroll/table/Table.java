@@ -25,6 +25,7 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoFieldMessage;
 import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.dto.DtoReference;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -89,38 +90,33 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private final List<TableColumn<RECORD, ?>> columns = new ArrayList<>();
 
-	private boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
+	private TableDisplayStyle displayStyle; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
 	private boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
 	private int rowHeight = 28;
-	private boolean stripedRows = true;
-	private boolean hideHeaders; //if true, do not show any headers
-	private boolean allowMultiRowSelection = false;
-	private boolean showRowCheckBoxes; //if true, show check boxes on the left
-	private boolean showNumbering; //if true, show numbering on the left
+	private boolean stripedRowsEnabled = true;
+	private boolean columnHeadersVisible = true; //if false, do not show any headers
+	private boolean multiRowSelectionEnabled = false;
+	private boolean rowCheckBoxesEnabled; //if true, show check boxes on the left
+	private boolean numberingColumnEnabled; //if true, show numbering on the left
 	private boolean textSelectionEnabled = true;
 
 	private Sorting sorting; // nullable
 
 	private boolean editable; //only valid for tables
-	private boolean ensureEmptyLastRow; //if true, there is always an empty last row, as soon as any data is inserted into the empty row a new empty row is inserted
-
-	private boolean treeMode; //if true, use the parent id property of UiDataRecord to display the table as tree
-	private String indentedColumnName; // if set, indent this column depending on the depth in the data hierarchy
-	private int indentation = 15; // in pixels
 
 	private SelectionFrame selectionFrame;
 
 	// ----- header -----
 
-	private boolean showHeaderRow = false;
-	private int headerRowHeight = 28;
-	private final Map<String, AbstractField> headerRowFields = new HashMap<>(0);
+	private boolean headerFieldsRowEnabled = false;
+	private int headerFieldsRowHeight = 28;
+	private Map<String, AbstractField> headerFields = new HashMap<>(0);
 
 	// ----- footer -----
 
-	private boolean showFooterRow = false;
-	private int footerRowHeight = 28;
-	private final Map<String, AbstractField> footerRowFields = new HashMap<>(0);
+	private boolean footerFieldsRowEnabled = false;
+	private int footerFieldsRowHeight = 28;
+	private Map<String, AbstractField> footerFields = new HashMap<>(0);
 
 	private final List<RECORD> topNonModelRecords = new ArrayList<>();
 	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
@@ -128,17 +124,49 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
-	public Table() {
-		this(new ArrayList<>());
+	Table(
+			TableModel<RECORD> model,
+			TableDisplayStyle displayStyle,
+			boolean forceFitWidth,
+			int rowHeight,
+			boolean stripedRowsEnabled,
+			boolean columnHeadersVisible,
+			boolean multiRowSelectionEnabled,
+			boolean rowCheckBoxesEnabled,
+			boolean numberingColumnEnabled,
+			boolean textSelectionEnabled,
+			boolean editable,
+			SelectionFrame selectionFrame,
+			boolean headerFieldsRowEnabled,
+			int headerFieldsRowHeight,
+			boolean footerFieldsRowEnabled,
+			int footerFieldsRowHeight
+	) {
+		super(model != null ? model : new ListTableModel<>());
+		this.displayStyle = displayStyle;
+		this.forceFitWidth = forceFitWidth;
+		this.rowHeight = rowHeight;
+		this.stripedRowsEnabled = stripedRowsEnabled;
+		this.columnHeadersVisible = columnHeadersVisible;
+		this.multiRowSelectionEnabled = multiRowSelectionEnabled;
+		this.rowCheckBoxesEnabled = rowCheckBoxesEnabled;
+		this.numberingColumnEnabled = numberingColumnEnabled;
+		this.textSelectionEnabled = textSelectionEnabled;
+		this.editable = editable;
+		this.selectionFrame = selectionFrame;
+		this.headerFieldsRowEnabled = headerFieldsRowEnabled;
+		this.headerFieldsRowHeight = headerFieldsRowHeight;
+		this.footerFieldsRowEnabled = footerFieldsRowEnabled;
+		this.footerFieldsRowHeight = footerFieldsRowHeight;
 	}
 
-	public Table(List<TableColumn<RECORD, ?>> columns) {
-		super(new ListTableModel<>());
-		columns.forEach(this::addColumn);
+	public static <RECORD> TableBuilder<RECORD> builder() {
+		return new TableBuilder<>();
 	}
 
-	public static <RECORD> Table<RECORD> create() {
-		return new Table<>();
+	public void setColumns(List<TableColumn<RECORD, ?>> columns) {
+		removeColumns(this.columns);
+		addColumns(columns, 0);
 	}
 
 	public void addColumn(TableColumn<RECORD, ?> column) {
@@ -212,31 +240,30 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		DtoTable uiTable = new DtoTable(columns);
 		mapAbstractUiComponentProperties(uiTable);
 		uiTable.setSelectionFrame(selectionFrame != null ? selectionFrame.createUiSelectionFrame() : null);
-		uiTable.setDisplayAsList(displayAsList);
+		uiTable.setDisplayStyle(displayStyle.toDto());
 		uiTable.setForceFitWidth(forceFitWidth);
 		uiTable.setRowHeight(rowHeight);
-		uiTable.setStripedRows(stripedRows);
-		uiTable.setHideHeaders(hideHeaders);
-		uiTable.setAllowMultiRowSelection(allowMultiRowSelection);
-		uiTable.setShowRowCheckBoxes(showRowCheckBoxes);
-		uiTable.setShowNumbering(showNumbering);
+		uiTable.setStripedRowsEnabled(stripedRowsEnabled);
+		uiTable.setColumnHeadersVisible(columnHeadersVisible);
+		uiTable.setMultiRowSelectionEnabled(multiRowSelectionEnabled);
+		uiTable.setRowCheckBoxesEnabled(rowCheckBoxesEnabled);
+		uiTable.setNumberingColumnEnabled(numberingColumnEnabled);
 		uiTable.setTextSelectionEnabled(textSelectionEnabled);
 		uiTable.setSortField(sorting != null ? sorting.getFieldName() : null);
 		uiTable.setSortDirection(sorting != null ? sorting.getSortDirection().toUiSortDirection() : null);
 		uiTable.setEditable(editable);
-		uiTable.setTreeMode(treeMode);
-		uiTable.setIndentedColumnName(indentedColumnName);
-		uiTable.setIndentation(indentation);
-		uiTable.setShowHeaderRow(showHeaderRow);
-		uiTable.setHeaderRowHeight(headerRowHeight);
-		uiTable.setHeaderRowFields(this.headerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createDtoReference())));
-		uiTable.setShowFooterRow(showFooterRow);
-		uiTable.setFooterRowHeight(footerRowHeight);
-		uiTable.setFooterRowFields(this.footerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createDtoReference())));
+		uiTable.setHeaderFieldsRowEnabled(headerFieldsRowEnabled);
+		uiTable.setHeaderFieldsRowHeight(headerFieldsRowHeight);
+		uiTable.setHeaderFields(toDtoFieldMap(this.headerFields));
+		uiTable.setFooterFieldsRowEnabled(footerFieldsRowEnabled);
+		uiTable.setFooterFieldsRowHeight(footerFieldsRowHeight);
+		uiTable.setFooterFields(toDtoFieldMap(this.footerFields));
 		uiTable.setContextMenuEnabled(contextMenuProvider != null);
 		return uiTable;
+	}
+
+	private Map<String, DtoReference> toDtoFieldMap(Map<String, AbstractField> fieldsMap) {
+		return fieldsMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().createDtoReference()));
 	}
 
 	@Override
@@ -809,66 +836,36 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return columns;
 	}
 
-	public boolean isDisplayAsList() {
-		return displayAsList;
-	}
-
-	public void setDisplayAsList(boolean displayAsList) {
-		this.displayAsList = displayAsList;
-		reRenderIfRendered();
+	public TableDisplayStyle getDisplayStyle() {
+		return displayStyle;
 	}
 
 	public boolean isForceFitWidth() {
 		return forceFitWidth;
 	}
 
-	public void setForceFitWidth(boolean forceFitWidth) {
-		this.forceFitWidth = forceFitWidth;
-		reRenderIfRendered();
-	}
-
 	public int getRowHeight() {
 		return rowHeight;
 	}
 
-	public void setRowHeight(int rowHeight) {
-		this.rowHeight = rowHeight;
-		reRenderIfRendered();
+	public boolean isStripedRowsEnabled() {
+		return stripedRowsEnabled;
 	}
 
-	public boolean isStripedRows() {
-		return stripedRows;
-	}
-
-	public void setStripedRows(boolean stripedRows) {
-		this.stripedRows = stripedRows;
-		reRenderIfRendered();
-	}
-
-	public void setStripedRowColorEven(Color stripedRowColorEven) {
-		this.setCssStyle(".striped-rows .slick-row.even", "background-color", stripedRowColorEven != null ? stripedRowColorEven.toHtmlColorString() : null);
+	public void setRowColor(Color rowColor) {       // TODO!
+		this.setCssStyle(".striped-rows .slick-row.even", "background-color", rowColor != null ? rowColor.toHtmlColorString() : null);
 	}
 
 	public void setStripedRowColorOdd(Color stripedRowColorOdd) {
 		this.setCssStyle(".striped-rows .slick-row.odd", "background-color", stripedRowColorOdd != null ? stripedRowColorOdd.toHtmlColorString() : null);
 	}
 
-	public boolean isHideHeaders() {
-		return hideHeaders;
+	public boolean isColumnHeadersVisible() {
+		return columnHeadersVisible;
 	}
 
-	public void setHideHeaders(boolean hideHeaders) {
-		this.hideHeaders = hideHeaders;
-		reRenderIfRendered();
-	}
-
-	public boolean isAllowMultiRowSelection() {
-		return allowMultiRowSelection;
-	}
-
-	public void setAllowMultiRowSelection(boolean allowMultiRowSelection) {
-		this.allowMultiRowSelection = allowMultiRowSelection;
-		reRenderIfRendered();
+	public boolean isMultiRowSelectionEnabled() {
+		return multiRowSelectionEnabled;
 	}
 
 	public void setSelectionColor(Color selectionColor) {
@@ -883,31 +880,16 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setCssStyle(".slick-cell", "border-color", rowBorderColor != null ? rowBorderColor.toHtmlColorString() : null);
 	}
 
-	public boolean isShowRowCheckBoxes() {
-		return showRowCheckBoxes;
+	public boolean isRowCheckBoxesEnabled() {
+		return rowCheckBoxesEnabled;
 	}
 
-	public void setShowRowCheckBoxes(boolean showRowCheckBoxes) {
-		this.showRowCheckBoxes = showRowCheckBoxes;
-		reRenderIfRendered();
-	}
-
-	public boolean isShowNumbering() {
-		return showNumbering;
-	}
-
-	public void setShowNumbering(boolean showNumbering) {
-		this.showNumbering = showNumbering;
-		reRenderIfRendered();
+	public boolean isNumberingColumnEnabled() {
+		return numberingColumnEnabled;
 	}
 
 	public boolean isTextSelectionEnabled() {
 		return textSelectionEnabled;
-	}
-
-	public void setTextSelectionEnabled(boolean textSelectionEnabled) {
-		this.textSelectionEnabled = textSelectionEnabled;
-		reRenderIfRendered();
 	}
 
 	public Sorting getSorting() {
@@ -930,144 +912,80 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return editable;
 	}
 
-	public void setEditable(boolean editable) {
-		this.editable = editable;
-		reRenderIfRendered();
-	}
-
-	public boolean isEnsureEmptyLastRow() {
-		return ensureEmptyLastRow;
-	}
-
-	public void setEnsureEmptyLastRow(boolean ensureEmptyLastRow) {
-		this.ensureEmptyLastRow = ensureEmptyLastRow;
-		reRenderIfRendered();
-	}
-
-	public boolean isTreeMode() {
-		return treeMode;
-	}
-
-	public void setTreeMode(boolean treeMode) {
-		this.treeMode = treeMode;
-		reRenderIfRendered();
-	}
-
-	public String getIndentedColumnName() {
-		return indentedColumnName;
-	}
-
-	public void setIndentedColumnName(String indentedColumnName) {
-		this.indentedColumnName = indentedColumnName;
-		reRenderIfRendered();
-	}
-
-	public int getIndentation() {
-		return indentation;
-	}
-
-	public void setIndentation(int indentation) {
-		this.indentation = indentation;
-		reRenderIfRendered();
-	}
-
 	public SelectionFrame getSelectionFrame() {
 		return selectionFrame;
 	}
 
-	public void setSelectionFrame(SelectionFrame selectionFrame) {
-		this.selectionFrame = selectionFrame;
-		reRenderIfRendered();
+	public boolean isHeaderFieldsRowEnabled() {
+		return headerFieldsRowEnabled;
 	}
 
-	public boolean isShowHeaderRow() {
-		return showHeaderRow;
+	public void setHeaderFieldsRowBorderWidth(int headerFieldsRowBorderWidth) {
+		this.setCssStyle(".slick-headerrow", "border-bottom-width", headerFieldsRowBorderWidth + "px");
 	}
 
-	public void setShowHeaderRow(boolean showHeaderRow) {
-		this.showHeaderRow = showHeaderRow;
-		reRenderIfRendered();
+	public void setHeaderFieldsRowBorderColor(Color headerFieldsRowBorderColor) {
+		this.setCssStyle(".slick-headerrow", "border-bottom-color", headerFieldsRowBorderColor != null ? headerFieldsRowBorderColor.toHtmlColorString() : null);
 	}
 
-	public void setHeaderRowBorderWidth(int headerRowBorderWidth) {
-		this.setCssStyle(".slick-headerrow", "border-bottom-width", headerRowBorderWidth + "px");
+	public int getHeaderFieldsRowHeight() {
+		return headerFieldsRowHeight;
 	}
 
-	public void setHeaderRowBorderColor(Color headerRowBorderColor) {
-		this.setCssStyle(".slick-headerrow", "border-bottom-color", headerRowBorderColor != null ? headerRowBorderColor.toHtmlColorString() : null);
+	public void setHeaderFieldsRowBackgroundColor(Color headerFieldsRowBackgroundColor) {
+		this.setCssStyle(".slick-headerrow", "background-color", headerFieldsRowBackgroundColor != null ? headerFieldsRowBackgroundColor.toHtmlColorString() : null);
 	}
 
-	public int getHeaderRowHeight() {
-		return headerRowHeight;
+	public Map<String, AbstractField> getHeaderFields() {
+		return Collections.unmodifiableMap(headerFields);
 	}
 
-	public void setHeaderRowHeight(int headerRowHeight) {
-		this.headerRowHeight = headerRowHeight;
-		reRenderIfRendered();
+	public void setHeaderFields(Map<String, AbstractField<?>> headerFields) {
+		this.headerFields = new HashMap<>();
+		this.headerFields.putAll(headerFields);
+		this.headerFields.values().forEach(field -> field.setParent(this));
+		sendCommandIfRendered(() -> new DtoTable.SetHeaderFieldsCommand(toDtoFieldMap(this.headerFields)));
 	}
 
-	public void setHeaderRowBackgroundColor(Color headerRowBackgroundColor) {
-		this.setCssStyle(".slick-headerrow", "background-color", headerRowBackgroundColor != null ? headerRowBackgroundColor.toHtmlColorString() : null);
+	public void setHeaderRowField(String columnName, AbstractField<?> field) {
+		this.headerFields.put(columnName, field);
+		sendCommandIfRendered(() -> new DtoTable.SetHeaderRowFieldCommand(columnName, field.createDtoReference()));
 	}
 
-	public Map<String, AbstractField> getHeaderRowFields() {
-		return Collections.unmodifiableMap(headerRowFields);
+	public boolean isFooterFieldsRowEnabled() {
+		return footerFieldsRowEnabled;
 	}
 
-	public void setHeaderRowFields(Map<String, AbstractField> headerRowFields) {
-		this.headerRowFields.clear();
-		this.headerRowFields.putAll(headerRowFields);
-		this.headerRowFields.values().forEach(field -> field.setParent(this));
-		reRenderIfRendered();
+	public void setFooterFieldsRowBorderWidth(int footerFieldsRowBorderWidth) {
+		this.setCssStyle(".slick-footerrow", "border-top-width", footerFieldsRowBorderWidth + "px");
 	}
 
-	public void setHeaderRowField(String columnName, AbstractField field) {
-		this.headerRowFields.put(columnName, field);
+	public void setFooterFieldsRowBorderColor(Color footerFieldsRowBorderColor) {
+		this.setCssStyle(".slick-footerrow", "border-top-color", footerFieldsRowBorderColor != null ? footerFieldsRowBorderColor.toHtmlColorString() : null);
 	}
 
-	public boolean isShowFooterRow() {
-		return showFooterRow;
+	public int getFooterFieldsRowHeight() {
+		return footerFieldsRowHeight;
 	}
 
-	public void setShowFooterRow(boolean showFooterRow) {
-		this.showFooterRow = showFooterRow;
-		reRenderIfRendered();
+	public void setFooterFieldsRowBackgroundColor(Color footerFieldsRowBackgroundColor) {
+		this.setCssStyle(".slick-footerrow", "background-color", footerFieldsRowBackgroundColor != null ? footerFieldsRowBackgroundColor.toHtmlColorString() : null);
 	}
 
-	public void setFooterRowBorderWidth(int footerRowBorderWidth) {
-		this.setCssStyle(".slick-footerrow", "border-top-width", footerRowBorderWidth + "px");
+	public Map<String, AbstractField> getFooterFields() {
+		return footerFields;
 	}
 
-	public void setFooterRowBorderColor(Color footerRowBorderColor) {
-		this.setCssStyle(".slick-footerrow", "border-top-color", footerRowBorderColor != null ? footerRowBorderColor.toHtmlColorString() : null);
+	public void setFooterFields(Map<String, AbstractField<?>> footerFields) {
+		this.footerFields = new HashMap<>();
+		this.footerFields.putAll(footerFields);
+		this.footerFields.values().forEach(field -> field.setParent(this));
+		sendCommandIfRendered(() -> new DtoTable.SetFooterFieldsCommand(toDtoFieldMap(this.footerFields)));
 	}
 
-	public int getFooterRowHeight() {
-		return footerRowHeight;
-	}
-
-	public void setFooterRowHeight(int footerRowHeight) {
-		this.footerRowHeight = footerRowHeight;
-		reRenderIfRendered();
-	}
-
-	public void setFooterRowBackgroundColor(Color footerRowBackgroundColor) {
-		this.setCssStyle(".slick-footerrow", "background-color", footerRowBackgroundColor != null ? footerRowBackgroundColor.toHtmlColorString() : null);
-	}
-
-	public Map<String, AbstractField> getFooterRowFields() {
-		return footerRowFields;
-	}
-
-	public void setFooterRowFields(Map<String, AbstractField> footerRowFields) {
-		this.footerRowFields.clear();
-		this.footerRowFields.putAll(footerRowFields);
-		this.headerRowFields.values().forEach(field -> field.setParent(this));
-		reRenderIfRendered();
-	}
-
-	public void setFooterRowField(String columnName, AbstractField field) {
-		this.footerRowFields.put(columnName, field);
+	public void setFooterRowField(String columnName, AbstractField<?> field) {
+		this.footerFields.put(columnName, field);
+		sendCommandIfRendered(() -> new DtoTable.SetFooterRowFieldCommand(columnName, field.createDtoReference()));
 	}
 
 	public <VALUE> TableColumn<RECORD, VALUE> getColumnByPropertyName(String propertyName) {
@@ -1078,11 +996,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public AbstractField getHeaderRowFieldByName(String propertyName) {
-		return headerRowFields.get(propertyName);
+		return headerFields.get(propertyName);
 	}
 
 	public AbstractField getFooterRowFieldByName(String propertyName) {
-		return footerRowFields.get(propertyName);
+		return footerFields.get(propertyName);
 	}
 
 	public List<RECORD> getRecordsWithChangedCellValues() {
