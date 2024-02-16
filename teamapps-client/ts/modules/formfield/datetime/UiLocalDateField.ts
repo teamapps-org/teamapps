@@ -44,6 +44,7 @@ import {TrivialTreeBox} from "../../trivial-components/TrivialTreeBox";
 import {CalendarBoxDropdown} from "../../trivial-components/dropdown/CalendarBoxDropdown";
 import {TrivialCalendarBox} from "../../trivial-components/TrivialCalendarBox";
 import {createUiLocalDateConfig, UiLocalDateConfig} from "../../../generated/UiLocalDateConfig";
+import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 
 export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDateConfig> implements UiLocalDateFieldEventSource, UiLocalDateFieldCommandHandler {
 
@@ -164,6 +165,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.trivialComboBox.focus();
 	}

@@ -36,6 +36,7 @@ import {bind} from "../util/Bind";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonEventSource, UiButtonCommandHandler {
 
@@ -158,6 +159,7 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 		super.setFieldMessages(fieldMessageConfigs);
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.$main.focus();
 	}

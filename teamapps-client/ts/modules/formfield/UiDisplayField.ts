@@ -23,6 +23,7 @@ import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {escapeHtml, parseHtml, removeTags} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 
 export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implements UiDisplayFieldEventSource, UiDisplayFieldCommandHandler {
@@ -75,6 +76,7 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 		}
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		// do nothing
 	}

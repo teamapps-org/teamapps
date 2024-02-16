@@ -159,6 +159,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		return this.$field.value;
 	}
 
+	@executeWhenFirstDisplayed()
 	public focus(): void {
 		this.$field.focus();
 	}

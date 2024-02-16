@@ -38,6 +38,7 @@ import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFor
 import {LocalDateTime} from "../../datetime/LocalDateTime";
 import {TreeBoxDropdown} from "../../trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "../../trivial-components/TrivialTreeBox";
+import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 
 
 export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiTimeFieldEventSource, AbstractUiTimeFieldCommandHandler {
@@ -98,6 +99,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.trivialComboBox.focus();
 	}

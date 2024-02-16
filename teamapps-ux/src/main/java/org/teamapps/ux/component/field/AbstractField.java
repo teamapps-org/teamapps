@@ -85,6 +85,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void focus() {
+		render();
 		queueCommandIfRendered(() -> new UiField.FocusCommand(getId()));
 	}
 

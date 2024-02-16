@@ -36,6 +36,7 @@ import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {buildObjectTree, NodeWithChildren, Renderer} from "../Common";
 import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
 import {UiToolButton} from "../micro-components/UiToolButton";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export function isFreeTextEntry(o: UiComboBoxTreeRecordConfig): boolean {
 	return o != null && o.id < 0;
@@ -166,6 +167,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		return isFreeTextEntry(value) ? value.asString : value.id;
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		if (this.isEditable()) {
 			this.trivialComboBox.focus();

@@ -41,6 +41,7 @@ import {
 	UiSimpleFileFieldEventSource
 } from "../../../generated/UiSimpleFileFieldConfig";
 import {FileItemState, UiFileItem} from "./UiFileItem";
+import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 
 /**
  * @author Yann Massard (yamass@gmail.com)
@@ -149,6 +150,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 		return [];
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.$uploadButton.focus();
 	}

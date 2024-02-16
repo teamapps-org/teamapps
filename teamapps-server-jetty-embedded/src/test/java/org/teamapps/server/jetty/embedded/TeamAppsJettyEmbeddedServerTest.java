@@ -20,23 +20,17 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.datetime.InstantDateTimeField;
-import org.teamapps.ux.component.field.datetime.LocalDateField;
-import org.teamapps.ux.component.field.datetime.LocalTimeField;
+import org.teamapps.ux.component.field.Button;
+import org.teamapps.ux.component.field.TextField;
+import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
-import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.table.ListTableModel;
-import org.teamapps.ux.component.table.Table;
-import org.teamapps.ux.component.toolbutton.ToolButton;
+import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.session.SessionContext;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -49,50 +43,42 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 					RootPanel rootPanel = sessionContext.addRootPanel();
 
-					Panel panel = new Panel(MaterialIcon.ALARM_ON, "Panel");
+					Window window = new Window();
+					window.setTitle("Window");
+					window.enableAutoHeight();
 
-					Table<User> table = new Table<>();
-					LocalDateField dateField = new LocalDateField();
-					LocalDateField dateField2 = new LocalDateField();
-					table.addColumn("x", "halo", dateField).setValueExtractor(user -> LocalDate.now());
-					LocalTimeField timeField = new LocalTimeField();
-					LocalTimeField timeField2 = new LocalTimeField();
-					table.addColumn("y", "ad", timeField).setValueExtractor(user -> LocalTime.now());
-					table.setModel(new ListTableModel<>(IntStream.range(0, 100)
-							.mapToObj(i -> new User(null, null, null))
-							.collect(Collectors.toList())));
-					table.setAllowMultiRowSelection(true);
+					TextField textField = new TextField();
 
-					table.onRowsSelected.addListener((eventData, disposable) -> {
-						System.out.println(eventData.size());
-					});
+					ComboBox<Object> combobox = new ComboBox<>();
 
-					ToolButton toolButton1 = new ToolButton(MaterialIcon.HELP);
-					toolButton1.onClick.addListener(() -> {
-						dateField.setCalendarIconEnabled(!dateField.isCalendarIconEnabled());
-						table.refresh();
-						dateField2.setCalendarIconEnabled(!dateField2.isCalendarIconEnabled());
-					});
-					panel.addToolButton(toolButton1);
-
-					ToolButton toolButton2 = new ToolButton(MaterialIcon.HELP);
-					toolButton2.onClick.addListener(() -> {
-						timeField.setClockIconEnabled(!timeField.isClockIconEnabled());
-						table.refresh();
-						timeField2.setClockIconEnabled(!timeField2.isClockIconEnabled());
-					});
-					panel.addToolButton(toolButton2);
-
+					combobox.focus();
+					textField.focus();
 
 					VerticalLayout verticalLayout = new VerticalLayout();
-					verticalLayout.addComponentFillRemaining(table);
-					verticalLayout.addComponent(dateField2);
-					verticalLayout.addComponent(timeField2);
-					verticalLayout.addComponent(new InstantDateTimeField());
+					verticalLayout.addComponent(textField);
 
-					panel.setContent(verticalLayout);
+					window.setContent(verticalLayout);
 
-					rootPanel.setContent(panel);
+					Button<BaseTemplateRecord> button = Button.create("show");
+					button.onClicked.addListener((eventData, disposable) -> {
+						window.show();
+
+						new Thread(() -> {
+							try {
+								Thread.sleep(1000L);
+							} catch (InterruptedException e) {
+								throw new RuntimeException(e);
+							}
+							sessionContext.runWithContext(() -> {
+								verticalLayout.addComponent(combobox);
+							});
+						}).start();
+					});
+					rootPanel.setContent(button);
+
+
+
+
 				})
 				.setPort(8082)
 				.build()
