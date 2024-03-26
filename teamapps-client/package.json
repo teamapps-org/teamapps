@@ -133,7 +133,7 @@
     "slick-carousel": "^1.8.1",
     "slickgrid": "yamass/SlickGrid",
     "socket.io-client": "^4.5.1",
-    "tinymce": "5.10.5",
+    "tinymce": "7.0.0",
     "tinymce-i18n": "^18.12.25",
     "ts-jest": "^26.5.4",
     "tslib": "^2.3.1",
