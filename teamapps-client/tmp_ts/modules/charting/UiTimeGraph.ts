@@ -31,11 +31,11 @@ import {ZoomBehavior, ZoomedElementBaseType} from "d3-zoom";
 import {Axis} from "d3-axis";
 import {generateUUID, parseHtml} from "../Common";
 import {
-	UiTimeGraph_IntervalSelectedEvent,
-	UiTimeGraph_ZoomedEvent,
-	UiTimeGraphCommandHandler,
+	DtoTimeGraph_IntervalSelectedEvent,
+	DtoTimeGraph_ZoomedEvent,
+	DtoTimeGraphCommandHandler,
 	DtoTimeGraph,
-	UiTimeGraphEventSource
+	DtoTimeGraphEventSource
 } from "../../generated/DtoTimeGraph";
 import {createDtoLongInterval, DtoLongInterval} from "../../generated/DtoLongInterval";
 import {BrushBehavior} from "d3-brush";
@@ -60,10 +60,10 @@ import {DtoHoseGraphData} from "../../generated/DtoHoseGraphData";
 
 export const yTickFormat = d3.format("-,.2s");
 
-export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements UiTimeGraphCommandHandler, UiTimeGraphEventSource {
+export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTimeGraphCommandHandler, DtoTimeGraphEventSource {
 
-	public readonly onIntervalSelected: TeamAppsEvent<UiTimeGraph_IntervalSelectedEvent> = new TeamAppsEvent<UiTimeGraph_IntervalSelectedEvent>();
-	public readonly onZoomed: TeamAppsEvent<UiTimeGraph_ZoomedEvent> = new TeamAppsEvent<UiTimeGraph_ZoomedEvent>();
+	public readonly onIntervalSelected: TeamAppsEvent<DtoTimeGraph_IntervalSelectedEvent> = new TeamAppsEvent<DtoTimeGraph_IntervalSelectedEvent>();
+	public readonly onZoomed: TeamAppsEvent<DtoTimeGraph_ZoomedEvent> = new TeamAppsEvent<DtoTimeGraph_ZoomedEvent>();
 
 	public static readonly LOGSCALE_MIN_Y = 0.5;
 	public static readonly DROP_SHADOW_ID = "drop-shadow";

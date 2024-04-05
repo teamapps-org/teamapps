@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoComponentField;
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -42,7 +42,7 @@ public class ComponentField extends AbstractField<Void> {
     }
 
     @Override
-    public DtoField createDto() {
+    public DtoAbstractField createDto() {
         DtoComponentField uiField = new DtoComponentField();
         mapAbstractFieldAttributesToUiField(uiField);
         uiField.setComponent(ClientObject.createDtoReference(component));

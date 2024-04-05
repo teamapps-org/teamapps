@@ -262,7 +262,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 			try {
 				this.sendPayloadMessage(this.payloadMessagesQueue[i]);
 			} catch (e) {
-				this.logException(e);
+				console.error(e);
 				break;
 			}
 		}
@@ -281,12 +281,6 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 	private log(...message: string[]) {
 		console.log("TeamAppsConnection: " + message);
 	}
-
-
-	private logException(e: any, additionalString?: string) {
-		console.error(e, e.stack, additionalString);
-	}
-
 	private enchainCommandExecution(cmd: DtoCMD) {
 		this.currentCommandExecutionPromise = this.currentCommandExecutionPromise.finally(async () => {
 			try {
@@ -295,7 +289,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					this.sendResult(cmd.id, result);
 				}
 			} catch (reason) {
-				this.logException(reason);
+				console.error(reason);
 			} finally {
 				this.ensureEnoughCommandsRequested();
 			}

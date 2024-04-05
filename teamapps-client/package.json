@@ -16,7 +16,8 @@
     "teamapps-client-core-components",
     "projector-calendar",
     "projector-infinite-scrolling-components",
-    "teamapps-client-common-components"
+    "teamapps-client-common-components",
+    "projector-combobox"
   ],
   "comments": {},
   "engines": {

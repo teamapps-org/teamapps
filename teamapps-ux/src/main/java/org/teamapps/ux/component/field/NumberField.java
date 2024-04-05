@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.dto.DtoNumberField;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
@@ -54,7 +54,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoNumberField field = new DtoNumberField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setPrecision(precision);

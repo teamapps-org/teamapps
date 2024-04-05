@@ -1,17 +1,17 @@
 import {Component} from "./Component";
 import {CustomElement} from "../custom-declarations/web-components";
-import {DtoComponent as DtoComponentConfig} from "../generated";
+import {DtoComponent as DtoComponent} from "../generated";
 import {debounce, DebounceMode} from "../util/debounce";
 import {StyleManager} from "../util/StyleManager";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export abstract class AbstractWebComponent<C extends DtoComponentConfig = DtoComponentConfig> extends HTMLElement implements Component<C>, CustomElement {
+export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent> extends HTMLElement implements Component<C>, CustomElement {
 
 	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
 	readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 	readonly onResized: TeamAppsEvent<{ width: number; height: number }> = new TeamAppsEvent();
 
-	private config: DtoComponentConfig;
+	private config: DtoComponent;
 	private width: number = 0;
 	private height: number = 0;
 	protected styleManager: StyleManager;

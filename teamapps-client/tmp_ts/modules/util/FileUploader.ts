@@ -18,11 +18,9 @@
  * =========================LICENSE_END==================================
  */
 import {TeamAppsEvent} from "./TeamAppsEvent";
-import * as log from "loglevel";
 
 export class FileUploader {
 
-	private static LOGGER: log.Logger = log.getLogger("UploadItem");
 
 	public readonly onProgress: TeamAppsEvent<number> = new TeamAppsEvent();
 	public readonly onSuccess: TeamAppsEvent<string> = new TeamAppsEvent();
@@ -52,7 +50,7 @@ export class FileUploader {
 							progress = position / total;
 						} else {
 							progress = -1;
-							FileUploader.LOGGER.warn("Cannot calculate percentage progress of file upload!");
+							console.warn("Cannot calculate percentage progress of file upload!");
 						}
 						this.onProgress.fire(progress);
 					}, false);

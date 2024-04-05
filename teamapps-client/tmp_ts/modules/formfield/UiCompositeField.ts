@@ -18,12 +18,12 @@
  * =========================LICENSE_END==================================
  */
 import {TeamAppsEvent} from "teamapps-client-core";
-import {UiField, ValueChangeEventData} from "./UiField";
+import {DtoAbstractField, ValueChangeEventData} from "./DtoAbstractField";
 import * as log from "loglevel";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {DtoCompositeSubField} from "../../generated/DtoCompositeSubField";
 import {DtoCompositeField} from "../../generated/DtoCompositeField";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {DtoFieldEditingMode} from "../../generated/DtoFieldEditingMode";
 import {DtoColumnDefinition} from "../../generated/DtoColumnDefinition";
 
 import Logger = log.Logger;
@@ -33,7 +33,7 @@ import {DtoTableClientRecord} from "../../generated/DtoTableClientRecord";
 
 export type SubField = {
 	config: DtoCompositeSubField,
-	field: UiField,
+	field: DtoAbstractField,
 	$cell: HTMLElement,
 	visible?: boolean
 };
@@ -43,12 +43,12 @@ export /* for testing */ type ColumnWidthConstraints = {
 	minWidth: number;
 };
 
-export class UiCompositeField extends UiField<DtoCompositeField, any> {
+export class UiCompositeField extends AbstractField<DtoCompositeField, any> {
 
 	private static logger: Logger = log.getLogger("UiCompositeField");
 
-	public readonly onSubFieldValueChanged: TeamAppsEvent<ValueChangeEventData & { fieldName: string, originalEmitter: UiField }> =
-		new TeamAppsEvent<ValueChangeEventData & { fieldName: string, originalEmitter: UiField }>();
+	public readonly onSubFieldValueChanged: TeamAppsEvent<ValueChangeEventData & { fieldName: string, originalEmitter: DtoAbstractField }> =
+		new TeamAppsEvent<ValueChangeEventData & { fieldName: string, originalEmitter: DtoAbstractField }>();
 
 	private subFields: SubField[];
 	private $wrapper: HTMLElement;
@@ -58,7 +58,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 		this.subFields = [];
 		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(config);
 		subFieldSkeletons.forEach(subFieldSkeleton => {
-			const field = subFieldSkeleton.config.field as UiField;
+			const field = subFieldSkeleton.config.field as DtoAbstractField;
 			subFieldSkeleton.$cell.appendChild(field.getMainElement());
 			field.onValueChanged.addListener((eventObject: ValueChangeEventData ) => {
 				this.onSubFieldValueChanged.fire({
@@ -101,7 +101,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 		}
 	}
 
-	private getNextFocusableField(navDirection: -1 | 1): UiField {
+	private getNextFocusableField(navDirection: -1 | 1): DtoAbstractField {
 		let sortedFocusableSubFields = this.getSubFieldsSortedByTabOrder();
 		let activeField = sortedFocusableSubFields.filter(f => f.field.hasFocus())[0];
 
@@ -128,8 +128,8 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 	private getSubFieldsSortedByTabOrder() {
 		let allSubFields = this.getAllSubFields();
 		let allFocusableSubFields = allSubFields
-			.filter(f => f.field.getEditingMode() !== UiFieldEditingMode.READONLY
-				&& f.field.getEditingMode() !== UiFieldEditingMode.DISABLED
+			.filter(f => f.field.getEditingMode() !== DtoFieldEditingMode.READONLY
+				&& f.field.getEditingMode() !== DtoFieldEditingMode.DISABLED
 				&& f.visible === true);
 		return allFocusableSubFields
 			.sort((sf1: SubField, sf2: SubField) => {
@@ -161,7 +161,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 			if (committedValue == null) {
 				subField.field.setCommittedValue(null);
 			} else {
-				let fieldName = "TODO!"; //(subField.config.field as UiField).fieldName;
+				let fieldName = "TODO!"; //(subField.config.field as DtoAbstractField).fieldName;
 				subField.field.setCommittedValue(committedValue[fieldName]);
 			}
 		});
@@ -226,11 +226,11 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 		// return this.subFields.filter(sf => sf.config.field.fieldName === fieldName)[0];
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
 		// don't do anything! sub-fields have their own editing mode property!
 	}
 
-	private getAllUiFields(): UiField[] {
+	private getAllUiFields(): DtoAbstractField[] {
 		return this.getAllSubFields().map(sf => sf.field);
 	}
 
@@ -262,7 +262,7 @@ export class UiCompositeField extends UiField<DtoCompositeField, any> {
 		$paddingWrapper.style.height = config.rowHeights.reduce((sum, height) => sum + height, 0) + "px";
 		let subFieldSkeletons: SubField[] = [];
 		config.subFields.forEach(subFieldConfig => {
-			const uiField: UiField = subFieldConfig.field as UiField;
+			const uiField: DtoAbstractField = subFieldConfig.field as DtoAbstractField;
 			let $cell = parseHtml(`<div class="subfield-wrapper" data-field-propertyname="${subFieldConfig.propertyName}" data-row="${subFieldConfig.row}" data-col="${subFieldConfig.col}" data-rowspan="${subFieldConfig.rowSpan}" data-colspan="${subFieldConfig.colSpan}"></div>`);
 			$paddingWrapper.appendChild($cell);
 			if (config.drawFieldBorders) {

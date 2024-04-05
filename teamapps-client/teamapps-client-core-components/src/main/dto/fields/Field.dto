@@ -28,7 +28,7 @@ enum FieldEditingMode {
 	READONLY
 }
 
-abstract class Field extends Component {
+abstract class AbstractField extends Component {
 	FieldEditingMode editingMode;
 	Object value;
 	List<FieldMessage> fieldMessages;

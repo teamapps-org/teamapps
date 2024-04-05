@@ -17,7 +17,7 @@
     "typescript": "^5.1"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.0.9",
+    "@floating-ui/dom": "^1.6.3",
     "@popperjs/core": "^2.11.8",
     "animate.css": "^4.1.1",
     "bootstrap-icons": "^1.10.2",

@@ -21,10 +21,10 @@
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {keyCodes} from "./trivial-components/TrivialCore";
+import {keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 import {DtoCachedImage} from "../generated/DtoCachedImage";
 import {applyDisplayMode, enableScrollViaDragAndDrop, parseHtml} from "./Common";
-import {UiImageDisplay_ImageDisplayedEvent, UiImageDisplay_ImagesRequestEvent, UiImageDisplayCommandHandler, DtoImageDisplay, UiImageDisplayEventSource} from "../generated/DtoImageDisplay";
+import {DtoImageDisplay_ImageDisplayedEvent, DtoImageDisplay_ImagesRequestEvent, DtoImageDisplayCommandHandler, DtoImageDisplay, DtoImageDisplayEventSource} from "../generated/DtoImageDisplay";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
@@ -36,10 +36,10 @@ interface UiCachedImage {
 	naturalHeight?: number;
 }
 
-export class UiImageDisplay extends AbstractComponent<DtoImageDisplay> implements UiImageDisplayCommandHandler, UiImageDisplayEventSource {
+export class UiImageDisplay extends AbstractComponent<DtoImageDisplay> implements DtoImageDisplayCommandHandler, DtoImageDisplayEventSource {
 
-	public readonly onImagesRequest: TeamAppsEvent<UiImageDisplay_ImagesRequestEvent> = new TeamAppsEvent<UiImageDisplay_ImagesRequestEvent>();
-	public readonly onImageDisplayed: TeamAppsEvent<UiImageDisplay_ImageDisplayedEvent> = new TeamAppsEvent<UiImageDisplay_ImageDisplayedEvent>();
+	public readonly onImagesRequest: TeamAppsEvent<DtoImageDisplay_ImagesRequestEvent> = new TeamAppsEvent<DtoImageDisplay_ImagesRequestEvent>();
+	public readonly onImageDisplayed: TeamAppsEvent<DtoImageDisplay_ImageDisplayedEvent> = new TeamAppsEvent<DtoImageDisplay_ImageDisplayedEvent>();
 
 	private forwardImageSvg = `<svg width="64" height="64" viewBox="0 0 10240 10240" version="1.1">
     <path d="M5892 2747l2147 2147c124,124 124,328 0,452l-2147 2147c-124,124 -276,187 -452,187l-1159 0c-66,0 -122,-38 -148,-99 -25,-61 -12,-127 35,-174l1647 -1647 -3255 0c-176,0 -320,-144 -320,-320l0 -640c0,-176 144,-320 320,-320l3255 0 -1647 -1647c-47,-47 -60,-113 -35,-174 26,-61 82,-99 148,-99l1159 0c176,0 328,63 452,187z"

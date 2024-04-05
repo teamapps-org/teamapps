@@ -26,23 +26,23 @@ import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {
-	UiVideoPlayer_EndedEvent,
-	UiVideoPlayer_ErrorLoadingEvent,
-	UiVideoPlayer_PlayerProgressEvent,
-	UiVideoPlayerCommandHandler,
+	DtoVideoPlayer_EndedEvent,
+	DtoVideoPlayer_ErrorLoadingEvent,
+	DtoVideoPlayer_PlayerProgressEvent,
+	DtoVideoPlayerCommandHandler,
 	DtoVideoPlayer,
-	UiVideoPlayerEventSource
+	DtoVideoPlayerEventSource
 } from "../generated/DtoVideoPlayer";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiMediaPreloadMode} from "../generated/UiMediaPreloadMode";
 import {parseHtml} from "./Common";
 import {UiPosterImageSize} from "../generated/UiPosterImageSize";
 
-export class UiVideoPlayer extends AbstractComponent<DtoVideoPlayer> implements UiVideoPlayerCommandHandler, UiVideoPlayerEventSource {
+export class UiVideoPlayer extends AbstractComponent<DtoVideoPlayer> implements DtoVideoPlayerCommandHandler, DtoVideoPlayerEventSource {
 
-	public readonly onPlayerProgress: TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent>();
-	public readonly onEnded: TeamAppsEvent<UiVideoPlayer_EndedEvent> = new TeamAppsEvent<UiVideoPlayer_EndedEvent>();
-	public readonly onErrorLoading: TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent> = new TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent>();
+	public readonly onPlayerProgress: TeamAppsEvent<DtoVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<DtoVideoPlayer_PlayerProgressEvent>();
+	public readonly onEnded: TeamAppsEvent<DtoVideoPlayer_EndedEvent> = new TeamAppsEvent<DtoVideoPlayer_EndedEvent>();
+	public readonly onErrorLoading: TeamAppsEvent<DtoVideoPlayer_ErrorLoadingEvent> = new TeamAppsEvent<DtoVideoPlayer_ErrorLoadingEvent>();
 
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLElement;

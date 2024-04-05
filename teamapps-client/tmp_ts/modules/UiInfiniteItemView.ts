@@ -24,12 +24,12 @@ import {Constants, generateUUID, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {
-	UiInfiniteItemView_ContextMenuRequestedEvent,
-	UiInfiniteItemView_DisplayedRangeChangedEvent,
-	UiInfiniteItemView_ItemClickedEvent,
-	UiInfiniteItemViewCommandHandler,
+	DtoInfiniteItemView_ContextMenuRequestedEvent,
+	DtoInfiniteItemView_DisplayedRangeChangedEvent,
+	DtoInfiniteItemView_ItemClickedEvent,
+	DtoInfiniteItemViewCommandHandler,
 	DtoInfiniteItemView,
-	UiInfiniteItemViewEventSource
+	DtoInfiniteItemViewEventSource
 } from "../generated/DtoInfiniteItemView";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {DtoTemplate} from "../generated/DtoTemplate";
@@ -169,12 +169,12 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<DtoIdentifiab
 	}
 }
 
-export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> implements UiInfiniteItemViewCommandHandler, UiInfiniteItemViewEventSource {
+export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> implements DtoInfiniteItemViewCommandHandler, DtoInfiniteItemViewEventSource {
 
 
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView_DisplayedRangeChangedEvent> = new TeamAppsEvent();
-	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent();
-	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView_ContextMenuRequestedEvent> = new TeamAppsEvent();
+	public readonly onDisplayedRangeChanged: TeamAppsEvent<DtoInfiniteItemView_DisplayedRangeChangedEvent> = new TeamAppsEvent();
+	public readonly onItemClicked: TeamAppsEvent<DtoInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent();
+	public readonly onContextMenuRequested: TeamAppsEvent<DtoInfiniteItemView_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;

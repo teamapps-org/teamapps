@@ -25,12 +25,12 @@ import {ForceLink, Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {
-	UiNetworkGraph_NodeClickedEvent,
-	UiNetworkGraph_NodeDoubleClickedEvent,
-	UiNetworkGraph_NodeExpandedOrCollapsedEvent,
-	UiNetworkGraphCommandHandler,
+	DtoNetworkGraph_NodeClickedEvent,
+	DtoNetworkGraph_NodeDoubleClickedEvent,
+	DtoNetworkGraph_NodeExpandedOrCollapsedEvent,
+	DtoNetworkGraphCommandHandler,
 	DtoNetworkGraph,
-	UiNetworkGraphEventSource
+	DtoNetworkGraphEventSource
 } from "../generated/DtoNetworkGraph";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
@@ -41,12 +41,12 @@ import {patternify} from "./UiTreeGraph";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/DtoTreeGraphNodeImage";
 import {DtoNetworkLink} from "../generated/DtoNetworkLink";
 
-export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implements UiNetworkGraphCommandHandler, UiNetworkGraphEventSource {
+export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implements DtoNetworkGraphCommandHandler, DtoNetworkGraphEventSource {
 
-	public readonly onNodeClicked: TeamAppsEvent<UiNetworkGraph_NodeClickedEvent> = new TeamAppsEvent();
-	public readonly onNodeDoubleClicked: TeamAppsEvent<UiNetworkGraph_NodeDoubleClickedEvent> = new TeamAppsEvent();
+	public readonly onNodeClicked: TeamAppsEvent<DtoNetworkGraph_NodeClickedEvent> = new TeamAppsEvent();
+	public readonly onNodeDoubleClicked: TeamAppsEvent<DtoNetworkGraph_NodeDoubleClickedEvent> = new TeamAppsEvent();
 
-	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<DtoNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
 
 	private $graph: HTMLElement;
 	private svg: d3.Selection<SVGElement, any, null, undefined>;

@@ -20,11 +20,11 @@
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiIFrameCommandHandler, DtoIFrame} from "../generated/DtoIFrame";
+import {DtoIFrameCommandHandler, DtoIFrame} from "../generated/DtoIFrame";
 import {parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
-export class UiIFrame extends AbstractComponent<DtoIFrame> implements UiIFrameCommandHandler {
+export class UiIFrame extends AbstractComponent<DtoIFrame> implements DtoIFrameCommandHandler {
 
 	private $iframe: HTMLIFrameElement;
 

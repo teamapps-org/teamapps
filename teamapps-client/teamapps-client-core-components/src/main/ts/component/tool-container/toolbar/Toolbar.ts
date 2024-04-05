@@ -85,7 +85,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 		this._$innerContainer.appendChild(this.$overflowDropDownButton);
 		this.overflowDropDown = new DropDown();
 		this.overflowToolAccordion = this.createDropDownAccordion();
-		this.overflowDropDown.setContentComponent(this.overflowToolAccordion);
+		this.overflowDropDown.setContentComponent(this.overflowToolAccordion?.getMainElement());
 		this.$overflowDropDownButton.addEventListener("mousedown", () => {
 			if (!this.overflowDropDown.isOpen) {
 				this.overflowDropDown.open({

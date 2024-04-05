@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoComponent as DtoComponentConfig, DtoComponentCommandHandler} from "../generated/DtoComponent";
+import {DtoComponent as DtoComponent, DtoComponentCommandHandler} from "../generated/DtoComponent";
 import {ClientObject} from "../ClientObject";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export interface Component<C extends DtoComponentConfig = DtoComponentConfig> extends ClientObject<C>, DtoComponentCommandHandler {
+export interface Component<C extends DtoComponent = DtoComponent> extends ClientObject<C>, DtoComponentCommandHandler {
 
 	/**
 	 * @return The main DOM element of this component.

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiGaugeCommandHandler, DtoGauge} from "../generated/DtoGauge";
+import {DtoGaugeCommandHandler, DtoGauge} from "../generated/DtoGauge";
 import {DtoGaugeOptions} from "../generated/DtoGaugeOptions";
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
@@ -28,7 +28,7 @@ import {LinearGauge, RadialGauge} from "canvas-gauges";
 import {debouncedMethod, DebounceMode} from "./util/debounce";
 import {parseHtml} from "./Common";
 
-export class UiGauge extends AbstractComponent<DtoGauge> implements UiGaugeCommandHandler {
+export class UiGauge extends AbstractComponent<DtoGauge> implements DtoGaugeCommandHandler {
 	private $main: HTMLElement;
 	private gauge: LinearGauge;
 	private value: number;

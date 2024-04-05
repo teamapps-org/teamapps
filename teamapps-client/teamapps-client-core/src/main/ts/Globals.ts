@@ -1,6 +1,6 @@
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {
-	DtoComponent as DtoComponentConfig,
+	DtoComponent as DtoComponent,
 	DtoConfiguration,
 	DtoGenericErrorMessageOption,
 	DtoGlobals,
@@ -48,7 +48,7 @@ export class Globals implements ClientObject<DtoGlobals> {
 		context.toggleEventListener(libraryUuid, clientObjectId, eventName, enabled)
 	}
 
-	public static async render(libraryUuid: string, config: DtoComponentConfig, context: TeamAppsUiContextInternalApi) {
+	public static async render(libraryUuid: string, config: DtoComponent, context: TeamAppsUiContextInternalApi) {
 		await context.renderClientObject(libraryUuid, config);
 	}
 

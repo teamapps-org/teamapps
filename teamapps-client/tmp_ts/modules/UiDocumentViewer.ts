@@ -21,7 +21,7 @@
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiDocumentViewerCommandHandler, DtoDocumentViewer} from "../generated/DtoDocumentViewer";
+import {DtoDocumentViewerCommandHandler, DtoDocumentViewer} from "../generated/DtoDocumentViewer";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {css, enableScrollViaDragAndDrop, generateUUID, parseHtml} from "./Common";
 import {DtoBorder} from "../generated/DtoBorder";
@@ -34,7 +34,7 @@ interface Page {
 	naturalHeight?: number;
 }
 
-export class UiDocumentViewer extends AbstractComponent<DtoDocumentViewer> implements UiDocumentViewerCommandHandler {
+export class UiDocumentViewer extends AbstractComponent<DtoDocumentViewer> implements DtoDocumentViewerCommandHandler {
 
 	private $componentWrapper: HTMLElement;
 	private $pagesContainerWrapper: HTMLElement;

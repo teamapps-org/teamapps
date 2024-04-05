@@ -24,10 +24,10 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {applyDisplayMode, boundSelection, css, Direction, parseHtml} from "./Common";
 import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {
-	UiImageCropper_SelectionChangedEvent,
-	UiImageCropperCommandHandler,
+	DtoImageCropper_SelectionChangedEvent,
+	DtoImageCropperCommandHandler,
 	DtoImageCropper,
-	UiImageCropperEventSource
+	DtoImageCropperEventSource
 } from "../generated/DtoImageCropper";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -39,9 +39,9 @@ type Selection = Omit<DtoImageCropperSelection, '_type'>;
 
 type Rect = { x: number, y: number, width: number, height: number }
 
-export class UiImageCropper extends AbstractComponent<DtoImageCropper> implements UiImageCropperCommandHandler, UiImageCropperEventSource {
+export class UiImageCropper extends AbstractComponent<DtoImageCropper> implements DtoImageCropperCommandHandler, DtoImageCropperEventSource {
 
-	public readonly onSelectionChanged: TeamAppsEvent<UiImageCropper_SelectionChangedEvent> = new TeamAppsEvent<UiImageCropper_SelectionChangedEvent>();
+	public readonly onSelectionChanged: TeamAppsEvent<DtoImageCropper_SelectionChangedEvent> = new TeamAppsEvent<DtoImageCropper_SelectionChangedEvent>();
 
 	private $element: HTMLElement;
 	private $selectionFrame: HTMLElement;

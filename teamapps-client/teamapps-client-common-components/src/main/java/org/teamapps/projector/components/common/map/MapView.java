@@ -59,7 +59,7 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	private Template defaultTemplate;
 	private TemplateDecider<Marker<RECORD>> templateDecider = m -> defaultTemplate;
-	private DtoMapConfig mapConfig;
+	private DtoMap mapConfig;
 
 	private PropertyProvider<RECORD> markerPropertyProvider = new BeanPropertyExtractor<>();
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
@@ -184,7 +184,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		}
 	}
 
-	public void setMapConfig(DtoMapConfig mapConfig) {
+	public void setMapConfig(DtoMap mapConfig) {
 		this.mapConfig = mapConfig;
 	}
 

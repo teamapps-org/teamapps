@@ -21,7 +21,7 @@ package "projector-infinite-scrolling-components":org.teamapps.projector.compone
 
 import org.teamapps.dto.Component;
 import org.teamapps.dto.IdentifiableClientRecord;
-import org.teamapps.dto.Field;
+import org.teamapps.dto.AbstractField;
 import org.teamapps.dto.FieldMessage;
 import org.teamapps.dto.TextAlignment;
 
@@ -33,7 +33,7 @@ class TableColumn {
 	required String propertyName;
 	required String icon;
 	required String title;
-	required Field* field;
+	required AbstractField* field;
 	int minWidth;
 	int defaultWidth;
 	int maxWidth;
@@ -83,17 +83,17 @@ class Table extends AbstractInfiniteListComponent {
     String headerFieldsRowBorderColor;
     int headerFieldsRowHeight;
     String headerFieldsRowBackgroundColor;
-    mutable Dictionary<Field*> headerFields;
+    mutable Dictionary<AbstractField*> headerFields;
 
     boolean footerFieldsRowEnabled;
     int footerFieldsRowBorderWidth; // even in list mode! the border will be there but transparent!
     String footerFieldsRowBorderColor;
     int footerFieldsRowHeight;
     String footerFieldsRowBackgroundColor;
-    mutable Dictionary<Field*> footerFields;
+    mutable Dictionary<AbstractField*> footerFields;
 
-    command setHeaderRowField(String columnName, Field* field);
-    command setFooterRowField(String columnName, Field* field);
+    command setHeaderRowField(String columnName, AbstractField* field);
+    command setFooterRowField(String columnName, AbstractField* field);
 
 	command clearTable();
 	command updateData(int startIndex, List<Integer> recordIds, List<TableClientRecord> newRecords, int totalNumberOfRecords);

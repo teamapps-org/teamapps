@@ -22,13 +22,13 @@ import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
-import {UiFlexContainerCommandHandler, DtoFlexContainer} from "../generated/DtoFlexContainer";
+import {DtoFlexContainerCommandHandler, DtoFlexContainer} from "../generated/DtoFlexContainer";
 import {UiCssFlexDirection} from "../generated/UiCssFlexDirection";
 import {UiCssAlignItems} from "../generated/UiCssAlignItems";
 import {UiCssJustifyContent} from "../generated/UiCssJustifyContent";
 import {UiComponent} from "./UiComponent";
 
-export class UiFlexContainer extends AbstractComponent<DtoFlexContainer> implements UiFlexContainerCommandHandler {
+export class UiFlexContainer extends AbstractComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
 
 	private $main: HTMLDivElement;
 	private components: UiComponent[] = [];

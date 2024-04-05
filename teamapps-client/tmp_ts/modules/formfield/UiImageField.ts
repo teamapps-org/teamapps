@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
-import {UiImageFieldCommandHandler, DtoImageField, UiImageFieldEventSource} from "../../generated/DtoImageField";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {DtoAbstractField} from "./DtoAbstractField";
+import {DtoImageFieldCommandHandler, DtoImageField, DtoImageFieldEventSource} from "../../generated/DtoImageField";
+import {DtoFieldEditingMode} from "../../generated/DtoFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 
 import {DtoBorder} from "../../generated/DtoBorder";
@@ -28,7 +28,7 @@ import {UiImageSizing} from "../../generated/UiImageSizing";
 import {createImageSizingCssObject, createUiBorderCssObject, createUiShadowCssObject, cssObjectToString} from "../util/CssFormatUtil";
 import {parseHtml} from "../Common";
 
-export class UiImageField extends UiField<DtoImageField, string> implements UiImageFieldEventSource, UiImageFieldCommandHandler {
+export class UiImageField extends AbstractField<DtoImageField, string> implements DtoImageFieldEventSource, DtoImageFieldCommandHandler {
 
 	private _$field: HTMLElement;
 
@@ -94,8 +94,8 @@ export class UiImageField extends UiField<DtoImageField, string> implements UiIm
 		return this.getCommittedValue();
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => null);
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => null);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {

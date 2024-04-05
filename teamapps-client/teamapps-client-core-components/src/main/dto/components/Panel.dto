@@ -52,7 +52,7 @@ enum PanelHeaderFieldIconVisibilityPolicy {
 }
 
 class PanelHeaderField {
-	required Field* field;
+	required AbstractField* field;
 	String icon;
 	int minWidth;
 	int maxWidth;

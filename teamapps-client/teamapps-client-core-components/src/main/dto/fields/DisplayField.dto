@@ -21,7 +21,7 @@ package "teamapps-client-core-components":org.teamapps.dto;
 
 import org.teamapps.dto.Component;
 
-class DisplayField extends Field {
+class DisplayField extends AbstractField {
 	boolean showBorder; //if true, show a border like for text fields
 	boolean showHtml; //if true, treat the value as valid HTML
 	boolean removeStyleTags;

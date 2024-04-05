@@ -21,7 +21,7 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoButton;
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -92,7 +92,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		Object uiRecord = createUiRecord();
 		DtoButton ui = new DtoButton(template != null ? template.createDtoReference() : null, uiRecord);
 		mapAbstractFieldAttributesToUiField(ui);

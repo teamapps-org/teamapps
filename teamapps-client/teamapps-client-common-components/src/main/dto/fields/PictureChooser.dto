@@ -23,7 +23,7 @@ import org.teamapps.dto.Component;
 
 
 
-class PictureChooser extends Field {
+class PictureChooser extends AbstractField {
 	String uploadUrl; // May point anywhere.
 	long maxFileSize;
 	String fileTooLargeMessage;

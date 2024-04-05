@@ -33,7 +33,6 @@ interface OpenConfig {
 export class DropDown {
 
 	public onClose: TeamAppsEvent<void> = new TeamAppsEvent();
-	public onComponentRemoved: TeamAppsEvent<Component> = new TeamAppsEvent();
 
 	protected $dropDown: HTMLElement;
 	protected $contentContainer: HTMLElement;
@@ -41,30 +40,27 @@ export class DropDown {
 	protected spinner = new Spinner({fixedSize: "25%"});
 	protected currentOpenConfig: OpenConfig;
 	private _isOpen = false;
-	private _contentComponent: Component;
+	private $contentElement: HTMLElement;
 	private cleanupPositionAutoUpdate: () => void = () => {};
 
-	constructor(content?: Component) {
+	constructor(contentElement?: HTMLElement) {
 		this.$dropDown = parseHtml(`<div class="DropDown teamapps-blurredBackgroundImage">
                 <div class="background-color-div"></div>
               </div>`);
 		this.$contentContainer = this.$dropDown.querySelector<HTMLElement>(':scope .background-color-div');
 
-		if (content) {
-			this.setContentComponent(content);
+		if (contentElement) {
+			this.setContentComponent(contentElement);
 		}
 	}
 
-	setContentComponent(component: Component) {
+	setContentComponent(element: HTMLElement) {
 		this.$contentContainer.innerHTML = '';
-		if (this._contentComponent && this.onComponentRemoved) {
-			this.onComponentRemoved.fire(this._contentComponent);
-		}
 
-		this._contentComponent = component;
+		this.$contentElement = element;
 
-		if (component != null) {
-			this.$contentContainer.append(component.getMainElement())
+		if (element != null) {
+			this.$contentContainer.append(element)
 		}
 
 		if (this._isOpen) {
@@ -79,7 +75,7 @@ export class DropDown {
 
 		this.currentOpenConfig = config;
 
-		if (this._contentComponent == null) {
+		if (this.$contentElement == null) {
 			this.$contentContainer.innerHTML = '';
 			this.$contentContainer.appendChild(this.spinner.getMainDomElement());
 		}
@@ -123,7 +119,4 @@ export class DropDown {
 		return this.$dropDown;
 	}
 
-	public getScrollContainer(): HTMLElement {
-		return this.$contentContainer;
-	}
 }

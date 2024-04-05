@@ -19,22 +19,7 @@
  */
 package org.teamapps.projector.components.infinitescroll.infiniteitemview;
 
-public class ItemClickedEventData<RECORD> {
+public record ItemClickedEventData<RECORD>(RECORD record, boolean isDoubleClick) {
 
-	private final RECORD record;
-	private final boolean isDoubleClick;
-
-	public ItemClickedEventData(RECORD record, boolean isDoubleClick) {
-		this.record = record;
-		this.isDoubleClick = isDoubleClick;
-	}
-
-	public RECORD getRecord() {
-		return record;
-	}
-
-	public boolean isDoubleClick() {
-		return isDoubleClick;
-	}
 
 }

@@ -20,11 +20,11 @@
 
 import {parseHtml} from "./Common";
 import {AbstractComponent} from "teamapps-client-core";
-import {UiAudioLevelIndicatorCommandHandler, DtoAudioLevelIndicator} from "../generated/DtoAudioLevelIndicator";
+import {DtoAudioLevelIndicatorCommandHandler, DtoAudioLevelIndicator} from "../generated/DtoAudioLevelIndicator";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
-export class UiAudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndicator> implements UiAudioLevelIndicatorCommandHandler {
+export class UiAudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndicator> implements DtoAudioLevelIndicatorCommandHandler {
 	private $main: HTMLElement;
 	private $activityDisplay: HTMLElement;
 	private $canvas: HTMLCanvasElement;

@@ -22,7 +22,7 @@ package org.teamapps.ux.component.field;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoColorPicker;
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 
 public class ColorPicker extends AbstractField<Color> {
 
@@ -35,7 +35,7 @@ public class ColorPicker extends AbstractField<Color> {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoColorPicker uiColorPicker = new DtoColorPicker();
 		mapAbstractFieldAttributesToUiField(uiColorPicker);
 		uiColorPicker.setDefaultColor(defaultColor != null ? defaultColor.toHtmlColorString() : null);

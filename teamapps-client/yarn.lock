@@ -19,19 +19,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/core@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "@floating-ui/core@npm:1.0.4"
-  checksum: 6362a625ad0dba7cfd197fc4b6f620eed95147d38684d7347287569897098862c6ba1173f3758d76d22e7739112c57dc836a569c582e78f5807c26ef41df4989
+"@floating-ui/core@npm:^1.0.0":
+  version: 1.6.0
+  resolution: "@floating-ui/core@npm:1.6.0"
+  dependencies:
+    "@floating-ui/utils": ^0.2.1
+  checksum: 2e25c53b0c124c5c9577972f8ae21d081f2f7895e6695836a53074463e8c65b47722744d6d2b5a993164936da006a268bcfe87fe68fd24dc235b1cb86bed3127
   languageName: node
   linkType: hard
 
-"@floating-ui/dom@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "@floating-ui/dom@npm:1.0.9"
+"@floating-ui/dom@npm:^1.6.3":
+  version: 1.6.3
+  resolution: "@floating-ui/dom@npm:1.6.3"
   dependencies:
-    "@floating-ui/core": ^1.0.4
-  checksum: 188ce7fe6d4e98c492dbe88e3f9d36bf8fcd341506c061c80ead742d81ec818b3149510d013e32dcc1adf70c3bc39e4b77b132a624a522d70dee6b5e4032727d
+    "@floating-ui/core": ^1.0.0
+    "@floating-ui/utils": ^0.2.0
+  checksum: 81cbb18ece3afc37992f436e469e7fabab2e433248e46fff4302d12493a175b0c64310f8a971e6e1eda7218df28ace6b70237b0f3c22fe12a21bba05b5579555
+  languageName: node
+  linkType: hard
+
+"@floating-ui/utils@npm:^0.2.0, @floating-ui/utils@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@floating-ui/utils@npm:0.2.1"
+  checksum: 9ed4380653c7c217cd6f66ae51f20fdce433730dbc77f95b5abfb5a808f5fdb029c6ae249b4e0490a816f2453aa6e586d9a873cd157fdba4690f65628efc6e06
   languageName: node
   linkType: hard
 
@@ -1887,6 +1897,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fastest-levenshtein@npm:^1.0.16":
+  version: 1.0.16
+  resolution: "fastest-levenshtein@npm:1.0.16"
+  checksum: a78d44285c9e2ae2c25f3ef0f8a73f332c1247b7ea7fb4a191e6bb51aa6ee1ef0dfb3ed113616dcdc7023e18e35a8db41f61c8d88988e877cf510df8edafbc71
+  languageName: node
+  linkType: hard
+
 "fs.realpath@npm:^1.0.0":
   version: 1.0.0
   resolution: "fs.realpath@npm:1.0.0"
@@ -2368,6 +2385,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-combobox@workspace:projector-combobox":
+  version: 0.0.0-use.local
+  resolution: "projector-combobox@workspace:projector-combobox"
+  dependencies:
+    "@floating-ui/dom": ^1.6.3
+    esbuild: ^0.15.13
+    fastest-levenshtein: ^1.0.16
+    rimraf: ^3.0.2
+    teamapps-client-core: "workspace:*"
+    teamapps-client-core-components: "workspace:*"
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-infinite-scrolling-components@workspace:projector-infinite-scrolling-components":
   version: 0.0.0-use.local
   resolution: "projector-infinite-scrolling-components@workspace:projector-infinite-scrolling-components"
@@ -2672,7 +2703,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "teamapps-client-core-components@workspace:teamapps-client-core-components"
   dependencies:
-    "@floating-ui/dom": ^1.0.9
+    "@floating-ui/dom": ^1.6.3
     "@popperjs/core": ^2.11.8
     animate.css: ^4.1.1
     bootstrap-icons: ^1.10.2

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.common.field.upload;
 
-import org.teamapps.projector.components.common.dto.DtoField;
+import org.teamapps.projector.components.common.dto.DtoAbstractField;
 import org.teamapps.projector.components.common.dto.DtoFileField;
 import org.teamapps.projector.components.common.dto.DtoIdentifiableClientRecord;
 import org.teamapps.dto.protocol.DtoEventWrapper;
@@ -29,7 +29,7 @@ import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 
@@ -85,7 +85,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		Map uploadButtonData = uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getPropertyNames());
 		DtoFileField uiField = new DtoFileField(fileItemTemplate != null ? fileItemTemplate.createDtoReference() : null, uploadButtonTemplate != null ? uploadButtonTemplate.createDtoReference() : null, uploadButtonData);
 		mapAbstractFieldAttributesToUiField(uiField);

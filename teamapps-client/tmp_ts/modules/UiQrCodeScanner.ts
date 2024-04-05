@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractComponent} from "teamapps-client-core";
-import {UiQrCodeScanner_QrCodeDetectedEvent, UiQrCodeScannerCommandHandler, DtoQrCodeScanner, UiQrCodeScannerEventSource} from "../generated/DtoQrCodeScanner";
+import {DtoQrCodeScanner_QrCodeDetectedEvent, DtoQrCodeScannerCommandHandler, DtoQrCodeScanner, DtoQrCodeScannerEventSource} from "../generated/DtoQrCodeScanner";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {calculateDisplayModeInnerSize, parseHtml} from "./Common";
@@ -27,9 +27,9 @@ import {QrScanner} from './qr-code-scanner/qr-scanner';
 import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 
-export class UiQrCodeScanner extends AbstractComponent<DtoQrCodeScanner> implements UiQrCodeScannerCommandHandler, UiQrCodeScannerEventSource {
+export class UiQrCodeScanner extends AbstractComponent<DtoQrCodeScanner> implements DtoQrCodeScannerCommandHandler, DtoQrCodeScannerEventSource {
 
-	public readonly onQrCodeDetected: TeamAppsEvent<UiQrCodeScanner_QrCodeDetectedEvent> = new TeamAppsEvent();
+	public readonly onQrCodeDetected: TeamAppsEvent<DtoQrCodeScanner_QrCodeDetectedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $video: HTMLVideoElement;

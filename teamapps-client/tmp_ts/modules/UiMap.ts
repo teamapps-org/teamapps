@@ -27,14 +27,14 @@ import {createDtoMapPolyline, DtoMapPolyline} from "../generated/DtoMapPolyline"
 import {DtoMapMarkerCluster} from "../generated/DtoMapMarkerCluster";
 import {DtoHeatMapData} from "../generated/DtoHeatMapData";
 import {
-	UiMap_LocationChangedEvent,
-	UiMap_MapClickedEvent,
-	UiMap_MarkerClickedEvent,
-	UiMap_ShapeDrawnEvent,
-	UiMap_ZoomLevelChangedEvent,
-	UiMapCommandHandler,
+	DtoMap_LocationChangedEvent,
+	DtoMap_MapClickedEvent,
+	DtoMap_MarkerClickedEvent,
+	DtoMap_ShapeDrawnEvent,
+	DtoMap_ZoomLevelChangedEvent,
+	DtoMapCommandHandler,
 	DtoMap,
-	UiMapEventSource
+	DtoMapEventSource
 } from "../generated/DtoMap";
 import {UiMapType} from "../generated/UiMapType";
 import L, {Circle, LatLngBounds, LatLngExpression, Layer, Marker, PathOptions, Polygon, Polyline, Rectangle} from "leaflet";
@@ -54,33 +54,33 @@ import {UiMapShapeType} from "../generated/UiMapShapeType";
 import {createDtoMapCircle, DtoMapCircle} from "../generated/DtoMapCircle";
 import {createDtoMapPolygon, DtoMapPolygon} from "../generated/DtoMapPolygon";
 import {createDtoMapRectangle, DtoMapRectangle} from "../generated/DtoMapRectangle";
-import {DtoAbstractMapShapeConfig} from "../generated/DtoAbstractMapShapeConfig";
+import {DtoAbstractMapShape} from "../generated/DtoAbstractMapShape";
 import {DtoShapeProperties} from "../generated/DtoShapeProperties";
-import {DtoMapConfig} from "../generated/DtoMapConfig";
+import {DtoMap} from "../generated/DtoMap";
 
-export function isUiMapCircle(shapeConfig: DtoAbstractMapShapeConfig): shapeConfig is DtoMapCircle {
+export function isUiMapCircle(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapCircle {
 	return shapeConfig._type === "UiMapCircle";
 }
 
-export function isUiMapPolygon(shapeConfig: DtoAbstractMapShapeConfig): shapeConfig is DtoMapPolygon {
+export function isUiMapPolygon(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapPolygon {
 	return shapeConfig._type === "UiMapPolygon";
 }
 
-export function isUiMapPolyline(shapeConfig: DtoAbstractMapShapeConfig): shapeConfig is DtoMapPolyline {
+export function isUiMapPolyline(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapPolyline {
 	return shapeConfig._type === "UiMapPolyline";
 }
 
-export function isUiMapRectangle(shapeConfig: DtoAbstractMapShapeConfig): shapeConfig is DtoMapRectangle {
+export function isUiMapRectangle(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapRectangle {
 	return shapeConfig._type === "UiMapRectangle";
 }
 
-export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHandler, UiMapEventSource {
+export class UiMap extends AbstractComponent<DtoMap> implements DtoMapCommandHandler, DtoMapEventSource {
 
-	public readonly onZoomLevelChanged: TeamAppsEvent<UiMap_ZoomLevelChangedEvent> = new TeamAppsEvent();
-	public readonly onLocationChanged: TeamAppsEvent<UiMap_LocationChangedEvent> = new TeamAppsEvent();
-	public readonly onMapClicked: TeamAppsEvent<UiMap_MapClickedEvent> = new TeamAppsEvent();
-	public readonly onMarkerClicked: TeamAppsEvent<UiMap_MarkerClickedEvent> = new TeamAppsEvent();
-	public readonly onShapeDrawn: TeamAppsEvent<UiMap_ShapeDrawnEvent> = new TeamAppsEvent();
+	public readonly onZoomLevelChanged: TeamAppsEvent<DtoMap_ZoomLevelChangedEvent> = new TeamAppsEvent();
+	public readonly onLocationChanged: TeamAppsEvent<DtoMap_LocationChangedEvent> = new TeamAppsEvent();
+	public readonly onMapClicked: TeamAppsEvent<DtoMap_MapClickedEvent> = new TeamAppsEvent();
+	public readonly onMarkerClicked: TeamAppsEvent<DtoMap_MarkerClickedEvent> = new TeamAppsEvent();
+	public readonly onShapeDrawn: TeamAppsEvent<DtoMap_ShapeDrawnEvent> = new TeamAppsEvent();
 
 	private id: any;
 	private leaflet: L.Map;
@@ -193,7 +193,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	}
 
 	@executeWhenFirstDisplayed()
-	public addShape(shapeId: string, shapeConfig: DtoAbstractMapShapeConfig): void {
+	public addShape(shapeId: string, shapeConfig: DtoAbstractMapShape): void {
 		if (isUiMapCircle(shapeConfig)) {
 			this.shapesById[shapeId] = L.circle(
 				this.createLeafletLatLng(shapeConfig.center), shapeConfig.radius, createPathOptions(shapeConfig.shapeProperties)
@@ -232,7 +232,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 	}
 
 	@executeWhenFirstDisplayed()
-	updateShape(shapeId: string, shapeConfig: DtoAbstractMapShapeConfig): void {
+	updateShape(shapeId: string, shapeConfig: DtoAbstractMapShape): void {
 		let shape = this.shapesById[shapeId];
 		if (shape == null) {
 			console.warn(`There is no shape with id ${shapeId}`);
@@ -325,7 +325,7 @@ export class UiMap extends AbstractComponent<DtoMap> implements UiMapCommandHand
 		this.leaflet.setZoom(zoomLevel);
 	}
 
-	public setMapConfig(mapConfig: DtoMapConfig): void {
+	public setMapConfig(mapConfig: DtoMap): void {
 		const token = this.config.accessToken;
 		let removeLayer = true;
 		let layer = L.tileLayer(mapConfig.urlTemplate, {

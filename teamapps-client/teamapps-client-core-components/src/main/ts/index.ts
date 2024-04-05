@@ -42,24 +42,26 @@ export {IFrame} from "./component/IFrame";
 export {AbsoluteLayout} from "./component/AbsoluteLayout";
 export {NotificationBar} from "./component/NotificationBar";
 
-export {Button} from "./component/formfield/Button";
-export {DisplayField} from "./component/formfield/DisplayField";
-export {AbstractField, getHighestSeverity} from "./component/formfield/AbstractField";
-export {Label} from "./component/formfield/Label";
-export {MultiLineTextField} from "./component/formfield/MultiLineTextField";
-export {PasswordField} from "./component/formfield/PasswordField";
-export {TextField} from "./component/formfield/TextField";
-export {TemplateField} from "./component/formfield/TemplateField";
-export {NumberField} from "./component/formfield/NumberField";
-export {ComponentField} from "./component/formfield/ComponentField";
+export {Button} from "./component/field/Button";
+export {DisplayField} from "./component/field/DisplayField";
+export {AbstractField, getHighestSeverity} from "./component/field/AbstractField";
+export {Label} from "./component/field/Label";
+export {MultiLineTextField} from "./component/field/MultiLineTextField";
+export {PasswordField} from "./component/field/PasswordField";
+export {TextField} from "./component/field/TextField";
+export {TemplateField} from "./component/field/TemplateField";
+export {NumberField} from "./component/field/NumberField";
+export {ComponentField} from "./component/field/ComponentField";
 
 export {ContextMenu} from "./micro-components/ContextMenu";
-export {draggable} from "./util/draggable";
 
 export * from "./template/MustacheTemplate";
 export * from "./template/GridTemplate";
 
+export * from "./util/draggable";
 export * from "./util/cssUtil";
+export * from "./util/BigDecimal";
+export * from "./util/NumberParser";
 export * from "./micro-components/DropDown";
 
 export * from "./generated";

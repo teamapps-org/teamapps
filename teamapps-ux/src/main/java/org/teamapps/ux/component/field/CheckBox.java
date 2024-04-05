@@ -22,7 +22,7 @@ package org.teamapps.ux.component.field;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoCheckBox;
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
 
@@ -46,7 +46,7 @@ public class CheckBox extends AbstractField<Boolean> {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoCheckBox uiCheckBox = new DtoCheckBox();
 		mapAbstractFieldAttributesToUiField(uiCheckBox);
 		uiCheckBox.setCaption(caption);

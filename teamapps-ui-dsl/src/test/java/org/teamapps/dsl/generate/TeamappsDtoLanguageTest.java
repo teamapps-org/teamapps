@@ -47,7 +47,7 @@ public class TeamappsDtoLanguageTest {
 	@Test
 	public void testListProperty() throws IOException {
 		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("class A {\n"
-				+ "  required List<DtoField> fields;"
+				+ "  required List<DtoAbstractField> fields;"
 				+ "}"));
 		parser.classDeclaration();
 	}

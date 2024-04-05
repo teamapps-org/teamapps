@@ -21,7 +21,7 @@ package org.teamapps.ux.component.field;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
@@ -46,9 +46,9 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 							CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
-	public final ProjectorEvent<VALUE> onFocus = createProjectorEventBoundToUiEvent(DtoField.FocusEvent.TYPE_ID);
-	public final ProjectorEvent<VALUE> onBlur = createProjectorEventBoundToUiEvent(DtoField.BlurEvent.TYPE_ID);
-	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(DtoField.ValueChangedEvent.TYPE_ID);
+	public final ProjectorEvent<VALUE> onFocus = createProjectorEventBoundToUiEvent(DtoAbstractField.FocusEvent.TYPE_ID);
+	public final ProjectorEvent<VALUE> onBlur = createProjectorEventBoundToUiEvent(DtoAbstractField.BlurEvent.TYPE_ID);
+	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(DtoAbstractField.ValueChangedEvent.TYPE_ID);
 	public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
 
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
@@ -68,7 +68,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	public void setEditingMode(FieldEditingMode editingMode) {
 		this.editingMode = editingMode;
-		sendCommandIfRendered(() -> new DtoField.SetEditingModeCommand(editingMode.toUiFieldEditingMode()));
+		sendCommandIfRendered(() -> new DtoAbstractField.SetEditingModeCommand(editingMode.toDtoFieldEditingMode()));
 	}
 
 	public void setVisible(boolean visible) {
@@ -77,13 +77,13 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void focus() {
-		sendCommandIfRendered(() -> new DtoField.FocusCommand());
+		sendCommandIfRendered(() -> new DtoAbstractField.FocusCommand());
 	}
 
-	protected void mapAbstractFieldAttributesToUiField(DtoField uiField) {
+	protected void mapAbstractFieldAttributesToUiField(DtoAbstractField uiField) {
 		mapAbstractUiComponentProperties(uiField);
 		uiField.setValue(convertUxValueToUiValue(this.value.read()));
-		uiField.setEditingMode(editingMode.toUiFieldEditingMode());
+		uiField.setEditingMode(editingMode.toDtoFieldEditingMode());
 		uiField.setFieldMessages(getFieldMessages().stream()
 				.map(message -> message.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList()));
@@ -94,7 +94,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		MultiWriteLockableValue.Lock lock = this.value.writeAndLock(value);
 		Object uiValue = this.convertUxValueToUiValue(value);
 		if (isRendered()) {
-			final DtoField.SetValueCommand setValueCommand = new DtoField.SetValueCommand(uiValue);
+			final DtoAbstractField.SetValueCommand setValueCommand = new DtoAbstractField.SetValueCommand(uiValue);
 			getSessionContext().sendCommandIfRendered(this, () -> setValueCommand, aVoid -> lock.release());
 		} else {
 			lock.release();
@@ -123,13 +123,13 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	@Override
 	public void handleUiEvent(DtoEventWrapper event) {
 		switch (event.getTypeId()) {
-			case DtoField.ValueChangedEvent.TYPE_ID -> {
-		 var e = event.as(DtoField.ValueChangedEventWrapper.class);
+			case DtoAbstractField.ValueChangedEvent.TYPE_ID -> {
+		 var e = event.as(DtoAbstractField.ValueChangedEventWrapper.class);
 				applyValueFromUi(e.getValue());
 				validate();
 			}
-			case DtoField.FocusEvent.TYPE_ID -> onFocus.fire();
-			case DtoField.BlurEvent.TYPE_ID -> onBlur.fire();
+			case DtoAbstractField.FocusEvent.TYPE_ID -> onFocus.fire();
+			case DtoAbstractField.BlurEvent.TYPE_ID -> onBlur.fire();
 		}
 	}
 
@@ -257,7 +257,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	private void updateFieldMessages() {
-		sendCommandIfRendered(() -> new DtoField.SetFieldMessagesCommand(getFieldMessages().stream()
+		sendCommandIfRendered(() -> new DtoAbstractField.SetFieldMessagesCommand(getFieldMessages().stream()
 				.map(fieldMessage -> fieldMessage.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList())));
 	}

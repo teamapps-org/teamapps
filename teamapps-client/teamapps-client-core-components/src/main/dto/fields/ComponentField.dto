@@ -21,7 +21,7 @@ package "teamapps-client-core-components":org.teamapps.dto;
 
 import org.teamapps.dto.Component;
 
-class ComponentField extends Field {
+class ComponentField extends AbstractField {
 	Component* component;
 	int height; // 0 = the height will be determined by the component's content and context
 	boolean bordered;

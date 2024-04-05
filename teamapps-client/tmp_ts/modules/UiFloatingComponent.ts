@@ -20,7 +20,7 @@
 
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiFloatingComponent_ExpandedOrCollapsedEvent, UiFloatingComponentCommandHandler, DtoFloatingComponent, UiFloatingComponentEventSource} from "../generated/DtoFloatingComponent";
+import {DtoFloatingComponent_ExpandedOrCollapsedEvent, DtoFloatingComponentCommandHandler, DtoFloatingComponent, DtoFloatingComponentEventSource} from "../generated/DtoFloatingComponent";
 import {UiComponent} from "./UiComponent";
 import ResizeObserver from 'resize-observer-polyfill';
 import {parseHtml, prependChild, removeClassesByFunction} from "./Common";
@@ -28,9 +28,9 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiFloatingComponentPosition} from "../generated/UiFloatingComponentPosition";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
-export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent> implements UiFloatingComponentCommandHandler, UiFloatingComponentEventSource {
+export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent> implements DtoFloatingComponentCommandHandler, DtoFloatingComponentEventSource {
 
-	public readonly onExpandedOrCollapsed: TeamAppsEvent<UiFloatingComponent_ExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onExpandedOrCollapsed: TeamAppsEvent<DtoFloatingComponent_ExpandedOrCollapsedEvent> = new TeamAppsEvent();
 
 	private containerComponent: UiComponent;
 	private contentComponent: UiComponent;

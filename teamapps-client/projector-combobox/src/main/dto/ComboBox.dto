@@ -1,0 +1,31 @@
+package "projector-combobox":org.teamapps.projector.components.trivial.dto;
+
+import org.teamapps.dto.Component;
+import org.teamapps.dto.Template;
+import org.teamapps.dto.TextInputHandlingField;
+import org.teamapps.dto.AbstractField;
+import org.teamapps.projector.components.trivial.dto.TreeRecord;
+
+class ComboBox extends AbstractField implements TextInputHandlingField {
+	mutable boolean dropDownButtonVisible;
+	mutable boolean showDropDownAfterResultsArrive;
+	mutable boolean firstEntryAutoHighlight;
+	mutable int textHighlightingEntryLimit;
+	mutable boolean autoCompletionEnabled; // if true, by typing any letter, the first matching will be selected (keeping all not yet entered letters int the text box selected)
+	mutable boolean freeTextEnabled;
+	mutable boolean clearButtonEnabled;
+	mutable boolean expandersVisible;
+	mutable boolean expandAnimationEnabled;
+	mutable String placeholderText;
+	mutable Integer dropDownMinWidth;
+	mutable Integer dropDownMaxHeight;
+	mutable int indentation;
+
+	query lazyChildren(int parentId) returns List<ComboBoxTreeRecord>;
+	query retrieveDropdownEntries(String queryString) returns List<ComboBoxTreeRecord>;
+	command replaceFreeTextEntry(String freeText, ComboBoxTreeRecord newEntry);
+}
+
+class ComboBoxTreeRecord extends TreeRecord {
+	Template* dropDownTemplate; // null == use asString
+}

@@ -126,7 +126,7 @@ public class SessionContext {
 					if (clientObject != null) {
 						clientObject.handleUiEvent(event);
 					} else {
-						throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
+						throw new ProjectorComponentNotFoundException(sessionId, uiComponentId);
 					}
 				} else {
 					handleStaticEvent(event);
@@ -145,7 +145,7 @@ public class SessionContext {
 						resultCallback.accept(result);
 					});
 				} else {
-					throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
+					throw new ProjectorComponentNotFoundException(sessionId, uiComponentId);
 				}
 			});
 		}

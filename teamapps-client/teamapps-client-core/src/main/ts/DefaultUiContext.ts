@@ -21,7 +21,7 @@
 
 import {capitalizeFirstLetter, generateUUID} from "./util/string-util";
 import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {DtoClientObject as DtoClientObjectConfig, DtoConfiguration, DtoGenericErrorMessageOption} from "./generated";
+import {DtoClientObject as DtoClientObject, DtoConfiguration, DtoGenericErrorMessageOption} from "./generated";
 import {
 	createDtoClientInfo,
 	DtoCommand,
@@ -41,7 +41,7 @@ import {createUiLocation} from "./util/locationUtil";
 import {AbstractWebComponent} from "./component/AbstractWebComponent";
 import {AbstractComponent} from "./component/AbstractComponent";
 
-type ClientObjectClass<T extends ClientObject = ClientObject> = { new(config: DtoClientObjectConfig): T };
+type ClientObjectClass<T extends ClientObject = ClientObject> = { new(config: DtoClientObject): T };
 
 
 function isClassicComponent(o: ClientObject): o is AbstractComponent {
@@ -253,14 +253,14 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	public async renderClientObject(libraryUuid: string, config: DtoClientObjectConfig) {
+	public async renderClientObject(libraryUuid: string, config: DtoClientObject) {
 		console.debug("rendering ClientObject: ", config._type, config.id, libraryUuid, config);
 		let promise = this.createClientObject(libraryUuid, config);
 		await this.registerClientObject(promise, config.id, config._type, config.listeningEvents);
 		return await promise;
 	}
 
-	public async createClientObject(libraryUuid: string, config: DtoClientObjectConfig): Promise<ClientObject> {
+	public async createClientObject(libraryUuid: string, config: DtoClientObject): Promise<ClientObject> {
 		let componentClass = await this.getClientObjectClassWrapper(libraryUuid, config._type);
 		if (componentClass) {
 
@@ -377,7 +377,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 				return await (method.apply(classWrapper.clazz, methodParameters));
 			}
 		} catch (e) {
-			console.error(e, e.stack);
+			console.error(e);
 		}
 	}
 

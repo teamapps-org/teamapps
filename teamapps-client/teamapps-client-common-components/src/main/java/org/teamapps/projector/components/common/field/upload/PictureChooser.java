@@ -20,7 +20,7 @@
 package org.teamapps.projector.components.common.field.upload;
 
 import net.coobird.thumbnailator.Thumbnails;
-import org.teamapps.projector.components.common.dto.DtoField;
+import org.teamapps.projector.components.common.dto.DtoAbstractField;
 import org.teamapps.projector.components.common.dto.DtoPictureChooser;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
@@ -150,7 +150,7 @@ public class PictureChooser extends AbstractField<Resource> {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoPictureChooser uiField = new DtoPictureChooser();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setUploadUrl(uploadUrl);

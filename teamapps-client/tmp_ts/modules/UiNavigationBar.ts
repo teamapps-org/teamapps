@@ -25,11 +25,11 @@ import {AbstractComponent} from "teamapps-client-core";
 import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {
-	UiNavigationBar_ButtonClickedEvent,
-	UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent,
-	UiNavigationBarCommandHandler,
+	DtoNavigationBar_ButtonClickedEvent,
+	DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent,
+	DtoNavigationBarCommandHandler,
 	DtoNavigationBar,
-	UiNavigationBarEventSource
+	DtoNavigationBarEventSource
 } from "../generated/DtoNavigationBar";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
@@ -40,10 +40,10 @@ interface Button {
 	$button: HTMLElement;
 }
 
-export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> implements UiNavigationBarCommandHandler, UiNavigationBarEventSource {
+export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
 
-	public readonly onButtonClicked: TeamAppsEvent<UiNavigationBar_ButtonClickedEvent> = new TeamAppsEvent();
-	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent();
+	public readonly onButtonClicked: TeamAppsEvent<DtoNavigationBar_ButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent();
 
 	private $bar: HTMLElement;
 	private $buttonsContainer: HTMLElement;

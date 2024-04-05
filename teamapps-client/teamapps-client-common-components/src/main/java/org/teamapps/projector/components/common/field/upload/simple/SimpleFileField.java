@@ -28,7 +28,7 @@ import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.projector.components.common.field.upload.FileFieldDisplayType;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public final ProjectorEvent<FileItem> onUploadInitiatedByUser = createProjectorEventBoundToUiEvent(DtoSimpleFileField.UploadInitiatedByUserEvent.TYPE_ID);

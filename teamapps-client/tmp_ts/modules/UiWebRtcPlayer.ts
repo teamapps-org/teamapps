@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiWebRtcPlayerCommandHandler, DtoWebRtcPlayer} from "../generated/DtoWebRtcPlayer";
+import {DtoWebRtcPlayerCommandHandler, DtoWebRtcPlayer} from "../generated/DtoWebRtcPlayer";
 import {UiSpinner} from "./micro-components/UiSpinner";
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
@@ -31,7 +31,7 @@ import {UiVideoCodec} from "../generated/UiVideoCodec";
 
 type WebRtcState = 'new' | 'checking' | 'connected' | 'completed' | 'failed' | 'disconnected' | 'closed';
 
-export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implements UiWebRtcPlayerCommandHandler {
+export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implements DtoWebRtcPlayerCommandHandler {
 
 	private static readonly PEER_CONNECTION_CONFIG: any = {'iceServers': []};
 

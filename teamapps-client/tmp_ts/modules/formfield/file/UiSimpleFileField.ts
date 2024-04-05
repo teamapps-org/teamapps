@@ -18,43 +18,43 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiField} from "../UiField";
+import {DtoAbstractField} from "../DtoAbstractField";
 import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
-import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
+import {DtoFieldEditingMode} from "../../../generated/DtoFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {arraysEqual, generateUUID, parseHtml} from "../../Common";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {keyCodes} from "../../trivial-components/TrivialCore";
+import {keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 import {createDtoFileItem, DtoFileItem} from "../../../generated/DtoFileItem";
 import {
-	UiSimpleFileField_FileItemClickedEvent,
-	UiSimpleFileField_FileItemRemovedEvent,
-	UiSimpleFileField_UploadCanceledEvent,
-	UiSimpleFileField_UploadFailedEvent,
-	UiSimpleFileField_UploadInitiatedByUserEvent,
-	UiSimpleFileField_UploadStartedEvent,
-	UiSimpleFileField_UploadSuccessfulEvent,
-	UiSimpleFileField_UploadTooLargeEvent,
-	UiSimpleFileFieldCommandHandler,
+	DtoSimpleFileField_FileItemClickedEvent,
+	DtoSimpleFileField_FileItemRemovedEvent,
+	DtoSimpleFileField_UploadCanceledEvent,
+	DtoSimpleFileField_UploadFailedEvent,
+	DtoSimpleFileField_UploadInitiatedByUserEvent,
+	DtoSimpleFileField_UploadStartedEvent,
+	DtoSimpleFileField_UploadSuccessfulEvent,
+	DtoSimpleFileField_UploadTooLargeEvent,
+	DtoSimpleFileFieldCommandHandler,
 	DtoSimpleFileField,
-	UiSimpleFileFieldEventSource
+	DtoSimpleFileFieldEventSource
 } from "../../../generated/DtoSimpleFileField";
 import {FileItemState, UiFileItem} from "./UiFileItem";
 
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
-export class UiSimpleFileField extends UiField<DtoSimpleFileField, DtoFileItem[]> implements UiSimpleFileFieldEventSource, UiSimpleFileFieldCommandHandler {
+export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileItem[]> implements DtoSimpleFileFieldEventSource, DtoSimpleFileFieldCommandHandler {
 
-	public readonly onFileItemClicked: TeamAppsEvent<UiSimpleFileField_FileItemClickedEvent> = new TeamAppsEvent();
-	public readonly onFileItemRemoved: TeamAppsEvent<UiSimpleFileField_FileItemRemovedEvent> = new TeamAppsEvent();
-	public readonly onUploadCanceled: TeamAppsEvent<UiSimpleFileField_UploadCanceledEvent> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<UiSimpleFileField_UploadFailedEvent> = new TeamAppsEvent();
-	public readonly onUploadInitiatedByUser: TeamAppsEvent<UiSimpleFileField_UploadInitiatedByUserEvent> = new TeamAppsEvent();
-	public readonly onUploadStarted: TeamAppsEvent<UiSimpleFileField_UploadStartedEvent> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<UiSimpleFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<UiSimpleFileField_UploadTooLargeEvent> = new TeamAppsEvent();
+	public readonly onFileItemClicked: TeamAppsEvent<DtoSimpleFileField_FileItemClickedEvent> = new TeamAppsEvent();
+	public readonly onFileItemRemoved: TeamAppsEvent<DtoSimpleFileField_FileItemRemovedEvent> = new TeamAppsEvent();
+	public readonly onUploadCanceled: TeamAppsEvent<DtoSimpleFileField_UploadCanceledEvent> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<DtoSimpleFileField_UploadFailedEvent> = new TeamAppsEvent();
+	public readonly onUploadInitiatedByUser: TeamAppsEvent<DtoSimpleFileField_UploadInitiatedByUserEvent> = new TeamAppsEvent();
+	public readonly onUploadStarted: TeamAppsEvent<DtoSimpleFileField_UploadStartedEvent> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<DtoSimpleFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<DtoSimpleFileField_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $uploadButton: HTMLElement;
@@ -107,7 +107,7 @@ export class UiSimpleFileField extends UiField<DtoSimpleFileField, DtoFileItem[]
 
 		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button');
 		["click", "keypress"].forEach(eventName => this.$uploadButton.addEventListener(eventName, (e: any) => {
-			if (e.button == 0 || e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
+			if (e.button == 0 || e.keyCode === "Enter" || e.keyCode === keyCodes.space) {
 				this.$fileInput.click();
 				return false; // no scrolling when space is pressed!
 			}
@@ -173,8 +173,8 @@ export class UiSimpleFileField extends UiField<DtoSimpleFileField, DtoFileItem[]
 		return v == null || Array.isArray(v);
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode?: DtoFieldEditingMode): void {
+		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}
 

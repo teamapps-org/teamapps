@@ -40,7 +40,7 @@ import {
 import {maximizeComponent} from "../Common";
 import {insertBefore, prependChild} from "teamapps-client-core";
 import {StaticIcons} from "../util/StaticIcons";
-import {positionDropdown, positionDropdownWithAutoUpdate} from "../util/dropdownPosition";
+import {positionDropdown} from "../util/dropdownPosition";
 import {contentWidth} from "../util/cssUtil";
 
 

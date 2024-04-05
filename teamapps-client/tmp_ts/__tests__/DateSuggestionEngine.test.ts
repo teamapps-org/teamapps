@@ -38,8 +38,8 @@
 import {
 	DateSuggestionEngine,
 	getYearMonthDayOrderFromDateFormat
-} from "../modules/formfield/datetime/DateSuggestionEngine";
-import { LocalDateTime } from "../modules/datetime/LocalDateTime";
+} from "../../projector-combobox/src/main/ts/DateSuggestionEngine";
+import { LocalDateTime } from "../../projector-combobox/src/main/ts/LocalDateTime";
 
 
 describe('TeamApps.extractAllPossibleDateFragmentCombinations', function () {

@@ -23,7 +23,7 @@ package "teamapps-client-core-components":org.teamapps.dto;
 import org.teamapps.dto.Component;
 import org.teamapps.dto.Template;
 
-class Button extends Field {
+class Button extends AbstractField {
 	required Template* template;
 	required Object templateRecord;
 

@@ -22,7 +22,7 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {addDelegatedEventListener, humanReadableFileSize, parseHtml, prependChild, removeDangerousTags} from "./Common";
 import {DtoChatMessage} from "../generated/DtoChatMessage";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiChatDisplayCommandHandler, DtoChatDisplay,} from "../generated/DtoChatDisplay";
+import {DtoChatDisplayCommandHandler, DtoChatDisplay,} from "../generated/DtoChatDisplay";
 import {UiSpinner} from "./micro-components/UiSpinner";
 import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {Autolinker} from "autolinker";
@@ -31,7 +31,7 @@ import {UiComponent} from "./UiComponent";
 import {DtoChatMessageBatch} from "../generated/DtoChatMessageBatch";
 import {debounce, debouncedMethod, DebounceMode} from "./util/debounce";
 
-export class UiChatDisplay extends AbstractComponent<DtoChatDisplay> implements UiChatDisplayCommandHandler {
+export class UiChatDisplay extends AbstractComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
 
 	private $main: HTMLElement;
 	private gotFirstMessage: boolean = false;

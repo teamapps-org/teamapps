@@ -28,7 +28,7 @@ public enum FieldEditingMode {
 	DISABLED,
 	READONLY;
 
-	public DtoFieldEditingMode toUiFieldEditingMode() {
+	public DtoFieldEditingMode toDtoFieldEditingMode() {
 		return DtoFieldEditingMode.valueOf(this.name());
 	}
 

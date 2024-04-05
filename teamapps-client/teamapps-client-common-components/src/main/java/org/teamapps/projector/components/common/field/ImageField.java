@@ -22,13 +22,13 @@ package org.teamapps.projector.components.common.field;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.TeamAppsComponent;
+import org.teamapps.ux.component.ProjectorComponent;
 import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.format.Border;
 import org.teamapps.ux.format.ImageSizing;
 
-@TeamAppsComponent(library = CoreComponentLibrary.class)
+@ProjectorComponent(library = CoreComponentLibrary.class)
 public class ImageField extends AbstractField<String> {
 
 	private Length width = Length.AUTO; 

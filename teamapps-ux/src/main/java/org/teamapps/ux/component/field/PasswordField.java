@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.dto.DtoPasswordField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -35,7 +35,7 @@ public class PasswordField extends TextField {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoPasswordField uiField = new DtoPasswordField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());

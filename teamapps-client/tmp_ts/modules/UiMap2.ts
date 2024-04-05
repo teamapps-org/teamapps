@@ -23,14 +23,14 @@ import {AbstractComponent} from "teamapps-client-core";
 import {parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {
-	UiMap2_LocationChangedEvent,
-	UiMap2_MapClickedEvent,
-	UiMap2_MarkerClickedEvent,
-	UiMap2_ShapeDrawnEvent,
-	UiMap2_ZoomLevelChangedEvent,
-	UiMap2CommandHandler,
+	DtoMap2_LocationChangedEvent,
+	DtoMap2_MapClickedEvent,
+	DtoMap2_MarkerClickedEvent,
+	DtoMap2_ShapeDrawnEvent,
+	DtoMap2_ZoomLevelChangedEvent,
+	DtoMap2CommandHandler,
 	DtoMap2,
-	UiMap2EventSource
+	DtoMap2EventSource
 } from "../generated/DtoMap2";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
@@ -39,29 +39,29 @@ import {createDtoMapLocation, DtoMapLocation} from "../generated/DtoMapLocation"
 import {createDtoMapArea} from "../generated/DtoMapArea";
 import {DtoMapMarkerClientRecord} from "../generated/DtoMapMarkerClientRecord";
 import {DtoTemplate} from "../generated/DtoTemplate";
-import {DtoAbstractMapShapeConfig} from "../generated/DtoAbstractMapShapeConfig";
+import {DtoAbstractMapShape} from "../generated/DtoAbstractMapShape";
 import {isUiMapCircle, isUiMapPolygon, isUiMapPolyline, isUiMapRectangle} from "./UiMap";
 import {Feature, Point, Position} from "geojson";
 import {DtoMapMarkerCluster} from "../generated/DtoMapMarkerCluster";
 import * as d3 from "d3";
 import {DeferredExecutor} from "./util/DeferredExecutor";
-import {DtoAbstractMapShapeChangeConfig} from "../generated/DtoAbstractMapShapeChangeConfig";
+import {DtoAbstractMapShapeChange} from "../generated/DtoAbstractMapShapeChange";
 import {DtoPolylineAppend} from "../generated/DtoPolylineAppend";
 import {DtoMapPolyline} from "../generated/DtoMapPolyline";
 
-export class UiMap2 extends AbstractComponent<DtoMap2> implements UiMap2EventSource, UiMap2CommandHandler {
+export class UiMap2 extends AbstractComponent<DtoMap2> implements DtoMap2EventSource, DtoMap2CommandHandler {
 
-	public readonly onZoomLevelChanged: TeamAppsEvent<UiMap2_ZoomLevelChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
-	public readonly onLocationChanged: TeamAppsEvent<UiMap2_LocationChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
-	public readonly onMapClicked: TeamAppsEvent<UiMap2_MapClickedEvent> = new TeamAppsEvent();
-	public readonly onMarkerClicked: TeamAppsEvent<UiMap2_MarkerClickedEvent> = new TeamAppsEvent();
-	public readonly onShapeDrawn: TeamAppsEvent<UiMap2_ShapeDrawnEvent> = new TeamAppsEvent();
+	public readonly onZoomLevelChanged: TeamAppsEvent<DtoMap2_ZoomLevelChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
+	public readonly onLocationChanged: TeamAppsEvent<DtoMap2_LocationChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
+	public readonly onMapClicked: TeamAppsEvent<DtoMap2_MapClickedEvent> = new TeamAppsEvent();
+	public readonly onMarkerClicked: TeamAppsEvent<DtoMap2_MarkerClickedEvent> = new TeamAppsEvent();
+	public readonly onShapeDrawn: TeamAppsEvent<DtoMap2_ShapeDrawnEvent> = new TeamAppsEvent();
 
 	private $map: HTMLElement;
 	private map: MapBoxMap;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 	private markersByClientId: { [id: number]: Marker } = {};
-	private shapesById: Map<string, { config: DtoAbstractMapShapeConfig }> = new Map();
+	private shapesById: Map<string, { config: DtoAbstractMapShape }> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
@@ -116,7 +116,7 @@ export class UiMap2 extends AbstractComponent<DtoMap2> implements UiMap2EventSou
 		this.map.setStyle(styleUrl);
 	}
 
-	public addShape(shapeId: string, shapeConfig: DtoAbstractMapShapeConfig): void {
+	public addShape(shapeId: string, shapeConfig: DtoAbstractMapShape): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.shapesById.set(shapeId, {config: shapeConfig});
 			if (isUiMapCircle(shapeConfig)) {
@@ -244,14 +244,14 @@ export class UiMap2 extends AbstractComponent<DtoMap2> implements UiMap2EventSou
 		return data;
 	}
 
-	updateShape(shapeId: string, shape: DtoAbstractMapShapeConfig): void {
+	updateShape(shapeId: string, shape: DtoAbstractMapShape): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.removeShape(shapeId);
 			this.addShape(shapeId, shape);
 		});
 	}
 
-	changeShape(shapeId: string, change: DtoAbstractMapShapeChangeConfig): void {
+	changeShape(shapeId: string, change: DtoAbstractMapShapeChange): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			if (isPolyLineAppend(change)) {
 				let config = this.shapesById.get(shapeId).config as DtoMapPolyline;
@@ -522,7 +522,7 @@ export class UiMap2 extends AbstractComponent<DtoMap2> implements UiMap2EventSou
 	}
 }
 
-function isPolyLineAppend(change: DtoAbstractMapShapeChangeConfig): change is DtoPolylineAppend {
+function isPolyLineAppend(change: DtoAbstractMapShapeChange): change is DtoPolylineAppend {
 	return change._type === "UiPolylineAppend";
 }
 

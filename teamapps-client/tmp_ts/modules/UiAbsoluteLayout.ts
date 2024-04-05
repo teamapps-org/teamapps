@@ -19,7 +19,7 @@
  */
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiAbsoluteLayoutCommandHandler, DtoAbsoluteLayout} from "../generated/DtoAbsoluteLayout";
+import {DtoAbsoluteLayoutCommandHandler, DtoAbsoluteLayout} from "../generated/DtoAbsoluteLayout";
 import {DtoAbsolutePositionedComponent} from "../generated/DtoAbsolutePositionedComponent";
 import {UiAnimationEasing} from "../generated/UiAnimationEasing";
 import {parseHtml} from "./Common";
@@ -37,7 +37,7 @@ const animationEasingCssValues = {
 	[UiAnimationEasing.STEP_END]: "step-end"
 };
 
-export class UiAbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements UiAbsoluteLayoutCommandHandler {
+export class UiAbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 	private $style: HTMLStyleElement;
 	private components: DtoAbsolutePositionedComponent[];

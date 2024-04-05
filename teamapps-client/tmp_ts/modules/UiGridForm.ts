@@ -19,10 +19,10 @@
  */
 
 import {
-	UiGridForm_SectionCollapsedStateChangedEvent,
-	UiGridFormCommandHandler,
+	DtoGridForm_SectionCollapsedStateChangedEvent,
+	DtoGridFormCommandHandler,
 	DtoGridForm,
-	UiGridFormEventSource
+	DtoGridFormEventSource
 } from "../generated/DtoGridForm";
 import {DtoFormLayoutPolicy} from "../generated/DtoFormLayoutPolicy";
 import {DtoFormSection} from "../generated/DtoFormSection";
@@ -46,11 +46,11 @@ import {DtoFormSectionFloatingFieldsPlacement} from "../generated/DtoFormSection
 import {generateUUID, parseHtml} from "./Common";
 import {bind} from "./util/Bind";
 import {UiComponent} from "./UiComponent";
-import {UiField} from "./formfield/UiField";
+import {DtoAbstractField} from "./formfield/DtoAbstractField";
 
-export class UiGridForm extends AbstractComponent<DtoGridForm> implements UiGridFormCommandHandler, UiGridFormEventSource {
+export class UiGridForm extends AbstractComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
 
-	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent>();
+	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<DtoGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<DtoGridForm_SectionCollapsedStateChangedEvent>();
 
 	private $mainDiv: HTMLElement;
 

@@ -17,22 +17,22 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "../UiField";
+import {DtoAbstractField} from "../DtoAbstractField";
 import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
-import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
+import {DtoFieldEditingMode} from "../../../generated/DtoFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {generateUUID, humanReadableFileSize, parseHtml, prependChild, removeClassesByFunction} from "../../Common";
 import {
-	UiFileField_FileItemClickedEvent,
-	UiFileField_FileItemRemoveButtonClickedEvent,
-	UiFileField_UploadCanceledEvent,
-	UiFileField_UploadFailedEvent,
-	UiFileField_UploadStartedEvent,
-	UiFileField_UploadSuccessfulEvent,
-	UiFileField_UploadTooLargeEvent,
-	UiFileFieldCommandHandler,
+	DtoFileField_FileItemClickedEvent,
+	DtoFileField_FileItemRemoveButtonClickedEvent,
+	DtoFileField_UploadCanceledEvent,
+	DtoFileField_UploadFailedEvent,
+	DtoFileField_UploadStartedEvent,
+	DtoFileField_UploadSuccessfulEvent,
+	DtoFileField_UploadTooLargeEvent,
+	DtoFileFieldCommandHandler,
 	DtoFileField,
-	UiFileFieldEventSource
+	DtoFileFieldEventSource
 } from "../../../generated/DtoFileField";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
@@ -43,19 +43,19 @@ import {ProgressCircle} from "../../micro-components/ProgressCircle";
 import {ProgressBar} from "../../micro-components/ProgressBar";
 import * as log from "loglevel";
 import {Logger} from "loglevel";
-import {keyCodes} from "../../trivial-components/TrivialCore";
+import {keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 import {DtoIdentifiableClientRecord} from "../../../generated/DtoIdentifiableClientRecord";
 import {FileUploader} from "../../util/FileUploader";
 
-export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientRecord[]> implements UiFileFieldEventSource, UiFileFieldCommandHandler {
+export class UiFileField extends AbstractField<DtoFileField, DtoIdentifiableClientRecord[]> implements DtoFileFieldEventSource, DtoFileFieldCommandHandler {
 
-	public readonly onFileItemClicked: TeamAppsEvent<UiFileField_FileItemClickedEvent> = new TeamAppsEvent();
-	public readonly onFileItemRemoveButtonClicked: TeamAppsEvent<UiFileField_FileItemRemoveButtonClickedEvent> = new TeamAppsEvent();
-	public readonly onUploadCanceled: TeamAppsEvent<UiFileField_UploadCanceledEvent> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<UiFileField_UploadFailedEvent> = new TeamAppsEvent();
-	public readonly onUploadStarted: TeamAppsEvent<UiFileField_UploadStartedEvent> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<UiFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<UiFileField_UploadTooLargeEvent> = new TeamAppsEvent();
+	public readonly onFileItemClicked: TeamAppsEvent<DtoFileField_FileItemClickedEvent> = new TeamAppsEvent();
+	public readonly onFileItemRemoveButtonClicked: TeamAppsEvent<DtoFileField_FileItemRemoveButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onUploadCanceled: TeamAppsEvent<DtoFileField_UploadCanceledEvent> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<DtoFileField_UploadFailedEvent> = new TeamAppsEvent();
+	public readonly onUploadStarted: TeamAppsEvent<DtoFileField_UploadStartedEvent> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<DtoFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<DtoFileField_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $wrapper: HTMLElement;
 	private $uploadButton: HTMLElement;
@@ -107,7 +107,7 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 		this.$uploadButtonTemplate = this.$wrapper.querySelector<HTMLElement>(':scope .upload-button-template');
 		this.$uploadButton = this.$wrapper.querySelector<HTMLElement>(':scope .upload-button-wrapper');
 		this.$uploadButton.addEventListener('keydown', e => {
-			if (e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
+			if (e.keyCode === "Enter" || e.keyCode === keyCodes.space) {
 				this.$fileInput.click();
 				return false; // no scrolling when space is pressed!
 			}
@@ -321,8 +321,8 @@ export class UiFileField extends UiField<DtoFileField, DtoIdentifiableClientReco
 			.map(fileItem => fileItem.data);
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}
 
@@ -372,10 +372,10 @@ class UploadItem {
 	private static LOGGER: Logger = log.getLogger("UploadItem");
 	public readonly onDeleteButtonClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
 	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
-	public readonly onUploadCanceled: TeamAppsEvent<UiFileField_UploadCanceledEvent> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<UiFileField_UploadFailedEvent> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<UiFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<UiFileField_UploadTooLargeEvent> = new TeamAppsEvent();
+	public readonly onUploadCanceled: TeamAppsEvent<DtoFileField_UploadCanceledEvent> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<DtoFileField_UploadFailedEvent> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<DtoFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<DtoFileField_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 

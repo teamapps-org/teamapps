@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field;
 
 import org.apache.commons.lang3.StringUtils;
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.dto.DtoTextField;
 import org.teamapps.dto.DtoTextInputHandlingField;
 import org.teamapps.dto.protocol.DtoEventWrapper;
@@ -82,7 +82,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoTextField uiField = new DtoTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(maxCharacters);

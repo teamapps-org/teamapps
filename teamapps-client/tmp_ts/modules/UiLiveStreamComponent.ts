@@ -29,20 +29,20 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {applyDisplayMode, css, fadeIn, fadeOut, generateUUID, parseHtml} from "./Common";
 import {LiveStreamPlayer} from "./live-stream/LiveStreamPlayer";
 import {
-	UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent,
-	UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent,
-	UiLiveStreamComponentCommandHandler,
+	DtoLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent,
+	DtoLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent,
+	DtoLiveStreamComponentCommandHandler,
 	DtoLiveStreamComponent,
-	UiLiveStreamComponentEventSource
+	DtoLiveStreamComponentEventSource
 } from "../generated/DtoLiveStreamComponent";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
 
-export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamComponent> implements UiLiveStreamComponentCommandHandler, UiLiveStreamComponentEventSource {
+export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamComponent> implements DtoLiveStreamComponentCommandHandler, DtoLiveStreamComponentEventSource {
 
-	public readonly onResultOfRequestInputDeviceAccess: TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent> = new TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent>();
-	public readonly onResultOfRequestInputDeviceInfo: TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent> = new TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent>();
+	public readonly onResultOfRequestInputDeviceAccess: TeamAppsEvent<DtoLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent> = new TeamAppsEvent<DtoLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent>();
+	public readonly onResultOfRequestInputDeviceInfo: TeamAppsEvent<DtoLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent> = new TeamAppsEvent<DtoLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent>();
 
 	private $componentWrapper: HTMLElement;
 

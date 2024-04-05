@@ -22,17 +22,17 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {createImageThumbnailUrl, fadeOut, insertAtCursorPosition, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {
-	UiChatInput_FileItemClickedEvent,
-	UiChatInput_FileItemRemovedEvent,
-	UiChatInput_MessageSentEvent,
-	UiChatInput_UploadCanceledEvent,
-	UiChatInput_UploadFailedEvent,
-	UiChatInput_UploadStartedEvent,
-	UiChatInput_UploadSuccessfulEvent,
-	UiChatInput_UploadTooLargeEvent,
-	UiChatInputCommandHandler,
+	DtoChatInput_FileItemClickedEvent,
+	DtoChatInput_FileItemRemovedEvent,
+	DtoChatInput_MessageSentEvent,
+	DtoChatInput_UploadCanceledEvent,
+	DtoChatInput_UploadFailedEvent,
+	DtoChatInput_UploadStartedEvent,
+	DtoChatInput_UploadSuccessfulEvent,
+	DtoChatInput_UploadTooLargeEvent,
+	DtoChatInputCommandHandler,
 	DtoChatInput,
-	UiChatInputEventSource
+	DtoChatInputEventSource
 } from "../generated/DtoChatInput";
 import {FileUploader} from "./util/FileUploader";
 import {ProgressBar} from "./micro-components/ProgressBar";
@@ -41,16 +41,16 @@ import * as log from "loglevel";
 import {createDtoNewChatMessage} from "../generated/DtoNewChatMessage";
 import {createDtoChatNewFile} from "../generated/DtoChatNewFile";
 
-export class UiChatInput extends AbstractComponent<DtoChatInput> implements UiChatInputCommandHandler, UiChatInputEventSource {
+export class UiChatInput extends AbstractComponent<DtoChatInput> implements DtoChatInputCommandHandler, DtoChatInputEventSource {
 
-	onFileItemClicked: TeamAppsEvent<UiChatInput_FileItemClickedEvent> = new TeamAppsEvent();
-	onFileItemRemoved: TeamAppsEvent<UiChatInput_FileItemRemovedEvent> = new TeamAppsEvent();
-	onMessageSent: TeamAppsEvent<UiChatInput_MessageSentEvent> = new TeamAppsEvent();
-	onUploadCanceled: TeamAppsEvent<UiChatInput_UploadCanceledEvent> = new TeamAppsEvent();
-	onUploadFailed: TeamAppsEvent<UiChatInput_UploadFailedEvent> = new TeamAppsEvent();
-	onUploadStarted: TeamAppsEvent<UiChatInput_UploadStartedEvent> = new TeamAppsEvent();
-	onUploadSuccessful: TeamAppsEvent<UiChatInput_UploadSuccessfulEvent> = new TeamAppsEvent();
-	onUploadTooLarge: TeamAppsEvent<UiChatInput_UploadTooLargeEvent> = new TeamAppsEvent();
+	onFileItemClicked: TeamAppsEvent<DtoChatInput_FileItemClickedEvent> = new TeamAppsEvent();
+	onFileItemRemoved: TeamAppsEvent<DtoChatInput_FileItemRemovedEvent> = new TeamAppsEvent();
+	onMessageSent: TeamAppsEvent<DtoChatInput_MessageSentEvent> = new TeamAppsEvent();
+	onUploadCanceled: TeamAppsEvent<DtoChatInput_UploadCanceledEvent> = new TeamAppsEvent();
+	onUploadFailed: TeamAppsEvent<DtoChatInput_UploadFailedEvent> = new TeamAppsEvent();
+	onUploadStarted: TeamAppsEvent<DtoChatInput_UploadStartedEvent> = new TeamAppsEvent();
+	onUploadSuccessful: TeamAppsEvent<DtoChatInput_UploadSuccessfulEvent> = new TeamAppsEvent();
+	onUploadTooLarge: TeamAppsEvent<DtoChatInput_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $uploadItems: HTMLElement;

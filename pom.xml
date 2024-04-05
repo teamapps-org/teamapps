@@ -43,6 +43,7 @@
         <module>teamapps-ux</module>
         <module>teamapps-client/projector-calendar</module>
         <module>teamapps-client/projector-infinite-scrolling-components</module>
+        <module>teamapps-client/projector-combobox</module>
 <!--        <module>teamapps-client/teamapps-client-common-components</module>-->
 <!--        <module>teamapps-session-stats-app</module>-->
         <module>teamapps-server-jetty-embedded</module>

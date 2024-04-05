@@ -20,12 +20,12 @@
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiGridLayout} from "./micro-components/UiGridLayout";
-import {UiResponsiveGridLayoutCommandHandler, DtoResponsiveGridLayout} from "../generated/DtoResponsiveGridLayout";
+import {DtoResponsiveGridLayoutCommandHandler, DtoResponsiveGridLayout} from "../generated/DtoResponsiveGridLayout";
 import {DtoResponsiveGridLayoutPolicy} from "../generated/DtoResponsiveGridLayoutPolicy";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
-export class UiResponsiveGridLayout extends AbstractComponent<DtoResponsiveGridLayout> implements UiResponsiveGridLayoutCommandHandler {
+export class UiResponsiveGridLayout extends AbstractComponent<DtoResponsiveGridLayout> implements DtoResponsiveGridLayoutCommandHandler {
 
 	private $main: HTMLElement;
 	private $gridLayout: HTMLElement;

@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
-import {DtoColorPicker, UiColorPickerEventSource} from "../../generated/DtoColorPicker";
+import {DtoAbstractField} from "./DtoAbstractField";
+import {DtoColorPicker, DtoColorPickerEventSource} from "../../generated/DtoColorPicker";
 import {TeamAppsUiContext} from "teamapps-client-core";
 
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {DtoFieldEditingMode} from "../../generated/DtoFieldEditingMode";
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
 import {executeWhenFirstDisplayed} from "../util/executeWhenFirstDisplayed";
-import {keyCodes} from "../trivial-components/TrivialCore";
+import {keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 import {parseHtml} from "../Common";
 
-export class UiColorPicker extends UiField<DtoColorPicker, string> implements UiColorPickerEventSource {
+export class UiColorPicker extends AbstractField<DtoColorPicker, string> implements DtoColorPickerEventSource {
 	private $main: HTMLElement;
 	private pickr: Pickr;
 	private doNotCommit: boolean;
@@ -78,7 +78,7 @@ export class UiColorPicker extends UiField<DtoColorPicker, string> implements Ui
 		this.doNotCommit = false;
 
 		this.$main.addEventListener("keydown", (e) => {
-			if (e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
+			if (e.keyCode === "Enter" || e.keyCode === keyCodes.space) {
 				this.pickr.show();
 			}
 		});
@@ -125,8 +125,8 @@ export class UiColorPicker extends UiField<DtoColorPicker, string> implements Ui
 		return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${color.a})`;
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		if (editingMode === UiFieldEditingMode.DISABLED || editingMode === UiFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+		if (editingMode === DtoFieldEditingMode.DISABLED || editingMode === DtoFieldEditingMode.READONLY) {
 			this.pickr.disable();
 		} else {
 			this.pickr.enable();

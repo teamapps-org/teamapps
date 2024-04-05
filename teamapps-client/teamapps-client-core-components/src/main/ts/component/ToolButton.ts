@@ -105,7 +105,7 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 			if ((this.dropDownComponent as any).onItemClicked != null) {
 				(this.dropDownComponent as any).onItemClicked.addListener(this.closeDropDown);
 			}
-			this.dropDown.setContentComponent(this.dropDownComponent);
+			this.dropDown.setContentComponent(this.dropDownComponent?.getMainElement());
 		} else {
 			this.dropDownComponent = null;
 			this.dropDown.setContentComponent(null);

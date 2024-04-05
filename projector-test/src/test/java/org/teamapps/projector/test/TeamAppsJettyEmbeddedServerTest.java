@@ -23,6 +23,7 @@ import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.projector.components.calendar.Calendar;
 import org.teamapps.projector.components.infinitescroll.table.ListTableModel;
 import org.teamapps.projector.components.infinitescroll.table.Table;
+import org.teamapps.projector.components.trivial.combobox.ComboBox;
 import org.teamapps.server.jetty.embedded.TeamAppsJettyEmbeddedServer;
 import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.field.Button;
@@ -62,6 +63,20 @@ public class TeamAppsJettyEmbeddedServerTest {
 			table.addColumn("x", "Hello", new TextField()).setValueExtractor(x -> "Hey!");
 			table.setModel(new ListTableModel<>(List.of("a", "", "")));
 			verticalLayout.addComponentFillRemaining(table);
+
+			verticalLayout.addComponent(new ComboBox<>(query -> List.of("a", "b")));
+//			verticalLayout.addComponent(new TagComboBox<>(query -> List.of("a", "b")));
+//			verticalLayout.addComponent(new CurrencyField(List.of(CurrencyUnit.forCode("EUR"), CurrencyUnit.forCode("USD"))));
+//			verticalLayout.addComponent(new LocalDateTimeField());
+//			verticalLayout.addComponent(new InstantDateTimeField());
+//			verticalLayout.addComponent(new LocalDateField());
+//			verticalLayout.addComponent(new LocalTimeField());
+//			verticalLayout.addComponent(new Tree<>(new AbstractTreeModel<String>() {
+//				@Override
+//				public List<String> getRecords() {
+//					return List.of("a", "b");
+//				}
+//			}));
 
 			rootPanel.setContent(verticalLayout);
 

@@ -26,12 +26,12 @@ import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {
-	UiShakaPlayer_EndedEvent,
-	UiShakaPlayer_ErrorLoadingEvent, UiShakaPlayer_ManifestLoadedEvent,
-	UiShakaPlayer_TimeUpdateEvent,
-	UiShakaPlayerCommandHandler,
+	DtoShakaPlayer_EndedEvent,
+	DtoShakaPlayer_ErrorLoadingEvent, DtoShakaPlayer_ManifestLoadedEvent,
+	DtoShakaPlayer_TimeUpdateEvent,
+	DtoShakaPlayerCommandHandler,
 	DtoShakaPlayer,
-	UiShakaPlayerEventSource,
+	DtoShakaPlayerEventSource,
 } from "../generated/DtoShakaPlayer";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
@@ -52,12 +52,12 @@ import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
 import {DtoShakaManifest} from "../generated/DtoShakaManifest";
 import Manifest = shaka.extern.Manifest;
 
-export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements UiShakaPlayerCommandHandler, UiShakaPlayerEventSource {
+export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
 
-	public readonly onManifestLoaded: TeamAppsEvent<UiShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();
-	public readonly onTimeUpdate: TeamAppsEvent<UiShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
-	public readonly onEnded: TeamAppsEvent<UiShakaPlayer_EndedEvent> = new TeamAppsEvent();
-	public readonly onErrorLoading: TeamAppsEvent<UiShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent();
+	public readonly onManifestLoaded: TeamAppsEvent<DtoShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();
+	public readonly onTimeUpdate: TeamAppsEvent<DtoShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
+	public readonly onEnded: TeamAppsEvent<DtoShakaPlayer_EndedEvent> = new TeamAppsEvent();
+	public readonly onErrorLoading: TeamAppsEvent<DtoShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent();
 
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLMediaElement;

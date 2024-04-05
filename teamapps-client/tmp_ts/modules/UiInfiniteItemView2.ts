@@ -24,11 +24,11 @@ import {addDelegatedEventListener, parseHtml} from "./Common";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {
-	UiInfiniteItemView2_ContextMenuRequestedEvent, UiInfiniteItemView2_DisplayedRangeChangedEvent,
-	UiInfiniteItemView2_ItemClickedEvent,
-	UiInfiniteItemView2CommandHandler,
+	DtoInfiniteItemView2_ContextMenuRequestedEvent, DtoInfiniteItemView2_DisplayedRangeChangedEvent,
+	DtoInfiniteItemView2_ItemClickedEvent,
+	DtoInfiniteItemView2CommandHandler,
 	DtoInfiniteItemView2,
-	UiInfiniteItemView2EventSource
+	DtoInfiniteItemView2EventSource
 } from "../generated/DtoInfiniteItemView2";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {DtoTemplate} from "../generated/DtoTemplate";
@@ -63,11 +63,11 @@ export var cssAlignItems = {
 	[UiVerticalElementAlignment.STRETCH]: "stretch"
 };
 
-export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2> implements UiInfiniteItemView2CommandHandler, UiInfiniteItemView2EventSource {
+export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2> implements DtoInfiniteItemView2CommandHandler, DtoInfiniteItemView2EventSource {
 
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent();
-	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent();
-	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView2_ContextMenuRequestedEvent> = new TeamAppsEvent();
+	public readonly onDisplayedRangeChanged: TeamAppsEvent<DtoInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent();
+	public readonly onItemClicked: TeamAppsEvent<DtoInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent();
+	public readonly onContextMenuRequested: TeamAppsEvent<DtoInfiniteItemView2_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;

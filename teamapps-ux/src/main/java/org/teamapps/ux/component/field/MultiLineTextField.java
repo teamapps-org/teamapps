@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.dto.DtoMultiLineTextField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -34,7 +34,7 @@ public class MultiLineTextField extends TextField {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoMultiLineTextField uiField = new DtoMultiLineTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());

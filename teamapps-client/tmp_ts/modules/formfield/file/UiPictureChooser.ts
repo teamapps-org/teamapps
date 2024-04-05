@@ -18,23 +18,23 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiField} from "../UiField";
-import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
+import {DtoAbstractField} from "../DtoAbstractField";
+import {DtoFieldEditingMode} from "../../../generated/DtoFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {humanReadableFileSize, parseHtml} from "../../Common";
 import {TeamAppsEvent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "teamapps-client-core";
-import {keyCodes} from "../../trivial-components/TrivialCore";
+import {keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 import {
-	UiPictureChooser_UploadCanceledEvent,
-	UiPictureChooser_UploadFailedEvent,
-	UiPictureChooser_UploadInitiatedByUserEvent,
-	UiPictureChooser_UploadStartedEvent,
-	UiPictureChooser_UploadSuccessfulEvent,
-	UiPictureChooser_UploadTooLargeEvent,
-	UiPictureChooserCommandHandler,
+	DtoPictureChooser_UploadCanceledEvent,
+	DtoPictureChooser_UploadFailedEvent,
+	DtoPictureChooser_UploadInitiatedByUserEvent,
+	DtoPictureChooser_UploadStartedEvent,
+	DtoPictureChooser_UploadSuccessfulEvent,
+	DtoPictureChooser_UploadTooLargeEvent,
+	DtoPictureChooserCommandHandler,
 	DtoPictureChooser,
-	UiPictureChooserEventSource
+	DtoPictureChooserEventSource
 } from "../../../generated/DtoPictureChooser";
 import {FileUploader} from "../../util/FileUploader";
 import {ProgressIndicator} from "../../micro-components/ProgressIndicator";
@@ -43,14 +43,14 @@ import {ProgressCircle} from "../../micro-components/ProgressCircle";
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
-export class UiPictureChooser extends UiField<DtoPictureChooser, string> implements UiPictureChooserEventSource, UiPictureChooserCommandHandler {
+export class UiPictureChooser extends AbstractField<DtoPictureChooser, string> implements DtoPictureChooserEventSource, DtoPictureChooserCommandHandler {
 
-	public readonly onUploadCanceled: TeamAppsEvent<UiPictureChooser_UploadCanceledEvent> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<UiPictureChooser_UploadFailedEvent> = new TeamAppsEvent();
-	public readonly onUploadInitiatedByUser: TeamAppsEvent<UiPictureChooser_UploadInitiatedByUserEvent> = new TeamAppsEvent();
-	public readonly onUploadStarted: TeamAppsEvent<UiPictureChooser_UploadStartedEvent> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<UiPictureChooser_UploadSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<UiPictureChooser_UploadTooLargeEvent> = new TeamAppsEvent();
+	public readonly onUploadCanceled: TeamAppsEvent<DtoPictureChooser_UploadCanceledEvent> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<DtoPictureChooser_UploadFailedEvent> = new TeamAppsEvent();
+	public readonly onUploadInitiatedByUser: TeamAppsEvent<DtoPictureChooser_UploadInitiatedByUserEvent> = new TeamAppsEvent();
+	public readonly onUploadStarted: TeamAppsEvent<DtoPictureChooser_UploadStartedEvent> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<DtoPictureChooser_UploadSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<DtoPictureChooser_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $picture: HTMLElement;
@@ -108,7 +108,7 @@ export class UiPictureChooser extends UiField<DtoPictureChooser, string> impleme
 
 		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button');
 		["click", "keypress"].forEach(eventName => this.$uploadButton.addEventListener(eventName, (e: MouseEvent & KeyboardEvent) => {
-			if (e.button == 0 || e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
+			if (e.button == 0 || e.keyCode === "Enter" || e.keyCode === keyCodes.space) {
 				this.$fileInput.click();
 				e.stopPropagation();
 				return false; // no scrolling when space is pressed!
@@ -181,8 +181,8 @@ export class UiPictureChooser extends UiField<DtoPictureChooser, string> impleme
 		return v == null || typeof v === "string";
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode?: DtoFieldEditingMode): void {
+		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}
 

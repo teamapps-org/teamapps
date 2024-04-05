@@ -19,14 +19,14 @@
  */
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiStaticGridLayoutCommandHandler, DtoStaticGridLayout} from "../generated/DtoStaticGridLayout";
+import {DtoStaticGridLayoutCommandHandler, DtoStaticGridLayout} from "../generated/DtoStaticGridLayout";
 import {UiGridLayout} from "./micro-components/UiGridLayout";
 import {DtoGridLayout} from "../generated/DtoGridLayout";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiResponsiveGridLayout} from "./UiResponsiveGridLayout";
 import {parseHtml} from "./Common";
 
-export class UiStaticGridLayout extends AbstractComponent<DtoStaticGridLayout> implements UiStaticGridLayoutCommandHandler{
+export class UiStaticGridLayout extends AbstractComponent<DtoStaticGridLayout> implements DtoStaticGridLayoutCommandHandler{
 
 	private $main: HTMLElement;
 	private layout: UiGridLayout;

@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoDisplayField;
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
 
@@ -42,7 +42,7 @@ public class DisplayField extends AbstractField<String> {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoDisplayField uiDisplayField = new DtoDisplayField();
 		mapAbstractFieldAttributesToUiField(uiDisplayField);
 		uiDisplayField.setShowBorder(showBorder);

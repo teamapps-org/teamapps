@@ -20,7 +20,7 @@
 package org.teamapps.projector.components.common.field.richtext;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.projector.components.common.dto.DtoField;
+import org.teamapps.projector.components.common.dto.DtoAbstractField;
 import org.teamapps.projector.components.common.dto.DtoRichTextEditor;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
@@ -58,7 +58,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoRichTextEditor field = new DtoRichTextEditor();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setToolbarVisibilityMode(this.toolbarVisibilityMode.toToolbarVisibilityMode());

@@ -88,11 +88,11 @@ export class ToolbarButton {
 			let dropdownClickInfo: DtoDropDownButtonClickInfo = null;
 			if (this.hasDropDown) {
 				if (this.dropDown == null) {
-					this.dropDown = new DropDown(this.dropDownComponent);
+					this.dropDown = new DropDown(this.dropDownComponent?.getMainElement());
 				}
 				dropdownClickInfo = createDtoDropDownButtonClickInfo(!this.dropDown.isOpen, this.dropDownComponent != null);
 				if (!this.dropDown.isOpen) {
-					this.dropDown.setContentComponent(this.dropDownComponent);
+					this.dropDown.setContentComponent(this.dropDownComponent?.getMainElement());
 					this.dropDown.open({$reference: this.$buttonWrapper, width: config.dropDownPanelWidth});
 				} else {
 					this.dropDown.close();
@@ -110,7 +110,7 @@ export class ToolbarButton {
 	setDropDownComponent(component: Component) {
 		this.dropDownComponent = component;
 		if (this.dropDown != null) {
-			this.dropDown.setContentComponent(component);
+			this.dropDown.setContentComponent(component?.getMainElement());
 			if ((component as any).onItemClicked) {
 				((component as any).onItemClicked as TeamAppsEvent<any>).addListener(eventObject => {
 					this.dropDown.close();

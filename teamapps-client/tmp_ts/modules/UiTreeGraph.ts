@@ -22,13 +22,13 @@ import * as d3 from "d3";
 import {BaseType, HierarchyNode, HierarchyPointLink, HierarchyPointNode, Selection, ZoomBehavior} from "d3";
 import {AbstractComponent} from "teamapps-client-core";
 import {
-	UiTreeGraph_NodeClickedEvent,
-	UiTreeGraph_NodeExpandedOrCollapsedEvent,
-	UiTreeGraph_ParentExpandedOrCollapsedEvent,
-	UiTreeGraph_SideListExpandedOrCollapsedEvent,
-	UiTreeGraphCommandHandler,
+	DtoTreeGraph_NodeClickedEvent,
+	DtoTreeGraph_NodeExpandedOrCollapsedEvent,
+	DtoTreeGraph_ParentExpandedOrCollapsedEvent,
+	DtoTreeGraph_SideListExpandedOrCollapsedEvent,
+	DtoTreeGraphCommandHandler,
 	DtoTreeGraph,
-	UiTreeGraphEventSource
+	DtoTreeGraphEventSource
 } from "../generated/DtoTreeGraph";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {DtoTreeGraphNode} from "../generated/DtoTreeGraphNode";
@@ -39,12 +39,12 @@ import {parseHtml} from "./Common";
 import {flextree, FlexTreeLayout} from "d3-flextree";
 import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 
-export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
+export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements DtoTreeGraphCommandHandler, DtoTreeGraphEventSource {
 
-	public readonly onNodeClicked: TeamAppsEvent<UiTreeGraph_NodeClickedEvent> = new TeamAppsEvent();
-	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
-	public readonly onParentExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_ParentExpandedOrCollapsedEvent> = new TeamAppsEvent();
-	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onNodeClicked: TeamAppsEvent<DtoTreeGraph_NodeClickedEvent> = new TeamAppsEvent();
+	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<DtoTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onParentExpandedOrCollapsed: TeamAppsEvent<DtoTreeGraph_ParentExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<DtoTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent();
 
 	private chart: TreeChart;
 	private $main: HTMLElement;

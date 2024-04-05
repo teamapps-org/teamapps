@@ -20,7 +20,7 @@
 
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiPieChart_DataPointClickedEvent, UiPieChartCommandHandler, DtoPieChart, UiPieChartEventSource} from "../generated/DtoPieChart";
+import {DtoPieChart_DataPointClickedEvent, DtoPieChartCommandHandler, DtoPieChart, DtoPieChartEventSource} from "../generated/DtoPieChart";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {DtoChartNamedDataPoint} from "../generated/DtoChartNamedDataPoint";
@@ -28,9 +28,9 @@ import * as d3 from "d3"
 import {UiDataPointWeighting} from '../generated/UiDataPointWeighting';
 import {UiChartLegendStyle} from "../generated/UiChartLegendStyle";
 
-export class UiPieChart extends AbstractComponent<DtoPieChart> implements UiPieChartCommandHandler, UiPieChartEventSource {
+export class UiPieChart extends AbstractComponent<DtoPieChart> implements DtoPieChartCommandHandler, DtoPieChartEventSource {
 
-	readonly onDataPointClicked: TeamAppsEvent<UiPieChart_DataPointClickedEvent> = new TeamAppsEvent();
+	readonly onDataPointClicked: TeamAppsEvent<DtoPieChart_DataPointClickedEvent> = new TeamAppsEvent();
 
 	chart: Chart;
 	config: DtoPieChart;

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoField;
+import org.teamapps.dto.DtoAbstractField;
 import org.teamapps.dto.DtoLabel;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
@@ -56,7 +56,7 @@ public class Label extends AbstractField<String> {
 	}
 
 	@Override
-	public DtoField createDto() {
+	public DtoAbstractField createDto() {
 		DtoLabel uiLabel = new DtoLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));

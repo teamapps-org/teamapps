@@ -24,7 +24,7 @@ import * as d3 from "d3v3";
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {UiMediaTrackGraph_HandleTimeSelectionEvent, UiMediaTrackGraphCommandHandler, DtoMediaTrackGraph, UiMediaTrackGraphEventSource} from "../generated/DtoMediaTrackGraph";
+import {DtoMediaTrackGraph_HandleTimeSelectionEvent, DtoMediaTrackGraphCommandHandler, DtoMediaTrackGraph, DtoMediaTrackGraphEventSource} from "../generated/DtoMediaTrackGraph";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
@@ -41,9 +41,9 @@ interface Marker {
 	bg: string
 }
 
-export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> implements UiMediaTrackGraphCommandHandler, UiMediaTrackGraphEventSource {
+export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> implements DtoMediaTrackGraphCommandHandler, DtoMediaTrackGraphEventSource {
 
-	public readonly onHandleTimeSelection: TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent> = new TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent>();
+	public readonly onHandleTimeSelection: TeamAppsEvent<DtoMediaTrackGraph_HandleTimeSelectionEvent> = new TeamAppsEvent<DtoMediaTrackGraph_HandleTimeSelectionEvent>();
 
 	private static MARGINS = {top: 5, right: 5, bottom: 15, left: 5};
 

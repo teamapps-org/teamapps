@@ -17,25 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {DtoAbstractField} from "./DtoAbstractField";
+import {DtoFieldEditingMode} from "../../generated/DtoFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 
 import {
-	UiRichTextEditor_ImageUploadFailedEvent,
-	UiRichTextEditor_ImageUploadStartedEvent,
-	UiRichTextEditor_ImageUploadSuccessfulEvent,
-	UiRichTextEditor_ImageUploadTooLargeEvent,
-	UiRichTextEditorCommandHandler,
+	DtoRichTextEditor_ImageUploadFailedEvent,
+	DtoRichTextEditor_ImageUploadStartedEvent,
+	DtoRichTextEditor_ImageUploadSuccessfulEvent,
+	DtoRichTextEditor_ImageUploadTooLargeEvent,
+	DtoRichTextEditorCommandHandler,
 	DtoRichTextEditor,
-	UiRichTextEditorEventSource
+	DtoRichTextEditorEventSource
 } from "../../generated/DtoRichTextEditor";
 import tinymce, {Editor} from 'tinymce';
 import 'tinymce/themes/silver';
 import 'tinymce/icons/default';
 import {executeWhenFirstDisplayed} from "../util/executeWhenFirstDisplayed";
 import {DeferredExecutor} from "../util/DeferredExecutor";
-import {generateUUID, keyCodes} from "../trivial-components/TrivialCore";
+import {generateUUID, keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 // Any plugins you want to use has to be imported
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/table';
@@ -51,27 +51,27 @@ import {TeamAppsEvent} from "teamapps-client-core";
 import {UiToolbarVisibilityMode} from "../../generated/UiToolbarVisibilityMode";
 import {UiSpinner} from "../micro-components/UiSpinner";
 import {
-	UiTextInputHandlingField_SpecialKeyPressedEvent,
-	UiTextInputHandlingField_TextInputEvent
+	DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated/DtoTextInputHandlingField";
-import {UiSpecialKey} from "../../generated/UiSpecialKey";
+import {DtoSpecialKey} from "../../generated/DtoSpecialKey";
 import {parseHtml, removeTags} from "../Common";
 
 
-export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> implements UiRichTextEditorEventSource, UiRichTextEditorCommandHandler {
+export class UiRichTextEditor extends AbstractField<DtoRichTextEditor, string> implements DtoRichTextEditorEventSource, DtoRichTextEditorCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
+	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent>({
 		throttlingMode: "throttle",
 		delay: 5000
 	});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent>({
 		throttlingMode: "debounce",
 		delay: 250
 	});
-	public readonly onImageUploadFailed: TeamAppsEvent<UiRichTextEditor_ImageUploadFailedEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadFailedEvent>();
-	public readonly onImageUploadStarted: TeamAppsEvent<UiRichTextEditor_ImageUploadStartedEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadStartedEvent>();
-	public readonly onImageUploadSuccessful: TeamAppsEvent<UiRichTextEditor_ImageUploadSuccessfulEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadSuccessfulEvent>();
-	public readonly onImageUploadTooLarge: TeamAppsEvent<UiRichTextEditor_ImageUploadTooLargeEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadTooLargeEvent>();
+	public readonly onImageUploadFailed: TeamAppsEvent<DtoRichTextEditor_ImageUploadFailedEvent> = new TeamAppsEvent<DtoRichTextEditor_ImageUploadFailedEvent>();
+	public readonly onImageUploadStarted: TeamAppsEvent<DtoRichTextEditor_ImageUploadStartedEvent> = new TeamAppsEvent<DtoRichTextEditor_ImageUploadStartedEvent>();
+	public readonly onImageUploadSuccessful: TeamAppsEvent<DtoRichTextEditor_ImageUploadSuccessfulEvent> = new TeamAppsEvent<DtoRichTextEditor_ImageUploadSuccessfulEvent>();
+	public readonly onImageUploadTooLarge: TeamAppsEvent<DtoRichTextEditor_ImageUploadTooLargeEvent> = new TeamAppsEvent<DtoRichTextEditor_ImageUploadTooLargeEvent>();
 
 	private static readonly TRANSLATION_FILES: { [languageIso: string]: string } = {
 		"af": "af_ZA.js",
@@ -343,13 +343,13 @@ export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> impleme
 					this.fireTextInputEvent();
 				});
 				editor.on('keydown', (e) => {
-					if (e.keyCode === keyCodes.escape) {
+					if (e.keyCode === "Escape") {
 						this.onSpecialKeyPressed.fire({
-							key: UiSpecialKey.ESCAPE
+							key: DtoSpecialKey.ESCAPE
 						});
-					} else if (e.keyCode === keyCodes.enter) {
+					} else if (e.keyCode === "Enter") {
 						this.onSpecialKeyPressed.fire({
-							key: UiSpecialKey.ENTER
+							key: DtoSpecialKey.ENTER
 						});
 					}
 				});
@@ -503,15 +503,15 @@ export class UiRichTextEditor extends UiField<DtoRichTextEditor, string> impleme
 		this.updateToolbar();
 	}
 
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode: UiFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode: DtoFieldEditingMode): void {
 		this.mceReadyExecutor?.invokeOnceWhenReady(() => {
 			// this MUST be done after initializing! Don't skip it when the editor is null,
 			// since the editor might just be initializing and thereby setting the readonly value to an old value! (actually happened!)
 			this.editor.setMode(this.isEditable() ? 'design' : 'readonly');
 			this.updateToolbar();
 		})
-		let wasEditable = !(oldEditingMode === UiFieldEditingMode.DISABLED || oldEditingMode === UiFieldEditingMode.READONLY);
-		UiField.defaultOnEditingModeChangedImpl(this, () => this.editor != null ? this.editor.getBody() : null);
+		let wasEditable = !(oldEditingMode === DtoFieldEditingMode.DISABLED || oldEditingMode === DtoFieldEditingMode.READONLY);
+		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.editor != null ? this.editor.getBody() : null);
 	}
 
 	private updateToolbar() { // both visibility and content (+overflow) are updated on show()

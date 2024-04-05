@@ -27,10 +27,10 @@ interface TextInputHandlingField {
 }
 
 enum SpecialKey {
-	ENTER, ESCAPE
+	ENTER = "Enter", ESCAPE = "Escape"
 }
 
-class TextField extends Field implements TextInputHandlingField {
+class TextField extends AbstractField implements TextInputHandlingField {
 	int maxCharacters; //if > 0, do not allow to enter more than this number of characters
 	boolean showClearButton;
 	String placeholderText;
