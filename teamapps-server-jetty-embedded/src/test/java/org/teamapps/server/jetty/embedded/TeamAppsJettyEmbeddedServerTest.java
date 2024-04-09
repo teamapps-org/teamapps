@@ -20,10 +20,8 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.field.Button;
-import org.teamapps.ux.component.field.TextField;
-import org.teamapps.ux.component.field.combobox.ComboBox;
-import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
@@ -46,38 +44,22 @@ public class TeamAppsJettyEmbeddedServerTest {
 					Window window = new Window();
 					window.setTitle("Window");
 					window.enableAutoHeight();
+					window.setModal(true);
+					window.setCloseable(true);
+					window.setCloseOnEscape(true);
+					window.setCloseOnClickOutside(true);
 
-					TextField textField = new TextField();
+					window.onClosed.addListener(() -> {
+						System.out.println("closed.");
+					});
 
-					ComboBox<Object> combobox = new ComboBox<>();
-
-					combobox.focus();
-					textField.focus();
-
-					VerticalLayout verticalLayout = new VerticalLayout();
-					verticalLayout.addComponent(textField);
-
-					window.setContent(verticalLayout);
+					window.setContent(new DummyComponent());
 
 					Button<BaseTemplateRecord> button = Button.create("show");
 					button.onClicked.addListener((eventData, disposable) -> {
 						window.show();
-
-						new Thread(() -> {
-							try {
-								Thread.sleep(1000L);
-							} catch (InterruptedException e) {
-								throw new RuntimeException(e);
-							}
-							sessionContext.runWithContext(() -> {
-								verticalLayout.addComponent(combobox);
-							});
-						}).start();
 					});
 					rootPanel.setContent(button);
-
-
-
 
 				})
 				.setPort(8082)
