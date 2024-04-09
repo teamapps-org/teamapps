@@ -22,7 +22,7 @@ import {UiPanel} from "./UiPanel";
 import {UiPanelHeaderFieldConfig} from "../generated/UiPanelHeaderFieldConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
+import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource, UiWindow_ClosedEvent} from "../generated/UiWindowConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {keyCodes} from "./trivial-components/TrivialCore";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
@@ -35,13 +35,10 @@ import {UiComponent} from "./UiComponent";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 
-export interface UiWindowListener {
-	onWindowClosed: (window: UiWindow, animationDuration: number) => void;
-}
-
 export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiWindowCommandHandler, UiWindowEventSource {
 
 	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onClosed: TeamAppsEvent<UiWindow_ClosedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $panelWrapper: HTMLElement;
@@ -49,11 +46,6 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 
 	private escapeKeyListener: (e: KeyboardEvent) => void;
 	private clickOutsideListener: (e: MouseEvent) => void;
-	private closeable: boolean;
-	private closeOnEscape: boolean;
-	private closeOnClickOutside: boolean;
-	private modal: boolean;
-	private modalBackgroundDimmingColor: string;
 
 	constructor(config: UiWindowConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -69,7 +61,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		if (config.closeable) {
 			this.panel.addWindowButton(UiWindowButtonType.CLOSE);
 		}
-		this.panel.getWindowButton(UiWindowButtonType.CLOSE).onClicked.addListener(() => this.close(500));
+		this.panel.getWindowButton(UiWindowButtonType.CLOSE).onClicked.addListener(() => this.close(500, true));
 		this.panel.onWindowButtonClicked.addListener(eventObject => {
 			return this.onWindowButtonClicked.fire({
 				windowButton: eventObject.windowButton
@@ -92,15 +84,15 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		animateCSS(this.$panelWrapper, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[UiEntranceAnimation.ZOOM_IN], animationDuration);
 
 		this.escapeKeyListener = (e) => {
-			if (this.closeOnEscape && e.keyCode === keyCodes.escape) {
-				this.close(animationDuration);
+			if (this._config.closeOnEscape && e.keyCode === keyCodes.escape) {
+				this.close(animationDuration, true);
 			}
 		};
 		document.body.addEventListener("keydown", this.escapeKeyListener, {capture: true});
 
 		this.clickOutsideListener = (e) => {
-			if (this.closeOnClickOutside && e.target === this.$main) {
-				this.close(animationDuration);
+			if (this._config.closeOnClickOutside && e.target === this.$main) {
+				this.close(animationDuration, true);
 			}
 		};
 		this.$main.addEventListener("click", this.clickOutsideListener)
@@ -119,7 +111,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		return this.$main;
 	}
 
-	public close(animationDuration: number) {
+	public close(animationDuration: number, fireEvent: boolean = false) {
 		this.setMaximized(false);
 		this.$main.classList.remove("open");
 		animateCSS(this.$panelWrapper, Constants.EXIT_ANIMATION_CSS_CLASSES[UiExitAnimation.ZOOM_OUT], animationDuration, () => {
@@ -127,6 +119,9 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 			this.getMainElement().remove();
 		});
 		this.removeBodyClickAndEscapeListeners();
+		if (fireEvent) {
+			this.onClosed.fire({});
+		}
 	}
 
 	public setContent(content: UiComponent) {
@@ -166,15 +161,15 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	}
 
 	public setCloseOnClickOutside(closeOnClickOutside: boolean): void {
-		this.closeOnClickOutside = closeOnClickOutside;
+		this._config.closeOnClickOutside = closeOnClickOutside;
 	}
 
 	public setCloseOnEscape(closeOnEscape: boolean): void {
-		this.closeOnEscape = closeOnEscape;
+		this._config.closeOnEscape = closeOnEscape;
 	}
 
 	public setCloseable(closeable: boolean): void {
-		this.closeable = closeable;
+		this._config.closeable = closeable;
 		if (closeable) {
 			this.panel.addWindowButton(UiWindowButtonType.CLOSE);
 		} else {
@@ -183,17 +178,13 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	}
 
 	public setModalBackgroundDimmingColor(modalBackgroundDimmingColor: string): void {
-		this.modalBackgroundDimmingColor = modalBackgroundDimmingColor;
+		this._config.modalBackgroundDimmingColor = modalBackgroundDimmingColor;
 		this.$main.style.backgroundColor = modalBackgroundDimmingColor;
 	}
 
 	public setModal(modal: boolean) {
-		this.modal = modal;
-		this.$main.classList.toggle('modal', this.modal);
-	}
-
-	public isModal() {
-		return this.modal;
+		this._config.modal = modal;
+		this.$main.classList.toggle('modal', modal);
 	}
 
 	public setSize(width: number, height: number): void {

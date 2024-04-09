@@ -74,6 +74,8 @@ class UiWindow extends UiPanel {
 	command setModal(boolean modal);
 	command setModalBackgroundDimmingColor(String modalBackgroundDimmingColor);
 	command setSize(int width, int height);
+
+	event closed();
 }
 
 class UiElegantPanel extends UiComponent {

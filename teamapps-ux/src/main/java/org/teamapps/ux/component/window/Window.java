@@ -19,15 +19,19 @@
  */
 package org.teamapps.ux.component.window;
 
-import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiWindow;
+import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.panel.Panel;
 
 public class Window extends Panel {
+
+	public final Event<Void> onClosed = new Event<>();
 
 	private boolean modal = false;
 	private int width = 0; // 0 = full width
@@ -76,6 +80,16 @@ public class Window extends Panel {
 		window.setCloseOnClickOutside(closeOnClickOutside);
 		window.setCloseOnEscape(closeOnEscape);
 		return window;
+	}
+
+	@Override
+	public void handleUiEvent(UiEvent event) {
+		super.handleUiEvent(event);
+		switch (event.getUiEventType()) {
+			case UI_WINDOW_CLOSED -> {
+				onClosed.fire();
+			}
+		}
 	}
 
 	public boolean isModal() {
