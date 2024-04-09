@@ -20,11 +20,11 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.dummy.DummyComponent;
-import org.teamapps.ux.component.field.Button;
+import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
-import org.teamapps.ux.component.window.Window;
+import org.teamapps.ux.component.toolbar.Toolbar;
+import org.teamapps.ux.component.toolbar.ToolbarButton;
+import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
@@ -41,25 +41,17 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 					RootPanel rootPanel = sessionContext.addRootPanel();
 
-					Window window = new Window();
-					window.setTitle("Window");
-					window.enableAutoHeight();
-					window.setModal(true);
-					window.setCloseable(true);
-					window.setCloseOnEscape(true);
-					window.setCloseOnClickOutside(true);
+					Panel panel = new Panel();
+					Toolbar toolbar = new Toolbar();
+					ToolbarButtonGroup buttonGroup = new ToolbarButtonGroup();
+					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "One", "One"));
+					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Two Words", "Two Words"));
+					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Three short words", "three short words"));
+					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Four words for you", "Four words for you"));
+					toolbar.addButtonGroup(buttonGroup);
+					panel.setToolbar(toolbar);
 
-					window.onClosed.addListener(() -> {
-						System.out.println("closed.");
-					});
-
-					window.setContent(new DummyComponent());
-
-					Button<BaseTemplateRecord> button = Button.create("show");
-					button.onClicked.addListener((eventData, disposable) -> {
-						window.show();
-					});
-					rootPanel.setContent(button);
+					rootPanel.setContent(panel);
 
 				})
 				.setPort(8082)
