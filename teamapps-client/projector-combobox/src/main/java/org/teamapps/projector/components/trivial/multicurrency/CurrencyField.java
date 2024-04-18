@@ -21,7 +21,7 @@ package org.teamapps.projector.components.trivial.multicurrency;
 
 import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoCurrencyField;
@@ -77,7 +77,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	}
 
 	@Override
-	public DtoAbstractField createDto() {
+	public DtoAbstractField createConfig() {
 		DtoCurrencyField field = new DtoCurrencyField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setCurrencyUnits(currencies.stream()
@@ -92,8 +92,8 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
+	public void handleUiEvent(String name, JsonWrapper params) {
+		super.handleUiEvent(name, params);
 		defaultHandleTextInputEvent(event);
 	}
 

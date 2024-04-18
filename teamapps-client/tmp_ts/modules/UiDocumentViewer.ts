@@ -34,7 +34,7 @@ interface Page {
 	naturalHeight?: number;
 }
 
-export class UiDocumentViewer extends AbstractComponent<DtoDocumentViewer> implements DtoDocumentViewerCommandHandler {
+export class UiDocumentViewer extends AbstractLegacyComponent<DtoDocumentViewer> implements DtoDocumentViewerCommandHandler {
 
 	private $componentWrapper: HTMLElement;
 	private $pagesContainerWrapper: HTMLElement;
@@ -49,8 +49,8 @@ export class UiDocumentViewer extends AbstractComponent<DtoDocumentViewer> imple
 	private pageSpacing: number;
 	private pageShadow: DtoShadow;
 
-	constructor(config: DtoDocumentViewer) {
-		super(config);
+	constructor(config: DtoDocumentViewer, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.uuidClass = `UiDocumentViewer-${generateUUID()}`;
 

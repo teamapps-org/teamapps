@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
 
 
@@ -27,7 +27,7 @@ interface Button {
 	$button: HTMLElement;
 }
 
-export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> extends AbstractComponent<C> {
+export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> extends AbstractLegacyComponent<C> {
 
 	protected static $sizeTestingContainer: HTMLElement;
 
@@ -38,8 +38,8 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 		});
 	}
 
-	constructor(config: C) {
-		super(config);
+	constructor(config: C, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 	}
 
 	public static optimizeButtonWidth($buttonWrapper: HTMLElement, $button: HTMLElement, maxHeight: number): number {

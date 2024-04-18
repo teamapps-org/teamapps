@@ -1,7 +1,5 @@
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {
-	DtoComponent as DtoComponent,
-	DtoConfiguration,
 	DtoGenericErrorMessageOption,
 	DtoGlobals,
 	DtoGlobals_GlobalKeyEventOccurredEvent,
@@ -17,8 +15,9 @@ import {parseHtml} from "./util/parseHtml";
 import {createUiLocation} from "./util/locationUtil";
 import {ClientObject} from "./ClientObject";
 import {loadJavaScript} from "./util/resourceLoading";
+import {DefaultUiContext} from "./DefaultUiContext";
 
-export class Globals implements ClientObject<DtoGlobals> {
+export class Globals implements ClientObject {
 
 	public static readonly onGlobalKeyEventOccurred: TeamAppsEvent<DtoGlobals_GlobalKeyEventOccurredEvent> = new TeamAppsEvent();
 	public static readonly onNavigationStateChange: TeamAppsEvent<DtoGlobals_NavigationStateChangeEvent> = new TeamAppsEvent();
@@ -28,6 +27,11 @@ export class Globals implements ClientObject<DtoGlobals> {
 		throw new Error("Globals should never be instantiated!");
 	}
 
+	invoke(name: string, params: any[]): Promise<any> {
+		// does not have any non-static command handlers anyway
+		return Promise.reject();
+    }
+
 	destroy(): void {
         // will not get instantiated anyway...
     }
@@ -36,37 +40,8 @@ export class Globals implements ClientObject<DtoGlobals> {
 		setGlobalKeyEventsEnabled.call(this, unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp);
 	}
 
-	public static async registerComponentLibrary(uuid: string, mainJsUrl: string, mainCssUrl: string, context: TeamAppsUiContextInternalApi) {
-		context.registerComponentLibrary(uuid, mainJsUrl, mainCssUrl);
-	}
-
-	public static async registerClientObjectType(libraryUuid: string, clientObjectType: string, eventNames: string[], queryNames: string[], context: TeamAppsUiContextInternalApi) {
-		console.log("TODO registerClientObjectType - need to do something here??:", libraryUuid, clientObjectType, eventNames, queryNames);
-	}
-
-	public static async toggleEventListening(libraryUuid: string, clientObjectId: string, eventName: string, enabled: boolean, context: TeamAppsUiContextInternalApi) {
-		context.toggleEventListener(libraryUuid, clientObjectId, eventName, enabled)
-	}
-
-	public static async render(libraryUuid: string, config: DtoComponent, context: TeamAppsUiContextInternalApi) {
-		await context.renderClientObject(libraryUuid, config);
-	}
-
-	public static unrender(componentId: string, context: TeamAppsUiContextInternalApi) {
-		context.destroyClientObject(componentId);
-	}
-
-	public static setConfig(config: DtoConfiguration, context: TeamAppsUiContext) {
-		this.setThemeClassName(config.themeClassName);
-
-		document.body.classList.toggle("optimized-for-touch", config.optimizedForTouch);
-
-		// console.warn("TODO Setting configuration on context. This should be implemented using an event instead!");
-		(context as any).config = config; // TODO change this to firing an event to the context!!!!
-	}
-
-	public static setSessionMessageWindows(expiredMessageWindow: Showable, errorMessageWindow: Showable, terminatedMessageWindow: Showable, context: TeamAppsUiContext) {
-		(context as any).setSessionMessageWindows(expiredMessageWindow, errorMessageWindow, terminatedMessageWindow);
+	public static setSessionMessageWindows(expiredMessageWindow: Showable, errorMessageWindow: Showable, terminatedMessageWindow: Showable, context: DefaultUiContext) {
+		context.setSessionMessageWindows(expiredMessageWindow, errorMessageWindow, terminatedMessageWindow);
 	}
 
 	public static setPageTitle(pageTitle: string) {

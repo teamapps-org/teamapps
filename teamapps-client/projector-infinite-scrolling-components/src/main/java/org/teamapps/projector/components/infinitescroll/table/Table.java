@@ -22,11 +22,7 @@ package org.teamapps.projector.components.infinitescroll.table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoFieldMessage;
-import org.teamapps.dto.DtoIdentifiableClientRecord;
-import org.teamapps.dto.DtoReference;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.*;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
@@ -43,6 +39,7 @@ import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.data.extraction.*;
+import org.teamapps.ux.session.SessionContext;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -199,9 +196,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			field.setParent(this);
 		});
 		if (isRendered()) {
-			getSessionContext().sendCommandIfRendered(this, new DtoTable.AddColumnsCommand(newColumns.stream()
+			SessionContext sessionContext = getSessionContext();
+			sessionContext.sendCommandIfRendered(this, (DtoCommand<?>) new DtoTable.AddColumnsCommand(newColumns.stream()
 					.map(TableColumn::createUiTableColumn)
-					.collect(Collectors.toList()), index));
+					.collect(Collectors.toList()), index), null);
 			// TODO #table resend data
 		}
 	}
@@ -220,9 +218,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	public void removeColumns(List<TableColumn<RECORD, ?>> obsoleteColumns) {
 		this.columns.removeAll(obsoleteColumns);
 		if (isRendered()) {
-			getSessionContext().sendCommandIfRendered(this, new DtoTable.RemoveColumnsCommand(obsoleteColumns.stream()
+			SessionContext sessionContext = getSessionContext();
+			sessionContext.sendCommandIfRendered(this, (DtoCommand<?>) new DtoTable.RemoveColumnsCommand(obsoleteColumns.stream()
 					.map(TableColumn::getPropertyName)
-					.collect(Collectors.toList())));
+					.collect(Collectors.toList())), null);
 		}
 	}
 
@@ -233,7 +232,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		List<DtoTableColumn> columns = this.columns.stream()
 				.map(TableColumn::createUiTableColumn)
 				.collect(Collectors.toList());
@@ -263,11 +262,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	private Map<String, DtoReference> toDtoFieldMap(Map<String, AbstractField> fieldsMap) {
-		return fieldsMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().createDtoReference()));
+		return fieldsMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().createClientReference()));
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoTable.RowsSelectedEvent.TYPE_ID -> {
 				var rowsSelectedEvent = event.as(DtoTable.RowsSelectedEventWrapper.class);
@@ -368,7 +367,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				if (record != null && contextMenuProvider != null) {
 					org.teamapps.ux.component.Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
+						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createClientReference()));
 					} else {
 						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 					}
@@ -949,7 +948,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setHeaderRowField(String columnName, AbstractField<?> field) {
 		this.headerFields.put(columnName, field);
-		sendCommandIfRendered(() -> new DtoTable.SetHeaderRowFieldCommand(columnName, field.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoTable.SetHeaderRowFieldCommand(columnName, field.createClientReference()));
 	}
 
 	public boolean isFooterFieldsRowEnabled() {
@@ -985,7 +984,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setFooterRowField(String columnName, AbstractField<?> field) {
 		this.footerFields.put(columnName, field);
-		sendCommandIfRendered(() -> new DtoTable.SetFooterRowFieldCommand(columnName, field.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoTable.SetFooterRowFieldCommand(columnName, field.createClientReference()));
 	}
 
 	public <VALUE> TableColumn<RECORD, VALUE> getColumnByPropertyName(String propertyName) {

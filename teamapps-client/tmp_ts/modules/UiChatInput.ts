@@ -41,7 +41,7 @@ import * as log from "loglevel";
 import {createDtoNewChatMessage} from "../generated/DtoNewChatMessage";
 import {createDtoChatNewFile} from "../generated/DtoChatNewFile";
 
-export class UiChatInput extends AbstractComponent<DtoChatInput> implements DtoChatInputCommandHandler, DtoChatInputEventSource {
+export class UiChatInput extends AbstractLegacyComponent<DtoChatInput> implements DtoChatInputCommandHandler, DtoChatInputEventSource {
 
 	onFileItemClicked: TeamAppsEvent<DtoChatInput_FileItemClickedEvent> = new TeamAppsEvent();
 	onFileItemRemoved: TeamAppsEvent<DtoChatInput_FileItemRemovedEvent> = new TeamAppsEvent();
@@ -59,8 +59,8 @@ export class UiChatInput extends AbstractComponent<DtoChatInput> implements DtoC
 	private $sendButton: HTMLElement;
 	private $attachmentButton: Element;
 
-	constructor(config: DtoChatInput) {
-		super(config);
+	constructor(config: DtoChatInput, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="UiChatInput drop-zone">
 	<div class="upload-items"></div>
 	<textarea class="text-input" maxlength="${config.messageLengthLimit}"></textarea>

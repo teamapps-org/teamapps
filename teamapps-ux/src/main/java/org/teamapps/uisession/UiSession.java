@@ -19,15 +19,17 @@
  */
 package org.teamapps.uisession;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.unimi.dsi.fastutil.ints.IntConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.dto.protocol.CMD;
-import org.teamapps.dto.protocol.*;
-import org.teamapps.uisession.commandbuffer.CommandBuffer;
-import org.teamapps.uisession.commandbuffer.CommandBufferException;
+import org.teamapps.dto.JsonWrapper;
+import org.teamapps.dto.protocol.server.SessionClosingReason;
+import org.teamapps.dto.protocol.server.*;
+import org.teamapps.uisession.messagebuffer.ServerMessageBuffer;
+import org.teamapps.uisession.messagebuffer.ServerMessageBufferException;
+import org.teamapps.uisession.messagebuffer.ServerMessageBufferMessage;
 import org.teamapps.uisession.statistics.RunningUiSessionStats;
 
 import java.lang.invoke.MethodHandles;
@@ -36,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
@@ -47,34 +48,25 @@ public class UiSession {
 	private final String sessionId;
 	private String name;
 	private final TeamAppsConfiguration config;
-	private final ObjectMapper objectMapper;
-	private CopyOnWriteArrayList<UiSessionListener> sessionListeners = new CopyOnWriteArrayList<>();
+	private final CopyOnWriteArrayList<UiSessionListener> sessionListeners = new CopyOnWriteArrayList<>();
 
 	private MessageSender messageSender;
 
-	private final CommandBuffer commandBuffer;
-	private final AtomicInteger commandIdCounter = new AtomicInteger();
+	private final ServerMessageBuffer serverMessageBuffer;
 
 	private final AtomicLong timestampOfLastMessageFromClient = new AtomicLong();
-	private int lastReceivedClientMessageId;
+	private int lastReceivedClientMessageSequenceNumber;
 	private boolean clientReadyToReceiveCommands = true;
 	private UiSessionState state = UiSessionState.ACTIVE;
 
-	private int maxRequestedCommandId = 0;
-	private int lastSentCommandId;
-	private long requestedCommandsZeroTimestamp = -1;
+	private int maxRequestedSequenceNumber = 0;
+	private int lastSentSequenceNumber;
+	private long requestNZeroTimestamp = -1;
 
-	private class ResultCallbackWithCommandClass {
-		private final Consumer<Object> callback;
-		private final Class<?> commandClass;
-
-		public ResultCallbackWithCommandClass(Consumer<Object> callback, Class<?> commandClass) {
-			this.callback = callback;
-			this.commandClass = commandClass;
-		}
+	private record ResultCallbackWithCommandName(Consumer<Object> callback, String commandName) {
 	}
 
-	private final Map<Integer, ResultCallbackWithCommandClass> resultCallbacksByCmdId = new ConcurrentHashMap<>();
+	private final Map<Integer, ResultCallbackWithCommandName> resultCallbacksByCmdId = new ConcurrentHashMap<>();
 
 	private final RunningUiSessionStats statistics;
 
@@ -82,12 +74,11 @@ public class UiSession {
 		this.sessionId = sessionId;
 		this.name = sessionId;
 		this.config = config;
-		this.objectMapper = objectMapper;
 		this.timestampOfLastMessageFromClient.set(creationTime);
 		this.messageSender = messageSender;
 
 		statistics = new RunningUiSessionStats(System.currentTimeMillis(), sessionId, name);
-		commandBuffer = new CommandBuffer(config.getCommandBufferLength(), config.getCommandBufferTotalSize());
+		serverMessageBuffer = new ServerMessageBuffer(config.getCommandBufferLength(), config.getCommandBufferTotalSize(), objectMapper);
 	}
 
 	public void updateStats() {
@@ -119,22 +110,42 @@ public class UiSession {
 		this.sessionListeners.add(sessionListener);
 	}
 
-	public int sendCommand(UiCommandWithResultCallback<?> commandWithCallback) {
+	public void sendCommand(UiCommandWithResultCallback commandWithCallback) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Sending command ({}): {}", sessionId.substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
+			LOGGER.debug("Sending command ({}): {}", sessionId.substring(0, 8), commandWithCallback.getCommandName());
 		}
-		statistics.commandSent(commandWithCallback.getUiCommand().getClass().getCanonicalName());
-		CMD cmd = createCMD(commandWithCallback);
+		statistics.commandSent(commandWithCallback.getParams().getClass().getCanonicalName());
+		CMD cmd = new CMD(commandWithCallback.getLibraryUuid(), commandWithCallback.getClientObjectId(),
+				commandWithCallback.getCommandName(), commandWithCallback.getParams(), commandWithCallback.getResultCallback() != null);
+		sendServerMessage(cmd, sequenceNumber -> {
+			if (commandWithCallback.getResultCallback() != null) {
+				resultCallbacksByCmdId.put(sequenceNumber, new ResultCallbackWithCommandName(commandWithCallback.getResultCallback(), commandWithCallback.getCommandName()));
+			}
+		});
+	}
+
+	public void sendServerMessage(AbstractReliableServerMessage serverMessage) {
+		sendServerMessage(serverMessage, null);
+	}
+
+	private void sendServerMessage(AbstractReliableServerMessage serverMessage, IntConsumer sequenceNumberHandler) {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Sending server message ({}): {}", sessionId.substring(0, 8), serverMessage.getClass().getSimpleName());
+		}
 		synchronized (this) {
 			try {
-				commandBuffer.addCommand(cmd);
-			} catch (CommandBufferException e) {
+				int sequenceNumber = serverMessageBuffer.addMessage(serverMessage);
+				if (sequenceNumberHandler != null) {
+					sequenceNumberHandler.accept(sequenceNumber);
+				}
+			} catch (ServerMessageBufferException e) {
 				LOGGER.error("Exception while adding command to CommandBuffer!", e);
-				close(DtoSessionClosingReason.COMMANDS_OVERFLOW);
-				return -1;
+				close(SessionClosingReason.COMMANDS_OVERFLOW);
+			} catch (Exception e) {
+				LOGGER.error("Exception while creating CMD!", e);
+				close(SessionClosingReason.SERVER_SIDE_ERROR);
 			}
-			sendAllQueuedCommandsIfPossible();
-			return commandBuffer.getUnconsumedCommandsCount();
+			sendQueuedCommands();
 		}
 	}
 
@@ -142,56 +153,41 @@ public class UiSession {
 		synchronized (this) {
 			return new ClientBackPressureInfo(
 					config.getCommandBufferLength(),
-					commandBuffer.getBufferedCommandsCount(),
-					commandBuffer.getUnconsumedCommandsCount(),
+					serverMessageBuffer.getBufferedMessagesCount(),
+					serverMessageBuffer.getUnconsumedMessagesCount(),
 					config.getClientMinRequestedCommands(),
 					config.getClientMaxRequestedCommands(),
-					maxRequestedCommandId - lastSentCommandId,
-					requestedCommandsZeroTimestamp
+					maxRequestedSequenceNumber - lastSentSequenceNumber,
+					requestNZeroTimestamp
 			);
 		}
 	}
 
-	private CMD createCMD(UiCommandWithResultCallback commandWithCallback) {
-		CMD cmd;
-		try {
-			int cmdId = commandIdCounter.incrementAndGet();
-			boolean awaitsResponse = commandWithCallback.getResultCallback() != null;
-			cmd = new CMD(cmdId, commandWithCallback.getLibraryUuid(), commandWithCallback.getClientObjectId(), objectMapper.writeValueAsString(commandWithCallback.getUiCommand()), awaitsResponse);
-			if (awaitsResponse) {
-				resultCallbacksByCmdId.put(cmdId, new ResultCallbackWithCommandClass(commandWithCallback.getResultCallback(), commandWithCallback.getUiCommand().getClass()));
-			}
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
-		return cmd;
-	}
-
 	public boolean rewindToCommand(int commandId) {
 		synchronized (this) {
-			this.lastSentCommandId = commandId - 1;
-			return commandBuffer.rewindToCommand(commandId);
+			this.lastSentSequenceNumber = commandId - 1;
+			return serverMessageBuffer.rewindToMessage(commandId);
 		}
 	}
 
-	private void sendAllQueuedCommandsIfPossible() {
+	private void sendQueuedCommands() {
 		if (clientReadyToReceiveCommands) {
-			List<CMD> cmdsToSend = new ArrayList<>();
+			List<ServerMessageBufferMessage> cmdsToSend = new ArrayList<>();
 			synchronized (this) {
 				while (true) {
 					if (!clientReadyToReceiveCommands) {
 						break;
 					}
-					if (lastSentCommandId >= maxRequestedCommandId) {
+					if (lastSentSequenceNumber >= maxRequestedSequenceNumber) {
 						clientReadyToReceiveCommands = false;
-						requestedCommandsZeroTimestamp = System.currentTimeMillis();
+						requestNZeroTimestamp = System.currentTimeMillis();
 						break;
 					} else {
-						requestedCommandsZeroTimestamp = -1;
+						requestNZeroTimestamp = -1;
 					}
-					CMD cmd = commandBuffer.consumeCommand();
+					var cmd = serverMessageBuffer.consumeMessage();
 					if (cmd != null) {
-						lastSentCommandId = cmd.getId();
+						lastSentSequenceNumber = cmd.sequenceNumber();
 						cmdsToSend.add(cmd);
 					} else {
 						break;
@@ -199,7 +195,7 @@ public class UiSession {
 				}
 			}
 			if (!cmdsToSend.isEmpty()) {
-				sendAsyncWithErrorHandler(new DtoMULTI_CMD(cmdsToSend));
+				sendAsyncWithErrorHandler(cmdsToSend);
 			}
 		}
 	}
@@ -207,7 +203,7 @@ public class UiSession {
 	public void reviveConnection() {
 		synchronized (this) {
 			this.clientReadyToReceiveCommands = true;
-			sendAllQueuedCommandsIfPossible();
+			sendQueuedCommands();
 		}
 	}
 
@@ -216,16 +212,16 @@ public class UiSession {
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		synchronized (this) {
 			if (lastReceivedCommandIdOrNull != null) {
-				this.commandBuffer.purgeTillCommand(lastReceivedCommandIdOrNull);
+				this.serverMessageBuffer.purgeTillMessage(lastReceivedCommandIdOrNull);
 			}
-			this.maxRequestedCommandId = Math.max(maxRequestedCommandId, this.maxRequestedCommandId);
+			this.maxRequestedSequenceNumber = Math.max(maxRequestedCommandId, this.maxRequestedSequenceNumber);
 			reviveConnection();
 		}
 	}
 
 	public void sendInitOk() {
 		LOGGER.debug("Sending INIT_OK for {}", sessionId);
-		sendAsyncWithErrorHandler(new DtoINIT_OK(
+		sendAsyncWithErrorHandler(new INIT_OK(
 				config.getClientMinRequestedCommands(),
 				config.getClientMaxRequestedCommands(),
 				config.getClientEventsBufferSize(),
@@ -246,56 +242,54 @@ public class UiSession {
 		});
 	}
 
-	public void handleEvent(int clientMessageId, DtoEventWrapper event) {
-		statistics.eventReceived(event.getTypeId());
+	public void handleEvent(int sequenceNumber, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {
+		statistics.eventReceived(libraryId + "." + name);
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Recieved event ({}): {}", sessionId.substring(0, 8), event.getClass());
+			LOGGER.debug("Recieved event ({}): {}.{}", sessionId.substring(0, 8), sequenceNumber, name);
 		}
-		updateClientMessageId(clientMessageId);
+		updateClientMessageSequenceNumber(sequenceNumber);
 		reviveConnection();
-		failsafeInvokeSessionListeners(sl -> sl.onUiEvent(sessionId, event));
+		failsafeInvokeSessionListeners(sl -> sl.handleEvent(sessionId, libraryId, clientObjectId, name, params));
 	}
 
-	public void handleQuery(int clientMessageId, DtoQueryWrapper query) {
-		statistics.queryReceived(query.getTypeId());
+	public void handleQuery(int sequenceNumber, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {
+		statistics.queryReceived(libraryId + "." + name);
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Recieved query ({}): {}", sessionId.substring(0, 8), query.getClass());
+			LOGGER.debug("Recieved query ({}): {}.{}", sessionId.substring(0, 8), sequenceNumber, name);
 		}
-		updateClientMessageId(clientMessageId);
+		updateClientMessageSequenceNumber(sequenceNumber);
 		reviveConnection();
-		failsafeInvokeSessionListeners(sl -> sl.onUiQuery(
-				sessionId,
-				query,
-				result -> {
-					sendAsyncWithErrorHandler(new DtoQRY_RES(clientMessageId, result));
-					statistics.queryResultSentFor(query.getTypeId());
-				}
-		));
+		Consumer<Object> resultCallback = result -> {
+			int resultSequenceNumber = sequenceNumberCounter.incrementAndGet();
+			sendAsyncWithErrorHandler(new QUERY_RES(resultSequenceNumber, sequenceNumber, result));
+			statistics.queryResultSentFor(libraryId + "." + name);
+		};
+		failsafeInvokeSessionListeners(sl -> sl.handleQuery(sessionId, libraryId, clientObjectId, name, params, resultCallback));
 	}
 
-	public void handleCommandResult(int clientMessageId, int cmdId, Object result) {
+	public void handleCommandResult(int sequenceNumber, int cmdId, Object result) {
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Recieved command result ({}): {}", sessionId.substring(0, 8), result);
 		}
-		updateClientMessageId(clientMessageId);
+		updateClientMessageSequenceNumber(sequenceNumber);
 		reviveConnection();
-		ResultCallbackWithCommandClass resultCallback = resultCallbacksByCmdId.remove(cmdId);
+		ResultCallbackWithCommandName resultCallback = resultCallbacksByCmdId.remove(cmdId);
 		if (resultCallback != null) {
-			statistics.commandResultReceivedFor(resultCallback.commandClass.getCanonicalName());
+			statistics.commandResultReceivedFor(resultCallback.commandName());
 			resultCallback.callback.accept(result);
 		} else {
 			LOGGER.error("Could not find result callback for CMD_RESULT! cmdId: " + cmdId);
 		}
 	}
 
-	private void updateClientMessageId(int clientMessageId) {
-		if (lastReceivedClientMessageId != -1 && clientMessageId != lastReceivedClientMessageId + 1) {
-			LOGGER.warn("Missing event from client? Expected event id: " + lastReceivedClientMessageId + 1 + "; Got: " + clientMessageId);
+	private void updateClientMessageSequenceNumber(int clientMessageSequenceNumber) {
+		if (lastReceivedClientMessageSequenceNumber != -1 && clientMessageSequenceNumber != lastReceivedClientMessageSequenceNumber + 1) {
+			LOGGER.warn("Missing event from client? Expected event id: " + lastReceivedClientMessageSequenceNumber + 1 + "; Got: " + clientMessageSequenceNumber);
 		}
-		lastReceivedClientMessageId = clientMessageId;
+		lastReceivedClientMessageSequenceNumber = clientMessageSequenceNumber;
 	}
 
 	public void reinit(int lastReceivedCommandId, int maxRequestedCommandId, MessageSender messageSender) {
@@ -304,19 +298,23 @@ public class UiSession {
 		if (rewindToCommand(lastReceivedCommandId)) {
 			LOGGER.debug("REINIT successful: " + sessionId);
 			synchronized (this) {
-				this.maxRequestedCommandId = Math.max(maxRequestedCommandId, this.maxRequestedCommandId);
+				this.maxRequestedSequenceNumber = Math.max(maxRequestedCommandId, this.maxRequestedSequenceNumber);
 			}
-			sendAsyncWithErrorHandler(new DtoREINIT_OK(lastReceivedClientMessageId));
+			sendAsyncWithErrorHandler(new REINIT_OK(lastReceivedClientMessageSequenceNumber));
 			reviveConnection();
 		} else {
 			LOGGER.warn("Could not reinit. Command with id " + lastReceivedCommandId + "not found in command buffer.");
-			sendAsyncWithErrorHandler(new DtoREINIT_NOK(DtoSessionClosingReason.REINIT_COMMAND_ID_NOT_FOUND));
+			sendAsyncWithErrorHandler(new REINIT_NOK(SessionClosingReason.REINIT_COMMAND_ID_NOT_FOUND));
 		}
 	}
 
-	public void sendAsyncWithErrorHandler(DtoAbstractServerMessage message) {
+	public void sendAsyncWithErrorHandler(AbstractServerMessage message) {
+		sendAsyncWithErrorHandler(List.of(message));
+	}
+
+	public void sendAsyncWithErrorHandler(List<AbstractServerMessage> messages) {
 		final long sendTime = System.currentTimeMillis();
-		this.messageSender.sendMessageAsynchronously(message, (exception) -> {
+		this.messageSender.sendAsynchronously(messages, (exception) -> {
 			if (timestampOfLastMessageFromClient.get() <= sendTime) {
 				clientReadyToReceiveCommands = false;
 			}
@@ -329,7 +327,7 @@ public class UiSession {
 	}
 
 	public void ping() {
-		sendAsyncWithErrorHandler(new DtoPING());
+		sendAsyncWithErrorHandler(new PING());
 	}
 
 	public void setActive() {
@@ -344,7 +342,7 @@ public class UiSession {
 		setState(UiSessionState.INACTIVE);
 	}
 
-	public void close(DtoSessionClosingReason reason) {
+	public void close(SessionClosingReason reason) {
 		if (this.state == UiSessionState.CLOSED) {
 			return; // already closed. nothing to do
 		}

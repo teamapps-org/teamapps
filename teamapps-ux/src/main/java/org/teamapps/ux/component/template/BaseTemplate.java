@@ -635,7 +635,7 @@ public enum BaseTemplate implements Template {
 	}
 
 	@Override
-	public DtoClientObject createDto() {
-		return this.template.createDto();
+	public DtoClientObject createConfig() {
+		return this.template.createConfig();
 	}
 }

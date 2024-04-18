@@ -22,9 +22,9 @@ package org.teamapps.ux.component.panel;
 import org.teamapps.common.format.Color;
 import org.teamapps.databinding.ObservableValue;
 import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoPanel;
 import org.teamapps.dto.DtoPanelHeaderField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -108,7 +108,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	private void updateToolButtons() {
 		sendCommandIfRendered(() -> new DtoPanel.SetToolButtonsCommand(this.toolButtons.stream()
-				.map(toolButton -> toolButton.createDtoReference())
+				.map(toolButton -> toolButton.createClientReference())
 				.collect(Collectors.toList())));
 	}
 
@@ -133,7 +133,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoPanel uiPanel = new DtoPanel();
 		mapUiPanelProperties(uiPanel);
 		return uiPanel;
@@ -147,13 +147,13 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		uiPanel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
 		uiPanel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy.toDto());
 		uiPanel.setTitleBarHidden(titleBarHidden);
-		uiPanel.setToolbar(ClientObject.createDtoReference(toolbar));
-		uiPanel.setContent(content != null ? content.createDtoReference() : null);
+		uiPanel.setToolbar(ClientObject.createClientReference(toolbar));
+		uiPanel.setContent(content != null ? content.createClientReference() : null);
 		uiPanel.setPadding(padding);
 		uiPanel.setWindowButtons(windowButtons.stream()
 				.map(b -> b.toUiWindowButtonType()).collect(Collectors.toList()));
 		uiPanel.setToolButtons(toolButtons.stream()
-				.map(toolButton -> toolButton.createDtoReference())
+				.map(toolButton -> toolButton.createClientReference())
 				.collect(Collectors.toList()));
 		uiPanel.setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy.toDto());
 		uiPanel.setContentStretchingEnabled(contentStretchingEnabled);
@@ -163,7 +163,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		if (field == null) {
 			return null;
 		}
-		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField(field.createDtoReference());
+		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField(field.createClientReference());
 		uiPanelHeaderField.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanelHeaderField.setMinWidth(minWidth);
 		uiPanelHeaderField.setMaxWidth(maxWidth);
@@ -208,11 +208,11 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		if (content != null) {
 			content.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoPanel.SetContentCommand(content != null ? content.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoPanel.SetContentCommand(content != null ? content.createClientReference() : null));
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoPanel.WindowButtonClickedEvent.TYPE_ID -> {
 				var clickedEvent = event.as(DtoPanel.WindowButtonClickedEventWrapper.class);
@@ -279,7 +279,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setToolbar(Toolbar toolbar) {
 		this.toolbar = toolbar;
-		sendCommandIfRendered(() -> new DtoPanel.SetToolbarCommand(toolbar.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoPanel.SetToolbarCommand(toolbar.createClientReference()));
 	}
 
 	public int getPadding() {

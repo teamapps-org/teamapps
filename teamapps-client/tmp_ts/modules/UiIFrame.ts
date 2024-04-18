@@ -24,12 +24,12 @@ import {DtoIFrameCommandHandler, DtoIFrame} from "../generated/DtoIFrame";
 import {parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
-export class UiIFrame extends AbstractComponent<DtoIFrame> implements DtoIFrameCommandHandler {
+export class UiIFrame extends AbstractLegacyComponent<DtoIFrame> implements DtoIFrameCommandHandler {
 
 	private $iframe: HTMLIFrameElement;
 
-	constructor(config: DtoIFrame) {
-		super(config);
+	constructor(config: DtoIFrame, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$iframe = parseHtml(`<iframe class="UiIFrame" src="${config.url}"></iframe>`);
 		// this.$iframe.addEventListener("load", e => {
 		// 	console.log(`load: ${this.$iframe.src}`);

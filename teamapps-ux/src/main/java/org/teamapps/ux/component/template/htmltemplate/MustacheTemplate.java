@@ -45,7 +45,7 @@ public class MustacheTemplate extends AbstractTemplate {
 	}
 
 	@Override
-	public DtoTemplate createDto() {
+	public DtoTemplate createConfig() {
 		DtoMustacheTemplate dto = new DtoMustacheTemplate(templateString);
 		dto.setId(getId());
 		return dto;

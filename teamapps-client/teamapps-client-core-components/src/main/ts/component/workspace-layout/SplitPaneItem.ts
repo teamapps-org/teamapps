@@ -19,7 +19,7 @@
  */
 import {DtoChildCollapsingPolicy, DtoSplitDirection, DtoSplitSizePolicy} from "../../generated";
 import {SplitPane} from "../SplitPane";
-import {Component, generateUUID} from "teamapps-client-core";
+import {Component, generateUUID, noOpServerChannel} from "teamapps-client-core";
 import {ItemTreeItem} from "./ItemTree";
 
 export class SplitPaneItem implements ItemTreeItem<SplitPane> {
@@ -39,7 +39,7 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 			referenceChildSize: firstChildRelativeSize,
 			resizable: true,
 			childCollapsingPolicy: DtoChildCollapsingPolicy.IF_EMPTY
-		});
+		}, noOpServerChannel);
 	}
 
 	public get itemIds() {

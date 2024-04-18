@@ -21,13 +21,10 @@ package org.teamapps.ux.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoClientObject;
-import org.teamapps.dto.DtoReference;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.dto.protocol.DtoQueryWrapper;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.dto.JsonWrapper;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 /**
  * A client object has a representation on the client.
@@ -38,42 +35,19 @@ public interface ClientObject {
 
 	Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	enum RenderingState {
-		NOT_RENDERED,
-		RENDERING,
-		RENDERED
-	}
-
 	/**
 	 * The id of a client object MUST be an immutable globally unique String.
 	 * @return the id of this client object
 	 */
 	String getId();
 
-	default boolean isRendered() {
-		return SessionContext.current().isRendered(this);
+	Object createConfig();
+
+	List<String> getListeningEventNames();
+
+	default void handleEvent(String name, List<JsonWrapper> params) {
 	}
-
-	DtoClientObject createDto();
-
-	/**
-	 * Creates a ui reference to a client object.
-	 * Ui references are just a simple way to reference objects on the client side.
-	 */
-	default DtoReference createDtoReference() {
-		LOGGER.debug("createDtoReference: " + getId());
-		SessionContext.current().renderClientObject(this);
-		return new DtoReference(getId());
-	}
-
-	static DtoReference createDtoReference(Component component) {
-		return component == null ? null : component.createDtoReference();
-	}
-
-	default void handleUiEvent(DtoEventWrapper event) {
-	}
-
-	default Object handleUiQuery(DtoQueryWrapper query) {
+	default Object handleQuery(String name, List<JsonWrapper> params) {
 		return null;
 	}
 }

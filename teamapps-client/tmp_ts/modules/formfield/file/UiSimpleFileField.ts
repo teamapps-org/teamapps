@@ -140,7 +140,7 @@ export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFile
 		const committedItemUuids = this.getCommittedValue().map(item => item.uuid);
 		existingItemUuids.filter(exId => committedItemUuids.indexOf(exId) === -1)
 			.forEach(uuid => this.removeFileItem(uuid));
-		committedItemUuids.filter(cId => existingItemUuids.indexOf(cId) === -1)
+		committedItemUuids.filter(oid => existingItemUuids.indexOf(oid) === -1)
 			.forEach(uuid => this.addFileItem(this.getCommittedValue().filter(item => item.uuid === uuid)[0]));
 	}
 

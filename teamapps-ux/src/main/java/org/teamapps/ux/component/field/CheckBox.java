@@ -46,7 +46,7 @@ public class CheckBox extends AbstractField<Boolean> {
 	}
 
 	@Override
-	public DtoAbstractField createDto() {
+	public DtoAbstractField createConfig() {
 		DtoCheckBox uiCheckBox = new DtoCheckBox();
 		mapAbstractFieldAttributesToUiField(uiCheckBox);
 		uiCheckBox.setCaption(caption);

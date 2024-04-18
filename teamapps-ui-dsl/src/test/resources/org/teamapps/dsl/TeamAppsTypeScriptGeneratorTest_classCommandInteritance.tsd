@@ -3,9 +3,7 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoReference} from "teamapps-client-communication";
-import {DtoCommand} from "teamapps-client-communication";
-import {DtoEvent} from "teamapps-client-communication";
+import {DtoClientObject} from "teamapps-client-core";
 import {DtoB} from "./DtoB";
 import {DtoA} from "./DtoA";
 import {DtoBCommandHandler} from "./DtoB";
@@ -31,6 +29,6 @@ export interface DtoCEventSource extends DtoBEventSource, DtoAEventSource {
 	onZ3: EventEmitter<DtoC_Z3Event>;
 }
 
-export interface DtoC_Z3Event extends DtoEvent {
+export interface DtoC_Z3Event {
 }
 

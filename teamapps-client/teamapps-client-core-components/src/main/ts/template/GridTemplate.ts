@@ -44,7 +44,7 @@ import {Template} from "teamapps-client-core";
 
 type RenderingFunction = (data: any) => string;
 
-export class GridTemplate implements Template<DtoGridTemplate> {
+export class GridTemplate implements Template {
 	private renderers: ((data: any) => string)[];
 	private gridCss: string;
 
@@ -85,6 +85,11 @@ export class GridTemplate implements Template<DtoGridTemplate> {
 		const borderCss = createUiBorderCssString(config.border);
 		this.gridCss = `${gridTemplateColumnsString} ${gridTemplateRowsString} ${paddingCss} ${gridGapCss} ${minWidthCss} ${minHeightCss} ${maxWidthCss} ${maxHeightCss} ${backgroundColorCss} ${borderCss}`;
 	}
+
+	invoke(name: string, params: any[]): Promise<any> {
+		// nothing to do with a GridTemplate at this moment
+        throw new Error("Method not implemented.");
+    }
 
 	render(data: any) {
 		if (data == null) {

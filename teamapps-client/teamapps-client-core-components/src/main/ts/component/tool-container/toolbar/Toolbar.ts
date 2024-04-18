@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, insertAfter, insertBefore, parseHtml, TeamAppsEvent} from "teamapps-client-core";
+import {Component, insertAfter, insertBefore, noOpServerChannel, parseHtml, ServerObjectChannel, TeamAppsEvent} from "teamapps-client-core";
 import {
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
 	DtoToolbar,
@@ -66,8 +66,8 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	private $overflowDropDownButton: HTMLElement;
 	private totalWidthOfOverflowButtons: number;
 
-	constructor(config: DtoToolbar) {
-		super(config);
+	constructor(config: DtoToolbar, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this._$toolbar = parseHtml(`<div class="Toolbar teamapps-blurredBackgroundImage"></div>`);
 		this._$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this._$toolbar.appendChild(this._$backgroundColorDiv);
@@ -107,7 +107,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 				return {...group.getConfig(), buttons: group.getButtonConfigs()}
 			})
 		};
-		let toolAccordion = new ToolAccordion(accordionConfig);
+		let toolAccordion = new ToolAccordion(accordionConfig, noOpServerChannel);
 		toolAccordion.onToolbarButtonClick.addListener(eventObject => {
 			if (!eventObject.dropDownClickInfo) { //
 				this.overflowDropDown.close();

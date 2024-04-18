@@ -18,16 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
-import {DtoSessionClosingReason} from "../generated";
-import {DtoCommand, DtoEvent, DtoQuery} from "../protocol/protocol";
+import {SessionClosingReason} from "../protocol/protocol";
 
 export interface TeamAppsConnection {
-	sendEvent(event: DtoEvent): void;
-	sendQuery(query: DtoQuery): Promise<any>;
+	sendEvent(lid: string | null, oid: string | null, name: string, params: any[]): void;
+	sendQuery(lid: string | null, oid: string | null, name: string, params: any[]): Promise<any>;
 }
 
 export interface TeamAppsConnectionListener {
 	onConnectionInitialized(): void;
-	onConnectionErrorOrBroken(reason: DtoSessionClosingReason, message?: string): void;
-	executeCommand(libraryUuid: string, clientObjectId: string, uiCommand: DtoCommand): Promise<any>;
+	onConnectionErrorOrBroken(reason: SessionClosingReason, message?: string): void;
+	executeCommand(libraryUuid: string, clientObjectId: string, commandName: string, params: any[]): Promise<any>;
 }

@@ -33,6 +33,8 @@ requirements for the maven plugin:
 
 * Translations: Delete TranslationProvider.getTranslation(...)
 
+make icons non-generic
+
 
 Low prio:
 Table:

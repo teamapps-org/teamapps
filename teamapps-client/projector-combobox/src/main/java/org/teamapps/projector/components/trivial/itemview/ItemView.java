@@ -20,7 +20,7 @@ package org.teamapps.projector.components.trivial.itemview;/*-
 
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoIdentifiableClientRecord;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoItemView;
 import org.teamapps.ux.component.AbstractComponent;
@@ -68,7 +68,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setGroupHeaderTemplate(Template groupHeaderTemplate) {
 		this.groupHeaderTemplate = groupHeaderTemplate;
-		sendCommandIfRendered(() -> new DtoItemView.SetGroupHeaderTemplateCommand(groupHeaderTemplate.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoItemView.SetGroupHeaderTemplateCommand(groupHeaderTemplate.createClientReference()));
 	}
 
 	public List<ItemGroup> getItemGroups() {
@@ -103,7 +103,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			public void handleAddItem(DtoIdentifiableClientRecord itemClientRecord, Consumer<Void> uiCommandCallback) {
 				if (isRendered()) {
 					final DtoItemView.AddItemCommand addItemCommand = new DtoItemView.AddItemCommand(group.getClientId(), itemClientRecord);
-					getSessionContext().sendCommandIfRendered(ItemView.this, () -> addItemCommand, uiCommandCallback);
+					getSessionContext().sendCommandIfRendered(ItemView.this, () -> addItemCommand.get(), uiCommandCallback);
 				} else {
 					uiCommandCallback.accept(null);
 				}
@@ -113,7 +113,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			public void handleRemoveItem(int itemClientRecordId, Consumer<Void> uiCommandCallback) {
 				if (isRendered()) {
 					final DtoItemView.RemoveItemCommand removeItemCommand = new DtoItemView.RemoveItemCommand(group.getClientId(), itemClientRecordId);
-					getSessionContext().sendCommandIfRendered(ItemView.this, () -> removeItemCommand, uiCommandCallback);
+					getSessionContext().sendCommandIfRendered(ItemView.this, () -> removeItemCommand.get(), uiCommandCallback);
 				}
 			}
 
@@ -192,10 +192,10 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoItemView uiItemView = new DtoItemView();
 		mapAbstractUiComponentProperties(uiItemView);
-		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate.createDtoReference() : null);
+		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate.createClientReference() : null);
 		uiItemView.setItemGroups(this.itemGroups.stream()
 				.map(group -> group.createUiItemViewItemGroup())
 				.collect(Collectors.toList()));
@@ -208,7 +208,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoItemView.ItemClickedEvent.TYPE_ID -> {
 				var itemClickedEvent = event.as(DtoItemView.ItemClickedEventWrapper.class);

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Component, generateUUID, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, generateUUID, noOpServerChannel, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoTabPanelTabStyle, DtoViewGroupPanelState, DtoWindowButtonType} from "../../generated";
 import {TabPanel} from "../TabPanel";
 import {ItemTreeItem} from "./ItemTree";
@@ -72,7 +72,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 			id: uuid,
 			hideTabBarIfSingleTab: true,
 			tabStyle: DtoTabPanelTabStyle.EARS
-		});
+		}, noOpServerChannel);
 		this.component.setWindowButtons(this.createWindowButtonList());
 		this.component.onWindowButtonClicked.addListener(eventObject => {
 			if (eventObject.windowButton === DtoWindowButtonType.MINIMIZE) {

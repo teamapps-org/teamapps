@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.DtoJsonWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoObject;
 
 /**
@@ -30,10 +30,7 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.dto.DtoReference;
-import org.teamapps.dto.DtoCommand;
-import org.teamapps.dto.DtoEvent;
-import org.teamapps.dto.DtoQuery;
+import org.teamapps.ux.component.DtoClientObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -43,7 +40,7 @@ public interface DtoA extends DtoObject {
 	public String getB();
 	public DtoA setB(String b);
 
-	public static class YEvent implements DtoEvent {
+	public static class YEvent {
 
 	    public static final String TYPE_ID = "A.y";
 
@@ -94,7 +91,7 @@ public interface DtoA extends DtoObject {
 		}
 
 	}
-    public static class YEventWrapper extends DtoJsonWrapper {
+    public static class YEventWrapper extends JsonWrapper {
 
         public static final String TYPE_ID = "y";
 
@@ -123,7 +120,7 @@ public interface DtoA extends DtoObject {
 
     }
 
-	public static class QQuery implements DtoQuery {
+	public static class QQuery {
 
 	    public static final String TYPE_ID = "A.q";
 
@@ -174,7 +171,7 @@ public interface DtoA extends DtoObject {
 		}
 
 	}
-	public static class QQueryWrapper extends DtoJsonWrapper {
+	public static class QQueryWrapper extends JsonWrapper {
 
 	    public static final String TYPE_ID = "q";
 
@@ -206,7 +203,9 @@ public interface DtoA extends DtoObject {
 	@JsonTypeName("A.x")
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"x"})
-	public static class XCommand implements DtoCommand<Void> {
+	public static class XCommand {
+
+	    public static final String CMD_NAME = "x";
 
 		protected String x;
 
@@ -234,12 +233,18 @@ public interface DtoA extends DtoObject {
 			return x;
 		}
 
+		public Object[] getParameters() {
+		    return new Object[] {x};
+		}
+
 	}
 
 	@JsonTypeName("A.x2")
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"x2"})
-	public static class X2Command implements DtoCommand<Boolean> {
+	public static class X2Command {
+
+	    public static final String CMD_NAME = "x2";
 
 		protected String x2;
 
@@ -265,6 +270,10 @@ public interface DtoA extends DtoObject {
 		@com.fasterxml.jackson.annotation.JsonGetter("x2")
 		public String getX2() {
 			return x2;
+		}
+
+		public Object[] getParameters() {
+		    return new Object[] {x2};
 		}
 
 	}

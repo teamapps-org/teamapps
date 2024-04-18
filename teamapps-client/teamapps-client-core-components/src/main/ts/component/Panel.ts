@@ -32,12 +32,12 @@ import {
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
 import {
-	AbstractComponent,
+	AbstractLegacyComponent,
 	Component,
 	executeWhenFirstDisplayed,
-	insertBefore,
+	insertBefore, noOpServerChannel,
 	parseHtml,
-	prependChild,
+	prependChild, ServerObjectChannel,
 	TeamAppsEvent
 } from "teamapps-client-core";
 
@@ -57,14 +57,14 @@ interface HeaderField {
 	minExpandedWidth?: number;
 }
 
-export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelCommandHandler, DtoPanelEventSource {
+export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanelCommandHandler, DtoPanelEventSource {
 
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize", visible: true, iconSize: 16})),
-		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize", visible: true, iconSize: 16})),
-		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close", visible: true, iconSize: 16})),
+		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize", visible: true, iconSize: 16}), noOpServerChannel),
+		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize", visible: true, iconSize: 16}), noOpServerChannel),
+		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close", visible: true, iconSize: 16}), noOpServerChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		DtoWindowButtonType.MINIMIZE,
@@ -96,8 +96,8 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	private windowButtons: DtoWindowButtonType[];
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: DtoPanel) {
-		super(config);
+	constructor(config: DtoPanel, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this.$panel = parseHtml(`<div class="Panel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">
                     <div class="panel-icon"></div>

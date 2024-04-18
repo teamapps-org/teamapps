@@ -54,7 +54,9 @@ public class ComponentLibraryRegistry {
 		if (!registeredComponentLibraries.containsKey(componentLibraryClass)) {
 			ComponentLibrary componentLibrary = componentLibrarySupplier.get();
 			String uuid = componentLibraryClass.getSimpleName() + "-" + UUID.randomUUID();
-			ComponentLibraryInfo componentLibraryInfo = new ComponentLibraryInfo(componentLibrary, uuid);
+			String mainJsUrl = getMainJsUrl(uuid);
+			String mainCss = getMainCssUrl(uuid);
+			ComponentLibraryInfo componentLibraryInfo = new ComponentLibraryInfo(componentLibrary, uuid, mainJsUrl, mainCss);
 			registeredComponentLibraries.put(componentLibraryClass, componentLibraryInfo);
 			librariesByUuid.put(uuid, componentLibraryInfo);
 			registerComponentLibrary(componentLibrary);
@@ -71,37 +73,23 @@ public class ComponentLibraryRegistry {
 		return componentLibraryInfo != null ? componentLibraryInfo.componentLibrary : null;
 	}
 
-	public String getMainJsUrl(Class<? extends ClientObject> clientObjectClass) {
-		String libraryUuid = getComponentLibraryForClientObjectClass(clientObjectClass).uuid;
+	public String getMainJsUrl(String libraryUuid) {
 		return componentsUrlBasePath + libraryUuid + "/";
 	}
 
-	public String getMainCssUrl(Class<? extends ClientObject> clientObjectClass) {
-		String libraryUuid = getComponentLibraryForClientObjectClass(clientObjectClass).uuid;
+	public String getMainCssUrl(String libraryUuid) {
 		return componentsUrlBasePath + libraryUuid + "/" + libraryUuid + ".css";
 	}
 
-	public static class ComponentLibraryInfo {
-		private final ComponentLibrary componentLibrary;
-		private final String uuid;
-
-		public ComponentLibraryInfo(ComponentLibrary componentLibrary, String uuid) {
-			this.componentLibrary = componentLibrary;
-			this.uuid = uuid;
-		}
-
-		public ComponentLibrary getComponentLibrary() {
-			return componentLibrary;
-		}
-
-		public String getUuid() {
-			return uuid;
-		}
-
+	public record ComponentLibraryInfo(ComponentLibrary componentLibrary, String uuid, String mainJsUrl, String mainCssUrl) {
 		@Override
 		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
 			ComponentLibraryInfo that = (ComponentLibraryInfo) o;
 			return Objects.equals(componentLibrary, that.componentLibrary) && Objects.equals(uuid, that.uuid);
 		}

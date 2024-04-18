@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoAbstractField;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoLabel;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.ClientObject;
@@ -56,17 +56,17 @@ public class Label extends AbstractField<String> {
 	}
 
 	@Override
-	public DtoAbstractField createDto() {
+	public DtoAbstractField createConfig() {
 		DtoLabel uiLabel = new DtoLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));
-		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createDtoReference() : null);
+		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createClientReference() : null);
 		return uiLabel;
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
+	public void handleUiEvent(String name, JsonWrapper params) {
+		super.handleUiEvent(name, params);
 		switch (event.getTypeId()) {
 			case DtoLabel.ClickedEvent.TYPE_ID -> {
 				this.onClicked.fire();
@@ -101,7 +101,7 @@ public class Label extends AbstractField<String> {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetComponent = targetComponent;
-		sendCommandIfRendered(() -> new DtoLabel.SetTargetComponentCommand(ClientObject.createDtoReference(targetComponent)));
+		sendCommandIfRendered(() -> new DtoLabel.SetTargetComponentCommand(ClientObject.createClientReference(targetComponent)));
 		return this;
 	}
 }

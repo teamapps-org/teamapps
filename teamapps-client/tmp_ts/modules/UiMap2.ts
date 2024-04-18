@@ -49,7 +49,7 @@ import {DtoAbstractMapShapeChange} from "../generated/DtoAbstractMapShapeChange"
 import {DtoPolylineAppend} from "../generated/DtoPolylineAppend";
 import {DtoMapPolyline} from "../generated/DtoMapPolyline";
 
-export class UiMap2 extends AbstractComponent<DtoMap2> implements DtoMap2EventSource, DtoMap2CommandHandler {
+export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2EventSource, DtoMap2CommandHandler {
 
 	public readonly onZoomLevelChanged: TeamAppsEvent<DtoMap2_ZoomLevelChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
 	public readonly onLocationChanged: TeamAppsEvent<DtoMap2_LocationChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
@@ -65,8 +65,8 @@ export class UiMap2 extends AbstractComponent<DtoMap2> implements DtoMap2EventSo
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
-	constructor(config: DtoMap2) {
-		super(config);
+	constructor(config: DtoMap2, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$map = parseHtml('<div class="UiMap2">');
 
 		mapboxgl.baseApiUrl = config.baseApiUrl;

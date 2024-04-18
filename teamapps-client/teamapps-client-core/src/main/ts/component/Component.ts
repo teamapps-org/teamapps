@@ -21,7 +21,7 @@ import {DtoComponent as DtoComponent, DtoComponentCommandHandler} from "../gener
 import {ClientObject} from "../ClientObject";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export interface Component<C extends DtoComponent = DtoComponent> extends ClientObject<C>, DtoComponentCommandHandler {
+export interface Component extends ClientObject, DtoComponentCommandHandler {
 
 	/**
 	 * @return The main DOM element of this component.

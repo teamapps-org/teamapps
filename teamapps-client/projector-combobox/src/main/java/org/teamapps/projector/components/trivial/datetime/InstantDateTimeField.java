@@ -38,7 +38,7 @@ public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 	}
 
 	@Override
-	public DtoAbstractField createDto() {
+	public DtoAbstractField createConfig() {
 		DtoInstantDateTimeField uiField = new DtoInstantDateTimeField();
 		mapAbstractDateTimeFieldUiValues(uiField);
 		uiField.setTimeZoneId(timeZoneId.getId());

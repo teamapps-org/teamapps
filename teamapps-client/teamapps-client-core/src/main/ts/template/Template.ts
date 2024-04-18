@@ -1,6 +1,6 @@
 import {ClientObject} from "../ClientObject";
 import {DtoTemplate} from "../generated";
 
-export interface Template<C extends DtoTemplate = DtoTemplate> extends ClientObject<C> {
+export interface Template extends ClientObject {
 	render: (data: any) => string;
 }

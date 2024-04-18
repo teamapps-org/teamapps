@@ -19,26 +19,26 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.DtoCommand;
-
 import java.util.function.Consumer;
 
-public class UiCommandWithResultCallback<RESULT> {
+public class UiCommandWithResultCallback {
 
 	private final String libraryUuid;
 	private final String clientObjectId;
-	private final DtoCommand<RESULT> uiCommand;
-	private final Consumer<RESULT> resultCallback;
+	private final String commandName;
+	private final Object[] params;
+	private final Consumer<Object> resultCallback;
 
-	public UiCommandWithResultCallback(String libraryUuid, String clientObjectId, DtoCommand<RESULT> uiCommand, Consumer<RESULT> resultCallback) {
+	public UiCommandWithResultCallback(String libraryUuid, String clientObjectId, String commandName, Object[] params, Consumer<Object> resultCallback) {
 		this.libraryUuid = libraryUuid;
 		this.clientObjectId = clientObjectId;
-		this.uiCommand = uiCommand;
+		this.commandName = commandName;
+		this.params = params;
 		this.resultCallback = resultCallback;
 	}
 
-	public UiCommandWithResultCallback(String libraryUuid, String clientObjectId, DtoCommand<RESULT> uiCommand) {
-		this(libraryUuid, clientObjectId, uiCommand, null);
+	public UiCommandWithResultCallback(String libraryUuid, String clientObjectId, String commandName, Object... params) {
+		this(libraryUuid, clientObjectId, commandName, params, null);
 	}
 
 	public String getLibraryUuid() {
@@ -49,11 +49,15 @@ public class UiCommandWithResultCallback<RESULT> {
 		return clientObjectId;
 	}
 
-	public DtoCommand<RESULT> getUiCommand() {
-		return uiCommand;
+	public String getCommandName() {
+		return commandName;
 	}
 
-	public Consumer<RESULT> getResultCallback() {
+	public Object[] getParams() {
+		return params;
+	}
+
+	public Consumer<Object> getResultCallback() {
 		return resultCallback;
 	}
 }

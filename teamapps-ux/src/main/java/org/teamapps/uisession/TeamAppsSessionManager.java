@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsUploadManager;
 import org.teamapps.dto.DtoGlobals;
-import org.teamapps.dto.protocol.DtoSessionClosingReason;
+import org.teamapps.dto.protocol.server.SessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.icons.SessionIconProvider;
@@ -217,9 +217,10 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			if (!hasTeamAppsRefreshParameter) {
 				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
 				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getSearch()) ? "&" : "?";
-				uiSession.sendCommand(new UiCommandWithResultCallback<>(null, null, new DtoGlobals.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
+				String url = clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis();
+				uiSession.sendCommand(new UiCommandWithResultCallback(null, null, DtoGlobals.GoToUrlCommand.CMD_NAME, new DtoGlobals.GoToUrlCommand(url, false).getParameters())); // TODO...
 			}
-			uiSession.close(DtoSessionClosingReason.WRONG_TEAMAPPS_VERSION);
+			uiSession.close(SessionClosingReason.WRONG_TEAMAPPS_VERSION);
 			return uiSession;
 		}
 
@@ -281,7 +282,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		}
 		for (UiSession sessionToClose : sessionsToClose) {
 			LOGGER.info("Closing session: {} ({})", sessionToClose.getName(), sessionToClose.getSessionId());
-			sessionToClose.close(DtoSessionClosingReason.SESSION_TIMEOUT);
+			sessionToClose.close(SessionClosingReason.SESSION_TIMEOUT);
 		}
 	}
 

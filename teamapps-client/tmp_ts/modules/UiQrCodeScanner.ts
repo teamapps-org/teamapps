@@ -27,7 +27,7 @@ import {QrScanner} from './qr-code-scanner/qr-scanner';
 import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 
-export class UiQrCodeScanner extends AbstractComponent<DtoQrCodeScanner> implements DtoQrCodeScannerCommandHandler, DtoQrCodeScannerEventSource {
+export class UiQrCodeScanner extends AbstractLegacyComponent<DtoQrCodeScanner> implements DtoQrCodeScannerCommandHandler, DtoQrCodeScannerEventSource {
 
 	public readonly onQrCodeDetected: TeamAppsEvent<DtoQrCodeScanner_QrCodeDetectedEvent> = new TeamAppsEvent();
 
@@ -38,8 +38,8 @@ export class UiQrCodeScanner extends AbstractComponent<DtoQrCodeScanner> impleme
 
 	private selectedCameraIndex: number = 0;
 
-	constructor(config: DtoQrCodeScanner) {
-		super(config);
+	constructor(config: DtoQrCodeScanner, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="UiQrCodeScanner">
 	<video></video>

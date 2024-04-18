@@ -18,7 +18,16 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, bind, capitalizeFirstLetter, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {
+	AbstractLegacyComponent,
+	bind,
+	capitalizeFirstLetter,
+	Component,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent,
+	TeamAppsUiContext
+} from "teamapps-client-core";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {
 	DtoChildCollapsingPolicy,
@@ -31,7 +40,7 @@ import {
 } from "../generated";
 import {applyCss} from "../util/cssUtil";
 
-export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptyable, DtoSplitPaneCommandHandler, DtoSplitPaneEventSource {
+export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements Emptyable, DtoSplitPaneCommandHandler, DtoSplitPaneEventSource {
 	public readonly onSplitResized: TeamAppsEvent<DtoSplitPane_SplitResizedEvent> = new TeamAppsEvent<DtoSplitPane_SplitResizedEvent>();
 
 	private _firstChildComponent: Component;
@@ -51,8 +60,8 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
-	constructor(config: DtoSplitPane) {
-		super(config);
+	constructor(config: DtoSplitPane, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this.referenceChildSize = config.referenceChildSize;
 		this.config.sizePolicy = config.sizePolicy;
 		const firstChildContainerId = config.id + '_firstChildContainer';

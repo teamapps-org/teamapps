@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, bind, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, bind, Component, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoToolButton,
 	DtoToolButton_ClickedEvent,
@@ -28,7 +28,7 @@ import {
 } from "../generated";
 import {DropDown} from "../micro-components/DropDown";
 
-export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoToolButtonEventSource, DtoToolButtonCommandHandler {
+export class ToolButton extends AbstractLegacyComponent<DtoToolButton> implements DtoToolButtonEventSource, DtoToolButtonCommandHandler {
 
 	public readonly onClicked: TeamAppsEvent<DtoToolButton_ClickedEvent> = new TeamAppsEvent();
 	public readonly onDropDownOpened: TeamAppsEvent<DtoToolButton_DropDownOpenedEvent> = new TeamAppsEvent();
@@ -43,8 +43,8 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 	private minDropDownHeight: number;
 	private openDropDownIfNotSet: boolean;
 
-	constructor(config: DtoToolButton) {
-		super(config);
+	constructor(config: DtoToolButton, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 
 		this.minDropDownWidth = config.minDropDownWidth;
 		this.minDropDownHeight = config.minDropDownHeight;

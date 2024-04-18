@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {removeClassesByFunction} from "../Common";
 import {
 	DtoProgressDisplay,
@@ -30,7 +30,7 @@ import {
 import {ProgressBar} from "../micro-components/ProgressBar";
 
 
-export class ProgressDisplay extends AbstractComponent<DtoProgressDisplay> implements DtoProgressDisplayCommandHandler, DtoProgressDisplayEventSource {
+export class ProgressDisplay extends AbstractLegacyComponent<DtoProgressDisplay> implements DtoProgressDisplayCommandHandler, DtoProgressDisplayEventSource {
 	onCancelButtonClicked: TeamAppsEvent<DtoProgressDisplay_CancelButtonClickedEvent> = new TeamAppsEvent();
 	onClicked: TeamAppsEvent<DtoProgressDisplay_ClickedEvent> = new TeamAppsEvent();
 
@@ -42,8 +42,8 @@ export class ProgressDisplay extends AbstractComponent<DtoProgressDisplay> imple
 	private $cancelButton: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: DtoProgressDisplay) {
-		super(config);
+	constructor(config: DtoProgressDisplay, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="ProgressDisplay">
 			<div class="title">

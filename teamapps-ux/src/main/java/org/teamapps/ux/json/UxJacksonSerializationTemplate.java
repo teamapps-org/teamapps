@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.session.SessionContext;
 
 import java.io.IOException;
@@ -32,26 +33,6 @@ import java.io.IOException;
 public class UxJacksonSerializationTemplate {
 
 	public static final SimpleModule UX_SERIALIZERS_JACKSON_MODULE = new UxSerializersJacksonModule();
-	private static final ThreadLocal<SessionContext> SESSION_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
-
-	private final SessionContext sessionContext;
-
-	public UxJacksonSerializationTemplate(SessionContext sessionContext) {
-		this.sessionContext = sessionContext;
-	}
-
-	public void doWithUxJacksonSerializers(Runnable runnable) {
-		SESSION_CONTEXT_THREAD_LOCAL.set(sessionContext);
-		try {
-			runnable.run();
-		} finally {
-			SESSION_CONTEXT_THREAD_LOCAL.remove();
-		}
-	}
-
-	private static SessionContext getSessionContext() {
-		return SESSION_CONTEXT_THREAD_LOCAL.get();
-	}
 
 	public static class UxSerializersJacksonModule extends SimpleModule {
 		public UxSerializersJacksonModule() {
@@ -59,13 +40,27 @@ public class UxJacksonSerializationTemplate {
 			this.addSerializer(Icon.class, new JsonSerializer<>() {
 				@Override
 				public void serialize(Icon icon, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-					SessionContext currentSessionContext = getSessionContext();
+					SessionContext currentSessionContext = SessionContext.current();
 					gen.writeString(currentSessionContext.resolveIcon(icon));
 				}
 
 				@Override
 				public void serializeWithType(Icon value, JsonGenerator gen, SerializerProvider serializers, TypeSerializer typeSer) throws IOException {
 					serialize(value, gen, serializers);
+				}
+			});
+			this.addSerializer(ClientObject.class, new JsonSerializer<>() {
+				@Override
+				public void serialize(ClientObject clientObject, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+					SessionContext currentSessionContext = SessionContext.current();
+					gen.writeStartObject();
+					gen.writeStringField("_ref", currentSessionContext.getClientObjectId(clientObject));
+					gen.writeEndObject();
+				}
+
+				@Override
+				public void serializeWithType(ClientObject clientObject, JsonGenerator gen, SerializerProvider serializers, TypeSerializer typeSer) throws IOException {
+					serialize(clientObject, gen, serializers);
 				}
 			});
 		}

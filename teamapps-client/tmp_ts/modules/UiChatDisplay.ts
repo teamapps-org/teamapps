@@ -31,7 +31,7 @@ import {UiComponent} from "./UiComponent";
 import {DtoChatMessageBatch} from "../generated/DtoChatMessageBatch";
 import {debounce, debouncedMethod, DebounceMode} from "./util/debounce";
 
-export class UiChatDisplay extends AbstractComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
+export class UiChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
 
 	private $main: HTMLElement;
 	private gotFirstMessage: boolean = false;
@@ -41,8 +41,8 @@ export class UiChatDisplay extends AbstractComponent<DtoChatDisplay> implements 
 	private $messages: HTMLElement;
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoChatDisplay) {
-		super(config);
+	constructor(config: DtoChatDisplay, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="UiChatDisplay">
 	<style> [data-teamapps-id=${config.id}] .message.deleted .deleted-icon {
 		background-image: url('${config.deletedMessageIcon}');				

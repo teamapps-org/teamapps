@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.DtoJsonWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoObject;
 
 /**

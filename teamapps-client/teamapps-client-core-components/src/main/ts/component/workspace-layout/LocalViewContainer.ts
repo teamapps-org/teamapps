@@ -71,7 +71,6 @@ export class LocalViewContainer implements ViewContainer {
 	            public readonly windowId: string,
 	            viewConfigs: DtoWorkSpaceLayoutView[],
 	            initialLayout: DtoWorkSpaceLayoutItem,
-	            private context: TeamAppsUiContext,
 	            private listener: ViewContainerListener,
 	            multiProgressDisplay: MultiProgressDisplay) {
 		this.$mainDiv = parseHtml(`<div data-id="${this.workSpaceLayoutId}" class="WorkSpaceLayout">
@@ -135,7 +134,7 @@ export class LocalViewContainer implements ViewContainer {
 					}
 					e.dataTransfer.effectAllowed = 'move';
 					let data: DtoWorkspaceLayoutDndDataTransfer = {
-						sourceUiSessionId: this.context.sessionId,
+						// sourceUiSessionId: this.context.sessionId, // TODO replace with workspace layout uuid to uniquely identify the workspace layout, even inside a session!
 						sourceWorkspaceLayoutId: this.workSpaceLayoutId,
 						sourceWindowId: this.windowId,
 						viewName: viewName,
@@ -216,7 +215,7 @@ export class LocalViewContainer implements ViewContainer {
 			let dataTransferString = e.dataTransfer.getData(LocalViewContainer.DND_MIME_TYPE);
 			if (dropPosition && dataTransferString != null) {
 				let dataTransfer = JSON.parse(dataTransferString) as DtoWorkspaceLayoutDndDataTransfer;
-				if (this.context.sessionId === dataTransfer.sourceUiSessionId && dataTransfer.sourceWorkspaceLayoutId === this.workSpaceLayoutId) {
+				if ( /* TODO this.context.sessionId === dataTransfer.sourceUiSessionId && */ dataTransfer.sourceWorkspaceLayoutId === this.workSpaceLayoutId) {
 					if (dataTransfer.sourceWindowId === this.windowId) {
 						if (dropPosition.tabPanel) {
 							if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {

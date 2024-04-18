@@ -25,7 +25,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.protocol.DtoSessionClosingReason;
+import org.teamapps.dto.protocol.server.SessionClosingReason;
 import org.teamapps.uisession.TeamAppsSessionManager;
 import org.teamapps.uisession.UiSession;
 
@@ -47,7 +47,7 @@ public class LeaveBeaconServlet extends HttpServlet {
 		LOGGER.debug("Got leaving beacon for teamapps session id: " + uiSessionId);
 		UiSession uiSession = uiSessionManager.getUiSessionById(uiSessionId);
 		if (uiSession != null) {
-			uiSession.close(DtoSessionClosingReason.TERMINATED_BY_CLIENT);
+			uiSession.close(SessionClosingReason.TERMINATED_BY_CLIENT);
 		}
 	}
 }

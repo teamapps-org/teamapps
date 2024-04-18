@@ -169,7 +169,7 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<DtoIdentifiab
 	}
 }
 
-export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> implements DtoInfiniteItemViewCommandHandler, DtoInfiniteItemViewEventSource {
+export class UiInfiniteItemView extends AbstractLegacyComponent<DtoInfiniteItemView> implements DtoInfiniteItemViewCommandHandler, DtoInfiniteItemViewEventSource {
 
 
 	public readonly onDisplayedRangeChanged: TeamAppsEvent<DtoInfiniteItemView_DisplayedRangeChangedEvent> = new TeamAppsEvent();
@@ -188,8 +188,8 @@ export class UiInfiniteItemView extends AbstractComponent<DtoInfiniteItemView> i
 	private verticalItemAlignment: UiVerticalItemAlignment;
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoInfiniteItemView) {
-		super(config);
+	constructor(config: DtoInfiniteItemView, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.uuid = generateUUID();
 		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.uuid}">
                 <div class="slickgrid"></div>

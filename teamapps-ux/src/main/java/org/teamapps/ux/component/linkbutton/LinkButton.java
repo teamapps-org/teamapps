@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.linkbutton;
 
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoLinkButton;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -46,7 +46,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	@Override
-	public DtoLinkButton createDto() {
+	public DtoLinkButton createConfig() {
 		DtoLinkButton ui = new DtoLinkButton();
 		mapAbstractUiComponentProperties(ui);
 		ui.setText(text);
@@ -57,7 +57,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoLinkButton.ClickedEvent.TYPE_ID -> {
 				onClicked.fire();
@@ -66,7 +66,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoLinkButton.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoLinkButton.UpdateCommand(createConfig()));
 	}
 
 	public String getText() {

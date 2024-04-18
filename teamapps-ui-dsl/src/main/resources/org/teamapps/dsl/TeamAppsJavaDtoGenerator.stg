@@ -20,7 +20,7 @@
 class(c) ::= <<
 <javaFilePrelude(c.packageName)>
 
-<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.dtoName>;}; separator="\n">
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
 
 @JsonTypeName("<c.name>")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -80,7 +80,7 @@ public List\<String\> getQueryNames() {
 interface(c) ::= <<
 <javaFilePrelude(c.packageName)>
 
-<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.dtoName>;}; separator="\n">
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
 
 @JsonTypeName("<c.name>")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -133,7 +133,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.DtoJsonWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoObject;
 
 /**
@@ -245,7 +245,7 @@ enumConstant(ec, stringEnum) ::= <<
 >>
 
 eventClass(ed) ::= <<
-public static class <ed.name; format="cap">Event implements DtoEvent {
+public static class <ed.name; format="cap">Event {
 
     public static final String TYPE_ID = "<ed.declaringClass.name>.<ed.name>";
 
@@ -272,7 +272,7 @@ public static class <ed.name; format="cap">Event implements DtoEvent {
 >>
 
 queryClass(qd) ::= <<
-public static class <qd.name; format="cap">Query implements DtoQuery {
+public static class <qd.name; format="cap">Query {
 
     public static final String TYPE_ID = "<qd.declaringClass.name>.<qd.name>";
 
@@ -294,7 +294,9 @@ commandClass(cmd) ::= <<
 @JsonTypeName("<cmd.declaringClass.name>.<cmd.name>")
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
 @JsonPropertyOrder({<cmd.allProperties:{p|"<p.name>"}; separator=", ">})
-public static class <cmd.name; format="cap">Command implements DtoCommand\<<if(cmd.type)><cmd.type.javaNonPrimitiveTypeString><else>Void<endif>\> {
+public static class <cmd.name; format="cap">Command {
+
+    public static final String CMD_NAME = "<cmd.name>";
 
 	<cmd.allProperties:fieldDeclaration(); separator="\n">
 
@@ -304,15 +306,23 @@ public static class <cmd.name; format="cap">Command implements DtoCommand\<<if(c
 
 	<cmd.allProperties:getter(); separator="\n\n">
 
+	<cmdParametersGetter(cmd)>
+
+}
+>>
+
+cmdParametersGetter(cmd) ::= <<
+public Object[] getParameters() {
+    return new Object[] {<cmd.allProperties:{p|<p.name>}; separator=", ">};
 }
 >>
 
 jsonWrapper(c) ::= <<
 <javaFilePrelude(c.packageName)>
 
-<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.dtoName>;}; separator="\n">
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
 
-public class <c.javaClassName>Wrapper extends <if(c.superClass)>Dto<c.superClass.name>Wrapper<else>DtoJsonWrapper<endif> {
+public class <c.javaClassName>Wrapper extends <if(c.superClass)>Dto<c.superClass.name>Wrapper<else>JsonWrapper<endif> {
 
     public static final String TYPE_ID = "<c.name>";
 
@@ -325,7 +335,7 @@ public class <c.javaClassName>Wrapper extends <if(c.superClass)>Dto<c.superClass
 >>
 
 eventJsonWrapper(c) ::= <<
-public static class <c.javaClassName>Wrapper extends DtoJsonWrapper {
+public static class <c.javaClassName>Wrapper extends JsonWrapper {
 
     public static final String TYPE_ID = "<c.name>";
 
@@ -388,7 +398,7 @@ return <variableName>.textValue();
 <elseif (type.isPrimitiveOrWrapperType)>
 return <variableName>.as<type.primitiveTypeName; format="cap">();
 <elseif (type.isObjectReference)>
-return new DtoJsonWrapper(node);
+return new JsonWrapper(node);
 <else>
 if (!<variableName>.isObject()) {
     throw new IllegalArgumentException("<variableName> must be an object!");

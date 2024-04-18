@@ -23,7 +23,7 @@ import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoElegantPanel;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.format.HorizontalElementAlignment;
 import org.teamapps.ux.format.Spacing;
@@ -45,11 +45,11 @@ public class ElegantPanel extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoElegantPanel uiElegantPanel = new DtoElegantPanel();
 		mapAbstractUiComponentProperties(uiElegantPanel);
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);
-		uiElegantPanel.setContent(content.createDtoReference());
+		uiElegantPanel.setContent(content.createClientReference());
 		uiElegantPanel.setMaxContentWidth(maxContentWidth);
 		uiElegantPanel.setPadding(padding.createUiSpacing());
 		uiElegantPanel.setHorizontalContentAlignment(horizontalContentAlignment.toUiHorizontalElementAlignment());
@@ -57,7 +57,7 @@ public class ElegantPanel extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 
 	}
 

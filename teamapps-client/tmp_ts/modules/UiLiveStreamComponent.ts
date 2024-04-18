@@ -39,7 +39,7 @@ import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
 
-export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamComponent> implements DtoLiveStreamComponentCommandHandler, DtoLiveStreamComponentEventSource {
+export class UiLiveStreamComponent extends AbstractLegacyComponent<DtoLiveStreamComponent> implements DtoLiveStreamComponentCommandHandler, DtoLiveStreamComponentEventSource {
 
 	public readonly onResultOfRequestInputDeviceAccess: TeamAppsEvent<DtoLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent> = new TeamAppsEvent<DtoLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent>();
 	public readonly onResultOfRequestInputDeviceInfo: TeamAppsEvent<DtoLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent> = new TeamAppsEvent<DtoLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent>();
@@ -68,8 +68,8 @@ export class UiLiveStreamComponent extends AbstractComponent<DtoLiveStreamCompon
 	private volume: number;
 
 
-	constructor(config: DtoLiveStreamComponent) {
-		super(config);
+	constructor(config: DtoLiveStreamComponent, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.volume = config.volume;
 

@@ -129,16 +129,16 @@ public class ToolbarButton {
 		Template template = getAppliedTemplate();
 		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getPropertyNames());
 
-		DtoToolbarButton ui = new DtoToolbarButton(clientId, template.createDtoReference(), values);
+		DtoToolbarButton ui = new DtoToolbarButton(clientId, template.createClientReference(), values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
-			ui.setDropDownComponent(dropDownComponentSupplier.get().createDtoReference());
+			ui.setDropDownComponent(dropDownComponentSupplier.get().createClientReference());
 		}
 		ui.setHasDropDown(this.dropDownComponentSupplier != null);
 		ui.setDropDownPanelWidth(droDownPanelWidth > 0 ? droDownPanelWidth : 450);
 		ui.setVisible(visible);
 		ui.setOpenNewTabWithUrl(openNewTabWithUrl);
-		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.createDtoReference() : null);
-		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createDtoReference() : null);
+		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.createClientReference() : null);
+		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createClientReference() : null);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setHoverBackgroundColor(hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null);
 		ui.setDebuggingId(debuggingId);

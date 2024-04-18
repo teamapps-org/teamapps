@@ -28,7 +28,7 @@ import * as d3 from "d3"
 import {UiDataPointWeighting} from '../generated/UiDataPointWeighting';
 import {UiChartLegendStyle} from "../generated/UiChartLegendStyle";
 
-export class UiPieChart extends AbstractComponent<DtoPieChart> implements DtoPieChartCommandHandler, DtoPieChartEventSource {
+export class UiPieChart extends AbstractLegacyComponent<DtoPieChart> implements DtoPieChartCommandHandler, DtoPieChartEventSource {
 
 	readonly onDataPointClicked: TeamAppsEvent<DtoPieChart_DataPointClickedEvent> = new TeamAppsEvent();
 
@@ -36,8 +36,8 @@ export class UiPieChart extends AbstractComponent<DtoPieChart> implements DtoPie
 	config: DtoPieChart;
 
 
-	constructor(config: DtoPieChart) {
-		super(config);
+	constructor(config: DtoPieChart, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.config = config;
 		this.createChart();
 	}

@@ -74,7 +74,7 @@ export function isUiMapRectangle(shapeConfig: DtoAbstractMapShape): shapeConfig 
 	return shapeConfig._type === "UiMapRectangle";
 }
 
-export class UiMap extends AbstractComponent<DtoMap> implements DtoMapCommandHandler, DtoMapEventSource {
+export class UiMap extends AbstractLegacyComponent<DtoMap> implements DtoMapCommandHandler, DtoMapEventSource {
 
 	public readonly onZoomLevelChanged: TeamAppsEvent<DtoMap_ZoomLevelChangedEvent> = new TeamAppsEvent();
 	public readonly onLocationChanged: TeamAppsEvent<DtoMap_LocationChangedEvent> = new TeamAppsEvent();
@@ -98,8 +98,8 @@ export class UiMap extends AbstractComponent<DtoMap> implements DtoMapCommandHan
 	private drawPolylineFeature: L.Draw.Polyline;
 	private drawRectangleFeature: L.Draw.Rectangle;
 
-	constructor(config: DtoMap) {
-		super(config);
+	constructor(config: DtoMap, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$map = parseHtml('<div class="UiMap">');
 		this.id = this.getId();
 		this.createLeafletMap();

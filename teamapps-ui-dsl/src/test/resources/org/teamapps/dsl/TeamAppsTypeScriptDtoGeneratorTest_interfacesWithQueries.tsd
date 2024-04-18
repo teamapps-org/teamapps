@@ -3,8 +3,7 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoReference} from "teamapps-client-communication";
-import {DtoQuery} from "teamapps-client-communication";
+import {DtoClientObject} from "teamapps-client-core";
 
 export interface DtoX {
 	_type?: string;
@@ -12,6 +11,6 @@ export interface DtoX {
 }
 
 
-export interface DtoX_QueryEntriesQuery extends DtoQuery {
+export interface DtoX_QueryEntriesQuery {
 	x: number
 }

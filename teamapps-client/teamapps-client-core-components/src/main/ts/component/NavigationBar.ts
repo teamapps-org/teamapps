@@ -18,7 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
+import {
+	AbstractLegacyComponent,
+	Component,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent,
+	TeamAppsUiContext,
+	Template
+} from "teamapps-client-core";
 import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins} from "../Common";
 import {
 	DtoNavigationBar,
@@ -37,7 +45,7 @@ interface Button {
 	$button: HTMLElement;
 }
 
-export class NavigationBar extends AbstractComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
+export class NavigationBar extends AbstractLegacyComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
 
 	public readonly onButtonClicked: TeamAppsEvent<DtoNavigationBar_ButtonClickedEvent> = new TeamAppsEvent();
 	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent();
@@ -53,8 +61,8 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 	private multiProgressDisplay: MultiProgressDisplay;
 	private $multiProgressDisplayContainer: HTMLElement;
 
-	constructor(config: DtoNavigationBar) {
-		super(config);
+	constructor(config: DtoNavigationBar, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this.$bar = parseHtml(`<div class="NavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>
@@ -104,7 +112,7 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 		$button.addEventListener("click", () => {
 			this.onButtonClicked.fire({
 				buttonId: button.id,
-				visibleFanOutComponentId: this.currentFanOutComponent && (this.currentFanOutComponent as AbstractComponent).getId()
+				visibleFanOutComponentId: this.currentFanOutComponent && (this.currentFanOutComponent as AbstractLegacyComponent).getId()
 			});
 		});
 		this.buttons[button.id] = {

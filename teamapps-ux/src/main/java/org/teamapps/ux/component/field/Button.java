@@ -22,7 +22,7 @@ package org.teamapps.ux.component.field;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoButton;
 import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.ClientObject;
@@ -92,11 +92,11 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	@Override
-	public DtoAbstractField createDto() {
+	public DtoAbstractField createConfig() {
 		Object uiRecord = createUiRecord();
-		DtoButton ui = new DtoButton(template != null ? template.createDtoReference() : null, uiRecord);
+		DtoButton ui = new DtoButton(template != null ? template.createClientReference() : null, uiRecord);
 		mapAbstractFieldAttributesToUiField(ui);
-		ui.setDropDownComponent(ClientObject.createDtoReference(dropDownComponent));
+		ui.setDropDownComponent(ClientObject.createClientReference(dropDownComponent));
 		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		ui.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		ui.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
@@ -115,8 +115,8 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
+	public void handleUiEvent(String name, JsonWrapper params) {
+		super.handleUiEvent(name, params);
 		switch (event.getTypeId()) {
 			case DtoButton.ClickedEvent.TYPE_ID -> {
 				var e = event.as(DtoButton.ClickedEventWrapper.class);
@@ -135,7 +135,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setTemplate(Template template) {
 		this.template = template;
-		sendCommandIfRendered(() -> new DtoButton.SetTemplateCommand(template.createDtoReference(), createUiRecord()));
+		sendCommandIfRendered(() -> new DtoButton.SetTemplateCommand(template.createClientReference(), createUiRecord()));
 		return this;
 	}
 
@@ -209,7 +209,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setDropDownComponent(org.teamapps.ux.component.Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		sendCommandIfRendered(() -> new DtoButton.SetDropDownComponentCommand(ClientObject.createDtoReference(dropDownComponent)));
+		sendCommandIfRendered(() -> new DtoButton.SetDropDownComponentCommand(ClientObject.createClientReference(dropDownComponent)));
 		return this;
 	}
 

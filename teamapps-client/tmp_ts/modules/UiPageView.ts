@@ -52,13 +52,13 @@ interface Block {
 	block: AbstractBlockComponent<DtoPageViewBlock>;
 }
 
-export class UiPageView extends AbstractComponent<DtoPageView> {
+export class UiPageView extends AbstractLegacyComponent<DtoPageView> {
 
 	private $component: HTMLElement;
 	private rows: Row[] = [];
 
-	constructor(config: DtoPageView) {
-		super(config);
+	constructor(config: DtoPageView, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$component = parseHtml(`<div class="UiPageView"></div>`);
 
 		if (config.blocks) {
@@ -190,8 +190,8 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<DtoMessagePageViewBl
 
 	private readonly minIdealImageHeight = 250;
 
-	constructor(config: DtoMessagePageViewBlock) {
-		super(config);
+	constructor(config: DtoMessagePageViewBlock, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="pageview-block UiMessagePageViewBlock">
 	<div class="tool-buttons"></div>
@@ -274,8 +274,8 @@ class UiCitationPageViewBlock extends AbstractBlockComponent<DtoCitationPageView
 	private $main: HTMLElement;
 	private $toolButtons: Element;
 
-	constructor(config: DtoCitationPageViewBlock) {
-		super(config);
+	constructor(config: DtoCitationPageViewBlock, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="pageview-block UiCitationPageViewBlock">
     <div class="tool-buttons"></div>
@@ -319,8 +319,8 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<DtoComponentPageVi
 	private $componentWrapper: HTMLElement;
 	private $toolButtons: Element;
 
-	constructor(config: DtoComponentPageViewBlock) {
-		super(config);
+	constructor(config: DtoComponentPageViewBlock, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="pageview-block UiComponentPageViewBlock" style="height:${config.height}px">
 	<div class="tool-buttons"></div>

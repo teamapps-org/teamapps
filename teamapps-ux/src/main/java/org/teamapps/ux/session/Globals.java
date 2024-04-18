@@ -17,7 +17,7 @@ public final class Globals implements ClientObject {
 	}
 
 	@Override
-	public DtoClientObject createDto() {
+	public DtoClientObject createConfig() {
 		return null;
 	}
 }

@@ -27,7 +27,7 @@ import {
 	DtoNotificationEventSource,
 	DtoNotificationPosition
 } from "../generated";
-import {AbstractComponent, Component, parseHtml, TeamAppsEvent, executeWhenFirstDisplayed} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, TeamAppsEvent, executeWhenFirstDisplayed, ServerObjectChannel} from "teamapps-client-core";
 import {animateCSS, Constants} from "../Common";
 import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";
@@ -118,7 +118,7 @@ export function showNotification(notification: Notification, position: DtoNotifi
 	setTimeout(() => notification.startCloseTimeout());
 }
 
-export class Notification extends AbstractComponent<DtoNotification> implements DtoNotificationCommandHandler, DtoNotificationEventSource {
+export class Notification extends AbstractLegacyComponent<DtoNotification> implements DtoNotificationCommandHandler, DtoNotificationEventSource {
 
 	public readonly onOpened: TeamAppsEvent<DtoNotification_OpenedEvent> = new TeamAppsEvent();
 	public readonly onClosed: TeamAppsEvent<DtoNotification_ClosedEvent> = new TeamAppsEvent();
@@ -129,8 +129,8 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: DtoNotification) {
-		super(config);
+	constructor(config: DtoNotification, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="Notification">
 	<div class="close-button"></div>

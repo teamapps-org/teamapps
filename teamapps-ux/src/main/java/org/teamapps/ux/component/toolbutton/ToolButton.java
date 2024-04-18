@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.toolbutton;
 
 import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoToolButton;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -70,14 +70,14 @@ public class ToolButton extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		String icon = getSessionContext().resolveIcon(this.icon);
 		DtoToolButton uiToolButton = new DtoToolButton(icon, popoverText);
 		uiToolButton.setIconSize(iconSize);
 		uiToolButton.setCaption(caption);
 		mapAbstractUiComponentProperties(uiToolButton);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
-		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createDtoReference() : null);
+		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createClientReference() : null);
 		uiToolButton.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight);
@@ -85,7 +85,7 @@ public class ToolButton extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoToolButton.ClickedEvent.TYPE_ID -> {
 				var e = event.as(DtoToolButton.ClickedEventWrapper.class);
@@ -149,7 +149,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setDropDownComponent(org.teamapps.ux.component.Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		sendCommandIfRendered(() -> new DtoToolButton.SetDropDownComponentCommand(dropDownComponent != null ? dropDownComponent.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoToolButton.SetDropDownComponentCommand(dropDownComponent != null ? dropDownComponent.createClientReference() : null));
 	}
 
 	public Integer getMinDropDownWidth() {

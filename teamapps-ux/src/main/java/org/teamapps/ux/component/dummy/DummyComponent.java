@@ -21,7 +21,7 @@ package org.teamapps.ux.component.dummy;
 
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoDummyComponent;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -43,7 +43,7 @@ public class DummyComponent extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoDummyComponent dummyComponent = new DtoDummyComponent();
 		mapAbstractUiComponentProperties(dummyComponent);
 		dummyComponent.setText(text);
@@ -51,7 +51,7 @@ public class DummyComponent extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoDummyComponent.ClickedEvent.TYPE_ID -> {
 				onClick.fire(null);

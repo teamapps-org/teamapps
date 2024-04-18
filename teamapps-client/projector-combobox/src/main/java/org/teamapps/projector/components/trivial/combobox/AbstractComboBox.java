@@ -21,9 +21,9 @@ package org.teamapps.projector.components.trivial.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoTextInputHandlingField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.dto.protocol.DtoQueryWrapper;
+import org.teamapps.dto.protocol.client.QueryWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoComboBox;
 import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
@@ -115,8 +115,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
+	public void handleUiEvent(String name, JsonWrapper params) {
+		super.handleUiEvent(name, params);
 		switch (event.getTypeId()) {
 			case DtoTextInputHandlingField.TextInputEvent.TYPE_ID -> {
 				var textInputEvent = event.as(DtoTextInputHandlingField.TextInputEventWrapper.class);
@@ -131,7 +131,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	@Override
-	public Object handleUiQuery(DtoQueryWrapper query) {
+	public Object handleUiQuery(QueryWrapper query) {
 		switch (query.getTypeId()) {
 			case DtoComboBox.RetrieveDropdownEntriesQuery.TYPE_ID -> {
 				var q = query.as(DtoComboBox.RetrieveDropdownEntriesQueryWrapper.class);
@@ -167,7 +167,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 			}
 
 		}
-		return super.handleUiQuery(query);
+		return super.handleQuery(query);
 	}
 
 	private List<RECORD> filterOutSelected(List<RECORD> resultRecords) {
@@ -196,8 +196,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		DtoComboBoxTreeRecord uiTreeRecord = new DtoComboBoxTreeRecord();
 		uiTreeRecord.setValues(values);
 
-		uiTreeRecord.setDisplayTemplate(displayTemplate != null ? displayTemplate.createDtoReference(): null);
-		uiTreeRecord.setDropDownTemplate(dropdownTemplate != null ? dropdownTemplate.createDtoReference(): null);
+		uiTreeRecord.setDisplayTemplate(displayTemplate != null ? displayTemplate.createClientReference(): null);
+		uiTreeRecord.setDropDownTemplate(dropdownTemplate != null ? dropdownTemplate.createClientReference(): null);
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);

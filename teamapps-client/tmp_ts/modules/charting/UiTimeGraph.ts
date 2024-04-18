@@ -60,7 +60,7 @@ import {DtoHoseGraphData} from "../../generated/DtoHoseGraphData";
 
 export const yTickFormat = d3.format("-,.2s");
 
-export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTimeGraphCommandHandler, DtoTimeGraphEventSource {
+export class UiTimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implements DtoTimeGraphCommandHandler, DtoTimeGraphEventSource {
 
 	public readonly onIntervalSelected: TeamAppsEvent<DtoTimeGraph_IntervalSelectedEvent> = new TeamAppsEvent<DtoTimeGraph_IntervalSelectedEvent>();
 	public readonly onZoomed: TeamAppsEvent<DtoTimeGraph_ZoomedEvent> = new TeamAppsEvent<DtoTimeGraph_ZoomedEvent>();
@@ -114,8 +114,8 @@ export class UiTimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoT
 		return this.getAllSeries().reduce((sum, s) => sum + (s.getYAxis()?.getWidth() ?? 0), 0);
 	}
 
-	constructor(config: DtoTimeGraph) {
-		super(config);
+	constructor(config: DtoTimeGraph, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		const me = this;
 		this.graphContext = {

@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.flexcontainer;
 
 import org.teamapps.dto.DtoFlexContainer;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -43,11 +43,11 @@ public class FlexContainer extends AbstractComponent {
 	private CssJustifyContent justifyContent = CssJustifyContent.START;
 
 	@Override
-	public DtoFlexContainer createDto() {
+	public DtoFlexContainer createConfig() {
 		DtoFlexContainer uiFlexContainer = new DtoFlexContainer();
 		mapAbstractUiComponentProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()
-				.map(c -> c.createDtoReference())
+				.map(c -> c.createClientReference())
 				.collect(Collectors.toList()));
 		uiFlexContainer.setFlexDirection(flexDirection.toDto());
 		uiFlexContainer.setAlignItems(alignItems.toDto());
@@ -57,7 +57,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void addComponent(org.teamapps.ux.component.Component component) {
 		this.components.add(component);
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createDtoReference()).toList()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()));
 	}
 
 	public void addComponent(org.teamapps.ux.component.Component component, FlexSizingPolicy sizingPolicy) {
@@ -67,7 +67,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void removeComponent(org.teamapps.ux.component.Component component) {
 		this.components.remove(component);
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createDtoReference()).toList()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()));
 	}
 
 	public void removeAllComponents() {
@@ -77,11 +77,11 @@ public class FlexContainer extends AbstractComponent {
 
 	public void setComponents(List<Component> components) {
 		this.components = new ArrayList<>(components);
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createDtoReference()).toList()));
+		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()));
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 
 	}
 

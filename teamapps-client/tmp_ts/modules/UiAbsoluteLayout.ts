@@ -37,13 +37,13 @@ const animationEasingCssValues = {
 	[UiAnimationEasing.STEP_END]: "step-end"
 };
 
-export class UiAbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
+export class UiAbsoluteLayout extends AbstractLegacyComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 	private $style: HTMLStyleElement;
 	private components: DtoAbsolutePositionedComponent[];
 
-	constructor(config: DtoAbsoluteLayout) {
-		super(config);
+	constructor(config: DtoAbsoluteLayout, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="UiAbsoluteLayout" data-teamapps-id="${this.getId()}">
 	<style></style>
 </div>`);

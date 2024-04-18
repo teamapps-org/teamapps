@@ -52,7 +52,7 @@ import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
 import {DtoShakaManifest} from "../generated/DtoShakaManifest";
 import Manifest = shaka.extern.Manifest;
 
-export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
+export class UiShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
 
 	public readonly onManifestLoaded: TeamAppsEvent<DtoShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();
 	public readonly onTimeUpdate: TeamAppsEvent<DtoShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
@@ -65,8 +65,8 @@ export class UiShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements 
 
 	private ui: Overlay;
 
-	constructor(config: DtoShakaPlayer) {
-		super(config);
+	constructor(config: DtoShakaPlayer, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		console.log(config.hlsUrl, config.dashUrl, config.posterImageUrl)
 

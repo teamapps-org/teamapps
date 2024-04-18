@@ -28,13 +28,13 @@ import {LinearGauge, RadialGauge} from "canvas-gauges";
 import {debouncedMethod, DebounceMode} from "./util/debounce";
 import {parseHtml} from "./Common";
 
-export class UiGauge extends AbstractComponent<DtoGauge> implements DtoGaugeCommandHandler {
+export class UiGauge extends AbstractLegacyComponent<DtoGauge> implements DtoGaugeCommandHandler {
 	private $main: HTMLElement;
 	private gauge: LinearGauge;
 	private value: number;
 
-	constructor(config: DtoGauge) {
-		super(config);
+	constructor(config: DtoGauge, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="UiGauge" data-teamapps-id="${this.getId()}"><canvas></canvas></div>`);
 		this.value = config.options.value;
 		this.createGauge();

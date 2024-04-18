@@ -21,7 +21,7 @@ package org.teamapps.ux.component.html;
 
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoHtmlView;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
 
@@ -50,12 +50,12 @@ public class HtmlView extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoHtmlView ui = new DtoHtmlView();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHtml(html);
 		ui.setComponentsByContainerElementSelector(componentsByContainerElementSelector.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(c -> c.createDtoReference()).collect(Collectors.toList()))));
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(c -> c.createClientReference()).collect(Collectors.toList()))));
 		ui.setContentHtmlByContainerElementSelector(contentHtmlByContainerElementSelector.entrySet().stream()
 				.filter(entry -> entry.getValue() != null) // Map.copyOf() does not support null values!
 				.collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue)));
@@ -63,7 +63,7 @@ public class HtmlView extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 
 	}
 
@@ -82,12 +82,12 @@ public class HtmlView extends AbstractComponent {
 	public void addComponent(String containerSelector, org.teamapps.ux.component.Component component, boolean clearContainer) {
 		this.componentsByContainerElementSelector.computeIfAbsent(containerSelector, s -> new ArrayList<>())
 				.add(component);
-		this.sendCommandIfRendered(() -> new DtoHtmlView.AddComponentCommand(containerSelector, component.createDtoReference(), clearContainer));
+		this.sendCommandIfRendered(() -> new DtoHtmlView.AddComponentCommand(containerSelector, component.createClientReference(), clearContainer));
 	}
 
 	public void removeComponent(org.teamapps.ux.component.Component component) {
 		componentsByContainerElementSelector.entrySet().removeIf(entry -> entry.getValue() == component);
-		this.sendCommandIfRendered(() -> new DtoHtmlView.RemoveComponentCommand(component.createDtoReference()));
+		this.sendCommandIfRendered(() -> new DtoHtmlView.RemoveComponentCommand(component.createClientReference()));
 	}
 
 	public void setContentHtml(String containerElementSelector, String html) {

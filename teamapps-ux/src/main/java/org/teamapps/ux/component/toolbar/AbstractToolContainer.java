@@ -21,8 +21,8 @@ package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoAbstractToolContainer;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoToolbar;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -31,6 +31,7 @@ import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.ux.session.SessionContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoAbstractToolContainer.ToolbarButtonClickEvent.TYPE_ID -> {
 				var clickEvent = event.as(DtoAbstractToolContainer.ToolbarButtonClickEventWrapper.class);
@@ -58,8 +59,9 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 					if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
 						Component dropdownComponent = button.getDropDownComponent();
 						if (dropdownComponent != null) {
-							getSessionContext().sendCommandIfRendered(this, new DtoToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
-									clickEvent.getButtonId(), dropdownComponent.createDtoReference()));
+							SessionContext sessionContext = getSessionContext();
+							sessionContext.sendCommandIfRendered(this, new DtoToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
+														clickEvent.getButtonId(), dropdownComponent.createClientReference()), null);
 						}
 					}
 					button.onClick.fire(new ToolbarButtonClickEvent(clickEvent.getDropDownClickInfo().getIsOpening(), clickEvent.getDropDownClickInfo().getIsContentSet()));
@@ -121,7 +123,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	protected void handleButtonSetDropDownComponent(ToolbarButtonGroup group, ToolbarButton button, Component component) {
-		sendCommandIfRendered(() -> new DtoToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createClientReference()));
 	}
 
 	protected void handleCloseDropdown(ToolbarButtonGroup group, ToolbarButton button) {

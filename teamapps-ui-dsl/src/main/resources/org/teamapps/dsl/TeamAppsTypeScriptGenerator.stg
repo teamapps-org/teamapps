@@ -27,7 +27,7 @@ typeScriptFilePrelude() ::= <<
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsPackageName>";}; separator="\n">
+<c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsPackageName>";}; separator="\n">
 <if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface Dto<c.typeScriptIdentifier> <if(c.superTypes)>extends <c.superTypes:{c|Dto<c.typeScriptIdentifier>};  separator=", "> <endif>{
@@ -78,13 +78,13 @@ on<evt.name; format="cap">: EventEmitter\<<evt.typeScriptInterfaceName>\>;
 >>
 
 eventInterface(evt) ::= <<
-export interface <evt.typeScriptInterfaceName> extends DtoEvent {
+export interface <evt.typeScriptInterfaceName> {
 	<evt.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
 queryInterface(q) ::= <<
-export interface <q.typeScriptInterfaceName> extends DtoQuery {
+export interface <q.typeScriptInterfaceName> {
 	<q.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
@@ -94,7 +94,7 @@ parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptTy
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.effectiveTypeScriptImports:{im|import {<im.dtoName>\} from "<im.jsPackageName>";}; separator="\n">
+<c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsPackageName>";}; separator="\n">
 <if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface Dto<c.typeScriptIdentifier> <if(c.interfaces)>extends <c.interfaces:{superInterface|Dto<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{

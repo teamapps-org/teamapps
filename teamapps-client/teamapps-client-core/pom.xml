@@ -46,9 +46,7 @@
                 </executions>
                 <configuration>
                     <jsResourcesTargetClassPath>org/teamapps/projector/core/resources/js</jsResourcesTargetClassPath>
-                    <dtoDependencies>
-                        <dependency>org.teamapps:teamapps-client-communication:${project.version}</dependency>
-                    </dtoDependencies>
+                    <dtoDependencies></dtoDependencies>
                 </configuration>
             </plugin>
             <plugin>

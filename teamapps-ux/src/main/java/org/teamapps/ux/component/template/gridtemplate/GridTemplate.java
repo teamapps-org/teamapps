@@ -241,7 +241,7 @@ public class GridTemplate extends AbstractTemplate {
 	}
 
 	@Override
-	public DtoTemplate createDto() {
+	public DtoTemplate createConfig() {
 		List<DtoGridColumn> uiColumns = columns.stream()
 				.map(column -> column != null ? column.createUiGridColumn() : null)
 				.collect(Collectors.toList());

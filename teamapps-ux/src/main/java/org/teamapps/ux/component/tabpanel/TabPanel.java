@@ -20,9 +20,9 @@
 package org.teamapps.ux.component.tabpanel;
 
 import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoTab;
 import org.teamapps.dto.DtoTabPanel;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -112,7 +112,7 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 
 	private void updateToolButtons() {
 		sendCommandIfRendered(() -> new DtoTabPanel.SetToolButtonsCommand(this.toolButtons.stream()
-				.map(toolButton -> toolButton.createDtoReference())
+				.map(toolButton -> toolButton.createClientReference())
 				.collect(Collectors.toList())));
 	}
 
@@ -139,7 +139,7 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoTabPanel uiTabPanel = new DtoTabPanel();
 		mapAbstractUiComponentProperties(uiTabPanel);
 		List<DtoTab> uiTabs = tabs.stream()
@@ -150,7 +150,7 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 		uiTabPanel.setHideTabBarIfSingleTab(hideTabBarIfSingleTab);
 		uiTabPanel.setTabStyle(tabStyle.toUiTabPanelTabStyle());
 		uiTabPanel.setToolButtons(toolButtons.stream()
-				.map(toolButton -> (toolButton.createDtoReference()))
+				.map(toolButton -> (toolButton.createClientReference()))
 				.collect(Collectors.toList()));
 		return uiTabPanel;
 	}
@@ -162,7 +162,7 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoTabPanel.TabSelectedEvent.TYPE_ID -> {
 				var tabSelectedEvent = event.as(DtoTabPanel.TabSelectedEventWrapper.class);
@@ -184,7 +184,7 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 			case DtoTabPanel.TabNeedsRefreshEvent.TYPE_ID -> {
 				var tabNeedsRefreshEvent = event.as(DtoTabPanel.TabNeedsRefreshEventWrapper.class);
 				Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
-				sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createDtoReference(tab.getContent())));
+				sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createClientReference(tab.getContent())));
 			}
 			case DtoTabPanel.TabClosedEvent.TYPE_ID -> {
 				var tabClosedEvent = event.as(DtoTabPanel.TabClosedEventWrapper.class);
@@ -204,11 +204,11 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 	}
 
 	/*package-private*/ void handleTabToolbarChanged(Tab tab) {
-		sendCommandIfRendered(() -> new DtoTabPanel.SetTabToolbarCommand(tab.getClientId(), ClientObject.createDtoReference(tab.getToolbar())));
+		sendCommandIfRendered(() -> new DtoTabPanel.SetTabToolbarCommand(tab.getClientId(), ClientObject.createClientReference(tab.getToolbar())));
 	}
 
 	/*package-private*/ void handleTabContentChanged(Tab tab) {
-		sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createDtoReference(tab.getContent())));
+		sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createClientReference(tab.getContent())));
 	}
 
 	/*package-private*/ void handleTabConfigurationChanged(Tab tab) {

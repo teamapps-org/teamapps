@@ -63,7 +63,7 @@ export var cssAlignItems = {
 	[UiVerticalElementAlignment.STRETCH]: "stretch"
 };
 
-export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2> implements DtoInfiniteItemView2CommandHandler, DtoInfiniteItemView2EventSource {
+export class UiInfiniteItemView2 extends AbstractLegacyComponent<DtoInfiniteItemView2> implements DtoInfiniteItemView2CommandHandler, DtoInfiniteItemView2EventSource {
 
 	public readonly onDisplayedRangeChanged: TeamAppsEvent<DtoInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent();
 	public readonly onItemClicked: TeamAppsEvent<DtoInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent();
@@ -80,8 +80,8 @@ export class UiInfiniteItemView2 extends AbstractComponent<DtoInfiniteItemView2>
 	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
 	private totalNumberOfRecords: number = null;
 
-	constructor(config: DtoInfiniteItemView2) {
-		super(config);
+	constructor(config: DtoInfiniteItemView2, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this.config.id}">
                 <div class="grid"></div>
                 <style></style>

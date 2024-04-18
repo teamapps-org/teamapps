@@ -25,7 +25,7 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {DtoHttpLiveStreamPlayer} from "../../generated/DtoHttpLiveStreamPlayer";
 import {parseHtml} from "../Common";
 
-export class UiHttpLiveStreamPlayer extends AbstractComponent<DtoHttpLiveStreamPlayer> implements LiveStreamPlayer {
+export class UiHttpLiveStreamPlayer extends AbstractLegacyComponent<DtoHttpLiveStreamPlayer> implements LiveStreamPlayer {
 	private $main: HTMLElement;
 	private $videoContainer: any;
 	private $notSupportedMessage: any;
@@ -35,8 +35,8 @@ export class UiHttpLiveStreamPlayer extends AbstractComponent<DtoHttpLiveStreamP
 	private $spinnerContainer: HTMLElement;
 	private resetTimer: number = null;
 
-	constructor(config: DtoHttpLiveStreamPlayer) {
-		super(config);
+	constructor(config: DtoHttpLiveStreamPlayer, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`
 <div class="HttpLiveStreamPlayer">
     <div class="not-supported-message">

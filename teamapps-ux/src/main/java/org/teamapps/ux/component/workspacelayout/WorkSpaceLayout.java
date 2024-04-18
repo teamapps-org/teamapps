@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.*;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -34,6 +33,7 @@ import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.ux.session.SessionContext;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -100,7 +100,7 @@ public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.u
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoWorkSpaceLayoutItem uiInitialLayout = getMainRootItem().createUiItem();
 		List<DtoWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
 				.map(WorkSpaceLayoutView::createUiView)
@@ -108,16 +108,16 @@ public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.u
 		DtoWorkSpaceLayout uiLayout = new DtoWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
 		mapAbstractUiComponentProperties(uiLayout);
 		if (toolbar != null) {
-			uiLayout.setToolbar(toolbar.createDtoReference());
+			uiLayout.setToolbar(toolbar.createClientReference());
 		}
 		uiLayout.setNewWindowBackgroundImage(newWindowBackgroundImage);
 		uiLayout.setNewWindowBlurredBackgroundImage(newWindowBlurredBackgroundImage);
-		uiLayout.setMultiProgressDisplay(ClientObject.createDtoReference(multiProgressDisplay));
+		uiLayout.setMultiProgressDisplay(ClientObject.createClientReference(multiProgressDisplay));
 		return uiLayout;
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoWorkSpaceLayout.LayoutChangedEvent.TYPE_ID -> {
 				var layoutChangedEvent = event.as(DtoWorkSpaceLayout.LayoutChangedEventWrapper.class);
@@ -134,7 +134,8 @@ public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.u
 				var needsRefreshEvent = event.as(DtoWorkSpaceLayout.ViewNeedsRefreshEventWrapper.class);
 				String viewName = needsRefreshEvent.getViewName();
 				WorkSpaceLayoutView view = getViewById(viewName);
-				getSessionContext().sendCommandIfRendered(this, new DtoWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()));
+				SessionContext sessionContext = getSessionContext();
+				sessionContext.sendCommandIfRendered(this, new DtoWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()), null);
 			}
 			case DtoWorkSpaceLayout.ChildWindowCreationFailedEvent.TYPE_ID -> {
 				var windowCreationFailedEvent = event.as(DtoWorkSpaceLayout.ChildWindowCreationFailedEventWrapper.class);
@@ -325,7 +326,7 @@ public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.u
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createClientReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

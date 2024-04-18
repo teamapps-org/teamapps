@@ -48,7 +48,7 @@ import {bind} from "./util/Bind";
 import {UiComponent} from "./UiComponent";
 import {DtoAbstractField} from "./formfield/DtoAbstractField";
 
-export class UiGridForm extends AbstractComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
+export class UiGridForm extends AbstractLegacyComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
 
 	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<DtoGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<DtoGridForm_SectionCollapsedStateChangedEvent>();
 
@@ -64,8 +64,8 @@ export class UiGridForm extends AbstractComponent<DtoGridForm> implements DtoGri
 
 	private fieldWrappers = new Map<UiComponent, HTMLDivElement>();
 
-	constructor(config: DtoGridForm) {
-		super(config);
+	constructor(config: DtoGridForm, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$mainDiv = parseHtml(`<div class="UiGridForm">
 </div>`);
 

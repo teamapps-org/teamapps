@@ -21,9 +21,9 @@ package org.teamapps.ux.component.field;
 
 import org.apache.commons.lang3.StringUtils;
 import org.teamapps.dto.DtoAbstractField;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoTextField;
 import org.teamapps.dto.DtoTextInputHandlingField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -82,7 +82,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	public DtoAbstractField createDto() {
+	public DtoAbstractField createConfig() {
 		DtoTextField uiField = new DtoTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(maxCharacters);
@@ -93,8 +93,8 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
+	public void handleUiEvent(String name, JsonWrapper params) {
+		super.handleUiEvent(name, params);
 		defaultHandleTextInputEvent(event);
 	}
 

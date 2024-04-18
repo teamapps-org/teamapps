@@ -57,7 +57,7 @@ import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType"
 import {ConferenceApi, Utils} from "./lib/avcore.client";
 import {ConferenceInput} from "./lib/avcore";
 
-export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3WebRtcClient> implements DtoMediaSoupV3WebRtcClientCommandHandler, DtoMediaSoupV3WebRtcClientEventSource {
+export class UiMediaSoupV3WebRtcClient extends AbstractLegacyComponent<DtoMediaSoupV3WebRtcClient> implements DtoMediaSoupV3WebRtcClientCommandHandler, DtoMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent();
 	public readonly onSourceMediaTrackEnded: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent> = new TeamAppsEvent();
 
@@ -110,8 +110,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3W
 		videoBitrate: 0
 	};
 
-	constructor(config: DtoMediaSoupV3WebRtcClient) {
-		super(config);
+	constructor(config: DtoMediaSoupV3WebRtcClient, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		// debug.enable(
 		// 	'conference-api* mediasoup-client*' //enable conference api and mediasoup client logs

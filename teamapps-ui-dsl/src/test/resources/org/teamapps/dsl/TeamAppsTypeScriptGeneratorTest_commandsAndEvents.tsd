@@ -3,9 +3,7 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoReference} from "teamapps-client-communication";
-import {DtoCommand} from "teamapps-client-communication";
-import {DtoEvent} from "teamapps-client-communication";
+import {DtoClientObject} from "teamapps-client-core";
 interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
 export interface DtoA {
@@ -20,7 +18,7 @@ export interface DtoAEventSource {
 	onZ3: EventEmitter<DtoA_Z3Event>;
 }
 
-export interface DtoA_Z3Event extends DtoEvent {
+export interface DtoA_Z3Event {
 	a: number;
 	b: number
 }

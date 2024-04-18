@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.splitpane;
 
 import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoSplitPane;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -61,17 +61,17 @@ public class SplitPane extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoSplitPane uiSplitPane = new DtoSplitPane();
 		uiSplitPane.setSplitDirection(splitDirection.toDto());
 		uiSplitPane.setSizePolicy(sizePolicy.toDto());
 		mapAbstractUiComponentProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);
 		if (firstChild != null) {
-			uiSplitPane.setFirstChild(firstChild.createDtoReference());
+			uiSplitPane.setFirstChild(firstChild.createClientReference());
 		}
 		if (lastChild != null) {
-			uiSplitPane.setLastChild(lastChild.createDtoReference());
+			uiSplitPane.setLastChild(lastChild.createClientReference());
 		}
 		uiSplitPane.setFirstChildMinSize(firstChildMinSize);
 		uiSplitPane.setLastChildMinSize(lastChildMinSize);
@@ -82,7 +82,7 @@ public class SplitPane extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoSplitPane.SplitResizedEvent.TYPE_ID -> {
 				var resizedEvent = event.as(DtoSplitPane.SplitResizedEventWrapper.class);
@@ -98,7 +98,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setFirstChild(org.teamapps.ux.component.Component firstChild) {
 		this.firstChild = firstChild;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createClientReference() : null));
 	}
 
 	public org.teamapps.ux.component.Component getLastChild() {
@@ -107,7 +107,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setLastChild(org.teamapps.ux.component.Component lastChild) {
 		this.lastChild = lastChild;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createClientReference() : null));
 	}
 
 	public SplitDirection getSplitDirection() {

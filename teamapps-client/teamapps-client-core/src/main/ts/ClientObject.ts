@@ -17,10 +17,26 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoClientObject} from "./generated";
 
-export interface ClientObject<C extends DtoClientObject = DtoClientObject> {
+export interface ServerObjectChannel {
+	sendEvent(name: string, params: any[]): void;
+	sendQuery(name: string, params: any[]): Promise<any>;
+}
 
+export const noOpServerChannel = {
+	sendEvent(name: string, params: any[]) {
+	},
+	sendQuery(name: string, params: any[]): Promise<any> {
+		return Promise.resolve();
+	}
+}
+
+export interface ClientObjectFactory {
+	createClientObject(typeName: string, config: any, serverChannel: ServerObjectChannel): Promise<ClientObject>;
+}
+
+export interface ClientObject {
+	init?(): any; // additional init method, called right after instantiating
+	invoke(name: string, params: any[]): Promise<any>;
 	destroy(): void;
-
 }

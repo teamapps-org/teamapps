@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.progress;
 
 import org.teamapps.dto.DtoDefaultMultiProgressDisplay;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoMultiProgressDisplay;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -76,7 +76,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public DtoDefaultMultiProgressDisplay createDto() {
+	public DtoDefaultMultiProgressDisplay createConfig() {
 		DtoDefaultMultiProgressDisplay ui = new DtoDefaultMultiProgressDisplay();
 		mapAbstractUiComponentProperties(ui);
 		ui.setRunningCount(progresses.size());
@@ -85,7 +85,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoMultiProgressDisplay.ClickedEvent.TYPE_ID -> {
 				this.onClicked.fire(null);
@@ -144,7 +144,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoDefaultMultiProgressDisplay.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoDefaultMultiProgressDisplay.UpdateCommand(createConfig()));
 	}
 
 	public boolean isShowNotificationOnProgressAdded() {

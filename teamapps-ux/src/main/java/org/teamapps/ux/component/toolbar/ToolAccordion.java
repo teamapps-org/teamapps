@@ -35,7 +35,7 @@ public class ToolAccordion extends AbstractToolContainer {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		List<DtoToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
 				.filter(group -> !group.isRightSide())
 				.sorted()

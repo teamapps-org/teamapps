@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.teamapps.dto.DtoJsonWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoObject;
 
 /**
@@ -30,8 +30,7 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.dto.DtoReference;
-import org.teamapps.dto.DtoCommand;
+import org.teamapps.ux.component.DtoClientObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -71,7 +70,9 @@ public abstract class DtoA implements DtoObject {
 	@JsonTypeName("A.a")
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 	@JsonPropertyOrder({"b"})
-	public static class ACommand implements DtoCommand<Void> {
+	public static class ACommand {
+
+	    public static final String CMD_NAME = "a";
 
 		protected String b;
 
@@ -97,6 +98,10 @@ public abstract class DtoA implements DtoObject {
 		@com.fasterxml.jackson.annotation.JsonGetter("b")
 		public String getB() {
 			return b;
+		}
+
+		public Object[] getParameters() {
+		    return new Object[] {b};
 		}
 
 	}

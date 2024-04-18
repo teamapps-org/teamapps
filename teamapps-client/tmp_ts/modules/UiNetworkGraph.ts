@@ -41,7 +41,7 @@ import {patternify} from "./UiTreeGraph";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/DtoTreeGraphNodeImage";
 import {DtoNetworkLink} from "../generated/DtoNetworkLink";
 
-export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implements DtoNetworkGraphCommandHandler, DtoNetworkGraphEventSource {
+export class UiNetworkGraph extends AbstractLegacyComponent<DtoNetworkGraph> implements DtoNetworkGraphCommandHandler, DtoNetworkGraphEventSource {
 
 	public readonly onNodeClicked: TeamAppsEvent<DtoNetworkGraph_NodeClickedEvent> = new TeamAppsEvent();
 	public readonly onNodeDoubleClicked: TeamAppsEvent<DtoNetworkGraph_NodeDoubleClickedEvent> = new TeamAppsEvent();
@@ -63,8 +63,8 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 
 	private lastDraggedNode: any;
 
-	constructor(config: DtoNetworkGraph) {
-		super(config);
+	constructor(config: DtoNetworkGraph, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$graph = parseHtml('<div class="UiNetworkGraph" id="' + this.getId() + '">');
 
 		this.links = config.links;

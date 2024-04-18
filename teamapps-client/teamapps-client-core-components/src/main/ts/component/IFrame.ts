@@ -17,16 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoIFrame, DtoIFrameCommandHandler} from "../generated";
 
 
-export class IFrame extends AbstractComponent<DtoIFrame> implements DtoIFrameCommandHandler {
+export class IFrame extends AbstractLegacyComponent<DtoIFrame> implements DtoIFrameCommandHandler {
 
 	private $iframe: HTMLIFrameElement;
 
-	constructor(config: DtoIFrame) {
-		super(config);
+	constructor(config: DtoIFrame, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this.$iframe = parseHtml(`<iframe class="IFrame" src="${config.url}"></iframe>`);
 		// this.$iframe.addEventListener("load", e => {
 		// 	console.log(`load: ${this.$iframe.src}`);

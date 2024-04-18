@@ -24,8 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.teamapps.dto.DtoReference;
 import org.teamapps.dto.DtoWorkSpaceLayout;
-import org.teamapps.dto.protocol.DtoINIT_NOK;
-import org.teamapps.dto.protocol.DtoSessionClosingReason;
+import org.teamapps.dto.protocol.server.INIT_NOK;
+import org.teamapps.dto.protocol.server.SessionClosingReason;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,12 +36,12 @@ public class SerializationTest {
 	@Before
 	public void setUp() throws Exception {
 		teamAppsObjectMapper = TeamAppsObjectMapperFactory.create();
-		teamAppsObjectMapper.registerSubtypes(DtoINIT_NOK.class);
+		teamAppsObjectMapper.registerSubtypes(INIT_NOK.class);
 	}
 
 	@Test
 	public void serialize() throws Exception {
-		DtoINIT_NOK init = new DtoINIT_NOK(DtoSessionClosingReason.SESSION_NOT_FOUND);
+		INIT_NOK init = new INIT_NOK(SessionClosingReason.SESSION_NOT_FOUND);
 		assertThat(teamAppsObjectMapper.writeValueAsString(init)).isEqualTo("{\"_type\":\"INIT_NOK\",\"reason\":0}");
 	}
 

@@ -43,10 +43,10 @@ public class Div extends AbstractComponent {
 	}
 
 	@Override
-	public DtoDiv createDto() {
+	public DtoDiv createConfig() {
 		DtoDiv ui = new DtoDiv();
 		mapAbstractUiComponentProperties(ui);
-		ui.setContent(content != null ? content.createDtoReference() : null);
+		ui.setContent(content != null ? content.createClientReference() : null);
 		ui.setInnerHtml(innerHtml);
 		return ui;
 	}
@@ -57,7 +57,7 @@ public class Div extends AbstractComponent {
 
 	public void setContent(org.teamapps.ux.component.Component content) {
 		this.content = content;
-		sendCommandIfRendered(() -> new DtoDiv.SetContentCommand(content != null ? content.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoDiv.SetContentCommand(content != null ? content.createClientReference() : null));
 	}
 
 	public String getInnerHtml() {

@@ -20,8 +20,8 @@
 package org.teamapps.projector.components.trivial.datetime;
 
 import com.ibm.icu.util.ULocale;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoTextInputHandlingField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoAbstractTimeField;
 import org.teamapps.ux.component.field.AbstractField;
@@ -48,8 +48,8 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
+	public void handleUiEvent(String name, JsonWrapper params) {
+		super.handleUiEvent(name, params);
 		defaultHandleTextInputEvent(event);
 	}
 

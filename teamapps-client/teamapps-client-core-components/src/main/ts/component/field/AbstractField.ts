@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, bind, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, bind, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoAbstractField,
 	DtoAbstractField_BlurEvent,
@@ -39,7 +39,7 @@ interface FieldMessage {
 	$message: HTMLElement
 }
 
-export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractField, V = any> extends AbstractComponent<C> implements DtoAbstractFieldCommandHandler, DtoAbstractFieldEventSource {
+export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractField, V = any> extends AbstractLegacyComponent<C> implements DtoAbstractFieldCommandHandler, DtoAbstractFieldEventSource {
 
 	public readonly onValueChanged: TeamAppsEvent<DtoAbstractField_ValueChangedEvent> = new TeamAppsEvent();
 	public readonly onFocus: TeamAppsEvent<DtoAbstractField_FocusEvent> = new TeamAppsEvent();
@@ -68,18 +68,18 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 	private hovering: boolean;
 	private focused: boolean;
 
-	constructor(_config: C) {
-		super(_config);
+	constructor(config: C, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
 		this.$fieldWrapper = parseHtml(`<div class="Field"></div>`);
-		this.initialize(_config);
+		this.initialize(config);
 		this.$fieldWrapper.appendChild(this.$messagesContainerAbove);
 		this.$fieldWrapper.appendChild(this.getMainInnerDomElement());
 		this.$fieldWrapper.appendChild(this.$messagesContainerBelow);
-		this.setEditingMode(_config.editingMode);
-		this.setCommittedValue(_config.value);
-		this.setFieldMessages(_config.fieldMessages);
+		this.setEditingMode(config.editingMode);
+		this.setCommittedValue(config.value);
+		this.setFieldMessages(config.fieldMessages);
 
 		this.onValueChanged.addListener(() => this.onUserManipulation.fire(null));
 		this.initFocusHandling();

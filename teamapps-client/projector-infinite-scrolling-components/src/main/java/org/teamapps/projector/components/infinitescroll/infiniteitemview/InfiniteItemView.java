@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoIdentifiableClientRecord;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
 import org.teamapps.projector.components.infinitescroll.table.InfiniteScrollingComponentLibrary;
@@ -84,8 +84,8 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	}
 
 	@Override
-	public DtoComponent createDto() {
-		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate != null ? itemTemplate.createDtoReference() : null);
+	public DtoComponent createConfig() {
+		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate != null ? itemTemplate.createClientReference() : null);
 		mapAbstractUiComponentProperties(ui);
 		ui.setItemWidth(itemWidth);
 		ui.setItemHeight(itemHeight);
@@ -100,7 +100,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoInfiniteItemView.DisplayedRangeChangedEvent.TYPE_ID -> {
 				var d = event.as(DtoInfiniteItemView.DisplayedRangeChangedEventWrapper.class);
@@ -130,7 +130,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 					if (record != null) {
 						org.teamapps.ux.component.Component contextMenuContent = contextMenuProvider.apply(record);
 						if (contextMenuContent != null) {
-							sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
+							sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createClientReference()));
 						} else {
 							sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 						}
@@ -189,7 +189,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate != null ? itemTemplate.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate != null ? itemTemplate.createClientReference() : null));
 		return this;
 	}
 

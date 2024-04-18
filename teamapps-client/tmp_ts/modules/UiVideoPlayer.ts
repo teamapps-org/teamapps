@@ -38,7 +38,7 @@ import {UiMediaPreloadMode} from "../generated/UiMediaPreloadMode";
 import {parseHtml} from "./Common";
 import {UiPosterImageSize} from "../generated/UiPosterImageSize";
 
-export class UiVideoPlayer extends AbstractComponent<DtoVideoPlayer> implements DtoVideoPlayerCommandHandler, DtoVideoPlayerEventSource {
+export class UiVideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> implements DtoVideoPlayerCommandHandler, DtoVideoPlayerEventSource {
 
 	public readonly onPlayerProgress: TeamAppsEvent<DtoVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<DtoVideoPlayer_PlayerProgressEvent>();
 	public readonly onEnded: TeamAppsEvent<DtoVideoPlayer_EndedEvent> = new TeamAppsEvent<DtoVideoPlayer_EndedEvent>();
@@ -54,8 +54,8 @@ export class UiVideoPlayer extends AbstractComponent<DtoVideoPlayer> implements 
 	private autoplay: boolean;
 	private playState: "initial" | "playing" | "paused" = "initial";
 
-	constructor(config: DtoVideoPlayer) {
-		super(config);
+	constructor(config: DtoVideoPlayer, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
 		let preload = `${config.preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : config.preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`;

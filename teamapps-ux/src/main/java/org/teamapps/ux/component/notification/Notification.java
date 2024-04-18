@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoNotification;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -70,7 +70,7 @@ public class Notification extends AbstractComponent {
 		return notification;
 	}
 
-	public DtoNotification createDto() {
+	public DtoNotification createConfig() {
 		DtoNotification ui = new DtoNotification();
 		mapAbstractUiComponentProperties(ui);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
@@ -78,12 +78,12 @@ public class Notification extends AbstractComponent {
 		ui.setDisplayTimeInMillis(displayTimeInMillis);
 		ui.setDismissible(dismissible);
 		ui.setProgressBarVisible(showProgressBar);
-		ui.setContent(content != null ? content.createDtoReference() : null);
+		ui.setContent(content != null ? content.createClientReference() : null);
 		return ui;
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoNotification.OpenedEvent.TYPE_ID -> {
 				this.showing = true;
@@ -107,7 +107,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
 		return this;
 	}
 
@@ -117,7 +117,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setPadding(Spacing padding) {
 		this.padding = padding;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
 		return this;
 	}
 
@@ -127,7 +127,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDisplayTimeInMillis(int displayTimeInMillis) {
 		this.displayTimeInMillis = displayTimeInMillis;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
 		return this;
 	}
 
@@ -137,7 +137,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDismissible(boolean dismissible) {
 		this.dismissible = dismissible;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
 		return this;
 	}
 
@@ -147,7 +147,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setShowProgressBar(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
 		return this;
 	}
 
@@ -157,7 +157,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setContent(org.teamapps.ux.component.Component content) {
 		this.content = content;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
 		return this;
 	}
 

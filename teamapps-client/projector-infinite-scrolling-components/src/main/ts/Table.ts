@@ -23,7 +23,7 @@
 
 
 import {
-	AbstractComponent,
+	AbstractLegacyComponent,
 	Component,
 	debouncedMethod,
 	DebounceMode,
@@ -106,7 +106,7 @@ const backgroundColorCssClassesByMessageSeverity = {
 type ElementsByName = { [fieldName: string]: HTMLElement };
 type FieldsByName = { [fieldName: string]: AbstractField };
 
-export class Table extends AbstractComponent<DtoTable> implements DtoTableCommandHandler, DtoTableEventSource {
+export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTableCommandHandler, DtoTableEventSource {
 
 	public readonly onCellEditingStarted: TeamAppsEvent<DtoTable_CellEditingStartedEvent> = new TeamAppsEvent();
 	public readonly onCellEditingStopped: TeamAppsEvent<DtoTable_CellEditingStoppedEvent> = new TeamAppsEvent();
@@ -143,8 +143,8 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoTable) {
-		super(config);
+	constructor(config: DtoTable, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		console.log("new Table");
 		this.$component = parseHtml(`<div class="Table"">
     <div class="slick-table"></div>

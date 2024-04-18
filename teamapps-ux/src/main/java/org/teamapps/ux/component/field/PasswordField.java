@@ -35,7 +35,7 @@ public class PasswordField extends TextField {
 	}
 
 	@Override
-	public DtoAbstractField createDto() {
+	public DtoAbstractField createConfig() {
 		DtoPasswordField uiField = new DtoPasswordField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());

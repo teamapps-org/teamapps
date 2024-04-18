@@ -382,33 +382,23 @@ public class TeamAppsIntermediateDtoModel {
 	public Collection<Import> getEffectiveImports(ClassOrInterfaceWrapper<?> classOrInterface, boolean typescript) {
 		Imports imports = new Imports();
 
-		imports.add("Reference", classOrInterface.getJsPackageName().equals("teamapps-client-communication") ? ".." : "teamapps-client-communication", "org.teamapps.dto");
-
-		if (!classOrInterface.getAllCommands().isEmpty()) {
-			imports.add("Command", classOrInterface.getJsPackageName().equals("teamapps-client-communication") ? ".." : "teamapps-client-communication", "org.teamapps.dto");
-		}
-		if (!classOrInterface.getAllEvents().isEmpty()) {
-			imports.add("Event", classOrInterface.getJsPackageName().equals("teamapps-client-communication") ? ".." : "teamapps-client-communication", "org.teamapps.dto");
-		}
-		if (!classOrInterface.getAllQueries().isEmpty()) {
-			imports.add("Query", classOrInterface.getJsPackageName().equals("teamapps-client-communication") ? ".." : "teamapps-client-communication", "org.teamapps.dto");
-		}
+		imports.addDtoImport("ClientObject", "teamapps-client-core", "org.teamapps.ux.component");
 
 		classOrInterface.getReferencedTypes().stream()
 				.forEach(t -> {
-					imports.add(t.getName(), classOrInterface.getJsPackageName().equals(t.getJsPackageName()) ? "./Dto" + t.getName() : t.getJsPackageName(), t.getPackageName());
+					imports.addDtoImport(t.getName(), classOrInterface.getJsPackageName().equals(t.getJsPackageName()) ? "./Dto" + t.getName() : t.getJsPackageName(), t.getPackageName());
 					if (!typescript && t instanceof ClassOrInterfaceWrapper<?> referencedClassOrInterface) {
-						imports.add(referencedClassOrInterface.getName() + "Wrapper", null, t.getPackageName());
+						imports.addDtoImport(referencedClassOrInterface.getName() + "Wrapper", null, t.getPackageName());
 					}
 				});
 
 		if (typescript) {
 			classOrInterface.getSuperTypes().stream()
 					.filter(c -> !c.getAllCommands().isEmpty())
-					.forEach(c -> imports.add(c.getName() + "CommandHandler", classOrInterface.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName(), c.getPackageName()));
+					.forEach(c -> imports.addDtoImport(c.getName() + "CommandHandler", classOrInterface.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName(), c.getPackageName()));
 			classOrInterface.getSuperTypes().stream()
 					.filter(c -> !c.getAllEvents().isEmpty())
-					.forEach(c -> imports.add(c.getName() + "EventSource", classOrInterface.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName(), c.getPackageName()));
+					.forEach(c -> imports.addDtoImport(c.getName() + "EventSource", classOrInterface.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName(), c.getPackageName()));
 		}
 
 		return imports.getAll();

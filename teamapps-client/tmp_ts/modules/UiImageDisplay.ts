@@ -36,7 +36,7 @@ interface UiCachedImage {
 	naturalHeight?: number;
 }
 
-export class UiImageDisplay extends AbstractComponent<DtoImageDisplay> implements DtoImageDisplayCommandHandler, DtoImageDisplayEventSource {
+export class UiImageDisplay extends AbstractLegacyComponent<DtoImageDisplay> implements DtoImageDisplayCommandHandler, DtoImageDisplayEventSource {
 
 	public readonly onImagesRequest: TeamAppsEvent<DtoImageDisplay_ImagesRequestEvent> = new TeamAppsEvent<DtoImageDisplay_ImagesRequestEvent>();
 	public readonly onImageDisplayed: TeamAppsEvent<DtoImageDisplay_ImageDisplayedEvent> = new TeamAppsEvent<DtoImageDisplay_ImageDisplayedEvent>();
@@ -60,8 +60,8 @@ export class UiImageDisplay extends AbstractComponent<DtoImageDisplay> implement
 	private displayMode: UiPageDisplayMode;
 	private currentImageIndex: number;
 
-	constructor(config: DtoImageDisplay) {
-		super(config);
+	constructor(config: DtoImageDisplay, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$componentWrapper = parseHtml(
 			`<div id=${config.id}" class="UiImageDisplay" tabindex="-1">

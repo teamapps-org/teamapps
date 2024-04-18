@@ -22,11 +22,16 @@ import {DtoMustacheTemplate} from "../generated";
 import {default as mustache} from "mustache";
 import {Template} from "teamapps-client-core";
 
-export class MustacheTemplate implements Template<DtoMustacheTemplate> {
+export class MustacheTemplate implements Template {
 
 	constructor(private config: DtoMustacheTemplate) {
 		mustache.parse(config.templateString);
 	}
+
+	invoke(name: string, params: any[]): Promise<any> {
+		// nothing to do with a GridTemplate at this moment
+        throw new Error("Method not implemented.");
+    }
 
 	render(data: any): string {
 		if (data == null) {

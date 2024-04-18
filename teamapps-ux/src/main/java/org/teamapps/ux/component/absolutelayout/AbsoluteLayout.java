@@ -22,7 +22,7 @@ package org.teamapps.ux.component.absolutelayout;
 import org.teamapps.dto.DtoAbsoluteLayout;
 import org.teamapps.dto.DtoAbsolutePositionedComponent;
 import org.teamapps.dto.DtoAbsolutePositioning;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -69,7 +69,7 @@ public class AbsoluteLayout extends AbstractComponent {
 				.map(entry -> {
 					org.teamapps.ux.component.Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
-					return new DtoAbsolutePositionedComponent(component.createDtoReference(), new DtoAbsolutePositioning(
+					return new DtoAbsolutePositionedComponent(component.createClientReference(), new DtoAbsolutePositioning(
 							position.getTop() != null ? position.getTop().toCssString(): null,
 							position.getRight() != null ? position.getRight().toCssString(): null,
 							position.getBottom() != null ? position.getBottom().toCssString(): null,
@@ -83,7 +83,7 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	@Override
-	public DtoAbsoluteLayout createDto() {
+	public DtoAbsoluteLayout createConfig() {
 		DtoAbsoluteLayout uiAbsoluteLayout = new DtoAbsoluteLayout();
 		mapAbstractUiComponentProperties(uiAbsoluteLayout);
 		uiAbsoluteLayout.setComponents(createUiAbsolutePositionedComponents());
@@ -91,7 +91,7 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		// none
 	}
 

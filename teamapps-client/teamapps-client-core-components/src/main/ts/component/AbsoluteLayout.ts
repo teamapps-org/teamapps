@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent, DtoAnimationEasing} from "../generated";
 
 const animationEasingCssValues = {
@@ -30,13 +30,13 @@ const animationEasingCssValues = {
 	[DtoAnimationEasing.STEP_END]: "step-end"
 };
 
-export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
+export class AbsoluteLayout extends AbstractLegacyComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 	private $style: HTMLStyleElement;
 	private components: DtoAbsolutePositionedComponent[];
 
-	constructor(config: DtoAbsoluteLayout) {
-		super(config);
+	constructor(config: DtoAbsoluteLayout, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="AbsoluteLayout" data-teamapps-id="${this.getId()}">
 	<style></style>
 </div>`);
@@ -73,7 +73,7 @@ export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> impleme
 	transition: top ${animationDuration}ms ${animationEasingCssValues[easing]}, right ${animationDuration}ms ${animationEasingCssValues[easing]}, bottom ${animationDuration}ms ${animationEasingCssValues[easing]}, left ${animationDuration}ms ${animationEasingCssValues[easing]}, width ${animationDuration}ms ${animationEasingCssValues[easing]}, height ${animationDuration}ms ${animationEasingCssValues[easing]};
 }`;
 		components.forEach(c => {
-			const component = c.component as AbstractComponent;
+			const component = c.component as AbstractLegacyComponent;
 			component.getMainElement().addEventListener('transitionend', this.transitionEndEventListener);
 			component.getMainElement().setAttribute("data-absolute-positioning-id", component.getId());
 			styles += `[data-teamapps-id=${this.getId()}] > [data-absolute-positioning-id=${component.getId()}] {

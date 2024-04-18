@@ -26,7 +26,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiResponsiveGridLayout} from "./UiResponsiveGridLayout";
 import {parseHtml} from "./Common";
 
-export class UiStaticGridLayout extends AbstractComponent<DtoStaticGridLayout> implements DtoStaticGridLayoutCommandHandler{
+export class UiStaticGridLayout extends AbstractLegacyComponent<DtoStaticGridLayout> implements DtoStaticGridLayoutCommandHandler{
 
 	private $main: HTMLElement;
 	private layout: UiGridLayout;

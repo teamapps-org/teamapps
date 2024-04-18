@@ -20,7 +20,7 @@
 package org.teamapps.projector.components.trivial.datetime;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoLocalDate;
@@ -63,7 +63,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	}
 
 	@Override
-	public DtoLocalDateField createDto() {
+	public DtoLocalDateField createConfig() {
 		DtoLocalDateField dateField = new DtoLocalDateField();
 		mapAbstractFieldAttributesToUiField(dateField);
 		dateField.setShowDropDownButton(showDropDownButton);
@@ -94,8 +94,8 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
+	public void handleUiEvent(String name, JsonWrapper params) {
+		super.handleUiEvent(name, params);
 		defaultHandleTextInputEvent(event);
 	}
 
@@ -105,7 +105,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 
 	public boolean isFavorPastDates() {
@@ -114,7 +114,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setFavorPastDates(boolean favorPastDates) {
 		this.favorPastDates = favorPastDates;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 
 	public Locale getLocale() {
@@ -131,7 +131,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -140,7 +140,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 
 	public boolean isShowClearButton() {
@@ -149,7 +149,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDefaultSuggestionDate(LocalDate defaultSuggestionDate) {
 		this.defaultSuggestionDate = defaultSuggestionDate;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 
 	public boolean isShuffledFormatSuggestionsEnabled() {
@@ -177,7 +177,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setShuffledFormatSuggestionsEnabled(boolean shuffledFormatSuggestionsEnabled) {
 		this.shuffledFormatSuggestionsEnabled = shuffledFormatSuggestionsEnabled;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 
 	public DropDownMode getDropDownMode() {
@@ -186,7 +186,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setDropDownMode(DropDownMode dropDownMode) {
 		this.dropDownMode = dropDownMode;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 
 	public String getEmptyText() {
@@ -195,6 +195,6 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 
 	public void setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createDto()));
+		sendCommandIfRendered(() -> new DtoLocalDateField.UpdateCommand(this.createConfig()));
 	}
 }

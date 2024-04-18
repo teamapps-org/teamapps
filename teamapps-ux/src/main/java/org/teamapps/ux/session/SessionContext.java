@@ -19,29 +19,30 @@
  */
 package org.teamapps.ux.session;
 
+import com.devskiller.friendly_id.FriendlyId;
 import com.ibm.icu.util.ULocale;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.DtoClientObject;
-import org.teamapps.dto.DtoCommand;
 import org.teamapps.dto.DtoGlobals;
 import org.teamapps.dto.DtoNotification;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.dto.protocol.DtoQueryWrapper;
-import org.teamapps.dto.protocol.DtoSessionClosingReason;
+import org.teamapps.dto.JsonWrapper;
+import org.teamapps.dto.protocol.server.SessionClosingReason;
+import org.teamapps.dto.protocol.server.CREATE_OBJ;
+import org.teamapps.dto.protocol.server.DESTROY_OBJ;
+import org.teamapps.dto.protocol.server.REGISTER_LIB;
+import org.teamapps.dto.protocol.server.TOGGLE_EVT;
 import org.teamapps.event.Event;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
-import org.teamapps.ux.component.ClientObject;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.ComponentLibrary;
-import org.teamapps.ux.component.ComponentLibraryRegistry;
+import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.ComponentLibraryRegistry.ComponentLibraryInfo;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
@@ -58,7 +59,6 @@ import org.teamapps.ux.i18n.ResourceBundleTranslationProvider;
 import org.teamapps.ux.i18n.TranslationProvider;
 import org.teamapps.ux.icon.IconBundle;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
-import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
 import java.io.File;
@@ -70,7 +70,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
@@ -80,10 +79,10 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
-	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> sendStaticCommand(Globals.class, new DtoGlobals.ToggleEventListeningCommand(null, null, DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID, hasListeners)));
-	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> sendStaticCommand(Globals.class, new DtoGlobals.ToggleEventListeningCommand(null, null, DtoGlobals.NavigationStateChangeEvent.TYPE_ID, hasListeners)));
+	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(Globals.class, "globalKeyEventOccurred", hasListeners));
+	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(Globals.class, "navigationStateChange", hasListeners));
 	public final ProjectorEvent<UiSessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
-	public final Event<DtoSessionClosingReason> onDestroyed = new Event<>();
+	public final Event<SessionClosingReason> onDestroyed = new Event<>();
 
 	/**
 	 * Decorators around all executions inside this SessionContext. These will be invoked when the Thread is already bound to the SessionContext, so SessionContext.current() will
@@ -101,9 +100,11 @@ public class SessionContext {
 	private final HttpSession httpSession;
 	private final UxServerContext serverContext;
 	private final SessionIconProvider iconProvider;
-	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
-	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
-	private Set<ClientObject> renderingClientObjects = new HashSet<>();
+
+	private final BidiMap<String, ClientObject> clientObjectsById = new DualHashBidiMap<>();
+	private final Set<ClientObject> renderingClientObjects = new HashSet<>();
+	private final Set<ClientObject> renderedClientObjects = new HashSet<>();
+
 	private final SessionContextResourceManager sessionResourceProvider;
 
 	private TranslationProvider translationProvider;
@@ -118,34 +119,34 @@ public class SessionContext {
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
-		public void onUiEvent(String sessionId, DtoEventWrapper event) {
+		public void handleEvent(String sessionId, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {
 			runWithContext(() -> {
-				String uiComponentId = event.getComponentId();
-				if (uiComponentId != null) {
-					ClientObject clientObject = getClientObject(uiComponentId);
+				if (clientObjectId != null) {
+					ClientObject clientObject = clientObjectsById.get(clientObjectId);
 					if (clientObject != null) {
-						clientObject.handleUiEvent(event);
+						clientObject.handleEvent(name, params);
 					} else {
-						throw new ProjectorComponentNotFoundException(sessionId, uiComponentId);
+						throw new ProjectorComponentNotFoundException(sessionId, clientObjectId);
 					}
 				} else {
-					handleStaticEvent(event);
+					handleStaticEvent(libraryId, name, params);
 				}
 			});
 		}
 
 		@Override
-		public void onUiQuery(String sessionId, DtoQueryWrapper query, Consumer<Object> resultCallback) {
+		public void handleQuery(String sessionId, String libraryId, String clientObjectId, String name, List<JsonWrapper> params, Consumer<Object> resultCallback) {
 			runWithContext(() -> {
-				String uiComponentId = query.getComponentId();
-				ClientObject clientObject = getClientObject(uiComponentId);
-				if (clientObject != null) {
-					Object result = clientObject.handleUiQuery(query);
-					new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
+				if (clientObjectId != null) {
+					ClientObject clientObject = clientObjectsById.get(clientObjectId);
+					if (clientObject != null) {
+						Object result = clientObject.handleQuery(name, params);
 						resultCallback.accept(result);
-					});
+					} else {
+						throw new ProjectorComponentNotFoundException(sessionId, clientObjectId);
+					}
 				} else {
-					throw new ProjectorComponentNotFoundException(sessionId, uiComponentId);
+					// TODO
 				}
 			});
 		}
@@ -162,7 +163,7 @@ public class SessionContext {
 		}
 
 		@Override
-		public void onClosed(String sessionId, DtoSessionClosingReason reason) {
+		public void onClosed(String sessionId, SessionClosingReason reason) {
 			runWithContext(() -> {
 				onDestroyed.fireIgnoringExceptions(reason);
 				// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
@@ -171,8 +172,7 @@ public class SessionContext {
 		}
 	};
 
-	private final Set<ComponentLibrary> componentLibrariesLoaded = new HashSet<>();
-	private final Set<Class<? extends ClientObject>> clientObjectTypesKnownToClient = new HashSet<>();
+	private final Set<ComponentLibrary> loadedComponentLibraries = new HashSet<>();
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 
 	public SessionContext(UiSession uiSession,
@@ -191,7 +191,6 @@ public class SessionContext {
 		this.sessionConfiguration = sessionConfiguration;
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
-		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
@@ -199,12 +198,12 @@ public class SessionContext {
 		this.componentLibraryRegistry = componentLibraryRegistry;
 	}
 
-	public Event<DtoSessionClosingReason> onDestroyed() {
+	public Event<SessionClosingReason> onDestroyed() {
 		return onDestroyed;
 	}
 
 	public void pushNavigationState(String relativeUrl) {
-		sendStaticCommand(Globals.class, new DtoGlobals.PushHistoryStateCommand(relativeUrl));
+		sendStaticCommand(Globals.class, DtoGlobals.PushHistoryStateCommand.CMD_NAME, new DtoGlobals.PushHistoryStateCommand(relativeUrl).getParameters());
 	}
 
 	public void navigateBack(int steps) {
@@ -212,7 +211,7 @@ public class SessionContext {
 	}
 
 	public void navigateForward(int steps) {
-		sendStaticCommand(Globals.class, new DtoGlobals.NavigateForwardCommand(steps));
+		sendStaticCommand(Globals.class, DtoGlobals.NavigateForwardCommand.CMD_NAME, new DtoGlobals.NavigateForwardCommand(steps).getParameters());
 	}
 
 	public static SessionContext current() {
@@ -273,47 +272,49 @@ public class SessionContext {
 	}
 
 	public void destroy() {
-		destroy(DtoSessionClosingReason.TERMINATED_BY_APPLICATION);
+		destroy(SessionClosingReason.TERMINATED_BY_APPLICATION);
 	}
 
-	private void destroy(DtoSessionClosingReason reason) {
+	private void destroy(SessionClosingReason reason) {
 		uiSession.close(reason);
 	}
 
-	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, DtoCommand<RESULT> command) {
-		sendStaticCommand(clientObjectClass, command, null);
+	public void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, String name, Object[] params) {
+		sendStaticCommand(clientObjectClass, name, params, null);
 	}
 
-	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, DtoCommand<RESULT> command, Consumer<RESULT> resultCallback) {
-		Objects.requireNonNull(clientObjectClass);
+	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, String name, Object[] params, Consumer<RESULT> resultCallback) {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
+		String componentLibraryUuid = getComponentLibraryUuidForClientObjectClass(clientObjectClass, true);
 
+		uiSession.sendCommand(new UiCommandWithResultCallback(componentLibraryUuid, null, name, params, (Consumer) wrappedCallback));
+	}
+
+	private String getComponentLibraryUuidForClientObjectClass(Class<? extends ClientObject> clientObjectClass, boolean loadIfNecessary) {
+		Objects.requireNonNull(clientObjectClass);
 		String componentLibraryUuid;
 		if (clientObjectClass == Globals.class) {
 			componentLibraryUuid = null;
 		} else {
-			ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObjectClass(clientObjectClass);
-			componentLibraryUuid = componentLibraryInfo.getUuid();
+			ComponentLibraryInfo libraryInfo = componentLibraryRegistry.getComponentLibraryForClientObjectClass(clientObjectClass);
+			if (!loadedComponentLibraries.contains(libraryInfo.componentLibrary()) && loadIfNecessary) {
+				uiSession.sendServerMessage(new REGISTER_LIB(libraryInfo.uuid(), libraryInfo.mainJsUrl(), libraryInfo.mainCssUrl()));
+				loadedComponentLibraries.add(libraryInfo.componentLibrary());
+			}
+			componentLibraryUuid = libraryInfo.uuid();
 		}
-
-		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(componentLibraryUuid, null, command, wrappedCallback)));
+		return componentLibraryUuid;
 	}
 
-	public void sendCommandIfRendered(ClientObject clientObject, DtoCommand<?> command) {
-		sendCommandIfRendered(clientObject, (Supplier) () -> command, null);
-	}
-
-	public <RESULT> void sendCommandIfRendered(ClientObject clientObject, Supplier<DtoCommand<RESULT>> commandSupplier, Consumer<RESULT> resultCallback) {
+	public <RESULT> void sendCommandIfRendered(ClientObject clientObject, String name, Object[] params, Consumer<RESULT> resultCallback) {
 		Objects.requireNonNull(clientObject, "clientObject must not be null!");
 		CurrentSessionContext.throwIfNotSameAs(this);
 
-		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
-
 		if (isRendering(clientObject)) {
 			/*
-			This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a thrown event. This change must be transported to the client
+			This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a fired event. This change must be transported to the client
 			as command (since the corresponding setter of the parent's DtoComponent has possibly already been set). However, this command must be enqueued after the component is rendered on the client
 			side! Therefore, sending the command must be forcibly enqueued.
 
@@ -322,14 +323,15 @@ public class SessionContext {
 			any effect on the initialization of the DtoPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
 			the panel was rendered (which is only after completing its createUiComponent() method).
 			 */
-			runWithContext(() -> sendCommandInternal(clientObject.getId(), commandSupplier.get(), wrappedCallback), true);
+			runWithContext(() -> sendCommandInternal(clientObject.getId(), name, params, resultCallback), true);
 		} else if (isRendered(clientObject)) {
-			sendCommandInternal(clientObject.getId(), commandSupplier.get(), wrappedCallback);
+			sendCommandInternal(clientObject.getId(), name, params, resultCallback);
 		}
 	}
 
-	private <RESULT> void sendCommandInternal(String clientObjectId, DtoCommand<RESULT> command, Consumer<RESULT> wrappedCallback) {
-		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(null, clientObjectId, command, wrappedCallback)));
+	private <RESULT> void sendCommandInternal(String clientObjectId, String name, Object[] params, Consumer<RESULT> resultCallback) {
+		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
+		uiSession.sendCommand(new UiCommandWithResultCallback(null, clientObjectId, name, params, (Consumer) wrappedCallback));
 	}
 
 	public ClientInfo getClientInfo() {
@@ -405,7 +407,7 @@ public class SessionContext {
 					return ((R) resultHolder[0]);
 				} catch (Throwable t) {
 					LOGGER.error("Exception while executing within session context", t);
-					this.destroy(DtoSessionClosingReason.SERVER_SIDE_ERROR);
+					this.destroy(SessionClosingReason.SERVER_SIDE_ERROR);
 					throw t;
 				} finally {
 					CurrentSessionContext.unset();
@@ -449,7 +451,7 @@ public class SessionContext {
 
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
-		sendStaticCommand(Globals.class, new DtoGlobals.SetConfigCommand(config.createUiConfiguration()));
+		sendStaticCommand(Globals.class, DtoGlobals.SetConfigCommand.CMD_NAME, new DtoGlobals.SetConfigCommand(config.createUiConfiguration()).getParameters());
 		updateSessionMessageWindows();
 	}
 
@@ -474,48 +476,65 @@ public class SessionContext {
 		return sessionConfiguration.getIconPath() + "/" + iconProvider.encodeIcon((Icon) icon, true);
 	}
 
-	public void renderClientObject(ClientObject clientObject) {
+	public ClientObjectChannel createClientObject(ClientObject clientObject) {
 		CurrentSessionContext.throwIfNotSameAs(this);
-		if (clientObjectsById.containsKey(clientObject.getId())) {
-			return; // already rendered or currently rendering!
+
+		if (!clientObjectsById.containsValue(clientObject)) {
+			String id = FriendlyId.createFriendlyId();
+			clientObjectsById.put(id, clientObject);
 		}
 
-		LOGGER.debug("Rendering: " + clientObject.getId());
+		if (!renderedClientObjects.contains(clientObject) && !renderingClientObjects.contains(clientObject)) {
+			this.renderingClientObjects.add(clientObject);
+			try {
+				String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
+				uiSession.sendServerMessage(new CREATE_OBJ(libraryUuid, clientObject.getClass().getSimpleName(), clientObject.createConfig(), clientObject.getListeningEventNames()));
+			} finally {
+				renderingClientObjects.remove(clientObject);
+			}
+			renderedClientObjects.add(clientObject);
+		}
 
-		this.renderingClientObjects.add(clientObject);
-		try {
-			clientObjectsById.put(clientObject.getId(), clientObject);
-			DtoClientObject uiClientObject = clientObject.createDto();
-			if (uiClientObject.getId() == null) {
-				throw new IllegalArgumentException("DtoClientObject must not have id == null!");
+		return new ClientObjectChannel() {
+			@Override
+			public void sendCommand(String name, Object[] params, Consumer<JsonWrapper> resultHandler) {
+				sendCommandIfRendered(clientObject, name, params, null);
 			}
 
-			ComponentLibraryInfo componentLibraryInfo = componentLibraryRegistry.getComponentLibraryForClientObject(clientObject);
-			loadComponentLibraryIfNecessary(clientObject, componentLibraryInfo);
-
-			if (!clientObjectTypesKnownToClient.contains(clientObject.getClass())) {
-				sendStaticCommand(Globals.class, new DtoGlobals.RegisterClientObjectTypeCommand(componentLibraryInfo.getUuid(), uiClientObject.getTypeId(), uiClientObject.getEventNames(), uiClientObject.getQueryNames()));
-				clientObjectTypesKnownToClient.add(clientObject.getClass());
+			@Override
+			public void toggleEvent(String eventName, boolean enabled) {
+				SessionContext.this.toggleEvent(clientObject, eventName, enabled);
 			}
+		};
+	}
 
-			sendStaticCommand(Globals.class, new DtoGlobals.RenderCommand(componentLibraryInfo.getUuid(), uiClientObject));
-		} finally {
+	public void toggleEvent(ClientObject clientObject, String eventName, boolean enabled) {
+		CurrentSessionContext.throwIfNotSameAs(this);
+		if (!renderedClientObjects.contains(clientObject)) {
+			return; // will be registered when rendering, anyway.
+		}
+		String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
+		uiSession.sendServerMessage(new TOGGLE_EVT(libraryUuid, clientObjectsById.getKey(clientObject), eventName, enabled));
+	}
+
+	public void toggleStaticEvent(Class<? extends ClientObject> representativeLibraryClass, String eventName, boolean enabled) {
+		CurrentSessionContext.throwIfNotSameAs(this);
+		String libraryUuid = getComponentLibraryUuidForClientObjectClass(representativeLibraryClass, true);
+		uiSession.sendServerMessage(new TOGGLE_EVT(libraryUuid, null, eventName, enabled));
+	}
+
+	public void destroyClientObject(ClientObject clientObject) {
+		String id = clientObjectsById.getKey(clientObject);
+		if (id != null) {
+			uiSession.sendServerMessage(new DESTROY_OBJ(id));
+			clientObjectsById.remove(id);
 			renderingClientObjects.remove(clientObject);
+			renderedClientObjects.remove(clientObject);
 		}
 	}
 
-	private void loadComponentLibraryIfNecessary(ClientObject clientObject, ComponentLibraryInfo componentLibraryInfo) {
-		if (!componentLibrariesLoaded.contains(componentLibraryInfo.getComponentLibrary())) {
-			String mainJsUrl = componentLibraryRegistry.getMainJsUrl(clientObject.getClass());
-			String mainCssUrl = componentLibraryRegistry.getMainCssUrl(clientObject.getClass());
-			sendStaticCommand(Globals.class, new DtoGlobals.RegisterComponentLibraryCommand(componentLibraryInfo.getUuid(), mainJsUrl, mainCssUrl), null);
-			componentLibrariesLoaded.add(componentLibraryInfo.getComponentLibrary());
-		}
-	}
-
-	public void unrenderClientObject(ClientObject clientObject) {
-		sendStaticCommand(Globals.class, new DtoGlobals.UnrenderCommand(clientObject.getId()));
-		clientObjectsById.remove(clientObject.getId());
+	public String getClientObjectId(ClientObject clientObject) {
+		return clientObjectsById.getKey(clientObject);
 	}
 
 	public boolean isRendering(ClientObject clientObject) {
@@ -523,11 +542,7 @@ public class SessionContext {
 	}
 
 	public boolean isRendered(ClientObject clientObject) {
-		return clientObjectsById.containsKey(clientObject.getId());
-	}
-
-	public ClientObject getClientObject(String clientObjectId) {
-		return clientObjectsById.get(clientObjectId);
+		return renderedClientObjects.contains(clientObject);
 	}
 
 	public String createResourceLink(Resource resource) {
@@ -547,15 +562,15 @@ public class SessionContext {
 	}
 
 	public void download(String url, String downloadFileName) {
-		runWithContext(() -> sendStaticCommand(Globals.class, new DtoGlobals.DownloadFileCommand(url, downloadFileName)));
+		runWithContext(() -> sendStaticCommand(Globals.class, DtoGlobals.DownloadFileCommand.CMD_NAME, new DtoGlobals.DownloadFileCommand(url, downloadFileName).getParameters()));
 	}
 
 	public void setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, Duration animationDuration) {
-		sendStaticCommand(Globals.class, new DtoGlobals.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()));
+		sendStaticCommand(Globals.class, DtoGlobals.SetBackgroundCommand.CMD_NAME, new DtoGlobals.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()).getParameters());
 	}
 
 	public void exitFullScreen() {
-		sendStaticCommand(Globals.class, new DtoGlobals.ExitFullScreenCommand());
+		sendStaticCommand(Globals.class, DtoGlobals.ExitFullScreenCommand.CMD_NAME, new DtoGlobals.ExitFullScreenCommand().getParameters());
 	}
 
 	public void addRootComponent(String containerElementSelector, Component component) {
@@ -563,7 +578,7 @@ public class SessionContext {
 	}
 
 	public void addRootPanel(String containerElementSelector, Component rootPanel) {
-		sendStaticCommand(Globals.class, new DtoGlobals.AddRootComponentCommand(containerElementSelector, rootPanel.createDtoReference()));
+		sendStaticCommand(Globals.class, DtoGlobals.AddRootComponentCommand.CMD_NAME, new DtoGlobals.AddRootComponentCommand(containerElementSelector, rootPanel).getParameters());
 	}
 
 	public RootPanel addRootPanel(String containerElementSelector) {
@@ -578,23 +593,22 @@ public class SessionContext {
 
 	public void addClientToken(String token) {
 		getClientInfo().getClientTokens().add(token);
-		sendStaticCommand(Globals.class, new DtoGlobals.AddClientTokenCommand(token));
+		sendStaticCommand(Globals.class, DtoGlobals.AddClientTokenCommand.CMD_NAME, new DtoGlobals.AddClientTokenCommand(token).getParameters());
 	}
 
 	public void removeClientToken(String token) {
 		getClientInfo().getClientTokens().remove(token);
-		sendStaticCommand(Globals.class, new DtoGlobals.RemoveClientTokenCommand(token));
+		sendStaticCommand(Globals.class, DtoGlobals.RemoveClientTokenCommand.CMD_NAME, new DtoGlobals.RemoveClientTokenCommand(token).getParameters());
 	}
 
 	public void clearClientTokens() {
 		getClientInfo().getClientTokens().clear();
-		sendStaticCommand(Globals.class, new DtoGlobals.ClearClientTokensCommand());
+		sendStaticCommand(Globals.class, DtoGlobals.ClearClientTokensCommand.CMD_NAME, new DtoGlobals.ClearClientTokensCommand().getParameters());
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			sendStaticCommand(Notification.class, new DtoNotification.ShowNotificationCommand(notification.createDtoReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
-					exitAnimation.toUiExitAnimation()));
+			sendStaticCommand(Notification.class, DtoNotification.ShowNotificationCommand.CMD_NAME, new DtoNotification.ShowNotificationCommand(notification, position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(), exitAnimation.toUiExitAnimation()).getParameters());
 		});
 	}
 
@@ -684,7 +698,7 @@ public class SessionContext {
 		if (cancelButtonCaption != null) {
 			LinkButton cancelLink = new LinkButton(cancelButtonCaption);
 			cancelLink.setCssStyle("text-align", "center");
-			cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.createDtoReference().getId() + "\").close();");
+			cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.createClientReference().getId() + "\").close();");
 			verticalLayout.addComponentAutoSize(cancelLink);
 		}
 
@@ -697,9 +711,9 @@ public class SessionContext {
 		String uuid = UUID.randomUUID().toString();
 		CompletableFuture<WakeLock> completableFuture = new CompletableFuture<>();
 		runWithContext(() -> {
-			sendStaticCommand(Globals.class, new DtoGlobals.RequestWakeLockCommand(uuid), successful -> {
+			this.<Boolean>sendStaticCommand(Globals.class, DtoGlobals.RequestWakeLockCommand.CMD_NAME, new DtoGlobals.RequestWakeLockCommand(uuid).getParameters(), successful -> {
 				if (successful) {
-					completableFuture.complete(() -> sendStaticCommand(Globals.class, new DtoGlobals.ReleaseWakeLockCommand(uuid)));
+					completableFuture.complete(() -> sendStaticCommand(Globals.class, DtoGlobals.ReleaseWakeLockCommand.CMD_NAME, new DtoGlobals.ReleaseWakeLockCommand(uuid).getParameters()));
 				} else {
 					completableFuture.completeExceptionally(new RuntimeException("Could not acquire WakeLock"));
 				}
@@ -709,7 +723,7 @@ public class SessionContext {
 	}
 
 	public void goToUrl(String url, boolean blankPage) {
-		sendStaticCommand(Globals.class, new DtoGlobals.GoToUrlCommand(url, blankPage));
+		sendStaticCommand(Globals.class, DtoGlobals.GoToUrlCommand.CMD_NAME, new DtoGlobals.GoToUrlCommand(url, blankPage).getParameters());
 	}
 
 	public void setFavicon(Icon<?, ?> icon) {
@@ -721,28 +735,31 @@ public class SessionContext {
 	}
 
 	public void setFavicon(String url) {
-		sendStaticCommand(Globals.class, new DtoGlobals.SetFaviconCommand(url));
+		sendStaticCommand(Globals.class, DtoGlobals.SetFaviconCommand.CMD_NAME, new DtoGlobals.SetFaviconCommand(url).getParameters());
 	}
 
 	public void setTitle(String title) {
-		sendStaticCommand(Globals.class, new DtoGlobals.SetTitleCommand(title));
+		sendStaticCommand(Globals.class, DtoGlobals.SetTitleCommand.CMD_NAME, new DtoGlobals.SetTitleCommand(title).getParameters());
 	}
 
 	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		sendStaticCommand(Globals.class, new DtoGlobals.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
+		sendStaticCommand(Globals.class, DtoGlobals.SetGlobalKeyEventsEnabledCommand.CMD_NAME,
+				new DtoGlobals.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp).getParameters());
 	}
 
 	public String getSessionId() {
 		return uiSession.getSessionId();
 	}
 
-	public void handleStaticEvent(DtoEventWrapper event) {
-		switch (event.getTypeId()) {
+	// TODO
+	public void handleStaticEvent(String libraryId, String name, List<JsonWrapper> params) {
+		switch (name) {
 			case DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {
-				DtoGlobals.GlobalKeyEventOccurredEventWrapper e = event.as(DtoGlobals.GlobalKeyEventOccurredEventWrapper.class);
+				DtoGlobals.GlobalKeyEventOccurredEventWrapper e = params.getFirst().as(DtoGlobals.GlobalKeyEventOccurredEventWrapper.class);
+				String clientObjectId = e.getSourceComponentId();
 				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
 						e.getEventType(),
-						(e.getSourceComponentId() != null ? (Component) getClientObject(e.getSourceComponentId()) : null),
+						(e.getSourceComponentId() != null ? (Component) clientObjectsById.get(clientObjectId) : null),
 						e.getCode(),
 						e.getIsComposing(),
 						e.getKey(),
@@ -758,12 +775,15 @@ public class SessionContext {
 				));
 			}
 			case DtoGlobals.NavigationStateChangeEvent.TYPE_ID -> {
-				DtoGlobals.NavigationStateChangeEventWrapper e = event.as(DtoGlobals.NavigationStateChangeEventWrapper.class);
+				DtoGlobals.NavigationStateChangeEventWrapper e = params.getFirst().as(DtoGlobals.NavigationStateChangeEventWrapper.class);
 				Location location = Location.fromUiLocationWrapper(e.getLocation());
 				this.currentLocation = location;
 				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
 			}
-			default -> throw new TeamAppsUiApiException(getSessionId(), event.getClass().getName());
+			default -> {
+				// TODO static event handlers on library level...
+				throw new TeamAppsUiApiException(getSessionId(), name);
+			}
 		}
 	}
 

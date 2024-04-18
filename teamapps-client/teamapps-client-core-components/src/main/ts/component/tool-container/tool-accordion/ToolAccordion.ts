@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, insertAfter, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, insertAfter, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {defaultSpinnerTemplate, doOnceOnClickOutsideElement} from "../../../Common";
@@ -46,8 +46,8 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 	private $mainDomElement: HTMLElement;
 	private $backgroundColorDiv: HTMLElement;
 
-	constructor(config: DtoToolAccordion) {
-		super(config);
+	constructor(config: DtoToolAccordion, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 
 		this.$mainDomElement = parseHtml(`<div class="ToolAccordion teamapps-blurredBackgroundImage"></div>`);
 		this.$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');

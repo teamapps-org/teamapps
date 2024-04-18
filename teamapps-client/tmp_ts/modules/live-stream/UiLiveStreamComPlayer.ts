@@ -24,14 +24,14 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {DtoLiveStreamComPlayer} from "../../generated/DtoLiveStreamComPlayer";
 import {parseHtml} from "../Common";
 
-export class UiLiveStreamComPlayer extends AbstractComponent<DtoLiveStreamComPlayer> implements LiveStreamPlayer {
+export class UiLiveStreamComPlayer extends AbstractLegacyComponent<DtoLiveStreamComPlayer> implements LiveStreamPlayer {
 
 	private playing: boolean = false;
 	private $wrapper: HTMLElement;
 	private player: Element;
 
-	constructor(config: DtoLiveStreamComPlayer) {
-		super(config);
+	constructor(config: DtoLiveStreamComPlayer, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$wrapper = parseHtml('<div class="livestreamcom-player-wrapper">');
 	}
 

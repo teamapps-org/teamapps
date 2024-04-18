@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoNotificationBar;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -47,7 +47,7 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoNotificationBar.ItemClickedEvent.TYPE_ID -> {
 				var e = event.as(DtoNotificationBar.ItemClickedEventWrapper.class);
@@ -79,7 +79,7 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoNotificationBar ui = new DtoNotificationBar();
 		mapAbstractUiComponentProperties(ui);
 		ui.setInitialItems(itemsByUiId.values().stream()

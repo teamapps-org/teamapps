@@ -18,19 +18,19 @@
  * =========================LICENSE_END==================================
  */
 import {DtoPageTransition, DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
-import {AbstractComponent, Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {pageTransition} from "../Common";
 
 // noinspection JSUnusedGlobalSymbols
-export class RootPanel extends AbstractComponent<DtoRootPanel> implements DtoRootPanelCommandHandler {
+export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements DtoRootPanelCommandHandler {
 
 	private $root: HTMLElement;
 	private content: Component;
 	private $contentWrapper: HTMLElement;
 	private $imagePreloadDiv: HTMLElement;
 
-	constructor(config: DtoRootPanel) {
-		super(config);
+	constructor(config: DtoRootPanel, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 
 		this.$root = parseHtml(`<div data-background-container-id="${config.id}" class="RootPanel">
               <div class="image-preload-div"></div>

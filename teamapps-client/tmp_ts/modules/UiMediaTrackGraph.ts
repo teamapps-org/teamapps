@@ -41,7 +41,7 @@ interface Marker {
 	bg: string
 }
 
-export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> implements DtoMediaTrackGraphCommandHandler, DtoMediaTrackGraphEventSource {
+export class UiMediaTrackGraph extends AbstractLegacyComponent<DtoMediaTrackGraph> implements DtoMediaTrackGraphCommandHandler, DtoMediaTrackGraphEventSource {
 
 	public readonly onHandleTimeSelection: TeamAppsEvent<DtoMediaTrackGraph_HandleTimeSelectionEvent> = new TeamAppsEvent<DtoMediaTrackGraph_HandleTimeSelectionEvent>();
 
@@ -68,8 +68,8 @@ export class UiMediaTrackGraph extends AbstractComponent<DtoMediaTrackGraph> imp
 	private markerData: Marker[];
 
 
-	constructor(config: DtoMediaTrackGraph) {
-		super(config);
+	constructor(config: DtoMediaTrackGraph, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$graph = parseHtml('<div class="UiMediaTrackGraph" id="' + this.getId() + '">');
 
 		this.trackCount = config.trackCount;

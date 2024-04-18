@@ -19,14 +19,15 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.protocol.DtoAbstractServerMessage;
-import org.teamapps.dto.protocol.DtoSessionClosingReason;
+import org.teamapps.dto.protocol.server.SessionClosingReason;
+
+import java.util.List;
 
 public interface MessageSender {
 
-	void sendMessageAsynchronously(DtoAbstractServerMessage message, SendingErrorHandler sendingErrorHandler);
+	void sendAsynchronously(List<String> messages, SendingErrorHandler sendingErrorHandler);
 
-	void close(DtoSessionClosingReason closingReason, String message);
+	void close(SessionClosingReason closingReason, String message);
 
 	long getDataReceived();
 	

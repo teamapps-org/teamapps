@@ -28,6 +28,7 @@ import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 public class TeamAppsObjectMapperFactory {
 
 	public static ObjectMapper create() {
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.registerModule(UxJacksonSerializationTemplate.UX_SERIALIZERS_JACKSON_MODULE);

@@ -26,7 +26,7 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {generateUUID, parseHtml} from "../Common";
 import {DtoYoutubePlayer} from "../../generated/DtoYoutubePlayer";
 
-export class UiYoutubePlayer extends AbstractComponent<DtoYoutubePlayer> implements LiveStreamPlayer {
+export class UiYoutubePlayer extends AbstractLegacyComponent<DtoYoutubePlayer> implements LiveStreamPlayer {
 	private static scriptTagAdded: boolean = false;
 	private static scriptLoaded: boolean = false;
 	private static commandsToInvokeWhenScripLoaded: Function[] = [];
@@ -54,8 +54,8 @@ export class UiYoutubePlayer extends AbstractComponent<DtoYoutubePlayer> impleme
 		}
 	}
 
-	constructor(config: DtoYoutubePlayer) {
-		super(config);
+	constructor(config: DtoYoutubePlayer, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$wrapper = parseHtml("<div>");
 		let elementUuid = generateUUID();
 		// 1. The <iframe> (and video player) will replace this <div> tag.

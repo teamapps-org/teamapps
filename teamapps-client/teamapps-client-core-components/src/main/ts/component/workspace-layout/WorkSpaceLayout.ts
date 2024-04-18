@@ -18,13 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import {
-	AbstractComponent,
-	Component,
-	DtoConfiguration,
-	DtoTemplate,
+	AbstractLegacyComponent,
+	Component, ServerObjectChannel,
 	TeamAppsEvent,
 	TeamAppsUiContext,
-	TeamAppsUiContextInternalApi
 } from "teamapps-client-core";
 import {
 	DtoRelativeWorkSpaceViewPosition,
@@ -55,19 +52,8 @@ import {Toolbar} from "../tool-container/toolbar/Toolbar";
 import {ProgressDisplay} from "../ProgressDisplay";
 import {MultiProgressDisplay} from "../MultiProgressDisplay";
 
-export type DtoWorkspaceLayoutSubWindowProtocol_INIT_OK = {
-	_type: 'INIT_OK',
-	sessionId: string,
-	workspaceLayoutId: string,
-	windowId: string,
-	uiConfiguration: DtoConfiguration,
-	backgroundImage: string,
-	blurredBackgroundImage: string,
-	childWindowPageTitle: string
-}
-
 export type DtoWorkspaceLayoutDndDataTransfer = {
-	sourceUiSessionId: string,
+	// sourceUiSessionId: string,   // sourceUiSessionId: this.context.sessionId, // TODO replace with workspace layout uuid to uniquely identify the workspace layout, even inside a session!
 	sourceWorkspaceLayoutId: string,
 	sourceWindowId: string,
 	targetWindowId?: string,
@@ -79,7 +65,7 @@ export type DtoWorkspaceLayoutDndDataTransfer = {
 	visible: boolean
 }
 
-export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> implements DtoWorkSpaceLayoutCommandHandler, DtoWorkSpaceLayoutEventSource {
+export class WorkSpaceLayout extends AbstractLegacyComponent<DtoWorkSpaceLayout> implements DtoWorkSpaceLayoutCommandHandler, DtoWorkSpaceLayoutEventSource {
 
 	public readonly onLayoutChanged: TeamAppsEvent<DtoWorkSpaceLayout_LayoutChangedEvent> = new TeamAppsEvent();
 	public readonly onViewDraggedToNewWindow: TeamAppsEvent<DtoWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new TeamAppsEvent();
@@ -98,12 +84,9 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 	private localViewContainer: LocalViewContainer;
 	private viewContainersByWindowId: { [windowId: string]: ViewContainer } = {};
 
-	constructor(config: DtoWorkSpaceLayout,
-	            context: TeamAppsUiContext,
-				windowId = WorkSpaceLayout.ROOT_WINDOW_ID,
-				rootWindowMessagePort?: MessagePort) {
-		super(config);
-		this.localViewContainer = new LocalViewContainer(this, this.windowId, config.views, config.initialLayout, context, {
+	constructor(config: DtoWorkSpaceLayout, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
+		this.localViewContainer = new LocalViewContainer(this, this.windowId, config.views, config.initialLayout, {
 			handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),
 			handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
 			handleViewDroppedFromOtherWindow: (sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition) => this.handleViewDroppedFromOtherWindow(sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition),

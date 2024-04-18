@@ -3,7 +3,7 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoReference} from "teamapps-client-communication";
+import {DtoClientObject} from "teamapps-client-core";
 import {DtoA} from "./DtoA";
 
 export interface DtoB {

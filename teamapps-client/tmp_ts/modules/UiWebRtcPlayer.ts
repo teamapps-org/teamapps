@@ -31,7 +31,7 @@ import {UiVideoCodec} from "../generated/UiVideoCodec";
 
 type WebRtcState = 'new' | 'checking' | 'connected' | 'completed' | 'failed' | 'disconnected' | 'closed';
 
-export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implements DtoWebRtcPlayerCommandHandler {
+export class UiWebRtcPlayer extends AbstractLegacyComponent<DtoWebRtcPlayer> implements DtoWebRtcPlayerCommandHandler {
 
 	private static readonly PEER_CONNECTION_CONFIG: any = {'iceServers': []};
 
@@ -48,8 +48,8 @@ export class UiWebRtcPlayer extends AbstractComponent<DtoWebRtcPlayer> implement
 	private userData: object;
 	private iceConnectionState: WebRtcState;
 
-	constructor(config: DtoWebRtcPlayer) {
-		super(config);
+	constructor(config: DtoWebRtcPlayer, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`
 <div class="UiWebRtcPlayer">

@@ -21,7 +21,7 @@ package org.teamapps.ux.component.iframe;
 
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoIFrame;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -40,14 +40,14 @@ public class IFrame extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoIFrame uiIFrame = new DtoIFrame().setUrl(url);
 		mapAbstractUiComponentProperties(uiIFrame);
 		return uiIFrame;
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 	}
 
 	public String getUrl() {

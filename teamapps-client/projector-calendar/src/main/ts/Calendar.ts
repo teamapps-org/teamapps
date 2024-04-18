@@ -33,7 +33,7 @@ import {
 	DtoCalendar,
 	DtoCalendarEventSource, DtoCalendarViewMode, DtoCalendarEventClientRecord
 } from "./generated";
-import {AbstractComponent} from "teamapps-client-core";
+import {AbstractLegacyComponent} from "teamapps-client-core";
 import {Interval, intervalsOverlap} from "./intervals";
 import {parseHtml, prependChild} from "teamapps-client-core";
 
@@ -51,7 +51,7 @@ import {Duration} from "@fullcalendar/core/datelib/duration";
 import {monthGridViewPlugin} from "./FullCalendarMonthGrid";
 import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
 
-export class Calendar extends AbstractComponent<DtoCalendar> implements DtoCalendarCommandHandler, DtoCalendarEventSource {
+export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements DtoCalendarCommandHandler, DtoCalendarEventSource {
 
 	public readonly onEventClicked: TeamAppsEvent<DtoCalendar_EventClickedEvent> = new TeamAppsEvent();
 	public readonly onEventMoved: TeamAppsEvent<DtoCalendar_EventMovedEvent> = new TeamAppsEvent();
@@ -67,8 +67,8 @@ export class Calendar extends AbstractComponent<DtoCalendar> implements DtoCalen
 	private eventSource: DtoCalendarFullCalendarEventSource;
 	private calendar: FullCalendar;
 
-	constructor(config: DtoCalendar) {
-		super(config);
+	constructor(config: DtoCalendar, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="Calendar">
 	<div class="calendar"></div>

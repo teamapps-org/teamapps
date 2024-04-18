@@ -25,7 +25,7 @@ import {DtoResponsiveGridLayoutPolicy} from "../generated/DtoResponsiveGridLayou
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
-export class UiResponsiveGridLayout extends AbstractComponent<DtoResponsiveGridLayout> implements DtoResponsiveGridLayoutCommandHandler {
+export class UiResponsiveGridLayout extends AbstractLegacyComponent<DtoResponsiveGridLayout> implements DtoResponsiveGridLayoutCommandHandler {
 
 	private $main: HTMLElement;
 	private $gridLayout: HTMLElement;
@@ -33,8 +33,8 @@ export class UiResponsiveGridLayout extends AbstractComponent<DtoResponsiveGridL
 	private layoutsFromSmallToLargeMinApplicableWidth: { minApplicableWidth: number, layout: UiGridLayout }[];
 	private currentLayout: UiGridLayout;
 
-	constructor(config: DtoResponsiveGridLayout) {
-		super(config);
+	constructor(config: DtoResponsiveGridLayout, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="UiResponsiveGridLayout">
 	<div class="UiGridLayout"></div>
 </div>`);

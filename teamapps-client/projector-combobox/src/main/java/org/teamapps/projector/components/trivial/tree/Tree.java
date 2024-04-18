@@ -21,8 +21,8 @@ package org.teamapps.projector.components.trivial.tree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.dto.protocol.DtoQueryWrapper;
+import org.teamapps.dto.JsonWrapper;
+import org.teamapps.dto.protocol.client.QueryWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
@@ -38,6 +38,7 @@ import org.teamapps.ux.component.template.TemplateDecider;
 import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyExtractor;
 import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.ux.session.SessionContext;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -85,7 +86,8 @@ public class Tree<RECORD> extends AbstractComponent {
 						.map(key -> uiRecordsByRecord.remove(key).getId())
 						.collect(Collectors.toList());
 				List<DtoTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
-				getSessionContext().sendCommandIfRendered(this, new DtoTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords));
+				SessionContext sessionContext = getSessionContext();
+				sessionContext.sendCommandIfRendered(this, (DtoCommand<?>) new DtoTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords), null);
 			}
 		});
 	}
@@ -131,7 +133,7 @@ public class Tree<RECORD> extends AbstractComponent {
 			uiTreeRecord.setId(++clientRecordIdCounter);
 		}
 		uiTreeRecord.setValues(values);
-		uiTreeRecord.setDisplayTemplate(template != null ? template.createDtoReference() : null);
+		uiTreeRecord.setDisplayTemplate(template != null ? template.createClientReference() : null);
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
@@ -164,7 +166,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoTree createDto() {
+	public DtoTree createConfig() {
 		DtoTree uiTree = new DtoTree();
 		mapAbstractUiComponentProperties(uiTree);
 		List<RECORD> records = model.getRecords();
@@ -185,7 +187,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoTree.NodeSelectedEvent.TYPE_ID -> {
 				var nodeSelectedEvent = event.as(DtoTree.NodeSelectedEventWrapper.class);
@@ -199,7 +201,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public Object handleUiQuery(DtoQueryWrapper query) {
+	public Object handleUiQuery(QueryWrapper query) {
 		return switch (query.getTypeId()) {
 			case DtoTree.LazyLoadChildrenQuery.TYPE_ID -> {
 				var requestTreeDataEvent = query.as(DtoTree.LazyLoadChildrenQueryWrapper.class);
@@ -244,7 +246,8 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (isRendered()) {
 			uiRecordsByRecord.clear();
 			List<DtoTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
-			getSessionContext().sendCommandIfRendered(this, new DtoTree.ReplaceNodesCommand(uiRecords));
+			SessionContext sessionContext = getSessionContext();
+			sessionContext.sendCommandIfRendered(this, (DtoCommand<?>) new DtoTree.ReplaceNodesCommand(uiRecords), null);
 		}
 	}
 

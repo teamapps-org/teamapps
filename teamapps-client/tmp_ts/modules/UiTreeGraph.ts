@@ -39,7 +39,7 @@ import {parseHtml} from "./Common";
 import {flextree, FlexTreeLayout} from "d3-flextree";
 import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 
-export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements DtoTreeGraphCommandHandler, DtoTreeGraphEventSource {
+export class UiTreeGraph extends AbstractLegacyComponent<DtoTreeGraph> implements DtoTreeGraphCommandHandler, DtoTreeGraphEventSource {
 
 	public readonly onNodeClicked: TeamAppsEvent<DtoTreeGraph_NodeClickedEvent> = new TeamAppsEvent();
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<DtoTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
@@ -49,8 +49,8 @@ export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements DtoT
 	private chart: TreeChart;
 	private $main: HTMLElement;
 
-	constructor(config: DtoTreeGraph) {
-		super(config);
+	constructor(config: DtoTreeGraph, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="UiTreeGraph">`);
 		this.chart = new TreeChart(context)

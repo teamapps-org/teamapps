@@ -39,11 +39,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>clean</goal>
                             <goal>sync-pom-version</goal>
-                            <goal>generate-java-dtos</goal>
-                            <goal>generate-typescript-dtos</goal>
-                            <goal>add-dto-resources</goal>
                         </goals>
                     </execution>
                 </executions>

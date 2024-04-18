@@ -22,7 +22,7 @@ package org.teamapps.ux.component.field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.validator.FieldValidator;
@@ -95,7 +95,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		Object uiValue = this.convertUxValueToUiValue(value);
 		if (isRendered()) {
 			final DtoAbstractField.SetValueCommand setValueCommand = new DtoAbstractField.SetValueCommand(uiValue);
-			getSessionContext().sendCommandIfRendered(this, () -> setValueCommand, aVoid -> lock.release());
+			getSessionContext().sendCommandIfRendered(this, () -> setValueCommand.get(), aVoid -> lock.release());
 		} else {
 			lock.release();
 		}
@@ -121,7 +121,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoAbstractField.ValueChangedEvent.TYPE_ID -> {
 		 var e = event.as(DtoAbstractField.ValueChangedEventWrapper.class);

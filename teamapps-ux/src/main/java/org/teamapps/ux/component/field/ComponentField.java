@@ -42,10 +42,10 @@ public class ComponentField extends AbstractField<Void> {
     }
 
     @Override
-    public DtoAbstractField createDto() {
+    public DtoAbstractField createConfig() {
         DtoComponentField uiField = new DtoComponentField();
         mapAbstractFieldAttributesToUiField(uiField);
-        uiField.setComponent(ClientObject.createDtoReference(component));
+        uiField.setComponent(ClientObject.createClientReference(component));
         uiField.setHeight(height);
         uiField.setBordered(bordered);
         return uiField;
@@ -57,7 +57,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setComponent(org.teamapps.ux.component.Component component) {
         this.component = component;
-        sendCommandIfRendered(() -> new DtoComponentField.SetComponentCommand(ClientObject.createDtoReference(component)));
+        sendCommandIfRendered(() -> new DtoComponentField.SetComponentCommand(ClientObject.createClientReference(component)));
     }
 
     public int getHeight() {

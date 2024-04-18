@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoDummyComponent,
 	DtoDummyComponent_ClickedEvent,
@@ -27,7 +27,7 @@ import {
 } from "../generated";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
-export class DummyComponent extends AbstractComponent<DtoDummyComponent> implements DtoDummyComponentCommandHandler, DtoDummyComponentEventSource {
+export class DummyComponent extends AbstractLegacyComponent<DtoDummyComponent> implements DtoDummyComponentCommandHandler, DtoDummyComponentEventSource {
 
 	public readonly onClicked: TeamAppsEvent<DtoDummyComponent_ClickedEvent> = new TeamAppsEvent<DtoDummyComponent_ClickedEvent>();
 
@@ -42,8 +42,8 @@ export class DummyComponent extends AbstractComponent<DtoDummyComponent> impleme
 	private commandCount: number = 0;
 	private text: string = "";
 
-	constructor(config: DtoDummyComponent) {
-		super(config);
+	constructor(config: DtoDummyComponent, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this.$panel = parseHtml('<div class="DummyComponent" id="' + config.id + '"></div>');
 		this.$panel.addEventListener("click", () => {
 			this.clickCount++;

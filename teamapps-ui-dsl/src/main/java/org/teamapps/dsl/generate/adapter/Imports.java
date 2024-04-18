@@ -11,11 +11,12 @@ public class Imports {
 	public Imports() {
 	}
 
-	public void add(String name, String jsModuleName, String javaPackageName) {
-		add(new Import(name, jsModuleName, javaPackageName));
+	public void addDtoImport(String name, String jsModuleName, String javaPackageName) {
+		addImport("Dto" + name, jsModuleName, javaPackageName);
 	}
 
-	public void add(Import newImport) {
+	public void addImport(String name, String jsModuleName, String javaPackageName) {
+		Import newImport = new Import(name, jsModuleName, javaPackageName);
 		Import existingImport = imports.get(newImport.name());
 		if (existingImport != null
 				&& (!Objects.equals(newImport.jsPackageName(), existingImport.jsPackageName()) || !Objects.equals(newImport.javaPackageName(), existingImport.javaPackageName()))) {

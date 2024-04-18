@@ -29,7 +29,15 @@ import {
 	DtoWindowCommandHandler,
 	DtoWindowEventSource
 } from "../generated";
-import {AbstractComponent, Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {
+	AbstractLegacyComponent,
+	Component,
+	noOpServerChannel,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent,
+	TeamAppsUiContext
+} from "teamapps-client-core";
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
@@ -40,7 +48,7 @@ export interface DtoWindowListener {
 	onWindowClosed: (window: Window, animationDuration: number) => void;
 }
 
-export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCommandHandler, DtoWindowEventSource {
+export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWindowCommandHandler, DtoWindowEventSource {
 
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
@@ -56,15 +64,15 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 	private modal: boolean;
 	private modalBackgroundDimmingColor: string;
 
-	constructor(config: DtoWindow) {
-		super(config);
+	constructor(config: DtoWindow, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="Window">
 	<div class="panel-wrapper"></div>
 </div>`);
 		this.$panelWrapper = this.$main.querySelector<HTMLElement>(":scope >.panel-wrapper");
 
-		this.panel = new Panel(config);
+		this.panel = new Panel(config, noOpServerChannel);
 		this.$panelWrapper.appendChild(this.panel.getMainElement());
 
 		if (config.closeable) {

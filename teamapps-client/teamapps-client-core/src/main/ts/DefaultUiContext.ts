@@ -19,92 +19,55 @@
  */
 "use strict";
 
-import {capitalizeFirstLetter, generateUUID} from "./util/string-util";
+import {generateUUID} from "./util/string-util";
 import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {DtoClientObject as DtoClientObject, DtoConfiguration, DtoGenericErrorMessageOption} from "./generated";
+import {DtoConfiguration, DtoGenericErrorMessageOption} from "./generated";
 import {
 	createDtoClientInfo,
-	DtoCommand,
-	DtoEvent,
-	DtoQuery,
 	DtoSessionClosingReason,
 	TeamAppsConnection,
 	TeamAppsConnectionImpl,
 	TeamAppsConnectionListener
 } from "teamapps-client-communication";
-import {bind} from "./util/bind";
-import {Component} from "./component/Component";
-import {ClientObject} from "./ClientObject";
+import {ClientObject, ClientObjectFactory, ServerObjectChannel} from "./ClientObject";
 import {Showable} from "./util/Showable";
 import {Globals} from "./Globals";
 import {createUiLocation} from "./util/locationUtil";
-import {AbstractWebComponent} from "./component/AbstractWebComponent";
-import {AbstractComponent} from "./component/AbstractComponent";
 
-type ClientObjectClass<T extends ClientObject = ClientObject> = { new(config: DtoClientObject): T };
+class ModuleWrapper {
+	activeEventNames: Set<string> = new Set<string>();
 
-
-function isClassicComponent(o: ClientObject): o is AbstractComponent {
-	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE !== 1;
-}
-
-function isWebComponent(o: ClientObject): o is AbstractWebComponent {
-	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE === 1;
-}
-
-class ClientObjectClassWrapper {
-	clazz: ClientObjectClass;
-	eventListeners: { [qualifiedName: string]: (any) => void } = {};
-
-	constructor(clazz: ClientObjectClass) {
-		this.clazz = clazz;
+	constructor(public module: any,
+				serverChannel: ServerObjectChannel) {
+		if (module.setServerChannel) {
+			module.setServerChannel({
+				sendEvent: (name: string, params: any[]) => {
+					if (this.activeEventNames.has(name)) {
+						serverChannel.sendEvent(name, params);
+					}
+				},
+				sendQuery(name: string, params: any[]): Promise<any> {
+					return serverChannel.sendQuery(name, params);
+				}
+			})
+		}
 	}
 
-	toggleEventListener(qualifiedEventName: string, listener?: (x: DtoEvent) => void) {
-		const eventName = capitalizeFirstLetter(qualifiedEventName.substring(qualifiedEventName.indexOf('.') + 1));
-		const event = this.clazz["on" + eventName];
-		const oldListener = this.eventListeners[qualifiedEventName];
-		if (oldListener) {
-			console.debug("Removing old listener", qualifiedEventName, this.eventListeners[qualifiedEventName])
-			event?.removeListener(oldListener);
-			delete this.eventListeners[qualifiedEventName];
-		}
-		if (listener != null) {
-			console.debug("Adding listener", qualifiedEventName, listener)
-			event?.addListener(listener);
-			this.eventListeners[qualifiedEventName] = listener;
+	toggleEvent(name: string, enabled: boolean) {
+		if (enabled) {
+			if (!this.module.setServerChannel) {
+				console.error(`Library does not define setServerChannel() function, so cannot listen to static event ${name}`);
+			}
+			this.activeEventNames.add(name);
+		} else {
+			this.activeEventNames.delete(name);
 		}
 	}
 }
 
-class ClientObjectWrapper {
+interface ClientObjectWrapper {
 	clientObject: ClientObject;
-	eventListeners: { [qualifiedName: string]: (any) => void } = {};
-	queryListeners: { [qualifiedName: string]: (any) => void } = {};
-
-	constructor(component: ClientObject) {
-		this.clientObject = component;
-	}
-
-	getUnwrappedComponent() {
-		return this.clientObject
-	}
-
-	toggleEventListener(qualifiedEventName: string, listener?: (x: DtoEvent) => void) {
-		const eventName = capitalizeFirstLetter(qualifiedEventName.substring(qualifiedEventName.indexOf('.') + 1));
-		const event = this.clientObject["on" + eventName];
-		const oldListener = this.eventListeners[qualifiedEventName];
-		if (oldListener) {
-			console.debug("Removing old listener", qualifiedEventName, this.eventListeners[qualifiedEventName])
-			event?.removeListener(oldListener);
-			delete this.eventListeners[qualifiedEventName];
-		}
-		if (listener != null) {
-			console.debug("Adding listener", qualifiedEventName, listener)
-			event?.addListener(listener);
-			this.eventListeners[qualifiedEventName] = listener;
-		}
-	}
+	toggleEvent(name: string, enabled: boolean): void;
 }
 
 export class DefaultUiContext implements TeamAppsUiContextInternalApi {
@@ -118,10 +81,10 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 		optimizedForTouch: false
 	};
 
-	private libraryModules: Map<string, Promise<any>> = new Map();
-	private componentClasses: Map<string, Promise<ClientObjectClassWrapper>> = new Map();
-	private components: Map<string, Promise<ClientObjectWrapper>> = new Map();
 	private connection: TeamAppsConnection;
+
+	private libraryModulesById: Map<string, Promise<ModuleWrapper>> = new Map();
+	private clientObjectWrappersById: Map<string, Promise<ClientObjectWrapper>> = new Map();
 
 	private expiredMessageWindow: Showable;
 	private errorMessageWindow: Showable;
@@ -130,12 +93,12 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string } = {}) {
 		this.sessionId = generateUUID();
 
-		let clientInfo = createDtoClientInfo({
+		const clientInfo = createDtoClientInfo({
 			viewPortWidth: window.innerWidth,
 			viewPortHeight: window.innerHeight,
 			screenWidth: window.screen.width,
 			screenHeight: window.screen.height,
-			highDensityScreen: this.isHighDensityScreen,
+			highDensityScreen: ((window.matchMedia && (window.matchMedia('only screen and (min-resolution: 124dpi), only screen and (min-resolution: 1.3dppx), only screen and (min-resolution: 48.8dpcm)').matches || window.matchMedia('only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 2.6/2), only screen and (min--moz-device-pixel-ratio: 1.3), only screen and (min-device-pixel-ratio: 1.3)').matches)) || (window.devicePixelRatio && window.devicePixelRatio > 1.3)),
 			timezoneOffsetMinutes: new Date().getTimezoneOffset(),
 			timezoneIana: Intl.DateTimeFormat().resolvedOptions().timeZone,
 			clientTokens: Globals.getClientTokens(),
@@ -144,7 +107,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 			teamAppsVersion: '__TEAMAPPS_VERSION__'
 		});
 
-		let connectionListener: TeamAppsConnectionListener = {
+		const connectionListener: TeamAppsConnectionListener = {
 			onConnectionInitialized: () => {
 			},
 			onConnectionErrorOrBroken: (reason, message) => {
@@ -180,15 +143,10 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 					}
 				}
 			},
-			executeCommand: (libraryUuid: string, clientObjectId: string, uiCommand: DtoCommand) => this.executeCommand(libraryUuid, clientObjectId, uiCommand)
+			executeCommand: (libraryUuid: string, clientObjectId: string, commandName: string, params: any[]) => this.executeCommand(libraryUuid, clientObjectId, commandName, params)
 		};
 
 		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
-
-		this.isHighDensityScreen = ((window.matchMedia && (window.matchMedia('only screen and (min-resolution: 124dpi), only screen and (min-resolution: 1.3dppx), only screen and (min-resolution: 48.8dpcm)').matches || window.matchMedia('only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 2.6/2), only screen and (min--moz-device-pixel-ratio: 1.3), only screen and (min-device-pixel-ratio: 1.3)').matches)) || (window.devicePixelRatio && window.devicePixelRatio > 1.3));
-		if (this.isHighDensityScreen) {
-			document.body.classList.add('high-density-screen');
-		}
 
 		window.addEventListener('unload', () => {
 			if (!navigator.sendBeacon) return;
@@ -197,111 +155,87 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 		})
 	}
 
-	@bind
-	public sendEvent(eventObject: DtoEvent) {
-		this.connection.sendEvent(eventObject);
-	}
-
-	@bind
-	public async sendQuery(query: DtoQuery): Promise<any> {
-		let result = await this.connection.sendQuery(query);
-		let resultWrapper = [result];
-		resultWrapper = await this.replaceComponentReferencesWithInstances(resultWrapper)
-		return resultWrapper[0];
-	}
-
-	private async registerClientObject(clientObjectPromise: Promise<ClientObject>, id: string, teamappsType: string, listeningEvents: string[]) {
-		console.debug("registering ClientObject: ", id);
-
-		const getClientComponentWrapper = async (clientObjectPromise: Promise<ClientObject>) => {
-			let clientObject = await clientObjectPromise;
-			return new ClientObjectWrapper(clientObject);
-		}
-
-		let clientComponentWrapper = getClientComponentWrapper(clientObjectPromise);
-		this.components.set(id, clientComponentWrapper);
-
-		console.debug(`Listening on clientObject ${id} to events ${listeningEvents}`);
-		listeningEvents?.forEach(qualifiedEventName => {
-			this.toggleEventListener(null, id, qualifiedEventName, true);
-		})
-	}
-
-	async toggleEventListener(libraryUuid: string | null, clientObjectId: string | null, qualifiedEventName: string, enabled: boolean) {
+	async toggleEvent(libraryUuid: string | null, clientObjectId: string | null, eventName: string, enabled: boolean) {
 		if (clientObjectId != null) {
-			let listener = enabled ? (eventObject) => {
-				const enhancedEventObject = {...eventObject, componentId: clientObjectId, _type: qualifiedEventName};
-				console.debug("Sending event to server: ", enhancedEventObject);
-				this.sendEvent(enhancedEventObject);
-			} : null;
-			let componentWrapper = await this.components.get(clientObjectId);
-			componentWrapper.toggleEventListener(qualifiedEventName, listener);
+			const componentWrapper = await this.clientObjectWrappersById.get(clientObjectId);
+			componentWrapper.toggleEvent(eventName, enabled);
 		} else {
 			// static event
-			let clazzWrapper: ClientObjectClassWrapper;
-			let className = qualifiedEventName.substring(0, qualifiedEventName.indexOf('.'));
-			let module = await this.libraryModules.get(libraryUuid);
-			clazzWrapper = await this.getClientObjectClassWrapper(libraryUuid, className);
-
-			let listener = enabled ? (eventObject) => {
-				const enhancedEventObject = {...eventObject, _type: qualifiedEventName};
-				console.debug("Sending static event to server: ", enhancedEventObject);
-				this.sendEvent(enhancedEventObject);
-			} : null;
-
-			clazzWrapper.toggleEventListener(qualifiedEventName, listener);
+			const moduleWrapper = await this.libraryModulesById.get(libraryUuid);
+			moduleWrapper.toggleEvent(eventName, enabled);
 		}
 	}
 
-	public async renderClientObject(libraryUuid: string, config: DtoClientObject) {
-		console.debug("rendering ClientObject: ", config._type, config.id, libraryUuid, config);
-		let promise = this.createClientObject(libraryUuid, config);
-		await this.registerClientObject(promise, config.id, config._type, config.listeningEvents);
-		return await promise;
-	}
+	public async createClientObject(libraryId: string, typeName: string, config: any, enabledEventNames: string[]) {
+		console.debug("creating ClientObject: ", config._type, config.id, libraryId, config);
 
-	public async createClientObject(libraryUuid: string, config: DtoClientObject): Promise<ClientObject> {
-		let componentClass = await this.getClientObjectClassWrapper(libraryUuid, config._type);
-		if (componentClass) {
-
-			// ((config as any)._queries ?? []).forEach(queryName => {
-			// 	(config as any)[queryName] = (queryObject: DtoQuery) => this.sendQuery({
-			// 		...queryObject,
-			// 		_type: config._type + "." + queryName,
-			// 		componentId: config.id
-			// 	});
-			// });
-			// delete (config as any)._queries;
-
-			let isWebComponent = (await componentClass.clazz as any).ELEMENT_NODE === 1;
-			if (isWebComponent) {
-				let webComponent = document.createElement('ui-div');
-				(webComponent as any).setConfig(config);
-				return webComponent as unknown as Component;
-			} else {
-				return new (await componentClass).clazz(config);
+		const activeEventNames: Set<string> = new Set<string>();
+		let serverChannel = {
+			sendEvent: (name: string, params: any[]): void => {
+				if (activeEventNames.has(name)) {
+					this.connection.sendEvent(libraryId, null, name, params);
+				}
+			},
+			sendQuery: async (name: string, params: any[]): Promise<any> => {
+				const result = await this.connection.sendQuery(libraryId, null, name, params);
+				return await this.replaceComponentReferencesWithInstances(result);
 			}
+		};
+
+		const wrapperPromise = this.instantiateClientObject(libraryId, typeName, config, serverChannel)
+			.then(clientObject => {
+				return {
+					clientObject,
+					toggleEvent(name: string, enabled: boolean) {
+						if (enabled) {
+							activeEventNames.add(name);
+						} else {
+							activeEventNames.delete(name);
+						}
+					}
+				} as ClientObjectWrapper;
+			});
+
+		this.clientObjectWrappersById.set(config.id, wrapperPromise);
+
+		console.debug(`Listening on clientObject ${(config.id)} to events ${(enabledEventNames)}`);
+		enabledEventNames?.forEach(qualifiedEventName => {
+			this.toggleEvent(null, config.id, qualifiedEventName, true);
+		});
+	}
+
+	private async instantiateClientObject(libraryId: string, typeName: string, config: any, serverChannel: ServerObjectChannel) {
+		const moduleWrapper = await this.libraryModulesById.get(libraryId);
+		const enhancedConfig = await this.replaceComponentReferencesWithInstances(config);
+
+		if (this.isClientObjectFactory(moduleWrapper.module)) {
+			return await moduleWrapper.module.createClientObject(typeName, enhancedConfig, serverChannel);
 		} else {
-			console.error("Unknown component type: " + config._type);
-			return null;
+			// fallback behavior: try to get hold of the constructor and invoke it with the config
+			const clazz = moduleWrapper[typeName];
+			if (!clazz) {
+				throw `Unknown client object type ${typeName} in library ${libraryId}`;
+			}
+			return new clazz(enhancedConfig);
 		}
 	}
 
-	async destroyClientObject(id: string) {
-		let o: any = (await this.components.get(id)).clientObject;
+	private isClientObjectFactory(module: any): module is ClientObjectFactory {
+		return typeof module["createClientObject"] === "function";
+	}
+
+	async destroyClientObject(oid: string) {
+		const o: any = (await this.clientObjectWrappersById.get(oid)).clientObject;
 		if (o != null) {
-			if (isClassicComponent(o)) {
-				o.getMainElement().remove();
-			}
 			o.destroy();
-			this.components.delete(id);
+			this.clientObjectWrappersById.delete(oid);
 		} else {
-			console.warn("Could not find component to destroy: " + id);
+			console.error("Could not find component to destroy: " + oid);
 		}
 	}
 
 	public async getClientObjectById(id: string): Promise<ClientObject> {
-		let promise = this.components.get(id);
+		const promise = this.clientObjectWrappersById.get(id);
 		if (promise == null) {
 			console.error(`Cannot find component with id ${id}`);
 			return null;
@@ -310,80 +244,84 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	private async replaceComponentReferencesWithInstances(o: any) {
-		let replaceOrRecur = async (value: any) => {
-			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("_ref") !== -1) {
-				const componentById = await this.getClientObjectById(value.id);
-				if (componentById != null) {
-					return componentById;
-				} else {
-					throw new Error("Could not find component with id " + value.id);
+	private async replaceComponentReferencesWithInstances<T>(o: any) {
+		const recur = async (o: any) => {
+			if (o == null || typeof o === "string" || typeof o === "boolean" || typeof o === "function" || typeof o === "number" || typeof o === "symbol") {
+				return o;
+			} else if (Array.isArray(o)) {
+				for (let i = 0; i < o.length; i++) {
+					let value = o[i];
+					const replacingValue = await this.replaceComponentReferencesWithInstances(value);
+					if (replacingValue !== value) {
+						o[i] = replacingValue;
+					}
+				}
+			} else if (typeof o === "object") {
+				for (const key of Object.keys(o)) {
+					let value: any = o[key];
+					const replacingValue = await this.replaceComponentReferencesWithInstances(value);
+					if (replacingValue !== value) {
+						o[key] = replacingValue;
+					}
 				}
 			} else {
-				value = await this.replaceComponentReferencesWithInstances(value);
-				return value;
-			}
-		};
-
-		if (o == null || typeof o === "string" || typeof o === "boolean" || typeof o === "function" || typeof o === "number" || typeof o === "symbol") {
-			return o;
-		} else if (Array.isArray(o)) {
-			for (let i = 0; i < o.length; i++) {
-				let value = o[i];
-				const replacingValue = await replaceOrRecur(value);
-				if (replacingValue !== value) {
-					o[i] = replacingValue;
-				}
-			}
-		} else if (typeof o === "object") {
-			for (const key of Object.keys(o)) {
-				let value = o[key];
-				const replacingValue = await replaceOrRecur(value);
-				if (replacingValue !== value) {
-					o[key] = replacingValue;
-				}
+				return o;
 			}
 		}
-		return o;
+
+		if (o != null && o._type && o._type === "_ref") {
+			const componentById = await this.getClientObjectById(o.id);
+			if (componentById != null) {
+				return componentById;
+			} else {
+				throw new Error("Could not find component with id " + o.id);
+			}
+		} else {
+			o = await recur(o);
+			return o;
+		}
 	}
 
-	private async executeCommand(libraryUuid: string | null, clientObjectId: string | null, command: DtoCommand): Promise<any> {
+	private async executeCommand(libraryUuid: string | null, clientObjectId: string | null, commandName: string, params: any[]): Promise<any> {
 		try {
-			command = await this.replaceComponentReferencesWithInstances(command);
-			const qualifiedMethodName = command[0];
-			const className = qualifiedMethodName.substring(0, qualifiedMethodName.indexOf('.'));
-			const methodName = qualifiedMethodName.substring(qualifiedMethodName.lastIndexOf('.') + 1);
-			console.log("Attempting to call", qualifiedMethodName, "on", clientObjectId, "in library", libraryUuid);
-			const parameters = command[1];
+			params = await this.replaceComponentReferencesWithInstances(params);
 			if (clientObjectId != null) {
-				console.debug(`Trying to call ${clientObjectId}.${methodName}()`);
-				const componentPromise: any = this.getClientObjectById(clientObjectId);
-				if (!componentPromise) {
-					throw new Error("The component " + clientObjectId + " does not exist, so cannot call " + methodName + "() on it.");
+				console.debug(`Trying to call ${libraryUuid}.${clientObjectId}.${commandName}(${params.join(", ")})`);
+				const clientObjectPromise: any = this.getClientObjectById(clientObjectId);
+				if (!clientObjectPromise) {
+					throw new Error("The object " + clientObjectId + " does not exist, so cannot call " + commandName + "() on it.");
 				}
-				const component = await componentPromise;
-				if (typeof component[methodName] !== "function") {
-					throw new Error(`The ${(<any>component.constructor).name || 'component'} ${clientObjectId} does not have a method ${methodName}()!`);
+				const clientObject = await clientObjectPromise;
+				if (typeof clientObject[commandName] !== "function") {
+					throw new Error(`The ${(<any>clientObject.constructor).name || 'object'} ${clientObjectId} does not have a method ${commandName}()!`);
 				}
-				return await component[methodName].apply(component, parameters);
+				return await clientObject[commandName].apply(clientObject, params);
 			} else {
-				console.debug(`Trying to call static method ${qualifiedMethodName}(${parameters.join(", ")})`);
-				const classWrapper = await this.getClientObjectClassWrapper(libraryUuid, className);
-				let method = classWrapper.clazz[methodName];
+				console.debug(`Trying to call global function ${libraryUuid}.${commandName}(${params.join(", ")})`);
+				const moduleWrapper = await this.libraryModulesById.get(libraryUuid);
+				const method = moduleWrapper[commandName];
 				if (method == null) {
-					console.error(`Cannot find method ${method} in ${className}`)
+					throw `Cannot find exported function ${method} from library ${libraryUuid}`;
+				} else {
+					return await (method.apply(moduleWrapper.module, params));
 				}
-				let methodParameters = (libraryUuid == null && className == "Globals") ? [...parameters, this] : [...parameters];
-				return await (method.apply(classWrapper.clazz, methodParameters));
 			}
 		} catch (e) {
 			console.error(e);
 		}
 	}
 
-	registerComponentLibrary(uuid: string, mainJsUrl: string, mainCssUrl: string) {
-		let module = import(mainJsUrl);
-		this.libraryModules.set(uuid, module);
+	registerComponentLibrary(libraryId: string, mainJsUrl: string, mainCssUrl: string) {
+		const module = import(mainJsUrl);
+		this.libraryModulesById.set(libraryId, module.then(module => new ModuleWrapper(module, {
+			sendEvent: (name: string, params: any[]): void => {
+				this.connection.sendEvent(libraryId, null, name, params);
+			},
+			sendQuery: async (name: string, params: any[]): Promise<any> => {
+				const result = await this.connection.sendQuery(libraryId, null, name, params);
+				return await this.replaceComponentReferencesWithInstances(result);
+			}
+		})));
 		if (mainCssUrl != null) {
 			const link = document.createElement('link');
 			link.rel = 'stylesheet';
@@ -391,31 +329,6 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 			link.href = mainCssUrl;
 			document.getElementsByTagName('head')[0].appendChild(link);
 		}
-	}
-
-	private async getClientObjectClassWrapper(libraryUuid: string, className: string): Promise<ClientObjectClassWrapper> {
-		let key = `${libraryUuid}#${className}`;
-		let clientObjectClassWrapperPromise = this.componentClasses.get(key);
-		if (clientObjectClassWrapperPromise == null) {
-			let promise = new Promise<ClientObjectClassWrapper>(async (resolve, reject) => {
-				if (libraryUuid != null) {
-					let module = await this.libraryModules.get(libraryUuid);
-					let clazz = module[className];
-
-					if (!clazz) {
-						console.error(`Unknown client object type ${className} in library ${libraryUuid}`);
-						reject();
-					} else {
-						resolve(new ClientObjectClassWrapper(clazz))
-					}
-				} else {
-					resolve(new ClientObjectClassWrapper(Globals as ClientObjectClass))
-				}
-			});
-			this.componentClasses.set(key, promise);
-			clientObjectClassWrapperPromise = promise;
-		}
-		return clientObjectClassWrapperPromise;
 	}
 
 	public setSessionMessageWindows(expiredMessageWindow: Showable, errorMessageWindow: Showable, terminatedMessageWindow: Showable) {

@@ -1,0 +1,252 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.uisession.messagebuffer;
+
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.api.Assertions;
+import org.junit.Assert;
+import org.junit.Test;
+import org.teamapps.dto.protocol.server.Command;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+public class ServerMessageBufferTest {
+
+	@Test
+	public void size() throws Exception {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(3, 1_000_000);
+		assertEquals(0, buffer.getBufferedMessagesCount());
+		buffer.addMessage(createCmd(1));
+		assertEquals(1, buffer.getBufferedMessagesCount());
+		buffer.addMessage(createCmd(2));
+		assertEquals(2, buffer.getBufferedMessagesCount());
+		buffer.addMessage(createCmd(3));
+		assertEquals(3, buffer.getBufferedMessagesCount());
+		buffer.consumeMessage();
+		buffer.addMessage(createCmd(4));
+		assertEquals(3, buffer.getBufferedMessagesCount()); // !!
+		buffer.consumeMessage();
+		buffer.addMessage(createCmd(5));
+		assertEquals(3, buffer.getBufferedMessagesCount()); // !!
+	}
+
+	@Test
+	public void consumeCommand() throws Exception {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(2, 1_000_000);
+
+		buffer.addMessage(createCmd(1));
+		assertEquals(1, buffer.consumeMessage().getId());
+		assertNull(buffer.consumeMessage());
+
+		buffer.addMessage(createCmd(2));
+		buffer.addMessage(createCmd(3));
+		assertEquals(2, buffer.consumeMessage().getId());
+		assertEquals(3, buffer.consumeMessage().getId());
+		assertNull(buffer.consumeMessage());
+	}
+
+	@Test
+	public void throwsExceptionIfCommandsNextConsumableCommandGetsDeletedDueToBufferOverflow() throws Exception {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(3, 1_000_000);
+		buffer.addMessage(createCmd(1));
+		buffer.addMessage(createCmd(2));
+		buffer.addMessage(createCmd(3));
+		buffer.consumeMessage();
+		buffer.addMessage(createCmd(4));
+		assertThatThrownBy(() -> buffer.addMessage(createCmd(5)))
+				.isInstanceOf(ServerMessageBufferLengthOverflowException.class);
+	}
+
+	@Test
+	public void rewindToCommand() throws Exception {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(5, 1_000_000);
+		for (int i = 1; i <= 4; i++) {
+			buffer.addMessage(createCmd(i));
+			if (i <= 3) {
+				buffer.consumeMessage();
+			}
+		}
+		assertEquals(4, buffer.getBufferedMessagesCount());
+
+		buffer.rewindToMessage(2);
+
+		assertEquals(4, buffer.getBufferedMessagesCount());
+		assertEquals(3, buffer.consumeMessage().getId());
+		assertEquals(4, buffer.consumeMessage().getId());
+		assertNull(buffer.consumeMessage());
+	}
+
+	@Test
+	public void rewindToCommand2() throws Exception {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(6, 1_000_000);
+		for (int i = 1; i <= 7; i++) {
+			buffer.addMessage(createCmd(i));
+			if (i <= 5) {
+				buffer.consumeMessage();
+			}
+		}
+		assertEquals(6, buffer.getBufferedMessagesCount());
+
+		buffer.rewindToMessage(3);
+
+		assertEquals(6, buffer.getBufferedMessagesCount());
+		assertEquals(4, buffer.consumeMessage().getId());
+		assertEquals(5, buffer.consumeMessage().getId());
+		assertEquals(6, buffer.consumeMessage().getId());
+		assertEquals(7, buffer.consumeMessage().getId());
+		assertNull(buffer.consumeMessage());
+	}
+
+	@Test
+	public void rewindToCommandWithLastReceivedIsMinusOne() throws Exception {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(6, 1_000_000);
+		for (int i = 1; i <= 3; i++) {
+			buffer.addMessage(createCmd(i));
+		}
+
+		assertEquals(true, buffer.rewindToMessage(-1));
+		assertEquals(1, buffer.consumeMessage().getId());
+	}
+
+	@Test
+	public void rewindToCommandWithLastReceivedIsMinusOneFailsIfAlreadyOutOfBuffer() throws Exception {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(6, 1_000_000);
+		for (int i = 1; i <= 7; i++) {
+			buffer.addMessage(createCmd(i));
+			if (i <= 2) {
+				buffer.consumeMessage();
+			}
+		}
+		assertEquals(6, buffer.getBufferedMessagesCount());
+
+		assertEquals(false, buffer.rewindToMessage(-1));
+	}
+
+	@Test
+	public void purgeTillCommand() throws Exception {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(10, 1_000_000);
+
+		for (int i = 1; i <= 15; i++) {
+			buffer.addMessage(createCmd(i));
+			if (i <= 11) {
+				buffer.consumeMessage();
+			}
+		}
+
+		Assert.assertEquals(10, buffer.getBufferedMessagesCount());
+
+		buffer.purgeTillMessage(8);
+		Assert.assertEquals(8, buffer.getBufferedMessagesCount());
+
+		buffer.purgeTillMessage(10);
+		Assert.assertEquals(6, buffer.getBufferedMessagesCount());
+
+		buffer.purgeTillMessage(11);
+		Assert.assertEquals(5, buffer.getBufferedMessagesCount());
+
+		buffer.purgeTillMessage(12);
+		Assert.assertEquals("must not purge next consumable command", 4, buffer.getBufferedMessagesCount());
+
+		buffer.purgeTillMessage(100);
+		Assert.assertEquals("must not purge next consumable command", 4, buffer.getBufferedMessagesCount());
+	}
+
+	@Test
+	public void rewindToCommandWhenTailGreaterThanNextConsumableAndRewindedCommandIsLeftFromNextConsumable()
+			throws ServerMessageBufferException {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(10, 1_000_000);
+
+		for (int i = 0; i < 15; i++) {
+			buffer.addMessage(createCmd(i));
+			buffer.consumeMessage();
+		}
+		buffer.addMessage(createCmd(15));
+
+		buffer.rewindToMessage(13);
+
+		Assertions.assertThat(buffer.consumeMessage().getId()).isEqualTo(14);
+	}
+
+	@Test
+	public void shouldThrowExceptionWhenMaxTotalSizeIsReached() throws ServerMessageBufferException {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(100, 1_000);
+
+		for (int i = 0; i < 10; i++) {
+			buffer.addMessage(createCmd(i, 100));
+		}
+
+		assertThatThrownBy(() -> buffer.addMessage(createCmd(10, 1)))
+				.isInstanceOf(ServerMessageBufferSizeOverflowException.class);
+	}
+
+	@Test
+	public void shouldPurgeACommandBeforeThrowingExceptionWhenMaxTotalSizeIsReached() throws ServerMessageBufferException {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(100, 1_000);
+
+		for (int i = 0; i < 10; i++) {
+			buffer.addMessage(createCmd(i, 100));
+		}
+
+		assertThat(buffer.getBufferedMessagesCount()).isEqualTo(10);
+
+		for (int i = 10; i < 20; i++) {
+			buffer.consumeMessage();
+			buffer.addMessage(createCmd(10, 100)); // does not throw an exception!
+		}
+
+		assertThat(buffer.getBufferedMessagesCount()).isEqualTo(10);
+
+		assertThatThrownBy(() -> buffer.addMessage(createCmd(11, 1)))
+				.isInstanceOf(ServerMessageBufferSizeOverflowException.class);
+	}
+
+	@Test
+	public void shouldPurgeMultipleCommandsBeforeThrowingExceptionWhenMaxTotalSizeIsReached() throws ServerMessageBufferException {
+		ServerMessageBuffer buffer = new ServerMessageBuffer(100, 1_000);
+
+		for (int i = 0; i < 10; i++) {
+			buffer.addMessage(createCmd(i, 100));
+		}
+
+		for (int i = 0; i < 5; i++) {
+			buffer.consumeMessage();
+		}
+
+		assertThat(buffer.getBufferedMessagesCount()).isEqualTo(10);
+
+		buffer.addMessage(createCmd(10, 500)); // fills up the buffer
+
+		assertThat(buffer.getBufferedMessagesCount()).isEqualTo(6);
+
+		assertThatThrownBy(() -> buffer.addMessage(createCmd(11, 1)))
+				.isInstanceOf(ServerMessageBufferSizeOverflowException.class);
+	}
+
+	private Command createCmd(int id) {
+		return createCmd(id, 10);
+	}
+
+	private Command createCmd(int id, int length) {
+		return new Command(id, null, "clientObjectId", "someCommand", StringUtils.repeat('x', length), false);
+	}
+}

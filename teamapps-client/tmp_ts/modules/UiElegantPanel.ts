@@ -28,14 +28,14 @@ import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlig
 import {parseHtml} from "./Common";
 import {UiComponent} from "./UiComponent";
 
-export class UiElegantPanel extends AbstractComponent<DtoElegantPanel> implements DtoElegantPanelCommandHandler {
+export class UiElegantPanel extends AbstractLegacyComponent<DtoElegantPanel> implements DtoElegantPanelCommandHandler {
 
 	private $element: HTMLElement;
 	private $contentContainer: HTMLElement;
 	private contentComponent: UiComponent<DtoComponent>;
 
-	constructor(config: DtoElegantPanel) {
-		super(config);
+	constructor(config: DtoElegantPanel, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$element = parseHtml(`<div class="UiElegantPanel">
                 <div class="flex-container">
                     <div class="background-image-div teamapps-blurredBackgroundImage">

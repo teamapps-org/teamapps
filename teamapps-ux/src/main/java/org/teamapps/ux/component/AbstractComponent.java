@@ -21,7 +21,6 @@ package org.teamapps.ux.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoCommand;
 import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoGlobals;
 import org.teamapps.event.ProjectorEvent;
@@ -53,6 +52,7 @@ public abstract class AbstractComponent implements Component {
 
 	public AbstractComponent() {
 		this.sessionContext = CurrentSessionContext.get();
+		sessionContext.registerClientObject(this);
 	}
 
 	protected void mapAbstractUiComponentProperties(DtoComponent uiComponent) {
@@ -78,15 +78,15 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
-	protected void toggleEventListening(String name, boolean shouldListen) {
+	protected void toggleEventListening(String name, boolean enabled) {
 		boolean changed;
-		if (shouldListen) {
+		if (enabled) {
 			changed = listeningEventNames.add(name);
 		} else {
 			changed = listeningEventNames.remove(name);
 		}
 		if (changed) {
-			sendGlobalStaticCommandIfRendered(() -> new DtoGlobals.ToggleEventListeningCommand(null, getId(), name, shouldListen));
+			sessionContext.toggleEvent(this, name, enabled);
 		}
 	}
 
@@ -113,18 +113,8 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
-	private void sendGlobalStaticCommandIfRendered(Supplier<DtoCommand<?>> commandSupplier) {
-		SessionContext sessionContext = getSessionContext();
-		if (sessionContext.isRendering(this)) {
-			// wait until finished rendering for sending this command!
-			sessionContext.runWithContext(() -> sessionContext.sendStaticCommand(Globals.class, commandSupplier.get()), true);
-		} else if (sessionContext.isRendered(this)) {
-			sessionContext.sendStaticCommand(Globals.class, commandSupplier.get());
-		}
-	}
-
 	protected void sendCommandIfRendered(Supplier<DtoCommand<?>> commandSupplier) {
-		sessionContext.sendCommandIfRendered(this, commandSupplier.get());
+		sessionContext.sendCommandIfRendered(this, commandSupplier.get(), null);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 export * from "./generated";
 
-export * from "./component/AbstractComponent";
+export * from "./component/AbstractLegacyComponent";
 export * from "./component/AbstractWebComponent";
 export * from "./component/Component";
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {animateCSS, Constants, removeClassesByFunction} from "../Common";
 
 import {
@@ -33,7 +33,7 @@ import {
 import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";
 
-export class NotificationBar extends AbstractComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {
+export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {
 
 	public readonly onItemClicked: TeamAppsEvent<DtoNotificationBar_ItemClickedEvent> = new TeamAppsEvent();
 	public readonly onItemActionLinkClicked: TeamAppsEvent<DtoNotificationBar_ItemActionLinkClickedEvent> = new TeamAppsEvent();
@@ -42,8 +42,8 @@ export class NotificationBar extends AbstractComponent<DtoNotificationBar> imple
 	private $main: HTMLElement;
 	private itemsById: { [id: string]: NotificationBarItem } = {};
 
-	constructor(config: DtoNotificationBar) {
-		super(config);
+	constructor(config: DtoNotificationBar, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="NotificationBar"></div>`);
 		config.initialItems.forEach(item => this.addItem(item))
 	}

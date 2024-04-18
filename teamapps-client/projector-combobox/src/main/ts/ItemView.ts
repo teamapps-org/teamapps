@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, DtoIdentifiableClientRecord, generateUUID, parseHtml, TeamAppsEvent, Template} from "teamapps-client-core";
+import {AbstractLegacyComponent, DtoIdentifiableClientRecord, generateUUID, parseHtml, TeamAppsEvent, Template} from "teamapps-client-core";
 import {
 	DtoItemView,
 	DtoItemView_ItemClickedEvent,
@@ -30,7 +30,7 @@ import {
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {DEFAULT_TEMPLATES, trivialMatch} from "./trivial-components/TrivialCore";
 
-export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemViewCommandHandler, DtoItemViewEventSource {
+export class ItemView extends AbstractLegacyComponent<DtoItemView> implements DtoItemViewCommandHandler, DtoItemViewEventSource {
 
 	public readonly onItemClicked: TeamAppsEvent<DtoItemView_ItemClickedEvent> = new TeamAppsEvent<DtoItemView_ItemClickedEvent>();
 
@@ -38,8 +38,8 @@ export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemV
 	private groupsByGroupId: { [index: string]: ItemGroup } = {};
 	private filterString: string = "";
 
-	constructor(config: DtoItemView) {
-		super(config);
+	constructor(config: DtoItemView, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$itemView = parseHtml('<div class="UiItemView"></div>');
 		this.$itemView.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";

@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.projector.components.calendar.dto.DtoCalendar;
@@ -157,9 +157,9 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		DtoCalendarEventClientRecord uiRecord = new DtoCalendarEventClientRecord();
 		uiRecord.setValues(values);
 
-		uiRecord.setTimeGridTemplate(timeGridTemplate != null ? timeGridTemplate.createDtoReference() : null);
-		uiRecord.setDayGridTemplate(dayGridTemplate != null ? dayGridTemplate.createDtoReference() : null);
-		uiRecord.setMonthGridTemplate(monthGridTemplate != null ? monthGridTemplate.createDtoReference() : null);
+		uiRecord.setTimeGridTemplate(timeGridTemplate != null ? timeGridTemplate.createClientReference() : null);
+		uiRecord.setDayGridTemplate(dayGridTemplate != null ? dayGridTemplate.createClientReference() : null);
+		uiRecord.setMonthGridTemplate(monthGridTemplate != null ? monthGridTemplate.createClientReference() : null);
 
 		uiRecord.setIcon(getSessionContext().resolveIcon(calendarEvent.getIcon()));
 		uiRecord.setTitle(calendarEvent.getTitle());
@@ -198,7 +198,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoCalendar uiCalendar = new DtoCalendar();
 		mapAbstractUiComponentProperties(uiCalendar);
 		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());
@@ -239,7 +239,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoCalendar.EventClickedEvent.TYPE_ID -> {
 				var clickEvent = event.as(DtoCalendar.EventClickedEventWrapper.class);
@@ -307,7 +307,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		CacheManipulationHandle<List<DtoCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
 			final DtoCalendar.SetCalendarDataCommand setCalendarDataCommand = new DtoCalendar.SetCalendarDataCommand(cacheResponse.getAndClearResult());
-			getSessionContext().sendCommandIfRendered(this, () -> setCalendarDataCommand, aVoid -> cacheResponse.commit());
+			getSessionContext().sendCommandIfRendered(this, () -> setCalendarDataCommand.get(), aVoid -> cacheResponse.commit());
 		} else {
 			cacheResponse.commit();
 		}

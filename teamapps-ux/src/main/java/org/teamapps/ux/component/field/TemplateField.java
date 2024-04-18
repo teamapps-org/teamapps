@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoClientRecord;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoTemplateField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -48,8 +48,8 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
+	public void handleUiEvent(String name, JsonWrapper params) {
+		super.handleUiEvent(name, params);
 		switch (event.getTypeId()) {
 			case DtoTemplateField.ClickedEvent.TYPE_ID -> {
 				var e = event.as(DtoTemplateField.ClickedEventWrapper.class);
@@ -59,10 +59,10 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 	}
 
 	@Override
-	public DtoTemplateField createDto() {
+	public DtoTemplateField createConfig() {
 		DtoTemplateField ui = new DtoTemplateField();
 		mapAbstractFieldAttributesToUiField(ui);
-		ui.setTemplate(template.createDtoReference());
+		ui.setTemplate(template.createClientReference());
 		ui.setValue(createUiRecord(getValue()));
 		return ui;
 	}
@@ -94,7 +94,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setTemplate(Template template) {
 		this.template = template;
-		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createConfig()));
 		return this;
 	}
 
@@ -104,7 +104,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
-		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createConfig()));
 		return this;
 	}
 

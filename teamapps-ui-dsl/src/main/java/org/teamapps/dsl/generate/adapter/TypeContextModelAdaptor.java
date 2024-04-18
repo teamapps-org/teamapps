@@ -168,7 +168,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor<TypeContext> {
 		} else if (isDictionary(typeContext)) {
 			return "Map<String, " + getJavaTypeString(typeContext.typeReference().typeArguments().typeArgument(0).type(), true) + ">";
 		} else if (isUiClientObjectReference(typeContext)) {
-			return "DtoReference";
+			return "ClientObject";
 		} else if (model.isDtoType(typeContext)) {
 			return "Dto" + typeContext.getText();
 		} else if (isPrimitiveType(typeContext) && forceNonPrimitive) {
@@ -187,7 +187,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor<TypeContext> {
 		} else if (model.isDtoClassOrInterface(typeContext)) {
 			return getJavaTypeString(typeContext, false) + "Wrapper";
 		} else if (isObject(typeContext)) {
-			return "DtoJsonWrapper";
+			return "JsonWrapper";
 		} else {
 			return getJavaTypeString(typeContext, false);
 		}

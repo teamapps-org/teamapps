@@ -28,13 +28,13 @@ import {UiCssAlignItems} from "../generated/UiCssAlignItems";
 import {UiCssJustifyContent} from "../generated/UiCssJustifyContent";
 import {UiComponent} from "./UiComponent";
 
-export class UiFlexContainer extends AbstractComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
+export class UiFlexContainer extends AbstractLegacyComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
 
 	private $main: HTMLDivElement;
 	private components: UiComponent[] = [];
 
-	constructor(config: DtoFlexContainer) {
-		super(config);
+	constructor(config: DtoFlexContainer, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="UiFlexContainer"></div>`);
 		this.$main.style.flexDirection = config.flexDirection;
 		this.$main.style.alignItems = config.alignItems;

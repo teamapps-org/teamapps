@@ -82,7 +82,7 @@ public class TableColumn<RECORD, VALUE> {
 
 	public DtoTableColumn createUiTableColumn() {
 		SessionContext context = CurrentSessionContext.get();
-		DtoTableColumn uiTableColumn = new DtoTableColumn(propertyName, context.resolveIcon(icon), title, field.createDtoReference());
+		DtoTableColumn uiTableColumn = new DtoTableColumn(propertyName, context.resolveIcon(icon), title, field.createClientReference());
 		uiTableColumn.setDefaultWidth(defaultWidth);
 		uiTableColumn.setMinWidth(minWidth);
 		uiTableColumn.setDefaultWidth(defaultWidth);

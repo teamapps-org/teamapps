@@ -26,17 +26,23 @@ import jakarta.websocket.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.dto.protocol.*;
+import org.teamapps.dto.protocol.client.*;
+import org.teamapps.dto.protocol.server.AbstractServerMessage;
+import org.teamapps.dto.protocol.server.REINIT_NOK;
+import org.teamapps.dto.protocol.server.SESSION_CLOSED;
+import org.teamapps.dto.protocol.server.SessionClosingReason;
 import org.teamapps.uisession.*;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.Location;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class WebSocketCommunicationEndpoint extends Endpoint {
 
@@ -113,29 +119,29 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 			totalReceiveCount.addAndGet(payload.length());
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
-				DtoAbstractClientMessageWrapper clientMessage = new DtoAbstractClientMessageWrapper(mapper.readTree(payload));
+				AbstractClientMessageWrapper clientMessage = new AbstractClientMessageWrapper(mapper.readTree(payload));
 
 				switch (clientMessage.getTypeId()) {
-					case DtoINITWrapper.TYPE_ID -> {
+					case INITWrapper.TYPE_ID -> {
 						ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
-						DtoINITWrapper init = clientMessage.as(DtoINITWrapper.class);
+						INITWrapper init = clientMessage.as(INITWrapper.class);
 
-						DtoClientInfoWrapper uiClientInfo = init.getClientInfo();
+						ClientInfoWrapper dtoClientInfo = init.getClientInfo();
 						var clientInfo = new ClientInfo(
 								serverSideClientInfo.getIp(),
-								uiClientInfo.getScreenWidth(),
-								uiClientInfo.getScreenHeight(),
-								uiClientInfo.getViewPortWidth(),
-								uiClientInfo.getViewPortHeight(),
+								dtoClientInfo.getScreenWidth(),
+								dtoClientInfo.getScreenHeight(),
+								dtoClientInfo.getViewPortWidth(),
+								dtoClientInfo.getViewPortHeight(),
 								serverSideClientInfo.getPreferredLanguageIso(),
-								uiClientInfo.getHighDensityScreen(),
-								uiClientInfo.getTimezoneIana(),
-								uiClientInfo.getTimezoneOffsetMinutes(),
-								uiClientInfo.getClientTokens(),
+								dtoClientInfo.getHighDensityScreen(),
+								dtoClientInfo.getTimezoneIana(),
+								dtoClientInfo.getTimezoneOffsetMinutes(),
+								dtoClientInfo.getClientTokens(),
 								serverSideClientInfo.getUserAgentString(),
-								Location.fromUiLocationWrapper(uiClientInfo.getLocation()),
-								uiClientInfo.getClientParameters(),
-								uiClientInfo.getTeamAppsVersion()
+								Location.fromUiLocationWrapper(dtoClientInfo.getLocation()),
+								dtoClientInfo.getClientParameters(),
+								dtoClientInfo.getTeamAppsVersion()
 						);
 
 						uiSession = sessionManager.initSession(
@@ -146,66 +152,71 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 								new MessageSenderImpl()
 						);
 					}
-					case DtoREINITWrapper.TYPE_ID -> {
-						DtoREINITWrapper reinit = clientMessage.as(DtoREINITWrapper.class);
+					case REINITWrapper.TYPE_ID -> {
+						REINITWrapper reinit = clientMessage.as(REINITWrapper.class);
 						String uiSessionId = reinit.getSessionId();
 						uiSession = sessionManager.getUiSessionById(uiSessionId);
 						if (uiSession != null) {
 							uiSession.reinit(reinit.getLastReceivedCommandId(), reinit.getMaxRequestedCommandId(), new MessageSenderImpl());
 						} else {
 							LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + uiSessionId);
-							send(new DtoREINIT_NOK(DtoSessionClosingReason.SESSION_NOT_FOUND), null, null);
+							send(new REINIT_NOK(SessionClosingReason.SESSION_NOT_FOUND), null, null);
 						}
 					}
-					case DtoTERMINATEWrapper.TYPE_ID -> {
-						uiSession.close(DtoSessionClosingReason.TERMINATED_BY_CLIENT);
+					case TERMINATEWrapper.TYPE_ID -> {
+						uiSession.close(SessionClosingReason.TERMINATED_BY_CLIENT);
 					}
-					case DtoEVTWrapper.TYPE_ID -> {
-						DtoEVTWrapper eventMessage = clientMessage.as(DtoEVTWrapper.class);
-						uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent());
+					case EVTWrapper.TYPE_ID -> {
+						EVTWrapper eventMessage = clientMessage.as(EVTWrapper.class);
+						uiSession.handleEvent(eventMessage.getSequenceNumber(), eventMessage.getLibraryId(), eventMessage.getClientObjectId(), eventMessage.getName(), eventMessage.getParams());
 					}
-					case DtoQRYWrapper.TYPE_ID -> {
-						DtoQRYWrapper queryMessage = clientMessage.as(DtoQRYWrapper.class);
-						uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery());
+					case QUERYWrapper.TYPE_ID -> {
+						QUERYWrapper queryMessage = clientMessage.as(QUERYWrapper.class);
+						uiSession.handleQuery(queryMessage.getSequenceNumber(), queryMessage.getLibraryId(), queryMessage.getClientObjectId(), queryMessage.getName(), queryMessage.getParams());
 					}
-					case DtoCMD_RESWrapper.TYPE_ID -> {
-						DtoCMD_RESWrapper cmdResult = clientMessage.as(DtoCMD_RESWrapper.class);
-						uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult());
+					case CMD_RESWrapper.TYPE_ID -> {
+						CMD_RESWrapper cmdResult = clientMessage.as(CMD_RESWrapper.class);
+						uiSession.handleCommandResult(cmdResult.getSequenceNumber(), cmdResult.getCmdSn(), cmdResult.getResult());
 					}
-					case DtoCMD_REQWrapper.TYPE_ID -> {
-						DtoCMD_REQWrapper cmdRequest = clientMessage.as(DtoCMD_REQWrapper.class);
+					case REQNWrapper.TYPE_ID -> {
+						REQNWrapper cmdRequest = clientMessage.as(REQNWrapper.class);
 						uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId());
 					}
-					case DtoKEEPALIVEWrapper.TYPE_ID -> {
+					case KEEPALIVEWrapper.TYPE_ID -> {
 						uiSession.handleKeepAlive();
 					}
 					default -> throw new TeamAppsCommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
 				}
 			} catch (TeamAppsSessionNotFoundException e) {
 				LOGGER.warn("TeamApps session not found: " + e.getSessionId());
-				send(new DtoSESSION_CLOSED(DtoSessionClosingReason.SESSION_NOT_FOUND, e.getMessage()), this::close, (t) -> close());
+				send(new SESSION_CLOSED(SessionClosingReason.SESSION_NOT_FOUND, e.getMessage()), this::close, (t) -> close());
 			} catch (Exception e) {
 				LOGGER.error("Exception while processing client message!", e);
-				send(new DtoSESSION_CLOSED(DtoSessionClosingReason.SERVER_SIDE_ERROR, e.getMessage()), this::close, (t) -> close());
+				send(new SESSION_CLOSED(SessionClosingReason.SERVER_SIDE_ERROR, e.getMessage()), this::close, (t) -> close());
 			}
 		}
 
-		private void send(DtoAbstractServerMessage message, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
+		private void send(AbstractServerMessage message, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
+			String messageAsString;
+			try {
+				messageAsString = mapper.writeValueAsString(message);
+			} catch (JsonProcessingException e) {
+				throw new TeamAppsCommunicationException(e);
+			}
+			send(messageAsString, sendingSuccessHandler, sendingErrorHandler);
+		}
+
+		private void send(String messageString, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
 			if (this.closed) {
 				sendingErrorHandler.onErrorWhileSending(new TeamAppsCommunicationException("Connection closed!"));
 				return;
 			}
 			try {
-				String messageAsString;
-				try {
-					messageAsString = mapper.writeValueAsString(message);
-				} catch (JsonProcessingException e) {
-					throw new TeamAppsCommunicationException(e);
-				}
-				sendCount.addAndGet(messageAsString.length());
-				totalSendCount.addAndGet(messageAsString.length());
+
+				sendCount.addAndGet(messageString.length());
+				totalSendCount.addAndGet(messageString.length());
 				//noinspection Convert2Lambda
-				wsSession.getAsyncRemote().sendText(messageAsString, new SendHandler() {
+				wsSession.getAsyncRemote().sendText(messageString, new SendHandler() {
 					@Override
 					public void onResult(SendResult result) {
 						if (result.isOK() && sendingSuccessHandler != null) {
@@ -239,14 +250,14 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 
 		private class MessageSenderImpl implements MessageSender {
 			@Override
-			public void sendMessageAsynchronously(DtoAbstractServerMessage msg, SendingErrorHandler sendingErrorHandler) {
-				send(msg, null, sendingErrorHandler);
+			public void sendAsynchronously(List<String> messages, SendingErrorHandler sendingErrorHandler) {
+				send(messages.stream().collect(Collectors.joining(",", "[", "]")), null, sendingErrorHandler);
 			}
 
 			@Override
-			public void close(DtoSessionClosingReason closingReason, String message) {
+			public void close(SessionClosingReason closingReason, String message) {
 				send(
-						new DtoSESSION_CLOSED(closingReason, message),
+						new SESSION_CLOSED(closingReason, message),
 						() -> jettyWorkaroundCloseExecutor.execute(WebSocketHandler.this::close),
 						(t) -> jettyWorkaroundCloseExecutor.execute(() -> WebSocketHandler.this.close())
 				);

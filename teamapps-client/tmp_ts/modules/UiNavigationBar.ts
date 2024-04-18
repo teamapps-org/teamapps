@@ -40,7 +40,7 @@ interface Button {
 	$button: HTMLElement;
 }
 
-export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
+export class UiNavigationBar extends AbstractLegacyComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
 
 	public readonly onButtonClicked: TeamAppsEvent<DtoNavigationBar_ButtonClickedEvent> = new TeamAppsEvent();
 	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent();
@@ -57,8 +57,8 @@ export class UiNavigationBar extends AbstractComponent<DtoNavigationBar> impleme
 	private multiProgressDisplay: UiMultiProgressDisplay;
 	private $multiProgressDisplayContainer: HTMLElement;
 
-	constructor(config: DtoNavigationBar) {
-		super(config);
+	constructor(config: DtoNavigationBar, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.buttonTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.buttonTemplate, null);
 

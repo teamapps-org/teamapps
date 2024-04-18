@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoDefaultMultiProgressDisplay,
 	DtoDefaultMultiProgressDisplayCommandHandler,
@@ -29,7 +29,7 @@ import {
 	DtoMultiProgressDisplayEventSource
 } from "../generated";
 
-export abstract class MultiProgressDisplay<C extends DtoMultiProgressDisplay = DtoMultiProgressDisplay> extends AbstractComponent<C> implements DtoMultiProgressDisplayCommandHandler, DtoMultiProgressDisplayEventSource {
+export abstract class MultiProgressDisplay<C extends DtoMultiProgressDisplay = DtoMultiProgressDisplay> extends AbstractLegacyComponent<C> implements DtoMultiProgressDisplayCommandHandler, DtoMultiProgressDisplayEventSource {
 	public readonly onClicked: TeamAppsEvent<DtoMultiProgressDisplay_ClickedEvent> = new TeamAppsEvent();
 	abstract update(config: C): void;
 }
@@ -40,8 +40,8 @@ export class DefaultMultiProgressDisplay extends MultiProgressDisplay<DtoDefault
 	private $spinner: HTMLElement;
 	private $runningCount: HTMLElement;
 
-	constructor(config: DtoDefaultMultiProgressDisplay) {
-		super(config);
+	constructor(config: DtoDefaultMultiProgressDisplay, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="DefaultMultiProgressDisplay">
 	<div class="spinner teamapps-spinner"></div>					

@@ -20,7 +20,6 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.dto.DtoTextInputHandlingField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
 
 public interface TextInputHandlingField {
@@ -29,7 +28,7 @@ public interface TextInputHandlingField {
 
 	ProjectorEvent<SpecialKey> onSpecialKeyPressed();
 
-	default boolean defaultHandleTextInputEvent(DtoEventWrapper event) {
+	default boolean defaultHandleTextInputEvent(EventWrapper event) {
 		return switch (event.getTypeId()) {
 			case DtoTextInputHandlingField.TextInputEvent.TYPE_ID -> {
 				var textInputEvent = event.as(DtoTextInputHandlingField.TextInputEventWrapper.class);

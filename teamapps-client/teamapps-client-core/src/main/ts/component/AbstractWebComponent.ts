@@ -5,7 +5,7 @@ import {debounce, DebounceMode} from "../util/debounce";
 import {StyleManager} from "../util/StyleManager";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent> extends HTMLElement implements Component<C>, CustomElement {
+export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent> extends HTMLElement implements Component, CustomElement {
 
 	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
 	readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
@@ -38,6 +38,10 @@ export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent
 			}
 		}, 300); // TODO remove when problems with missing resizeObserver calls are solved...
 	}
+
+	async invoke(name: string, params: any[]): Promise<any> {
+		return await (this[name] as Function)(...params);
+    }
 
 	protected reLayout(width: number, height: number): void {
 		let hasSize = width > 0 || height > 0;

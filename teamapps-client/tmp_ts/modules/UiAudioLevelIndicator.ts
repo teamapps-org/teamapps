@@ -24,7 +24,7 @@ import {DtoAudioLevelIndicatorCommandHandler, DtoAudioLevelIndicator} from "../g
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
-export class UiAudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndicator> implements DtoAudioLevelIndicatorCommandHandler {
+export class UiAudioLevelIndicator extends AbstractLegacyComponent<DtoAudioLevelIndicator> implements DtoAudioLevelIndicatorCommandHandler {
 	private $main: HTMLElement;
 	private $activityDisplay: HTMLElement;
 	private $canvas: HTMLCanvasElement;
@@ -37,8 +37,8 @@ export class UiAudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndica
 	private maxLevel2 = 0;
 	private lastDrawingTimestamp = 0;
 
-	constructor(config: DtoAudioLevelIndicator) {
-		super(config)
+	constructor(config: DtoAudioLevelIndicator, serverChannel: ServerChannel) {
+		super(config, serverChannel)
 
 		this.$main = parseHtml(`
 <div class="UiAudioLevelIndicator">

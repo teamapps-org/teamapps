@@ -20,11 +20,7 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoReference;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoNavigationBar;
-import org.teamapps.dto.DtoNavigationBarButton;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.dto.*;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
@@ -57,8 +53,8 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 	}
 
 	@Override
-	public DtoComponent createDto() {
-		DtoNavigationBar uiNavigationBar = new DtoNavigationBar(buttonTemplate != null ? buttonTemplate.createDtoReference() : null);
+	public DtoComponent createConfig() {
+		DtoNavigationBar uiNavigationBar = new DtoNavigationBar(buttonTemplate != null ? buttonTemplate.createClientReference() : null);
 		mapAbstractUiComponentProperties(uiNavigationBar);
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiNavigationBar.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
@@ -68,11 +64,11 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 		}
 		if (fanOutComponents != null) {
 			List<DtoReference> uiComponents = fanOutComponents.stream()
-					.map(component -> component.createDtoReference())
+					.map(component -> component.createClientReference())
 					.collect(Collectors.toList());
 			uiNavigationBar.setFanOutComponents(uiComponents);
 		}
-		uiNavigationBar.setMultiProgressDisplay(multiProgressDisplay.createDtoReference());
+		uiNavigationBar.setMultiProgressDisplay(multiProgressDisplay.createClientReference());
 		return uiNavigationBar;
 	}
 
@@ -83,7 +79,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoNavigationBar.ButtonClickedEvent.TYPE_ID -> {
 				var clickedEvent = event.as(DtoNavigationBar.ButtonClickedEventWrapper.class);
@@ -136,7 +132,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 		if (component != null) {
 			component.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoNavigationBar.AddFanOutComponentCommand(component != null ? component.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoNavigationBar.AddFanOutComponentCommand(component != null ? component.createClientReference() : null));
 	}
 
 	public void showFanOutComponent(org.teamapps.ux.component.Component component) {
@@ -144,7 +140,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 			preloadFanOutComponent(component);
 		}
 		activeFanOutComponent = component;
-		sendCommandIfRendered(() -> new DtoNavigationBar.ShowFanOutComponentCommand(component != null ? component.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoNavigationBar.ShowFanOutComponentCommand(component != null ? component.createClientReference() : null));
 	}
 
 	public void hideFanOutComponent() {
@@ -208,7 +204,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		sendCommandIfRendered(() -> new DtoNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createDtoReference()));
+		sendCommandIfRendered(() -> new DtoNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createClientReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

@@ -1,103 +1,182 @@
-import {DtoClientInfo, DtoSessionClosingReason} from "../generated";
+// =========== SERVER ============
 
-export interface DtoAbstractClientMessage {
-	_type?: string;
-	sessionId: string
+export interface ServerMessage {
+	_type: 'INIT_OK' | 'INIT_NOK' | 'REINIT_OK' | 'REINIT_NOK' | 'PING' | 'SESSION_CLOSED' | 'REGISTER_LIB' | 'CREATE_OBJ' | 'DESTROY_OBJ' | 'TOGGLE_EVT' | 'CMD' | 'QUERY_RES';
 }
-export interface DtoAbstractClientPayloadMessage extends DtoAbstractClientMessage {
-	_type?: string;
-	id: number
+
+export interface ReliableServerMessage extends ServerMessage {
+	sn: number; // sequenceNumber
 }
-export interface DtoAbstractServerMessage {
-	_type?: string;
-}
-export interface DtoCMD_REQ extends DtoAbstractClientMessage {
-	_type?: string;
-	lastReceivedCommandId: number;
-	maxRequestedCommandId: number
-}
-export interface DtoCMD_RES extends DtoAbstractClientPayloadMessage {
-	_type?: string;
-	cmdId: number;
-	result: any
-}
-export interface DtoCMD {
-	id: number, // sequence number
-	lid: string|null, // library uuid
-	cid: string|null, // client object id
-	c: DtoCommand, // uiCommand
-	r: boolean    // awaitsResult
-}
-export interface DtoCommand {
-	_type?: string;
-}
-export interface DtoEvent {
-	_type?: string;
-	componentId?: string
-}
-export interface DtoEVT extends DtoAbstractClientPayloadMessage {
-	_type?: string;
-	uiEvent: DtoEvent
-}
-export interface DtoINIT extends DtoAbstractClientMessage {
-	_type?: string;
-	clientInfo: DtoClientInfo;
-	maxRequestedCommandId: number
-}
-export interface DtoINIT_NOK extends DtoAbstractServerMessage {
-	_type?: string;
-	reason: DtoSessionClosingReason
-}
-export interface DtoINIT_OK extends DtoAbstractServerMessage {
-	_type?: string;
+
+export interface INIT_OK extends ServerMessage {
+	_type: 'INIT_OK';
 	minRequestedCommands: number;
 	maxRequestedCommands: number;
 	sentEventsBufferSize: number;
 	keepaliveInterval: number
 }
-export interface DtoKEEPALIVE extends DtoAbstractClientMessage {
-	_type?: string;
+
+export interface INIT_NOK extends ServerMessage {
+	_type: 'INIT_NOK';
+	reason: SessionClosingReason
 }
-export interface DtoMULTI_CMD extends DtoAbstractServerMessage {
-	_type?: string;
-	cmds: any[]
+
+export interface REINIT_OK extends ServerMessage {
+	_type: 'REINIT_OK';
+	lastReceivedEventId: number
 }
-export interface DtoPING extends DtoAbstractServerMessage {
-	_type?: string;
+
+export interface REINIT_NOK extends ServerMessage {
+	_type: 'REINIT_NOK';
+	reason: SessionClosingReason
 }
-export interface DtoQRY extends DtoAbstractClientPayloadMessage {
-	_type?: string;
-	uiQuery: DtoQuery
+
+export interface PING extends ServerMessage {
+	_type: 'PING';
 }
-export interface DtoQRY_RES extends DtoAbstractServerMessage {
-	_type?: string;
-	queryId: number;
+
+export interface SESSION_CLOSED extends ServerMessage {
+	_type: 'SESSION_CLOSED';
+	reason: SessionClosingReason;
+	message?: string
+}
+
+export enum SessionClosingReason {
+	SESSION_NOT_FOUND, SESSION_TIMEOUT, TERMINATED_BY_CLIENT, SERVER_SIDE_ERROR, COMMANDS_OVERFLOW, REINIT_COMMAND_ID_NOT_FOUND, CMD_REQUEST_TOO_LARGE, WRONG_TEAMAPPS_VERSION, TERMINATED_BY_APPLICATION
+}
+
+export interface REGISTER_LIB extends ReliableServerMessage {
+	_type: 'REGISTER_LIB';
+	lid: string;
+	jsUrl: string;
+	cssUrl: string | null;
+}
+
+export interface CREATE_OBJ extends ReliableServerMessage {
+	_type: 'CREATE_OBJ';
+	lid: string;
+	typeName: string;
+	oid: string;
+	config: any;
+	evtNames: string[];
+}
+
+export interface DESTROY_OBJ extends ReliableServerMessage {
+	_type: 'DESTROY_OBJ';
+	oid: string;
+}
+
+export interface TOGGLE_EVT extends ReliableServerMessage {
+	_type: 'TOGGLE_EVT';
+	lid: string;
+	oid: string;
+	evtName: string;
+	enabled: boolean;
+}
+
+export interface CMD extends ReliableServerMessage {
+	_type: 'CMD';
+	lid: string | null, // library uuid
+	oid: string | null, // client object id (or null for 'global' functions)
+	name: string, // command name (mostly method name)
+	params: any[], // the parameters of the command
+	r: boolean    // awaitsResult
+}
+
+export interface QUERY_RES extends ReliableServerMessage {
+	_type: 'QUERY_RES';
+	evtId: number;
 	result: any
 }
-export interface DtoQuery {
-	_type?: string;
-	componentId?: string
+
+
+// =========== CLIENT ============
+
+export interface ClientMessage {
+	_type: 'INIT' | 'REINIT' | 'KEEPALIVE' | 'TERMINATE' | 'REQN' | 'EVT' | 'QUERY' | 'CMD_RES';
 }
-export interface DtoREINIT extends DtoAbstractClientMessage {
+
+export interface ReliableClientMessage extends ClientMessage{
+	sn: number; // sequenceNumber
+}
+
+export interface INIT extends ClientMessage {
+	_type: 'INIT';
+	sessionId: string;
+	clientInfo: ClientInfo;
+	maxRequestedCommandId: number
+}
+
+export interface ClientInfo {
 	_type?: string;
+	screenWidth?: number;
+	screenHeight?: number;
+	viewPortWidth?: number;
+	viewPortHeight?: number;
+	highDensityScreen?: boolean;
+	timezoneIana?: string;
+	timezoneOffsetMinutes?: number;
+	clientTokens?: string[];
+	location?: Location;
+	clientParameters?: {[name: string]: string};
+	teamAppsVersion?: string
+}
+
+export interface Location {
+	_type?: string;
+	href?: string;
+	origin?: string;
+	protocol?: string;
+	host?: string;
+	hostname?: string;
+	port?: number;
+	pathname?: string;
+	search?: string;
+	hash?: string
+}
+
+export interface REINIT extends ClientMessage {
+	_type: 'REINIT';
+	sessionId: string;
 	lastReceivedCommandId: number;
 	maxRequestedCommandId: number
 }
-export interface DtoREINIT_NOK extends DtoAbstractServerMessage {
-	_type?: string;
-	reason: DtoSessionClosingReason
+
+export interface KEEPALIVE extends ClientMessage {
+	_type: 'KEEPALIVE';
 }
-export interface DtoREINIT_OK extends DtoAbstractServerMessage {
-	_type?: string;
-	lastReceivedEventId: number
+
+export interface TERMINATE extends ClientMessage {
+	_type: 'TERMINATE';
 }
-export interface DtoSESSION_CLOSED extends DtoAbstractServerMessage {
-	_type?: string;
-	reason: DtoSessionClosingReason;
-	message?: string
+
+// request_n
+export interface REQN extends ClientMessage {
+	_type: 'REQN';
+	lastReceivedCommandId: number;
+	maxRequestedCommandId: number
 }
-export interface DtoTERMINATE extends DtoAbstractClientMessage {
-	_type?: string;
+
+export interface EVT extends ReliableClientMessage {
+	_type: 'EVT';
+	lid: string | null; // library uuid
+	oid: string; // client object id
+	name: string; // the name of this event
+	params: any[] // the parameters of the event
+}
+
+export interface QUERY extends ReliableClientMessage {
+	_type: 'QUERY';
+	lid: string | null; // library uuid
+	oid: string; // client object id
+	name: string; // the name of this event
+	params: any[] // the parameters of the event
+}
+
+export interface CMD_RES extends ReliableClientMessage {
+	_type: 'CMD_RES';
+	cmdSn: number;
+	result: any
 }
 
 

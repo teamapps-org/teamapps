@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoMobileLayout;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
@@ -40,21 +40,21 @@ public class MobileLayout extends AbstractComponent implements org.teamapps.ux.c
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoMobileLayout uiMobileLayout = new DtoMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (content != null) {
-			uiMobileLayout.setInitialView(content.createDtoReference());
+			uiMobileLayout.setInitialView(content.createClientReference());
 		}
 		if (toolbar != null) {
-			uiMobileLayout.setToolbar(toolbar.createDtoReference());
+			uiMobileLayout.setToolbar(toolbar.createClientReference());
 		}
-		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createDtoReference() : null);
+		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createClientReference() : null);
 		return uiMobileLayout;
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 	}
 
 	public void setContent(org.teamapps.ux.component.Component component) {
@@ -65,7 +65,7 @@ public class MobileLayout extends AbstractComponent implements org.teamapps.ux.c
 		if (this.content != component) {
 			content = component;
 			component.setParent(this);
-			sendCommandIfRendered(() -> new DtoMobileLayout.ShowViewCommand(component.createDtoReference(), animation != null ? animation.toUiPageTransition() : null,
+			sendCommandIfRendered(() -> new DtoMobileLayout.ShowViewCommand(component.createClientReference(), animation != null ? animation.toUiPageTransition() : null,
 					animationDuration));
 		}
 	}
@@ -91,7 +91,7 @@ public class MobileLayout extends AbstractComponent implements org.teamapps.ux.c
 		if (navigationBar != null) {
 			navigationBar.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createDtoReference() : null));
+		sendCommandIfRendered(() -> new DtoMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createClientReference() : null));
 	}
 
 }

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, loadSensitiveThrottling, parseHtml, TeamAppsEvent, Template} from "teamapps-client-core";
+import {AbstractLegacyComponent, loadSensitiveThrottling, parseHtml, TeamAppsEvent, Template} from "teamapps-client-core";
 import {
 	DtoTree,
 	DtoTree_NodeSelectedEvent,
@@ -28,7 +28,7 @@ import {
 import {TrivialTree} from "./trivial-components/TrivialTree";
 import {buildObjectTree, NodeWithChildren} from "teamapps-client-core-components";
 
-export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
+export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
 
 	public readonly onNodeSelected: TeamAppsEvent<DtoTree_NodeSelectedEvent> = new TeamAppsEvent();
 
@@ -36,8 +36,8 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 	private trivialTree: TrivialTree<DtoTreeRecord>;
 	private nodes: DtoTreeRecord[];
 
-	constructor(config: DtoTree) {
-		super(config);
+	constructor(config: DtoTree, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.$panel = parseHtml('<div class="UiTree">');
 
 		this.nodes = config.initialData;

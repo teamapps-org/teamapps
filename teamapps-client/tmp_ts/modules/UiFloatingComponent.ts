@@ -28,7 +28,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiFloatingComponentPosition} from "../generated/UiFloatingComponentPosition";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
-export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent> implements DtoFloatingComponentCommandHandler, DtoFloatingComponentEventSource {
+export class UiFloatingComponent extends AbstractLegacyComponent<DtoFloatingComponent> implements DtoFloatingComponentCommandHandler, DtoFloatingComponentEventSource {
 
 	public readonly onExpandedOrCollapsed: TeamAppsEvent<DtoFloatingComponent_ExpandedOrCollapsedEvent> = new TeamAppsEvent();
 
@@ -38,8 +38,8 @@ export class UiFloatingComponent extends AbstractComponent<DtoFloatingComponent>
 
 	private $expanderHandle: HTMLElement;
 
-	constructor(config: DtoFloatingComponent) {
-		super(config);
+	constructor(config: DtoFloatingComponent, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 		this.containerComponent = config.containerComponent as UiComponent;
 
 		this.$main = parseHtml(`<div class="UiFloatingComponent"></div>`);

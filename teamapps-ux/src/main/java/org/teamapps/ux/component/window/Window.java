@@ -64,7 +64,7 @@ public class Window extends Panel {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public DtoComponent createConfig() {
 		DtoWindow window = new DtoWindow();
 		mapUiPanelProperties(window);
 		window.setModal(modal);
@@ -132,7 +132,7 @@ public class Window extends Panel {
 	}
 
 	public void show(int animationDuration) {
-		getSessionContext().renderClientObject(this);
+		getSessionContext().createClientObject(this);
 		sendCommandIfRendered(() -> new DtoWindow.ShowCommand(animationDuration));
 	}
 

@@ -39,7 +39,7 @@ type Selection = Omit<DtoImageCropperSelection, '_type'>;
 
 type Rect = { x: number, y: number, width: number, height: number }
 
-export class UiImageCropper extends AbstractComponent<DtoImageCropper> implements DtoImageCropperCommandHandler, DtoImageCropperEventSource {
+export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> implements DtoImageCropperCommandHandler, DtoImageCropperEventSource {
 
 	public readonly onSelectionChanged: TeamAppsEvent<DtoImageCropper_SelectionChangedEvent> = new TeamAppsEvent<DtoImageCropper_SelectionChangedEvent>();
 
@@ -51,8 +51,8 @@ export class UiImageCropper extends AbstractComponent<DtoImageCropper> implement
 	private imageNaturalWidth: number = null;
 	private imageNaturalHeight: number = null;
 
-	constructor(config: DtoImageCropper) {
-		super(config);
+	constructor(config: DtoImageCropper, serverChannel: ServerChannel) {
+		super(config, serverChannel);
 
 		this.$element = parseHtml(`<div data-id="' + config.id + '" class="UiImageCropper">
     <img></img>

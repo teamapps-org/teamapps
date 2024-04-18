@@ -19,7 +19,16 @@
  */
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
-import {AbstractComponent, bind, Component, insertAtIndex, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {
+	AbstractLegacyComponent,
+	bind,
+	Component,
+	insertAtIndex, noOpServerChannel,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent,
+	TeamAppsUiContext
+} from "teamapps-client-core";
 import {DtoTab as DtoTab} from "../generated/DtoTab";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {ToolButton} from "./ToolButton";
@@ -57,7 +66,7 @@ interface Tab {
 	visible: boolean;
 }
 
-export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPanelCommandHandler, DtoTabPanelEventSource, Emptyable {
+export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements DtoTabPanelCommandHandler, DtoTabPanelEventSource, Emptyable {
 
 	public readonly onTabSelected: TeamAppsEvent<DtoTabPanel_TabSelectedEvent> = new TeamAppsEvent<DtoTabPanel_TabSelectedEvent>();
 
@@ -68,9 +77,9 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "tab-button-minimize", iconSize: 16})),
-		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "tab-button-maximize", iconSize: 16})),
-		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "tab-button-close", iconSize: 16})),
+		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "tab-button-minimize", iconSize: 16}), noOpServerChannel),
+		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "tab-button-maximize", iconSize: 16}), noOpServerChannel),
+		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "tab-button-close", iconSize: 16}), noOpServerChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		DtoWindowButtonType.MINIMIZE,
@@ -103,8 +112,8 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: DtoTabPanel) {
-		super(config);
+	constructor(config: DtoTabPanel, serverChannel: ServerObjectChannel) {
+		super(config, serverChannel);
 
 		this.$tabPanel = parseHtml(`<div class="TabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">

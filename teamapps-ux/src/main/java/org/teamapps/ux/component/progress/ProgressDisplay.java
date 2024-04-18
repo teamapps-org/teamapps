@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.progress;
 
+import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoProgressDisplay;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -68,7 +68,7 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public DtoProgressDisplay createDto() {
+	public DtoProgressDisplay createConfig() {
 		DtoProgressDisplay ui = new DtoProgressDisplay();
 		mapAbstractUiComponentProperties(ui);
 		ui.setIcon(getSessionContext().resolveIcon(icon));
@@ -81,11 +81,11 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	private void updateUi() {
-		sendCommandIfRendered(() -> new DtoProgressDisplay.UpdateCommand(createDto()));
+		sendCommandIfRendered(() -> new DtoProgressDisplay.UpdateCommand(createConfig()));
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
+	public void handleUiEvent(String name, JsonWrapper params) {
 		switch (event.getTypeId()) {
 			case DtoProgressDisplay.ClickedEvent.TYPE_ID -> {
 				var clickedEvent = event.as(DtoProgressDisplay.ClickedEventWrapper.class);

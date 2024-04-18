@@ -70,8 +70,8 @@ public class Tab {
 		uiTab.setCloseable(closeable);
 		uiTab.setLazyLoading(this.isLazyLoading());
 		uiTab.setRightSide(this.rightSide);
-		uiTab.setToolbar(ClientObject.createDtoReference(this.toolbar));
-		uiTab.setContent(ClientObject.createDtoReference(content));
+		uiTab.setToolbar(ClientObject.createClientReference(this.toolbar));
+		uiTab.setContent(ClientObject.createClientReference(content));
 		uiTab.setVisible(visible);
 		return uiTab;
 	}
