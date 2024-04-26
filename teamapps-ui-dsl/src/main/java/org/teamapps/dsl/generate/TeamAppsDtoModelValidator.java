@@ -19,16 +19,11 @@
  */
 package org.teamapps.dsl.generate;
 
-import org.teamapps.dsl.generate.wrapper.ClassWrapper;
-import org.teamapps.dsl.generate.wrapper.InterfaceWrapper;
 import org.teamapps.dsl.generate.wrapper.TypeWrapper;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.teamapps.dsl.generate.ErrorMessageUtil.runWithExceptionMessagePrefix;
 
 public class TeamAppsDtoModelValidator {
 
@@ -39,16 +34,7 @@ public class TeamAppsDtoModelValidator {
 	}
 
 	public void validate() throws Exception {
-		List<ClassWrapper> classDeclarations = model.getClassDeclarations();
-
 		validateNoDuplicateClassDeclarations(model.getAllTypeDeclarations());
-		for (ClassWrapper classDeclaration : classDeclarations) {
-			checkClassWithCommandsOrEventsIsManaged(classDeclaration);
-			checkManagedClassDefinesIdProperty(classDeclaration);
-		}
-		for (InterfaceWrapper interfaceDeclaration : model.getInterfaceDeclarations()) {
-			checkManagedInterfaceDefinesIdProperty(interfaceDeclaration);
-		}
 	}
 
 	private void validateNoDuplicateClassDeclarations(List<TypeWrapper<?>> typeDeclarations) {
@@ -63,28 +49,4 @@ public class TeamAppsDtoModelValidator {
 		}
 	}
 
-	private void checkClassWithCommandsOrEventsIsManaged(ClassWrapper classDeclaration) throws IOException {
-		runWithExceptionMessagePrefix(() -> {
-			boolean hasCommandOrEvent = !classDeclaration.getAllCommands().isEmpty() || !classDeclaration.getAllEvents().isEmpty();
-			if (hasCommandOrEvent && !classDeclaration.isManaged()) {
-				throw new ModelValidationException("Dto class " + classDeclaration.getName() + " declares a command or event but is not managed!");
-			}
-		}, "Error while validating class " + classDeclaration.getName());
-	}
-
-	private void checkManagedClassDefinesIdProperty(ClassWrapper classDeclaration) throws IOException {
-		runWithExceptionMessagePrefix(() -> {
-			if (classDeclaration.isManaged() && classDeclaration.getAllProperties().stream().noneMatch(p -> p.type().getText().equals("String") && p.Identifier().getText().equals("id"))) {
-				throw new ModelValidationException("Dto class " + classDeclaration.getName() + " is managed but does not declare an id property (String id)!");
-			}
-		}, "Error while validating class " + classDeclaration.getName());
-	}
-
-	private void checkManagedInterfaceDefinesIdProperty(InterfaceWrapper classDeclaration) throws IOException {
-		runWithExceptionMessagePrefix(() -> {
-			if (classDeclaration.isManaged() && classDeclaration.getAllProperties().stream().noneMatch(p -> p.type().getText().equals("String") && p.Identifier().getText().equals("id"))) {
-				throw new ModelValidationException("Dto interface " + classDeclaration.getName() + " is managed but does not declare an id property (String id)!");
-			}
-		}, "Error while validating interface " + classDeclaration.getName());
-	}
 }

@@ -19,8 +19,6 @@
  */
 package "teamapps-client-core-components":org.teamapps.dto;
 
-import org.teamapps.dto.Template;
-
 class GridTemplate implements Template {
     required List<GridColumn> columns;
     required List<GridRow> rows;

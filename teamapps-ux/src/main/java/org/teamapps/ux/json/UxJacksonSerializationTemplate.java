@@ -19,7 +19,12 @@
  */
 package org.teamapps.ux.json;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
@@ -33,6 +38,8 @@ import java.io.IOException;
 public class UxJacksonSerializationTemplate {
 
 	public static final SimpleModule UX_SERIALIZERS_JACKSON_MODULE = new UxSerializersJacksonModule();
+
+	public record ClientObjectReference(@JsonProperty("_ref") String ref) {}
 
 	public static class UxSerializersJacksonModule extends SimpleModule {
 		public UxSerializersJacksonModule() {
@@ -53,14 +60,20 @@ public class UxJacksonSerializationTemplate {
 				@Override
 				public void serialize(ClientObject clientObject, JsonGenerator gen, SerializerProvider serializers) throws IOException {
 					SessionContext currentSessionContext = SessionContext.current();
-					gen.writeStartObject();
-					gen.writeStringField("_ref", currentSessionContext.getClientObjectId(clientObject));
-					gen.writeEndObject();
+					gen.writeObject(new ClientObjectReference(currentSessionContext.getClientObjectId(clientObject)));
 				}
 
 				@Override
 				public void serializeWithType(ClientObject clientObject, JsonGenerator gen, SerializerProvider serializers, TypeSerializer typeSer) throws IOException {
 					serialize(clientObject, gen, serializers);
+				}
+			});
+			this.addDeserializer(ClientObject.class, new JsonDeserializer<>() {
+				@Override
+				public ClientObject deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+					SessionContext currentSessionContext = SessionContext.current();
+					ClientObjectReference ref = p.readValueAs(ClientObjectReference.class);
+					return currentSessionContext.getClientObjectById(ref.ref());
 				}
 			});
 		}

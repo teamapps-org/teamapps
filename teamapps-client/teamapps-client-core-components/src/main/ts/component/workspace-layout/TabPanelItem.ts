@@ -66,10 +66,8 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		this.id = id;
 		this.persistent = persistent;
 		this.parent = parent;
-		let uuid = generateUUID();
 		this.component = new MinimizableTabPanel({
 			_type: "DtoTabPanel",
-			id: uuid,
 			hideTabBarIfSingleTab: true,
 			tabStyle: DtoTabPanelTabStyle.EARS
 		}, noOpServerChannel);

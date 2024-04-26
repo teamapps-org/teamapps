@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import stringify from "json-stable-stringify";
 import {ClientMessage, ServerMessage} from "../protocol/protocol";
 
 export interface ReconnectingCompressingWebSocketConnectionListener {
@@ -44,13 +43,7 @@ export class ReconnectingCompressingWebSocketConnection {
 	};
 
 	public send(object: ClientMessage) {
-		let jsonString = stringify(object, {
-			cmp: (a, b) => {
-				let aIsUnderscore = a.key[0] === '_';
-				let bIsUnderscore = b.key[0] === '_';
-				return (aIsUnderscore && !bIsUnderscore) ? -1 : (!aIsUnderscore && bIsUnderscore) ? 1 : 0;
-			}
-		});
+		let jsonString = JSON.stringify(object);
 		this.connection.send(jsonString);
 	};
 

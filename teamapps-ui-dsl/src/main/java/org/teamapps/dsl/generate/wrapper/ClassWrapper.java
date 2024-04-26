@@ -126,11 +126,6 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 	}
 
 	@Override
-	public boolean isManagedBaseType() {
-		return context.managedModifier() != null;
-	}
-
-	@Override
 	public boolean isAbstract() {
 		return context.abstractModifier() != null;
 	}

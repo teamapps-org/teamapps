@@ -33,7 +33,6 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 		this.id = id;
 		this.parent = parent;
 		this.component = new SplitPane({
-			id: generateUUID(),
 			splitDirection: splitDirection,
 			sizePolicy: sizePolicy,
 			referenceChildSize: firstChildRelativeSize,

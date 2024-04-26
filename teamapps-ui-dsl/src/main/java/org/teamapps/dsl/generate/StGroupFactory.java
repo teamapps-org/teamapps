@@ -42,7 +42,7 @@ public class StGroupFactory {
         stGroup.registerModelAdaptor(TeamAppsDtoParser.QueryDeclarationContext.class, new QueryDeclarationContextModelAdaptor(model));
         stGroup.registerModelAdaptor(TeamAppsDtoParser.PropertyDeclarationContext.class, new PropertyDeclarationContextModelAdaptor());
         stGroup.registerModelAdaptor(TeamAppsDtoParser.TypeContext.class, new TypeContextModelAdaptor(model));
-        stGroup.registerModelAdaptor(TeamAppsDtoParser.FormalParameterWithDefaultContext.class, new FormalParameterWithDefaultModelAdaptor());
+        stGroup.registerModelAdaptor(TeamAppsDtoParser.FormalParameterContext.class, new FormalParameterModelAdaptor());
         return stGroup;
     }
 }

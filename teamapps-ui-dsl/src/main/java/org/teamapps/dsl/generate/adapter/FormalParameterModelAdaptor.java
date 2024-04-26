@@ -5,10 +5,10 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dsl.TeamAppsDtoParser;
 
-public class FormalParameterWithDefaultModelAdaptor extends PojoModelAdaptor<TeamAppsDtoParser.FormalParameterWithDefaultContext> {
+public class FormalParameterModelAdaptor extends PojoModelAdaptor<TeamAppsDtoParser.FormalParameterContext> {
 
 	@Override
-	public Object getProperty(Interpreter interpreter, ST self, TeamAppsDtoParser.FormalParameterWithDefaultContext context, Object property, String propertyName) throws STNoSuchPropertyException {
+	public Object getProperty(Interpreter interpreter, ST self, TeamAppsDtoParser.FormalParameterContext context, Object property, String propertyName) throws STNoSuchPropertyException {
 		if (propertyName.equals("name")) {
 			return context.Identifier().getText();
 		} else {

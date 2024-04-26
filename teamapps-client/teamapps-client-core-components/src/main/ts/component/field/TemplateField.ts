@@ -25,7 +25,7 @@ import {
 	DtoTemplateFieldCommandHandler,
 	DtoTemplateFieldEventSource
 } from "../../generated";
-import {DtoClientRecord, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
+import {DtoClientRecord, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
 
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {
@@ -34,7 +34,7 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 
 	private $main: HTMLElement;
 
-	constructor(config: DtoTemplateField, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoTemplateField, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 	}
 

@@ -108,7 +108,6 @@ export interface INIT extends ClientMessage {
 }
 
 export interface ClientInfo {
-	_type?: string;
 	screenWidth?: number;
 	screenHeight?: number;
 	viewPortWidth?: number;
@@ -123,7 +122,6 @@ export interface ClientInfo {
 }
 
 export interface Location {
-	_type?: string;
 	href?: string;
 	origin?: string;
 	protocol?: string;

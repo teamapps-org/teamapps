@@ -35,7 +35,7 @@ export class UiGauge extends AbstractLegacyComponent<DtoGauge> implements DtoGau
 
 	constructor(config: DtoGauge, serverChannel: ServerChannel) {
 		super(config, serverChannel);
-		this.$main = parseHtml(`<div class="UiGauge" data-teamapps-id="${this.getId()}"><canvas></canvas></div>`);
+		this.$main = parseHtml(`<div class="UiGauge"><canvas></canvas></div>`);
 		this.value = config.options.value;
 		this.createGauge();
 	}

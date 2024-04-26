@@ -45,3 +45,5 @@ BaseTemplate: icon and image are technically the same thing. so remove one of th
 
 Upgrade FullCalendar to version 6 (and get rid of moment.js there)
 
+check if component.setStyle() removes all old styles for this selector? If so, wanted?
+

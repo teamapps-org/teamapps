@@ -23,6 +23,7 @@ import org.teamapps.dto.Component;
 
 class RootPanel extends Component {
 	Component* content;
+
 	command setContent(Component* content, PageTransition transition, long animationDuration);
 }
 

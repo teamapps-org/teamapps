@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
 
 
@@ -38,7 +38,7 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 		});
 	}
 
-	constructor(config: C, serverChannel: ServerObjectChannel) {
+	constructor(config: C, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 	}
 

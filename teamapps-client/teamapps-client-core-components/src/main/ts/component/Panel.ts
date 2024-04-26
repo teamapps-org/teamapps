@@ -37,7 +37,7 @@ import {
 	executeWhenFirstDisplayed,
 	insertBefore, noOpServerChannel,
 	parseHtml,
-	prependChild, ServerObjectChannel,
+	prependChild, ServerChannel,
 	TeamAppsEvent
 } from "teamapps-client-core";
 
@@ -96,7 +96,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	private windowButtons: DtoWindowButtonType[];
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: DtoPanel, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoPanel, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$panel = parseHtml(`<div class="Panel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">

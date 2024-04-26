@@ -3,7 +3,6 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoClientObject} from "teamapps-client-core";
 import {DtoA} from "./DtoA";
 import {DtoI} from "./DtoI";
 import {DtoACommandHandler} from "./DtoA";
@@ -14,10 +13,6 @@ interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest
 
 export interface DtoB extends DtoA, DtoI {
 	_type?: string;
-}
-
-export interface BReference {
-	id: string;
 }
 
 export interface DtoBCommandHandler extends DtoACommandHandler, DtoICommandHandler {

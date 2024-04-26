@@ -3,7 +3,6 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {DtoClientObject} from "teamapps-client-core";
 import {DtoLocation} from "xxx";
 
 export interface DtoX {

@@ -25,7 +25,7 @@ import {Component} from "./Component";
 import {StyleManager} from "../util/StyleManager";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import { ServerObjectChannel } from "../ClientObject";
+import { ServerChannel } from "../ClientObject";
 
 export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoComponent> implements Component {
 
@@ -41,13 +41,12 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 	public displayedDeferredExecutor = new DeferredExecutor();
 
 	protected styleManager: StyleManager;
+	private cssUuid: string;
 
-	constructor(protected config: C, private serverChannel: ServerObjectChannel) {
-		if (config.id == null) {
-			config.id = generateUUID();
-		}
+	constructor(protected config: C, private serverChannel: ServerChannel) {
+		this.cssUuid = generateUUID();
 
-		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-teamapps-id=${this.getId()}]`, `[data-teamapps-id=${this.getId()}]`);
+		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-css-id=${this.cssUuid}]`, `[data-css-id=${this.cssUuid}]`);
 		this.displayedDeferredExecutor.invokeOnceWhenReady(() => this.styleManager.apply());
 
 		this.visible = config.visible ?? false;
@@ -57,8 +56,8 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 		return await (this[name] as Function)(...params);
 	}
 
-	public getId(): string {
-		return this.config.id ?? "";
+	public getCssUuid(): string {
+		return this.cssUuid ?? "";
 	}
 
 	public getTeamAppsType(): string {
@@ -74,7 +73,7 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 		this.height = height;
 		this.displayedDeferredExecutor.ready = hasSize;
 		if (hasSize) {
-			console.debug("resize: " + this.getId());
+			console.debug("resize");
 			this.onResized.fire({width: this.width, height: this.height});
 			this.onResize();
 		}
@@ -110,7 +109,7 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 		if (this.firstTimeGetMainElementCalled) {
 			this.firstTimeGetMainElementCalled = false;
 
-			element.setAttribute("data-teamapps-id", this.config.id);
+			element.setAttribute("data-css-id", this.cssUuid);
 
 			if (this.config.debuggingId != null) {
 				element.setAttribute("data-teamapps-debugging-id", this.config.debuggingId);

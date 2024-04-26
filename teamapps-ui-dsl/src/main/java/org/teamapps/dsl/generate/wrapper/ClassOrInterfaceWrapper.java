@@ -175,17 +175,17 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 								.filter(t -> getModel().shouldReferenceDtoType(t))
 								.map(t -> getModel().findReferencedDtoType(t)),
 						getCommands().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
+								.flatMap(cd -> cd.formalParameter().stream())
 								.map(p -> p.type())
 								.filter(t -> getModel().shouldReferenceDtoType(t))
 								.map(t -> getModel().findReferencedDtoType(t)),
 						getEvents().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
+								.flatMap(cd -> cd.formalParameter().stream())
 								.map(p -> p.type())
 								.filter(t -> getModel().shouldReferenceDtoType(t))
 								.map(t -> getModel().findReferencedDtoType(t)),
 						getQueries().stream()
-								.flatMap(cd -> cd.formalParameterWithDefault().stream())
+								.flatMap(cd -> cd.formalParameter().stream())
 								.map(p -> p.type())
 								.filter(t -> getModel().shouldReferenceDtoType(t))
 								.map(t -> getModel().findReferencedDtoType(t))
@@ -194,28 +194,6 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.filter(c -> c != this)
 				.distinct()
 				.toList();
-	}
-
-	default boolean isManaged() {
-		return isManagedBaseType() || getManagedBaseSuperType() != null;
-	}
-
-	boolean isManagedBaseType();
-
-	default ClassOrInterfaceWrapper<?> getManagedBaseType(boolean includingSelf) {
-		return getAllSuperTypes(includingSelf).stream()
-				.filter(ClassOrInterfaceWrapper::isManagedBaseType)
-				.findFirst().orElse(null);
-	}
-
-	default ClassOrInterfaceWrapper<?> getManagedSuperType() {
-		return getSuperTypes().stream()
-				.filter(t -> t.isManaged())
-				.findFirst().orElse(null);
-	}
-
-	default ClassOrInterfaceWrapper<?> getManagedBaseSuperType() {
-		return getManagedBaseType(false);
 	}
 
 	boolean isAbstract();

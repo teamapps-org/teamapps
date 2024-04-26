@@ -37,12 +37,12 @@ import java.util.stream.Collectors;
 
 public class EventDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<EventDeclarationContext> {
 
-    private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
+    private static final TeamAppsDtoParser.FormalParameterContext COMPONENT_ID_PARAMETER;
     private final TeamAppsIntermediateDtoModel model;
 
     static {
         try {
-            COMPONENT_ID_PARAMETER = ParserFactory.createParser(new StringReader("String componentId")).formalParameterWithDefault();
+            COMPONENT_ID_PARAMETER = ParserFactory.createParser(new StringReader("String componentId")).formalParameter();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -74,7 +74,7 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
         } else if ("simplePropertiesSortedByRelevance".equals(propertyName)) {
             return getAllParameters(context).stream()
                     .sorted((p1, p2) -> {
-                        Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
+                        Function<TeamAppsDtoParser.FormalParameterContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
                                 return 50;
                             } else if (p.Identifier().getText().equals("name")) {
@@ -112,8 +112,8 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
         return StringUtils.capitalize(node.Identifier().getText()) + "Event";
     }
 
-	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(EventDeclarationContext eventContext) {
-        ArrayList<TeamAppsDtoParser.FormalParameterWithDefaultContext> allProperties = new ArrayList<>(eventContext.formalParameterWithDefault());
+	private List<TeamAppsDtoParser.FormalParameterContext> getAllParameters(EventDeclarationContext eventContext) {
+        ArrayList<TeamAppsDtoParser.FormalParameterContext> allProperties = new ArrayList<>(eventContext.formalParameter());
         if (eventContext.staticModifier() == null) {
 			allProperties.add(0, COMPONENT_ID_PARAMETER);
 		}

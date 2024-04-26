@@ -107,8 +107,8 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 	public void classCommandInteritance() throws Exception {
 		executeClassTest(
 				"org.teamapps.dto.C", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classCommandInteritance.tsd", "package \"x\":org.teamapps.dto; interface A { String a; command x1(String y); event z(); }"
-						+ "managed class B implements A { String b; command x2(String y2); event z2();}"
-						+ "managed class C extends B implements A { String c; command x3(String y3); event z3();}"
+						+ "class B implements A { String b; command x2(String y2); event z2();}"
+						+ "class C extends B implements A { String c; command x3(String y3); event z3();}"
 		);
 	}
 
@@ -160,15 +160,15 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 	@Test
 	public void importStatementsForSuperClassCommandAndEventHandler() throws Exception {
 		executeClassTest(
-				"org.teamapps.dto.B", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_importStatementsForSuperClassCommandAndEventHandler.tsd", "package \"x\":org.teamapps.dto; \tmanaged class A {command a(); event b();}\n"
+				"org.teamapps.dto.B", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_importStatementsForSuperClassCommandAndEventHandler.tsd", "package \"x\":org.teamapps.dto; \tclass A {command a(); event b();}\n"
 						+ "\tinterface I {command i(); event j();}\n"
-						+ "\tmanaged class B extends A implements I {}"
+						+ "\tclass B extends A implements I {}"
 		);
 	}
 
 	@Test
 	public void staticCommands() throws Exception {
-		executeClassTest("org.teamapps.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_staticCommands.tsd", "package \"x\":org.teamapps.dto; abstract managed class A { static command a(String b); }"
+		executeClassTest("org.teamapps.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_staticCommands.tsd", "package \"x\":org.teamapps.dto; abstract class A { static command a(String b); }"
 		);
 	}
 

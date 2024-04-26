@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoHtmlView, DtoHtmlViewCommandHandler} from "../generated";
 
 export class HtmlView extends AbstractLegacyComponent<DtoHtmlView> implements DtoHtmlViewCommandHandler {
 
 	private $main: HTMLDivElement;
 
-	constructor(config: DtoHtmlView, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoHtmlView, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="HtmlView">${config.html}</div>`);
 		for (let selector in config.componentsByContainerElementSelector) {

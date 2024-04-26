@@ -24,7 +24,7 @@ import {
 	capitalizeFirstLetter,
 	Component,
 	parseHtml,
-	ServerObjectChannel,
+	ServerChannel,
 	TeamAppsEvent,
 	TeamAppsUiContext
 } from "teamapps-client-core";
@@ -60,21 +60,19 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
-	constructor(config: DtoSplitPane, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoSplitPane, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.referenceChildSize = config.referenceChildSize;
 		this.config.sizePolicy = config.sizePolicy;
-		const firstChildContainerId = config.id + '_firstChildContainer';
-		const lastChildContainerId = config.id + '_lastChildContainer';
 		this._$splitPane = parseHtml(`<div class="splitpane">
 	<div class="splitpane-component-wrapper">
-		<div id="${firstChildContainerId}" class="splitpane-component"></div>
+		<div class="splitpane-component"></div>
 	</div>
 	<div class="splitpane-divider-wrapper">
 		<div class="splitpane-divider ${config.resizable ? "" : "hidden"}" id="divider"></div>
 	</div>
 	<div class="splitpane-component-wrapper">
-		<div id="${lastChildContainerId}" class="splitpane-component"></div>
+		<div class="splitpane-component"></div>
 	</div>
 </div>`);
 		const $componentWrappers = this._$splitPane.querySelectorAll<HTMLElement>(":scope .splitpane-component-wrapper");
@@ -290,10 +288,6 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 
 	get lastChildComponent() {
 		return this._lastChildComponent;
-	}
-
-	get id() {
-		return this.config.id;
 	}
 
 	get empty() {

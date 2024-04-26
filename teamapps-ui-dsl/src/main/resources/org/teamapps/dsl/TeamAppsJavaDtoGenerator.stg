@@ -46,12 +46,6 @@ public <if(c.abstract)>abstract <endif>class <c.javaClassName> <if(c.superClass)
 	<c.queries:queryClass(); separator="\n\n">
 	<c.queries:eventJsonWrapper(); separator="\n\n">
 
-    <if(c.managed)>
-        <typeIdGetter(c)>
-        <eventListGetter(c)>
-        <queryListGetter(c)>
-    <endif>
-
 	<c.commands:commandClass(); separator="\n\n">
 
 }>>
@@ -97,15 +91,6 @@ public interface <c.javaClassName><if(c.typeArguments)><c.typeArguments.text><en
 
 	<c.commands:commandClass(); separator="\n\n">
 
-    <if(c.managedBaseType)>
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    public String getTypeId();
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    public List\<String\> getEventNames();
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    public List\<String\> getQueryNames();
-    <endif>
-
 }>>
 
 javaFilePrelude(packageName) ::= <<
@@ -143,7 +128,7 @@ import org.teamapps.dto.DtoObject;
 >>
 
 fieldDeclaration(p) ::= <<
-protected <p.type.javaTypeString> <p.name><if(p.defaultValueAssignment)> = <defaultValue(p)><endif>;
+protected <p.type.javaTypeString> <p.name>;
 >>
 
 getterStub(p) ::= <<
@@ -190,10 +175,6 @@ jsonSetter(p) ::= <<
 <if(!p.type.isPrimitiveType)>	<endif>obj.put("<p.name>", <p.name>);
 <if(!p.type.isPrimitiveType)>}<endif>
 <! } !>
->>
-
-defaultValue(p) ::=  <<
-  <if(p.defaultValueAssignment)><p.defaultValueAssignment.expression.fullText><else><p.type.defaultValue><endif>
 >>
 
 parameter(p) ::= "<p.type.javaTypeString> <p.name>"

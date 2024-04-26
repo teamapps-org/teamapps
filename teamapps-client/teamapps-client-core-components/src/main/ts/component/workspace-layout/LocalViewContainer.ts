@@ -67,13 +67,15 @@ export class LocalViewContainer implements ViewContainer {
 	private multiProgressDisplay: MultiProgressDisplay;
 	private viewEventsSuppressed: boolean;
 
+	public readonly uuid = generateUUID();
+
 	constructor(private workSpaceLayout: WorkSpaceLayout,
 	            public readonly windowId: string,
 	            viewConfigs: DtoWorkSpaceLayoutView[],
 	            initialLayout: DtoWorkSpaceLayoutItem,
 	            private listener: ViewContainerListener,
 	            multiProgressDisplay: MultiProgressDisplay) {
-		this.$mainDiv = parseHtml(`<div data-id="${this.workSpaceLayoutId}" class="WorkSpaceLayout">
+		this.$mainDiv = parseHtml(`<div class="WorkSpaceLayout">
     <div class="toolbar-container"></div>
     <div class="content-container-wrapper">
 	    <div class="content-container"></div>
@@ -135,7 +137,7 @@ export class LocalViewContainer implements ViewContainer {
 					e.dataTransfer.effectAllowed = 'move';
 					let data: DtoWorkspaceLayoutDndDataTransfer = {
 						// sourceUiSessionId: this.context.sessionId, // TODO replace with workspace layout uuid to uniquely identify the workspace layout, even inside a session!
-						sourceWorkspaceLayoutId: this.workSpaceLayoutId,
+						sourceWorkspaceLayoutId: this.uuid,
 						sourceWindowId: this.windowId,
 						viewName: viewName,
 						tabIcon: view.tabIcon,
@@ -215,7 +217,7 @@ export class LocalViewContainer implements ViewContainer {
 			let dataTransferString = e.dataTransfer.getData(LocalViewContainer.DND_MIME_TYPE);
 			if (dropPosition && dataTransferString != null) {
 				let dataTransfer = JSON.parse(dataTransferString) as DtoWorkspaceLayoutDndDataTransfer;
-				if ( /* TODO this.context.sessionId === dataTransfer.sourceUiSessionId && */ dataTransfer.sourceWorkspaceLayoutId === this.workSpaceLayoutId) {
+				if ( /* TODO this.context.sessionId === dataTransfer.sourceUiSessionId && */ dataTransfer.sourceWorkspaceLayoutId === this.uuid) {
 					if (dataTransfer.sourceWindowId === this.windowId) {
 						if (dropPosition.tabPanel) {
 							if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
@@ -231,7 +233,7 @@ export class LocalViewContainer implements ViewContainer {
 						}
 						this.listener.handleLocalLayoutChangedByUser(this.windowId);
 					} else {
-						if (this.workSpaceLayoutId === dataTransfer.sourceWorkspaceLayoutId) {
+						if (this.uuid === dataTransfer.sourceWorkspaceLayoutId) {
 							this.listener.handleViewDroppedFromOtherWindow(dataTransfer.sourceWindowId, this.windowId, {
 								viewName: dataTransfer.viewName,
 								tabIcon: dataTransfer.tabIcon,
@@ -292,10 +294,6 @@ export class LocalViewContainer implements ViewContainer {
 				top: `${values.y + (leftOrRight ? 0 : alignment === 'top' ? $floating.offsetHeight : $tabPanelContentWrapper.offsetHeight)}px`
 			});
 		});
-	}
-
-	private get workSpaceLayoutId() {
-		return this.workSpaceLayout.getId();
 	}
 
 	public setToolbar(toolbar: Toolbar): void {

@@ -46,17 +46,17 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
         } else if ("declaringClass".equals(propertyName)) {
             return model.getDeclaringClassOrInterface(context);
         } else if ("allProperties".equals(propertyName)) {
-            return new ArrayList<>(context.formalParameterWithDefault());
+            return new ArrayList<>(context.formalParameter());
         } else if ("allRequiredProperties".equals(propertyName)) {
-            return new ArrayList<>(context.formalParameterWithDefault());
+            return new ArrayList<>(context.formalParameter());
         } else if ("requiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return new ArrayList<>(context.formalParameterWithDefault());
+            return new ArrayList<>(context.formalParameter());
         } else if ("superClassDecl".equals(propertyName)) {
             return null;
         } else if ("simplePropertiesSortedByRelevance".equals(propertyName)) {
-            return new ArrayList<>(context.formalParameterWithDefault()).stream()
+            return new ArrayList<>(context.formalParameter()).stream()
                     .sorted((p1, p2) -> {
-                        Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
+                        Function<TeamAppsDtoParser.FormalParameterContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
                                 return 50;
                             } else if (p.Identifier().getText().equals("name")) {

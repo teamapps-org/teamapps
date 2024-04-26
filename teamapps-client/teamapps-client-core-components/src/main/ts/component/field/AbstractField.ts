@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, bind, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, bind, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoAbstractField,
 	DtoAbstractField_BlurEvent,
@@ -68,7 +68,7 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 	private hovering: boolean;
 	private focused: boolean;
 
-	constructor(config: C, serverChannel: ServerObjectChannel) {
+	constructor(config: C, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
@@ -192,10 +192,10 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 
 	public setCommittedValue(v: V): void {
 		if (!this.isValidData(v)) {
-			console.error(this.constructor.toString().match(/\w+/g)[1] + ": Invalid data: " + JSON.stringify(v));
+			console.error(this.constructor.toString().match(/\w+/g)[1] + ": Invalid data: ", v);
 			return;
 		}
-		console.debug("setCommittedValue(): " + JSON.stringify(v));
+		console.debug("setCommittedValue(): ", v);
 		this.committedValue = v != null ? v : this.getDefaultValue();
 		this.displayCommittedValue();
 	}
@@ -205,7 +205,7 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 	}
 
 	private fireCommittedChangeEvent(): void {
-		console.trace("firing committed change event: " + JSON.stringify(this.committedValue));
+		console.trace("firing committed change event: ", this.committedValue);
 		this.onValueChanged.fire({
 			value: this.convertValueForSendingToServer(this.committedValue)
 		});

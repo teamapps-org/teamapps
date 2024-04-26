@@ -237,8 +237,8 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		this.sendClientPayloadMessage(cmdResult);
 	}
 
-	private sendClientPayloadMessage(cmdResult: ReliableClientMessage) {
-		this.reliableMessagesQueue.push(cmdResult);
+	private sendClientPayloadMessage(payloadObject: ReliableClientMessage) {
+		this.reliableMessagesQueue.push(payloadObject);
 		if (this.isConnected()) {
 			this.flushPayloadMessages();
 		}

@@ -41,7 +41,7 @@ class NavigationBar extends Component {
 	command hideFanOutComponent();
 	command setMultiProgressDisplay(MultiProgressDisplay* multiProgressDisplay);
 
-	event buttonClicked(String buttonId, String visibleFanOutComponentId);
+	event buttonClicked(String buttonId, Component* visibleFanOutComponentId);
 	event fanoutClosedDueToClickOutsideFanout();
 }
 

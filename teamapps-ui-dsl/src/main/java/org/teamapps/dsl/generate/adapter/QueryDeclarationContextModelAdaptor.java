@@ -37,12 +37,12 @@ import java.util.stream.Collectors;
 
 public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<QueryDeclarationContext> {
 
-    private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
+    private static final TeamAppsDtoParser.FormalParameterContext COMPONENT_ID_PARAMETER;
     private final TeamAppsIntermediateDtoModel model;
 
     static {
         try {
-            COMPONENT_ID_PARAMETER = ParserFactory.createParser(new StringReader("String componentId")).formalParameterWithDefault();
+            COMPONENT_ID_PARAMETER = ParserFactory.createParser(new StringReader("String componentId")).formalParameter();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -70,7 +70,7 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
         } else if ("simplePropertiesSortedByRelevance".equals(propertyName)) {
             return getAllParameters(context).stream()
                     .sorted((p1, p2) -> {
-                        Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
+                        Function<TeamAppsDtoParser.FormalParameterContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
                                 return 50;
                             } else if (p.Identifier().getText().equals("name")) {
@@ -108,8 +108,8 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
         return StringUtils.capitalize(node.Identifier().getText()) + "Query";
     }
 
-	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(QueryDeclarationContext commandContext) {
-        ArrayList<TeamAppsDtoParser.FormalParameterWithDefaultContext> allProperties = new ArrayList<>(commandContext.formalParameterWithDefault());
+	private List<TeamAppsDtoParser.FormalParameterContext> getAllParameters(QueryDeclarationContext commandContext) {
+        ArrayList<TeamAppsDtoParser.FormalParameterContext> allProperties = new ArrayList<>(commandContext.formalParameter());
         allProperties.add(0, COMPONENT_ID_PARAMETER);
         return allProperties;
     }

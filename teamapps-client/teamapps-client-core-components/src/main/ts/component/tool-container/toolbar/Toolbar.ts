@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, insertAfter, insertBefore, noOpServerChannel, parseHtml, ServerObjectChannel, TeamAppsEvent} from "teamapps-client-core";
+import {Component, insertAfter, insertBefore, noOpServerChannel, parseHtml, ServerChannel, TeamAppsEvent} from "teamapps-client-core";
 import {
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
 	DtoToolbar,
@@ -66,7 +66,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	private $overflowDropDownButton: HTMLElement;
 	private totalWidthOfOverflowButtons: number;
 
-	constructor(config: DtoToolbar, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoToolbar, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this._$toolbar = parseHtml(`<div class="Toolbar teamapps-blurredBackgroundImage"></div>`);
 		this._$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');

@@ -17,23 +17,21 @@ typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 enumDeclaration : notGeneratedAnnotation? 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? ';'? '}' ;
 enumConstant : Identifier ('=' StringLiteral)?;
 
-classDeclaration : notGeneratedAnnotation? typescriptFactoryAnnotation? abstractModifier? managedModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
+classDeclaration : notGeneratedAnnotation? typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
-interfaceDeclaration : notGeneratedAnnotation? managedModifier? 'interface' Identifier typeArguments? superInterfaceDecl? '{'
+interfaceDeclaration : notGeneratedAnnotation? 'interface' Identifier typeArguments? superInterfaceDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
 superClassDecl: 'extends' typeName;
 superInterfaceDecl: 'extends' classList;
 implementsDecl: 'implements' classList;
 classList: ((typeName ',')* typeName)?;
-propertyDeclaration : requiredModifier? mutableModifier? type Identifier (defaultValueAssignment)? ';';
-commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ('returns' type)? ';';
-eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
-queryDeclaration : 'query' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' 'returns' type ';';
-formalParameterWithDefault : type Identifier (defaultValueAssignment)?;
-
-defaultValueAssignment : '=' expression;
+propertyDeclaration : requiredModifier? mutableModifier? type Identifier ';';
+commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ('returns' type)? ';';
+eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ';';
+queryDeclaration : 'query' Identifier '(' ((formalParameter ',')* formalParameter)? ')' 'returns' type ';';
+formalParameter : type Identifier;
 
 type : typeReference | primitiveType ;
 
@@ -66,7 +64,6 @@ abstractModifier : 'abstract';
 requiredModifier : 'required';
 mutableModifier : 'mutable';
 staticModifier : 'static';
-managedModifier : 'managed';
 
 // EXPRESSIONS
 

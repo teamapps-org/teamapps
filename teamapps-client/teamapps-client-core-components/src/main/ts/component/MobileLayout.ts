@@ -20,7 +20,7 @@
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {NavigationBar} from "./NavigationBar";
-import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoMobileLayout, DtoMobileLayoutCommandHandler, DtoPageTransition} from "../generated";
 
 import {pageTransition} from "../Common";
@@ -39,7 +39,7 @@ export class MobileLayout extends AbstractLegacyComponent<DtoMobileLayout> imple
 	private content: Component;
 	private $contentContainer: HTMLElement;
 
-	constructor(config: DtoMobileLayout, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoMobileLayout, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$mainDiv = parseHtml(`<div class="MobileLayout">
                              <div class="toolbar-container"></div>

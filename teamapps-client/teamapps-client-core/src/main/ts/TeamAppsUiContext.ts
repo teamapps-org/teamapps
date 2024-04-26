@@ -17,9 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {ClientObject} from "./ClientObject";
-import {DtoClientObject, DtoComponent, DtoConfiguration} from "./generated";
+import {DtoConfiguration} from "./generated";
 
 export interface TeamAppsUiContext {
 	readonly sessionId: string;
@@ -33,7 +32,7 @@ export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 
 	registerComponentLibrary(uuid: string, mainJsUrl: string, mainCssUrl: string): void;
 
-	createClientObject(libraryUuid: string, typeName: string, config: any, enabledEventNames: string[]): void;
+	createClientObject(libraryUuid: string, typeName: string, objectId: string, config: any, enabledEventNames: string[]): void;
 
 	destroyClientObject(oid: string);
 

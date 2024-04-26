@@ -34,7 +34,7 @@ import {
 	Component,
 	noOpServerChannel,
 	parseHtml,
-	ServerObjectChannel,
+	ServerChannel,
 	TeamAppsEvent,
 	TeamAppsUiContext
 } from "teamapps-client-core";
@@ -64,7 +64,7 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 	private modal: boolean;
 	private modalBackgroundDimmingColor: string;
 
-	constructor(config: DtoWindow, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoWindow, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="Window">

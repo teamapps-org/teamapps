@@ -19,8 +19,6 @@
  */
 package "teamapps-client-core-components":org.teamapps.dto;
 
-import org.teamapps.dto.Template;
-
 class MustacheTemplate implements Template {
 	required String templateString;
 }

@@ -1,5 +1,5 @@
 package "teamapps-client-core":org.teamapps.dto;
 
-interface Showable extends ClientObject {
+interface Showable {
 	command show(int animationDuration);
 }

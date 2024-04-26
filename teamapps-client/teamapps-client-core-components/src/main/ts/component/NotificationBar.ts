@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {animateCSS, Constants, removeClassesByFunction} from "../Common";
 
 import {
@@ -42,7 +42,7 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 	private $main: HTMLElement;
 	private itemsById: { [id: string]: NotificationBarItem } = {};
 
-	constructor(config: DtoNotificationBar, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoNotificationBar, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="NotificationBar"></div>`);
 		config.initialItems.forEach(item => this.addItem(item))

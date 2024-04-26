@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 
 import {
 	DtoLinkButton,
@@ -33,7 +33,7 @@ export class LinkButton extends AbstractLegacyComponent<DtoLinkButton> implement
 	
 	private readonly $main: HTMLAnchorElement;
 
-	constructor(config: DtoLinkButton, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoLinkButton, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$main = parseHtml(`<a class="LinkButton" tabindex="0"></a>`)
 		this.$main.addEventListener("click", ev => {

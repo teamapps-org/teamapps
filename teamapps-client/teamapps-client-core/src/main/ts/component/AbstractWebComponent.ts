@@ -51,7 +51,7 @@ export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent
 		this.width = width;
 		this.height = height;
 		if (hasSize) {
-			console.debug("resize: " + this.getId());
+			console.debug("resize");
 			this.onResized.fire({width: this.width, height: this.height});
 			this.onResize();
 		}
@@ -66,14 +66,8 @@ export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent
 	}
 
 
-	public getId(): string {
-		return this.config.id ?? "";
-	}
-
 	public setConfig(config: C) {
 		this.config = config;
-
-		this.setAttribute("data-teamapps-id", this.config.id);
 
 		if (this.config.debuggingId != null) {
 			this.setAttribute("data-teamapps-debugging-id", this.config.debuggingId);

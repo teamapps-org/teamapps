@@ -123,13 +123,17 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 	private updateStyles() {
 		const highestMessageSeverity = getHighestSeverity(this.getFieldMessages());
 		if (highestMessageSeverity > DtoFieldMessageSeverity.INFO) {
-			this.$style.textContent = ''; // styles are defined by message severity styles
+			this.setStyle(".checkbox-check", {
+				"background-color": null,
+				"color": null,
+				"border": null
+			});
 		} else {
-			this.$style.textContent = `[data-teamapps-id=${this.config.id}] > .checkbox-check {
-			background-color: ${(this.backgroundColor ?? '')};
-			color: ${(this.checkColor ?? '')};
-			border: 1px solid ${(this.borderColor ?? '')};  
-		}`;
+			this.setStyle(".checkbox-check", {
+				"background-color": (this.backgroundColor ?? ''),
+				"color": (this.checkColor ?? ''),
+				"border": `1px solid ${(this.borderColor ?? '')}`
+			});
 		}
 	}
 

@@ -30,7 +30,6 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.ux.component.DtoClientObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -53,19 +52,6 @@ public abstract class DtoA implements DtoObject {
 
 
 
-
-        @com.fasterxml.jackson.annotation.JsonIgnore
-        public String getTypeId() {
-            return TYPE_ID;
-        }
-        @com.fasterxml.jackson.annotation.JsonIgnore
-        public List<String> getEventNames() {
-            return EVENT_NAMES;
-        }
-        @com.fasterxml.jackson.annotation.JsonIgnore
-        public List<String> getQueryNames() {
-            return QUERY_NAMES;
-        }
 
 	@JsonTypeName("A.a")
 	@JsonFormat(shape = JsonFormat.Shape.ARRAY)

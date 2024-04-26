@@ -19,6 +19,6 @@
  */
 package "teamapps-client-core":org.teamapps.dto;
 
-interface Template extends ClientObject {
+interface Template {
 
 }

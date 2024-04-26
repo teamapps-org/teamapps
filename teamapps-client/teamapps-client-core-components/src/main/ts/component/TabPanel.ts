@@ -23,17 +23,18 @@ import {
 	AbstractLegacyComponent,
 	bind,
 	Component,
-	insertAtIndex, noOpServerChannel,
+	executeWhenFirstDisplayed,
+	insertAtIndex,
+	insertBefore,
+	noOpServerChannel,
 	parseHtml,
-	ServerObjectChannel,
-	TeamAppsEvent,
-	TeamAppsUiContext
+	prependChild,
+	ServerChannel,
+	TeamAppsEvent
 } from "teamapps-client-core";
 import {DtoTab as DtoTab} from "../generated/DtoTab";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {ToolButton} from "./ToolButton";
-import {DropDown} from "../micro-components/DropDown";
-import {executeWhenFirstDisplayed} from "teamapps-client-core";
 import {
 	createDtoToolButton,
 	DtoTabPanel,
@@ -47,7 +48,6 @@ import {
 	DtoWindowButtonType
 } from "../generated";
 import {maximizeComponent} from "../Common";
-import {insertBefore, prependChild} from "teamapps-client-core";
 import {StaticIcons} from "../util/StaticIcons";
 import {positionDropdown} from "../util/dropdownPosition";
 import {contentWidth} from "../util/cssUtil";
@@ -106,13 +106,12 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	private selectedTab: Tab;
 	private hideTabBarIfSingleTab: boolean;
 
-	private toolButtons: { [id: string]: ToolButton } = {};
-	private toolButtonDropDown: DropDown;
+	private toolButtons: ToolButton[] = [];
 	private windowButtons: DtoWindowButtonType[];
 
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: DtoTabPanel, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoTabPanel, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 
 		this.$tabPanel = parseHtml(`<div class="TabPanel">
@@ -176,8 +175,6 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		if (config.toolButtons != null) {
 			this.setToolButtons(config.toolButtons as ToolButton[]);
 		}
-		this.toolButtonDropDown = new DropDown();
-
 		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
@@ -296,7 +293,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	public selectTab(tabId: string, sendSelectionEvent = false) {
 		let tab = this.getTabById(tabId);
 		if (!tab) {
-			console.error("Cannot select non-existing tab " + this.config.id + "~" + tabId);
+			console.error("Cannot select non-existing tab " + tabId);
 			return;
 		}
 		this.selectedTab = tab;
@@ -507,16 +504,15 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	public setToolButtons(toolButtons: ToolButton[]) {
 		this.$toolButtonContainer.innerHTML = '';
 		this.$toolButtonContainer.classList.toggle("hidden", !toolButtons || toolButtons.length === 0);
-		this.toolButtons = {};
+		this.toolButtons = toolButtons;
 		toolButtons.forEach(toolButton => {
 			this.$toolButtonContainer.appendChild(toolButton.getMainElement());
-			this.toolButtons[toolButton.getId()] = toolButton;
 		});
 		this.relayoutButtons();
 	}
 
 	public getToolButtons() {
-		return Object.values(this.toolButtons);
+		return this.toolButtons;
 	}
 
 	public setWindowButtons(buttonTypes:DtoWindowButtonType[]):void{

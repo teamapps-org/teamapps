@@ -101,7 +101,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 						+ " A, B "
 						+ "} "
 						+ "class C { "
-						+ "    E e = E.A; "
+						+ "    E e; "
 						+ "}",
 				"org.teamapps.dto.C",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_fromJsonWithEnums.java"
@@ -110,7 +110,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 
 	@Test
 	public void staticCommands() throws Exception {
-		String dslString = "package \"x\":org.teamapps.dto; abstract managed class A { static command a(String b); }";
+		String dslString = "package \"x\":org.teamapps.dto; abstract class A { static command a(String b); }";
 		executeClassTest(
 				dslString,
 				"org.teamapps.dto.A",

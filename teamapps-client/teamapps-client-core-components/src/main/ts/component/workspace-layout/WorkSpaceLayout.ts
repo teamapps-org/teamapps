@@ -19,7 +19,7 @@
  */
 import {
 	AbstractLegacyComponent,
-	Component, ServerObjectChannel,
+	Component, ServerChannel,
 	TeamAppsEvent,
 	TeamAppsUiContext,
 } from "teamapps-client-core";
@@ -84,7 +84,7 @@ export class WorkSpaceLayout extends AbstractLegacyComponent<DtoWorkSpaceLayout>
 	private localViewContainer: LocalViewContainer;
 	private viewContainersByWindowId: { [windowId: string]: ViewContainer } = {};
 
-	constructor(config: DtoWorkSpaceLayout, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoWorkSpaceLayout, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.localViewContainer = new LocalViewContainer(this, this.windowId, config.views, config.initialLayout, {
 			handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),

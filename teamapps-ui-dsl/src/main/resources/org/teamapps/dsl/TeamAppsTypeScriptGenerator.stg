@@ -36,12 +36,6 @@ export interface Dto<c.typeScriptIdentifier> <if(c.superTypes)>extends <c.superT
 	<c.queries:queryDeclaration(); separator=";\n">
 }
 
-<if(c.managedBaseType)>
-export interface <c.name>Reference {
-	id: string;
-}
-<endif>
-
 <if(c.parserRuleContext.typescriptFactoryAnnotation)>
 export function createDto<c.typeScriptIdentifier; format="cap">(<c.allRequiredProperties:parameter(false); separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>, <endif><if(c.allNonRequiredProperties)>nonRequiredProperties?: {<c.allNonRequiredProperties:parameter(true); separator=", ">}<endif>): Dto<c.typeScriptIdentifier> {
 	return {
@@ -70,7 +64,7 @@ export interface Dto<c.name>EventSource <if(c.superTypesWithEvents)>extends <c.s
 >>
 
 commandMethodStub(cmd) ::= <<
-<cmd.name>(<cmd.formalParameterWithDefault:parameter(false); separator=", ">): <if(cmd.type)>Promise\<<cmd.type.typeScriptType>\>|<cmd.type.typeScriptType><else>any<endif>;
+<cmd.name>(<cmd.formalParameter:parameter(false); separator=", ">): <if(cmd.type)>Promise\<<cmd.type.typeScriptType>\>|<cmd.type.typeScriptType><else>any<endif>;
 >>
 
 teamAppsEventDeclaration(evt) ::= <<
@@ -79,13 +73,13 @@ on<evt.name; format="cap">: EventEmitter\<<evt.typeScriptInterfaceName>\>;
 
 eventInterface(evt) ::= <<
 export interface <evt.typeScriptInterfaceName> {
-	<evt.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
+	<evt.formalParameter:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
 queryInterface(q) ::= <<
 export interface <q.typeScriptInterfaceName> {
-	<q.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
+	<q.formalParameter:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
@@ -102,12 +96,6 @@ export interface Dto<c.typeScriptIdentifier> <if(c.interfaces)>extends <c.interf
 	<c.properties:typeScriptPropertyDeclaration(false); separator=";\n">
 	<c.queries:queryDeclaration(); separator=";\n">
 }
-
-<if(c.managedBaseType)>
-export interface Dto<c.name>Reference {
-    id: string;
-}
-<endif>
 
 <if(c.allCommands)>
 export interface Dto<c.name>CommandHandler <if(c.superTypesWithCommands)>extends <c.superInterfacesWithCommands:{c|<c.name>CommandHandler}; separator=", "> <endif>{

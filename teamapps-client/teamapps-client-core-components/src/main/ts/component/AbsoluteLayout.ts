@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerChannel, TeamAppsUiContext, generateUUID} from "teamapps-client-core";
 import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent, DtoAnimationEasing} from "../generated";
 
 const animationEasingCssValues = {
@@ -32,15 +32,11 @@ const animationEasingCssValues = {
 
 export class AbsoluteLayout extends AbstractLegacyComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
-	private $style: HTMLStyleElement;
-	private components: DtoAbsolutePositionedComponent[];
 
-	constructor(config: DtoAbsoluteLayout, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoAbsoluteLayout, serverChannel: ServerChannel) {
 		super(config, serverChannel);
-		this.$main = parseHtml(`<div class="AbsoluteLayout" data-teamapps-id="${this.getId()}">
-	<style></style>
+		this.$main = parseHtml(`<div class="AbsoluteLayout">
 </div>`);
-		this.$style = this.$main.querySelector(":scope > style");
 		this.update(config.components, 0, DtoAnimationEasing.EASE);
 	}
 
@@ -58,36 +54,36 @@ export class AbsoluteLayout extends AbstractLegacyComponent<DtoAbsoluteLayout> i
 	update(components: DtoAbsolutePositionedComponent[], animationDuration: number, easing: DtoAnimationEasing): void {
 		Array.from(this.$main.querySelectorAll(":scope > :not(style)")).forEach(c => c.remove());
 
-		this.components = components;
 		components
 			.map(c => c.component)
 			.forEach((c: Component) => {
 				const mainDomElementElement = c.getMainElement();
 				mainDomElementElement.removeEventListener("transitionend", this.transitionEndEventListener);
 				this.$main.appendChild(mainDomElementElement);
+
+				let childId = mainDomElementElement.getAttribute("absolute-layout-child-id");
+				if (!childId) {
+					mainDomElementElement.setAttribute("absolute-layout-child-id", generateUUID());
+				}
 			});
 
 		this.$main.offsetWidth; // trigger reflow
 
-		let styles = `[data-teamapps-id=${this.getId()}] > * {
-	transition: top ${animationDuration}ms ${animationEasingCssValues[easing]}, right ${animationDuration}ms ${animationEasingCssValues[easing]}, bottom ${animationDuration}ms ${animationEasingCssValues[easing]}, left ${animationDuration}ms ${animationEasingCssValues[easing]}, width ${animationDuration}ms ${animationEasingCssValues[easing]}, height ${animationDuration}ms ${animationEasingCssValues[easing]};
-}`;
+		this.setStyle("*", {"transition": `transition: top ${animationDuration}ms ${animationEasingCssValues[easing]}, right ${animationDuration}ms ${animationEasingCssValues[easing]}, bottom ${animationDuration}ms ${animationEasingCssValues[easing]}, left ${animationDuration}ms ${animationEasingCssValues[easing]}, width ${animationDuration}ms ${animationEasingCssValues[easing]}, height ${animationDuration}ms ${animationEasingCssValues[easing]};`})
 		components.forEach(c => {
 			const component = c.component as AbstractLegacyComponent;
 			component.getMainElement().addEventListener('transitionend', this.transitionEndEventListener);
-			component.getMainElement().setAttribute("data-absolute-positioning-id", component.getId());
-			styles += `[data-teamapps-id=${this.getId()}] > [data-absolute-positioning-id=${component.getId()}] {
-	top: ${c.position.topCss != null ? c.position.topCss : "initial"};
-	right: ${c.position.rightCss != null ? c.position.rightCss : "initial"};
-	bottom: ${c.position.bottomCss != null ? c.position.bottomCss : "initial"};
-	left: ${c.position.leftCss != null ? c.position.leftCss : "initial"};
-	width: ${c.position.widthCss != null ? c.position.widthCss : "initial"};
-	height: ${c.position.heightCss != null ? c.position.heightCss : "initial"};
-	z-index: ${c.position.zIndex != null ? c.position.zIndex : "initial"};			
-}`;
+			// TODO when having many different (ever changing) children, this will generate a lot of CSS rules. Clean old ones up!
+			this.setStyle(`> [absolute-layout-child-id=${component.getMainElement().getAttribute("absolute-layout-child-id")}]`, {
+				top: `${c.position.topCss != null ? c.position.topCss : "initial"}`,
+				right: `${c.position.rightCss != null ? c.position.rightCss : "initial"}`,
+				bottom: `${c.position.bottomCss != null ? c.position.bottomCss : "initial"}`,
+				left: `${c.position.leftCss != null ? c.position.leftCss : "initial"}`,
+				width: `${c.position.widthCss != null ? c.position.widthCss : "initial"}`,
+				height: `${c.position.heightCss != null ? c.position.heightCss : "initial"}`,
+				"z-index": `${c.position.zIndex != null ? c.position.zIndex : "initial"}`
+			});
 		});
-
-		this.$style.innerText = styles;
 	}
 
 }

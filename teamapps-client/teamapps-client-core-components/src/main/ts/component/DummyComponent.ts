@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoDummyComponent,
 	DtoDummyComponent_ClickedEvent,
@@ -42,9 +42,9 @@ export class DummyComponent extends AbstractLegacyComponent<DtoDummyComponent> i
 	private commandCount: number = 0;
 	private text: string = "";
 
-	constructor(config: DtoDummyComponent, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoDummyComponent, serverChannel: ServerChannel) {
 		super(config, serverChannel);
-		this.$panel = parseHtml('<div class="DummyComponent" id="' + config.id + '"></div>');
+		this.$panel = parseHtml('<div class="DummyComponent"></div>');
 		this.$panel.addEventListener("click", () => {
 			this.clickCount++;
 			this.onClicked.fire({
@@ -76,7 +76,6 @@ export class DummyComponent extends AbstractLegacyComponent<DtoDummyComponent> i
 	private generateText() {
 		return `
 This is a dummy component!<br>
-id: <span>${this.getId()}</span><br>
 text: <span>${this.text}</span><br>
 clickCount: <span>${this.clickCount}</span><br>
 jsClickCount: <span>${this.jsClickCount}</span><br>

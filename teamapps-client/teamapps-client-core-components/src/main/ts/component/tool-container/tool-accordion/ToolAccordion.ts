@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, insertAfter, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, insertAfter, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {defaultSpinnerTemplate, doOnceOnClickOutsideElement} from "../../../Common";
@@ -46,7 +46,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 	private $mainDomElement: HTMLElement;
 	private $backgroundColorDiv: HTMLElement;
 
-	constructor(config: DtoToolAccordion, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoToolAccordion, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 
 		this.$mainDomElement = parseHtml(`<div class="ToolAccordion teamapps-blurredBackgroundImage"></div>`);
@@ -174,7 +174,7 @@ class DtoButtonGroup {
 	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolAccordion: ToolAccordion, private $sizeTestingContainer: HTMLElement) {
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
-		const $buttonGroup = parseHtml(`<div class="toolbar-button-group" id="${this.toolAccordionId}_${buttonGroupConfig.groupId}">`);
+		const $buttonGroup = parseHtml(`<div class="toolbar-button-group">`);
 		$buttonGroupWrapper.appendChild($buttonGroup);
 
 		this.config = buttonGroupConfig;
@@ -186,10 +186,6 @@ class DtoButtonGroup {
 		}
 
 		this.setVisible(buttonGroupConfig.visible);
-	}
-
-	private get toolAccordionId() {
-		return this.toolAccordion.getId();
 	}
 
 	public get position() {

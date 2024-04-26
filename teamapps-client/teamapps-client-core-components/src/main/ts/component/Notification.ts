@@ -27,7 +27,7 @@ import {
 	DtoNotificationEventSource,
 	DtoNotificationPosition
 } from "../generated";
-import {AbstractLegacyComponent, Component, parseHtml, TeamAppsEvent, executeWhenFirstDisplayed, ServerObjectChannel} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, TeamAppsEvent, executeWhenFirstDisplayed, ServerChannel} from "teamapps-client-core";
 import {animateCSS, Constants} from "../Common";
 import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";
@@ -129,7 +129,7 @@ export class Notification extends AbstractLegacyComponent<DtoNotification> imple
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: DtoNotification, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoNotification, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="Notification">

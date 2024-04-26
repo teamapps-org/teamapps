@@ -537,6 +537,10 @@ public class SessionContext {
 		return clientObjectsById.getKey(clientObject);
 	}
 
+	public ClientObject getClientObjectById(String id) {
+		return clientObjectsById.get(id);
+	}
+
 	public boolean isRendering(ClientObject clientObject) {
 		return renderingClientObjects.contains(clientObject);
 	}

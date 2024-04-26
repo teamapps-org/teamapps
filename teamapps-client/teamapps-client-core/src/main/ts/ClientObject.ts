@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-export interface ServerObjectChannel {
+export interface ServerChannel {
 	sendEvent(name: string, params: any[]): void;
 	sendQuery(name: string, params: any[]): Promise<any>;
 }
@@ -32,10 +32,15 @@ export const noOpServerChannel = {
 }
 
 export interface ClientObjectFactory {
-	createClientObject(typeName: string, config: any, serverChannel: ServerObjectChannel): Promise<ClientObject>;
+	createClientObject(typeName: string, config: any, serverChannel: ServerChannel): Promise<ClientObject>;
+}
+
+export interface ComponentLibrary extends Partial<ClientObjectFactory> {
+	init?: (serverChannel: ServerChannel) => void;
 }
 
 export interface ClientObject {
+	// constructor taking a configuration object as first and a ServerChannel as second parameter
 	init?(): any; // additional init method, called right after instantiating
 	invoke(name: string, params: any[]): Promise<any>;
 	destroy(): void;

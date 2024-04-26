@@ -1,47 +1,43 @@
 package "teamapps-client-core":org.teamapps.dto;
 
-import org.teamapps.dto.protocol.Location;
 
-class Globals implements ClientObject {
 
-    static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
-    static event navigationStateChange(Location location, boolean triggeredByUser);
+class Globals {
 
-    static command setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp);
+//    static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
+//    static event navigationStateChange(Location location, boolean triggeredByUser);
 
-//    static command registerComponentLibrary(String uuid, String mainJsUrl, String mainCssUrl);
-//    static command registerClientObjectType(String libraryUuid, String clientObjectType, List<String> eventNames, List<String> queryNames);
-//    static command toggleEventListening(String libraryUuid, String clientObjectId, String eventName, boolean listen);
-//    static command render(String libraryUuid, ClientObject component);
-//    static command unrender(String id);
+//    static command setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp);
 
-    static command setConfig(Configuration config);
-    static command setThemeClassName(String theme);
-    static command setSessionMessageWindows(Showable* expiredMessageWindow, Showable* errorMessageWindow, Showable* terminatedMessageWindow);
+//    static command setConfig(Configuration config);
+//    static command setThemeClassName(String theme);
+//    static command setOptimizedForTouch();
 
-    static command setPageTitle(String pageTitle);
-    static command addRootComponent(String containerElementId, Component* component); // containerDomSelector == null --> body
-
-    static command addClientToken(String token);
-    static command removeClientToken(String token);
-    static command clearClientTokens();
-
-    static command downloadFile(String fileUrl, String downloadFileName);
-    static command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, int animationDuration);
-    static command exitFullScreen();
-    static command showDialogMessage(String icon, String title, String message, List<GenericErrorMessageOption> options);
-
-    // uuid is a server-generated id for this particular lock. Multiple locks are possible!
-    static command requestWakeLock(String uuid) returns boolean;
-    static command releaseWakeLock(String uuid);
-
-    static command goToUrl(String url, boolean blankPage);
-
-    static command pushHistoryState(String relativeUrl);
-    static command navigateForward(int steps);
-
-    static command setFavicon(String url);
-    static command setTitle(String title);
+//    static command setSessionMessageWindows(Showable* expiredMessageWindow, Showable* errorMessageWindow, Showable* terminatedMessageWindow);
+//
+//    static command setPageTitle(String pageTitle);
+//    static command addRootComponent(String containerElementId, Component* component); // containerDomSelector == null --> body
+//
+//    static command addClientToken(String token);
+//    static command removeClientToken(String token);
+//    static command clearClientTokens();
+//
+//    static command downloadFile(String fileUrl, String downloadFileName);
+//    static command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, int animationDuration);
+//    static command exitFullScreen();
+//    static command showDialogMessage(String icon, String title, String message, List<GenericErrorMessageOption> options);
+//
+//    // uuid is a server-generated id for this particular lock. Multiple locks are possible!
+//    static command requestWakeLock(String uuid) returns boolean;
+//    static command releaseWakeLock(String uuid);
+//
+//    static command goToUrl(String url, boolean blankPage);
+//
+//    static command pushHistoryState(String relativeUrl);
+//    static command navigateForward(int steps);
+//
+//    static command setFavicon(String url);
+//    static command setTitle(String title);
 
 }
 

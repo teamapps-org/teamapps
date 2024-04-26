@@ -18,14 +18,14 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, Component, insertAtIndex, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, insertAtIndex, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {DtoCssAlignItems, DtoCssFlexDirection, DtoCssJustifyContent, DtoFlexContainer, DtoFlexContainerCommandHandler} from "../generated";
 
 export class FlexContainer extends AbstractLegacyComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
 
 	private $main: HTMLDivElement;
 
-	constructor(config: DtoFlexContainer, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoFlexContainer, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="FlexContainer"></div>`);
 

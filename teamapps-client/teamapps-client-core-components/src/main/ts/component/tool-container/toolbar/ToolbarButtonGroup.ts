@@ -41,7 +41,7 @@ export class ToolbarButtonGroup {
 	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolbar: Toolbar) {
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
-		const $buttonGroup = parseHtml(`<div class="toolbar-button-group" id="${this.toolbarId}_${buttonGroupConfig.groupId}"></div>`);
+		const $buttonGroup = parseHtml(`<div class="toolbar-button-group"></div>`);
 		$buttonGroupWrapper.appendChild($buttonGroup);
 
 		this.config = buttonGroupConfig;
@@ -68,10 +68,6 @@ export class ToolbarButtonGroup {
 
 	public getId() {
 		return this.config.groupId;
-	}
-
-	private get toolbarId() {
-		return this.toolbar.getId();
 	}
 
 	public get position() {

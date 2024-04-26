@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DtoPageTransition, DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
-import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
 import {pageTransition} from "../Common";
 
 // noinspection JSUnusedGlobalSymbols
@@ -29,10 +29,10 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 	private $contentWrapper: HTMLElement;
 	private $imagePreloadDiv: HTMLElement;
 
-	constructor(config: DtoRootPanel, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoRootPanel, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 
-		this.$root = parseHtml(`<div data-background-container-id="${config.id}" class="RootPanel">
+		this.$root = parseHtml(`<div class="RootPanel">
               <div class="image-preload-div"></div>
 		</div>`);
 		this.$imagePreloadDiv = this.$root.querySelector<HTMLElement>(":scope .image-preload-div");
@@ -48,7 +48,6 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 			return;
 		}
 
-		let oldContent = this.content;
 		let $oldContentWrapper = this.$contentWrapper;
 
 		this.content = content;

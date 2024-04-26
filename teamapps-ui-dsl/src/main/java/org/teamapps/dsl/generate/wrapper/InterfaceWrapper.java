@@ -68,11 +68,6 @@ public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclar
 	}
 
 	@Override
-	public boolean isManagedBaseType() {
-		return context.managedModifier() != null;
-	}
-
-	@Override
 	public boolean isAbstract() {
 		return true;
 	}

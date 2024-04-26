@@ -22,9 +22,8 @@ import {
 	AbstractLegacyComponent,
 	Component,
 	parseHtml,
-	ServerObjectChannel,
+	ServerChannel,
 	TeamAppsEvent,
-	TeamAppsUiContext,
 	Template
 } from "teamapps-client-core";
 import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins} from "../Common";
@@ -61,7 +60,7 @@ export class NavigationBar extends AbstractLegacyComponent<DtoNavigationBar> imp
 	private multiProgressDisplay: MultiProgressDisplay;
 	private $multiProgressDisplayContainer: HTMLElement;
 
-	constructor(config: DtoNavigationBar, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoNavigationBar, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$bar = parseHtml(`<div class="NavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
@@ -112,7 +111,7 @@ export class NavigationBar extends AbstractLegacyComponent<DtoNavigationBar> imp
 		$button.addEventListener("click", () => {
 			this.onButtonClicked.fire({
 				buttonId: button.id,
-				visibleFanOutComponentId: this.currentFanOutComponent && (this.currentFanOutComponent as AbstractLegacyComponent).getId()
+				visibleFanOutComponentId: this.currentFanOutComponent
 			});
 		});
 		this.buttons[button.id] = {

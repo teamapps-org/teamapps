@@ -30,7 +30,6 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.ux.component.DtoClientObject;
 import org.teamapps.dto.DtoA;
 import org.teamapps.dto.DtoAWrapper;
 

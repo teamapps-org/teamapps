@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, bind, Component, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, bind, Component, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoToolButton,
 	DtoToolButton_ClickedEvent,
@@ -43,7 +43,7 @@ export class ToolButton extends AbstractLegacyComponent<DtoToolButton> implement
 	private minDropDownHeight: number;
 	private openDropDownIfNotSet: boolean;
 
-	constructor(config: DtoToolButton, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoToolButton, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 
 		this.minDropDownWidth = config.minDropDownWidth;

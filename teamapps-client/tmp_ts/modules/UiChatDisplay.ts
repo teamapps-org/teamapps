@@ -44,12 +44,10 @@ export class UiChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> imple
 	constructor(config: DtoChatDisplay, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 		this.$main = parseHtml(`<div class="UiChatDisplay">
-	<style> [data-teamapps-id=${config.id}] .message.deleted .deleted-icon {
-		background-image: url('${config.deletedMessageIcon}');				
-	}</style>
 	<div class="loading-indicator-wrapper hidden"></div>
 	<div class="messages"></div>
 </div>`);
+		this.setStyle(".message.deleted .deleted-icon", {"background-image": `url('${config.deletedMessageIcon}')`})
 		this.$loadingIndicatorWrapper = this.$main.querySelector(":scope .loading-indicator-wrapper");
 		this.$loadingIndicatorWrapper.appendChild(new UiSpinner({fixedSize: 20}).getMainDomElement());
 		this.$messages = this.$main.querySelector(":scope .messages");

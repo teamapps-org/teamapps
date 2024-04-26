@@ -2,8 +2,8 @@ import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiConte
 import {
 	DtoGenericErrorMessageOption,
 	DtoGlobals,
-	DtoGlobals_GlobalKeyEventOccurredEvent,
-	DtoGlobals_NavigationStateChangeEvent,
+	// DtoGlobals_GlobalKeyEventOccurredEvent,
+	// DtoGlobals_NavigationStateChangeEvent,
 	DtoKeyEventType,
 } from "./generated";
 import {releaseWakeLock, requestWakeLock} from "./util/wakeLock";
@@ -19,8 +19,8 @@ import {DefaultUiContext} from "./DefaultUiContext";
 
 export class Globals implements ClientObject {
 
-	public static readonly onGlobalKeyEventOccurred: TeamAppsEvent<DtoGlobals_GlobalKeyEventOccurredEvent> = new TeamAppsEvent();
-	public static readonly onNavigationStateChange: TeamAppsEvent<DtoGlobals_NavigationStateChangeEvent> = new TeamAppsEvent();
+	// public static readonly onGlobalKeyEventOccurred: TeamAppsEvent<DtoGlobals_GlobalKeyEventOccurredEvent> = new TeamAppsEvent();
+	// public static readonly onNavigationStateChange: TeamAppsEvent<DtoGlobals_NavigationStateChangeEvent> = new TeamAppsEvent();
 
 	// dummy constructor
 	constructor(config: DtoGlobals){
@@ -121,10 +121,9 @@ export class Globals implements ClientObject {
 
 	public static createGenericErrorMessageShowable(title: string, message: string, showErrorIcon: boolean, options: DtoGenericErrorMessageOption[]): Showable {
 		let $div = parseHtml(`
-<div data-teamapps-id="ad352268-6d6b-473a-8c8d-316df8375361"
-     style="position: absolute; inset: 0 0 0 0; z-index: 1000000; display: flex; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5);">
+<div style="position: absolute; inset: 0 0 0 0; z-index: 1000000; display: flex; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5);">
     <div style="width: 370px; height: 200px; max-width: 100%; max-height: 100%; box-shadow: 3px 10px 70px rgb(0 0 0 / 85%);">
-        <div data-teamapps-id="ad352268-6d6b-473a-8c8d-316df8375361" style="width: 100%; height: 100%; background-color: white; margin: 0;">
+        <div style="width: 100%; height: 100%; background-color: white; margin: 0;">
             <div style="min-height: 32px; border-bottom: 1px solid rgba(0, 0, 0, 0.09); padding: 0 1px 0 8px; display: flex; align-items: center;">Session Expired</div>
             <div style="padding: 15px">
                     <div style="text-align: justify; margin-bottom: 15px">${message}</div>
@@ -162,7 +161,7 @@ export class Globals implements ClientObject {
 
 	public static async pushHistoryState(relativeUrl: string) {
 		window.history.pushState({}, "", relativeUrl);
-		Globals.onNavigationStateChange.fire({location: createUiLocation(), triggeredByUser: false});
+		// Globals.onNavigationStateChange.fire({location: createUiLocation(), triggeredByUser: false});
 	}
 
 	public static async navigateForward(steps: number) {
@@ -216,22 +215,22 @@ let keyboardEventListener = (e: KeyboardEvent) => {
 			}
 		}
 
-		Globals.onGlobalKeyEventOccurred.fire({
-			eventType: e.type == "keydown" ? DtoKeyEventType.KEY_DOWN : DtoKeyEventType.KEY_UP,
-			sourceComponentId: componentId,
-			code: e.code,
-			isComposing: e.isComposing,
-			key: e.key,
-			charCode: e.charCode,
-			keyCode: e.keyCode,
-			locale: (e as any).locale,
-			location: e.location,
-			repeat: e.repeat,
-			altKey: e.altKey,
-			ctrlKey: e.ctrlKey,
-			shiftKey: e.shiftKey,
-			metaKey: e.metaKey
-		})
+		// Globals.onGlobalKeyEventOccurred.fire({
+		// 	eventType: e.type == "keydown" ? DtoKeyEventType.KEY_DOWN : DtoKeyEventType.KEY_UP,
+		// 	sourceComponentId: componentId,
+		// 	code: e.code,
+		// 	isComposing: e.isComposing,
+		// 	key: e.key,
+		// 	charCode: e.charCode,
+		// 	keyCode: e.keyCode,
+		// 	locale: (e as any).locale,
+		// 	location: e.location,
+		// 	repeat: e.repeat,
+		// 	altKey: e.altKey,
+		// 	ctrlKey: e.ctrlKey,
+		// 	shiftKey: e.shiftKey,
+		// 	metaKey: e.metaKey
+		// })
 	}
 }
 
@@ -248,8 +247,8 @@ function setGlobalKeyEventsEnabled(unmodified: boolean, modifiedWithAltKey: bool
 }
 
 window.addEventListener('popstate', (event) => {
-	Globals.onNavigationStateChange.fire({
-		location: createUiLocation(),
-		triggeredByUser: true
-	});
+	// Globals.onNavigationStateChange.fire({
+	// 	location: createUiLocation(),
+	// 	triggeredByUser: true
+	// });
 });

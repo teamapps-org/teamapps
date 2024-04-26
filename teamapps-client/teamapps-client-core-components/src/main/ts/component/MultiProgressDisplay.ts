@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
 import {
 	DtoDefaultMultiProgressDisplay,
 	DtoDefaultMultiProgressDisplayCommandHandler,
@@ -40,7 +40,7 @@ export class DefaultMultiProgressDisplay extends MultiProgressDisplay<DtoDefault
 	private $spinner: HTMLElement;
 	private $runningCount: HTMLElement;
 
-	constructor(config: DtoDefaultMultiProgressDisplay, serverChannel: ServerObjectChannel) {
+	constructor(config: DtoDefaultMultiProgressDisplay, serverChannel: ServerChannel) {
 		super(config, serverChannel);
 
 		this.$main = parseHtml(`<div class="DefaultMultiProgressDisplay">

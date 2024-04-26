@@ -30,7 +30,6 @@ import org.teamapps.dto.DtoObject;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.ux.component.DtoClientObject;
 import org.teamapps.dto.DtoE;
 
 @JsonTypeName("C")
@@ -41,7 +40,7 @@ public class DtoC implements DtoObject {
     public static final List<String> EVENT_NAMES = List.of();
     public static final List<String> QUERY_NAMES = List.of();
 
-	protected DtoE e = E.A;
+	protected DtoE e;
 
 	public DtoC() {
 	}
