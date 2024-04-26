@@ -26,6 +26,8 @@ import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.animation.EntranceAnimation;
+import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.format.Spacing;
@@ -161,7 +163,55 @@ public class Notification extends AbstractComponent {
 		return this;
 	}
 
+	public void show() {
+		// TODO
+	}
+
 	public boolean isShowing() {
 		return showing;
+	}
+
+
+	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
+		// TODO
+//		runWithContext(() -> {
+//			sendStaticCommand(Notification.class, DtoNotification.ShowNotificationCommand.CMD_NAME, new DtoNotification.ShowNotificationCommand(notification, position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(), exitAnimation.toUiExitAnimation()).getParameters());
+//		});
+	}
+
+	public void showNotification(Notification notification, NotificationPosition position) {
+//		runWithContext(() -> {
+//			showNotification(notification, position, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+//		});
+	}
+
+	public void showNotification(Icon<?, ?> icon, String caption) {
+//		runWithContext(() -> {
+//			Notification notification = Notification.createWithIconAndCaption(icon, caption);
+//			notification.setDismissible(true);
+//			notification.setShowProgressBar(false);
+//			notification.setDisplayTimeInMillis(5000);
+//			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+//		});
+	}
+
+	public void showNotification(Icon<?, ?> icon, String caption, String description) {
+//		runWithContext(() -> {
+//			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
+//			notification.setDismissible(true);
+//			notification.setShowProgressBar(false);
+//			notification.setDisplayTimeInMillis(5000);
+//			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+//		});
+	}
+
+	public void showNotification(Icon<?, ?> icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
+//		runWithContext(() -> {
+//			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
+//			notification.setDismissible(dismissable);
+//			notification.setDisplayTimeInMillis(displayTimeInMillis);
+//			notification.setShowProgressBar(showProgress);
+//			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+//		});
 	}
 }

@@ -34,8 +34,6 @@ public class SessionContextResourceManager {
 	public static final String BASE_PATH = "/files/";
 	public static final String RESOURCE_LINK_ID_PREFIX = "res-";
 
-	private static final Map<Class<? extends Resource>, Boolean> IMPLEMENTS_EQUAL_BY_RESOURCE_CLASS = new ConcurrentHashMap<>();
-
 	private final String sessionId;
 	private final AtomicInteger linkIdGenerator = new AtomicInteger();
 	private final Map<Integer, Resource> resourceByLinkId = new ConcurrentHashMap<>();

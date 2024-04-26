@@ -22,8 +22,12 @@ package "teamapps-client-core-components":org.teamapps.dto;
 import org.teamapps.dto.Component;
 
 class RootPanel extends Component {
+    String backgroundImageUrl;
+    String blurredBackgroundImageUrl;
+    String backgroundColor
 	Component* content;
 
+    command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, long animationDuration);
 	command setContent(Component* content, PageTransition transition, long animationDuration);
 }
 

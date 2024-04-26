@@ -27,6 +27,7 @@ import jakarta.servlet.http.HttpSessionListener;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsUploadManager;
 import org.teamapps.dto.DtoGlobals;
@@ -39,8 +40,12 @@ import org.teamapps.uisession.statistics.SessionStatsUpdatedEventData;
 import org.teamapps.uisession.statistics.UiSessionStats;
 import org.teamapps.util.threading.SequentialExecutorFactory;
 import org.teamapps.ux.component.ComponentLibraryRegistry;
+import org.teamapps.ux.component.div.Div;
+import org.teamapps.ux.component.field.Button;
+import org.teamapps.ux.component.flexcontainer.VerticalLayout;
+import org.teamapps.ux.component.linkbutton.LinkButton;
+import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
@@ -78,7 +83,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	private final IconProvider iconProvider;
 	private final UxServerContext uxServerContext;
 
-	public TeamAppsSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper,
+	public TeamAppsSessionManager(TeamAppsConfiguration config,
+								  ObjectMapper objectMapper,
 								  SequentialExecutorFactory sessionExecutorFactory,
 								  WebController webController,
 								  IconProvider iconProvider,
@@ -189,7 +195,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			MessageSender messageSender
 	) {
 		LOGGER.trace("initSession: sessionId = [" + sessionId + "], clientInfo = [" + clientInfo + "], "
-				+ "maxRequestedCommandId = [" + maxRequestedCommandId + "], messageSender = [" + messageSender + "]");
+					 + "maxRequestedCommandId = [" + maxRequestedCommandId + "], messageSender = [" + messageSender + "]");
 
 		UiSession uiSession = new UiSession(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender);
 		uiSession.addSessionListener(new UiSessionListener() {
@@ -210,7 +216,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		uiSession.handleCommandRequest(maxRequestedCommandId, null);
 
 		boolean wrongTeamappsVersion = clientInfo.getTeamAppsVersion() == null
-				|| (!Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_VERSION) && !Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_DEV_SERVER_VERSION));
+									   || (!Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_VERSION) && !Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_DEV_SERVER_VERSION));
 		boolean hasTeamAppsRefreshParameter = clientInfo.getClientParameters().containsKey(TEAMAPPS_VERSION_REFRESH_PARAMETER);
 		if (wrongTeamappsVersion) {
 			LOGGER.info("Wrong TeamApps client version {} in session {}! Expected: {}!", clientInfo.getTeamAppsVersion(), sessionId, TEAMAPPS_VERSION);
@@ -218,7 +224,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
 				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getSearch()) ? "&" : "?";
 				String url = clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis();
-				uiSession.sendCommand(new UiCommandWithResultCallback(null, null, DtoGlobals.GoToUrlCommand.CMD_NAME, new DtoGlobals.GoToUrlCommand(url, false).getParameters())); // TODO...
+				uiSession.sendCommand(new UiCommandWithResultCallback(null, null, "goToUrl", url, false));
 			}
 			uiSession.close(SessionClosingReason.WRONG_TEAMAPPS_VERSION);
 			return uiSession;
@@ -291,18 +297,54 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	}
 
 	public SessionContext createSessionContext(UiSession uiSession, ClientInfo clientInfo, HttpSession httpSession) {
-		SessionConfiguration sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
-
-		return new SessionContext(
+		SessionContext sessionContext = new SessionContext(
 				uiSession,
-				sessionExecutorFactory.createExecutor(uiSession.getSessionId().toString()),
+				sessionExecutorFactory.createExecutor(uiSession.getSessionId()),
 				clientInfo,
-				sessionConfiguration,
 				httpSession,
 				uxServerContext,
 				new SessionIconProvider(iconProvider),
 				componentLibraryRegistry
 		);
+
+		sessionContext.runWithContext(() -> {
+			var sessionExpiredWindow = createDefaultSessionMessageWindow(sessionContext.getLocalized("teamapps.common.sessionExpired"), sessionContext.getLocalized("teamapps.common.sessionExpiredText"), sessionContext.getLocalized("teamapps.common.refresh"), sessionContext.getLocalized("teamapps.common.cancel")),
+			var	sessionErrorWindow = createDefaultSessionMessageWindow(sessionContext.getLocalized("teamapps.common.error"), sessionContext.getLocalized("teamapps.common.sessionErrorText"), sessionContext.getLocalized("teamapps.common.refresh"), sessionContext.getLocalized("teamapps.common.cancel"));
+			var	sessionTerminatedWindow = createDefaultSessionMessageWindow(sessionContext.getLocalized("teamapps.common.sessionTerminated"), sessionContext.getLocalized("teamapps.common.sessionTerminatedText"), sessionContext.getLocalized("teamapps.common.refresh"), sessionContext.getLocalized("teamapps.common.cancel"));
+			sessionContext.setSessionMessages(sessionExpiredWindow, sessionErrorWindow, sessionTerminatedWindow);
+		});
+		return sessionContext;
+	}
+
+	public static Window createDefaultSessionMessageWindow(String title, String message, String refreshButtonCaption, String cancelButtonCaption) {
+		Window window = new Window(null, title, null, 300, 300, true, true, true);
+		window.setPadding(10);
+
+		VerticalLayout verticalLayout = new VerticalLayout();
+
+		Div messageField = new Div(message);
+		messageField.setCssStyle("font-size", "110%");
+		verticalLayout.addComponentFillRemaining(messageField);
+
+		Button<?> refreshButton = new Button<>(null, refreshButtonCaption);
+		refreshButton.setCssStyle("margin", "10px 0");
+		refreshButton.setCssStyle(".DtoButton", "background-color", RgbaColor.MATERIAL_BLUE_600.toHtmlColorString());
+		refreshButton.setCssStyle(".DtoButton", "color", RgbaColor.WHITE.toHtmlColorString());
+		refreshButton.setCssStyle(".DtoButton", "font-size", "120%");
+		refreshButton.setCssStyle(".DtoButton", "height", "50px");
+		refreshButton.setOnClickJavaScript("window.location.reload()");
+		verticalLayout.addComponentAutoSize(refreshButton);
+
+		if (cancelButtonCaption != null) {
+			LinkButton cancelLink = new LinkButton(cancelButtonCaption);
+			cancelLink.setCssStyle("text-align", "center");
+			// TODO cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.createClientReference().getId() + "\").close();");
+			verticalLayout.addComponentAutoSize(cancelLink);
+		}
+
+		window.setContent(verticalLayout);
+		window.enableAutoHeight();
+		return window;
 	}
 
 }

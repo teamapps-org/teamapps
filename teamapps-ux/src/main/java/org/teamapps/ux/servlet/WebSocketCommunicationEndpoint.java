@@ -33,10 +33,10 @@ import org.teamapps.dto.protocol.server.SESSION_CLOSED;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
 import org.teamapps.uisession.*;
 import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.Location;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -139,7 +139,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 								dtoClientInfo.getTimezoneOffsetMinutes(),
 								dtoClientInfo.getClientTokens(),
 								serverSideClientInfo.getUserAgentString(),
-								Location.fromUiLocationWrapper(dtoClientInfo.getLocation()),
+								URI.create(dtoClientInfo.getLocation()).toURL(),
 								dtoClientInfo.getClientParameters(),
 								dtoClientInfo.getTeamAppsVersion()
 						);

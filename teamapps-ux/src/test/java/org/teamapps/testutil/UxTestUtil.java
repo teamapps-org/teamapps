@@ -26,10 +26,9 @@ import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.UiSession;
 import org.teamapps.ux.component.ComponentLibraryRegistry;
 import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.Location;
-import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -44,13 +43,13 @@ public class UxTestUtil {
 	}
 
 	public static SessionContext createDummySessionContext() {
-		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", Mockito.mock(Location.class), Collections.emptyMap(), TEAMAPPS_VERSION);
+		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", Mockito.mock(URL.class), Collections.emptyMap(), TEAMAPPS_VERSION);
 		ComponentLibraryRegistry componentLibraryRegistryMock = Mockito.mock(ComponentLibraryRegistry.class);
 		Mockito.when(componentLibraryRegistryMock.getComponentLibraryForClientObject(Mockito.any())).thenReturn(Mockito.mock(ComponentLibraryRegistry.ComponentLibraryInfo.class));
 		return new SessionContext(
 				Mockito.mock(UiSession.class),
 				Executors.newSingleThreadExecutor(),
-				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
+				clientInfo, Mockito.mock(HttpSession.class),
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(SessionIconProvider.class),
 				componentLibraryRegistryMock

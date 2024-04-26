@@ -26,7 +26,6 @@ import org.teamapps.dto.DtoGlobals;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.Globals;
 import org.teamapps.ux.session.SessionContext;
 
 import java.lang.invoke.MethodHandles;
@@ -56,7 +55,6 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	protected void mapAbstractUiComponentProperties(DtoComponent uiComponent) {
-		uiComponent.setId(id);
 		uiComponent.setDebuggingId(debuggingId);
 		uiComponent.setVisible(visible);
 		uiComponent.setListeningEvents(List.copyOf(listeningEventNames));

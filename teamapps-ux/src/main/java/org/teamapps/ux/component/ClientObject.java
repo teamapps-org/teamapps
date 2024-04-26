@@ -36,10 +36,9 @@ public interface ClientObject {
 	Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
-	 * The id of a client object MUST be an immutable globally unique String.
-	 * @return the id of this client object
+	 * Sets the channel that this object must use to communicate with its client-side representation.
 	 */
-	String getId();
+	void setClientObjectChannel(ClientObjectChannel clientObjectChannel);
 
 	Object createConfig();
 

@@ -42,22 +42,19 @@
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-common</artifactId>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.teamapps</groupId>-->
-<!--            <artifactId>teamapps-icon</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-icon</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-material-icon-provider</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-component-api</artifactId>
+            <version>0.9.155-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-client-core-components</artifactId>

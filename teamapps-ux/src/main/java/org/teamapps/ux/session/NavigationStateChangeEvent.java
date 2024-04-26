@@ -19,17 +19,19 @@
  */
 package org.teamapps.ux.session;
 
+import java.net.URL;
+
 public class NavigationStateChangeEvent {
 
-	private final Location location;
+	private final URL location;
 	private final boolean triggeredByUser;
 
-	public NavigationStateChangeEvent(Location location, boolean triggeredByUser) {
+	public NavigationStateChangeEvent(URL location, boolean triggeredByUser) {
 		this.location = location;
 		this.triggeredByUser = triggeredByUser;
 	}
 
-	public Location getLocation() {
+	public URL getLocation() {
 		return location;
 	}
 

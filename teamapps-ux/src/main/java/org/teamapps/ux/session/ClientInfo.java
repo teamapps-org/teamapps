@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.session;
 
+import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -37,16 +38,13 @@ public class ClientInfo {
 	private final int timeZoneOffsetMinutes;
 	private final Set<String> clientTokens;
 	private final String userAgent;
-	private final Location location;
+	private final URL location;
 	private final Map<String, String> clientParameters;
 	private final String teamAppsVersion;
 
-	private ClientUserAgent userAgentData;
-
-
 	public ClientInfo(String ip, int screenWidth, int screenHeight, int viewPortWidth, int viewPortHeight,
 					  String preferredLanguageIso, boolean highDensityScreen, String timeZone, int timeZoneOffsetMinutes, List<String> clientTokens, String userAgent,
-					  Location location, Map<String, String> clientParameters, String teamAppsVersion) {
+					  URL location, Map<String, String> clientParameters, String teamAppsVersion) {
 		this.ip = ip;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
@@ -115,24 +113,12 @@ public class ClientInfo {
 		return userAgent;
 	}
 
-	public Location getLocation() {
+	public URL getLocation() {
 		return location;
-	}
-
-	public String getClientUrl() {
-		return location.getHref();
 	}
 
 	public Map<String, String> getClientParameters() {
 		return clientParameters;
-	}
-
-	public ClientUserAgent getUserAgentData() {
-		return userAgentData;
-	}
-
-	public void setUserAgentData(ClientUserAgent userAgentData) {
-		this.userAgentData = userAgentData;
 	}
 
 	public String getTeamAppsVersion() {

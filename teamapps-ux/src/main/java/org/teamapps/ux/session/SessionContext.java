@@ -20,41 +20,29 @@
 package org.teamapps.ux.session;
 
 import com.devskiller.friendly_id.FriendlyId;
+import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.ULocale;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.DtoGlobals;
-import org.teamapps.dto.DtoNotification;
+import org.teamapps.dto.DtoConfiguration;
 import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.protocol.server.SessionClosingReason;
-import org.teamapps.dto.protocol.server.CREATE_OBJ;
-import org.teamapps.dto.protocol.server.DESTROY_OBJ;
-import org.teamapps.dto.protocol.server.REGISTER_LIB;
-import org.teamapps.dto.protocol.server.TOGGLE_EVT;
+import org.teamapps.dto.protocol.server.*;
 import org.teamapps.event.Event;
 import org.teamapps.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
-import org.teamapps.ux.component.*;
+import org.teamapps.ux.component.ClientObject;
+import org.teamapps.ux.component.ClientObjectChannel;
+import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ComponentLibrary;
+import org.teamapps.ux.component.ComponentLibraryRegistry;
 import org.teamapps.ux.component.ComponentLibraryRegistry.ComponentLibraryInfo;
-import org.teamapps.ux.component.animation.EntranceAnimation;
-import org.teamapps.ux.component.animation.ExitAnimation;
-import org.teamapps.ux.component.div.Div;
-import org.teamapps.ux.component.field.Button;
-import org.teamapps.ux.component.flexcontainer.VerticalLayout;
-import org.teamapps.ux.component.linkbutton.LinkButton;
-import org.teamapps.ux.component.notification.Notification;
-import org.teamapps.ux.component.notification.NotificationPosition;
-import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.rootpanel.WakeLock;
-import org.teamapps.ux.component.window.Window;
+import org.teamapps.ux.component.Showable;
 import org.teamapps.ux.i18n.ResourceBundleTranslationProvider;
 import org.teamapps.ux.i18n.TranslationProvider;
 import org.teamapps.ux.icon.IconBundle;
@@ -63,7 +51,8 @@ import org.teamapps.ux.resource.Resource;
 
 import java.io.File;
 import java.lang.invoke.MethodHandles;
-import java.time.Duration;
+import java.net.URL;
+import java.time.DayOfWeek;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -79,8 +68,8 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
-	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(Globals.class, "globalKeyEventOccurred", hasListeners));
-	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(Globals.class, "navigationStateChange", hasListeners));
+	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(null, "globalKeyEventOccurred", hasListeners));
+	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(null, "navigationStateChange", hasListeners));
 	public final ProjectorEvent<UiSessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
 	public final Event<SessionClosingReason> onDestroyed = new Event<>();
 
@@ -95,7 +84,7 @@ public class SessionContext {
 	private final UiSession uiSession;
 
 	private final ClientInfo clientInfo;
-	private Location currentLocation;
+	private URL currentLocation;
 
 	private final HttpSession httpSession;
 	private final UxServerContext serverContext;
@@ -109,13 +98,7 @@ public class SessionContext {
 
 	private TranslationProvider translationProvider;
 
-	private SessionConfiguration sessionConfiguration;
-
 	private final Map<String, Icon<?, ?>> bundleIconByKey = new HashMap<>();
-
-	private Window sessionExpiredWindow;
-	private Window sessionErrorWindow;
-	private Window sessionTerminatedWindow;
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
@@ -175,10 +158,18 @@ public class SessionContext {
 	private final Set<ComponentLibrary> loadedComponentLibraries = new HashSet<>();
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 
+	private ULocale locale = ULocale.US;
+	private DateTimeFormatDescriptor dateFormat = DateTimeFormatDescriptor.forDate(DateTimeFormatDescriptor.FullLongMediumShortType.SHORT);
+	private DateTimeFormatDescriptor timeFormat = DateTimeFormatDescriptor.forTime(DateTimeFormatDescriptor.FullLongMediumShortType.SHORT);
+	private ZoneId timeZone = ZoneId.of("Europe/Berlin");
+	private DayOfWeek firstDayOfWeek; // null == determine by locale
+	private boolean optimizedForTouch = false;
+	private String iconBasePath = "/icons";
+	private StylingTheme theme = StylingTheme.DEFAULT;
+
 	public SessionContext(UiSession uiSession,
 						  ExecutorService sessionExecutor,
 						  ClientInfo clientInfo,
-						  SessionConfiguration sessionConfiguration,
 						  HttpSession httpSession,
 						  UxServerContext serverContext,
 						  SessionIconProvider iconProvider,
@@ -186,16 +177,27 @@ public class SessionContext {
 		this.sessionExecutor = sessionExecutor;
 		this.uiSession = uiSession;
 		this.httpSession = httpSession;
-		this.clientInfo = clientInfo;
-		this.currentLocation = clientInfo.getLocation();
-		this.sessionConfiguration = sessionConfiguration;
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
-		runWithContext(this::updateSessionMessageWindows);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 		this.componentLibraryRegistry = componentLibraryRegistry;
+
+		this.clientInfo = clientInfo;
+		this.currentLocation = clientInfo.getLocation();
+		boolean optimizedForTouch = false;
+		StylingTheme theme = StylingTheme.DEFAULT;
+		if (clientInfo.isMobileDevice()) {
+			optimizedForTouch = true;
+			theme = StylingTheme.MODERN;
+		}
+		ULocale locale1 = ULocale.forLanguageTag(clientInfo.getPreferredLanguageIso());
+		ZoneId timeZone1 = ZoneId.of(clientInfo.getTimeZone());
+		this.locale = locale1;
+		this.timeZone = timeZone1;
+		this.theme = theme;
+		this.optimizedForTouch = optimizedForTouch;
 	}
 
 	public Event<SessionClosingReason> onDestroyed() {
@@ -203,7 +205,7 @@ public class SessionContext {
 	}
 
 	public void pushNavigationState(String relativeUrl) {
-		sendStaticCommand(Globals.class, DtoGlobals.PushHistoryStateCommand.CMD_NAME, new DtoGlobals.PushHistoryStateCommand(relativeUrl).getParameters());
+		sendStaticCommand(null, "pushHistoryState", relativeUrl);
 	}
 
 	public void navigateBack(int steps) {
@@ -211,7 +213,7 @@ public class SessionContext {
 	}
 
 	public void navigateForward(int steps) {
-		sendStaticCommand(Globals.class, DtoGlobals.NavigateForwardCommand.CMD_NAME, new DtoGlobals.NavigateForwardCommand(steps).getParameters());
+		sendStaticCommand(null, "navigateForward", steps);
 	}
 
 	public static SessionContext current() {
@@ -238,23 +240,6 @@ public class SessionContext {
 		return bundleIconByKey.get(key);
 	}
 
-	public ULocale getULocale() {
-		return sessionConfiguration.getULocale();
-	}
-
-	public Locale getLocale() {
-		return sessionConfiguration.getLocale();
-	}
-
-	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
-		sessionConfiguration.setULocale(locale);
-		setConfiguration(sessionConfiguration);
-	}
-
 	public String getLocalized(String key, Object... parameters) {
 		return translationProvider.getLocalized(getLocale(), key, parameters);
 	}
@@ -279,11 +264,18 @@ public class SessionContext {
 		uiSession.close(reason);
 	}
 
-	public void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, String name, Object[] params) {
-		sendStaticCommand(clientObjectClass, name, params, null);
+	public void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, String name, Object... params) {
+		sendStaticCommandWithCallback(clientObjectClass, name, params, null);
 	}
 
-	public <RESULT> void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, String name, Object[] params, Consumer<RESULT> resultCallback) {
+	/**
+	 * Invokes the given command on the client side and calls the resultCallback after it has been executed on the client side.
+	 * Note that the callback is also going to be called if the client side does not explicitly return a result (in which case
+	 * the callback is invoked with null).
+	 * 
+	 * @param resultCallback invoked after the command has been executed on the client side.
+	 */
+	public <RESULT> void sendStaticCommandWithCallback(Class<? extends ClientObject> clientObjectClass, String name, Object[] params, Consumer<RESULT> resultCallback) {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
@@ -293,9 +285,8 @@ public class SessionContext {
 	}
 
 	private String getComponentLibraryUuidForClientObjectClass(Class<? extends ClientObject> clientObjectClass, boolean loadIfNecessary) {
-		Objects.requireNonNull(clientObjectClass);
 		String componentLibraryUuid;
-		if (clientObjectClass == Globals.class) {
+		if (clientObjectClass == null) {
 			componentLibraryUuid = null;
 		} else {
 			ComponentLibraryInfo libraryInfo = componentLibraryRegistry.getComponentLibraryForClientObjectClass(clientObjectClass);
@@ -323,9 +314,9 @@ public class SessionContext {
 			any effect on the initialization of the DtoPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
 			the panel was rendered (which is only after completing its createUiComponent() method).
 			 */
-			runWithContext(() -> sendCommandInternal(clientObject.getId(), name, params, resultCallback), true);
+			runWithContext(() -> sendCommandInternal(getClientObjectId(clientObject, false), name, params, resultCallback), true);
 		} else if (isRendered(clientObject)) {
-			sendCommandInternal(clientObject.getId(), name, params, resultCallback);
+			sendCommandInternal(getClientObjectId(clientObject, false), name, params, resultCallback);
 		}
 	}
 
@@ -445,20 +436,6 @@ public class SessionContext {
 		executionDecorators.clear();
 	}
 
-	public SessionConfiguration getConfiguration() {
-		return sessionConfiguration;
-	}
-
-	public void setConfiguration(SessionConfiguration config) {
-		this.sessionConfiguration = config;
-		sendStaticCommand(Globals.class, DtoGlobals.SetConfigCommand.CMD_NAME, new DtoGlobals.SetConfigCommand(config.createUiConfiguration()).getParameters());
-		updateSessionMessageWindows();
-	}
-
-	public ZoneId getTimeZone() {
-		return sessionConfiguration.getTimeZone();
-	}
-
 	public SessionIconProvider getIconProvider() {
 		return iconProvider;
 	}
@@ -473,14 +450,15 @@ public class SessionContext {
 		if (icon == null) {
 			return null;
 		}
-		return sessionConfiguration.getIconPath() + "/" + iconProvider.encodeIcon((Icon) icon, true);
+		return getIconBasePath() + "/" + iconProvider.encodeIcon((Icon) icon, true);
 	}
 
-	public ClientObjectChannel createClientObject(ClientObject clientObject) {
+	public void createClientObject(ClientObject clientObject) {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
-		if (!clientObjectsById.containsValue(clientObject)) {
-			String id = FriendlyId.createFriendlyId();
+		String id = clientObjectsById.getKey(clientObject);
+		if (id == null) {
+			id = FriendlyId.createFriendlyId();
 			clientObjectsById.put(id, clientObject);
 		}
 
@@ -488,14 +466,14 @@ public class SessionContext {
 			this.renderingClientObjects.add(clientObject);
 			try {
 				String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
-				uiSession.sendServerMessage(new CREATE_OBJ(libraryUuid, clientObject.getClass().getSimpleName(), clientObject.createConfig(), clientObject.getListeningEventNames()));
+				uiSession.sendServerMessage(new CREATE_OBJ(libraryUuid, clientObject.getClass().getSimpleName(), id, clientObject.createConfig(), clientObject.getListeningEventNames()));
 			} finally {
 				renderingClientObjects.remove(clientObject);
 			}
 			renderedClientObjects.add(clientObject);
 		}
 
-		return new ClientObjectChannel() {
+		clientObject.setClientObjectChannel(new ClientObjectChannel() {
 			@Override
 			public void sendCommand(String name, Object[] params, Consumer<JsonWrapper> resultHandler) {
 				sendCommandIfRendered(clientObject, name, params, null);
@@ -505,7 +483,7 @@ public class SessionContext {
 			public void toggleEvent(String eventName, boolean enabled) {
 				SessionContext.this.toggleEvent(clientObject, eventName, enabled);
 			}
-		};
+		});
 	}
 
 	public void toggleEvent(ClientObject clientObject, String eventName, boolean enabled) {
@@ -533,8 +511,12 @@ public class SessionContext {
 		}
 	}
 
-	public String getClientObjectId(ClientObject clientObject) {
-		return clientObjectsById.getKey(clientObject);
+	public String getClientObjectId(ClientObject clientObject, boolean renderIfNotYetRendered) {
+		String clientId = clientObjectsById.getKey(clientObject);
+		if (clientId != null && renderIfNotYetRendered) {
+			createClientObject(clientObject);
+		}
+		return clientId;
 	}
 
 	public ClientObject getClientObjectById(String id) {
@@ -553,10 +535,6 @@ public class SessionContext {
 		return createResourceLink(resource, null);
 	}
 
-	public void showWindow(Window window, int animationDuration) {
-		window.show(animationDuration);
-	}
-
 	public void download(Resource resource, String downloadFileName) {
 		download(createResourceLink(resource), downloadFileName);
 	}
@@ -566,158 +544,35 @@ public class SessionContext {
 	}
 
 	public void download(String url, String downloadFileName) {
-		runWithContext(() -> sendStaticCommand(Globals.class, DtoGlobals.DownloadFileCommand.CMD_NAME, new DtoGlobals.DownloadFileCommand(url, downloadFileName).getParameters()));
-	}
-
-	public void setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, Duration animationDuration) {
-		sendStaticCommand(Globals.class, DtoGlobals.SetBackgroundCommand.CMD_NAME, new DtoGlobals.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()).getParameters());
+		runWithContext(() -> sendStaticCommand(null, "downloadFile", url, downloadFileName));
 	}
 
 	public void exitFullScreen() {
-		sendStaticCommand(Globals.class, DtoGlobals.ExitFullScreenCommand.CMD_NAME, new DtoGlobals.ExitFullScreenCommand().getParameters());
+		sendStaticCommand(null, "exitFullScreen");
 	}
 
-	public void addRootComponent(String containerElementSelector, Component component) {
-		addRootPanel(containerElementSelector, component);
+	public void addComponent(String containerElementSelector, Component component) {
+		sendStaticCommand(null, "addRootComponent", containerElementSelector, component);
 	}
 
-	public void addRootPanel(String containerElementSelector, Component rootPanel) {
-		sendStaticCommand(Globals.class, DtoGlobals.AddRootComponentCommand.CMD_NAME, new DtoGlobals.AddRootComponentCommand(containerElementSelector, rootPanel).getParameters());
+	public void addRootComponent(Component component) {
+		addComponent("body", component);
 	}
 
-	public RootPanel addRootPanel(String containerElementSelector) {
-		RootPanel rootPanel = new RootPanel();
-		addRootPanel(containerElementSelector, rootPanel);
-		return rootPanel;
+	public void setSessionMessages(Showable sessionExpiredShowable, Showable sessionErrorShowable, Showable sessionTerminatedShowable) {
+		createClientObject(sessionExpiredShowable);
+		createClientObject(sessionExpiredShowable);
+		createClientObject(sessionExpiredShowable);
 	}
 
-	public RootPanel addRootPanel() {
-		return addRootPanel("body");
-	}
-
-	public void addClientToken(String token) {
-		getClientInfo().getClientTokens().add(token);
-		sendStaticCommand(Globals.class, DtoGlobals.AddClientTokenCommand.CMD_NAME, new DtoGlobals.AddClientTokenCommand(token).getParameters());
-	}
-
-	public void removeClientToken(String token) {
-		getClientInfo().getClientTokens().remove(token);
-		sendStaticCommand(Globals.class, DtoGlobals.RemoveClientTokenCommand.CMD_NAME, new DtoGlobals.RemoveClientTokenCommand(token).getParameters());
-	}
-
-	public void clearClientTokens() {
-		getClientInfo().getClientTokens().clear();
-		sendStaticCommand(Globals.class, DtoGlobals.ClearClientTokensCommand.CMD_NAME, new DtoGlobals.ClearClientTokensCommand().getParameters());
-	}
-
-	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
-		runWithContext(() -> {
-			sendStaticCommand(Notification.class, DtoNotification.ShowNotificationCommand.CMD_NAME, new DtoNotification.ShowNotificationCommand(notification, position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(), exitAnimation.toUiExitAnimation()).getParameters());
-		});
-	}
-
-	public void showNotification(Notification notification, NotificationPosition position) {
-		runWithContext(() -> {
-			showNotification(notification, position, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
-		});
-	}
-
-	public void showNotification(Icon<?, ?> icon, String caption) {
-		runWithContext(() -> {
-			Notification notification = Notification.createWithIconAndCaption(icon, caption);
-			notification.setDismissible(true);
-			notification.setShowProgressBar(false);
-			notification.setDisplayTimeInMillis(5000);
-			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
-		});
-	}
-
-	public void showNotification(Icon<?, ?> icon, String caption, String description) {
-		runWithContext(() -> {
-			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
-			notification.setDismissible(true);
-			notification.setShowProgressBar(false);
-			notification.setDisplayTimeInMillis(5000);
-			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
-		});
-	}
-
-	public void showNotification(Icon<?, ?> icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
-		runWithContext(() -> {
-			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
-			notification.setDismissible(dismissable);
-			notification.setDisplayTimeInMillis(displayTimeInMillis);
-			notification.setShowProgressBar(showProgress);
-			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
-		});
-	}
-
-	public void setSessionExpiredWindow(Window sessionExpiredWindow) {
-		this.sessionExpiredWindow = sessionExpiredWindow;
-		updateSessionMessageWindows();
-	}
-
-	public void setSessionErrorWindow(Window sessionErrorWindow) {
-		this.sessionErrorWindow = sessionErrorWindow;
-		updateSessionMessageWindows();
-	}
-
-	public void setSessionTerminatedWindow(Window sessionTerminatedWindow) {
-		this.sessionTerminatedWindow = sessionTerminatedWindow;
-		updateSessionMessageWindows();
-	}
-
-	private void updateSessionMessageWindows() {
-		// TODO uncomment:
-//		sendStaticCommand(null,
-//				new DtoGlobals.SetSessionMessageWindowsCommand(
-//						sessionExpiredWindow != null ? sessionExpiredWindow.createDtoReference()
-//								: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
-//								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createDtoReference(),
-//						sessionErrorWindow != null ? sessionErrorWindow.createDtoReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
-//								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createDtoReference(),
-//						sessionTerminatedWindow != null ? sessionTerminatedWindow.createDtoReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
-//								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createDtoReference()));
-	}
-
-	public static Window createDefaultSessionMessageWindow(String title, String message, String refreshButtonCaption, String cancelButtonCaption) {
-		Window window = new Window(null, title, null, 300, 300, true, true, true);
-		window.setPadding(10);
-
-		VerticalLayout verticalLayout = new VerticalLayout();
-
-		Div messageField = new Div(message);
-		messageField.setCssStyle("font-size", "110%");
-		verticalLayout.addComponentFillRemaining(messageField);
-
-		Button<?> refreshButton = new Button<>(null, refreshButtonCaption);
-		refreshButton.setCssStyle("margin", "10px 0");
-		refreshButton.setCssStyle(".DtoButton", "background-color", RgbaColor.MATERIAL_BLUE_600.toHtmlColorString());
-		refreshButton.setCssStyle(".DtoButton", "color", RgbaColor.WHITE.toHtmlColorString());
-		refreshButton.setCssStyle(".DtoButton", "font-size", "120%");
-		refreshButton.setCssStyle(".DtoButton", "height", "50px");
-		refreshButton.setOnClickJavaScript("window.location.reload()");
-		verticalLayout.addComponentAutoSize(refreshButton);
-
-		if (cancelButtonCaption != null) {
-			LinkButton cancelLink = new LinkButton(cancelButtonCaption);
-			cancelLink.setCssStyle("text-align", "center");
-			cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.createClientReference().getId() + "\").close();");
-			verticalLayout.addComponentAutoSize(cancelLink);
-		}
-
-		window.setContent(verticalLayout);
-		window.enableAutoHeight();
-		return window;
-	}
 
 	public CompletableFuture<WakeLock> requestWakeLock() {
 		String uuid = UUID.randomUUID().toString();
 		CompletableFuture<WakeLock> completableFuture = new CompletableFuture<>();
 		runWithContext(() -> {
-			this.<Boolean>sendStaticCommand(Globals.class, DtoGlobals.RequestWakeLockCommand.CMD_NAME, new DtoGlobals.RequestWakeLockCommand(uuid).getParameters(), successful -> {
+			this.<Boolean>sendStaticCommandWithCallback(null, "wakeLock", new Object[]{uuid}, successful -> {
 				if (successful) {
-					completableFuture.complete(() -> sendStaticCommand(Globals.class, DtoGlobals.ReleaseWakeLockCommand.CMD_NAME, new DtoGlobals.ReleaseWakeLockCommand(uuid).getParameters()));
+					completableFuture.complete(() -> sendStaticCommand(null, "releaseWakeLock", uuid));
 				} else {
 					completableFuture.completeExceptionally(new RuntimeException("Could not acquire WakeLock"));
 				}
@@ -727,7 +582,7 @@ public class SessionContext {
 	}
 
 	public void goToUrl(String url, boolean blankPage) {
-		sendStaticCommand(Globals.class, DtoGlobals.GoToUrlCommand.CMD_NAME, new DtoGlobals.GoToUrlCommand(url, blankPage).getParameters());
+		sendStaticCommand(null, "goToUrlCommand", "goToUrl", url, blankPage);
 	}
 
 	public void setFavicon(Icon<?, ?> icon) {
@@ -739,59 +594,58 @@ public class SessionContext {
 	}
 
 	public void setFavicon(String url) {
-		sendStaticCommand(Globals.class, DtoGlobals.SetFaviconCommand.CMD_NAME, new DtoGlobals.SetFaviconCommand(url).getParameters());
+		sendStaticCommand(null, "setFavicon", url);
 	}
 
 	public void setTitle(String title) {
-		sendStaticCommand(Globals.class, DtoGlobals.SetTitleCommand.CMD_NAME, new DtoGlobals.SetTitleCommand(title).getParameters());
+		sendStaticCommand(null, "SetTitle", title);
 	}
 
 	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		sendStaticCommand(Globals.class, DtoGlobals.SetGlobalKeyEventsEnabledCommand.CMD_NAME,
-				new DtoGlobals.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp).getParameters());
+		sendStaticCommand(null, "setGlobalKeyEventsEnabled", "setGlobalKeyEventsEnabled", unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp);
 	}
 
 	public String getSessionId() {
 		return uiSession.getSessionId();
 	}
 
-	// TODO
 	public void handleStaticEvent(String libraryId, String name, List<JsonWrapper> params) {
-		switch (name) {
-			case DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {
-				DtoGlobals.GlobalKeyEventOccurredEventWrapper e = params.getFirst().as(DtoGlobals.GlobalKeyEventOccurredEventWrapper.class);
-				String clientObjectId = e.getSourceComponentId();
-				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
-						e.getEventType(),
-						(e.getSourceComponentId() != null ? (Component) clientObjectsById.get(clientObjectId) : null),
-						e.getCode(),
-						e.getIsComposing(),
-						e.getKey(),
-						e.getCharCode(),
-						e.getKeyCode(),
-						e.getLocale(),
-						e.getLocation(),
-						e.getRepeat(),
-						e.getAltKey(),
-						e.getCtrlKey(),
-						e.getShiftKey(),
-						e.getMetaKey()
-				));
-			}
-			case DtoGlobals.NavigationStateChangeEvent.TYPE_ID -> {
-				DtoGlobals.NavigationStateChangeEventWrapper e = params.getFirst().as(DtoGlobals.NavigationStateChangeEventWrapper.class);
-				Location location = Location.fromUiLocationWrapper(e.getLocation());
-				this.currentLocation = location;
-				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
-			}
-			default -> {
-				// TODO static event handlers on library level...
-				throw new TeamAppsUiApiException(getSessionId(), name);
-			}
-		}
+		// TODO
+//		switch (name) {
+//			case DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {
+//				DtoGlobals.GlobalKeyEventOccurredEventWrapper e = params.getFirst().as(DtoGlobals.GlobalKeyEventOccurredEventWrapper.class);
+//				String clientObjectId = e.getSourceComponentId();
+//				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
+//						e.getEventType(),
+//						(e.getSourceComponentId() != null ? (Component) clientObjectsById.get(clientObjectId) : null),
+//						e.getCode(),
+//						e.getIsComposing(),
+//						e.getKey(),
+//						e.getCharCode(),
+//						e.getKeyCode(),
+//						e.getLocale(),
+//						e.getLocation(),
+//						e.getRepeat(),
+//						e.getAltKey(),
+//						e.getCtrlKey(),
+//						e.getShiftKey(),
+//						e.getMetaKey()
+//				));
+//			}
+//			case DtoGlobals.NavigationStateChangeEvent.TYPE_ID -> {
+//				DtoGlobals.NavigationStateChangeEventWrapper e = params.getFirst().as(DtoGlobals.NavigationStateChangeEventWrapper.class);
+//				Location location = Location.fromUiLocationWrapper(e.getLocation());
+//				this.currentLocation = location;
+//				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
+//			}
+//			default -> {
+//				 TODO static event handlers on library level...
+//				throw new TeamAppsUiApiException(getSessionId(), name);
+//			}
+//		}
 	}
 
-	public Location getCurrentLocation() {
+	public URL getCurrentLocation() {
 		return currentLocation;
 	}
 
@@ -805,5 +659,97 @@ public class SessionContext {
 
 	public String getName() {
 		return uiSession.getName();
+	}
+
+	private static DayOfWeek determineFirstDayOfWeek(ULocale locale) {
+		return DayOfWeek.of(GregorianCalendar.getInstance(locale).getFirstDayOfWeek()).minus(1);
+	}
+
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		updateConfig();
+	}
+
+	public DateTimeFormatDescriptor getDateFormat() {
+		return dateFormat;
+	}
+
+	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
+		this.dateFormat = dateFormat;
+		updateConfig();
+	}
+
+	public DateTimeFormatDescriptor getTimeFormat() {
+		return timeFormat;
+	}
+
+	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
+		this.timeFormat = timeFormat;
+		updateConfig();
+	}
+
+	public ZoneId getTimeZone() {
+		return timeZone;
+	}
+
+	public void setTimeZone(ZoneId timeZone) {
+		this.timeZone = timeZone;
+		updateConfig();
+	}
+
+	public DayOfWeek getFirstDayOfWeek() {
+		return firstDayOfWeek != null ? firstDayOfWeek : determineFirstDayOfWeek(locale);
+	}
+
+	public void setFirstDayOfWeek(DayOfWeek firstDayOfWeek) {
+		this.firstDayOfWeek = firstDayOfWeek;
+		updateConfig();
+	}
+
+	public boolean isOptimizedForTouch() {
+		return optimizedForTouch;
+	}
+
+	public void setOptimizedForTouch(boolean optimizedForTouch) {
+		this.optimizedForTouch = optimizedForTouch;
+		updateConfig();
+	}
+
+	public String getIconBasePath() {
+		return iconBasePath;
+	}
+
+	public void setIconBasePath(String iconBasePath) {
+		this.iconBasePath = iconBasePath;
+		updateConfig();
+	}
+
+	public StylingTheme getTheme() {
+		return theme;
+	}
+
+	public void setTheme(StylingTheme theme) {
+		this.theme = theme;
+		updateConfig();
+	}
+
+	private void updateConfig() {
+		DtoConfiguration config = new DtoConfiguration();
+		config.setLocale(locale.toLanguageTag());
+		config.setOptimizedForTouch(optimizedForTouch);
+		config.setThemeClassName(theme.getCssClass());
+		sendStaticCommand(null, "setConfig", config);
 	}
 }

@@ -49,6 +49,7 @@
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
         <module>projector-test</module>
+        <module>projector-component-api</module>
     </modules>
 
     <properties>

@@ -95,15 +95,12 @@ public class ClientInfoWrapper extends JsonWrapper {
 	}
 
 
-	public LocationWrapper getLocation() {
+	public String getLocation() {
 		var node = jsonNode.get("location");
 		if (node == null || node.isNull()) {
 			return null;
 		}
-		if (!node.isObject()) {
-			throw new IllegalArgumentException("node must be an object!");
-		}
-		return new LocationWrapper(node);
+		return node.asText();
 	}
 
 

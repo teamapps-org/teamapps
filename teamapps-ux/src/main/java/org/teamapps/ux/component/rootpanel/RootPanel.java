@@ -19,23 +19,33 @@
  */
 package org.teamapps.ux.component.rootpanel;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.DtoComponent;
+import org.teamapps.dto.DtoGlobals;
 import org.teamapps.dto.JsonWrapper;
 import org.teamapps.dto.DtoRootPanel;
 import org.teamapps.ux.component.*;
 import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
 
-@ProjectorComponent(library = CoreComponentLibrary.class)
-public class RootPanel extends AbstractComponent implements org.teamapps.ux.component.Component {
+import java.time.Duration;
 
-	private org.teamapps.ux.component.Component content;
+@ProjectorComponent(library = CoreComponentLibrary.class)
+public class RootPanel extends AbstractComponent implements Component {
+
+	private String backgroundImageUrl;
+	private String blurredBackgroundImageUrl;
+	private Color backgroundColor;
+	private Component content;
 
 	@Override
 	public DtoComponent createConfig() {
 		DtoRootPanel uiRootPanel = new DtoRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
-		uiRootPanel.setContent(content != null ? content.createClientReference() : null);
+		uiRootPanel.setBackgroundImageUrl(backgroundImageUrl);
+		uiRootPanel.setBlurredBackgroundImageUrl(blurredBackgroundImageUrl);
+		uiRootPanel.setBackgroundColor(backgroundColor.toHtmlColorString());
+		uiRootPanel.setContent(content);
 		return uiRootPanel;
 	}
 
@@ -44,19 +54,23 @@ public class RootPanel extends AbstractComponent implements org.teamapps.ux.comp
 		// no ui events for this component
 	}
 
-	public void setContent(org.teamapps.ux.component.Component component) {
+	public void setContent(Component component) {
 		setContent(component, null, 0);
 	}
 
-	public void setContent(org.teamapps.ux.component.Component component, PageTransition animation, long animationDuration) {
+	public void setContent(Component component, PageTransition animation, long animationDuration) {
 		content = component;
 		if (component != null) {
 			component.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoRootPanel.SetContentCommand(component != null ? component.createClientReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
+		sendCommandIfRendered(() -> new DtoRootPanel.SetContentCommand(component, animation != null ? animation.toUiPageTransition() : null, animationDuration));
 	}
 
-	public org.teamapps.ux.component.Component getContent() {
+	public void setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, Duration animationDuration) {
+		sendCommandIfRendered(() -> new DtoRootPanel.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()).getParameters());
+	}
+
+	public Component getContent() {
 		return content;
 	}
 

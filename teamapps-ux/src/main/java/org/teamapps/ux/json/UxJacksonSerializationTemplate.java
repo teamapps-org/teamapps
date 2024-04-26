@@ -60,7 +60,7 @@ public class UxJacksonSerializationTemplate {
 				@Override
 				public void serialize(ClientObject clientObject, JsonGenerator gen, SerializerProvider serializers) throws IOException {
 					SessionContext currentSessionContext = SessionContext.current();
-					gen.writeObject(new ClientObjectReference(currentSessionContext.getClientObjectId(clientObject)));
+					gen.writeObject(new ClientObjectReference(currentSessionContext.getClientObjectId(clientObject, true)));
 				}
 
 				@Override

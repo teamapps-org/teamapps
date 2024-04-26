@@ -17,13 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.servlet;
+package org.teamapps.metrics;
 
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.MeterBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.ux.servlet.WebSocketCommunicationEndpoint;
 
 import java.lang.invoke.MethodHandles;
 

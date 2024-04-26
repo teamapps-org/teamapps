@@ -25,11 +25,12 @@ import org.teamapps.dto.DtoComponent;
 import org.teamapps.dto.DtoWindow;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.Showable;
 import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.panel.Panel;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
-public class Window extends Panel {
+public class Window extends Panel implements Showable {
 
 	private boolean modal = false;
 	private int width = 0; // 0 = full width
