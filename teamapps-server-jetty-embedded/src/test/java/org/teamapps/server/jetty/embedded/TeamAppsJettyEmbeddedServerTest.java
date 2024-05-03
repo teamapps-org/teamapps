@@ -19,12 +19,17 @@
  */
 package org.teamapps.server.jetty.embedded;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.ux.component.field.FieldEditingMode;
+import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.field.textcolormarker.TextColorMarkerField;
+import org.teamapps.ux.component.field.textcolormarker.TextColorMarkerFieldMarkerDefinition;
+import org.teamapps.ux.component.field.textcolormarker.TextColorMarkerFieldValue;
+import org.teamapps.ux.component.field.textcolormarker.TextMarker;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.toolbar.Toolbar;
-import org.teamapps.ux.component.toolbar.ToolbarButton;
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.ux.component.toolbutton.ToolButton;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
@@ -32,27 +37,33 @@ import java.util.Locale;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
-	public static final List<MaterialIcon> ALL_ICONS = List.copyOf(MaterialIcon.getAllIcons());
-
 	public static void main(String[] args) throws Exception {
 		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
 					sessionContext.setLocale(Locale.US);
-
-
 					RootPanel rootPanel = sessionContext.addRootPanel();
 
-					Panel panel = new Panel();
-					Toolbar toolbar = new Toolbar();
-					ToolbarButtonGroup buttonGroup = new ToolbarButtonGroup();
-					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "One", "One"));
-					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Two Words", "Two Words"));
-					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Three short words", "three short words"));
-					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Four words for you", "Four words for you"));
-					toolbar.addButtonGroup(buttonGroup);
-					panel.setToolbar(toolbar);
+					Panel panel = new Panel(null, "Hallo");
+					ToolButton toolButton = new ToolButton(MaterialIcon.REFRESH, "Do it!");
+					panel.addToolButton(toolButton);
+					ToolButton readonlyButton = new ToolButton(MaterialIcon.FLASH_ON, "readonly");
+					panel.addToolButton(readonlyButton);
+
+					TextColorMarkerField field = new TextColorMarkerField();
+
+					field.setMarkerDefinitions(List.of(
+							new TextColorMarkerFieldMarkerDefinition(123, Color.RED, Color.BLUE, "ja so wat! \n ach ne!")
+					), new TextColorMarkerFieldValue("Hallo Welt", List.of(new TextMarker(123, 2, 5))));
+
+					field.addCustomFieldMessage(FieldMessage.Severity.ERROR, "Dingens");
+
+
+					toolButton.onClick.addListener(() -> field.setToolbarEnabled(!field.isToolbarEnabled()));
+					readonlyButton.onClick.addListener(() ->
+							field.setEditingMode(field.getEditingMode() == FieldEditingMode.READONLY ? FieldEditingMode.EDITABLE : FieldEditingMode.READONLY));
+
+					panel.setContent(field);
 
 					rootPanel.setContent(panel);
-
 				})
 				.setPort(8082)
 				.build()
