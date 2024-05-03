@@ -129,6 +129,7 @@ export {UiTemplateField} from "./formfield/UiTemplateField";
 export {UiLinkButton} from "./UiLinkButton";
 export {UiDiv} from "./UiDiv";
 export {UiCollapsible} from "./UiCollapsible";
+export {UiTextColorMarkerField} from "./UiTextColorMarkerField";
 
 export {UiToolButton} from "./micro-components/UiToolButton";
 
