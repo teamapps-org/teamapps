@@ -21,16 +21,17 @@ package org.teamapps.ux.component.field;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
-import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent {
@@ -68,7 +69,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	public void setEditingMode(FieldEditingMode editingMode) {
 		this.editingMode = editingMode;
-		sendCommandIfRendered(() -> new DtoAbstractField.SetEditingModeCommand(editingMode.toDtoFieldEditingMode()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractField.SetEditingModeCommand(editingMode.toDtoFieldEditingMode()), null);
 	}
 
 	public void setVisible(boolean visible) {
@@ -77,7 +78,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void focus() {
-		sendCommandIfRendered(() -> new DtoAbstractField.FocusCommand());
+		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractField.FocusCommand(), null);
 	}
 
 	protected void mapAbstractFieldAttributesToUiField(DtoAbstractField uiField) {
@@ -257,9 +258,9 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	private void updateFieldMessages() {
-		sendCommandIfRendered(() -> new DtoAbstractField.SetFieldMessagesCommand(getFieldMessages().stream()
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoAbstractField.SetFieldMessagesCommand(getFieldMessages().stream()
 				.map(fieldMessage -> fieldMessage.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
-				.collect(Collectors.toList())));
+				.collect(Collectors.toList()))).get(), null);
 	}
 
 	public boolean isValid() {

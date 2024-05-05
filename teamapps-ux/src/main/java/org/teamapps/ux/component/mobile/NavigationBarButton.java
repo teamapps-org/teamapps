@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.mobile;
 
-import org.teamapps.dto.DtoNavigationBarButton;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoNavigationBarButton;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 

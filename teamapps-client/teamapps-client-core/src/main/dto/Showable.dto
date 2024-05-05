@@ -1,5 +1,0 @@
-package "teamapps-client-core":org.teamapps.dto;
-
-interface Showable {
-	command show(int animationDuration);
-}

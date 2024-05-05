@@ -21,9 +21,11 @@ package org.teamapps.ux.component.template;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.DtoClientObject;
+import org.teamapps.projector.dto.DtoClientObject;
+import org.teamapps.projector.format.*;
+import org.teamapps.projector.template.Template;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.template.gridtemplate.*;
 import org.teamapps.ux.format.*;
 
@@ -125,7 +127,7 @@ public enum BaseTemplate implements Template {
 						.setHorizontalAlignment(HorizontalElementAlignment.CENTER))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, iconSize, iconSize)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_CAPTION, 1, 0)
 						.setWrapLines(true)
@@ -150,7 +152,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 20).setMargin(new Spacing(0, 2, 0, 0)))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 20, 20)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT)
 						.setMargin(new Spacing(0, 2, 0, 0)))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
@@ -180,7 +182,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 16))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 16, 16)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1).setWrapLines(false));
 	}
@@ -200,7 +202,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 32))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 32, 32)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1).setWrapLines(true))
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 1, 1).setWrapLines(true).setFontStyle(0.8f, Color.fromVariableName("ta-text-color-gray")));
@@ -227,7 +229,7 @@ public enum BaseTemplate implements Template {
 						.setMargin(new Spacing(0, 4, 0, 0)))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, iconSize, iconSize).setRowSpan(2)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(0.5f))
+						.setShadow(BoxShadow.withSize(0.5f))
 						.setVerticalAlignment(verticalIconAlignment)
 						.setMargin(new Spacing(0, 4, 0, 0)))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
@@ -276,7 +278,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, mainIconSize, mainIconSize)
 						.setRowSpan(3)
 						.setBorder(new Border(new Line(mainImageBorderColor, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(0.5f))
+						.setShadow(BoxShadow.withSize(0.5f))
 						.setVerticalAlignment(mainIconVerticalAlignment)
 						.setMargin(new Spacing(0, 3, 0, 0)))
 
@@ -355,7 +357,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, iconSize, iconSize)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
 						//todo: shadow only if size of image large enough
-						.setShadow(Shadow.withSize(0.5f))
+						.setShadow(BoxShadow.withSize(0.5f))
 						.setVerticalAlignment(verticalIconAlignment)
 						.setMargin(new Spacing(0, 3, 0, 0)))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
@@ -385,7 +387,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 24))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 24, 24)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
 						.setFontStyle(1.15f)
@@ -405,7 +407,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new IconElement(PROPERTY_ICON, 0, 0, iconSize))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, iconSize, iconSize)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
 						.setFontStyle(relativeFontSize)
@@ -427,7 +429,7 @@ public enum BaseTemplate implements Template {
 				)
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 32, 32)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.CENTER)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT)
 				)
@@ -455,7 +457,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 32, 32)
 						.setRowSpan(2)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.CENTER)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT)
 						.setMargin(new Spacing(0, 5, 0, 0))
@@ -488,7 +490,7 @@ public enum BaseTemplate implements Template {
 				)
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 32, 32)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT)
 						.setMargin(new Spacing(0, 0, 2, 0))
@@ -523,7 +525,7 @@ public enum BaseTemplate implements Template {
 						.setHorizontalAlignment(HorizontalElementAlignment.CENTER))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 32, 32)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_CAPTION, 1, 0)
 						.setWrapLines(true)
@@ -556,7 +558,7 @@ public enum BaseTemplate implements Template {
 						.setRowSpan(2))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 32, 32)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.CENTER)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT)
 						.setRowSpan(2))
@@ -583,7 +585,7 @@ public enum BaseTemplate implements Template {
 						.setMargin(new Spacing(0, 3, 0, 0)))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 64, 64).setRowSpan(2)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
-						.setShadow(Shadow.withSize(1.5f))
+						.setShadow(BoxShadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.CENTER)
 						.setMargin(new Spacing(0, 3, 0, 0)))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)

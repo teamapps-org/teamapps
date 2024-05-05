@@ -23,8 +23,8 @@ import org.teamapps.projector.components.common.dto.DtoComponent;
 import org.teamapps.projector.components.common.dto.DtoDocumentViewer;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.format.Border;
-import org.teamapps.ux.format.Shadow;
+import org.teamapps.projector.format.Border;
+import org.teamapps.projector.format.BoxShadow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class DocumentViewer extends AbstractComponent {
 	private PageDisplayMode displayMode = PageDisplayMode.FIT_WIDTH;
 	private float zoomFactor = 1;
 	private Border pageBorder;
-	private Shadow pageShadow;
+	private BoxShadow pageShadow;
 	private int padding;
 	private int pageSpacing = 5;
 
@@ -112,11 +112,11 @@ public class DocumentViewer extends AbstractComponent {
 		sendCommandIfRendered(() -> new DtoDocumentViewer.SetPageBorderCommand(pageBorder != null ? pageBorder.createUiBorder(): null));
 	}
 
-	public Shadow getPageShadow() {
+	public BoxShadow getPageShadow() {
 		return pageShadow;
 	}
 
-	public void setPageShadow(Shadow pageShadow) {
+	public void setPageShadow(BoxShadow pageShadow) {
 		this.pageShadow = pageShadow;
 		sendCommandIfRendered(() -> new DtoDocumentViewer.SetPageShadowCommand(pageShadow != null ? pageShadow.createUiShadow(): null));
 	}

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.trivial.tree.model;
 
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 
 public abstract class AbstractTreeModel<RECORD> implements TreeModel<RECORD> {
 

@@ -19,20 +19,23 @@
  */
 package org.teamapps.ux.component.html;
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoHtmlView;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.ux.component.*;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoHtmlView;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class HtmlView extends AbstractComponent {
 
 	private String html;
-	private final Map<String, List<org.teamapps.ux.component.Component>> componentsByContainerElementSelector = new HashMap<>();
+	private final Map<String, List<Component>> componentsByContainerElementSelector = new HashMap<>();
 	private final Map<String, String> contentHtmlByContainerElementSelector = new HashMap<>();
 
 	public HtmlView() {
@@ -43,7 +46,7 @@ public class HtmlView extends AbstractComponent {
 		this(html, Collections.emptyMap(), Collections.emptyMap());
 	}
 
-	public HtmlView(String html, Map<String, List<org.teamapps.ux.component.Component>> componentsByContainerElementSelector, Map<String, String> contentHtmlByContainerElementSelector) {
+	public HtmlView(String html, Map<String, List<Component>> componentsByContainerElementSelector, Map<String, String> contentHtmlByContainerElementSelector) {
 		this.html = html;
 		this.componentsByContainerElementSelector.putAll(componentsByContainerElementSelector);
 		this.contentHtmlByContainerElementSelector.putAll(contentHtmlByContainerElementSelector);
@@ -75,23 +78,23 @@ public class HtmlView extends AbstractComponent {
 		this.html = html;
 	}
 
-	public void addComponent(String containerSelector, org.teamapps.ux.component.Component component) {
+	public void addComponent(String containerSelector, Component component) {
 		addComponent(containerSelector, component, false);
 	}
 
-	public void addComponent(String containerSelector, org.teamapps.ux.component.Component component, boolean clearContainer) {
+	public void addComponent(String containerSelector, Component component, boolean clearContainer) {
 		this.componentsByContainerElementSelector.computeIfAbsent(containerSelector, s -> new ArrayList<>())
 				.add(component);
-		this.sendCommandIfRendered(() -> new DtoHtmlView.AddComponentCommand(containerSelector, component.createClientReference(), clearContainer));
+		getClientObjectChannel().sendCommandIfRendered(new DtoHtmlView.AddComponentCommand(containerSelector, component.createClientReference(), clearContainer), null);
 	}
 
-	public void removeComponent(org.teamapps.ux.component.Component component) {
+	public void removeComponent(Component component) {
 		componentsByContainerElementSelector.entrySet().removeIf(entry -> entry.getValue() == component);
-		this.sendCommandIfRendered(() -> new DtoHtmlView.RemoveComponentCommand(component.createClientReference()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoHtmlView.RemoveComponentCommand(component.createClientReference()), null);
 	}
 
 	public void setContentHtml(String containerElementSelector, String html) {
 		contentHtmlByContainerElementSelector.put(containerElementSelector, html);
-		this.sendCommandIfRendered(() -> new DtoHtmlView.SetContentHtmlCommand(containerElementSelector, html));
+		getClientObjectChannel().sendCommandIfRendered(new DtoHtmlView.SetContentHtmlCommand(containerElementSelector, html), null);
 	}
 }

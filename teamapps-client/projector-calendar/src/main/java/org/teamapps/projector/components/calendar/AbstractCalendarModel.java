@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.calendar;
 
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 
 public abstract class AbstractCalendarModel<CEVENT extends CalendarEvent> implements CalendarModel<CEVENT> {
 

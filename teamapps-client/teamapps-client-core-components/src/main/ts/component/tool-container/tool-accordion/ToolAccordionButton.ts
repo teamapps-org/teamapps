@@ -25,11 +25,10 @@ import {
 	isFullScreen,
 	parseHtml,
 	TeamAppsEvent,
-	TeamAppsUiContext, Template
-} from "teamapps-client-core";
+	Template
+} from "projector-client-object-api";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {AbstractToolContainer} from "../AbstractToolContainer";
-import {DtoGridTemplate} from "../../../generated";
 import {ToolAccordion} from "./ToolAccordion";
 
 export class ToolAccordionButton {

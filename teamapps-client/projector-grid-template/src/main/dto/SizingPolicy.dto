@@ -1,0 +1,14 @@
+package "projector-grid-template":org.teamapps.projector.template.grid;
+
+class SizingPolicy {
+	required SizeType type;
+    double value;
+    int minAbsoluteSize;
+}
+
+enum SizeType {
+	FIXED = "px",
+	RELATIVE = "%",
+	AUTO = "auto",
+	FRACTION = "fr"
+}

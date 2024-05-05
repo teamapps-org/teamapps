@@ -19,14 +19,17 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoLabel;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoLabel;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.ClientObject;
+import org.teamapps.projector.clientobject.ClientObject;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class Label extends AbstractField<String> {
@@ -35,13 +38,13 @@ public class Label extends AbstractField<String> {
 
 	private String caption;
 	private Icon<?, ?> icon;
-	private org.teamapps.ux.component.Component targetComponent;
+	private Component targetComponent;
 
 	public Label(String caption) {
 		this(caption, null, null);
 	}
 
-	public Label(String caption, org.teamapps.ux.component.Component targetComponent) {
+	public Label(String caption, Component targetComponent) {
 		this(caption, null, targetComponent);
 	}
 
@@ -49,7 +52,7 @@ public class Label extends AbstractField<String> {
 		this(caption, icon, null);
 	}
 
-	public Label(String caption, Icon<?, ?> icon, org.teamapps.ux.component.Component targetComponent) {
+	public Label(String caption, Icon<?, ?> icon, Component targetComponent) {
 		this.caption = caption;
 		this.icon = icon;
 		this.targetComponent = targetComponent;
@@ -80,7 +83,7 @@ public class Label extends AbstractField<String> {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
-		sendCommandIfRendered(() -> new DtoLabel.SetCaptionCommand(caption));
+		getClientObjectChannel().sendCommandIfRendered(new DtoLabel.SetCaptionCommand(caption), null);
 	}
 
 	public Icon<?, ?> getIcon() {
@@ -89,19 +92,19 @@ public class Label extends AbstractField<String> {
 
 	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
-		sendCommandIfRendered(() -> new DtoLabel.SetIconCommand(getSessionContext().resolveIcon(icon)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoLabel.SetIconCommand(getSessionContext().resolveIcon(icon)), null);
 	}
 
-	public org.teamapps.ux.component.Component getTargetComponent() {
+	public Component getTargetComponent() {
 		return targetComponent;
 	}
 
-	public Label setTargetComponent(org.teamapps.ux.component.Component targetComponent) {
+	public Label setTargetComponent(Component targetComponent) {
 		if (targetComponent == this) {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetComponent = targetComponent;
-		sendCommandIfRendered(() -> new DtoLabel.SetTargetComponentCommand(ClientObject.createClientReference(targetComponent)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoLabel.SetTargetComponentCommand(ClientObject.createClientReference(targetComponent)), null);
 		return this;
 	}
 }

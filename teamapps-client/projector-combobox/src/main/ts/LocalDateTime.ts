@@ -307,6 +307,7 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 	}
 
 	resolvedLocaleOpts(options?: DateTimeFormatOptions): Intl.ResolvedDateTimeFormatOptions {
+		options = this.normalizeDateTimeFormatOptionsForChrome(options);
 		return this.dateTime.resolvedLocaleOpts(options);
 	}
 
@@ -327,6 +328,7 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 	}
 
 	toFormat(format: string, options?: DateTimeFormatOptions): string {
+		options = this.normalizeDateTimeFormatOptionsForChrome(options);
 		return this.dateTime.toFormat(format, options);
 	}
 
@@ -367,10 +369,12 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 	}
 
 	toLocaleParts(options?: LocaleOptions & DateTimeFormatOptions): (any & { type: string })[] {
+		options = this.normalizeDateTimeFormatOptionsForChrome(options);
 		return this.dateTime.toLocaleParts(options);
 	}
 
 	toLocaleString(options?: LocaleOptions & DateTimeFormatOptions): string {
+		options = this.normalizeDateTimeFormatOptionsForChrome(options);
 		return this.dateTime.toLocaleString(options);
 	}
 
@@ -403,5 +407,12 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 
 	valueOf() {
 		return this.dateTime.valueOf();
+	}
+
+	private normalizeDateTimeFormatOptionsForChrome(options?: DateTimeFormatOptions): DateTimeFormatOptions {
+		if (options?.fractionalSecondDigits == null) {
+			return options;
+		}
+		return {...options, fractionalSecondDigits: options.fractionalSecondDigits > 0 ? options.fractionalSecondDigits : undefined};
 	}
 }

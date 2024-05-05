@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,13 +19,14 @@
  */
 package org.teamapps.ux.application.assembler;
 
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.ResponsiveApplicationToolbar;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.mobile.MobileLayout;
 import org.teamapps.ux.component.mobile.NavigationBar;
@@ -37,8 +38,6 @@ import org.teamapps.ux.component.toolbar.ToolAccordion;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
-import org.teamapps.ux.icon.TeamAppsIconBundle;
-import org.teamapps.ux.session.SessionContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,12 +65,11 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	private View activeView;
 
 	public MobileApplicationAssembler() {
-		this(
-				SessionContext.current().getIcon(TeamAppsIconBundle.APPLICATION_LAUNCHER.getKey()),
-				SessionContext.current().getIcon(TeamAppsIconBundle.TREE.getKey()),
-				SessionContext.current().getIcon(TeamAppsIconBundle.VIEWS.getKey()),
-				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()),
-				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()),
+		this(MaterialIcon.VIEW_MODULE,
+				MaterialIcon.TOC,
+				MaterialIcon.VIEW_CAROUSEL,
+				MaterialIcon.SUBTITLES,
+				MaterialIcon.SUBTITLES,
 				null);
 	}
 
@@ -249,7 +247,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
 	@Override
 	public void handlePerspectiveChange(ResponsiveApplication application, Perspective perspective, Perspective previousPerspective, List<View> activeViews, List<View> addedViews,
-                                        List<View> removedViews) {
+										List<View> removedViews) {
 		perspectiveViews = activeViews;
 
 		viewsItemView.removeAllToolbarButtonGroups();

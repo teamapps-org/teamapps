@@ -1,8 +1,8 @@
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.dto.Component;
-import org.teamapps.dto.Template;
-import org.teamapps.dto.IdentifiableClientRecord;
+import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.IdentifiableClientRecord;
 
 class Tree extends Component {
 	List<TreeRecord> initialData; //if available, use this as data source

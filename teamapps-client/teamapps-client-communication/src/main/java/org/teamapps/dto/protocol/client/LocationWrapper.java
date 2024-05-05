@@ -1,7 +1,7 @@
 package org.teamapps.dto.protocol.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.teamapps.dto.JsonWrapper;
+import org.teamapps.projector.dto.JsonWrapper;
 
 public class LocationWrapper extends JsonWrapper {
 

@@ -24,8 +24,8 @@ import org.mockito.Mockito;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.TextField;
-import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.CurrentSessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.lang.reflect.Method;
 import java.util.List;

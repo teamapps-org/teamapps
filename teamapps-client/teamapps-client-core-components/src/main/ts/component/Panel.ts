@@ -35,11 +35,13 @@ import {
 	AbstractLegacyComponent,
 	Component,
 	executeWhenFirstDisplayed,
-	insertBefore, noOpServerChannel,
+	insertBefore,
+	noOpServerChannel,
 	parseHtml,
-	prependChild, ServerChannel,
+	prependChild,
+	ServerChannel,
 	TeamAppsEvent
-} from "teamapps-client-core";
+} from "projector-client-object-api";
 
 import {StaticIcons} from "../util/StaticIcons";
 import {maximizeComponent, outerWidthIncludingMargins} from "../Common";

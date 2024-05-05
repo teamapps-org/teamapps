@@ -2362,6 +2362,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-client-object-api@workspace:*, projector-client-object-api@workspace:projector-client-object-api":
+  version: 0.0.0-use.local
+  resolution: "projector-client-object-api@workspace:projector-client-object-api"
+  dependencies:
+    cross-var: ^1.1.0
+    esbuild: ^0.15.13
+    esbuild-plugin-alias: ^0.2.1
+    esbuild-plugin-less: ^1.1.11
+    replace-in-file: ^7.0.1
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-combobox@workspace:projector-combobox":
   version: 0.0.0-use.local
   resolution: "projector-combobox@workspace:projector-combobox"
@@ -2376,6 +2390,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-grid-template@workspace:projector-grid-template":
+  version: 0.0.0-use.local
+  resolution: "projector-grid-template@workspace:projector-grid-template"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-infinite-scrolling-components@workspace:projector-infinite-scrolling-components":
   version: 0.0.0-use.local
   resolution: "projector-infinite-scrolling-components@workspace:projector-infinite-scrolling-components"
@@ -2386,6 +2411,17 @@ __metadata:
     slickgrid: ^4.0.0
     teamapps-client-core: "workspace:*"
     teamapps-client-core-components: "workspace:*"
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-mustache-template@workspace:projector-mustache-template":
+  version: 0.0.0-use.local
+  resolution: "projector-mustache-template@workspace:projector-mustache-template"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
     typescript: ^5.1
   languageName: unknown
   linkType: soft
@@ -2684,9 +2720,9 @@ __metadata:
     bootstrap-icons: ^1.10.2
     esbuild: ^0.15.13
     mustache: ^4.2.0
+    projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     teamapps-client-communication: "workspace:*"
-    teamapps-client-core: "workspace:*"
     typescript: ^5.1
   languageName: unknown
   linkType: soft
@@ -2700,6 +2736,7 @@ __metadata:
     esbuild-plugin-alias: ^0.2.1
     esbuild-plugin-less: ^1.1.11
     nosleep.js: ^0.12.0
+    projector-client-object-api: "workspace:*"
     replace-in-file: ^7.0.1
     rimraf: ^3.0.2
     teamapps-client-communication: "workspace:*"

@@ -4,10 +4,10 @@ import com.ibm.icu.util.ULocale;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.session.CurrentSessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

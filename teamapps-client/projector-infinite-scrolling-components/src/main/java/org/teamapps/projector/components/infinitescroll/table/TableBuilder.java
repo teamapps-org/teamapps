@@ -4,6 +4,10 @@ import org.teamapps.common.format.Color;
 import org.teamapps.ux.cache.record.EqualsAndHashCode;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.data.extraction.*;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.BeanPropertyInjector;
+import org.teamapps.projector.dataextraction.PropertyInjector;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -19,15 +19,15 @@
  */
 package org.teamapps.ux.component.flexcontainer;
 
-import org.teamapps.dto.DtoFlexContainer;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
+import org.teamapps.projector.dto.DtoFlexContainer;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
-import org.teamapps.ux.css.CssAlignItems;
-import org.teamapps.ux.css.CssFlexDirection;
-import org.teamapps.ux.css.CssJustifyContent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.format.FlexDirection;
+import org.teamapps.projector.format.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,10 +37,10 @@ import java.util.stream.Collectors;
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class FlexContainer extends AbstractComponent {
 
-	private List<org.teamapps.ux.component.Component> components = new ArrayList<>();
-	private CssFlexDirection flexDirection = CssFlexDirection.ROW;
-	private CssAlignItems alignItems = CssAlignItems.STRETCH;
-	private CssJustifyContent justifyContent = CssJustifyContent.START;
+	private List<Component> components = new ArrayList<>();
+	private FlexDirection flexDirection = FlexDirection.ROW;
+	private AlignItems alignItems = AlignItems.STRETCH;
+	private JustifyContent justifyContent = JustifyContent.START;
 
 	@Override
 	public DtoFlexContainer createConfig() {
@@ -55,29 +55,29 @@ public class FlexContainer extends AbstractComponent {
 		return uiFlexContainer;
 	}
 
-	public void addComponent(org.teamapps.ux.component.Component component) {
+	public void addComponent(Component component) {
 		this.components.add(component);
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()), null);
 	}
 
-	public void addComponent(org.teamapps.ux.component.Component component, FlexSizingPolicy sizingPolicy) {
+	public void addComponent(Component component, FlexSizingPolicy sizingPolicy) {
 		component.setCssStyle("flex", sizingPolicy.toCssValue());
 		addComponent(component);
 	}
 
-	public void removeComponent(org.teamapps.ux.component.Component component) {
+	public void removeComponent(Component component) {
 		this.components.remove(component);
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()), null);
 	}
 
 	public void removeAllComponents() {
 		this.components.clear();
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(List.of()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetComponentsCommand(List.of()), null);
 	}
 
 	public void setComponents(List<Component> components) {
 		this.components = new ArrayList<>(components);
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()), null);
 	}
 
 	@Override
@@ -85,35 +85,35 @@ public class FlexContainer extends AbstractComponent {
 
 	}
 
-	public CssFlexDirection getFlexDirection() {
+	public FlexDirection getFlexDirection() {
 		return flexDirection;
 	}
 
-	public void setFlexDirection(CssFlexDirection flexDirection) {
+	public void setFlexDirection(FlexDirection flexDirection) {
 		this.flexDirection = flexDirection;
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetFlexDirectionCommand(flexDirection.toDto()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetFlexDirectionCommand(flexDirection.toDto()), null);
 	}
 
-	public CssAlignItems getAlignItems() {
+	public AlignItems getAlignItems() {
 		return alignItems;
 	}
 
-	public void setAlignItems(CssAlignItems alignItems) {
+	public void setAlignItems(AlignItems alignItems) {
 		this.alignItems = alignItems;
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetAlignItemsCommand(alignItems.toDto()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetAlignItemsCommand(alignItems.toDto()), null);
 
 	}
 
-	public CssJustifyContent getJustifyContent() {
+	public JustifyContent getJustifyContent() {
 		return justifyContent;
 	}
 
-	public void setJustifyContent(CssJustifyContent justifyContent) {
+	public void setJustifyContent(JustifyContent justifyContent) {
 		this.justifyContent = justifyContent;
-		sendCommandIfRendered(() -> new DtoFlexContainer.SetJustifyContentCommand(justifyContent.toDto()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetJustifyContentCommand(justifyContent.toDto()), null);
 	}
 
-	public List<org.teamapps.ux.component.Component> getComponents() {
+	public List<Component> getComponents() {
 		return Collections.unmodifiableList(components);
 	}
 }

@@ -19,13 +19,14 @@
  */
 package org.teamapps.projector.components.trivial.datetime;
 
-import org.teamapps.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoInstantDateTimeField;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = TrivialComponentsLibrary.class)
 public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
@@ -51,7 +52,7 @@ public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 
 	public void setTimeZoneId(ZoneId timeZoneId) {
 		this.timeZoneId = timeZoneId;
-		sendCommandIfRendered(() -> new DtoInstantDateTimeField.SetTimeZoneIdCommand(timeZoneId.getId()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInstantDateTimeField.SetTimeZoneIdCommand(timeZoneId.getId()), null);
 	}
 
 	@Override

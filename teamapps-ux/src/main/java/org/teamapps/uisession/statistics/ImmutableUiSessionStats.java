@@ -20,7 +20,7 @@
 package org.teamapps.uisession.statistics;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import org.teamapps.uisession.UiSessionState;
+import org.teamapps.projector.session.uisession.UiSessionState;
 
 public class ImmutableUiSessionStats implements UiSessionStats {
 

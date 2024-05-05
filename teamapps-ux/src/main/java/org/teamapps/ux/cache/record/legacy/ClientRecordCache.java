@@ -21,8 +21,8 @@ package org.teamapps.ux.cache.record.legacy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.common.util.StreamUtil;
-import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.commons.util.StreamUtil;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;

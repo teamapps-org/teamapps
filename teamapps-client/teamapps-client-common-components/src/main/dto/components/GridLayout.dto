@@ -19,13 +19,13 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.dto.Component;
-import org.teamapps.dto.Spacing;
-import org.teamapps.dto.Border;
-import org.teamapps.dto.Shadow;
-import org.teamapps.dto.VerticalElementAlignment;
-import org.teamapps.dto.HorizontalElementAlignment;
-import org.teamapps.dto.SizingPolicy;
+import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.Spacing;
+import org.teamapps.projector.dto.Border;
+import org.teamapps.projector.dto.Shadow;
+import org.teamapps.projector.dto.VerticalElementAlignment;
+import org.teamapps.projector.dto.HorizontalElementAlignment;
+import org.teamapps.projector.dto.SizingPolicy;
 
 class StaticGridLayout extends Component {
 	required GridLayout descriptor;

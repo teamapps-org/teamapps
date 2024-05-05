@@ -30,11 +30,11 @@ import org.teamapps.projector.components.common.dto.DtoTree;
 import org.teamapps.projector.components.common.dto.DtoTreeRecord;
 import org.teamapps.projector.components.common.model.TreeModel;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 import org.teamapps.ux.component.template.TemplateDecider;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 
 import java.util.*;
 import java.util.function.Function;

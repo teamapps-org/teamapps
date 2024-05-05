@@ -21,8 +21,8 @@ package org.teamapps.projector.components.trivial.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
 import org.teamapps.projector.components.trivial.dto.DtoTagComboBox;
@@ -30,8 +30,8 @@ import org.teamapps.projector.components.trivial.tree.model.ComboBoxModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfoExtractor;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.template.Template;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -213,7 +213,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setMaxEntries(int maxEntries) {
 		this.maxEntries = maxEntries;
-		sendCommandIfRendered(() -> new DtoTagComboBox.SetMaxEntriesCommand(maxEntries));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetMaxEntriesCommand(maxEntries), null);
 	}
 
 	public TagBoxWrappingMode getWrappingMode() {
@@ -222,7 +222,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setWrappingMode(TagBoxWrappingMode wrappingMode) {
 		this.wrappingMode = wrappingMode;
-		sendCommandIfRendered(() -> new DtoTagComboBox.SetWrappingModeCommand(wrappingMode.toDtoValue()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetWrappingModeCommand(wrappingMode.toDtoValue()), null);
 	}
 
 	public boolean isDistinct() {
@@ -231,7 +231,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setDistinct(boolean distinct) {
 		this.distinct = distinct;
-		sendCommandIfRendered(() -> new DtoTagComboBox.SetDistinctCommand(distinct));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetDistinctCommand(distinct), null);
 	}
 
 	public List<String> getFreeTextEntries() {
@@ -248,7 +248,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setTwoStepDeletionEnabled(boolean twoStepDeletionEnabled) {
 		this.twoStepDeletionEnabled = twoStepDeletionEnabled;
-		sendCommandIfRendered(() -> new DtoTagComboBox.SetTwoStepDeletionEnabledCommand(twoStepDeletionEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetTwoStepDeletionEnabledCommand(twoStepDeletionEnabled), null);
 	}
 
 	public boolean isDeleteButtonsEnabled() {
@@ -257,6 +257,6 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setDeleteButtonsEnabled(boolean deleteButtonsEnabled) {
 		this.deleteButtonsEnabled = deleteButtonsEnabled;
-		sendCommandIfRendered(() -> new DtoTagComboBox.SetDeleteButtonsEnabledCommand(deleteButtonsEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetDeleteButtonsEnabledCommand(deleteButtonsEnabled), null);
 	}
 }

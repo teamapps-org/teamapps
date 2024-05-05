@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.task;
 
-import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.CurrentSessionContext;
+import org.teamapps.projector.session.SessionContext;
 import org.teamapps.ux.task.function.ProgressReportingBiConsumer;
 import org.teamapps.ux.task.function.ProgressReportingBiFunction;
 import org.teamapps.ux.task.function.ProgressReportingConsumer;

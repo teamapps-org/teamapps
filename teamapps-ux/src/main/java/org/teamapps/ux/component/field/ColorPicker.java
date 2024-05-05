@@ -21,8 +21,8 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoColorPicker;
-import org.teamapps.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoColorPicker;
+import org.teamapps.projector.dto.DtoAbstractField;
 
 public class ColorPicker extends AbstractField<Color> {
 

@@ -20,7 +20,7 @@
 package org.teamapps.server.undertow.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 public class TeamAppsUndertowEmbeddedServerTest {

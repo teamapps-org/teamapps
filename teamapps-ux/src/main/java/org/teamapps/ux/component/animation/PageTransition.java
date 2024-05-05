@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.animation;
 
-import org.teamapps.dto.DtoPageTransition;
+import org.teamapps.projector.dto.DtoPageTransition;
 
 public enum PageTransition {
 	MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT,

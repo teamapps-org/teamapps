@@ -19,7 +19,7 @@
  */
 import {Panel} from "../Panel";
 import {DtoPanel_WindowButtonClickedEvent, DtoWindowButtonType} from "../../generated";
-import {bind, Component, TeamAppsEvent} from "teamapps-client-core";
+import {bind, Component, TeamAppsEvent} from "projector-client-object-api";
 import {TabPanelItem} from "./TabPanelItem";
 import {ViewInfo} from "./ViewInfo";
 

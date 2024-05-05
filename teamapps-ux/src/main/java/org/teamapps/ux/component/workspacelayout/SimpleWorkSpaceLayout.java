@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.workspacelayout;
 
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)

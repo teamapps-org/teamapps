@@ -19,9 +19,9 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.dto.Component;
-import org.teamapps.dto.Template;
-import org.teamapps.dto.IdentifiableClientRecord;
+import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.IdentifiableClientRecord;
 
 class Map extends Component {
 	String accessToken;

@@ -19,22 +19,26 @@
  */
 package org.teamapps.ux.component.tabpanel;
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoTab;
-import org.teamapps.dto.DtoTabPanel;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.*;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoTab;
+import org.teamapps.projector.dto.DtoTabPanel;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.ClientObject;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
-public class TabPanel extends AbstractComponent implements org.teamapps.ux.component.Component {
+public class TabPanel extends AbstractComponent implements Component {
 
 	public final ProjectorEvent<Tab> onTabSelected = createProjectorEventBoundToUiEvent(DtoTabPanel.TabSelectedEvent.TYPE_ID);
 	public final ProjectorEvent<Tab> onTabClosed = createProjectorEventBoundToUiEvent(DtoTabPanel.TabClosedEvent.TYPE_ID);
@@ -64,20 +68,20 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 		}
 		tabs.add(tab);
 		tab.setTabPanel(this);
-		sendCommandIfRendered(() -> new DtoTabPanel.AddTabCommand(tab.createUiTab(), select));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.AddTabCommand(tab.createUiTab(), select), null);
 	}
 
 	public void removeTab(Tab tab) {
 		boolean wasRemoved = tabs.remove(tab);
 		if (wasRemoved) {
-			sendCommandIfRendered(() -> new DtoTabPanel.RemoveTabCommand(tab.getClientId()));
+			getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.RemoveTabCommand(tab.getClientId()), null);
 		}
 	}
 
 	public void setSelectedTab(Tab tab) {
 		if (tab != null) {
 			this.selectedTab = tab;
-			sendCommandIfRendered(() -> new DtoTabPanel.SelectTabCommand(tab.getClientId()));
+			getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.SelectTabCommand(tab.getClientId()), null);
 		}
 	}
 
@@ -111,9 +115,9 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 	}
 
 	private void updateToolButtons() {
-		sendCommandIfRendered(() -> new DtoTabPanel.SetToolButtonsCommand(this.toolButtons.stream()
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoTabPanel.SetToolButtonsCommand(this.toolButtons.stream()
 				.map(toolButton -> toolButton.createClientReference())
-				.collect(Collectors.toList())));
+				.collect(Collectors.toList()))).get(), null);
 	}
 
 	public List<ToolButton> getToolButtons() {
@@ -126,7 +130,7 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 
 	public void setHideTabBarIfSingleTab(boolean hideTabBarIfSingleTab) {
 		this.hideTabBarIfSingleTab = hideTabBarIfSingleTab;
-		this.sendCommandIfRendered(() -> new DtoTabPanel.SetHideTabBarIfSingleTabCommand(hideTabBarIfSingleTab));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.SetHideTabBarIfSingleTabCommand(hideTabBarIfSingleTab), null);
 	}
 
 	public TabPanelTabStyle getTabStyle() {
@@ -135,7 +139,7 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 
 	public void setTabStyle(TabPanelTabStyle tabStyle) {
 		this.tabStyle = tabStyle;
-		this.sendCommandIfRendered(() -> new DtoTabPanel.SetTabStyleCommand(tabStyle.toUiTabPanelTabStyle()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.SetTabStyleCommand(tabStyle.toUiTabPanelTabStyle()), null);
 	}
 
 	@Override
@@ -184,7 +188,7 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 			case DtoTabPanel.TabNeedsRefreshEvent.TYPE_ID -> {
 				var tabNeedsRefreshEvent = event.as(DtoTabPanel.TabNeedsRefreshEventWrapper.class);
 				Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
-				sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createClientReference(tab.getContent())));
+				getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createClientReference(tab.getContent())), null);
 			}
 			case DtoTabPanel.TabClosedEvent.TYPE_ID -> {
 				var tabClosedEvent = event.as(DtoTabPanel.TabClosedEventWrapper.class);
@@ -204,23 +208,23 @@ public class TabPanel extends AbstractComponent implements org.teamapps.ux.compo
 	}
 
 	/*package-private*/ void handleTabToolbarChanged(Tab tab) {
-		sendCommandIfRendered(() -> new DtoTabPanel.SetTabToolbarCommand(tab.getClientId(), ClientObject.createClientReference(tab.getToolbar())));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.SetTabToolbarCommand(tab.getClientId(), ClientObject.createClientReference(tab.getToolbar())), null);
 	}
 
 	/*package-private*/ void handleTabContentChanged(Tab tab) {
-		sendCommandIfRendered(() -> new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createClientReference(tab.getContent())));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.SetTabContentCommand(tab.getClientId(), ClientObject.createClientReference(tab.getContent())), null);
 	}
 
 	/*package-private*/ void handleTabConfigurationChanged(Tab tab) {
 		String iconString = getSessionContext().resolveIcon(tab.getIcon());
 		String caption = tab.getTitle();
-		sendCommandIfRendered(() -> new DtoTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()), null);
 	}
 
 	/*package-private*/ void handleTabVisibilityChanged(Tab tab) {
 		String iconString = getSessionContext().resolveIcon(tab.getIcon());
 		String caption = tab.getTitle();
-		sendCommandIfRendered(() -> new DtoTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()), null);
 	}
 
 }

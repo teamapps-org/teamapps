@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, bind, Component, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, bind, Component, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoToolButton,
 	DtoToolButton_ClickedEvent,

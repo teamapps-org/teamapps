@@ -24,10 +24,10 @@ import org.teamapps.projector.components.common.form.layoutpolicy.FormSection;
 import org.teamapps.projector.components.common.form.layoutpolicy.FormSectionFieldPlacement;
 import org.teamapps.projector.components.common.grid.layout.GridColumn;
 import org.teamapps.projector.components.common.grid.layout.GridRow;
-import org.teamapps.ux.format.Border;
-import org.teamapps.ux.format.Shadow;
-import org.teamapps.ux.format.Spacing;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.format.Border;
+import org.teamapps.projector.format.BoxShadow;
+import org.teamapps.projector.format.Spacing;
+import org.teamapps.projector.template.Template;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class ResponsiveFormSection {
 	private Spacing margin;
 	private Spacing padding;
 	private Border border;
-	private Shadow shadow;
+	private BoxShadow shadow;
 	private boolean drawHeaderLine;
 	private Color backgroundColor;
 	private boolean collapsible;
@@ -195,11 +195,11 @@ public class ResponsiveFormSection {
 		return this;
 	}
 
-	public Shadow getShadow() {
+	public BoxShadow getShadow() {
 		return shadow;
 	}
 
-	public ResponsiveFormSection setShadow(Shadow shadow) {
+	public ResponsiveFormSection setShadow(BoxShadow shadow) {
 		this.shadow = shadow;
 		return this;
 	}

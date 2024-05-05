@@ -21,10 +21,12 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoCheckBox;
-import org.teamapps.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoCheckBox;
+import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class CheckBox extends AbstractField<Boolean> {
@@ -63,7 +65,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
-		sendCommandIfRendered(() -> new DtoCheckBox.SetCaptionCommand(caption));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCheckBox.SetCaptionCommand(caption), null);
 	}
 
 	public Color getBackgroundColor() {
@@ -72,7 +74,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new DtoCheckBox.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCheckBox.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null), null);
 	}
 
 	public Color getCheckColor() {
@@ -81,7 +83,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public void setCheckColor(Color checkColor) {
 		this.checkColor = checkColor;
-		sendCommandIfRendered(() -> new DtoCheckBox.SetCheckColorCommand(checkColor != null ? checkColor.toHtmlColorString() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCheckBox.SetCheckColorCommand(checkColor != null ? checkColor.toHtmlColorString() : null), null);
 	}
 
 	public Color getBorderColor() {
@@ -90,7 +92,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public void setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
-		sendCommandIfRendered(() -> new DtoCheckBox.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCheckBox.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null), null);
 	}
 
 	public boolean isHtmlEnabled() {
@@ -99,6 +101,6 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public void setHtmlEnabled(boolean htmlEnabled) {
 		this.htmlEnabled = htmlEnabled;
-		sendCommandIfRendered(() -> new DtoCheckBox.SetHtmlEnabledCommand(htmlEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCheckBox.SetHtmlEnabledCommand(htmlEnabled), null);
 	}
 }

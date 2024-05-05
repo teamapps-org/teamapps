@@ -24,28 +24,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.event.Disposable;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.projector.components.calendar.dto.DtoCalendar;
 import org.teamapps.projector.components.calendar.dto.DtoCalendarEventClientRecord;
 import org.teamapps.projector.components.calendar.dto.DtoCalendarEventRenderingStyle;
 import org.teamapps.projector.components.calendar.dto.DtoWeekDay;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
-import org.teamapps.ux.icon.TeamAppsIconBundle;
-import org.teamapps.ux.session.CurrentSessionContext;
 
 import java.lang.invoke.MethodHandles;
 import java.time.DayOfWeek;
@@ -316,19 +316,19 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public ToolbarButtonGroup createViewModesToolbarButtonGroup() {
 		ToolbarButtonGroup group = new ToolbarButtonGroup();
 
-		ToolbarButton yearViewButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.YEAR.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.YEAR.getKey()));
+		ToolbarButton yearViewButton = ToolbarButton.createSmall(MaterialIcon.EVENT_NOTE, getSessionContext().getLocalized(TeamAppsDictionary.YEAR.getKey()));
 		yearViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.YEAR));
 		group.addButton(yearViewButton);
 
-		ToolbarButton monthViewButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.MONTH.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.MONTH.getKey()));
+		ToolbarButton monthViewButton = ToolbarButton.createSmall(MaterialIcon.DATE_RANGE, getSessionContext().getLocalized(TeamAppsDictionary.MONTH.getKey()));
 		monthViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.MONTH));
 		group.addButton(monthViewButton);
 
-		ToolbarButton weekViewButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.WEEK.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.WEEK.getKey()));
+		ToolbarButton weekViewButton = ToolbarButton.createSmall(MaterialIcon.VIEW_WEEK, getSessionContext().getLocalized(TeamAppsDictionary.WEEK.getKey()));
 		weekViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.WEEK));
 		group.addButton(weekViewButton);
 
-		ToolbarButton dayViewButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.DAY.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.DAY.getKey()));
+		ToolbarButton dayViewButton = ToolbarButton.createSmall(MaterialIcon.VIEW_DAY, getSessionContext().getLocalized(TeamAppsDictionary.DAY.getKey()));
 		dayViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.DAY));
 		group.addButton(dayViewButton);
 
@@ -338,12 +338,12 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public ToolbarButtonGroup createNavigationButtonGroup() {
 		ToolbarButtonGroup group = new ToolbarButtonGroup();
 
-		ToolbarButton forwardButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.PREVIOUS.getKey()),
+		ToolbarButton forwardButton = ToolbarButton.createSmall(MaterialIcon.NAVIGATE_BEFORE,
 				getSessionContext().getLocalized(TeamAppsDictionary.PREVIOUS.getKey()));
 		forwardButton.onClick.addListener(toolbarButtonClickEvent -> this.setDisplayedDate(activeViewMode.decrement(displayedDate)));
 		group.addButton(forwardButton);
 
-		ToolbarButton backButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.NEXT.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.NEXT.getKey()));
+		ToolbarButton backButton = ToolbarButton.createSmall(MaterialIcon.NAVIGATE_NEXT, getSessionContext().getLocalized(TeamAppsDictionary.NEXT.getKey()));
 		backButton.onClick.addListener(toolbarButtonClickEvent -> this.setDisplayedDate(activeViewMode.increment(displayedDate)));
 		group.addButton(backButton);
 
@@ -366,7 +366,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setActiveViewMode(CalendarViewMode activeViewMode) {
 		this.activeViewMode = activeViewMode;
-		sendCommandIfRendered(() -> new DtoCalendar.SetViewModeCommand(activeViewMode.toUiCalendarViewMode()));
+		java.util.Calendar.this.getClientObjectChannel().sendCommandIfRendered(new DtoCalendar.SetViewModeCommand(activeViewMode.toUiCalendarViewMode()), null);
 		refreshEvents();
 	}
 
@@ -376,7 +376,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
-		sendCommandIfRendered(() -> new DtoCalendar.SetDisplayedDateCommand(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
+		java.util.Calendar.this.getClientObjectChannel().sendCommandIfRendered(new DtoCalendar.SetDisplayedDateCommand(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()), null);
 	}
 
 	public void setDisplayDateOneUnitPrevious() {
@@ -516,7 +516,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setTimeZone(ZoneId timeZone) {
 		this.timeZone = timeZone;
-		sendCommandIfRendered(() -> new DtoCalendar.SetTimeZoneIdCommand(timeZone.getId()));
+		java.util.Calendar.this.getClientObjectChannel().sendCommandIfRendered(new DtoCalendar.SetTimeZoneIdCommand(timeZone.getId()), null);
 	}
 
 	public int getMinYearViewMonthTileWidth() {

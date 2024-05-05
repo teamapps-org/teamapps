@@ -19,16 +19,18 @@
  */
 package org.teamapps.ux.component.progress;
 
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoProgressDisplay;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoProgressDisplay;
 import org.teamapps.event.Disposable;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.task.ObservableProgress;
 import org.teamapps.ux.task.ProgressStatus;
+
+import java.util.function.Supplier;
 
 /**
  * This component displays progress information.
@@ -81,7 +83,7 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	private void updateUi() {
-		sendCommandIfRendered(() -> new DtoProgressDisplay.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoProgressDisplay.UpdateCommand(createConfig()), null);
 	}
 
 	@Override

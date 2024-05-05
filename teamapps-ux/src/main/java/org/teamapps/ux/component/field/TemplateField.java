@@ -19,16 +19,16 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoClientRecord;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoTemplateField;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoClientRecord;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoTemplateField;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
-import org.teamapps.ux.component.template.Template;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class TemplateField<RECORD> extends AbstractField<RECORD> {
@@ -94,7 +94,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setTemplate(Template template) {
 		this.template = template;
-		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTemplateField.UpdateCommand(createConfig()), null);
 		return this;
 	}
 
@@ -104,7 +104,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
-		sendCommandIfRendered(() -> new DtoTemplateField.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTemplateField.UpdateCommand(createConfig()), null);
 		return this;
 	}
 

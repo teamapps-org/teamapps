@@ -21,6 +21,7 @@ package org.teamapps.ux.resource;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.teamapps.projector.resource.FileResource;
 
 import java.io.File;
 

@@ -25,8 +25,8 @@ import org.teamapps.icons.IconLibraryRegistry;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.TeamAppsSessionManager;
-import org.teamapps.util.threading.SequentialExecutorFactory;
-import org.teamapps.ux.component.ComponentLibraryRegistry;
+import org.teamapps.threading.SequentialExecutorFactory;
+import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
 import org.teamapps.ux.servlet.WebSocketCommunicationEndpoint;
 import org.teamapps.webcontroller.WebController;
 

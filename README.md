@@ -73,7 +73,7 @@ import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.ux.org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.webcontroller.WebController;
 
 public class TeamAppsDemo {

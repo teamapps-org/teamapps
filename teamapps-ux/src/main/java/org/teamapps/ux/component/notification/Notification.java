@@ -20,17 +20,18 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoNotification;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoNotification;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.field.TemplateField;
-import org.teamapps.ux.format.Spacing;
+import org.teamapps.projector.format.Spacing;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 
@@ -47,12 +48,12 @@ public class Notification extends AbstractComponent {
 	private boolean dismissible = true;
 	private boolean showProgressBar = true;
 
-	private org.teamapps.ux.component.Component content;
+	private Component content;
 
 	public Notification() {
 	}
 
-	public Notification(org.teamapps.ux.component.Component content) {
+	public Notification(Component content) {
 		this.content = content;
 	}
 
@@ -100,7 +101,7 @@ public class Notification extends AbstractComponent {
 	}
 
 	public void close() {
-		sendCommandIfRendered(() -> new DtoNotification.CloseCommand());
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.CloseCommand(), null);
 	}
 
 	public Color getBackgroundColor() {
@@ -109,7 +110,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
 		return this;
 	}
 
@@ -119,7 +120,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setPadding(Spacing padding) {
 		this.padding = padding;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
 		return this;
 	}
 
@@ -129,7 +130,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDisplayTimeInMillis(int displayTimeInMillis) {
 		this.displayTimeInMillis = displayTimeInMillis;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
 		return this;
 	}
 
@@ -139,7 +140,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDismissible(boolean dismissible) {
 		this.dismissible = dismissible;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
 		return this;
 	}
 
@@ -149,17 +150,17 @@ public class Notification extends AbstractComponent {
 
 	public Notification setShowProgressBar(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
 		return this;
 	}
 
-	public org.teamapps.ux.component.Component getContent() {
+	public Component getContent() {
 		return content;
 	}
 
-	public Notification setContent(org.teamapps.ux.component.Component content) {
+	public Notification setContent(Component content) {
 		this.content = content;
-		sendCommandIfRendered(() -> new DtoNotification.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
 		return this;
 	}
 

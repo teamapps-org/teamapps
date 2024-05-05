@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoFieldEditingMode;
+import org.teamapps.projector.dto.DtoFieldEditingMode;
 
 public enum FieldEditingMode {
 

@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.dto.DtoWorkSpaceLayoutItem;
-import org.teamapps.dto.DtoWorkSpaceLayoutSplitItem;
+import org.teamapps.projector.dto.DtoWorkSpaceLayoutItem;
+import org.teamapps.projector.dto.DtoWorkSpaceLayoutSplitItem;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.workspacelayout.definition.SplitPaneDefinition;
 

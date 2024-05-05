@@ -19,13 +19,16 @@
  */
 package org.teamapps.ux.component.splitpane;
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoSplitPane;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoSplitPane;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class SplitPane extends AbstractComponent {
@@ -35,8 +38,8 @@ public class SplitPane extends AbstractComponent {
 	private SplitDirection splitDirection;
 	private SplitSizePolicy sizePolicy;
 	private double referenceChildSize;
-	private org.teamapps.ux.component.Component firstChild;
-	private org.teamapps.ux.component.Component lastChild;
+	private Component firstChild;
+	private Component lastChild;
 	private int firstChildMinSize = 10;
 	private int lastChildMinSize = 10;
 	private boolean resizable = true;
@@ -92,22 +95,22 @@ public class SplitPane extends AbstractComponent {
 		}
 	}
 
-	public org.teamapps.ux.component.Component getFirstChild() {
+	public Component getFirstChild() {
 		return firstChild;
 	}
 
-	public void setFirstChild(org.teamapps.ux.component.Component firstChild) {
+	public void setFirstChild(Component firstChild) {
 		this.firstChild = firstChild;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createClientReference() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createClientReference() : null), null);
 	}
 
-	public org.teamapps.ux.component.Component getLastChild() {
+	public Component getLastChild() {
 		return lastChild;
 	}
 
-	public void setLastChild(org.teamapps.ux.component.Component lastChild) {
+	public void setLastChild(Component lastChild) {
 		this.lastChild = lastChild;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createClientReference() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createClientReference() : null), null);
 	}
 
 	public SplitDirection getSplitDirection() {
@@ -116,7 +119,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setSplitDirection(SplitDirection splitDirection) {
 		this.splitDirection = splitDirection;
-		this.sendCommandIfRendered(() -> new DtoSplitPane.SetSplitDirectionCommand(splitDirection.toDto()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetSplitDirectionCommand(splitDirection.toDto()), null);
 	}
 
 	public SplitSizePolicy getSizePolicy() {
@@ -125,7 +128,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setSizePolicy(SplitSizePolicy sizePolicy) {
 		this.sizePolicy = sizePolicy;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetSizePolicyCommand(sizePolicy.toDto()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetSizePolicyCommand(sizePolicy.toDto()), null);
 	}
 
 	public double getReferenceChildSize() {
@@ -134,7 +137,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setReferenceChildSize(float referenceChildSize) {
 		this.referenceChildSize = referenceChildSize;
-		sendCommandIfRendered(() -> new DtoSplitPane.SetReferenceChildSizeCommand(referenceChildSize));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetReferenceChildSizeCommand(referenceChildSize), null);
 	}
 
 	public int getFirstChildMinSize() {
@@ -143,7 +146,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setFirstChildMinSize(int firstChildMinSize) {
 		this.firstChildMinSize = firstChildMinSize;
-		this.sendCommandIfRendered(() -> new DtoSplitPane.SetFirstChildMinSizeCommand(firstChildMinSize));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetFirstChildMinSizeCommand(firstChildMinSize), null);
 	}
 
 	public int getLastChildMinSize() {
@@ -152,7 +155,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setLastChildMinSize(int lastChildMinSize) {
 		this.lastChildMinSize = lastChildMinSize;
-		this.sendCommandIfRendered(() -> new DtoSplitPane.SetLastChildMinSizeCommand(lastChildMinSize));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetLastChildMinSizeCommand(lastChildMinSize), null);
 	}
 
 	public boolean isResizable() {
@@ -161,7 +164,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setResizable(boolean resizable) {
 		this.resizable = resizable;
-		this.sendCommandIfRendered(() -> new DtoSplitPane.SetResizableCommand(resizable));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetResizableCommand(resizable), null);
 	}
 
 	public ChildCollapsingPolicy getChildCollapsingPolicy() {
@@ -170,6 +173,6 @@ public class SplitPane extends AbstractComponent {
 
 	public void setChildCollapsingPolicy(ChildCollapsingPolicy childCollapsingPolicy) {
 		this.childCollapsingPolicy = childCollapsingPolicy;
-		this.sendCommandIfRendered(() -> new DtoSplitPane.SetChildCollapsingPolicyCommand(childCollapsingPolicy.toDto()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetChildCollapsingPolicyCommand(childCollapsingPolicy.toDto()), null);
 	}
 }

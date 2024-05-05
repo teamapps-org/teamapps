@@ -19,6 +19,9 @@
  */
 package org.teamapps.ux.component.absolutelayout;
 
+import org.teamapps.projector.format.Length;
+import org.teamapps.projector.format.SizeUnit;
+
 public class AbsolutePosition {
 
 	private final Length top;

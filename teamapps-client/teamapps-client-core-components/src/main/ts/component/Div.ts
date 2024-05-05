@@ -19,7 +19,7 @@
  */
 import {DtoDiv, DtoDivCommandHandler} from "../generated";
 
-import {AbstractWebComponent, Component} from "teamapps-client-core";
+import {AbstractWebComponent, Component} from "projector-client-object-api";
 
 const template = document.createElement("template");
 template.innerHTML = `

@@ -32,7 +32,7 @@ import org.teamapps.dto.protocol.server.REINIT_NOK;
 import org.teamapps.dto.protocol.server.SESSION_CLOSED;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
 import org.teamapps.uisession.*;
-import org.teamapps.ux.session.ClientInfo;
+import org.teamapps.projector.session.ClientInfo;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -104,7 +104,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 	private class WebSocketHandler implements MessageHandler.Whole<String> {
 		private final Session wsSession;
 		private boolean closed;
-		private UiSession uiSession;
+		private UiSessionImpl uiSession;
 
 		private final AtomicLong sendCount = new AtomicLong();
 		private final AtomicLong receivedCount = new AtomicLong();

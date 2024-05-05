@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel} from "projector-client-object-api";
 import {DtoIFrame, DtoIFrameCommandHandler} from "../generated";
 
 

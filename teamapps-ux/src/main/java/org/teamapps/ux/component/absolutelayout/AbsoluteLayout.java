@@ -19,35 +19,34 @@
  */
 package org.teamapps.ux.component.absolutelayout;
 
-import org.teamapps.dto.DtoAbsoluteLayout;
-import org.teamapps.dto.DtoAbsolutePositionedComponent;
-import org.teamapps.dto.DtoAbsolutePositioning;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class AbsoluteLayout extends AbstractComponent {
 
-	private Map<org.teamapps.ux.component.Component, AbsolutePosition> positionsByComponent = new HashMap<>();
+	private Map<Component, AbsolutePosition> positionsByComponent = new HashMap<>();
 	private AnimationEasing animationEasing = AnimationEasing.EASE;
 	private int animationDuration = 200;
 
 	public AbsoluteLayout() {
 	}
 
-	public void putComponent(org.teamapps.ux.component.Component component, AbsolutePosition positioning) {
+	public void putComponent(Component component, AbsolutePosition positioning) {
 		positionsByComponent.put(component, positioning);
 		updateUiLayout();
 	}
 
-	public void putComponents(Map<org.teamapps.ux.component.Component, AbsolutePosition> positioningByComponent, boolean removeExisting) {
+	public void putComponents(Map<Component, AbsolutePosition> positioningByComponent, boolean removeExisting) {
 		if (removeExisting) {
 			this.positionsByComponent.clear();
 		}
@@ -55,19 +54,19 @@ public class AbsoluteLayout extends AbstractComponent {
 		updateUiLayout();
 	}
 
-	public void removeComponent(org.teamapps.ux.component.Component component) {
+	public void removeComponent(Component component) {
 		positionsByComponent.remove(component);
 		updateUiLayout();
 	}
 
 	private void updateUiLayout() {
-		sendCommandIfRendered(() -> new DtoAbsoluteLayout.UpdateCommand(createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoAbsoluteLayout.UpdateCommand(createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing()), null);
 	}
 
 	private List<DtoAbsolutePositionedComponent> createUiAbsolutePositionedComponents() {
 		return positionsByComponent.entrySet().stream()
 				.map(entry -> {
-					org.teamapps.ux.component.Component component = entry.getKey();
+					Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
 					return new DtoAbsolutePositionedComponent(component.createClientReference(), new DtoAbsolutePositioning(
 							position.getTop() != null ? position.getTop().toCssString(): null,

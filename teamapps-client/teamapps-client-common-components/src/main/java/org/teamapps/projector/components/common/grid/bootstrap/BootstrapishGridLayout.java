@@ -19,13 +19,12 @@
  */
 package org.teamapps.projector.components.common.grid.bootstrap;
 
-import org.teamapps.dto.*;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.format.HorizontalElementAlignment;
-import org.teamapps.ux.format.SizingPolicy;
-import org.teamapps.ux.format.VerticalElementAlignment;
+import org.teamapps.projector.format.HorizontalElementAlignment;
+import org.teamapps.projector.format.SizingPolicy;
+import org.teamapps.projector.format.VerticalElementAlignment;
 import org.teamapps.projector.components.common.grid.layout.GridColumn;
 
 import java.util.*;

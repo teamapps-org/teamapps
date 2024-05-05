@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.dto.DtoViewGroupPanelState;
+import org.teamapps.projector.dto.DtoViewGroupPanelState;
 
 public enum ViewGroupPanelState {
 	NORMAL, MAXIMIZED, MINIMIZED;

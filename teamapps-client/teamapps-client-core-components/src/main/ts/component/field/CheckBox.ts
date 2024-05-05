@@ -26,7 +26,7 @@ import {
 	DtoFieldMessageSeverity
 } from "../../generated";
 import {AbstractField, getHighestSeverity} from "./AbstractField";
-import {generateUUID, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {generateUUID, parseHtml} from "projector-client-object-api";
 
 
 export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements DtoCheckBoxEventSource, DtoCheckBoxCommandHandler {

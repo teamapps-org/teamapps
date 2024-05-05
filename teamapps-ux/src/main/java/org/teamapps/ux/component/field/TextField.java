@@ -20,13 +20,15 @@
 package org.teamapps.ux.component.field;
 
 import org.apache.commons.lang3.StringUtils;
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoTextField;
-import org.teamapps.dto.DtoTextInputHandlingField;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoTextField;
+import org.teamapps.projector.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class TextField extends AbstractField<String> implements TextInputHandlingField {
@@ -49,7 +51,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setMaxCharacters(int maxCharacters) {
 		this.maxCharacters = maxCharacters;
-		sendCommandIfRendered(() -> new DtoTextField.SetMaxCharactersCommand(maxCharacters));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTextField.SetMaxCharactersCommand(maxCharacters), null);
 		return this;
 	}
 
@@ -59,7 +61,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		sendCommandIfRendered(() -> new DtoTextField.SetShowClearButtonCommand(showClearButton));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTextField.SetShowClearButtonCommand(showClearButton), null);
 		return this;
 	}
 
@@ -69,7 +71,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		sendCommandIfRendered(() -> new DtoTextField.SetPlaceholderTextCommand(emptyText));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTextField.SetPlaceholderTextCommand(emptyText), null);
 		return this;
 	}
 

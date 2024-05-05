@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, Component, insertAtIndex, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, insertAtIndex, parseHtml, ServerChannel} from "projector-client-object-api";
 import {DtoCssAlignItems, DtoCssFlexDirection, DtoCssJustifyContent, DtoFlexContainer, DtoFlexContainerCommandHandler} from "../generated";
 
 export class FlexContainer extends AbstractLegacyComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {

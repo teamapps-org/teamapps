@@ -23,7 +23,7 @@ import {DtoFieldEditingMode} from "../../generated/DtoFieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 
 import {DtoBorder} from "../../generated/DtoBorder";
-import {DtoShadow} from "../../generated/DtoShadow";
+import {DtoBoxShadow} from "../../generated/DtoBoxShadow";
 import {UiImageSizing} from "../../generated/UiImageSizing";
 import {createImageSizingCssObject, createUiBorderCssObject, createUiShadowCssObject, cssObjectToString} from "../util/CssFormatUtil";
 import {parseHtml} from "../Common";
@@ -57,7 +57,7 @@ export class UiImageField extends AbstractField<DtoImageField, string> implement
 		Object.assign(this._$field.style, createUiBorderCssObject(border));
 	}
 
-	setShadow(shadow: DtoShadow): void {
+	setShadow(shadow: DtoBoxShadow): void {
 		Object.assign(this._$field.style, createUiShadowCssObject(shadow));
 	}
 

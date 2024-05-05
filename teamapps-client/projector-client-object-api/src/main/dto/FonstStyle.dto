@@ -1,0 +1,10 @@
+package "projector-client-object-api":org.teamapps.projector.dto;
+
+class FontStyle {
+	String fontColor;
+	String backgroundColor;
+	boolean bold;
+	boolean underline;
+	boolean italic;
+	double relativeFontSize;
+}

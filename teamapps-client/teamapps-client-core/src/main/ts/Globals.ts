@@ -1,20 +1,4 @@
-import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {
-	DtoGenericErrorMessageOption,
-	DtoGlobals,
-	// DtoGlobals_GlobalKeyEventOccurredEvent,
-	// DtoGlobals_NavigationStateChangeEvent,
-	DtoKeyEventType,
-} from "./generated";
-import {releaseWakeLock, requestWakeLock} from "./util/wakeLock";
-import {exitFullScreen} from "./util/fullscreen";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {Component} from "./component/Component";
-import {Showable} from "./util/Showable";
-import {parseHtml} from "./util/parseHtml";
-import {createUiLocation} from "./util/locationUtil";
-import {ClientObject} from "./ClientObject";
-import {loadJavaScript} from "./util/resourceLoading";
+import {releaseWakeLock, requestWakeLock, exitFullScreen, Component, Showable, parseHtml, ClientObject} from "projector-client-object-api";
 import {DefaultUiContext} from "./DefaultUiContext";
 
 export class Globals implements ClientObject {
@@ -22,19 +6,14 @@ export class Globals implements ClientObject {
 	// public static readonly onGlobalKeyEventOccurred: TeamAppsEvent<DtoGlobals_GlobalKeyEventOccurredEvent> = new TeamAppsEvent();
 	// public static readonly onNavigationStateChange: TeamAppsEvent<DtoGlobals_NavigationStateChangeEvent> = new TeamAppsEvent();
 
-	// dummy constructor
-	constructor(config: DtoGlobals){
-		throw new Error("Globals should never be instantiated!");
-	}
-
 	invoke(name: string, params: any[]): Promise<any> {
 		// does not have any non-static command handlers anyway
 		return Promise.reject();
-    }
+	}
 
 	destroy(): void {
-        // will not get instantiated anyway...
-    }
+		// will not get instantiated anyway...
+	}
 
 	public static setGlobalKeyEventsEnabled(unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean, keyDown: boolean, keyUp: boolean) {
 		setGlobalKeyEventsEnabled.call(this, unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp);
@@ -53,7 +32,7 @@ export class Globals implements ClientObject {
 		// TODO
 	}
 
-	public static addRootComponent(containerElementId: string, component: Component, context?: TeamAppsUiContext): void {
+	public static addRootComponent(containerElementId: string, component: Component): void {
 		const $container = containerElementId ? document.querySelector(containerElementId) : document.body;
 		$container.appendChild(component.getMainElement());
 	}
@@ -119,7 +98,7 @@ export class Globals implements ClientObject {
 		exitFullScreen();
 	}
 
-	public static createGenericErrorMessageShowable(title: string, message: string, showErrorIcon: boolean, options: DtoGenericErrorMessageOption[]): Showable {
+	public static createGenericErrorMessageShowable(title: string, message: string, showErrorIcon: boolean): Showable {
 		let $div = parseHtml(`
 <div style="position: absolute; inset: 0 0 0 0; z-index: 1000000; display: flex; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5);">
     <div style="width: 370px; height: 200px; max-width: 100%; max-height: 100%; box-shadow: 3px 10px 70px rgb(0 0 0 / 85%);">
@@ -128,7 +107,8 @@ export class Globals implements ClientObject {
             <div style="padding: 15px">
                     <div style="text-align: justify; margin-bottom: 15px">${message}</div>
                     <div style="display: flex; justify-content: space-around;">
-                        ${options.map(o => `<div class="${DtoGenericErrorMessageOption[o].toLowerCase()}" style="display: inline-block; text-align: center; cursor: pointer; padding: 5px; border-radius: 3px; user-select: none; border: 1px solid rgba(0, 0, 0, 0.09);">${DtoGenericErrorMessageOption[o]}</div>`).join("")}
+                        <div class="ok" style="display: inline-block; text-align: center; cursor: pointer; padding: 5px; border-radius: 3px; user-select: none; border: 1px solid rgba(0, 0, 0, 0.09);">OK</div>
+                        <div class="reload" style="display: inline-block; text-align: center; cursor: pointer; padding: 5px; border-radius: 3px; user-select: none; border: 1px solid rgba(0, 0, 0, 0.09);">Reload</div>
                     </div>
             </div>
         </div>
@@ -184,9 +164,13 @@ export class Globals implements ClientObject {
 }
 
 
-
-
-let keyboardEventSettings: { unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean } = {
+let keyboardEventSettings: {
+	unmodified: boolean,
+	modifiedWithAltKey: boolean,
+	modifiedWithCtrlKey: boolean,
+	modifiedWithMetaKey: boolean,
+	includeRepeats: boolean
+} = {
 	unmodified: false,
 	modifiedWithAltKey: false,
 	modifiedWithCtrlKey: false,

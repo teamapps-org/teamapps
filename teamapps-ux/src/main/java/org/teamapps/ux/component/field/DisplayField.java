@@ -19,10 +19,12 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoDisplayField;
-import org.teamapps.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoDisplayField;
+import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class DisplayField extends AbstractField<String> {
@@ -57,7 +59,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setShowBorder(boolean showBorder) {
 		this.showBorder = showBorder;
-		sendCommandIfRendered(() -> new DtoDisplayField.SetShowBorderCommand(showBorder));
+		getClientObjectChannel().sendCommandIfRendered(new DtoDisplayField.SetShowBorderCommand(showBorder), null);
 		return this;
 	}
 
@@ -67,7 +69,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setShowHtml(boolean showHtml) {
 		this.showHtml = showHtml;
-		sendCommandIfRendered(() -> new DtoDisplayField.SetShowHtmlCommand(showHtml));
+		getClientObjectChannel().sendCommandIfRendered(new DtoDisplayField.SetShowHtmlCommand(showHtml), null);
 		return this;
 	}
 
@@ -77,7 +79,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setRemoveStyleTags(boolean removeStyleTags) {
 		this.removeStyleTags = removeStyleTags;
-		sendCommandIfRendered(() -> new DtoDisplayField.SetRemoveStyleTagsCommand(removeStyleTags));
+		getClientObjectChannel().sendCommandIfRendered(new DtoDisplayField.SetRemoveStyleTagsCommand(removeStyleTags), null);
 		return this;
 	}
 }

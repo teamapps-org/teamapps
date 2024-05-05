@@ -31,7 +31,7 @@ import {
 	prependChild,
 	ServerChannel,
 	TeamAppsEvent
-} from "teamapps-client-core";
+} from "projector-client-object-api";
 import {DtoTab as DtoTab} from "../generated/DtoTab";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {ToolButton} from "./ToolButton";
@@ -50,7 +50,7 @@ import {
 import {maximizeComponent} from "../Common";
 import {StaticIcons} from "../util/StaticIcons";
 import {positionDropdown} from "../util/dropdownPosition";
-import {contentWidth} from "../util/cssUtil";
+import {contentWidth} from "../../../../../projector-client-object-api/src/main/ts/util/cssUtil";
 
 
 interface Tab {

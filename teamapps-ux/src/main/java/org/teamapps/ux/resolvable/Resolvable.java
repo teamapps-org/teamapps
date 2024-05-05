@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.resolvable;
 
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 public interface Resolvable {
 

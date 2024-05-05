@@ -42,7 +42,7 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-common</artifactId>
+            <artifactId>projector-common</artifactId>
             <scope>provided</scope>
         </dependency>
 

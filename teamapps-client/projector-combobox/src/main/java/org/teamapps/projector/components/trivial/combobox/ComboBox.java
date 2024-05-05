@@ -21,8 +21,8 @@ package org.teamapps.projector.components.trivial.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoComboBox;
 import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
@@ -30,9 +30,9 @@ import org.teamapps.projector.components.trivial.tree.model.ComboBoxModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfoExtractor;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.field.TextInputHandlingField;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;

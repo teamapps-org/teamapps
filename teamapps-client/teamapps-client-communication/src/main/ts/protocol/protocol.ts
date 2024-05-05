@@ -116,7 +116,7 @@ export interface ClientInfo {
 	timezoneIana?: string;
 	timezoneOffsetMinutes?: number;
 	clientTokens?: string[];
-	location?: Location;
+	location?: string;
 	clientParameters?: {[name: string]: string};
 	teamAppsVersion?: string
 }

@@ -19,10 +19,10 @@
  */
 package org.teamapps.projector.components.trivial.datetime;
 
-import org.teamapps.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoLocalDateTimeField;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -19,20 +19,23 @@
  */
 package org.teamapps.ux.component.mobile;
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoMobileLayout;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoMobileLayout;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.toolbar.Toolbar;
 
+import java.util.function.Supplier;
+
 @ProjectorComponent(library = CoreComponentLibrary.class)
-public class MobileLayout extends AbstractComponent implements org.teamapps.ux.component.Component {
+public class MobileLayout extends AbstractComponent implements Component {
 
 	protected Toolbar toolbar;
-	protected org.teamapps.ux.component.Component content;
+	protected Component content;
 	protected NavigationBar navigationBar;
 
 	public MobileLayout() {
@@ -57,16 +60,16 @@ public class MobileLayout extends AbstractComponent implements org.teamapps.ux.c
 	public void handleUiEvent(String name, JsonWrapper params) {
 	}
 
-	public void setContent(org.teamapps.ux.component.Component component) {
+	public void setContent(Component component) {
 		setContent(component, null, 0);
 	}
 
-	public void setContent(org.teamapps.ux.component.Component component, PageTransition animation, int animationDuration) {
+	public void setContent(Component component, PageTransition animation, int animationDuration) {
 		if (this.content != component) {
 			content = component;
 			component.setParent(this);
-			sendCommandIfRendered(() -> new DtoMobileLayout.ShowViewCommand(component.createClientReference(), animation != null ? animation.toUiPageTransition() : null,
-					animationDuration));
+			getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoMobileLayout.ShowViewCommand(component.createClientReference(), animation != null ? animation.toUiPageTransition() : null,
+					animationDuration)).get(), null);
 		}
 	}
 
@@ -78,7 +81,7 @@ public class MobileLayout extends AbstractComponent implements org.teamapps.ux.c
 		this.toolbar = toolbar;
 	}
 
-	public org.teamapps.ux.component.Component getContent() {
+	public Component getContent() {
 		return content;
 	}
 
@@ -91,7 +94,7 @@ public class MobileLayout extends AbstractComponent implements org.teamapps.ux.c
 		if (navigationBar != null) {
 			navigationBar.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createClientReference() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createClientReference() : null), null);
 	}
 
 }

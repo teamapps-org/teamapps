@@ -18,7 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, insertAfter, insertBefore, noOpServerChannel, parseHtml, ServerChannel, TeamAppsEvent} from "teamapps-client-core";
+import {
+	Component,
+	insertAfter,
+	insertBefore,
+	noOpServerChannel,
+	parseHtml,
+	ServerChannel,
+	TeamAppsEvent
+} from "projector-client-object-api";
 import {
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
 	DtoToolbar,

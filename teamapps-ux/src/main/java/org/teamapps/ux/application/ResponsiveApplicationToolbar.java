@@ -27,8 +27,8 @@ import org.teamapps.ux.component.toolbar.ToolAccordion;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
-import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.CurrentSessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.util.ArrayList;
 import java.util.List;

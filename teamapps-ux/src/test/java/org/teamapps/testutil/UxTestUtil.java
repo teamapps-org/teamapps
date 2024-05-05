@@ -22,11 +22,11 @@ package org.teamapps.testutil;
 import jakarta.servlet.http.HttpSession;
 import org.mockito.Mockito;
 import org.teamapps.icons.SessionIconProvider;
-import org.teamapps.server.UxServerContext;
-import org.teamapps.uisession.UiSession;
-import org.teamapps.ux.component.ComponentLibraryRegistry;
-import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.server.UxServerContext;
+import org.teamapps.uisession.UiSessionImpl;
+import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
+import org.teamapps.projector.session.ClientInfo;
+import org.teamapps.projector.session.SessionContext;
 
 import java.net.URL;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public class UxTestUtil {
 		ComponentLibraryRegistry componentLibraryRegistryMock = Mockito.mock(ComponentLibraryRegistry.class);
 		Mockito.when(componentLibraryRegistryMock.getComponentLibraryForClientObject(Mockito.any())).thenReturn(Mockito.mock(ComponentLibraryRegistry.ComponentLibraryInfo.class));
 		return new SessionContext(
-				Mockito.mock(UiSession.class),
+				Mockito.mock(UiSessionImpl.class),
 				Executors.newSingleThreadExecutor(),
 				clientInfo, Mockito.mock(HttpSession.class),
 				Mockito.mock(UxServerContext.class),

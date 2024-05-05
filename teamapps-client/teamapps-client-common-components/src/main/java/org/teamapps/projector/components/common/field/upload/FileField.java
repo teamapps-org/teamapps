@@ -24,7 +24,6 @@ import org.teamapps.projector.components.common.dto.DtoFileField;
 import org.teamapps.projector.components.common.dto.DtoIdentifiableClientRecord;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.ProjectorEvent;
-import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
@@ -33,12 +32,11 @@ import org.teamapps.ux.component.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
-import org.teamapps.ux.component.template.Template;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
-import org.teamapps.ux.icon.TeamAppsIconBundle;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,7 +65,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Template uploadButtonTemplate = BaseTemplate.BUTTON;
-	private Object uploadButtonData = new BaseTemplateRecord<>(getSessionContext().getIcon(TeamAppsIconBundle.UPLOAD.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey()));
+	private Object uploadButtonData = new BaseTemplateRecord<>(getSessionContext().getIcon(MaterialIcon.BACKUP), getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey()));
 	private PropertyProvider uploadButtonPropertyProvider = new BeanPropertyExtractor<>();
 
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;

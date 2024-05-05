@@ -20,16 +20,17 @@
 package org.teamapps.projector.components.trivial.datetime;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoTextInputHandlingField;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoAbstractTimeField;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
-import org.teamapps.ux.session.DateTimeFormatDescriptor;
+import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.util.Locale;
+import java.util.function.Supplier;
 
 public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
 
@@ -67,7 +68,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		sendCommandIfRendered(() -> new DtoAbstractTimeField.SetShowDropDownButtonCommand(showDropDownButton));
+		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractTimeField.SetShowDropDownButtonCommand(showDropDownButton), null);
 	}
 
 
@@ -85,7 +86,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		sendCommandIfRendered(() -> new DtoAbstractTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()), null);
 	}
 
 	public DateTimeFormatDescriptor getTimeFormat() {
@@ -94,7 +95,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		sendCommandIfRendered(() -> new DtoAbstractTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()), null);
 	}
 
 	public boolean isShowClearButton() {
@@ -103,7 +104,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		sendCommandIfRendered(() -> new DtoAbstractTimeField.SetShowClearButtonCommand(showClearButton));
+		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractTimeField.SetShowClearButtonCommand(showClearButton), null);
 	}
 
 	@Override

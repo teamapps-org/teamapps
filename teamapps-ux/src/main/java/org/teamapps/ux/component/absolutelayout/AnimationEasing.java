@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.absolutelayout;
 
-import org.teamapps.dto.DtoAnimationEasing;
+import org.teamapps.projector.dto.DtoAnimationEasing;
 
 public enum AnimationEasing {
 

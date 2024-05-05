@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, insertAfter, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, insertAfter, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {defaultSpinnerTemplate, doOnceOnClickOutsideElement} from "../../../Common";

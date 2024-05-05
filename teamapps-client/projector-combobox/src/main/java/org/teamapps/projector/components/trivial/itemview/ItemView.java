@@ -18,17 +18,17 @@ package org.teamapps.projector.components.trivial.itemview;/*-
  * =========================LICENSE_END==================================
  */
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoIdentifiableClientRecord;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoItemView;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.Template;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setGroupHeaderTemplate(Template groupHeaderTemplate) {
 		this.groupHeaderTemplate = groupHeaderTemplate;
-		sendCommandIfRendered(() -> new DtoItemView.SetGroupHeaderTemplateCommand(groupHeaderTemplate.createClientReference()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetGroupHeaderTemplateCommand(groupHeaderTemplate.createClientReference()), null);
 	}
 
 	public List<ItemGroup> getItemGroups() {
@@ -119,10 +119,10 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 			@Override
 			public void handleRefreshRequired() {
-				sendCommandIfRendered(() -> new DtoItemView.RefreshItemGroupCommand(group.createUiItemViewItemGroup()));
+				getClientObjectChannel().sendCommandIfRendered(new DtoItemView.RefreshItemGroupCommand(group.createUiItemViewItemGroup()), null);
 			}
 		});
-		sendCommandIfRendered(() -> new DtoItemView.AddItemGroupCommand(group.createUiItemViewItemGroup()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.AddItemGroupCommand(group.createUiItemViewItemGroup()), null);
 	}
 
 	public String getFilter() {
@@ -131,7 +131,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
-		sendCommandIfRendered(() -> new DtoItemView.SetFilterCommand(filter));
+		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetFilterCommand(filter), null);
 	}
 
 	public void removeAllGroups() {
@@ -140,7 +140,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void removeItemGroup(ItemGroup itemGroup) {
 		itemGroups.remove(itemGroup);
-		sendCommandIfRendered(() -> new DtoItemView.RemoveItemGroupCommand(itemGroup.getClientId()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.RemoveItemGroupCommand(itemGroup.getClientId()), null);
 	}
 
 	public int getHorizontalPadding() {
@@ -149,7 +149,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setHorizontalPadding(int horizontalPadding) {
 		this.horizontalPadding = horizontalPadding;
-		sendCommandIfRendered(() -> new DtoItemView.SetHorizontalPaddingCommand(horizontalPadding));
+		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetHorizontalPaddingCommand(horizontalPadding), null);
 	}
 
 	public int getVerticalPadding() {
@@ -158,7 +158,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setVerticalPadding(int verticalPadding) {
 		this.verticalPadding = verticalPadding;
-		sendCommandIfRendered(() -> new DtoItemView.SetVerticalPaddingCommand(verticalPadding));
+		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetVerticalPaddingCommand(verticalPadding), null);
 	}
 
 	public int getGroupSpacing() {
@@ -167,7 +167,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setGroupSpacing(int groupSpacing) {
 		this.groupSpacing = groupSpacing;
-		sendCommandIfRendered(() -> new DtoItemView.SetGroupSpacingCommand(groupSpacing));
+		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetGroupSpacingCommand(groupSpacing), null);
 	}
 
 	public ItemViewItemBackgroundMode getItemBackgroundMode() {
@@ -176,7 +176,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setItemBackgroundMode(ItemViewItemBackgroundMode itemBackgroundMode) {
 		this.itemBackgroundMode = itemBackgroundMode;
-		sendCommandIfRendered(() -> new DtoItemView.SetItemBackgroundModeCommand(itemBackgroundMode.toDtoValue()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetItemBackgroundModeCommand(itemBackgroundMode.toDtoValue()), null);
 	}
 
 	public PropertyProvider<HEADERRECORD> getHeaderPropertyProvider() {

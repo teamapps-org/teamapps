@@ -1,0 +1,8 @@
+package "projector-client-object-api":org.teamapps.projector.dto;
+
+enum TextAlignment {
+	LEFT,
+	CENTER,
+	RIGHT,
+	JUSTIFY
+}

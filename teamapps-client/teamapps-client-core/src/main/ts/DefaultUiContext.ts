@@ -19,9 +19,7 @@
  */
 "use strict";
 
-import {createUiLocation, generateUUID, Showable} from "./util";
-import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {DtoConfiguration, DtoGenericErrorMessageOption} from "./generated";
+import {generateUUID, Showable, ClientObject, ClientObjectFactory, ComponentLibrary, ServerChannel} from "projector-client-object-api";
 import {
 	ClientInfo,
 	SessionClosingReason,
@@ -29,7 +27,6 @@ import {
 	TeamAppsConnectionImpl,
 	TeamAppsConnectionListener
 } from "teamapps-client-communication";
-import {ClientObject, ClientObjectFactory, ComponentLibrary, ServerChannel} from "./ClientObject";
 import {Globals} from "./Globals";
 
 class FilteredServerChannel implements ServerChannel {
@@ -80,15 +77,9 @@ class ClientObjectWrapper {
 	}
 }
 
-export class DefaultUiContext implements TeamAppsUiContextInternalApi {
+export class DefaultUiContext {
 
 	public readonly sessionId: string;
-	public config: DtoConfiguration = {
-		_type: "UiConfiguration",
-		locale: "en",
-		themeClassName: null,
-		optimizedForTouch: false
-	};
 
 	private connection: TeamAppsConnection;
 
@@ -112,7 +103,7 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 			timezoneOffsetMinutes: new Date().getTimezoneOffset(),
 			timezoneIana: Intl.DateTimeFormat().resolvedOptions().timeZone,
 			clientTokens: Globals.getClientTokens(),
-			location: createUiLocation(),
+			location: location.href,
 			clientParameters: clientParameters,
 			teamAppsVersion: '__TEAMAPPS_VERSION__'
 		};
@@ -134,22 +125,19 @@ export class DefaultUiContext implements TeamAppsUiContextInternalApi {
 					if (this.expiredMessageWindow != null) {
 						this.expiredMessageWindow.show(500);
 					} else {
-						Globals.createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							false, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD]).show(500);
+						Globals.createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", false).show(500);
 					}
 				} else if (reason == SessionClosingReason.TERMINATED_BY_APPLICATION) {
 					if (this.terminatedMessageWindow != null) {
 						this.terminatedMessageWindow.show(500);
 					} else {
-						Globals.createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							true, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD]).show(500);
+						Globals.createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
 					}
 				} else {
 					if (this.errorMessageWindow != null) {
 						this.errorMessageWindow.show(500);
 					} else {
-						Globals.createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.",
-							true, [DtoGenericErrorMessageOption.OK, DtoGenericErrorMessageOption.RELOAD]).show(500);
+						Globals.createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
 					}
 				}
 			},

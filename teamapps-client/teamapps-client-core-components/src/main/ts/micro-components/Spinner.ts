@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {parseHtml} from "teamapps-client-core";
+import {parseHtml} from "projector-client-object-api";
 
 export class Spinner {
 	private $mainDomElement: HTMLElement;

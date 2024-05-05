@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.trivial.itemview;
 
-import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
 import java.util.function.Consumer;
 

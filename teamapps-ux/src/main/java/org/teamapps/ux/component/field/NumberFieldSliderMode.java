@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoNumberFieldSliderMode;
+import org.teamapps.projector.dto.DtoNumberFieldSliderMode;
 
 public enum NumberFieldSliderMode {
 	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED, SLIDER_ONLY;

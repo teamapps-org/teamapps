@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.servlet.resourceprovider;
 
-import org.teamapps.ux.resource.Resource;
+import org.teamapps.projector.resource.Resource;
 
 /**
  * Created by mb on 08.10.15.

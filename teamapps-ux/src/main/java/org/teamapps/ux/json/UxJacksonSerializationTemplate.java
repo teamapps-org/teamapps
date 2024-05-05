@@ -30,8 +30,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.ClientObject;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.clientobject.ClientObject;
+import org.teamapps.projector.session.SessionContext;
 
 import java.io.IOException;
 

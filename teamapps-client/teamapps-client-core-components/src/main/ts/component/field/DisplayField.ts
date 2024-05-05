@@ -19,7 +19,7 @@
  */
 import {DtoDisplayField, DtoDisplayFieldCommandHandler, DtoDisplayFieldEventSource, DtoFieldEditingMode} from "../../generated";
 import {AbstractField} from "./AbstractField";
-import {parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {parseHtml} from "projector-client-object-api";
 import {escapeHtml, removeTags} from "../../Common";
 
 

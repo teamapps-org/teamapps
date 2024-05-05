@@ -21,6 +21,7 @@ package org.teamapps.util.threading;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.teamapps.threading.SequentialExecutorFactory;
 
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;

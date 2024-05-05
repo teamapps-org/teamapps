@@ -25,7 +25,7 @@ import {
 	DtoTemplateFieldCommandHandler,
 	DtoTemplateFieldEventSource
 } from "../../generated";
-import {DtoClientRecord, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
+import {DtoClientRecord, parseHtml, ServerChannel, TeamAppsEvent, Template} from "projector-client-object-api";
 
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {

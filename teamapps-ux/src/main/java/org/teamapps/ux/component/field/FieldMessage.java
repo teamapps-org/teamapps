@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoFieldMessage;
-import org.teamapps.dto.DtoFieldMessagePosition;
-import org.teamapps.dto.DtoFieldMessageSeverity;
-import org.teamapps.dto.DtoFieldMessageVisibilityMode;
+import org.teamapps.projector.dto.DtoFieldMessage;
+import org.teamapps.projector.dto.DtoFieldMessagePosition;
+import org.teamapps.projector.dto.DtoFieldMessageSeverity;
+import org.teamapps.projector.dto.DtoFieldMessageVisibilityMode;
 
 import java.util.Objects;
 

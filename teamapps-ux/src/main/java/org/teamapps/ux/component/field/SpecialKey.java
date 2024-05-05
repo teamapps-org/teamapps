@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoSpecialKey;
+import org.teamapps.projector.dto.DtoSpecialKey;
 
 public enum SpecialKey {
 	ENTER, ESCAPE;

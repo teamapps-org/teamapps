@@ -32,7 +32,7 @@ import org.teamapps.ux.servlet.component.ComponentLibraryResourceServlet;
 import org.teamapps.ux.servlet.resourceprovider.IconResourceProvider;
 import org.teamapps.ux.servlet.resourceprovider.ResourceProviderServlet;
 import org.teamapps.ux.servlet.resourceprovider.TeamAppsSessionResourceProvider;
-import org.teamapps.ux.session.SessionContextResourceManager;
+import org.teamapps.projector.session.SessionContextResourceManager;
 
 import java.lang.invoke.MethodHandles;
 import java.util.EnumSet;

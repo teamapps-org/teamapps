@@ -23,10 +23,10 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.ProjectorComponent;
-import org.teamapps.ux.component.absolutelayout.Length;
+import org.teamapps.projector.format.Length;
 import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.format.Border;
-import org.teamapps.ux.format.ImageSizing;
+import org.teamapps.projector.format.Border;
+import org.teamapps.ux.ImageSizing;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class ImageField extends AbstractField<String> {

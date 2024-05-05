@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.dto;
+package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.dto.Component;
+import org.teamapps.projector.dto.Component;
 
 class RootPanel extends Component {
     String backgroundImageUrl;
     String blurredBackgroundImageUrl;
-    String backgroundColor
+    String backgroundColor;
 	Component* content;
 
-    command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, long animationDuration);
+    command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, long animationDuration);
 	command setContent(Component* content, PageTransition transition, long animationDuration);
 }
 

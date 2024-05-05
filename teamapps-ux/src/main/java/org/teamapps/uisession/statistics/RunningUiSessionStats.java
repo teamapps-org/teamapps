@@ -21,7 +21,7 @@ package org.teamapps.uisession.statistics;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import org.teamapps.uisession.UiSessionState;
+import org.teamapps.projector.session.uisession.UiSessionState;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

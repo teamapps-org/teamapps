@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, parseHtml, ServerChannel, TeamAppsUiContext, generateUUID} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, generateUUID, parseHtml, ServerChannel} from "projector-client-object-api";
 import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent, DtoAnimationEasing} from "../generated";
 
 const animationEasingCssValues = {

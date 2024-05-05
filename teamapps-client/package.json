@@ -12,6 +12,9 @@
   },
   "workspaces": [
     "teamapps-client-communication",
+    "projector-client-object-api",
+    "projector-grid-template",
+    "projector-mustache-template",
     "teamapps-client-core",
     "teamapps-client-core-components",
     "projector-calendar",

@@ -1,0 +1,14 @@
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+
+import {ClientObject} from "projector-client-object-api";
+import {DtoDtoWeekDay} from "./DtoDtoWeekDay";
+
+export interface DtoDtoCalendar {
+	_type?: string;
+	workingDays?: DtoDtoWeekDay[]
+}
+
+

@@ -40,7 +40,7 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-common</artifactId>
+            <artifactId>projector-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
@@ -52,12 +52,7 @@
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>projector-component-api</artifactId>
-            <version>0.9.155-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-core-components</artifactId>
+            <artifactId>projector-client-object-api</artifactId>
         </dependency>
 
         <dependency>
@@ -77,12 +72,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.devskiller.friendly-id</groupId>
-            <artifactId>friendly-id</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
@@ -94,7 +83,6 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.websocket</groupId>

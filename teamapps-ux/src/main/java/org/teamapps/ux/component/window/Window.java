@@ -21,13 +21,16 @@ package org.teamapps.ux.component.window;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoWindow;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoWindow;
 import org.teamapps.icons.Icon;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.Showable;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.Showable;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.panel.Panel;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class Window extends Panel implements Showable {
@@ -43,19 +46,19 @@ public class Window extends Panel implements Showable {
 	public Window() {
 	}
 
-	public Window(org.teamapps.ux.component.Component content) {
+	public Window(Component content) {
 		this(0, 0, content);
 	}
 
-	public Window(int width, int height, org.teamapps.ux.component.Component content) {
+	public Window(int width, int height, Component content) {
 		this(null, null, width, height, content);
 	}
 
-	public Window(Icon<?, ?> icon, String title, int width, int height, org.teamapps.ux.component.Component content) {
+	public Window(Icon<?, ?> icon, String title, int width, int height, Component content) {
 		this(icon, title, content, width, height, false, false, false);
 	}
 
-	public Window(Icon<?, ?> icon, String title, org.teamapps.ux.component.Component content, int width, int height, boolean closeable, boolean closeOnEscape, boolean closeOnClickOutside) {
+	public Window(Icon<?, ?> icon, String title, Component content, int width, int height, boolean closeable, boolean closeOnEscape, boolean closeOnClickOutside) {
 		super(icon, title, content);
 		this.width = width;
 		this.height = height;
@@ -87,7 +90,7 @@ public class Window extends Panel implements Showable {
 
 	public void setModal(boolean modal) {
 		this.modal = modal;
-		sendCommandIfRendered(() -> new DtoWindow.SetModalCommand(modal));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetModalCommand(modal), null);
 	}
 
 	public int getWidth() {
@@ -116,7 +119,7 @@ public class Window extends Panel implements Showable {
 		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
 			this.setContentStretchingEnabled(false);
 		}
-		sendCommandIfRendered(() -> new DtoWindow.SetSizeCommand(width, height));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetSizeCommand(width, height), null);
 	}
 
 	public Color getModalBackgroundDimmingColor() {
@@ -125,7 +128,7 @@ public class Window extends Panel implements Showable {
 
 	public void setModalBackgroundDimmingColor(Color modalBackgroundDimmingColor) {
 		this.modalBackgroundDimmingColor = modalBackgroundDimmingColor;
-		sendCommandIfRendered(() -> new DtoWindow.SetModalBackgroundDimmingColorCommand(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetModalBackgroundDimmingColorCommand(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null), null);
 	}
 
 	public void show() {
@@ -133,8 +136,8 @@ public class Window extends Panel implements Showable {
 	}
 
 	public void show(int animationDuration) {
-		getSessionContext().createClientObject(this);
-		sendCommandIfRendered(() -> new DtoWindow.ShowCommand(animationDuration));
+		getSessionContext().renderClientObject(this);
+		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.ShowCommand(animationDuration), null);
 	}
 
 	public void close() {
@@ -142,7 +145,7 @@ public class Window extends Panel implements Showable {
 	}
 
 	public void close(int animationDuration) {
-		sendCommandIfRendered(() -> new DtoWindow.CloseCommand(animationDuration));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.CloseCommand(animationDuration), null);
 	}
 
 	public boolean isCloseable() {
@@ -151,7 +154,7 @@ public class Window extends Panel implements Showable {
 
 	public void setCloseable(boolean closeable) {
 		this.closeable = closeable;
-		sendCommandIfRendered(() -> new DtoWindow.SetCloseableCommand(closeable));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetCloseableCommand(closeable), null);
 	}
 
 	public boolean isCloseOnEscape() {
@@ -160,7 +163,7 @@ public class Window extends Panel implements Showable {
 
 	public void setCloseOnEscape(boolean closeOnEscape) {
 		this.closeOnEscape = closeOnEscape;
-		sendCommandIfRendered(() -> new DtoWindow.SetCloseOnEscapeCommand(closeOnEscape));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetCloseOnEscapeCommand(closeOnEscape), null);
 	}
 
 	public boolean isCloseOnClickOutside() {
@@ -169,6 +172,6 @@ public class Window extends Panel implements Showable {
 
 	public void setCloseOnClickOutside(boolean closeOnClickOutside) {
 		this.closeOnClickOutside = closeOnClickOutside;
-		sendCommandIfRendered(() -> new DtoWindow.SetCloseOnClickOutsideCommand(closeOnClickOutside));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetCloseOnClickOutsideCommand(closeOnClickOutside), null);
 	}
 }

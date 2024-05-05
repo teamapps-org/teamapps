@@ -1,0 +1,9 @@
+package "projector-client-object-api":org.teamapps.projector.dto;
+
+class Border {
+	Line top;
+	Line left;
+	Line bottom;
+	Line right;
+	double borderRadius;
+}

@@ -21,8 +21,8 @@ package org.teamapps.projector.components.common.grid.layout;
 
 import org.teamapps.projector.components.common.dto.DtoGridPlacement;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.format.HorizontalElementAlignment;
-import org.teamapps.ux.format.VerticalElementAlignment;
+import org.teamapps.projector.format.HorizontalElementAlignment;
+import org.teamapps.projector.format.VerticalElementAlignment;
 
 import java.util.List;
 

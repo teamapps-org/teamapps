@@ -27,7 +27,7 @@ import {
 import {ViewInfo} from "./ViewInfo";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {Component} from "teamapps-client-core";
+import {Component} from "projector-client-object-api";
 
 export interface ViewContainer {
 	windowId: string;

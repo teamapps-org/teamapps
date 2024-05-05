@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.dto;
+package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.dto.Component;
+import org.teamapps.projector.dto.Component;
 
 enum EntranceAnimation {
 	BACK_IN_DOWN,

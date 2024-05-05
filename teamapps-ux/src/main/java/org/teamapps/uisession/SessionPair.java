@@ -19,19 +19,19 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 public class SessionPair {
 
-	private final UiSession uiSession;
+	private final UiSessionImpl uiSession;
 	private final SessionContext sessionContext;
 
-	public SessionPair(UiSession uiSession, SessionContext sessionContext) {
+	public SessionPair(UiSessionImpl uiSession, SessionContext sessionContext) {
 		this.uiSession = uiSession;
 		this.sessionContext = sessionContext;
 	}
 
-	public UiSession getUiSession() {
+	public UiSessionImpl getUiSession() {
 		return uiSession;
 	}
 

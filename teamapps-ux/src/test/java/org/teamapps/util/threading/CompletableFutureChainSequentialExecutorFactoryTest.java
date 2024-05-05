@@ -25,6 +25,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.teamapps.threading.CompletableFutureChainSequentialExecutorFactory;
 
 import java.util.List;
 import java.util.concurrent.*;

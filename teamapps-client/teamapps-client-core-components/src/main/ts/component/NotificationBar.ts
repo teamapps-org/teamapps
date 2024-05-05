@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
 import {animateCSS, Constants, removeClassesByFunction} from "../Common";
 
 import {
@@ -30,7 +30,7 @@ import {
 	DtoNotificationBarEventSource,
 	DtoNotificationBarItem
 } from "../generated";
-import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
+import {createUiSpacingValueCssString} from "../../../../../projector-client-object-api/src/main/ts/util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";
 
 export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {

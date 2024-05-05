@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DtoPageTransition, DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
-import {AbstractLegacyComponent, Component, parseHtml, ServerChannel} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerChannel} from "projector-client-object-api";
 import {pageTransition} from "../Common";
 
 // noinspection JSUnusedGlobalSymbols
@@ -37,6 +37,7 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 		</div>`);
 		this.$imagePreloadDiv = this.$root.querySelector<HTMLElement>(":scope .image-preload-div");
 		this.setContent(config.content as Component);
+		this.setBackground(config.backgroundImageUrl, config.blurredBackgroundImageUrl, config.backgroundColor, 0);
 	}
 
 	public doGetMainElement(): HTMLElement {
@@ -78,6 +79,8 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 	}
 
 	public async setBackground(backgroundImageUrl: string, blurredBackgroundImageUrl: string, backgroundColor: string, animationDuration: number) {
+		this.config.backgroundImageUrl = backgroundImageUrl;
+		this.config.blurredBackgroundImageUrl = blurredBackgroundImageUrl;
 		this.config.backgroundColor = backgroundColor;
 		await Promise.all([RootPanel.loadImage(backgroundImageUrl), RootPanel.loadImage(blurredBackgroundImageUrl)]);
 		this.updateBackground(animationDuration);
@@ -88,33 +91,14 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 		this.updateBackground(animationDuration);
 	}
 
-	public static setBackgroundImage(id: string, animationDuration: number) {
-		let backgroundImage: string = null;
-		let blurredBackgroundImage: string = null;
-		if (id != null) {
-			let registeredImage = this.BACKGROUND_IMAGES_BY_ID[id];
-			if (!registeredImage) {
-				this.LOGGER.warn(`Background image with id ${id} does not exist!`);
-				return;
-			}
-			backgroundImage = registeredImage.image;
-			blurredBackgroundImage = registeredImage.blurredImage;
-		}
-		this.ALL_ROOT_PANELS.forEach(uiRootPanel => {
-			uiRootPanel.backgroundImage = backgroundImage;
-			uiRootPanel.blurredBackgroundImage = blurredBackgroundImage;
-			uiRootPanel.updateBackground(animationDuration);
-		});
-	}
-
 	private updateBackground(animationDuration: number) {
 		[null, ".teamapps-backgroundImage", ".teamapps-blurredBackgroundImage"].forEach(selector => this.setStyle(selector, {"transition": "background-image ${animationDuration}ms ease-in-out, background-color ${animationDuration}ms ease-in-out"}))
 
 		this.$root.clientWidth; // ensure the css is applied!
 
 		[null, ".teamapps-backgroundImage", ".teamapps-blurredBackgroundImage"].forEach(selector => this.setStyle(selector, {"background-color": this.config.backgroundColor || ''}));
-		[null, ".teamapps-backgroundImage"].forEach(selector => this.setStyle(selector, {"background-image": this.config.backgroundImage ? `url('${this.config.backgroundImage}')` : 'none'}));
-		[".teamapps-blurredBackgroundImage"].forEach(selector => this.setStyle(selector, {"background-image": this.config.blurredBackgroundImage ? `url('${this.config.blurredBackgroundImage}')` : 'none'}));
+		[null, ".teamapps-backgroundImage"].forEach(selector => this.setStyle(selector, {"background-image": this.config.backgroundImageUrl ? `url('${this.config.backgroundImageUrl}')` : 'none'}));
+		[".teamapps-blurredBackgroundImage"].forEach(selector => this.setStyle(selector, {"background-image": this.config.blurredBackgroundImageUrl ? `url('${this.config.blurredBackgroundImageUrl}')` : 'none'}));
 	}
 
 	public destroy(): void {

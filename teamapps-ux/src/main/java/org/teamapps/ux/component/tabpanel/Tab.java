@@ -19,14 +19,14 @@
  */
 package org.teamapps.ux.component.tabpanel;
 
-import org.teamapps.dto.DtoTab;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoTab;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.ClientObject;
-import org.teamapps.ux.component.Component;
+import org.teamapps.projector.clientobject.ClientObject;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.toolbar.Toolbar;
-import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.CurrentSessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.util.UUID;
 

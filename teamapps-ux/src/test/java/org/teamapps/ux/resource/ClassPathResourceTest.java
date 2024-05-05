@@ -20,6 +20,7 @@
 package org.teamapps.ux.resource;
 
 import org.junit.Test;
+import org.teamapps.projector.resource.ClassPathResource;
 
 import static org.junit.Assert.assertEquals;
 

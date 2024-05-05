@@ -19,12 +19,14 @@
  */
 package org.teamapps.ux.component.iframe;
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoIFrame;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoIFrame;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class IFrame extends AbstractComponent {
@@ -56,6 +58,6 @@ public class IFrame extends AbstractComponent {
 
 	public void setUrl(String url) {
 		this.url = url;
-		sendCommandIfRendered(() -> new DtoIFrame.SetUrlCommand(url));
+		getClientObjectChannel().sendCommandIfRendered(new DtoIFrame.SetUrlCommand(url), null);
 	}
 }

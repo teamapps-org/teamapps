@@ -32,7 +32,7 @@ import {
 import {Panel} from "../Panel";
 import {DtoWorkspaceLayoutDndDataTransfer, WorkSpaceLayout} from "./WorkSpaceLayout";
 import {getMicrosoftBrowserVersion} from "../../Common";
-import {bind, Component, generateUUID, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {bind, Component, generateUUID, parseHtml} from "projector-client-object-api";
 import {Toolbar} from "../tool-container/toolbar/Toolbar";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";

@@ -20,7 +20,7 @@
 package org.teamapps.projector.components.common.tree;
 
 import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 
 import java.util.Arrays;
 import java.util.Collection;

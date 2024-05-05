@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoDefaultMultiProgressDisplay,
 	DtoDefaultMultiProgressDisplayCommandHandler,

@@ -64,7 +64,7 @@ public class GenerateTypeScriptDtosMojo extends AbstractMojo {
 						groupId("org.codehaus.mojo"),
 						artifactId("exec-maven-plugin"),
 						version("3.1.0"),
-						List.of(dependency("org.teamapps", "teamapps-ui-dsl", projectorVersion))
+						List.of(dependency("org.teamapps", "projector-dto-dsl", projectorVersion))
 				),
 				goal("java"),
 				configuration(

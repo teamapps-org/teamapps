@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.task;
 
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 
 public interface ObservableProgress {
 

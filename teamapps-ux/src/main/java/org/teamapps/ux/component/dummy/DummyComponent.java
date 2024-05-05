@@ -19,13 +19,15 @@
  */
 package org.teamapps.ux.component.dummy;
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoDummyComponent;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoDummyComponent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class DummyComponent extends AbstractComponent {
@@ -65,7 +67,7 @@ public class DummyComponent extends AbstractComponent {
 
 	public void setText(String text) {
 		this.text = text;
-		sendCommandIfRendered(() -> new DtoDummyComponent.SetTextCommand(text));
+		getClientObjectChannel().sendCommandIfRendered(new DtoDummyComponent.SetTextCommand(text), null);
 	}
 
 }

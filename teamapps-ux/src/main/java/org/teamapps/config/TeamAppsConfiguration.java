@@ -19,8 +19,8 @@
  */
 package org.teamapps.config;
 
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.session.SessionContext;
 
 import java.io.File;
 

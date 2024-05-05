@@ -22,8 +22,8 @@ package org.teamapps.projector.components.common.form.layoutpolicy;
 import org.teamapps.projector.components.common.dto.DtoFormSectionFieldPlacement;
 import org.teamapps.projector.components.common.dto.DtoFormSectionPlacement;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.format.HorizontalElementAlignment;
-import org.teamapps.ux.format.VerticalElementAlignment;
+import org.teamapps.projector.format.HorizontalElementAlignment;
+import org.teamapps.projector.format.VerticalElementAlignment;
 
 public class FormSectionFieldPlacement implements FormSectionPlacement {
 

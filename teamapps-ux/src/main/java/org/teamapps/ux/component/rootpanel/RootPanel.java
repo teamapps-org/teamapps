@@ -20,15 +20,18 @@
 package org.teamapps.ux.component.rootpanel;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoGlobals;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoRootPanel;
-import org.teamapps.ux.component.*;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoGlobals;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoRootPanel;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.animation.PageTransition;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 
 import java.time.Duration;
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class RootPanel extends AbstractComponent implements Component {
@@ -63,11 +66,11 @@ public class RootPanel extends AbstractComponent implements Component {
 		if (component != null) {
 			component.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoRootPanel.SetContentCommand(component, animation != null ? animation.toUiPageTransition() : null, animationDuration));
+		getClientObjectChannel().sendCommandIfRendered(new DtoRootPanel.SetContentCommand(component, animation != null ? animation.toUiPageTransition() : null, animationDuration), null);
 	}
 
 	public void setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, Duration animationDuration) {
-		sendCommandIfRendered(() -> new DtoRootPanel.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()).getParameters());
+		getClientObjectChannel().sendCommandIfRendered(new DtoRootPanel.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()).getParameters(), null);
 	}
 
 	public Component getContent() {

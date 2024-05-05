@@ -20,16 +20,18 @@
 package org.teamapps.ux.application;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.application.assembler.*;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.session.CurrentSessionContext;
+import org.teamapps.ux.application.assembler.AdditionalNavigationButton;
+import org.teamapps.ux.application.assembler.ApplicationAssembler;
+import org.teamapps.ux.application.assembler.DesktopApplicationAssembler;
+import org.teamapps.ux.application.assembler.MobileApplicationAssembler;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
-import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.icon.TeamAppsIconBundle;
-import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
 
@@ -44,12 +46,14 @@ public interface ResponsiveApplication {
 	}
 
 	static ResponsiveApplication createApplication(View applicationLauncher) {
-		return createApplication(applicationLauncher,
-				SessionContext.current().getIcon(TeamAppsIconBundle.APPLICATION_LAUNCHER.getKey()),
-				SessionContext.current().getIcon(TeamAppsIconBundle.TREE.getKey()),
-				SessionContext.current().getIcon(TeamAppsIconBundle.VIEWS.getKey()),
-				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()),
-				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()));
+		return createApplication(
+				applicationLauncher,
+				MaterialIcon.VIEW_MODULE,
+				MaterialIcon.TOC,
+				MaterialIcon.VIEW_CAROUSEL,
+				MaterialIcon.SUBTITLES,
+				MaterialIcon.SUBTITLES
+		);
 	}
 
 	static ResponsiveApplication createApplication(View applicationLauncher, Icon<?, ?> launcherIcon, Icon<?, ?> treeIcon, Icon<?, ?> viewsIcon, Icon<?, ?> toolbarIcon, Icon<?, ?> backIcon) {

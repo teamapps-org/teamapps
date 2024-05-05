@@ -1,0 +1,15 @@
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+
+import {ClientObject} from "projector-client-object-api";
+import {DtoA} from "./DtoA";
+import {DtoB} from "./DtoB";
+import {DtoC} from "./DtoC";
+
+export interface DtoD extends DtoA, DtoB, DtoC {
+	_type?: string;
+}
+
+

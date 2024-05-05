@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Component, generateUUID, noOpServerChannel, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, noOpServerChannel, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {DtoTabPanelTabStyle, DtoViewGroupPanelState, DtoWindowButtonType} from "../../generated";
 import {TabPanel} from "../TabPanel";
 import {ItemTreeItem} from "./ItemTree";

@@ -21,10 +21,10 @@ package org.teamapps.projector.components.trivial.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoTextInputHandlingField;
 import org.teamapps.dto.protocol.client.QueryWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoComboBox;
 import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
 import org.teamapps.projector.components.trivial.tree.model.ComboBoxModel;
@@ -34,11 +34,11 @@ import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 import org.teamapps.ux.component.template.TemplateDecider;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -283,47 +283,47 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setDropDownButtonVisible(boolean dropDownButtonVisible) {
 		this.dropDownButtonVisible = dropDownButtonVisible;
-		sendCommandIfRendered(() -> new DtoComboBox.SetDropDownButtonVisibleCommand(dropDownButtonVisible));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetDropDownButtonVisibleCommand(dropDownButtonVisible), null);
 	}
 
 	public void setShowDropDownAfterResultsArrive(boolean showDropDownAfterResultsArrive) {
 		this.showDropDownAfterResultsArrive = showDropDownAfterResultsArrive;
-		sendCommandIfRendered(() -> new DtoComboBox.SetShowDropDownAfterResultsArriveCommand(showDropDownAfterResultsArrive));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetShowDropDownAfterResultsArriveCommand(showDropDownAfterResultsArrive), null);
 	}
 
 	public void setFirstEntryAutoHighlight(boolean firstEntryAutoHighlight) {
 		this.firstEntryAutoHighlight = firstEntryAutoHighlight;
-		sendCommandIfRendered(() -> new DtoComboBox.SetFirstEntryAutoHighlightCommand(firstEntryAutoHighlight));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetFirstEntryAutoHighlightCommand(firstEntryAutoHighlight), null);
 	}
 
 	public void setAutoCompletionEnabled(boolean autoCompletionEnabled) {
 		this.autoCompletionEnabled = autoCompletionEnabled;
-		sendCommandIfRendered(() -> new DtoComboBox.SetAutoCompletionEnabledCommand(autoCompletionEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetAutoCompletionEnabledCommand(autoCompletionEnabled), null);
 	}
 
 	public void setTextHighlightingEnabled(boolean textHighlightingEnabled) {
 		this.textHighlightingEnabled = textHighlightingEnabled;
-		sendCommandIfRendered(() -> new DtoComboBox.SetTextHighlightingEntryLimitCommand(textHighlightingEnabled ? textHighlightingEntryLimit : 0));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetTextHighlightingEntryLimitCommand(textHighlightingEnabled ? textHighlightingEntryLimit : 0), null);
 	}
 
 	public void setTextHighlightingEntryLimit(int textHighlightingEntryLimit) {
 		this.textHighlightingEntryLimit = textHighlightingEntryLimit;
-		sendCommandIfRendered(() -> new DtoComboBox.SetTextHighlightingEntryLimitCommand(textHighlightingEnabled ? textHighlightingEntryLimit : 0));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetTextHighlightingEntryLimitCommand(textHighlightingEnabled ? textHighlightingEntryLimit : 0), null);
 	}
 
 	public void setFreeTextEnabled(boolean freeTextEnabled) {
 		this.freeTextEnabled = freeTextEnabled;
-		sendCommandIfRendered(() -> new DtoComboBox.SetFreeTextEnabledCommand(freeTextEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetFreeTextEnabledCommand(freeTextEnabled), null);
 	}
 
 	public void setClearButtonEnabled(boolean clearButtonEnabled) {
 		this.clearButtonEnabled = clearButtonEnabled;
-		sendCommandIfRendered(() -> new DtoComboBox.SetClearButtonEnabledCommand(clearButtonEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetClearButtonEnabledCommand(clearButtonEnabled), null);
 	}
 
 	public void setExpandAnimationEnabled(boolean expandAnimationEnabled) {
 		this.expandAnimationEnabled = expandAnimationEnabled;
-		sendCommandIfRendered(() -> new DtoComboBox.SetExpandAnimationEnabledCommand(expandAnimationEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetExpandAnimationEnabledCommand(expandAnimationEnabled), null);
 	}
 
 	public boolean isExpandersVisible() {
@@ -332,7 +332,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setExpandersVisible(boolean expandersVisible) {
 		this.expandersVisible = expandersVisible;
-		sendCommandIfRendered(() -> new DtoComboBox.SetExpandersVisibleCommand(expandersVisible));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetExpandersVisibleCommand(expandersVisible), null);
 	}
 
 	public void setSelectedEntryTemplate(Template selectedEntryTemplate) {
@@ -411,7 +411,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setPlaceholderText(String placeholderText) {
 		this.placeholderText = placeholderText;
-		sendCommandIfRendered(() -> new DtoComboBox.SetPlaceholderTextCommand(placeholderText));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetPlaceholderTextCommand(placeholderText), null);
 	}
 
 	public boolean isDistinctModelResultFiltering() {
@@ -428,7 +428,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setDropDownMinWidth(Integer dropDownMinWidth) {
 		this.dropDownMinWidth = dropDownMinWidth;
-		sendCommandIfRendered(() -> new DtoComboBox.SetDropDownMinWidthCommand(dropDownMinWidth));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetDropDownMinWidthCommand(dropDownMinWidth), null);
 	}
 
 	public Integer getDropDownMaxHeight() {
@@ -437,7 +437,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setDropDownMaxHeight(Integer dropDownMaxHeight) {
 		this.dropDownMaxHeight = dropDownMaxHeight;
-		sendCommandIfRendered(() -> new DtoComboBox.SetDropDownMaxHeightCommand(dropDownMaxHeight));
+		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetDropDownMaxHeightCommand(dropDownMaxHeight), null);
 	}
 
 	@Override

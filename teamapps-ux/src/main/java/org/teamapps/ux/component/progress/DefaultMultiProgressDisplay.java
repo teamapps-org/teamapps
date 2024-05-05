@@ -19,17 +19,17 @@
  */
 package org.teamapps.ux.component.progress;
 
-import org.teamapps.dto.DtoDefaultMultiProgressDisplay;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoMultiProgressDisplay;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoDefaultMultiProgressDisplay;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoMultiProgressDisplay;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.field.DisplayField;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
-import org.teamapps.ux.format.Spacing;
+import org.teamapps.projector.format.Spacing;
 import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
@@ -144,7 +144,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoDefaultMultiProgressDisplay.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoDefaultMultiProgressDisplay.UpdateCommand(createConfig()), null);
 	}
 
 	public boolean isShowNotificationOnProgressAdded() {

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.task;
 
-import org.teamapps.dto.DtoProgressStatus;
+import org.teamapps.projector.dto.DtoProgressStatus;
 
 public enum ProgressStatus {
 	NOT_YET_STARTED,

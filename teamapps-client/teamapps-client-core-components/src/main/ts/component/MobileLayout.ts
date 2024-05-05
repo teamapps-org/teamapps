@@ -20,7 +20,7 @@
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {NavigationBar} from "./NavigationBar";
-import {AbstractLegacyComponent, Component, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerChannel} from "projector-client-object-api";
 import {DtoMobileLayout, DtoMobileLayoutCommandHandler, DtoPageTransition} from "../generated";
 
 import {pageTransition} from "../Common";

@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.servlet.resourceprovider;
 
-import org.teamapps.ux.resource.Resource;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.resource.Resource;
+import org.teamapps.projector.session.SessionContext;
 
 import java.util.function.Function;
 
-import static org.teamapps.ux.session.SessionContextResourceManager.RESOURCE_LINK_ID_PREFIX;
+import static org.teamapps.projector.session.SessionContextResourceManager.RESOURCE_LINK_ID_PREFIX;
 
 public class TeamAppsSessionResourceProvider implements ResourceProvider {
 

@@ -1,0 +1,392 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class(c) ::= <<
+<javaFilePrelude(c.packageName)>
+
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
+
+@JsonTypeName("<c.name>")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public <if(c.abstract)>abstract <endif>class <c.javaClassName> <if(c.superClass)>extends Dto<c.superClass.name> <endif>implements <if(c.interfaces)><c.interfaces:{itf|Dto<itf.name>}; separator=", ">, <endif>DtoObject {
+
+    public static final String TYPE_ID = "<c.name>";
+    public static final List\<String\> EVENT_NAMES = List.of(<c.allEvents:{e|"<e.name>"}; separator=", ">);
+    public static final List\<String\> QUERY_NAMES = List.of(<c.allQueries:{q|"<q.name>"}; separator=", ">);
+
+	<c.propertiesNotImplementedBySuperClasses:fieldDeclaration(); separator="\n">
+
+	<constructor(c, "Dto", "")>
+
+	<toString(c)>
+
+	<c.propertiesNotImplementedBySuperClasses:getter(); separator="\n\n">
+
+	<c.propertiesNotImplementedBySuperClasses:setter(c.javaClassName); separator="\n\n">
+
+	<c.events:eventClass(); separator="\n\n">
+	<c.events:eventJsonWrapper(); separator="\n\n">
+
+	<c.queries:queryClass(); separator="\n\n">
+	<c.queries:eventJsonWrapper(); separator="\n\n">
+
+	<c.commands:commandClass(); separator="\n\n">
+
+}>>
+
+typeIdGetter(c) ::= <<
+@com.fasterxml.jackson.annotation.JsonIgnore
+public String getTypeId() {
+    return TYPE_ID;
+}
+>>
+
+eventListGetter(c) ::= <<
+@com.fasterxml.jackson.annotation.JsonIgnore
+public List\<String\> getEventNames() {
+    return EVENT_NAMES;
+}
+>>
+
+queryListGetter(c) ::= <<
+@com.fasterxml.jackson.annotation.JsonIgnore
+public List\<String\> getQueryNames() {
+    return QUERY_NAMES;
+}
+>>
+
+interface(c) ::= <<
+<javaFilePrelude(c.packageName)>
+
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
+
+@JsonTypeName("<c.name>")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public interface <c.javaClassName><if(c.typeArguments)><c.typeArguments.text><endif> extends <if(c.interfaces)><c.interfaces:{si|<si.javaClassName>}; separator=", ">, <endif>DtoObject {
+
+	<c.properties:getterStub(); separator="\n">
+	<c.nonRequiredProperties:setterStub(c); separator="\n">
+
+	<c.events:eventClass(); separator="\n\n">
+    <c.events:eventJsonWrapper(); separator="\n\n">
+
+	<c.queries:queryClass(); separator="\n\n">
+	<c.queries:eventJsonWrapper(); separator="\n\n">
+
+	<c.commands:commandClass(); separator="\n\n">
+
+}>>
+
+javaFilePrelude(packageName) ::= <<
+package <packageName>;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
+
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoObject;
+
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+>>
+
+fieldDeclaration(p) ::= <<
+protected <p.type.javaTypeString> <p.name>;
+>>
+
+getterStub(p) ::= <<
+public <p.type.javaTypeString> get<p.name; format="cap">();
+>>
+
+setterStub(p, c) ::= <<
+public <c.javaClassName> set<p.name; format="cap">(<p.type.javaTypeString> <p.name>);
+>>
+
+constructor(c, classNamePrefix, classNameSuffix) ::= <<
+<if(c.allRequiredProperties)>
+/**
+ * @deprecated Only for Jackson deserialization. Use the other constructor instead.
+ */
+@Deprecated
+public <classNamePrefix><c.name; format="cap"><classNameSuffix>() {
+	// default constructor for Jackson
+}
+<endif>
+
+public <classNamePrefix><c.name; format="cap"><classNameSuffix>(<c.allRequiredProperties:parameter(); separator=", ">) {
+	<if(c.superClass)>super(<c.superClass.allRequiredProperties:{p|<p.name>}; separator=", ">);<endif>
+	<c.requiredPropertiesNotImplementedBySuperClasses:propertyAssignment(); separator="\n">
+}
+>>
+
+toString(c) ::= <<
+@SuppressWarnings("unchecked")
+public String toString() {
+	return new StringBuilder(getClass().getSimpleName()).append(": ")
+			<c.simplePropertiesSortedByRelevance:propertyToString(); separator=".append(\", \")\n">
+			.toString();
+}
+>>
+
+propertyToString(p) ::= <<
+.append(<if(!p.type.isDtoClassOrInterface)>"<p.name>=" + <p.name><else><p.name> != null ? "<p.name>={" + <p.name>.toString() + "}" : ""<endif>)
+>>
+
+jsonSetter(p) ::= <<
+<! if (<if(p.type.isPrimitiveType)><p.name> != <defaultValue(p)><else>!Objects.equals(<p.name>, <defaultValue(p)>)<endif>) { !><\\>
+<if(!p.type.isPrimitiveType)>if (<p.name> != null) {<endif>
+<if(!p.type.isPrimitiveType)>	<endif>obj.put("<p.name>", <p.name>);
+<if(!p.type.isPrimitiveType)>}<endif>
+<! } !>
+>>
+
+parameter(p) ::= "<p.type.javaTypeString> <p.name>"
+
+getter(propertyDeclaration) ::= <<
+@com.fasterxml.jackson.annotation.JsonGetter("<propertyDeclaration.name>")
+public <propertyDeclaration.type.javaTypeString> get<propertyDeclaration.name; format="cap">() {
+	return <propertyDeclaration.name>;
+}
+>>
+
+setter(propertyDeclaration, clazzName) ::= <<
+@com.fasterxml.jackson.annotation.JsonSetter("<propertyDeclaration.name>")
+public <clazzName; format="cap"> set<propertyDeclaration.name; format="cap">(<propertyDeclaration.type.javaTypeString> <propertyDeclaration.name>) {
+	<propertyAssignment(propertyDeclaration)>
+	return this;
+}
+>>
+
+propertyAssignment(p) ::= "this.<p.name> = <p.name>;"
+
+enumClass(e) ::= <<
+<javaFilePrelude(e.packageName)>
+public enum <e.javaClassName> {
+	<e.enumConstants:enumConstant(e.stringEnum); separator=",\n">;
+
+	<if(e.stringEnum)>
+	private final String jsonValue;
+
+	<e.javaClassName>(String jsonValue) {
+		this.jsonValue = jsonValue;
+	}
+
+	@com.fasterxml.jackson.annotation.JsonValue
+	public String jsonValue() {
+		return jsonValue;
+	}
+	<else>
+    @com.fasterxml.jackson.annotation.JsonValue
+    public int jsonValue() {
+        return ordinal();
+    }
+	<endif>
+}>>
+
+
+enumConstant(ec, stringEnum) ::= <<
+	<ec.Identifier><if(stringEnum)>(<ec.StringLiteral>)<endif>
+>>
+
+eventClass(ed) ::= <<
+public static class <ed.name; format="cap">Event {
+
+    public static final String TYPE_ID = "<ed.declaringClass.name>.<ed.name>";
+
+	<ed.allProperties:fieldDeclaration(); separator="\n">
+
+	<constructor(ed, "", "Event")>
+
+	<toString(ed)>
+
+	<ed.allProperties:getter(); separator="\n\n">
+
+	<ed.allProperties:setter([ed.name, "Event"]); separator="\n\n">
+
+    <if(ed.staticModifier)>
+    public String getComponentId() {
+        return null;
+    }
+    public <ed.name; format="cap">Event setComponentId(String ignored) {
+        return this;
+    }
+    <endif>
+
+}
+>>
+
+queryClass(qd) ::= <<
+public static class <qd.name; format="cap">Query {
+
+    public static final String TYPE_ID = "<qd.declaringClass.name>.<qd.name>";
+
+	<qd.allProperties:fieldDeclaration(); separator="\n">
+
+	<constructor(qd, "", "Query")>
+
+	<toString(qd)>
+
+	<qd.allProperties:getter(); separator="\n\n">
+
+	<qd.allProperties:setter([qd.name, "Query"]); separator="\n\n">
+
+}
+>>
+
+
+commandClass(cmd) ::= <<
+@JsonTypeName("<cmd.declaringClass.name>.<cmd.name>")
+@JsonFormat(shape = JsonFormat.Shape.ARRAY)
+@JsonPropertyOrder({<cmd.allProperties:{p|"<p.name>"}; separator=", ">})
+public static class <cmd.name; format="cap">Command {
+
+    public static final String CMD_NAME = "<cmd.name>";
+
+	<cmd.allProperties:fieldDeclaration(); separator="\n">
+
+	<constructor(cmd, "", "Command")>
+
+	<toString(cmd)>
+
+	<cmd.allProperties:getter(); separator="\n\n">
+
+	<cmdParametersGetter(cmd)>
+
+}
+>>
+
+cmdParametersGetter(cmd) ::= <<
+public Object[] getParameters() {
+    return new Object[] {<cmd.allProperties:{p|<p.name>}; separator=", ">};
+}
+>>
+
+jsonWrapper(c) ::= <<
+<javaFilePrelude(c.packageName)>
+
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
+
+public class <c.javaClassName>Wrapper extends <if(c.superClass)>Dto<c.superClass.name>Wrapper<else>JsonWrapper<endif> {
+
+    public static final String TYPE_ID = "<c.name>";
+
+    public <c.javaClassName>Wrapper(JsonNode jsonNode) {
+        super(jsonNode);
+    }
+
+    <c.properties:jsonWrapperGetter(); separator="\n\n">
+}
+>>
+
+eventJsonWrapper(c) ::= <<
+public static class <c.javaClassName>Wrapper extends JsonWrapper {
+
+    public static final String TYPE_ID = "<c.name>";
+
+    public <c.javaClassName>Wrapper(JsonNode jsonNode) {
+        super(jsonNode);
+    }
+
+    <c.allProperties:jsonWrapperGetter(); separator="\n\n">
+}
+>>
+
+jsonWrapperGetter(propertyDeclaration) ::= <<
+<if(propertyDeclaration.type.isUiClientObjectReferenceOrCollectionOfThese)>
+// skipped <propertyDeclaration.name>
+<else>
+<uiObjectWrapperGetter(propertyDeclaration)>
+<endif>
+>>
+
+uiObjectWrapperGetter(propertyDeclaration) ::= <<
+public <propertyDeclaration.type.javaTypeWrapperString> get<propertyDeclaration.name; format="cap">() {
+    var node = jsonNode.get("<propertyDeclaration.name>");
+    <wrapperPropertyValueExtractor(propertyDeclaration.type, "node")>
+}
+>>
+
+wrapperPropertyValueExtractor(type, variableName) ::= <<
+if (<variableName> == null || <variableName>.isNull()) {
+    return <type.defaultValue>;
+}
+<if (type.isList)>
+ArrayNode <variableName>ArrayNode = ((ArrayNode) <variableName>);
+return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.elements(), <variableName>ArrayNode.size(), Spliterator.ORDERED), false)
+    .map(<variableName>X -> {
+        <wrapperPropertyValueExtractor(type.firstTypeArgument, [variableName,"X"])>
+    })
+    .collect(Collectors.toList());
+<elseif (type.isDictionary)>
+ObjectNode <variableName>ArrayNode = ((ObjectNode) <variableName>);
+return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.fields(), <variableName>ArrayNode.size(), Spliterator.ORDERED), false)
+        .collect(Collectors.toMap(e -> e.getKey(), <variableName>Field -> {
+            JsonNode <variableName>X = <variableName>Field.getValue();
+            <wrapperPropertyValueExtractor(type.firstTypeArgument, [variableName,"X"])>
+        }));
+<elseif (type.isDtoClassOrInterface)>
+if (!<variableName>.isObject()) {
+    throw new IllegalArgumentException("<variableName> must be an object!");
+}
+return new <type.javaTypeWrapperString>(<variableName>);
+<elseif (type.isEnum)>
+if (<variableName>.isInt()) {
+    return <type.javaTypeString>.values()[<variableName>.intValue()];
+} else if (<variableName>.isTextual()) {
+    return <type.javaTypeString>.valueOf(<variableName>.textValue());
+} else {
+    return null;
+}
+<elseif (type.isString)>
+return <variableName>.textValue();
+<elseif (type.isPrimitiveOrWrapperType)>
+return <variableName>.as<type.primitiveTypeName; format="cap">();
+<elseif (type.isObjectReference)>
+return new JsonWrapper(node);
+<else>
+if (!<variableName>.isObject()) {
+    throw new IllegalArgumentException("<variableName> must be an object!");
+}
+return new <type.javaTypeWrapperString>(<variableName>);
+<endif>
+>>
+
+
+

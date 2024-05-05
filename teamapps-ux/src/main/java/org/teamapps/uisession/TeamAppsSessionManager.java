@@ -28,38 +28,41 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.RgbaColor;
+import org.teamapps.commons.event.Event;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsUploadManager;
-import org.teamapps.dto.DtoGlobals;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
-import org.teamapps.event.Event;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.icons.SessionIconProvider;
-import org.teamapps.server.UxServerContext;
+import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
+import org.teamapps.projector.server.UxServerContext;
+import org.teamapps.projector.session.ClientInfo;
+import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.session.uisession.CommandWithResultCallback;
+import org.teamapps.projector.session.uisession.UiSessionState;
 import org.teamapps.uisession.statistics.SessionStatsUpdatedEventData;
 import org.teamapps.uisession.statistics.UiSessionStats;
-import org.teamapps.util.threading.SequentialExecutorFactory;
-import org.teamapps.ux.component.ComponentLibraryRegistry;
+import org.teamapps.threading.SequentialExecutorFactory;
 import org.teamapps.ux.component.div.Div;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.linkbutton.LinkButton;
 import org.teamapps.ux.component.window.Window;
-import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_DEV_SERVER_VERSION;
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
-import static org.teamapps.uisession.UiSessionState.*;
+import static org.teamapps.projector.session.uisession.UiSessionState.*;
 
 /**
- * Implements a cache for {@link UiSession} instances.
+ * Implements a cache for {@link UiSessionImpl} instances.
  * <p>
  * It takes care of the removal of timed-out sessions. The "last used" information is updated every time a session is retrieved.
  */
@@ -139,7 +142,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		this.uxServerContext = uploadManager::getUploadedFile;
 	}
 
-	public UiSession getUiSessionById(String sessionId) {
+	public UiSessionImpl getUiSessionById(String sessionId) {
 		SessionPair sessionPair = sessionsById.get(sessionId);
 		return sessionPair != null ? sessionPair.getUiSession() : null;
 	}
@@ -187,7 +190,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		}
 	}
 
-	public UiSession initSession(
+	public UiSessionImpl initSession(
 			String sessionId,
 			ClientInfo clientInfo,
 			HttpSession httpSession,
@@ -197,7 +200,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		LOGGER.trace("initSession: sessionId = [" + sessionId + "], clientInfo = [" + clientInfo + "], "
 					 + "maxRequestedCommandId = [" + maxRequestedCommandId + "], messageSender = [" + messageSender + "]");
 
-		UiSession uiSession = new UiSession(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender);
+		UiSessionImpl uiSession = new UiSessionImpl(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender);
 		uiSession.addSessionListener(new UiSessionListener() {
 			@Override
 			public void onStateChanged(String sessionId, UiSessionState state) {
@@ -211,7 +214,28 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			}
 		});
 		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession);
-		uiSession.addSessionListener(sessionContext.getAsUiSessionListenerInternal());
+		SessionContext.InternalUiSessionListener sessionUiSessionListenerImpl = sessionContext.getInternalApi();
+		uiSession.addSessionListener(new UiSessionListener() {
+			@Override
+			public void handleEvent(String sessionId, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {
+				sessionUiSessionListenerImpl.handleEvent(sessionId, libraryId, clientObjectId, name, params);
+			}
+
+			@Override
+			public void handleQuery(String sessionId, String libraryId, String clientObjectId, String name, List<JsonWrapper> params, Consumer<Object> resultCallback) {
+				sessionUiSessionListenerImpl.handleQuery(sessionId, libraryId, clientObjectId, name, params, resultCallback);
+			}
+
+			@Override
+			public void onStateChanged(String sessionId, UiSessionState state) {
+				sessionUiSessionListenerImpl.onStateChanged(sessionId, state);
+			}
+
+			@Override
+			public void onClosed(String sessionId, SessionClosingReason reason) {
+				sessionUiSessionListenerImpl.onClosed(sessionId, reason);
+			}
+		});
 
 		uiSession.handleCommandRequest(maxRequestedCommandId, null);
 
@@ -222,9 +246,9 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			LOGGER.info("Wrong TeamApps client version {} in session {}! Expected: {}!", clientInfo.getTeamAppsVersion(), sessionId, TEAMAPPS_VERSION);
 			if (!hasTeamAppsRefreshParameter) {
 				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
-				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getSearch()) ? "&" : "?";
-				String url = clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis();
-				uiSession.sendCommand(new UiCommandWithResultCallback(null, null, "goToUrl", url, false));
+				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getQuery()) ? "&" : "?";
+				String url = clientInfo.getLocation().toString() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis();
+				uiSession.sendCommand(new CommandWithResultCallback(null, null, "goToUrl", url, false));
 			}
 			uiSession.close(SessionClosingReason.WRONG_TEAMAPPS_VERSION);
 			return uiSession;
@@ -252,8 +276,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 
 	public void updateSessionStates() {
 		long now = System.currentTimeMillis();
-		Map<UiSessionState, List<UiSession>> sessionsByActivity;
-		List<UiSession> sessionsToClose;
+		Map<UiSessionState, List<UiSessionImpl>> sessionsByActivity;
+		List<UiSessionImpl> sessionsToClose;
 		long nearlyInactiveTimeout = config.getUiSessionInactivityTimeoutMillis() - config.getUiSessionPreInactivityPingMillis();
 		sessionsByActivity = sessionsById.values().stream()
 				.map(SessionPair::getUiSession)
@@ -267,26 +291,26 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				.map(SessionPair::getUiSession)
 				.filter(session -> now - session.getTimestampOfLastMessageFromClient() > config.getUiSessionTimeoutMillis())
 				.collect(Collectors.toList());
-		for (UiSession inactiveSession : sessionsByActivity.getOrDefault(INACTIVE, List.of())) {
+		for (UiSessionImpl inactiveSession : sessionsByActivity.getOrDefault(INACTIVE, List.of())) {
 			if (inactiveSession.getState() != INACTIVE) {
 				LOGGER.info("Marking session inactive: {} ({})", inactiveSession.getName(), inactiveSession.getSessionId());
 				inactiveSession.setInactive();
 			}
 		}
-		for (UiSession criticalSession : sessionsByActivity.getOrDefault(NEARLY_INACTIVE, List.of())) {
+		for (UiSessionImpl criticalSession : sessionsByActivity.getOrDefault(NEARLY_INACTIVE, List.of())) {
 			if (criticalSession.getState() != NEARLY_INACTIVE) {
 				LOGGER.info("Marking session nearly inactive and sending PING to client: {} ({})", criticalSession.getName(), criticalSession.getSessionId());
 				criticalSession.setNearlyInactive();
 				criticalSession.ping();
 			}
 		}
-		for (UiSession activeSession : sessionsByActivity.getOrDefault(ACTIVE, List.of())) {
+		for (UiSessionImpl activeSession : sessionsByActivity.getOrDefault(ACTIVE, List.of())) {
 			if (activeSession.getState() != ACTIVE) {
 				LOGGER.info("Marking session active: {} ({})", activeSession.getName(), activeSession.getSessionId());
 				activeSession.setActive();
 			}
 		}
-		for (UiSession sessionToClose : sessionsToClose) {
+		for (UiSessionImpl sessionToClose : sessionsToClose) {
 			LOGGER.info("Closing session: {} ({})", sessionToClose.getName(), sessionToClose.getSessionId());
 			sessionToClose.close(SessionClosingReason.SESSION_TIMEOUT);
 		}
@@ -296,7 +320,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		houseKeepingScheduledExecutor.shutdown();
 	}
 
-	public SessionContext createSessionContext(UiSession uiSession, ClientInfo clientInfo, HttpSession httpSession) {
+	public SessionContext createSessionContext(UiSessionImpl uiSession, ClientInfo clientInfo, HttpSession httpSession) {
 		SessionContext sessionContext = new SessionContext(
 				uiSession,
 				sessionExecutorFactory.createExecutor(uiSession.getSessionId()),
@@ -308,7 +332,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		);
 
 		sessionContext.runWithContext(() -> {
-			var sessionExpiredWindow = createDefaultSessionMessageWindow(sessionContext.getLocalized("teamapps.common.sessionExpired"), sessionContext.getLocalized("teamapps.common.sessionExpiredText"), sessionContext.getLocalized("teamapps.common.refresh"), sessionContext.getLocalized("teamapps.common.cancel")),
+			var sessionExpiredWindow = createDefaultSessionMessageWindow(sessionContext.getLocalized("teamapps.common.sessionExpired"), sessionContext.getLocalized("teamapps.common.sessionExpiredText"), sessionContext.getLocalized("teamapps.common.refresh"), sessionContext.getLocalized("teamapps.common.cancel"));
 			var	sessionErrorWindow = createDefaultSessionMessageWindow(sessionContext.getLocalized("teamapps.common.error"), sessionContext.getLocalized("teamapps.common.sessionErrorText"), sessionContext.getLocalized("teamapps.common.refresh"), sessionContext.getLocalized("teamapps.common.cancel"));
 			var	sessionTerminatedWindow = createDefaultSessionMessageWindow(sessionContext.getLocalized("teamapps.common.sessionTerminated"), sessionContext.getLocalized("teamapps.common.sessionTerminatedText"), sessionContext.getLocalized("teamapps.common.refresh"), sessionContext.getLocalized("teamapps.common.cancel"));
 			sessionContext.setSessionMessages(sessionExpiredWindow, sessionErrorWindow, sessionTerminatedWindow);

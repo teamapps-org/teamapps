@@ -18,9 +18,8 @@
  * =========================LICENSE_END==================================
  */
 import {DtoEntranceAnimation, DtoExitAnimation, DtoPageTransition, DtoRepeatableAnimation,} from "./generated";
-import rgba from "color-rgba";
-import {Component, parseHtml} from "teamapps-client-core";
-import {applyCss, extractCssValues} from "./util/cssUtil";
+import {Component, parseHtml} from "projector-client-object-api";
+import {applyCss, extractCssValues} from "../../../../projector-client-object-api/src/main/ts/util/cssUtil";
 
 export const defaultSpinnerTemplate = `<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`;
 

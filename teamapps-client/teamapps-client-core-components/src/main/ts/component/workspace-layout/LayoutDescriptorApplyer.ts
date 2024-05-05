@@ -28,8 +28,7 @@ import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {TabPanelItem} from "./TabPanelItem";
-import {LocalViewContainer} from "./LocalViewContainer";
-import {Component, TeamAppsUiContext} from "teamapps-client-core";
+import {Component} from "projector-client-object-api";
 import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./WorkSpaceLayout";
 
 export class LayoutDescriptorApplyer {

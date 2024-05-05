@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.animation;
 
-import org.teamapps.dto.DtoEntranceAnimation;
+import org.teamapps.projector.dto.DtoEntranceAnimation;
 
 public enum EntranceAnimation {
 	BACK_IN_DOWN,

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.calendar;
 
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 
 public interface CalendarEventTemplateDecider<CEVENT extends CalendarEvent> {
 

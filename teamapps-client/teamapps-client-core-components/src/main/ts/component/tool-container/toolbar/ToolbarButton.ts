@@ -25,10 +25,11 @@ import {
 	exitFullScreen,
 	generateUUID,
 	isFullScreen,
-	parseHtml, prependChild,
+	parseHtml,
+	prependChild,
 	TeamAppsEvent,
-	TeamAppsUiContext, Template
-} from "teamapps-client-core";
+	Template
+} from "projector-client-object-api";
 import {Toolbar} from "./Toolbar";
 import {AbstractToolContainer} from "../AbstractToolContainer";
 import {createDtoDropDownButtonClickInfo, DtoDropDownButtonClickInfo, DtoGridTemplate} from "../../../generated";

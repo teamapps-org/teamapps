@@ -27,7 +27,7 @@ import {
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {escapeHtml} from "../../Common";
 
 export class TextField<C extends DtoTextField = DtoTextField> extends AbstractField<C, string> implements DtoTextFieldEventSource, DtoTextFieldCommandHandler {

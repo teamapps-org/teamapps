@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.DtoMultiLineTextField;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoMultiLineTextField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class MultiLineTextField extends TextField {

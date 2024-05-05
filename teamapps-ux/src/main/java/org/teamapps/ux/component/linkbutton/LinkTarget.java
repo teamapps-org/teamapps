@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.linkbutton;
 
-import org.teamapps.dto.DtoLinkTarget;
+import org.teamapps.projector.dto.DtoLinkTarget;
 
 public enum LinkTarget {
 	SELF, BLANK, PARENT, TOP;

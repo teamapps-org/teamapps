@@ -20,14 +20,14 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoNotificationBarItem;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoNotificationBarItem;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.animation.RepeatableAnimation;
-import org.teamapps.ux.format.Spacing;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.format.Spacing;
+import org.teamapps.projector.session.SessionContext;
 
 import java.util.UUID;
 

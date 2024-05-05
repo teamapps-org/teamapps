@@ -23,7 +23,7 @@ import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.MeterBinder;
 import org.teamapps.uisession.TeamAppsSessionManager;
-import org.teamapps.uisession.UiSessionState;
+import org.teamapps.projector.session.uisession.UiSessionState;
 
 public class TeamAppsSessionMetrics implements MeterBinder {
 

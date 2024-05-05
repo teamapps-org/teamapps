@@ -17,12 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {
-	AbstractLegacyComponent,
-	Component, ServerChannel,
-	TeamAppsEvent,
-	TeamAppsUiContext,
-} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, ServerChannel, TeamAppsEvent,} from "projector-client-object-api";
 import {
 	DtoRelativeWorkSpaceViewPosition,
 	DtoSplitSizePolicy,

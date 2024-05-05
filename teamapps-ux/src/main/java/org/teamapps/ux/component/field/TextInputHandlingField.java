@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoTextInputHandlingField;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.event.ProjectorEvent;
 
 public interface TextInputHandlingField {
 

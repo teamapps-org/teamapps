@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.animation;
 
-import org.teamapps.dto.DtoRepeatableAnimation;
+import org.teamapps.projector.dto.DtoRepeatableAnimation;
 
 public enum RepeatableAnimation {
 

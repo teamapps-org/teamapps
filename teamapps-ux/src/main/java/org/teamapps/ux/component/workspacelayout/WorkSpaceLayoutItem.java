@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.dto.DtoWorkSpaceLayoutItem;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoWorkSpaceLayoutItem;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 
 import java.util.List;

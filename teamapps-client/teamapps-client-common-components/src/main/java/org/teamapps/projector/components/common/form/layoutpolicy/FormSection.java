@@ -24,12 +24,12 @@ import org.teamapps.projector.components.common.dto.DtoFormSection;
 import org.teamapps.projector.components.common.dto.DtoFormSectionPlacement;
 import org.teamapps.projector.components.common.dto.DtoGridColumn;
 import org.teamapps.projector.components.common.dto.DtoGridRow;
-import org.teamapps.ux.format.Border;
-import org.teamapps.ux.format.Shadow;
-import org.teamapps.ux.format.Spacing;
+import org.teamapps.projector.format.Border;
+import org.teamapps.projector.format.BoxShadow;
+import org.teamapps.projector.format.Spacing;
 import org.teamapps.projector.components.common.grid.layout.GridColumn;
 import org.teamapps.projector.components.common.grid.layout.GridRow;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class FormSection {
 	private Spacing margin;
 	private Spacing padding;
 	private Border border;
-	private Shadow shadow;
+	private BoxShadow shadow;
 	private boolean drawHeaderLine = true;
 	private Color backgroundColor;
 	private List<GridColumn> columns = new ArrayList<>();
@@ -123,11 +123,11 @@ public class FormSection {
 		return this;
 	}
 
-	public Shadow getShadow() {
+	public BoxShadow getShadow() {
 		return shadow;
 	}
 
-	public FormSection setShadow(Shadow shadow) {
+	public FormSection setShadow(BoxShadow shadow) {
 		this.shadow = shadow;
 		return this;
 	}

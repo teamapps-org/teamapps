@@ -20,7 +20,7 @@
 
 
 import {doOnceOnClickOutsideElement} from "../Common";
-import {Component, parseHtml} from "teamapps-client-core";
+import {Component, parseHtml} from "projector-client-object-api";
 
 export class ContextMenu {
 

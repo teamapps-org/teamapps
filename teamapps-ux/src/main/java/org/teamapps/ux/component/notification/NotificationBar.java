@@ -19,16 +19,17 @@
  */
 package org.teamapps.ux.component.notification;
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoNotificationBar;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoNotificationBar;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.teamapps.ux.component.notification.NotificationBarItemClosedEvent.ClosingReason.TIMEOUT;
@@ -90,14 +91,14 @@ public class NotificationBar extends AbstractComponent {
 
 	public void addItem(NotificationBarItem item) {
 		itemsByUiId.put(item.getUiId(), item);
-		item.setListener(() -> sendCommandIfRendered(() -> new DtoNotificationBar.UpdateItemCommand(item.toUiNotificationBarItem())));
-		sendCommandIfRendered(() -> new DtoNotificationBar.AddItemCommand(item.toUiNotificationBarItem()));
+		item.setListener(() -> getClientObjectChannel().sendCommandIfRendered(new DtoNotificationBar.UpdateItemCommand(item.toUiNotificationBarItem()), null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotificationBar.AddItemCommand(item.toUiNotificationBarItem()), null);
 	}
 
 	public void removeItem(NotificationBarItem item) {
 		itemsByUiId.remove(item.getUiId());
 		item.setListener(null);
-		sendCommandIfRendered(() -> new DtoNotificationBar.RemoveItemCommand(item.getUiId(), null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNotificationBar.RemoveItemCommand(item.getUiId(), null), null);
 	}
 
 }

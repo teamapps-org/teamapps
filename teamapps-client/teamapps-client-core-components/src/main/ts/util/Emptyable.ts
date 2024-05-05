@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "teamapps-client-core";
+import {TeamAppsEvent} from "projector-client-object-api";
 
 export interface Emptyable {
 	readonly empty: boolean;

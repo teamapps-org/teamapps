@@ -21,27 +21,29 @@ package org.teamapps.projector.components.infinitescroll.infiniteitemview;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoIdentifiableClientRecord;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
 import org.teamapps.projector.components.infinitescroll.table.InfiniteScrollingComponentLibrary;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.Template;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.ux.format.HorizontalElementAlignment;
-import org.teamapps.ux.format.VerticalElementAlignment;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.format.HorizontalElementAlignment;
+import org.teamapps.projector.format.VerticalElementAlignment;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = InfiniteScrollingComponentLibrary.class)
 public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECORD, InfiniteItemViewModel<RECORD>> {
@@ -65,7 +67,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	private int clientRecordIdCounter = 0;
 
-	private Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider = null;
+	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
 	public InfiniteItemView(Template itemTemplate, float itemWidth, int itemHeight) {
@@ -128,11 +130,11 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 				} else {
 					RECORD record = renderedRecords.getRecord(e.getRecordId());
 					if (record != null) {
-						org.teamapps.ux.component.Component contextMenuContent = contextMenuProvider.apply(record);
+						Component contextMenuContent = contextMenuProvider.apply(record);
 						if (contextMenuContent != null) {
-							sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createClientReference()));
+							getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createClientReference()), null);
 						} else {
-							sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+							getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()), null);
 						}
 					}
 				}
@@ -152,7 +154,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	@Override
 	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<DtoIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
-		sendCommandIfRendered(() -> {
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> {
 			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}",
 					start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
 			return new DtoInfiniteItemView.SetDataCommand(start,
@@ -160,7 +162,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 					newUiRecords,
 					totalNumberOfRecords
 			);
-		});
+		}).get(), null);
 	}
 
 	@Override
@@ -171,16 +173,16 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 		return clientRecord;
 	}
 
-	public Function<RECORD, org.teamapps.ux.component.Component> getContextMenuProvider() {
+	public Function<RECORD, Component> getContextMenuProvider() {
 		return contextMenuProvider;
 	}
 
-	public void setContextMenuProvider(Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider) {
+	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
 		this.contextMenuProvider = contextMenuProvider;
 	}
 
 	public void closeContextMenu() {
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId), null);
 	}
 
 	public Template getItemTemplate() {
@@ -189,7 +191,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate != null ? itemTemplate.createClientReference() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate != null ? itemTemplate.createClientReference() : null), null);
 		return this;
 	}
 
@@ -199,7 +201,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemWidth(float itemWidth) {
 		this.itemWidth = itemWidth;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemWidthCommand(itemWidth));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemWidthCommand(itemWidth), null);
 		return this;
 	}
 
@@ -209,7 +211,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemHeight(float itemHeight) {
 		this.itemHeight = itemHeight;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemHeightCommand(itemHeight));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemHeightCommand(itemHeight), null);
 		return this;
 	}
 
@@ -239,7 +241,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment) {
 		this.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemContentHorizontalAlignmentCommand(itemContentHorizontalAlignment.toUiHorizontalElementAlignment()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemContentHorizontalAlignmentCommand(itemContentHorizontalAlignment.toUiHorizontalElementAlignment()), null);
 		return this;
 	}
 
@@ -249,7 +251,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment) {
 		this.itemContentVerticalAlignment = itemContentVerticalAlignment;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemContentVerticalAlignmentCommand(itemContentVerticalAlignment.toUiVerticalElementAlignment()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemContentVerticalAlignmentCommand(itemContentVerticalAlignment.toUiVerticalElementAlignment()), null);
 		return this;
 	}
 
@@ -269,7 +271,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public void setItemPositionAnimationTime(int itemPositionAnimationTime) {
 		this.itemPositionAnimationTime = itemPositionAnimationTime;
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.SetItemPositionAnimationTimeCommand(itemPositionAnimationTime));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemPositionAnimationTimeCommand(itemPositionAnimationTime), null);
 	}
 
 	public PropertyProvider<RECORD> getItemPropertyProvider() {

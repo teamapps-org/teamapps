@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ui-dsl</artifactId>
+            <artifactId>projector-dto-dsl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>

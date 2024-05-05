@@ -23,7 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.dataextraction.*;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
 import org.teamapps.projector.components.infinitescroll.dto.DtoTable;
@@ -34,21 +36,23 @@ import org.teamapps.projector.components.infinitescroll.infiniteitemview.Records
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.RecordsRemovedEvent;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.data.extraction.*;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
+import org.teamapps.ux.dataextraction.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ProjectorComponent(library = InfiniteScrollingComponentLibrary.class)
-public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements org.teamapps.ux.component.Component {
+public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -118,7 +122,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private final List<RECORD> topNonModelRecords = new ArrayList<>();
 	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
 
-	private Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider = null;
+	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
 	Table(
@@ -365,11 +369,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				lastSeenContextMenuRequestId = e.getRequestId();
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null && contextMenuProvider != null) {
-					org.teamapps.ux.component.Component contextMenuContent = contextMenuProvider.apply(record);
+					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createClientReference()));
+						getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createClientReference()), null);
 					} else {
-						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+						getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()), null);
 					}
 				} else {
 					closeContextMenu();
@@ -432,7 +436,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		DtoIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
 			final Object uiValue = getColumnByPropertyName(propertyName).getField().convertUxValueToUiValue(value);
-			sendCommandIfRendered(() -> new DtoTable.SetCellValueCommand(uiRecordIdOrNull.getId(), propertyName, uiValue));
+			getClientObjectChannel().sendCommandIfRendered(new DtoTable.SetCellValueCommand(uiRecordIdOrNull.getId(), propertyName, uiValue), null);
 		}
 	}
 
@@ -451,7 +455,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		}
 		DtoIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			sendCommandIfRendered(() -> new DtoTable.MarkTableFieldCommand(uiRecordIdOrNull.getId(), propertyName, mark));
+			getClientObjectChannel().sendCommandIfRendered(new DtoTable.MarkTableFieldCommand(uiRecordIdOrNull.getId(), propertyName, mark), null);
 		}
 	}
 
@@ -462,14 +466,14 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void clearAllCellMarkings() {
 		markedCells.clear();
-		sendCommandIfRendered(() -> new DtoTable.ClearAllFieldMarkingsCommand());
+		getClientObjectChannel().sendCommandIfRendered(new DtoTable.ClearAllFieldMarkingsCommand(), null);
 	}
 
 	// TODO implement using decider? more general formatting options?
 	public void setRecordBold(RECORD record, boolean bold) {
 		DtoIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			sendCommandIfRendered(() -> new DtoTable.SetRecordBoldCommand(uiRecordIdOrNull.getId(), bold));
+			getClientObjectChannel().sendCommandIfRendered(new DtoTable.SetRecordBoldCommand(uiRecordIdOrNull.getId(), bold), null);
 		}
 	}
 
@@ -487,7 +491,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setSelectedRecords(List<RECORD> records, boolean scrollToFirstIfAvailable) {
 		this.selectedRecords = records == null ? List.of() : List.copyOf(records);
-		sendCommandIfRendered(() -> new DtoTable.SelectRecordsCommand(renderedRecords.getUiRecordIds(selectedRecords), scrollToFirstIfAvailable));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTable.SelectRecordsCommand(renderedRecords.getUiRecordIds(selectedRecords), scrollToFirstIfAvailable), null);
 	}
 
 	public void setSelectedRow(int rowIndex) {
@@ -497,10 +501,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	public void setSelectedRow(int rowIndex, boolean scrollTo) {
 		getRecordByRowIndex(rowIndex).ifPresentOrElse(record -> {
 			this.selectedRecords = List.of(record);
-			sendCommandIfRendered(() -> new DtoTable.SelectRowsCommand(List.of(rowIndex), scrollTo));
+			getClientObjectChannel().sendCommandIfRendered(new DtoTable.SelectRowsCommand(List.of(rowIndex), scrollTo), null);
 		}, () -> {
 			this.selectedRecords = List.of();
-			sendCommandIfRendered(() -> new DtoTable.SelectRowsCommand(List.of(), scrollTo));
+			getClientObjectChannel().sendCommandIfRendered(new DtoTable.SelectRowsCommand(List.of(), scrollTo), null);
 		});
 	}
 
@@ -510,7 +514,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setSelectedRows(List<Integer> rowIndexes, boolean scrollToFirst) {
 		this.selectedRecords = getRecordsByRowIndexes(rowIndexes);
-		sendCommandIfRendered(() -> new DtoTable.SelectRowsCommand(rowIndexes, scrollToFirst));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTable.SelectRowsCommand(rowIndexes, scrollToFirst), null);
 	}
 
 	private List<RECORD> getRecordsByRowIndexes(List<Integer> rowIndexes) {
@@ -533,9 +537,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	protected void updateColumnMessages(TableColumn<RECORD, ?> tableColumn) {
-		sendCommandIfRendered(() -> new DtoTable.SetColumnMessagesCommand(tableColumn.getPropertyName(), tableColumn.getMessages().stream()
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoTable.SetColumnMessagesCommand(tableColumn.getPropertyName(), tableColumn.getMessages().stream()
 				.map(message -> message.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
-				.collect(Collectors.toList())));
+				.collect(Collectors.toList()))).get(), null);
 	}
 
 	public List<FieldMessage> getCellMessages(RECORD record, String propertyName) {
@@ -585,19 +589,19 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private void updateSingleCellMessages(RECORD record, String propertyName, List<FieldMessage> cellMessages) {
 		DtoIdentifiableClientRecord uiRecordId = renderedRecords.getUiRecord(record);
 		if (uiRecordId != null) {
-			sendCommandIfRendered(() -> new DtoTable.SetSingleCellMessagesCommand(
+			getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoTable.SetSingleCellMessagesCommand(
 					uiRecordId.getId(),
 					propertyName,
 					cellMessages.stream()
 							.map(m -> m.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
 							.collect(Collectors.toList())
-			));
+			)).get(), null);
 		}
 	}
 
 
 	protected void updateColumnVisibility(TableColumn<RECORD, ?> tableColumn) {
-		sendCommandIfRendered(() -> new DtoTable.SetColumnVisibilityCommand(tableColumn.getPropertyName(), tableColumn.isVisible()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTable.SetColumnVisibilityCommand(tableColumn.getPropertyName(), tableColumn.isVisible()), null);
 	}
 
 	// TODO #focus propagation
@@ -717,7 +721,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	@Override
 	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<DtoIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
-		sendCommandIfRendered(() -> {
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> {
 			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; newUiRecords.size: {}; totalCount: {}",
 					start, uiRecordIds.size(), renderedRecords.size(), newUiRecords.size(), totalNumberOfRecords);
 			return new DtoTable.UpdateDataCommand(
@@ -726,7 +730,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 					(List) newUiRecords,
 					totalNumberOfRecords
 			);
-		});
+		}).get(), null);
 	}
 
 	private int getTotalRecordsCount() {
@@ -802,7 +806,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		TableCellCoordinates<RECORD> activeEditorCell = getActiveEditorCell();
 		DtoIdentifiableClientRecord uiRecord = renderedRecords.getUiRecord(activeEditorCell.getRecord());
 		if (uiRecord != null) {
-			sendCommandIfRendered(() -> new DtoTable.CancelEditingCellCommand(uiRecord.getId(), activeEditorCell.getPropertyName()));
+			getClientObjectChannel().sendCommandIfRendered(new DtoTable.CancelEditingCellCommand(uiRecord.getId(), activeEditorCell.getPropertyName()), null);
 		}
 	}
 
@@ -943,12 +947,12 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.headerFields = new HashMap<>();
 		this.headerFields.putAll(headerFields);
 		this.headerFields.values().forEach(field -> field.setParent(this));
-		sendCommandIfRendered(() -> new DtoTable.SetHeaderFieldsCommand(toDtoFieldMap(this.headerFields)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTable.SetHeaderFieldsCommand(toDtoFieldMap(this.headerFields)), null);
 	}
 
 	public void setHeaderRowField(String columnName, AbstractField<?> field) {
 		this.headerFields.put(columnName, field);
-		sendCommandIfRendered(() -> new DtoTable.SetHeaderRowFieldCommand(columnName, field.createClientReference()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTable.SetHeaderRowFieldCommand(columnName, field.createClientReference()), null);
 	}
 
 	public boolean isFooterFieldsRowEnabled() {
@@ -979,12 +983,12 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.footerFields = new HashMap<>();
 		this.footerFields.putAll(footerFields);
 		this.footerFields.values().forEach(field -> field.setParent(this));
-		sendCommandIfRendered(() -> new DtoTable.SetFooterFieldsCommand(toDtoFieldMap(this.footerFields)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTable.SetFooterFieldsCommand(toDtoFieldMap(this.footerFields)), null);
 	}
 
 	public void setFooterRowField(String columnName, AbstractField<?> field) {
 		this.footerFields.put(columnName, field);
-		sendCommandIfRendered(() -> new DtoTable.SetFooterRowFieldCommand(columnName, field.createClientReference()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTable.SetFooterRowFieldCommand(columnName, field.createClientReference()), null);
 	}
 
 	public <VALUE> TableColumn<RECORD, VALUE> getColumnByPropertyName(String propertyName) {
@@ -1065,16 +1069,16 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.propertyInjector = propertyInjector;
 	}
 
-	public Function<RECORD, org.teamapps.ux.component.Component> getContextMenuProvider() {
+	public Function<RECORD, Component> getContextMenuProvider() {
 		return contextMenuProvider;
 	}
 
-	public void setContextMenuProvider(Function<RECORD, org.teamapps.ux.component.Component> contextMenuProvider) {
+	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
 		this.contextMenuProvider = contextMenuProvider;
 	}
 
 	public void closeContextMenu() {
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId), null);
 	}
 
 }

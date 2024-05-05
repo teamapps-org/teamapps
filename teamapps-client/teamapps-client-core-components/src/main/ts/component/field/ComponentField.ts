@@ -19,7 +19,7 @@
  */
 import {DtoComponentField, DtoComponentFieldCommandHandler, DtoComponentFieldEventSource, DtoFieldEditingMode} from "../../generated";
 import {AbstractField} from "./AbstractField";
-import {Component, parseHtml, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, parseHtml} from "projector-client-object-api";
 
 
 export class ComponentField extends AbstractField<DtoComponentField, void> implements DtoComponentFieldEventSource, DtoComponentFieldCommandHandler {

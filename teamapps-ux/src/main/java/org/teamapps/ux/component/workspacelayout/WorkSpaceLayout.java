@@ -24,23 +24,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.*;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.*;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.ClientObject;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
-public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.ux.component.Component {
+public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -89,14 +93,14 @@ public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.u
 	}
 
 	private void updateClientSideLayout(List<WorkSpaceLayoutView> newViews) {
-		sendCommandIfRendered(() -> {
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> {
 			Map<String, DtoWorkSpaceLayoutItem> uiRootItemsByWindowId = rootItemsByWindowId.entrySet().stream()
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().createUiItem()));
 			List<DtoWorkSpaceLayoutView> newUiViews = newViews.stream()
 					.map(WorkSpaceLayoutView::createUiView)
 					.collect(Collectors.toList());
 			return new DtoWorkSpaceLayout.RedefineLayoutCommand(uiRootItemsByWindowId, newUiViews);
-		});
+		}).get(), null);
 	}
 
 	@Override
@@ -254,15 +258,15 @@ public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.u
 	// ============== Internal API ======================
 
 	/*package-private*/ void handleViewAddedToGroup(WorkSpaceLayoutViewGroup workSpaceLayoutViewGroup, WorkSpaceLayoutView view, boolean selected) {
-		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.AddViewAsTabCommand(view.createUiView(), workSpaceLayoutViewGroup.getId(), selected));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWorkSpaceLayout.AddViewAsTabCommand(view.createUiView(), workSpaceLayoutViewGroup.getId(), selected), null);
 	}
 
 	/*package-private*/ void handleViewGroupPanelStateChangedViaApi(WorkSpaceLayoutViewGroup viewGroup, ViewGroupPanelState panelState) {
-		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SetViewGroupPanelStateCommand(viewGroup.getId(), panelState.toUiViewGroupPanelState()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWorkSpaceLayout.SetViewGroupPanelStateCommand(viewGroup.getId(), panelState.toUiViewGroupPanelState()), null);
 	}
 
 	/*package-private*/ void handleViewSelectedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView workSpaceLayoutView) {
-		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SelectViewCommand(workSpaceLayoutView.getId()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWorkSpaceLayout.SelectViewCommand(workSpaceLayoutView.getId()), null);
 	}
 
 	/*package-private*/ void handleViewRemovedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView view) {
@@ -273,7 +277,7 @@ public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.u
 	}
 
 	/*package-private*/ void handleViewAttributeChangedViaApi(WorkSpaceLayoutView view) {
-		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.RefreshViewAttributesCommand(view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWorkSpaceLayout.RefreshViewAttributesCommand(view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()), null);
 	}
 
 	/*package-private*/ void handleSplitPaneSizingChanged(SplitSizePolicy sizePolicy, double referenceChildSize) {
@@ -326,7 +330,7 @@ public class WorkSpaceLayout extends AbstractComponent implements org.teamapps.u
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		sendCommandIfRendered(() -> new DtoWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createClientReference()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createClientReference()), null);
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

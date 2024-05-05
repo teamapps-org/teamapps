@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.tabpanel;
 
-import org.teamapps.dto.DtoTabPanelTabStyle;
+import org.teamapps.projector.dto.DtoTabPanelTabStyle;
 
 public enum TabPanelTabStyle {
 

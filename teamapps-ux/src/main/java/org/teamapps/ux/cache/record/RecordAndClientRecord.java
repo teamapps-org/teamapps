@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.cache.record;
 
-import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
 public class RecordAndClientRecord<RECORD> {
 	private final RECORD record;

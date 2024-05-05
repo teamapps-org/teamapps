@@ -27,9 +27,16 @@ import {
 	DtoNotificationEventSource,
 	DtoNotificationPosition
 } from "../generated";
-import {AbstractLegacyComponent, Component, parseHtml, TeamAppsEvent, executeWhenFirstDisplayed, ServerChannel} from "teamapps-client-core";
+import {
+	AbstractLegacyComponent,
+	Component,
+	executeWhenFirstDisplayed,
+	parseHtml,
+	ServerChannel,
+	TeamAppsEvent
+} from "projector-client-object-api";
 import {animateCSS, Constants} from "../Common";
-import {createUiSpacingValueCssString} from "../util/CssFormatUtil";
+import {createUiSpacingValueCssString} from "../../../../../projector-client-object-api/src/main/ts/util/CssFormatUtil";
 import {ProgressBar} from "../micro-components/ProgressBar";
 
 const containersByPosition: {

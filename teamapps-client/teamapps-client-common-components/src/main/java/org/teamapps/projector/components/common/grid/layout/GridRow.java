@@ -20,7 +20,7 @@
 package org.teamapps.projector.components.common.grid.layout;
 
 import org.teamapps.projector.components.common.dto.DtoGridRow;
-import org.teamapps.ux.format.SizingPolicy;
+import org.teamapps.projector.format.SizingPolicy;
 
 public class GridRow {
 

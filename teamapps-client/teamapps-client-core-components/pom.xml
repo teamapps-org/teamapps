@@ -14,15 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ui-dsl</artifactId>
+            <artifactId>projector-dto-dsl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ux</artifactId>
+            <artifactId>projector-client-object-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -47,7 +43,7 @@
                 <configuration>
                     <jsResourcesTargetClassPath>org/teamapps/projector/components/core/resources/js</jsResourcesTargetClassPath>
                     <dtoDependencies>
-                        <dependency>org.teamapps:teamapps-client-core:${project.version}</dependency>
+                        <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
                     </dtoDependencies>
                 </configuration>
             </plugin>

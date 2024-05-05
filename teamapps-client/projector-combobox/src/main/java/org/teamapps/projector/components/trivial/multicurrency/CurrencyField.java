@@ -20,25 +20,26 @@
 package org.teamapps.projector.components.trivial.multicurrency;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoCurrencyField;
 import org.teamapps.projector.components.trivial.dto.DtoCurrencyUnit;
 import org.teamapps.projector.components.trivial.dto.DtoCurrencyValue;
 import org.teamapps.projector.components.trivial.multicurrency.value.CurrencyUnit;
 import org.teamapps.projector.components.trivial.multicurrency.value.CurrencyValue;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProjectorComponent(library = TrivialComponentsLibrary.class)
@@ -103,9 +104,9 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencies(List<CurrencyUnit> currencies) {
 		this.currencies = currencies;
-		sendCommandIfRendered(() -> new DtoCurrencyField.SetCurrencyUnitsCommand(currencies != null ? currencies.stream()
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoCurrencyField.SetCurrencyUnitsCommand(currencies != null ? currencies.stream()
 				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
-				.collect(Collectors.toList()) : null));
+				.collect(Collectors.toList()) : null)).get(), null);
 		return this;
 	}
 
@@ -169,7 +170,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencyBeforeAmount(boolean currencyBeforeAmount) {
 		this.currencyBeforeAmount = currencyBeforeAmount;
-		sendCommandIfRendered(() -> new DtoCurrencyField.SetShowCurrencyBeforeAmountCommand(currencyBeforeAmount));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetShowCurrencyBeforeAmountCommand(currencyBeforeAmount), null);
 		return this;
 	}
 
@@ -179,7 +180,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencySymbolsEnabled(boolean currencySymbolsEnabled) {
 		this.currencySymbolsEnabled = currencySymbolsEnabled;
-		sendCommandIfRendered(() -> new DtoCurrencyField.SetShowCurrencySymbolCommand(currencySymbolsEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetShowCurrencySymbolCommand(currencySymbolsEnabled), null);
 		return this;
 	}
 
@@ -189,12 +190,12 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public void setFixedPrecision(int fixedPrecision) {
 		this.fixedPrecision = fixedPrecision;
-		sendCommandIfRendered(() -> new DtoCurrencyField.SetFixedPrecisionCommand(fixedPrecision));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetFixedPrecisionCommand(fixedPrecision), null);
 	}
 
 	public void setAlphabeticKeysQueryEnabled(boolean alphabeticKeysQueryEnabled) {
 		this.alphabeticKeysQueryEnabled = alphabeticKeysQueryEnabled;
-		sendCommandIfRendered(() -> new DtoCurrencyField.SetAlphabeticKeysQueryEnabledCommand(alphabeticKeysQueryEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetAlphabeticKeysQueryEnabledCommand(alphabeticKeysQueryEnabled), null);
 	}
 
 	public Locale getLocale() {
@@ -212,7 +213,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		setCurrencies(currencies);
-		sendCommandIfRendered(() -> new DtoCurrencyField.SetLocaleCommand(locale.toLanguageTag()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetLocaleCommand(locale.toLanguageTag()), null);
 	}
 
 	@Override

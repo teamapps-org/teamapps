@@ -21,21 +21,22 @@ package org.teamapps.ux.component.mobile;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
-public class NavigationBar<RECORD> extends AbstractComponent implements org.teamapps.ux.component.Component {
+public class NavigationBar<RECORD> extends AbstractComponent implements Component {
 
 	public ProjectorEvent<NavigationBarButton> onButtonClick = createProjectorEventBoundToUiEvent(DtoNavigationBar.ButtonClickedEvent.TYPE_ID);
 
@@ -43,8 +44,8 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 	private List<NavigationBarButton<RECORD>> buttons = new ArrayList<>();
 	private Color backgroundColor;
 	private Color borderColor;
-	private final List<org.teamapps.ux.component.Component> fanOutComponents = new ArrayList<>();
-	private org.teamapps.ux.component.Component activeFanOutComponent;
+	private final List<Component> fanOutComponents = new ArrayList<>();
+	private Component activeFanOutComponent;
 	private int buttonClientIdCounter = 0;
 	private MultiProgressDisplay multiProgressDisplay = new DefaultMultiProgressDisplay();
 
@@ -110,37 +111,37 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 		} else {
 			buttons.add(button);
 		}
-		sendCommandIfRendered(() -> new DtoNavigationBar.SetButtonsCommand(createUiButtons()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.SetButtonsCommand(createUiButtons()), null);
 		return this;
 	}
 
 	/*package-private*/ void handleButtonVisibilityChanged(NavigationBarButton<RECORD> button) {
-		sendCommandIfRendered(() -> new DtoNavigationBar.SetButtonVisibleCommand(button.getClientId(), button.isVisible()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.SetButtonVisibleCommand(button.getClientId(), button.isVisible()), null);
 	}
 
 	public void removeButton(NavigationBarButton<RECORD> button) {
 		buttons.remove(button);
-		sendCommandIfRendered(() -> new DtoNavigationBar.SetButtonsCommand(createUiButtons()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.SetButtonsCommand(createUiButtons()), null);
 	}
 
 	/**
 	 * May be used for client-side performance reasons.
 	 */
 	// TODO #componentRef still needed after component reference implementation??
-	public void preloadFanOutComponent(org.teamapps.ux.component.Component component) {
+	public void preloadFanOutComponent(Component component) {
 		fanOutComponents.add(component);
 		if (component != null) {
 			component.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoNavigationBar.AddFanOutComponentCommand(component != null ? component.createClientReference() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.AddFanOutComponentCommand(component != null ? component.createClientReference() : null), null);
 	}
 
-	public void showFanOutComponent(org.teamapps.ux.component.Component component) {
+	public void showFanOutComponent(Component component) {
 		if (!fanOutComponents.contains(component)) {
 			preloadFanOutComponent(component);
 		}
 		activeFanOutComponent = component;
-		sendCommandIfRendered(() -> new DtoNavigationBar.ShowFanOutComponentCommand(component != null ? component.createClientReference() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.ShowFanOutComponentCommand(component != null ? component.createClientReference() : null), null);
 	}
 
 	public void hideFanOutComponent() {
@@ -148,10 +149,10 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 			return;
 		}
 		activeFanOutComponent = null;
-		sendCommandIfRendered(() -> new DtoNavigationBar.HideFanOutComponentCommand());
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.HideFanOutComponentCommand(), null);
 	}
 
-	public void showOrHideFanoutComponent(org.teamapps.ux.component.Component component) {
+	public void showOrHideFanoutComponent(Component component) {
 		if (activeFanOutComponent == component) {
 			hideFanOutComponent();
 		} else {
@@ -182,7 +183,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new DtoNavigationBar.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null), null);
 	}
 
 	public Color getBorderColor() {
@@ -191,20 +192,20 @@ public class NavigationBar<RECORD> extends AbstractComponent implements org.team
 
 	public void setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
-		sendCommandIfRendered(() -> new DtoNavigationBar.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null), null);
 	}
 
-	public List<org.teamapps.ux.component.Component> getFanOutComponents() {
+	public List<Component> getFanOutComponents() {
 		return fanOutComponents;
 	}
 
-	public org.teamapps.ux.component.Component getActiveFanOutComponent() {
+	public Component getActiveFanOutComponent() {
 		return activeFanOutComponent;
 	}
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		sendCommandIfRendered(() -> new DtoNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createClientReference()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createClientReference()), null);
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

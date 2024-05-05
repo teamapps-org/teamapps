@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.splitpane;
 
-import org.teamapps.dto.DtoSplitDirection;
+import org.teamapps.projector.dto.DtoSplitDirection;
 
 public enum SplitDirection {
 

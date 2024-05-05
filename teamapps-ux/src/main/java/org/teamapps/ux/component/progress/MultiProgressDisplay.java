@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.progress;
 
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.Component;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.task.ObservableProgress;
 import org.teamapps.ux.task.ProgressCompletableFuture;
 import org.teamapps.ux.task.function.ProgressReportingRunnable;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.JsonWrapper;
+import org.teamapps.projector.dto.JsonWrapper;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;

@@ -22,8 +22,8 @@ package org.teamapps.json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.teamapps.dto.DtoReference;
-import org.teamapps.dto.DtoWorkSpaceLayout;
+import org.teamapps.projector.dto.DtoReference;
+import org.teamapps.projector.dto.DtoWorkSpaceLayout;
 import org.teamapps.dto.protocol.server.INIT_NOK;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
 

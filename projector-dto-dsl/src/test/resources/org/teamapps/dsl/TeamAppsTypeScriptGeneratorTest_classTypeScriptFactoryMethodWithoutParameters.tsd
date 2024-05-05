@@ -1,0 +1,18 @@
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+
+import {ClientObject} from "projector-client-object-api";
+
+export interface DtoA {
+	_type?: string;
+}
+
+export function createDtoA(): DtoA {
+	return {
+		_type: "A"
+	};
+}
+
+

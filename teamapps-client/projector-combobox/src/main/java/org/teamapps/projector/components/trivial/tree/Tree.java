@@ -21,24 +21,24 @@ package org.teamapps.projector.components.trivial.tree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.JsonWrapper;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.dto.protocol.client.QueryWrapper;
 import org.teamapps.event.Disposable;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
 import org.teamapps.projector.components.trivial.dto.DtoTree;
 import org.teamapps.projector.components.trivial.dto.DtoTreeRecord;
 import org.teamapps.projector.components.trivial.tree.model.TreeModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.template.Template;
 import org.teamapps.ux.component.template.TemplateDecider;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.session.SessionContext;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -228,7 +228,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	public void setSelectedNode(RECORD selectedNode, boolean reveal) {
 		int uiRecordId = uiRecordsByRecord.get(selectedNode) != null ? uiRecordsByRecord.get(selectedNode).getId() : -1;
 		this.selectedNode = selectedNode;
-		sendCommandIfRendered(() -> new DtoTree.SetSelectedNodeIdCommand(uiRecordId, reveal));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetSelectedNodeIdCommand(uiRecordId, reveal), null);
 	}
 
 	public TreeModel<RECORD> getModel() {
@@ -257,7 +257,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setExpandAnimationEnabled(boolean expandAnimationEnabled) {
 		this.expandAnimationEnabled = expandAnimationEnabled;
-		sendCommandIfRendered(() -> new DtoTree.SetExpandAnimationEnabledCommand(expandAnimationEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetExpandAnimationEnabledCommand(expandAnimationEnabled), null);
 	}
 
 	public boolean isExpandersVisible() {
@@ -266,7 +266,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setExpandersVisible(boolean expandersVisible) {
 		this.expandersVisible = expandersVisible;
-		sendCommandIfRendered(() -> new DtoTree.SetExpandersVisibleCommand(expandersVisible));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetExpandersVisibleCommand(expandersVisible), null);
 	}
 
 	public boolean isExpandOnSelection() {
@@ -275,7 +275,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setExpandOnSelection(boolean expandOnSelection) {
 		this.expandOnSelection = expandOnSelection;
-		sendCommandIfRendered(() -> new DtoTree.SetExpandOnSelectionCommand(expandOnSelection));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetExpandOnSelectionCommand(expandOnSelection), null);
 	}
 
 	public boolean isEnforceSingleExpandedPath() {
@@ -284,7 +284,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setEnforceSingleExpandedPath(boolean enforceSingleExpandedPath) {
 		this.enforceSingleExpandedPath = enforceSingleExpandedPath;
-		sendCommandIfRendered(() -> new DtoTree.SetEnforceSingleExpandedPathCommand(enforceSingleExpandedPath));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetEnforceSingleExpandedPathCommand(enforceSingleExpandedPath), null);
 	}
 
 	public int getIndentation() {
@@ -293,7 +293,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setIndentation(int indentation) {
 		this.indentation = indentation;
-		sendCommandIfRendered(() -> new DtoTree.SetIndentationCommand(indentation));
+		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetIndentationCommand(indentation), null);
 	}
 
 	public PropertyProvider<RECORD> getPropertyProvider() {

@@ -19,7 +19,7 @@
  */
 import {DtoChildCollapsingPolicy, DtoSplitDirection, DtoSplitSizePolicy} from "../../generated";
 import {SplitPane} from "../SplitPane";
-import {Component, generateUUID, noOpServerChannel} from "teamapps-client-core";
+import {Component, noOpServerChannel} from "projector-client-object-api";
 import {ItemTreeItem} from "./ItemTree";
 
 export class SplitPaneItem implements ItemTreeItem<SplitPane> {

@@ -1,9 +1,9 @@
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.dto.Component;
-import org.teamapps.dto.Template;
-import org.teamapps.dto.TextInputHandlingField;
-import org.teamapps.dto.AbstractField;
+import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.TextInputHandlingField;
+import org.teamapps.projector.dto.AbstractField;
 import org.teamapps.projector.components.trivial.dto.TreeRecord;
 
 class ComboBox extends AbstractField implements TextInputHandlingField {

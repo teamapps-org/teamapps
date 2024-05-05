@@ -1,0 +1,9 @@
+package "projector-client-object-api":org.teamapps.projector.dto;
+
+class BoxShadow {
+	required String color;
+	required double blur;
+	double offsetX;
+	double offsetY;
+	double spread;
+}

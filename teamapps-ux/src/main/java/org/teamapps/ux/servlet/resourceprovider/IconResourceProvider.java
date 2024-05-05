@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.icons.IconResource;
 import org.teamapps.icons.IconProvider;
-import org.teamapps.ux.resource.Resource;
+import org.teamapps.projector.resource.Resource;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

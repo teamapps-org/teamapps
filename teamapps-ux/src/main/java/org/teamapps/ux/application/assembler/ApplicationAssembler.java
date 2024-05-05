@@ -22,7 +22,7 @@ package org.teamapps.ux.application.assembler;
 import org.teamapps.ux.application.*;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
-import org.teamapps.ux.component.Component;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 

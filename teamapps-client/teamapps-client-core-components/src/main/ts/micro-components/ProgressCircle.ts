@@ -19,7 +19,7 @@
  */
 
 import {ProgressIndicator} from "./ProgressIndicator";
-import {generateUUID, parseSvg} from "teamapps-client-core";
+import {generateUUID, parseSvg} from "projector-client-object-api";
 
 export class ProgressCircle implements ProgressIndicator {
 	private $mainDomElement: HTMLElement;

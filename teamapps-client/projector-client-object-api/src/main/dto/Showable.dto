@@ -1,0 +1,6 @@
+package "projector-client-object-api":org.teamapps.projector.dto;
+
+
+interface Showable {
+	command show(int animationDuration);
+}

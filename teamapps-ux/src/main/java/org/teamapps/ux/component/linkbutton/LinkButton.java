@@ -19,12 +19,14 @@
  */
 package org.teamapps.ux.component.linkbutton;
 
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoLinkButton;
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoLinkButton;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class LinkButton extends AbstractComponent {
@@ -66,7 +68,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoLinkButton.UpdateCommand(createConfig()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoLinkButton.UpdateCommand(createConfig()), null);
 	}
 
 	public String getText() {

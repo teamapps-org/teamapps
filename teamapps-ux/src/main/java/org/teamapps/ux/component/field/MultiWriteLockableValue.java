@@ -19,13 +19,15 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.projector.session.CurrentSessionContext;
+
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Used to write-lock a value for client-writes, as long as not all server value changes have been applied to the client.
  *
- * This code is not thread-safe since all access to ux components is sequential due to exclusive access to sessions (see {@link org.teamapps.ux.session.CurrentSessionContext}).
+ * This code is not thread-safe since all access to ux components is sequential due to exclusive access to sessions (see {@link CurrentSessionContext}).
  */
 public class MultiWriteLockableValue<VALUE> {
 

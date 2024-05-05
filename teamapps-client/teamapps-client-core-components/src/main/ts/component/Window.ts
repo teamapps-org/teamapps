@@ -22,27 +22,21 @@ import {Panel} from "./Panel";
 import {
 	DtoEntranceAnimation,
 	DtoExitAnimation,
-	DtoPanel_WindowButtonClickedEvent, DtoPanelHeaderComponentMinimizationPolicy,
-	DtoPanelHeaderField, DtoPanelHeaderFieldIconVisibilityPolicy,
+	DtoPanel_WindowButtonClickedEvent,
+	DtoPanelHeaderComponentMinimizationPolicy,
+	DtoPanelHeaderField,
+	DtoPanelHeaderFieldIconVisibilityPolicy,
 	DtoWindow,
 	DtoWindowButtonType,
 	DtoWindowCommandHandler,
 	DtoWindowEventSource
 } from "../generated";
-import {
-	AbstractLegacyComponent,
-	Component,
-	noOpServerChannel,
-	parseHtml,
-	ServerChannel,
-	TeamAppsEvent,
-	TeamAppsUiContext
-} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, noOpServerChannel, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
 import {animateCSS, Constants} from "../Common";
-import {applyCss} from "../util/cssUtil";
+import {applyCss} from "../../../../../projector-client-object-api/src/main/ts/util/cssUtil";
 
 export interface DtoWindowListener {
 	onWindowClosed: (window: Window, animationDuration: number) => void;

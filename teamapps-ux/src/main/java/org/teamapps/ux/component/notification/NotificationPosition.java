@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.notification;
 
-import org.teamapps.dto.DtoNotificationPosition;
+import org.teamapps.projector.dto.DtoNotificationPosition;
 
 public enum NotificationPosition {
 	TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT;

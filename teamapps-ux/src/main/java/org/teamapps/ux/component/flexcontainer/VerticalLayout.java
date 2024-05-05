@@ -19,22 +19,23 @@
  */
 package org.teamapps.ux.component.flexcontainer;
 
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
-import org.teamapps.ux.css.CssFlexDirection;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.format.FlexDirection;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class VerticalLayout extends FlexContainer {
 
 	public VerticalLayout() {
-		setFlexDirection(CssFlexDirection.COLUMN);
+		setFlexDirection(FlexDirection.COLUMN);
 	}
 
-	public void addComponentFillRemaining(org.teamapps.ux.component.Component component) {
+	public void addComponentFillRemaining(Component component) {
 		addComponent(component, new FlexSizingPolicy(1, FlexSizeUnit.PIXEL, 1, 1));
 	}
 
-	public void addComponentAutoSize(org.teamapps.ux.component.Component component) {
+	public void addComponentAutoSize(Component component) {
 		addComponent(component, new FlexSizingPolicy(0, 0));
 	}
 

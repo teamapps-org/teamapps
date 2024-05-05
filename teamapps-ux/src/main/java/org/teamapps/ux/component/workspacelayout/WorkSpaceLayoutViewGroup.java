@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
-import org.teamapps.dto.DtoWorkSpaceLayoutItem;
-import org.teamapps.dto.DtoWorkSpaceLayoutViewGroupItem;
+import org.teamapps.projector.dto.DtoWorkSpaceLayoutItem;
+import org.teamapps.projector.dto.DtoWorkSpaceLayoutViewGroupItem;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.Component;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.workspacelayout.definition.ViewGroupDefinition;
 import org.teamapps.ux.component.workspacelayout.definition.ViewDefinition;
 

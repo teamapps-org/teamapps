@@ -23,11 +23,11 @@ import org.teamapps.icons.Icon;
 import org.teamapps.projector.components.infinitescroll.dto.DtoTableColumn;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
-import org.teamapps.ux.data.extraction.ValueExtractor;
-import org.teamapps.ux.data.extraction.ValueInjector;
-import org.teamapps.ux.format.TextAlignment;
-import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.dataextraction.ValueExtractor;
+import org.teamapps.projector.dataextraction.ValueInjector;
+import org.teamapps.projector.format.TextAlignment;
+import org.teamapps.projector.session.CurrentSessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.util.ArrayList;
 import java.util.List;

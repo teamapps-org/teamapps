@@ -26,7 +26,7 @@ import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {css, enableScrollViaDragAndDrop, generateUUID, parseHtml} from "./Common";
 import {DtoBorder} from "../generated/DtoBorder";
 import {createUiBorderCssString, createUiShadowCssString} from "./util/CssFormatUtil";
-import {DtoShadow} from "../generated/DtoShadow";
+import {DtoBoxShadow} from "../generated/DtoBoxShadow";
 
 interface Page {
 	$img: HTMLElement;
@@ -47,7 +47,7 @@ export class UiDocumentViewer extends AbstractLegacyComponent<DtoDocumentViewer>
 	private $styleTag: HTMLElement;
 	private pageBorder: DtoBorder;
 	private pageSpacing: number;
-	private pageShadow: DtoShadow;
+	private pageShadow: DtoBoxShadow;
 
 	constructor(config: DtoDocumentViewer, serverChannel: ServerChannel) {
 		super(config, serverChannel);
@@ -190,7 +190,7 @@ export class UiDocumentViewer extends AbstractLegacyComponent<DtoDocumentViewer>
 		this.updateStyles();
 	}
 
-	setPageShadow(pageShadow: DtoShadow): void {
+	setPageShadow(pageShadow: DtoBoxShadow): void {
 		this.pageShadow = pageShadow;
 		this.updateStyles();
 	}

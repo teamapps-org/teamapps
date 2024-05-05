@@ -19,24 +19,27 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.DtoComponentField;
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.ux.component.ClientObject;
+import org.teamapps.projector.dto.DtoComponentField;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.clientobject.ClientObject;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class ComponentField extends AbstractField<Void> {
 
-    private org.teamapps.ux.component.Component component;
+    private Component component;
     private int height; // 0 = auto-height
     private boolean bordered = true;
 
-    public ComponentField(org.teamapps.ux.component.Component component) {
+    public ComponentField(Component component) {
        this(component, 0);
     }
 
-    public ComponentField(org.teamapps.ux.component.Component component, int height) {
+    public ComponentField(Component component, int height) {
         this.component = component;
         this.height = height;
     }
@@ -51,14 +54,14 @@ public class ComponentField extends AbstractField<Void> {
         return uiField;
     }
 
-    public org.teamapps.ux.component.Component getComponent() {
+    public Component getComponent() {
         return component;
     }
 
-    public void setComponent(org.teamapps.ux.component.Component component) {
+    public void setComponent(Component component) {
         this.component = component;
-        sendCommandIfRendered(() -> new DtoComponentField.SetComponentCommand(ClientObject.createClientReference(component)));
-    }
+		getClientObjectChannel().sendCommandIfRendered(new DtoComponentField.SetComponentCommand(ClientObject.createClientReference(component)), null);
+	}
 
     public int getHeight() {
         return height;
@@ -66,8 +69,8 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setHeight(int height) {
         this.height = height;
-        sendCommandIfRendered(() -> new DtoComponentField.SetHeightCommand(height));
-    }
+		getClientObjectChannel().sendCommandIfRendered(new DtoComponentField.SetHeightCommand(height), null);
+	}
 
     public boolean isBordered() {
         return bordered;
@@ -75,7 +78,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setBordered(boolean bordered) {
         this.bordered = bordered;
-        sendCommandIfRendered(() -> new DtoComponentField.SetBorderedCommand(bordered));
-    }
+		getClientObjectChannel().sendCommandIfRendered(new DtoComponentField.SetBorderedCommand(bordered), null);
+	}
 
 }

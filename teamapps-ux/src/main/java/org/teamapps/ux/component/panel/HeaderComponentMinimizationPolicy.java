@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.panel;
 
-import org.teamapps.dto.DtoPanelHeaderComponentMinimizationPolicy;
+import org.teamapps.projector.dto.DtoPanelHeaderComponentMinimizationPolicy;
 
 public enum HeaderComponentMinimizationPolicy {
 	LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST;

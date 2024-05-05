@@ -19,7 +19,7 @@
  */
 package org.teamapps.uisession.statistics;
 
-import org.teamapps.uisession.UiSessionState;
+import org.teamapps.projector.session.uisession.UiSessionState;
 
 public interface UiSessionStats {
 

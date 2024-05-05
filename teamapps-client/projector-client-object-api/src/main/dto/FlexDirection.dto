@@ -1,0 +1,10 @@
+package "projector-client-object-api":org.teamapps.projector.dto;
+
+enum FlexDirection {
+	ROW = "row",
+    ROW_REVERSE = "row-reverse",
+    COLUMN = "column",
+    COLUMN_REVERSE = "column-reverse",
+    INITIAL = "initial",
+    INHERIT = "inherit"
+}

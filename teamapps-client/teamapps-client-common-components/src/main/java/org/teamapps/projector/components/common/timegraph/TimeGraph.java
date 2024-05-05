@@ -20,7 +20,7 @@
 package org.teamapps.projector.components.common.timegraph;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoComponent;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.ProjectorEvent;

@@ -21,12 +21,12 @@ package org.teamapps.ux.component.panel;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoElegantPanel;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.format.HorizontalElementAlignment;
-import org.teamapps.ux.format.Spacing;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoElegantPanel;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.format.HorizontalElementAlignment;
+import org.teamapps.projector.format.Spacing;
 
 public class ElegantPanel extends AbstractComponent {
 

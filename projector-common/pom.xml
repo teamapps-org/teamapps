@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>teamapps</artifactId>
+        <groupId>org.teamapps</groupId>
+        <version>0.9.155-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>projector-common</artifactId>
+
+    <name>TeamApps Common</name>
+    <description>TeamApps Common</description>
+    <url>https://github.com/teamapps-org/teamapps</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Matthias Bernstein</name>
+            <email>matthias.bernstein@teamapps.org</email>
+            <id>matthias-bernstein</id>
+        </developer>
+        <developer>
+            <name>Yann Massard</name>
+            <email>yann.massard@teamapps.org</email>
+            <id>yamass</id>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-commons</artifactId>
+            <version>0.1.3-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/teamAppsVersion.txt</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/teamAppsVersion.txt</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+
+</project>

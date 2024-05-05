@@ -30,9 +30,9 @@ import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.validator.MultiFieldValidator;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyInjector;
-import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyInjector;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 
 import java.util.ArrayList;
 import java.util.List;

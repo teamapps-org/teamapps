@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.ux.i18n.TeamAppsDictionary;
-import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.util.Arrays;
 import java.util.List;

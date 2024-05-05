@@ -19,7 +19,7 @@
  */
 package org.teamapps.databinding;
 
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

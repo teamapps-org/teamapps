@@ -1,0 +1,13 @@
+package "projector-client-object-api":org.teamapps.projector.dto;
+
+enum JustifyContent {
+	START = "flex-start",
+	END = "flex-end",
+	CENTER = "center",
+	STRETCH = "stretch",
+	SPACE_BETWEEN = "space-between",
+	SPACE_AROUND = "space-around",
+	SPACE_EVENLY = "space-evenly",
+	INITIAL = "initial",
+	INHERIT = "inherit"
+}

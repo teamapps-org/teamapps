@@ -22,8 +22,9 @@ package org.teamapps.event;
 import org.awaitility.Awaitility;
 import org.junit.Assert;
 import org.junit.Test;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.testutil.UxTestUtil;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;

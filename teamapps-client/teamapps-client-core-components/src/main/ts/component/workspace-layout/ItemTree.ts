@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Component} from "teamapps-client-core";
+import {Component} from "projector-client-object-api";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
 import {TabPanelItem} from "./TabPanelItem";

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractField} from "./AbstractField";
-import {Component, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {DtoFieldEditingMode, DtoLabel, DtoLabel_ClickedEvent, DtoLabelCommandHandler, DtoLabelEventSource} from "../../generated";
 
 export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEventSource, DtoLabelCommandHandler {

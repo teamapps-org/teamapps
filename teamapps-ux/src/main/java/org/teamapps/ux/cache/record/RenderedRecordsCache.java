@@ -21,7 +21,7 @@ package org.teamapps.ux.cache.record;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;

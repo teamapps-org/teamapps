@@ -35,7 +35,7 @@ import org.teamapps.projector.components.common.imagecropper.ImageCropperSelecti
 import org.teamapps.projector.components.common.imagecropper.ImageCropperSelectionMode;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
-import org.teamapps.ux.css.CssJustifyContent;
+import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.resource.FileResource;
 import org.teamapps.ux.resource.Resource;
@@ -84,7 +84,7 @@ public class PictureChooser extends AbstractField<Resource> {
 		horizontalLayout.addComponentAutoSize(cancelButton);
 		horizontalLayout.addComponentAutoSize(rotateButton);
 		horizontalLayout.addComponentAutoSize(okButton);
-		horizontalLayout.setJustifyContent(CssJustifyContent.END);
+		horizontalLayout.setJustifyContent(JustifyContent.END);
 		horizontalLayout.setCssStyle("padding", "5px");
 		verticalLayout.addComponentAutoSize(horizontalLayout);
 		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized(TeamAppsDictionary.CROP_IMAGE.getKey()), 700, 500, verticalLayout);

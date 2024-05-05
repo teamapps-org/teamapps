@@ -19,11 +19,11 @@
  */
 package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.dto;
 
-import org.teamapps.dto.Component;
-import org.teamapps.dto.Template;
-import org.teamapps.dto.IdentifiableClientRecord;
-import org.teamapps.dto.HorizontalElementAlignment;
-import org.teamapps.dto.VerticalElementAlignment;
+import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.IdentifiableClientRecord;
+import org.teamapps.projector.dto.HorizontalElementAlignment;
+import org.teamapps.projector.dto.VerticalElementAlignment;
 
 class InfiniteItemView extends AbstractInfiniteListComponent {
 	required Template* itemTemplate;

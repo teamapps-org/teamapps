@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.panel;
 
-import org.teamapps.dto.DtoWindowButtonType;
+import org.teamapps.projector.dto.DtoWindowButtonType;
 
 public enum WindowButtonType {
 	MINIMIZE, MAXIMIZE_RESTORE, CLOSE;

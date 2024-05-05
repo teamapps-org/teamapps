@@ -19,11 +19,11 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.dto.Component;
-import org.teamapps.dto.Template;
-import org.teamapps.dto.ToolButton;
-import org.teamapps.dto.ClientRecord;
-import org.teamapps.dto.HorizontalElementAlignment;
+import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.ToolButton;
+import org.teamapps.projector.dto.ClientRecord;
+import org.teamapps.projector.dto.HorizontalElementAlignment;
 
 class PageView extends Component {
 	List<PageViewBlock> blocks;

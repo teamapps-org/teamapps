@@ -40,7 +40,7 @@ public class GenerateJavaDtosMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.basedir}/src/main/dto")
 	private String dtoDir;
 
-	@Parameter(defaultValue = "${project.build.directory}/generated-sources/teamapps-dto")
+	@Parameter(defaultValue = "${project.build.directory}/generated-sources/projector-dto")
 	private String javaTargetDir;
 
 	@Parameter(required = true, defaultValue = "${projector.version}")
@@ -70,7 +70,7 @@ public class GenerateJavaDtosMojo extends AbstractMojo {
 						groupId("org.codehaus.mojo"),
 						artifactId("exec-maven-plugin"),
 						version("3.1.0"),
-						List.of(dependency("org.teamapps", "teamapps-ui-dsl", projectorVersion))
+						List.of(dependency("org.teamapps", "projector-dto-dsl", projectorVersion))
 				),
 				goal("java"),
 				configuration(

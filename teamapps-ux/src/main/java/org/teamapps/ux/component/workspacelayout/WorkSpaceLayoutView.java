@@ -21,18 +21,18 @@ package org.teamapps.ux.component.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.DtoReference;
-import org.teamapps.dto.DtoWorkSpaceLayoutView;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoReference;
+import org.teamapps.projector.dto.DtoWorkSpaceLayoutView;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.Component;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.panel.WindowButtonType;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.definition.ViewDefinition;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;

@@ -19,11 +19,11 @@
  */
 package org.teamapps.ux.component.toolbar;
 
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.DtoToolAccordion;
-import org.teamapps.dto.DtoToolbarButtonGroup;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoToolAccordion;
+import org.teamapps.projector.dto.DtoToolbarButtonGroup;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 
 import java.util.List;
 import java.util.stream.Collectors;

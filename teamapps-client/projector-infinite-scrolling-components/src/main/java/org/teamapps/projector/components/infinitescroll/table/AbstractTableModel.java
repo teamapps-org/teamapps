@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.infinitescroll.table;
 
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.RecordsAddedEvent;
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.RecordsChangedEvent;
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.RecordsRemovedEvent;

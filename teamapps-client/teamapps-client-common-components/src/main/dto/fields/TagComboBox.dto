@@ -19,7 +19,7 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.dto.Component;
+import org.teamapps.projector.dto.Component;
 
 class TagComboBox extends ComboBox {
 	int maxEntries; // if 0, then the list is unbounded

@@ -20,15 +20,16 @@
 package org.teamapps.ux.component.field;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoNumberField;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoNumberField;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.session.SessionContext;
 
 import java.util.Locale;
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class NumberField extends AbstractField<Number> implements TextInputHandlingField {
@@ -81,7 +82,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setPrecision(int precision) {
 		this.precision = precision;
-		sendCommandIfRendered(() -> new DtoNumberField.SetPrecisionCommand(precision));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetPrecisionCommand(precision), null);
 		return this;
 	}
 
@@ -91,7 +92,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		sendCommandIfRendered(() -> new DtoNumberField.SetPlaceholderTextCommand(emptyText));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetPlaceholderTextCommand(emptyText), null);
 		return this;
 	}
 
@@ -101,7 +102,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		sendCommandIfRendered(() -> new DtoNumberField.SetShowClearButtonCommand(showClearButton));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetShowClearButtonCommand(showClearButton), null);
 		return this;
 	}
 
@@ -111,7 +112,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setMinValue(double minValue) {
 		this.minValue = minValue;
-		sendCommandIfRendered(() -> new DtoNumberField.SetMinValueCommand(minValue));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetMinValueCommand(minValue), null);
 		return this;
 	}
 
@@ -121,7 +122,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setMaxValue(double maxValue) {
 		this.maxValue = maxValue;
-		sendCommandIfRendered(() -> new DtoNumberField.SetMaxValueCommand(maxValue));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetMaxValueCommand(maxValue), null);
 		return this;
 	}
 
@@ -131,7 +132,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setSliderMode(NumberFieldSliderMode sliderMode) {
 		this.sliderMode = sliderMode;
-		sendCommandIfRendered(() -> new DtoNumberField.SetSliderModeCommand(sliderMode.toUiNumberFieldSliderMode()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetSliderModeCommand(sliderMode.toUiNumberFieldSliderMode()), null);
 		return this;
 	}
 
@@ -141,7 +142,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setSliderStep(double sliderStep) {
 		this.sliderStep = sliderStep;
-		sendCommandIfRendered(() -> new DtoNumberField.SetSliderStepCommand(sliderStep));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetSliderStepCommand(sliderStep), null);
 		return this;
 	}
 
@@ -151,7 +152,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setCommitOnSliderChange(boolean commitOnSliderChange) {
 		this.commitOnSliderChange = commitOnSliderChange;
-		sendCommandIfRendered(() -> new DtoNumberField.SetCommitOnSliderChangeCommand(commitOnSliderChange));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetCommitOnSliderChangeCommand(commitOnSliderChange), null);
 		return this;
 	}
 
@@ -169,7 +170,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		sendCommandIfRendered(() -> new DtoNumberField.SetLocaleCommand(locale.toLanguageTag()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoNumberField.SetLocaleCommand(locale.toLanguageTag()), null);
 	}
 
 	@Override

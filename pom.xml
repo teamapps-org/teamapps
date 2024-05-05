@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.teamapps</groupId>
@@ -33,23 +34,28 @@
 
     <modules>
         <module>projector-maven-plugin</module>
-        <module>teamapps-common</module>
-        <module>teamapps-icon</module>
-        <module>teamapps-material-icon-provider</module>
-        <module>teamapps-ui-dsl</module>
+        <module>projector-common</module>
+        <module>projector-dto-base</module>
+        <module>projector-dto-dsl</module>
         <module>teamapps-client/teamapps-client-communication</module>
-        <module>teamapps-client/teamapps-client-core</module>
+
+        <module>teamapps-client/projector-client-object-api</module>
+        <module>teamapps-client/projector-grid-template</module>
+        <module>teamapps-client/projector-mustache-template</module>
         <module>teamapps-client/teamapps-client-core-components</module>
-        <module>teamapps-ux</module>
         <module>teamapps-client/projector-calendar</module>
         <module>teamapps-client/projector-infinite-scrolling-components</module>
         <module>teamapps-client/projector-combobox</module>
-<!--        <module>teamapps-client/teamapps-client-common-components</module>-->
+        <module>teamapps-client/teamapps-client-common-components</module>
+
+<!--        <module>teamapps-client/teamapps-client-core</module>-->
+<!--        <module>teamapps-icon</module>-->
+<!--        <module>teamapps-material-icon-provider</module>-->
+<!--        <module>teamapps-ux</module>-->
 <!--        <module>teamapps-session-stats-app</module>-->
-        <module>teamapps-server-jetty-embedded</module>
-        <module>teamapps-server-undertow-embedded</module>
-        <module>projector-test</module>
-        <module>projector-component-api</module>
+<!--        <module>teamapps-server-jetty-embedded</module>-->
+<!--        <module>teamapps-server-undertow-embedded</module>-->
+<!--        <module>projector-test</module>-->
     </modules>
 
     <properties>
@@ -110,7 +116,7 @@
 
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-common</artifactId>
+                <artifactId>projector-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -125,7 +131,12 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-ui-dsl</artifactId>
+                <artifactId>projector-dto-dsl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>projector-dto-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -150,6 +161,11 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
+                <artifactId>projector-client-object-api</artifactId>
+                <version>0.9.155-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-ux</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -163,6 +179,7 @@
                 <artifactId>teamapps-server-undertow-embedded</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
 
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -189,6 +206,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.devskiller.friendly-id</groupId>
+                <artifactId>friendly-id</artifactId>
+                <version>1.1.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson-version}</version>
@@ -207,6 +230,12 @@
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${jackson-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>5.0.0</version>
             </dependency>
 
             <dependency>

@@ -20,15 +20,15 @@
 package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
-import org.teamapps.dto.DtoToolbarButton;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.dto.DtoToolbarButton;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.Component;
+import org.teamapps.projector.clientobject.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 
 import java.util.Map;
 import java.util.UUID;

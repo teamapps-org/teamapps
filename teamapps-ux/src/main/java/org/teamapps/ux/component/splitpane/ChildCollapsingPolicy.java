@@ -1,6 +1,6 @@
 package org.teamapps.ux.component.splitpane;
 
-import org.teamapps.dto.DtoChildCollapsingPolicy;
+import org.teamapps.projector.dto.DtoChildCollapsingPolicy;
 
 public enum ChildCollapsingPolicy {
 

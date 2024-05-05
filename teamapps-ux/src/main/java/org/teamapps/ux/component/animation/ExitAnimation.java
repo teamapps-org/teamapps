@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.animation;
 
-import org.teamapps.dto.DtoExitAnimation;
+import org.teamapps.projector.dto.DtoExitAnimation;
 
 public enum ExitAnimation {
 	BACK_OUT_DOWN,

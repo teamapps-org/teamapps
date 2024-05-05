@@ -23,7 +23,7 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.projector.components.common.charting.common.GraphNodeIcon;
 import org.teamapps.projector.components.common.charting.common.GraphNodeImage;
-import org.teamapps.ux.component.template.Template;
+import org.teamapps.projector.template.Template;
 
 import java.util.UUID;
 

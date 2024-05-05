@@ -1,6 +1,6 @@
 package org.teamapps.ux.component.panel;
 
-import org.teamapps.dto.DtoPanelHeaderFieldIconVisibilityPolicy;
+import org.teamapps.projector.dto.DtoPanelHeaderFieldIconVisibilityPolicy;
 
 public enum HeaderFieldIconVisibilityPolicy {
 	DISPLAYED_WHEN_MINIMIZED,

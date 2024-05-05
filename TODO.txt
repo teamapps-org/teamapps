@@ -47,3 +47,6 @@ Upgrade FullCalendar to version 6 (and get rid of moment.js there)
 
 check if component.setStyle() removes all old styles for this selector? If so, wanted?
 
+make sure the teamapps plugin checks that teamapps dependencies are marked as provided!
+
+Search for ""\sto\w+String" in java files. Try to find a better solution (Jackson Serializers?)

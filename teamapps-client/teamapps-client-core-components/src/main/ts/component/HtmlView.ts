@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, Component, parseHtml, ServerChannel} from "projector-client-object-api";
 import {DtoHtmlView, DtoHtmlViewCommandHandler} from "../generated";
 
 export class HtmlView extends AbstractLegacyComponent<DtoHtmlView> implements DtoHtmlViewCommandHandler {

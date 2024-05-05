@@ -1,4 +1,4 @@
-package "teamapps-client-core-components":org.teamapps.dto;
+package "teamapps-client-core-components":org.teamapps.projector.dto;
 
 class MobileLayout extends Component {
 	Toolbar* toolbar;

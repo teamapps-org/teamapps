@@ -21,9 +21,9 @@ package org.teamapps.projector.components.common.grid.layout;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.projector.components.common.dto.DtoGridLayout;
-import org.teamapps.ux.format.Border;
-import org.teamapps.ux.format.Shadow;
-import org.teamapps.ux.format.Spacing;
+import org.teamapps.projector.format.Border;
+import org.teamapps.projector.format.BoxShadow;
+import org.teamapps.projector.format.Spacing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class GridLayoutDefinition {
 	private Spacing margin;
 	private Spacing padding;
 	private Border border;
-	private Shadow shadow;
+	private BoxShadow shadow;
 	private Color backgroundColor;
 
 	public GridLayoutDefinition() {
@@ -137,11 +137,11 @@ public class GridLayoutDefinition {
 		this.border = border;
 	}
 
-	public Shadow getShadow() {
+	public BoxShadow getShadow() {
 		return shadow;
 	}
 
-	public void setShadow(Shadow shadow) {
+	public void setShadow(BoxShadow shadow) {
 		this.shadow = shadow;
 	}
 

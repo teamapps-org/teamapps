@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.splitpane;
 
-import org.teamapps.dto.DtoSplitSizePolicy;
+import org.teamapps.projector.dto.DtoSplitSizePolicy;
 
 public enum SplitSizePolicy {
 

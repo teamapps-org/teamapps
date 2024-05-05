@@ -20,20 +20,23 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.DtoButton;
-import org.teamapps.dto.DtoAbstractField;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.dto.DtoButton;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.ClientObject;
+import org.teamapps.projector.clientobject.ClientObject;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
-import org.teamapps.ux.component.template.Template;
-import org.teamapps.ux.data.extraction.BeanPropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyExtractor;
-import org.teamapps.ux.data.extraction.PropertyProvider;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class Button<RECORD> extends AbstractField<Void> {
@@ -46,13 +49,13 @@ public class Button<RECORD> extends AbstractField<Void> {
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	private boolean openDropDownIfNotSet = false;
-	private org.teamapps.ux.component.Component dropDownComponent;
+	private Component dropDownComponent;
 	private Integer minDropDownWidth = null;
 	private Integer minDropDownHeight = 300;
 
 	private String onClickJavaScript;
 
-	public Button(Template template, RECORD templateRecord, org.teamapps.ux.component.Component dropDownComponent) {
+	public Button(Template template, RECORD templateRecord, Component dropDownComponent) {
 		super();
 		this.template = template;
 		this.templateRecord = templateRecord;
@@ -63,7 +66,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 		this(template, templateRecord, null);
 	}
 
-	public static Button<BaseTemplateRecord<?>> create(BaseTemplate template, Icon<?, ?> icon, String caption, org.teamapps.ux.component.Component dropDownComponent) {
+	public static Button<BaseTemplateRecord<?>> create(BaseTemplate template, Icon<?, ?> icon, String caption, Component dropDownComponent) {
 		return new Button<>(template, new BaseTemplateRecord<>(icon, caption), dropDownComponent);
 	}
 
@@ -75,11 +78,11 @@ public class Button<RECORD> extends AbstractField<Void> {
 		return create(template, null, caption, null);
 	}
 
-	public static Button<BaseTemplateRecord<?>> create(Icon<?, ?> icon, String caption, org.teamapps.ux.component.Component dropDownComponent) {
+	public static Button<BaseTemplateRecord<?>> create(Icon<?, ?> icon, String caption, Component dropDownComponent) {
 		return create(BaseTemplate.BUTTON, icon, caption, dropDownComponent);
 	}
 
-	public static Button<BaseTemplateRecord<?>> create(String caption, org.teamapps.ux.component.Component dropDownComponent) {
+	public static Button<BaseTemplateRecord<?>> create(String caption, Component dropDownComponent) {
 		return create(BaseTemplate.BUTTON, null, caption, dropDownComponent);
 	}
 
@@ -135,7 +138,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setTemplate(Template template) {
 		this.template = template;
-		sendCommandIfRendered(() -> new DtoButton.SetTemplateCommand(template.createClientReference(), createUiRecord()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoButton.SetTemplateCommand(template.createClientReference(), createUiRecord()), null);
 		return this;
 	}
 
@@ -145,7 +148,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setTemplateRecord(RECORD templateRecord) {
 		this.templateRecord = templateRecord;
-		sendCommandIfRendered(() -> new DtoButton.SetTemplateRecordCommand(templateRecord));
+		getClientObjectChannel().sendCommandIfRendered(new DtoButton.SetTemplateRecordCommand(templateRecord), null);
 		return this;
 	}
 
@@ -172,7 +175,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setMinDropDownWidth(Integer minDropDownWidth) {
 		this.minDropDownWidth = minDropDownWidth;
-		sendCommandIfRendered(() -> new DtoButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
+		getClientObjectChannel().sendCommandIfRendered(new DtoButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0), null);
 		return this;
 	}
 
@@ -182,14 +185,14 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setMinDropDownHeight(Integer minDropDownHeight) {
 		this.minDropDownHeight = minDropDownHeight;
-		sendCommandIfRendered(() -> new DtoButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
+		getClientObjectChannel().sendCommandIfRendered(new DtoButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0), null);
 		return this;
 	}
 
 	public Button<RECORD> setMinDropDownSize(Integer minDropDownWidth, Integer minDropDownHeight) {
 		this.minDropDownWidth = minDropDownWidth;
 		this.minDropDownHeight = minDropDownHeight;
-		sendCommandIfRendered(() -> new DtoButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
+		getClientObjectChannel().sendCommandIfRendered(new DtoButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight), null);
 		return this;
 	}
 
@@ -199,22 +202,22 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setOpenDropDownIfNotSet(boolean openDropDownIfNotSet) {
 		this.openDropDownIfNotSet = openDropDownIfNotSet;
-		sendCommandIfRendered(() -> new DtoButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet));
+		getClientObjectChannel().sendCommandIfRendered(new DtoButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet), null);
 		return this;
 	}
 
-	public org.teamapps.ux.component.Component getDropDownComponent() {
+	public Component getDropDownComponent() {
 		return dropDownComponent;
 	}
 
-	public Button<RECORD> setDropDownComponent(org.teamapps.ux.component.Component dropDownComponent) {
+	public Button<RECORD> setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		sendCommandIfRendered(() -> new DtoButton.SetDropDownComponentCommand(ClientObject.createClientReference(dropDownComponent)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoButton.SetDropDownComponentCommand(ClientObject.createClientReference(dropDownComponent)), null);
 		return this;
 	}
 
 	public void closeDropDown() {
-		sendCommandIfRendered(DtoButton.CloseDropDownCommand::new);
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) DtoButton.CloseDropDownCommand::new).get(), null);
 	}
 
 	public String getOnClickJavaScript() {
@@ -223,6 +226,6 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public void setOnClickJavaScript(String onClickJavaScript) {
 		this.onClickJavaScript = onClickJavaScript;
-		sendCommandIfRendered(() -> new DtoButton.SetOnClickJavaScriptCommand(onClickJavaScript));
+		getClientObjectChannel().sendCommandIfRendered(new DtoButton.SetOnClickJavaScriptCommand(onClickJavaScript), null);
 	}
 }

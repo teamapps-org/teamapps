@@ -17,22 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, bind, parseHtml, ServerChannel, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, bind, parseHtml, prependChild, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoAbstractField,
 	DtoAbstractField_BlurEvent,
 	DtoAbstractField_FocusEvent,
 	DtoAbstractField_ValueChangedEvent,
 	DtoAbstractFieldCommandHandler,
-	DtoFieldEditingMode,
 	DtoAbstractFieldEventSource,
+	DtoFieldEditingMode,
 	DtoFieldMessage,
 	DtoFieldMessagePosition,
 	DtoFieldMessageSeverity,
 	DtoFieldMessageVisibilityMode
 } from "../../generated";
 import {createPopper, Instance as Popper} from '@popperjs/core';
-import {prependChild} from "teamapps-client-core";
 
 interface FieldMessage {
 	message: DtoFieldMessage,

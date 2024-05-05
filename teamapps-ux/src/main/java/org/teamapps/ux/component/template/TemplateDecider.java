@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.component.template;
 
+import org.teamapps.projector.template.Template;
+
 public interface TemplateDecider<RECORD> {
 
 	Template getTemplate(RECORD record);

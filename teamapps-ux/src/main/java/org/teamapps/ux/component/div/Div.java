@@ -20,18 +20,21 @@
  */
 package org.teamapps.ux.component.div;
 
-import org.teamapps.dto.DtoDiv;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.dto.DtoDiv;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.AbstractComponent;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
+
+import java.util.function.Supplier;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class Div extends AbstractComponent {
 
-	private org.teamapps.ux.component.Component content;
+	private Component content;
 	private String innerHtml;
 
-	public Div(org.teamapps.ux.component.Component content) {
+	public Div(Component content) {
 		this.content = content;
 	}
 
@@ -51,13 +54,13 @@ public class Div extends AbstractComponent {
 		return ui;
 	}
 
-	public org.teamapps.ux.component.Component getContent() {
+	public Component getContent() {
 		return content;
 	}
 
-	public void setContent(org.teamapps.ux.component.Component content) {
+	public void setContent(Component content) {
 		this.content = content;
-		sendCommandIfRendered(() -> new DtoDiv.SetContentCommand(content != null ? content.createClientReference() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoDiv.SetContentCommand(content != null ? content.createClientReference() : null), null);
 	}
 
 	public String getInnerHtml() {
@@ -66,6 +69,6 @@ public class Div extends AbstractComponent {
 
 	public void setInnerHtml(String innerHtml) {
 		this.innerHtml = innerHtml;
-		sendCommandIfRendered(() -> new DtoDiv.SetInnerHtmlCommand(innerHtml));
+		getClientObjectChannel().sendCommandIfRendered(new DtoDiv.SetInnerHtmlCommand(innerHtml), null);
 	}
 }

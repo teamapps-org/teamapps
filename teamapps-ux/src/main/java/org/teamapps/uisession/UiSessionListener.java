@@ -19,8 +19,9 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.JsonWrapper;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
+import org.teamapps.projector.session.uisession.UiSessionState;
 
 import java.util.List;
 import java.util.function.Consumer;

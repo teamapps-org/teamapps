@@ -21,24 +21,28 @@ package org.teamapps.ux.component.panel;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.databinding.ObservableValue;
-import org.teamapps.dto.DtoComponent;
-import org.teamapps.dto.JsonWrapper;
-import org.teamapps.dto.DtoPanel;
-import org.teamapps.dto.DtoPanelHeaderField;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoPanel;
+import org.teamapps.projector.dto.DtoPanelHeaderField;
 import org.teamapps.event.Disposable;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.ClientObject;
+import org.teamapps.projector.clientobject.Component;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.*;
-import org.teamapps.ux.component.annotations.ProjectorComponent;
+import org.teamapps.projector.clientobject.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProjectorComponent(library = CoreComponentLibrary.class)
-public class Panel extends AbstractComponent implements org.teamapps.ux.component.Component {
+public class Panel extends AbstractComponent implements Component {
 
 	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(DtoPanel.WindowButtonClickedEvent.TYPE_ID);
 
@@ -56,7 +60,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 	private HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy = HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
 	private HeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy = HeaderFieldIconVisibilityPolicy.DISPLAYED_WHEN_MINIMIZED;
 
-	private org.teamapps.ux.component.Component content;
+	private Component content;
 	private boolean contentStretchingEnabled = true;
 
 	private boolean titleBarHidden;
@@ -79,7 +83,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		this(icon, title, null);
 	}
 
-	public Panel(Icon<?, ?> icon, String title, org.teamapps.ux.component.Component content) {
+	public Panel(Icon<?, ?> icon, String title, Component content) {
 		this.icon = icon;
 		this.title = title;
 		setContent(content);
@@ -107,9 +111,9 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 	}
 
 	private void updateToolButtons() {
-		sendCommandIfRendered(() -> new DtoPanel.SetToolButtonsCommand(this.toolButtons.stream()
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetToolButtonsCommand(this.toolButtons.stream()
 				.map(toolButton -> toolButton.createClientReference())
-				.collect(Collectors.toList())));
+				.collect(Collectors.toList()))).get(), null);
 	}
 
 	public List<ToolButton> getToolButtons() {
@@ -123,9 +127,9 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 	}
 
 	private void updateWindowButtons() {
-		sendCommandIfRendered(() -> new DtoPanel.SetWindowButtonsCommand(this.windowButtons.stream()
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetWindowButtonsCommand(this.windowButtons.stream()
 				.map(b -> b.toUiWindowButtonType())
-				.collect(Collectors.toList())));
+				.collect(Collectors.toList()))).get(), null);
 	}
 
 	public Set<WindowButtonType> getWindowButtons() {
@@ -178,7 +182,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		this.leftHeaderFieldIcon = icon;
 		this.leftHeaderFieldMinWidth = minWidth;
 		this.leftHeaderFieldMaxWidth = maxWidth;
-		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
 		return this;
 	}
 
@@ -194,8 +198,8 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		this.rightHeaderFieldIcon = icon;
 		this.rightHeaderFieldMinWidth = minWidth;
 		this.rightHeaderFieldMaxWidth = maxWidth;
-		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+				rightHeaderFieldMaxWidth))).get(), null);
 		return this;
 	}
 
@@ -203,12 +207,12 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		return rightHeaderField;
 	}
 
-	public void setContent(org.teamapps.ux.component.Component content) {
+	public void setContent(Component content) {
 		this.content = content;
 		if (content != null) {
 			content.setParent(this);
 		}
-		sendCommandIfRendered(() -> new DtoPanel.SetContentCommand(content != null ? content.createClientReference() : null));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetContentCommand(content != null ? content.createClientReference() : null), null);
 	}
 
 	@Override
@@ -227,7 +231,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setTitle(String title) {
 		this.title = title;
-		sendCommandIfRendered(() -> new DtoPanel.SetTitleCommand(title));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetTitleCommand(title), null);
 	}
 
 	public Icon<?, ?> getIcon() {
@@ -236,10 +240,10 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
-		sendCommandIfRendered(() -> new DtoPanel.SetIconCommand(getSessionContext().resolveIcon(icon)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetIconCommand(getSessionContext().resolveIcon(icon)), null);
 	}
 
-	public org.teamapps.ux.component.Component getContent() {
+	public Component getContent() {
 		return content;
 	}
 
@@ -261,7 +265,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setHeaderComponentMinimizationPolicy(HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy) {
 		this.headerComponentMinimizationPolicy = headerComponentMinimizationPolicy;
-		sendCommandIfRendered(() -> new DtoPanel.SetHeaderComponentMinimizationPolicyCommand(headerComponentMinimizationPolicy.toDto()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetHeaderComponentMinimizationPolicyCommand(headerComponentMinimizationPolicy.toDto()), null);
 	}
 
 	public boolean isTitleBarHidden() {
@@ -270,7 +274,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setTitleBarHidden(boolean titleBarHidden) {
 		this.titleBarHidden = titleBarHidden;
-		sendCommandIfRendered(() -> new DtoPanel.SetTitleBarHiddenCommand(this.titleBarHidden));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetTitleBarHiddenCommand(this.titleBarHidden), null);
 	}
 
 	public Toolbar getToolbar() {
@@ -279,7 +283,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setToolbar(Toolbar toolbar) {
 		this.toolbar = toolbar;
-		sendCommandIfRendered(() -> new DtoPanel.SetToolbarCommand(toolbar.createClientReference()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetToolbarCommand(toolbar.createClientReference()), null);
 	}
 
 	public int getPadding() {
@@ -288,7 +292,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setPadding(int padding) {
 		this.padding = padding;
-		sendCommandIfRendered(() -> new DtoPanel.SetPaddingCommand(this.padding));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetPaddingCommand(this.padding), null);
 	}
 
 	public boolean isMaximizable() {
@@ -310,7 +314,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		}
 		this.leftHeaderField = leftHeaderField;
 		leftHeaderField.setParent(this);
-		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
 	}
 
 	public Icon<?, ?> getLeftHeaderFieldIcon() {
@@ -319,7 +323,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setLeftHeaderFieldIcon(Icon<?, ?> leftHeaderFieldIcon) {
 		this.leftHeaderFieldIcon = leftHeaderFieldIcon;
-		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
 	}
 
 	public int getLeftHeaderFieldMinWidth() {
@@ -328,7 +332,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setLeftHeaderFieldMinWidth(int leftHeaderFieldMinWidth) {
 		this.leftHeaderFieldMinWidth = leftHeaderFieldMinWidth;
-		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
 	}
 
 	public int getLeftHeaderFieldMaxWidth() {
@@ -337,7 +341,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setLeftHeaderFieldMaxWidth(int leftHeaderFieldMaxWidth) {
 		this.leftHeaderFieldMaxWidth = leftHeaderFieldMaxWidth;
-		sendCommandIfRendered(() -> new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
 	}
 
 	public void setRightHeaderField(AbstractField<?> rightHeaderField) {
@@ -346,8 +350,8 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 		}
 		this.rightHeaderField = rightHeaderField;
 		rightHeaderField.setParent(this);
-		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+				rightHeaderFieldMaxWidth))).get(), null);
 	}
 
 	public Icon<?, ?> getRightHeaderFieldIcon() {
@@ -356,8 +360,8 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setRightHeaderFieldIcon(Icon<?, ?> rightHeaderFieldIcon) {
 		this.rightHeaderFieldIcon = rightHeaderFieldIcon;
-		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+				rightHeaderFieldMaxWidth))).get(), null);
 	}
 
 	public int getRightHeaderFieldMinWidth() {
@@ -366,8 +370,8 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setRightHeaderFieldMinWidth(int rightHeaderFieldMinWidth) {
 		this.rightHeaderFieldMinWidth = rightHeaderFieldMinWidth;
-		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+				rightHeaderFieldMaxWidth))).get(), null);
 	}
 
 	public int getRightHeaderFieldMaxWidth() {
@@ -376,8 +380,8 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setRightHeaderFieldMaxWidth(int rightHeaderFieldMaxWidth) {
 		this.rightHeaderFieldMaxWidth = rightHeaderFieldMaxWidth;
-		sendCommandIfRendered(() -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth)));
+		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+				rightHeaderFieldMaxWidth))).get(), null);
 	}
 
 	public HeaderFieldIconVisibilityPolicy getHeaderFieldIconVisibilityPolicy() {
@@ -386,7 +390,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setHeaderFieldIconVisibilityPolicy(HeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy) {
 		this.headerFieldIconVisibilityPolicy = headerFieldIconVisibilityPolicy;
-		sendCommandIfRendered(() -> new DtoPanel.SetHeaderFieldIconVisibilityPolicyCommand(this.headerFieldIconVisibilityPolicy.toDto()));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetHeaderFieldIconVisibilityPolicyCommand(this.headerFieldIconVisibilityPolicy.toDto()), null);
 	}
 
 	public boolean isContentStretchingEnabled() {
@@ -395,7 +399,7 @@ public class Panel extends AbstractComponent implements org.teamapps.ux.componen
 
 	public void setContentStretchingEnabled(boolean contentStretchingEnabled) {
 		this.contentStretchingEnabled = contentStretchingEnabled;
-		sendCommandIfRendered(() -> new DtoPanel.SetContentStretchingEnabledCommand(contentStretchingEnabled));
+		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetContentStretchingEnabledCommand(contentStretchingEnabled), null);
 	}
 
 

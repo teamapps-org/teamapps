@@ -20,7 +20,6 @@
 
 import "@less/teamapps.less";
 import {ContextMenu} from "./micro-components/ContextMenu";
-import {MustacheTemplate} from "./template/MustacheTemplate";
 
 export * from "./Common";
 
@@ -55,11 +54,11 @@ export {ComponentField} from "./component/field/ComponentField";
 
 export {ContextMenu} from "./micro-components/ContextMenu";
 
-export * from "./template/MustacheTemplate";
-export * from "./template/GridTemplate";
+export * from "../../../../../projector-mustache-template/src/main/ts/MustacheTemplate";
+export * from "../../../../../projector-grid-template/src/main/ts/GridTemplate";
 
 export * from "./util/draggable";
-export * from "./util/cssUtil";
+export * from "../../../../projector-client-object-api/src/main/ts/util/cssUtil";
 export * from "./util/BigDecimal";
 export * from "./util/NumberParser";
 export * from "./micro-components/DropDown";

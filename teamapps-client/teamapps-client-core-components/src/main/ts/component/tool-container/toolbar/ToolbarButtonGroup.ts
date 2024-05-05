@@ -20,7 +20,7 @@
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
 import {ToolbarButton} from "./ToolbarButton";
-import {Component, insertAfter, insertBefore, parseHtml, TeamAppsEvent, TeamAppsUiContext} from "teamapps-client-core";
+import {Component, insertAfter, insertBefore, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {ButtonVisibilities, Toolbar} from "./Toolbar";

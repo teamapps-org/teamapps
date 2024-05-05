@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, ServerChannel} from "projector-client-object-api";
 import {DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
 
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {bind, Component, DtoTemplate, parseHtml, TeamAppsEvent, TeamAppsUiContext, Template} from "teamapps-client-core";
+import {bind, Component, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
 import {DropDown} from "../../micro-components/DropDown";
 import {
 	DtoButton,
