@@ -304,8 +304,13 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 	}
 
 	private async fireLayoutChanged() {
+		let layout = await this.getCurrentLayout();
+		if (layout[UiWorkSpaceLayout.ROOT_WINDOW_ID] == null) {
+			return; // event during initialization. Not worth it.
+		}
+
 		this.onLayoutChanged.fire({
-			layoutsByWindowId: await this.getCurrentLayout()
+			layoutsByWindowId: layout
 		});
 	}
 

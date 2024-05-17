@@ -51,7 +51,17 @@ public class ViewGroupDefinition extends LayoutItemDefinition {
 
 	@Override
 	public List<ViewDefinition> getAllViews() {
-		return views;
+		return List.copyOf(views);
+	}
+
+	@Override
+	public List<ViewDefinition> getEffectivelyVisibleViews() {
+		if (panelState == ViewGroupPanelState.MINIMIZED) {
+			return List.of();
+		} else if (selectedView != null && views.stream().anyMatch(v -> v.getId().equals(selectedView.getId()))) {
+			return List.of(selectedView);
+		}
+		return List.of();
 	}
 
 	@Override

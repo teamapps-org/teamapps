@@ -19,8 +19,8 @@
  */
 package org.teamapps.ux.application.perspective;
 
-import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.layout.ExtendedLayout;
+import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;

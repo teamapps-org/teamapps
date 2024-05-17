@@ -20,6 +20,7 @@
 package org.teamapps.ux.application.view;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.panel.Panel;
@@ -29,6 +30,8 @@ import java.util.List;
 
 public interface View {
 
+    Event<Boolean> onEffectiveVisibilityChanged();
+    
     static View createView() {
         return new ViewImpl();
     }
@@ -99,4 +102,5 @@ public interface View {
 
     void setLocalToolbarBackgroundColor(Color color);
 
+    void select();
 }

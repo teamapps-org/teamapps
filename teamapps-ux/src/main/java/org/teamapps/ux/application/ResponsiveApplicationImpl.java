@@ -175,6 +175,11 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
 				changeHandlers.forEach(changeHandler -> changeHandler.handleViewWorkspaceToolbarButtonGroupRemoved(application, isActivePerspective(perspective), perspective, view, buttonGroup));
 			}
 
+			@Override
+			public void handleViewSelect(View view) {
+				changeHandlers.forEach(ch -> ch.handleViewSelect(view));
+			}
+
 		});
 		return perspective;
 	}
