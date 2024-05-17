@@ -20,15 +20,17 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.panel.Panel;
+import org.teamapps.ux.application.ResponsiveApplication;
+import org.teamapps.ux.application.layout.StandardLayout;
+import org.teamapps.ux.application.perspective.Perspective;
+import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
-import java.util.Locale;
+import java.util.stream.Stream;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -36,27 +38,82 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
-					sessionContext.setLocale(Locale.US);
+					RootPanel rootPanel = new RootPanel();
+					sessionContext.addRootPanel(null, rootPanel);
 
+					//create a responsive application that will run on desktops as well as on smart phones
+					ResponsiveApplication application = ResponsiveApplication.createApplication();
 
-					RootPanel rootPanel = sessionContext.addRootPanel();
+					Perspective perspectiveA = createPerspective("A");
+					application.addPerspective(perspectiveA);
+					application.showPerspective(perspectiveA);
 
-					Panel panel = new Panel();
-					Toolbar toolbar = new Toolbar();
+					Perspective perspectiveB = createPerspective("B");
+					application.addPerspective(perspectiveB);
+					application.showPerspective(perspectiveB);
+
 					ToolbarButtonGroup buttonGroup = new ToolbarButtonGroup();
-					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "One", "One"));
-					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Two Words", "Two Words"));
-					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Three short words", "three short words"));
-					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.MENU, "Four words for you", "Four words for you"));
-					toolbar.addButtonGroup(buttonGroup);
-					panel.setToolbar(toolbar);
+					buttonGroup.addButton(ToolbarButton.create(MaterialIcon.SAVE, "Switch Perspective", "")).onClick.addListener(toolbarButtonClickEvent -> {
+						if (application.getActivePerspective() == perspectiveA) {
+							application.showPerspective(perspectiveB);
+						} else {
+							application.showPerspective(perspectiveA);
+						}
+					});
+					application.addApplicationButtonGroup(buttonGroup);
 
-					rootPanel.setContent(panel);
-
+					rootPanel.setContent(application.getUi());
 				})
 				.setPort(8082)
 				.build()
 				.start();
+	}
+
+	private static Perspective createPerspective(String prefix) {
+		//create perspective with default layout
+		Perspective perspective = Perspective.createPerspective();
+
+		View leftPanel = View.createView(StandardLayout.LEFT, MaterialIcon.MESSAGE, prefix + " - Left panel", null);
+		View centerPanel = View.createView(StandardLayout.CENTER, MaterialIcon.SEARCH, prefix + " - Center panel", null, true);
+		View centerPanel2 = View.createView(StandardLayout.CENTER, MaterialIcon.PEOPLE, prefix + " - Center panel 2", null);
+		View rightPanel = View.createView(StandardLayout.RIGHT, MaterialIcon.FOLDER, prefix + " - Right panel", null);
+		View rightBottomPanel = View.createView(StandardLayout.RIGHT_BOTTOM, MaterialIcon.VIEW_CAROUSEL, prefix + " - Right bottom panel", null);
+
+		Stream.of(leftPanel,
+				centerPanel,
+				centerPanel2,
+				rightPanel,
+				rightBottomPanel).forEach(view -> view.onEffectiveVisibilityChanged().addListener(aBoolean -> {
+			System.out.println(view.getTitle() + " -> " + aBoolean);
+		}));
+
+		//create an empty left panel
+		perspective.addView(leftPanel);
+
+		//create a tabbed center panel
+		perspective.addView(centerPanel);
+		perspective.addView(centerPanel2);
+
+		//create a right panel
+		perspective.addView(rightPanel);
+
+		//create a right bottom panel
+		perspective.addView(rightBottomPanel);
+
+		//create toolbar buttons
+		ToolbarButtonGroup buttonGroup = new ToolbarButtonGroup();
+		buttonGroup.addButton(ToolbarButton.create(MaterialIcon.SAVE, "Save", "Save changes")).onClick.addListener(toolbarButtonClickEvent -> {
+			boolean visible = !centerPanel.isVisible();
+			centerPanel.setVisible(visible);
+			if (visible) {
+				centerPanel.select();
+			}
+		});
+
+		//display these buttons only when this perspective is visible
+		perspective.addWorkspaceButtonGroup(buttonGroup);
+
+		return perspective;
 	}
 
 }

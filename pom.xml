@@ -98,6 +98,11 @@
                 <artifactId>teamapps-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>teamapps-commons</artifactId>
+                <version>0.1.2</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.teamapps</groupId>

@@ -153,6 +153,11 @@ public class PerspectiveImpl implements Perspective {
             public void handleWorkspaceButtonGroupRemoved(ToolbarButtonGroup buttonGroup) {
                 changeHandlers.forEach(changeHandler -> changeHandler.handleViewWorkspaceToolbarButtonGroupRemoved(perspective, view, buttonGroup));
             }
+
+            @Override
+            public void handleSelect() {
+                changeHandlers.forEach(ch -> ch.handleViewSelect(view));
+            }
         });
         changeHandlers.forEach(changeHandler -> changeHandler.handleViewAdded(this, view));
         return view;

@@ -84,6 +84,18 @@ public class SplitPaneDefinition extends LayoutItemDefinition {
 	}
 
 	@Override
+	public List<ViewDefinition> getEffectivelyVisibleViews() {
+		List<ViewDefinition> effectivelyVisibleViews = new ArrayList<>();
+		if (firstChild != null) {
+			effectivelyVisibleViews.addAll(firstChild.getEffectivelyVisibleViews());
+		}
+		if (lastChild != null) {
+			effectivelyVisibleViews.addAll(lastChild.getEffectivelyVisibleViews());
+		}
+		return effectivelyVisibleViews;
+	}
+
+	@Override
 	public List<LayoutItemDefinition> getSelfAndAncestors() {
 		ArrayList<LayoutItemDefinition> result = new ArrayList<>();
 		result.add(this);
