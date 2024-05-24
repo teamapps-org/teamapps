@@ -1,5 +1,5 @@
 /* SLIDE UP */
-import {applyCss, extractCssValues} from "../../../../../projector-client-object-api/src/main/ts/util/cssUtil";
+import {applyCss, extractCssValues} from "projector-client-object-api";
 
 type Options = { hiddenClass?: string, duration?: number };
 const DEFAULT_OPTIONS = {

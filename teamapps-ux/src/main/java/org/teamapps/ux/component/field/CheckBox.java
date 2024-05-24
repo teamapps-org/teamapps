@@ -23,12 +23,11 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.projector.dto.DtoCheckBox;
 import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 
-import java.util.function.Supplier;
-
-@ProjectorComponent(library = CoreComponentLibrary.class)
+@ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class CheckBox extends AbstractField<Boolean> {
 
 	private String caption;

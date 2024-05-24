@@ -22,8 +22,7 @@ package org.teamapps.projector.components.infinitescroll.table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.*;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.dataextraction.*;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
@@ -36,10 +35,10 @@ import org.teamapps.projector.components.infinitescroll.infiniteitemview.Records
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.RecordsRemovedEvent;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
-import org.teamapps.projector.clientobject.ProjectorComponent;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.component.field.FieldMessage;
-import org.teamapps.ux.component.field.validator.FieldValidator;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.field.AbstractField;
+import org.teamapps.projector.field.FieldMessage;
+import org.teamapps.projector.field.validator.FieldValidator;
 import org.teamapps.ux.data.extraction.*;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.ux.dataextraction.*;
@@ -51,7 +50,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@ProjectorComponent(library = InfiniteScrollingComponentLibrary.class)
+@ClientObjectLibrary(value = InfiniteScrollingComponentLibrary.class)
 public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -329,7 +328,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				if (record == null || column == null) {
 					return;
 				}
-				Object value = column.getField().convertUiValueToUxValue(changeEvent.getValue());
+				Object value = column.getField().convertClientValueToServerValue(changeEvent.getValue());
 				transientChangesByRecordAndPropertyName
 						.computeIfAbsent(record, idValue -> new HashMap<>())
 						.put(column.getPropertyName(), value);
@@ -435,7 +434,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		transientChangesByRecordAndPropertyName.computeIfAbsent(record, record1 -> new HashMap<>()).put(propertyName, value);
 		DtoIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			final Object uiValue = getColumnByPropertyName(propertyName).getField().convertUxValueToUiValue(value);
+			final Object uiValue = getColumnByPropertyName(propertyName).getField().convertServerValueToClientValue(value);
 			getClientObjectChannel().sendCommandIfRendered(new DtoTable.SetCellValueCommand(uiRecordIdOrNull.getId(), propertyName, uiValue), null);
 		}
 	}
@@ -798,7 +797,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private void applyTransientChangesToClientRecord(DtoTableClientRecord uiRecord) {
 		Map<String, Object> changes = transientChangesByRecordAndPropertyName.get(renderedRecords.getRecord(uiRecord.getId()));
 		if (changes != null) {
-			changes.forEach((key, value) -> uiRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertUxValueToUiValue(value)));
+			changes.forEach((key, value) -> uiRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertServerValueToClientValue(value)));
 		}
 	}
 
@@ -826,7 +825,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		clientRecord.setId(++clientRecordIdCounter);
 		Map<String, Object> uxValues = extractRecordProperties(record);
 		Map<String, Object> uiValues = columns.stream()
-				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), ((AbstractField) column.getField()).convertUxValueToUiValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
+				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), ((AbstractField) column.getField()).convertServerValueToClientValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
 		clientRecord.setValues(uiValues);
 		clientRecord.setSelected(selectedRecords.stream().anyMatch(r -> customEqualsAndHashCode.getEquals().test(r, record)));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));

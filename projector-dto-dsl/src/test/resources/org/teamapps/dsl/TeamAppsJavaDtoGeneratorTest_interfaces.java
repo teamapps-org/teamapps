@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.Spliterator;
@@ -44,7 +45,6 @@ public interface DtoA extends DtoObject {
 
 	    public static final String TYPE_ID = "A.y";
 
-		protected String componentId;
 		protected String y;
 
 		/**
@@ -55,33 +55,20 @@ public interface DtoA extends DtoObject {
 			// default constructor for Jackson
 		}
 
-		public YEvent(String componentId, String y) {
-			this.componentId = componentId;
+		public YEvent(String y) {
 			this.y = y;
 		}
 
 		@SuppressWarnings("unchecked")
 		public String toString() {
 			return new StringBuilder(getClass().getSimpleName()).append(": ")
-					.append("componentId=" + componentId).append(", ")
 					.append("y=" + y)
 					.toString();
-		}
-
-		@com.fasterxml.jackson.annotation.JsonGetter("componentId")
-		public String getComponentId() {
-			return componentId;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonGetter("y")
 		public String getY() {
 			return y;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonSetter("componentId")
-		public YEvent setComponentId(String componentId) {
-			this.componentId = componentId;
-			return this;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("y")
@@ -99,16 +86,6 @@ public interface DtoA extends DtoObject {
             super(jsonNode);
         }
 
-        public String getComponentId() {
-            var node = jsonNode.get("componentId");
-            if (node == null || node.isNull()) {
-                return null;
-            }
-            return node.textValue();
-
-        }
-
-
         public String getY() {
             var node = jsonNode.get("y");
             if (node == null || node.isNull()) {
@@ -124,7 +101,6 @@ public interface DtoA extends DtoObject {
 
 	    public static final String TYPE_ID = "A.q";
 
-		protected String componentId;
 		protected String y;
 
 		/**
@@ -135,33 +111,20 @@ public interface DtoA extends DtoObject {
 			// default constructor for Jackson
 		}
 
-		public QQuery(String componentId, String y) {
-			this.componentId = componentId;
+		public QQuery(String y) {
 			this.y = y;
 		}
 
 		@SuppressWarnings("unchecked")
 		public String toString() {
 			return new StringBuilder(getClass().getSimpleName()).append(": ")
-					.append("componentId=" + componentId).append(", ")
 					.append("y=" + y)
 					.toString();
-		}
-
-		@com.fasterxml.jackson.annotation.JsonGetter("componentId")
-		public String getComponentId() {
-			return componentId;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonGetter("y")
 		public String getY() {
 			return y;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonSetter("componentId")
-		public QQuery setComponentId(String componentId) {
-			this.componentId = componentId;
-			return this;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonSetter("y")
@@ -178,16 +141,6 @@ public interface DtoA extends DtoObject {
 	    public QQueryWrapper(JsonNode jsonNode) {
 	        super(jsonNode);
 	    }
-
-	    public String getComponentId() {
-	        var node = jsonNode.get("componentId");
-	        if (node == null || node.isNull()) {
-	            return null;
-	        }
-	        return node.textValue();
-
-	    }
-
 
 	    public String getY() {
 	        var node = jsonNode.get("y");

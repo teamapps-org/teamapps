@@ -1,11 +1,11 @@
 package org.teamapps.projector.components.calendar;
 
-import org.teamapps.projector.clientobject.ComponentLibrary;
+import org.teamapps.projector.clientobject.ClientObjectLibrary;
 import org.teamapps.projector.resource.ClassPathResource;
 import org.teamapps.projector.resource.Resource;
-import org.teamapps.ux.servlet.resourceprovider.ClassPathResourceProvider;
+import org.teamapps.projector.resourceprovider.ClassPathResourceProvider;
 
-public class CalendarComponentLibrary implements ComponentLibrary {
+public class CalendarComponentLibrary implements ClientObjectLibrary {
 
 	private final ClassPathResourceProvider resourceProvider;
 

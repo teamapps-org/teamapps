@@ -31,10 +31,10 @@ import org.teamapps.projector.components.trivial.dto.DtoTree;
 import org.teamapps.projector.components.trivial.dto.DtoTreeRecord;
 import org.teamapps.projector.components.trivial.tree.model.TreeModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
-import org.teamapps.projector.clientobject.AbstractComponent;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.template.Template;
-import org.teamapps.ux.component.template.TemplateDecider;
+import org.teamapps.projector.template.TemplateDecider;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
@@ -45,7 +45,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@ProjectorComponent(library = TrivialComponentsLibrary.class)
+@ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public class Tree<RECORD> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

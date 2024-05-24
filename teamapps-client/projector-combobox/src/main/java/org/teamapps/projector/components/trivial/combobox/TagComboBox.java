@@ -30,14 +30,14 @@ import org.teamapps.projector.components.trivial.tree.model.ComboBoxModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfoExtractor;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.template.Template;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@ProjectorComponent(library = TrivialComponentsLibrary.class)
+@ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -132,7 +132,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	@Override
-	public List<RECORD> convertUiValueToUxValue(Object value) {
+	public List<RECORD> convertClientValueToServerValue(Object value) {
 		if (value != null && !(value instanceof List)) {
 			throw new IllegalArgumentException("Invalid TagComboBox value coming from ui: " + value);
 		}
@@ -198,7 +198,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	@Override
-	public Object convertUxValueToUiValue(List<RECORD> uxValue) {
+	public Object convertServerValueToClientValue(List<RECORD> uxValue) {
 		if (uxValue == null) {
 			return null;
 		}

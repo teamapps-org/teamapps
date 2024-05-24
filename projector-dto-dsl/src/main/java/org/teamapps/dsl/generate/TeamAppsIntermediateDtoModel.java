@@ -21,13 +21,13 @@ package org.teamapps.dsl.generate;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
-import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.TeamAppsDtoParser.*;
-import org.teamapps.dsl.generate.adapter.Import;
-import org.teamapps.dsl.generate.adapter.Imports;
 import org.teamapps.dsl.generate.wrapper.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,16 +36,16 @@ public class TeamAppsIntermediateDtoModel {
 	private final List<ClassWrapper> classDeclarations = new ArrayList<>();
 	private final List<InterfaceWrapper> interfaceDeclarations = new ArrayList<>();
 	private final List<EnumWrapper> enumDeclarations = new ArrayList<>();
-	private final List<EventDeclarationContext> eventDeclarations = new ArrayList<>();
-	private final List<QueryDeclarationContext> queryDeclarations = new ArrayList<>();
-	private final List<CommandDeclarationContext> commandDeclarations = new ArrayList<>();
+	private final List<EventWrapper> eventDeclarations = new ArrayList<>();
+	private final List<QueryWrapper> queryDeclarations = new ArrayList<>();
+	private final List<CommandWrapper> commandDeclarations = new ArrayList<>();
 
 	private final List<ClassWrapper> ownClassDeclarations;
 	private final List<InterfaceWrapper> ownInterfaceDeclarations;
 	private final List<EnumWrapper> ownEnumDeclarations;
-	private final List<EventDeclarationContext> ownEventDeclarations;
-	private final List<QueryDeclarationContext> ownQueryDeclarations;
-	private final List<CommandDeclarationContext> ownCommandDeclarations;
+	private final List<EventWrapper> ownEventDeclarations;
+	private final List<QueryWrapper> ownQueryDeclarations;
+	private final List<CommandWrapper> ownCommandDeclarations;
 	private final String debugName;
 	private final TeamAppsIntermediateDtoModel[] importedModels;
 
@@ -60,6 +60,7 @@ public class TeamAppsIntermediateDtoModel {
 			List<TypeDeclarationContext> typeDeclarations = classCollectionContext.typeDeclaration();
 			classDeclarations.addAll(extractClassDeclarations(typeDeclarations));
 			interfaceDeclarations.addAll(extractInterfaceDeclarations(typeDeclarations));
+			interfaceDeclarations.addAll(extractExternalInterfaces(classCollectionContext));
 			enumDeclarations.addAll(extractEnumDeclarations(typeDeclarations));
 		});
 		eventDeclarations.addAll(extractEventDeclarations());
@@ -83,6 +84,13 @@ public class TeamAppsIntermediateDtoModel {
 		}
 	}
 
+	private List<ExternalInterfaceWrapper> extractExternalInterfaces(ClassCollectionContext classCollectionContext) {
+		return classCollectionContext.importDeclaration().stream()
+				.filter(importDeclarationContext -> importDeclarationContext.externalInterfaceTypeModifier() != null)
+				.map(importDeclarationContext -> new ExternalInterfaceWrapper(importDeclarationContext, this))
+				.toList();
+	}
+
 	private List<ClassWrapper> extractClassDeclarations(List<TypeDeclarationContext> types) {
 		return types.stream()
 				.filter(typeContext -> typeContext.classDeclaration() != null)
@@ -104,21 +112,21 @@ public class TeamAppsIntermediateDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	private List<EventDeclarationContext> extractEventDeclarations() {
+	private List<EventWrapper> extractEventDeclarations() {
 		return Stream.concat(
 				classDeclarations.stream().flatMap(c -> c.getEvents().stream()),
 				interfaceDeclarations.stream().flatMap(i -> i.getEvents().stream())
 		).collect(Collectors.toList());
 	}
 
-	private List<QueryDeclarationContext> extractQueryDeclarations() {
+	private List<QueryWrapper> extractQueryDeclarations() {
 		return Stream.concat(
 				classDeclarations.stream().flatMap(c -> c.getQueries().stream()),
 				interfaceDeclarations.stream().flatMap(i -> i.getQueries().stream())
 		).collect(Collectors.toList());
 	}
 
-	private List<CommandDeclarationContext> extractCommandDeclarations() {
+	private List<CommandWrapper> extractCommandDeclarations() {
 		return Stream.concat(
 				classDeclarations.stream().flatMap(c -> c.getCommands().stream()),
 				interfaceDeclarations.stream().flatMap(i -> i.getCommands().stream())
@@ -137,15 +145,15 @@ public class TeamAppsIntermediateDtoModel {
 		return ownEnumDeclarations;
 	}
 
-	public List<EventDeclarationContext> getOwnEventDeclarations() {
+	public List<EventWrapper> getOwnEventDeclarations() {
 		return ownEventDeclarations;
 	}
 
-	public List<QueryDeclarationContext> getOwnQueryDeclarations() {
+	public List<QueryWrapper> getOwnQueryDeclarations() {
 		return ownQueryDeclarations;
 	}
 
-	public List<CommandDeclarationContext> getOwnCommandDeclarations() {
+	public List<CommandWrapper> getOwnCommandDeclarations() {
 		return ownCommandDeclarations;
 	}
 
@@ -169,32 +177,16 @@ public class TeamAppsIntermediateDtoModel {
 		return l;
 	}
 
-	public List<EventDeclarationContext> getEventDeclarations() {
+	public List<EventWrapper> getEventDeclarations() {
 		return eventDeclarations;
 	}
 
-	public List<QueryDeclarationContext> getQueryDeclarations() {
+	public List<QueryWrapper> getQueryDeclarations() {
 		return queryDeclarations;
 	}
 
-	public List<CommandDeclarationContext> getCommandDeclarations() {
+	public List<CommandWrapper> getCommandDeclarations() {
 		return commandDeclarations;
-	}
-
-	public Optional<ClassWrapper> findReferencedClass(TypeContext typeContext) {
-		TypeReferenceContext typeReferenceContext = typeContext.typeReference();
-		if (typeReferenceContext == null) {
-			return Optional.empty();
-		}
-		String qualifiedTypeName = getQualifiedTypeName(typeContext);
-		return findClassByQualifiedName(qualifiedTypeName)
-				.or(() -> {
-					if (typeReferenceContext.typeArguments() != null && !typeReferenceContext.typeArguments().typeArgument().isEmpty()) {
-						return findReferencedClass(typeReferenceContext.typeArguments().typeArgument(0).type());
-					} else {
-						return Optional.empty();
-					}
-				});
 	}
 
 	public Optional<TypeWrapper<?>> findTypeByQualifiedName(String qualifiedName) {
@@ -222,7 +214,7 @@ public class TeamAppsIntermediateDtoModel {
 				.findFirst();
 	}
 
-	private static String getQualifiedTypeName(TypeContext typeContext) {
+	public static String getQualifiedTypeName(TypeContext typeContext) {
 		if (typeContext.primitiveType() != null) {
 			return typeContext.typeReference().getText();
 		}
@@ -239,48 +231,11 @@ public class TeamAppsIntermediateDtoModel {
 				.orElse(potentiallyImportedTypeName);
 	}
 
-	private static Optional<ImportDeclarationContext> findImport(ParserRuleContext parserRuleContext, String simpleTypeName) {
+	public static Optional<ImportDeclarationContext> findImport(ParserRuleContext parserRuleContext, String simpleTypeName) {
 		return findAncestorOfType(parserRuleContext, ClassCollectionContext.class, false).stream()
 				.flatMap(ccc -> ccc.importDeclaration().stream())
 				.filter(i -> i.qualifiedTypeName().Identifier().getText().equals(simpleTypeName))
 				.findFirst();
-	}
-
-	public List<ImportDeclarationContext> getAllImports(ParserRuleContext context) {
-		return findAncestorOfType(context, ClassCollectionContext.class, false).stream()
-				.flatMap(ccc -> ccc.importDeclaration().stream())
-				.collect(Collectors.toList());
-	}
-
-	public Optional<InterfaceWrapper> findReferencedInterface(TypeContext typeContext) {
-		TypeReferenceContext typeReferenceContext = typeContext.typeReference();
-		if (typeReferenceContext == null) {
-			return Optional.empty();
-		}
-		return findInterfaceByQualifiedName(getQualifiedTypeName(typeContext))
-				.or(() -> {
-					if (typeReferenceContext.typeArguments() != null && !typeReferenceContext.typeArguments().typeArgument().isEmpty()) {
-						return findReferencedInterface(typeReferenceContext.typeArguments().typeArgument(0).type());
-					} else {
-						return Optional.empty();
-					}
-				});
-	}
-
-	public Optional<EnumWrapper> findReferencedEnum(TypeContext typeContext) {
-		TypeReferenceContext typeRef = typeContext.typeReference();
-		if (typeRef == null) {
-			return Optional.empty();
-		}
-
-		return findEnumByQualifiedName(getQualifiedTypeName(typeContext))
-				.or(() -> {
-					if (typeRef.typeArguments() != null && !typeRef.typeArguments().typeArgument().isEmpty()) {
-						return findReferencedEnum(typeRef.typeArguments().typeArgument(0).type());
-					} else {
-						return Optional.empty();
-					}
-				});
 	}
 
 	public static <T extends RuleContext> Optional<T> findAncestorOfType(RuleContext ruleContext, Class<? extends T> ancestorType, boolean includeSelf) {
@@ -309,101 +264,6 @@ public class TeamAppsIntermediateDtoModel {
 				.or(() -> findAncestorOfType(element, InterfaceDeclarationContext.class, true)
 						.map(i -> new InterfaceWrapper(i, this)))
 				.orElse(null);
-	}
-
-	public boolean shouldReferenceDtoType(TypeContext type) {
-		List<String> knownJavaTypes = List.of(
-				"Object", "java.lang.Object",
-				"String", "java.lang.String",
-				"boolean", "char", "byte", "short", "int", "long", "float", "double",
-				"Boolean", "Character", "Byte", "Short", "Integer", "Long", "Float", "Double"
-		);
-		boolean isKnownJavaType = knownJavaTypes.contains(type.getText());
-		return !isKnownJavaType && (!isCollection(type) || shouldReferenceDtoType(getCollectionType(type)));
-	}
-
-	public boolean isCollection(TypeContext typeContext) {
-		return isList(typeContext) || isDictionary(typeContext);
-	}
-
-	public static boolean isList(TypeContext typeContext) {
-		return typeContext.typeReference() != null && Set.of("List", "java.util.List").contains(typeContext.typeReference().typeName().getText());
-	}
-
-	public static boolean isDictionary(TypeContext typeContext) {
-		return typeContext.typeReference() != null
-				&& ("Dictionary".equals(typeContext.typeReference().typeName().getText()));
-	}
-
-	private TypeContext getCollectionType(TypeContext typeContext) {
-		if (typeContext.typeReference() != null && typeContext.typeReference().typeArguments() != null && !typeContext.typeReference().typeArguments().typeArgument().isEmpty()) {
-			return typeContext.typeReference().typeArguments().typeArgument(0).type();
-		} else {
-			throw new IllegalArgumentException(typeContext.typeReference().typeName().getText() + " must have a generic parameter!");
-		}
-	}
-
-	public static boolean isObject(TypeContext typeContext) {
-		return typeContext.typeReference() != null && Set.of("Object", "java.lang.Object").contains(typeContext.typeReference().typeName().getText());
-	}
-
-	public TypeWrapper<?> findReferencedDtoType(TypeContext type) {
-		if (isCollection(type)) {
-			return findReferencedDtoType(getCollectionType(type));
-		}
-		return Optional.<TypeWrapper<?>>empty()
-				.or(() -> findReferencedClass(type))
-				.or(() -> findReferencedInterface(type))
-				.or(() -> findReferencedEnum(type))
-				.orElseThrow(() -> new TeamAppsGeneratorException("Cannot find type with name '" + type.typeReference().typeName().getText() + "'. Did you forget to import it?"));
-	}
-
-	public Optional<ClassOrInterfaceWrapper<?>> findReferencedClassOrInterface(TypeContext type) {
-		return Optional.<ClassOrInterfaceWrapper<?>>empty()
-				.or(() -> findReferencedClass(type))
-				.or(() -> findReferencedInterface(type));
-	}
-
-	public boolean isDtoClassOrInterface(TeamAppsDtoParser.TypeContext typeContext) {
-		return Optional.empty()
-				.or(() -> findReferencedClass(typeContext))
-				.or(() -> findReferencedInterface(typeContext))
-				.isPresent();
-	}
-
-	public boolean isDtoType(TeamAppsDtoParser.TypeContext typeContext) {
-		return Optional.empty()
-				.or(() -> findReferencedClass(typeContext))
-				.or(() -> findReferencedInterface(typeContext))
-				.or(() -> findReferencedEnum(typeContext))
-				.isPresent();
-	}
-
-	public Collection<Import> getEffectiveImports(ClassOrInterfaceWrapper<?> classOrInterface, boolean typescript) {
-		Imports imports = new Imports();
-
-		boolean isClientApiPackage = classOrInterface.getJsPackageName().equals("projector-client-object-api");
-
-		imports.addImport("ClientObject", isClientApiPackage? "../ClientObject" : "projector-client-object-api", "org.teamapps.projector.clientobject");
-
-		classOrInterface.getReferencedTypes().stream()
-				.forEach(t -> {
-					imports.addDtoImport(t.getName(), classOrInterface.getJsPackageName().equals(t.getJsPackageName()) ? "./Dto" + t.getName() : t.getJsPackageName(), t.getPackageName());
-					if (!typescript && t instanceof ClassOrInterfaceWrapper<?> referencedClassOrInterface) {
-						imports.addDtoImport(referencedClassOrInterface.getName() + "Wrapper", null, t.getPackageName());
-					}
-				});
-
-		if (typescript) {
-			classOrInterface.getSuperTypes().stream()
-					.filter(c -> !c.getAllCommands().isEmpty())
-					.forEach(c -> imports.addDtoImport(c.getName() + "CommandHandler", classOrInterface.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName(), c.getPackageName()));
-			classOrInterface.getSuperTypes().stream()
-					.filter(c -> !c.getAllEvents().isEmpty())
-					.forEach(c -> imports.addDtoImport(c.getName() + "EventSource", classOrInterface.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName(), c.getPackageName()));
-		}
-
-		return imports.getAll();
 	}
 
 }

@@ -50,7 +50,7 @@ import {
 import {maximizeComponent} from "../Common";
 import {StaticIcons} from "../util/StaticIcons";
 import {positionDropdown} from "../util/dropdownPosition";
-import {contentWidth} from "../../../../../projector-client-object-api/src/main/ts/util/cssUtil";
+import {contentWidth} from "projector-client-object-api";
 
 
 interface Tab {

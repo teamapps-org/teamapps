@@ -24,13 +24,12 @@ import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoTextInputHandlingField;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoAbstractTimeField;
-import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.util.Locale;
-import java.util.function.Supplier;
 
 public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
 

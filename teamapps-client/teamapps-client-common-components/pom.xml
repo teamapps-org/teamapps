@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ux</artifactId>
+            <artifactId>projector-client-object-api</artifactId>
         </dependency>
     </dependencies>
 

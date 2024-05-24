@@ -106,10 +106,6 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 
 			element.setAttribute("data-css-id", this.cssUuid);
 
-			if (this.config.debuggingId != null) {
-				element.setAttribute("data-teamapps-debugging-id", this.config.debuggingId);
-			}
-
 			element.classList.toggle("invisible-component", this.visible == null ? false : !this.visible);
 			if (this.config.stylesBySelector != null) {
 				Object.keys(this.config.stylesBySelector).forEach(selector => this.setStyle(selector, this.config.stylesBySelector[selector]));

@@ -17,15 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "./AbstractField";
+import {AbstractField} from "projector-client-object-api";
 import {
-	DtoFieldEditingMode,
 	DtoTemplateField,
 	DtoTemplateField_ClickedEvent,
 	DtoTemplateFieldCommandHandler,
 	DtoTemplateFieldEventSource
 } from "../../generated";
-import {DtoClientRecord, parseHtml, ServerChannel, TeamAppsEvent, Template} from "projector-client-object-api";
+import {DtoClientRecord, DtoFieldEditingMode, parseHtml, ServerChannel, TeamAppsEvent, Template} from "projector-client-object-api";
 
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {

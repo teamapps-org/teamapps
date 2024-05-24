@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoDisplayField, DtoDisplayFieldCommandHandler, DtoDisplayFieldEventSource, DtoFieldEditingMode} from "../../generated";
-import {AbstractField} from "./AbstractField";
-import {parseHtml} from "projector-client-object-api";
+import {DtoDisplayField, DtoDisplayFieldCommandHandler, DtoDisplayFieldEventSource} from "../../generated";
+import {AbstractField} from "projector-client-object-api";
+import {DtoFieldEditingMode, parseHtml} from "projector-client-object-api";
 import {escapeHtml, removeTags} from "../../Common";
 
 

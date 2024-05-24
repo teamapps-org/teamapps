@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.clientobject.ComponentLibrary;
+import org.teamapps.projector.clientobject.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
 import org.teamapps.projector.resource.Resource;
 
@@ -48,7 +48,7 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 			return;
 		}
 
-		ComponentLibrary componentLibrary = componentLibraryRegistry.getComponentLibraryById(componentLibraryId);
+		ClientObjectLibrary componentLibrary = componentLibraryRegistry.getComponentLibraryById(componentLibraryId);
 		if (componentLibrary == null) {
 			resp.setStatus(404);
 			return;

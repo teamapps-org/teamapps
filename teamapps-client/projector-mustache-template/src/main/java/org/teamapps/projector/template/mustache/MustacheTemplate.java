@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.template.mustache;
 
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.mustache.dto.DtoMustacheTemplate;
 
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@ProjectorComponent(library = MustacheTemplateLibrary.class)
+@ClientObjectLibrary(value = MustacheTemplateLibrary.class)
 public class MustacheTemplate implements Template {
 
 	private static final Pattern PLACE_HOLDER_REGEX = Pattern.compile("\\{\\{#?(\\w+)\\}\\}");

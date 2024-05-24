@@ -21,7 +21,7 @@ package org.teamapps.ux.application.assembler;
 
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.ResponsiveApplicationToolbar;
 import org.teamapps.ux.application.perspective.Perspective;

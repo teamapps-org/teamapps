@@ -23,12 +23,13 @@ import org.teamapps.common.format.Color;
 import org.teamapps.projector.dto.DtoButton;
 import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.clientobject.ClientObject;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.projector.template.Template;
@@ -38,7 +39,7 @@ import org.teamapps.projector.dataextraction.PropertyProvider;
 
 import java.util.function.Supplier;
 
-@ProjectorComponent(library = CoreComponentLibrary.class)
+@ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class Button<RECORD> extends AbstractField<Void> {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoButton.ClickedEvent.TYPE_ID);

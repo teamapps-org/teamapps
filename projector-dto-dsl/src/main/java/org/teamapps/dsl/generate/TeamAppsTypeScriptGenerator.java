@@ -108,7 +108,8 @@ public class TeamAppsTypeScriptGenerator {
             generateEnum(enumContext, new FileWriter(new File(parentDir, "Dto" + enumContext.getName() + ".ts")));
         }
         for (InterfaceWrapper interfaceContext : model.getOwnInterfaceDeclarations()) {
-            if (interfaceContext.getParserRuleContext().notGeneratedAnnotation() != null) {
+            if (interfaceContext.isExternal()
+				|| interfaceContext.getParserRuleContext().notGeneratedAnnotation() != null) {
                 System.out.println("Skipping @NotGenerated interface: " + interfaceContext.getName());
                 continue;
             }
@@ -130,9 +131,9 @@ public class TeamAppsTypeScriptGenerator {
 
     private void generateIndexTs(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("indexTs")
-                .add("classes", model.getOwnClassDeclarations().stream().filter(c -> c.getParserRuleContext().notGeneratedAnnotation() == null).collect(Collectors.toList()))
-                .add("interfaces", model.getOwnInterfaceDeclarations().stream().filter(c -> c.getParserRuleContext().notGeneratedAnnotation() == null).collect(Collectors.toList()))
-                .add("enums", model.getOwnEnumDeclarations().stream().filter(e -> e.getParserRuleContext().notGeneratedAnnotation() == null).collect(Collectors.toList()));
+                .add("classes", model.getOwnClassDeclarations().stream().filter(c -> c.getParserRuleContext().notGeneratedAnnotation() == null && !c.isExternal()).collect(Collectors.toList()))
+                .add("interfaces", model.getOwnInterfaceDeclarations().stream().filter(c -> c.getParserRuleContext().notGeneratedAnnotation() == null && !c.isExternal()).collect(Collectors.toList()))
+                .add("enums", model.getOwnEnumDeclarations().stream().filter(e -> e.getParserRuleContext().notGeneratedAnnotation() == null && !e.isExternal()).collect(Collectors.toList()));
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();

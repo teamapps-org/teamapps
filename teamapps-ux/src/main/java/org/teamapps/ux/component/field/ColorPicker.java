@@ -23,6 +23,7 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.projector.dto.DtoColorPicker;
 import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.field.AbstractField;
 
 public class ColorPicker extends AbstractField<Color> {
 
@@ -45,7 +46,7 @@ public class ColorPicker extends AbstractField<Color> {
 	}
 
 	@Override
-	public Color convertUiValueToUxValue(Object value) {
+	public Color convertClientValueToServerValue(Object value) {
 		if (value == null) {
 			return null;
 		} else {
@@ -54,7 +55,7 @@ public class ColorPicker extends AbstractField<Color> {
 	}
 
 	@Override
-	public Object convertUxValueToUiValue(Color color) {
+	public Object convertServerValueToClientValue(Color color) {
 		return color != null ? color.toHtmlColorString() : null;
 	}
 

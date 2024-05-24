@@ -22,9 +22,9 @@ package org.teamapps.ux.component.field;
 import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.projector.dto.DtoPasswordField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 
-@ProjectorComponent(library = CoreComponentLibrary.class)
+@ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class PasswordField extends TextField {
 
 	private boolean sendValueAsMd5;

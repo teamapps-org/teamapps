@@ -22,13 +22,12 @@ package org.teamapps.projector.components.trivial.datetime;
 import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoInstantDateTimeField;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.function.Supplier;
 
-@ProjectorComponent(library = TrivialComponentsLibrary.class)
+@ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 
 	protected ZoneId timeZoneId;
@@ -56,7 +55,7 @@ public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 	}
 
 	@Override
-	public Instant convertUiValueToUxValue(Object value) {
+	public Instant convertClientValueToServerValue(Object value) {
 		if (value == null) {
 			return null;
 		} else {

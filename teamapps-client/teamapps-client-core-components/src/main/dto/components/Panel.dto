@@ -22,6 +22,7 @@ package "teamapps-client-core-components":org.teamapps.projector.dto;
 import org.teamapps.projector.dto.Component;
 
 import org.teamapps.projector.dto.Showable;
+import org.teamapps.projector.dto.JustifyContent;
 
 class Panel extends Component {
 	mutable String icon;
@@ -82,7 +83,7 @@ class ElegantPanel extends Component {
 	String bodyBackgroundColor;
 	Component* content;
 	Spacing padding;
-	HorizontalElementAlignment horizontalContentAlignment;
+	JustifyContent horizontalContentAlignment;
 	int maxContentWidth; // 0 = 100%
 
 	command setContent(Component* content);

@@ -31,7 +31,7 @@ export interface Component extends ClientObject, DtoComponentCommandHandler {
 	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
 
 	isVisible(): boolean;
-
+	
 	setVisible(visible: boolean): any;
 	setStyle(selector: string, styles: {[name: string]: string}): any;
 	setClassNames(selector: string, classNames: {[name: string]: boolean}): any;

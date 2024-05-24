@@ -45,7 +45,7 @@ public class UxTestUtil {
 	public static SessionContext createDummySessionContext() {
 		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", Mockito.mock(URL.class), Collections.emptyMap(), TEAMAPPS_VERSION);
 		ComponentLibraryRegistry componentLibraryRegistryMock = Mockito.mock(ComponentLibraryRegistry.class);
-		Mockito.when(componentLibraryRegistryMock.getComponentLibraryForClientObject(Mockito.any())).thenReturn(Mockito.mock(ComponentLibraryRegistry.ComponentLibraryInfo.class));
+		Mockito.when(componentLibraryRegistryMock.getComponentLibraryForClientObject(Mockito.any())).thenReturn(Mockito.mock(ComponentLibraryRegistry.ClientObjectLibraryInfo.class));
 		return new SessionContext(
 				Mockito.mock(UiSessionImpl.class),
 				Executors.newSingleThreadExecutor(),

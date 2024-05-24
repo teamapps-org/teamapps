@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.Spliterator;
@@ -41,8 +42,8 @@ public class DtoA implements DtoObject {
     public static final List<String> QUERY_NAMES = List.of();
 
 	protected Object x;
-	protected List y;
-	protected Map<String, Object> z;
+	protected List<?> y;
+	protected Map<String, ?> z;
 
 	public DtoA() {
 	}
@@ -62,12 +63,12 @@ public class DtoA implements DtoObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonGetter("y")
-	public List getY() {
+	public List<?> getY() {
 		return y;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonGetter("z")
-	public Map<String, Object> getZ() {
+	public Map<String, ?> getZ() {
 		return z;
 	}
 
@@ -78,13 +79,13 @@ public class DtoA implements DtoObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("y")
-	public DtoA setY(List y) {
+	public DtoA setY(List<?> y) {
 		this.y = y;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("z")
-	public DtoA setZ(Map<String, Object> z) {
+	public DtoA setZ(Map<String, ?> z) {
 		this.z = z;
 		return this;
 	}

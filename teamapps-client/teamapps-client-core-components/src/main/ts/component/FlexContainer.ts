@@ -18,8 +18,16 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, Component, insertAtIndex, parseHtml, ServerChannel} from "projector-client-object-api";
-import {DtoCssAlignItems, DtoCssFlexDirection, DtoCssJustifyContent, DtoFlexContainer, DtoFlexContainerCommandHandler} from "../generated";
+import {
+	AbstractLegacyComponent,
+	Component,
+	DtoAlignItems,
+	DtoFlexDirection, DtoJustifyContent,
+	insertAtIndex,
+	parseHtml,
+	ServerChannel
+} from "projector-client-object-api";
+import {DtoFlexContainer, DtoFlexContainerCommandHandler} from "../generated";
 
 export class FlexContainer extends AbstractLegacyComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
 
@@ -54,17 +62,17 @@ export class FlexContainer extends AbstractLegacyComponent<DtoFlexContainer> imp
 		}
 	}
 
-	setAlignItems(alignItems: DtoCssAlignItems): any {
+	setAlignItems(alignItems: DtoAlignItems): any {
 		this.config.alignItems = alignItems;
 		this.$main.style.alignItems = alignItems;
 	}
 
-	setFlexDirection(flexDirection: DtoCssFlexDirection): any {
+	setFlexDirection(flexDirection: DtoFlexDirection): any {
 		this.config.flexDirection = flexDirection;
 		this.$main.style.flexDirection = flexDirection;
 	}
 
-	setJustifyContent(justifyContent: DtoCssJustifyContent): any {
+	setJustifyContent(justifyContent: DtoJustifyContent): any {
 		this.config.justifyContent = justifyContent;
 		this.$main.style.justifyContent = justifyContent;
 	}

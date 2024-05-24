@@ -19,8 +19,9 @@
  */
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-abstract class Component {
-	String debuggingId;
+import external org.teamapps.projector.clientobject.component.ComponentConfig;
+
+abstract class Component implements ComponentConfig! {
 	boolean visible;
 	Dictionary<Dictionary<String>> stylesBySelector;
 	Dictionary<Dictionary<Boolean>> classNamesBySelector;

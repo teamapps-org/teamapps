@@ -21,7 +21,7 @@ package org.teamapps.ux.application.view;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;

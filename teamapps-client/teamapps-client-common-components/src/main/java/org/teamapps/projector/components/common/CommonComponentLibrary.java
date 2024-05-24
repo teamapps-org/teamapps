@@ -3,7 +3,7 @@ package org.teamapps.projector.components.common;
 import org.teamapps.ux.component.ComponentLibrary;
 import org.teamapps.ux.resource.ClassPathResource;
 import org.teamapps.ux.resource.Resource;
-import org.teamapps.ux.servlet.resourceprovider.ClassPathResourceProvider;
+import org.teamapps.projector.resourceprovider.ClassPathResourceProvider;
 
 public class CommonComponentLibrary implements ComponentLibrary {
 

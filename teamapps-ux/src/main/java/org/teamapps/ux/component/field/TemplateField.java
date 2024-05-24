@@ -23,14 +23,15 @@ import org.teamapps.projector.dto.DtoClientRecord;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoTemplateField;
 import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 
-@ProjectorComponent(library = CoreComponentLibrary.class)
+@ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoTemplateField.ClickedEvent.TYPE_ID);
@@ -67,11 +68,11 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 		return ui;
 	}
 
-	public RECORD convertUiValueToUxValue(Object value) {
+	public RECORD convertClientValueToServerValue(Object value) {
 		return getValue();
 	}
 
-	public Object convertUxValueToUiValue(RECORD record) {
+	public Object convertServerValueToClientValue(RECORD record) {
 		if (record == null) {
 			return null;
 		} else {

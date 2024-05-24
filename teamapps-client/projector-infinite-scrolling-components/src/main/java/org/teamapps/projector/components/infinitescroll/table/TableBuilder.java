@@ -2,7 +2,7 @@ package org.teamapps.projector.components.infinitescroll.table;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.cache.record.EqualsAndHashCode;
-import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.data.extraction.*;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.BeanPropertyInjector;

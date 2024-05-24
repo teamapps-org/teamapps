@@ -36,7 +36,7 @@ import org.teamapps.projector.template.Template;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
-import org.teamapps.ux.i18n.TeamAppsDictionary;
+import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -65,7 +65,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Template uploadButtonTemplate = BaseTemplate.BUTTON;
-	private Object uploadButtonData = new BaseTemplateRecord<>(getSessionContext().getIcon(MaterialIcon.BACKUP), getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey()));
+	private Object uploadButtonData = new BaseTemplateRecord<>(getSessionContext().getIcon(MaterialIcon.BACKUP), getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD.getKey()));
 	private PropertyProvider uploadButtonPropertyProvider = new BeanPropertyExtractor<>();
 
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;
@@ -90,8 +90,8 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
 		uiField.setUploadUrl(uploadUrl);
 
-		uiField.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsDictionary.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
-		uiField.setUploadErrorMessage(getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD_ERROR_MESSAGE.getKey()));
+		uiField.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
+		uiField.setUploadErrorMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD_ERROR_MESSAGE.getKey()));
 
 		uiField.setDisplayType(displayType.toUiFileFieldDisplayType());
 		uiField.setMaxFiles(this.maxFiles);

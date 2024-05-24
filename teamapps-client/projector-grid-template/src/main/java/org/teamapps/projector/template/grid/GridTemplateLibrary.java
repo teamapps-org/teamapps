@@ -1,10 +1,10 @@
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.clientobject.ComponentLibrary;
+import org.teamapps.projector.clientobject.ClientObjectLibrary;
 import org.teamapps.projector.resource.ClassPathResource;
 import org.teamapps.projector.resource.Resource;
 
-public class GridTemplateLibrary implements ComponentLibrary {
+public class GridTemplateLibrary implements ClientObjectLibrary {
 
 	@Override
 	public Resource getMainJsResource() {

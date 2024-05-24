@@ -9,7 +9,6 @@
         <version>0.9.155-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.example</groupId>
     <artifactId>projector-grid-template</artifactId>
 
     <properties>

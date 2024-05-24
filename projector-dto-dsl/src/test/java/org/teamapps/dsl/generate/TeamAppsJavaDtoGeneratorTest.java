@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,12 +32,12 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void classProperties() throws Exception {
 		executeClassTest(
 				"package \"x\":org.teamapps.dto222; " +
-						"import org.teamapps.dto.blah.DtoComponent; " +
-						"class A { "
-						+ " required String aasdf; "
-						+ " String b; "
-						+ " List<Long> c; "
-						+ "}",
+				"import org.teamapps.dto.blah.DtoComponent; " +
+				"class A { "
+				+ " required String aasdf; "
+				+ " String b; "
+				+ " List<Long> c; "
+				+ "}",
 				"org.teamapps.dto222.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_classProperties.java"
 		);
@@ -47,11 +47,23 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void classesImplementTheirInterfaces() throws Exception {
 		executeClassTest(
 				"package \"x\":org.teamapps.projector.dto; class A {}"
-						+ "interface B { String bProperty; }"
-						+ "interface C { required List<Integer> cProperty; }"
-						+ "class D extends A implements B, C {}",
+				+ "interface B { String bProperty; }"
+				+ "interface C { required List<Integer> cProperty; }"
+				+ "class D extends A implements B, C {}",
 				"org.teamapps.projector.dto.D",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_classesImplementTheirInterfaces.java"
+		);
+	}
+
+	@Test
+	public void classesImplementingExternalInterface() throws Exception {
+		String dslString = "package \"x\":org.teamapps.projector.dto;\n"
+						   + "import external org.teamapps.projector.clientobject.component.ComponentConfig;\n"
+						   + "class A implements ComponentConfig {}";
+		executeClassTest(
+				dslString,
+				"org.teamapps.projector.dto.A",
+				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_classesImplementingExternalInterface.java"
 		);
 	}
 
@@ -59,9 +71,9 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void doubleInheritedInterfaceProperties() throws Exception {
 		executeClassTest(
 				"package \"x\":org.teamapps.projector.dto; interface B { String bProperty; }"
-						+ "interface C { required List<Integer> cProperty; }"
-						+ "class A implements B {} "
-						+ "class D extends A implements B, C {}",
+				+ "interface C { required List<Integer> cProperty; }"
+				+ "class A implements B {} "
+				+ "class D extends A implements B, C {}",
 				"org.teamapps.projector.dto.D",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_doubleInheritedInterfaceProperties.java"
 		);
@@ -71,14 +83,14 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void interfaces() throws Exception {
 		executeInterfaceTest(
 				"package \"x\":org.teamapps.projector.dto; " +
-						"interface A { "
-						+ " required String a;"
-						+ " String b;"
-						+ " command x(String x);"
-						+ " command x2(String x2) returns boolean;"
-						+ " event y(String y);"
-						+ " query q(String y) returns int;"
-						+ "}",
+				"interface A { "
+				+ " required String a;"
+				+ " String b;"
+				+ " command x(String x);"
+				+ " command x2(String x2) returns boolean;"
+				+ " event y(String y);"
+				+ " query q(String y) returns int;"
+				+ "}",
 				"org.teamapps.projector.dto.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_interfaces.java"
 		);
@@ -88,7 +100,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void interfaceInteritance() throws Exception {
 		executeInterfaceTest(
 				"package \"x\":org.teamapps.projector.dto; interface A { String a; }"
-						+ "interface B extends A { String b; }",
+				+ "interface B extends A { String b; }",
 				"org.teamapps.projector.dto.B",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_interfaceInteritance.java"
 		);
@@ -98,11 +110,11 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void fromJsonWithEnums() throws Exception {
 		executeClassTest(
 				"package \"x\":org.teamapps.projector.dto; enum E { "
-						+ " A, B "
-						+ "} "
-						+ "class C { "
-						+ "    E e; "
-						+ "}",
+				+ " A, B "
+				+ "} "
+				+ "class C { "
+				+ "    E e; "
+				+ "}",
 				"org.teamapps.projector.dto.C",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_fromJsonWithEnums.java"
 		);
@@ -121,7 +133,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void dictionaryOfList() throws Exception {
 		String dslString = "package \"x\":org.teamapps.projector.dto; interface X {}"
-				+ "class A { Dictionary<List<X>> x; }";
+						   + "class A { Dictionary<List<X>> x; }";
 		executeClassTest(
 				dslString,
 				"org.teamapps.projector.dto.A",
@@ -132,7 +144,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void plainObjects() throws Exception {
 		String dslString = "package \"x\":org.teamapps.projector.dto; interface X {}"
-				+ "class A { Object x; List<Object> y; Dictionary<Object> z; }";
+						   + "class A { Object x; List<Object> y; Dictionary<Object> z; }";
 		executeClassTest(
 				dslString,
 				"org.teamapps.projector.dto.A",
@@ -144,7 +156,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void mutableProperties() throws Exception {
 		executeClassTest(
 				"package \"x\":org.teamapps.projector.dto;"
-								   + "class A { mutable String a; }",
+				+ "class A { mutable String a; }",
 				"org.teamapps.projector.dto.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_mutableProperties.java"
 		);
@@ -154,8 +166,8 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void enums() throws Exception {
 		executeEnumTest(
 				"package \"x\":org.teamapps.projector.dto; enum E { "
-						+ " A, B "
-						+ "} ",
+				+ " A, B "
+				+ "} ",
 				"org.teamapps.projector.dto.E",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_enums.java"
 		);
@@ -165,10 +177,36 @@ public class TeamAppsJavaDtoGeneratorTest {
 	public void stringEnums() throws Exception {
 		executeEnumTest(
 				"package \"x\":org.teamapps.projector.dto; enum E { "
-						+ " A = \"a\", B = \"b\" "
-						+ "} ",
+				+ " A = \"a\", B = \"b\" "
+				+ "} ",
 				"org.teamapps.projector.dto.E",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_stringEnums.java"
+		);
+	}
+
+	@Test
+	public void eventMethodInvoker() throws Exception {
+		executeEventMethodInvokerTest(
+				"package \"x\":org.teamapps.dto222; " +
+				"import org.teamapps.dto.blah.DtoComponent; " +
+				"class A { "
+				+ " event e(int i, String s, Object o);"
+				+ "}",
+				"org.teamapps.dto222.A",
+				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_eventMethodInvoker.java"
+		);
+	}
+
+	@Test
+	public void eventHandlerInterface() throws Exception {
+		executeEventHandlerInterfaceTest(
+				"package \"x\":org.teamapps.dto222; " +
+				"import org.teamapps.dto.blah.DtoComponent; " +
+				"class A { "
+				+ " event e(int i, String s, Object o);"
+				+ "}",
+				"org.teamapps.dto222.A",
+				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_eventHandlerInterface.java"
 		);
 	}
 
@@ -193,6 +231,22 @@ public class TeamAppsJavaDtoGeneratorTest {
 
 		StringWriter stringWriter = new StringWriter();
 		new TeamAppsJavaDtoGenerator(model).generateEnum(model.findEnumByQualifiedName(qualifiedEnumName).orElseThrow(), stringWriter);
+		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
+	}
+
+	private void executeEventMethodInvokerTest(String dslString, String qualifiedClassName, String expectedResultResourceName) throws IOException {
+		TeamAppsIntermediateDtoModel model = createModel(dslString);
+
+		StringWriter stringWriter = new StringWriter();
+		new TeamAppsJavaDtoGenerator(model).generateClientObjectEventMethodInvoker(model.findClassByQualifiedName(qualifiedClassName).orElseThrow(), stringWriter);
+		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
+	}
+
+	private void executeEventHandlerInterfaceTest(String dslString, String qualifiedClassName, String expectedResultResourceName) throws IOException {
+		TeamAppsIntermediateDtoModel model = createModel(dslString);
+
+		StringWriter stringWriter = new StringWriter();
+		new TeamAppsJavaDtoGenerator(model).generateClientObjectEventHandlerInterface(model.findClassByQualifiedName(qualifiedClassName).orElseThrow(), stringWriter);
 		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
 	}
 

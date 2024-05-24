@@ -20,7 +20,6 @@
 package org.teamapps.dsl.generate;
 
 import org.stringtemplate.v4.STErrorListener;
-import org.stringtemplate.v4.misc.ErrorType;
 import org.stringtemplate.v4.misc.STMessage;
 
 public class StringTemplatesErrorListener implements STErrorListener {
@@ -31,9 +30,7 @@ public class StringTemplatesErrorListener implements STErrorListener {
 
 	@Override
 	public void runTimeError(STMessage stMessage) {
-		if (stMessage.error != ErrorType.NO_SUCH_PROPERTY) { // ignore these - see org.stringtemplate.v4.STErrorListener.runTimeError()
-			throw createException(stMessage);
-		}
+		throw createException(stMessage);
 	}
 
 	@Override
@@ -47,6 +44,6 @@ public class StringTemplatesErrorListener implements STErrorListener {
 	}
 
 	private RuntimeException createException(STMessage stMessage) {
-		return new RuntimeException("ErrorType: " + stMessage.error + ", arg1: " + stMessage.arg + ", arg2: " + stMessage.arg2 + ", arg3: " + stMessage.arg3, stMessage.cause);
+		return new TeamAppsGeneratorException("ErrorType: " + stMessage.error + ", arg1: " + stMessage.arg + ", arg2: " + stMessage.arg2 + ", arg3: " + stMessage.arg3, stMessage.cause);
 	}
 }

@@ -29,12 +29,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.commons.event.Event;
 import org.teamapps.commons.util.ExceptionUtil;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.dto.protocol.server.*;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.projector.clientobject.*;
-import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ComponentLibraryInfo;
+import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.i18n.ResourceBundleTranslationProvider;
 import org.teamapps.projector.i18n.TranslationProvider;
@@ -102,7 +103,7 @@ public class SessionContext {
 
 	private final InternalUiSessionListener uiSessionListener = new InternalUiSessionListener();
 
-	private final Set<ComponentLibrary> loadedComponentLibraries = new HashSet<>();
+	private final Set<ClientObjectLibrary> loadedComponentLibraries = new HashSet<>();
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 
 	private ULocale locale = ULocale.US;
@@ -282,10 +283,10 @@ public class SessionContext {
 		if (clientObjectClass == null) {
 			componentLibraryUuid = null;
 		} else {
-			ComponentLibraryInfo libraryInfo = componentLibraryRegistry.getComponentLibraryForClientObjectClass(clientObjectClass);
-			if (!loadedComponentLibraries.contains(libraryInfo.componentLibrary()) && loadIfNecessary) {
+			ClientObjectLibraryInfo libraryInfo = componentLibraryRegistry.getComponentLibraryForClientObjectClass(clientObjectClass);
+			if (!loadedComponentLibraries.contains(libraryInfo.clientObjectLibrary()) && loadIfNecessary) {
 				uiSession.sendReliableServerMessage(new REGISTER_LIB(libraryInfo.uuid(), libraryInfo.mainJsUrl(), libraryInfo.mainCssUrl()));
-				loadedComponentLibraries.add(libraryInfo.componentLibrary());
+				loadedComponentLibraries.add(libraryInfo.clientObjectLibrary());
 			}
 			componentLibraryUuid = libraryInfo.uuid();
 		}
@@ -451,7 +452,7 @@ public class SessionContext {
 			}
 
 			@Override
-			public void sendCommandIfRendered(String name, Object[] params, Consumer<JsonWrapper> resultHandler) {
+			public boolean sendCommandIfRendered(String name, Object[] params, Consumer<JsonWrapper> resultHandler) {
 				CurrentSessionContext.throwIfNotSameAs(SessionContext.this);
 
 				if (isRendering(clientObject)) {
@@ -466,8 +467,12 @@ public class SessionContext {
 					the panel was rendered (which is only after completing its createUiComponent() method).
 					 */
 					runWithContext(() -> sendCommandInternal(getClientObjectId(clientObject, false), name, params, null), true);
+					return true;
 				} else if (isRendered(clientObject)) {
 					sendCommandInternal(getClientObjectId(clientObject, false), name, params, null);
+					return true;
+				} else {
+					return false;
 				}
 			}
 

@@ -24,7 +24,7 @@ class(c) ::= <<
 
 @JsonTypeName("<c.name>")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public <if(c.abstract)>abstract <endif>class <c.javaClassName> <if(c.superClass)>extends Dto<c.superClass.name> <endif>implements <if(c.interfaces)><c.interfaces:{itf|Dto<itf.name>}; separator=", ">, <endif>DtoObject {
+public <if(c.abstract)>abstract <endif>class <c.javaClassName> <if(c.superClass)>extends <c.superClass.javaClassName> <endif>implements <if(c.interfaces)><c.interfaces:{itf|<itf.javaClassName>}; separator=", ">, <endif>DtoObject {
 
     public static final String TYPE_ID = "<c.name>";
     public static final List\<String\> EVENT_NAMES = List.of(<c.allEvents:{e|"<e.name>"}; separator=", ">);
@@ -78,7 +78,7 @@ interface(c) ::= <<
 
 @JsonTypeName("<c.name>")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface <c.javaClassName><if(c.typeArguments)><c.typeArguments.text><endif> extends <if(c.interfaces)><c.interfaces:{si|<si.javaClassName>}; separator=", ">, <endif>DtoObject {
+public interface <c.javaClassName> extends <if(c.interfaces)><c.interfaces:{si|<si.javaClassName>}; separator=", ">, <endif>DtoObject {
 
 	<c.properties:getterStub(); separator="\n">
 	<c.nonRequiredProperties:setterStub(c); separator="\n">
@@ -102,6 +102,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.Spliterator;
@@ -198,13 +199,13 @@ propertyAssignment(p) ::= "this.<p.name> = <p.name>;"
 
 enumClass(e) ::= <<
 <javaFilePrelude(e.packageName)>
-public enum <e.javaClassName> {
+public enum Dto<e.javaClassName> {
 	<e.enumConstants:enumConstant(e.stringEnum); separator=",\n">;
 
 	<if(e.stringEnum)>
 	private final String jsonValue;
 
-	<e.javaClassName>(String jsonValue) {
+	Dto<e.javaClassName>(String jsonValue) {
 		this.jsonValue = jsonValue;
 	}
 
@@ -240,7 +241,7 @@ public static class <ed.name; format="cap">Event {
 
 	<ed.allProperties:setter([ed.name, "Event"]); separator="\n\n">
 
-    <if(ed.staticModifier)>
+    <if(ed.isStatic)>
     public String getComponentId() {
         return null;
     }
@@ -329,7 +330,7 @@ public static class <c.javaClassName>Wrapper extends JsonWrapper {
 >>
 
 jsonWrapperGetter(propertyDeclaration) ::= <<
-<if(propertyDeclaration.type.isUiClientObjectReferenceOrCollectionOfThese)>
+<if(propertyDeclaration.type.isUiClientObjectReferenceOrClientObjectCollection)>
 // skipped <propertyDeclaration.name>
 <else>
 <uiObjectWrapperGetter(propertyDeclaration)>
@@ -351,7 +352,7 @@ if (<variableName> == null || <variableName>.isNull()) {
 ArrayNode <variableName>ArrayNode = ((ArrayNode) <variableName>);
 return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.elements(), <variableName>ArrayNode.size(), Spliterator.ORDERED), false)
     .map(<variableName>X -> {
-        <wrapperPropertyValueExtractor(type.firstTypeArgument, [variableName,"X"])>
+        <wrapperPropertyValueExtractor(type.collectionType, [variableName,"X"])>
     })
     .collect(Collectors.toList());
 <elseif (type.isDictionary)>
@@ -359,7 +360,7 @@ ObjectNode <variableName>ArrayNode = ((ObjectNode) <variableName>);
 return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.fields(), <variableName>ArrayNode.size(), Spliterator.ORDERED), false)
         .collect(Collectors.toMap(e -> e.getKey(), <variableName>Field -> {
             JsonNode <variableName>X = <variableName>Field.getValue();
-            <wrapperPropertyValueExtractor(type.firstTypeArgument, [variableName,"X"])>
+            <wrapperPropertyValueExtractor(type.collectionType, [variableName,"X"])>
         }));
 <elseif (type.isDtoClassOrInterface)>
 if (!<variableName>.isObject()) {
@@ -378,7 +379,7 @@ if (<variableName>.isInt()) {
 return <variableName>.textValue();
 <elseif (type.isPrimitiveOrWrapperType)>
 return <variableName>.as<type.primitiveTypeName; format="cap">();
-<elseif (type.isObjectReference)>
+<elseif (type.isObjectOrObjectCollection)>
 return new JsonWrapper(node);
 <else>
 if (!<variableName>.isObject()) {
@@ -388,5 +389,96 @@ return new <type.javaTypeWrapperString>(<variableName>);
 <endif>
 >>
 
+clientObjectChannel(c) ::= <<
+<javaFilePrelude(c.packageName)>
+
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
+import org.teamapps.projector.clientobject.ClientObjectChannel;
+
+public class <c.name>ClientObjectChannel implements ClientObjectChannel {
+
+    private final ClientObjectChannel delegate;
+
+	public <c.name>ClientObjectChannel(ClientObjectChannel clientObjectChannel) {
+        this.delegate = clientObjectChannel;
+	}
+
+	@Override
+    public void forceRender() {
+        delegate.forceRender();
+    }
+
+	@Override
+    public boolean sendCommandIfRendered(String name, Object[] params, Consumer\<JsonWrapper\> resultHandler) {
+        return delegate.sendCommandIfRendered(name, params, resultHandler);
+    }
+
+	@Override
+    public void toggleEvent(String eventName, boolean enabled) {
+        delegate.toggleEvent(eventName, enabled);
+    }
+
+	<c.allCommands:commandClientObjectChannelMethod(); separator="\n\n">
+
+}>>
+
+commandClientObjectChannelMethod(cmd) ::= <<
+public boolean <cmd.name>(<cmd.allProperties:parameter(); separator=", ">) {
+    return this.delegate.sendCommandIfRendered("<cmd.name>", new Object[] { <cmd.allProperties:{p|<p.name>}; separator=", "> });
+}
+public boolean <cmd.name>(<cmd.allProperties:parameter(); separator=", "><if(cmd.allProperties)>, <endif>Consumer\<JsonWrapper\> resultHandler) {
+    return this.delegate.sendCommandIfRendered("<cmd.name>", new Object[] { <cmd.allProperties:{p|<p.name>}; separator=", "> }, resultHandler);
+}
+>>
 
 
+eventMethodInvoker(c) ::= <<
+<javaFilePrelude(c.packageName)>
+
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
+import java.lang.reflect.Method;
+import org.teamapps.projector.clientobject.AbstractClientObjectEventMethodInvoker;
+import java.util.function.Function;
+
+public class <c.name>EventMethodInvoker extends AbstractClientObjectEventMethodInvoker {
+
+	private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+	public <c.name>EventMethodInvoker(Object targetObject) {
+		super(targetObject);
+	}
+
+	@Override
+	protected void invokeHandlerMethod(Method method, String name, List\<JsonWrapper> parameters) throws Exception {
+		switch (name) {
+		    <c.allEvents:{e|case "<e.name>" -> method.invoke(targetObject<if(e.parameters)>, <endif><e.parameters:eventMethodParameterExtractor(i0); separator=", ">);}; separator="\n">
+			default -> LOGGER.warn("No information on how to invoke this event handler method: {}", method.getName());
+		}
+	}
+}
+>>
+
+eventMethodParameterExtractor(p, index) ::= <<
+    ((Function\<JsonNode, <p.type.javaNonPrimitiveTypeString>\>) node -> {
+        <wrapperPropertyValueExtractor(p.type, "node")>
+    }).apply(parameters.get(<index>).getJsonNode())
+>>
+
+eventHandlerInterface(c) ::= <<
+<javaFilePrelude(c.packageName)>
+
+<c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
+import java.lang.reflect.Method;
+import org.teamapps.projector.clientobject.AbstractClientObjectEventMethodInvoker;
+import java.util.function.Function;
+
+public interface <c.name>EventHandler {
+
+    <c.allEvents:eventMethodStub(); separator="\n">
+
+}
+>>
+
+eventMethodStub(e) ::= <<
+    void handle<e.name; format="cap">(<e.parameters:parameter(); separator=", ">);
+>>

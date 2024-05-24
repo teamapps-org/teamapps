@@ -36,7 +36,7 @@ import {
 	TeamAppsEvent
 } from "projector-client-object-api";
 import {animateCSS, Constants} from "../Common";
-import {createUiSpacingValueCssString} from "../../../../../projector-client-object-api/src/main/ts/util/CssFormatUtil";
+import {createUiSpacingValueCssString} from "projector-client-object-api";
 import {ProgressBar} from "../micro-components/ProgressBar";
 
 const containersByPosition: {

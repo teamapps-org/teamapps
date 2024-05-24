@@ -31,10 +31,7 @@ public class GenerateJavaDtosMojo extends AbstractMojo {
 	@Component
 	private BuildPluginManager pluginManager;
 
-	@Component
-	private ProjectBuilder projectBuilder;
-
-	@Parameter(property = "maven.version", readonly = true)
+	@Parameter(defaultValue = "${maven.version}", readonly = true)
 	private String mavenVersion;
 
 	@Parameter(defaultValue = "${project.basedir}/src/main/dto")

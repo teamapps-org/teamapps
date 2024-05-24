@@ -23,13 +23,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.*;
-import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
@@ -43,7 +42,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-@ProjectorComponent(library = CoreComponentLibrary.class)
+@ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";

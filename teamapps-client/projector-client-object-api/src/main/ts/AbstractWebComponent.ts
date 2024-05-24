@@ -67,10 +67,6 @@ export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent
 	public setConfig(config: C) {
 		this.config = config;
 
-		if (this.config.debuggingId != null) {
-			this.setAttribute("data-teamapps-debugging-id", this.config.debuggingId);
-		}
-
 		this.classList.toggle("invisible-component", this.config.visible == null ? false : !this.config.visible);
 		if (this.config.stylesBySelector != null) { // might be null when used via JavaScript API!
 			Object.keys(this.config.stylesBySelector).forEach(selector => this.setStyle(selector, this.config.stylesBySelector[selector]));

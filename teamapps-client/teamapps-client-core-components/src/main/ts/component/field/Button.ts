@@ -17,18 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {bind, Component, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
+import {bind, Component, DtoFieldEditingMode, DtoFieldMessage, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
 import {DropDown} from "../../micro-components/DropDown";
 import {
 	DtoButton,
 	DtoButton_ClickedEvent,
 	DtoButton_DropDownOpenedEvent,
 	DtoButtonCommandHandler,
-	DtoButtonEventSource,
-	DtoFieldEditingMode,
-	DtoFieldMessage
+	DtoButtonEventSource
 } from "../../generated";
-import {AbstractField} from "./AbstractField";
+import {AbstractField} from "projector-client-object-api";
 
 export class Button extends AbstractField<DtoButton, void> implements DtoButtonEventSource, DtoButtonCommandHandler {
 

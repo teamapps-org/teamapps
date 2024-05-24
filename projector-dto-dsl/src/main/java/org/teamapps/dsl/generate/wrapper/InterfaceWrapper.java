@@ -4,6 +4,8 @@ import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.TeamAppsDtoParser.InterfaceDeclarationContext;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclarationContext> {
@@ -11,19 +13,30 @@ public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclar
 	private final InterfaceDeclarationContext context;
 	private final TeamAppsIntermediateDtoModel model;
 
+	private List<PropertyWrapper> properties;
+	private List<CommandWrapper> commands;
+	private List<EventWrapper> events;
+	private List<QueryWrapper> queries;
+
 	public InterfaceWrapper(InterfaceDeclarationContext context, TeamAppsIntermediateDtoModel model) {
 		this.context = context;
 		this.model = model;
+
+		this.properties = context.propertyDeclaration().stream().map(p -> new PropertyWrapper(p, model)).toList();
+		this.commands = getAllCommandDeclarationContexts().stream().map(p -> new CommandWrapper(p, model)).toList();
+		this.events = context.eventDeclaration().stream().map(p -> new EventWrapper(p, model)).toList();
+		this.queries = context.queryDeclaration().stream().map(p -> new QueryWrapper(p, model)).toList();
+	}
+
+	private List<TeamAppsDtoParser.CommandDeclarationContext> getAllCommandDeclarationContexts() {
+		ArrayList<TeamAppsDtoParser.CommandDeclarationContext> allCommandDeclarations = new ArrayList<>(context.commandDeclaration());
+		allCommandDeclarations.addAll(ClassOrInterfaceWrapper.createImplicitMutationCommands(context.propertyDeclaration()));
+		return allCommandDeclarations;
 	}
 
 	@Override
 	public InterfaceDeclarationContext getParserRuleContext() {
 		return context;
-	}
-
-	@Override
-	public TeamAppsIntermediateDtoModel getModel() {
-		return model;
 	}
 
 	@Override
@@ -48,28 +61,33 @@ public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclar
 	}
 
 	@Override
-	public List<TeamAppsDtoParser.PropertyDeclarationContext> getProperties() {
-		return context.propertyDeclaration();
+	public List<PropertyWrapper> getProperties() {
+		return properties;
 	}
 
 	@Override
-	public List<TeamAppsDtoParser.CommandDeclarationContext> getCommands() {
-		return context.commandDeclaration();
+	public List<CommandWrapper> getCommands() {
+		return commands;
 	}
 
 	@Override
-	public List<TeamAppsDtoParser.EventDeclarationContext> getEvents() {
-		return context.eventDeclaration();
+	public List<EventWrapper> getEvents() {
+		return events;
 	}
 
 	@Override
-	public List<TeamAppsDtoParser.QueryDeclarationContext> getQueries() {
-		return context.queryDeclaration();
+	public List<QueryWrapper> getQueries() {
+		return queries;
 	}
 
 	@Override
 	public boolean isAbstract() {
 		return true;
+	}
+
+	@Override
+	public boolean isExternal() {
+		return false;
 	}
 
 	@Override

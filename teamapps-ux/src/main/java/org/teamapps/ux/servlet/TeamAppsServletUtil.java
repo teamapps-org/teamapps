@@ -3,8 +3,8 @@ package org.teamapps.ux.servlet;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
-import org.teamapps.ux.servlet.resourceprovider.ResourceProvider;
-import org.teamapps.ux.servlet.resourceprovider.ResourceProviderServlet;
+import org.teamapps.projector.resourceprovider.ResourceProvider;
+import org.teamapps.projector.resourceprovider.ResourceProviderServlet;
 
 public class TeamAppsServletUtil {
 

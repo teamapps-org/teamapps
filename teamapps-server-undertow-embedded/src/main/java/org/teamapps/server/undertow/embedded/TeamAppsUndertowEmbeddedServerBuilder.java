@@ -5,9 +5,9 @@ import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsCore;
 import org.teamapps.threading.CompletableFutureChainSequentialExecutorFactory;
 import org.teamapps.threading.SequentialExecutorFactory;
-import org.teamapps.ux.servlet.resourceprovider.ClassPathResourceProvider;
-import org.teamapps.ux.servlet.resourceprovider.DirectoryResolutionStrategy;
-import org.teamapps.ux.servlet.resourceprovider.ResourceProvider;
+import org.teamapps.projector.resourceprovider.ClassPathResourceProvider;
+import org.teamapps.projector.resourceprovider.DirectoryResolutionStrategy;
+import org.teamapps.projector.resourceprovider.ResourceProvider;
 import org.teamapps.webcontroller.WebController;
 
 import java.util.ArrayList;

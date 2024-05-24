@@ -4,13 +4,25 @@ grammar TeamAppsDto;
 package org.teamapps.dsl;
 }
 
+IMPORT: 'import';
+EXTERNAL: 'external';
+INTERFACE: 'interface';
+EXTENDS: 'extends';
+IMPLEMENTS: 'implements';
+COMMAND: 'command';
+EVENT: 'event';
+QUERY: 'query';
+RETURNS: 'returns';
+Identifier : [a-zA-Z_][a-zA-Z0-9_]*;
+
 classCollection : packageDeclaration importDeclaration* typeDeclaration*;
 
 packageDeclaration : 'package' StringLiteral ':' packageName ';' ;
 
 packageName : Identifier | packageName '.' Identifier;
 
-importDeclaration : 'import' qualifiedTypeName ';';
+importDeclaration : IMPORT externalInterfaceTypeModifier? qualifiedTypeName ';';
+externalInterfaceTypeModifier : EXTERNAL;
 
 typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 
@@ -20,7 +32,7 @@ enumConstant : Identifier ('=' StringLiteral)?;
 classDeclaration : notGeneratedAnnotation? typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
-interfaceDeclaration : notGeneratedAnnotation? 'interface' Identifier typeArguments? superInterfaceDecl? '{'
+interfaceDeclaration : notGeneratedAnnotation? 'interface' Identifier superInterfaceDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
 superClassDecl: 'extends' typeName;
@@ -28,9 +40,11 @@ superInterfaceDecl: 'extends' classList;
 implementsDecl: 'implements' classList;
 classList: ((typeName ',')* typeName)?;
 propertyDeclaration : requiredModifier? mutableModifier? type Identifier ';';
+
 commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ('returns' type)? ';';
 eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ';';
 queryDeclaration : 'query' Identifier '(' ((formalParameter ',')* formalParameter)? ')' 'returns' type ';';
+
 formalParameter : type Identifier;
 
 type : typeReference | primitiveType ;
@@ -41,10 +55,12 @@ referenceTypeModifier : '*';
 typeName : Identifier ;
 qualifiedTypeName : packageName '.' Identifier ;
 
-typeArguments
-    :   '<' typeArgument (',' typeArgument)* '>'
-    ;
+//typeParameters : '<' typeParameterList '>' ;
+//typeParameterList : typeParameter (',' typeParameter)* ;
+//typeParameter : typeName typeBound? ;
+//typeBound : 'extends' typeName;
 
+typeArguments :   '<' typeArgument (',' typeArgument)* '>' ;
 typeArgument : type;
 
 primitiveType
@@ -66,194 +82,6 @@ mutableModifier : 'mutable';
 staticModifier : 'static';
 
 // EXPRESSIONS
-
-parExpression
-    :   '(' expression ')'
-    ;
-
-expressionList
-    :   expression (',' expression)*
-    ;
-
-statementExpression
-    :   expression
-    ;
-
-constantExpression
-    :   expression
-    ;
-
-expression
-    :   primary
-    |   expression '.' Identifier
-    |   expression '.' 'this'
-    |   expression '.' 'super' superSuffix
-    |   expression '.' explicitGenericInvocation
-    |   expression '[' expression ']'
-    |   expression '(' expressionList? ')'
-    |   'new' creator
-    |   '(' type ')' expression
-    |   expression ('++' | '--')
-    |   ('+'|'-'|'++'|'--') expression
-    |   ('~'|'!') expression
-    |   expression ('*'|'/'|'%') expression
-    |   expression ('+'|'-') expression
-    |   expression ('<' '<' | '>' '>' '>' | '>' '>') expression
-    |   expression ('<=' | '>=' | '>' | '<') expression
-    |   expression 'instanceof' type
-    |   expression ('==' | '!=') expression
-    |   expression '&' expression
-    |   expression '^' expression
-    |   expression '|' expression
-    |   expression '&&' expression
-    |   expression '||' expression
-    |   expression '?' expression ':' expression
-    |   <assoc=right> expression
-        (   '='
-        |   '+='
-        |   '-='
-        |   '*='
-        |   '/='
-        |   '&='
-        |   '|='
-        |   '^='
-        |   '>>='
-        |   '>>>='
-        |   '<<='
-        |   '%='
-        )
-        expression
-    ;
-
-primary
-    :   '(' expression ')'
-    |   'this'
-    |   'super'
-    |   literal
-    |   Identifier
-    |   type '.' 'class'
-    |   'void' '.' 'class'
-    |   nonWildcardTypeArguments (explicitGenericInvocationSuffix | 'this' arguments)
-    ;
-
-creator
-    :   nonWildcardTypeArguments createdName classCreatorRest
-    |   createdName (arrayCreatorRest | classCreatorRest)
-    ;
-
-createdName
-    :   Identifier typeArgumentsOrDiamond? ('.' Identifier typeArgumentsOrDiamond?)*
-    |   primitiveType
-    ;
-
-arrayCreatorRest
-    :   '['
-        (   ']' ('[' ']')* arrayInitializer
-        |   expression ']' ('[' expression ']')* ('[' ']')*
-        )
-    ;
-
-classCreatorRest
-    :   arguments
-    ;
-
-explicitGenericInvocation
-    :   nonWildcardTypeArguments explicitGenericInvocationSuffix
-    ;
-
-nonWildcardTypeArguments
-    :   '<' typeList '>'
-    ;
-
-typeList
-    :   type (',' type)*
-    ;
-
-typeArgumentsOrDiamond
-    :   '<' '>'
-    |   typeArguments
-    ;
-
-nonWildcardTypeArgumentsOrDiamond
-    :   '<' '>'
-    |   nonWildcardTypeArguments
-    ;
-
-superSuffix
-    :   arguments
-    |   '.' Identifier arguments?
-    ;
-
-explicitGenericInvocationSuffix
-    :   'super' superSuffix
-    |   Identifier arguments
-    ;
-
-arguments
-    :   '(' expressionList? ')'
-    ;
-
-variableInitializer
-    :   arrayInitializer
-    |   expression
-    ;
-
-arrayInitializer
-    :   '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
-    ;
-
-
-// literals
-
-literal
-    :   IntegerLiteral
-    |   FloatingPointLiteral
-    |   CharacterLiteral
-    |   StringLiteral
-    |   BooleanLiteral
-    |   NullLiteral
-    ;
-
-// §3.10.1 Integer Literals
-
-IntegerLiteral
-    :   '-'?
-    (DecimalIntegerLiteral
-    |   HexIntegerLiteral
-    |   OctalIntegerLiteral
-    |   BinaryIntegerLiteral)
-    ;
-
-fragment
-DecimalIntegerLiteral
-    :   DecimalNumeral IntegerTypeSuffix?
-    ;
-
-fragment
-HexIntegerLiteral
-    :   HexNumeral IntegerTypeSuffix?
-    ;
-
-fragment
-OctalIntegerLiteral
-    :   OctalNumeral IntegerTypeSuffix?
-    ;
-
-fragment
-BinaryIntegerLiteral
-    :   BinaryNumeral IntegerTypeSuffix?
-    ;
-
-fragment
-IntegerTypeSuffix
-    :   [lL]
-    ;
-
-fragment
-DecimalNumeral
-    :   '0'
-    |   NonZeroDigit (Digits? | Underscores Digits)
-    ;
 
 fragment
 Digits
@@ -277,40 +105,10 @@ DigitOrUnderscore
     |   '_'
     ;
 
-fragment
-Underscores
-    :   '_'+
-    ;
-
-fragment
-HexNumeral
-    :   '0' [xX] HexDigits
-    ;
-
-fragment
-HexDigits
-    :   HexDigit (HexDigitOrUnderscore* HexDigit)?
-    ;
 
 fragment
 HexDigit
     :   [0-9a-fA-F]
-    ;
-
-fragment
-HexDigitOrUnderscore
-    :   HexDigit
-    |   '_'
-    ;
-
-fragment
-OctalNumeral
-    :   '0' Underscores? OctalDigits
-    ;
-
-fragment
-OctalDigits
-    :   OctalDigit (OctalDigitOrUnderscore* OctalDigit)?
     ;
 
 fragment
@@ -322,107 +120,6 @@ fragment
 OctalDigitOrUnderscore
     :   OctalDigit
     |   '_'
-    ;
-
-fragment
-BinaryNumeral
-    :   '0' [bB] BinaryDigits
-    ;
-
-fragment
-BinaryDigits
-    :   BinaryDigit (BinaryDigitOrUnderscore* BinaryDigit)?
-    ;
-
-fragment
-BinaryDigit
-    :   [01]
-    ;
-
-fragment
-BinaryDigitOrUnderscore
-    :   BinaryDigit
-    |   '_'
-    ;
-
-// §3.10.2 Floating-Point Literals
-
-FloatingPointLiteral
-    :   DecimalFloatingPointLiteral
-    |   HexadecimalFloatingPointLiteral
-    ;
-
-fragment
-DecimalFloatingPointLiteral
-    :   Digits '.' Digits? ExponentPart? FloatTypeSuffix?
-    |   '.' Digits ExponentPart? FloatTypeSuffix?
-    |   Digits ExponentPart FloatTypeSuffix?
-    |   Digits FloatTypeSuffix
-    ;
-
-fragment
-ExponentPart
-    :   ExponentIndicator SignedInteger
-    ;
-
-fragment
-ExponentIndicator
-    :   [eE]
-    ;
-
-fragment
-SignedInteger
-    :   Sign? Digits
-    ;
-
-fragment
-Sign
-    :   [+-]
-    ;
-
-fragment
-FloatTypeSuffix
-    :   [fFdD]
-    ;
-
-fragment
-HexadecimalFloatingPointLiteral
-    :   HexSignificand BinaryExponent FloatTypeSuffix?
-    ;
-
-fragment
-HexSignificand
-    :   HexNumeral '.'?
-    |   '0' [xX] HexDigits? '.' HexDigits
-    ;
-
-fragment
-BinaryExponent
-    :   BinaryExponentIndicator SignedInteger
-    ;
-
-fragment
-BinaryExponentIndicator
-    :   [pP]
-    ;
-
-// §3.10.3 Boolean Literals
-
-BooleanLiteral
-    :   'true'
-    |   'false'
-    ;
-
-// §3.10.4 Character Literals
-
-CharacterLiteral
-    :   '\'' SingleCharacter '\''
-    |   '\'' EscapeSequence '\''
-    ;
-
-fragment
-SingleCharacter
-    :   ~['\\]
     ;
 
 // §3.10.5 String Literals
@@ -471,8 +168,6 @@ ZeroToThree
 NullLiteral
     :   'null'
     ;
-
-Identifier : [a-zA-Z_][a-zA-Z0-9_]*;
 
 WS : [ \t\n]+ -> skip;
 COMMENT : '/*' .*? '*/' -> skip;

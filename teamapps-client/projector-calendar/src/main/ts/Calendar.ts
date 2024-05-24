@@ -18,7 +18,6 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "teamapps-client-core";
 import {
 	DtoCalendar_DataNeededEvent,
 	DtoCalendar_DayClickedEvent,
@@ -33,9 +32,7 @@ import {
 	DtoCalendar,
 	DtoCalendarEventSource, DtoCalendarViewMode, DtoCalendarEventClientRecord
 } from "./generated";
-import {AbstractLegacyComponent} from "teamapps-client-core";
 import {Interval, intervalsOverlap} from "./intervals";
-import {parseHtml, prependChild} from "teamapps-client-core";
 
 import {addDays, Calendar as FullCalendar} from '@fullcalendar/core';
 import dayGridPlugin, {DayGridView} from '@fullcalendar/daygrid';
@@ -44,12 +41,12 @@ import interactionPlugin from '@fullcalendar/interaction';
 import momentTimeZone from './fullcalendar-moment-timezone';
 import {EventInput, EventRenderingChoice} from "@fullcalendar/core/structs/event";
 import {EventSourceError, ExtendedEventSourceInput} from "@fullcalendar/core/structs/event-source";
-import {bind} from "teamapps-client-core";
 import {View} from "@fullcalendar/core/View";
 import EventApi from "@fullcalendar/core/api/EventApi";
 import {Duration} from "@fullcalendar/core/datelib/duration";
 import {monthGridViewPlugin} from "./FullCalendarMonthGrid";
 import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
+import {AbstractLegacyComponent, bind, parseHtml, prependChild, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
 
 export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements DtoCalendarCommandHandler, DtoCalendarEventSource {
 
@@ -75,7 +72,7 @@ export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements Dt
 </div>`);
 		let $fullCalendarElement: HTMLElement = this.$main.querySelector(':scope > .calendar');
 
-		this.eventSource = new DtoCalendarFullCalendarEventSource(config.id, () => this.calendar);
+		this.eventSource = new DtoCalendarFullCalendarEventSource();
 		this.calendar = new FullCalendar($fullCalendarElement, {
 			plugins: [momentTimeZone, interactionPlugin, dayGridPlugin, timeGridPlugin, monthGridViewPlugin],
 			header: false,
@@ -289,14 +286,8 @@ export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements Dt
 
 		this.calendar.render();
 
-		this.$main.append(parseHtml(`<style>
-                #${config.id} .fc-head td.fc-widget-header>.fc-row.fc-widget-header {
-                    background-color: ${(config.tableHeaderBackgroundColor ?? '')};
-                }
-                #${config.id} .fc-bgevent-skeleton td.fc-week-number {
-                    background-color: ${(config.tableHeaderBackgroundColor ?? '')};
-                }
-            </style>`));
+		this.setStyle(".fc-head td.fc-widget-header>.fc-row.fc-widget-header", {"background-color": config.tableHeaderBackgroundColor ?? ''});
+		this.setStyle(".fc-bgevent-skeleton td.fc-week-number", {"background-color": config.tableHeaderBackgroundColor ?? ''});
 	}
 
 	public setViewMode(viewMode: DtoCalendarViewMode) {
@@ -394,9 +385,6 @@ class DtoCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 
 	private cachedEvents: any[] = [];
 	private queriesDisabled: boolean;
-
-	constructor(private componentId: string, private fullCalendarAccessor: () => FullCalendar) {
-	}
 
 	@bind
 	public events(query: { start: Date; end: Date; timeZone: string; }, successCallback: (events: EventInput[]) => void, failureCallback: (error: EventSourceError) => void) {

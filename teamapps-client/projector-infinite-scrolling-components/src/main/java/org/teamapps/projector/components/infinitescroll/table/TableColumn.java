@@ -21,8 +21,8 @@ package org.teamapps.projector.components.infinitescroll.table;
 
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.components.infinitescroll.dto.DtoTableColumn;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.projector.field.AbstractField;
+import org.teamapps.projector.field.FieldMessage;
 import org.teamapps.projector.dataextraction.ValueExtractor;
 import org.teamapps.projector.dataextraction.ValueInjector;
 import org.teamapps.projector.format.TextAlignment;

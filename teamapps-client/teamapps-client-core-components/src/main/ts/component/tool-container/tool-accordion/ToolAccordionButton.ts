@@ -62,7 +62,7 @@ export class ToolAccordionButton {
 		}
 
 		this.$button = this.$buttonWrapper.firstElementChild as HTMLElement;
-		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as DtoGridTemplate).maxHeight || ToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT);
+		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as any).maxHeight || ToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT);
 		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
 		this.$buttonWrapper.classList.toggle("hidden", !config.visible);
 		this.$styleTag = this.$buttonWrapper.querySelector(":scope style");

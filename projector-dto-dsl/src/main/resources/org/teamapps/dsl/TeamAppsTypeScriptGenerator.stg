@@ -30,7 +30,7 @@ classConfigDefinition(c) ::= <<
 <c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsPackageName>";}; separator="\n">
 <if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
-export interface Dto<c.typeScriptIdentifier> <if(c.superTypes)>extends <c.superTypes:{c|Dto<c.typeScriptIdentifier>};  separator=", "> <endif>{
+export interface Dto<c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{c|Dto<c.typeScriptIdentifier>};  separator=", "> <endif>{
 	_type?: string;
 	<c.properties:typeScriptPropertyDeclaration(false); separator=";\n">
 	<c.queries:queryDeclaration(); separator=";\n">
@@ -64,7 +64,7 @@ export interface Dto<c.name>EventSource <if(c.superTypesWithEvents)>extends <c.s
 >>
 
 commandMethodStub(cmd) ::= <<
-<cmd.name>(<cmd.formalParameter:parameter(false); separator=", ">): <if(cmd.type)>Promise\<<cmd.type.typeScriptType>\>|<cmd.type.typeScriptType><else>any<endif>;
+<cmd.name>(<cmd.parameters:parameter(false); separator=", ">): <if(cmd.returnType)>Promise\<<cmd.returnType.typeScriptTypeName>\>|<cmd.returnType.typeScriptTypeName><else>any<endif>;
 >>
 
 teamAppsEventDeclaration(evt) ::= <<
@@ -73,17 +73,17 @@ on<evt.name; format="cap">: EventEmitter\<<evt.typeScriptInterfaceName>\>;
 
 eventInterface(evt) ::= <<
 export interface <evt.typeScriptInterfaceName> {
-	<evt.formalParameter:typeScriptPropertyDeclaration(true); separator=";\n">
+	<evt.parameters:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
 queryInterface(q) ::= <<
 export interface <q.typeScriptInterfaceName> {
-	<q.formalParameter:typeScriptPropertyDeclaration(true); separator=";\n">
+	<q.parameters:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
-parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptType>"
+parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptTypeName>"
 
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
@@ -91,7 +91,7 @@ interfaceConfigDefinition(c) ::= <<
 <c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsPackageName>";}; separator="\n">
 <if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
-export interface Dto<c.typeScriptIdentifier> <if(c.interfaces)>extends <c.interfaces:{superInterface|Dto<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
+export interface Dto<c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{superInterface|Dto<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
 	_type?: string;
 	<c.properties:typeScriptPropertyDeclaration(false); separator=";\n">
 	<c.queries:queryDeclaration(); separator=";\n">
@@ -115,11 +115,11 @@ export interface Dto<c.name>EventSource <if(c.superTypesWithEvents)>extends <c.s
 >>
 
 typeScriptPropertyDeclaration(p, forceRequired) ::= <<
-<p.name><if(!p.requiredModifier && !forceRequired)>?<endif>: <p.type.typeScriptType>
+<p.name><if(!p.required && !forceRequired)>?<endif>: <p.type.typeScriptTypeName>
 >>
 
 queryDeclaration(q) ::= <<
-<q.name>: (query: <q.typeScriptInterfaceName>) => Promise\<<q.type.typeScriptType>\>
+<q.name>: (query: <q.typeScriptInterfaceName>) => Promise\<<q.returnType.typeScriptTypeName>\>
 >>
 
 enum(e) ::= <<
@@ -134,7 +134,7 @@ export enum Dto<e.name> {
 >>
 
 eventNamesObject(c, static) ::= <<
-<if(static)>{ componentType: "<c.name>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.name>", _type: "<e._type>"\}}; separator=", ">] }<else>{ componentType: "<c.name>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.name>", _type: "<e._type>"\}}; separator=", ">] }<endif>
+<if(static)>{ componentType: "<c.name>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.name>", _type: "<e.jsonIdentifier>"\}}; separator=", ">] }<else>{ componentType: "<c.name>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.name>", _type: "<e.jsonIdentifier>"\}}; separator=", ">] }<endif>
 >>
 
 indexTs(classes, interfaces, enums) ::= <<

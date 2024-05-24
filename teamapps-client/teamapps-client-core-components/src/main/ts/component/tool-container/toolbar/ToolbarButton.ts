@@ -32,7 +32,7 @@ import {
 } from "projector-client-object-api";
 import {Toolbar} from "./Toolbar";
 import {AbstractToolContainer} from "../AbstractToolContainer";
-import {createDtoDropDownButtonClickInfo, DtoDropDownButtonClickInfo, DtoGridTemplate} from "../../../generated";
+import {createDtoDropDownButtonClickInfo, DtoDropDownButtonClickInfo} from "../../../generated";
 
 export class ToolbarButton {
 
@@ -64,7 +64,7 @@ export class ToolbarButton {
 		this.$button = parseHtml((config.template as Template).render(config.recordData));
 		prependChild(this.$buttonWrapper, this.$button);
 		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
-		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as DtoGridTemplate).maxHeight || Toolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
+		this.optimizedWidth = AbstractToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as any).maxHeight || Toolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
 		this.$styleTag = this.$buttonWrapper.querySelector(":scope style");
 		this.updateStyles();
 		this.setVisible(config.visible);

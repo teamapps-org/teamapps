@@ -36,7 +36,7 @@ import {AbstractLegacyComponent, Component, noOpServerChannel, parseHtml, Server
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
 import {animateCSS, Constants} from "../Common";
-import {applyCss} from "../../../../../projector-client-object-api/src/main/ts/util/cssUtil";
+import {applyCss} from "projector-client-object-api";
 
 export interface DtoWindowListener {
 	onWindowClosed: (window: Window, animationDuration: number) => void;

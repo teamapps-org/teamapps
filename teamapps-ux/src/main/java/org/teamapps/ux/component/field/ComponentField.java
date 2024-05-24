@@ -22,13 +22,12 @@ package org.teamapps.ux.component.field;
 import org.teamapps.projector.dto.DtoComponentField;
 import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 
-import java.util.function.Supplier;
-
-@ProjectorComponent(library = CoreComponentLibrary.class)
+@ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class ComponentField extends AbstractField<Void> {
 
     private Component component;

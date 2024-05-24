@@ -43,6 +43,7 @@ public interface ClientObject {
 
 	default void handleEvent(String name, List<JsonWrapper> params) {
 	}
+
 	default Object handleQuery(String name, List<JsonWrapper> params) {
 		return null;
 	}

@@ -22,14 +22,13 @@ package org.teamapps.projector.components.trivial.datetime;
 import com.ibm.icu.util.ULocale;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoAbstractDateTimeField;
-import org.teamapps.projector.clientobject.ProjectorComponent;
-import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.util.Locale;
-import java.util.function.Supplier;
 
-@ProjectorComponent(library = TrivialComponentsLibrary.class)
+@ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> {
 
 	private boolean showDropDownButton = true;

@@ -23,7 +23,7 @@ import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoItemView;
-import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;

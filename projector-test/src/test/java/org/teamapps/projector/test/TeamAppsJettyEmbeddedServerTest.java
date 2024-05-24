@@ -25,12 +25,12 @@ import org.teamapps.projector.components.infinitescroll.table.ListTableModel;
 import org.teamapps.projector.components.infinitescroll.table.Table;
 import org.teamapps.projector.components.trivial.combobox.ComboBox;
 import org.teamapps.server.jetty.embedded.TeamAppsJettyEmbeddedServer;
-import org.teamapps.ux.component.dummy.DummyComponent;
+import org.teamapps.projector.components.core.dummy.DummyComponent;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.TextField;
-import org.teamapps.ux.component.flexcontainer.VerticalLayout;
-import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.window.Window;
+import org.teamapps.projector.components.core.flexcontainer.VerticalLayout;
+import org.teamapps.projector.components.core.rootpanel.RootPanel;
+import org.teamapps.projector.components.core.window.Window;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 

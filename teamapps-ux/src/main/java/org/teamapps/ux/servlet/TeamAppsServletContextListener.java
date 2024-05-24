@@ -29,9 +29,8 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.core.TeamAppsCore;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.ux.servlet.component.ComponentLibraryResourceServlet;
-import org.teamapps.ux.servlet.resourceprovider.IconResourceProvider;
-import org.teamapps.ux.servlet.resourceprovider.ResourceProviderServlet;
-import org.teamapps.ux.servlet.resourceprovider.TeamAppsSessionResourceProvider;
+import org.teamapps.projector.resourceprovider.IconResourceProvider;
+import org.teamapps.projector.resourceprovider.ResourceProviderServlet;
 import org.teamapps.projector.session.SessionContextResourceManager;
 
 import java.lang.invoke.MethodHandles;

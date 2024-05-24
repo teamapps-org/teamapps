@@ -21,7 +21,7 @@ package org.teamapps.projector.template.grid;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.FontStyle;
 import org.teamapps.projector.format.Spacing;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ProjectorComponent(library = GridTemplateLibrary.class)
+@ClientObjectLibrary(value = GridTemplateLibrary.class)
 public class GridTemplate implements Template {
 
 	private int minWidth = 0;

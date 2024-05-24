@@ -31,7 +31,7 @@ import org.teamapps.ux.component.CoreComponentLibrary;
 import org.teamapps.ux.component.ProjectorComponent;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.projector.components.common.field.upload.FileFieldDisplayType;
-import org.teamapps.ux.i18n.TeamAppsDictionary;
+import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	private Icon<?, ?> browseButtonIcon = MaterialIcon.FILE_UPLOAD;
 	private final Icon<?, ?> defaultItemIcon = MaterialIcon.CARD_TRAVEL;
 
-	private String browseButtonCaption = getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey());
+	private String browseButtonCaption = getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD.getKey());
 
 	public void addFileItem(FileItem fileItem) {
 		fileItem.setState(FileItemState.DONE);
@@ -114,8 +114,8 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 		field.setBrowseButtonCaption(browseButtonCaption);
 		field.setUploadUrl(uploadUrl);
 		field.setMaxBytesPerFile(maxBytesPerFile);
-		field.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsDictionary.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
-		field.setUploadErrorMessage(getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD_ERROR_MESSAGE.getKey()));
+		field.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
+		field.setUploadErrorMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD_ERROR_MESSAGE.getKey()));
 		field.setMaxFiles(maxFiles);
 		field.setDisplayMode(displayType.toUiFileFieldDisplayType());
 		field.setFileItems(fileItems.stream()
@@ -225,7 +225,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	public void setMaxBytesPerFile(long maxBytesPerFile) {
 		this.maxBytesPerFile = maxBytesPerFile;
 		sendCommandIfRendered(() -> new DtoSimpleFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
-		sendCommandIfRendered(() -> new DtoSimpleFileField.SetFileTooLargeMessageCommand(getSessionContext().getLocalized(TeamAppsDictionary.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1))));
+		sendCommandIfRendered(() -> new DtoSimpleFileField.SetFileTooLargeMessageCommand(getSessionContext().getLocalized(TeamAppsTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1))));
 	}
 
 	public String getUploadUrl() {

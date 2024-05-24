@@ -109,8 +109,16 @@ public class TeamAppsJavaDtoGenerator {
 			System.out.println("Generating class: " + classWrapper.getName());
 			generateClass(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + ".java")));
 			generateClassJsonWrapper(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + "Wrapper.java")));
+			generateClientObjectChannel(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "ClientObjectChannel.java")));
+			if (!classWrapper.getEvents().isEmpty()) {
+				generateClientObjectEventMethodInvoker(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "EventMethodInvoker.java")));
+				generateClientObjectEventHandlerInterface(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "EventHandler.java")));
+			}
 		}
 		for (InterfaceWrapper interfaceWrapper : model.getOwnInterfaceDeclarations()) {
+			if (interfaceWrapper.isExternal()) {
+				continue;
+			}
 			File packageDir = FileUtils.createDirectory(new File(targetDir, interfaceWrapper.getPackageName().replace('.', '/')));
 			if (interfaceWrapper.getParserRuleContext().notGeneratedAnnotation() != null) {
 				System.out.println("Skipping @NotGenerated interface: " + interfaceWrapper.getName());
@@ -140,6 +148,39 @@ public class TeamAppsJavaDtoGenerator {
 		}, "Error while generating JsonWrapper for " + clazzContext.getName());
 	}
 
+	void generateClientObjectChannel(ClassWrapper classContext, Writer writer) throws IOException {
+		System.out.println("Generating ClientObjectChannel " + classContext.getName());
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("clientObjectChannel")
+					.add("c", classContext);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating ClientObjectChannel for " + classContext.getName());
+	}
+
+	void generateClientObjectEventMethodInvoker(ClassWrapper classContext, Writer writer) throws IOException {
+		System.out.println("Generating ClientObjectEventMethodInvoker " + classContext.getName());
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("eventMethodInvoker")
+					.add("c", classContext);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating ClientObjectEventMethodInvoker for " + classContext.getName());
+	}
+
+	void generateClientObjectEventHandlerInterface(ClassWrapper classContext, Writer writer) throws IOException {
+		System.out.println("Generating event handler interface " + classContext.getName());
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("eventHandlerInterface")
+					.add("c", classContext);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating event handler interface for " + classContext.getName());
+	}
+
 	private void generateInterfaceJsonWrapper(InterfaceWrapper interfaceWrapper, Writer writer) throws IOException {
 		runWithExceptionMessagePrefix(() -> {
 			ST template = stGroup.getInstanceOf("jsonWrapper")
@@ -148,7 +189,7 @@ public class TeamAppsJavaDtoGenerator {
 			template.write(out, new StringTemplatesErrorListener());
 			writer.close();
 		}, "Error while generating JsonWrapper for " + interfaceWrapper.getName());
-	}
+	}                                                                                                          
 
 	void generateClass(ClassWrapper clazzContext, Writer writer) throws IOException {
 		runWithExceptionMessagePrefix(() -> {

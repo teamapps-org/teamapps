@@ -20,10 +20,10 @@
 package org.teamapps.ux.component.workspacelayout;
 
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 
-@ProjectorComponent(library = CoreComponentLibrary.class)
+@ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class SimpleWorkSpaceLayout extends WorkSpaceLayout {
 
 	private final WorkSpaceLayoutViewGroup leftViewGroup;

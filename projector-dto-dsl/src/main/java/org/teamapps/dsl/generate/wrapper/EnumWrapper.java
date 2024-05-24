@@ -22,25 +22,36 @@ public class EnumWrapper implements TypeWrapper<EnumDeclarationContext> {
 	}
 
 	@Override
-	public TeamAppsIntermediateDtoModel getModel() {
-		return model;
-	}
-
-	@Override
 	public String getName() {
 		return context.Identifier().getText();
 	}
 
 	public boolean isStringEnum() {
-		return getParserRuleContext().enumConstant().stream().allMatch(ec -> ec.StringLiteral() != null);
+		return context.enumConstant().stream().allMatch(ec -> ec.StringLiteral() != null);
 	}
 
 	public List<TeamAppsDtoParser.EnumConstantContext> getEnumConstants() {
-		return getParserRuleContext().enumConstant();
+		return context.enumConstant();
 	}
 
 	@Override
 	public String toString() {
 		return "EnumWrapper: " + getName();
+	}
+
+
+
+
+
+	public String getTypeScriptIdentifier() {
+		return getName();
+	}
+
+	public String getJsonIdentifier() {
+		return getName();
+	}
+
+	public String getJavaClassName() {
+		return getName();
 	}
 }

@@ -30,7 +30,7 @@ import org.teamapps.projector.components.trivial.tree.model.ComboBoxModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfoExtractor;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.projector.template.Template;
 
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@ProjectorComponent(library = TrivialComponentsLibrary.class)
+@ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -115,7 +115,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 	}
 
 	@Override
-	public RECORD convertUiValueToUxValue(Object value) {
+	public RECORD convertClientValueToServerValue(Object value) {
 		this.freeTextEntry = null;
 		if (value == null) {
 			return null;
@@ -141,7 +141,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implement
 	}
 
 	@Override
-	public Object convertUxValueToUiValue(RECORD record) {
+	public Object convertServerValueToClientValue(RECORD record) {
 		if (record == null) {
 			return null;
 		}

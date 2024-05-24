@@ -18,8 +18,8 @@
  * =========================LICENSE_END==================================
  */
 import { createPopper, Instance as Popper } from '@popperjs/core';
-import {parseHtml} from "teamapps-client-core";
 import {animateCSS, Constants, DtoEntranceAnimation} from "teamapps-client-core-components";
+import {parseHtml} from "projector-client-object-api";
 
 export class CalendarEventListPopper {
 

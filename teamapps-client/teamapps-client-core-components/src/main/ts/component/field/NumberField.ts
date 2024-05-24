@@ -17,9 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "./AbstractField";
+import {AbstractField} from "projector-client-object-api";
 import {
-	DtoFieldEditingMode,
 	DtoNumberField,
 	DtoNumberFieldCommandHandler,
 	DtoNumberFieldEventSource,
@@ -28,7 +27,7 @@ import {
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {DtoFieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {NumberParser} from "../../util/NumberParser";
 
 export class NumberField extends AbstractField<DtoNumberField, number> implements DtoNumberFieldEventSource, DtoNumberFieldCommandHandler {

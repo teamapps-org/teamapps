@@ -32,7 +32,7 @@ import org.teamapps.ux.cache.record.EqualsAndHashCode;
 import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.cache.record.RecordAndClientRecord;
 import org.teamapps.ux.cache.record.RenderedRecordsCache;
-import org.teamapps.projector.clientobject.AbstractComponent;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;

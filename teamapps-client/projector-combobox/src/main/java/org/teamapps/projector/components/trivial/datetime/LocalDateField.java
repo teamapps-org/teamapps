@@ -26,17 +26,16 @@ import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoLocalDate;
 import org.teamapps.projector.components.trivial.dto.DtoLocalDateField;
 import org.teamapps.projector.components.trivial.dto.DtoLocalDateFieldDropDownMode;
-import org.teamapps.projector.clientobject.ProjectorComponent;
-import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.time.LocalDate;
 import java.util.Locale;
-import java.util.function.Supplier;
 
-@ProjectorComponent(library = TrivialComponentsLibrary.class)
+@ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public class LocalDateField extends AbstractField<LocalDate> implements TextInputHandlingField {
 
 	public enum DropDownMode {
@@ -72,7 +71,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 		dateField.setLocale(locale.toLanguageTag());
 		dateField.setDateFormat(dateFormat.toDateTimeFormatDescriptor());
 		dateField.setShowClearButton(showClearButton);
-		dateField.setDefaultSuggestionDate(convertUxValueToUiValue(defaultSuggestionDate));
+		dateField.setDefaultSuggestionDate(this.convertServerValueToClientValue(defaultSuggestionDate));
 		dateField.setShuffledFormatSuggestionsEnabled(shuffledFormatSuggestionsEnabled);
 		dateField.setDropDownMode(DtoLocalDateFieldDropDownMode.valueOf(dropDownMode.name()));
 		dateField.setPlaceholderText(this.emptyText);
@@ -80,7 +79,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	}
 
 	@Override
-	public LocalDate convertUiValueToUxValue(Object value) {
+	public LocalDate convertClientValueToServerValue(Object value) {
 		if (value == null) {
 			return null;
 		} else {
@@ -90,7 +89,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 	}
 
 	@Override
-	public DtoLocalDate convertUxValueToUiValue(LocalDate localDate) {
+	public DtoLocalDate convertServerValueToClientValue(LocalDate localDate) {
 		return localDate != null ? new DtoLocalDate(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth()) : null;
 	}
 

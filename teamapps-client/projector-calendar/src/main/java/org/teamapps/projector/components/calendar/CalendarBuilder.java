@@ -3,11 +3,11 @@ package org.teamapps.projector.components.calendar;
 import com.ibm.icu.util.ULocale;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.template.grid.BaseTemplate;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -37,7 +37,7 @@ public class CalendarBuilder<CEVENT extends CalendarEvent> {
 	private boolean showWeekNumbers = true;
 	private int businessHoursStart = 8;
 	private int businessHoursEnd = 17;
-	private DayOfWeek firstDayOfWeek = CurrentSessionContext.get().getConfiguration().getFirstDayOfWeek();
+	private DayOfWeek firstDayOfWeek = CurrentSessionContext.get().getFirstDayOfWeek();
 	private List<DayOfWeek> workingDays = java.util.Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
 	private Color tableHeaderBackgroundColor;
 	private ULocale locale = SessionContext.current().getULocale();

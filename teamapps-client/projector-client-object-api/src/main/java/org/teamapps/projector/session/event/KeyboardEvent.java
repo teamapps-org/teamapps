@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.session.event;
 
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 
 public class KeyboardEvent {
 

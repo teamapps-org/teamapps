@@ -37,7 +37,7 @@ import {
 	DtoSplitPaneEventSource,
 	DtoSplitSizePolicy
 } from "../generated";
-import {applyCss} from "../../../../../projector-client-object-api/src/main/ts/util/cssUtil";
+import {applyCss} from "projector-client-object-api";
 
 export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements Emptyable, DtoSplitPaneCommandHandler, DtoSplitPaneEventSource {
 	public readonly onSplitResized: TeamAppsEvent<DtoSplitPane_SplitResizedEvent> = new TeamAppsEvent<DtoSplitPane_SplitResizedEvent>();

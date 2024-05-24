@@ -19,7 +19,9 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.ux.i18n.TeamAppsDictionary;
+import org.teamapps.projector.field.AbstractField;
+import org.teamapps.projector.field.FieldMessage;
+import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
 import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.util.Arrays;
@@ -54,7 +56,7 @@ public final class Fields {
      */
     @Deprecated
     public static boolean validateAllAsRequired(AbstractField<?>... fields) {
-        FieldMessage errorMessage = new FieldMessage(FieldMessage.Severity.ERROR, CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()));
+        FieldMessage errorMessage = new FieldMessage(FieldMessage.Severity.ERROR, CurrentSessionContext.get().getLocalized(TeamAppsTranslationKeys.REQUIRED_FIELD.getKey()));
         boolean isNotEmpty = true;
         for (AbstractField<?> field : fields) {
             if (field.isEmpty()) {

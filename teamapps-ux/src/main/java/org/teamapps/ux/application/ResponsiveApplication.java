@@ -22,7 +22,7 @@ package org.teamapps.ux.application;
 import org.teamapps.common.format.Color;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.ux.application.assembler.AdditionalNavigationButton;
 import org.teamapps.ux.application.assembler.ApplicationAssembler;

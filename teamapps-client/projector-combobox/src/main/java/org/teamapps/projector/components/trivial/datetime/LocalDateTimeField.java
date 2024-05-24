@@ -22,12 +22,12 @@ package org.teamapps.projector.components.trivial.datetime;
 import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoLocalDateTimeField;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@ProjectorComponent(library = TrivialComponentsLibrary.class)
+@ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime> {
 
 	public LocalDateTimeField() {
@@ -42,7 +42,7 @@ public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime> {
 	}
 
 	@Override
-	public LocalDateTime convertUiValueToUxValue(Object value) {
+	public LocalDateTime convertClientValueToServerValue(Object value) {
 		if (value == null) {
 			return null;
 		} else {

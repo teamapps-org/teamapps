@@ -50,3 +50,7 @@ check if component.setStyle() removes all old styles for this selector? If so, w
 make sure the teamapps plugin checks that teamapps dependencies are marked as provided!
 
 Search for ""\sto\w+String" in java files. Try to find a better solution (Jackson Serializers?)
+
+plugin: make projector-client-object-api an implicit DTO dependency
+
+add Script and StyleSheet client object implementations

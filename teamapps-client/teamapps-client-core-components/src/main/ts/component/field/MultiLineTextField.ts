@@ -18,7 +18,6 @@
  * =========================LICENSE_END==================================
  */
 import {
-	DtoFieldEditingMode,
 	DtoMultiLineTextField,
 	DtoMultiLineTextFieldCommandHandler,
 	DtoMultiLineTextFieldEventSource,
@@ -27,8 +26,8 @@ import {
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
 import {Constants, escapeHtml, hasVerticalScrollBar} from "../../Common";
-import {executeWhenFirstDisplayed, parseHtml, TeamAppsEvent} from "projector-client-object-api";
-import {AbstractField} from "./AbstractField";
+import {DtoFieldEditingMode, executeWhenFirstDisplayed, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractField} from "projector-client-object-api";
 
 export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, string> implements DtoMultiLineTextFieldEventSource, DtoMultiLineTextFieldCommandHandler {
 

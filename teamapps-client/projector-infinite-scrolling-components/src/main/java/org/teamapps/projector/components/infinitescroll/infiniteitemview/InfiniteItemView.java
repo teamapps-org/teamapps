@@ -24,13 +24,13 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.projector.dto.DtoComponent;
 import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
 import org.teamapps.projector.components.infinitescroll.table.InfiniteScrollingComponentLibrary;
 import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@ProjectorComponent(library = InfiniteScrollingComponentLibrary.class)
+@ClientObjectLibrary(value = InfiniteScrollingComponentLibrary.class)
 public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECORD, InfiniteItemViewModel<RECORD>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

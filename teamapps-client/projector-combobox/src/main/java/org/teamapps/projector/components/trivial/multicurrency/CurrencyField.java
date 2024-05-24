@@ -29,8 +29,8 @@ import org.teamapps.projector.components.trivial.dto.DtoCurrencyUnit;
 import org.teamapps.projector.components.trivial.dto.DtoCurrencyValue;
 import org.teamapps.projector.components.trivial.multicurrency.value.CurrencyUnit;
 import org.teamapps.projector.components.trivial.multicurrency.value.CurrencyValue;
-import org.teamapps.projector.clientobject.ProjectorComponent;
-import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.projector.session.SessionContext;
@@ -42,7 +42,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-@ProjectorComponent(library = TrivialComponentsLibrary.class)
+@ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public class CurrencyField extends AbstractField<CurrencyValue> implements TextInputHandlingField {
 
 	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoCurrencyField.TextInputEvent.TYPE_ID);
@@ -111,12 +111,12 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	}
 
 	@Override
-	public Object convertUxValueToUiValue(CurrencyValue currencyValue) {
+	public Object convertServerValueToClientValue(CurrencyValue currencyValue) {
 		return currencyValue != null ? currencyValue.toUiCurrencyValue(locale.toLocale()) : null;
 	}
 
 	@Override
-	public CurrencyValue convertUiValueToUxValue(Object value) {
+	public CurrencyValue convertClientValueToServerValue(Object value) {
 		if (value == null) {
 			return null;
 		} else if (value instanceof DtoCurrencyValue) {

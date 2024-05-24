@@ -30,7 +30,7 @@ import {
 	DtoNotificationBarEventSource,
 	DtoNotificationBarItem
 } from "../generated";
-import {createUiSpacingValueCssString} from "../../../../../projector-client-object-api/src/main/ts/util/CssFormatUtil";
+import {createUiSpacingValueCssString} from "projector-client-object-api";
 import {ProgressBar} from "../micro-components/ProgressBar";
 
 export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {

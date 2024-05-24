@@ -21,12 +21,16 @@ import {
 	DtoCheckBox,
 	DtoCheckBoxCommandHandler,
 	DtoCheckBoxEventSource,
+} from "../../generated";
+import {
 	DtoFieldEditingMode,
 	DtoFieldMessage,
-	DtoFieldMessageSeverity
-} from "../../generated";
-import {AbstractField, getHighestSeverity} from "./AbstractField";
-import {generateUUID, parseHtml} from "projector-client-object-api";
+	DtoFieldMessageSeverity,
+	generateUUID,
+	getHighestSeverity,
+	parseHtml
+} from "projector-client-object-api";
+import {AbstractField} from "projector-client-object-api";
 
 
 export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements DtoCheckBoxEventSource, DtoCheckBoxCommandHandler {

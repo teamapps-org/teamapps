@@ -22,16 +22,15 @@ package org.teamapps.ux.component.field;
 import org.teamapps.projector.dto.DtoAbstractField;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoLabel;
-import org.teamapps.projector.clientobject.Component;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.clientobject.ClientObject;
+import org.teamapps.projector.field.AbstractField;
 import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.projector.clientobject.ProjectorComponent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 
-import java.util.function.Supplier;
-
-@ProjectorComponent(library = CoreComponentLibrary.class)
+@ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class Label extends AbstractField<String> {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLabel.ClickedEvent.TYPE_ID);

@@ -2,19 +2,21 @@ package org.teamapps.dsl.generate.wrapper;
 
 import com.google.common.collect.Lists;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.teamapps.commons.util.StreamUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.TeamAppsDtoParser.CommandDeclarationContext;
-import org.teamapps.dsl.TeamAppsDtoParser.EventDeclarationContext;
-import org.teamapps.dsl.TeamAppsDtoParser.PropertyDeclarationContext;
+import org.teamapps.dsl.generate.ParserFactory;
 
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.teamapps.commons.util.StreamUtil.distinctByKey;
+import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.findAncestorOfType;
 
 public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends TypeWrapper<T> {
 
@@ -34,6 +36,12 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 	}
 
 	List<ClassOrInterfaceWrapper<?>> getSuperTypes();
+
+	default List<ClassOrInterfaceWrapper<?>> getNonExternalSuperTypes() {
+		return getSuperTypes().stream()
+				.filter(st -> !st.isExternal())
+				.toList();
+	}
 
 	default List<ClassOrInterfaceWrapper<?>> getAllSuperTypes(boolean includeSelf) {
 		List<ClassOrInterfaceWrapper<?>> superTypes = new ArrayList<>();
@@ -61,52 +69,52 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.collect(Collectors.toList());
 	}
 
-	List<PropertyDeclarationContext> getProperties();
+	List<PropertyWrapper> getProperties();
 
-	default List<PropertyDeclarationContext> getAllProperties() {
+	default List<PropertyWrapper> getAllProperties() {
 		return Lists.reverse(getAllSuperTypes(true)).stream()
 				.flatMap(t -> t.getProperties().stream())
-				.filter(distinctByKey(property -> property.Identifier().getText()))
+				.filter(distinctByKey(property -> property.getName()))
 				.toList();
 	}
 
-	default List<PropertyDeclarationContext> getRequiredProperties() {
+	default List<PropertyWrapper> getRequiredProperties() {
 		return getProperties().stream()
-				.filter(p -> p.requiredModifier() != null)
+				.filter(p -> p.isRequired())
 				.toList();
 	}
 
-	default List<PropertyDeclarationContext> getAllRequiredProperties() {
+	default List<PropertyWrapper> getAllRequiredProperties() {
 		return getAllProperties().stream()
-				.filter(p -> p.requiredModifier() != null)
+				.filter(p -> p.isRequired())
 				.toList();
 	}
 
-	default List<PropertyDeclarationContext> getNonRequiredProperties() {
+	default List<PropertyWrapper> getNonRequiredProperties() {
 		return getProperties().stream()
-				.filter(p -> p.requiredModifier() == null)
+				.filter(p -> !p.isRequired())
 				.toList();
 	}
 
-	default List<PropertyDeclarationContext> getAllNonRequiredProperties() {
+	default List<PropertyWrapper> getAllNonRequiredProperties() {
 		return getAllProperties().stream()
-				.filter(p -> p.requiredModifier() == null)
+				.filter(p -> !p.isRequired())
 				.toList();
 	}
 
-	default List<PropertyDeclarationContext> getSimplePropertiesSortedByRelevance() {
+	default List<PropertyWrapper> getSimplePropertiesSortedByRelevance() {
 			return getAllProperties().stream()
 					.sorted((p1, p2) -> {
-						Function<PropertyDeclarationContext, Integer> getPriority = (p) -> {
-							if (p.Identifier().getText().equals("id")) {
+						Function<PropertyWrapper, Integer> getPriority = (p) -> {
+							if (p.getName().equals("id")) {
 								return 50;
-							} else if (p.Identifier().getText().equals("name")) {
+							} else if (p.getName().equals("name")) {
 								return 40;
-							} else if (p.Identifier().getText().contains("Id")) {
+							} else if (p.getName().contains("Id")) {
 								return 30;
-							} else if (p.Identifier().getText().contains("Name")) {
+							} else if (p.getName().contains("Name")) {
 								return 20;
-							} else if (getModel().findReferencedClass(p.type()) == null) {
+							} else if (p.getType().findReferencedClassOrInterface().isEmpty()) {
 								return 10;
 							} else {
 								return 0;
@@ -117,85 +125,170 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 					.toList();
 	}
 
-	List<CommandDeclarationContext> getCommands();
+	List<CommandWrapper> getCommands();
 
-	default List<CommandDeclarationContext> getAllCommands() {
+	default List<CommandWrapper> getAllCommands() {
 		return getAllSuperTypes(true).stream()
 				.flatMap(t -> t.getCommands().stream())
-				.filter(distinctByKey(property -> property.Identifier().getText()))
+				.filter(distinctByKey(CommandWrapper::getName))
 				.toList();
 	}
 
-	default List<CommandDeclarationContext> getNonStaticCommands() {
+	default List<CommandWrapper> getNonStaticCommands() {
 		return getCommands().stream()
-				.filter(c -> c.staticModifier() == null)
+				.filter(c -> !c.isStatic())
 				.toList();
 	}
 
-	List<EventDeclarationContext> getEvents();
+	List<EventWrapper> getEvents();
 
-	default List<EventDeclarationContext> getAllEvents() {
+	default List<EventWrapper> getAllEvents() {
 		return getAllSuperTypes(true).stream()
 				.flatMap(t -> t.getEvents().stream())
-				.filter(distinctByKey(property -> property.Identifier().getText()))
+				.filter(distinctByKey(property -> property.getName()))
 				.toList();
 	}
 
-	default List<EventDeclarationContext> getNonStaticEvents() {
+	default List<EventWrapper> getNonStaticEvents() {
 		return getEvents().stream()
-				.filter(e -> e.staticModifier() == null)
+				.filter(e -> !e.isStatic())
 				.toList();
 	}
 
-	default List<EventDeclarationContext> getAllStaticEvents() {
+	default List<EventWrapper> getAllStaticEvents() {
 		return getAllEvents().stream()
-				.filter(e -> e.staticModifier() == null)
+				.filter(e -> !e.isStatic())
 				.toList();
 	}
 
-	default List<EventDeclarationContext> getAllNonStaticEvents() {
+	default List<EventWrapper> getAllNonStaticEvents() {
 		return getAllEvents().stream()
-				.filter(e -> e.staticModifier() == null)
+				.filter(e -> !e.isStatic())
 				.toList();
 	}
 
-	List<TeamAppsDtoParser.QueryDeclarationContext> getQueries();
+	List<QueryWrapper> getQueries();
 
-	default List<TeamAppsDtoParser.QueryDeclarationContext> getAllQueries() {
+	default List<QueryWrapper> getAllQueries() {
 		return getAllSuperTypes(true).stream()
 				.flatMap(t -> t.getQueries().stream())
-				.filter(distinctByKey(property -> property.Identifier().getText()))
+				.filter(distinctByKey(QueryWrapper::getName))
 				.toList();
 	}
 
-	default List<TypeWrapper<?>> getReferencedTypes() {
+	default List<TypeWrapper<?>> getReferencedTypes(boolean typescript) {
 		return Stream.<Stream<TypeWrapper<?>>>of(
-						getSuperTypes().stream().map(t -> (TypeWrapper<?>) t),
+						getSuperTypes().stream()
+								.map(Function.identity()), /* for the java compiler... */
 						getProperties().stream()
-								.map(p -> p.type())
-								.filter(t -> getModel().shouldReferenceDtoType(t))
-								.map(t -> getModel().findReferencedDtoType(t)),
+								.map(p -> p.getType())
+								.filter(t -> t.referencesDtoType())
+								.map(t -> t.findReferencedDtoType()),
 						getCommands().stream()
-								.flatMap(cd -> cd.formalParameter().stream())
-								.map(p -> p.type())
-								.filter(t -> getModel().shouldReferenceDtoType(t))
-								.map(t -> getModel().findReferencedDtoType(t)),
+								.flatMap(cd -> cd.getParameters().stream())
+								.map(p -> p.getType())
+								.filter(t -> t.referencesDtoType())
+								.map(t -> t.findReferencedDtoType()),
 						getEvents().stream()
-								.flatMap(cd -> cd.formalParameter().stream())
-								.map(p -> p.type())
-								.filter(t -> getModel().shouldReferenceDtoType(t))
-								.map(t -> getModel().findReferencedDtoType(t)),
+								.flatMap(cd -> cd.getParameters().stream())
+								.map(p -> p.getType())
+								.filter(t -> t.referencesDtoType())
+								.map(t -> t.findReferencedDtoType()),
 						getQueries().stream()
-								.flatMap(cd -> cd.formalParameter().stream())
-								.map(p -> p.type())
-								.filter(t -> getModel().shouldReferenceDtoType(t))
-								.map(t -> getModel().findReferencedDtoType(t))
+								.flatMap(cd -> cd.getParameters().stream())
+								.map(p -> p.getType())
+								.filter(t -> t.referencesDtoType())
+								.map(t -> t.findReferencedDtoType())
 				)
 				.flatMap(Function.identity())
+				.filter(typeWrapper -> !(typescript && typeWrapper.isExternal()))
 				.filter(c -> c != this)
 				.distinct()
 				.toList();
 	}
 
 	boolean isAbstract();
+
+	default String getTypeScriptIdentifier() {
+		return getName();
+	}
+
+	default String getJsonIdentifier() {
+		return getName();
+	}
+
+	default String getJavaClassName() {
+		return "Dto" + StringUtils.capitalize(getName());
+	}
+
+	static List<TeamAppsDtoParser.CommandDeclarationContext> createImplicitMutationCommands(List<TeamAppsDtoParser.PropertyDeclarationContext> propertyDeclarations) {
+		return propertyDeclarations.stream()
+				.filter(property -> property.mutableModifier() != null)
+				.map(property -> ExceptionUtil.runWithSoftenedExceptions(
+						() -> {
+							TeamAppsDtoParser.CommandDeclarationContext command =
+									ParserFactory.createParser(new StringReader("command set" + StringUtils.capitalize(property.Identifier().toString())
+																				+ "(" + property.type().getText() + " " + property.Identifier().toString() + ");")).commandDeclaration();
+							command.setParent(property.getParent());
+							return command;
+						}
+				))
+				.collect(Collectors.toList());
+	}
+
+	default List<TeamAppsDtoParser.ImportDeclarationContext> getAllImports() {
+		return findAncestorOfType(getParserRuleContext(), TeamAppsDtoParser.ClassCollectionContext.class, false).stream()
+				.flatMap(ccc -> ccc.importDeclaration().stream())
+				.collect(Collectors.toList());
+	}
+
+	default Collection<Import> getEffectiveImports(boolean typescript) {
+		Imports imports = new Imports();
+
+		boolean isClientApiPackage = this.getJsPackageName().equals("projector-client-object-api");
+
+		imports.addImport("ClientObject", isClientApiPackage? "../ClientObject" : "projector-client-object-api", "org.teamapps.projector.clientobject");
+
+		this.getReferencedTypes(typescript).stream()
+				.forEach(t -> {
+					String name = t.getName();
+					String jsModuleName = this.getJsPackageName().equals(t.getJsPackageName()) ? "./Dto" + t.getName() : t.getJsPackageName();
+					String javaPackageName = t.getPackageName();
+					imports.addImport("Dto" + name, jsModuleName, javaPackageName);
+
+					if (!typescript && t instanceof ClassOrInterfaceWrapper<?> referencedClassOrInterface && !referencedClassOrInterface.isExternal()) {
+						imports.addImport("Dto" + name + "Wrapper", null, javaPackageName);
+					}
+				});
+
+		if (typescript) {
+			this.getSuperTypes().stream()
+					.filter(c -> !c.getAllCommands().isEmpty())
+					.forEach(c -> {
+						String name = c.getName() + "CommandHandler";
+						String jsModuleName = this.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName();
+						String javaPackageName = c.getPackageName();
+						imports.addImport("Dto" + name, jsModuleName, javaPackageName);
+					});
+			this.getSuperTypes().stream()
+					.filter(c -> !c.getAllEvents().isEmpty())
+					.forEach(c -> {
+						String name = c.getName() + "EventSource";
+						String jsModuleName = this.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName();
+						String javaPackageName = c.getPackageName();
+						imports.addImport("Dto" + name, jsModuleName, javaPackageName);
+					});
+		}
+
+		return imports.getAll();
+	}
+
+	default Collection<Import> getEffectiveTypeScriptImports() {
+		return getEffectiveImports(true);
+	}
+
+	default Collection<Import> getEffectiveJavaImports() {
+		return getEffectiveImports(false);
+	}
+
 }

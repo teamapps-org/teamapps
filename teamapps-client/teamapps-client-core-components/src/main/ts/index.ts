@@ -43,7 +43,6 @@ export {NotificationBar} from "./component/NotificationBar";
 
 export {Button} from "./component/field/Button";
 export {DisplayField} from "./component/field/DisplayField";
-export {AbstractField, getHighestSeverity} from "./component/field/AbstractField";
 export {Label} from "./component/field/Label";
 export {MultiLineTextField} from "./component/field/MultiLineTextField";
 export {PasswordField} from "./component/field/PasswordField";
@@ -54,11 +53,8 @@ export {ComponentField} from "./component/field/ComponentField";
 
 export {ContextMenu} from "./micro-components/ContextMenu";
 
-export * from "../../../../../projector-mustache-template/src/main/ts/MustacheTemplate";
-export * from "../../../../../projector-grid-template/src/main/ts/GridTemplate";
-
 export * from "./util/draggable";
-export * from "../../../../projector-client-object-api/src/main/ts/util/cssUtil";
+export * from "projector-client-object-api";
 export * from "./util/BigDecimal";
 export * from "./util/NumberParser";
 export * from "./micro-components/DropDown";

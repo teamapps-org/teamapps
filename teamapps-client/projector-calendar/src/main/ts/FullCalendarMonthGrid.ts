@@ -17,8 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {generateUUID, parseHtml} from "teamapps-client-core";
-import {parseSvg} from "teamapps-client-core";
 import * as d3 from "d3";
 import {Selection} from "d3-selection";
 import {addDays, createFormatter, createPlugin, DateFormatter, EventApi, EventStore, View} from "@fullcalendar/core";
@@ -27,6 +25,7 @@ import moment from "moment-timezone";
 import {Moment} from "moment-timezone";
 import {CalendarEventListPopper} from "./CalendarEventListPopper";
 import {ComponentContext} from "@fullcalendar/core/component/Component";
+import {generateUUID, parseHtml, parseSvg} from "projector-client-object-api";
 
 class Segment {
 	constructor(
