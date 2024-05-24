@@ -20,29 +20,25 @@
 package org.teamapps.projector.components.core.panel;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.databinding.ObservableValue;
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoPanel;
-import org.teamapps.projector.dto.DtoPanelHeaderField;
-import org.teamapps.event.Disposable;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.component.toolbar.Toolbar;
-import org.teamapps.ux.component.toolbutton.ToolButton;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.components.core.CoreComponentLibrary;
+import org.teamapps.projector.components.core.toolbar.Toolbar;
+import org.teamapps.projector.components.core.toolbutton.ToolButton;
+import org.teamapps.projector.dto.*;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.field.AbstractField;
 
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
+import static org.teamapps.commons.util.CollectionCastUtil.castList;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class Panel extends AbstractComponent implements Component {
+public class Panel extends AbstractComponent implements DtoPanelEventHandler {
+
+	private final DtoPanelClientObjectChannel clientObjectChannel = new DtoPanelClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(DtoPanel.WindowButtonClickedEvent.TYPE_ID);
 
@@ -69,12 +65,6 @@ public class Panel extends AbstractComponent implements Component {
 	private final List<ToolButton> toolButtons = new ArrayList<>();
 	private final Set<WindowButtonType> windowButtons = new HashSet<>();
 
-	private Disposable iconChangeListenerDisposable;
-	private Disposable titleChangeListenerDisposable;
-	private Disposable leftHeaderFieldChangeListenerDisposable;
-	private Disposable rightHeaderFieldChangeListenerDisposable;
-
-
 	public Panel() {
 		this(null, null, null);
 	}
@@ -91,13 +81,11 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void addToolButton(ToolButton toolButton) {
 		this.toolButtons.add(toolButton);
-		toolButton.setParent(this);
 		updateToolButtons();
 	}
 
 	public void removeToolButton(ToolButton toolButton) {
 		this.toolButtons.remove(toolButton);
-		toolButton.setParent(null);
 		updateToolButtons();
 	}
 
@@ -105,15 +93,12 @@ public class Panel extends AbstractComponent implements Component {
 		this.toolButtons.clear();
 		if (toolButtons != null) {
 			this.toolButtons.addAll(toolButtons);
-			this.toolButtons.forEach(toolButton -> toolButton.setParent(this));
 		}
 		updateToolButtons();
 	}
 
 	private void updateToolButtons() {
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetToolButtonsCommand(this.toolButtons.stream()
-				.map(toolButton -> toolButton.createClientReference())
-				.collect(Collectors.toList()))).get(), null);
+		clientObjectChannel.setToolButtons(castList(this.toolButtons));
 	}
 
 	public List<ToolButton> getToolButtons() {
@@ -127,9 +112,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	private void updateWindowButtons() {
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetWindowButtonsCommand(this.windowButtons.stream()
-				.map(b -> b.toUiWindowButtonType())
-				.collect(Collectors.toList()))).get(), null);
+		clientObjectChannel.setWindowButtons(List.copyOf(this.windowButtons));
 	}
 
 	public Set<WindowButtonType> getWindowButtons() {
@@ -151,14 +134,11 @@ public class Panel extends AbstractComponent implements Component {
 		uiPanel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
 		uiPanel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy.toDto());
 		uiPanel.setTitleBarHidden(titleBarHidden);
-		uiPanel.setToolbar(ClientObject.createClientReference(toolbar));
-		uiPanel.setContent(content != null ? content.createClientReference() : null);
+		uiPanel.setToolbar(toolbar);
+		uiPanel.setContent(content != null ? content : null);
 		uiPanel.setPadding(padding);
-		uiPanel.setWindowButtons(windowButtons.stream()
-				.map(b -> b.toUiWindowButtonType()).collect(Collectors.toList()));
-		uiPanel.setToolButtons(toolButtons.stream()
-				.map(toolButton -> toolButton.createClientReference())
-				.collect(Collectors.toList()));
+		uiPanel.setWindowButtons(List.copyOf(windowButtons));
+		uiPanel.setToolButtons(castList(toolButtons));
 		uiPanel.setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy.toDto());
 		uiPanel.setContentStretchingEnabled(contentStretchingEnabled);
 	}
@@ -167,7 +147,7 @@ public class Panel extends AbstractComponent implements Component {
 		if (field == null) {
 			return null;
 		}
-		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField(field.createClientReference());
+		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField(field);
 		uiPanelHeaderField.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanelHeaderField.setMinWidth(minWidth);
 		uiPanelHeaderField.setMaxWidth(maxWidth);
@@ -175,14 +155,11 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public Panel setLeftHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
-		if (field != null) {
-			field.setParent(this);
-		}
 		this.leftHeaderField = field;
 		this.leftHeaderFieldIcon = icon;
 		this.leftHeaderFieldMinWidth = minWidth;
 		this.leftHeaderFieldMaxWidth = maxWidth;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
+		clientObjectChannel.setLeftHeaderField(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth));
 		return this;
 	}
 
@@ -191,15 +168,11 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public Panel setRightHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
-		if (field != null) {
-			field.setParent(this);
-		}
 		this.rightHeaderField = field;
 		this.rightHeaderFieldIcon = icon;
 		this.rightHeaderFieldMinWidth = minWidth;
 		this.rightHeaderFieldMaxWidth = maxWidth;
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth))).get(), null);
+		clientObjectChannel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
 		return this;
 	}
 
@@ -209,20 +182,17 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setContent(Component content) {
 		this.content = content;
-		if (content != null) {
-			content.setParent(this);
-		}
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetContentCommand(content != null ? content.createClientReference() : null), null);
+		clientObjectChannel.setContent(content);
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoPanel.WindowButtonClickedEvent.TYPE_ID -> {
-				var clickedEvent = event.as(DtoPanel.WindowButtonClickedEventWrapper.class);
-				this.onWindowButtonClicked.fire(WindowButtonType.fromUiWindowButtonType(clickedEvent.getWindowButton()));
-			}
-		}
+	public void handleEvent(String name, List<JsonWrapper> params) {
+		new DtoWindowEventMethodInvoker(this).handleEvent(name, params);
+	}
+
+	@Override
+	public void handleWindowButtonClicked(WindowButtonType windowButton) {
+		this.onWindowButtonClicked.fire(windowButton);
 	}
 
 	public String getTitle() {
@@ -231,7 +201,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setTitle(String title) {
 		this.title = title;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetTitleCommand(title), null);
+		clientObjectChannel.setTitle(title);
 	}
 
 	public Icon<?, ?> getIcon() {
@@ -240,7 +210,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetIconCommand(getSessionContext().resolveIcon(icon)), null);
+		clientObjectChannel.setIcon(getSessionContext().resolveIcon(icon));
 	}
 
 	public Component getContent() {
@@ -265,7 +235,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setHeaderComponentMinimizationPolicy(HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy) {
 		this.headerComponentMinimizationPolicy = headerComponentMinimizationPolicy;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetHeaderComponentMinimizationPolicyCommand(headerComponentMinimizationPolicy.toDto()), null);
+		clientObjectChannel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy.toDto());
 	}
 
 	public boolean isTitleBarHidden() {
@@ -274,7 +244,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setTitleBarHidden(boolean titleBarHidden) {
 		this.titleBarHidden = titleBarHidden;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetTitleBarHiddenCommand(this.titleBarHidden), null);
+		clientObjectChannel.setTitleBarHidden(this.titleBarHidden);
 	}
 
 	public Toolbar getToolbar() {
@@ -283,7 +253,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setToolbar(Toolbar toolbar) {
 		this.toolbar = toolbar;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetToolbarCommand(toolbar.createClientReference()), null);
+		clientObjectChannel.setToolbar(toolbar);
 	}
 
 	public int getPadding() {
@@ -292,7 +262,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setPadding(int padding) {
 		this.padding = padding;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetPaddingCommand(this.padding), null);
+		clientObjectChannel.setPadding(this.padding);
 	}
 
 	public boolean isMaximizable() {
@@ -309,12 +279,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setLeftHeaderField(AbstractField<?> leftHeaderField) {
-		if (this.leftHeaderField != null) {
-			this.leftHeaderField.setParent(null);
-		}
-		this.leftHeaderField = leftHeaderField;
-		leftHeaderField.setParent(this);
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
+		setLeftHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth);
 	}
 
 	public Icon<?, ?> getLeftHeaderFieldIcon() {
@@ -322,8 +287,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setLeftHeaderFieldIcon(Icon<?, ?> leftHeaderFieldIcon) {
-		this.leftHeaderFieldIcon = leftHeaderFieldIcon;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
+		setLeftHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth);
 	}
 
 	public int getLeftHeaderFieldMinWidth() {
@@ -331,8 +295,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setLeftHeaderFieldMinWidth(int leftHeaderFieldMinWidth) {
-		this.leftHeaderFieldMinWidth = leftHeaderFieldMinWidth;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
+		setLeftHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth);
 	}
 
 	public int getLeftHeaderFieldMaxWidth() {
@@ -340,18 +303,11 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setLeftHeaderFieldMaxWidth(int leftHeaderFieldMaxWidth) {
-		this.leftHeaderFieldMaxWidth = leftHeaderFieldMaxWidth;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)), null);
+		setLeftHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth);
 	}
 
 	public void setRightHeaderField(AbstractField<?> rightHeaderField) {
-		if (this.rightHeaderField != null) {
-			this.rightHeaderField.setParent(null);
-		}
-		this.rightHeaderField = rightHeaderField;
-		rightHeaderField.setParent(this);
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth))).get(), null);
+		setRightHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth);
 	}
 
 	public Icon<?, ?> getRightHeaderFieldIcon() {
@@ -359,9 +315,8 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setRightHeaderFieldIcon(Icon<?, ?> rightHeaderFieldIcon) {
-		this.rightHeaderFieldIcon = rightHeaderFieldIcon;
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth))).get(), null);
+		setRightHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth);
+
 	}
 
 	public int getRightHeaderFieldMinWidth() {
@@ -369,9 +324,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setRightHeaderFieldMinWidth(int rightHeaderFieldMinWidth) {
-		this.rightHeaderFieldMinWidth = rightHeaderFieldMinWidth;
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth))).get(), null);
+		setRightHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth);
 	}
 
 	public int getRightHeaderFieldMaxWidth() {
@@ -379,9 +332,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	public void setRightHeaderFieldMaxWidth(int rightHeaderFieldMaxWidth) {
-		this.rightHeaderFieldMaxWidth = rightHeaderFieldMaxWidth;
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
-				rightHeaderFieldMaxWidth))).get(), null);
+		setRightHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth);
 	}
 
 	public HeaderFieldIconVisibilityPolicy getHeaderFieldIconVisibilityPolicy() {
@@ -390,7 +341,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setHeaderFieldIconVisibilityPolicy(HeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy) {
 		this.headerFieldIconVisibilityPolicy = headerFieldIconVisibilityPolicy;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetHeaderFieldIconVisibilityPolicyCommand(this.headerFieldIconVisibilityPolicy.toDto()), null);
+		clientObjectChannel.setHeaderFieldIconVisibilityPolicy(this.headerFieldIconVisibilityPolicy.toDto());
 	}
 
 	public boolean isContentStretchingEnabled() {
@@ -399,47 +350,6 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setContentStretchingEnabled(boolean contentStretchingEnabled) {
 		this.contentStretchingEnabled = contentStretchingEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoPanel.SetContentStretchingEnabledCommand(contentStretchingEnabled), null);
-	}
-
-
-	public void setIcon(ObservableValue<Icon<?, ?>> observableIcon) {
-		if (iconChangeListenerDisposable != null) {
-			iconChangeListenerDisposable.dispose();
-		}
-		if (observableIcon != null) {
-			this.setIcon(observableIcon.get());
-			this.iconChangeListenerDisposable = observableIcon.onChanged().addListener(this::setIcon);
-		}
-	}
-
-	public void setTitle(ObservableValue<String> observableTitle) {
-		if (titleChangeListenerDisposable != null) {
-			titleChangeListenerDisposable.dispose();
-		}
-		if (observableTitle != null) {
-			this.setTitle(observableTitle.get());
-			this.titleChangeListenerDisposable = observableTitle.onChanged().addListener(this::setTitle);
-		}
-	}
-
-	public void setLeftHeaderField(ObservableValue<AbstractField<?>> observableLeftHeaderField) {
-		if (leftHeaderFieldChangeListenerDisposable != null) {
-			leftHeaderFieldChangeListenerDisposable.dispose();
-		}
-		if (observableLeftHeaderField != null) {
-			this.setLeftHeaderField(observableLeftHeaderField.get());
-			this.leftHeaderFieldChangeListenerDisposable = observableLeftHeaderField.onChanged().addListener(this::setLeftHeaderField);
-		}
-	}
-
-	public void setRightHeaderField(ObservableValue<AbstractField<?>> observableRightHeaderField) {
-		if (rightHeaderFieldChangeListenerDisposable != null) {
-			rightHeaderFieldChangeListenerDisposable.dispose();
-		}
-		if (observableRightHeaderField != null) {
-			this.setRightHeaderField(observableRightHeaderField.get());
-			this.rightHeaderFieldChangeListenerDisposable = observableRightHeaderField.onChanged().addListener(this::setRightHeaderField);
-		}
+		clientObjectChannel.setContentStretchingEnabled(contentStretchingEnabled);
 	}
 }

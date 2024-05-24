@@ -40,19 +40,11 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>projector-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-icon</artifactId>
+            <artifactId>teamapps-client-core-components</artifactId>
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-material-icon-provider</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>projector-client-object-api</artifactId>
         </dependency>
 
         <dependency>

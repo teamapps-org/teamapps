@@ -6,26 +6,26 @@
 import {ClientObject} from "projector-client-object-api";
 interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
-export interface DtoA {
+export interface A {
 	_type?: string;
 	a: string;
 	b?: string
-	z: (query: DtoA_ZQuery) => Promise<string[]>
+	z: (query: A_ZQuery) => Promise<string[]>
 }
 
-export interface DtoACommandHandler {
+export interface ACommandHandler {
 	x1(x: string): any;
 	x2(x: string): Promise<number[]>|number[];
 }
 
-export interface DtoAEventSource {
-	onY: EventEmitter<DtoA_YEvent>;
+export interface AEventSource {
+	onY: EventEmitter<A_YEvent>;
 }
 
-export interface DtoA_YEvent {
+export interface A_YEvent {
 	y: string
 }
 
-export interface DtoA_ZQuery {
+export interface A_ZQuery {
 	s: string
 }

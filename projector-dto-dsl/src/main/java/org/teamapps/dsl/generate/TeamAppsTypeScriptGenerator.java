@@ -105,7 +105,7 @@ public class TeamAppsTypeScriptGenerator {
                 System.out.println("Skipping @NotGenerated enum: " + enumContext.getName());
                 continue;
             }
-            generateEnum(enumContext, new FileWriter(new File(parentDir, "Dto" + enumContext.getName() + ".ts")));
+            generateEnum(enumContext, new FileWriter(new File(parentDir, enumContext.getName() + ".ts")));
         }
         for (InterfaceWrapper interfaceContext : model.getOwnInterfaceDeclarations()) {
             if (interfaceContext.isExternal()
@@ -115,7 +115,7 @@ public class TeamAppsTypeScriptGenerator {
             }
             logger.info("Generating typescript definitions for interface: " + interfaceContext.getName());
             System.out.println("Generating typescript definitions for interface: " + interfaceContext.getName());
-            generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, "Dto" + interfaceContext.getName() + ".ts")));
+            generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, interfaceContext.getName() + ".ts")));
         }
         for (ClassWrapper classContext : model.getOwnClassDeclarations()) {
             if (classContext.getParserRuleContext().notGeneratedAnnotation() != null) {
@@ -123,7 +123,7 @@ public class TeamAppsTypeScriptGenerator {
                 continue;
             }
             logger.info("Generating typescript definitions for class: " + classContext.getName());
-            generateClassDefinition(classContext, new FileWriter(new File(parentDir, "Dto" + classContext.getName() + ".ts")));
+            generateClassDefinition(classContext, new FileWriter(new File(parentDir, classContext.getName() + ".ts")));
         }
 
         generateIndexTs(new FileWriter(new File(parentDir, "index.ts")));

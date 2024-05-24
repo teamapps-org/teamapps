@@ -25,13 +25,13 @@ import org.teamapps.projector.dto.DtoTextInputHandlingField;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoAbstractTimeField;
 import org.teamapps.projector.field.AbstractField;
-import org.teamapps.ux.component.field.SpecialKey;
-import org.teamapps.ux.component.field.TextInputHandlingField;
+import org.teamapps.projector.components.core.field.SpecialKey;
+import org.teamapps.projector.components.core.field.TextInputHandlingField;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.util.Locale;
 
-public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
+public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> {
 
 	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.TextInputEvent.TYPE_ID);
 	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
@@ -67,7 +67,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractTimeField.SetShowDropDownButtonCommand(showDropDownButton), null);
+		clientObjectChannel.setShowDropDownButton(showDropDownButton);
 	}
 
 
@@ -85,7 +85,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()), null);
+		clientObjectChannel.setLocaleAndTimeFormat(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor());
 	}
 
 	public DateTimeFormatDescriptor getTimeFormat() {
@@ -94,7 +94,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()), null);
+		clientObjectChannel.setLocaleAndTimeFormat(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor());
 	}
 
 	public boolean isShowClearButton() {
@@ -103,7 +103,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractTimeField.SetShowClearButtonCommand(showClearButton), null);
+		clientObjectChannel.setShowClearButton(showClearButton);
 	}
 
 	@Override

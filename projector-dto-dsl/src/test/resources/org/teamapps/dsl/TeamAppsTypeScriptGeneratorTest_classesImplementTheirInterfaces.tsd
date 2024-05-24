@@ -4,11 +4,11 @@
  */
 
 import {ClientObject} from "projector-client-object-api";
-import {DtoA} from "./DtoA";
-import {DtoB} from "./DtoB";
-import {DtoC} from "./DtoC";
+import {A} from "./A";
+import {B} from "./B";
+import {C} from "./C";
 
-export interface DtoD extends DtoA, DtoB, DtoC {
+export interface D extends A, B, C {
 	_type?: string;
 }
 

@@ -21,7 +21,6 @@ package org.teamapps.projector.clientobject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.dto.JsonWrapper;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.List;
  * This representation is said to be rendered when the client holds a corresponding instance of it.
  * The server and the client refer to the {@link ClientObject} using the id (a UUID).
  */
-public interface ClientObject {
+public interface ClientObject extends ClientMessageHandler {
 
 	Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -41,10 +40,4 @@ public interface ClientObject {
 		return List.of();
 	}
 
-	default void handleEvent(String name, List<JsonWrapper> params) {
-	}
-
-	default Object handleQuery(String name, List<JsonWrapper> params) {
-		return null;
-	}
 }

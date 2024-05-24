@@ -19,22 +19,23 @@
  */
 package org.teamapps.projector.components.core.toolbutton;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoToolButton;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-
-import java.util.function.Supplier;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.components.core.CoreComponentLibrary;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoToolButton;
+import org.teamapps.projector.dto.DtoToolButtonClientObjectChannel;
+import org.teamapps.projector.dto.DtoToolButtonEventHandler;
+import org.teamapps.projector.event.ProjectorEvent;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class ToolButton extends AbstractComponent {
+public class ToolButton extends AbstractComponent implements DtoToolButtonEventHandler {
 
 	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(DtoToolButton.DropDownOpenedEvent.TYPE_ID);
+
+	private final DtoToolButtonClientObjectChannel clientObjectChannel = new DtoToolButtonClientObjectChannel(getClientObjectChannel());
 
 	private Icon<?, ?> icon;
 	private Integer iconSize = null; // null = default defined by CSS
@@ -80,25 +81,21 @@ public class ToolButton extends AbstractComponent {
 		uiToolButton.setCaption(caption);
 		mapAbstractUiComponentProperties(uiToolButton);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
-		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createClientReference() : null);
+		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent : null);
 		uiToolButton.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight);
 		return uiToolButton;
 	}
+	
+	@Override
+	public void handleClicked() {
+		this.onClick.fire();
+	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoToolButton.ClickedEvent.TYPE_ID -> {
-				var e = event.as(DtoToolButton.ClickedEventWrapper.class);
-				this.onClick.fire(null);
-			}
-			case DtoToolButton.DropDownOpenedEvent.TYPE_ID -> {
-				var e = event.as(DtoToolButton.DropDownOpenedEventWrapper.class);
-				this.onDropDownOpened.fire(null);
-			}
-		}
+	public void handleDropDownOpened() {
+		this.onDropDownOpened.fire();
 	}
 
 	public Icon<?, ?> getIcon() {
@@ -107,7 +104,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolButton.SetIconCommand(getSessionContext().resolveIcon(icon)), null);
+		clientObjectChannel.setIcon(getSessionContext().resolveIcon(icon));
 	}
 
 	public Integer getIconSize() {
@@ -116,7 +113,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setIconSize(Integer iconSize) {
 		this.iconSize = iconSize;
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolButton.SetIconSizeCommand(iconSize), null);
+		clientObjectChannel.setIconSize(iconSize);
 	}
 
 	public String getCaption() {
@@ -125,7 +122,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolButton.SetCaptionCommand(caption), null);
+		clientObjectChannel.setCaption(caption);
 	}
 
 	public String getPopoverText() {
@@ -134,7 +131,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setPopoverText(String popoverText) {
 		this.popoverText = popoverText;
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolButton.SetPopoverTextCommand(popoverText), null);
+		clientObjectChannel.setPopoverText(popoverText);
 	}
 
 	public boolean isOpenDropDownIfNotSet() {
@@ -143,7 +140,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setOpenDropDownIfNotSet(boolean openDropDownIfNotSet) {
 		this.openDropDownIfNotSet = openDropDownIfNotSet;
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet), null);
+		clientObjectChannel.setOpenDropDownIfNotSet(openDropDownIfNotSet);
 	}
 
 	public Component getDropDownComponent() {
@@ -152,7 +149,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolButton.SetDropDownComponentCommand(dropDownComponent != null ? dropDownComponent.createClientReference() : null), null);
+		clientObjectChannel.setDropDownComponent(dropDownComponent != null ? dropDownComponent : null);
 	}
 
 	public Integer getMinDropDownWidth() {
@@ -161,7 +158,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setMinDropDownWidth(Integer minDropDownWidth) {
 		this.minDropDownWidth = minDropDownWidth;
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight), null);
+		clientObjectChannel.setDropDownSize(minDropDownWidth, minDropDownHeight);
 	}
 
 	public Integer getMinDropDownHeight() {
@@ -170,11 +167,10 @@ public class ToolButton extends AbstractComponent {
 
 	public void setMinDropDownHeight(Integer minDropDownHeight) {
 		this.minDropDownHeight = minDropDownHeight;
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight), null);
+		clientObjectChannel.setDropDownSize(minDropDownWidth, minDropDownHeight);
 	}
 
 	public void closeDropDown() {
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) DtoToolButton.CloseDropDownCommand::new).get(), null);
+		clientObjectChannel.closeDropDown();
 	}
-
 }

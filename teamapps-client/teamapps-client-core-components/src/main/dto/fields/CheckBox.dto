@@ -19,9 +19,9 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class CheckBox extends AbstractField {
+class DtoCheckBox extends DtoAbstractField {
 	String caption; // displayed on the right side of the checkbox
 	String backgroundColor;
 	String checkColor;

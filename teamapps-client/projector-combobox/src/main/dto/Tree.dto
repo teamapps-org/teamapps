@@ -1,11 +1,11 @@
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.IdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
-class Tree extends Component {
-	List<TreeRecord> initialData; //if available, use this as data source
+class DtoTree extends DtoComponent {
+	List<DtoTreeRecord> initialData; //if available, use this as data source
 
 	mutable boolean expandersVisible;
 	mutable boolean expandAnimationEnabled;
@@ -15,10 +15,10 @@ class Tree extends Component {
 
     Integer selectedNodeId;
 
-	command bulkUpdate(List<Integer> nodesToBeRemoved, List<TreeRecord> nodesToBeAdded);
-	command replaceNodes(List<TreeRecord> nodes);
+	command bulkUpdate(List<Integer> nodesToBeRemoved, List<DtoTreeRecord> nodesToBeAdded);
+	command replaceNodes(List<DtoTreeRecord> nodes);
     command setSelectedNodeId(Integer recordId, boolean reveal);
 
 	event nodeSelected(int nodeId);
-	query lazyLoadChildren(int parentNodeId) returns List<TreeRecord>;
+	query lazyLoadChildren(int parentNodeId) returns List<DtoTreeRecord>;
 }

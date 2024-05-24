@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -35,7 +38,7 @@ import org.teamapps.projector.clientobject.ClientObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DtoA implements DtoObject {
+public class A implements DtoObject {
 
     public static final String TYPE_ID = "A";
     public static final List<String> EVENT_NAMES = List.of();
@@ -43,17 +46,18 @@ public class DtoA implements DtoObject {
 
 	protected String aasdf;
 	protected String b;
+	protected int i;
 	protected List<Long> c;
 
 	/**
 	 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
 	 */
 	@Deprecated
-	public DtoA() {
+	public A() {
 		// default constructor for Jackson
 	}
 
-	public DtoA(String aasdf) {
+	public A(String aasdf) {
 		this.aasdf = aasdf;
 	}
 
@@ -62,6 +66,7 @@ public class DtoA implements DtoObject {
 		return new StringBuilder(getClass().getSimpleName()).append(": ")
 				.append("aasdf=" + aasdf).append(", ")
 				.append("b=" + b).append(", ")
+				.append("i=" + i).append(", ")
 				.append("c=" + c)
 				.toString();
 	}
@@ -76,25 +81,36 @@ public class DtoA implements DtoObject {
 		return b;
 	}
 
+	@com.fasterxml.jackson.annotation.JsonGetter("i")
+	public int getI() {
+		return i;
+	}
+
 	@com.fasterxml.jackson.annotation.JsonGetter("c")
 	public List<Long> getC() {
 		return c;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("aasdf")
-	public DtoA setAasdf(String aasdf) {
+	public A setAasdf(String aasdf) {
 		this.aasdf = aasdf;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("b")
-	public DtoA setB(String b) {
+	public A setB(String b) {
 		this.b = b;
 		return this;
 	}
 
+	@com.fasterxml.jackson.annotation.JsonSetter("i")
+	public A setI(int i) {
+		this.i = i;
+		return this;
+	}
+
 	@com.fasterxml.jackson.annotation.JsonSetter("c")
-	public DtoA setC(List<Long> c) {
+	public A setC(List<Long> c) {
 		this.c = c;
 		return this;
 	}

@@ -19,14 +19,14 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.ClientRecord;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoClientRecord;
 
-class NetworkGraph extends Component{
-	required List<NetworkNode> nodes;
-	required List<NetworkLink> links;
-	required List<NetworkImage> images;
+class DtoNetworkGraph extends DtoComponent{
+	required List<DtoNetworkNode> nodes;
+	required List<DtoNetworkLink> links;
+	required List<DtoNetworkImage> images;
 	double gravity;
 	double theta;
 	double alpha;
@@ -42,7 +42,7 @@ class NetworkGraph extends Component{
 	command setDistance(double linkDistance, double nodeDistance);
 
 	command zoomAllNodesIntoView(int animationDuration);
-	command addNodesAndLinks(List<NetworkNode> nodes, List<NetworkLink> links);
+	command addNodesAndLinks(List<DtoNetworkNode> nodes, List<DtoNetworkLink> links);
 	command removeNodesAndLinks(List<String> nodeIds, Dictionary<List<String>> linksBySourceNodeId);
 
 	event nodeClicked(String nodeId);
@@ -50,7 +50,7 @@ class NetworkGraph extends Component{
 	event nodeExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
-class NetworkNode {
+class DtoNetworkNode {
 	required String id;
 	required int width;
 	required int height;
@@ -65,17 +65,17 @@ class NetworkNode {
 	TreeGraphNodeImage image;
 	TreeGraphNodeIcon icon;
 
-	Template* template;     // will get embedded using foreignObject
-	ClientRecord record;   // will get embedded using foreignObject
+	DtoTemplate* template;     // will get embedded using foreignObject
+	DtoClientRecord record;   // will get embedded using foreignObject
 
-	NetworkNodeExpandState expandState;
+	DtoNetworkNodeExpandState expandState;
 }
 
-enum NetworkNodeExpandState {
+enum DtoNetworkNodeExpandState {
     NOT_EXPANDABLE, EXPANDED, COLLAPSED;
 }
 
-class NetworkLink {
+class DtoNetworkLink {
 	required String source;
 	required String target;
 	String lineColor;
@@ -84,7 +84,7 @@ class NetworkLink {
 	int linkLength;
 }
 
-class NetworkImage {
+class DtoNetworkImage {
 	required String imageId;
 	required String image;
 }

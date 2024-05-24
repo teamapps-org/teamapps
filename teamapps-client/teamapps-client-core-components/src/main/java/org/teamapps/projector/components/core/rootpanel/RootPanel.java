@@ -20,19 +20,22 @@
 package org.teamapps.projector.components.core.rootpanel;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoRootPanel;
+import org.teamapps.projector.animation.PageTransition;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.ux.component.animation.PageTransition;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoRootPanel;
+import org.teamapps.projector.dto.DtoRootPanelClientObjectChannel;
+import org.teamapps.projector.dto.DtoRootPanelEventHandler;
 
 import java.time.Duration;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class RootPanel extends AbstractComponent implements Component {
+public class RootPanel extends AbstractComponent implements DtoRootPanelEventHandler {
+
+	private final DtoRootPanelClientObjectChannel clientObjectChannel = new DtoRootPanelClientObjectChannel(getClientObjectChannel());
 
 	private String backgroundImageUrl;
 	private String blurredBackgroundImageUrl;
@@ -50,25 +53,17 @@ public class RootPanel extends AbstractComponent implements Component {
 		return uiRootPanel;
 	}
 
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		// no ui events for this component
-	}
-
 	public void setContent(Component component) {
 		setContent(component, null, 0);
 	}
 
 	public void setContent(Component component, PageTransition animation, long animationDuration) {
 		content = component;
-		if (component != null) {
-			component.setParent(this);
-		}
-		getClientObjectChannel().sendCommandIfRendered(new DtoRootPanel.SetContentCommand(component, animation != null ? animation.toUiPageTransition() : null, animationDuration), null);
+		clientObjectChannel.setContent(component, animation != null ? animation.toUiPageTransition() : null, animationDuration);
 	}
 
 	public void setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, Color backgroundColor, Duration animationDuration) {
-		getClientObjectChannel().sendCommandIfRendered(new DtoRootPanel.SetBackgroundCommand(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis()).getParameters(), null);
+		clientObjectChannel.setBackground(backgroundImageUrl, blurredBackgroundImageUrl, backgroundColor.toHtmlColorString(), (int) animationDuration.toMillis());
 	}
 
 	public Component getContent() {

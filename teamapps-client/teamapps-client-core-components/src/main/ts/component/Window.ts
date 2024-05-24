@@ -20,18 +20,24 @@
 
 import {Panel} from "./Panel";
 import {
-	DtoEntranceAnimation,
-	DtoExitAnimation,
 	DtoPanel_WindowButtonClickedEvent,
 	DtoPanelHeaderComponentMinimizationPolicy,
 	DtoPanelHeaderField,
 	DtoPanelHeaderFieldIconVisibilityPolicy,
 	DtoWindow,
-	DtoWindowButtonType,
+	WindowButtonType,
 	DtoWindowCommandHandler,
 	DtoWindowEventSource
 } from "../generated";
-import {AbstractLegacyComponent, Component, noOpServerChannel, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {
+	AbstractLegacyComponent,
+	Component,
+	DtoEntranceAnimation, DtoExitAnimation,
+	noOpServerChannel,
+	parseHtml,
+	ServerChannel,
+	TeamAppsEvent
+} from "projector-client-object-api";
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
@@ -70,9 +76,9 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 		this.$panelWrapper.appendChild(this.panel.getMainElement());
 
 		if (config.closeable) {
-			this.panel.addWindowButton(DtoWindowButtonType.CLOSE);
+			this.panel.addWindowButton(WindowButtonType.CLOSE);
 		}
-		this.panel.getWindowButton(DtoWindowButtonType.CLOSE).onClicked.addListener(() => this.close(500));
+		this.panel.getWindowButton(WindowButtonType.CLOSE).onClicked.addListener(() => this.close(500));
 		this.panel.onWindowButtonClicked.addListener(eventObject => {
 			return this.onWindowButtonClicked.fire({
 				windowButton: eventObject.windowButton
@@ -191,9 +197,9 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 	public setCloseable(closeable: boolean): void {
 		this.closeable = closeable;
 		if (closeable) {
-			this.panel.addWindowButton(DtoWindowButtonType.CLOSE);
+			this.panel.addWindowButton(WindowButtonType.CLOSE);
 		} else {
-			this.panel.removeWindowButton(DtoWindowButtonType.CLOSE);
+			this.panel.removeWindowButton(WindowButtonType.CLOSE);
 		}
 	}
 
@@ -230,7 +236,7 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 
 
 
-	setWindowButtons(windowButtons: DtoWindowButtonType[]): void {
+	setWindowButtons(windowButtons: WindowButtonType[]): void {
 	}
 }
 

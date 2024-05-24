@@ -20,14 +20,18 @@
  */
 package org.teamapps.projector.components.core.div;
 
-import org.teamapps.projector.dto.DtoDiv;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.components.core.CoreComponentLibrary;
+import org.teamapps.projector.dto.DtoDiv;
+import org.teamapps.projector.dto.DtoDivClientObjectChannel;
+import org.teamapps.projector.dto.DtoDivEventHandler;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class Div extends AbstractComponent {
+public class Div extends AbstractComponent implements DtoDivEventHandler {
+
+	private final DtoDivClientObjectChannel clientObjectChannel = new DtoDivClientObjectChannel(getClientObjectChannel());
 
 	private Component content;
 	private String innerHtml;
@@ -47,7 +51,7 @@ public class Div extends AbstractComponent {
 	public DtoDiv createConfig() {
 		DtoDiv ui = new DtoDiv();
 		mapAbstractUiComponentProperties(ui);
-		ui.setContent(content != null ? content.createClientReference() : null);
+		ui.setContent(content != null ? content : null);
 		ui.setInnerHtml(innerHtml);
 		return ui;
 	}
@@ -58,7 +62,7 @@ public class Div extends AbstractComponent {
 
 	public void setContent(Component content) {
 		this.content = content;
-		getClientObjectChannel().sendCommandIfRendered(new DtoDiv.SetContentCommand(content != null ? content.createClientReference() : null), null);
+		clientObjectChannel.setContent(content);
 	}
 
 	public String getInnerHtml() {
@@ -67,6 +71,6 @@ public class Div extends AbstractComponent {
 
 	public void setInnerHtml(String innerHtml) {
 		this.innerHtml = innerHtml;
-		getClientObjectChannel().sendCommandIfRendered(new DtoDiv.SetInnerHtmlCommand(innerHtml), null);
+		clientObjectChannel.setInnerHtml(innerHtml);
 	}
 }

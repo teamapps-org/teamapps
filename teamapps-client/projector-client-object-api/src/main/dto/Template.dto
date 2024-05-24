@@ -19,6 +19,6 @@
  */
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-interface Template {
+abstract class DtoTemplate extends DtoClientObject {
 
 }

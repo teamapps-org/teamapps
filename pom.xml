@@ -39,23 +39,31 @@
         <module>projector-dto-dsl</module>
 
         <module>teamapps-client/teamapps-client-communication</module>
+        <module>teamapps-icon</module>
         <module>teamapps-client/projector-client-object-api</module>
+
         <module>teamapps-client/projector-grid-template</module>
         <module>teamapps-client/projector-mustache-template</module>
+
         <module>teamapps-client/teamapps-client-core-components</module>
+
+
+        <module>teamapps-ux</module>
+        <module>teamapps-server-jetty-embedded</module>
+
+        <module>teamapps-session-stats-app</module>
+
+        <module>teamapps-client/projector-workspace-layout</module>
         <module>teamapps-client/teamapps-client-common-components</module>
         <module>teamapps-client/projector-infinite-scrolling-components</module>
         <module>teamapps-client/projector-combobox</module>
         <module>teamapps-client/projector-calendar</module>
         <module>teamapps-client/teamapps-client-core</module>
 
-        <module>teamapps-icon</module>
         <module>teamapps-material-icon-provider</module>
-        <module>teamapps-ux</module>
-        <module>teamapps-session-stats-app</module>
-        <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
         <module>projector-test</module>
+        <module>projector-application</module>
     </modules>
 
     <properties>
@@ -66,7 +74,7 @@
         <slf4j-version>1.7.36</slf4j-version>
         <jackson-version>2.13.2</jackson-version>
         <jackson-version-patched>2.14.1</jackson-version-patched>
-        <guava-version>31.1-jre</guava-version>
+        <guava-version>33.2.0-jre</guava-version>
         <apache-commons-io>2.11.0</apache-commons-io>
         <junit.version>4.13.2</junit.version>
         <cloning.version>1.9.9</cloning.version>
@@ -187,6 +195,11 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-server-undertow-embedded</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>projector-workspace-layout</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -19,24 +19,24 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class ChatDisplay extends Component {
-	ChatMessageBatch initialMessages;
+class DtoChatDisplay extends DtoComponent {
+	DtoChatMessageBatch initialMessages;
     boolean contextMenuEnabled;
     String deletedMessageIcon;
 
-	command addMessages(ChatMessageBatch messages);
-	command updateMessage(ChatMessage message);
+	command addMessages(DtoChatMessageBatch messages);
+	command updateMessage(DtoChatMessage message);
 	command deleteMessage(int messageId);
-	command clearMessages(ChatMessageBatch messages);
+	command clearMessages(DtoChatMessageBatch messages);
     command closeContextMenu();
 
-	query requestPreviousMessages() returns ChatMessageBatch;
-    query requestContextMenu(int chatMessageId) returns Component*;
+	query requestPreviousMessages() returns DtoChatMessageBatch;
+    query requestContextMenu(int chatMessageId) returns DtoComponent*;
 }
 
-class ChatInput extends Component {
+class DtoChatInput extends DtoComponent {
 	required String defaultFileIcon;
 	long maxBytesPerUpload;
 	String uploadUrl;
@@ -45,7 +45,7 @@ class ChatInput extends Component {
 
 	command setAttachmentsEnabled(boolean attachmentsEnabled);
 
-	event messageSent(NewChatMessage message);
+	event messageSent(DtoNewChatMessage message);
 	event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
 	event uploadStarted(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
 	event uploadCanceled(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
@@ -55,28 +55,28 @@ class ChatInput extends Component {
 	event fileItemRemoved(String fileItemUuid);
 }
 
-class ChatMessageBatch {
-    required List<ChatMessage> messages;
+class DtoChatMessageBatch {
+    required List<DtoChatMessage> messages;
     required boolean containsFirstMessage;
 }
 
-class ChatMessage {
+class DtoChatMessage {
 	int id;
 	String userImageUrl;
 	String userNickname;
 	String text;
-	List<ChatPhoto> photos;
-	List<ChatFile> files;
+	List<DtoChatPhoto> photos;
+	List<DtoChatFile> files;
 	boolean deleted;
 }
 
-class ChatPhoto {
+class DtoChatPhoto {
 	String fileName;
 	String thumbnailUrl;
 	String imageUrl;
 }
 
-class ChatFile {
+class DtoChatFile {
 	String name;
 	String icon;
 	long length;
@@ -85,13 +85,13 @@ class ChatFile {
 }
 
 @TypeScriptFactory
-class NewChatMessage {
+class DtoNewChatMessage {
 	String text;
-	List<ChatNewFile> uploadedFiles;
+	List<DtoChatNewFile> uploadedFiles;
 }
 
 @TypeScriptFactory
-class ChatNewFile {
+class DtoChatNewFile {
 	String uploadedFileUuid;
 	String fileName;
 }

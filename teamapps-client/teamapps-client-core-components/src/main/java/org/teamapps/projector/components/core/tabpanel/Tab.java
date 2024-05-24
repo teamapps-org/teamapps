@@ -19,12 +19,11 @@
  */
 package org.teamapps.projector.components.core.tabpanel;
 
+import org.teamapps.icons.Icon;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.components.core.toolbar.Toolbar;
 import org.teamapps.projector.dto.DtoTab;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.icons.Icon;
-import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
 
@@ -70,8 +69,8 @@ public class Tab {
 		uiTab.setCloseable(closeable);
 		uiTab.setLazyLoading(this.isLazyLoading());
 		uiTab.setRightSide(this.rightSide);
-		uiTab.setToolbar(ClientObject.createClientReference(this.toolbar));
-		uiTab.setContent(ClientObject.createClientReference(content));
+		uiTab.setToolbar(this.toolbar);
+		uiTab.setContent(content);
 		uiTab.setVisible(visible);
 		return uiTab;
 	}
@@ -118,9 +117,6 @@ public class Tab {
 
 	public Tab setContent(Component content) {
 		this.content = content;
-		if (content != null) {
-			content.setParent(tabPanel);
-		}
 		if (tabPanel != null) {
 			tabPanel.handleTabContentChanged(this);
 		}

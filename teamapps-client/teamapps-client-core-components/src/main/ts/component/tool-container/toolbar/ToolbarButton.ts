@@ -32,11 +32,11 @@ import {
 } from "projector-client-object-api";
 import {Toolbar} from "./Toolbar";
 import {AbstractToolContainer} from "../AbstractToolContainer";
-import {createDtoDropDownButtonClickInfo, DtoDropDownButtonClickInfo} from "../../../generated";
+import {createDropDownButtonClickInfo, DropDownButtonClickInfo} from "../../../generated";
 
 export class ToolbarButton {
 
-	public readonly onClicked: TeamAppsEvent<DtoDropDownButtonClickInfo> = new TeamAppsEvent();
+	public readonly onClicked: TeamAppsEvent<DropDownButtonClickInfo> = new TeamAppsEvent();
 
 	private $buttonWrapper: HTMLElement;
 	private $button: HTMLElement;
@@ -86,12 +86,12 @@ export class ToolbarButton {
 				window.open(this.config.openNewTabWithUrl, '_blank');
 			}
 
-			let dropdownClickInfo: DtoDropDownButtonClickInfo = null;
+			let dropdownClickInfo: DropDownButtonClickInfo = null;
 			if (this.hasDropDown) {
 				if (this.dropDown == null) {
 					this.dropDown = new DropDown(this.dropDownComponent?.getMainElement());
 				}
-				dropdownClickInfo = createDtoDropDownButtonClickInfo(!this.dropDown.isOpen, this.dropDownComponent != null);
+				dropdownClickInfo = createDropDownButtonClickInfo(!this.dropDown.isOpen, this.dropDownComponent != null);
 				if (!this.dropDown.isOpen) {
 					this.dropDown.setContentComponent(this.dropDownComponent?.getMainElement());
 					this.dropDown.open({$reference: this.$buttonWrapper, width: config.dropDownPanelWidth});

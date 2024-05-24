@@ -19,43 +19,43 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-//import org.teamapps.projector.dto.Abcde;
+//import org.teamapps.projector.dto.DtoAbcde;
 
 
-class AbstractChart extends Component {
+class DtoAbstractChart extends DtoComponent {
 	long initialAnimationDuration;
-	ChartLegendStyle legendStyle;
+	DtoChartLegendStyle legendStyle;
 
-	command setLegendStyle(ChartLegendStyle legendStyle);
+	command setLegendStyle(DtoChartLegendStyle legendStyle);
 }
 
-class PieChart extends AbstractChart {
-	DataPointWeighting dataPointWeighting;
+class DtoPieChart extends DtoAbstractChart {
+	DtoDataPointWeighting dataPointWeighting;
 	double rotation3D; // degrees from 0 to 90
 	double height3D;
 	double rotationClockwise; // 0 - 360
 	double innerRadiusProportion; // 0 - 1
 
-	List<ChartNamedDataPoint> dataPoints;
+	List<DtoChartNamedDataPoint> dataPoints;
 
-	command setDataPointWeighting(DataPointWeighting dataPointWeighting);
+	command setDataPointWeighting(DtoDataPointWeighting dataPointWeighting);
 	command setRotation3D(double rotation3D);
 	command setHeight3D(double height3D);
 	command setRotationClockwise(double rotationClockwise);
 	command setInnerRadiusProportion(double innerRadiusProportion);
-	command setDataPoints(List<ChartNamedDataPoint> dataPoints, long animationDuration);
+	command setDataPoints(List<DtoChartNamedDataPoint> dataPoints, long animationDuration);
 
 	event dataPointClicked(String dataPointName);
 }
 
-enum DataPointWeighting {
+enum DtoDataPointWeighting {
 	RELATIVE, // data points will sum up to 100% regardless of their absolute values
 	ABSOLUTE  // use absolute values, which should sum up to less than 1
 }
 
-enum ChartLegendStyle {
+enum DtoChartLegendStyle {
 	NONE,
 	INLINE,
 	SEPARATE_TOP,
@@ -64,38 +64,38 @@ enum ChartLegendStyle {
 	SEPARATE_RIGHT
 }
 
-class ChartNamedDataPoint {
+class DtoChartNamedDataPoint {
 	required String name;
 	required double y;
 	String color;
 }
 
-class ChartDataPoint2D {
+class DtoChartDataPoint2D {
 	required double x;
 	required double y;
 }
 
-class ChartDataPoint3D {
+class DtoChartDataPoint3D {
 	required double x;
 	required double y;
 	required double z;
 }
 
 
-//class AbstractChart extends Component {
-//	Spacing margin; // not pixels! this defines the space available for tick and axis labels
+//class DtoAbstractChart extends DtoComponent {
+//	DtoSpacing margin; // not pixels! this defines the space available for tick and axis labels
 //	int animationDuration;
 //	boolean showLegend;
 //
-//	ChartAxisConfig xAxisConfig; // if null, no axis details are drawn
-//	ChartAxisConfig yAxisConfig; // if null, no axis details are drawn
+//	DtoChartAxisConfig xAxisConfig; // if null, no axis details are drawn
+//	DtoChartAxisConfig yAxisConfig; // if null, no axis details are drawn
 //
-//	command uploadChartImage(ImageType imageType);
+//	command uploadChartImage(DtoImageType imageType);
 //
-//	event chartImageUploaded(String fileItemUuId, int sizeInBytes, ImageType imageType);
+//	event chartImageUploaded(String fileItemUuId, int sizeInBytes, DtoImageType imageType);
 //}
 //
-//class ChartAxisConfig {
+//class DtoChartAxisConfig {
 //	boolean drawAxisLine;
 //	String axisLabel;
 //	int axisLabelDistance;
@@ -104,42 +104,42 @@ class ChartDataPoint3D {
 //	String[] distinctValues; //e.g. "January, February, March, ..."
 //}
 //
-//class BasicChart extends AbstractChart {
+//class DtoBasicChart extends DtoAbstractChart {
 //	boolean useInteractiveGuideline;
 //
 //	boolean stacked;
 //
-//	List<BasicChartSeries> data;
-//	command setData(List<BasicChartSeries> data, boolean clear);
+//	List<DtoBasicChartSeries> data;
+//	command setData(List<DtoBasicChartSeries> data, boolean clear);
 //}
 //
-//class BasicChartSeries {
+//class DtoBasicChartSeries {
 //    required BasicChartSeriesType seriesType;
 //    AbstractChartData[] values; //values - represents the array of {x,y} data points
 //    String key; //key  - the name of the series.
 //    String color;  //color - optional: choose your own line color.
 //    String secondaryColor; //e.g. for area
-//    LineChartCurveType curveType;
+//    DtoLineChartCurveType curveType;
 //    boolean showDataLabels; //data labels to be displayed for each point of data in the series
 //    String dashStyle; //e.g. "3, 3"
 //    boolean shadow; //whether to apply a drop shadow to the series
 //
 //}
 //
-//enum BasicChartSeriesType {
+//enum DtoBasicChartSeriesType {
 //    LINE,
 //    AREA,
 //    BAR,
 //    SPLINE
 //}
 //
-//class PieChart extends AbstractChart {
+//class DtoPieChart extends DtoAbstractChart {
 //	boolean useInteractiveGuideline;
 //
 //    //...
 //}
 //
-//class HeatMapChart extends AbstractChart {
+//class DtoHeatMapChart extends DtoAbstractChart {
 //	boolean useInteractiveGuideline;
 //
 //    //...
@@ -147,7 +147,7 @@ class ChartDataPoint3D {
 //
 //
 //
-//enum ImageType {
+//enum DtoImageType {
 //    PNG,
 //    JPEG
 //}

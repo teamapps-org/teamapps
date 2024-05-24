@@ -34,7 +34,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Locale;
 
-public class RichTextEditor extends AbstractField<String> implements TextInputHandlingField {
+public class RichTextEditor extends AbstractField<String> {
 
 	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoRichTextEditor.TextInputEvent.TYPE_ID);
 	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoRichTextEditor.SpecialKeyPressedEvent.TYPE_ID);

@@ -19,21 +19,21 @@
  */
 package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.IdentifiableClientRecord;
-import org.teamapps.projector.dto.AbstractField;
-import org.teamapps.projector.dto.FieldMessage;
-import org.teamapps.projector.dto.TextAlignment;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoFieldMessage;
+import org.teamapps.projector.dto.DtoTextAlignment;
 
-enum SortDirection {
+enum DtoSortDirection {
 	ASC, DESC
 }
 
-class TableColumn {
+class DtoTableColumn {
 	required String propertyName;
 	required String icon;
 	required String title;
-	required AbstractField* field;
+	required DtoAbstractField* field;
 	int minWidth;
 	int defaultWidth;
 	int maxWidth;
@@ -41,18 +41,18 @@ class TableColumn {
 	boolean resizeable;
 	boolean visible;
 	boolean hiddenIfOnlyEmptyCellsVisible;
-	List<FieldMessage> messages;
-	TextAlignment headerAlignment;
+	List<DtoFieldMessage> messages;
+	DtoTextAlignment headerAlignment;
 }
 
-enum TableDisplayStyle {
+enum DtoTableDisplayStyle {
 	TABLE, LIST;
 }
 
-class Table extends AbstractInfiniteListComponent {
-	required List<TableColumn> columns;
+class DtoTable extends DtoAbstractInfiniteListComponent {
+	required List<DtoTableColumn> columns;
 
-	TableDisplayStyle displayStyle;
+	DtoTableDisplayStyle displayStyle;
 	boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
 	int rowHeight;
 	boolean stripedRowsEnabled;
@@ -69,11 +69,11 @@ class Table extends AbstractInfiniteListComponent {
 	boolean textSelectionEnabled;
 
 	String sortField; //if available the table is initially sorted by this field
-	SortDirection sortDirection;
+	DtoSortDirection sortDirection;
 
 	boolean editable; //only valid for tables
 
-	SelectionFrame selectionFrame;
+	DtoSelectionFrame selectionFrame;
 
 	boolean contextMenuEnabled;
 
@@ -83,21 +83,21 @@ class Table extends AbstractInfiniteListComponent {
     String headerFieldsRowBorderColor;
     int headerFieldsRowHeight;
     String headerFieldsRowBackgroundColor;
-    mutable Dictionary<AbstractField*> headerFields;
+    mutable Dictionary<DtoAbstractField*> headerFields;
 
     boolean footerFieldsRowEnabled;
     int footerFieldsRowBorderWidth; // even in list mode! the border will be there but transparent!
     String footerFieldsRowBorderColor;
     int footerFieldsRowHeight;
     String footerFieldsRowBackgroundColor;
-    mutable Dictionary<AbstractField*> footerFields;
+    mutable Dictionary<DtoAbstractField*> footerFields;
 
-    command setHeaderRowField(String columnName, AbstractField* field);
-    command setFooterRowField(String columnName, AbstractField* field);
+    command setHeaderRowField(String columnName, DtoAbstractField* field);
+    command setFooterRowField(String columnName, DtoAbstractField* field);
 
 	command clearTable();
-	command updateData(int startIndex, List<Integer> recordIds, List<TableClientRecord> newRecords, int totalNumberOfRecords);
-	command setSorting(String sortField, SortDirection sortDirection);
+	command updateData(int startIndex, List<Integer> recordIds, List<DtoTableClientRecord> newRecords, int totalNumberOfRecords);
+	command setSorting(String sortField, DtoSortDirection sortDirection);
     command setCellValue(int recordId, String columnPropertyName, Object value);
 	command markTableField(int recordId, String columnPropertyName, boolean mark); //mark or unmark the field to indicate errors or missing data
 	command clearAllFieldMarkings();
@@ -107,13 +107,13 @@ class Table extends AbstractInfiniteListComponent {
 	command editCellIfAvailable(int recordId, String propertyName);
 	command cancelEditingCell(int recordId, String propertyName);
 	command focusCell(int recordId, String columnPropertyName);
-    command setSingleCellMessages(int recordId, String columnPropertyName, List<FieldMessage> messages);
+    command setSingleCellMessages(int recordId, String columnPropertyName, List<DtoFieldMessage> messages);
     command clearAllCellMessages();
-    command setColumnMessages(String columnPropertyName, List<FieldMessage> messages);
-    command addColumns(List<TableColumn> column, int index);
+    command setColumnMessages(String columnPropertyName, List<DtoFieldMessage> messages);
+    command addColumns(List<DtoTableColumn> column, int index);
     command removeColumns(List<String> columnName);
     command setColumnVisibility(String columnPropertyName, boolean visible);
-	command setContextMenuContent(int requestId, Component* component);
+	command setContextMenuContent(int requestId, DtoComponent* component);
 	command closeContextMenu(int requestId);
 
 	event cellClicked(int recordId, String columnPropertyName);
@@ -121,7 +121,7 @@ class Table extends AbstractInfiniteListComponent {
 	event cellEditingStopped(int recordId, String columnPropertyName);
 	event cellValueChanged(int recordId, String columnPropertyName, Object value);
 	event rowsSelected(List<Integer> recordIds);
-	event sortingChanged(String sortField, SortDirection sortDirection); // sent when the user clicks on a sortable header column
+	event sortingChanged(String sortField, DtoSortDirection sortDirection); // sent when the user clicks on a sortable header column
 	event contextMenuRequested(int requestId, int recordId);
 
 	event fieldOrderChange(String columnPropertyName, int position); //zero based
@@ -129,19 +129,19 @@ class Table extends AbstractInfiniteListComponent {
 }
 
 @TypeScriptFactory
-class TableDataRequest {
+class DtoTableDataRequest {
 	required int startIndex;
 	required int length;
 	required String sortField;
-	required SortDirection sortDirection;
+	required DtoSortDirection sortDirection;
 }
 
-class TableCellMessages {
+class DtoTableCellMessages {
 	required int recordId;
-	required Dictionary<List<FieldMessage>> messages;
+	required Dictionary<List<DtoFieldMessage>> messages;
 }
 
-class SelectionFrame {
+class DtoSelectionFrame {
 	String color;
 	int borderWidth;
 	int animationDuration; // ms
@@ -150,8 +150,8 @@ class SelectionFrame {
 	boolean fullRow;
 }
 
-class TableClientRecord extends IdentifiableClientRecord {
-	Dictionary<List<FieldMessage>> messages;
+class DtoTableClientRecord extends DtoIdentifiableClientRecord {
+	Dictionary<List<DtoFieldMessage>> messages;
 	List<String> markings;
 	boolean selected;
 	boolean bold;

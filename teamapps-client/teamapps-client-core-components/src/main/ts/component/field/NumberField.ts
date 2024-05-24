@@ -23,7 +23,7 @@ import {
 	DtoNumberFieldCommandHandler,
 	DtoNumberFieldEventSource,
 	DtoNumberFieldSliderMode,
-	DtoSpecialKey,
+	SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
@@ -118,7 +118,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 				this.fireTextInput();
 				this.$field.select();
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ESCAPE
+					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === "ArrowUp" || e.key == "ArrowDown") {
 				if (this.getTransientValue() != null) {
@@ -131,7 +131,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 			} else if (e.key === "Enter") {
 				this.commit();
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ENTER
+					key: SpecialKey.ENTER
 				});
 			}
 		});

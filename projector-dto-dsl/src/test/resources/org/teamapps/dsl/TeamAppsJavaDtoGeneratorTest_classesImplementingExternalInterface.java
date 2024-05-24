@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -32,18 +35,18 @@ import org.teamapps.projector.dto.DtoObject;
  */
 
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.clientobject.component.DtoComponentConfig;
+import org.teamapps.projector.clientobject.component.ComponentConfig;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DtoA implements ComponentConfig, DtoObject {
+public class A implements ComponentConfig, DtoObject {
 
     public static final String TYPE_ID = "A";
     public static final List<String> EVENT_NAMES = List.of();
     public static final List<String> QUERY_NAMES = List.of();
 
 
-	public DtoA() {
+	public A() {
 	}
 
 	@SuppressWarnings("unchecked")

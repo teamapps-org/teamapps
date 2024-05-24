@@ -1,6 +1,6 @@
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-class FontStyle {
+class DtoFontStyle {
 	String fontColor;
 	String backgroundColor;
 	boolean bold;

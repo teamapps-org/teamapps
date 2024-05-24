@@ -1,6 +1,7 @@
 package org.teamapps.dto.protocol.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,8 @@ public class EVTWrapper extends AbstractReliableClientMessageWrapper {
 
 	public static final String TYPE_ID = "EVT";
 
-	public EVTWrapper(JsonNode jsonNode) {
-		super(jsonNode);
+	public EVTWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
+		super(objectMapper, jsonNode);
 	}
 
 	public String getLibraryId() {
@@ -38,11 +39,11 @@ public class EVTWrapper extends AbstractReliableClientMessageWrapper {
 		}
 		if (!node.isArray()) {
 			LOGGER.warn("Event '{}' has params property that is not a list!", getName());
-			return List.of(new JsonWrapper(node));
+			return List.of(new JsonWrapper(getObjectMapper(), jsonNode));
 		}
 		//noinspection UnstableApiUsage
 		return Streams.stream(node.elements())
-				.map(JsonWrapper::new)
+				.map(jsonNode -> new JsonWrapper(getObjectMapper(), jsonNode))
 				.toList();
 	}
 

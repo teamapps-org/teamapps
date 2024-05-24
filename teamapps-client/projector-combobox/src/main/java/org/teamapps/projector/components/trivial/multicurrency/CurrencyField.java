@@ -31,8 +31,8 @@ import org.teamapps.projector.components.trivial.multicurrency.value.CurrencyUni
 import org.teamapps.projector.components.trivial.multicurrency.value.CurrencyValue;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.field.AbstractField;
-import org.teamapps.ux.component.field.SpecialKey;
-import org.teamapps.ux.component.field.TextInputHandlingField;
+import org.teamapps.projector.components.core.field.SpecialKey;
+import org.teamapps.projector.components.core.field.TextInputHandlingField;
 import org.teamapps.projector.session.SessionContext;
 
 import java.math.BigDecimal;
@@ -43,7 +43,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
-public class CurrencyField extends AbstractField<CurrencyValue> implements TextInputHandlingField {
+public class CurrencyField extends AbstractField<CurrencyValue> {
 
 	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoCurrencyField.TextInputEvent.TYPE_ID);
 	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoCurrencyField.SpecialKeyPressedEvent.TYPE_ID);
@@ -170,7 +170,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencyBeforeAmount(boolean currencyBeforeAmount) {
 		this.currencyBeforeAmount = currencyBeforeAmount;
-		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetShowCurrencyBeforeAmountCommand(currencyBeforeAmount), null);
+		clientObjectChannel.setShowCurrencyBeforeAmount(currencyBeforeAmount);
 		return this;
 	}
 
@@ -180,7 +180,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencySymbolsEnabled(boolean currencySymbolsEnabled) {
 		this.currencySymbolsEnabled = currencySymbolsEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetShowCurrencySymbolCommand(currencySymbolsEnabled), null);
+		clientObjectChannel.setShowCurrencySymbol(currencySymbolsEnabled);
 		return this;
 	}
 
@@ -190,12 +190,12 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public void setFixedPrecision(int fixedPrecision) {
 		this.fixedPrecision = fixedPrecision;
-		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetFixedPrecisionCommand(fixedPrecision), null);
+		clientObjectChannel.setFixedPrecision(fixedPrecision);
 	}
 
 	public void setAlphabeticKeysQueryEnabled(boolean alphabeticKeysQueryEnabled) {
 		this.alphabeticKeysQueryEnabled = alphabeticKeysQueryEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetAlphabeticKeysQueryEnabledCommand(alphabeticKeysQueryEnabled), null);
+		clientObjectChannel.setAlphabeticKeysQueryEnabled(alphabeticKeysQueryEnabled);
 	}
 
 	public Locale getLocale() {
@@ -213,7 +213,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		setCurrencies(currencies);
-		getClientObjectChannel().sendCommandIfRendered(new DtoCurrencyField.SetLocaleCommand(locale.toLanguageTag()), null);
+		clientObjectChannel.setLocale(locale.toLanguageTag());
 	}
 
 	@Override

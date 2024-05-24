@@ -1,6 +1,7 @@
 package org.teamapps.projector.field;
 
 import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.field.validator.FieldValidator;
 
@@ -29,7 +30,7 @@ public interface Field<VALUE> extends Component {
 
 	Object convertServerValueToClientValue(VALUE value);
 
-	VALUE convertClientValueToServerValue(Object value);
+	VALUE convertClientValueToServerValue(JsonWrapper value);
 
 	Collection<FieldValidator<VALUE>> getValidators();
 

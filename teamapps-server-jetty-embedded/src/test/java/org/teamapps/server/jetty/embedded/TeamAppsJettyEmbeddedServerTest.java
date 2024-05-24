@@ -21,7 +21,7 @@ package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.projector.components.core.dummy.DummyComponent;
-import org.teamapps.ux.component.field.Button;
+import org.teamapps.projector.components.core.field.Button;
 import org.teamapps.projector.components.core.flexcontainer.VerticalLayout;
 import org.teamapps.projector.components.core.rootpanel.RootPanel;
 import org.teamapps.projector.components.core.window.Window;
@@ -33,7 +33,8 @@ public class TeamAppsJettyEmbeddedServerTest {
 	public static void main(String[] args) throws Exception {
 
 		WebController controller = (SessionContext sessionContext) -> {
-			RootPanel rootPanel = sessionContext.addRootPanel();
+			RootPanel rootPanel = new RootPanel();
+			sessionContext.addRootComponent(rootPanel);
 			DummyComponent content = new DummyComponent();
 			content.onClick.addListener((eventData, disposable) -> {
 				System.out.println("Clicked!");
@@ -41,7 +42,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 			});
 			VerticalLayout verticalLayout = new VerticalLayout();
 			verticalLayout.addComponent(content);
-			Button<?> button = Button.create(MaterialIcon.CLOSED_CAPTION, "re-register");
+			Button button = Button.create(MaterialIcon.CLOSED_CAPTION, "re-register");
 			button.onClicked.addListener(() -> {
 				System.out.println("button clicked");
 				content.onClick.addListener((e, d) -> {

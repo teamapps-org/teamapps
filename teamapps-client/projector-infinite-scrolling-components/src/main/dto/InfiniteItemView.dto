@@ -19,14 +19,14 @@
  */
 package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.IdentifiableClientRecord;
-import org.teamapps.projector.dto.HorizontalElementAlignment;
-import org.teamapps.projector.dto.VerticalElementAlignment;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoHorizontalElementAlignment;
+import org.teamapps.projector.dto.DtoVerticalElementAlignment;
 
-class InfiniteItemView extends AbstractInfiniteListComponent {
-	required Template* itemTemplate;
+class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
+	required DtoTemplate* itemTemplate;
 
 	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width
 	double itemHeight;
@@ -35,24 +35,24 @@ class InfiniteItemView extends AbstractInfiniteListComponent {
 	double itemPositionAnimationTime; // ms
 	HorizontalElementAlignment itemContentHorizontalAlignment;
 	VerticalElementAlignment itemContentVerticalAlignment;
-	ItemJustification rowHorizontalAlignment;
+	DtoItemJustification rowHorizontalAlignment;
 //	boolean autoHeight; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 
 	boolean contextMenuEnabled;
 	
-	command setData(int startIndex, List<Integer> recordIds, List<IdentifiableClientRecord> newRecords, int totalNumberOfRecords);
+	command setData(int startIndex, List<Integer> recordIds, List<DtoIdentifiableClientRecord> newRecords, int totalNumberOfRecords);
 
-	command setItemTemplate(Template* itemTemplate);
+	command setItemTemplate(DtoTemplate* itemTemplate);
     command setItemWidth(double itemWidth);
     command setItemHeight(double itemHeight);
     command setHorizontalSpacing(double horizontalSpacing);
     command setVerticalSpacing(double verticalSpacing);
     command setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment);
     command setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment);
-    command setRowHorizontalAlignment(ItemJustification rowHorizontalAlignment);
+    command setRowHorizontalAlignment(DtoItemJustification rowHorizontalAlignment);
     command setItemPositionAnimationTime(int animationMillis);
 
-    command setContextMenuContent(int requestId, Component* component);
+    command setContextMenuContent(int requestId, DtoComponent* component);
     command closeContextMenu(int requestId);
 
 	event itemClicked(int recordId, boolean isDoubleClick);
@@ -60,11 +60,11 @@ class InfiniteItemView extends AbstractInfiniteListComponent {
 }
 
 @TypeScriptFactory
-class InfiniteItemViewDataRequest {
+class DtoInfiniteItemViewDataRequest {
 	required int startIndex;
 	required int length;
 }
 
-enum ItemJustification {
+enum DtoItemJustification {
 	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN, SPACE_EVENLY
 }

@@ -19,43 +19,35 @@
  */
 package org.teamapps.projector.components.core.mobile;
 
+import org.teamapps.icons.Icon;
 import org.teamapps.projector.dto.DtoNavigationBarButton;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
-public class NavigationBarButton<RECORD> {
+public class NavigationBarButton {
 
 	public ProjectorEvent<Void> onClick = new ProjectorEvent<>();
 
 	private String clientId;
-	private RECORD data;
+	private final Template template;
+	private final Object data;
 	private boolean visible = true;
 
-	private NavigationBar<RECORD> container;
+	private NavigationBar container;
 
-	public NavigationBarButton(RECORD data) {
+	public NavigationBarButton(Template template, Object data) {
+		this.template = template;
 		this.data = data;
 	}
 
-	public static NavigationBarButton<BaseTemplateRecord<?>> create(Icon<?, ?> icon) {
-		return new NavigationBarButton<>(new BaseTemplateRecord<Void>(icon, null));
-	}
-
-	public static NavigationBarButton<BaseTemplateRecord<?>> create(Icon<?, ?> icon, String caption) {
-		return new NavigationBarButton<>(new BaseTemplateRecord<>(icon, caption));
-	}
-
-	public static <PAYLOAD> NavigationBarButton<BaseTemplateRecord<PAYLOAD>> create(Icon<?, ?> icon, PAYLOAD payload) {
-		return new NavigationBarButton<>(new BaseTemplateRecord<PAYLOAD>(icon, null, payload));
-	}
-
-	public static <PAYLOAD> NavigationBarButton<BaseTemplateRecord<PAYLOAD>> create(Icon<?, ?> icon, String caption, PAYLOAD payload) {
-		return new NavigationBarButton<>(new BaseTemplateRecord<PAYLOAD>(icon, caption, payload));
+	public static NavigationBarButton create(Icon<?, ?> icon) {
+		return new NavigationBarButton(BaseTemplates.NAVIGATION_BAR_ICON_ONLY, new BaseTemplateRecord<Void>(icon, null));
 	}
 
 	public DtoNavigationBarButton createUiNavigationBarButton() {
-		DtoNavigationBarButton uiNavigationBarButton = new DtoNavigationBarButton(clientId, data);
+		DtoNavigationBarButton uiNavigationBarButton = new DtoNavigationBarButton(clientId, template, data);
 		uiNavigationBarButton.setVisible(visible);
 		return uiNavigationBarButton;
 	}
@@ -66,14 +58,6 @@ public class NavigationBarButton<RECORD> {
 
 	/*package-private*/ void setClientId(String clientId) {
 		this.clientId = clientId;
-	}
-
-	public RECORD getData() {
-		return data;
-	}
-
-	public void setData(RECORD data) {
-		this.data = data;
 	}
 
 	public boolean isVisible() {
@@ -87,7 +71,7 @@ public class NavigationBarButton<RECORD> {
 		}
 	}
 
-	/*package-private*/ void setContainer(NavigationBar<RECORD> container) {
+	/*package-private*/ void setContainer(NavigationBar container) {
 		this.container = container;
 	}
 }

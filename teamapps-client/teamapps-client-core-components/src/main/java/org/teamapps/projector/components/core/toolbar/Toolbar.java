@@ -24,12 +24,13 @@ import org.teamapps.projector.dto.DtoToolbar;
 import org.teamapps.projector.dto.DtoToolbarButtonGroup;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.dto.DtoToolbarEventHandler;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class Toolbar extends AbstractToolContainer {
+public class Toolbar extends AbstractToolContainer implements DtoToolbarEventHandler {
 
 	private String logoImageUrl;
 

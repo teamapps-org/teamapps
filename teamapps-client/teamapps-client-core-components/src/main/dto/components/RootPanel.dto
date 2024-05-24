@@ -19,16 +19,16 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class RootPanel extends Component {
+class DtoRootPanel extends DtoComponent {
     String backgroundImageUrl;
     String blurredBackgroundImageUrl;
     String backgroundColor;
-	Component* content;
+	DtoComponent* content;
 
     command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, long animationDuration);
-	command setContent(Component* content, PageTransition transition, long animationDuration);
+	command setContent(DtoComponent* content, DtoPageTransition transition, long animationDuration);
 }
 
 

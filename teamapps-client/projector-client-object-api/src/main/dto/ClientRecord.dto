@@ -19,14 +19,14 @@
  */
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class ClientRecord {
+class DtoClientRecord {
     Dictionary<Object> values;
     String asString;
 }
 
-class IdentifiableClientRecord extends ClientRecord {
+class DtoIdentifiableClientRecord extends DtoClientRecord {
 	int id;
 }
 

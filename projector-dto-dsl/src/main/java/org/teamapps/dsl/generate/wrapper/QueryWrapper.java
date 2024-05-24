@@ -48,7 +48,7 @@ public class QueryWrapper {
 
 	public String getTypeScriptInterfaceName() {
 		System.out.println("QueryWrapper.getDeclaringClass");
-		return "Dto" + model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Query";
+		return model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Query";
 	}
 
 	public List<FormalParameterWrapper> getAllProperties() {

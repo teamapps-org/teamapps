@@ -32,7 +32,7 @@ public <if(c.abstract)>abstract <endif>class <c.javaClassName> <if(c.superClass)
 
 	<c.propertiesNotImplementedBySuperClasses:fieldDeclaration(); separator="\n">
 
-	<constructor(c, "Dto", "")>
+	<constructor(c, "", "")>
 
 	<toString(c)>
 
@@ -118,9 +118,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -133,7 +136,7 @@ protected <p.type.javaTypeString> <p.name>;
 >>
 
 getterStub(p) ::= <<
-public <p.type.javaTypeString> get<p.name; format="cap">();
+public <p.type.javaTypeString> <if(p.type.boolean)>is<else>get<endif><p.name; format="cap">();
 >>
 
 setterStub(p, c) ::= <<
@@ -182,7 +185,7 @@ parameter(p) ::= "<p.type.javaTypeString> <p.name>"
 
 getter(propertyDeclaration) ::= <<
 @com.fasterxml.jackson.annotation.JsonGetter("<propertyDeclaration.name>")
-public <propertyDeclaration.type.javaTypeString> get<propertyDeclaration.name; format="cap">() {
+public <propertyDeclaration.type.javaTypeString> <if(propertyDeclaration.type.boolean)>is<else>get<endif><propertyDeclaration.name; format="cap">() {
 	return <propertyDeclaration.name>;
 }
 >>
@@ -199,13 +202,13 @@ propertyAssignment(p) ::= "this.<p.name> = <p.name>;"
 
 enumClass(e) ::= <<
 <javaFilePrelude(e.packageName)>
-public enum Dto<e.javaClassName> {
+public enum <e.javaClassName> {
 	<e.enumConstants:enumConstant(e.stringEnum); separator=",\n">;
 
 	<if(e.stringEnum)>
 	private final String jsonValue;
 
-	Dto<e.javaClassName>(String jsonValue) {
+	<e.javaClassName>(String jsonValue) {
 		this.jsonValue = jsonValue;
 	}
 
@@ -304,12 +307,16 @@ jsonWrapper(c) ::= <<
 
 <c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
 
-public class <c.javaClassName>Wrapper extends <if(c.superClass)>Dto<c.superClass.name>Wrapper<else>JsonWrapper<endif> {
+public class <c.javaClassName>Wrapper extends <if(c.superClass)><c.superClass.name>Wrapper<else>JsonWrapper<endif> {
 
     public static final String TYPE_ID = "<c.name>";
 
-    public <c.javaClassName>Wrapper(JsonNode jsonNode) {
-        super(jsonNode);
+    public <c.javaClassName>Wrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
+        super(objectMapper, jsonNode);
+    }
+
+    public <c.javaClassName> unwrap() {
+        return ExceptionUtil.runWithSoftenedExceptions(() -> getObjectMapper().treeToValue(jsonNode, <c.javaClassName>.class));
     }
 
     <c.properties:jsonWrapperGetter(); separator="\n\n">
@@ -321,8 +328,8 @@ public static class <c.javaClassName>Wrapper extends JsonWrapper {
 
     public static final String TYPE_ID = "<c.name>";
 
-    public <c.javaClassName>Wrapper(JsonNode jsonNode) {
-        super(jsonNode);
+    public <c.javaClassName>Wrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
+        super(objectMapper, jsonNode);
     }
 
     <c.allProperties:jsonWrapperGetter(); separator="\n\n">
@@ -330,29 +337,27 @@ public static class <c.javaClassName>Wrapper extends JsonWrapper {
 >>
 
 jsonWrapperGetter(propertyDeclaration) ::= <<
-<if(propertyDeclaration.type.isUiClientObjectReferenceOrClientObjectCollection)>
-// skipped <propertyDeclaration.name>
-<else>
 <uiObjectWrapperGetter(propertyDeclaration)>
-<endif>
 >>
 
 uiObjectWrapperGetter(propertyDeclaration) ::= <<
-public <propertyDeclaration.type.javaTypeWrapperString> get<propertyDeclaration.name; format="cap">() {
+public <propertyDeclaration.type.javaTypeWrapperString> <if(propertyDeclaration.type.boolean)>is<else>get<endif><propertyDeclaration.name; format="cap">() {
     var node = jsonNode.get("<propertyDeclaration.name>");
-    <wrapperPropertyValueExtractor(propertyDeclaration.type, "node")>
+    <wrapperPropertyValueExtractor(propertyDeclaration.type, "node", "getObjectMapper()")>
 }
 >>
 
-wrapperPropertyValueExtractor(type, variableName) ::= <<
+wrapperPropertyValueExtractor(type, variableName, objectMapperExpression) ::= <<
 if (<variableName> == null || <variableName>.isNull()) {
     return <type.defaultValue>;
 }
-<if (type.isList)>
+<if (type.isClientObjectReference)>
+return ExceptionUtil.runWithSoftenedExceptions(() -> <objectMapperExpression>.treeToValue(node, ClientObject.class));
+<elseif (type.isList)>
 ArrayNode <variableName>ArrayNode = ((ArrayNode) <variableName>);
 return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.elements(), <variableName>ArrayNode.size(), Spliterator.ORDERED), false)
     .map(<variableName>X -> {
-        <wrapperPropertyValueExtractor(type.collectionType, [variableName,"X"])>
+        <wrapperPropertyValueExtractor(type.collectionType, [variableName,"X"], objectMapperExpression)>
     })
     .collect(Collectors.toList());
 <elseif (type.isDictionary)>
@@ -360,13 +365,14 @@ ObjectNode <variableName>ArrayNode = ((ObjectNode) <variableName>);
 return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.fields(), <variableName>ArrayNode.size(), Spliterator.ORDERED), false)
         .collect(Collectors.toMap(e -> e.getKey(), <variableName>Field -> {
             JsonNode <variableName>X = <variableName>Field.getValue();
-            <wrapperPropertyValueExtractor(type.collectionType, [variableName,"X"])>
+            <wrapperPropertyValueExtractor(type.collectionType, [variableName,"X"], objectMapperExpression)>
         }));
 <elseif (type.isDtoClassOrInterface)>
 if (!<variableName>.isObject()) {
     throw new IllegalArgumentException("<variableName> must be an object!");
 }
-return new <type.javaTypeWrapperString>(<variableName>);
+// <type.text>
+return new <type.javaTypeWrapperString>(<objectMapperExpression>, <variableName>);
 <elseif (type.isEnum)>
 if (<variableName>.isInt()) {
     return <type.javaTypeString>.values()[<variableName>.intValue()];
@@ -380,12 +386,12 @@ return <variableName>.textValue();
 <elseif (type.isPrimitiveOrWrapperType)>
 return <variableName>.as<type.primitiveTypeName; format="cap">();
 <elseif (type.isObjectOrObjectCollection)>
-return new JsonWrapper(node);
+return new JsonWrapper(<objectMapperExpression>, node);
 <else>
 if (!<variableName>.isObject()) {
     throw new IllegalArgumentException("<variableName> must be an object!");
 }
-return new <type.javaTypeWrapperString>(<variableName>);
+return new <type.javaTypeWrapperString>(<objectMapperExpression>, <variableName>);
 <endif>
 >>
 
@@ -406,6 +412,11 @@ public class <c.name>ClientObjectChannel implements ClientObjectChannel {
 	@Override
     public void forceRender() {
         delegate.forceRender();
+    }
+
+    @Override
+    public boolean isRendered() {
+        return delegate.isRendered();
     }
 
 	@Override
@@ -438,7 +449,7 @@ eventMethodInvoker(c) ::= <<
 <c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
 import java.lang.reflect.Method;
 import org.teamapps.projector.clientobject.AbstractClientObjectEventMethodInvoker;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class <c.name>EventMethodInvoker extends AbstractClientObjectEventMethodInvoker {
 
@@ -459,9 +470,9 @@ public class <c.name>EventMethodInvoker extends AbstractClientObjectEventMethodI
 >>
 
 eventMethodParameterExtractor(p, index) ::= <<
-    ((Function\<JsonNode, <p.type.javaNonPrimitiveTypeString>\>) node -> {
-        <wrapperPropertyValueExtractor(p.type, "node")>
-    }).apply(parameters.get(<index>).getJsonNode())
+    ((BiFunction\<ObjectMapper, JsonNode, <if(p.type.isDtoClassOrInterface)><p.type.javaTypeWrapperString><else><p.type.javaNonPrimitiveTypeString><endif>\>) (objectMapper, node) -> {
+        <wrapperPropertyValueExtractor(p.type, "node", "objectMapper")>
+    }).apply(parameters.get(<index>).getObjectMapper(), parameters.get(<index>).getJsonNode())
 >>
 
 eventHandlerInterface(c) ::= <<
@@ -470,9 +481,18 @@ eventHandlerInterface(c) ::= <<
 <c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
 import java.lang.reflect.Method;
 import org.teamapps.projector.clientobject.AbstractClientObjectEventMethodInvoker;
-import java.util.function.Function;
+import org.teamapps.projector.clientobject.ClientMessageHandler;
+import java.util.function.BiFunction;
 
-public interface <c.name>EventHandler {
+
+public interface <c.name>EventHandler <if(!c.abstract)>extends ClientMessageHandler<endif> {
+
+<if(!c.abstract)>
+	@Override
+	default void handleEvent(String name, List\<JsonWrapper> params) {
+		new <c.name>EventMethodInvoker(this).handleEvent(name, params);
+	}
+<endif>
 
     <c.allEvents:eventMethodStub(); separator="\n">
 
@@ -480,5 +500,5 @@ public interface <c.name>EventHandler {
 >>
 
 eventMethodStub(e) ::= <<
-    void handle<e.name; format="cap">(<e.parameters:parameter(); separator=", ">);
+void handle<e.name; format="cap">(<e.parameters:{p|<p.type.javaTypeWrapperString> <p.name>}; separator=", ">);
 >>

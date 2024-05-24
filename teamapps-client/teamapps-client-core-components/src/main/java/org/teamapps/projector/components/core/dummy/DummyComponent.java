@@ -19,18 +19,18 @@
  */
 package org.teamapps.projector.components.core.dummy;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoDummyComponent;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.dto.*;
+import org.teamapps.projector.event.ProjectorEvent;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class DummyComponent extends AbstractComponent {
+public class DummyComponent extends AbstractComponent implements DtoDummyComponentEventHandler {
 
 	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(DtoDummyComponent.ClickedEvent.TYPE_ID);
+
+	private final DtoDummyComponentClientObjectChannel clientObjectChannel = new DtoDummyComponentClientObjectChannel(getClientObjectChannel());
 
 	private String text;
 
@@ -51,12 +51,8 @@ public class DummyComponent extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoDummyComponent.ClickedEvent.TYPE_ID -> {
-				onClick.fire(null);
-			}
-		}
+	public void handleClicked(int clickCount) {
+		onClick.fire();
 	}
 
 	public String getText() {
@@ -65,7 +61,6 @@ public class DummyComponent extends AbstractComponent {
 
 	public void setText(String text) {
 		this.text = text;
-		getClientObjectChannel().sendCommandIfRendered(new DtoDummyComponent.SetTextCommand(text), null);
+		clientObjectChannel.setText(text);
 	}
-
 }

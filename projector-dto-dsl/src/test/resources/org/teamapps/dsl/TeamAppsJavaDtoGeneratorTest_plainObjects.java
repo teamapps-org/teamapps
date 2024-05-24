@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -35,7 +38,7 @@ import org.teamapps.projector.clientobject.ClientObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DtoA implements DtoObject {
+public class A implements DtoObject {
 
     public static final String TYPE_ID = "A";
     public static final List<String> EVENT_NAMES = List.of();
@@ -45,7 +48,7 @@ public class DtoA implements DtoObject {
 	protected List<?> y;
 	protected Map<String, ?> z;
 
-	public DtoA() {
+	public A() {
 	}
 
 	@SuppressWarnings("unchecked")
@@ -73,19 +76,19 @@ public class DtoA implements DtoObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("x")
-	public DtoA setX(Object x) {
+	public A setX(Object x) {
 		this.x = x;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("y")
-	public DtoA setY(List<?> y) {
+	public A setY(List<?> y) {
 		this.y = y;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("z")
-	public DtoA setZ(Map<String, ?> z) {
+	public A setZ(Map<String, ?> z) {
 		this.z = z;
 		return this;
 	}

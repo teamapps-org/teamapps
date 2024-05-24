@@ -32,7 +32,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class AbstractField<VALUE> extends AbstractComponent implements Field<VALUE>, AbstractFieldEventHandler {
+public abstract class AbstractField<VALUE> extends AbstractComponent implements Field<VALUE>, DtoAbstractFieldEventHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -50,8 +50,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(DtoAbstractField.ValueChangedEvent.TYPE_ID);
 	public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
 
-	private final AbstractFieldClientObjectChannel clientObjectChannel;
-	private final AbstractFieldEventMethodInvoker eventMethodInvoker = new AbstractFieldEventMethodInvoker(this);
+	private final DtoAbstractFieldClientObjectChannel clientObjectChannel = new DtoAbstractFieldClientObjectChannel(getClientObjectChannel());
 
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
 
@@ -63,10 +62,6 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 	private final MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
 
 	private boolean valueChangedByClient;
-
-	public AbstractField() {
-		this.clientObjectChannel = new AbstractFieldClientObjectChannel(getClientObjectChannel());
-	}
 
 	@Override
 	public ProjectorEvent<VALUE> onFocus() {
@@ -137,7 +132,6 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 	 * @param value the server-side value
 	 * @return the object to be sent to the ui
 	 */
-	@Override
 	public Object convertServerValueToClientValue(VALUE value) {
 		return value;
 	}
@@ -148,12 +142,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 	}
 
 	@Override
-	public void handleEvent(String name, List<JsonWrapper> params) {
-		eventMethodInvoker.handleEvent(name, params);
-	}
-
-	@Override
-	public void handleValueChanged(Object value) {
+	public void handleValueChanged(JsonWrapper value) {
 		applyValueFromUi(value);
 		validate();
 	}
@@ -168,7 +157,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 		onBlur.fire();
 	}
 
-	protected void applyValueFromUi(Object value) {
+	protected void applyValueFromUi(JsonWrapper value) {
 		if (!this.value.isLocked()) {
 			VALUE transformedValue = convertClientValueToServerValue(value);
 			if (!this.value.isLocked()) {
@@ -179,10 +168,14 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 		}
 	}
 
-	@Override
-	public VALUE convertClientValueToServerValue(Object value) {
-		return (VALUE) value;
+	public VALUE convertClientValueToServerValue(JsonWrapper value) {
+		if (value == null || value.getJsonNode().isNull()) {
+			return null;
+		}
+		return doConvertClientValueToServerValue(value);
 	}
+
+	abstract public VALUE doConvertClientValueToServerValue(JsonWrapper value);
 
 	/**
 	 * Whether this value be regarded as empty / "no user input".

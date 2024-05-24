@@ -1,6 +1,7 @@
 package org.teamapps.projector.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A wrapper around a JSON node sent by the client.
@@ -18,10 +19,19 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class JsonWrapper {
 
+	private final ObjectMapper objectMapper;
 	protected final JsonNode jsonNode;
 
-	public JsonWrapper(JsonNode jsonNode) {
+	public JsonWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
+		this.objectMapper = objectMapper;
 		this.jsonNode = jsonNode;
+	}
+
+	/**
+	 * Get the objectMapper for deserialization.
+	 */
+	public ObjectMapper getObjectMapper() {
+		return objectMapper;
 	}
 
 	/**

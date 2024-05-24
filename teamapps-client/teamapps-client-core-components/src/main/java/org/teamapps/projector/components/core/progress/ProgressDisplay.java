@@ -19,16 +19,16 @@
  */
 package org.teamapps.projector.components.core.progress;
 
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoProgressDisplay;
-import org.teamapps.event.Disposable;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.commons.event.Disposable;
 import org.teamapps.icons.Icon;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.ux.task.ObservableProgress;
-import org.teamapps.ux.task.ProgressStatus;
+import org.teamapps.projector.dto.DtoProgressDisplay;
+import org.teamapps.projector.dto.DtoProgressDisplayClientObjectChannel;
+import org.teamapps.projector.dto.DtoProgressDisplayEventHandler;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.event.ProjectorEvent;
 
 /**
  * This component displays progress information.
@@ -37,10 +37,12 @@ import org.teamapps.ux.task.ProgressStatus;
  * However, it can also be used manually, without attaching a progress.
  */
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class ProgressDisplay extends AbstractComponent {
+public class ProgressDisplay extends AbstractComponent implements DtoProgressDisplayEventHandler {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);
 	public final ProjectorEvent<Void> onCancelButtonClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);
+
+	private final DtoProgressDisplayClientObjectChannel clientObjectChannel = new DtoProgressDisplayClientObjectChannel(getClientObjectChannel());
 
 	private Icon<?, ?> icon;
 	private String taskName;
@@ -81,25 +83,20 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	private void updateUi() {
-		getClientObjectChannel().sendCommandIfRendered(new DtoProgressDisplay.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoProgressDisplay.ClickedEvent.TYPE_ID -> {
-				var clickedEvent = event.as(DtoProgressDisplay.ClickedEventWrapper.class);
-				this.onClicked.fire(null);
-			}
-			case DtoProgressDisplay.CancelButtonClickedEvent.TYPE_ID -> {
-				var cancelButtonClickedEvent = event.as(DtoProgressDisplay.CancelButtonClickedEventWrapper.class);
-				if (this.observedProgress != null) {
-					this.observedProgress.requestCancellation();
-				}
-				this.onCancelButtonClicked.fire(null);
+	public void handleClicked() {
+		this.onClicked.fire();
+	}
 
-			}
+	@Override
+	public void handleCancelButtonClicked() {
+		if (this.observedProgress != null) {
+			this.observedProgress.requestCancellation();
 		}
+		this.onCancelButtonClicked.fire();
 	}
 
 	public void setObservedProgress(ObservableProgress observableProgress) {
@@ -182,6 +179,5 @@ public class ProgressDisplay extends AbstractComponent {
 		this.cancelable = cancelable;
 		updateUi();
 	}
-
 
 }

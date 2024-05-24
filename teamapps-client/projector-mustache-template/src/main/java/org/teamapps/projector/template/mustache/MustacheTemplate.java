@@ -22,13 +22,14 @@ package org.teamapps.projector.template.mustache;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.mustache.dto.DtoMustacheTemplate;
+import org.teamapps.projector.template.mustache.dto.DtoMustacheTemplateEventHandler;
 
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = MustacheTemplateLibrary.class)
-public class MustacheTemplate implements Template {
+public class MustacheTemplate implements Template, DtoMustacheTemplateEventHandler {
 
 	private static final Pattern PLACE_HOLDER_REGEX = Pattern.compile("\\{\\{#?(\\w+)\\}\\}");
 
@@ -52,5 +53,5 @@ public class MustacheTemplate implements Template {
 	public List<String> getPropertyNames() {
 		return propertyNames;
 	}
-	
+
 }

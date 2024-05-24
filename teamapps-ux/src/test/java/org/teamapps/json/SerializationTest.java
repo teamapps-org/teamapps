@@ -22,8 +22,7 @@ package org.teamapps.json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.teamapps.projector.dto.DtoReference;
-import org.teamapps.projector.dto.DtoWorkSpaceLayout;
+import org.teamapps.dto.protocol.server.CMD;
 import org.teamapps.dto.protocol.server.INIT_NOK;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
 
@@ -47,8 +46,8 @@ public class SerializationTest {
 
 	@Test
 	public void serializeCommands() throws Exception {
-		DtoWorkSpaceLayout.RefreshViewComponentCommand o = new DtoWorkSpaceLayout.RefreshViewComponentCommand("viewName", new DtoReference("asdf"));
-		assertThat(teamAppsObjectMapper.writeValueAsString(o)).isEqualTo("[\"WorkSpaceLayout.refreshViewComponent\",[\"viewName\",{\"_type\":\"_ref\",\"id\":\"asdf\"}]]");
+		CMD cmd = new CMD("myLib", "myClientObjectId", "myCommand", new Object[]{"param1", 222}, false);
+		assertThat(teamAppsObjectMapper.writeValueAsString(cmd)).isEqualTo("{\"_type\":\"CMD\",\"lid\":\"myLib\",\"oid\":\"myClientObjectId\",\"name\":\"myCommand\",\"params\":[\"param1\",222],\"r\":false,\"sn\":0}");
 	}
 
 }

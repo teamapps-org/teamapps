@@ -19,26 +19,26 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class TabPanel extends Component {
-	List<Tab> tabs;
+class DtoTabPanel extends DtoComponent {
+	List<DtoTab> tabs;
 	String selectedTabId; // TODO
 	boolean hideTabBarIfSingleTab; // if true and there is only one tab, then the tab bar is hidden. Tool buttons pop up when hovering over the top 50px of the tab panel.
-	TabPanelTabStyle tabStyle; // if true and there is only one tab, then the tab bar is hidden.
-	List<ToolButton*> toolButtons; // shown inside a right-aligned space in the tab bar
+	DtoTabPanelTabStyle tabStyle; // if true and there is only one tab, then the tab bar is hidden.
+	List<DtoToolButton*> toolButtons; // shown inside a right-aligned space in the tab bar
 	List<WindowButtonType> windowButtons;
 
 	command setHideTabBarIfSingleTab(boolean hideTabBarIfSingleTab);
-	command setTabStyle(TabPanelTabStyle tabStyle);
-	command setToolButtons(List<ToolButton*> toolButtons);
+	command setTabStyle(DtoTabPanelTabStyle tabStyle);
+	command setToolButtons(List<DtoToolButton*> toolButtons);
 	command setWindowButtons(List<WindowButtonType> windowButtons);
 	command selectTab(String tabId);
-	command addTab(Tab tab, boolean select);
+	command addTab(DtoTab tab, boolean select);
 	command removeTab(String tabId);
 
-	command setTabToolbar(String tabId, Toolbar* toolbar);
-	command setTabContent(String tabId, Component* component);
+	command setTabToolbar(String tabId, DtoToolbar* toolbar);
+	command setTabContent(String tabId, DtoComponent* component);
 	command setTabConfiguration(String tabId, String icon, String caption, boolean closeable, boolean visible, boolean rightSide);
 
 	event tabSelected(String tabId);
@@ -47,11 +47,11 @@ class TabPanel extends Component {
 	event windowButtonClicked(WindowButtonType windowButton);
 }
 
-enum TabPanelTabStyle {
+enum DtoTabPanelTabStyle {
     BLOCKS, EARS
 }
 
-class Tab {
+class DtoTab {
 	required String tabId;
 	required String icon;
 	required String caption;
@@ -59,6 +59,6 @@ class Tab {
 	boolean lazyLoading;
 	boolean rightSide; //if true show on the right
 	boolean visible;
-	Toolbar* toolbar;
-	Component* content;
+	DtoToolbar* toolbar;
+	DtoComponent* content;
 }

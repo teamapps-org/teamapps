@@ -19,7 +19,7 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
 /*
 	Layers (in order)
@@ -29,10 +29,10 @@ import org.teamapps.projector.dto.Component;
 	 * image overlay
 	 * info text overlay
 */
-class LiveStreamComponent extends Component {
+class DtoLiveStreamComponent extends DtoComponent {
 
 	String backgroundImage; //display if no live stream of waiting video is available, null == transparent
-	PageDisplayMode backgroundImageDisplayMode;
+	DtoPageDisplayMode backgroundImageDisplayMode;
 	double volume;
 
 	/**
@@ -42,7 +42,7 @@ class LiveStreamComponent extends Component {
 	 * @param offsetMillis The offset at which the videos should start. Specify 0 to start from beginning.
 	 * @param stopLiveStream Stop any live stream
 	 */
-	command showWaitingVideos(List<WaitingVideoInfo> videoInfos, long offsetSeconds, boolean stopLiveStream);
+	command showWaitingVideos(List<DtoWaitingVideoInfo> videoInfos, long offsetSeconds, boolean stopLiveStream);
 	command stopWaitingVideos();
 
 	command startHttpLiveStream(String url);
@@ -58,7 +58,7 @@ class LiveStreamComponent extends Component {
 	 *
 	 * The image overlay covers the complete player. In particular, mouse events are (for now) catched by this layer...
 	 */
-	command displayImageOverlay(String imageUrl, PageDisplayMode displayMode, boolean useVideoAreaAsFrame /* if no video is playing (use whole player area) ignore this flag, even if video comes later */);
+	command displayImageOverlay(String imageUrl, DtoPageDisplayMode displayMode, boolean useVideoAreaAsFrame /* if no video is playing (use whole player area) ignore this flag, even if video comes later */);
 	command removeImageOverlay();
 
 	command displayInfoTextOverlay(String text); // position at bottom, use text size optimization code as is
@@ -67,33 +67,33 @@ class LiveStreamComponent extends Component {
 	command setVolume(double volume); // for liveStream AND waitingVideos!!
 
 	event resultOfRequestInputDeviceAccess(boolean microphoneAccessGranted, boolean cameraAccessGranted);
-	event resultOfRequestInputDeviceInfo(AudioInputDeviceInfo audioInputDeviceInfo, VideoInputDeviceInfo videoInputDeviceInfo);
+	event resultOfRequestInputDeviceInfo(DtoAudioInputDeviceInfo audioInputDeviceInfo, DtoVideoInputDeviceInfo videoInputDeviceInfo);
 }
 
-class AbstractLiveStreamPlayer extends Component {
+class DtoAbstractLiveStreamPlayer extends DtoComponent {
 	command play(String url);
     command stop();
     command setVolume(double volume);
 }
 
-class MpegDashPlayer extends AbstractLiveStreamPlayer {}
-class HttpLiveStreamPlayer extends AbstractLiveStreamPlayer {}
-class LiveStreamComPlayer extends AbstractLiveStreamPlayer {}
-class YoutubePlayer extends AbstractLiveStreamPlayer {}
+class DtoMpegDashPlayer extends DtoAbstractLiveStreamPlayer {}
+class DtoHttpLiveStreamPlayer extends DtoAbstractLiveStreamPlayer {}
+class DtoLiveStreamComPlayer extends DtoAbstractLiveStreamPlayer {}
+class DtoYoutubePlayer extends DtoAbstractLiveStreamPlayer {}
 
-class WaitingVideoInfo {
+class DtoWaitingVideoInfo {
 	required String url;
 	required long durationInSeconds;
 }
 
-class AudioInputDeviceInfo {
+class DtoAudioInputDeviceInfo {
 }
-class VideoInputDeviceInfo {
+class DtoVideoInputDeviceInfo {
 	int nativeWidth; //the native width of the camera resolution
 	int nativeHeight;
 }
 
-class MediaInputSettings {
+class DtoMediaInputSettings {
 	boolean audio;
 	int audioKiloBitsPerSecond;
 	boolean video;

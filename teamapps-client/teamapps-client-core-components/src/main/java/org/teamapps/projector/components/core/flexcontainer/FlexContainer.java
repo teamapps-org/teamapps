@@ -24,7 +24,8 @@ import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.dto.DtoFlexContainer;
-import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.DtoFlexContainerClientObjectChannel;
+import org.teamapps.projector.dto.DtoFlexContainerEventHandler;
 import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.FlexDirection;
 import org.teamapps.projector.format.JustifyContent;
@@ -35,7 +36,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class FlexContainer extends AbstractComponent {
+public class FlexContainer extends AbstractComponent implements DtoFlexContainerEventHandler {
+
+	private final DtoFlexContainerClientObjectChannel clientObjectChannel = new DtoFlexContainerClientObjectChannel(getClientObjectChannel());
 
 	private List<Component> components = new ArrayList<>();
 	private FlexDirection flexDirection = FlexDirection.ROW;
@@ -47,7 +50,7 @@ public class FlexContainer extends AbstractComponent {
 		DtoFlexContainer uiFlexContainer = new DtoFlexContainer();
 		mapAbstractUiComponentProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()
-				.map(c -> c.createClientReference())
+				.map(c -> c)
 				.collect(Collectors.toList()));
 		uiFlexContainer.setFlexDirection(flexDirection.toDto());
 		uiFlexContainer.setAlignItems(alignItems.toDto());
@@ -57,7 +60,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void addComponent(Component component) {
 		this.components.add(component);
-		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()), null);
+		clientObjectChannel.setComponents(List.copyOf(components));
 	}
 
 	public void addComponent(Component component, FlexSizingPolicy sizingPolicy) {
@@ -67,22 +70,17 @@ public class FlexContainer extends AbstractComponent {
 
 	public void removeComponent(Component component) {
 		this.components.remove(component);
-		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()), null);
+		clientObjectChannel.setComponents(List.copyOf(components));
 	}
 
 	public void removeAllComponents() {
 		this.components.clear();
-		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetComponentsCommand(List.of()), null);
+		clientObjectChannel.setComponents(List.of());
 	}
 
 	public void setComponents(List<Component> components) {
 		this.components = new ArrayList<>(components);
-		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetComponentsCommand(components.stream().map(c -> c.createClientReference()).toList()), null);
-	}
-
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-
+		clientObjectChannel.setComponents(List.copyOf(components));
 	}
 
 	public FlexDirection getFlexDirection() {
@@ -91,7 +89,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void setFlexDirection(FlexDirection flexDirection) {
 		this.flexDirection = flexDirection;
-		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetFlexDirectionCommand(flexDirection.toDto()), null);
+		clientObjectChannel.setFlexDirection(flexDirection.toDto());
 	}
 
 	public AlignItems getAlignItems() {
@@ -100,7 +98,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void setAlignItems(AlignItems alignItems) {
 		this.alignItems = alignItems;
-		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetAlignItemsCommand(alignItems.toDto()), null);
+		clientObjectChannel.setAlignItems(alignItems.toDto());
 
 	}
 
@@ -110,7 +108,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void setJustifyContent(JustifyContent justifyContent) {
 		this.justifyContent = justifyContent;
-		getClientObjectChannel().sendCommandIfRendered(new DtoFlexContainer.SetJustifyContentCommand(justifyContent.toDto()), null);
+		clientObjectChannel.setJustifyContent(justifyContent.toDto());
 	}
 
 	public List<Component> getComponents() {

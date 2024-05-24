@@ -19,11 +19,11 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
 
 
-class PictureChooser extends AbstractField {
+class DtoPictureChooser extends DtoAbstractField {
 	String uploadUrl; // May point anywhere.
 	long maxFileSize;
 	String fileTooLargeMessage;
@@ -35,7 +35,7 @@ class PictureChooser extends AbstractField {
     int imageDisplayWidth;
     int imageDisplayHeight;
 
-	FileItem fileItem;
+	DtoFileItem fileItem;
 
 	event uploadInitiatedByUser(String fileName, String mimeType, long sizeInBytes);
     event uploadTooLarge(String fileName, String mimeType, long sizeInBytes);

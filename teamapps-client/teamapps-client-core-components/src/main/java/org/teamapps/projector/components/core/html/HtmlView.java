@@ -19,19 +19,22 @@
  */
 package org.teamapps.projector.components.core.html;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoHtmlView;
-import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoHtmlView;
+import org.teamapps.projector.dto.DtoHtmlViewClientObjectChannel;
+import org.teamapps.projector.dto.DtoHtmlViewEventHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class HtmlView extends AbstractComponent {
+public class HtmlView extends AbstractComponent implements DtoHtmlViewEventHandler {
+
+	private final DtoHtmlViewClientObjectChannel clientObjectChannel = new DtoHtmlViewClientObjectChannel(getClientObjectChannel());
 
 	private String html;
 	private final Map<String, List<Component>> componentsByContainerElementSelector = new HashMap<>();
@@ -57,16 +60,11 @@ public class HtmlView extends AbstractComponent {
 		mapAbstractUiComponentProperties(ui);
 		ui.setHtml(html);
 		ui.setComponentsByContainerElementSelector(componentsByContainerElementSelector.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(c -> c.createClientReference()).collect(Collectors.toList()))));
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(c -> c).collect(Collectors.toList()))));
 		ui.setContentHtmlByContainerElementSelector(contentHtmlByContainerElementSelector.entrySet().stream()
 				.filter(entry -> entry.getValue() != null) // Map.copyOf() does not support null values!
 				.collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue)));
 		return ui;
-	}
-
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-
 	}
 
 	public String getHtml() {
@@ -84,16 +82,16 @@ public class HtmlView extends AbstractComponent {
 	public void addComponent(String containerSelector, Component component, boolean clearContainer) {
 		this.componentsByContainerElementSelector.computeIfAbsent(containerSelector, s -> new ArrayList<>())
 				.add(component);
-		getClientObjectChannel().sendCommandIfRendered(new DtoHtmlView.AddComponentCommand(containerSelector, component.createClientReference(), clearContainer), null);
+		clientObjectChannel.addComponent(containerSelector, component, clearContainer);
 	}
 
 	public void removeComponent(Component component) {
 		componentsByContainerElementSelector.entrySet().removeIf(entry -> entry.getValue() == component);
-		getClientObjectChannel().sendCommandIfRendered(new DtoHtmlView.RemoveComponentCommand(component.createClientReference()), null);
+		clientObjectChannel.removeComponent(component);
 	}
 
 	public void setContentHtml(String containerElementSelector, String html) {
 		contentHtmlByContainerElementSelector.put(containerElementSelector, html);
-		getClientObjectChannel().sendCommandIfRendered(new DtoHtmlView.SetContentHtmlCommand(containerElementSelector, html), null);
+		clientObjectChannel.setContentHtml(containerElementSelector, html);
 	}
 }

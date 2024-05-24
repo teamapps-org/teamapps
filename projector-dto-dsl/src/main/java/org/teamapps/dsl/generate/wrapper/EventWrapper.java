@@ -47,7 +47,7 @@ public class EventWrapper {
 
 	public String getTypeScriptInterfaceName() {
 		System.out.println("EventWrapper.getDeclaringClass");
-		return "Dto" + model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Event";
+		return model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Event";
 	}
 
 	public List<FormalParameterWrapper> getAllProperties() {

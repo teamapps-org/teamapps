@@ -4,15 +4,15 @@
  */
 
 import {ClientObject} from "projector-client-object-api";
-import {DtoX} from "./DtoX";
+import {X} from "./X";
 
-export interface DtoA {
+export interface A {
 	_type?: string;
-	x?: DtoX
+	x?: X
 }
 
-export interface DtoACommandHandler {
-	setX(x: DtoX): any;
+export interface ACommandHandler {
+	setX(x: X): any;
 }
 
 

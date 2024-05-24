@@ -19,17 +19,17 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class FloatingComponent extends Component {
+class DtoFloatingComponent extends DtoComponent {
 
-	Component* containerComponent;
-	Component* contentComponent;
+	DtoComponent* containerComponent;
+	DtoComponent* contentComponent;
 	int width; // 0 = full width, -1 = auto
 	int height; // 0 = full height, -1 = auto
 	int marginX;
 	int marginY;
-	FloatingComponentPosition position;
+	DtoFloatingComponentPosition position;
 
     String backgroundColor;
     String expanderHandleColor;
@@ -37,9 +37,9 @@ class FloatingComponent extends Component {
     boolean collapsible;
     boolean expanded;
 
-	command setContentComponent(Component* contentComponent);
+	command setContentComponent(DtoComponent* contentComponent);
 	command setExpanded(boolean expanded);
-	command setPosition(FloatingComponentPosition position);
+	command setPosition(DtoFloatingComponentPosition position);
 	command setDimensions(int width, int height);
 	command setMargins(int marginX, int marginY);
 	command setBackgroundColor(String backgroundColor);
@@ -49,7 +49,7 @@ class FloatingComponent extends Component {
 
 }
 
-enum FloatingComponentPosition {
+enum DtoFloatingComponentPosition {
 	TOP_LEFT = "top-left",
 	TOP_RIGHT = "top-right",
 	BOTTOM_LEFT = "bottom-left",

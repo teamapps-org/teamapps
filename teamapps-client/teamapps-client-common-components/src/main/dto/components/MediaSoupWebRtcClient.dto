@@ -19,9 +19,9 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class MediaSoupV3WebRtcClient extends Component {
+class DtoMediaSoupV3WebRtcClient extends DtoComponent {
 	Double displayAreaAspectRatio;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
 	boolean activityLineVisible;
 	String activityInactiveColor;
@@ -29,23 +29,23 @@ class MediaSoupV3WebRtcClient extends Component {
 	List<String> icons;
 	String caption;
 	String noVideoImageUrl;
-	WebRtcClientSpinnerPolicy spinnerPolicy;
+	DtoWebRtcClientSpinnerPolicy spinnerPolicy;
 	double playbackVolume; // 0-1
 	boolean contextMenuEnabled;
 	boolean bitrateDisplayEnabled;
 	int forceRefreshCount;
 	
 	// only one (or none) of the following must be set:
-	MediaSoupPublishingParameters publishingParameters;
-    MediaSoupPlaybackParameters playbackParameters;
+	DtoMediaSoupPublishingParameters publishingParameters;
+    DtoMediaSoupPlaybackParameters playbackParameters;
 	
-	command update(MediaSoupV3WebRtcClient config);
+	command update(DtoMediaSoupV3WebRtcClient config);
 	command setActive(boolean active);
-	command setContextMenuContent(int requestId, Component* component);
+	command setContextMenuContent(int requestId, DtoComponent* component);
 	command closeContextMenu(int requestId);
 
-	event sourceMediaTrackRetrievalFailed(MediaRetrievalFailureReason reason);
-	event sourceMediaTrackEnded(SourceMediaTrackType trackType); // otherwise cam/mic
+	event sourceMediaTrackRetrievalFailed(DtoMediaRetrievalFailureReason reason);
+	event sourceMediaTrackEnded(DtoSourceMediaTrackType trackType); // otherwise cam/mic
 	event trackPublishingSuccessful(boolean audio, boolean video);
 	event trackPublishingFailed(boolean audio, boolean video, String errorMessage);
 	event connectionStateChanged(boolean connected);
@@ -56,22 +56,22 @@ class MediaSoupV3WebRtcClient extends Component {
 	event clicked();
 	event contextMenuRequested(int requestId);
 
-	static command enumerateDevices() returns List<MediaDeviceInfo>;
+	static command enumerateDevices() returns List<DtoMediaDeviceInfo>;
 }
 
 @TypeScriptFactory
-class MediaDeviceInfo {
+class DtoMediaDeviceInfo {
 	 String deviceId;
 	 String groupId;
-	 MediaDeviceKind kind;
+	 DtoMediaDeviceKind kind;
 	 String label;
 }
 
-enum MediaDeviceKind {
+enum DtoMediaDeviceKind {
     AUDIO_INPUT, AUDIO_OUTPUT, VIDEO_INPUT
 }
 
-enum WebRtcPublishingFailureReason {
+enum DtoWebRtcPublishingFailureReason {
 	MIC_MEDIA_RETRIEVAL_FAILED,
 	CAM_MEDIA_RETRIEVAL_FAILED,
 	CAM_MIC_MEDIA_RETRIEVAL_FAILED,
@@ -80,30 +80,30 @@ enum WebRtcPublishingFailureReason {
 	CONNECTION_ESTABLISHMENT_FAILED
 }
 
-enum SourceMediaTrackType {
+enum DtoSourceMediaTrackType {
 	CAM, MIC, SCREEN;
 }
 
-enum MediaRetrievalFailureReason {
+enum DtoMediaRetrievalFailureReason {
 	MIC_MEDIA_RETRIEVAL_FAILED,
 	CAM_MEDIA_RETRIEVAL_FAILED,
 	DISPLAY_MEDIA_RETRIEVAL_FAILED,
 	VIDEO_MIXING_FAILED
 }
 
-enum WebRtcClientSpinnerPolicy {
+enum DtoWebRtcClientSpinnerPolicy {
 	NEVER,
 	WHILE_CONNECTING,
 	WHEN_NOT_STREAMING
 }
 
-class MediaSoupPublishingParameters {
+class DtoMediaSoupPublishingParameters {
 	String streamUuid;
-	MediaServerUrlAndToken server;
+	DtoMediaServerUrlAndToken server;
 
-	AudioTrackConstraints audioConstraints;
-	VideoTrackConstraints videoConstraints;
-	ScreenSharingConstraints screenSharingConstraints;
+	DtoAudioTrackConstraints audioConstraints;
+	DtoVideoTrackConstraints videoConstraints;
+	DtoScreenSharingConstraints screenSharingConstraints;
 
 	boolean simulcast;
 	long minBitrate;
@@ -111,16 +111,16 @@ class MediaSoupPublishingParameters {
 	long keyFrameRequestDelay; // milliseconds
 }
 
-class MediaServerUrlAndToken {
+class DtoMediaServerUrlAndToken {
 	required String url;
 	required int worker;
     required String token;
 }
 
-class MediaSoupPlaybackParameters {
+class DtoMediaSoupPlaybackParameters {
 	String streamUuid;
-	MediaServerUrlAndToken server; // the server/worker from which to receive the stream
-	MediaServerUrlAndToken origin; // the origin server/worker, if the stream is cascaded (scaling via origin/edge); may be null
+	DtoMediaServerUrlAndToken server; // the server/worker from which to receive the stream
+	DtoMediaServerUrlAndToken origin; // the origin server/worker, if the stream is cascaded (scaling via origin/edge); may be null
 
 	boolean audio;
 	boolean video;
@@ -129,7 +129,7 @@ class MediaSoupPlaybackParameters {
 	long maxBitrate;
 }
 
-class AudioTrackConstraints {
+class DtoAudioTrackConstraints {
 	String deviceId;
     int channelCount;
     boolean autoGainControl;
@@ -137,21 +137,21 @@ class AudioTrackConstraints {
     boolean noiseSuppression;
 }
 
-class VideoTrackConstraints {
+class DtoVideoTrackConstraints {
 	String deviceId;
     Double aspectRatio;
 	Integer width;
 	Integer height;
-    VideoFacingMode facingMode;
+    DtoVideoFacingMode facingMode;
     double frameRate;
 }
 
-class ScreenSharingConstraints {
+class DtoScreenSharingConstraints {
 	Integer maxWidth;
 	Integer maxHeight;
 }
 
-enum VideoFacingMode {
+enum DtoVideoFacingMode {
 	USER, // The video source is facing toward the user; this includes, for example, the front-facing camera on a smartphone.
 	ENVIRONMENT, // The video source is facing away from the user, thereby viewing their environment. This is the back camera on a smartphone.
 	LEFT, // The video source is facing toward the user but to their left, such as a camera aimed toward the user but over their left shoulder.

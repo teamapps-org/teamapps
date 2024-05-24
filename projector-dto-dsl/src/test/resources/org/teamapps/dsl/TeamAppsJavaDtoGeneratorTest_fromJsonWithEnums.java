@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -32,19 +35,19 @@ import org.teamapps.projector.dto.DtoObject;
  */
 
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.dto.DtoE;
+import org.teamapps.projector.dto.E;
 
 @JsonTypeName("C")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DtoC implements DtoObject {
+public class C implements DtoObject {
 
     public static final String TYPE_ID = "C";
     public static final List<String> EVENT_NAMES = List.of();
     public static final List<String> QUERY_NAMES = List.of();
 
-	protected DtoE e;
+	protected E e;
 
-	public DtoC() {
+	public C() {
 	}
 
 	@SuppressWarnings("unchecked")
@@ -55,12 +58,12 @@ public class DtoC implements DtoObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonGetter("e")
-	public DtoE getE() {
+	public E getE() {
 		return e;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("e")
-	public DtoC setE(DtoE e) {
+	public C setE(E e) {
 		this.e = e;
 		return this;
 	}

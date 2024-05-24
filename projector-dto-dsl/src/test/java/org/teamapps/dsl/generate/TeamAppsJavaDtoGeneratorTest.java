@@ -36,6 +36,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 				"class A { "
 				+ " required String aasdf; "
 				+ " String b; "
+				+ " int i; "
 				+ " List<Long> c; "
 				+ "}",
 				"org.teamapps.dto222.A",
@@ -210,6 +211,19 @@ public class TeamAppsJavaDtoGeneratorTest {
 		);
 	}
 
+	@Test
+	public void jsonWrapper() throws Exception {
+		executeJsonWrapperTest(
+				"package \"x\":org.teamapps.dto222; " +
+				"import org.teamapps.dto.blah.DtoComponent; " +
+				"class A { "
+				+ " int i; String s; A a; List<String> l; Dictionary<A> d;"
+				+ "}",
+				"org.teamapps.dto222.A",
+				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_jsonWrapper.java"
+		);
+	}
+
 	private void executeClassTest(String dslString, String qualifiedClassName, String expectedResultResourceName) throws IOException {
 		TeamAppsIntermediateDtoModel model = createModel(dslString);
 
@@ -247,6 +261,14 @@ public class TeamAppsJavaDtoGeneratorTest {
 
 		StringWriter stringWriter = new StringWriter();
 		new TeamAppsJavaDtoGenerator(model).generateClientObjectEventHandlerInterface(model.findClassByQualifiedName(qualifiedClassName).orElseThrow(), stringWriter);
+		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
+	}
+
+	private void executeJsonWrapperTest(String dslString, String qualifiedClassName, String expectedResultResourceName) throws IOException {
+		TeamAppsIntermediateDtoModel model = createModel(dslString);
+
+		StringWriter stringWriter = new StringWriter();
+		new TeamAppsJavaDtoGenerator(model).generateClassJsonWrapper(model.findClassByQualifiedName(qualifiedClassName).orElseThrow(), stringWriter);
 		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
 	}
 

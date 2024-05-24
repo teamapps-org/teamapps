@@ -19,50 +19,50 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.IdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
-class Map extends Component {
+class DtoMap extends DtoComponent {
 	String accessToken;
-	MapConfig mapConfig;
+	DtoMapConfig mapConfig;
 
-	MapType mapType;
+	DtoMapType mapType;
 	int zoomLevel;
-	MapLocation mapPosition;
-	Dictionary<AbstractMapShape> shapes;
-	List<MapMarkerClientRecord> markers;
-	MapMarkerCluster markerCluster;
+	DtoMapLocation mapPosition;
+	Dictionary<DtoAbstractMapShape> shapes;
+	List<DtoMapMarkerClientRecord> markers;
+	DtoMapMarkerCluster markerCluster;
 
-	command addMarker(MapMarkerClientRecord marker);
+	command addMarker(DtoMapMarkerClientRecord marker);
 	command removeMarker(int id);
-	command setMapMarkerCluster(MapMarkerCluster cluster);
+	command setMapMarkerCluster(DtoMapMarkerCluster cluster);
 
-	command addShape(String shapeId, AbstractMapShape shape);
-	command updateShape(String shapeId, AbstractMapShape shape);
+	command addShape(String shapeId, DtoAbstractMapShape shape);
+	command updateShape(String shapeId, DtoAbstractMapShape shape);
 	command removeShape(String shapeId);
 	command clearShapes();
 	command clearMarkers();
 	command clearMarkerCluster();
 	command clearHeatMap();
 
-	command startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties);
+	command startDrawingShape(DtoMapShapeType shapeType, DtoShapeProperties shapeProperties);
 	command stopDrawingShape();
 	
 	command setZoomLevel(int zoom);
-	command setLocation(MapLocation location);
-	command setMapType(MapType mapType);
-	command setHeatMap(HeatMapData data);
-	command fitBounds(MapLocation southWest, MapLocation northEast);
+	command setLocation(DtoMapLocation location);
+	command setMapType(DtoMapType mapType);
+	command setHeatMap(DtoHeatMapData data);
+	command fitBounds(DtoMapLocation southWest, DtoMapLocation northEast);
 
 	event zoomLevelChanged(int zoomLevel);
-	event locationChanged(MapLocation center, MapArea displayedArea);
-	event mapClicked(MapLocation location);
+	event locationChanged(DtoMapLocation center, DtoMapArea displayedArea);
+	event mapClicked(DtoMapLocation location);
 	event markerClicked(int markerId);
-	event shapeDrawn(String shapeId, AbstractMapShape shape);
+	event shapeDrawn(String shapeId, DtoAbstractMapShape shape);
 }
 
-class MapConfig {
+class DtoMapConfig {
 	String urlTemplate;
 	String id;
 	int minZoom;
@@ -70,7 +70,7 @@ class MapConfig {
 	String attribution;
 }
 
-enum MapType {
+enum DtoMapType {
 	INTERNAL,
 	INTERNAL_DARK,
 	INTERNAL_DARK_HIGH_RES,
@@ -92,28 +92,28 @@ enum MapType {
 }
 
 @TypeScriptFactory
-class MapLocation {
+class DtoMapLocation {
 	required double latitude;
 	required double longitude;
 }
 
 @TypeScriptFactory
-class MapArea {
+class DtoMapArea {
 	required double minLatitude;
 	required double maxLatitude;
 	required double minLongitude;
 	required double maxLongitude;
 }
 
-class MapMarkerClientRecord extends IdentifiableClientRecord {
-	MapLocation location;
-    Template* template; // null == use asString
-    MapMarkerAnchor anchor;
+class DtoMapMarkerClientRecord extends DtoIdentifiableClientRecord {
+	DtoMapLocation location;
+    DtoTemplate* template; // null == use asString
+    DtoMapMarkerAnchor anchor;
     int offsetPixelsX;
     int offsetPixelsY;
 }
 
-enum MapMarkerAnchor {
+enum DtoMapMarkerAnchor {
 	CENTER = "center",
 	TOP = "top",
 	BOTTOM = "bottom",
@@ -125,62 +125,62 @@ enum MapMarkerAnchor {
 	BOTTOM_RIGHT = "bottom-right";
 }
 
-class MapMarkerCluster {
-	required List<MapMarkerClientRecord> markers;
+class DtoMapMarkerCluster {
+	required List<DtoMapMarkerClientRecord> markers;
 }
 
-class HeatMapData {
-	required List<HeatMapDataElement> elements;
+class DtoHeatMapData {
+	required List<DtoHeatMapDataElement> elements;
 	int maxCount;
 	int radius;
 	int blur;
 }
 
-class HeatMapDataElement {
+class DtoHeatMapDataElement {
 	required double latitude;
 	required double longitude;
 	required int count;
 }
 
-enum MapShapeType {
+enum DtoMapShapeType {
 	CIRCLE,
     POLYGON,
     POLYLINE,
     RECTANGLE;
 }
 
-abstract class AbstractMapShape {
-	ShapeProperties shapeProperties;
+abstract class DtoAbstractMapShape {
+	DtoShapeProperties shapeProperties;
 }
 
 
-abstract class AbstractMapShapeChange {
+abstract class DtoAbstractMapShapeChange {
 }
 
-class MapCircle extends AbstractMapShape {
-	MapLocation center;
+class DtoMapCircle extends DtoAbstractMapShape {
+	DtoMapLocation center;
 	int radius; // meters
 }
 
-class MapPolygon extends AbstractMapShape {
-	List<MapLocation> path;
+class DtoMapPolygon extends DtoAbstractMapShape {
+	List<DtoMapLocation> path;
 }
 
-class MapPolyline extends AbstractMapShape {
-	List<MapLocation> path;
+class DtoMapPolyline extends DtoAbstractMapShape {
+	List<DtoMapLocation> path;
 }
 
 
-class PolylineAppend extends AbstractMapShapeChange {
-    required List<MapLocation> appendedPath;
+class DtoPolylineAppend extends DtoAbstractMapShapeChange {
+    required List<DtoMapLocation> appendedPath;
 }
 
-class MapRectangle extends AbstractMapShape {
-	MapLocation l1;
-	MapLocation l2;
+class DtoMapRectangle extends DtoAbstractMapShape {
+	DtoMapLocation l1;
+	DtoMapLocation l2;
 }
 
-class ShapeProperties {
+class DtoShapeProperties {
   String strokeColor;
   double strokeWeight;
   List<Double> strokeDashArray;

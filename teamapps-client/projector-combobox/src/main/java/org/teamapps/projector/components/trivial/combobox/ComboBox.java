@@ -31,7 +31,7 @@ import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfoExtractor;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.ux.component.field.TextInputHandlingField;
+import org.teamapps.projector.components.core.field.TextInputHandlingField;
 import org.teamapps.projector.template.Template;
 
 import java.lang.invoke.MethodHandles;
@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
-public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implements TextInputHandlingField {
+public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

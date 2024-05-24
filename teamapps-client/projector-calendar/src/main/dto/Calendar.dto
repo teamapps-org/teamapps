@@ -19,37 +19,37 @@
  */
 package "projector-calendar":org.teamapps.projector.components.calendar.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.IdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
-enum CalendarViewMode {
+enum DtoCalendarViewMode {
 	YEAR = "year",
 	MONTH = "dayGridMonth",
 	WEEK = "timeGridWeek",
 	DAY = "timeGridDay"
 }
-enum WeekDay {
+enum DtoWeekDay {
 	SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
 }
-enum CalendarEventRenderingStyle { // see http://fullcalendar.io/docs/event_rendering/Background_Events/
+enum DtoCalendarEventRenderingStyle { // see http://fullcalendar.io/docs/event_rendering/Background_Events/
 	DEFAULT = "", // normal event display
 	BACKGROUND = "background", // only show colored shadow for the event. this may useful for subtly showing a secondary calendar with anonymous events inside the main one.
 	INVERSE_BACKGROUND = "inverse-background" // highlight the whole calendar except the time period of the event.
 }
 
-class Calendar extends Component {
-	List<CalendarEventClientRecord> initialData;
+class DtoCalendar extends DtoComponent {
+	List<DtoCalendarEventClientRecord> initialData;
 	
-	CalendarViewMode activeViewMode;
+	DtoCalendarViewMode activeViewMode;
 	long displayedDate;
 	boolean showHeader;
 	boolean tableBorder;
 	boolean showWeekNumbers;
 	int businessHoursStart;
 	int businessHoursEnd;
-	WeekDay firstDayOfWeek;
-	List<WeekDay> workingDays;
+	DtoWeekDay firstDayOfWeek;
+	List<DtoWeekDay> workingDays;
 	String tableHeaderBackgroundColor;
     String defaultBackgroundColor;
     String defaultBorderColor;
@@ -61,11 +61,11 @@ class Calendar extends Component {
     String locale;
     String timeZoneId;
 
-	command setViewMode(CalendarViewMode viewMode);
+	command setViewMode(DtoCalendarViewMode viewMode);
 	command setDisplayedDate(long date);
-	command addEvent(CalendarEventClientRecord theEvent); // an existing event with the same id gets removed before the new one is added
+	command addEvent(DtoCalendarEventClientRecord theEvent); // an existing event with the same id gets removed before the new one is added
 	command removeEvent(int eventId);
-	command setCalendarData(List<CalendarEventClientRecord> events);
+	command setCalendarData(List<DtoCalendarEventClientRecord> events);
 	command clearCalendar();
 	command setTimeZoneId(String timeZoneId);
 
@@ -77,17 +77,17 @@ class Calendar extends Component {
 	event weekHeaderClicked(int year, int week, long weekStartDate);
 	event monthHeaderClicked(int year, int month, long monthStartDate);
 	event viewChanged(
-		CalendarViewMode viewMode,
+		DtoCalendarViewMode viewMode,
 		long mainIntervalStart, long mainIntervalEnd, // the interval the calendar currently formally represents. (e.g. 1. January 2016 0:00 to 1 February 2016 0:00)
 		long displayedIntervalStart, long displayedIntervalEnd // the interval the calendar displays. (e.g. 28. December 2015 0:00 to 8 February 2016 0:00)
 	);
 	event dataNeeded(long requestIntervalStart, long requestIntervalEnd); // interval of missing calendar data
 }
 
-class CalendarEventClientRecord extends IdentifiableClientRecord {
-    Template* timeGridTemplate;   // null = use default
-    Template* dayGridTemplate;    // null = use default
-    Template* monthGridTemplate;  // null = use default
+class DtoCalendarEventClientRecord extends DtoIdentifiableClientRecord {
+    DtoTemplate* timeGridTemplate;   // null = use default
+    DtoTemplate* dayGridTemplate;    // null = use default
+    DtoTemplate* monthGridTemplate;  // null = use default
 
 	long start;
     long end;
@@ -99,5 +99,5 @@ class CalendarEventClientRecord extends IdentifiableClientRecord {
 
     String backgroundColor;
     String borderColor;
-    CalendarEventRenderingStyle rendering;
+    DtoCalendarEventRenderingStyle rendering;
 }

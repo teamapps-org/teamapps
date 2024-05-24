@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoPageTransition, DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
-import {AbstractLegacyComponent, Component, parseHtml, ServerChannel} from "projector-client-object-api";
+import {DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
+import {AbstractLegacyComponent, Component, DtoPageTransition, parseHtml, ServerChannel} from "projector-client-object-api";
 import {pageTransition} from "../Common";
 
 // noinspection JSUnusedGlobalSymbols

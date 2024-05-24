@@ -4,11 +4,11 @@
  */
 
 import {ClientObject} from "projector-client-object-api";
-import {DtoDtoWeekDay} from "./DtoDtoWeekDay";
+import {DtoWeekDay} from "./DtoWeekDay";
 
-export interface DtoDtoCalendar {
+export interface DtoCalendar {
 	_type?: string;
-	workingDays?: DtoDtoWeekDay[]
+	workingDays?: DtoWeekDay[]
 }
 
 

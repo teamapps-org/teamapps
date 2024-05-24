@@ -40,6 +40,8 @@ export {HtmlView} from "./component/HtmlView";
 export {IFrame} from "./component/IFrame";
 export {AbsoluteLayout} from "./component/AbsoluteLayout";
 export {NotificationBar} from "./component/NotificationBar";
+export {SplitPane} from "./component/SplitPane";
+export {TabPanel} from "./component/TabPanel";
 
 export {Button} from "./component/field/Button";
 export {DisplayField} from "./component/field/DisplayField";
@@ -57,6 +59,7 @@ export * from "./util/draggable";
 export * from "projector-client-object-api";
 export * from "./util/BigDecimal";
 export * from "./util/NumberParser";
+export * from "./util/Emptyable";
 export * from "./micro-components/DropDown";
 
 export * from "./generated";

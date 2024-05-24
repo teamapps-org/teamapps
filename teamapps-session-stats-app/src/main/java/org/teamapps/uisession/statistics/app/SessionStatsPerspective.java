@@ -77,7 +77,7 @@ public class SessionStatsPerspective {
 		table.addColumn("sessionId", "ID", new TextField()).setDefaultWidth(50)
 				.setValueExtractor(record -> record.getStatistics().getSessionId().toString());
 		table.addColumn("name", "Name", new TextField()).setValueExtractor(record -> record.getStatistics().getName());
-		table.addColumn("state", "State", new TemplateField<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE)).setDefaultWidth(120)
+		table.addColumn("state", "State", new TemplateField<>(BaseTemplates.LIST_ITEM_SMALL_ICON_SINGLE_LINE)).setDefaultWidth(120)
 				.setValueExtractor(record -> {
 					Icon<?, ?> icon;
 					UiSessionState state = record.getStatistics().getState();

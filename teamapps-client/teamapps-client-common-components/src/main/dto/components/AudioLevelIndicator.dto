@@ -19,9 +19,9 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class AudioLevelIndicator extends Component {
+class DtoAudioLevelIndicator extends DtoComponent {
     String deviceId;
     int barWidth;
     

@@ -20,9 +20,12 @@
 package org.teamapps.projector.components.core.notification;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.icons.Icon;
+import org.teamapps.projector.animation.EntranceAnimation;
+import org.teamapps.projector.animation.ExitAnimation;
+import org.teamapps.projector.animation.RepeatableAnimation;
 import org.teamapps.projector.dto.DtoNotificationBarItem;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.icons.Icon;
 import org.teamapps.projector.format.Spacing;
 import org.teamapps.projector.session.SessionContext;
 

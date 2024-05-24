@@ -19,63 +19,63 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
 
-abstract class AbstractToolContainer extends Component {
-	required List<ToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
-	required List<ToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
+abstract class DtoAbstractToolContainer extends DtoComponent {
+	required List<DtoToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
+	required List<DtoToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
 	String backgroundColor;
 
 	command setButtonVisible(String groupId, String buttonId, boolean visible);
 	command setButtonColors(String groupId, String buttonId, String backgroundColor, String hoverBackgroundColor);
 	command setButtonGroupVisible(String groupId, boolean visible);
-	command addButton(String groupId, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor); //if neighborButtonId is empty, add at last position
+	command addButton(String groupId, DtoToolbarButton button, String neighborButtonId, boolean beforeNeighbor); //if neighborButtonId is empty, add at last position
 	command removeButton(String groupId, String buttonId);
-	command addButtonGroup(ToolbarButtonGroup group, boolean rightSide);
+	command addButtonGroup(DtoToolbarButtonGroup group, boolean rightSide);
 	command removeButtonGroup(String groupId);
 	
 	command setButtonHasDropDown(String groupId, String buttonId, boolean hasDropDown);
-	command setDropDownComponent(String groupId, String buttonId, Component* component);
+	command setDropDownComponent(String groupId, String buttonId, DtoComponent* component);
 	command closeDropDown(String groupId, String buttonId);
 
 	event toolbarButtonClick(String groupId, String buttonId, DropDownButtonClickInfo dropDownClickInfo); // dropDownInfo is null for non-dropdown buttons!
 }
 
-enum ToolbarButtonGroupPosition {
+enum DtoToolbarButtonGroupPosition {
 	FIRST, RATHER_FIRST, CENTER, RATHER_LAST, LAST
 }
 
-class Toolbar extends AbstractToolContainer {
+class DtoToolbar extends DtoAbstractToolContainer {
 	String logoImage;
 
 	command setLogoImage(String logoImage);
 }
 
-class ToolAccordion extends AbstractToolContainer {
+class DtoToolAccordion extends DtoAbstractToolContainer {
 	// no added funcionality...
 }
 
-class ToolbarButtonGroup {
+class DtoToolbarButtonGroup {
 	required String groupId;
-	required List<ToolbarButton> buttons;
-	ToolbarButtonGroupPosition position;
+	required List<DtoToolbarButton> buttons;
+	DtoToolbarButtonGroupPosition position;
 	boolean visible;
 	boolean showGroupSeparator; // separator on the RIGHT side!!
-	ToolbarButton collapsedButton;  //displayed if group is inside a drop down list or toolbar is too small an group is condensed to a single button
+	DtoToolbarButton collapsedButton;  //displayed if group is inside a drop down list or toolbar is too small an group is condensed to a single button
 }
 
-class ToolbarButton {
+class DtoToolbarButton {
 	required String buttonId;
 	String debuggingId;
-	required Template* template;
+	required DtoTemplate* template;
 	boolean visible;
 	required Object recordData;
 	String openNewTabWithUrl; // If this is set, when the user clicks this button, the specified URL is navigated to in a new tab. The button still sends events to the server.
-	Component* togglesFullScreenOnComponent; // If this is set, this button makes the specified component will enter fullscreen. The button still sends events to the server.
-	Component* startPlaybackComponent; // If this is set, when the user clicks this button, the play() method of the specified component will be called (if it has such a method).
+	DtoComponent* togglesFullScreenOnComponent; // If this is set, this button makes the specified component will enter fullscreen. The button still sends events to the server.
+	DtoComponent* startPlaybackComponent; // If this is set, when the user clicks this button, the play() method of the specified component will be called (if it has such a method).
 	boolean hasDropDown;
-	Component* dropDownComponent;
+	DtoComponent* dropDownComponent;
 	int dropDownPanelWidth;
 
 	String backgroundColor;
@@ -84,6 +84,6 @@ class ToolbarButton {
 
 @TypeScriptFactory
 class DropDownButtonClickInfo {
-	required boolean isOpening;
-	required boolean isContentSet;
+	required boolean opening;
+	required boolean contentSet;
 }

@@ -452,6 +452,11 @@ public class SessionContext {
 			}
 
 			@Override
+			public boolean isRendered() {
+				return SessionContext.this.isRendered(clientObject);
+			}
+
+			@Override
 			public boolean sendCommandIfRendered(String name, Object[] params, Consumer<JsonWrapper> resultHandler) {
 				CurrentSessionContext.throwIfNotSameAs(SessionContext.this);
 
@@ -468,7 +473,7 @@ public class SessionContext {
 					 */
 					runWithContext(() -> sendCommandInternal(getClientObjectId(clientObject, false), name, params, null), true);
 					return true;
-				} else if (isRendered(clientObject)) {
+				} else if (isRendered()) {
 					sendCommandInternal(getClientObjectId(clientObject, false), name, params, null);
 					return true;
 				} else {
@@ -617,7 +622,7 @@ public class SessionContext {
 //						e.getEventType(),
 //						(e.getSourceComponentId() != null ? (Component) clientObjectsById.get(clientObjectId) : null),
 //						e.getCode(),
-//						e.getIsComposing(),
+//						e.isComposing(),
 //						e.getKey(),
 //						e.getCharCode(),
 //						e.getKeyCode(),

@@ -19,15 +19,18 @@
  */
 package org.teamapps.projector.components.core.iframe;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoIFrame;
-import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoIFrame;
+import org.teamapps.projector.dto.DtoIFrameClientObjectChannel;
+import org.teamapps.projector.dto.DtoIFrameEventHandler;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class IFrame extends AbstractComponent {
+public class IFrame extends AbstractComponent implements DtoIFrameEventHandler {
+
+	private final DtoIFrameClientObjectChannel clientObjectChannel = new DtoIFrameClientObjectChannel(getClientObjectChannel());
 
 	private String url;
 
@@ -46,16 +49,12 @@ public class IFrame extends AbstractComponent {
 		return uiIFrame;
 	}
 
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-	}
-
 	public String getUrl() {
 		return url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
-		getClientObjectChannel().sendCommandIfRendered(new DtoIFrame.SetUrlCommand(url), null);
+		clientObjectChannel.setUrl(url);
 	}
 }

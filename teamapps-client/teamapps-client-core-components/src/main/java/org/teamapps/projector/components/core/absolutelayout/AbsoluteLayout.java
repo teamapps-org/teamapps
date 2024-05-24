@@ -19,11 +19,11 @@
  */
 package org.teamapps.projector.components.core.absolutelayout;
 
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.components.core.CoreComponentLibrary;
+import org.teamapps.projector.dto.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +31,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class AbsoluteLayout extends AbstractComponent {
+public class AbsoluteLayout extends AbstractComponent implements DtoAbsoluteLayoutEventHandler {
+
+	private final DtoAbsoluteLayoutClientObjectChannel clientObjectChannel = new DtoAbsoluteLayoutClientObjectChannel(getClientObjectChannel());
 
 	private Map<Component, AbsolutePosition> positionsByComponent = new HashMap<>();
 	private AnimationEasing animationEasing = AnimationEasing.EASE;
@@ -59,7 +61,7 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	private void updateUiLayout() {
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbsoluteLayout.UpdateCommand(createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing()), null);
+		clientObjectChannel.update(createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing());
 	}
 
 	private List<DtoAbsolutePositionedComponent> createUiAbsolutePositionedComponents() {
@@ -67,7 +69,7 @@ public class AbsoluteLayout extends AbstractComponent {
 				.map(entry -> {
 					Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
-					return new DtoAbsolutePositionedComponent(component.createClientReference(), new DtoAbsolutePositioning(
+					return new DtoAbsolutePositionedComponent(component, new DtoAbsolutePositioning(
 							position.getTop() != null ? position.getTop().toCssString(): null,
 							position.getRight() != null ? position.getRight().toCssString(): null,
 							position.getBottom() != null ? position.getBottom().toCssString(): null,
@@ -88,11 +90,6 @@ public class AbsoluteLayout extends AbstractComponent {
 		return uiAbsoluteLayout;
 	}
 
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		// none
-	}
-
 	public AnimationEasing getAnimationEasing() {
 		return animationEasing;
 	}
@@ -108,4 +105,5 @@ public class AbsoluteLayout extends AbstractComponent {
 	public void setAnimationDuration(int animationDuration) {
 		this.animationDuration = animationDuration;
 	}
+
 }

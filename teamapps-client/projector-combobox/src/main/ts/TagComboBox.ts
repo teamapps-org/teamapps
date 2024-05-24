@@ -23,7 +23,7 @@ import {isFreeTextEntry} from "./ComboBox";
 import {
 	AbstractField,
 	buildObjectTree,
-	DtoFieldEditingMode, DtoSpecialKey,
+	DtoFieldEditingMode, SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent,
 	NodeWithChildren
@@ -122,11 +122,11 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 		this.trivialTagComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ESCAPE
+					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ENTER
+					key: SpecialKey.ENTER
 				});
 			}
 		});

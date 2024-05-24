@@ -20,15 +20,15 @@
 package org.teamapps.projector.components.core.toolbar;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.icons.Icon;
+import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.dto.DtoToolbarButton;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.icons.Icon;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.util.Map;
 import java.util.UUID;
@@ -90,11 +90,11 @@ public class ToolbarButton {
 	}
 
 	public static ToolbarButton createLarge(Icon<?, ?> icon, String caption, String description) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON, new BaseTemplateRecord<>(icon, caption, description));
+		return new ToolbarButton(BaseTemplates.TOOLBAR_BUTTON, new BaseTemplateRecord<>(icon, caption, description));
 	}
 
 	public static ToolbarButton createLargeDarkTheme(Icon<?, ?> icon, String caption, String description) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON.createDarkThemeTemplate(), new BaseTemplateRecord<>(icon, caption, description));
+		return new ToolbarButton(BaseTemplates.TOOLBAR_BUTTON.createDarkThemeTemplate(), new BaseTemplateRecord<>(icon, caption, description));
 	}
 
 	public static ToolbarButton createSmall(Icon<?, ?> icon, String caption) {
@@ -102,15 +102,15 @@ public class ToolbarButton {
 	}
 
 	public static ToolbarButton createSmall(Icon<?, ?> icon, String caption, String description) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_SMALL, new BaseTemplateRecord<>(icon, caption, description));
+		return new ToolbarButton(BaseTemplates.TOOLBAR_BUTTON_SMALL, new BaseTemplateRecord<>(icon, caption, description));
 	}
 
 	public static ToolbarButton createSmallDarkTheme(Icon<?, ?> icon, String caption, String description) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_SMALL.createDarkThemeTemplate(), new BaseTemplateRecord<>(icon, caption, description));
+		return new ToolbarButton(BaseTemplates.TOOLBAR_BUTTON_SMALL.createDarkThemeTemplate(), new BaseTemplateRecord<>(icon, caption, description));
 	}
 
 	public static ToolbarButton createTiny(Icon<?, ?> icon, String caption) {
-		return new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord<>(icon, caption));
+		return new ToolbarButton(BaseTemplates.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord<>(icon, caption));
 	}
 
 	public static ToolbarButton createOpenNewTabButton(Template template, BaseTemplateRecord<?> Object, String newTabUrl) {
@@ -129,16 +129,16 @@ public class ToolbarButton {
 		Template template = getAppliedTemplate();
 		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getPropertyNames());
 
-		DtoToolbarButton ui = new DtoToolbarButton(clientId, template.createClientReference(), values);
+		DtoToolbarButton ui = new DtoToolbarButton(clientId, template, values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
-			ui.setDropDownComponent(dropDownComponentSupplier.get().createClientReference());
+			ui.setDropDownComponent(dropDownComponentSupplier.get());
 		}
 		ui.setHasDropDown(this.dropDownComponentSupplier != null);
 		ui.setDropDownPanelWidth(droDownPanelWidth > 0 ? droDownPanelWidth : 450);
 		ui.setVisible(visible);
 		ui.setOpenNewTabWithUrl(openNewTabWithUrl);
-		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.createClientReference() : null);
-		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createClientReference() : null);
+		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent : null);
+		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent : null);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setHoverBackgroundColor(hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null);
 		ui.setDebuggingId(debuggingId);
@@ -251,7 +251,7 @@ public class ToolbarButton {
 		} else if (toolbarButtonGroup != null && toolbarButtonGroup.getAppliedTemplate() != null) {
 			return toolbarButtonGroup.getAppliedTemplate();
 		} else {
-			return BaseTemplate.TOOLBAR_BUTTON;
+			return BaseTemplates.TOOLBAR_BUTTON;
 		}
 	}
 

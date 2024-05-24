@@ -20,29 +20,27 @@
 package org.teamapps.projector.components.core.toolbar;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.dto.DtoAbstractToolContainer;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoToolbar;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.projector.template.Template;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
-import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.dto.*;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
-public abstract class AbstractToolContainer extends AbstractComponent {
+public abstract class AbstractToolContainer extends AbstractComponent implements DtoAbstractToolContainerEventHandler {
 	public final ProjectorEvent<ToolbarButtonClickEventData> onButtonClick = createProjectorEventBoundToUiEvent(DtoAbstractToolContainer.ToolbarButtonClickEvent.TYPE_ID);
-	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 
-	private Template buttonTemplate = BaseTemplate.TOOLBAR_BUTTON;
+	private final DtoAbstractToolContainerClientObjectChannel clientObjectChannel = new DtoAbstractToolContainerClientObjectChannel(getClientObjectChannel());
+
+	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
+	private Template buttonTemplate = BaseTemplates.TOOLBAR_BUTTON;
 	private PropertyProvider<?> propertyProvider = new BeanPropertyExtractor<>();
 
 	public AbstractToolContainer() {
@@ -50,29 +48,18 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoAbstractToolContainer.ToolbarButtonClickEvent.TYPE_ID -> {
-				var clickEvent = event.as(DtoAbstractToolContainer.ToolbarButtonClickEventWrapper.class);
-				ToolbarButton button = getButtonByClientId(clickEvent.getGroupId(), clickEvent.getButtonId());
-				if (button != null) {
-					var uiDropDownButtonClickInfo = clickEvent.getDropDownClickInfo();
-					if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
-						Component dropdownComponent = button.getDropDownComponent();
-						if (dropdownComponent != null) {
-							SessionContext sessionContext = getSessionContext();
-							sessionContext.sendCommandIfRendered(this, new DtoToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
-														clickEvent.getButtonId(), dropdownComponent.createClientReference()), null);
-						}
-					}
-					button.onClick.fire(new ToolbarButtonClickEvent(clickEvent.getDropDownClickInfo().getIsOpening(), clickEvent.getDropDownClickInfo().getIsContentSet()));
-					DropDownButtonClickInfo dropDownButtonClickInfo = uiDropDownButtonClickInfo != null ? new DropDownButtonClickInfo(uiDropDownButtonClickInfo.getIsOpening(),
-							uiDropDownButtonClickInfo.getIsContentSet()) : null;
-					onButtonClick.fire(new ToolbarButtonClickEventData(button, dropDownButtonClickInfo));
-				}
+	public void handleToolbarButtonClick(String groupId, String buttonId, DropDownButtonClickInfoWrapper dropDownClickInfo) {
+		ToolbarButton button = getButtonByClientId(groupId, buttonId);
+		if (button != null) {
+			if (dropDownClickInfo != null && dropDownClickInfo.isOpening() && !dropDownClickInfo.isContentSet()) {
+				Component dropdownComponent = button.getDropDownComponent();
+				clientObjectChannel.setDropDownComponent(groupId, buttonId, dropdownComponent);
 			}
+			button.onClick.fire(new ToolbarButtonClickEvent(dropDownClickInfo != null && dropDownClickInfo.isOpening(), dropDownClickInfo != null && dropDownClickInfo.isContentSet()));
+			onButtonClick.fire(new ToolbarButtonClickEventData(button, dropDownClickInfo != null ? dropDownClickInfo.unwrap() : null));
 		}
 	}
+
 
 	private ToolbarButton getButtonByClientId(String groupId, String buttonId) {
 		return buttonGroups.stream()
@@ -89,7 +76,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	public ToolbarButtonGroup addButtonGroup(ToolbarButtonGroup buttonGroup) {
 		buttonGroups.add(buttonGroup);
 		buttonGroup.setToolContainer(this);
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolbar.AddButtonGroupCommand(buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide()), null);
+		clientObjectChannel.addButtonGroup(buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide());
 		return buttonGroup;
 	}
 
@@ -99,36 +86,38 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 
 	public void removeToolbarButtonGroup(ToolbarButtonGroup group) {
 		buttonGroups.remove(group);
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolbar.RemoveButtonGroupCommand(group.getClientId()), null);
+		clientObjectChannel.removeButtonGroup(group.getClientId());
 	}
 
 	protected void handleGroupVisibilityChange(String groupId, boolean visible) {
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolbar.SetButtonGroupVisibleCommand(groupId, visible), null);
+		clientObjectChannel.setButtonGroupVisible(groupId, visible);
 	}
 
 	protected void handleButtonVisibilityChange(String groupClientId, String buttonClientId, boolean visible) {
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolbar.SetButtonVisibleCommand(groupClientId, buttonClientId, visible), null);
+		clientObjectChannel.setButtonVisible(groupClientId, buttonClientId, visible);
 	}
 
 	protected void handleButtonColorChange(String groupClientId, String buttonClientId, Color backgroundColor, Color hoverBackgroundColor) {
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoToolbar.SetButtonColorsCommand(groupClientId, buttonClientId, backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
-				hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null)).get(), null);
+		clientObjectChannel.setButtonColors(groupClientId, buttonClientId,
+				backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
+				hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null
+		);
 	}
 
 	protected void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolbar.AddButtonCommand(group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor), null);
+		clientObjectChannel.addButton(group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor);
 	}
 
 	protected void handleButtonRemoved(ToolbarButtonGroup group, ToolbarButton button) {
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolbar.RemoveButtonCommand(group.getClientId(), button.getClientId()), null);
+		clientObjectChannel.removeButton(group.getClientId(), button.getClientId());
 	}
 
 	protected void handleButtonSetDropDownComponent(ToolbarButtonGroup group, ToolbarButton button, Component component) {
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createClientReference()), null);
+		clientObjectChannel.setDropDownComponent(group.getClientId(), button.getClientId(), component);
 	}
 
 	protected void handleCloseDropdown(ToolbarButtonGroup group, ToolbarButton button) {
-		getClientObjectChannel().sendCommandIfRendered(new DtoToolbar.CloseDropDownCommand(group.getClientId(), button.getClientId()), null);
+		clientObjectChannel.closeDropDown(group.getClientId(), button.getClientId());
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {

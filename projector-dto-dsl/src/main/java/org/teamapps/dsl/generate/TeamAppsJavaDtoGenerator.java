@@ -107,10 +107,10 @@ public class TeamAppsJavaDtoGenerator {
 				continue;
 			}
 			System.out.println("Generating class: " + classWrapper.getName());
-			generateClass(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + ".java")));
-			generateClassJsonWrapper(classWrapper, new FileWriter(new File(packageDir, "Dto" + classWrapper.getName() + "Wrapper.java")));
+			generateClass(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + ".java")));
+			generateClassJsonWrapper(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "Wrapper.java")));
 			generateClientObjectChannel(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "ClientObjectChannel.java")));
-			if (!classWrapper.getEvents().isEmpty()) {
+			if (classWrapper.getAllSuperTypes(false).stream().anyMatch(t -> t.getQualifiedName().equals("org.teamapps.projector.dto.DtoClientObject"))) {
 				generateClientObjectEventMethodInvoker(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "EventMethodInvoker.java")));
 				generateClientObjectEventHandlerInterface(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "EventHandler.java")));
 			}
@@ -125,8 +125,8 @@ public class TeamAppsJavaDtoGenerator {
 				continue;
 			}
 			logger.info("Generating interface: " + interfaceWrapper.getName());
-			generateInterface(interfaceWrapper, new FileWriter(new File(packageDir, "Dto" + interfaceWrapper.getName() + ".java")));
-			generateInterfaceJsonWrapper(interfaceWrapper, new FileWriter(new File(packageDir, "Dto" + interfaceWrapper.getName() + "Wrapper.java")));
+			generateInterface(interfaceWrapper, new FileWriter(new File(packageDir, interfaceWrapper.getName() + ".java")));
+			generateInterfaceJsonWrapper(interfaceWrapper, new FileWriter(new File(packageDir, interfaceWrapper.getName() + "Wrapper.java")));
 		}
 		for (EnumWrapper enumWrapper : model.getOwnEnumDeclarations()) {
 			File packageDir = FileUtils.createDirectory(new File(targetDir, enumWrapper.getPackageName().replace('.', '/')));
@@ -134,11 +134,11 @@ public class TeamAppsJavaDtoGenerator {
 				System.out.println("Skipping @NotGenerated enum: " + enumWrapper.getName());
 				continue;
 			}
-			generateEnum(enumWrapper, new FileWriter(new File(packageDir, "Dto" + enumWrapper.getName() + ".java")));
+			generateEnum(enumWrapper, new FileWriter(new File(packageDir, enumWrapper.getName() + ".java")));
 		}
 	}
 
-	private void generateClassJsonWrapper(ClassWrapper clazzContext, Writer writer) throws IOException {
+	void generateClassJsonWrapper(ClassWrapper clazzContext, Writer writer) throws IOException {
 		runWithExceptionMessagePrefix(() -> {
 			ST template = stGroup.getInstanceOf("jsonWrapper")
 					.add("c", clazzContext);
@@ -181,7 +181,7 @@ public class TeamAppsJavaDtoGenerator {
 		}, "Error while generating event handler interface for " + classContext.getName());
 	}
 
-	private void generateInterfaceJsonWrapper(InterfaceWrapper interfaceWrapper, Writer writer) throws IOException {
+	void generateInterfaceJsonWrapper(InterfaceWrapper interfaceWrapper, Writer writer) throws IOException {
 		runWithExceptionMessagePrefix(() -> {
 			ST template = stGroup.getInstanceOf("jsonWrapper")
 					.add("c", interfaceWrapper);

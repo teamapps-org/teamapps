@@ -49,7 +49,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	private String filter;
 
-	private Template groupHeaderTemplate = BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE;
+	private Template groupHeaderTemplate = BaseTemplates.LIST_ITEM_SMALL_ICON_SINGLE_LINE;
 	private PropertyProvider<HEADERRECORD> headerPropertyProvider = new BeanPropertyExtractor<>();
 
 	public ItemView() {
@@ -68,7 +68,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setGroupHeaderTemplate(Template groupHeaderTemplate) {
 		this.groupHeaderTemplate = groupHeaderTemplate;
-		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetGroupHeaderTemplateCommand(groupHeaderTemplate.createClientReference()), null);
+		clientObjectChannel.setGroupHeaderTemplate(groupHeaderTemplate);
 	}
 
 	public List<ItemGroup> getItemGroups() {
@@ -119,10 +119,10 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 			@Override
 			public void handleRefreshRequired() {
-				getClientObjectChannel().sendCommandIfRendered(new DtoItemView.RefreshItemGroupCommand(group.createUiItemViewItemGroup()), null);
+				clientObjectChannel.refreshItemGroup(group.createUiItemViewItemGroup());
 			}
 		});
-		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.AddItemGroupCommand(group.createUiItemViewItemGroup()), null);
+		clientObjectChannel.addItemGroup(group.createUiItemViewItemGroup());
 	}
 
 	public String getFilter() {
@@ -131,7 +131,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
-		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetFilterCommand(filter), null);
+		clientObjectChannel.setFilter(filter);
 	}
 
 	public void removeAllGroups() {
@@ -140,7 +140,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void removeItemGroup(ItemGroup itemGroup) {
 		itemGroups.remove(itemGroup);
-		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.RemoveItemGroupCommand(itemGroup.getClientId()), null);
+		clientObjectChannel.removeItemGroup(itemGroup.getClientId());
 	}
 
 	public int getHorizontalPadding() {
@@ -149,7 +149,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setHorizontalPadding(int horizontalPadding) {
 		this.horizontalPadding = horizontalPadding;
-		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetHorizontalPaddingCommand(horizontalPadding), null);
+		clientObjectChannel.setHorizontalPadding(horizontalPadding);
 	}
 
 	public int getVerticalPadding() {
@@ -158,7 +158,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setVerticalPadding(int verticalPadding) {
 		this.verticalPadding = verticalPadding;
-		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetVerticalPaddingCommand(verticalPadding), null);
+		clientObjectChannel.setVerticalPadding(verticalPadding);
 	}
 
 	public int getGroupSpacing() {
@@ -167,7 +167,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setGroupSpacing(int groupSpacing) {
 		this.groupSpacing = groupSpacing;
-		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetGroupSpacingCommand(groupSpacing), null);
+		clientObjectChannel.setGroupSpacing(groupSpacing);
 	}
 
 	public ItemViewItemBackgroundMode getItemBackgroundMode() {
@@ -176,7 +176,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setItemBackgroundMode(ItemViewItemBackgroundMode itemBackgroundMode) {
 		this.itemBackgroundMode = itemBackgroundMode;
-		getClientObjectChannel().sendCommandIfRendered(new DtoItemView.SetItemBackgroundModeCommand(itemBackgroundMode.toDtoValue()), null);
+		clientObjectChannel.setItemBackgroundMode(itemBackgroundMode.toDtoValue());
 	}
 
 	public PropertyProvider<HEADERRECORD> getHeaderPropertyProvider() {
@@ -195,7 +195,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	public DtoComponent createConfig() {
 		DtoItemView uiItemView = new DtoItemView();
 		mapAbstractUiComponentProperties(uiItemView);
-		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate.createClientReference() : null);
+		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate : null);
 		uiItemView.setItemGroups(this.itemGroups.stream()
 				.map(group -> group.createUiItemViewItemGroup())
 				.collect(Collectors.toList()));

@@ -20,24 +20,24 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
 
-class Button extends AbstractField {
-	required Template* template;
+class DtoButton extends DtoAbstractField {
+	required DtoTemplate* template;
 	required Object templateRecord;
 
 	int minDropDownWidth;
 	int minDropDownHeight;
 	boolean openDropDownIfNotSet;
-	Component* dropDownComponent;
+	DtoComponent* dropDownComponent;
 	String onClickJavaScript;
 
-	command setTemplate(Template* template, Object templateRecord);
+	command setTemplate(DtoTemplate* template, Object templateRecord);
 	command setTemplateRecord(Object templateRecord);
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
-	command setDropDownComponent(Component* dropDownComponent);
+	command setDropDownComponent(DtoComponent* dropDownComponent);
 	command closeDropDown();
 	command setOnClickJavaScript(String onClickJavaScript);
 

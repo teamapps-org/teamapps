@@ -25,7 +25,7 @@ import {CalendarBoxDropdown} from "./trivial-components/dropdown/CalendarBoxDrop
 import {TrivialCalendarBox} from "./trivial-components/TrivialCalendarBox";
 import {
 	AbstractField, DtoDateTimeFormatDescriptor,
-	DtoFieldEditingMode, DtoSpecialKey,
+	DtoFieldEditingMode, SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "teamapps-client-core-components";
@@ -114,11 +114,11 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ESCAPE
+					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ENTER
+					key: SpecialKey.ENTER
 				});
 			}
 		});

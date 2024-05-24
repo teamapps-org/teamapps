@@ -20,7 +20,7 @@
 package org.teamapps.projector.components.core.panel;
 
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.projector.field.AbstractField;
 
 public class HeaderField {
 

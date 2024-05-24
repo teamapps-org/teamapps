@@ -19,57 +19,57 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.IdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
-class ItemView extends Component {
-	List<ItemViewItemGroup> itemGroups;
+class DtoItemView extends DtoComponent {
+	List<DtoItemViewItemGroup> itemGroups;
 	
-	mutable Template* groupHeaderTemplate;
+	mutable DtoTemplate* groupHeaderTemplate;
 	mutable int horizontalPadding;
 	mutable int verticalPadding;
 	mutable int groupSpacing;
-	mutable ItemViewItemBackgroundMode itemBackgroundMode;
+	mutable DtoItemViewItemBackgroundMode itemBackgroundMode;
 	mutable String filter;
 
-	command addItemGroup(ItemViewItemGroup itemGroup); // if a group with this id already exists, it is first removed.
-	command refreshItemGroup(ItemViewItemGroup itemGroup); // reconfigure in-place!
+	command addItemGroup(DtoItemViewItemGroup itemGroup); // if a group with this id already exists, it is first removed.
+	command refreshItemGroup(DtoItemViewItemGroup itemGroup); // reconfigure in-place!
 	command removeItemGroup(String groupId);
 
-	command addItem(String groupId, IdentifiableClientRecord item);
+	command addItem(String groupId, DtoIdentifiableClientRecord item);
 	command removeItem(String groupId, int itemId);
 
 	event itemClicked(String groupId, int itemId);
 }
 
-class ItemViewItemGroup {
+class DtoItemViewItemGroup {
 	String id;
-	required Template* itemTemplate;
-	IdentifiableClientRecord headerData;
-	List<IdentifiableClientRecord> items;
+	required DtoTemplate* itemTemplate;
+	DtoIdentifiableClientRecord headerData;
+	List<DtoIdentifiableClientRecord> items;
 	boolean headerVisible;
-	ItemViewFloatStyle floatStyle; // if true, the buttons are placed one
+	DtoItemViewFloatStyle floatStyle; // if true, the buttons are placed one
 	double buttonWidth; // -1: use natural width, 0: full width, 0<x<1: relative width, >=1: fixed width
 	int horizontalPadding;
 	int verticalPadding;
 	int horizontalItemMargin;
 	int verticalItemMargin;
-	ItemJustification itemJustification;
+	DtoItemJustification itemJustification;
 }
 
-enum ItemViewItemBackgroundMode {
+enum DtoItemViewItemBackgroundMode {
 	LIGHT = "light",
     OPAQUE = "opaque",
     DARK = "dark"
 }
 
-enum ItemViewFloatStyle {
+enum DtoItemViewFloatStyle {
 	VERTICAL_LIST = "vertical-list",
     HORIZONTAL_FLOAT = "horizontal-float"
 }
 
-enum ItemJustification {
+enum DtoItemJustification {
 	LEFT = "flex-start",
     RIGHT = "flex-end",
     CENTER = "center",
@@ -78,7 +78,7 @@ enum ItemJustification {
     SPACE_EVENLY = "space-evenly"
 }
 
-enum VerticalItemAlignment {
+enum DtoVerticalItemAlignment {
 	TOP = "flex-start",
     CENTER = "center",
     BOTTOM = "flex-end",

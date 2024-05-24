@@ -26,9 +26,9 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 import org.teamapps.core.TeamAppsCore;
+import org.teamapps.projector.resourceprovider.ResourceProvider;
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.ux.servlet.TeamAppsServletUtil;
-import org.teamapps.projector.resourceprovider.ResourceProvider;
 import org.teamapps.webcontroller.WebController;
 
 import java.util.List;

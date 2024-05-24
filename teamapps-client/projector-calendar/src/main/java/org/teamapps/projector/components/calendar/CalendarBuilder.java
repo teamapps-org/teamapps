@@ -7,7 +7,7 @@ import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
-import org.teamapps.projector.template.grid.BaseTemplate;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -20,9 +20,9 @@ public class CalendarBuilder<CEVENT extends CalendarEvent> {
 	private PropertyProvider<CEVENT> propertyProvider = new BeanPropertyExtractor<>();
 	private CalendarEventTemplateDecider<CEVENT> templateDecider = //(calendarEvent, viewMode) -> null;
 			Calendar.createStaticTemplateDecider(
-					BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
-					BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
-					BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
+					BaseTemplates.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
+					BaseTemplates.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
+					BaseTemplates.LIST_ITEM_MEDIUM_ICON_TWO_LINES
 			);
 	private CalendarViewMode activeViewMode = CalendarViewMode.MONTH;
 	private LocalDate displayedDate = LocalDate.now();

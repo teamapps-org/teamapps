@@ -26,17 +26,14 @@ import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.FontStyle;
 import org.teamapps.projector.format.Spacing;
 import org.teamapps.projector.template.Template;
-import org.teamapps.projector.template.grid.dto.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.dto.DtoGridColumn;
-import org.teamapps.projector.template.grid.dto.DtoGridRow;
-import org.teamapps.projector.template.grid.dto.DtoGridTemplate;
+import org.teamapps.projector.template.grid.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = GridTemplateLibrary.class)
-public class GridTemplate implements Template {
+public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 
 	private int minWidth = 0;
 	private int maxWidth = 0;

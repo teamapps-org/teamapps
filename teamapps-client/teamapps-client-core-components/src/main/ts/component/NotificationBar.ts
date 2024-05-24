@@ -17,11 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, DtoExitAnimation, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
 import {animateCSS, Constants, removeClassesByFunction} from "../Common";
 
 import {
-	DtoExitAnimation,
 	DtoNotificationBar,
 	DtoNotificationBar_ItemActionLinkClickedEvent,
 	DtoNotificationBar_ItemClickedEvent,

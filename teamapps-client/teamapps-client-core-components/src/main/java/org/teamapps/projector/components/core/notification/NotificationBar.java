@@ -19,13 +19,11 @@
  */
 package org.teamapps.projector.components.core.notification;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoNotificationBar;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.dto.*;
+import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,7 +33,9 @@ import static org.teamapps.projector.components.core.notification.NotificationBa
 import static org.teamapps.projector.components.core.notification.NotificationBarItemClosedEvent.ClosingReason.USER;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class NotificationBar extends AbstractComponent {
+public class NotificationBar extends AbstractComponent implements DtoNotificationBarEventHandler {
+
+	private final DtoNotificationBarClientObjectChannel clientObjectChannel = new DtoNotificationBarClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = createProjectorEventBoundToUiEvent(DtoNotificationBar.ItemClosedEvent.TYPE_ID);
 	public final ProjectorEvent<NotificationBarItem> onItemClicked = createProjectorEventBoundToUiEvent(DtoNotificationBar.ItemClickedEvent.TYPE_ID);
@@ -47,36 +47,33 @@ public class NotificationBar extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoNotificationBar.ItemClickedEvent.TYPE_ID -> {
-				var e = event.as(DtoNotificationBar.ItemClickedEventWrapper.class);
-				NotificationBarItem item = itemsByUiId.get(e.getId());
-				if (item != null) {
-					item.onClicked.fire();
-					onItemClicked.fire(item);
-				}
-			}
-			case DtoNotificationBar.ItemActionLinkClickedEvent.TYPE_ID -> {
-				var e = event.as(DtoNotificationBar.ItemActionLinkClickedEventWrapper.class);
-				NotificationBarItem item = itemsByUiId.get(e.getId());
-				if (item != null) {
-					item.onActionLinkClicked.fire();
-					onItemActionLinkClicked.fire(item);
-				}
-			}
-			case DtoNotificationBar.ItemClosedEvent.TYPE_ID -> {
-				var e = event.as(DtoNotificationBar.ItemClosedEventWrapper.class);
-				NotificationBarItem item = itemsByUiId.get(e.getId());
-				if (item != null) {
-					NotificationBarItemClosedEvent.ClosingReason reason = e.getWasTimeout() ? TIMEOUT : USER;
-					item.onClosed.fire(reason);
-					onItemClosed.fire(new NotificationBarItemClosedEvent(item, reason));
-				}
-			}
+	public void handleItemClicked(String id) {
+		NotificationBarItem item = itemsByUiId.get(id);
+		if (item != null) {
+			item.onClicked.fire();
+			onItemClicked.fire(item);
 		}
-
 	}
+
+	@Override
+	public void handleItemActionLinkClicked(String id) {
+		NotificationBarItem item = itemsByUiId.get(id);
+		if (item != null) {
+			item.onActionLinkClicked.fire();
+			onItemActionLinkClicked.fire(item);
+		}
+	}
+
+	@Override
+	public void handleItemClosed(String id, boolean wasTimeout) {
+		NotificationBarItem item = itemsByUiId.get(id);
+		if (item != null) {
+			NotificationBarItemClosedEvent.ClosingReason reason = wasTimeout ? TIMEOUT : USER;
+			item.onClosed.fire(reason);
+			onItemClosed.fire(new NotificationBarItemClosedEvent(item, reason));
+		}
+	}
+
 
 	@Override
 	public DtoComponent createConfig() {
@@ -90,14 +87,13 @@ public class NotificationBar extends AbstractComponent {
 
 	public void addItem(NotificationBarItem item) {
 		itemsByUiId.put(item.getUiId(), item);
-		item.setListener(() -> getClientObjectChannel().sendCommandIfRendered(new DtoNotificationBar.UpdateItemCommand(item.toUiNotificationBarItem()), null));
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotificationBar.AddItemCommand(item.toUiNotificationBarItem()), null);
+		item.setListener(() -> clientObjectChannel.updateItem(item.toUiNotificationBarItem()));
+		clientObjectChannel.addItem(item.toUiNotificationBarItem());
 	}
 
 	public void removeItem(NotificationBarItem item) {
 		itemsByUiId.remove(item.getUiId());
 		item.setListener(null);
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotificationBar.RemoveItemCommand(item.getUiId(), null), null);
+		clientObjectChannel.removeItem(item.getUiId(), null);
 	}
-
 }

@@ -24,11 +24,11 @@ import {Component, insertAfter, insertBefore, parseHtml, TeamAppsEvent} from "pr
 
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {ButtonVisibilities, Toolbar} from "./Toolbar";
-import {DtoDropDownButtonClickInfo} from "../../../generated";
+import {DropDownButtonClickInfo} from "../../../generated";
 import {outerWidthIncludingMargins} from "../../../Common";
 
 export class ToolbarButtonGroup {
-	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: DtoDropDownButtonClickInfo}> = new TeamAppsEvent();
+	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: DropDownButtonClickInfo}> = new TeamAppsEvent();
 
 	private config: DtoToolbarButtonGroup;
 	private visible: boolean = true;

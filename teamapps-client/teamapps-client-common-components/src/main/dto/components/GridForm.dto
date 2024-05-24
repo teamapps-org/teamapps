@@ -19,42 +19,42 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.Spacing;
-import org.teamapps.projector.dto.Border;
-import org.teamapps.projector.dto.Shadow;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoSpacing;
+import org.teamapps.projector.dto.DtoBorder;
+import org.teamapps.projector.dto.DtoShadow;
 
-class GridForm extends Component {
-	required List<Component*> fields;
-	required List<FormLayoutPolicy> layoutPolicies;
+class DtoGridForm extends DtoComponent {
+	required List<DtoComponent*> fields;
+	required List<DtoFormLayoutPolicy> layoutPolicies;
 
-	command updateLayoutPolicies(List<FormLayoutPolicy> layoutPolicies);
+	command updateLayoutPolicies(List<DtoFormLayoutPolicy> layoutPolicies);
 	command setSectionCollapsed(String sectionId, boolean collapsed);
-	command addOrReplaceField(Component* field);
+	command addOrReplaceField(DtoComponent* field);
 
 	event sectionCollapsedStateChanged(String sectionId, boolean collapsed);
 }
 
-class FormLayoutPolicy {
+class DtoFormLayoutPolicy {
 	 required int minWidth;
-     required List<FormSection> sections;
+     required List<DtoFormSection> sections;
 }
 
-class FormSection {
+class DtoFormSection {
 	required String id;
-    required List<GridColumn> columns;
-    required List<GridRow> rows;
-    required List<FormSectionPlacement> fieldPlacements;
-    Spacing margin;
-    Spacing padding;
-    Border border;
+    required List<DtoGridColumn> columns;
+    required List<DtoGridRow> rows;
+    required List<DtoFormSectionPlacement> fieldPlacements;
+    DtoSpacing margin;
+    DtoSpacing padding;
+    DtoBorder border;
     Shadow shadow;
     String backgroundColor;
     boolean collapsible;
     boolean collapsed;
     boolean visible;
-    Template* headerTemplate;
+    DtoTemplate* headerTemplate;
     Object headerData;
     boolean drawHeaderLine;
     int gridGap; // pixels between fields, labels etc.
@@ -62,23 +62,23 @@ class FormSection {
     boolean hideWhenNoVisibleFields;
 }
 
-interface FormSectionPlacement extends GridPlacement {
+interface DtoFormSectionPlacement extends DtoGridPlacement {
 }
 
-class FormSectionFieldPlacement implements FormSectionPlacement {
-	required Component* field;
+class DtoFormSectionFieldPlacement implements DtoFormSectionPlacement {
+	required DtoComponent* field;
 }
 
-class FormSectionFloatingFieldsPlacement implements FormSectionPlacement {
-	required List<FormSectionFloatingField> floatingFields;
+class DtoFormSectionFloatingFieldsPlacement implements DtoFormSectionPlacement {
+	required List<DtoFormSectionFloatingField> floatingFields;
 	boolean wrap;
 	int horizontalSpacing;
 	int verticalSpacing;  
 	// we might also want to be able to align the items differently than "baseline" - maybe add a setting "verticalFieldAlignment"
 }
 
-class FormSectionFloatingField {
-	required Component* field;
+class DtoFormSectionFloatingField {
+	required DtoComponent* field;
 	int minWidth;
 	int maxWidth;
 	int minHeight;

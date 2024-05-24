@@ -4,11 +4,11 @@
  */
 
 import {ClientObject} from "projector-client-object-api";
-import {DtoLocation} from "xxx";
+import {Location} from "xxx";
 
-export interface DtoX {
+export interface X {
 	_type?: string;
-	location?: DtoLocation
+	location?: Location
 }
 
 

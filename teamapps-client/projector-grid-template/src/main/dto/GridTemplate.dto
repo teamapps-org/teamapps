@@ -19,96 +19,96 @@
  */
 package "projector-grid-template":org.teamapps.projector.template.grid.dto;
 
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.Spacing;
-import org.teamapps.projector.dto.Border;
-import org.teamapps.projector.dto.BoxShadow;
-import org.teamapps.projector.dto.HorizontalElementAlignment;
-import org.teamapps.projector.dto.VerticalElementAlignment;
-import org.teamapps.projector.dto.FontStyle;
-import org.teamapps.projector.dto.TextAlignment;
-import org.teamapps.projector.dto.AlignItems;
-import org.teamapps.projector.dto.JustifyContent;
-import org.teamapps.projector.template.grid.SizingPolicy;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoSpacing;
+import org.teamapps.projector.dto.DtoBorder;
+import org.teamapps.projector.dto.DtoBoxShadow;
+import org.teamapps.projector.dto.DtoHorizontalElementAlignment;
+import org.teamapps.projector.dto.DtoVerticalElementAlignment;
+import org.teamapps.projector.dto.DtoFontStyle;
+import org.teamapps.projector.dto.DtoTextAlignment;
+import org.teamapps.projector.dto.DtoAlignItems;
+import org.teamapps.projector.dto.DtoJustifyContent;
+import org.teamapps.projector.template.grid.DtoSizingPolicy;
 
-class GridTemplate implements Template {
-    required List<GridColumn> columns;
-    required List<GridRow> rows;
-    required List<AbstractGridTemplateElement> elements;
+class DtoGridTemplate extends DtoTemplate {
+    required List<DtoGridColumn> columns;
+    required List<DtoGridRow> rows;
+    required List<DtoAbstractGridTemplateElement> elements;
     int minWidth;
     int maxWidth;
 	int minHeight;
     int maxHeight;
-    Spacing padding;
+    DtoSpacing padding;
     int gridGap;
     String backgroundColor;
-    Border border;
+    DtoBorder border;
     String ariaLabelProperty;
     String titleProperty;
 }
 
-class GridColumn {
-	SizingPolicy widthPolicy;
+class DtoGridColumn {
+	DtoSizingPolicy widthPolicy;
 	int leftPadding;
 	int rightPadding;
 }
 
-class GridRow {
-	SizingPolicy heightPolicy;
+class DtoGridRow {
+	DtoSizingPolicy heightPolicy;
     int topPadding;
     int bottomPadding;
 }
 
-abstract class AbstractGridTemplateElement {
+abstract class DtoAbstractGridTemplateElement {
 	required String property;
     required int row;
     required int column;
     int rowSpan;
     int colSpan;
-    JustifyContent horizontalAlignment;
-    AlignItems verticalAlignment;
-    Spacing margin;
+    DtoJustifyContent horizontalAlignment;
+    DtoAlignItems verticalAlignment;
+    DtoSpacing margin;
     String backgroundColor;
 }
 
-class TextElement extends AbstractGridTemplateElement {
-	FontStyle fontStyle;
+class DtoTextElement extends DtoAbstractGridTemplateElement {
+	DtoFontStyle fontStyle;
 	double lineHeight;
 	boolean wrapLines;
-	Spacing padding;
-	TextAlignment textAlignment;
+	DtoSpacing padding;
+	DtoTextAlignment textAlignment;
 }
 
-class BadgeElement extends TextElement {
+class DtoBadgeElement extends DtoTextElement {
 	// the badge background color is defined by the font background color. This only makes the element look like a badge.
 	String borderColor;
 }
 
-class FloatingElement extends AbstractGridTemplateElement {
-	required List<AbstractGridTemplateElement> elements;
+class DtoFloatingElement extends DtoAbstractGridTemplateElement {
+	required List<DtoAbstractGridTemplateElement> elements;
 	boolean wrap;
-    AlignItems alignItems;
-    JustifyContent justifyContent;
+    DtoAlignItems alignItems;
+    DtoJustifyContent justifyContent;
 }
 
-class ImageElement extends AbstractGridTemplateElement {
+class DtoImageElement extends DtoAbstractGridTemplateElement {
 	required int width;
 	required int height;
-	Border border;
-	Spacing padding;
-	BoxShadow shadow;
-	ImageSizing imageSizing;
+	DtoBorder border;
+	DtoSpacing padding;
+	DtoBoxShadow shadow;
+	DtoImageSizing imageSizing;
 }
 
-enum ImageSizing {
+enum DtoImageSizing {
 	COVER, CONTAIN, ORIGINAL, STRETCH
 }
 
-class IconElement extends AbstractGridTemplateElement {
+class DtoIconElement extends DtoAbstractGridTemplateElement {
 	required int size;
 }
 
-class GlyphIconElement extends AbstractGridTemplateElement {
+class DtoGlyphIconElement extends DtoAbstractGridTemplateElement {
 	required int size;
 	String fontColor;
 }

@@ -19,21 +19,21 @@
  */
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.AbstractField;
-import org.teamapps.projector.dto.TextInputHandlingField;
-import org.teamapps.projector.dto.DateTimeFormatDescriptor;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.dto.DtoDateTimeFormatDescriptor;
 
-abstract class AbstractTimeField extends AbstractField implements TextInputHandlingField {
+abstract class DtoAbstractTimeField extends DtoAbstractField implements DtoTextInputHandlingField {
     boolean showDropDownButton;
     boolean showClearButton;
     String locale;
-    DateTimeFormatDescriptor timeFormat; // if null, Configuration.timeFormat applies
+    DtoDateTimeFormatDescriptor timeFormat; // if null, Configuration.timeFormat applies
 
     command setShowDropDownButton(boolean showDropDownButton);
     command setShowClearButton(boolean showClearButton);
-    command setLocaleAndTimeFormat(String locale, DateTimeFormatDescriptor timeFormat);
+    command setLocaleAndTimeFormat(String locale, DtoDateTimeFormatDescriptor timeFormat);
 }
                             
-class LocalTimeField extends AbstractTimeField {
+class DtoLocalTimeField extends DtoAbstractTimeField {
 }

@@ -19,64 +19,64 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class WebRtcPublisher extends Component {
-	WebRtcPublishingSettings publishingSettings;
+class DtoWebRtcPublisher extends DtoComponent {
+	DtoWebRtcPublishingSettings publishingSettings;
 	boolean microphoneMuted;
 	String backgroundImageUrl;
 
-    command publish(WebRtcPublishingSettings settings);
+    command publish(DtoWebRtcPublishingSettings settings);
     command unPublish();
     command setMicrophoneMuted(boolean microphoneMuted);
     command setBackgroundImageUrl(String backgroundImageUrl);
 
-    event publishingFailed(WebRtcPublishingErrorReason reason);
+    event publishingFailed(DtoWebRtcPublishingErrorReason reason);
 
     static command isChromeExtensionInstalled() returns boolean;
 }
 
-class WebRtcPlayer extends Component {
-	WebRtcPlayingSettings playingSettings;
+class DtoWebRtcPlayer extends DtoComponent {
+	DtoWebRtcPlayingSettings playingSettings;
 	String backgroundImageUrl;
 
-	command play(WebRtcPlayingSettings settings);
+	command play(DtoWebRtcPlayingSettings settings);
 	command stopPlaying();
 	command setBackgroundImageUrl(String backgroundImageUrl);
 
-	static command getPlayableVideoCodecs() returns List<VideoCodec>;
+	static command getPlayableVideoCodecs() returns List<DtoVideoCodec>;
 }
 
-enum AudioCodec {
+enum DtoAudioCodec {
 	OPUS
 }
 
-enum VideoCodec {
+enum DtoVideoCodec {
 	H264,
 	VP8,
 	VP9
 }
 
-class WebRtcPlayingSettings {
+class DtoWebRtcPlayingSettings {
 	required String signalingUrl;
 	required String wowzaApplicationName;
 	required String streamName;
 }
 
-class WebRtcPublishingSettings {
+class DtoWebRtcPublishingSettings {
 	required String signalingUrl;
 	required String wowzaApplicationName;
 	required String streamName;
-	required WebRtcPublishingMediaSettings mediaSettings;
+	required DtoWebRtcPublishingMediaSettings mediaSettings;
 }
 
-class WebRtcPublishingMediaSettings {
+class DtoWebRtcPublishingMediaSettings {
 	boolean audio;
-	AudioCodec audioCodec;
+	DtoAudioCodec audioCodec;
 	int audioKiloBitsPerSecond;
 
 	boolean video;
-	VideoCodec videoCodec;
+	DtoVideoCodec videoCodec;
 	int videoWidth;
 	int videoHeight;
 	int videoFps;
@@ -85,7 +85,7 @@ class WebRtcPublishingMediaSettings {
 	boolean screen;
 }
 
-enum WebRtcPublishingErrorReason {
+enum DtoWebRtcPublishingErrorReason {
 	CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED,
 	CANNOT_GET_SCREEN_MEDIA_STREAM,
 	OTHER

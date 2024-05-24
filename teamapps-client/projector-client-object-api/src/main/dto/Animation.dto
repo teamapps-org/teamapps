@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "projector-client-object-api":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-enum EntranceAnimation {
+enum DtoEntranceAnimation {
 	BACK_IN_DOWN,
 	BACK_IN_LEFT,
 	BACK_IN_RIGHT,
@@ -73,7 +73,7 @@ enum EntranceAnimation {
 	BOUNCE_IN_UP;
 }
 
-enum ExitAnimation {
+enum DtoExitAnimation {
 	BACK_OUT_DOWN,
 	BACK_OUT_LEFT,
 	BACK_OUT_RIGHT,
@@ -125,7 +125,7 @@ enum ExitAnimation {
 	BOUNCE_OUT_UP;
 }
 
-enum RepeatableAnimation {
+enum DtoRepeatableAnimation {
 	BOUNCE,
 	FLASH,
 	PULSE,
@@ -145,7 +145,7 @@ enum RepeatableAnimation {
 	BLINK_SUBTLE
 }
 
-enum PageTransition {
+enum DtoPageTransition {
 	MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT,
 	MOVE_TO_RIGHT_VS_MOVE_FROM_LEFT,
 	MOVE_TO_TOP_VS_MOVE_FROM_BOTTOM,

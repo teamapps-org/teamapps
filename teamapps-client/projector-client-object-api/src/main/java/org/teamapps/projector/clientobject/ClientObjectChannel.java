@@ -8,6 +8,8 @@ public interface ClientObjectChannel {
 
 	void forceRender();
 
+	boolean isRendered();
+
 	default boolean sendCommandIfRendered(String name, Object... params) {
 		return sendCommandIfRendered(name, params, null);
 	}

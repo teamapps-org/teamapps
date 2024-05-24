@@ -19,7 +19,7 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
 enum SplitSizePolicy {
 	FIRST_FIXED,
@@ -31,20 +31,20 @@ enum SplitDirection {
 	HORIZONTAL, VERTICAL
 }
 
-class SplitPane extends Component {
+class DtoSplitPane extends DtoComponent {
 	mutable SplitDirection splitDirection;
 	mutable SplitSizePolicy sizePolicy;
 	mutable double referenceChildSize; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
-	mutable Component* firstChild;
-	mutable Component* lastChild;
+	mutable DtoComponent* firstChild;
+	mutable DtoComponent* lastChild;
 	mutable int firstChildMinSize; // in pixels
 	mutable int lastChildMinSize;  // in pixels
 	mutable boolean resizable;
-	mutable ChildCollapsingPolicy childCollapsingPolicy;
+	mutable DtoChildCollapsingPolicy childCollapsingPolicy;
 
 	event splitResized(double referenceChildSize);
 }
 
-enum ChildCollapsingPolicy {
+enum DtoChildCollapsingPolicy {
     NEVER, IF_NULL, IF_EMPTY
 }

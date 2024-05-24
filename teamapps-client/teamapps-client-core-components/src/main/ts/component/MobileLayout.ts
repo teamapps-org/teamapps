@@ -20,8 +20,8 @@
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {NavigationBar} from "./NavigationBar";
-import {AbstractLegacyComponent, Component, parseHtml, ServerChannel} from "projector-client-object-api";
-import {DtoMobileLayout, DtoMobileLayoutCommandHandler, DtoPageTransition} from "../generated";
+import {AbstractLegacyComponent, Component, DtoPageTransition, parseHtml, ServerChannel} from "projector-client-object-api";
+import {DtoMobileLayout, DtoMobileLayoutCommandHandler} from "../generated";
 
 import {pageTransition} from "../Common";
 

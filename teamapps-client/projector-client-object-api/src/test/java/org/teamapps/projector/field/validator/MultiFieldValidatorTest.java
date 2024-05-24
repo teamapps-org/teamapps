@@ -25,6 +25,7 @@ import org.mockito.Mockito;
 import org.teamapps.commons.event.Event;
 import org.teamapps.projector.clientobject.ClientObjectChannel;
 import org.teamapps.projector.clientobject.component.ComponentConfig;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.field.AbstractField;
 import org.teamapps.projector.field.FieldMessage;
 import org.teamapps.projector.session.CurrentSessionContext;
@@ -211,6 +212,21 @@ public class MultiFieldValidatorTest {
         @Override
         public ComponentConfig createConfig() {
             return null;
+        }
+
+        @Override
+        public void handleEvent(String name, List<JsonWrapper> params) {
+
+        }
+
+        @Override
+        public Object handleQuery(String name, List<JsonWrapper> params) {
+            return null;
+        }
+
+        @Override
+        public String doConvertClientValueToServerValue(JsonWrapper value) {
+            return "";
         }
     }
 

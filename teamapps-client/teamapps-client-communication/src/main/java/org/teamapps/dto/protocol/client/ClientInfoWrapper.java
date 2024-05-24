@@ -1,6 +1,7 @@
 package org.teamapps.dto.protocol.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.teamapps.projector.dto.JsonWrapper;
@@ -16,8 +17,8 @@ public class ClientInfoWrapper extends JsonWrapper {
 
 	public static final String TYPE_ID = "ClientInfo";
 
-	public ClientInfoWrapper(JsonNode jsonNode) {
-		super(jsonNode);
+	public ClientInfoWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
+		super(objectMapper, jsonNode);
 	}
 
 	public int getScreenWidth() {

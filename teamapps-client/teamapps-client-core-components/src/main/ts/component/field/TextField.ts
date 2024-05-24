@@ -19,7 +19,7 @@
  */
 import {AbstractField} from "projector-client-object-api";
 import {
-	DtoSpecialKey,
+	SpecialKey,
 	DtoTextField,
 	DtoTextFieldCommandHandler,
 	DtoTextFieldEventSource,
@@ -80,7 +80,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 				this.fireTextInput();
 				this.$field.select();
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ESCAPE
+					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === 'Enter') {
 				if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
@@ -88,7 +88,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 					this.commit();
 				}
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ENTER
+					key: SpecialKey.ENTER
 				});
 			}
 		});

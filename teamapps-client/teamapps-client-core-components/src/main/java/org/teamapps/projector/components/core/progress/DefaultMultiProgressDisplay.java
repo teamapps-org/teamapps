@@ -19,40 +19,40 @@
  */
 package org.teamapps.projector.components.core.progress;
 
-import org.teamapps.projector.dto.DtoDefaultMultiProgressDisplay;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoMultiProgressDisplay;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.ux.component.field.DisplayField;
-import org.teamapps.ux.component.flexcontainer.VerticalLayout;
+import org.teamapps.projector.components.core.div.Div;
+import org.teamapps.projector.components.core.flexcontainer.VerticalLayout;
+import org.teamapps.projector.components.core.notification.Notification;
+import org.teamapps.projector.components.core.notification.NotificationPosition;
+import org.teamapps.projector.components.core.notification.Notifications;
+import org.teamapps.projector.dto.DtoDefaultMultiProgressDisplay;
+import org.teamapps.projector.dto.DtoDefaultMultiProgressDisplayClientObjectChannel;
+import org.teamapps.projector.dto.DtoMultiProgressDisplayEventHandler;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.Spacing;
-import org.teamapps.ux.component.notification.Notification;
-import org.teamapps.ux.component.notification.NotificationPosition;
 import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
-import org.teamapps.ux.task.ObservableProgress;
-import org.teamapps.ux.task.ProgressCompletableFuture;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.teamapps.ux.task.ProgressStatus.*;
-
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class DefaultMultiProgressDisplay extends AbstractComponent implements MultiProgressDisplay {
+public class DefaultMultiProgressDisplay extends AbstractComponent implements MultiProgressDisplay, DtoMultiProgressDisplayEventHandler {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoDefaultMultiProgressDisplay.ClickedEvent.TYPE_ID);
+
+	private final DtoDefaultMultiProgressDisplayClientObjectChannel clientObjectChannel = new DtoDefaultMultiProgressDisplayClientObjectChannel(getClientObjectChannel());
 
 	private final List<ObservableProgress> progresses = new ArrayList<>();
 	private final Notification progressListNotification;
 	private final VerticalLayout progressListVerticalLayout;
-	private final DisplayField noEntriesDisplayField;
+	private final Div noEntriesDiv;
 
 	private boolean showNotificationOnProgressAdded = true;
 	private int notificationDisplayTimeMillis = 3000;
@@ -63,10 +63,9 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 
 	public DefaultMultiProgressDisplay() {
 		progressListVerticalLayout = new VerticalLayout();
-		noEntriesDisplayField = new DisplayField();
-		noEntriesDisplayField.setValue("<div style=\"text-align: center\">" + getSessionContext().getLocalized(TeamAppsTranslationKeys.NO_RUNNING_TASKS.getKey()) + "</div>");
-		noEntriesDisplayField.setShowHtml(true);
-		progressListVerticalLayout.addComponent(noEntriesDisplayField);
+		noEntriesDiv = new Div();
+		noEntriesDiv.setInnerHtml("<div style=\"text-align: center\">" + getSessionContext().getLocalized(TeamAppsTranslationKeys.NO_RUNNING_TASKS.getKey()) + "</div>");
+		progressListVerticalLayout.addComponent(noEntriesDiv);
 		progressListNotification = new Notification(progressListVerticalLayout);
 		progressListNotification.setPadding(new Spacing(2, 4, 2, 4));
 		progressListNotification.setShowProgressBar(false);
@@ -85,32 +84,29 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoMultiProgressDisplay.ClickedEvent.TYPE_ID -> {
-				this.onClicked.fire(null);
-				if (showingNotificationWithoutTimeout) {
-					this.showingNotificationWithoutTimeout = false;
-					progressListNotification.close();
-				} else {
-					this.showingNotificationWithoutTimeout = true;
-					if (progresses.size() > 0) {
-						progressListNotification.setDisplayTimeInMillis(-1);
-					} else {
-						progressListNotification.setDisplayTimeInMillis(2000);
-					}
-					getSessionContext().showNotification(progressListNotification, notificationPosition);
-				}
+	public void handleClicked() {
+		this.onClicked.fire(null);
+		if (showingNotificationWithoutTimeout) {
+			this.showingNotificationWithoutTimeout = false;
+			progressListNotification.close();
+		} else {
+			this.showingNotificationWithoutTimeout = true;
+			if (progresses.size() > 0) {
+				progressListNotification.setDisplayTimeInMillis(-1);
+			} else {
+				progressListNotification.setDisplayTimeInMillis(2000);
 			}
+			Notifications.showNotification(getSessionContext(), progressListNotification, notificationPosition);
 		}
 	}
+
 
 	@Override
 	public void addProgress(Icon<?, ?> icon, String taskName, ObservableProgress progress) {
 		this.progresses.add(progress);
-		progressListVerticalLayout.removeComponent(noEntriesDisplayField);
+		progressListVerticalLayout.removeComponent(noEntriesDiv);
 		ProgressDisplay progressDisplay = new ProgressDisplay(icon, taskName, progress);
-		progressDisplay.setMargin(new Spacing(2, 0, 2, 0));
+		progressDisplay.setCssStyle("margin", "2 0 2 0");
 		progressListVerticalLayout.addComponent(progressDisplay);
 		progress.onChanged().addListener(data -> {
 			if (EnumSet.of(ProgressStatus.CANCELED, ProgressStatus.COMPLETE, ProgressStatus.FAILED).contains(data.getStatus())) {
@@ -118,17 +114,19 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 				this.progresses.remove(progress);
 				this.update();
 
-				new ProgressCompletableFuture<Void>().completeOnTimeout(null, listEntryRemainTimeout, TimeUnit.MILLISECONDS)
-						.handleWithCurrentSessionContext((aVoid, throwable) -> {
-							progressListVerticalLayout.removeComponent(progressDisplay);
-							if (progressListVerticalLayout.getComponents().size() == 0) {
-								progressListVerticalLayout.addComponent(noEntriesDisplayField);
-							}
-							if (this.progresses.size() == 0) {
-								showingNotificationWithoutTimeout = false;
-								this.progressListNotification.close();
-							}
-							return null;
+				new CompletableFuture<Void>().completeOnTimeout(null, listEntryRemainTimeout, TimeUnit.MILLISECONDS)
+						.handle((aVoid, throwable) -> {
+							return getSessionContext().runWithContext(() -> {
+								progressListVerticalLayout.removeComponent(progressDisplay);
+								if (progressListVerticalLayout.getComponents().isEmpty()) {
+									progressListVerticalLayout.addComponent(noEntriesDiv);
+								}
+								if (this.progresses.isEmpty()) {
+									showingNotificationWithoutTimeout = false;
+									this.progressListNotification.close();
+								}
+								return null;
+							});
 						});
 			}
 		});
@@ -139,12 +137,12 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	private void showNotificationDueToUpdate() {
 		if (!showingNotificationWithoutTimeout) {
 			progressListNotification.setDisplayTimeInMillis(notificationDisplayTimeMillis);
-			getSessionContext().showNotification(progressListNotification, notificationPosition);
+			Notifications.showNotification(getSessionContext(), progressListNotification, notificationPosition);
 		}
 	}
 
 	private void update() {
-		getClientObjectChannel().sendCommandIfRendered(new DtoDefaultMultiProgressDisplay.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 	}
 
 	public boolean isShowNotificationOnProgressAdded() {

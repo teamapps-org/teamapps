@@ -19,27 +19,29 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoEntranceAnimation;
+import org.teamapps.projector.dto.DtoExitAnimation;
 
-enum NotificationPosition {
+enum DtoNotificationPosition {
 	TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
 }
 
-class Notification extends Component {
+class DtoNotification extends DtoComponent {
 	String backgroundColor;
-	Spacing padding;
+	DtoSpacing padding;
 
 	boolean dismissible;
 	int displayTimeInMillis; // 0 = display until user closes it actively
 	boolean progressBarVisible;
 
-	Component* content;
+	DtoComponent* content;
 	int contentHeight; // <= 0: auto
 
-    static command showNotification(Notification* notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation);
+    static command showNotification(DtoNotification* notification, DtoNotificationPosition position, DtoEntranceAnimation entranceAnimation, DtoExitAnimation exitAnimation);
 
 	command close();
-	command update(Notification config);
+	command update(DtoNotification config);
 
 	event opened();
 	event closed(boolean byUser);

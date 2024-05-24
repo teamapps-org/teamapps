@@ -19,20 +19,21 @@
  */
 package org.teamapps.projector.components.core.mobile;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoMobileLayout;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.components.core.CoreComponentLibrary;
+import org.teamapps.projector.animation.PageTransition;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.ux.component.animation.PageTransition;
-import org.teamapps.ux.component.toolbar.Toolbar;
-
-import java.util.function.Supplier;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.components.core.CoreComponentLibrary;
+import org.teamapps.projector.components.core.toolbar.Toolbar;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoMobileLayout;
+import org.teamapps.projector.dto.DtoMobileLayoutClientObjectChannel;
+import org.teamapps.projector.dto.DtoMobileLayoutEventHandler;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class MobileLayout extends AbstractComponent implements Component {
+public class MobileLayout extends AbstractComponent implements DtoMobileLayoutEventHandler {
+
+	private final DtoMobileLayoutClientObjectChannel clientObjectChannel = new DtoMobileLayoutClientObjectChannel(getClientObjectChannel());
 
 	protected Toolbar toolbar;
 	protected Component content;
@@ -47,17 +48,13 @@ public class MobileLayout extends AbstractComponent implements Component {
 		DtoMobileLayout uiMobileLayout = new DtoMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (content != null) {
-			uiMobileLayout.setInitialView(content.createClientReference());
+			uiMobileLayout.setInitialView(content);
 		}
 		if (toolbar != null) {
-			uiMobileLayout.setToolbar(toolbar.createClientReference());
+			uiMobileLayout.setToolbar(toolbar);
 		}
-		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createClientReference() : null);
+		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar : null);
 		return uiMobileLayout;
-	}
-
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
 	}
 
 	public void setContent(Component component) {
@@ -67,9 +64,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 	public void setContent(Component component, PageTransition animation, int animationDuration) {
 		if (this.content != component) {
 			content = component;
-			component.setParent(this);
-			getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoMobileLayout.ShowViewCommand(component.createClientReference(), animation != null ? animation.toUiPageTransition() : null,
-					animationDuration)).get(), null);
+			clientObjectChannel.showView(component, animation != null ? animation.toUiPageTransition() : null, animationDuration);
 		}
 	}
 
@@ -91,10 +86,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 
 	public void setNavigationBar(NavigationBar navigationBar) {
 		this.navigationBar = navigationBar;
-		if (navigationBar != null) {
-			navigationBar.setParent(this);
-		}
-		getClientObjectChannel().sendCommandIfRendered(new DtoMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createClientReference() : null), null);
+		clientObjectChannel.setNavigationBar(navigationBar);
 	}
 
 }

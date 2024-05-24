@@ -19,22 +19,22 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class NumberField extends AbstractField implements TextInputHandlingField {
+class DtoNumberField extends DtoAbstractField implements DtoTextInputHandlingField {
   	String locale;
 	int precision; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
 	String placeholderText;
 	boolean showClearButton;
 	double minValue;
     double maxValue;
-    NumberFieldSliderMode sliderMode;
+    DtoNumberFieldSliderMode sliderMode;
     double sliderStep;
     boolean commitOnSliderChange;
 
     command setMinValue(double min);
     command setMaxValue(double max);
-    command setSliderMode(NumberFieldSliderMode sliderMode);
+    command setSliderMode(DtoNumberFieldSliderMode sliderMode);
     command setSliderStep(double step);
     command setCommitOnSliderChange(boolean commitOnSliderChange);
 	command setPrecision(int displayPrecision);
@@ -43,6 +43,6 @@ class NumberField extends AbstractField implements TextInputHandlingField {
 	command setLocale(String locale);
 }
 
-enum NumberFieldSliderMode {
+enum DtoNumberFieldSliderMode {
 	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED, SLIDER_ONLY
 }

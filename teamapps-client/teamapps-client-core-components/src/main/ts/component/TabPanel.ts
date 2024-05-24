@@ -45,7 +45,7 @@ import {
 	DtoTabPanelCommandHandler,
 	DtoTabPanelEventSource,
 	DtoTabPanelTabStyle,
-	DtoWindowButtonType
+	WindowButtonType
 } from "../generated";
 import {maximizeComponent} from "../Common";
 import {StaticIcons} from "../util/StaticIcons";
@@ -77,14 +77,14 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "tab-button-minimize", iconSize: 16}), noOpServerChannel),
-		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "tab-button-maximize", iconSize: 16}), noOpServerChannel),
-		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "tab-button-close", iconSize: 16}), noOpServerChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {iconSize: 16}), noOpServerChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {iconSize: 16}), noOpServerChannel),
+		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {iconSize: 16}), noOpServerChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
-		DtoWindowButtonType.MINIMIZE,
-		DtoWindowButtonType.MAXIMIZE_RESTORE,
-		DtoWindowButtonType.CLOSE
+		WindowButtonType.MINIMIZE,
+		WindowButtonType.MAXIMIZE_RESTORE,
+		WindowButtonType.CLOSE
 	];
 
 	private $tabPanel: HTMLElement;
@@ -107,7 +107,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	private hideTabBarIfSingleTab: boolean;
 
 	private toolButtons: ToolButton[] = [];
-	private windowButtons: DtoWindowButtonType[];
+	private windowButtons: WindowButtonType[];
 
 	private restoreFunction: (animationCallback?: () => void) => void;
 
@@ -175,7 +175,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		if (config.toolButtons != null) {
 			this.setToolButtons(config.toolButtons as ToolButton[]);
 		}
-		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
 			} else {
@@ -201,12 +201,12 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	}
 
 	public maximize(): void {
-		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
 		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
-		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
 		if (this.restoreFunction != null) {
 			this.restoreFunction();
 		}
@@ -515,7 +515,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		return this.toolButtons;
 	}
 
-	public setWindowButtons(buttonTypes:DtoWindowButtonType[]):void{
+	public setWindowButtons(buttonTypes:WindowButtonType[]):void{
 		this.windowButtons = [];
 		this.$windowButtonContainer.innerHTML = '';
 		if (buttonTypes && buttonTypes.length > 0) {
@@ -527,7 +527,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		}
 	}
 
-	private addWindowButton(toolButtonType: DtoWindowButtonType) {
+	private addWindowButton(toolButtonType: WindowButtonType) {
 		if (this.windowButtons.filter(tb => tb === toolButtonType).length > 0){
 			this.removeWindowButton(toolButtonType);
 		}
@@ -549,7 +549,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		this.relayoutButtons();
 	}
 
-	public removeWindowButton(uiToolButton: DtoWindowButtonType) {
+	public removeWindowButton(uiToolButton: WindowButtonType) {
 		this.defaultToolButtons[uiToolButton].getMainElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {

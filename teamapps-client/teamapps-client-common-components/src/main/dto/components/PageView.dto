@@ -19,50 +19,50 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.ToolButton;
-import org.teamapps.projector.dto.ClientRecord;
-import org.teamapps.projector.dto.HorizontalElementAlignment;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoToolButton;
+import org.teamapps.projector.dto.DtoClientRecord;
+import org.teamapps.projector.dto.DtoHorizontalElementAlignment;
 
-class PageView extends Component {
-	List<PageViewBlock> blocks;
+class DtoPageView extends DtoComponent {
+	List<DtoPageViewBlock> blocks;
 
-	command addBlock(PageViewBlock block, boolean before, String otherBlockId);
+	command addBlock(DtoPageViewBlock block, boolean before, String otherBlockId);
 	command removeBlock(String blockId);
 }
 
-class PageViewBlock {
+class DtoPageViewBlock {
 	String id;
 	PageViewBlockAlignment alignment;
-	List<ToolButton*> toolButtons;
+	List<DtoToolButton*> toolButtons;
 }
 
-enum PageViewBlockAlignment {
+enum DtoPageViewBlockAlignment {
     LEFT, RIGHT, FULL
 }
 
-class MessagePageViewBlock extends PageViewBlock {
-	Template* topTemplate;
-	ClientRecord topRecord;
+class DtoMessagePageViewBlock extends DtoPageViewBlock {
+	DtoTemplate* topTemplate;
+	DtoClientRecord topRecord;
 	HorizontalElementAlignment topRecordAlignment;
 	String html;
 	List<String> imageUrls;
 }
 
-class CitationPageViewBlock extends PageViewBlock {
+class DtoCitationPageViewBlock extends DtoPageViewBlock {
 	String creatorImageUrl;
 	PageViewBlockCreatorImageAlignment creatorImageAlignment;
 	String citation; // rich text!
 	String author; // plain text
 }
 
-enum PageViewBlockCreatorImageAlignment {
+enum DtoPageViewBlockCreatorImageAlignment {
 	LEFT, RIGHT
 }
 
-class ComponentPageViewBlock extends PageViewBlock {
-	Component* component;
+class DtoComponentPageViewBlock extends DtoPageViewBlock {
+	DtoComponent* component;
 	int height;
 	String title;
 }

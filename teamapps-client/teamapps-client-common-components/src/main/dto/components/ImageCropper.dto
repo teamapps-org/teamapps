@@ -19,28 +19,28 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class ImageCropper extends Component {
+class DtoImageCropper extends DtoComponent {
 	required String imageUrl;
-	required ImageCropperSelectionMode selectionMode;
+	required DtoImageCropperSelectionMode selectionMode;
 	required double aspectRatio; // width/height; 0 = no aspect ratio constraint!
-	ImageCropperSelection selection;
+	DtoImageCropperSelection selection;
 
 	command setImageUrl(String imageUrl);
-	command setSelectionMode(ImageCropperSelectionMode selectionMode);
+	command setSelectionMode(DtoImageCropperSelectionMode selectionMode);
 	command setAspectRatio(double aspectRatio);
-	command setSelection(ImageCropperSelection selection);
+	command setSelection(DtoImageCropperSelection selection);
 
-	event selectionChanged(ImageCropperSelection selection);
+	event selectionChanged(DtoImageCropperSelection selection);
 }
 
-enum ImageCropperSelectionMode {
+enum DtoImageCropperSelectionMode {
 	RECTANGLE, ROUND
 }
 
 @TypeScriptFactory
-class ImageCropperSelection {
+class DtoImageCropperSelection {
 	required int left;
 	required int top;
 	required int width;

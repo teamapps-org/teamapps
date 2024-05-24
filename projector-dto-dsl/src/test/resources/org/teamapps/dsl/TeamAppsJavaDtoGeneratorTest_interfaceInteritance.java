@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -32,15 +35,15 @@ import org.teamapps.projector.dto.DtoObject;
  */
 
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.dto.DtoA;
-import org.teamapps.projector.dto.DtoAWrapper;
+import org.teamapps.projector.dto.A;
+import org.teamapps.projector.dto.AWrapper;
 
 @JsonTypeName("B")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface DtoB extends DtoA, DtoObject {
+public interface B extends A, DtoObject {
 
 	public String getB();
-	public DtoB setB(String b);
+	public B setB(String b);
 
 
 

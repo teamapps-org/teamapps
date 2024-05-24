@@ -19,6 +19,8 @@
  */
 package org.teamapps.projector.components.core.toolbar;
 
+import org.teamapps.projector.dto.DropDownButtonClickInfo;
+
 public class ToolbarButtonClickEventData {
 
 	private final ToolbarButton button;

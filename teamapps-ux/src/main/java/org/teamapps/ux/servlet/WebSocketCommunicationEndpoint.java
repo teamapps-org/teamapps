@@ -119,7 +119,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 			totalReceiveCount.addAndGet(payload.length());
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
-				AbstractClientMessageWrapper clientMessage = new AbstractClientMessageWrapper(mapper.readTree(payload));
+				AbstractClientMessageWrapper clientMessage = new AbstractClientMessageWrapper(mapper, mapper.readTree(payload));
 
 				switch (clientMessage.getTypeId()) {
 					case INITWrapper.TYPE_ID -> {

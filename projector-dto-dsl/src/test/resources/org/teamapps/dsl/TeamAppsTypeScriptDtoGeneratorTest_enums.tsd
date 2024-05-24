@@ -2,6 +2,6 @@
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
-export enum DtoE {
+export enum E {
 	A, B
 }

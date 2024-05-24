@@ -21,7 +21,7 @@ import {
 	DtoMultiLineTextField,
 	DtoMultiLineTextFieldCommandHandler,
 	DtoMultiLineTextFieldEventSource,
-	DtoSpecialKey,
+	SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
@@ -82,11 +82,11 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ESCAPE
+					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === 'Enter') {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ENTER
+					key: SpecialKey.ENTER
 				});
 			}
 		});

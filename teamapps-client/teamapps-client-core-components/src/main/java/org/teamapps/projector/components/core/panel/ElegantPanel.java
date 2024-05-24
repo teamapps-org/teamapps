@@ -21,14 +21,14 @@ package org.teamapps.projector.components.core.panel;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.dto.DtoComponent;
 import org.teamapps.projector.dto.DtoElegantPanel;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.format.HorizontalElementAlignment;
+import org.teamapps.projector.dto.DtoElegantPanelEventHandler;
 import org.teamapps.projector.format.Spacing;
+import org.teamapps.projector.template.grid.HorizontalElementAlignment;
 
-public class ElegantPanel extends AbstractComponent {
+public class ElegantPanel extends AbstractComponent implements DtoElegantPanelEventHandler {
 
 	private Color bodyBackgroundColor = RgbaColor.WHITE.withAlpha(.4f);
 	private AbstractComponent content;
@@ -49,16 +49,11 @@ public class ElegantPanel extends AbstractComponent {
 		DtoElegantPanel uiElegantPanel = new DtoElegantPanel();
 		mapAbstractUiComponentProperties(uiElegantPanel);
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);
-		uiElegantPanel.setContent(content.createClientReference());
+		uiElegantPanel.setContent(content);
 		uiElegantPanel.setMaxContentWidth(maxContentWidth);
 		uiElegantPanel.setPadding(padding.createUiSpacing());
 		uiElegantPanel.setHorizontalContentAlignment(horizontalContentAlignment.toUiHorizontalElementAlignment());
 		return uiElegantPanel;
-	}
-
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-
 	}
 
 	public Color getBodyBackgroundColor() {
@@ -100,4 +95,5 @@ public class ElegantPanel extends AbstractComponent {
 	public void setHorizontalContentAlignment(HorizontalElementAlignment horizontalContentAlignment) {
 		this.horizontalContentAlignment = horizontalContentAlignment;
 	}
+
 }

@@ -20,25 +20,27 @@
 package org.teamapps.projector.components.core.notification;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoNotification;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.ux.component.animation.EntranceAnimation;
-import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.ux.component.field.TemplateField;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.components.core.CoreComponentLibrary;
+import org.teamapps.projector.components.core.field.TemplateField;
+import org.teamapps.projector.dto.DtoNotification;
+import org.teamapps.projector.dto.DtoNotificationClientObjectChannel;
+import org.teamapps.projector.dto.DtoNotificationEventHandler;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.Spacing;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class Notification extends AbstractComponent {
+public class Notification extends AbstractComponent implements DtoNotificationEventHandler {
+
 	public final ProjectorEvent<Void> onOpened = createProjectorEventBoundToUiEvent(DtoNotification.OpenedEvent.TYPE_ID);
 	public final ProjectorEvent<Boolean> onClosed = createProjectorEventBoundToUiEvent(DtoNotification.ClosedEvent.TYPE_ID);
+
+	private final DtoNotificationClientObjectChannel clientObjectChannel = new DtoNotificationClientObjectChannel(getClientObjectChannel());
 
 	private boolean showing;
 
@@ -58,7 +60,7 @@ public class Notification extends AbstractComponent {
 	}
 
 	public static Notification createWithIconAndCaption(Icon<?, ?> icon, String text) {
-		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplate.NOTIFICATION_ICON_CAPTION);
+		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplates.NOTIFICATION_ICON_CAPTION);
 		templateField.setValue(new BaseTemplateRecord<>(icon, text));
 		Notification notification = new Notification();
 		notification.setContent(templateField);
@@ -66,7 +68,7 @@ public class Notification extends AbstractComponent {
 	}
 
 	public static Notification createWithIconAndTextAndDescription(Icon<?, ?> icon, String text, String description) {
-		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplate.NOTIFICATION_ICON_CAPTION_DESCRIPTION);
+		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplates.NOTIFICATION_ICON_CAPTION_DESCRIPTION);
 		templateField.setValue(new BaseTemplateRecord<>(icon, text, description));
 		Notification notification = new Notification();
 		notification.setContent(templateField);
@@ -81,27 +83,24 @@ public class Notification extends AbstractComponent {
 		ui.setDisplayTimeInMillis(displayTimeInMillis);
 		ui.setDismissible(dismissible);
 		ui.setProgressBarVisible(showProgressBar);
-		ui.setContent(content != null ? content.createClientReference() : null);
+		ui.setContent(content != null ? content : null);
 		return ui;
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoNotification.OpenedEvent.TYPE_ID -> {
-				this.showing = true;
-				onOpened.fire(null);
-			}
-			case DtoNotification.ClosedEvent.TYPE_ID -> {
-				var e = event.as(DtoNotification.ClosedEventWrapper.class);
-				this.showing = false;
-				onClosed.fire(e.getByUser());
-			}
-		}
+	public void handleOpened() {
+		this.showing = true;
+		onOpened.fire(null);
+	}
+
+	@Override
+	public void handleClosed(boolean byUser) {
+		this.showing = false;
+		onClosed.fire(byUser);
 	}
 
 	public void close() {
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.CloseCommand(), null);
+		clientObjectChannel.close();
 	}
 
 	public Color getBackgroundColor() {
@@ -110,7 +109,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 		return this;
 	}
 
@@ -120,7 +119,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setPadding(Spacing padding) {
 		this.padding = padding;
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 		return this;
 	}
 
@@ -130,7 +129,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDisplayTimeInMillis(int displayTimeInMillis) {
 		this.displayTimeInMillis = displayTimeInMillis;
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 		return this;
 	}
 
@@ -140,7 +139,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDismissible(boolean dismissible) {
 		this.dismissible = dismissible;
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 		return this;
 	}
 
@@ -150,7 +149,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setShowProgressBar(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 		return this;
 	}
 
@@ -160,7 +159,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setContent(Component content) {
 		this.content = content;
-		getClientObjectChannel().sendCommandIfRendered(new DtoNotification.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 		return this;
 	}
 
@@ -172,47 +171,4 @@ public class Notification extends AbstractComponent {
 		return showing;
 	}
 
-
-	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
-		// TODO
-//		runWithContext(() -> {
-//			sendStaticCommand(Notification.class, DtoNotification.ShowNotificationCommand.CMD_NAME, new DtoNotification.ShowNotificationCommand(notification, position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(), exitAnimation.toUiExitAnimation()).getParameters());
-//		});
-	}
-
-	public void showNotification(Notification notification, NotificationPosition position) {
-//		runWithContext(() -> {
-//			showNotification(notification, position, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
-//		});
-	}
-
-	public void showNotification(Icon<?, ?> icon, String caption) {
-//		runWithContext(() -> {
-//			Notification notification = Notification.createWithIconAndCaption(icon, caption);
-//			notification.setDismissible(true);
-//			notification.setShowProgressBar(false);
-//			notification.setDisplayTimeInMillis(5000);
-//			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
-//		});
-	}
-
-	public void showNotification(Icon<?, ?> icon, String caption, String description) {
-//		runWithContext(() -> {
-//			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
-//			notification.setDismissible(true);
-//			notification.setShowProgressBar(false);
-//			notification.setDisplayTimeInMillis(5000);
-//			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
-//		});
-	}
-
-	public void showNotification(Icon<?, ?> icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
-//		runWithContext(() -> {
-//			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
-//			notification.setDismissible(dismissable);
-//			notification.setDisplayTimeInMillis(displayTimeInMillis);
-//			notification.setShowProgressBar(showProgress);
-//			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
-//		});
-	}
 }

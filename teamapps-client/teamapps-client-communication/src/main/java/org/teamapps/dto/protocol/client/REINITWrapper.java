@@ -1,13 +1,14 @@
 package org.teamapps.dto.protocol.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class REINITWrapper extends AbstractClientMessageWrapper {
 
 	public static final String TYPE_ID = "REINIT";
 
-	public REINITWrapper(JsonNode jsonNode) {
-		super(jsonNode);
+	public REINITWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
+		super(objectMapper, jsonNode);
 	}
 
 	public String getSessionId() {

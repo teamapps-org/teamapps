@@ -1,8 +1,8 @@
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-class Globals {
+class DtoGlobals {
 
-//    static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
+//    static event globalKeyEventOccurred(DtoKeyEventType eventType, String sourceComponentId, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
 //    static event navigationStateChange(Location location, boolean triggeredByUser);
 
 //    static command setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp);
@@ -11,10 +11,10 @@ class Globals {
 //    static command setThemeClassName(String theme);
 //    static command setOptimizedForTouch();
 
-//    static command setSessionMessageWindows(Showable* expiredMessageWindow, Showable* errorMessageWindow, Showable* terminatedMessageWindow);
+//    static command setSessionMessageWindows(DtoShowable* expiredMessageWindow, DtoShowable* errorMessageWindow, DtoShowable* terminatedMessageWindow);
 //
 //    static command setPageTitle(String pageTitle);
-//    static command addRootComponent(String containerElementId, Component* component); // containerDomSelector == null --> body
+//    static command addRootComponent(String containerElementId, DtoComponent* component); // containerDomSelector == null --> body
 //
 //    static command addClientToken(String token);
 //    static command removeClientToken(String token);
@@ -23,7 +23,7 @@ class Globals {
 //    static command downloadFile(String fileUrl, String downloadFileName);
 //    static command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, int animationDuration);
 //    static command exitFullScreen();
-//    static command showDialogMessage(String icon, String title, String message, List<GenericErrorMessageOption> options);
+//    static command showDialogMessage(String icon, String title, String message, List<DtoGenericErrorMessageOption> options);
 //
 //    // uuid is a server-generated id for this particular lock. Multiple locks are possible!
 //    static command requestWakeLock(String uuid) returns boolean;
@@ -39,10 +39,10 @@ class Globals {
 
 }
 
-//enum KeyEventType {
+//enum DtoKeyEventType {
 //    KEY_DOWN, KEY_UP
 //}
 //
-//enum GenericErrorMessageOption {
+//enum DtoGenericErrorMessageOption {
 //	OK, RELOAD
 //}

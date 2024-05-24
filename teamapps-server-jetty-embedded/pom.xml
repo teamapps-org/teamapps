@@ -64,6 +64,11 @@
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-ux</artifactId>
         </dependency>
+        <dependency>
+<!--            TODO WHY IS THIS NECESSARY? UX SHOULD BE ENOUGH! -->
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-client-object-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>

@@ -19,17 +19,20 @@
  */
 package org.teamapps.projector.components.core.linkbutton;
 
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoLinkButton;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.dto.DtoLinkButton;
+import org.teamapps.projector.dto.DtoLinkButtonClientObjectChannel;
+import org.teamapps.projector.dto.DtoLinkButtonEventHandler;
+import org.teamapps.projector.event.ProjectorEvent;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class LinkButton extends AbstractComponent {
+public class LinkButton extends AbstractComponent implements DtoLinkButtonEventHandler {
 
 	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLinkButton.ClickedEvent.TYPE_ID);
+
+	private final DtoLinkButtonClientObjectChannel clientObjectChannel = new DtoLinkButtonClientObjectChannel(getClientObjectChannel());
 
 	private String text;
 	private String url;
@@ -57,16 +60,12 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoLinkButton.ClickedEvent.TYPE_ID -> {
-				onClicked.fire();
-			}
-		}
+	public void handleClicked() {
+		onClicked.fire();
 	}
 
 	private void update() {
-		getClientObjectChannel().sendCommandIfRendered(new DtoLinkButton.UpdateCommand(createConfig()), null);
+		clientObjectChannel.update(createConfig());
 	}
 
 	public String getText() {

@@ -19,24 +19,24 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class MediaTrackGraph extends Component {
+class DtoMediaTrackGraph extends DtoComponent {
 	int trackCount;
-	List<MediaTrackData> trackData;
-	List<MediaTrackMarker> markers;
+	List<DtoMediaTrackData> trackData;
+	List<DtoMediaTrackMarker> markers;
 
 	command setCursorPosition(long time);
 
 	event handleTimeSelection(long start, long end);
 }
 
-class MediaTrackData {
+class DtoMediaTrackData {
 	long time;
 	List<Integer> values;
 }
 
-class MediaTrackMarker {
+class DtoMediaTrackMarker {
 	int track;
 	long start;
 	long end;
@@ -48,18 +48,18 @@ class MediaTrackMarker {
 /**
  * May also be used as audio player...
  */
-class VideoPlayer extends Component {
+class DtoVideoPlayer extends DtoComponent {
 	required String url; //the url of the video
 	boolean autoplay;
 	boolean showControls;
 	String posterImageUrl;
-	PosterImageSize posterImageSize;
+	DtoPosterImageSize posterImageSize;
 	int sendPlayerProgressEventsEachXSeconds; // if 0, then send NO events
 	String backgroundColor;
-	MediaPreloadMode preloadMode;
+	DtoMediaPreloadMode preloadMode;
 
 	command setUrl(String url);
-	command setPreloadMode(MediaPreloadMode preloadMode);
+	command setPreloadMode(DtoMediaPreloadMode preloadMode);
 	command setAutoplay(boolean autoplay);
 	command play();
 	command pause();
@@ -70,10 +70,10 @@ class VideoPlayer extends Component {
 	event ended();
 }
 
-enum PosterImageSize {
+enum DtoPosterImageSize {
     CONTAIN, COVER, FILL
 }
 
-enum MediaPreloadMode {
+enum DtoMediaPreloadMode {
 	NONE, METADATA, AUTO
 }

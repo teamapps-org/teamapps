@@ -21,7 +21,7 @@ import {TimeSuggestionEngine} from "./TimeSuggestionEngine";
 import {LocalDateTime} from "./LocalDateTime";
 import {
 	AbstractField, DtoDateTimeFormatDescriptor,
-	DtoFieldEditingMode, DtoSpecialKey,
+	DtoFieldEditingMode, SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "teamapps-client-core-components";
@@ -63,11 +63,11 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ESCAPE
+					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ENTER
+					key: SpecialKey.ENTER
 				});
 			}
 		});

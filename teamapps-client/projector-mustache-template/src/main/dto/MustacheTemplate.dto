@@ -19,8 +19,8 @@
  */
 package "projector-mustache-template":org.teamapps.projector.template.mustache.dto;
 
-import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.DtoTemplate;
 
-class MustacheTemplate implements Template {
+class DtoMustacheTemplate extends DtoTemplate {
 	required String templateString;
 }

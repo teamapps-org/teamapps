@@ -1,6 +1,6 @@
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-enum JustifyContent {
+enum DtoJustifyContent {
 	START = "flex-start",
 	END = "flex-end",
 	CENTER = "center",

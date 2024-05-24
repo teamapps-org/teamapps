@@ -1,6 +1,6 @@
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-class Spacing {
+class DtoSpacing {
 	double top;
 	double right;
 	double bottom;

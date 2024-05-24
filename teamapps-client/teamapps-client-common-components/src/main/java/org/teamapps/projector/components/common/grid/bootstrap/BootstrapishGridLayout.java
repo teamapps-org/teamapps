@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class BootstrapishGridLayout extends AbstractComponent implements Component {
+public class BootstrapishGridLayout extends AbstractComponent {
 
 	private static final int DEFAULT_NUMBER_OF_COLUMNS = 12;
 

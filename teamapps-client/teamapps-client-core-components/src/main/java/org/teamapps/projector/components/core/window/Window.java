@@ -21,17 +21,18 @@ package org.teamapps.projector.components.core.window;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoWindow;
 import org.teamapps.icons.Icon;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.clientobject.Showable;
 import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
-import org.teamapps.projector.clientobject.Showable;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.ux.component.panel.Panel;
+import org.teamapps.projector.components.core.panel.Panel;
+import org.teamapps.projector.dto.*;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class Window extends Panel implements Showable {
+public class Window extends Panel implements Showable, DtoWindowEventHandler {
+
+	private final DtoWindowClientObjectChannel clientObjectChannel = new DtoWindowClientObjectChannel(getClientObjectChannel());
 
 	private boolean modal = false;
 	private int width = 0; // 0 = full width
@@ -88,7 +89,7 @@ public class Window extends Panel implements Showable {
 
 	public void setModal(boolean modal) {
 		this.modal = modal;
-		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetModalCommand(modal), null);
+		clientObjectChannel.setModal(modal);
 	}
 
 	public int getWidth() {
@@ -117,7 +118,7 @@ public class Window extends Panel implements Showable {
 		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
 			this.setContentStretchingEnabled(false);
 		}
-		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetSizeCommand(width, height), null);
+		clientObjectChannel.setSize(width, height);
 	}
 
 	public Color getModalBackgroundDimmingColor() {
@@ -126,7 +127,7 @@ public class Window extends Panel implements Showable {
 
 	public void setModalBackgroundDimmingColor(Color modalBackgroundDimmingColor) {
 		this.modalBackgroundDimmingColor = modalBackgroundDimmingColor;
-		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetModalBackgroundDimmingColorCommand(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null), null);
+		clientObjectChannel.setModalBackgroundDimmingColor(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null);
 	}
 
 	public void show() {
@@ -135,7 +136,7 @@ public class Window extends Panel implements Showable {
 
 	public void show(int animationDuration) {
 		getSessionContext().renderClientObject(this);
-		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.ShowCommand(animationDuration), null);
+		clientObjectChannel.show(animationDuration);
 	}
 
 	public void close() {
@@ -143,7 +144,7 @@ public class Window extends Panel implements Showable {
 	}
 
 	public void close(int animationDuration) {
-		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.CloseCommand(animationDuration), null);
+		clientObjectChannel.close(animationDuration);
 	}
 
 	public boolean isCloseable() {
@@ -152,7 +153,7 @@ public class Window extends Panel implements Showable {
 
 	public void setCloseable(boolean closeable) {
 		this.closeable = closeable;
-		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetCloseableCommand(closeable), null);
+		clientObjectChannel.setCloseable(closeable);
 	}
 
 	public boolean isCloseOnEscape() {
@@ -161,7 +162,7 @@ public class Window extends Panel implements Showable {
 
 	public void setCloseOnEscape(boolean closeOnEscape) {
 		this.closeOnEscape = closeOnEscape;
-		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetCloseOnEscapeCommand(closeOnEscape), null);
+		clientObjectChannel.setCloseOnEscape(closeOnEscape);
 	}
 
 	public boolean isCloseOnClickOutside() {
@@ -170,6 +171,6 @@ public class Window extends Panel implements Showable {
 
 	public void setCloseOnClickOutside(boolean closeOnClickOutside) {
 		this.closeOnClickOutside = closeOnClickOutside;
-		getClientObjectChannel().sendCommandIfRendered(new DtoWindow.SetCloseOnClickOutsideCommand(closeOnClickOutside), null);
+		clientObjectChannel.setCloseOnClickOutside(closeOnClickOutside);
 	}
 }

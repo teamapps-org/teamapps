@@ -19,19 +19,19 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class LinkButton extends Component {
+class DtoLinkButton extends DtoComponent {
 	String text;
 	String url; // null = still render as link but do not open a page
-	LinkTarget target;
+	DtoLinkTarget target;
 	String onClickJavaScript;
 
-	command update(LinkButton config);
+	command update(DtoLinkButton config);
 
 	event clicked();
 }
 
-enum LinkTarget {
+enum DtoLinkTarget {
 	SELF, BLANK, PARENT, TOP;
 }

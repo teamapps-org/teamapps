@@ -29,7 +29,7 @@ import java.util.List;
 
 public class SimpleTree<PAYLOAD> extends Tree<BaseTemplateTreeNode<PAYLOAD>> {
 
-	private List<Template> templatesByDepth = Arrays.asList(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES, BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+	private List<Template> templatesByDepth = Arrays.asList(BaseTemplates.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, BaseTemplates.LIST_ITEM_MEDIUM_ICON_TWO_LINES, BaseTemplates.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 
 	public SimpleTree() {
 		this(Collections.emptyList());

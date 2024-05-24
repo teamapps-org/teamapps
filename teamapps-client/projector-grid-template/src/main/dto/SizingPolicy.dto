@@ -1,12 +1,12 @@
 package "projector-grid-template":org.teamapps.projector.template.grid;
 
-class SizingPolicy {
-	required SizeType type;
+class DtoSizingPolicy {
+	required DtoSizeType type;
     double value;
     int minAbsoluteSize;
 }
 
-enum SizeType {
+enum DtoSizeType {
 	FIXED = "px",
 	RELATIVE = "%",
 	AUTO = "auto",

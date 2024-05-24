@@ -19,47 +19,47 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-import org.teamapps.projector.dto.Showable;
-import org.teamapps.projector.dto.JustifyContent;
+import org.teamapps.projector.dto.DtoShowable;
+import org.teamapps.projector.dto.DtoJustifyContent;
 
-class Panel extends Component {
+class DtoPanel extends DtoComponent {
 	mutable String icon;
 	mutable String title;
-	mutable PanelHeaderField leftHeaderField;
-	mutable PanelHeaderField rightHeaderField;
-	mutable PanelHeaderComponentMinimizationPolicy headerComponentMinimizationPolicy;
-	mutable PanelHeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy;
+	mutable DtoPanelHeaderField leftHeaderField;
+	mutable DtoPanelHeaderField rightHeaderField;
+	mutable DtoPanelHeaderComponentMinimizationPolicy headerComponentMinimizationPolicy;
+	mutable DtoPanelHeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy;
 	mutable boolean titleBarHidden;
-	mutable Toolbar* toolbar;
-	mutable Component* content;
+	mutable DtoToolbar* toolbar;
+	mutable DtoComponent* content;
 	mutable boolean contentStretchingEnabled;
 	mutable int padding;
 	mutable List<WindowButtonType> windowButtons;
-	mutable List<ToolButton*> toolButtons;
+	mutable List<DtoToolButton*> toolButtons;
 
 	command setMaximized(boolean maximized);
 
 	event windowButtonClicked(WindowButtonType windowButton);
 }
 
-enum PanelHeaderComponentMinimizationPolicy {
+enum DtoPanelHeaderComponentMinimizationPolicy {
     LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST
 }
 
-enum PanelHeaderFieldIconVisibilityPolicy {
+enum DtoPanelHeaderFieldIconVisibilityPolicy {
     DISPLAYED_WHEN_MINIMIZED, ALWAYS_DISPLAYED
 }
 
-class PanelHeaderField {
-	required AbstractField* field;
+class DtoPanelHeaderField {
+	required DtoAbstractField* field;
 	String icon;
 	int minWidth;
 	int maxWidth;
 }
 
-class Window extends Panel implements Showable {
+class DtoWindow extends DtoPanel implements DtoShowable {
 	boolean modal;
 	int width; // 0 = full width
 	int height; // 0 = full height, -1 = auto
@@ -79,14 +79,14 @@ class Window extends Panel implements Showable {
 	command setSize(int width, int height);
 }
 
-class ElegantPanel extends Component {
+class DtoElegantPanel extends DtoComponent {
 	String bodyBackgroundColor;
-	Component* content;
-	Spacing padding;
-	JustifyContent horizontalContentAlignment;
+	DtoComponent* content;
+	DtoSpacing padding;
+	DtoJustifyContent horizontalContentAlignment;
 	int maxContentWidth; // 0 = 100%
 
-	command setContent(Component* content);
+	command setContent(DtoComponent* content);
 }
 
 enum WindowButtonType {

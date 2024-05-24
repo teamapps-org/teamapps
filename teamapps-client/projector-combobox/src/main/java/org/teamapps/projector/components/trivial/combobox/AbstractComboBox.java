@@ -32,8 +32,8 @@ import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.projector.field.AbstractField;
-import org.teamapps.ux.component.field.SpecialKey;
-import org.teamapps.ux.component.field.TextInputHandlingField;
+import org.teamapps.projector.components.core.field.SpecialKey;
+import org.teamapps.projector.components.core.field.TextInputHandlingField;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.TemplateDecider;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
@@ -45,7 +45,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
+public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALUE> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -196,8 +196,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		DtoComboBoxTreeRecord uiTreeRecord = new DtoComboBoxTreeRecord();
 		uiTreeRecord.setValues(values);
 
-		uiTreeRecord.setDisplayTemplate(displayTemplate != null ? displayTemplate.createClientReference(): null);
-		uiTreeRecord.setDropDownTemplate(dropdownTemplate != null ? dropdownTemplate.createClientReference(): null);
+		uiTreeRecord.setDisplayTemplate(displayTemplate != null ? displayTemplate: null);
+		uiTreeRecord.setDropDownTemplate(dropdownTemplate != null ? dropdownTemplate: null);
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
@@ -283,47 +283,47 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setDropDownButtonVisible(boolean dropDownButtonVisible) {
 		this.dropDownButtonVisible = dropDownButtonVisible;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetDropDownButtonVisibleCommand(dropDownButtonVisible), null);
+		clientObjectChannel.setDropDownButtonVisible(dropDownButtonVisible);
 	}
 
 	public void setShowDropDownAfterResultsArrive(boolean showDropDownAfterResultsArrive) {
 		this.showDropDownAfterResultsArrive = showDropDownAfterResultsArrive;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetShowDropDownAfterResultsArriveCommand(showDropDownAfterResultsArrive), null);
+		clientObjectChannel.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
 	}
 
 	public void setFirstEntryAutoHighlight(boolean firstEntryAutoHighlight) {
 		this.firstEntryAutoHighlight = firstEntryAutoHighlight;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetFirstEntryAutoHighlightCommand(firstEntryAutoHighlight), null);
+		clientObjectChannel.setFirstEntryAutoHighlight(firstEntryAutoHighlight);
 	}
 
 	public void setAutoCompletionEnabled(boolean autoCompletionEnabled) {
 		this.autoCompletionEnabled = autoCompletionEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetAutoCompletionEnabledCommand(autoCompletionEnabled), null);
+		clientObjectChannel.setAutoCompletionEnabled(autoCompletionEnabled);
 	}
 
 	public void setTextHighlightingEnabled(boolean textHighlightingEnabled) {
 		this.textHighlightingEnabled = textHighlightingEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetTextHighlightingEntryLimitCommand(textHighlightingEnabled ? textHighlightingEntryLimit : 0), null);
+		clientObjectChannel.setTextHighlightingEntryLimit(textHighlightingEnabled ? textHighlightingEntryLimit : 0);
 	}
 
 	public void setTextHighlightingEntryLimit(int textHighlightingEntryLimit) {
 		this.textHighlightingEntryLimit = textHighlightingEntryLimit;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetTextHighlightingEntryLimitCommand(textHighlightingEnabled ? textHighlightingEntryLimit : 0), null);
+		clientObjectChannel.setTextHighlightingEntryLimit(textHighlightingEnabled ? textHighlightingEntryLimit : 0);
 	}
 
 	public void setFreeTextEnabled(boolean freeTextEnabled) {
 		this.freeTextEnabled = freeTextEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetFreeTextEnabledCommand(freeTextEnabled), null);
+		clientObjectChannel.setFreeTextEnabled(freeTextEnabled);
 	}
 
 	public void setClearButtonEnabled(boolean clearButtonEnabled) {
 		this.clearButtonEnabled = clearButtonEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetClearButtonEnabledCommand(clearButtonEnabled), null);
+		clientObjectChannel.setClearButtonEnabled(clearButtonEnabled);
 	}
 
 	public void setExpandAnimationEnabled(boolean expandAnimationEnabled) {
 		this.expandAnimationEnabled = expandAnimationEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetExpandAnimationEnabledCommand(expandAnimationEnabled), null);
+		clientObjectChannel.setExpandAnimationEnabled(expandAnimationEnabled);
 	}
 
 	public boolean isExpandersVisible() {
@@ -332,7 +332,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setExpandersVisible(boolean expandersVisible) {
 		this.expandersVisible = expandersVisible;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetExpandersVisibleCommand(expandersVisible), null);
+		clientObjectChannel.setExpandersVisible(expandersVisible);
 	}
 
 	public void setSelectedEntryTemplate(Template selectedEntryTemplate) {
@@ -411,7 +411,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setPlaceholderText(String placeholderText) {
 		this.placeholderText = placeholderText;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetPlaceholderTextCommand(placeholderText), null);
+		clientObjectChannel.setPlaceholderText(placeholderText);
 	}
 
 	public boolean isDistinctModelResultFiltering() {
@@ -428,7 +428,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setDropDownMinWidth(Integer dropDownMinWidth) {
 		this.dropDownMinWidth = dropDownMinWidth;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetDropDownMinWidthCommand(dropDownMinWidth), null);
+		clientObjectChannel.setDropDownMinWidth(dropDownMinWidth);
 	}
 
 	public Integer getDropDownMaxHeight() {
@@ -437,7 +437,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setDropDownMaxHeight(Integer dropDownMaxHeight) {
 		this.dropDownMaxHeight = dropDownMaxHeight;
-		getClientObjectChannel().sendCommandIfRendered(new DtoComboBox.SetDropDownMaxHeightCommand(dropDownMaxHeight), null);
+		clientObjectChannel.setDropDownMaxHeight(dropDownMaxHeight);
 	}
 
 	@Override

@@ -19,19 +19,19 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class CachedImage {
+class DtoCachedImage {
 	required String id;
 	required String imageUrl;
 }
 
 // TODO drag and drop for scrolling... (nice to have)
-class ImageDisplay extends Component {
+class DtoImageDisplay extends DtoComponent {
 	required int totalNumberOfRecords;
-	List<CachedImage> cachedImages;
+	List<DtoCachedImage> cachedImages;
 
-	PageDisplayMode displayMode;
+	DtoPageDisplayMode displayMode;
 	double zoomFactor; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
 	String backgroundColor;
 	int padding;
@@ -41,8 +41,8 @@ class ImageDisplay extends Component {
 	event imagesRequest(int startIndex, int length);
 	event imageDisplayed(String imageId);
 
-	command setCachedImages(int startIndex, List<CachedImage> cachedImages, int totalNumberOfRecords);
-	command setDisplayMode(PageDisplayMode displayMode, double zoomFactor);
+	command setCachedImages(int startIndex, List<DtoCachedImage> cachedImages, int totalNumberOfRecords);
+	command setDisplayMode(DtoPageDisplayMode displayMode, double zoomFactor);
 	command setZoomFactor(double zoomFactor);
 	command showImage(String id);
 }

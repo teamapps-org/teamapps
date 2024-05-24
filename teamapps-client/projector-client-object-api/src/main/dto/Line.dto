@@ -1,12 +1,12 @@
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-class Line {
+class DtoLine {
 	double thickness;
 	String color;
-	LineType type;
+	DtoLineType type;
 }
 
-enum LineType {
+enum DtoLineType {
 	SOLID,
 	DOTTED,
 	DASHED,

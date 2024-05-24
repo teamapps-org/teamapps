@@ -19,27 +19,27 @@
  */
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.AbstractField;
-import org.teamapps.projector.dto.TextInputHandlingField;
-import org.teamapps.projector.dto.DateTimeFormatDescriptor;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.dto.DtoDateTimeFormatDescriptor;
 
-abstract class AbstractDateTimeField extends AbstractField implements TextInputHandlingField {
+abstract class DtoAbstractDateTimeField extends DtoAbstractField implements DtoTextInputHandlingField {
 	boolean showDropDownButton;
 	boolean favorPastDates; // TODO!!!
 	String locale;
-	DateTimeFormatDescriptor dateFormat; // if null, Configuration.dateFormat applies
-	DateTimeFormatDescriptor timeFormat; // if null, Configuration.timeFormat applies
+	DtoDateTimeFormatDescriptor dateFormat; // if null, Configuration.dateFormat applies
+	DtoDateTimeFormatDescriptor timeFormat; // if null, Configuration.timeFormat applies
 
 	command setShowDropDownButton(boolean showDropDownButton);
 	command setFavorPastDates(boolean favorPastDates);
-	command setLocaleAndFormats(String locale, DateTimeFormatDescriptor dateFormat, DateTimeFormatDescriptor timeFormat);
+	command setLocaleAndFormats(String locale, DtoDateTimeFormatDescriptor dateFormat, DtoDateTimeFormatDescriptor timeFormat);
 }
 
-class LocalDateTimeField extends AbstractDateTimeField {
+class DtoLocalDateTimeField extends DtoAbstractDateTimeField {
 }
 
-class InstantDateTimeField extends AbstractDateTimeField {
+class DtoInstantDateTimeField extends DtoAbstractDateTimeField {
 	String timeZoneId; // if null, Configuration.timeZoneId applies
 
 	command setTimeZoneId(String timeZoneId);

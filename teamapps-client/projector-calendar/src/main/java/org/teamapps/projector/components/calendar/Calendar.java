@@ -56,7 +56,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = CalendarComponentLibrary.class)
-public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
+public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent implements DtoCalendarEventHandler {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -76,9 +76,9 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private CalendarEventTemplateDecider<CEVENT> templateDecider = //(calendarEvent, viewMode) -> null;
 			createStaticTemplateDecider(
-					BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
-					BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
-					BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
+					BaseTemplates.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
+					BaseTemplates.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
+					BaseTemplates.LIST_ITEM_MEDIUM_ICON_TWO_LINES
 			);
 
 	private CalendarViewMode activeViewMode = CalendarViewMode.MONTH;
@@ -157,9 +157,9 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		DtoCalendarEventClientRecord uiRecord = new DtoCalendarEventClientRecord();
 		uiRecord.setValues(values);
 
-		uiRecord.setTimeGridTemplate(timeGridTemplate != null ? timeGridTemplate.createClientReference() : null);
-		uiRecord.setDayGridTemplate(dayGridTemplate != null ? dayGridTemplate.createClientReference() : null);
-		uiRecord.setMonthGridTemplate(monthGridTemplate != null ? monthGridTemplate.createClientReference() : null);
+		uiRecord.setTimeGridTemplate(timeGridTemplate != null ? timeGridTemplate : null);
+		uiRecord.setDayGridTemplate(dayGridTemplate != null ? dayGridTemplate : null);
+		uiRecord.setMonthGridTemplate(monthGridTemplate != null ? monthGridTemplate : null);
 
 		uiRecord.setIcon(getSessionContext().resolveIcon(calendarEvent.getIcon()));
 		uiRecord.setTitle(calendarEvent.getTitle());
@@ -245,7 +245,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 				var clickEvent = event.as(DtoCalendar.EventClickedEventWrapper.class);
 				CEVENT calendarEvent = recordCache.getRecordByClientId(clickEvent.getEventId());
 				if (calendarEvent != null) {
-					onEventClicked.fire(new EventClickedEventData<>(calendarEvent, clickEvent.getIsDoubleClick()));
+					onEventClicked.fire(new EventClickedEventData<>(calendarEvent, clickEvent.isDoubleClick()));
 				}
 			}
 			case DtoCalendar.EventMovedEvent.TYPE_ID -> {
@@ -257,7 +257,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 			}
 			case DtoCalendar.DayClickedEvent.TYPE_ID -> {
 				var dayClickedEvent = event.as(DtoCalendar.DayClickedEventWrapper.class);
-				onDayClicked.fire(new DayClickedEventData(timeZone, Instant.ofEpochMilli(dayClickedEvent.getDate()), dayClickedEvent.getIsDoubleClick()));
+				onDayClicked.fire(new DayClickedEventData(timeZone, Instant.ofEpochMilli(dayClickedEvent.getDate()), dayClickedEvent.isDoubleClick()));
 
 			}
 			case DtoCalendar.IntervalSelectedEvent.TYPE_ID -> {
@@ -366,7 +366,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setActiveViewMode(CalendarViewMode activeViewMode) {
 		this.activeViewMode = activeViewMode;
-		java.util.Calendar.this.getClientObjectChannel().sendCommandIfRendered(new DtoCalendar.SetViewModeCommand(activeViewMode.toUiCalendarViewMode()), null);
+		java.util.Calendar.this.clientObjectChannel.setViewMode(activeViewMode.toUiCalendarViewMode());
 		refreshEvents();
 	}
 
@@ -376,7 +376,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
-		java.util.Calendar.this.getClientObjectChannel().sendCommandIfRendered(new DtoCalendar.SetDisplayedDateCommand(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()), null);
+		java.util.Calendar.this.clientObjectChannel.setDisplayedDate(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli());
 	}
 
 	public void setDisplayDateOneUnitPrevious() {
@@ -516,7 +516,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setTimeZone(ZoneId timeZone) {
 		this.timeZone = timeZone;
-		java.util.Calendar.this.getClientObjectChannel().sendCommandIfRendered(new DtoCalendar.SetTimeZoneIdCommand(timeZone.getId()), null);
+		java.util.Calendar.this.clientObjectChannel.setTimeZoneId(timeZone.getId());
 	}
 
 	public int getMinYearViewMonthTileWidth() {

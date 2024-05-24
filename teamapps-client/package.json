@@ -17,6 +17,7 @@
     "projector-mustache-template",
     "teamapps-client-core",
     "teamapps-client-core-components",
+    "projector-workspace-layout",
     "projector-calendar",
     "projector-infinite-scrolling-components",
     "teamapps-client-common-components",

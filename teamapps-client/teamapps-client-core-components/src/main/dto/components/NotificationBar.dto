@@ -1,33 +1,36 @@
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoEntranceAnimation;
+import org.teamapps.projector.dto.DtoExitAnimation;
+import org.teamapps.projector.dto.DtoRepeatableAnimation;
 
-class NotificationBar extends Component {
-	List<NotificationBarItem> initialItems;
+class DtoNotificationBar extends DtoComponent {
+	List<DtoNotificationBarItem> initialItems;
 
-	command addItem(NotificationBarItem item);
-	command updateItem(NotificationBarItem item);
-	command removeItem(String id, ExitAnimation exitAnimation);
+	command addItem(DtoNotificationBarItem item);
+	command updateItem(DtoNotificationBarItem item);
+	command removeItem(String id, DtoExitAnimation exitAnimation);
 
 	event itemClicked(String id);
 	event itemActionLinkClicked(String id);
 	event itemClosed(String id, boolean wasTimeout);
 }
 
-class NotificationBarItem {
+class DtoNotificationBarItem {
 	String id;
 
 	String icon;
-	RepeatableAnimation iconAnimation;
+	DtoRepeatableAnimation iconAnimation;
 	String text;
 	String actionLinkText;
 	String backgroundColor;
 	String borderColor;
 	String textColor;
 	String actionLinkColor;
-	Spacing padding;
-	EntranceAnimation entranceAnimation;
-	ExitAnimation exitAnimation;
+	DtoSpacing padding;
+	DtoEntranceAnimation entranceAnimation;
+	DtoExitAnimation exitAnimation;
 
 	boolean dismissible;
 	int displayTimeInMillis; // 0 <= display until user closes it actively

@@ -19,34 +19,34 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
 
-class NavigationBar extends Component {
-	required Template* buttonTemplate;
-	List<NavigationBarButton> buttons;
+class DtoNavigationBar extends DtoComponent {
+	List<DtoNavigationBarButton> buttons;
 	String backgroundColor;
 	String borderColor;
-	List<Component*> fanOutComponents;
-	MultiProgressDisplay* multiProgressDisplay;
+	List<DtoComponent*> fanOutComponents;
+	DtoMultiProgressDisplay* multiProgressDisplay;
 
-	command setButtons(List<NavigationBarButton> buttons);
+	command setButtons(List<DtoNavigationBarButton> buttons);
 	command setButtonVisible(String buttonId, boolean visible);
 	command setBackgroundColor(String backgroundColor);
 	command setBorderColor(String borderColor);
 
-	command addFanOutComponent(Component* fanOutComponent); // TODO #componentRef No more necessary?
-	command removeFanOutComponent(Component* fanOutComponent); // TODO #componentRef No more necessary?
-	command showFanOutComponent(Component* fanOutComponent);
+	command addFanOutComponent(DtoComponent* fanOutComponent); // TODO #componentRef No more necessary?
+	command removeFanOutComponent(DtoComponent* fanOutComponent); // TODO #componentRef No more necessary?
+	command showFanOutComponent(DtoComponent* fanOutComponent);
 	command hideFanOutComponent();
-	command setMultiProgressDisplay(MultiProgressDisplay* multiProgressDisplay);
+	command setMultiProgressDisplay(DtoMultiProgressDisplay* multiProgressDisplay);
 
-	event buttonClicked(String buttonId, Component* visibleFanOutComponentId);
+	event buttonClicked(String buttonId, DtoComponent* visibleFanOutComponentId);
 	event fanoutClosedDueToClickOutsideFanout();
 }
 
-class NavigationBarButton {
+class DtoNavigationBarButton {
 	required String id;
+    required DtoTemplate* template;
 	required Object data;
 	boolean visible;
 }

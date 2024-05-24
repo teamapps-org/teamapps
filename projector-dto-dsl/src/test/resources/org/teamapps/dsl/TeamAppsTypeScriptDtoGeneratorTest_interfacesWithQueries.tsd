@@ -5,12 +5,12 @@
 
 import {ClientObject} from "projector-client-object-api";
 
-export interface DtoX {
+export interface X {
 	_type?: string;
-	queryEntries: (query: DtoX_QueryEntriesQuery) => Promise<string[]>
+	queryEntries: (query: X_QueryEntriesQuery) => Promise<string[]>
 }
 
 
-export interface DtoX_QueryEntriesQuery {
+export interface X_QueryEntriesQuery {
 	x: number
 }

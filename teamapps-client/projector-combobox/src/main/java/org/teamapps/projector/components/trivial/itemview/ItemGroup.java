@@ -68,13 +68,13 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 	}
 
 	public ItemGroup(HEADERRECORD headerRecord, Template itemTemplate, List<RECORD> items) {
-		this.itemTemplate = itemTemplate == null ? BaseTemplate.ITEM_VIEW_ITEM : itemTemplate;
+		this.itemTemplate = itemTemplate == null ? BaseTemplates.ITEM_VIEW_ITEM : itemTemplate;
 		this.headerRecord = headerRecord;
 		this.items.addAll(items != null ? items : Collections.emptyList());
 	}
 
 	public DtoItemViewItemGroup createUiItemViewItemGroup() {
-		DtoItemViewItemGroup itemGroup = new DtoItemViewItemGroup(itemTemplate != null ? itemTemplate.createClientReference() : null);
+		DtoItemViewItemGroup itemGroup = new DtoItemViewItemGroup(itemTemplate != null ? itemTemplate : null);
 		itemGroup.setId(clientId);
 		if (headerRecord != null) {
 			itemGroup.setHeaderData(container.createHeaderClientRecord(headerRecord));

@@ -18,8 +18,6 @@
  * =========================LICENSE_END==================================
  */
 import {
-	DtoEntranceAnimation,
-	DtoExitAnimation,
 	DtoNotification,
 	DtoNotification_ClosedEvent,
 	DtoNotification_OpenedEvent,
@@ -29,7 +27,7 @@ import {
 } from "../generated";
 import {
 	AbstractLegacyComponent,
-	Component,
+	Component, DtoEntranceAnimation, DtoExitAnimation,
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerChannel,

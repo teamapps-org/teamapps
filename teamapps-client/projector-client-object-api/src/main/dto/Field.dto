@@ -19,26 +19,26 @@
  */
 package "projector-client-object-api":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-enum FieldEditingMode {
+enum DtoFieldEditingMode {
 	EDITABLE,
-	EDITABLE_IF_FOCUSED, // GridForm and CompositeField only!!
+	EDITABLE_IF_FOCUSED, // DtoGridForm and CompositeField only!!
 	DISABLED,
 	READONLY
 }
 
-abstract class AbstractField extends Component {
-	FieldEditingMode editingMode;
+abstract class DtoAbstractField extends DtoComponent {
+	DtoFieldEditingMode editingMode;
 	Object value;
-	List<FieldMessage> fieldMessages;
+	List<DtoFieldMessage> fieldMessages;
 
 	event valueChanged(Object value);
 	event focus();
 	event blur();
 
-	command setEditingMode(FieldEditingMode editingMode);
+	command setEditingMode(DtoFieldEditingMode editingMode);
 	command setValue(Object value);
     command focus();
-	command setFieldMessages(List<FieldMessage> fieldMessages);
+	command setFieldMessages(List<DtoFieldMessage> fieldMessages);
 }

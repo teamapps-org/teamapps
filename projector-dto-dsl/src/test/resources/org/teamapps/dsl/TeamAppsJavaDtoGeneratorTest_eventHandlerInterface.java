@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -34,10 +37,17 @@ import org.teamapps.projector.dto.DtoObject;
 import org.teamapps.projector.clientobject.ClientObject;
 import java.lang.reflect.Method;
 import org.teamapps.projector.clientobject.AbstractClientObjectEventMethodInvoker;
-import java.util.function.Function;
+import org.teamapps.projector.clientobject.ClientMessageHandler;
+import java.util.function.BiFunction;
 
-public interface AEventHandler {
 
-        void handleE(Integer i, String s, Object o);
+public interface AEventHandler extends ClientMessageHandler {
+
+	@Override
+	default void handleEvent(String name, List<JsonWrapper> params) {
+		new AEventMethodInvoker(this).handleEvent(name, params);
+	}
+
+    void handleE(int i, String s, JsonWrapper o);
 
 }

@@ -23,7 +23,7 @@ import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {DtoComboBox, DtoComboBoxCommandHandler, DtoComboBoxEventSource, DtoComboBoxTreeRecord} from "./generated";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {
-	AbstractField, buildObjectTree, DtoFieldEditingMode, DtoSpecialKey,
+	AbstractField, buildObjectTree, DtoFieldEditingMode, SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent, NodeWithChildren
 } from "teamapps-client-core-components";
@@ -94,11 +94,11 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ESCAPE
+					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ENTER
+					key: SpecialKey.ENTER
 				});
 			}
 		});

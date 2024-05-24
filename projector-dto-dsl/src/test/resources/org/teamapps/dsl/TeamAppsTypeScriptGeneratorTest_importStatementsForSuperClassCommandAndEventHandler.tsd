@@ -4,22 +4,22 @@
  */
 
 import {ClientObject} from "projector-client-object-api";
-import {DtoA} from "./DtoA";
-import {DtoI} from "./DtoI";
-import {DtoACommandHandler} from "./DtoA";
-import {DtoICommandHandler} from "./DtoI";
-import {DtoAEventSource} from "./DtoA";
-import {DtoIEventSource} from "./DtoI";
+import {A} from "./A";
+import {I} from "./I";
+import {ACommandHandler} from "./A";
+import {ICommandHandler} from "./I";
+import {AEventSource} from "./A";
+import {IEventSource} from "./I";
 interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
-export interface DtoB extends DtoA, DtoI {
+export interface B extends A, I {
 	_type?: string;
 }
 
-export interface DtoBCommandHandler extends DtoACommandHandler, DtoICommandHandler {
+export interface BCommandHandler extends ACommandHandler, ICommandHandler {
 }
 
-export interface DtoBEventSource extends DtoAEventSource, DtoIEventSource {
+export interface BEventSource extends AEventSource, IEventSource {
 }
 
 

@@ -2426,6 +2426,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-workspace-layout@workspace:projector-workspace-layout":
+  version: 0.0.0-use.local
+  resolution: "projector-workspace-layout@workspace:projector-workspace-layout"
+  dependencies:
+    esbuild: ^0.15.13
+    rimraf: ^3.0.2
+    teamapps-client-core: "workspace:*"
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "prr@npm:~1.0.1":
   version: 1.0.1
   resolution: "prr@npm:1.0.1"

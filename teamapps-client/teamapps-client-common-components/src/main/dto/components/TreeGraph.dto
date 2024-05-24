@@ -19,11 +19,11 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.ClientRecord;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoClientRecord;
 
-class TreeGraph extends Component {
+class DtoTreeGraph extends DtoComponent {
     List<TreeGraphNode> nodes;
 
 	String backgroundColor;
@@ -36,7 +36,7 @@ class TreeGraph extends Component {
     int horizontalSiblingGap;
     int horizontalNonSignlingGap;
 
-    command update(TreeGraph config);
+    command update(DtoTreeGraph config);
 
     command setZoomFactor(double zoomFactor); // > 0
     command setNodes(List<TreeGraphNode> nodes);
@@ -54,7 +54,7 @@ class TreeGraph extends Component {
     event sideListExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
-class BaseTreeGraphNode {
+class DtoBaseTreeGraphNode {
 	required String id;
     required int width;
     required int height;
@@ -66,15 +66,15 @@ class BaseTreeGraphNode {
     TreeGraphNodeImage image;
     TreeGraphNodeIcon icon;
 
-    Template* template;     // will get embedded using foreignObject
-    ClientRecord record;   // will get embedded using foreignObject
+    DtoTemplate* template;     // will get embedded using foreignObject
+    DtoClientRecord record;   // will get embedded using foreignObject
 
     String connectorLineColor; // line to parent node
     int connectorLineWidth;
     String dashArray;
 }
 
-class TreeGraphNode extends BaseTreeGraphNode{
+class DtoTreeGraphNode extends DtoBaseTreeGraphNode{
     String parentId;
     boolean parentExpandable;
     boolean parentExpanded;
@@ -82,11 +82,11 @@ class TreeGraphNode extends BaseTreeGraphNode{
     boolean expanded;
     boolean hasLazyChildren;
 
-    List<BaseTreeGraphNode> sideListNodes;
+    List<DtoBaseTreeGraphNode> sideListNodes;
     boolean sideListExpanded;
 }
 
-class TreeGraphNodeImage {
+class DtoTreeGraphNodeImage {
     required String url;
     required int width;
     required int height;
@@ -98,11 +98,11 @@ class TreeGraphNodeImage {
     String borderColor;
 }
 
-enum TreeGraphNodeImageCornerShape {
+enum DtoTreeGraphNodeImageCornerShape {
     ORIGINAL, ROUNDED, CIRCLE;
 }
 
-class TreeGraphNodeIcon {
+class DtoTreeGraphNodeIcon {
     required String icon;
     required int size; //width = height
 }

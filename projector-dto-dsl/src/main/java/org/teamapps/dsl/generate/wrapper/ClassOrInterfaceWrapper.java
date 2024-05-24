@@ -218,7 +218,7 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 	}
 
 	default String getJavaClassName() {
-		return "Dto" + StringUtils.capitalize(getName());
+		return StringUtils.capitalize(getName());
 	}
 
 	static List<TeamAppsDtoParser.CommandDeclarationContext> createImplicitMutationCommands(List<TeamAppsDtoParser.PropertyDeclarationContext> propertyDeclarations) {
@@ -252,12 +252,12 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 		this.getReferencedTypes(typescript).stream()
 				.forEach(t -> {
 					String name = t.getName();
-					String jsModuleName = this.getJsPackageName().equals(t.getJsPackageName()) ? "./Dto" + t.getName() : t.getJsPackageName();
+					String jsModuleName = this.getJsPackageName().equals(t.getJsPackageName()) ? "./" + t.getName() : t.getJsPackageName();
 					String javaPackageName = t.getPackageName();
-					imports.addImport("Dto" + name, jsModuleName, javaPackageName);
+					imports.addImport(name, jsModuleName, javaPackageName);
 
 					if (!typescript && t instanceof ClassOrInterfaceWrapper<?> referencedClassOrInterface && !referencedClassOrInterface.isExternal()) {
-						imports.addImport("Dto" + name + "Wrapper", null, javaPackageName);
+						imports.addImport(name + "Wrapper", null, javaPackageName);
 					}
 				});
 
@@ -266,17 +266,17 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 					.filter(c -> !c.getAllCommands().isEmpty())
 					.forEach(c -> {
 						String name = c.getName() + "CommandHandler";
-						String jsModuleName = this.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName();
+						String jsModuleName = this.getJsPackageName().equals(c.getJsPackageName()) ? "./" + c.getName() : c.getJsPackageName();
 						String javaPackageName = c.getPackageName();
-						imports.addImport("Dto" + name, jsModuleName, javaPackageName);
+						imports.addImport(name, jsModuleName, javaPackageName);
 					});
 			this.getSuperTypes().stream()
 					.filter(c -> !c.getAllEvents().isEmpty())
 					.forEach(c -> {
 						String name = c.getName() + "EventSource";
-						String jsModuleName = this.getJsPackageName().equals(c.getJsPackageName()) ? "./Dto" + c.getName() : c.getJsPackageName();
+						String jsModuleName = this.getJsPackageName().equals(c.getJsPackageName()) ? "./" + c.getName() : c.getJsPackageName();
 						String javaPackageName = c.getPackageName();
-						imports.addImport("Dto" + name, jsModuleName, javaPackageName);
+						imports.addImport(name, jsModuleName, javaPackageName);
 					});
 		}
 

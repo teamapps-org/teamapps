@@ -19,13 +19,13 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class FlexContainer extends Component {
-	mutable List<Component*> components;
-	mutable FlexDirection flexDirection;
-	mutable AlignItems alignItems;
-	mutable JustifyContent justifyContent;
+class DtoFlexContainer extends DtoComponent {
+	mutable List<DtoComponent*> components;
+	mutable DtoFlexDirection flexDirection;
+	mutable DtoAlignItems alignItems;
+	mutable DtoJustifyContent justifyContent;
 }
 
 

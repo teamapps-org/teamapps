@@ -59,7 +59,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractDateTimeField.SetShowDropDownButtonCommand(showDropDownButton), null);
+		clientObjectChannel.setShowDropDownButton(showDropDownButton);
 	}
 
 	public boolean isFavorPastDates() {
@@ -68,7 +68,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setFavorPastDates(boolean favorPastDates) {
 		this.favorPastDates = favorPastDates;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractDateTimeField.SetFavorPastDatesCommand(favorPastDates), null);
+		clientObjectChannel.setFavorPastDates(favorPastDates);
 	}
 
 	public Locale getLocale() {
@@ -85,7 +85,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()), null);
+		clientObjectChannel.setLocaleAndFormats(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor());
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -94,7 +94,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()), null);
+		clientObjectChannel.setLocaleAndFormats(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor());
 	}
 
 	public DateTimeFormatDescriptor getTimeFormat() {
@@ -103,7 +103,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		getClientObjectChannel().sendCommandIfRendered(new DtoAbstractDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()), null);
+		clientObjectChannel.setLocaleAndFormats(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor());
 	}
 
 }

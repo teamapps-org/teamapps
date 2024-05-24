@@ -19,17 +19,17 @@
  */
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.components.trivial.dto.ComboBox;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.components.trivial.dto.DtoComboBox;
 
-class TagComboBox extends ComboBox {
+class DtoTagComboBox extends DtoComboBox {
 	mutable int maxEntries; // if 0, then the list is unbounded
-	mutable TagComboBoxWrappingMode wrappingMode;
+	mutable DtoTagComboBoxWrappingMode wrappingMode;
 	mutable boolean distinct; // if true, do not allow the same entry to be selected multiple times!
 	mutable boolean twoStepDeletionEnabled; // This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
 	mutable boolean deleteButtonsEnabled;
 }
 
-enum TagComboBoxWrappingMode {
+enum DtoTagComboBoxWrappingMode {
     SINGLE_LINE, MULTI_LINE, SINGLE_TAG_PER_LINE
 }

@@ -32,7 +32,7 @@ import java.util.List;
 
 public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 
-	private Template topTemplate = BaseTemplate.LIST_ITEM_LARGE_ICON_TWO_LINES;
+	private Template topTemplate = BaseTemplates.LIST_ITEM_LARGE_ICON_TWO_LINES;
 	private RECORD topRecord;
 	private PropertyProvider<RECORD> topRecordPropertyProvider = new BeanPropertyExtractor<>();
 	private HorizontalElementAlignment topRecordAlignment = HorizontalElementAlignment.LEFT;

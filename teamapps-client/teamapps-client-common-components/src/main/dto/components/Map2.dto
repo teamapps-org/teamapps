@@ -19,49 +19,49 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
 
-class Map2 extends Component {
+class DtoMap2 extends DtoComponent {
 	String baseApiUrl;
 	String accessToken;
 	String styleUrl;
 	boolean displayAttributionControl;
 
 	double zoomLevel;
-	MapLocation mapPosition;
-	Dictionary<AbstractMapShape> shapes;
-	List<MapMarkerClientRecord> markers;
-	MapMarkerCluster markerCluster;
+	DtoMapLocation mapPosition;
+	Dictionary<DtoAbstractMapShape> shapes;
+	List<DtoMapMarkerClientRecord> markers;
+	DtoMapMarkerCluster markerCluster;
 
-	command addMarker(MapMarkerClientRecord marker);
+	command addMarker(DtoMapMarkerClientRecord marker);
 	command removeMarker(int id);
 	command clearMarkers();
 
-	command setMapMarkerCluster(MapMarkerCluster cluster);
+	command setMapMarkerCluster(DtoMapMarkerCluster cluster);
 
-	command setHeatMap(HeatMapData data);
+	command setHeatMap(DtoHeatMapData data);
 
-	command addShape(String shapeId, AbstractMapShape shape);
-	command updateShape(String shapeId, AbstractMapShape shape);
-	command changeShape(String shapeId, AbstractMapShapeChange change);
+	command addShape(String shapeId, DtoAbstractMapShape shape);
+	command updateShape(String shapeId, DtoAbstractMapShape shape);
+	command changeShape(String shapeId, DtoAbstractMapShapeChange change);
 	command removeShape(String shapeId);
 	command clearShapes();
 
-	command startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties);
+	command startDrawingShape(DtoMapShapeType shapeType, DtoShapeProperties shapeProperties);
 	command stopDrawingShape();
 	
 	command setZoomLevel(double zoom);
-	command setLocation(MapLocation location, long animationDurationMillis, double targetZoomLevel);
+	command setLocation(DtoMapLocation location, long animationDurationMillis, double targetZoomLevel);
 	command setStyleUrl(String styleUrl);
 
-	command fitBounds(MapLocation southWest, MapLocation northEast);
+	command fitBounds(DtoMapLocation southWest, DtoMapLocation northEast);
 
 	event zoomLevelChanged(double zoomLevel);
-	event locationChanged(MapLocation center, MapArea displayedArea);
-	event mapClicked(MapLocation location);
+	event locationChanged(DtoMapLocation center, DtoMapArea displayedArea);
+	event mapClicked(DtoMapLocation location);
 	event markerClicked(int markerId);
-	event shapeDrawn(String shapeId, AbstractMapShape shape);
+	event shapeDrawn(String shapeId, DtoAbstractMapShape shape);
 }
 
 

@@ -78,16 +78,16 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	}
 
 	public InfiniteItemView(float itemWidth, int itemHeight) {
-		this(BaseTemplate.ITEM_VIEW_ITEM, itemWidth, itemHeight);
+		this(BaseTemplates.ITEM_VIEW_ITEM, itemWidth, itemHeight);
 	}
 
 	public InfiniteItemView() {
-		this(BaseTemplate.ITEM_VIEW_ITEM, 300, 300);
+		this(BaseTemplates.ITEM_VIEW_ITEM, 300, 300);
 	}
 
 	@Override
 	public DtoComponent createConfig() {
-		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate != null ? itemTemplate.createClientReference() : null);
+		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate != null ? itemTemplate : null);
 		mapAbstractUiComponentProperties(ui);
 		ui.setItemWidth(itemWidth);
 		ui.setItemHeight(itemHeight);
@@ -119,7 +119,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 				var e = event.as(DtoInfiniteItemView.ItemClickedEventWrapper.class);
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null) {
-					onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick()));
+					onItemClicked.fire(new ItemClickedEventData<>(record, e.isDoubleClick()));
 				}
 			}
 			case DtoInfiniteItemView.ContextMenuRequestedEvent.TYPE_ID -> {
@@ -132,9 +132,9 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 					if (record != null) {
 						Component contextMenuContent = contextMenuProvider.apply(record);
 						if (contextMenuContent != null) {
-							getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createClientReference()), null);
+							clientObjectChannel.setContextMenuContent(e.getRequestId(), contextMenuContent);
 						} else {
-							getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()), null);
+							clientObjectChannel.closeContextMenu(e.getRequestId());
 						}
 					}
 				}
@@ -182,7 +182,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	}
 
 	public void closeContextMenu() {
-		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId), null);
+		clientObjectChannel.closeContextMenu(this.lastSeenContextMenuRequestId);
 	}
 
 	public Template getItemTemplate() {
@@ -191,7 +191,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemTemplateCommand(itemTemplate != null ? itemTemplate.createClientReference() : null), null);
+		clientObjectChannel.setItemTemplate(itemTemplate != null ? itemTemplate : null);
 		return this;
 	}
 
@@ -201,7 +201,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemWidth(float itemWidth) {
 		this.itemWidth = itemWidth;
-		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemWidthCommand(itemWidth), null);
+		clientObjectChannel.setItemWidth(itemWidth);
 		return this;
 	}
 
@@ -211,7 +211,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemHeight(float itemHeight) {
 		this.itemHeight = itemHeight;
-		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemHeightCommand(itemHeight), null);
+		clientObjectChannel.setItemHeight(itemHeight);
 		return this;
 	}
 
@@ -241,7 +241,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment) {
 		this.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
-		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemContentHorizontalAlignmentCommand(itemContentHorizontalAlignment.toUiHorizontalElementAlignment()), null);
+		clientObjectChannel.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toUiHorizontalElementAlignment());
 		return this;
 	}
 
@@ -251,7 +251,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment) {
 		this.itemContentVerticalAlignment = itemContentVerticalAlignment;
-		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemContentVerticalAlignmentCommand(itemContentVerticalAlignment.toUiVerticalElementAlignment()), null);
+		clientObjectChannel.setItemContentVerticalAlignment(itemContentVerticalAlignment.toUiVerticalElementAlignment());
 		return this;
 	}
 
@@ -271,7 +271,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public void setItemPositionAnimationTime(int itemPositionAnimationTime) {
 		this.itemPositionAnimationTime = itemPositionAnimationTime;
-		getClientObjectChannel().sendCommandIfRendered(new DtoInfiniteItemView.SetItemPositionAnimationTimeCommand(itemPositionAnimationTime), null);
+		clientObjectChannel.setItemPositionAnimationTime(itemPositionAnimationTime);
 	}
 
 	public PropertyProvider<RECORD> getItemPropertyProvider() {

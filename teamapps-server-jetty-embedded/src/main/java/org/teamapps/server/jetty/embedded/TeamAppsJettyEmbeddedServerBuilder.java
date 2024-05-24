@@ -3,11 +3,11 @@ package org.teamapps.server.jetty.embedded;
 import jakarta.servlet.ServletContextListener;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsCore;
-import org.teamapps.threading.CompletableFutureChainSequentialExecutorFactory;
-import org.teamapps.threading.SequentialExecutorFactory;
 import org.teamapps.projector.resourceprovider.ClassPathResourceProvider;
 import org.teamapps.projector.resourceprovider.DirectoryResolutionStrategy;
 import org.teamapps.projector.resourceprovider.ResourceProvider;
+import org.teamapps.threading.CompletableFutureChainSequentialExecutorFactory;
+import org.teamapps.threading.SequentialExecutorFactory;
 import org.teamapps.webcontroller.WebController;
 
 import java.util.ArrayList;

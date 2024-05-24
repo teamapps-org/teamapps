@@ -19,15 +19,15 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class ImageField extends AbstractField {
+class DtoImageField extends DtoAbstractField {
 	String width; // css
 	String height; // css
-    Border border;
+    DtoBorder border;
     Shadow shadow;
-	ImageSizing imageSizing;
+	DtoImageSizing imageSizing;
 	String backgroundColor;
 
-	command update(ImageField config);
+	command update(DtoImageField config);
 }

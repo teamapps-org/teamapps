@@ -19,19 +19,19 @@
  */
 package org.teamapps.projector.components.core.splitpane;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoSplitPane;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.components.core.CoreComponentLibrary;
+import org.teamapps.projector.dto.*;
+import org.teamapps.projector.event.ProjectorEvent;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class SplitPane extends AbstractComponent {
+public class SplitPane extends AbstractComponent implements DtoSplitPaneEventHandler {
 
 	public ProjectorEvent<Double> onResized = createProjectorEventBoundToUiEvent(DtoSplitPane.SplitResizedEvent.TYPE_ID);
+
+	private final DtoSplitPaneClientObjectChannel clientObjectChannel = new DtoSplitPaneClientObjectChannel(getClientObjectChannel());
 
 	private SplitDirection splitDirection;
 	private SplitSizePolicy sizePolicy;
@@ -64,15 +64,15 @@ public class SplitPane extends AbstractComponent {
 	@Override
 	public DtoComponent createConfig() {
 		DtoSplitPane uiSplitPane = new DtoSplitPane();
-		uiSplitPane.setSplitDirection(splitDirection.toDto());
-		uiSplitPane.setSizePolicy(sizePolicy.toDto());
+		uiSplitPane.setSplitDirection(splitDirection);
+		uiSplitPane.setSizePolicy(sizePolicy);
 		mapAbstractUiComponentProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);
 		if (firstChild != null) {
-			uiSplitPane.setFirstChild(firstChild.createClientReference());
+			uiSplitPane.setFirstChild(firstChild);
 		}
 		if (lastChild != null) {
-			uiSplitPane.setLastChild(lastChild.createClientReference());
+			uiSplitPane.setLastChild(lastChild);
 		}
 		uiSplitPane.setFirstChildMinSize(firstChildMinSize);
 		uiSplitPane.setLastChildMinSize(lastChildMinSize);
@@ -83,14 +83,9 @@ public class SplitPane extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoSplitPane.SplitResizedEvent.TYPE_ID -> {
-				var resizedEvent = event.as(DtoSplitPane.SplitResizedEventWrapper.class);
-				this.referenceChildSize = resizedEvent.getReferenceChildSize();
-				onResized.fire(resizedEvent.getReferenceChildSize());
-			}
-		}
+	public void handleSplitResized(double referenceChildSize) {
+		this.referenceChildSize = referenceChildSize;
+		onResized.fire(referenceChildSize);
 	}
 
 	public Component getFirstChild() {
@@ -99,7 +94,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setFirstChild(Component firstChild) {
 		this.firstChild = firstChild;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetFirstChildCommand(firstChild != null ? firstChild.createClientReference() : null), null);
+		clientObjectChannel.setFirstChild(firstChild);
 	}
 
 	public Component getLastChild() {
@@ -108,7 +103,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setLastChild(Component lastChild) {
 		this.lastChild = lastChild;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetLastChildCommand(lastChild != null ? lastChild.createClientReference() : null), null);
+		clientObjectChannel.setLastChild(lastChild);
 	}
 
 	public SplitDirection getSplitDirection() {
@@ -117,7 +112,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setSplitDirection(SplitDirection splitDirection) {
 		this.splitDirection = splitDirection;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetSplitDirectionCommand(splitDirection.toDto()), null);
+		clientObjectChannel.setSplitDirection(splitDirection);
 	}
 
 	public SplitSizePolicy getSizePolicy() {
@@ -126,7 +121,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setSizePolicy(SplitSizePolicy sizePolicy) {
 		this.sizePolicy = sizePolicy;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetSizePolicyCommand(sizePolicy.toDto()), null);
+		clientObjectChannel.setSizePolicy(sizePolicy);
 	}
 
 	public double getReferenceChildSize() {
@@ -135,7 +130,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setReferenceChildSize(float referenceChildSize) {
 		this.referenceChildSize = referenceChildSize;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetReferenceChildSizeCommand(referenceChildSize), null);
+		clientObjectChannel.setReferenceChildSize(referenceChildSize);
 	}
 
 	public int getFirstChildMinSize() {
@@ -144,7 +139,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setFirstChildMinSize(int firstChildMinSize) {
 		this.firstChildMinSize = firstChildMinSize;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetFirstChildMinSizeCommand(firstChildMinSize), null);
+		clientObjectChannel.setFirstChildMinSize(firstChildMinSize);
 	}
 
 	public int getLastChildMinSize() {
@@ -153,7 +148,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setLastChildMinSize(int lastChildMinSize) {
 		this.lastChildMinSize = lastChildMinSize;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetLastChildMinSizeCommand(lastChildMinSize), null);
+		clientObjectChannel.setLastChildMinSize(lastChildMinSize);
 	}
 
 	public boolean isResizable() {
@@ -162,7 +157,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setResizable(boolean resizable) {
 		this.resizable = resizable;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetResizableCommand(resizable), null);
+		clientObjectChannel.setResizable(resizable);
 	}
 
 	public ChildCollapsingPolicy getChildCollapsingPolicy() {
@@ -171,6 +166,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setChildCollapsingPolicy(ChildCollapsingPolicy childCollapsingPolicy) {
 		this.childCollapsingPolicy = childCollapsingPolicy;
-		getClientObjectChannel().sendCommandIfRendered(new DtoSplitPane.SetChildCollapsingPolicyCommand(childCollapsingPolicy.toDto()), null);
+		clientObjectChannel.setChildCollapsingPolicy(childCollapsingPolicy.toDto());
 	}
+
 }

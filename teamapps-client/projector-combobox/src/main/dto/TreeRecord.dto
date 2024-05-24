@@ -1,12 +1,12 @@
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.Template;
-import org.teamapps.projector.dto.IdentifiableClientRecord;
+import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 
-class TreeRecord extends IdentifiableClientRecord {
+class DtoTreeRecord extends DtoIdentifiableClientRecord {
 	Integer parentId;
 	boolean expanded;
 	boolean lazyChildren;
 	boolean selectable;
-	Template* displayTemplate; // null == use toString()
+	DtoTemplate* displayTemplate; // null == use toString()
 }

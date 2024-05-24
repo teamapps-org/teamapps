@@ -248,7 +248,7 @@ public class ResponsiveFormLayout {
 		}
 		ResponsiveFormSection responsiveFormSection = new ResponsiveFormSection(this, "section" + (responsiveFormSections.size() + 1), configurationTemplate);
 		if (configurationTemplate.getSectionTemplate() == null || configurationTemplate.getSectionTemplate().getHeaderTemplate() == null) {
-			responsiveFormSection.setHeaderTemplate(BaseTemplate.FORM_SECTION_HEADER);
+			responsiveFormSection.setHeaderTemplate(BaseTemplates.FORM_SECTION_HEADER);
 		}
 		if (icon != null || caption != null) {
 			responsiveFormSection.setHeaderData(new BaseTemplateRecord<>(icon, caption));

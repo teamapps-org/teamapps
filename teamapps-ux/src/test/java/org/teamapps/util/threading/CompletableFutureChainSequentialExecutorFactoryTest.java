@@ -23,14 +23,12 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.teamapps.threading.CompletableFutureChainSequentialExecutorFactory;
 
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.stream.IntStream;
 
 public class CompletableFutureChainSequentialExecutorFactoryTest {
@@ -107,57 +105,6 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 				.get();
 
 		Assert.assertTrue(secondWasExecuted[0]);
-	}
-
-	@Test
-	@Ignore
-	public void performance() throws InterruptedException, ExecutionException {
-		CompletableFutureChainSequentialExecutorFactory executorFactory = new CompletableFutureChainSequentialExecutorFactory(20);
-		long now = System.currentTimeMillis();
-		long in5seconds = now + 3000;
-		AtomicBoolean shutdown = new AtomicBoolean(false);
-		AtomicBoolean done = new AtomicBoolean(false);
-
-		Runnable task = () -> {
-			while (System.currentTimeMillis() < in5seconds) {
-
-			}
-			if (done.get()) {
-				System.err.println("AFTER DONE!");
-			}
-		};
-
-		List<ExecutorService> executors = IntStream.range(0, 10)
-				.mapToObj(i -> executorFactory.createExecutor())
-				.collect(Collectors.toList());
-
-		ExecutorService x = Executors.newFixedThreadPool(20);
-		for (int i = 0; i < 1000_000; i++) {
-			x.submit(() -> {
-				executors.get(ThreadLocalRandom.current().nextInt(0, 10))
-						.submit(task);
-				if (shutdown.get()) {
-					System.err.println("After shutdown??");
-				}
-			});
-		}
-		x.shutdown();
-		x.awaitTermination(10_000, TimeUnit.MILLISECONDS);
-		System.out.println("Shutdown = true");
-		shutdown.set(true);
-
-		CompletableFuture[] completionFutures = IntStream.range(0, 10)
-				.mapToObj(i -> executors.get(i)
-						.submit(task))
-				.toArray(CompletableFuture[]::new);
-		CompletableFuture.allOf(completionFutures)
-				.thenRun(() -> {
-					done.set(true);
-					System.err.println("Done after " + (System.currentTimeMillis() - in5seconds) + "ms");
-				})
-				.get();
-
-		Thread.sleep(1000);
 	}
 
 	private void checkIntListContents(IntList executionOrderCheckingList, int rangeMax) {

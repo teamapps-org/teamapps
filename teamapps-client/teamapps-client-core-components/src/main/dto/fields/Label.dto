@@ -19,16 +19,16 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class Label extends AbstractField {
+class DtoLabel extends DtoAbstractField {
 	required String caption; // this is only displayed if value == null
 	String icon;
-	Component* targetComponent; // if != null, this is the field that gets focused when this label gets clicked. This label also appears/disappears synchronously to its target field
+	DtoComponent* targetComponent; // if != null, this is the field that gets focused when this label gets clicked. This label also appears/disappears synchronously to its target field
 
 	event clicked();
 
 	command setCaption(String caption);
 	command setIcon(String icon);
-	command setTargetComponent(AbstractField* targetField);
+	command setTargetComponent(DtoAbstractField* targetField);
 }

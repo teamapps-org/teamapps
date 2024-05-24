@@ -21,6 +21,7 @@ package org.teamapps.projector.components.core.toolbar;
 
 import org.teamapps.projector.dto.DtoComponent;
 import org.teamapps.projector.dto.DtoToolAccordion;
+import org.teamapps.projector.dto.DtoToolAccordionEventHandler;
 import org.teamapps.projector.dto.DtoToolbarButtonGroup;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
-public class ToolAccordion extends AbstractToolContainer {
+public class ToolAccordion extends AbstractToolContainer implements DtoToolAccordionEventHandler {
 
 	public ToolAccordion() {
 	}

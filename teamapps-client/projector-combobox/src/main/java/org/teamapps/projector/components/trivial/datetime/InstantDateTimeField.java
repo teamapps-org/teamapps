@@ -51,7 +51,7 @@ public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 
 	public void setTimeZoneId(ZoneId timeZoneId) {
 		this.timeZoneId = timeZoneId;
-		getClientObjectChannel().sendCommandIfRendered(new DtoInstantDateTimeField.SetTimeZoneIdCommand(timeZoneId.getId()), null);
+		clientObjectChannel.setTimeZoneId(timeZoneId.getId());
 	}
 
 	@Override

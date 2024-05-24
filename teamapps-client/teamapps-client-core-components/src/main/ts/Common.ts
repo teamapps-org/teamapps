@@ -17,8 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoEntranceAnimation, DtoExitAnimation, DtoPageTransition, DtoRepeatableAnimation,} from "./generated";
-import {Component, parseHtml} from "projector-client-object-api";
+import {
+	Component,
+	DtoEntranceAnimation,
+	DtoExitAnimation,
+	DtoPageTransition,
+	DtoRepeatableAnimation,
+	parseHtml
+} from "projector-client-object-api";
 import {applyCss, extractCssValues} from "projector-client-object-api";
 
 export const defaultSpinnerTemplate = `<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`;

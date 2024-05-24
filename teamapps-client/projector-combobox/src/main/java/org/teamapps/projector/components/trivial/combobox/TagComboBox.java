@@ -213,7 +213,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setMaxEntries(int maxEntries) {
 		this.maxEntries = maxEntries;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetMaxEntriesCommand(maxEntries), null);
+		clientObjectChannel.setMaxEntries(maxEntries);
 	}
 
 	public TagBoxWrappingMode getWrappingMode() {
@@ -222,7 +222,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setWrappingMode(TagBoxWrappingMode wrappingMode) {
 		this.wrappingMode = wrappingMode;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetWrappingModeCommand(wrappingMode.toDtoValue()), null);
+		clientObjectChannel.setWrappingMode(wrappingMode.toDtoValue());
 	}
 
 	public boolean isDistinct() {
@@ -231,7 +231,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setDistinct(boolean distinct) {
 		this.distinct = distinct;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetDistinctCommand(distinct), null);
+		clientObjectChannel.setDistinct(distinct);
 	}
 
 	public List<String> getFreeTextEntries() {
@@ -248,7 +248,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setTwoStepDeletionEnabled(boolean twoStepDeletionEnabled) {
 		this.twoStepDeletionEnabled = twoStepDeletionEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetTwoStepDeletionEnabledCommand(twoStepDeletionEnabled), null);
+		clientObjectChannel.setTwoStepDeletionEnabled(twoStepDeletionEnabled);
 	}
 
 	public boolean isDeleteButtonsEnabled() {
@@ -257,6 +257,6 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setDeleteButtonsEnabled(boolean deleteButtonsEnabled) {
 		this.deleteButtonsEnabled = deleteButtonsEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTagComboBox.SetDeleteButtonsEnabledCommand(deleteButtonsEnabled), null);
+		clientObjectChannel.setDeleteButtonsEnabled(deleteButtonsEnabled);
 	}
 }

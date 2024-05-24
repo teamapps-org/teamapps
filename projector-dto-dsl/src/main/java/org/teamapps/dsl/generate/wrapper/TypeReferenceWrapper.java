@@ -48,9 +48,9 @@ public class TypeReferenceWrapper {
 		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("byte", "0");
 		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("short", "0");
 		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("int", "0");
-		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("long", "0");
-		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("float", "0");
-		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("double", "0");
+		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("long", "0L");
+		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("float", "0f");
+		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("double", "0d");
 	}
 
 	private final TeamAppsDtoParser.TypeContext context;
@@ -74,6 +74,10 @@ public class TypeReferenceWrapper {
 
 	public String getText() {
 		return context.getText();
+	}
+
+	public boolean isBoolean() {
+		return context.getText().equals("boolean");
 	}
 
 	public boolean isList() {
@@ -222,7 +226,7 @@ public class TypeReferenceWrapper {
 		} else if (isClientObjectReference()) {
 			return "unknown";
 		} else if (isDtoType()) {
-			return "Dto" + getText();
+			return getText();
 		} else if (PRIMITIVE_TYPE_TO_TYPESCRIPT_TYPE.containsKey(getText())) {
 			return PRIMITIVE_TYPE_TO_TYPESCRIPT_TYPE.get(getText());
 		} else {
@@ -231,11 +235,11 @@ public class TypeReferenceWrapper {
 	}
 
 	public String getJavaTypeString() {
-		return getJavaTypeString(true);
+		return getJavaTypeString(false);
 	}
 
 	public String getJavaNonPrimitiveTypeString() {
-		return getJavaTypeString(false);
+		return getJavaTypeString(true);
 	}
 
 	public String getJavaTypeString(boolean forceNonPrimitive) {
@@ -256,7 +260,7 @@ public class TypeReferenceWrapper {
 		} else if (isClientObjectReference()) {
 			return "ClientObject";
 		} else if (isDtoType()) {
-			return "Dto" + context.getText();
+			return context.getText();
 		} else if (isPrimitiveType() && forceNonPrimitive) {
 			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(getText());
 		} else {
@@ -277,7 +281,7 @@ public class TypeReferenceWrapper {
 	}
 
 	public String getPrimitiveTypeName() {
-		return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.inverse().getOrDefault(context.getText(), getJavaNonPrimitiveTypeString());
+		return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.inverse().getOrDefault(context.getText(), context.getText());
 	}
 
 	public String getJavaTypeWrapperString() {
@@ -285,12 +289,14 @@ public class TypeReferenceWrapper {
 			return "List<" + getCollectionType().map(TypeReferenceWrapper::getJavaTypeWrapperString).orElse("??") + ">";
 		} else if (isDictionary()) {
 			return "Map<String, " + getCollectionType().map(TypeReferenceWrapper::getJavaTypeWrapperString).orElse("??") + ">";
+		} else if (isClientObjectReference()) {
+			return "ClientObject";
 		} else if (isDtoClassOrInterface()) {
 			return getJavaTypeString() + "Wrapper";
 		} else if (isObject()) {
 			return "JsonWrapper";
 		} else {
-			return getJavaNonPrimitiveTypeString();
+			return getJavaTypeString();
 		}
 	}
 

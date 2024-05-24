@@ -23,7 +23,7 @@ import {defaultListQueryFunctionFactory, isModifierKey, QueryFunction} from "./t
 import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "./trivial-components/TrivialUnitBox";
 import {
 	AbstractField,
-	BigDecimal, DtoFieldEditingMode, DtoSpecialKey,
+	BigDecimal, DtoFieldEditingMode, SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent, selectElementContents
 } from "teamapps-client-core-components";
@@ -87,11 +87,11 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 				});
 			} else 	if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ESCAPE
+					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire({
-					key: DtoSpecialKey.ENTER
+					key: SpecialKey.ENTER
 				});
 			}
 		});

@@ -31,24 +31,24 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.commons.event.Event;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsUploadManager;
-import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
+import org.teamapps.projector.components.core.div.Div;
+import org.teamapps.projector.components.core.field.Button;
+import org.teamapps.projector.components.core.flexcontainer.VerticalLayout;
+import org.teamapps.projector.components.core.linkbutton.LinkButton;
+import org.teamapps.projector.components.core.window.Window;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.server.UxServerContext;
 import org.teamapps.projector.session.ClientInfo;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.session.uisession.CommandWithResultCallback;
 import org.teamapps.projector.session.uisession.UiSessionState;
+import org.teamapps.threading.SequentialExecutorFactory;
 import org.teamapps.uisession.statistics.SessionStatsUpdatedEventData;
 import org.teamapps.uisession.statistics.UiSessionStats;
-import org.teamapps.threading.SequentialExecutorFactory;
-import org.teamapps.ux.component.div.Div;
-import org.teamapps.ux.component.field.Button;
-import org.teamapps.ux.component.flexcontainer.VerticalLayout;
-import org.teamapps.ux.component.linkbutton.LinkButton;
-import org.teamapps.ux.component.window.Window;
 import org.teamapps.webcontroller.WebController;
 
 import java.lang.invoke.MethodHandles;
@@ -350,7 +350,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		messageField.setCssStyle("font-size", "110%");
 		verticalLayout.addComponentFillRemaining(messageField);
 
-		Button<?> refreshButton = new Button<>(null, refreshButtonCaption);
+		Button refreshButton = new Button(null, refreshButtonCaption);
 		refreshButton.setCssStyle("margin", "10px 0");
 		refreshButton.setCssStyle(".DtoButton", "background-color", RgbaColor.MATERIAL_BLUE_600.toHtmlColorString());
 		refreshButton.setCssStyle(".DtoButton", "color", RgbaColor.WHITE.toHtmlColorString());
@@ -362,7 +362,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		if (cancelButtonCaption != null) {
 			LinkButton cancelLink = new LinkButton(cancelButtonCaption);
 			cancelLink.setCssStyle("text-align", "center");
-			// TODO cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.createClientReference().getId() + "\").close();");
+			// TODO cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.getId() + "\").close();");
 			verticalLayout.addComponentAutoSize(cancelLink);
 		}
 

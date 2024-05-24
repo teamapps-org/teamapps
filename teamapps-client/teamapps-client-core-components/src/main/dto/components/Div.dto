@@ -19,12 +19,12 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class Div extends Component {
-    Component* content;
+class DtoDiv extends DtoComponent {
+    DtoComponent* content;
     String innerHtml;
 
-    command setContent(Component* content);
+    command setContent(DtoComponent* content);
     command setInnerHtml(String innerHtml);
 }

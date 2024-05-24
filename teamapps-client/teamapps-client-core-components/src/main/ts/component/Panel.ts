@@ -27,7 +27,7 @@ import {
 	DtoPanelHeaderComponentMinimizationPolicy,
 	DtoPanelHeaderField,
 	DtoPanelHeaderFieldIconVisibilityPolicy,
-	DtoWindowButtonType
+	WindowButtonType
 } from "../generated";
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
@@ -64,14 +64,14 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[DtoWindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize", visible: true, iconSize: 16}), noOpServerChannel),
-		[DtoWindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize", visible: true, iconSize: 16}), noOpServerChannel),
-		[DtoWindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close", visible: true, iconSize: 16}), noOpServerChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {visible: true, iconSize: 16}), noOpServerChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {visible: true, iconSize: 16}), noOpServerChannel),
+		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {visible: true, iconSize: 16}), noOpServerChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
-		DtoWindowButtonType.MINIMIZE,
-		DtoWindowButtonType.MAXIMIZE_RESTORE,
-		DtoWindowButtonType.CLOSE
+		WindowButtonType.MINIMIZE,
+		WindowButtonType.MAXIMIZE_RESTORE,
+		WindowButtonType.CLOSE
 	];
 
 	private $panel: HTMLElement;
@@ -95,7 +95,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 
 	private titleNaturalWidth: number;
 	private toolButtons: ToolButton[] = [];
-	private windowButtons: DtoWindowButtonType[];
+	private windowButtons: WindowButtonType[];
 	private restoreFunction: (animationCallback?: () => void) => void;
 
 	constructor(config: DtoPanel, serverChannel: ServerChannel) {
@@ -139,7 +139,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 		}
 		this.setHeaderComponentMinimizationPolicy(config.headerComponentMinimizationPolicy);
 
-		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
 			} else {
@@ -181,12 +181,12 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	}
 
 	public maximize(): void {
-		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
 		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
-		this.defaultToolButtons[DtoWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
 		if (this.restoreFunction != null) {
 			this.restoreFunction();
 		}
@@ -207,7 +207,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 		this.relayoutHeader();
 	}
 
-	public setWindowButtons(buttonTypes: DtoWindowButtonType[]): void {
+	public setWindowButtons(buttonTypes: WindowButtonType[]): void {
 		this.windowButtons = [];
 		this.$windowButtonContainer.innerHTML = '';
 		if (buttonTypes && buttonTypes.length > 0) {
@@ -219,7 +219,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 		}
 	}
 
-	public addWindowButton(toolButtonType: DtoWindowButtonType) {
+	public addWindowButton(toolButtonType: WindowButtonType) {
 		if (this.windowButtons.filter(tb => tb === toolButtonType).length > 0){
 			this.removeWindowButton(toolButtonType);
 		}
@@ -241,7 +241,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 		this.relayoutHeader();
 	}
 
-	public removeWindowButton(uiToolButton: DtoWindowButtonType) {
+	public removeWindowButton(uiToolButton: WindowButtonType) {
 		this.defaultToolButtons[uiToolButton].getMainElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
@@ -249,7 +249,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 		}
 	}
 
-	public getWindowButton(buttonType: DtoWindowButtonType) {
+	public getWindowButton(buttonType: WindowButtonType) {
 		return this.defaultToolButtons[buttonType];
 	}
 

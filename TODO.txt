@@ -54,3 +54,15 @@ Search for ""\sto\w+String" in java files. Try to find a better solution (Jackso
 plugin: make projector-client-object-api an implicit DTO dependency
 
 add Script and StyleSheet client object implementations
+
+use external imports for references to concrete ClientObject instances instead of the generic ClientObject in DTOs. Example DtoTemplateField.template
+
+Remove createProjectorEventBoundToUiEvent. A lambda toggling the event is trivial, now. And much more intuitive.
+
+Replace setOnClickJavaScript(...) with invocation of JavaScript client object
+
+rename SessionContext.runWithContext() to run()
+
+make Label NOT a field. It is not!
+
+switch to junit jupiter

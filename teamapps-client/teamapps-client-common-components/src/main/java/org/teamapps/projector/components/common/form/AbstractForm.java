@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractForm<RECORD> extends AbstractComponent implements Component {
+public abstract class AbstractForm<RECORD> extends AbstractComponent {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

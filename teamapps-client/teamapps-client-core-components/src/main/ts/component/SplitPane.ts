@@ -30,12 +30,12 @@ import {
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {
 	DtoChildCollapsingPolicy,
-	DtoSplitDirection,
+	SplitDirection,
 	DtoSplitPane,
 	DtoSplitPane_SplitResizedEvent,
 	DtoSplitPaneCommandHandler,
 	DtoSplitPaneEventSource,
-	DtoSplitSizePolicy
+	SplitSizePolicy
 } from "../generated";
 import {applyCss} from "projector-client-object-api";
 
@@ -96,7 +96,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 
 	}
 
-	public get splitDirection(): DtoSplitDirection {
+	public get splitDirection(): SplitDirection {
 		return this.config.splitDirection
 	}
 
@@ -120,9 +120,9 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 			this._$divider.classList.remove('dragged', 'touch');
 
 			let referenceChildSize;
-			if (this.config.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
+			if (this.config.sizePolicy === SplitSizePolicy.RELATIVE) {
 				referenceChildSize = this._$firstChildContainer[this._offsetSizeAttribute] / this._$splitPane[this._offsetSizeAttribute];
-			} else if (this.config.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
+			} else if (this.config.sizePolicy === SplitSizePolicy.FIRST_FIXED) {
 				referenceChildSize = this._$firstChildContainer[this._offsetSizeAttribute];
 			} else {
 				referenceChildSize = this._$lastChildContainer[this._offsetSizeAttribute];
@@ -142,13 +142,13 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 		const initialFirstContainerWidth = this._$firstChildContainer[this._offsetSizeAttribute];
 		const splitPaneSize = this._$splitPane[this._offsetSizeAttribute];
 		return (event: MouseEvent) => {
-			const diff = (this.config.splitDirection === DtoSplitDirection.HORIZONTAL) ? this.pageYof(event) - dragStartY : this.pageXof(event) - dragStartX;
+			const diff = (this.config.splitDirection === SplitDirection.HORIZONTAL) ? this.pageYof(event) - dragStartY : this.pageXof(event) - dragStartX;
 			const newFirstChildSize = initialFirstContainerWidth + diff;
 
-			if (this.config.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
+			if (this.config.sizePolicy === SplitSizePolicy.RELATIVE) {
 				this.referenceChildSize = newFirstChildSize / splitPaneSize;
 				this._updatePositions();
-			} else if (this.config.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
+			} else if (this.config.sizePolicy === SplitSizePolicy.FIRST_FIXED) {
 				this.referenceChildSize = newFirstChildSize;
 				this._updatePositions();
 			} else {
@@ -228,7 +228,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 	private _updatePositions() {
 		const referenceChildSize = this.referenceChildSize;
 
-		if (this.config.sizePolicy === DtoSplitSizePolicy.RELATIVE) {
+		if (this.config.sizePolicy === SplitSizePolicy.RELATIVE) {
 			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "" + referenceChildSize,
 				"flex-shrink": "" + referenceChildSize,
@@ -241,7 +241,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 				"flex-basis": "1px",
 				[this._minSizeAttribute]: this.config.lastChildMinSize
 			});
-		} else if (this.config.sizePolicy === DtoSplitSizePolicy.FIRST_FIXED) {
+		} else if (this.config.sizePolicy === SplitSizePolicy.FIRST_FIXED) {
 			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "0",
 				"flex-shrink": "1",
@@ -254,7 +254,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 				"flex-basis": '1px',
 				[this._minSizeAttribute]: this.config.lastChildMinSize
 			});
-		} else if (this.config.sizePolicy === DtoSplitSizePolicy.LAST_FIXED) {
+		} else if (this.config.sizePolicy === SplitSizePolicy.LAST_FIXED) {
 			applyCss(this._$firstChildContainerWrapper, {
 				"flex-grow": "1",
 				"flex-shrink": "1",
@@ -323,8 +323,8 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 		this._updateChildContainerClasses()
 	}
 
-	setSizePolicy(sizePolicy: DtoSplitSizePolicy): any {
-		this._$divider.classList.add('splitpane-' + DtoSplitSizePolicy[this.config.sizePolicy].toLowerCase());
+	setSizePolicy(sizePolicy: SplitSizePolicy): any {
+		this._$divider.classList.add('splitpane-' + SplitSizePolicy[this.config.sizePolicy].toLowerCase());
 		this._updatePositions();
 	}
 
@@ -338,12 +338,12 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 		this._updatePositions();
 	}
 
-	public setSplitDirection(splitDirection: DtoSplitDirection) {
+	public setSplitDirection(splitDirection: SplitDirection) {
 		this._$splitPane.classList.remove('splitpane-horizontal', 'splitpane-vertical')
-		this._$splitPane.classList.add(`splitpane-${DtoSplitDirection[splitDirection].toLowerCase()}`)
+		this._$splitPane.classList.add(`splitpane-${SplitDirection[splitDirection].toLowerCase()}`)
 
-		this._offsetSizeAttribute = splitDirection === DtoSplitDirection.HORIZONTAL ? 'offsetHeight' : 'offsetWidth';
-		const sizeAttribute = splitDirection === DtoSplitDirection.HORIZONTAL ? 'height' : 'width';
+		this._offsetSizeAttribute = splitDirection === SplitDirection.HORIZONTAL ? 'offsetHeight' : 'offsetWidth';
+		const sizeAttribute = splitDirection === SplitDirection.HORIZONTAL ? 'height' : 'width';
 		this._minSizeAttribute = "min" + capitalizeFirstLetter(sizeAttribute) as 'minWidth' | 'minHeight';
 
 		this._updatePositions();

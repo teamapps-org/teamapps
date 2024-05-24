@@ -1,0 +1,104 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "projector-workspace-layout":org.teamapps.projector.components.workspacelayout.dto;
+
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoToolbar;
+import org.teamapps.projector.dto.DtoMultiProgressDisplay;
+import org.teamapps.projector.dto.SplitSizePolicy;
+import org.teamapps.projector.dto.SplitDirection;
+
+class DtoWorkSpaceLayout extends DtoComponent {
+	required List<DtoWorkSpaceLayoutView> views;
+	required DtoWorkSpaceLayoutItem initialLayout;
+	required String childWindowPageTitle;
+	DtoToolbar* toolbar;
+	String newWindowBackgroundImage;
+	String newWindowBlurredBackgroundImage;
+	DtoMultiProgressDisplay* multiProgressDisplay;
+
+	command setToolbar(DtoToolbar* toolbar);
+
+	command addViewAsTab(DtoWorkSpaceLayoutView newView, String viewGroupId, boolean select);
+	command addViewAsNeighbourTab(DtoWorkSpaceLayoutView newView, String existingViewName, boolean select);
+	command addViewRelativeToOtherView(DtoWorkSpaceLayoutView newView, String existingViewName, DtoRelativeWorkSpaceViewPosition relativePosition, SplitSizePolicy sizePolicy, double referenceChildSize);
+	command addViewToTopLevel(DtoWorkSpaceLayoutView newView, String windowId, DtoRelativeWorkSpaceViewPosition relativePosition, SplitSizePolicy sizePolicy, double referenceChildSize);
+
+	command moveViewToNeighbourTab(String viewName, String existingViewName, boolean select);
+  	command moveViewRelativeToOtherView(String viewName, String existingViewName, DtoRelativeWorkSpaceViewPosition relativePosition, SplitSizePolicy sizePolicy, double referenceChildSize);
+  	command moveViewToTopLevel(String viewName, String windowId, DtoRelativeWorkSpaceViewPosition relativePosition, SplitSizePolicy sizePolicy, double referenceChildSize);
+
+	command redefineLayout(Dictionary<DtoWorkSpaceLayoutItem> layoutsByWindowId, List<DtoWorkSpaceLayoutView> addedViews);
+
+	command removeView(String viewName);
+	command refreshViewAttributes(String viewName, String tabIcon, String tabCaption, boolean tabCloseable, boolean visible);
+	command refreshViewComponent(String viewName, DtoComponent* component);
+	command selectView(String viewName);
+	command setViewGroupPanelState(String viewGroupId, DtoViewGroupPanelState panelState);
+	command setMultiProgressDisplay(DtoMultiProgressDisplay* multiProgressDisplay);
+
+    event layoutChanged(Dictionary<DtoWorkSpaceLayoutItem> layoutsByWindowId); // root window has id "ROOT_WINDOW" TODO not yet sure if these events should get a little more fine-grained...
+    event viewDraggedToNewWindow(String windowId, String viewName, Dictionary<DtoWorkSpaceLayoutItem> layoutsByWindowId);
+    event viewNeedsRefresh(String viewName);
+    event childWindowCreationFailed(String viewName); // due to popup blocker...
+    event childWindowClosed(String windowId);
+    event viewSelected(String viewGroupId, String viewName, List<String> siblingViewNames);
+    event viewClosed(String viewName);
+    event viewGroupPanelStateChanged(String viewGroupId, DtoViewGroupPanelState panelState);
+}
+
+enum DtoViewGroupPanelState {
+	NORMAL, MAXIMIZED, MINIMIZED
+}
+
+class DtoWorkSpaceLayoutView {
+	required String viewName;
+	required String tabIcon;
+    required String tabCaption;
+	required DtoComponent* component;
+    boolean tabCloseable;
+    boolean lazyLoading;
+    boolean visible;
+}
+
+enum DtoRelativeWorkSpaceViewPosition {
+	TOP, RIGHT, BOTTOM, LEFT
+}
+
+abstract class DtoWorkSpaceLayoutItem {
+	required String id;
+}
+
+@TypeScriptFactory
+class DtoWorkSpaceLayoutSplitItem extends DtoWorkSpaceLayoutItem {
+    required SplitDirection splitDirection;
+    SplitSizePolicy sizePolicy;
+    double referenceChildSize;
+    required DtoWorkSpaceLayoutItem firstChild;
+    required DtoWorkSpaceLayoutItem lastChild;
+}
+
+@TypeScriptFactory
+class DtoWorkSpaceLayoutViewGroupItem extends DtoWorkSpaceLayoutItem {
+    required List<String> viewNames;
+    String selectedViewName;
+    boolean persistent; // if true, this viewGroup will never be removed from the tree of items on the client side, even if there are no more views left inside it.
+    DtoViewGroupPanelState panelState;
+}

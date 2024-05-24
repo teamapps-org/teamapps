@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -35,11 +38,11 @@ import org.teamapps.projector.clientobject.ClientObject;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface DtoA extends DtoObject {
+public interface A extends DtoObject {
 
 	public String getA();
 	public String getB();
-	public DtoA setB(String b);
+	public A setB(String b);
 
 	public static class YEvent {
 
@@ -82,8 +85,8 @@ public interface DtoA extends DtoObject {
 
         public static final String TYPE_ID = "y";
 
-        public YEventWrapper(JsonNode jsonNode) {
-            super(jsonNode);
+        public YEventWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
+            super(objectMapper, jsonNode);
         }
 
         public String getY() {
@@ -94,7 +97,6 @@ public interface DtoA extends DtoObject {
             return node.textValue();
 
         }
-
     }
 
 	public static class QQuery {
@@ -138,8 +140,8 @@ public interface DtoA extends DtoObject {
 
 	    public static final String TYPE_ID = "q";
 
-	    public QQueryWrapper(JsonNode jsonNode) {
-	        super(jsonNode);
+	    public QQueryWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
+	        super(objectMapper, jsonNode);
 	    }
 
 	    public String getY() {
@@ -150,7 +152,6 @@ public interface DtoA extends DtoObject {
 	        return node.textValue();
 
 	    }
-
 	}
 
 	@JsonTypeName("A.x")

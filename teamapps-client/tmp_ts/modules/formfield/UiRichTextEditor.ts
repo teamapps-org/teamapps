@@ -54,7 +54,7 @@ import {
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated/DtoTextInputHandlingField";
-import {DtoSpecialKey} from "../../generated/DtoSpecialKey";
+import {SpecialKey} from "../../generated/SpecialKey";
 import {parseHtml, removeTags} from "../Common";
 
 
@@ -345,11 +345,11 @@ export class UiRichTextEditor extends AbstractField<DtoRichTextEditor, string> i
 				editor.on('keydown', (e) => {
 					if (e.keyCode === "Escape") {
 						this.onSpecialKeyPressed.fire({
-							key: DtoSpecialKey.ESCAPE
+							key: SpecialKey.ESCAPE
 						});
 					} else if (e.keyCode === "Enter") {
 						this.onSpecialKeyPressed.fire({
-							key: DtoSpecialKey.ENTER
+							key: SpecialKey.ENTER
 						});
 					}
 				});

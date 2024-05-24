@@ -23,9 +23,9 @@ import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {defaultSpinnerTemplate, doOnceOnClickOutsideElement} from "../../../Common";
 import {
-	createDtoDropDownButtonClickInfo,
+	createDropDownButtonClickInfo,
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
-	DtoDropDownButtonClickInfo,
+	DropDownButtonClickInfo,
 	DtoToolAccordion,
 	DtoToolAccordionCommandHandler,
 	DtoToolAccordionEventSource
@@ -196,13 +196,13 @@ class DtoButtonGroup {
 		let button = new ToolAccordionButton(buttonConfig);
 
 		button.onClick.addListener(eventObject => {
-			let dropdownClickInfo: DtoDropDownButtonClickInfo = null;
+			let dropdownClickInfo: DropDownButtonClickInfo = null;
 			if (button.hasDropDown) {
 				if (button.$dropDown == null) {
 					this.createDropDown(button);
 				}
 				let dropdownVisible = !button.$dropDown.classList.contains('hidden');
-				dropdownClickInfo = createDtoDropDownButtonClickInfo(!dropdownVisible, button.dropDownComponent != null);
+				dropdownClickInfo = createDropDownButtonClickInfo(!dropdownVisible, button.dropDownComponent != null);
 				if (!dropdownVisible) {
 					if (button.dropDownComponent != null) {
 						button.$dropDown.appendChild(button.dropDownComponent.getMainElement());

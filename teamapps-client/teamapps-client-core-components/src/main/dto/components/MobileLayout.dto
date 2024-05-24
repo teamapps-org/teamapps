@@ -1,11 +1,13 @@
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-class MobileLayout extends Component {
-	Toolbar* toolbar;
-	Component* initialView;
-	NavigationBar* navigationBar;
+import org.teamapps.projector.dto.DtoPageTransition;
 
-	command setToolbar(Toolbar* toolbar); // null removes the toolbar
-	command setNavigationBar(NavigationBar* navBar); // null removes the navigation bar
-	command showView(Component* component, PageTransition animation, int animationDuration);
+class DtoMobileLayout extends DtoComponent {
+	DtoToolbar* toolbar;
+	DtoComponent* initialView;
+	DtoNavigationBar* navigationBar;
+
+	command setToolbar(DtoToolbar* toolbar); // null removes the toolbar
+	command setNavigationBar(DtoNavigationBar* navBar); // null removes the navigation bar
+	command showView(DtoComponent* component, DtoPageTransition animation, int animationDuration);
 }

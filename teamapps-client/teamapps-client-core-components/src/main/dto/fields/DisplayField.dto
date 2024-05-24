@@ -19,9 +19,9 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class DisplayField extends AbstractField {
+class DtoDisplayField extends DtoAbstractField {
 	boolean showBorder; //if true, show a border like for text fields
 	boolean showHtml; //if true, treat the value as valid HTML
 	boolean removeStyleTags;

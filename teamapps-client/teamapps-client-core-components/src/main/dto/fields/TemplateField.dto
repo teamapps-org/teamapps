@@ -19,13 +19,13 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
-import org.teamapps.projector.dto.Template;
+import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.dto.DtoTemplate;
 
-class TemplateField extends AbstractField {
-	Template* template;
+class DtoTemplateField extends DtoAbstractField {
+	DtoTemplate* template;
 
-	command update(TemplateField config);
+	command update(DtoTemplateField config);
 
 	event clicked();
 }

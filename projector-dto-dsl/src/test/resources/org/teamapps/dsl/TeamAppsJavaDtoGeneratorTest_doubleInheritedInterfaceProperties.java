@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -32,16 +35,16 @@ import org.teamapps.projector.dto.DtoObject;
  */
 
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.dto.DtoA;
-import org.teamapps.projector.dto.DtoAWrapper;
-import org.teamapps.projector.dto.DtoB;
-import org.teamapps.projector.dto.DtoBWrapper;
-import org.teamapps.projector.dto.DtoC;
-import org.teamapps.projector.dto.DtoCWrapper;
+import org.teamapps.projector.dto.A;
+import org.teamapps.projector.dto.AWrapper;
+import org.teamapps.projector.dto.B;
+import org.teamapps.projector.dto.BWrapper;
+import org.teamapps.projector.dto.C;
+import org.teamapps.projector.dto.CWrapper;
 
 @JsonTypeName("D")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
+public class D extends A implements B, C, DtoObject {
 
     public static final String TYPE_ID = "D";
     public static final List<String> EVENT_NAMES = List.of();
@@ -53,11 +56,11 @@ public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
 	 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
 	 */
 	@Deprecated
-	public DtoD() {
+	public D() {
 		// default constructor for Jackson
 	}
 
-	public DtoD(List<Integer> cProperty) {
+	public D(List<Integer> cProperty) {
 		super();
 		this.cProperty = cProperty;
 	}
@@ -76,7 +79,7 @@ public class DtoD extends DtoA implements DtoB, DtoC, DtoObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("cProperty")
-	public DtoD setCProperty(List<Integer> cProperty) {
+	public D setCProperty(List<Integer> cProperty) {
 		this.cProperty = cProperty;
 		return this;
 	}

@@ -19,14 +19,14 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class ComponentField extends AbstractField {
-	Component* component;
+class DtoComponentField extends DtoAbstractField {
+	DtoComponent* component;
 	int height; // 0 = the height will be determined by the component's content and context
 	boolean bordered;
 
-	command setComponent(Component* component);
+	command setComponent(DtoComponent* component);
 	command setHeight(int height);
 	command setBordered(boolean bordered);
 }

@@ -100,7 +100,7 @@ export class NavigationBar extends AbstractLegacyComponent<DtoNavigationBar> imp
 	private addButton(button: DtoNavigationBarButton) {
 		let $button = parseHtml(`<div class="nav-button-wrapper"><div class="nav-button-inner-wrapper"></div></div>`);
 		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper");
-		$innerWrapper.appendChild(parseHtml((this.config.buttonTemplate as Template).render(button.data)));
+		$innerWrapper.appendChild(parseHtml((button.template as Template).render(button.data)));
 		$button.addEventListener("click", () => {
 			this.onButtonClicked.fire({
 				buttonId: button.id,

@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -34,7 +37,7 @@ import org.teamapps.projector.dto.DtoObject;
 import org.teamapps.projector.clientobject.ClientObject;
 import java.lang.reflect.Method;
 import org.teamapps.projector.clientobject.AbstractClientObjectEventMethodInvoker;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class AEventMethodInvoker extends AbstractClientObjectEventMethodInvoker {
 
@@ -47,25 +50,25 @@ public class AEventMethodInvoker extends AbstractClientObjectEventMethodInvoker 
 	@Override
 	protected void invokeHandlerMethod(Method method, String name, List<JsonWrapper> parameters) throws Exception {
 		switch (name) {
-		    case "e" -> method.invoke(targetObject, ((Function<JsonNode, int>) node -> {
+		    case "e" -> method.invoke(targetObject, ((BiFunction<ObjectMapper, JsonNode, Integer>) (objectMapper, node) -> {
 		            if (node == null || node.isNull()) {
 		                return 0;
 		            }
 		            return node.asInt();
 
-		        }).apply(parameters.get(0).getJsonNode()), ((Function<JsonNode, String>) node -> {
+		        }).apply(parameters.get(0).getObjectMapper(), parameters.get(0).getJsonNode()), ((BiFunction<ObjectMapper, JsonNode, String>) (objectMapper, node) -> {
 		            if (node == null || node.isNull()) {
 		                return null;
 		            }
 		            return node.textValue();
 
-		        }).apply(parameters.get(0).getJsonNode()), ((Function<JsonNode, Object>) node -> {
+		        }).apply(parameters.get(0).getObjectMapper(), parameters.get(0).getJsonNode()), ((BiFunction<ObjectMapper, JsonNode, Object>) (objectMapper, node) -> {
 		            if (node == null || node.isNull()) {
 		                return null;
 		            }
-		            return new JsonWrapper(node);
+		            return new JsonWrapper(objectMapper, node);
 
-		        }).apply(parameters.get(0).getJsonNode()));
+		        }).apply(parameters.get(0).getObjectMapper(), parameters.get(0).getJsonNode()));
 			default -> LOGGER.warn("No information on how to invoke this event handler method: {}", method.getName());
 		}
 	}

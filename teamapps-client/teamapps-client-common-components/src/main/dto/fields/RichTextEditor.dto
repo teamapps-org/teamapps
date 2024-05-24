@@ -19,18 +19,18 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-enum ToolbarVisibilityMode {
+enum DtoToolbarVisibilityMode {
 	HIDDEN, VISIBLE, VISIBLE_IF_FOCUSED
 }
 
-class RichTextEditor extends AbstractField implements TextInputHandlingField {
+class DtoRichTextEditor extends DtoAbstractField implements DtoTextInputHandlingField {
     String locale;
     boolean imageUploadEnabled;
 	String uploadUrl;
 	long maxImageFileSizeInBytes;
-	ToolbarVisibilityMode toolbarVisibilityMode;
+	DtoToolbarVisibilityMode toolbarVisibilityMode;
 	int minHeight;
 	int maxHeight;
 
@@ -44,5 +44,5 @@ class RichTextEditor extends AbstractField implements TextInputHandlingField {
 	command setUploadUrl(String uploadUrl);
 	command setMaxImageFileSizeInBytes(long maxImageFileSizeInBytes);
 	command setUploadedImageUrl(String fileUuid, String url);
-	command setToolbarVisibilityMode(ToolbarVisibilityMode toolbarVisibilityMode);
+	command setToolbarVisibilityMode(DtoToolbarVisibilityMode toolbarVisibilityMode);
 }

@@ -19,17 +19,17 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class ShakaPlayer extends Component {
+class DtoShakaPlayer extends DtoComponent {
     String hlsUrl;
     String dashUrl;
     String posterImageUrl;
-    PosterImageSize posterImageSize;
+    DtoPosterImageSize posterImageSize;
     int timeUpdateEventThrottleMillis;
     String backgroundColor;
     boolean autoplay;
-    TrackLabelFormat trackLabelFormat;
+    DtoTrackLabelFormat trackLabelFormat;
     boolean videoDisabled;
     long timeMillis;
     String preferredAudioLanguage;
@@ -39,32 +39,32 @@ class ShakaPlayer extends Component {
 	command selectAudioLanguage(String language, String role);
 
 	event errorLoading();
-	event manifestLoaded(ShakaManifest manifest);
+	event manifestLoaded(DtoShakaManifest manifest);
 	event timeUpdate(long timeMillis);
 	event ended();
 
 	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
 }
 
-enum TrackLabelFormat {
+enum DtoTrackLabelFormat {
 	LABEL,
 	LANGUAGE,
 	LANGUAGE_ROLE,
 	ROLE;
 }
 
-class ShakaManifest {
-    required List<ShakaManifestVariant> variants;
+class DtoShakaManifest {
+    required List<DtoShakaManifestVariant> variants;
 }
 
-class ShakaManifestVariant {
+class DtoShakaManifestVariant {
 	int id;
-	ShakaAudioStream audio;
-	ShakaVideoStream video;
+	DtoShakaAudioStream audio;
+	DtoShakaVideoStream video;
 	int bandwidth;
 }
 
-abstract class AbstractShakaStream {
+abstract class DtoAbstractShakaStream {
 	int id;
 	String originalId;
 	String mimeType;
@@ -74,13 +74,13 @@ abstract class AbstractShakaStream {
 	List<String> roles;
 }
 
-class ShakaAudioStream extends AbstractShakaStream {
+class DtoShakaAudioStream extends DtoAbstractShakaStream {
     String language;
     int channelsCount;
     int audioSamplingRate;
 }
 
-class ShakaVideoStream extends AbstractShakaStream {
+class DtoShakaVideoStream extends DtoAbstractShakaStream {
     int frameRate;
     String pixelAspectRatio;
     int width;

@@ -22,9 +22,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+
+import org.teamapps.commons.util.ExceptionUtil;
 
 /**
  * THIS IS GENERATED CODE!
@@ -32,20 +35,20 @@ import org.teamapps.projector.dto.DtoObject;
  */
 
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.dto.DtoX;
-import org.teamapps.projector.dto.DtoXWrapper;
+import org.teamapps.projector.dto.X;
+import org.teamapps.projector.dto.XWrapper;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DtoA implements DtoObject {
+public class A implements DtoObject {
 
     public static final String TYPE_ID = "A";
     public static final List<String> EVENT_NAMES = List.of();
     public static final List<String> QUERY_NAMES = List.of();
 
-	protected Map<String, List<DtoX>> x;
+	protected Map<String, List<X>> x;
 
-	public DtoA() {
+	public A() {
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,12 +59,12 @@ public class DtoA implements DtoObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonGetter("x")
-	public Map<String, List<DtoX>> getX() {
+	public Map<String, List<X>> getX() {
 		return x;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("x")
-	public DtoA setX(Map<String, List<DtoX>> x) {
+	public A setX(Map<String, List<X>> x) {
 		this.x = x;
 		return this;
 	}

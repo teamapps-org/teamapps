@@ -19,10 +19,10 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
 
-enum ProgressStatus {
+enum DtoProgressStatus {
 	NOT_YET_STARTED = "not-yet-started",
 	RUNNING = "running",
 	CANCELLATION_REQUESTED = "cancellation-requested",
@@ -31,29 +31,29 @@ enum ProgressStatus {
 	FAILED = "failed"
 }
 
-class ProgressDisplay extends Component {
+class DtoProgressDisplay extends DtoComponent {
 	String icon;
 	String taskName;
 	String statusMessage;
 	double progress;
-	ProgressStatus status;
+	DtoProgressStatus status;
 	boolean cancelable;
 
-    command update(ProgressDisplay config);
+    command update(DtoProgressDisplay config);
 
     event clicked();
     event cancelButtonClicked();
 }
 
-class MultiProgressDisplay extends Component {
+class DtoMultiProgressDisplay extends DtoComponent {
 	int runningCount;
 	List<String> statusMessages;
 
-	command update(DefaultMultiProgressDisplay config);
+	command update(DtoDefaultMultiProgressDisplay config);
 
 	event clicked();
 }
 
-class DefaultMultiProgressDisplay extends MultiProgressDisplay {
+class DtoDefaultMultiProgressDisplay extends DtoMultiProgressDisplay {
 
 }

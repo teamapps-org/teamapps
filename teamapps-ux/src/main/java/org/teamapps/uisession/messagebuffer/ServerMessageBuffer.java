@@ -19,8 +19,6 @@
  */
 package org.teamapps.uisession.messagebuffer;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +30,6 @@ import java.lang.invoke.MethodHandles;
  * NOT THREAD-SAFE! Client code MUST provide synchronization.
  */
 public class ServerMessageBuffer {
-
-	/**
-	 * used for adding the sequence number to the JSON...
-	 */
-	public record SequenceNumberWrapper(@JsonProperty("sn") int sequenceNumber,
-										@JsonUnwrapped AbstractReliableServerMessage reliableServerMessage) { }
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -77,9 +69,10 @@ public class ServerMessageBuffer {
 	 */
 	public int addMessage(AbstractReliableServerMessage serverMessage) throws ServerMessageBufferException {
 		int sequenceNumber = ++sequenceNumberCounter;
+		serverMessage.setSequenceNumber(sequenceNumber);
 		String messageString;
 		try {
-			messageString = objectMapper.writeValueAsString(new SequenceNumberWrapper(sequenceNumber, serverMessage));
+			messageString = objectMapper.writeValueAsString(serverMessage);
 		} catch (Exception e) {
 			throw new ServerMessageBufferException(e);
 		}

@@ -133,7 +133,7 @@ public class Tree<RECORD> extends AbstractComponent {
 			uiTreeRecord.setId(++clientRecordIdCounter);
 		}
 		uiTreeRecord.setValues(values);
-		uiTreeRecord.setDisplayTemplate(template != null ? template.createClientReference() : null);
+		uiTreeRecord.setDisplayTemplate(template != null ? template : null);
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
@@ -228,7 +228,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	public void setSelectedNode(RECORD selectedNode, boolean reveal) {
 		int uiRecordId = uiRecordsByRecord.get(selectedNode) != null ? uiRecordsByRecord.get(selectedNode).getId() : -1;
 		this.selectedNode = selectedNode;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetSelectedNodeIdCommand(uiRecordId, reveal), null);
+		clientObjectChannel.setSelectedNodeId(uiRecordId, reveal);
 	}
 
 	public TreeModel<RECORD> getModel() {
@@ -257,7 +257,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setExpandAnimationEnabled(boolean expandAnimationEnabled) {
 		this.expandAnimationEnabled = expandAnimationEnabled;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetExpandAnimationEnabledCommand(expandAnimationEnabled), null);
+		clientObjectChannel.setExpandAnimationEnabled(expandAnimationEnabled);
 	}
 
 	public boolean isExpandersVisible() {
@@ -266,7 +266,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setExpandersVisible(boolean expandersVisible) {
 		this.expandersVisible = expandersVisible;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetExpandersVisibleCommand(expandersVisible), null);
+		clientObjectChannel.setExpandersVisible(expandersVisible);
 	}
 
 	public boolean isExpandOnSelection() {
@@ -275,7 +275,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setExpandOnSelection(boolean expandOnSelection) {
 		this.expandOnSelection = expandOnSelection;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetExpandOnSelectionCommand(expandOnSelection), null);
+		clientObjectChannel.setExpandOnSelection(expandOnSelection);
 	}
 
 	public boolean isEnforceSingleExpandedPath() {
@@ -284,7 +284,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setEnforceSingleExpandedPath(boolean enforceSingleExpandedPath) {
 		this.enforceSingleExpandedPath = enforceSingleExpandedPath;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetEnforceSingleExpandedPathCommand(enforceSingleExpandedPath), null);
+		clientObjectChannel.setEnforceSingleExpandedPath(enforceSingleExpandedPath);
 	}
 
 	public int getIndentation() {
@@ -293,7 +293,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setIndentation(int indentation) {
 		this.indentation = indentation;
-		getClientObjectChannel().sendCommandIfRendered(new DtoTree.SetIndentationCommand(indentation), null);
+		clientObjectChannel.setIndentation(indentation);
 	}
 
 	public PropertyProvider<RECORD> getPropertyProvider() {

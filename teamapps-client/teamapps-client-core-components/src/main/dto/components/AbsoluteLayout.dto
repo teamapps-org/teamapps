@@ -19,20 +19,20 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
-class AbsoluteLayout extends Component {
-	List<AbsolutePositionedComponent> components;
+class DtoAbsoluteLayout extends DtoComponent {
+	List<DtoAbsolutePositionedComponent> components;
 
-	command update(List<AbsolutePositionedComponent> components, int animationDuration, AnimationEasing easing);
+	command update(List<DtoAbsolutePositionedComponent> components, int animationDuration, DtoAnimationEasing easing);
 }
 
-class AbsolutePositionedComponent {
-	required Component* component;
-	required AbsolutePositioning position;
+class DtoAbsolutePositionedComponent {
+	required DtoComponent* component;
+	required DtoAbsolutePositioning position;
 }
 
-class AbsolutePositioning {
+class DtoAbsolutePositioning {
 	required String topCss;
 	required String rightCss;
 	required String bottomCss;
@@ -42,7 +42,7 @@ class AbsolutePositioning {
 	required int zIndex;
 }
 
-enum AnimationEasing {
+enum DtoAnimationEasing {
 	EASE,
 	LINEAR,
 	EASE_IN,

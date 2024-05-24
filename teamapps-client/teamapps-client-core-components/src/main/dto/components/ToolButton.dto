@@ -19,10 +19,10 @@
  */
 package "teamapps-client-core-components":org.teamapps.projector.dto;
 
-import org.teamapps.projector.dto.Component;
+import org.teamapps.projector.dto.DtoComponent;
 
 @TypeScriptFactory
-class ToolButton extends Component {
+class DtoToolButton extends DtoComponent {
 	required String icon;
 	Integer iconSize; // if null, default (defined by css)
     String caption;
@@ -32,7 +32,7 @@ class ToolButton extends Component {
 	int minDropDownWidth;
 	int minDropDownHeight;
 	boolean openDropDownIfNotSet;
-	Component* dropDownComponent;
+	DtoComponent* dropDownComponent;
 
     command setIcon(String icon);
     command setIconSize(Integer iconSize);
@@ -41,7 +41,7 @@ class ToolButton extends Component {
     command setGrayOutIfNotHovered(boolean grayOutIfNotHovered);
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
-	command setDropDownComponent(Component* dropDownComponent);
+	command setDropDownComponent(DtoComponent* dropDownComponent);
 	command closeDropDown();
 
 	event clicked();
