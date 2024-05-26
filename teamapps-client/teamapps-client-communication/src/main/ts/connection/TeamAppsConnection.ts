@@ -28,5 +28,9 @@ export interface TeamAppsConnection {
 export interface TeamAppsConnectionListener {
 	onConnectionInitialized(): void;
 	onConnectionErrorOrBroken(reason: SessionClosingReason, message?: string): void;
+	registerLibrary(libraryId: string, mainJsUrl: string, mainCssUrl: string): void;
+	createClientObject(libraryId: string, typeName: string, objectId: string, config: any, enabledEventNames: string[]): Promise<any>;
+	destroyClientObject(oid: string): Promise<any>;
+	toggleEvent(libraryUuid: string | null, clientObjectId: string | null, eventName: string, enabled: boolean): Promise<any>;
 	executeCommand(libraryUuid: string, clientObjectId: string, commandName: string, params: any[]): Promise<any>;
 }

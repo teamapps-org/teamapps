@@ -35,8 +35,8 @@ export class UiHttpLiveStreamPlayer extends AbstractLegacyComponent<DtoHttpLiveS
 	private $spinnerContainer: HTMLElement;
 	private resetTimer: number = null;
 
-	constructor(config: DtoHttpLiveStreamPlayer, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoHttpLiveStreamPlayer, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`
 <div class="HttpLiveStreamPlayer">
     <div class="not-supported-message">

@@ -20,13 +20,23 @@
 import {TeamAppsConnection, TeamAppsConnectionListener} from "./TeamAppsConnection";
 import {ReconnectingCompressingWebSocketConnection} from "./ReconnectingWebSocketConnection";
 import {
-	ClientMessage, CMD,
-	REQN,
-	CMD_RES, EVT, QUERY_RES, INIT, INIT_NOK, INIT_OK, PING,
+	ClientInfo,
+	CMD,
+	CMD_RES,
+	EVT,
+	INIT,
+	INIT_NOK,
+	INIT_OK,
+	PING,
+	QUERY,
+	QUERY_RES,
 	REINIT,
 	REINIT_NOK,
-	REINIT_OK, ReliableClientMessage,
-	SESSION_CLOSED, QUERY, ClientInfo, SessionClosingReason
+	REINIT_OK,
+	ReliableClientMessage, ReliableServerMessage,
+	REQN,
+	SESSION_CLOSED,
+	SessionClosingReason
 } from "../protocol/protocol";
 
 
@@ -58,7 +68,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 
 	private currentCommandExecutionPromise: Promise<any> = Promise.resolve();
 
-	constructor(url: string, private sessionId: string, clientInfo: ClientInfo, private commandHandler: TeamAppsConnectionListener) {
+	constructor(url: string, private sessionId: string, clientInfo: ClientInfo, private connectionListener: TeamAppsConnectionListener) {
 		if (sessionId == null) {
 			throw "sessionId may not be null!!";
 		}
@@ -72,57 +82,97 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					maxRequestedCommandId: this.maxRequestedCommands
 				} as INIT)
 			},
-			onMessage: async (message) => {
-				if (TeamAppsConnectionImpl.isCMDS(message)) {
-					let cmd = message as CMD;
-					this.lastReceivedCommandSequenceNumber = cmd.sn;
-					this.enchainCommandExecution(cmd);
-				} else if (TeamAppsConnectionImpl.isQUERY_RES(message)) {
-					this.eventResultHandlerByMessageId.get(message.evtId)(message.result);
-				} else if (TeamAppsConnectionImpl.isINIT_OK(message)) {
-					this.protocolStatus = TeamAppsProtocolStatus.ESTABLISHED;
-					this.sentEventsMinBufferSize = message.sentEventsBufferSize;
-					this.initKeepAlive(message.keepaliveInterval ?? 25_000);
-					this.minRequestedCommands = message.minRequestedCommands;
-					this.maxRequestedCommands = message.maxRequestedCommands;
-					this.log("Connection accepted.");
-					this.flushPayloadMessages();
-					commandHandler.onConnectionInitialized();
-				} else if (TeamAppsConnectionImpl.isREINIT_OK(message)) {
-					this.protocolStatus = TeamAppsProtocolStatus.ESTABLISHED;
-					this.log("Reconnect accepted.");
+			onMessage: async (messages) => {
+				for (var i = 0; i < messages.length; i++) {
+					var message = messages[i];
 
-					let lastReceivedEventIndex: number;
-					for (let i = 0; i < this.sentReliableMessagesBuffer.length; i++) {
-						if (this.sentReliableMessagesBuffer[i].sn === message.lastReceivedEventId) {
-							lastReceivedEventIndex = i;
-						}
+					switch (message._type) {
+						case "INIT_OK":
+							this.protocolStatus = TeamAppsProtocolStatus.ESTABLISHED;
+							this.sentEventsMinBufferSize = message.sentEventsBufferSize;
+							this.initKeepAlive(message.keepaliveInterval ?? 25_000);
+							this.minRequestedCommands = message.minRequestedCommands;
+							this.maxRequestedCommands = message.maxRequestedCommands;
+							this.log("Connection accepted.");
+							this.flushPayloadMessages();
+							connectionListener.onConnectionInitialized();
+							break;
+						case "INIT_NOK":
+							this.protocolStatus = TeamAppsProtocolStatus.ERROR;
+							this.log("Connection refused. Reason: " + SessionClosingReason[message.reason]);
+							connectionListener.onConnectionErrorOrBroken(message.reason);
+							this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
+							break;
+						case "REINIT_OK":
+							this.protocolStatus = TeamAppsProtocolStatus.ESTABLISHED;
+							this.log("Reconnect accepted.");
+
+							let lastReceivedEventIndex: number;
+							for (let i = 0; i < this.sentReliableMessagesBuffer.length; i++) {
+								if (this.sentReliableMessagesBuffer[i].sn === message.lastReceivedEventId) {
+									lastReceivedEventIndex = i;
+								}
+							}
+							let eventsToBeResent = this.sentReliableMessagesBuffer.slice(lastReceivedEventIndex + 1, this.sentReliableMessagesBuffer.length);
+							this.reliableMessagesQueue.splice(0, 0, ...eventsToBeResent);
+							this.sentReliableMessagesBuffer = [];
+
+							this.flushPayloadMessages();
+							break;
+						case "REINIT_NOK":
+							this.protocolStatus = TeamAppsProtocolStatus.ERROR;
+							this.log("Reconnect refused. Reason: " + SessionClosingReason[message.reason]);
+							connectionListener.onConnectionErrorOrBroken(message.reason);
+							this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
+							break;
+						case "PING":
+							this.log("Got PING from server.");
+							this.connection.send({_type: "KEEPALIVE"});
+							break;
+						case "SESSION_CLOSED":
+							this.protocolStatus = TeamAppsProtocolStatus.ERROR;
+							this.log("Error reported by server: " + SessionClosingReason[message.reason] + ": " + message.message);
+							connectionListener.onConnectionErrorOrBroken(message.reason, message.message);
+							this.connection.stopReconnecting();
+							break;
+						case "REGISTER_LIB":
+							this.handleReliableServerMessage(message, async (message) => {
+								await this.connectionListener.registerLibrary(message.lid, message.jsUrl, message.cssUrl);
+							});
+							break;
+						case "CREATE_OBJ":
+							this.handleReliableServerMessage(message, async (message) => {
+								await this.connectionListener.createClientObject(message.lid, message.typeName, message.oid, message.config, message.evtNames);
+							});
+							break;
+						case "DESTROY_OBJ":
+							this.handleReliableServerMessage(message, async (message) => {
+								await connectionListener.destroyClientObject(message.oid);
+							});
+							break;
+						case "TOGGLE_EVT":
+							this.handleReliableServerMessage(message, async (message) => {
+								await connectionListener.toggleEvent(message.lid, message.oid, message.evtName, message.enabled);
+							});
+							break;
+						case "CMD":
+							this.handleReliableServerMessage(message, async (message) => {
+								let result = await this.connectionListener.executeCommand(message.lid, message.oid, message.name, message.params);
+								if (message.r) {
+									this.sendCommandResult(message.sn, result);
+								}
+							});
+							break;
+						case "QUERY_RES":
+							this.handleReliableServerMessage(message, async (message) => {
+								let handler = this.eventResultHandlerByMessageId.get(message.evtId);
+								this.eventResultHandlerByMessageId.delete(message.evtId);
+								await handler(message.result);
+							});
+							break;
+						default:
+							this.log(`ERROR: unknown message type`, message)
 					}
-					let eventsToBeResent = this.sentReliableMessagesBuffer.slice(lastReceivedEventIndex + 1, this.sentReliableMessagesBuffer.length);
-					this.reliableMessagesQueue.splice(0, 0, ...eventsToBeResent);
-					this.sentReliableMessagesBuffer = [];
-
-					this.flushPayloadMessages();
-				} else if (TeamAppsConnectionImpl.isINIT_NOK(message)) {
-					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Connection refused. Reason: " + SessionClosingReason[message.reason]);
-					commandHandler.onConnectionErrorOrBroken(message.reason);
-					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
-				} else if (TeamAppsConnectionImpl.isREINIT_NOK(message)) {
-					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Reconnect refused. Reason: " + SessionClosingReason[message.reason]);
-					commandHandler.onConnectionErrorOrBroken(message.reason);
-					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
-				} else if (TeamAppsConnectionImpl.isPING(message)) {
-					this.log("Got PING from server.");
-					this.connection.send({_type: "KEEPALIVE"});
-				} else if (TeamAppsConnectionImpl.isSESSION_CLOSED(message)) {
-					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Error reported by server: " + SessionClosingReason[message.reason] + ": " + message.message);
-					commandHandler.onConnectionErrorOrBroken(message.reason, message.message);
-					this.connection.stopReconnecting();
-				} else {
-					this.log(`ERROR: unknown message type: ${message._type}`)
 				}
 			},
 			onConnectionLost: () => {
@@ -269,16 +319,13 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 	private log(...message: string[]) {
 		console.log("TeamAppsConnection: " + message);
 	}
-
-	private enchainCommandExecution(cmd: CMD) {
+	private handleReliableServerMessage<M extends ReliableServerMessage>(message: M, action: (message: M) => Promise<any>) {
+		this.lastReceivedCommandSequenceNumber = message.sn;
 		this.currentCommandExecutionPromise = this.currentCommandExecutionPromise.finally(async () => {
 			try {
-				let result = await this.commandHandler.executeCommand(cmd.lid, cmd.oid, cmd.name, cmd.params);
-				if (cmd.r) {
-					this.sendCommandResult(cmd.sn, result);
-				}
-			} catch (reason) {
-				console.error(reason);
+				await action(message);
+			} catch (e) {
+				console.error(e);
 			} finally {
 				this.ensureEnoughCommandsRequested();
 			}

@@ -19,12 +19,14 @@
  */
 package org.teamapps.projector.components.core.flexcontainer;
 
+import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.format.FlexDirection;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
+@ClientObjectTypeName("FlexContainer")
 public class HorizontalLayout extends FlexContainer {
 
 	public HorizontalLayout() {

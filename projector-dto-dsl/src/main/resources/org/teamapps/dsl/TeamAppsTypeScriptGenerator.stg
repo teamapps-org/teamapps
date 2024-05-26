@@ -27,7 +27,7 @@ typeScriptFilePrelude() ::= <<
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsPackageName>";}; separator="\n">
+<c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsModuleName>";}; separator="\n">
 <if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{c|<c.typeScriptIdentifier>};  separator=", "> <endif>{
@@ -51,6 +51,9 @@ export interface <c.name>CommandHandler <if(c.superTypesWithCommands)>extends <c
 	<c.nonStaticCommands:commandMethodStub(); separator="\n">
 }
 <endif>
+
+<serverObjectChannelInterface(c)>
+<if(c.hasStaticEventsOrQueries)><staticServerObjectChannelInterface(c)><endif>
 
 <if(c.allEvents)>
 export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.superTypesWithEvents:{c|<c.name>EventSource}; separator=", "> <endif>{
@@ -88,7 +91,7 @@ parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptTy
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsPackageName>";}; separator="\n">
+<c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsModuleName>";}; separator="\n">
 <if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{superInterface|<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
@@ -108,6 +111,9 @@ export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.supe
 	<c.events:teamAppsEventDeclaration(); separator="\n">
 }
 <endif>
+
+<serverObjectChannelInterface(c)>
+<if(c.hasStaticEventsOrQueries)><staticServerObjectChannelInterface(c)><endif>
 
 <c.events:eventInterface(); separator="\n\n">
 
@@ -133,12 +139,34 @@ export enum <e.name> {
 }
 >>
 
-eventNamesObject(c, static) ::= <<
-<if(static)>{ componentType: "<c.name>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.name>", _type: "<e.jsonIdentifier>"\}}; separator=", ">] }<else>{ componentType: "<c.name>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.name>", _type: "<e.jsonIdentifier>"\}}; separator=", ">] }<endif>
->>
-
 indexTs(classes, interfaces, enums) ::= <<
 <interfaces:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
 <classes:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
 <enums:{c|export * from "./<c.typeScriptIdentifier>";}; separator="\n">
+>>
+
+serverObjectChannelInterface(c) ::= <<
+export interface <c.name>ServerObjectChannel extends ServerObjectChannel {
+
+    <c.allNonStaticEvents:eventServerObjectChannelEventMethodStub(); separator="\n\n">
+    <c.allNonStaticQueries:eventServerObjectChannelQueryMethodStub(); separator="\n\n">
+
+}
+>>
+
+staticServerObjectChannelInterface(c) ::= <<
+export interface Static<c.name; format="cap">ServerObjectChannel extends ServerObjectChannel {
+
+    <c.allStaticEvents:eventServerObjectChannelEventMethodStub(); separator="\n\n">
+    <c.allStaticQueries:eventServerObjectChannelQueryMethodStub(); separator="\n\n">
+
+}
+>>
+
+eventServerObjectChannelEventMethodStub(e) ::= <<
+sendEvent(eventName: "<e.name>", <e.parameters:parameter(false); separator=", ">): void;
+>>
+
+eventServerObjectChannelQueryMethodStub(q) ::= <<
+sendQuery(eventName: "<q.name>", <q.parameters:parameter(false); separator=", ">): Promise\<<q.returnType.typeScriptTypeName>\>;
 >>

@@ -33,9 +33,9 @@ import {
 	AbstractLegacyComponent,
 	Component,
 	DtoEntranceAnimation, DtoExitAnimation,
-	noOpServerChannel,
+	noOpServerObjectChannel,
 	parseHtml,
-	ServerChannel,
+	ServerObjectChannel,
 	TeamAppsEvent
 } from "projector-client-object-api";
 
@@ -64,15 +64,15 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 	private modal: boolean;
 	private modalBackgroundDimmingColor: string;
 
-	constructor(config: DtoWindow, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoWindow, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="Window">
 	<div class="panel-wrapper"></div>
 </div>`);
 		this.$panelWrapper = this.$main.querySelector<HTMLElement>(":scope >.panel-wrapper");
 
-		this.panel = new Panel(config, noOpServerChannel);
+		this.panel = new Panel(config, noOpServerObjectChannel);
 		this.$panelWrapper.appendChild(this.panel.getMainElement());
 
 		if (config.closeable) {

@@ -28,10 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.core.TeamAppsCore;
 import org.teamapps.icons.IconProvider;
-import org.teamapps.ux.servlet.component.ComponentLibraryResourceServlet;
 import org.teamapps.projector.resourceprovider.IconResourceProvider;
 import org.teamapps.projector.resourceprovider.ResourceProviderServlet;
 import org.teamapps.projector.session.SessionContextResourceManager;
+import org.teamapps.ux.servlet.component.ComponentLibraryResourceServlet;
 
 import java.lang.invoke.MethodHandles;
 import java.util.EnumSet;

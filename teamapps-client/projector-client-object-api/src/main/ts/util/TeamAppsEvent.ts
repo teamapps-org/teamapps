@@ -20,12 +20,16 @@
 import {debounce, DebounceMode} from "./debounce";
 import {throttle} from "./throttle";
 import {deepEquals} from "./deepEquals";
+import {isServerObjectChannel, ServerObjectChannel} from "../ClientObject";
 
 export type TeamAppsEventListener<EO> = (eventObject?: EO) => void;
 
 export interface EventSubscription {
 	unsubscribe: () => void
 }
+
+type FireMethod<T> = (eventObject: T) => void;
+type FireMethodDecorator<T> = (fire: FireMethod<T>) => FireMethod<T>;
 
 /**
  * @param EO the event object type
@@ -37,14 +41,23 @@ export class TeamAppsEvent<EO> {
 
 	public fire: (eventObject: EO) => void;
 
-	constructor(options?: { throttlingMode: "throttle" | "debounce"; delay: number; debounceMode?: DebounceMode }) {
-		if (options?.throttlingMode === "debounce") {
-			this.fire = debounce(this._fire.bind(this), options.delay, options.debounceMode ?? DebounceMode.BOTH);
-		} else if (options?.throttlingMode === "throttle") {
-			this.fire = throttle(this._fire.bind(this), options.delay);
-		} else {
-			this.fire = this._fire.bind(this);
+	/**
+	 * @param fireMethodWrapper use for throttling and debouncing
+	 */
+	constructor(fireMethodWrapper?: FireMethodDecorator<EO>) {
+		this.fire = this.#fire;
+
+		if (fireMethodWrapper != null) {
+			this.fire = fireMethodWrapper(this.fire);
 		}
+	}
+
+	public static createThrottled<EO>(delayMillis: number) {
+		return new TeamAppsEvent<EO>(fire => throttle(fire, delayMillis));
+	}
+
+	public static createDebounced<EO>(delayMillis: number, mode: DebounceMode) {
+		return new TeamAppsEvent<EO>(fire => debounce(fire, delayMillis, mode));
 	}
 
 	public addListener(fn: TeamAppsEventListener<EO>, allowDuplicates = false): EventSubscription {
@@ -62,7 +75,7 @@ export class TeamAppsEvent<EO> {
 		}
 	};
 
-	private _fire(eventObject: EO) {
+	#fire(eventObject: EO) {
 		for (let i = 0; i < this.listeners.length; i++) {
 			this.listeners[i].call(null, eventObject);
 		}

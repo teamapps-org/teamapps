@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, bind, Component, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, bind, Component, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoToolButton,
 	DtoToolButton_ClickedEvent,
@@ -43,8 +43,8 @@ export class ToolButton extends AbstractLegacyComponent<DtoToolButton> implement
 	private minDropDownHeight: number;
 	private openDropDownIfNotSet: boolean;
 
-	constructor(config: DtoToolButton, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoToolButton, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.minDropDownWidth = config.minDropDownWidth;
 		this.minDropDownHeight = config.minDropDownHeight;

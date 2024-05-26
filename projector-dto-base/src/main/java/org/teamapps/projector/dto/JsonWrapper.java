@@ -47,7 +47,7 @@ public class JsonWrapper {
 
 	public <W extends JsonWrapper> W as(Class<W> clazz) {
 		try {
-			return clazz.getConstructor(JsonNode.class).newInstance(jsonNode);
+			return clazz.getConstructor(ObjectMapper.class, JsonNode.class).newInstance(objectMapper, jsonNode);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

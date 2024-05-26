@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "projector-client-object-api";
+import {AbstractField, DebounceMode} from "projector-client-object-api";
 import {
 	SpecialKey,
 	DtoTextField,
@@ -31,8 +31,8 @@ import {escapeHtml} from "../../Common";
 
 export class TextField<C extends DtoTextField = DtoTextField> extends AbstractField<C, string> implements DtoTextFieldEventSource, DtoTextFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = TeamAppsEvent.createDebounced<DtoTextInputHandlingField_TextInputEvent>(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced<DtoTextInputHandlingField_SpecialKeyPressedEvent>(250, DebounceMode.BOTH);
 
 	private $wrapper: HTMLElement;
 	protected $field: HTMLInputElement;

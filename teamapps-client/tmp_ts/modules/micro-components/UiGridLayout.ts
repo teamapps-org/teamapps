@@ -137,11 +137,11 @@ export class UiGridLayout {
 	}
 
 	private isSimplePlacement(placement: DtoFormSectionPlacement): placement is DtoComponentGridPlacement {
-		return placement._type === "UiComponentGridPlacement";
+		return placement._type === "DtoComponentGridPlacement";
 	}
 
 	private isFloatingPlacement(placement: DtoFormSectionPlacement): placement is DtoFloatingComponentGridPlacement {
-		return placement._type === "UiFloatingComponentGridPlacement";
+		return placement._type === "DtoFloatingComponentGridPlacement";
 	}
 
 	public getAllComponents(): UiComponent[] {

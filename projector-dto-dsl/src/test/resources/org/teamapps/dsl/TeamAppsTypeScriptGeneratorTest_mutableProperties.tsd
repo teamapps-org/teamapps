@@ -4,6 +4,7 @@
  */
 
 import {ClientObject} from "projector-client-object-api";
+import {ServerObjectChannel} from "projector-client-object-api";
 
 export interface A {
 	_type?: string;
@@ -12,6 +13,11 @@ export interface A {
 
 export interface ACommandHandler {
 	setS(s: string): any;
+}
+
+export interface AServerObjectChannel extends ServerObjectChannel {
+
+
 }
 
 

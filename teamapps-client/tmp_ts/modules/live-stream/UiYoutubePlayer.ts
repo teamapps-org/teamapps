@@ -54,8 +54,8 @@ export class UiYoutubePlayer extends AbstractLegacyComponent<DtoYoutubePlayer> i
 		}
 	}
 
-	constructor(config: DtoYoutubePlayer, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoYoutubePlayer, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$wrapper = parseHtml("<div>");
 		let elementUuid = generateUUID();
 		// 1. The <iframe> (and video player) will replace this <div> tag.

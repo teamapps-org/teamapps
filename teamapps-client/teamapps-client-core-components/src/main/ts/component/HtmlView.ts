@@ -17,15 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, parseHtml, ServerChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoHtmlView, DtoHtmlViewCommandHandler} from "../generated";
 
 export class HtmlView extends AbstractLegacyComponent<DtoHtmlView> implements DtoHtmlViewCommandHandler {
 
 	private $main: HTMLDivElement;
 
-	constructor(config: DtoHtmlView, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoHtmlView, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="HtmlView">${config.html}</div>`);
 		for (let selector in config.componentsByContainerElementSelector) {
 			let components = config.componentsByContainerElementSelector[selector] as Component[];

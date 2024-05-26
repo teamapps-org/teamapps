@@ -21,7 +21,7 @@ import {ClientMessage, ServerMessage} from "../protocol/protocol";
 
 export interface ReconnectingCompressingWebSocketConnectionListener {
 	onConnected: () => void;
-	onMessage: (messageObject: ServerMessage) => void;
+	onMessage: (messages: ServerMessage[]) => void;
 	onConnectionLost: () => void;
 	onReconnected: () => void;
 }

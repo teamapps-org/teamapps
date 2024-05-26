@@ -54,8 +54,8 @@ export class UiVideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> imple
 	private autoplay: boolean;
 	private playState: "initial" | "playing" | "paused" = "initial";
 
-	constructor(config: DtoVideoPlayer, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoVideoPlayer, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
 		let preload = `${config.preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : config.preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`;

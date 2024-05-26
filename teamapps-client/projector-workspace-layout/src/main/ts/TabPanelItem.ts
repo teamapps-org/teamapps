@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Component, noOpServerChannel, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {Component, noOpServerObjectChannel, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {DtoTabPanelTabStyle, TabPanel, WindowButtonType} from "teamapps-client-core-components";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
@@ -70,7 +70,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 			_type: "DtoTabPanel",
 			hideTabBarIfSingleTab: true,
 			tabStyle: DtoTabPanelTabStyle.EARS
-		}, noOpServerChannel);
+		}, noOpServerObjectChannel);
 		this.component.setWindowButtons(this.createWindowButtonList());
 		this.component.onWindowButtonClicked.addListener(eventObject => {
 			if (eventObject.windowButton === WindowButtonType.MINIMIZE) {

@@ -30,8 +30,8 @@ export class UiLiveStreamComPlayer extends AbstractLegacyComponent<DtoLiveStream
 	private $wrapper: HTMLElement;
 	private player: Element;
 
-	constructor(config: DtoLiveStreamComPlayer, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoLiveStreamComPlayer, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$wrapper = parseHtml('<div class="livestreamcom-player-wrapper">');
 	}
 

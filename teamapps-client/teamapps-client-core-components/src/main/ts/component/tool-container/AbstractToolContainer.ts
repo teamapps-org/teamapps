@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
 
 
@@ -38,8 +38,8 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 		});
 	}
 
-	constructor(config: C, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: C, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 	}
 
 	public static optimizeButtonWidth($buttonWrapper: HTMLElement, $button: HTMLElement, maxHeight: number): number {

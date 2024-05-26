@@ -51,8 +51,8 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 	private imageNaturalWidth: number = null;
 	private imageNaturalHeight: number = null;
 
-	constructor(config: DtoImageCropper, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoImageCropper, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$element = parseHtml(`<div data-id="' + config.id + '" class="UiImageCropper">
     <img></img>

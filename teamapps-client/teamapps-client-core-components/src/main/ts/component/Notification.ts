@@ -30,7 +30,7 @@ import {
 	Component, DtoEntranceAnimation, DtoExitAnimation,
 	executeWhenFirstDisplayed,
 	parseHtml,
-	ServerChannel,
+	ServerObjectChannel,
 	TeamAppsEvent
 } from "projector-client-object-api";
 import {animateCSS, Constants} from "../Common";
@@ -134,8 +134,8 @@ export class Notification extends AbstractLegacyComponent<DtoNotification> imple
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: DtoNotification, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoNotification, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="Notification">
 	<div class="close-button"></div>

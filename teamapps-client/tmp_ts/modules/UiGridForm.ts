@@ -64,8 +64,8 @@ export class UiGridForm extends AbstractLegacyComponent<DtoGridForm> implements 
 
 	private fieldWrappers = new Map<UiComponent, HTMLDivElement>();
 
-	constructor(config: DtoGridForm, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoGridForm, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$mainDiv = parseHtml(`<div class="UiGridForm">
 </div>`);
 
@@ -336,11 +336,11 @@ class UiFormSection {
 	}
 
 	private isUiFormSectionFieldPlacement(placement: DtoFormSectionPlacement): placement is DtoFormSectionFieldPlacement {
-		return placement._type === "UiFormSectionFieldPlacement";
+		return placement._type === "DtoUiFormSectionFieldPlacement";
 	}
 
 	private isUiFormSectionFloatingFieldsPlacement(placement: DtoFormSectionPlacement): placement is DtoFormSectionFloatingFieldsPlacement {
-		return placement._type === "UiFormSectionFloatingFieldsPlacement";
+		return placement._type === "DtoUiFormSectionFloatingFieldsPlacement";
 	}
 
 	public getMainDomElement(): HTMLElement {

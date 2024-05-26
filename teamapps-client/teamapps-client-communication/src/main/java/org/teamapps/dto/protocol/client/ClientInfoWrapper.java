@@ -101,7 +101,7 @@ public class ClientInfoWrapper extends JsonWrapper {
 		if (node == null || node.isNull()) {
 			return null;
 		}
-		return node.asText();
+		return node.textValue();
 	}
 
 

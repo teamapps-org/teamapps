@@ -49,7 +49,7 @@ class DtoMultiProgressDisplay extends DtoComponent {
 	int runningCount;
 	List<String> statusMessages;
 
-	command update(DtoDefaultMultiProgressDisplay config);
+	command update(DtoMultiProgressDisplay config);
 
 	event clicked();
 }

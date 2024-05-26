@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoIFrame, DtoIFrameCommandHandler} from "../generated";
 
 
@@ -25,8 +25,8 @@ export class IFrame extends AbstractLegacyComponent<DtoIFrame> implements DtoIFr
 
 	private $iframe: HTMLIFrameElement;
 
-	constructor(config: DtoIFrame, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoIFrame, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$iframe = parseHtml(`<iframe class="IFrame" src="${config.url}"></iframe>`);
 		// this.$iframe.addEventListener("load", e => {
 		// 	console.log(`load: ${this.$iframe.src}`);

@@ -21,15 +21,15 @@ public class QUERYWrapper extends AbstractReliableClientMessageWrapper {
 	}
 
 	public String getLibraryId() {
-		return jsonNode.get("lid").asText();
+		return jsonNode.get("lid").textValue();
 	}
 
 	public String getClientObjectId() {
-		return jsonNode.get("oid").asText();
+		return jsonNode.get("oid").textValue();
 	}
 
 	public String getName() {
-		return jsonNode.get("name").asText();
+		return jsonNode.get("name").textValue();
 	}
 
 	public List<JsonWrapper> getParams() {
@@ -39,7 +39,7 @@ public class QUERYWrapper extends AbstractReliableClientMessageWrapper {
 		}
 		if (!node.isArray()) {
 			LOGGER.warn("Query '{}' has params property that is not a list!", getName());
-			return List.of(new JsonWrapper(getObjectMapper(), jsonNode));
+			return List.of(new JsonWrapper(getObjectMapper(), node));
 		}
 		//noinspection UnstableApiUsage
 		return Streams.stream(node.elements())

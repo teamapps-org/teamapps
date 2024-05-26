@@ -5,10 +5,16 @@
 
 import {ClientObject} from "projector-client-object-api";
 import {DtoWeekDay} from "./DtoWeekDay";
+import {ServerObjectChannel} from "projector-client-object-api";
 
 export interface DtoCalendar {
 	_type?: string;
 	workingDays?: DtoWeekDay[]
+}
+
+export interface DtoCalendarServerObjectChannel extends ServerObjectChannel {
+
+
 }
 
 

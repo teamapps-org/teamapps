@@ -40,6 +40,10 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-client-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
             <artifactId>teamapps-client-core-components</artifactId>
         </dependency>
         <dependency>

@@ -68,8 +68,8 @@ export class UiMediaTrackGraph extends AbstractLegacyComponent<DtoMediaTrackGrap
 	private markerData: Marker[];
 
 
-	constructor(config: DtoMediaTrackGraph, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoMediaTrackGraph, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$graph = parseHtml('<div class="UiMediaTrackGraph" id="' + this.getId() + '">');
 
 		this.trackCount = config.trackCount;

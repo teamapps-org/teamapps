@@ -22,7 +22,7 @@ public class CMD_RESWrapper extends AbstractReliableClientMessageWrapper {
 		if (node == null || node.isNull()) {
 			return null;
 		}
-		return new JsonWrapper(getObjectMapper(), jsonNode);
+		return new JsonWrapper(getObjectMapper(), node);
 	}
 
 }

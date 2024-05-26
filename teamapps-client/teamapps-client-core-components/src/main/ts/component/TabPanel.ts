@@ -26,10 +26,10 @@ import {
 	executeWhenFirstDisplayed,
 	insertAtIndex,
 	insertBefore,
-	noOpServerChannel,
+	noOpServerObjectChannel,
 	parseHtml,
 	prependChild,
-	ServerChannel,
+	ServerObjectChannel,
 	TeamAppsEvent
 } from "projector-client-object-api";
 import {DtoTab as DtoTab} from "../generated/DtoTab";
@@ -77,9 +77,9 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {iconSize: 16}), noOpServerChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {iconSize: 16}), noOpServerChannel),
-		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {iconSize: 16}), noOpServerChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {iconSize: 16}), noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		WindowButtonType.MINIMIZE,
@@ -111,8 +111,8 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: DtoTabPanel, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoTabPanel, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$tabPanel = parseHtml(`<div class="TabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">

@@ -46,7 +46,7 @@ import EventApi from "@fullcalendar/core/api/EventApi";
 import {Duration} from "@fullcalendar/core/datelib/duration";
 import {monthGridViewPlugin} from "./FullCalendarMonthGrid";
 import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
-import {AbstractLegacyComponent, bind, parseHtml, prependChild, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, bind, parseHtml, prependChild, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 
 export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements DtoCalendarCommandHandler, DtoCalendarEventSource {
 
@@ -64,8 +64,8 @@ export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements Dt
 	private eventSource: DtoCalendarFullCalendarEventSource;
 	private calendar: FullCalendar;
 
-	constructor(config: DtoCalendar, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoCalendar, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="Calendar">
 	<div class="calendar"></div>

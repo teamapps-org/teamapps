@@ -80,8 +80,8 @@ export class UiInfiniteItemView2 extends AbstractLegacyComponent<DtoInfiniteItem
 	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
 	private totalNumberOfRecords: number = null;
 
-	constructor(config: DtoInfiniteItemView2, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoInfiniteItemView2, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this.config.id}">
                 <div class="grid"></div>
                 <style></style>

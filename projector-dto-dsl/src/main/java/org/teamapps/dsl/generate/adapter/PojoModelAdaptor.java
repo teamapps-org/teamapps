@@ -45,20 +45,20 @@ public class PojoModelAdaptor<T> implements ModelAdaptor<T> {
 		try {
 			String mn = "get" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
 			m = context.getClass().getMethod(mn);
-		} catch (Exception e) {
+		} catch (NoSuchMethodException e) {
 		}
 		if (m == null) {
 			try {
 				String mn = "is" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
 				m = context.getClass().getMethod(mn);
 
-			} catch (Exception e) {
+			} catch (NoSuchMethodException e) {
 			}
 		}
 		if (m == null) {
 			try {
-				m = context.getClass().getDeclaredMethod(propertyName);
-			} catch (Exception e) {
+				m = context.getClass().getMethod(propertyName);
+			} catch (NoSuchMethodException e) {
 			}
 		}
 		if (m != null) {

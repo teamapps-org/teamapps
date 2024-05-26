@@ -20,18 +20,9 @@
 package org.teamapps.projector.session.event;
 
 import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.dto.KeyEventType;
 
 public class KeyboardEvent {
-
-	public enum KeyEventType {
-		KEY_DOWN,
-		KEY_UP;
-
-		@com.fasterxml.jackson.annotation.JsonValue
-		public int jsonValue() {
-			return ordinal();
-		}
-	}
 
 	private final KeyEventType eventType;
 	private final Component sourceComponent;

@@ -36,10 +36,10 @@ import {
 	Component,
 	executeWhenFirstDisplayed,
 	insertBefore,
-	noOpServerChannel,
+	noOpServerObjectChannel,
 	parseHtml,
 	prependChild,
-	ServerChannel,
+	ServerObjectChannel,
 	TeamAppsEvent
 } from "projector-client-object-api";
 
@@ -64,9 +64,9 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {visible: true, iconSize: 16}), noOpServerChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {visible: true, iconSize: 16}), noOpServerChannel),
-		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {visible: true, iconSize: 16}), noOpServerChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {visible: true, iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {visible: true, iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {visible: true, iconSize: 16}), noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		WindowButtonType.MINIMIZE,
@@ -98,8 +98,8 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	private windowButtons: WindowButtonType[];
 	private restoreFunction: (animationCallback?: () => void) => void;
 
-	constructor(config: DtoPanel, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoPanel, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$panel = parseHtml(`<div class="Panel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">
                     <div class="panel-icon"></div>

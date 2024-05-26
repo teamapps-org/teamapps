@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, DtoExitAnimation, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, DtoExitAnimation, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {animateCSS, Constants, removeClassesByFunction} from "../Common";
 
 import {
@@ -41,8 +41,8 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 	private $main: HTMLElement;
 	private itemsById: { [id: string]: NotificationBarItem } = {};
 
-	constructor(config: DtoNotificationBar, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoNotificationBar, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="NotificationBar"></div>`);
 		config.initialItems.forEach(item => this.addItem(item))
 	}

@@ -38,8 +38,8 @@ export class UiFloatingComponent extends AbstractLegacyComponent<DtoFloatingComp
 
 	private $expanderHandle: HTMLElement;
 
-	constructor(config: DtoFloatingComponent, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoFloatingComponent, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.containerComponent = config.containerComponent as UiComponent;
 
 		this.$main = parseHtml(`<div class="UiFloatingComponent"></div>`);

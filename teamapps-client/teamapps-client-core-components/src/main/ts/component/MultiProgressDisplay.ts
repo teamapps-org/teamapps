@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoDefaultMultiProgressDisplay,
 	DtoDefaultMultiProgressDisplayCommandHandler,
@@ -40,8 +40,8 @@ export class DefaultMultiProgressDisplay extends MultiProgressDisplay<DtoDefault
 	private $spinner: HTMLElement;
 	private $runningCount: HTMLElement;
 
-	constructor(config: DtoDefaultMultiProgressDisplay, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoDefaultMultiProgressDisplay, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="DefaultMultiProgressDisplay">
 	<div class="spinner teamapps-spinner"></div>					

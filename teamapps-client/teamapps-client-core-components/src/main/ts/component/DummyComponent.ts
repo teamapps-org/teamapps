@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoDummyComponent,
 	DtoDummyComponent_ClickedEvent,
@@ -42,8 +42,8 @@ export class DummyComponent extends AbstractLegacyComponent<DtoDummyComponent> i
 	private commandCount: number = 0;
 	private text: string = "";
 
-	constructor(config: DtoDummyComponent, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoDummyComponent, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$panel = parseHtml('<div class="DummyComponent"></div>');
 		this.$panel.addEventListener("click", () => {
 			this.clickCount++;

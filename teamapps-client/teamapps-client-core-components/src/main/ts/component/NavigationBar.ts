@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, Component, parseHtml, ServerChannel, TeamAppsEvent, Template} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel, TeamAppsEvent, Template} from "projector-client-object-api";
 import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins} from "../Common";
 import {
 	DtoNavigationBar,
@@ -53,8 +53,8 @@ export class NavigationBar extends AbstractLegacyComponent<DtoNavigationBar> imp
 	private multiProgressDisplay: MultiProgressDisplay;
 	private $multiProgressDisplayContainer: HTMLElement;
 
-	constructor(config: DtoNavigationBar, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoNavigationBar, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$bar = parseHtml(`<div class="NavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>

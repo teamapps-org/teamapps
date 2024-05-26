@@ -63,8 +63,8 @@ export class UiNetworkGraph extends AbstractLegacyComponent<DtoNetworkGraph> imp
 
 	private lastDraggedNode: any;
 
-	constructor(config: DtoNetworkGraph, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoNetworkGraph, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$graph = parseHtml('<div class="UiNetworkGraph" id="' + this.getId() + '">');
 
 		this.links = config.links;

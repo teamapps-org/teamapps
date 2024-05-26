@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 
 import {
 	DtoLinkButton,
@@ -33,8 +33,8 @@ export class LinkButton extends AbstractLegacyComponent<DtoLinkButton> implement
 	
 	private readonly $main: HTMLAnchorElement;
 
-	constructor(config: DtoLinkButton, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoLinkButton, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<a class="LinkButton" tabindex="0"></a>`)
 		this.$main.addEventListener("click", ev => {
 			if (this.config.onClickJavaScript != null) {

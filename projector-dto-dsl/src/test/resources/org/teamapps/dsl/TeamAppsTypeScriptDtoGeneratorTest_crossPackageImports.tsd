@@ -5,10 +5,16 @@
 
 import {ClientObject} from "projector-client-object-api";
 import {Location} from "xxx";
+import {ServerObjectChannel} from "projector-client-object-api";
 
 export interface X {
 	_type?: string;
 	location?: Location
+}
+
+export interface XServerObjectChannel extends ServerObjectChannel {
+
+
 }
 
 

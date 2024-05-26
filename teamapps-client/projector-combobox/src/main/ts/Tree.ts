@@ -36,8 +36,8 @@ export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCom
 	private trivialTree: TrivialTree<DtoTreeRecord>;
 	private nodes: DtoTreeRecord[];
 
-	constructor(config: DtoTree, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoTree, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$panel = parseHtml('<div class="UiTree">');
 
 		this.nodes = config.initialData;

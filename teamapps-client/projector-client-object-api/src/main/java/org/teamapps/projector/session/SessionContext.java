@@ -29,13 +29,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.commons.event.Event;
 import org.teamapps.commons.util.ExceptionUtil;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.dto.protocol.server.*;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
+import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.*;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
+import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.i18n.ResourceBundleTranslationProvider;
 import org.teamapps.projector.i18n.TranslationProvider;
@@ -422,7 +423,7 @@ public class SessionContext {
 		return getIconBasePath() + "/" + iconProvider.encodeIcon((Icon) icon, true);
 	}
 
-	public void renderClientObject(ClientObject clientObject) {
+	public String renderClientObject(ClientObject clientObject) {
 		CurrentSessionContext.throwIfNotSameAs(this);
 
 		String id = clientObjectsById.getKey(clientObject);
@@ -435,12 +436,18 @@ public class SessionContext {
 			this.renderingClientObjects.add(clientObject);
 			try {
 				String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
-				uiSession.sendReliableServerMessage(new CREATE_OBJ(libraryUuid, clientObject.getClass().getSimpleName(), id, clientObject.createConfig(), clientObject.getListeningEventNames()));
+
+				// TODO cache for performance
+				ClientObjectTypeName typeNameAnnotation = clientObject.getClass().getAnnotation(ClientObjectTypeName.class);
+				String typeName = typeNameAnnotation != null ? typeNameAnnotation.value() : clientObject.getClass().getSimpleName();
+
+				uiSession.sendReliableServerMessage(new CREATE_OBJ(libraryUuid, typeName, id, clientObject.createConfig(), clientObject.getListeningEventNames()));
 			} finally {
 				renderingClientObjects.remove(clientObject);
 			}
 			renderedClientObjects.add(clientObject);
 		}
+		return id;
 	}
 
 	public ClientObjectChannel getClientObjectChannel(ClientObject clientObject) {
@@ -516,8 +523,8 @@ public class SessionContext {
 
 	public String getClientObjectId(ClientObject clientObject, boolean renderIfNotYetRendered) {
 		String clientId = clientObjectsById.getKey(clientObject);
-		if (clientId != null && renderIfNotYetRendered) {
-			renderClientObject(clientObject);
+		if (renderIfNotYetRendered) {
+			clientId = renderClientObject(clientObject);
 		}
 		return clientId;
 	}
@@ -604,8 +611,8 @@ public class SessionContext {
 		sendStaticCommand(null, "SetTitle", title);
 	}
 
-	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		sendStaticCommand(null, "setGlobalKeyEventsEnabled", "setGlobalKeyEventsEnabled", unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp);
+	public void configureGlobalKeyEvents(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
+		sendStaticCommand(null, "configureGlobalKeyboardEvents", new Object[] {unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp});
 	}
 
 	public String getSessionId() {
@@ -613,6 +620,7 @@ public class SessionContext {
 	}
 
 	public void handleStaticEvent(String libraryId, String name, List<JsonWrapper> params) {
+		LOGGER.info("static event: {}, {}, {}", libraryId, name, params);
 		// TODO
 //		switch (name) {
 //			case DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {

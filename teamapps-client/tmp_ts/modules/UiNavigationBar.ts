@@ -57,8 +57,8 @@ export class UiNavigationBar extends AbstractLegacyComponent<DtoNavigationBar> i
 	private multiProgressDisplay: UiMultiProgressDisplay;
 	private $multiProgressDisplayContainer: HTMLElement;
 
-	constructor(config: DtoNavigationBar, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoNavigationBar, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.buttonTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.buttonTemplate, null);
 

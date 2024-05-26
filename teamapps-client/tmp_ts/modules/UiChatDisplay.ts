@@ -41,8 +41,8 @@ export class UiChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> imple
 	private $messages: HTMLElement;
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoChatDisplay, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoChatDisplay, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="UiChatDisplay">
 	<div class="loading-indicator-wrapper hidden"></div>
 	<div class="messages"></div>

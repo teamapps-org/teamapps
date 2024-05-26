@@ -90,6 +90,8 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 			try(BufferedInputStream bis = new BufferedInputStream(resource.getInputStream())) {
 				resp.setContentType(resource.getMimeType());
 				bis.transferTo(resp.getOutputStream());
+			} catch (Exception e) {
+				throw new IOException("Cannot read resource " + fullPath, e);
 			}
 		}
 	}

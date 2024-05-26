@@ -19,7 +19,7 @@
  */
 import {DtoChildCollapsingPolicy, SplitDirection, SplitSizePolicy} from "teamapps-client-core-components";
 import {SplitPane} from "teamapps-client-core-components";
-import {Component, noOpServerChannel} from "projector-client-object-api";
+import {Component, noOpServerObjectChannel} from "projector-client-object-api";
 import {ItemTreeItem} from "./ItemTree";
 
 export class SplitPaneItem implements ItemTreeItem<SplitPane> {
@@ -38,7 +38,7 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 			referenceChildSize: firstChildRelativeSize,
 			resizable: true,
 			childCollapsingPolicy: DtoChildCollapsingPolicy.IF_EMPTY
-		}, noOpServerChannel);
+		}, noOpServerObjectChannel);
 	}
 
 	public get itemIds() {

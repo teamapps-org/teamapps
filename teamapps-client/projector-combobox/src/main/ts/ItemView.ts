@@ -38,8 +38,8 @@ export class ItemView extends AbstractLegacyComponent<DtoItemView> implements Dt
 	private groupsByGroupId: { [index: string]: ItemGroup } = {};
 	private filterString: string = "";
 
-	constructor(config: DtoItemView, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoItemView, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$itemView = parseHtml('<div class="UiItemView"></div>');
 		this.$itemView.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";

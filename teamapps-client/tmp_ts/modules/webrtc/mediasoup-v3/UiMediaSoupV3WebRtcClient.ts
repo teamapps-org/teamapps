@@ -110,8 +110,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractLegacyComponent<DtoMediaS
 		videoBitrate: 0
 	};
 
-	constructor(config: DtoMediaSoupV3WebRtcClient, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoMediaSoupV3WebRtcClient, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		// debug.enable(
 		// 	'conference-api* mediasoup-client*' //enable conference api and mediasoup client logs

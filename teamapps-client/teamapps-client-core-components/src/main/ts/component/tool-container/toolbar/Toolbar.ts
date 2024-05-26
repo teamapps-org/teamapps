@@ -22,9 +22,9 @@ import {
 	Component,
 	insertAfter,
 	insertBefore,
-	noOpServerChannel,
+	noOpServerObjectChannel,
 	parseHtml,
-	ServerChannel,
+	ServerObjectChannel,
 	TeamAppsEvent
 } from "projector-client-object-api";
 import {
@@ -74,8 +74,8 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	private $overflowDropDownButton: HTMLElement;
 	private totalWidthOfOverflowButtons: number;
 
-	constructor(config: DtoToolbar, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoToolbar, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this._$toolbar = parseHtml(`<div class="Toolbar teamapps-blurredBackgroundImage"></div>`);
 		this._$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this._$toolbar.appendChild(this._$backgroundColorDiv);
@@ -115,7 +115,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 				return {...group.getConfig(), buttons: group.getButtonConfigs()}
 			})
 		};
-		let toolAccordion = new ToolAccordion(accordionConfig, noOpServerChannel);
+		let toolAccordion = new ToolAccordion(accordionConfig, noOpServerObjectChannel);
 		toolAccordion.onToolbarButtonClick.addListener(eventObject => {
 			if (!eventObject.dropDownClickInfo) { //
 				this.overflowDropDown.close();

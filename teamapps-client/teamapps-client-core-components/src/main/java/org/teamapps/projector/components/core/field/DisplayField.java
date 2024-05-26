@@ -85,6 +85,6 @@ public class DisplayField extends AbstractField<String> implements DtoDisplayFie
 
 	@Override
 	public String doConvertClientValueToServerValue(JsonWrapper value) {
-		return value.getJsonNode().asText();
+		return value.getJsonNode().textValue();
 	}
 }

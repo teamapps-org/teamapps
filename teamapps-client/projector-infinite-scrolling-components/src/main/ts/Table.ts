@@ -143,8 +143,8 @@ export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTable
 
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoTable, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoTable, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		console.log("new Table");
 		this.$component = parseHtml(`<div class="Table"">
     <div class="slick-table"></div>

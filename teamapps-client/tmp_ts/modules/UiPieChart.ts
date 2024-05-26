@@ -36,8 +36,8 @@ export class UiPieChart extends AbstractLegacyComponent<DtoPieChart> implements 
 	config: DtoPieChart;
 
 
-	constructor(config: DtoPieChart, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoPieChart, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.config = config;
 		this.createChart();
 	}

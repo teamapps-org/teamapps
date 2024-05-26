@@ -38,8 +38,8 @@ export class UiQrCodeScanner extends AbstractLegacyComponent<DtoQrCodeScanner> i
 
 	private selectedCameraIndex: number = 0;
 
-	constructor(config: DtoQrCodeScanner, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoQrCodeScanner, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="UiQrCodeScanner">
 	<video></video>

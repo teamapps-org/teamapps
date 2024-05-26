@@ -25,7 +25,7 @@ import {
 	DtoFlexDirection, DtoJustifyContent,
 	insertAtIndex,
 	parseHtml,
-	ServerChannel
+	ServerObjectChannel
 } from "projector-client-object-api";
 import {DtoFlexContainer, DtoFlexContainerCommandHandler} from "../generated";
 
@@ -33,8 +33,8 @@ export class FlexContainer extends AbstractLegacyComponent<DtoFlexContainer> imp
 
 	private $main: HTMLDivElement;
 
-	constructor(config: DtoFlexContainer, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoFlexContainer, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="FlexContainer"></div>`);
 
 		this.setAlignItems(config.alignItems);

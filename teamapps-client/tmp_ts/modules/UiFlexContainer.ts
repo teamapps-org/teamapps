@@ -33,8 +33,8 @@ export class UiFlexContainer extends AbstractLegacyComponent<DtoFlexContainer> i
 	private $main: HTMLDivElement;
 	private components: UiComponent[] = [];
 
-	constructor(config: DtoFlexContainer, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoFlexContainer, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="UiFlexContainer"></div>`);
 		this.$main.style.flexDirection = config.flexDirection;
 		this.$main.style.alignItems = config.alignItems;

@@ -20,7 +20,7 @@
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {NavigationBar} from "./NavigationBar";
-import {AbstractLegacyComponent, Component, DtoPageTransition, parseHtml, ServerChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, DtoPageTransition, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoMobileLayout, DtoMobileLayoutCommandHandler} from "../generated";
 
 import {pageTransition} from "../Common";
@@ -39,8 +39,8 @@ export class MobileLayout extends AbstractLegacyComponent<DtoMobileLayout> imple
 	private content: Component;
 	private $contentContainer: HTMLElement;
 
-	constructor(config: DtoMobileLayout, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoMobileLayout, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$mainDiv = parseHtml(`<div class="MobileLayout">
                              <div class="toolbar-container"></div>
                              <div class="content-container-wrapper"></div>

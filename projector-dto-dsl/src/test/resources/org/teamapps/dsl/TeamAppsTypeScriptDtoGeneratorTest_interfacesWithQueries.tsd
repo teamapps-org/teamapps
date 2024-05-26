@@ -4,10 +4,17 @@
  */
 
 import {ClientObject} from "projector-client-object-api";
+import {ServerObjectChannel} from "projector-client-object-api";
 
 export interface X {
 	_type?: string;
 	queryEntries: (query: X_QueryEntriesQuery) => Promise<string[]>
+}
+
+export interface XServerObjectChannel extends ServerObjectChannel {
+
+    sendQuery(eventName: "queryEntries", x: number): Promise<string[]>;
+
 }
 
 

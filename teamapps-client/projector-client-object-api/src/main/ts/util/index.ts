@@ -7,7 +7,6 @@ export * from "./DeferredExecutor";
 export * from "./domUtil";
 export * from "./executeWhenFirstDisplayed";
 export * from "./fullscreen";
-export * from "./locationUtil";
 export * from "./nonRecursive";
 export * from "./parseHtml";
 export * from "./resourceLoading";

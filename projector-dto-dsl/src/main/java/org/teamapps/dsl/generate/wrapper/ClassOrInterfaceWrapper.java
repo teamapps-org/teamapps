@@ -103,26 +103,26 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 	}
 
 	default List<PropertyWrapper> getSimplePropertiesSortedByRelevance() {
-			return getAllProperties().stream()
-					.sorted((p1, p2) -> {
-						Function<PropertyWrapper, Integer> getPriority = (p) -> {
-							if (p.getName().equals("id")) {
-								return 50;
-							} else if (p.getName().equals("name")) {
-								return 40;
-							} else if (p.getName().contains("Id")) {
-								return 30;
-							} else if (p.getName().contains("Name")) {
-								return 20;
-							} else if (p.getType().findReferencedClassOrInterface().isEmpty()) {
-								return 10;
-							} else {
-								return 0;
-							}
-						};
-						return getPriority.apply(p2) - getPriority.apply(p1);
-					})
-					.toList();
+		return getAllProperties().stream()
+				.sorted((p1, p2) -> {
+					Function<PropertyWrapper, Integer> getPriority = (p) -> {
+						if (p.getName().equals("id")) {
+							return 50;
+						} else if (p.getName().equals("name")) {
+							return 40;
+						} else if (p.getName().contains("Id")) {
+							return 30;
+						} else if (p.getName().contains("Name")) {
+							return 20;
+						} else if (p.getType().findReferencedClassOrInterface().isEmpty()) {
+							return 10;
+						} else {
+							return 0;
+						}
+					};
+					return getPriority.apply(p2) - getPriority.apply(p1);
+				})
+				.toList();
 	}
 
 	List<CommandWrapper> getCommands();
@@ -149,6 +149,12 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.toList();
 	}
 
+	default List<EventWrapper> getStaticEvents() {
+		return getEvents().stream()
+				.filter(e -> e.isStatic())
+				.toList();
+	}
+
 	default List<EventWrapper> getNonStaticEvents() {
 		return getEvents().stream()
 				.filter(e -> !e.isStatic())
@@ -157,7 +163,7 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 
 	default List<EventWrapper> getAllStaticEvents() {
 		return getAllEvents().stream()
-				.filter(e -> !e.isStatic())
+				.filter(e -> e.isStatic())
 				.toList();
 	}
 
@@ -175,6 +181,51 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.filter(distinctByKey(QueryWrapper::getName))
 				.toList();
 	}
+
+	default List<QueryWrapper> getStaticQueries() {
+		return getQueries().stream()
+				.filter(e -> e.isStatic())
+				.toList();
+	}
+
+	default List<QueryWrapper> getNonStaticQueries() {
+		return getQueries().stream()
+				.filter(e -> !e.isStatic())
+				.toList();
+	}
+
+	default List<QueryWrapper> getAllStaticQueries() {
+		return getAllQueries().stream()
+				.filter(e -> e.isStatic())
+				.toList();
+	}
+
+	default List<QueryWrapper> getAllNonStaticQueries() {
+		return getAllQueries().stream()
+				.filter(e -> !e.isStatic())
+				.toList();
+	}
+
+	default boolean hasNonStaticEventsOrQueries() {
+		return !getAllNonStaticEvents().isEmpty() || !getAllNonStaticQueries().isEmpty();
+	}
+
+	default boolean hasStaticEventsOrQueries() {
+		return !getAllStaticEvents().isEmpty() || !getAllStaticQueries().isEmpty();
+	}
+
+	default List<ClassOrInterfaceWrapper<?>> getSuperTypesWithNonStaticQueriesOrEvents() {
+		return getNonExternalSuperTypes().stream()
+				.filter(s -> !s.getAllNonStaticEvents().isEmpty() || !s.getAllNonStaticQueries().isEmpty())
+				.toList();
+	}
+
+	default List<ClassOrInterfaceWrapper<?>> getSuperTypesWithStaticQueriesOrEvents() {
+		return getNonExternalSuperTypes().stream()
+				.filter(s -> !s.getAllStaticEvents().isEmpty() || !s.getAllStaticQueries().isEmpty())
+				.toList();
+	}
+
 
 	default List<TypeWrapper<?>> getReferencedTypes(boolean typescript) {
 		return Stream.<Stream<TypeWrapper<?>>>of(
@@ -205,6 +256,15 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.filter(c -> c != this)
 				.distinct()
 				.toList();
+	}
+
+
+	default List<TypeWrapper<?>> getAllReferencedTypes(boolean typescript) {
+		return getAllSuperTypes(true).stream()
+				.flatMap(st -> st.getReferencedTypes(typescript).stream())
+				.distinct()
+				.toList();
+
 	}
 
 	boolean isAbstract();
@@ -243,41 +303,29 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 	}
 
 	default Collection<Import> getEffectiveImports(boolean typescript) {
-		Imports imports = new Imports();
+		Imports imports = new Imports(this.getJsModuleName());
 
-		boolean isClientApiPackage = this.getJsPackageName().equals("projector-client-object-api");
+		imports.addImport("ClientObject", "projector-client-object-api", "../ClientObject", "org.teamapps.projector.clientobject");
 
-		imports.addImport("ClientObject", isClientApiPackage? "../ClientObject" : "projector-client-object-api", "org.teamapps.projector.clientobject");
-
-		this.getReferencedTypes(typescript).stream()
+		List<TypeWrapper<?>> referencedTypesToConsider = typescript ? getAllReferencedTypes(true) : this.getReferencedTypes(false);
+		referencedTypesToConsider.stream()
 				.forEach(t -> {
-					String name = t.getName();
-					String jsModuleName = this.getJsPackageName().equals(t.getJsPackageName()) ? "./" + t.getName() : t.getJsPackageName();
-					String javaPackageName = t.getPackageName();
-					imports.addImport(name, jsModuleName, javaPackageName);
+					imports.addImport(t.getName(), t.getJsModuleName(), t.getPackageName());
 
 					if (!typescript && t instanceof ClassOrInterfaceWrapper<?> referencedClassOrInterface && !referencedClassOrInterface.isExternal()) {
-						imports.addImport(name + "Wrapper", null, javaPackageName);
+						imports.addImport(t.getName() + "Wrapper", null, t.getPackageName());
 					}
 				});
 
 		if (typescript) {
+			imports.addImport("ServerObjectChannel", "projector-client-object-api", "../ClientObject", null);
+
 			this.getSuperTypes().stream()
 					.filter(c -> !c.getAllCommands().isEmpty())
-					.forEach(c -> {
-						String name = c.getName() + "CommandHandler";
-						String jsModuleName = this.getJsPackageName().equals(c.getJsPackageName()) ? "./" + c.getName() : c.getJsPackageName();
-						String javaPackageName = c.getPackageName();
-						imports.addImport(name, jsModuleName, javaPackageName);
-					});
+					.forEach(c -> imports.addImport(c.getName() + "CommandHandler", c.getJsModuleName(), "./" + c.getName(), c.getPackageName()));
 			this.getSuperTypes().stream()
 					.filter(c -> !c.getAllEvents().isEmpty())
-					.forEach(c -> {
-						String name = c.getName() + "EventSource";
-						String jsModuleName = this.getJsPackageName().equals(c.getJsPackageName()) ? "./" + c.getName() : c.getJsPackageName();
-						String javaPackageName = c.getPackageName();
-						imports.addImport(name, jsModuleName, javaPackageName);
-					});
+					.forEach(c -> imports.addImport(c.getName() + "EventSource", c.getJsModuleName(), "./" + c.getName(), c.getPackageName()));
 		}
 
 		return imports.getAll();

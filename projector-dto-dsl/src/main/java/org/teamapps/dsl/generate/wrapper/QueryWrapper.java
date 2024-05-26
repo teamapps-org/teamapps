@@ -27,6 +27,10 @@ public class QueryWrapper {
 		return context.Identifier().toString();
 	}
 
+	public boolean isStatic() {
+		return context.staticModifier() != null;
+	}
+
 	public List<FormalParameterWrapper> getParameters() {
 		return parameters;
 	}

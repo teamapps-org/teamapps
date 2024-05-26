@@ -52,6 +52,17 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 	}
 
 	@Test
+	public void staticEvents() throws Exception {
+		executeClassTest(
+				"org.teamapps.projector.dto.A",
+				"org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_staticEvents.tsd",
+				"package \"x\":org.teamapps.projector.dto; " +
+				"class S { event s(String s); static event s2(int i); }" +
+				"class A extends S { event z(int a, long b);static event z2(int a, long b);}"
+		);
+	}
+
+	@Test
 	public void mutableProperties() throws Exception {
 		executeClassTest(
 				"org.teamapps.projector.dto.A",

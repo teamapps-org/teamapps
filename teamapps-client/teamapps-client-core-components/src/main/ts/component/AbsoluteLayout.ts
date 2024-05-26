@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, generateUUID, parseHtml, ServerChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, generateUUID, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent, DtoAnimationEasing} from "../generated";
 
 const animationEasingCssValues = {
@@ -33,8 +33,8 @@ const animationEasingCssValues = {
 export class AbsoluteLayout extends AbstractLegacyComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 
-	constructor(config: DtoAbsoluteLayout, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoAbsoluteLayout, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="AbsoluteLayout">
 </div>`);
 		this.update(config.components, 0, DtoAnimationEasing.EASE);

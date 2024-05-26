@@ -68,8 +68,8 @@ export class UiLiveStreamComponent extends AbstractLegacyComponent<DtoLiveStream
 	private volume: number;
 
 
-	constructor(config: DtoLiveStreamComponent, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoLiveStreamComponent, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.volume = config.volume;
 

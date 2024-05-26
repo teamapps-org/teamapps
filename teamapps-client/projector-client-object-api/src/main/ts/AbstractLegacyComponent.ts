@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {Component} from "./Component";
-import { ServerChannel } from "./ClientObject";
+import { ServerObjectChannel } from "./ClientObject";
 import {DtoComponent} from "./generated";
 import {debounce, DebounceMode, DeferredExecutor, generateUUID, StyleManager, TeamAppsEvent} from "./util";
 
@@ -38,10 +38,10 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 	protected styleManager: StyleManager;
 	private cssUuid: string;
 
-	constructor(protected config: C, private serverChannel: ServerChannel) {
+	constructor(protected config: C, private serverObjectChannel: ServerObjectChannel) {
 		this.cssUuid = generateUUID();
 
-		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-css-id=${this.cssUuid}]`, `[data-css-id=${this.cssUuid}]`);
+		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-css-id="${this.cssUuid}"]`, `[data-css-id="${this.cssUuid}"]`);
 		this.displayedDeferredExecutor.invokeOnceWhenReady(() => this.styleManager.apply());
 
 		this.visible = config.visible ?? false;

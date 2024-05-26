@@ -6,6 +6,7 @@
 import {ClientObject} from "projector-client-object-api";
 import {B} from "./B";
 import {A} from "./A";
+import {ServerObjectChannel} from "projector-client-object-api";
 import {BCommandHandler} from "./B";
 import {ACommandHandler} from "./A";
 import {BEventSource} from "./B";
@@ -19,6 +20,16 @@ export interface C extends B, A {
 
 export interface CCommandHandler extends BCommandHandler, ACommandHandler {
 	x3(y3: string): any;
+}
+
+export interface CServerObjectChannel extends ServerObjectChannel {
+
+    sendEvent(eventName: "z3", ): void;
+
+    sendEvent(eventName: "z2", ): void;
+
+    sendEvent(eventName: "z", ): void;
+
 }
 
 export interface CEventSource extends BEventSource, AEventSource {

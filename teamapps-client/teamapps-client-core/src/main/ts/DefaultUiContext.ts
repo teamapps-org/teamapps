@@ -19,7 +19,7 @@
  */
 "use strict";
 
-import {generateUUID, Showable, ClientObject, ClientObjectFactory, ComponentLibrary, ServerChannel} from "projector-client-object-api";
+import {ClientObject, ComponentLibrary, generateUUID, ServerObjectChannel, Showable} from "projector-client-object-api";
 import {
 	ClientInfo,
 	SessionClosingReason,
@@ -27,12 +27,13 @@ import {
 	TeamAppsConnectionImpl,
 	TeamAppsConnectionListener
 } from "teamapps-client-communication";
-import {Globals} from "./Globals";
+import {CoreLibrary} from "./CoreLibrary";
+import {createGenericErrorMessageShowable} from "./genericErrorMessages";
 
-class FilteredServerChannel implements ServerChannel {
+class FilteredServerObjectChannel implements ServerObjectChannel {
 	private activeEventNames: Set<string> = new Set<string>();
 
-	constructor(private serverChannel: ServerChannel) {
+	constructor(private serverObjectChannel: ServerObjectChannel) {
 	}
 
 	toggleEvent(name: string, enabled: boolean): void {
@@ -45,39 +46,39 @@ class FilteredServerChannel implements ServerChannel {
 
 	sendEvent(name: string, params: any[]) {
 		if (this.activeEventNames.has(name)) {
-			this.serverChannel.sendEvent(name, params);
+			this.serverObjectChannel.sendEvent(name, params);
 		}
 	}
 
 	sendQuery(name: string, params: any[]): Promise<any> {
-		return this.serverChannel.sendQuery(name, params);
+		return this.serverObjectChannel.sendQuery(name, params);
 	}
 }
 
 class ModuleWrapper {
 	constructor(public module: ComponentLibrary,
-				private filteredServerChannel: FilteredServerChannel) {
+				private filteredServerObjectChannel: FilteredServerObjectChannel) {
 		if (typeof module.init === "function") {
-			module.init(filteredServerChannel);
+			module.init(filteredServerObjectChannel);
 		}
 	}
 
 	toggleEvent(name: string, enabled: boolean) {
-		this.filteredServerChannel.toggleEvent(name, enabled);
+		this.filteredServerObjectChannel.toggleEvent(name, enabled);
 	}
 }
 
 class ClientObjectWrapper {
 	constructor(public clientObjectPromise: Promise<ClientObject>,
-				private filteredServerChannel: FilteredServerChannel) {
+				private filteredServerObjectChannel: FilteredServerObjectChannel) {
 	}
 
 	toggleEvent(name: string, enabled: boolean) {
-		this.filteredServerChannel.toggleEvent(name, enabled);
+		this.filteredServerObjectChannel.toggleEvent(name, enabled);
 	}
 }
 
-export class DefaultUiContext {
+export class DefaultUiContext implements TeamAppsConnectionListener {
 
 	public readonly sessionId: string;
 
@@ -102,74 +103,77 @@ export class DefaultUiContext {
 			highDensityScreen: ((window.matchMedia && (window.matchMedia('only screen and (min-resolution: 124dpi), only screen and (min-resolution: 1.3dppx), only screen and (min-resolution: 48.8dpcm)').matches || window.matchMedia('only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 2.6/2), only screen and (min--moz-device-pixel-ratio: 1.3), only screen and (min-device-pixel-ratio: 1.3)').matches)) || (window.devicePixelRatio && window.devicePixelRatio > 1.3)),
 			timezoneOffsetMinutes: new Date().getTimezoneOffset(),
 			timezoneIana: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			clientTokens: Globals.getClientTokens(),
+			clientTokens: CoreLibrary.getClientTokens(),
 			location: location.href,
 			clientParameters: clientParameters,
 			teamAppsVersion: '__TEAMAPPS_VERSION__'
 		};
 
-		const connectionListener: TeamAppsConnectionListener = {
-			onConnectionInitialized: () => {
-			},
-			onConnectionErrorOrBroken: (reason, message) => {
-				console.error(`Connection broken. ${message != null ? 'Message: ' + message : ""}`);
-				sessionStorage.clear();
-				if (reason == SessionClosingReason.WRONG_TEAMAPPS_VERSION) {
-					// NOTE that there is a special handling for wrong teamapps client versions on the server side, which sends the client a goToUrl() command for a page with a cache-prevention GET parameter.
-					// This is only in case the server-side logic does not work.
-					document.body.innerHTML = `<div class="centered-body-text">
-						<h3>Caching problem!</h3>
-						<p>Your browser uses an old client version to connect to our server. Please <a onclick="location.reload()">refresh this page</a>. If this does not help, please clear your browser's cache.</p>
-					<div>`;
-				} else if (reason == SessionClosingReason.SESSION_NOT_FOUND || reason == SessionClosingReason.SESSION_TIMEOUT) {
-					if (this.expiredMessageWindow != null) {
-						this.expiredMessageWindow.show(500);
-					} else {
-						Globals.createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", false).show(500);
-					}
-				} else if (reason == SessionClosingReason.TERMINATED_BY_APPLICATION) {
-					if (this.terminatedMessageWindow != null) {
-						this.terminatedMessageWindow.show(500);
-					} else {
-						Globals.createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
-					}
-				} else {
-					if (this.errorMessageWindow != null) {
-						this.errorMessageWindow.show(500);
-					} else {
-						Globals.createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
-					}
-				}
-			},
-			executeCommand: (libraryUuid: string, clientObjectId: string, commandName: string, params: any[]) => this.executeCommand(libraryUuid, clientObjectId, commandName, params)
-		};
-
-		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
+		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, this);
 
 		window.addEventListener('unload', () => {
 			if (!navigator.sendBeacon) return;
 			var status = navigator.sendBeacon("/leave", this.sessionId);
 			console.log(`Beacon returned: ${status}`);
-		})
+		});
+
+		console.debug(`Registering global library.`);
+		this.libraryModulesById.set(null, Promise.resolve(new ModuleWrapper(CoreLibrary, this.createfilteredServerObjectChannel(null, null))));
+	}
+
+	public onConnectionInitialized() {
+		console.log('Connection initialized')
+	}
+
+	public onConnectionErrorOrBroken(reason, message) {
+		console.error(`Connection broken. ${message != null ? 'Message: ' + message : ""}`);
+		sessionStorage.clear();
+		if (reason == SessionClosingReason.WRONG_TEAMAPPS_VERSION) {
+			// NOTE that there is a special handling for wrong teamapps client versions on the server side, which sends the client a goToUrl() command for a page with a cache-prevention GET parameter.
+			// This is only in case the server-side logic does not work.
+			document.body.innerHTML = `<div class="centered-body-text">
+						<h3>Caching problem!</h3>
+						<p>Your browser uses an old client version to connect to our server. Please <a onclick="location.reload()">refresh this page</a>. If this does not help, please clear your browser's cache.</p>
+					<div>`;
+		} else if (reason == SessionClosingReason.SESSION_NOT_FOUND || reason == SessionClosingReason.SESSION_TIMEOUT) {
+			if (this.expiredMessageWindow != null) {
+				this.expiredMessageWindow.show(500);
+			} else {
+				createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", false).show(500);
+			}
+		} else if (reason == SessionClosingReason.TERMINATED_BY_APPLICATION) {
+			if (this.terminatedMessageWindow != null) {
+				this.terminatedMessageWindow.show(500);
+			} else {
+				createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
+			}
+		} else {
+			if (this.errorMessageWindow != null) {
+				this.errorMessageWindow.show(500);
+			} else {
+				createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
+			}
+		}
 	}
 
 	async toggleEvent(libraryUuid: string | null, clientObjectId: string | null, eventName: string, enabled: boolean) {
+		console.log("Toggle event", libraryUuid, clientObjectId, eventName, enabled);
 		if (clientObjectId != null) {
 			const componentWrapper = this.clientObjectWrappersById.get(clientObjectId);
 			componentWrapper.toggleEvent(eventName, enabled);
 		} else {
 			// static event
-			const moduleWrapper = await this.libraryModulesById.get(libraryUuid);
+			const moduleWrapper = await this.libraryModulesById.get(libraryUuid ?? null);
 			moduleWrapper.toggleEvent(eventName, enabled);
 		}
 	}
 
 	public async createClientObject(libraryId: string, typeName: string, objectId: string, config: any, enabledEventNames: string[]) {
-		console.debug("creating ClientObject: ", libraryId, typeName, objectId, config, enabledEventNames);
+		console.log("Creating ClientObject: ", libraryId, typeName, objectId, config, enabledEventNames);
 
-		let filteredServerChannel = this.createFilteredServerChannel(libraryId, objectId);
-		let clientObjectPromise = this.instantiateClientObject(libraryId, typeName, config, filteredServerChannel);
-		let clientObjectWrapper = new ClientObjectWrapper(clientObjectPromise, filteredServerChannel);
+		let filteredServerObjectChannel = this.createfilteredServerObjectChannel(libraryId, objectId);
+		let clientObjectPromise = this.instantiateClientObject(libraryId, typeName, config, filteredServerObjectChannel);
+		let clientObjectWrapper = new ClientObjectWrapper(clientObjectPromise, filteredServerObjectChannel);
 
 		this.clientObjectWrappersById.set(objectId, clientObjectWrapper);
 		clientObjectWrapper.clientObjectPromise
@@ -179,27 +183,29 @@ export class DefaultUiContext {
 		enabledEventNames?.forEach(name => clientObjectWrapper.toggleEvent(name, true));
 	}
 
-	private async instantiateClientObject(libraryId: string, typeName: string, config: any, serverChannel: ServerChannel): Promise<ClientObject> {
-		const moduleWrapper = await this.libraryModulesById.get(libraryId);
+	private async instantiateClientObject(libraryId: string, typeName: string, config: any, serverObjectChannel: ServerObjectChannel): Promise<ClientObject> {
+		const moduleWrapper = await this.libraryModulesById.get(libraryId ?? null);
 		const enhancedConfig = await this.replaceComponentReferencesWithInstances(config);
 
-		if (this.isClientObjectFactory(moduleWrapper.module)) {
-			return await moduleWrapper.module.createClientObject(typeName, enhancedConfig, serverChannel);
+		let instance: ClientObject;
+		if (typeof moduleWrapper.module["createClientObject"] === "function") {
+			instance = await moduleWrapper.module.createClientObject(typeName, enhancedConfig, serverObjectChannel);
 		} else {
 			// fallback behavior: try to get hold of the constructor and invoke it with the config
-			const clazz = moduleWrapper[typeName];
+			const clazz = moduleWrapper.module[typeName];
 			if (!clazz) {
 				throw `Unknown client object type ${typeName} in library ${libraryId}`;
 			}
-			return new clazz(enhancedConfig);
+			instance = new clazz(enhancedConfig);
 		}
-	}
-
-	private isClientObjectFactory(module: any): module is ClientObjectFactory {
-		return typeof module["createClientObject"] === "function";
+		if (typeof instance.init === "function") {
+			instance.init(config, serverObjectChannel);
+		}
+		return instance;
 	}
 
 	async destroyClientObject(oid: string) {
+		console.log("Destroy client object", oid);
 		let clientObjectWrapper = this.clientObjectWrappersById.get(oid);
 		if (clientObjectWrapper == null) {
 			console.error("Could not find component to destroy: " + oid);
@@ -210,7 +216,9 @@ export class DefaultUiContext {
 		this.clientObjectWrappersById.delete(oid);
 		this.idByClientObject.delete(clientObject);
 
-		clientObject.destroy();
+		if (typeof clientObject.destroy === 'function') {
+			clientObject.destroy();
+		}
 	}
 
 	public async getClientObjectById(id: string): Promise<ClientObject> {
@@ -225,8 +233,8 @@ export class DefaultUiContext {
 
 	private async replaceComponentReferencesWithInstances(serverMessageObject: any) {
 		return await this.replaceRecursively(serverMessageObject, async (o, recur) => {
-			if (o != null && o._type && o._type === "_ref") {
-				const componentById = await this.getClientObjectById(o.id);
+			if (o != null && o._ref) {
+				const componentById = await this.getClientObjectById(o._ref);
 				if (componentById != null) {
 					return componentById;
 				} else {
@@ -261,6 +269,7 @@ export class DefaultUiContext {
 						o[i] = replacingValue;
 					}
 				}
+				return o;
 			} else if (typeof o === "object") {
 				for (const key of Object.keys(o)) {
 					let value: any = o[key];
@@ -269,20 +278,22 @@ export class DefaultUiContext {
 						o[key] = replacingValue;
 					}
 				}
+				return o;
 			} else {
 				return o;
 			}
 		}
 
-		let replaced = await replacer(o, recur);
-		if (replaced === o) {
-			return await recur(o);
-		} else {
-			return replaced;
-		}
+		return await replacer(o, recur);
+		// if (replaced === o) {
+		// 	return await recur(o);
+		// } else {
+		// 	return replaced;
+		// }
 	}
 
-	private async executeCommand(libraryUuid: string | null, clientObjectId: string | null, commandName: string, params: any[]): Promise<any> {
+	async executeCommand(libraryUuid: string | null, clientObjectId: string | null, commandName: string, params: any[]): Promise<any> {
+		console.log("Execute command", libraryUuid, clientObjectId, commandName, params);
 		params = await this.replaceComponentReferencesWithInstances(params);
 		if (clientObjectId != null) {
 			console.debug(`Trying to call ${libraryUuid}.${clientObjectId}.${commandName}(${params.join(", ")})`);
@@ -295,10 +306,13 @@ export class DefaultUiContext {
 				throw new Error(`The ${(<any>clientObject.constructor).name || 'object'} ${clientObjectId} does not have a method ${commandName}()!`);
 			}
 			return await clientObject[commandName].apply(clientObject, params);
+		} else if (libraryUuid == null) {
+			// this is a core library command
+			return await (CoreLibrary[commandName] as Function).apply(null, params);
 		} else {
 			console.debug(`Trying to call global function ${libraryUuid}.${commandName}(${params.join(", ")})`);
-			const moduleWrapper = await this.libraryModulesById.get(libraryUuid);
-			const method = moduleWrapper[commandName];
+			const moduleWrapper = await this.libraryModulesById.get(libraryUuid ?? null);
+			const method = moduleWrapper.module[commandName];
 			if (method == null) {
 				throw `Cannot find exported function ${method} from library ${libraryUuid}`;
 			} else {
@@ -307,10 +321,11 @@ export class DefaultUiContext {
 		}
 	}
 
-	registerComponentLibrary(libraryId: string, mainJsUrl: string, mainCssUrl: string) {
+	registerLibrary(libraryId: string, mainJsUrl: string, mainCssUrl: string) {
+		console.log(`Register library`, libraryId, mainJsUrl, mainCssUrl);
 		const module: Promise<ComponentLibrary> = import(mainJsUrl);
 		this.libraryModulesById.set(libraryId, module.then(module => {
-			return new ModuleWrapper(module, this.createFilteredServerChannel(libraryId, null));
+			return new ModuleWrapper(module, this.createfilteredServerObjectChannel(libraryId, null));
 		}));
 		if (mainCssUrl != null) {
 			const link = document.createElement('link');
@@ -321,13 +336,13 @@ export class DefaultUiContext {
 		}
 	}
 
-	private createFilteredServerChannel(libraryId: string, objectId: string) {
-		return new FilteredServerChannel({
-			sendEvent: async (name: string, params: any[]) => {
+	private createfilteredServerObjectChannel(libraryId: string, objectId: string) {
+		return new FilteredServerObjectChannel({
+			sendEvent: async (name: string, ...params: any[]) => {
 				params = await this.replaceComponentInstancesWithReferences(params);
 				this.connection.sendEvent(libraryId, objectId, name, params);
 			},
-			sendQuery: async (name: string, params: any[]): Promise<any> => {
+			sendQuery: async (name: string, ...params: any[]): Promise<any> => {
 				params = await this.replaceComponentInstancesWithReferences(params);
 				const result = await this.connection.sendQuery(libraryId, objectId, name, params);
 				return await this.replaceComponentReferencesWithInstances(result);

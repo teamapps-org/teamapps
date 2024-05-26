@@ -49,8 +49,8 @@ export class UiTreeGraph extends AbstractLegacyComponent<DtoTreeGraph> implement
 	private chart: TreeChart;
 	private $main: HTMLElement;
 
-	constructor(config: DtoTreeGraph, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoTreeGraph, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="UiTreeGraph">`);
 		this.chart = new TreeChart(context)

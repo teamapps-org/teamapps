@@ -27,7 +27,7 @@ import {
 } from "./generated";
 import {AbstractLegacyComponent} from "./AbstractLegacyComponent";
 import {bind, parseHtml, prependChild, TeamAppsEvent} from "./util";
-import {ServerChannel} from "./ClientObject";
+import {ServerObjectChannel} from "./ClientObject";
 
 interface FieldMessage {
 	message: DtoFieldMessage,
@@ -63,8 +63,8 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 	private hovering: boolean;
 	private focused: boolean;
 
-	constructor(config: C, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: C, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
 		this.$fieldWrapper = parseHtml(`<div class="Field"></div>`);
@@ -200,7 +200,7 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 	}
 
 	private fireCommittedChangeEvent(): void {
-		console.trace("firing committed change event: ", this.committedValue);
+		console.debug("firing committed change event: ", this.committedValue);
 		this.onValueChanged.fire({
 			value: this.convertValueForSendingToServer(this.committedValue)
 		});

@@ -114,8 +114,8 @@ export class UiTimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implement
 		return this.getAllSeries().reduce((sum, s) => sum + (s.getYAxis()?.getWidth() ?? 0), 0);
 	}
 
-	constructor(config: DtoTimeGraph, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoTimeGraph, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		const me = this;
 		this.graphContext = {
@@ -265,13 +265,13 @@ export class UiTimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implement
 
 	public static createDataDisplay(timeGraphId: string, graphConfig: DtoGraph, dropShadowFilterId: string, graphContext: GraphContext) {
 		let display: DtoAbstractGraph;
-		if (graphConfig._type === 'UiLineGraph') {
+		if (graphConfig._type === 'DtoLineGraph') {
 			display = new UiLineGraph(timeGraphId, graphConfig, dropShadowFilterId);
-		} else if (graphConfig._type === 'UiHoseGraph') {
+		} else if (graphConfig._type === 'DtoHoseGraph') {
 			display = new UiHoseGraph(timeGraphId, graphConfig, dropShadowFilterId);
-		} else if (graphConfig._type === 'UiIncidentGraph') {
+		} else if (graphConfig._type === 'DtoIncidentGraph') {
 			display = new UiIncidentGraph(timeGraphId, graphConfig, graphContext);
-		} else if (graphConfig._type === 'UiGraphGroup') {
+		} else if (graphConfig._type === 'DtoGraphGroup') {
 			display = new UiGraphGroup(timeGraphId, graphConfig, dropShadowFilterId, graphContext);
 		}
 		return display;

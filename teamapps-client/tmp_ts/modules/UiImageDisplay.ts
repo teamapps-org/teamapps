@@ -60,8 +60,8 @@ export class UiImageDisplay extends AbstractLegacyComponent<DtoImageDisplay> imp
 	private displayMode: UiPageDisplayMode;
 	private currentImageIndex: number;
 
-	constructor(config: DtoImageDisplay, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoImageDisplay, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$componentWrapper = parseHtml(
 			`<div id=${config.id}" class="UiImageDisplay" tabindex="-1">

@@ -32,17 +32,10 @@ template.innerHTML = `
 `;
 
 export class Div extends AbstractWebComponent<DtoDiv> implements DtoDivCommandHandler {
-	private static elementDefined = false;
-
 	private $slot: HTMLSlotElement;
 
 	constructor() {
 		super();
-
-		if (!Div.elementDefined) {
-			window.customElements.define("ui-div", Div);
-			Div.elementDefined = true;
-		}
 
 		this.shadowRoot?.appendChild(template.content.cloneNode(true));
 		this.$slot = this.shadowRoot.querySelector("slot");
@@ -74,3 +67,5 @@ export class Div extends AbstractWebComponent<DtoDiv> implements DtoDivCommandHa
 		}
 	}
 }
+
+window.customElements.define("ui-div", Div);

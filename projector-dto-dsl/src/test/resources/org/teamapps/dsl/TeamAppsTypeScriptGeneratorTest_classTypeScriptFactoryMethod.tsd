@@ -4,6 +4,7 @@
  */
 
 import {ClientObject} from "projector-client-object-api";
+import {ServerObjectChannel} from "projector-client-object-api";
 
 export interface A {
 	_type?: string;
@@ -19,6 +20,11 @@ export function createA(req1: string, req2: number, nonRequiredProperties?: {non
 		req1, req2,
 		...(nonRequiredProperties||{})
 	};
+}
+
+export interface AServerObjectChannel extends ServerObjectChannel {
+
+
 }
 
 

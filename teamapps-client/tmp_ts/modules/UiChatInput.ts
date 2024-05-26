@@ -59,8 +59,8 @@ export class UiChatInput extends AbstractLegacyComponent<DtoChatInput> implement
 	private $sendButton: HTMLElement;
 	private $attachmentButton: Element;
 
-	constructor(config: DtoChatInput, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoChatInput, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="UiChatInput drop-zone">
 	<div class="upload-items"></div>
 	<textarea class="text-input" maxlength="${config.messageLengthLimit}"></textarea>

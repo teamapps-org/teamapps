@@ -59,19 +59,19 @@ import {DtoShapeProperties} from "../generated/DtoShapeProperties";
 import {DtoMap} from "../generated/DtoMap";
 
 export function isUiMapCircle(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapCircle {
-	return shapeConfig._type === "UiMapCircle";
+	return shapeConfig._type === "DtoMapCircle";
 }
 
 export function isUiMapPolygon(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapPolygon {
-	return shapeConfig._type === "UiMapPolygon";
+	return shapeConfig._type === "DtoMapPolygon";
 }
 
 export function isUiMapPolyline(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapPolyline {
-	return shapeConfig._type === "UiMapPolyline";
+	return shapeConfig._type === "DtoMapPolyline";
 }
 
 export function isUiMapRectangle(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapRectangle {
-	return shapeConfig._type === "UiMapRectangle";
+	return shapeConfig._type === "DtoMapRectangle";
 }
 
 export class UiMap extends AbstractLegacyComponent<DtoMap> implements DtoMapCommandHandler, DtoMapEventSource {
@@ -98,8 +98,8 @@ export class UiMap extends AbstractLegacyComponent<DtoMap> implements DtoMapComm
 	private drawPolylineFeature: L.Draw.Polyline;
 	private drawRectangleFeature: L.Draw.Rectangle;
 
-	constructor(config: DtoMap, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoMap, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$map = parseHtml('<div class="UiMap">');
 		this.id = this.getId();
 		this.createLeafletMap();

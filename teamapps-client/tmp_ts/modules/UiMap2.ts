@@ -65,8 +65,8 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
-	constructor(config: DtoMap2, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoMap2, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$map = parseHtml('<div class="UiMap2">');
 
 		mapboxgl.baseApiUrl = config.baseApiUrl;
@@ -523,7 +523,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 }
 
 function isPolyLineAppend(change: DtoAbstractMapShapeChange): change is DtoPolylineAppend {
-	return change._type === "UiPolylineAppend";
+	return change._type === "DtoPolylineAppend";
 }
 
 

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
-import {AbstractLegacyComponent, Component, DtoPageTransition, parseHtml, ServerChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, DtoPageTransition, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {pageTransition} from "../Common";
 
 // noinspection JSUnusedGlobalSymbols
@@ -29,8 +29,8 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 	private $contentWrapper: HTMLElement;
 	private $imagePreloadDiv: HTMLElement;
 
-	constructor(config: DtoRootPanel, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoRootPanel, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$root = parseHtml(`<div class="RootPanel">
               <div class="image-preload-div"></div>
@@ -82,7 +82,7 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 		this.config.backgroundImageUrl = backgroundImageUrl;
 		this.config.blurredBackgroundImageUrl = blurredBackgroundImageUrl;
 		this.config.backgroundColor = backgroundColor;
-		await Promise.all([RootPanel.loadImage(backgroundImageUrl), RootPanel.loadImage(blurredBackgroundImageUrl)]);
+		await Promise.all([backgroundImageUrl, blurredBackgroundImageUrl].filter(url => url != null).map(url => RootPanel.loadImage(url)));
 		this.updateBackground(animationDuration);
 	}
 

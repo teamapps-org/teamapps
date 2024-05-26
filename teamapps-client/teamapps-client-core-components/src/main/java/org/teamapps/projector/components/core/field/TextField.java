@@ -95,7 +95,7 @@ public class TextField extends AbstractField<String> implements DtoTextFieldEven
 
 	@Override
 	public String doConvertClientValueToServerValue(JsonWrapper value) {
-		return value.getJsonNode().asText();
+		return value.getJsonNode().textValue();
 	}
 
 	@Override

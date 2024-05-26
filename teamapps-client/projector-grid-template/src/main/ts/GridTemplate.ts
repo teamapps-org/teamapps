@@ -221,27 +221,27 @@ function createElementRenderer(element: DtoAbstractGridTemplateElement, addition
 }
 
 export function isUiTextElement(element: DtoAbstractGridTemplateElement): element is DtoTextElement {
-	return element._type === "TextElement";
+	return element._type === "DtoTextElement";
 }
 
 export function isUiBadgeElement(element: DtoAbstractGridTemplateElement): element is DtoBadgeElement {
-	return element._type === "BadgeElement";
+	return element._type === "DtoBadgeElement";
 }
 
 export function isUiFloatingElement(element: DtoAbstractGridTemplateElement): element is DtoFloatingElement {
-	return element._type === "FloatingElement";
+	return element._type === "DtoFloatingElement";
 }
 
 export function isUiImageElement(element: DtoAbstractGridTemplateElement): element is DtoImageElement {
-	return element._type === "ImageElement";
+	return element._type === "DtoImageElement";
 }
 
 export function isUiIconElement(element: DtoAbstractGridTemplateElement): element is DtoIconElement {
-	return element._type === "IconElement";
+	return element._type === "DtoIconElement";
 }
 
 export function isUiGlyphIconElement(element: DtoAbstractGridTemplateElement): element is DtoGlyphIconElement {
-	return element._type === "GlyphIconElement";
+	return element._type === "DtoGlyphIconElement";
 }
 
 export function createImageSizingCssObject(imageSizing: DtoImageSizing): CssPropertyObject {

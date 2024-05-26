@@ -18,12 +18,17 @@
  * =========================LICENSE_END==================================
  */
 
-export interface ServerChannel {
-	sendEvent(name: string, params: any[]): void;
-	sendQuery(name: string, params: any[]): Promise<any>;
+export interface ServerObjectChannel {
+	sendEvent(name: string, ...params: any[]): void;
+
+	sendQuery(name: string, ...params: any[]): Promise<any>;
 }
 
-export const noOpServerChannel = {
+export function isServerObjectChannel(o: any): o is ServerObjectChannel {
+	return typeof (o) === "object" && typeof (o.sendEvent) === "function" && typeof (o.sendQuery) === "function";
+}
+
+export const noOpServerObjectChannel = {
 	sendEvent(name: string, params: any[]) {
 	},
 	sendQuery(name: string, params: any[]): Promise<any> {
@@ -31,17 +36,53 @@ export const noOpServerChannel = {
 	}
 }
 
-export interface ClientObjectFactory {
-	createClientObject(typeName: string, config: any, serverChannel: ServerChannel): Promise<ClientObject>;
+export interface ComponentLibrary {
+	/**
+	 * Initializes this component library.
+	 * @param serverObjectChannel the serverObjectChannel for sending global/static events and queries.
+	 */
+	init?: (serverObjectChannel: ServerObjectChannel) => void;
+
+	/**
+	 * ComponentLibrary implementations may choose between providing an exported class/constructor for each client object type
+	 * or this catch-all method for instantiating client objects.
+	 *
+	 * @param typeName the name of the client object type
+	 * @param config the configuration for the client object to instantiate
+	 * @param serverObjectChannel the ServerObjectChannel to use for sending events/queries from this client object
+	 */
+	createClientObject?(typeName: string, config: any, serverObjectChannel: ServerObjectChannel): Promise<ClientObject>
 }
 
-export interface ComponentLibrary extends Partial<ClientObjectFactory> {
-	init?: (serverChannel: ServerChannel) => void;
-}
-
+/**
+ * An object controlled by the server, using commands. ClientObjects may send events and issue queries to the server throug the provided
+ * ServerObjectChannel.
+ *
+ * ClientObjects are instantiated using one of two approaches:
+ * * Either by calling the ComponentLibrary's createClientObject method
+ * * or by calling the constructor of an exported class with the name of the client object type, with two parameters:
+ *   a configuration object and a ServerObjectChannel.
+ *
+ * Additionally, if provided, the init method is going to be called with the same parameters.
+ */
 export interface ClientObject {
-	// constructor taking a configuration object as first and a ServerChannel as second parameter
-	init?(): any; // additional init method, called right after instantiating
-	invoke(name: string, params: any[]): Promise<any>;
-	destroy(): void;
+
+	/**
+	 * Additional init method, called right after instantiating. This method is guaranteed to be called, if implemented.
+	 */
+	init?(config: any, serverObjectChannel: ServerObjectChannel): any;
+
+	/**
+	 * ClientObject implementations may choose between implementing either an individual method for each command name (named by the command)
+	 * or this method as a catch-all for all commands.
+	 *
+	 * @param name name of the command
+	 * @param params parameters of the command
+	 */
+	executeCommand?(name: string, params: any[]): Promise<any>;
+
+	/**
+	 * Invoked to destroy the object.
+	 */
+	destroy?(): void;
 }

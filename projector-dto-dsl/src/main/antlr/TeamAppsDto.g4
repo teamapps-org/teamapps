@@ -43,7 +43,7 @@ propertyDeclaration : requiredModifier? mutableModifier? type Identifier ';';
 
 commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ('returns' type)? ';';
 eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ';';
-queryDeclaration : 'query' Identifier '(' ((formalParameter ',')* formalParameter)? ')' 'returns' type ';';
+queryDeclaration : staticModifier? 'query' Identifier '(' ((formalParameter ',')* formalParameter)? ')' 'returns' type ';';
 
 formalParameter : type Identifier;
 

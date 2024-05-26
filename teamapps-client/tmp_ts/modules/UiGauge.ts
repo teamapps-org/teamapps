@@ -33,8 +33,8 @@ export class UiGauge extends AbstractLegacyComponent<DtoGauge> implements DtoGau
 	private gauge: LinearGauge;
 	private value: number;
 
-	constructor(config: DtoGauge, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoGauge, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="UiGauge"><canvas></canvas></div>`);
 		this.value = config.options.value;
 		this.createGauge();

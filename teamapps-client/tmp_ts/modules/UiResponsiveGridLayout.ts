@@ -33,8 +33,8 @@ export class UiResponsiveGridLayout extends AbstractLegacyComponent<DtoResponsiv
 	private layoutsFromSmallToLargeMinApplicableWidth: { minApplicableWidth: number, layout: UiGridLayout }[];
 	private currentLayout: UiGridLayout;
 
-	constructor(config: DtoResponsiveGridLayout, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoResponsiveGridLayout, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="UiResponsiveGridLayout">
 	<div class="UiGridLayout"></div>
 </div>`);

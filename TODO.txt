@@ -66,3 +66,5 @@ rename SessionContext.runWithContext() to run()
 make Label NOT a field. It is not!
 
 switch to junit jupiter
+
+rework globalKeyEventOccurred - remove unnecessary clutter

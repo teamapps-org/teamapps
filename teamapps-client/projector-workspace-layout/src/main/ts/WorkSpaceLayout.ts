@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, ServerChannel, TeamAppsEvent,} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, ServerObjectChannel, TeamAppsEvent,} from "projector-client-object-api";
 import {ViewInfo} from "./ViewInfo";
 import {ViewContainer} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
@@ -78,8 +78,8 @@ export class WorkSpaceLayout extends AbstractLegacyComponent<DtoWorkSpaceLayout>
 	private localViewContainer: LocalViewContainer;
 	private viewContainersByWindowId: { [windowId: string]: ViewContainer } = {};
 
-	constructor(config: DtoWorkSpaceLayout, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoWorkSpaceLayout, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.localViewContainer = new LocalViewContainer(this, this.windowId, config.views, config.initialLayout, {
 			handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),
 			handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
@@ -415,11 +415,11 @@ export class WorkSpaceLayout extends AbstractLegacyComponent<DtoWorkSpaceLayout>
 }
 
 export function isTabPanelDescriptor(item: DtoWorkSpaceLayoutItem): item is DtoWorkSpaceLayoutViewGroupItem {
-	return item._type === 'WorkSpaceLayoutViewGroupItem';
+	return item._type === 'DtoWorkSpaceLayoutViewGroupItem';
 }
 
 export function isSplitPanelDescriptor(item: DtoWorkSpaceLayoutItem): item is DtoWorkSpaceLayoutSplitItem {
-	return item._type === 'WorkSpaceLayoutSplitItem';
+	return item._type === 'DtoWorkSpaceLayoutSplitItem';
 }
 
 

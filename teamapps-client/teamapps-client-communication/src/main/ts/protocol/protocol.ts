@@ -1,14 +1,30 @@
 // =========== SERVER ============
 
-export interface ServerMessage {
+interface IServerMessage {
 	_type: 'INIT_OK' | 'INIT_NOK' | 'REINIT_OK' | 'REINIT_NOK' | 'PING' | 'SESSION_CLOSED' | 'REGISTER_LIB' | 'CREATE_OBJ' | 'DESTROY_OBJ' | 'TOGGLE_EVT' | 'CMD' | 'QUERY_RES';
 }
 
-export interface ReliableServerMessage extends ServerMessage {
+export interface IReliableServerMessage extends IServerMessage {
 	sn: number; // sequenceNumber
 }
 
-export interface INIT_OK extends ServerMessage {
+export type ServerMessage =
+	INIT_OK
+	| INIT_NOK
+	| REINIT_OK
+	| REINIT_NOK
+	| PING
+	| SESSION_CLOSED
+	| REGISTER_LIB
+	| CREATE_OBJ
+	| DESTROY_OBJ
+	| TOGGLE_EVT
+	| CMD
+	| QUERY_RES;
+
+export type ReliableServerMessage = REGISTER_LIB | CREATE_OBJ | DESTROY_OBJ | TOGGLE_EVT | CMD | QUERY_RES;
+
+export interface INIT_OK extends IServerMessage {
 	_type: 'INIT_OK';
 	minRequestedCommands: number;
 	maxRequestedCommands: number;
@@ -16,43 +32,51 @@ export interface INIT_OK extends ServerMessage {
 	keepaliveInterval: number
 }
 
-export interface INIT_NOK extends ServerMessage {
+export interface INIT_NOK extends IServerMessage {
 	_type: 'INIT_NOK';
 	reason: SessionClosingReason
 }
 
-export interface REINIT_OK extends ServerMessage {
+export interface REINIT_OK extends IServerMessage {
 	_type: 'REINIT_OK';
 	lastReceivedEventId: number
 }
 
-export interface REINIT_NOK extends ServerMessage {
+export interface REINIT_NOK extends IServerMessage {
 	_type: 'REINIT_NOK';
 	reason: SessionClosingReason
 }
 
-export interface PING extends ServerMessage {
+export interface PING extends IServerMessage {
 	_type: 'PING';
 }
 
-export interface SESSION_CLOSED extends ServerMessage {
+export interface SESSION_CLOSED extends IServerMessage {
 	_type: 'SESSION_CLOSED';
 	reason: SessionClosingReason;
 	message?: string
 }
 
 export enum SessionClosingReason {
-	SESSION_NOT_FOUND, SESSION_TIMEOUT, TERMINATED_BY_CLIENT, SERVER_SIDE_ERROR, COMMANDS_OVERFLOW, REINIT_COMMAND_ID_NOT_FOUND, CMD_REQUEST_TOO_LARGE, WRONG_TEAMAPPS_VERSION, TERMINATED_BY_APPLICATION
+	SESSION_NOT_FOUND,
+	SESSION_TIMEOUT,
+	TERMINATED_BY_CLIENT,
+	SERVER_SIDE_ERROR,
+	COMMANDS_OVERFLOW,
+	REINIT_COMMAND_ID_NOT_FOUND,
+	CMD_REQUEST_TOO_LARGE,
+	WRONG_TEAMAPPS_VERSION,
+	TERMINATED_BY_APPLICATION
 }
 
-export interface REGISTER_LIB extends ReliableServerMessage {
+export interface REGISTER_LIB extends IReliableServerMessage {
 	_type: 'REGISTER_LIB';
 	lid: string;
 	jsUrl: string;
 	cssUrl: string | null;
 }
 
-export interface CREATE_OBJ extends ReliableServerMessage {
+export interface CREATE_OBJ extends IReliableServerMessage {
 	_type: 'CREATE_OBJ';
 	lid: string;
 	typeName: string;
@@ -61,12 +85,12 @@ export interface CREATE_OBJ extends ReliableServerMessage {
 	evtNames: string[];
 }
 
-export interface DESTROY_OBJ extends ReliableServerMessage {
+export interface DESTROY_OBJ extends IReliableServerMessage {
 	_type: 'DESTROY_OBJ';
 	oid: string;
 }
 
-export interface TOGGLE_EVT extends ReliableServerMessage {
+export interface TOGGLE_EVT extends IReliableServerMessage {
 	_type: 'TOGGLE_EVT';
 	lid: string;
 	oid: string;
@@ -74,7 +98,7 @@ export interface TOGGLE_EVT extends ReliableServerMessage {
 	enabled: boolean;
 }
 
-export interface CMD extends ReliableServerMessage {
+export interface CMD extends IReliableServerMessage {
 	_type: 'CMD';
 	lid: string | null, // library uuid
 	oid: string | null, // client object id (or null for 'global' functions)
@@ -83,7 +107,7 @@ export interface CMD extends ReliableServerMessage {
 	r: boolean    // awaitsResult
 }
 
-export interface QUERY_RES extends ReliableServerMessage {
+export interface QUERY_RES extends IReliableServerMessage {
 	_type: 'QUERY_RES';
 	evtId: number;
 	result: any
@@ -96,7 +120,7 @@ export interface ClientMessage {
 	_type: 'INIT' | 'REINIT' | 'KEEPALIVE' | 'TERMINATE' | 'REQN' | 'EVT' | 'QUERY' | 'CMD_RES';
 }
 
-export interface ReliableClientMessage extends ClientMessage{
+export interface ReliableClientMessage extends ClientMessage {
 	sn: number; // sequenceNumber
 }
 
@@ -117,7 +141,7 @@ export interface ClientInfo {
 	timezoneOffsetMinutes?: number;
 	clientTokens?: string[];
 	location?: string;
-	clientParameters?: {[name: string]: string};
+	clientParameters?: { [name: string]: string };
 	teamAppsVersion?: string
 }
 

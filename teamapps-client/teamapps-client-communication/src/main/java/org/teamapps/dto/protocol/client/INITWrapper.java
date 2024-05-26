@@ -23,7 +23,7 @@ public class INITWrapper extends AbstractClientMessageWrapper {
 		if (!node.isObject()) {
 			throw new IllegalArgumentException("node must be an object!");
 		}
-		return new ClientInfoWrapper(getObjectMapper(), jsonNode);
+		return new ClientInfoWrapper(getObjectMapper(), node);
 	}
 
 	public int getMaxRequestedCommandId() {

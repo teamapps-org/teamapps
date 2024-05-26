@@ -13,7 +13,7 @@ public interface TypeWrapper<T extends ParserRuleContext> {
 				.map(ccc -> ccc.packageDeclaration().packageName().getText()).orElse(null);
 	}
 	
-	default String getJsPackageName() {
+	default String getJsModuleName() {
 		return findAncestorOfType(getParserRuleContext(), TeamAppsDtoParser.ClassCollectionContext.class, true)
 				.map(ccc -> {
 					String stringLiteral = ccc.packageDeclaration().StringLiteral().getText();

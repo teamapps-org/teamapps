@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {removeClassesByFunction} from "../Common";
 import {
 	DtoProgressDisplay,
@@ -42,8 +42,8 @@ export class ProgressDisplay extends AbstractLegacyComponent<DtoProgressDisplay>
 	private $cancelButton: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(config: DtoProgressDisplay, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoProgressDisplay, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="ProgressDisplay">
 			<div class="title">

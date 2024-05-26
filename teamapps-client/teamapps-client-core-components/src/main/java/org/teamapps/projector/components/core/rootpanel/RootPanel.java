@@ -48,7 +48,7 @@ public class RootPanel extends AbstractComponent implements DtoRootPanelEventHan
 		mapAbstractUiComponentProperties(uiRootPanel);
 		uiRootPanel.setBackgroundImageUrl(backgroundImageUrl);
 		uiRootPanel.setBlurredBackgroundImageUrl(blurredBackgroundImageUrl);
-		uiRootPanel.setBackgroundColor(backgroundColor.toHtmlColorString());
+		uiRootPanel.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
 		uiRootPanel.setContent(content);
 		return uiRootPanel;
 	}

@@ -49,8 +49,8 @@ export class UiDocumentViewer extends AbstractLegacyComponent<DtoDocumentViewer>
 	private pageSpacing: number;
 	private pageShadow: DtoBoxShadow;
 
-	constructor(config: DtoDocumentViewer, serverChannel: ServerChannel) {
-		super(config, serverChannel);
+	constructor(config: DtoDocumentViewer, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
 
 		this.uuidClass = `UiDocumentViewer-${generateUUID()}`;
 
@@ -123,8 +123,8 @@ export class UiDocumentViewer extends AbstractLegacyComponent<DtoDocumentViewer>
 
 		this.pages.forEach((p) => {
 			let imageAspectRatio = p.naturalWidth / p.naturalHeight;
-			console.trace("image: " + p.naturalWidth + "/" + p.naturalHeight + " = " + imageAspectRatio);
-			console.trace("viewport: " + viewPortWidth + "/" + viewPortHeight + " = " + viewPortAspectRatio);
+			console.debug("image: " + p.naturalWidth + "/" + p.naturalHeight + " = " + imageAspectRatio);
+			console.debug("viewport: " + viewPortWidth + "/" + viewPortHeight + " = " + viewPortAspectRatio);
 			if (this.displayMode === UiPageDisplayMode.FIT_WIDTH) {
 				applyCss(p.$img, {
 					width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
