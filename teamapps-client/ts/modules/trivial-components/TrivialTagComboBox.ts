@@ -383,17 +383,14 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					this.focus();
 				}
 				this.closeDropDown();
-			} else {
-				this.setTagToBeRemoved(null);
-				if (!this.config.showDropDownOnResultsOnly) {
-					this.openDropDown();
-				}
-
-				// We need the new editor value (after the keydown event). Therefore setTimeout().
-				setTimeout(() => this.query(this.config.preselectFirstQueryResult && this.$editor.textContent ? 1 : 0))
 			}
 		});
-		this.$editor.addEventListener("keyup", (e) => {
+		this.$editor.addEventListener("input", e => {
+			this.setTagToBeRemoved(null);
+			if (!this.config.showDropDownOnResultsOnly) {
+				this.openDropDown();
+			}
+
 			function splitStringBySeparatorChars(s: string, separatorChars: string[]) {
 				return s.split(new RegExp("[" + escapeSpecialRegexCharacter(separatorChars.join()) + "]"));
 			}
@@ -415,7 +412,9 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					this.closeDropDown();
 				}
 			}
-		});
+
+			this.query(this.config.preselectFirstQueryResult && this.$editor.textContent ? 1 : 0);
+		})
 		this.$editor.addEventListener("mousedown", () => {
 			if (this.editingMode === "editable") {
 				if (!this.config.showDropDownOnResultsOnly) {

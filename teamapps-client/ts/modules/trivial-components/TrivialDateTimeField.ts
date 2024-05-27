@@ -308,21 +308,17 @@ export class TrivialDateTimeField implements TrivialComponent {
 							selectElementContents(this.getActiveEditor()[0], 0, this.getActiveEditor().text().length);
 						}
 						this.closeDropDown();
-					} else {
-						this.setDropDownMode(e.currentTarget === this.$dateEditor[0] ? Mode.MODE_DATE_LIST : Mode.MODE_TIME_LIST);
-						this.openDropDown();
-						setTimeout(() => { // We need the new editor value (after the keydown event). Therefore setTimeout().
-							// if (this.$editor.val()) {
-							// this.query(1);
-							// } else {
-							// 	this.query(0);
-							// 	this.treeBox.setHighlightedEntryById(null);
-							// }
-							this.query(1);
-						});
 					}
 				}
 			);
+
+		[this.$dateEditor, this.$timeEditor].forEach(editor => {
+			editor[0].addEventListener("input", e => {
+				this.setDropDownMode(e.currentTarget === this.$dateEditor[0] ? Mode.MODE_DATE_LIST : Mode.MODE_TIME_LIST);
+				this.openDropDown();
+				this.query(1);
+			})
+		});
 
 		this.setValue(null);
 
