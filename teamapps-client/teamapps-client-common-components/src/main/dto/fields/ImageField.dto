@@ -25,7 +25,7 @@ class DtoImageField extends DtoAbstractField {
 	String width; // css
 	String height; // css
     DtoBorder border;
-    Shadow shadow;
+    DtoBoxShadow shadow;
 	DtoImageSizing imageSizing;
 	String backgroundColor;
 

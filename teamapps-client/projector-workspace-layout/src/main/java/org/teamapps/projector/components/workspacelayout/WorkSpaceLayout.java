@@ -45,13 +45,14 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+	private final DtoWorkSpaceLayoutClientObjectChannel clientObjectChannel = new DtoWorkSpaceLayoutClientObjectChannel(getClientObjectChannel());
+
 	public final ProjectorEvent<ViewSelectedEventData> onViewSelected = new ProjectorEvent<>(clientObjectChannel::toggleViewSelectedEvent);
 	public final ProjectorEvent<WorkSpaceLayoutView> onChildWindowCreationFailed = new ProjectorEvent<>(clientObjectChannel::toggleChildWindowCreationFailedEvent);
 	public final ProjectorEvent<ChildWindowClosedEventData> onChildWindowClosed = new ProjectorEvent<>(clientObjectChannel::toggleChildWindowClosedEvent);
 	public final ProjectorEvent<WorkSpaceLayoutView> onViewClosed = new ProjectorEvent<>(clientObjectChannel::toggleViewClosedEvent);
 	public final ProjectorEvent<WorkSpaceLayoutViewGroup> onViewGroupPanelStateChanged = new ProjectorEvent<>(clientObjectChannel::toggleViewGroupPanelStateChangedEvent);
 
-	private final DtoWorkSpaceLayoutClientObjectChannel clientObjectChannel = new DtoWorkSpaceLayoutClientObjectChannel(getClientObjectChannel());
 
 	private final String childWindowPageTitle = "Application window";
 	private Toolbar toolbar;

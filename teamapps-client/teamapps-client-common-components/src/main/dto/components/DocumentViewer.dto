@@ -21,14 +21,14 @@ package "teamapps-client-common-components":org.teamapps.projector.components.co
 
 import org.teamapps.projector.dto.DtoComponent;
 import org.teamapps.projector.dto.DtoBorder;
-import org.teamapps.projector.dto.DtoShadow;
+import org.teamapps.projector.dto.DtoBoxShadow;
 
 class DtoDocumentViewer extends DtoComponent {
 	List<String> pageUrls;
 	DtoPageDisplayMode displayMode;
 	double zoomFactor; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
 	DtoBorder pageBorder;
-	Shadow pageShadow;
+	DtoBoxShadow pageShadow;
 	int padding;
 	int pageSpacing;
 
@@ -36,7 +36,7 @@ class DtoDocumentViewer extends DtoComponent {
 	command setDisplayMode(DtoPageDisplayMode displayMode, double zoomFactor);
 	command setZoomFactor(double zoomFactor);
 	command setPageBorder(DtoBorder pageBorder);
-	command setPageShadow(Shadow pageShadow);
+	command setPageShadow(DtoBoxShadow pageShadow);
 	command setPaddding(int padding);
 	command setPageSpacing(int pageSpacing);
 }

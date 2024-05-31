@@ -30,7 +30,7 @@ import org.teamapps.projector.template.Template;
 
 import java.util.List;
 
-public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
+public class MessageBlogViewBlock<RECORD> extends AbstractPageViewBlock {
 
 	private Template topTemplate = BaseTemplates.LIST_ITEM_LARGE_ICON_TWO_LINES;
 	private RECORD topRecord;
@@ -39,15 +39,15 @@ public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 	private String html;
 	private List<String> imageUrls;
 
-	public MessagePageViewBlock() {
+	public MessageBlogViewBlock() {
 	}
 
-	public MessagePageViewBlock(Template topTemplate, RECORD topRecord) {
+	public MessageBlogViewBlock(Template topTemplate, RECORD topRecord) {
 		this.topTemplate = topTemplate;
 		this.topRecord = topRecord;
 	}
 
-	public MessagePageViewBlock(PageViewBlockAlignment alignment, Template topTemplate, RECORD topRecord) {
+	public MessageBlogViewBlock(PageViewBlockAlignment alignment, Template topTemplate, RECORD topRecord) {
 		super(alignment);
 		this.topTemplate = topTemplate;
 		this.topRecord = topRecord;

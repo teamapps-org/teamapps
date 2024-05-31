@@ -18,8 +18,6 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
 import {UiPageViewBlock_Alignment, DtoPageViewBlock} from "../generated/DtoPageViewBlock";
 import {DtoMessagePageViewBlock} from "../generated/DtoMessagePageViewBlock";
 import {insertAfter, insertBefore, parseHtml, removeClassesByFunction, removeDangerousTags} from "./Common";
@@ -52,7 +50,7 @@ interface Block {
 	block: AbstractBlockComponent<DtoPageViewBlock>;
 }
 
-export class UiPageView extends AbstractLegacyComponent<DtoPageView> {
+export class BlogView extends AbstractLegacyComponent<DtoPageView> {
 
 	private $component: HTMLElement;
 	private rows: Row[] = [];

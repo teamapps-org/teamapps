@@ -23,7 +23,7 @@ import org.teamapps.projector.dto.DtoComponent;
 import org.teamapps.projector.dto.DtoTemplate;
 import org.teamapps.projector.dto.DtoSpacing;
 import org.teamapps.projector.dto.DtoBorder;
-import org.teamapps.projector.dto.DtoShadow;
+import org.teamapps.projector.dto.DtoBoxShadow;
 
 class DtoGridForm extends DtoComponent {
 	required List<DtoComponent*> fields;
@@ -49,7 +49,7 @@ class DtoFormSection {
     DtoSpacing margin;
     DtoSpacing padding;
     DtoBorder border;
-    Shadow shadow;
+    DtoBoxShadow shadow;
     String backgroundColor;
     boolean collapsible;
     boolean collapsed;

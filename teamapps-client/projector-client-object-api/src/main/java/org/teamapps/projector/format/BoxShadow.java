@@ -31,7 +31,7 @@ public class BoxShadow {
 	private final float spread;
 	private final Color color;
 
-	public static BoxShadow withSize(float size) {
+	public static BoxShadow ofSize(float size) {
 		return new BoxShadow(0, 0, size, 0, RgbaColor.BLACK);
 	}
 

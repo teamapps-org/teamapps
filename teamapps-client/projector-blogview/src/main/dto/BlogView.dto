@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
+package "projector-blogview":org.teamapps.projector.components.blogview;
 
 import org.teamapps.projector.dto.DtoComponent;
 import org.teamapps.projector.dto.DtoTemplate;
@@ -25,24 +25,24 @@ import org.teamapps.projector.dto.DtoToolButton;
 import org.teamapps.projector.dto.DtoClientRecord;
 import org.teamapps.projector.dto.DtoHorizontalElementAlignment;
 
-class DtoPageView extends DtoComponent {
-	List<DtoPageViewBlock> blocks;
+class DtoBlogView extends DtoComponent {
+	List<DtoBlock> blocks;
 
-	command addBlock(DtoPageViewBlock block, boolean before, String otherBlockId);
+	command addBlock(DtoBlock block, boolean before, String otherBlockId);
 	command removeBlock(String blockId);
 }
 
-class DtoPageViewBlock {
+class DtoBlock {
 	String id;
-	PageViewBlockAlignment alignment;
+	BlockAlignment alignment;
 	List<DtoToolButton*> toolButtons;
 }
 
-enum DtoPageViewBlockAlignment {
+enum BlockAlignment {
     LEFT, RIGHT, FULL
 }
 
-class DtoMessagePageViewBlock extends DtoPageViewBlock {
+class DtoMessageBlock extends DtoBlock {
 	DtoTemplate* topTemplate;
 	DtoClientRecord topRecord;
 	HorizontalElementAlignment topRecordAlignment;
@@ -50,18 +50,18 @@ class DtoMessagePageViewBlock extends DtoPageViewBlock {
 	List<String> imageUrls;
 }
 
-class DtoCitationPageViewBlock extends DtoPageViewBlock {
+class DtoCitationBlock extends DtoBlock {
 	String creatorImageUrl;
-	PageViewBlockCreatorImageAlignment creatorImageAlignment;
+	CreatorImageAlignment creatorImageAlignment;
 	String citation; // rich text!
 	String author; // plain text
 }
 
-enum DtoPageViewBlockCreatorImageAlignment {
+enum CreatorImageAlignment {
 	LEFT, RIGHT
 }
 
-class DtoComponentPageViewBlock extends DtoPageViewBlock {
+class DtoComponentBlock extends DtoBlock {
 	DtoComponent* component;
 	int height;
 	String title;
