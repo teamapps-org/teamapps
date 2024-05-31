@@ -20,6 +20,8 @@
 package org.teamapps.projector.session;
 
 import com.devskiller.friendly_id.FriendlyId;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.ULocale;
 import jakarta.servlet.http.HttpSession;
@@ -89,6 +91,7 @@ public class SessionContext {
 	private final HttpSession httpSession;
 	private final UxServerContext serverContext;
 	private final SessionIconProvider iconProvider;
+	private final ObjectMapper objectMapper;
 
 	private final BidiMap<String, ClientObject> clientObjectsById = new DualHashBidiMap<>();
 	private final HashMap<ClientObject, ClientObjectChannel> channelsByClientObject = new HashMap<>();
@@ -125,12 +128,14 @@ public class SessionContext {
 						  HttpSession httpSession,
 						  UxServerContext serverContext,
 						  SessionIconProvider iconProvider,
-						  ComponentLibraryRegistry componentLibraryRegistry) {
+						  ComponentLibraryRegistry componentLibraryRegistry,
+						  ObjectMapper objectMapper) {
 		this.sessionExecutor = sessionExecutor;
 		this.uiSession = uiSession;
 		this.httpSession = httpSession;
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
+		this.objectMapper = objectMapper;
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 		this.componentLibraryRegistry = componentLibraryRegistry;
@@ -749,5 +754,9 @@ public class SessionContext {
 			String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
 			uiSession.sendReliableServerMessage(new TOGGLE_EVT(libraryUuid, clientObjectsById.getKey(clientObject), eventName, enabled));
 		}
+	}
+
+	public ObjectMapper getObjectMapper() {
+		return objectMapper;
 	}
 }

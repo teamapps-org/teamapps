@@ -86,12 +86,12 @@ public class ProgressDisplay extends AbstractComponent implements DtoProgressDis
 	}
 
 	@Override
-	public void handleClicked(DtoProgressDisplay.ClickedEventWrapper event) {
+	public void handleClicked() {
 		this.onClicked.fire();
 	}
 
 	@Override
-	public void handleCancelButtonClicked(DtoProgressDisplay.CancelButtonClickedEventWrapper event) {
+	public void handleCancelButtonClicked() {
 		if (this.observedProgress != null) {
 			this.observedProgress.requestCancellation();
 		}

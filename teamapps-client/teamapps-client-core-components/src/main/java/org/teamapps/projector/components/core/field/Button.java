@@ -120,12 +120,12 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 	}
 
 	@Override
-	public void handleClicked(DtoButton.ClickedEventWrapper eventObject) {
+	public void handleClicked() {
 		this.onClicked.fire();
 	}
 
 	@Override
-	public void handleDropDownOpened(DtoButton.DropDownOpenedEventWrapper eventObject) {
+	public void handleDropDownOpened() {
 		this.onDropDownOpened.fire();
 	}
 

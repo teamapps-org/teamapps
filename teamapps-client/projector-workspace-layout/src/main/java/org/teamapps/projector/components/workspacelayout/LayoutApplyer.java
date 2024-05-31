@@ -246,10 +246,10 @@ class LayoutApplyer {
 	private static LayoutItemWrapper createWrapperFromUi(DtoWorkSpaceLayoutItemWrapper child) {
 		switch (child.getTypeId()) {
 			case DtoWorkSpaceLayoutSplitItem.TYPE_ID -> {
-				return new DtoWorkSpaceLayoutSplitItemWrapper(child.as(org.teamapps.projector.components.workspacelayout.dto.DtoWorkSpaceLayoutSplitItemWrapper.class));
+				return new DtoWorkSpaceLayoutSplitItemWrapper(child.as(org.teamapps.projector.components.workspacelayout.dto.DtoWorkSpaceLayoutSplitItemWrapper::new));
 			}
 			case DtoWorkSpaceLayoutViewGroupItem.TYPE_ID -> {
-				return new DtoWorkSpaceLayoutViewGroupItemWrapper(child.as(org.teamapps.projector.components.workspacelayout.dto.DtoWorkSpaceLayoutViewGroupItemWrapper.class));
+				return new DtoWorkSpaceLayoutViewGroupItemWrapper(child.as(org.teamapps.projector.components.workspacelayout.dto.DtoWorkSpaceLayoutViewGroupItemWrapper::new));
 			}
 			default -> throw new IllegalArgumentException("Unknown layout item type " + child.getClass().getCanonicalName());
 		}

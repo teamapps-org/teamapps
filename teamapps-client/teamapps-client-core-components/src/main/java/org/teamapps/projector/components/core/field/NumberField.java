@@ -71,13 +71,13 @@ public class NumberField extends AbstractField<Number> implements DtoNumberField
 	}
 
 	@Override
-	public void handleTextInput(DtoTextInputHandlingField.TextInputEventWrapper event) {
-		onTextInput.fire(event.getEnteredString());
+	public void handleTextInput(String enteredString) {
+		onTextInput.fire(enteredString);
 	}
 
 	@Override
-	public void handleSpecialKeyPressed(DtoTextInputHandlingField.SpecialKeyPressedEventWrapper event) {
-		onSpecialKeyPressed.fire(event.getKey());
+	public void handleSpecialKeyPressed(SpecialKey key) {
+		onSpecialKeyPressed.fire(key);
 	}
 
 	public int getPrecision() {

@@ -51,7 +51,7 @@ public class DummyComponent extends AbstractComponent implements DtoDummyCompone
 	}
 
 	@Override
-	public void handleClicked(DtoDummyComponent.ClickedEventWrapper event) {
+	public void handleClicked(int clickCount) {
 		onClick.fire();
 	}
 

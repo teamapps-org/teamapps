@@ -1,14 +1,13 @@
 package org.teamapps.dto.protocol.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class INITWrapper extends AbstractClientMessageWrapper {
 
 	public static final String TYPE_ID = "INIT";
 
-	public INITWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
-		super(objectMapper, jsonNode);
+	public INITWrapper(JsonNode jsonNode) {
+		super(jsonNode);
 	}
 
 	public String getSessionId() {
@@ -23,7 +22,7 @@ public class INITWrapper extends AbstractClientMessageWrapper {
 		if (!node.isObject()) {
 			throw new IllegalArgumentException("node must be an object!");
 		}
-		return new ClientInfoWrapper(getObjectMapper(), node);
+		return new ClientInfoWrapper(node);
 	}
 
 	public int getMaxRequestedCommandId() {

@@ -88,7 +88,7 @@ public class NavigationBar extends AbstractComponent implements DtoNavigationBar
 	}
 
 	@Override
-	public void handleFanoutClosedDueToClickOutsideFanout(DtoNavigationBar.FanoutClosedDueToClickOutsideFanoutEventWrapper event) {
+	public void handleFanoutClosedDueToClickOutsideFanout() {
 		this.activeFanOutComponent = null;
 	}
 

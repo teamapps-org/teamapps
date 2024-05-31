@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+import org.teamapps.projector.session.SessionContext;
 
 import org.teamapps.commons.util.ExceptionUtil;
 

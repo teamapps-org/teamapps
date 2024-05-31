@@ -157,12 +157,12 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	}
 
 	@Override
-	public void handleTabSelected(DtoTabPanel.TabSelectedEventWrapper event) {
-		if (event.getTabId() == null) {
+	public void handleTabSelected(String tabId) {
+		if (tabId == null) {
 			this.selectedTab = null;
 		} else {
 			Tab oldSelectedTab = this.selectedTab;
-			Tab selectedTab = this.getTabByClientId(event.getTabId());
+			Tab selectedTab = this.getTabByClientId(tabId);
 			this.selectedTab = selectedTab;
 			if (oldSelectedTab != null) {
 				oldSelectedTab.onDeselected.fire(null);
@@ -175,14 +175,14 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	}
 
 	@Override
-	public void handleTabNeedsRefresh(DtoTabPanel.TabNeedsRefreshEventWrapper event) {
-		Tab tab = getTabByClientId(event.getTabId());
-		clientObjectChannel.setTabContent(event.getTabId(), tab.getContent());
+	public void handleTabNeedsRefresh(String tabId) {
+		Tab tab = getTabByClientId(tabId);
+		clientObjectChannel.setTabContent(tabId, tab.getContent());
 	}
 
 	@Override
-	public void handleTabClosed(DtoTabPanel.TabClosedEventWrapper event) {
-		Tab closedTab = this.getTabByClientId(event.getTabId());
+	public void handleTabClosed(String tabId) {
+		Tab closedTab = this.getTabByClientId(tabId);
 		if (closedTab != null) {
 			tabs.remove(closedTab);
 			closedTab.onClosed.fire(null);
@@ -191,8 +191,8 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	}
 
 	@Override
-	public void handleWindowButtonClicked(DtoTabPanel.WindowButtonClickedEventWrapper event) {
-		 // TODO remove?
+	public void handleWindowButtonClicked(WindowButtonType windowButton) {
+		// TODO remove?
 	}
 
 	/*package-private*/ void handleTabSelected(Tab tab) {

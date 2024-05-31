@@ -49,7 +49,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 	}
 
 	@Override
-	public void handleClicked(DtoTemplateField.ClickedEventWrapper event) {
+	public void handleClicked() {
 		onClicked.fire();
 	}
 

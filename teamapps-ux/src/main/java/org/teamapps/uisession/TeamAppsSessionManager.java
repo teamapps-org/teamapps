@@ -323,7 +323,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				httpSession,
 				uxServerContext,
 				new SessionIconProvider(iconProvider),
-				componentLibraryRegistry
+				componentLibraryRegistry,
+				objectMapper
 		);
 
 		sessionContext.runWithContext(() -> {

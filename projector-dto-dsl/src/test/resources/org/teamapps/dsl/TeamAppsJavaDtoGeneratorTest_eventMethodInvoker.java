@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+import org.teamapps.projector.session.SessionContext;
 
 import org.teamapps.commons.util.ExceptionUtil;
 
@@ -50,7 +51,9 @@ public class AEventMethodInvoker extends AbstractClientObjectEventMethodInvoker 
 	@Override
 	protected void invokeHandlerMethod(Method method, String name, JsonWrapper eventObject) throws Exception {
 		switch (name) {
-		    case "e" -> method.invoke(targetObject, new A.EEventWrapper(eventObject.getObjectMapper(), eventObject.getJsonNode()));
+		    case "e" -> 
+		    method.invoke(targetObject, eventObject.as(A.EEventWrapper::new));
+
 			default -> LOGGER.warn("No information on how to invoke this event handler method: {}", method.getName());
 		}
 	}

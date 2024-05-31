@@ -47,8 +47,8 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 	}
 
 	@Override
-	public void handleItemClicked(DtoNotificationBar.ItemClickedEventWrapper event) {
-		NotificationBarItem item = itemsByUiId.get(event.getId());
+	public void handleItemClicked(String id) {
+		NotificationBarItem item = itemsByUiId.get(id);
 		if (item != null) {
 			item.onClicked.fire();
 			onItemClicked.fire(item);
@@ -56,8 +56,8 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 	}
 
 	@Override
-	public void handleItemActionLinkClicked(DtoNotificationBar.ItemActionLinkClickedEventWrapper event) {
-		NotificationBarItem item = itemsByUiId.get(event.getId());
+	public void handleItemActionLinkClicked(String id) {
+		NotificationBarItem item = itemsByUiId.get(id);
 		if (item != null) {
 			item.onActionLinkClicked.fire();
 			onItemActionLinkClicked.fire(item);

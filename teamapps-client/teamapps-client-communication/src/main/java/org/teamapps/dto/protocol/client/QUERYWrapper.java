@@ -1,7 +1,6 @@
 package org.teamapps.dto.protocol.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +15,8 @@ public class QUERYWrapper extends AbstractReliableClientMessageWrapper {
 
 	public static final String TYPE_ID = "QUERY";
 
-	public QUERYWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
-		super(objectMapper, jsonNode);
+	public QUERYWrapper(JsonNode jsonNode) {
+		super(jsonNode);
 	}
 
 	public String getLibraryId() {
@@ -39,11 +38,11 @@ public class QUERYWrapper extends AbstractReliableClientMessageWrapper {
 		}
 		if (!node.isArray()) {
 			LOGGER.warn("Query '{}' has params property that is not a list!", getName());
-			return List.of(new JsonWrapper(getObjectMapper(), node));
+			return List.of(new JsonWrapper(node));
 		}
 		//noinspection UnstableApiUsage
 		return Streams.stream(node.elements())
-				.map(jsonNode -> new JsonWrapper(getObjectMapper(), jsonNode))
+				.map(JsonWrapper::new)
 				.toList();
 	}
 

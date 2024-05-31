@@ -30,7 +30,6 @@ import org.teamapps.projector.components.core.notification.NotificationPosition;
 import org.teamapps.projector.components.core.notification.Notifications;
 import org.teamapps.projector.dto.DtoDefaultMultiProgressDisplay;
 import org.teamapps.projector.dto.DtoDefaultMultiProgressDisplayClientObjectChannel;
-import org.teamapps.projector.dto.DtoMultiProgressDisplay;
 import org.teamapps.projector.dto.DtoMultiProgressDisplayEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.Spacing;
@@ -85,7 +84,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	@Override
-	public void handleClicked(DtoMultiProgressDisplay.ClickedEventWrapper eventObject) {
+	public void handleClicked() {
 		this.onClicked.fire(null);
 		if (showingNotificationWithoutTimeout) {
 			this.showingNotificationWithoutTimeout = false;

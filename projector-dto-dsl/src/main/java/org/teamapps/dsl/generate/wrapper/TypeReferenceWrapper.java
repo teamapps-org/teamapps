@@ -284,11 +284,11 @@ public class TypeReferenceWrapper {
 		return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.inverse().getOrDefault(context.getText(), context.getText());
 	}
 
-	public String getJavaTypeWrapperString() {
+	public String getJavaJsonWrapperTypeString() {
 		if (isList()) {
-			return "List<" + getCollectionType().map(TypeReferenceWrapper::getJavaTypeWrapperString).orElse("??") + ">";
+			return "List<" + getCollectionType().map(TypeReferenceWrapper::getJavaJsonWrapperTypeString).orElse("??") + ">";
 		} else if (isDictionary()) {
-			return "Map<String, " + getCollectionType().map(TypeReferenceWrapper::getJavaTypeWrapperString).orElse("??") + ">";
+			return "Map<String, " + getCollectionType().map(TypeReferenceWrapper::getJavaJsonWrapperTypeString).orElse("??") + ">";
 		} else if (isClientObjectReference()) {
 			return "ClientObject";
 		} else if (isDtoClassOrInterface()) {

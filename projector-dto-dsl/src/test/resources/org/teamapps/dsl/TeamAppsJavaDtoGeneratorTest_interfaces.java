@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+import org.teamapps.projector.session.SessionContext;
 
 import org.teamapps.commons.util.ExceptionUtil;
 
@@ -44,49 +45,12 @@ public interface A extends DtoObject {
 	public String getB();
 	public A setB(String b);
 
-	public static class YEvent {
-
-	    public static final String TYPE_ID = "A.y";
-
-		protected String y;
-
-		/**
-		 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-		 */
-		@Deprecated
-		public YEvent() {
-			// default constructor for Jackson
-		}
-
-		public YEvent(String y) {
-			this.y = y;
-		}
-
-		@SuppressWarnings("unchecked")
-		public String toString() {
-			return new StringBuilder(getClass().getSimpleName()).append(": ")
-					.append("y=" + y)
-					.toString();
-		}
-
-		@com.fasterxml.jackson.annotation.JsonGetter("y")
-		public String getY() {
-			return y;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonSetter("y")
-		public YEvent setY(String y) {
-			this.y = y;
-			return this;
-		}
-
-	}
     public static class YEventWrapper extends JsonWrapper {
 
         public static final String TYPE_ID = "y";
 
-        public YEventWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
-            super(objectMapper, jsonNode);
+        public YEventWrapper(JsonNode jsonNode) {
+            super(jsonNode);
         }
 
         public String getY() {
@@ -99,49 +63,12 @@ public interface A extends DtoObject {
         }
     }
 
-	public static class QQuery {
-
-	    public static final String TYPE_ID = "A.q";
-
-		protected String y;
-
-		/**
-		 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-		 */
-		@Deprecated
-		public QQuery() {
-			// default constructor for Jackson
-		}
-
-		public QQuery(String y) {
-			this.y = y;
-		}
-
-		@SuppressWarnings("unchecked")
-		public String toString() {
-			return new StringBuilder(getClass().getSimpleName()).append(": ")
-					.append("y=" + y)
-					.toString();
-		}
-
-		@com.fasterxml.jackson.annotation.JsonGetter("y")
-		public String getY() {
-			return y;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonSetter("y")
-		public QQuery setY(String y) {
-			this.y = y;
-			return this;
-		}
-
-	}
 	public static class QQueryWrapper extends JsonWrapper {
 
 	    public static final String TYPE_ID = "q";
 
-	    public QQueryWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
-	        super(objectMapper, jsonNode);
+	    public QQueryWrapper(JsonNode jsonNode) {
+	        super(jsonNode);
 	    }
 
 	    public String getY() {

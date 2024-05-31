@@ -35,17 +35,34 @@ public class EventWrapper {
 		return parameters;
 	}
 
-
-
-
-
-
 	public ClassOrInterfaceWrapper<?> getDeclaringClass() {
 		return model.getDeclaringClassOrInterface(context);
 	}
 
 	public String getTypeScriptInterfaceName() {
 		return model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Event";
+	}
+
+	public boolean hasNoParameters() {
+		return parameters.isEmpty();
+	}
+
+	public boolean hasOneParameter() {
+		return parameters.size() == 1;
+	}
+
+	public boolean hasMultipleParameters() {
+		return parameters.size() > 1;
+	}
+
+	public String getEffectiveTypeScriptEventObjectTypeName() {
+		if (hasMultipleParameters()) {
+			return getTypeScriptInterfaceName();
+		} else if (hasOneParameter()) {
+			return getParameters().getFirst().getType().getTypeScriptTypeName();
+		} else {
+			return "void";
+		}
 	}
 
 	public List<FormalParameterWrapper> getAllProperties() {

@@ -1,7 +1,6 @@
 package org.teamapps.dto.protocol.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.projector.dto.JsonWrapper;
@@ -14,8 +13,8 @@ public class EVTWrapper extends AbstractReliableClientMessageWrapper {
 
 	public static final String TYPE_ID = "EVT";
 
-	public EVTWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
-		super(objectMapper, jsonNode);
+	public EVTWrapper(JsonNode jsonNode) {
+		super(jsonNode);
 	}
 
 	public String getLibraryId() {
@@ -35,11 +34,7 @@ public class EVTWrapper extends AbstractReliableClientMessageWrapper {
 		if (node == null || node.isNull()) {
 			return null;
 		}
-		return new JsonWrapper(getObjectMapper(), node);
+		return new JsonWrapper(node);
 	}
 
-	public boolean isAwaitingResult() {
-		JsonNode r = jsonNode.get("r");
-		return r != null && r.asBoolean();
-	}
 }

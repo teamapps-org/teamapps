@@ -124,9 +124,9 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 	}
 
 	@Override
-	public void handleViewDraggedToNewWindow(String windowId, String viewName, Map<String, DtoWorkSpaceLayoutItemWrapper> layoutsByWindowId) {
-		this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, layoutsByWindowId);
-		printLayoutSyncTraceMessage(layoutsByWindowId);
+	public void handleViewDraggedToNewWindow(DtoWorkSpaceLayout.ViewDraggedToNewWindowEventWrapper event) {
+		this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, event.getLayoutsByWindowId());
+		printLayoutSyncTraceMessage(event.getLayoutsByWindowId());
 	}
 
 	@Override
@@ -158,11 +158,11 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 	}
 
 	@Override
-	public void handleViewSelected(String viewGroupId, String viewName, List<String> siblingViewNames) {
-		WorkSpaceLayoutViewGroup viewGroup = this.getViewGroupById(viewGroupId);
+	public void handleViewSelected(DtoWorkSpaceLayout.ViewSelectedEventWrapper event) {
+		WorkSpaceLayoutViewGroup viewGroup = this.getViewGroupById(event.getViewGroupId());
 		if (viewGroup != null) {
-			viewGroup.handleViewSelectedByClient(viewName);
-			WorkSpaceLayoutView view = getViewById(viewName);
+			viewGroup.handleViewSelectedByClient(event.getViewName());
+			WorkSpaceLayoutView view = getViewById(event.getViewName());
 			this.onViewSelected.fire(new ViewSelectedEventData(viewGroup, view));
 		}
 	}
@@ -180,10 +180,10 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 	}
 
 	@Override
-	public void handleViewGroupPanelStateChanged(String viewGroupId, DtoViewGroupPanelState panelState) {
-		WorkSpaceLayoutViewGroup viewGroup = getViewGroupById(viewGroupId);
+	public void handleViewGroupPanelStateChanged(DtoWorkSpaceLayout.ViewGroupPanelStateChangedEventWrapper event) {
+		WorkSpaceLayoutViewGroup viewGroup = getViewGroupById(event.getViewGroupId());
 		if (viewGroup != null) {
-			viewGroup.setPanelStateSilently(ViewGroupPanelState.valueOf(panelState.name()));
+			viewGroup.setPanelStateSilently(ViewGroupPanelState.valueOf(event.getPanelState().name()));
 			this.onViewGroupPanelStateChanged.fire(viewGroup);
 		}
 	}

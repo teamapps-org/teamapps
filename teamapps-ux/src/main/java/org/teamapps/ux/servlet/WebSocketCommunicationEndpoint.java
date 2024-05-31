@@ -31,8 +31,8 @@ import org.teamapps.dto.protocol.server.AbstractServerMessage;
 import org.teamapps.dto.protocol.server.REINIT_NOK;
 import org.teamapps.dto.protocol.server.SESSION_CLOSED;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
-import org.teamapps.uisession.*;
 import org.teamapps.projector.session.ClientInfo;
+import org.teamapps.uisession.*;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -119,7 +119,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 			totalReceiveCount.addAndGet(payload.length());
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
-				AbstractClientMessageWrapper clientMessage = new AbstractClientMessageWrapper(mapper, mapper.readTree(payload));
+				AbstractClientMessageWrapper clientMessage = new AbstractClientMessageWrapper(mapper.readTree(payload));
 
 				switch (clientMessage.getTypeId()) {
 					case INITWrapper.TYPE_ID -> {

@@ -67,7 +67,7 @@ public class Label extends AbstractField<String> implements DtoLabelEventHandler
 	}
 
 	@Override
-	public void handleClicked(DtoLabel.ClickedEventWrapper event) {
+	public void handleClicked() {
 		this.onClicked.fire();
 	}
 

@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+import org.teamapps.projector.session.SessionContext;
 
 import org.teamapps.commons.util.ExceptionUtil;
 
@@ -41,9 +42,7 @@ import org.teamapps.projector.clientobject.component.ComponentConfig;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class A implements ComponentConfig, DtoObject {
 
-    public static final String TYPE_ID = "A";
-    public static final List<String> EVENT_NAMES = List.of();
-    public static final List<String> QUERY_NAMES = List.of();
+    public static final String TYPE_ID = "A";  // TODO remove
 
 
 	public A() {

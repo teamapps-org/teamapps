@@ -19,6 +19,7 @@
  */
 package org.teamapps.projector.event;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.awaitility.Awaitility;
 import org.junit.Assert;
@@ -331,7 +332,7 @@ public class ProjectorEventTest {
 				clientInfo, Mockito.mock(HttpSession.class),
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(SessionIconProvider.class),
-				componentLibraryRegistryMock
-		);
+				componentLibraryRegistryMock,
+				Mockito.mock(ObjectMapper.class));
 	}
 }

@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+import org.teamapps.projector.session.SessionContext;
 
 import org.teamapps.commons.util.ExceptionUtil;
 
@@ -40,7 +41,6 @@ import org.teamapps.projector.clientobject.AbstractClientObjectEventMethodInvoke
 import org.teamapps.projector.clientobject.ClientMessageHandler;
 import java.util.function.BiFunction;
 
-
 public interface AEventHandler extends ClientMessageHandler {
 
 	@Override
@@ -48,6 +48,8 @@ public interface AEventHandler extends ClientMessageHandler {
 		new AEventMethodInvoker(this).handleEvent(name, eventObject);
 	}
 
-    void handleE(A.EEventWrapper event);
+    void handleE(
+                                      A.EEventWrapper event
+    );
 
 }

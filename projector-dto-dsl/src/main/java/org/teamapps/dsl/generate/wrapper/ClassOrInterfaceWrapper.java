@@ -142,6 +142,12 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 
 	List<EventWrapper> getEvents();
 
+	default List<EventWrapper> getEventsWithParameters() {
+		return getEvents().stream()
+				.filter(eventWrapper -> !eventWrapper.getParameters().isEmpty())
+				.toList();
+	}
+
 	default List<EventWrapper> getAllEvents() {
 		return getAllSuperTypes(true).stream()
 				.flatMap(t -> t.getEvents().stream())

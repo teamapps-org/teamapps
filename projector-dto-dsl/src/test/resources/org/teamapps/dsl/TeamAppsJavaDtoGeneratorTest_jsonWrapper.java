@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.DtoObject;
+import org.teamapps.projector.session.SessionContext;
 
 import org.teamapps.commons.util.ExceptionUtil;
 
@@ -40,12 +41,16 @@ public class AWrapper extends JsonWrapper {
 
     public static final String TYPE_ID = "A";
 
-    public AWrapper(ObjectMapper objectMapper, JsonNode jsonNode) {
-        super(objectMapper, jsonNode);
+    public AWrapper(JsonNode jsonNode) {
+        super(jsonNode);
     }
 
     public A unwrap() {
-        return ExceptionUtil.runWithSoftenedExceptions(() -> getObjectMapper().treeToValue(jsonNode, A.class));
+        return ExceptionUtil.runWithSoftenedExceptions(() -> SessionContext.current().getObjectMapper().treeToValue(jsonNode, A.class));
+    }
+
+    public A unwrap(ObjectMapper objectMapper) {
+        return ExceptionUtil.runWithSoftenedExceptions(() -> objectMapper.treeToValue(jsonNode, A.class));
     }
 
     public int getI() {
@@ -75,7 +80,7 @@ public class AWrapper extends JsonWrapper {
             throw new IllegalArgumentException("node must be an object!");
         }
         // A
-        return new AWrapper(getObjectMapper(), node);
+        return new AWrapper(node);
 
     }
 
@@ -113,7 +118,7 @@ public class AWrapper extends JsonWrapper {
                         throw new IllegalArgumentException("nodeX must be an object!");
                     }
                     // A
-                    return new AWrapper(getObjectMapper(), nodeX);
+                    return new AWrapper(nodeX);
 
                 }));
 
