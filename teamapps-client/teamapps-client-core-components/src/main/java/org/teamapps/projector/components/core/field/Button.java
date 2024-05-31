@@ -37,10 +37,11 @@ import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class Button extends AbstractField<Void> implements DtoButtonEventHandler {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoButton.ClickedEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(DtoButton.DropDownOpenedEvent.TYPE_ID);
-
 	private final DtoButtonClientObjectChannel clientObjectChannel = new DtoButtonClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onDropDownOpened = new ProjectorEvent<>(clientObjectChannel::toggleDropDownOpenedEvent);
+
 
 	private Template template; // null: toString!
 	private Object templateRecord;
@@ -119,12 +120,12 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 	}
 
 	@Override
-	public void handleClicked() {
+	public void handleClicked(DtoButton.ClickedEventWrapper eventObject) {
 		this.onClicked.fire();
 	}
 
 	@Override
-	public void handleDropDownOpened() {
+	public void handleDropDownOpened(DtoButton.DropDownOpenedEventWrapper eventObject) {
 		this.onDropDownOpened.fire();
 	}
 

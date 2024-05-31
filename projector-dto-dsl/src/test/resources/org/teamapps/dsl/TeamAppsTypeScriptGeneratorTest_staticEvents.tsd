@@ -7,6 +7,8 @@ import {ClientObject} from "projector-client-object-api";
 import {S} from "./S";
 import {ServerObjectChannel} from "projector-client-object-api";
 import {SEventSource} from "./S";
+import {S_SEvent} from "./S";
+import {S_S2Event} from "./S";
 interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
 export interface A extends S {
@@ -15,16 +17,16 @@ export interface A extends S {
 
 export interface AServerObjectChannel extends ServerObjectChannel {
 
-    sendEvent(eventName: "z", a: number, b: number): void;
+    sendEvent(eventName: "z", eventObject: A_ZEvent): void;
 
-    sendEvent(eventName: "s", s: string): void;
+    sendEvent(eventName: "s", eventObject: S_SEvent): void;
 
 }
 export interface StaticAServerObjectChannel extends ServerObjectChannel {
 
-    sendEvent(eventName: "z2", a: number, b: number): void;
+    sendEvent(eventName: "z2", eventObject: A_Z2Event): void;
 
-    sendEvent(eventName: "s2", i: number): void;
+    sendEvent(eventName: "s2", eventObject: S_S2Event): void;
 
 }
 
@@ -41,4 +43,3 @@ export interface A_Z2Event {
 	a: number;
 	b: number
 }
-

@@ -19,7 +19,7 @@
  */
 
 export interface ServerObjectChannel {
-	sendEvent(name: string, ...params: any[]): void;
+	sendEvent(name: string, eventObject: any): void;
 
 	sendQuery(name: string, ...params: any[]): Promise<any>;
 }

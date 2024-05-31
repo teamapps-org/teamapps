@@ -250,7 +250,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		return this.connection.isConnected() && this.protocolStatus === TeamAppsProtocolStatus.ESTABLISHED;
 	}
 
-	public sendEvent(libraryId: string | null, objectId: string | null, name: string, params: any[]): void {
+	public sendEvent(libraryId: string | null, objectId: string | null, name: string, eventObject: any): void {
 		let sequenceNumber = this.clientMessageSequenceNumberCounter++;
 		let evt: EVT = {
 			_type: "EVT",
@@ -258,14 +258,14 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 			lid: libraryId,
 			oid: objectId,
 			name,
-			params
+			evtObj: eventObject
 		};
 		this.sendClientPayloadMessage(evt);
 	}
 
 	public sendQuery(libraryId: string | null, objectId: string | null, name: string, params: any[]): Promise<any> {
 		let sequenceNumber = this.clientMessageSequenceNumberCounter++;
-		let evt: QUERY = {
+		let query: QUERY = {
 			_type: "QUERY",
 			sn: sequenceNumber,
 			lid: libraryId,
@@ -273,7 +273,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 			name,
 			params
 		};
-		this.sendClientPayloadMessage(evt);
+		this.sendClientPayloadMessage(query);
 		return new Promise<any>(resolve => this.eventResultHandlerByMessageId.set(sequenceNumber, resolve));
 	}
 

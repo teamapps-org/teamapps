@@ -104,12 +104,12 @@ public class TextField extends AbstractField<String> implements DtoTextFieldEven
 	}
 
 	@Override
-	public void handleTextInput(String enteredString) {
-		onTextInput.fire(enteredString);
+	public void handleTextInput(DtoTextInputHandlingField.TextInputEventWrapper event) {
+		onTextInput.fire(event.getEnteredString());
 	}
 
 	@Override
-	public void handleSpecialKeyPressed(SpecialKey key) {
-		onSpecialKeyPressed.fire(key);
+	public void handleSpecialKeyPressed(DtoTextInputHandlingField.SpecialKeyPressedEventWrapper event) {
+		onSpecialKeyPressed.fire(event.getKey());
 	}
 }

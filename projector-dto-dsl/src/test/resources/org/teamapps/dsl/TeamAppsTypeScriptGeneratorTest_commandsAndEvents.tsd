@@ -17,7 +17,7 @@ export interface ACommandHandler {
 
 export interface AServerObjectChannel extends ServerObjectChannel {
 
-    sendEvent(eventName: "z3", a: number, b: number): void;
+    sendEvent(eventName: "z3", eventObject: A_Z3Event): void;
 
 }
 
@@ -29,4 +29,3 @@ export interface A_Z3Event {
 	a: number;
 	b: number
 }
-

@@ -184,7 +184,7 @@ export interface EVT extends ReliableClientMessage {
 	lid: string | null; // library uuid
 	oid: string; // client object id
 	name: string; // the name of this event
-	params: any[] // the parameters of the event
+	evtObj: any // the event object
 }
 
 export interface QUERY extends ReliableClientMessage {

@@ -33,7 +33,6 @@ classConfigDefinition(c) ::= <<
 export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{c|<c.typeScriptIdentifier>};  separator=", "> <endif>{
 	_type?: string;
 	<c.properties:typeScriptPropertyDeclaration(false); separator=";\n">
-	<c.queries:queryDeclaration(); separator=";\n">
 }
 
 <if(c.parserRuleContext.typescriptFactoryAnnotation)>
@@ -63,7 +62,6 @@ export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.supe
 
 <c.events:eventInterface(); separator="\n\n">
 
-<c.queries:queryInterface(); separator="\n\n">
 >>
 
 commandMethodStub(cmd) ::= <<
@@ -80,12 +78,6 @@ export interface <evt.typeScriptInterfaceName> {
 }
 >>
 
-queryInterface(q) ::= <<
-export interface <q.typeScriptInterfaceName> {
-	<q.parameters:typeScriptPropertyDeclaration(true); separator=";\n">
-}
->>
-
 parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptTypeName>"
 
 interfaceConfigDefinition(c) ::= <<
@@ -97,7 +89,6 @@ interfaceConfigDefinition(c) ::= <<
 export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{superInterface|<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
 	_type?: string;
 	<c.properties:typeScriptPropertyDeclaration(false); separator=";\n">
-	<c.queries:queryDeclaration(); separator=";\n">
 }
 
 <if(c.allCommands)>
@@ -122,10 +113,6 @@ export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.supe
 
 typeScriptPropertyDeclaration(p, forceRequired) ::= <<
 <p.name><if(!p.required && !forceRequired)>?<endif>: <p.type.typeScriptTypeName>
->>
-
-queryDeclaration(q) ::= <<
-<q.name>: (query: <q.typeScriptInterfaceName>) => Promise\<<q.returnType.typeScriptTypeName>\>
 >>
 
 enum(e) ::= <<
@@ -163,8 +150,8 @@ export interface Static<c.name; format="cap">ServerObjectChannel extends ServerO
 }
 >>
 
-eventServerObjectChannelEventMethodStub(e) ::= <<
-sendEvent(eventName: "<e.name>", <e.parameters:parameter(false); separator=", ">): void;
+eventServerObjectChannelEventMethodStub(evt) ::= <<
+sendEvent(eventName: "<evt.name>", eventObject: <evt.typeScriptInterfaceName>): void;
 >>
 
 eventServerObjectChannelQueryMethodStub(q) ::= <<

@@ -21,7 +21,6 @@ package org.teamapps.projector.components.core.tabpanel;
 
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.components.core.toolbutton.ToolButton;
 import org.teamapps.projector.dto.*;
@@ -158,12 +157,12 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	}
 
 	@Override
-	public void handleTabSelected(String tabId) {
-		if (tabId == null) {
+	public void handleTabSelected(DtoTabPanel.TabSelectedEventWrapper event) {
+		if (event.getTabId() == null) {
 			this.selectedTab = null;
 		} else {
 			Tab oldSelectedTab = this.selectedTab;
-			Tab selectedTab = this.getTabByClientId(tabId);
+			Tab selectedTab = this.getTabByClientId(event.getTabId());
 			this.selectedTab = selectedTab;
 			if (oldSelectedTab != null) {
 				oldSelectedTab.onDeselected.fire(null);
@@ -175,16 +174,15 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 		onTabSelected.fire(selectedTab);
 	}
 
-	// TODO make this a query...
 	@Override
-	public void handleTabNeedsRefresh(String tabId) {
-		Tab tab = getTabByClientId(tabId);
-		clientObjectChannel.setTabContent(tabId, tab.getContent());
+	public void handleTabNeedsRefresh(DtoTabPanel.TabNeedsRefreshEventWrapper event) {
+		Tab tab = getTabByClientId(event.getTabId());
+		clientObjectChannel.setTabContent(event.getTabId(), tab.getContent());
 	}
 
 	@Override
-	public void handleTabClosed(String tabId) {
-		Tab closedTab = this.getTabByClientId(tabId);
+	public void handleTabClosed(DtoTabPanel.TabClosedEventWrapper event) {
+		Tab closedTab = this.getTabByClientId(event.getTabId());
 		if (closedTab != null) {
 			tabs.remove(closedTab);
 			closedTab.onClosed.fire(null);
@@ -193,7 +191,7 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	}
 
 	@Override
-	public void handleWindowButtonClicked(WindowButtonType windowButton) {
+	public void handleWindowButtonClicked(DtoTabPanel.WindowButtonClickedEventWrapper event) {
 		 // TODO remove?
 	}
 

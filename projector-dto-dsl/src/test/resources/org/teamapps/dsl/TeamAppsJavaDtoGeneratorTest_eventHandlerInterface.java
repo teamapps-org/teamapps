@@ -44,10 +44,10 @@ import java.util.function.BiFunction;
 public interface AEventHandler extends ClientMessageHandler {
 
 	@Override
-	default void handleEvent(String name, List<JsonWrapper> params) {
-		new AEventMethodInvoker(this).handleEvent(name, params);
+	default void handleEvent(String name, JsonWrapper eventObject) {
+		new AEventMethodInvoker(this).handleEvent(name, eventObject);
 	}
 
-    void handleE(int i, String s, JsonWrapper o);
+    void handleE(A.EEventWrapper event);
 
 }

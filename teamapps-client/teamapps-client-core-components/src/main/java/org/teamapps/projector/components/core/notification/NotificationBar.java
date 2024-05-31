@@ -47,8 +47,8 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 	}
 
 	@Override
-	public void handleItemClicked(String id) {
-		NotificationBarItem item = itemsByUiId.get(id);
+	public void handleItemClicked(DtoNotificationBar.ItemClickedEventWrapper event) {
+		NotificationBarItem item = itemsByUiId.get(event.getId());
 		if (item != null) {
 			item.onClicked.fire();
 			onItemClicked.fire(item);
@@ -56,8 +56,8 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 	}
 
 	@Override
-	public void handleItemActionLinkClicked(String id) {
-		NotificationBarItem item = itemsByUiId.get(id);
+	public void handleItemActionLinkClicked(DtoNotificationBar.ItemActionLinkClickedEventWrapper event) {
+		NotificationBarItem item = itemsByUiId.get(event.getId());
 		if (item != null) {
 			item.onActionLinkClicked.fire();
 			onItemActionLinkClicked.fire(item);
@@ -65,10 +65,10 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 	}
 
 	@Override
-	public void handleItemClosed(String id, boolean wasTimeout) {
-		NotificationBarItem item = itemsByUiId.get(id);
+	public void handleItemClosed(DtoNotificationBar.ItemClosedEventWrapper event) {
+		NotificationBarItem item = itemsByUiId.get(event.getId());
 		if (item != null) {
-			NotificationBarItemClosedEvent.ClosingReason reason = wasTimeout ? TIMEOUT : USER;
+			NotificationBarItemClosedEvent.ClosingReason reason = event.isWasTimeout() ? TIMEOUT : USER;
 			item.onClosed.fire(reason);
 			onItemClosed.fire(new NotificationBarItemClosedEvent(item, reason));
 		}

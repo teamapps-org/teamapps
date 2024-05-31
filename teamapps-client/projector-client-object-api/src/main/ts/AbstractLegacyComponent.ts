@@ -20,7 +20,16 @@
 import {Component} from "./Component";
 import { ServerObjectChannel } from "./ClientObject";
 import {DtoComponent} from "./generated";
-import {debounce, DebounceMode, DeferredExecutor, generateUUID, StyleManager, TeamAppsEvent} from "./util";
+import {
+	capitalizeFirstLetter,
+	debounce,
+	DebounceMode,
+	DeferredExecutor,
+	generateUUID,
+	isTeamAppsEvent,
+	StyleManager,
+	TeamAppsEvent
+} from "./util";
 
 export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoComponent> implements Component {
 
@@ -45,6 +54,21 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 		this.displayedDeferredExecutor.invokeOnceWhenReady(() => this.styleManager.apply());
 
 		this.visible = config.visible ?? false;
+	}
+
+	init(config: any, serverObjectChannel: ServerObjectChannel): any {
+		this.registerEvents(serverObjectChannel);
+	}
+
+	private registerEvents(serverObjectChannel: ServerObjectChannel) {
+		for (const propertyName in this) {
+			if (propertyName.startsWith("on")) {
+				let propertyValue = this[propertyName];
+				if (isTeamAppsEvent(propertyValue)) {
+					propertyValue.addListener(eventObject => serverObjectChannel.sendEvent(capitalizeFirstLetter(propertyName), eventObject))
+				}
+			}
+		}
 	}
 
 	async invoke(name: string, params: any[]): Promise<any> {

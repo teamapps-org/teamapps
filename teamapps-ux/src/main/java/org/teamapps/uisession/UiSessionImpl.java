@@ -255,7 +255,7 @@ public class UiSessionImpl implements UiSession {
 		});
 	}
 
-	public void handleEvent(int sequenceNumber, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {
+	public void handleEvent(int sequenceNumber, String libraryId, String clientObjectId, String name, JsonWrapper eventObject) {
 		statistics.eventReceived(libraryId + "." + name);
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
@@ -263,7 +263,7 @@ public class UiSessionImpl implements UiSession {
 		}
 		updateClientMessageSequenceNumber(sequenceNumber);
 		reviveConnection();
-		failsafeInvokeSessionListeners(sl -> sl.handleEvent(sessionId, libraryId, clientObjectId, name, params));
+		failsafeInvokeSessionListeners(sl -> sl.handleEvent(sessionId, libraryId, clientObjectId, name, eventObject));
 	}
 
 	public void handleQuery(int sequenceNumber, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {

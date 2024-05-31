@@ -11,6 +11,8 @@ import {BCommandHandler} from "./B";
 import {ACommandHandler} from "./A";
 import {BEventSource} from "./B";
 import {AEventSource} from "./A";
+import {B_Z2Event} from "./B";
+import {A_ZEvent} from "./A";
 interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
 export interface C extends B, A {
@@ -24,11 +26,11 @@ export interface CCommandHandler extends BCommandHandler, ACommandHandler {
 
 export interface CServerObjectChannel extends ServerObjectChannel {
 
-    sendEvent(eventName: "z3", ): void;
+    sendEvent(eventName: "z3", eventObject: C_Z3Event): void;
 
-    sendEvent(eventName: "z2", ): void;
+    sendEvent(eventName: "z2", eventObject: B_Z2Event): void;
 
-    sendEvent(eventName: "z", ): void;
+    sendEvent(eventName: "z", eventObject: A_ZEvent): void;
 
 }
 
@@ -38,4 +40,3 @@ export interface CEventSource extends BEventSource, AEventSource {
 
 export interface C_Z3Event {
 }
-

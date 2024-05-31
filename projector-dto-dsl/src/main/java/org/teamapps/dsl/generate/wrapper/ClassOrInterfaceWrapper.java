@@ -326,6 +326,10 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 			this.getSuperTypes().stream()
 					.filter(c -> !c.getAllEvents().isEmpty())
 					.forEach(c -> imports.addImport(c.getName() + "EventSource", c.getJsModuleName(), "./" + c.getName(), c.getPackageName()));
+			this.getSuperTypes().stream()
+					.flatMap(c -> c.getAllEvents().stream())
+					.filter(distinctByKey(EventWrapper::getName))
+					.forEach(e -> imports.addImport(e.getTypeScriptInterfaceName(), e.getDeclaringClass().getJsModuleName(), "./" + e.getDeclaringClass().getName(), e.getDeclaringClass().getPackageName()));
 		}
 
 		return imports.getAll();

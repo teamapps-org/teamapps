@@ -11,6 +11,8 @@ import {ACommandHandler} from "./A";
 import {ICommandHandler} from "./I";
 import {AEventSource} from "./A";
 import {IEventSource} from "./I";
+import {A_BEvent} from "./A";
+import {I_JEvent} from "./I";
 interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
 export interface B extends A, I {
@@ -22,13 +24,12 @@ export interface BCommandHandler extends ACommandHandler, ICommandHandler {
 
 export interface BServerObjectChannel extends ServerObjectChannel {
 
-    sendEvent(eventName: "b", ): void;
+    sendEvent(eventName: "b", eventObject: A_BEvent): void;
 
-    sendEvent(eventName: "j", ): void;
+    sendEvent(eventName: "j", eventObject: I_JEvent): void;
 
 }
 
 export interface BEventSource extends AEventSource, IEventSource {
 }
-
 

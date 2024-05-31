@@ -21,7 +21,7 @@
 import {SessionClosingReason} from "../protocol/protocol";
 
 export interface TeamAppsConnection {
-	sendEvent(lid: string | null, oid: string | null, name: string, params: any[]): void;
+	sendEvent(lid: string | null, oid: string | null, name: string, eventObject: any): void;
 	sendQuery(lid: string | null, oid: string | null, name: string, params: any[]): Promise<any>;
 }
 

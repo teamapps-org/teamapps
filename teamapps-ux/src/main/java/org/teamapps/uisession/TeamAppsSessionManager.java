@@ -201,24 +201,12 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 					 + "maxRequestedCommandId = [" + maxRequestedCommandId + "], messageSender = [" + messageSender + "]");
 
 		UiSessionImpl uiSession = new UiSessionImpl(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender);
-		uiSession.addSessionListener(new UiSessionListener() {
-			@Override
-			public void onStateChanged(String sessionId, UiSessionState state) {
-				if (state == CLOSED) {
-					sessionsById.remove(uiSession.getSessionId());
-					closedSessionsStatistics.addLast(uiSession.getStatistics().immutableCopy());
-					while (closedSessionsStatistics.size() > 10_000) {
-						closedSessionsStatistics.removeFirst();
-					}
-				}
-			}
-		});
 		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession);
 		SessionContext.InternalUiSessionListener sessionUiSessionListenerImpl = sessionContext.getInternalApi();
 		uiSession.addSessionListener(new UiSessionListener() {
 			@Override
-			public void handleEvent(String sessionId, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {
-				sessionUiSessionListenerImpl.handleEvent(sessionId, libraryId, clientObjectId, name, params);
+			public void handleEvent(String sessionId, String libraryId, String clientObjectId, String name, JsonWrapper eventObject) {
+				sessionUiSessionListenerImpl.handleEvent(sessionId, libraryId, clientObjectId, name, eventObject);
 			}
 
 			@Override
@@ -228,6 +216,13 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 
 			@Override
 			public void onStateChanged(String sessionId, UiSessionState state) {
+				if (state == CLOSED) {
+					sessionsById.remove(uiSession.getSessionId());
+					closedSessionsStatistics.addLast(uiSession.getStatistics().immutableCopy());
+					while (closedSessionsStatistics.size() > 10_000) {
+						closedSessionsStatistics.removeFirst();
+					}
+				}
 				sessionUiSessionListenerImpl.onStateChanged(sessionId, state);
 			}
 

@@ -83,8 +83,8 @@ public class SplitPane extends AbstractComponent implements DtoSplitPaneEventHan
 	}
 
 	@Override
-	public void handleSplitResized(double referenceChildSize) {
-		this.referenceChildSize = referenceChildSize;
+	public void handleSplitResized(DtoSplitPane.SplitResizedEventWrapper event) {
+		this.referenceChildSize = event.getReferenceChildSize();
 		onResized.fire(referenceChildSize);
 	}
 

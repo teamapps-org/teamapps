@@ -8,7 +8,6 @@ import {ServerObjectChannel} from "projector-client-object-api";
 
 export interface X {
 	_type?: string;
-	queryEntries: (query: X_QueryEntriesQuery) => Promise<string[]>
 }
 
 export interface XServerObjectChannel extends ServerObjectChannel {
@@ -18,6 +17,3 @@ export interface XServerObjectChannel extends ServerObjectChannel {
 }
 
 
-export interface X_QueryEntriesQuery {
-	x: number
-}

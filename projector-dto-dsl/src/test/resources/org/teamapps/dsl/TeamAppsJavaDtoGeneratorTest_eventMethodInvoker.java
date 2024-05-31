@@ -48,27 +48,9 @@ public class AEventMethodInvoker extends AbstractClientObjectEventMethodInvoker 
 	}
 
 	@Override
-	protected void invokeHandlerMethod(Method method, String name, List<JsonWrapper> parameters) throws Exception {
+	protected void invokeHandlerMethod(Method method, String name, JsonWrapper eventObject) throws Exception {
 		switch (name) {
-		    case "e" -> method.invoke(targetObject, ((BiFunction<ObjectMapper, JsonNode, Integer>) (objectMapper, node) -> {
-		            if (node == null || node.isNull()) {
-		                return 0;
-		            }
-		            return node.asInt();
-
-		        }).apply(parameters.get(0).getObjectMapper(), parameters.get(0).getJsonNode()), ((BiFunction<ObjectMapper, JsonNode, String>) (objectMapper, node) -> {
-		            if (node == null || node.isNull()) {
-		                return null;
-		            }
-		            return node.textValue();
-
-		        }).apply(parameters.get(0).getObjectMapper(), parameters.get(0).getJsonNode()), ((BiFunction<ObjectMapper, JsonNode, Object>) (objectMapper, node) -> {
-		            if (node == null || node.isNull()) {
-		                return null;
-		            }
-		            return new JsonWrapper(objectMapper, node);
-
-		        }).apply(parameters.get(0).getObjectMapper(), parameters.get(0).getJsonNode()));
+		    case "e" -> method.invoke(targetObject, new A.EEventWrapper(eventObject.getObjectMapper(), eventObject.getJsonNode()));
 			default -> LOGGER.warn("No information on how to invoke this event handler method: {}", method.getName());
 		}
 	}

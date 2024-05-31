@@ -149,17 +149,17 @@ public class SessionContext {
 	}
 
 	public class InternalUiSessionListener {
-		public void handleEvent(String sessionId, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {
+		public void handleEvent(String sessionId, String libraryId, String clientObjectId, String name, JsonWrapper eventObject) {
 			runWithContext(() -> {
 				if (clientObjectId != null) {
 					ClientObject clientObject = clientObjectsById.get(clientObjectId);
 					if (clientObject != null) {
-						clientObject.handleEvent(name, params);
+						clientObject.handleEvent(name, eventObject);
 					} else {
 						throw new ProjectorComponentNotFoundException(sessionId, clientObjectId);
 					}
 				} else {
-					handleStaticEvent(libraryId, name, params);
+					handleStaticEvent(libraryId, name, eventObject);
 				}
 			});
 		}
@@ -453,6 +453,9 @@ public class SessionContext {
 	public ClientObjectChannel getClientObjectChannel(ClientObject clientObject) {
 		Objects.requireNonNull(clientObject, "clientObject must not be null!");
 		return new ClientObjectChannel() {
+
+			private final Set<String> enabledEventNames = new HashSet<>();
+
 			@Override
 			public void forceRender() {
 				SessionContext.this.renderClientObject(clientObject);
@@ -491,6 +494,7 @@ public class SessionContext {
 			@Override
 			public void toggleEvent(String eventName, boolean enabled) {
 				CurrentSessionContext.throwIfNotSameAs(SessionContext.this);
+				enabledEventNames.add(eventName);
 				if (!renderedClientObjects.contains(clientObject)) {
 					return; // will be registered when rendering, anyway.
 				}
@@ -619,8 +623,8 @@ public class SessionContext {
 		return uiSession.getSessionId();
 	}
 
-	public void handleStaticEvent(String libraryId, String name, List<JsonWrapper> params) {
-		LOGGER.info("static event: {}, {}, {}", libraryId, name, params);
+	public void handleStaticEvent(String libraryId, String name, JsonWrapper eventObject) {
+		LOGGER.info("static event: {}, {}, {}", libraryId, name, eventObject);
 		// TODO
 //		switch (name) {
 //			case DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {

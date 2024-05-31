@@ -142,18 +142,18 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 	}
 
 	@Override
-	public void handleValueChanged(JsonWrapper value) {
-		applyValueFromUi(value);
+	public void handleValueChanged(DtoAbstractField.ValueChangedEventWrapper eventObject) {
+		applyValueFromUi(eventObject.getValue());
 		validate();
 	}
 
 	@Override
-	public void handleFocus() {
+	public void handleFocus(DtoAbstractField.FocusEventWrapper eventObject) {
 		onFocus.fire();
 	}
 
 	@Override
-	public void handleBlur() {
+	public void handleBlur(DtoAbstractField.BlurEventWrapper eventObject) {
 		onBlur.fire();
 	}
 

@@ -10,9 +10,10 @@ import org.teamapps.projector.dto.JsonWrapper;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractClientObjectEventMethodInvoker {
+public abstract class AbstractClientObjectQueryMethodInvoker {
 
 	record ClassAndMethodName(Class<?> clazz, String methodName) {}
 
@@ -21,26 +22,26 @@ public abstract class AbstractClientObjectEventMethodInvoker {
 
 	protected final Object targetObject;
 
-	public AbstractClientObjectEventMethodInvoker(Object targetObject) {
+	public AbstractClientObjectQueryMethodInvoker(Object targetObject) {
 		this.targetObject = targetObject;
 	}
 
-	public void handleEvent(String name, JsonWrapper eventObject) {
+	public void handleQuery(String name, List<JsonWrapper> parameters) {
 		Method method = getMethod(name);
 		if (method == null) {
-			LOGGER.warn("Could not find method to call for event: {}", name);
+			LOGGER.warn("Could not find method to call for query: {}", name);
 			return;
 		}
 
 		ExceptionUtil.runWithSoftenedExceptions(() ->  {
-			invokeHandlerMethod(method, name, eventObject);
+			invokeHandlerMethod(method, name, parameters);
 		});
 	}
 
-	abstract protected void invokeHandlerMethod(Method method, String name, JsonWrapper eventObject) throws Exception;
+	abstract protected void invokeHandlerMethod(Method method, String name, List<JsonWrapper> parameters) throws Exception;
 
 	protected Method getMethod(String name) {
-		String methodName = "handle" + StringUtils.capitalize(name) + "Event";
+		String methodName = "handle" + StringUtils.capitalize(name) + "Query";
 		return cachedMethods.computeIfAbsent(new ClassAndMethodName(getClass(), methodName),
 				classAndMethodName -> ReflectionUtil.findMethod(classAndMethodName.clazz, classAndMethodName.methodName));
 	}

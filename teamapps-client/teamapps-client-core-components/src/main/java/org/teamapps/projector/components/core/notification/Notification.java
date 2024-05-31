@@ -88,15 +88,15 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 	}
 
 	@Override
-	public void handleOpened() {
+	public void handleOpened(DtoNotification.OpenedEventWrapper eventObject) {
 		this.showing = true;
 		onOpened.fire(null);
 	}
 
 	@Override
-	public void handleClosed(boolean byUser) {
+	public void handleClosed(DtoNotification.ClosedEventWrapper eventObject) {
 		this.showing = false;
-		onClosed.fire(byUser);
+		onClosed.fire(eventObject.isByUser());
 	}
 
 	public void close() {

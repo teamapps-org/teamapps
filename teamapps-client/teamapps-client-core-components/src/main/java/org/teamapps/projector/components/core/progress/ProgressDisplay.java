@@ -27,7 +27,6 @@ import org.teamapps.projector.components.core.CoreComponentLibrary;
 import org.teamapps.projector.dto.DtoProgressDisplay;
 import org.teamapps.projector.dto.DtoProgressDisplayClientObjectChannel;
 import org.teamapps.projector.dto.DtoProgressDisplayEventHandler;
-import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 
 /**
@@ -87,12 +86,12 @@ public class ProgressDisplay extends AbstractComponent implements DtoProgressDis
 	}
 
 	@Override
-	public void handleClicked() {
+	public void handleClicked(DtoProgressDisplay.ClickedEventWrapper event) {
 		this.onClicked.fire();
 	}
 
 	@Override
-	public void handleCancelButtonClicked() {
+	public void handleCancelButtonClicked(DtoProgressDisplay.CancelButtonClickedEventWrapper event) {
 		if (this.observedProgress != null) {
 			this.observedProgress.requestCancellation();
 		}

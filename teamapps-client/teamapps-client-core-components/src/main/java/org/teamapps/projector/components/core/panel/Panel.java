@@ -186,13 +186,13 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 	}
 
 	@Override
-	public void handleEvent(String name, List<JsonWrapper> params) {
-		new DtoWindowEventMethodInvoker(this).handleEvent(name, params);
+	public void handleEvent(String name, JsonWrapper eventObject) {
+		new DtoWindowEventMethodInvoker(this).handleEvent(name, eventObject);
 	}
 
 	@Override
-	public void handleWindowButtonClicked(WindowButtonType windowButton) {
-		this.onWindowButtonClicked.fire(windowButton);
+	public void handleWindowButtonClicked(DtoPanel.WindowButtonClickedEventWrapper event) {
+		this.onWindowButtonClicked.fire(event.getWindowButton());
 	}
 
 	public String getTitle() {

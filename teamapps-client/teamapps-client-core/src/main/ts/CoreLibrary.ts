@@ -40,25 +40,28 @@ let keyboardEventListener = (e: KeyboardEvent) => {
 			}
 		}
 
-		serverObjectChannel?.sendEvent("globalKeyEventOccurred",
-			e.type == "keydown" ? KeyEventType.KEY_DOWN : KeyEventType.KEY_UP,
-			componentId,
-			e.code,
-			e.isComposing,
-			e.key,
-			(e as any).locale,
-			e.location,
-			e.repeat,
-			e.altKey,
-			e.ctrlKey,
-			e.shiftKey,
-			e.metaKey
-		);
+		serverObjectChannel?.sendEvent("globalKeyEventOccurred", {
+			eventType: e.type == "keydown" ? KeyEventType.KEY_DOWN : KeyEventType.KEY_UP,
+			sourceComponentId: componentId,
+			code: e.code,
+			isComposing: e.isComposing,
+			key: e.key,
+			locale: (e as any).locale,
+			location: e.location,
+			repeat: e.repeat,
+			altKey: e.altKey,
+			ctrlKey: e.ctrlKey,
+			shiftKey: e.shiftKey,
+			metaKey: e.metaKey
+		});
 	}
 }
 
 window.addEventListener('popstate', (event) => {
-	serverObjectChannel?.sendEvent("navigationStateChange", location.href, true);
+	serverObjectChannel?.sendEvent("navigationStateChange", {
+		location: location.href,
+		triggeredByUser: true
+	});
 });
 
 export var CoreLibrary = {

@@ -215,7 +215,7 @@ public class MultiFieldValidatorTest {
         }
 
         @Override
-        public void handleEvent(String name, List<JsonWrapper> params) {
+        public void handleEvent(String name, JsonWrapper eventObject) {
 
         }
 

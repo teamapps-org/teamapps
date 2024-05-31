@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public interface UiSessionListener {
 
-	default void handleEvent(String sessionId, String libraryId, String clientObjectId, String name, List<JsonWrapper> params) {
+	default void handleEvent(String sessionId, String libraryId, String clientObjectId, String name, JsonWrapper eventObject) {
 	}
 
 	default void handleQuery(String sessionId, String libraryId, String clientObjectId, String name, List<JsonWrapper> params, Consumer<Object> resultCallback) {

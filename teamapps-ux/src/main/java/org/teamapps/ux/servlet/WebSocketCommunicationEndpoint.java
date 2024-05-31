@@ -168,7 +168,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 					}
 					case EVTWrapper.TYPE_ID -> {
 						EVTWrapper eventMessage = clientMessage.as(EVTWrapper.class);
-						uiSession.handleEvent(eventMessage.getSequenceNumber(), eventMessage.getLibraryId(), eventMessage.getClientObjectId(), eventMessage.getName(), eventMessage.getParams());
+						uiSession.handleEvent(eventMessage.getSequenceNumber(), eventMessage.getLibraryId(), eventMessage.getClientObjectId(), eventMessage.getName(), eventMessage.getEventObject());
 					}
 					case QUERYWrapper.TYPE_ID -> {
 						QUERYWrapper queryMessage = clientMessage.as(QUERYWrapper.class);

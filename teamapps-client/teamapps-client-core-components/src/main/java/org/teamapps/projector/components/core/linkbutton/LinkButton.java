@@ -60,7 +60,7 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 	}
 
 	@Override
-	public void handleClicked() {
+	public void handleClicked(DtoLinkButton.ClickedEventWrapper event) {
 		onClicked.fire();
 	}
 

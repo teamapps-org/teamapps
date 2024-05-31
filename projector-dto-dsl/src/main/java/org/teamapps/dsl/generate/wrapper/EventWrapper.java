@@ -41,12 +41,10 @@ public class EventWrapper {
 
 
 	public ClassOrInterfaceWrapper<?> getDeclaringClass() {
-		System.out.println("EventWrapper.getDeclaringClass");
 		return model.getDeclaringClassOrInterface(context);
 	}
 
 	public String getTypeScriptInterfaceName() {
-		System.out.println("EventWrapper.getDeclaringClass");
 		return model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Event";
 	}
 

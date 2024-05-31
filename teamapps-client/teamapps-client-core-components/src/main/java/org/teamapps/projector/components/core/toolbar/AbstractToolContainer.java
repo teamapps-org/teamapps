@@ -48,18 +48,17 @@ public abstract class AbstractToolContainer extends AbstractComponent implements
 	}
 
 	@Override
-	public void handleToolbarButtonClick(String groupId, String buttonId, DropDownButtonClickInfoWrapper dropDownClickInfo) {
-		ToolbarButton button = getButtonByClientId(groupId, buttonId);
+	public void handleToolbarButtonClick(DtoAbstractToolContainer.ToolbarButtonClickEventWrapper e) {
+		ToolbarButton button = getButtonByClientId(e.getGroupId(), e.getButtonId());
 		if (button != null) {
-			if (dropDownClickInfo != null && dropDownClickInfo.isOpening() && !dropDownClickInfo.isContentSet()) {
+			if (e.getDropDownClickInfo() != null && e.getDropDownClickInfo().isOpening() && !e.getDropDownClickInfo().isContentSet()) {
 				Component dropdownComponent = button.getDropDownComponent();
-				clientObjectChannel.setDropDownComponent(groupId, buttonId, dropdownComponent);
+				clientObjectChannel.setDropDownComponent(e.getGroupId(), e.getButtonId(), dropdownComponent);
 			}
-			button.onClick.fire(new ToolbarButtonClickEvent(dropDownClickInfo != null && dropDownClickInfo.isOpening(), dropDownClickInfo != null && dropDownClickInfo.isContentSet()));
-			onButtonClick.fire(new ToolbarButtonClickEventData(button, dropDownClickInfo != null ? dropDownClickInfo.unwrap() : null));
+			button.onClick.fire(new ToolbarButtonClickEvent(e.getDropDownClickInfo() != null && e.getDropDownClickInfo().isOpening(), e.getDropDownClickInfo() != null && e.getDropDownClickInfo().isContentSet()));
+			onButtonClick.fire(new ToolbarButtonClickEventData(button, e.getDropDownClickInfo() != null ? e.getDropDownClickInfo().unwrap() : null));
 		}
 	}
-
 
 	private ToolbarButton getButtonByClientId(String groupId, String buttonId) {
 		return buttonGroups.stream()

@@ -99,3 +99,10 @@ export class TeamAppsEvent<EO> {
 	}
 }
 
+export function isTeamAppsEvent(e: any): e is TeamAppsEvent<any> {
+	return typeof e === "object"
+		&& typeof (e["fire"]) === "function"
+		&& typeof (e["addListener"]) === "function"
+		&& typeof (e["removeListener"]) === "function";
+}
+

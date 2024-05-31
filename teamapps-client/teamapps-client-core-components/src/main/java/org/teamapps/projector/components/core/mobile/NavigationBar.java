@@ -21,7 +21,6 @@ package org.teamapps.projector.components.core.mobile;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.clientobject.ClientObject;
 import org.teamapps.projector.clientobject.component.AbstractComponent;
 import org.teamapps.projector.clientobject.component.Component;
 import org.teamapps.projector.components.core.CoreComponentLibrary;
@@ -79,9 +78,9 @@ public class NavigationBar extends AbstractComponent implements DtoNavigationBar
 	}
 
 	@Override
-	public void handleButtonClicked(String buttonId, ClientObject visibleFanOutComponentId) {
+	public void handleButtonClicked(DtoNavigationBar.ButtonClickedEventWrapper event) {
 		buttons.stream()
-				.filter(btn -> btn.getClientId().equals(buttonId))
+				.filter(btn -> btn.getClientId().equals(event.getButtonId()))
 				.forEach(button -> {
 					onButtonClick.fire(button);
 					button.onClick.fire(null);
@@ -89,7 +88,7 @@ public class NavigationBar extends AbstractComponent implements DtoNavigationBar
 	}
 
 	@Override
-	public void handleFanoutClosedDueToClickOutsideFanout() {
+	public void handleFanoutClosedDueToClickOutsideFanout(DtoNavigationBar.FanoutClosedDueToClickOutsideFanoutEventWrapper event) {
 		this.activeFanOutComponent = null;
 	}
 
