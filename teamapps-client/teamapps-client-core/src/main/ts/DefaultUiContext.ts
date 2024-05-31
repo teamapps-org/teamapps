@@ -37,6 +37,7 @@ class FilteredServerObjectChannel implements ServerObjectChannel {
 	}
 
 	toggleEvent(name: string, enabled: boolean): void {
+		console.debug(`Toggling event ${name}: ${enabled}`)
 		if (enabled) {
 			this.activeEventNames.add(name);
 		} else {
@@ -46,7 +47,10 @@ class FilteredServerObjectChannel implements ServerObjectChannel {
 
 	sendEvent(name: string, params: any[]) {
 		if (this.activeEventNames.has(name)) {
+			console.debug(`sendEvent(${name}) will be forwarded to server.`);
 			this.serverObjectChannel.sendEvent(name, params);
+		} else {
+			console.debug(`Event swallowed (not enabled): ${name}.`);
 		}
 	}
 
@@ -179,7 +183,7 @@ export class DefaultUiContext implements TeamAppsConnectionListener {
 		clientObjectWrapper.clientObjectPromise
 			.then(clientObject => this.idByClientObject.set(clientObject, objectId))
 
-		console.debug(`Listening on clientObject ${(config.id)} to events ${(enabledEventNames)}`);
+		console.debug(`Listening on clientObject ${objectId} to events: ${enabledEventNames}`);
 		enabledEventNames?.forEach(name => clientObjectWrapper.toggleEvent(name, true));
 	}
 

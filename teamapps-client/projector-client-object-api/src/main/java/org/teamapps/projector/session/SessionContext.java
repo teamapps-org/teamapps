@@ -36,6 +36,7 @@ import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.*;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
 import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.dto.DtoGlobals;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.i18n.ResourceBundleTranslationProvider;
@@ -51,6 +52,7 @@ import org.teamapps.projector.session.uisession.UiSessionState;
 
 import java.io.File;
 import java.lang.invoke.MethodHandles;
+import java.net.URI;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.ZoneId;
@@ -89,6 +91,7 @@ public class SessionContext {
 	private final SessionIconProvider iconProvider;
 
 	private final BidiMap<String, ClientObject> clientObjectsById = new DualHashBidiMap<>();
+	private final HashMap<ClientObject, ClientObjectChannel> channelsByClientObject = new HashMap<>();
 	private final Set<ClientObject> renderingClientObjects = new HashSet<>();
 	private final Set<ClientObject> renderedClientObjects = new HashSet<>();
 
@@ -267,7 +270,7 @@ public class SessionContext {
 	 * Invokes the given command on the client side and calls the resultCallback after it has been executed on the client side.
 	 * Note that the callback is also going to be called if the client side does not explicitly return a result (in which case
 	 * the callback is invoked with null).
-	 * 
+	 *
 	 * @param resultCallback invoked after the command has been executed on the client side.
 	 */
 	public <RESULT> void sendStaticCommandWithCallback(Class<? extends ClientObject> clientObjectClass, String name, Object[] params, Consumer<RESULT> resultCallback) {
@@ -423,85 +426,39 @@ public class SessionContext {
 		return getIconBasePath() + "/" + iconProvider.encodeIcon((Icon) icon, true);
 	}
 
-	public String renderClientObject(ClientObject clientObject) {
-		CurrentSessionContext.throwIfNotSameAs(this);
+	public ClientObjectChannel registerClientObject(ClientObject clientObject) {
+		Objects.requireNonNull(clientObject, "clientObject must not be null!");
 
-		String id = clientObjectsById.getKey(clientObject);
-		if (id == null) {
-			id = FriendlyId.createFriendlyId();
-			clientObjectsById.put(id, clientObject);
+		if (channelsByClientObject.containsKey(clientObject)) {
+			LOGGER.warn("Attempt to register client object multiple times! {}", clientObject);
+			return channelsByClientObject.get(clientObject);
 		}
 
-		if (!renderedClientObjects.contains(clientObject) && !renderingClientObjects.contains(clientObject)) {
-			this.renderingClientObjects.add(clientObject);
-			try {
-				String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
+		String clientId = clientObjectsById.inverseBidiMap().computeIfAbsent(clientObject, co -> co.getClass().getSimpleName() + "-" + FriendlyId.createFriendlyId());
 
-				// TODO cache for performance
-				ClientObjectTypeName typeNameAnnotation = clientObject.getClass().getAnnotation(ClientObjectTypeName.class);
-				String typeName = typeNameAnnotation != null ? typeNameAnnotation.value() : clientObject.getClass().getSimpleName();
+		ClientObjectChannel clientObjectChannel = new ClientObjectChannelImpl(clientObject, clientId);
 
-				uiSession.sendReliableServerMessage(new CREATE_OBJ(libraryUuid, typeName, id, clientObject.createConfig(), clientObject.getListeningEventNames()));
-			} finally {
-				renderingClientObjects.remove(clientObject);
-			}
-			renderedClientObjects.add(clientObject);
-		}
-		return id;
+		channelsByClientObject.put(clientObject, clientObjectChannel);
+		return clientObjectChannel;
 	}
 
-	public ClientObjectChannel getClientObjectChannel(ClientObject clientObject) {
-		Objects.requireNonNull(clientObject, "clientObject must not be null!");
-		return new ClientObjectChannel() {
+	private void renderClientObject(ClientObject clientObject) {
+		CurrentSessionContext.throwIfNotSameAs(this);
 
-			private final Set<String> enabledEventNames = new HashSet<>();
+		ClientObjectChannel clientObjectChannel = channelsByClientObject.get(clientObject);
 
-			@Override
-			public void forceRender() {
-				SessionContext.this.renderClientObject(clientObject);
-			}
+		if (clientObjectChannel == null) {
+			throw new IllegalStateException("Cannot render unregistered client object! Please call registerClientObject first. If you are not the developer of this component (" + clientObject.getClass() + "), please file a bug report to them.");
+		}
 
-			@Override
-			public boolean isRendered() {
-				return SessionContext.this.isRendered(clientObject);
-			}
+		clientObjectChannel.forceRender();
+	}
 
-			@Override
-			public boolean sendCommandIfRendered(String name, Object[] params, Consumer<JsonWrapper> resultHandler) {
-				CurrentSessionContext.throwIfNotSameAs(SessionContext.this);
+	/*package-private*/ String ensureRenderedAndGetId(ClientObject clientObject) {
+		CurrentSessionContext.throwIfNotSameAs(this);
 
-				if (isRendering(clientObject)) {
-					/*
-					This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a fired event. This change must be transported to the client
-					as command (since the corresponding setter of the parent's DtoComponent has possibly already been set). However, this command must be enqueued after the component is rendered on the client
-					side! Therefore, sending the command must be forcibly enqueued.
-
-					Example: A panel contains a table. The panel's title is bound to the table's "count" ObservableValue. When the panel is rendered, the table also is rendered (as part of rendering the
-					panel). While rendering, the table sets its "count" value, so the panel's title is changed. However, the DtoPanel's setTitle() method already has been invoked, so the change will not have
-					any effect on the initialization of the DtoPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
-					the panel was rendered (which is only after completing its createUiComponent() method).
-					 */
-					runWithContext(() -> sendCommandInternal(getClientObjectId(clientObject, false), name, params, null), true);
-					return true;
-				} else if (isRendered()) {
-					sendCommandInternal(getClientObjectId(clientObject, false), name, params, null);
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-			@Override
-			public void toggleEvent(String eventName, boolean enabled) {
-				CurrentSessionContext.throwIfNotSameAs(SessionContext.this);
-				enabledEventNames.add(eventName);
-				if (!renderedClientObjects.contains(clientObject)) {
-					return; // will be registered when rendering, anyway.
-				}
-				String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
-				uiSession.sendReliableServerMessage(new TOGGLE_EVT(libraryUuid, clientObjectsById.getKey(clientObject), eventName, enabled));
-			}
-		};
+		renderClientObject(clientObject);
+		return clientObjectsById.getKey(clientObject);
 	}
 
 	private <RESULT> void sendCommandInternal(String clientObjectId, String name, Object[] params, Consumer<RESULT> resultCallback) {
@@ -523,14 +480,6 @@ public class SessionContext {
 			renderingClientObjects.remove(clientObject);
 			renderedClientObjects.remove(clientObject);
 		}
-	}
-
-	public String getClientObjectId(ClientObject clientObject, boolean renderIfNotYetRendered) {
-		String clientId = clientObjectsById.getKey(clientObject);
-		if (renderIfNotYetRendered) {
-			clientId = renderClientObject(clientObject);
-		}
-		return clientId;
 	}
 
 	public ClientObject getClientObjectById(String id) {
@@ -616,7 +565,7 @@ public class SessionContext {
 	}
 
 	public void configureGlobalKeyEvents(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		sendStaticCommand(null, "configureGlobalKeyboardEvents", new Object[] {unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp});
+		sendStaticCommand(null, "configureGlobalKeyboardEvents", new Object[]{unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp});
 	}
 
 	public String getSessionId() {
@@ -625,39 +574,32 @@ public class SessionContext {
 
 	public void handleStaticEvent(String libraryId, String name, JsonWrapper eventObject) {
 		LOGGER.info("static event: {}, {}, {}", libraryId, name, eventObject);
-		// TODO
-//		switch (name) {
-//			case DtoGlobals.GlobalKeyEventOccurredEvent.TYPE_ID -> {
-//				DtoGlobals.GlobalKeyEventOccurredEventWrapper e = params.getFirst().as(DtoGlobals.GlobalKeyEventOccurredEventWrapper.class);
-//				String clientObjectId = e.getSourceComponentId();
-//				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
-//						e.getEventType(),
-//						(e.getSourceComponentId() != null ? (Component) clientObjectsById.get(clientObjectId) : null),
-//						e.getCode(),
-//						e.isComposing(),
-//						e.getKey(),
-//						e.getCharCode(),
-//						e.getKeyCode(),
-//						e.getLocale(),
-//						e.getLocation(),
-//						e.getRepeat(),
-//						e.getAltKey(),
-//						e.getCtrlKey(),
-//						e.getShiftKey(),
-//						e.getMetaKey()
-//				));
-//			}
-//			case DtoGlobals.NavigationStateChangeEvent.TYPE_ID -> {
-//				DtoGlobals.NavigationStateChangeEventWrapper e = params.getFirst().as(DtoGlobals.NavigationStateChangeEventWrapper.class);
-//				Location location = Location.fromUiLocationWrapper(e.getLocation());
-//				this.currentLocation = location;
-//				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
-//			}
-//			default -> {
-//				 TODO static event handlers on library level...
-//				throw new TeamAppsUiApiException(getSessionId(), name);
-//			}
-//		}
+		if (libraryId == null && "globalKeyEventOccurred".equals(name)) {
+			DtoGlobals.GlobalKeyEventOccurredEventWrapper e = eventObject.as(DtoGlobals.GlobalKeyEventOccurredEventWrapper::new);
+			String clientObjectId = e.getSourceComponentId();
+			onGlobalKeyEventOccurred.fire(new KeyboardEvent(
+					e.getEventType(),
+					(e.getSourceComponentId() != null ? (Component) clientObjectsById.get(clientObjectId) : null),
+					e.getCode(),
+					e.isComposing(),
+					e.getKey(),
+					e.getLocale(),
+					e.getLocation(),
+					e.isRepeat(),
+					e.isAltKey(),
+					e.isCtrlKey(),
+					e.isShiftKey(),
+					e.isMetaKey()
+			));
+		} else if (libraryId == null && "navigationStateChange".equals(name)) {
+			DtoGlobals.NavigationStateChangeEventWrapper e = eventObject.as(DtoGlobals.NavigationStateChangeEventWrapper::new);
+			URL url = ExceptionUtil.runWithSoftenedExceptions(() -> URI.create(e.getLocation()).toURL());
+			this.currentLocation = url;
+			onNavigationStateChange.fire(new NavigationStateChangeEvent(url, e.isTriggeredByUser()));
+		} else {
+			// TODO static event handlers on library level...
+			LOGGER.error("TODO static event handling!");
+		}
 	}
 
 	public URL getCurrentLocation() {
@@ -736,4 +678,76 @@ public class SessionContext {
 		return (T) uiSessionListener;
 	}
 
+	private class ClientObjectChannelImpl implements ClientObjectChannel {
+
+		private final Set<String> enabledEventNames;
+		private final ClientObject clientObject;
+		private final String clientId;
+
+		public ClientObjectChannelImpl(ClientObject clientObject, String clientId) {
+			this.clientObject = clientObject;
+			this.clientId = clientId;
+			enabledEventNames = new HashSet<>();
+		}
+
+		@Override
+		public void forceRender() {
+			if (!renderedClientObjects.contains(clientObject) && !renderingClientObjects.contains(clientObject)) {
+				renderingClientObjects.add(clientObject);
+				try {
+					String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
+
+					// TODO cache for performance
+					ClientObjectTypeName typeNameAnnotation = clientObject.getClass().getAnnotation(ClientObjectTypeName.class);
+					String typeName = typeNameAnnotation != null ? typeNameAnnotation.value() : clientObject.getClass().getSimpleName();
+
+					uiSession.sendReliableServerMessage(new CREATE_OBJ(libraryUuid, typeName, clientId, clientObject.createConfig(), List.copyOf(enabledEventNames)));
+				} finally {
+					renderingClientObjects.remove(clientObject);
+				}
+				renderedClientObjects.add(clientObject);
+			}
+		}
+
+		@Override
+		public boolean isRendered() {
+			return SessionContext.this.isRendered(clientObject);
+		}
+
+		@Override
+		public boolean sendCommandIfRendered(String name, Object[] params, Consumer<JsonWrapper> resultHandler) {
+			CurrentSessionContext.throwIfNotSameAs(SessionContext.this);
+
+			if (isRendering(clientObject)) {
+				/*
+				This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a fired event. This change must be transported to the client
+				as command (since the corresponding setter of the parent's DtoComponent has possibly already been set). However, this command must be enqueued after the component is rendered on the client
+				side! Therefore, sending the command must be forcibly enqueued.
+
+				Example: A panel contains a table. The panel's title is bound to the table's "count" ObservableValue. When the panel is rendered, the table also is rendered (as part of rendering the
+				panel). While rendering, the table sets its "count" value, so the panel's title is changed. However, the DtoPanel's setTitle() method already has been invoked, so the change will not have
+				any effect on the initialization of the DtoPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
+				the panel was rendered (which is only after completing its createUiComponent() method).
+				 */
+				runWithContext(() -> sendCommandInternal(clientObjectsById.getKey(clientObject), name, params, null), true);
+				return true;
+			} else if (isRendered()) {
+				sendCommandInternal(clientObjectsById.getKey(clientObject), name, params, null);
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		@Override
+		public void toggleEvent(String eventName, boolean enabled) {
+			CurrentSessionContext.throwIfNotSameAs(SessionContext.this);
+			enabledEventNames.add(eventName);
+			if (!renderedClientObjects.contains(clientObject)) {
+				return; // will be registered when rendering, anyway.
+			}
+			String libraryUuid = getComponentLibraryUuidForClientObjectClass(clientObject.getClass(), true);
+			uiSession.sendReliableServerMessage(new TOGGLE_EVT(libraryUuid, clientObjectsById.getKey(clientObject), eventName, enabled));
+		}
+	}
 }

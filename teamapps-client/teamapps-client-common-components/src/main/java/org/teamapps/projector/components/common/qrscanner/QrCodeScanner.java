@@ -27,7 +27,7 @@ import org.teamapps.ux.component.AbstractComponent;
 
 public class QrCodeScanner extends AbstractComponent {
 
-	public final ProjectorEvent<String> onQrCodeDetected = createProjectorEventBoundToUiEvent(DtoQrCodeScanner.QrCodeDetectedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onQrCodeDetected = new ProjectorEvent<>(clientObjectChannel::toggleQrCodeDetectedEvent);
 
 	private boolean scanning;
 	private boolean stopsScanningAtFirstResult;

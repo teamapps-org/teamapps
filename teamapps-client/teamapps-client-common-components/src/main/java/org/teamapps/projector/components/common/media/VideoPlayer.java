@@ -29,9 +29,9 @@ import org.teamapps.ux.component.AbstractComponent;
 
 public class VideoPlayer extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(DtoVideoPlayer.ErrorLoadingEvent.TYPE_ID);
-	public final ProjectorEvent<Integer> onProgress = createProjectorEventBoundToUiEvent(DtoVideoPlayer.PlayerProgressEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(DtoVideoPlayer.EndedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onErrorLoading = new ProjectorEvent<>(clientObjectChannel::toggleErrorLoadingEvent);
+	public final ProjectorEvent<Integer> onProgress = new ProjectorEvent<>(clientObjectChannel::togglePlayerProgressEvent);
+	public final ProjectorEvent<Void> onEnded = new ProjectorEvent<>(clientObjectChannel::toggleEndedEvent);
 
 	private String url; //the url of the video
 	private boolean autoplay; // if set...

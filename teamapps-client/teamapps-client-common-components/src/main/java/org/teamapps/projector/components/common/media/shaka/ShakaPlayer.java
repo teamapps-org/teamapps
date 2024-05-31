@@ -34,10 +34,10 @@ import org.teamapps.ux.session.SessionContext;
 
 public class ShakaPlayer extends AbstractComponent {
 
-	public final ProjectorEvent<Void> onErrorLoading = createProjectorEventBoundToUiEvent(DtoShakaPlayer.ErrorLoadingEvent.TYPE_ID);
-	public final ProjectorEvent<DtoShakaManifest> onManifestLoaded = createProjectorEventBoundToUiEvent(DtoShakaPlayer.ManifestLoadedEvent.TYPE_ID);
-	public final ProjectorEvent<Long> onTimeUpdate = createProjectorEventBoundToUiEvent(DtoShakaPlayer.TimeUpdateEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onEnded = createProjectorEventBoundToUiEvent(DtoShakaPlayer.EndedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onErrorLoading = new ProjectorEvent<>(clientObjectChannel::toggleErrorLoadingEvent);
+	public final ProjectorEvent<DtoShakaManifest> onManifestLoaded = new ProjectorEvent<>(clientObjectChannel::toggleManifestLoadedEvent);
+	public final ProjectorEvent<Long> onTimeUpdate = new ProjectorEvent<>(clientObjectChannel::toggleTimeUpdateEvent);
+	public final ProjectorEvent<Void> onEnded = new ProjectorEvent<>(clientObjectChannel::toggleEndedEvent);
 
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
 		SessionContext.current().sendStaticCommand(ShakaPlayer.class, new DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));

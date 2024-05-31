@@ -40,7 +40,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 
 	private final DtoPanelClientObjectChannel clientObjectChannel = new DtoPanelClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = createProjectorEventBoundToUiEvent(DtoPanel.WindowButtonClickedEvent.TYPE_ID);
+	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = new ProjectorEvent<>(clientObjectChannel::toggleWindowButtonClickedEvent);
 
 	private String title;
 	private Icon<?, ?> icon;

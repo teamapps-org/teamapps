@@ -60,14 +60,14 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 
 	private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public final ProjectorEvent<EventClickedEventData<CEVENT>> onEventClicked = createProjectorEventBoundToUiEvent(DtoCalendar.EventClickedEvent.TYPE_ID);
-	public final ProjectorEvent<EventMovedEventData<CEVENT>> onEventMoved = createProjectorEventBoundToUiEvent(DtoCalendar.EventMovedEvent.TYPE_ID);
-	public final ProjectorEvent<DayClickedEventData> onDayClicked = createProjectorEventBoundToUiEvent(DtoCalendar.DayClickedEvent.TYPE_ID);
-	public final ProjectorEvent<IntervalSelectedEventData> onIntervalSelected = createProjectorEventBoundToUiEvent(DtoCalendar.IntervalSelectedEvent.TYPE_ID);
-	public final ProjectorEvent<ViewChangedEventData> onViewChanged = createProjectorEventBoundToUiEvent(DtoCalendar.ViewChangedEvent.TYPE_ID);
-	public final ProjectorEvent<LocalDate> onMonthHeaderClicked = createProjectorEventBoundToUiEvent(DtoCalendar.MonthHeaderClickedEvent.TYPE_ID);
-	public final ProjectorEvent<WeekHeaderClickedEventData> onWeekHeaderClicked = createProjectorEventBoundToUiEvent(DtoCalendar.WeekHeaderClickedEvent.TYPE_ID);
-	public final ProjectorEvent<LocalDate> onDayHeaderClicked = createProjectorEventBoundToUiEvent(DtoCalendar.DayHeaderClickedEvent.TYPE_ID);
+	public final ProjectorEvent<EventClickedEventData<CEVENT>> onEventClicked = new ProjectorEvent<>(clientObjectChannel::toggleEventClickedEvent);
+	public final ProjectorEvent<EventMovedEventData<CEVENT>> onEventMoved = new ProjectorEvent<>(clientObjectChannel::toggleEventMovedEvent);
+	public final ProjectorEvent<DayClickedEventData> onDayClicked = new ProjectorEvent<>(clientObjectChannel::toggleDayClickedEvent);
+	public final ProjectorEvent<IntervalSelectedEventData> onIntervalSelected = new ProjectorEvent<>(clientObjectChannel::toggleIntervalSelectedEvent);
+	public final ProjectorEvent<ViewChangedEventData> onViewChanged = new ProjectorEvent<>(clientObjectChannel::toggleViewChangedEvent);
+	public final ProjectorEvent<LocalDate> onMonthHeaderClicked = new ProjectorEvent<>(clientObjectChannel::toggleMonthHeaderClickedEvent);
+	public final ProjectorEvent<WeekHeaderClickedEventData> onWeekHeaderClicked = new ProjectorEvent<>(clientObjectChannel::toggleWeekHeaderClickedEvent);
+	public final ProjectorEvent<LocalDate> onDayHeaderClicked = new ProjectorEvent<>(clientObjectChannel::toggleDayHeaderClickedEvent);
 
 	private CalendarModel<CEVENT> model;
 	private PropertyProvider<CEVENT> propertyProvider = new BeanPropertyExtractor<>();

@@ -59,11 +59,11 @@ export class ReconnectingCompressingWebSocketConnection {
 
 		this.connection.onopen = () => {
 			if (this.initialConnection) {
-				ReconnectingCompressingWebSocketConnection.log("Connected.");
+				ReconnectingCompressingWebSocketConnection.log("WebSocket connection established.");
 				this.listener.onConnected();
 				this.initialConnection = false;
 			} else {
-				ReconnectingCompressingWebSocketConnection.log("Reconnected.");
+				ReconnectingCompressingWebSocketConnection.log("WebSocket connection reestablished.");
 				this.listener.onReconnected();
 			}
 		};

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.json;
+package org.teamapps.projector.session;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JacksonException;
@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.session.SessionContext;
 
 import java.io.IOException;
 
@@ -58,7 +57,7 @@ public class UxSerializersJacksonModule extends SimpleModule {
 			@Override
 			public void serialize(ClientObject clientObject, JsonGenerator gen, SerializerProvider serializers) throws IOException {
 				SessionContext currentSessionContext = SessionContext.current();
-				gen.writeObject(new ClientObjectReference(currentSessionContext.getClientObjectId(clientObject, true)));
+				gen.writeObject(new ClientObjectReference(currentSessionContext.ensureRenderedAndGetId(clientObject)));
 			}
 
 			@Override

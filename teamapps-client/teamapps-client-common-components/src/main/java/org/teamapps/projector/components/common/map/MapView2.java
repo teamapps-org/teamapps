@@ -38,11 +38,11 @@ import java.util.stream.Collectors;
 
 public class MapView2<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<LocationChangedEventData> onLocationChanged = createProjectorEventBoundToUiEvent(DtoMap2.LocationChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Double> onZoomLevelChanged = createProjectorEventBoundToUiEvent(DtoMap2.ZoomLevelChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Location> onMapClicked = createProjectorEventBoundToUiEvent(DtoMap2.MapClickedEvent.TYPE_ID);
-	public final ProjectorEvent<Marker<RECORD>> onMarkerClicked = createProjectorEventBoundToUiEvent(DtoMap2.MarkerClickedEvent.TYPE_ID);
-	public final ProjectorEvent<AbstractMapShape> onShapeDrawn = createProjectorEventBoundToUiEvent(DtoMap2.ShapeDrawnEvent.TYPE_ID);
+	public final ProjectorEvent<LocationChangedEventData> onLocationChanged = new ProjectorEvent<>(clientObjectChannel::toggleLocationChangedEvent);
+	public final ProjectorEvent<Double> onZoomLevelChanged = new ProjectorEvent<>(clientObjectChannel::toggleZoomLevelChangedEvent);
+	public final ProjectorEvent<Location> onMapClicked = new ProjectorEvent<>(clientObjectChannel::toggleMapClickedEvent);
+	public final ProjectorEvent<Marker<RECORD>> onMarkerClicked = new ProjectorEvent<>(clientObjectChannel::toggleMarkerClickedEvent);
+	public final ProjectorEvent<AbstractMapShape> onShapeDrawn = new ProjectorEvent<>(clientObjectChannel::toggleShapeDrawnEvent);
 
 
 	private final String baseApiUrl;

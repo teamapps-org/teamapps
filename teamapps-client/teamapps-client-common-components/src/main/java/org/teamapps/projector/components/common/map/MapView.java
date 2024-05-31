@@ -41,11 +41,11 @@ import java.util.stream.Collectors;
 
 public class MapView<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<LocationChangedEventData> onLocationChanged = createProjectorEventBoundToUiEvent(DtoMap.LocationChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Integer> onZoomLevelChanged = createProjectorEventBoundToUiEvent(DtoMap.ZoomLevelChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Location> onMapClicked = createProjectorEventBoundToUiEvent(DtoMap.MapClickedEvent.TYPE_ID);
-	public final ProjectorEvent<Marker<RECORD>> onMarkerClicked = createProjectorEventBoundToUiEvent(DtoMap.MarkerClickedEvent.TYPE_ID);
-	public final ProjectorEvent<AbstractMapShape> onShapeDrawn = createProjectorEventBoundToUiEvent(DtoMap.ShapeDrawnEvent.TYPE_ID);
+	public final ProjectorEvent<LocationChangedEventData> onLocationChanged = new ProjectorEvent<>(clientObjectChannel::toggleLocationChangedEvent);
+	public final ProjectorEvent<Integer> onZoomLevelChanged = new ProjectorEvent<>(clientObjectChannel::toggleZoomLevelChangedEvent);
+	public final ProjectorEvent<Location> onMapClicked = new ProjectorEvent<>(clientObjectChannel::toggleMapClickedEvent);
+	public final ProjectorEvent<Marker<RECORD>> onMarkerClicked = new ProjectorEvent<>(clientObjectChannel::toggleMarkerClickedEvent);
+	public final ProjectorEvent<AbstractMapShape> onShapeDrawn = new ProjectorEvent<>(clientObjectChannel::toggleShapeDrawnEvent);
 
 	private MapType mapType = MapType.MAP_BOX_STREETS_SATELLITE;
 	private String accessToken = null;

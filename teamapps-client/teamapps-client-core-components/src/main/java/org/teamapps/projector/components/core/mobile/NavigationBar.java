@@ -38,9 +38,9 @@ import static org.teamapps.commons.util.CollectionCastUtil.castList;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class NavigationBar extends AbstractComponent implements DtoNavigationBarEventHandler {
 
-	public ProjectorEvent<NavigationBarButton> onButtonClick = createProjectorEventBoundToUiEvent(DtoNavigationBar.ButtonClickedEvent.TYPE_ID);
-
 	private final DtoNavigationBarClientObjectChannel clientObjectChannel = new DtoNavigationBarClientObjectChannel(getClientObjectChannel());
+
+	public ProjectorEvent<NavigationBarButton> onButtonClick = new ProjectorEvent<>(clientObjectChannel::toggleButtonClickedEvent);
 
 	private List<NavigationBarButton> buttons = new ArrayList<>();
 	private Color backgroundColor;

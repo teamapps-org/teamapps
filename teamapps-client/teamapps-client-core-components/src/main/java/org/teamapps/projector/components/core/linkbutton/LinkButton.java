@@ -30,9 +30,9 @@ import org.teamapps.projector.event.ProjectorEvent;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class LinkButton extends AbstractComponent implements DtoLinkButtonEventHandler {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLinkButton.ClickedEvent.TYPE_ID);
-
 	private final DtoLinkButtonClientObjectChannel clientObjectChannel = new DtoLinkButtonClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
 
 	private String text;
 	private String url;

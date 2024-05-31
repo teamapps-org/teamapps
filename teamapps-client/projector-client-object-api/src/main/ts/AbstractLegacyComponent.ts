@@ -28,7 +28,7 @@ import {
 	generateUUID,
 	isTeamAppsEvent,
 	StyleManager,
-	TeamAppsEvent
+	TeamAppsEvent, uncapitalizeFirstLetter
 } from "./util";
 
 export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoComponent> implements Component {
@@ -65,7 +65,8 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 			if (propertyName.startsWith("on")) {
 				let propertyValue = this[propertyName];
 				if (isTeamAppsEvent(propertyValue)) {
-					propertyValue.addListener(eventObject => serverObjectChannel.sendEvent(capitalizeFirstLetter(propertyName), eventObject))
+					let eventName = uncapitalizeFirstLetter(propertyName.substring(2));
+					propertyValue.addListener(eventObject => serverObjectChannel.sendEvent(eventName, eventObject))
 				}
 			}
 		}
@@ -92,7 +93,6 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 		this.height = height;
 		this.displayedDeferredExecutor.ready = hasSize;
 		if (hasSize) {
-			console.debug("resize");
 			this.onResized.fire({width: this.width, height: this.height});
 			this.onResize();
 		}

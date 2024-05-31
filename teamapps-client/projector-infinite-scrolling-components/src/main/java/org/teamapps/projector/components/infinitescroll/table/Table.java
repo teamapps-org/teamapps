@@ -55,26 +55,26 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public final ProjectorEvent<CellEditingStartedEvent<RECORD, ?>> onCellEditingStarted = createProjectorEventBoundToUiEvent(DtoTable.CellEditingStartedEvent.TYPE_ID);
-	public final ProjectorEvent<CellEditingStoppedEvent<RECORD, ?>> onCellEditingStopped = createProjectorEventBoundToUiEvent(DtoTable.CellEditingStoppedEvent.TYPE_ID);
-	public final ProjectorEvent<FieldValueChangedEventData<RECORD, ?>> onCellValueChanged = createProjectorEventBoundToUiEvent(DtoTable.CellValueChangedEvent.TYPE_ID);
+	public final ProjectorEvent<CellEditingStartedEvent<RECORD, ?>> onCellEditingStarted = new ProjectorEvent<>(clientObjectChannel::toggleCellEditingStartedEvent);
+	public final ProjectorEvent<CellEditingStoppedEvent<RECORD, ?>> onCellEditingStopped = new ProjectorEvent<>(clientObjectChannel::toggleCellEditingStoppedEvent);
+	public final ProjectorEvent<FieldValueChangedEventData<RECORD, ?>> onCellValueChanged = new ProjectorEvent<>(clientObjectChannel::toggleCellValueChangedEvent);
 	/**
 	 * Fired when any number of rows is selected by the user.
 	 */
-	public final ProjectorEvent<List<RECORD>> onRowsSelected = createProjectorEventBoundToUiEvent(DtoTable.RowsSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<List<RECORD>> onRowsSelected = new ProjectorEvent<>(clientObjectChannel::toggleRowsSelectedEvent);
 	/**
 	 * Fired only when a single row is selected by the user.
 	 */
-	public final ProjectorEvent<RECORD> onSingleRowSelected = createProjectorEventBoundToUiEvent(DtoTable.RowsSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<RECORD> onSingleRowSelected = new ProjectorEvent<>(clientObjectChannel::toggleRowsSelectedEvent);
 	/**
 	 * Fired only when multiple rows are selected by the user.
 	 */
-	public final ProjectorEvent<List<RECORD>> onMultipleRowsSelected = createProjectorEventBoundToUiEvent(DtoTable.RowsSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<List<RECORD>> onMultipleRowsSelected = new ProjectorEvent<>(clientObjectChannel::toggleRowsSelectedEvent);
 
-	public final ProjectorEvent<CellClickedEvent<RECORD, ?>> onCellClicked = createProjectorEventBoundToUiEvent(DtoTable.CellClickedEvent.TYPE_ID);
-	public final ProjectorEvent<SortingChangedEventData> onSortingChanged = createProjectorEventBoundToUiEvent(DtoTable.SortingChangedEvent.TYPE_ID);
-	public final ProjectorEvent<ColumnOrderChangeEventData<RECORD, ?>> onColumnOrderChange = createProjectorEventBoundToUiEvent(DtoTable.FieldOrderChangeEvent.TYPE_ID);
-	public final ProjectorEvent<ColumnSizeChangeEventData<RECORD, ?>> onColumnSizeChange = createProjectorEventBoundToUiEvent(DtoTable.ColumnSizeChangeEvent.TYPE_ID);
+	public final ProjectorEvent<CellClickedEvent<RECORD, ?>> onCellClicked = new ProjectorEvent<>(clientObjectChannel::toggleCellClickedEvent);
+	public final ProjectorEvent<SortingChangedEventData> onSortingChanged = new ProjectorEvent<>(clientObjectChannel::toggleSortingChangedEvent);
+	public final ProjectorEvent<ColumnOrderChangeEventData<RECORD, ?>> onColumnOrderChange = new ProjectorEvent<>(clientObjectChannel::toggleFieldOrderChangeEvent);
+	public final ProjectorEvent<ColumnSizeChangeEventData<RECORD, ?>> onColumnSizeChange = new ProjectorEvent<>(clientObjectChannel::toggleColumnSizeChangeEvent);
 
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();

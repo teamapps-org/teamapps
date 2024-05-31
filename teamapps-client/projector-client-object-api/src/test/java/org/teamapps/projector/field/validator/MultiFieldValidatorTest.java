@@ -190,7 +190,7 @@ public class MultiFieldValidatorTest {
         Method set = CurrentSessionContext.class.getDeclaredMethod("set", SessionContext.class);
         set.setAccessible(true);
         SessionContext sessionContextMock = Mockito.mock(SessionContext.class);
-        Mockito.when(sessionContextMock.getClientObjectChannel(any())).thenReturn(Mockito.mock(ClientObjectChannel.class));
+        Mockito.when(sessionContextMock.registerClientObject(any())).thenReturn(Mockito.mock(ClientObjectChannel.class));
         Mockito.when(sessionContextMock.onDestroyed()).thenReturn(new Event<>());
         Mockito.when(sessionContextMock.runWithContext(any(Runnable.class))).then(invocation -> {
             ((Runnable) invocation.getArguments()[0]).run();

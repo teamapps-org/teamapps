@@ -28,7 +28,7 @@ import org.teamapps.ux.component.AbstractComponent;
 
 public class ImageCropper extends AbstractComponent {
 
-	public final ProjectorEvent<ImageCropperSelection> onSelectionChanged = createProjectorEventBoundToUiEvent(DtoImageCropper.SelectionChangedEvent.TYPE_ID);
+	public final ProjectorEvent<ImageCropperSelection> onSelectionChanged = new ProjectorEvent<>(clientObjectChannel::toggleSelectionChangedEvent);
 
 	private String imageUrl;
 	private ImageCropperSelectionMode selectionMode = ImageCropperSelectionMode.RECTANGLE;

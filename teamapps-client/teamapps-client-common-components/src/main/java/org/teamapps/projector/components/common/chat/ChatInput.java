@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class ChatInput extends AbstractComponent {
 
-	public final ProjectorEvent<NewChatMessageData> onMessageSent = createProjectorEventBoundToUiEvent(DtoChatInput.MessageSentEvent.TYPE_ID);
+	public final ProjectorEvent<NewChatMessageData> onMessageSent = new ProjectorEvent<>(clientObjectChannel::toggleMessageSentEvent);
 
 	private long maxBytesPerUpload = 5000000;
 	private String uploadUrl = "/upload";

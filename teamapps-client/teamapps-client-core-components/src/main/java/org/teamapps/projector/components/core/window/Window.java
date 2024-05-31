@@ -135,7 +135,7 @@ public class Window extends Panel implements Showable, DtoWindowEventHandler {
 	}
 
 	public void show(int animationDuration) {
-		getSessionContext().renderClientObject(this);
+		clientObjectChannel.forceRender();
 		clientObjectChannel.show(animationDuration);
 	}
 

@@ -45,11 +45,11 @@ import java.nio.file.Files;
 
 public class PictureChooser extends AbstractField<Resource> {
 
-	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadTooLargeEvent.TYPE_ID);
-	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadStartedEvent.TYPE_ID);
-	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadCanceledEvent.TYPE_ID);
-	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadFailedEvent.TYPE_ID);
-	public final ProjectorEvent<UploadedFile> onUploadSuccessful = createProjectorEventBoundToUiEvent(DtoPictureChooser.UploadSuccessfulEvent.TYPE_ID);
+	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = new ProjectorEvent<>(clientObjectChannel::toggleUploadTooLargeEvent);
+	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = new ProjectorEvent<>(clientObjectChannel::toggleUploadStartedEvent);
+	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = new ProjectorEvent<>(clientObjectChannel::toggleUploadCanceledEvent);
+	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = new ProjectorEvent<>(clientObjectChannel::toggleUploadFailedEvent);
+	public final ProjectorEvent<UploadedFile> onUploadSuccessful = new ProjectorEvent<>(clientObjectChannel::toggleUploadSuccessfulEvent);
 
 	private long maxFileSize = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.

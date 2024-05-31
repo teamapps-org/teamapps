@@ -29,10 +29,10 @@ import org.teamapps.projector.field.AbstractField;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class TextField extends AbstractField<String> implements DtoTextFieldEventHandler {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID);
-
 	private final DtoTextFieldClientObjectChannel clientObjectChannel = new DtoTextFieldClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private int maxCharacters;
 	private boolean showClearButton;

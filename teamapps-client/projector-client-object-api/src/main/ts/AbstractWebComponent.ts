@@ -49,7 +49,6 @@ export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent
 		this.width = width;
 		this.height = height;
 		if (hasSize) {
-			console.debug("resize");
 			this.onResized.fire({width: this.width, height: this.height});
 			this.onResize();
 		}

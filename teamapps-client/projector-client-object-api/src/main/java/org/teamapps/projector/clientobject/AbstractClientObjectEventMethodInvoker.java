@@ -40,8 +40,8 @@ public abstract class AbstractClientObjectEventMethodInvoker {
 	abstract protected void invokeHandlerMethod(Method method, String name, JsonWrapper eventObject) throws Exception;
 
 	protected Method getMethod(String name) {
-		String methodName = "handle" + StringUtils.capitalize(name) + "Event";
-		return cachedMethods.computeIfAbsent(new ClassAndMethodName(getClass(), methodName),
+		String methodName = "handle" + StringUtils.capitalize(name);
+		return cachedMethods.computeIfAbsent(new ClassAndMethodName(targetObject.getClass(), methodName),
 				classAndMethodName -> ReflectionUtil.findMethod(classAndMethodName.clazz, classAndMethodName.methodName));
 	}
 

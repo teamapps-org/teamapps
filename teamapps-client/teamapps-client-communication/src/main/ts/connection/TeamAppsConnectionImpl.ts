@@ -180,6 +180,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 			},
 			onReconnected: () => {
 				this.protocolStatus = TeamAppsProtocolStatus.REINITIALIZING;
+				console.log("Sending REINIT.")
 				this.connection.send({
 					_type: "REINIT",
 					sessionId,

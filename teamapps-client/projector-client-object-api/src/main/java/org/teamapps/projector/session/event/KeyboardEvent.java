@@ -29,8 +29,6 @@ public class KeyboardEvent {
 	private final String code;
 	private final boolean isComposing;
 	private final String key;
-	private final int charCode;
-	private final int keyCode;
 	private final String locale;
 	private final int location;
 	private final boolean repeat;
@@ -39,14 +37,12 @@ public class KeyboardEvent {
 	private final boolean shiftKey;
 	private final boolean metaKey;
 
-	public KeyboardEvent(KeyEventType eventType, Component sourceComponent, String code, boolean isComposing, String key, int charCode, int keyCode, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey) {
+	public KeyboardEvent(KeyEventType eventType, Component sourceComponent, String code, boolean isComposing, String key, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey) {
 		this.eventType = eventType;
 		this.sourceComponent = sourceComponent;
 		this.code = code;
 		this.isComposing = isComposing;
 		this.key = key;
-		this.charCode = charCode;
-		this.keyCode = keyCode;
 		this.locale = locale;
 		this.location = location;
 		this.repeat = repeat;
@@ -74,14 +70,6 @@ public class KeyboardEvent {
 
 	public String getKey() {
 		return key;
-	}
-
-	public int getCharCode() {
-		return charCode;
-	}
-
-	public int getKeyCode() {
-		return keyCode;
 	}
 
 	public String getLocale() {
@@ -120,8 +108,6 @@ public class KeyboardEvent {
 				", code='" + code + '\'' +
 				", isComposing=" + isComposing +
 				", key='" + key + '\'' +
-				", charCode=" + charCode +
-				", keyCode=" + keyCode +
 				", locale='" + locale + '\'' +
 				", location=" + location +
 				", repeat=" + repeat +

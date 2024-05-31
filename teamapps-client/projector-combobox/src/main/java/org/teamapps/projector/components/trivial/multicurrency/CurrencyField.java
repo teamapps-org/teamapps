@@ -45,8 +45,8 @@ import java.util.stream.Collectors;
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
 public class CurrencyField extends AbstractField<CurrencyValue> {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoCurrencyField.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoCurrencyField.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private ULocale locale = SessionContext.current().getULocale();
 

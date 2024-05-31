@@ -31,9 +31,9 @@ import org.teamapps.projector.field.AbstractField;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class Label extends AbstractField<String> implements DtoLabelEventHandler {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoLabel.ClickedEvent.TYPE_ID);
-
 	private final DtoLabelClientObjectChannel clientObjectChannel = new DtoLabelClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
 
 	private String caption;
 	private Icon<?, ?> icon;

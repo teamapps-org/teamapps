@@ -33,9 +33,9 @@ import org.teamapps.projector.event.ProjectorEvent;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class ToolButton extends AbstractComponent implements DtoToolButtonEventHandler {
 
-	public final ProjectorEvent<Void> onDropDownOpened = createProjectorEventBoundToUiEvent(DtoToolButton.DropDownOpenedEvent.TYPE_ID);
-
 	private final DtoToolButtonClientObjectChannel clientObjectChannel = new DtoToolButtonClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Void> onDropDownOpened = new ProjectorEvent<>(clientObjectChannel::toggleDropDownOpenedEvent);
 
 	private Icon<?, ?> icon;
 	private Integer iconSize = null; // null = default defined by CSS
@@ -48,7 +48,7 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 	private Integer minDropDownWidth = 300;
 	private Integer minDropDownHeight = 300;
 
-	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(DtoToolButton.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
 
 	public ToolButton(Icon<?, ?> icon) {
 		this(icon, null, null);

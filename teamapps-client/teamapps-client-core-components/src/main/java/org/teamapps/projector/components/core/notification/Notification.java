@@ -37,10 +37,10 @@ import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class Notification extends AbstractComponent implements DtoNotificationEventHandler {
 
-	public final ProjectorEvent<Void> onOpened = createProjectorEventBoundToUiEvent(DtoNotification.OpenedEvent.TYPE_ID);
-	public final ProjectorEvent<Boolean> onClosed = createProjectorEventBoundToUiEvent(DtoNotification.ClosedEvent.TYPE_ID);
-
 	private final DtoNotificationClientObjectChannel clientObjectChannel = new DtoNotificationClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Void> onOpened = new ProjectorEvent<>(clientObjectChannel::toggleOpenedEvent);
+	public final ProjectorEvent<Boolean> onClosed = new ProjectorEvent<>(clientObjectChannel::toggleClosedEvent);
 
 	private boolean showing;
 

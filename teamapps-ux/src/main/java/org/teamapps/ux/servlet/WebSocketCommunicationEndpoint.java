@@ -124,7 +124,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 				switch (clientMessage.getTypeId()) {
 					case INITWrapper.TYPE_ID -> {
 						ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
-						INITWrapper init = clientMessage.as(INITWrapper.class);
+						INITWrapper init = clientMessage.as(INITWrapper::new);
 
 						ClientInfoWrapper dtoClientInfo = init.getClientInfo();
 						var clientInfo = new ClientInfo(
@@ -153,7 +153,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 						);
 					}
 					case REINITWrapper.TYPE_ID -> {
-						REINITWrapper reinit = clientMessage.as(REINITWrapper.class);
+						REINITWrapper reinit = clientMessage.as(REINITWrapper::new);
 						String uiSessionId = reinit.getSessionId();
 						uiSession = sessionManager.getUiSessionById(uiSessionId);
 						if (uiSession != null) {
@@ -167,19 +167,19 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 						uiSession.close(SessionClosingReason.TERMINATED_BY_CLIENT);
 					}
 					case EVTWrapper.TYPE_ID -> {
-						EVTWrapper eventMessage = clientMessage.as(EVTWrapper.class);
+						EVTWrapper eventMessage = clientMessage.as(EVTWrapper::new);
 						uiSession.handleEvent(eventMessage.getSequenceNumber(), eventMessage.getLibraryId(), eventMessage.getClientObjectId(), eventMessage.getName(), eventMessage.getEventObject());
 					}
 					case QUERYWrapper.TYPE_ID -> {
-						QUERYWrapper queryMessage = clientMessage.as(QUERYWrapper.class);
+						QUERYWrapper queryMessage = clientMessage.as(QUERYWrapper::new);
 						uiSession.handleQuery(queryMessage.getSequenceNumber(), queryMessage.getLibraryId(), queryMessage.getClientObjectId(), queryMessage.getName(), queryMessage.getParams());
 					}
 					case CMD_RESWrapper.TYPE_ID -> {
-						CMD_RESWrapper cmdResult = clientMessage.as(CMD_RESWrapper.class);
+						CMD_RESWrapper cmdResult = clientMessage.as(CMD_RESWrapper::new);
 						uiSession.handleCommandResult(cmdResult.getSequenceNumber(), cmdResult.getCmdSn(), cmdResult.getResult());
 					}
 					case REQNWrapper.TYPE_ID -> {
-						REQNWrapper cmdRequest = clientMessage.as(REQNWrapper.class);
+						REQNWrapper cmdRequest = clientMessage.as(REQNWrapper::new);
 						uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId());
 					}
 					case KEEPALIVEWrapper.TYPE_ID -> {

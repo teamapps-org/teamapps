@@ -28,9 +28,9 @@ import org.teamapps.projector.event.ProjectorEvent;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class DummyComponent extends AbstractComponent implements DtoDummyComponentEventHandler {
 
-	public final ProjectorEvent<Void> onClick = createProjectorEventBoundToUiEvent(DtoDummyComponent.ClickedEvent.TYPE_ID);
-
 	private final DtoDummyComponentClientObjectChannel clientObjectChannel = new DtoDummyComponentClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
 
 	private String text;
 

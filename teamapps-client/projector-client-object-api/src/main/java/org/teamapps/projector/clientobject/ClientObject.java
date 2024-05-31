@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 /**
  * A client object has a representation on the client.
@@ -35,9 +34,5 @@ public interface ClientObject extends ClientMessageHandler {
 	Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	Object createConfig();
-
-	default List<String> getListeningEventNames() {
-		return List.of();
-	}
 
 }

@@ -36,12 +36,12 @@ import java.util.Locale;
 
 public class RichTextEditor extends AbstractField<String> {
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoRichTextEditor.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoRichTextEditor.SpecialKeyPressedEvent.TYPE_ID);
-	public final ProjectorEvent<ImageUploadTooLargeEventData> onImageUploadTooLarge = createProjectorEventBoundToUiEvent(DtoRichTextEditor.ImageUploadTooLargeEvent.TYPE_ID);
-	public final ProjectorEvent<ImageUploadStartedEventData> onImageUploadStarted = createProjectorEventBoundToUiEvent(DtoRichTextEditor.ImageUploadStartedEvent.TYPE_ID);
-	public final ProjectorEvent<ImageUploadSuccessfulEventData> onImageUploadSuccessful = createProjectorEventBoundToUiEvent(DtoRichTextEditor.ImageUploadSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<ImageUploadFailedEventData> onImageUploadFailed = createProjectorEventBoundToUiEvent(DtoRichTextEditor.ImageUploadFailedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
+	public final ProjectorEvent<ImageUploadTooLargeEventData> onImageUploadTooLarge = new ProjectorEvent<>(clientObjectChannel::toggleImageUploadTooLargeEvent);
+	public final ProjectorEvent<ImageUploadStartedEventData> onImageUploadStarted = new ProjectorEvent<>(clientObjectChannel::toggleImageUploadStartedEvent);
+	public final ProjectorEvent<ImageUploadSuccessfulEventData> onImageUploadSuccessful = new ProjectorEvent<>(clientObjectChannel::toggleImageUploadSuccessfulEvent);
+	public final ProjectorEvent<ImageUploadFailedEventData> onImageUploadFailed = new ProjectorEvent<>(clientObjectChannel::toggleImageUploadFailedEvent);
 
 	private ToolbarVisibilityMode toolbarVisibilityMode = ToolbarVisibilityMode.VISIBLE;
 	private int minHeight = 150;

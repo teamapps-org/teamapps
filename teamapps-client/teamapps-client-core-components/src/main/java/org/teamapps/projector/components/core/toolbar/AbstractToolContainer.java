@@ -35,9 +35,10 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractToolContainer extends AbstractComponent implements DtoAbstractToolContainerEventHandler {
-	public final ProjectorEvent<ToolbarButtonClickEventData> onButtonClick = createProjectorEventBoundToUiEvent(DtoAbstractToolContainer.ToolbarButtonClickEvent.TYPE_ID);
 
 	private final DtoAbstractToolContainerClientObjectChannel clientObjectChannel = new DtoAbstractToolContainerClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<ToolbarButtonClickEventData> onButtonClick = new ProjectorEvent<>(clientObjectChannel::toggleToolbarButtonClickEvent);
 
 	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 	private Template buttonTemplate = BaseTemplates.TOOLBAR_BUTTON;

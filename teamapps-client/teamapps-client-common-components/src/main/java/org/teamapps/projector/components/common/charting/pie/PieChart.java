@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 public class PieChart extends AbstractComponent {
 
-	public final ProjectorEvent<ChartNamedDataPoint> onDataPointClicked = createProjectorEventBoundToUiEvent(DtoPieChart.DataPointClickedEvent.TYPE_ID);
+	public final ProjectorEvent<ChartNamedDataPoint> onDataPointClicked = new ProjectorEvent<>(clientObjectChannel::toggleDataPointClickedEvent);
 
 	private long animationDuration = 500;
 	private ChartLegendStyle legendStyle;

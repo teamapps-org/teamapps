@@ -29,9 +29,9 @@ import org.teamapps.projector.event.ProjectorEvent;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class SplitPane extends AbstractComponent implements DtoSplitPaneEventHandler {
 
-	public ProjectorEvent<Double> onResized = createProjectorEventBoundToUiEvent(DtoSplitPane.SplitResizedEvent.TYPE_ID);
-
 	private final DtoSplitPaneClientObjectChannel clientObjectChannel = new DtoSplitPaneClientObjectChannel(getClientObjectChannel());
+
+	public ProjectorEvent<Double> onResized = new ProjectorEvent<>(clientObjectChannel::toggleSplitResizedEvent);
 
 	private SplitDirection splitDirection;
 	private SplitSizePolicy sizePolicy;

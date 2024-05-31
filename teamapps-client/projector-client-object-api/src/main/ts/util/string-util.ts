@@ -1,6 +1,9 @@
 export function capitalizeFirstLetter(string: string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
+export function uncapitalizeFirstLetter(string: string) {
+	return string.charAt(0).toLocaleLowerCase() + string.slice(1);
+}
 
 export function generateUUID(startingWithCharacter?: boolean) {
 	return (startingWithCharacter ? 'u-' : '') + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

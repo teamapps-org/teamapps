@@ -36,10 +36,10 @@ import java.util.stream.Collectors;
 
 public class TreeGraph<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<TreeGraphNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(DtoTreeGraph.NodeClickedEvent.TYPE_ID);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoTreeGraph.NodeExpandedOrCollapsedEvent.TYPE_ID);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoTreeGraph.ParentExpandedOrCollapsedEvent.TYPE_ID);
-	public final ProjectorEvent<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoTreeGraph.SideListExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<TreeGraphNode<RECORD>> onNodeClicked = new ProjectorEvent<>(clientObjectChannel::toggleNodeClickedEvent);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new ProjectorEvent<>(clientObjectChannel::toggleNodeExpandedOrCollapsedEvent);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = new ProjectorEvent<>(clientObjectChannel::toggleParentExpandedOrCollapsedEvent);
+	public final ProjectorEvent<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = new ProjectorEvent<>(clientObjectChannel::toggleSideListExpandedOrCollapsedEvent);
 
 	private float zoomFactor;
 	private boolean compact = false;

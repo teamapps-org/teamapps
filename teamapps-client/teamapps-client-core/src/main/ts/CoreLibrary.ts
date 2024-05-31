@@ -44,7 +44,7 @@ let keyboardEventListener = (e: KeyboardEvent) => {
 			eventType: e.type == "keydown" ? KeyEventType.KEY_DOWN : KeyEventType.KEY_UP,
 			sourceComponentId: componentId,
 			code: e.code,
-			isComposing: e.isComposing,
+			composing: e.isComposing,
 			key: e.key,
 			locale: (e as any).locale,
 			location: e.location,

@@ -45,12 +45,12 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 							CurrentSessionContext.get().getLocalized(TeamAppsTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
 
-	public final ProjectorEvent<VALUE> onFocus = createProjectorEventBoundToUiEvent(DtoAbstractField.FocusEvent.TYPE_ID);
-	public final ProjectorEvent<VALUE> onBlur = createProjectorEventBoundToUiEvent(DtoAbstractField.BlurEvent.TYPE_ID);
-	public final ProjectorEvent<VALUE> onValueChanged = createProjectorEventBoundToUiEvent(DtoAbstractField.ValueChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
-
 	private final DtoAbstractFieldClientObjectChannel clientObjectChannel = new DtoAbstractFieldClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<VALUE> onFocus = new ProjectorEvent<>(clientObjectChannel::toggleFocusEvent);
+	public final ProjectorEvent<VALUE> onBlur = new ProjectorEvent<>(clientObjectChannel::toggleBlurEvent);
+	public final ProjectorEvent<VALUE> onValueChanged = new ProjectorEvent<>(clientObjectChannel::toggleValueChangedEvent);
+	public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
 
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
 

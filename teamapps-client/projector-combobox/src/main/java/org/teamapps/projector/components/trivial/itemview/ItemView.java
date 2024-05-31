@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
-	public ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = createProjectorEventBoundToUiEvent(DtoItemView.ItemClickedEvent.TYPE_ID);
+	public ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = new ProjectorEvent<>(clientObjectChannel::toggleItemClickedEvent);
 
 	private final List<ItemGroup<HEADERRECORD, RECORD>> itemGroups = new ArrayList<>();
 

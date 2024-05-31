@@ -50,12 +50,12 @@ import java.util.stream.Collectors;
 public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 
-	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = createProjectorEventBoundToUiEvent(DtoFileField.UploadTooLargeEvent.TYPE_ID);
-	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = createProjectorEventBoundToUiEvent(DtoFileField.UploadStartedEvent.TYPE_ID);
-	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = createProjectorEventBoundToUiEvent(DtoFileField.UploadCanceledEvent.TYPE_ID);
-	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = createProjectorEventBoundToUiEvent(DtoFileField.UploadFailedEvent.TYPE_ID);
-	public final ProjectorEvent<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = createProjectorEventBoundToUiEvent(DtoFileField.UploadSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<RECORD> onFileItemClicked = createProjectorEventBoundToUiEvent(DtoFileField.FileItemClickedEvent.TYPE_ID);
+	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = new ProjectorEvent<>(clientObjectChannel::toggleUploadTooLargeEvent);
+	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = new ProjectorEvent<>(clientObjectChannel::toggleUploadStartedEvent);
+	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = new ProjectorEvent<>(clientObjectChannel::toggleUploadCanceledEvent);
+	public final ProjectorEvent<UploadFailedEventData> onUploadFailed = new ProjectorEvent<>(clientObjectChannel::toggleUploadFailedEvent);
+	public final ProjectorEvent<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = new ProjectorEvent<>(clientObjectChannel::toggleUploadSuccessfulEvent);
+	public final ProjectorEvent<RECORD> onFileItemClicked = new ProjectorEvent<>(clientObjectChannel::toggleFileItemClickedEvent);
 	public final ProjectorEvent<RECORD> onFileItemRemoved = new ProjectorEvent<>();
 
 	private FileFieldDisplayType displayType = FileFieldDisplayType.FLOATING;

@@ -30,7 +30,7 @@ import org.teamapps.ux.component.Component;
 
 public class FloatingComponent extends AbstractComponent {
 
-	public final ProjectorEvent<Boolean> onExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoFloatingComponent.ExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<Boolean> onExpandedOrCollapsed = new ProjectorEvent<>(clientObjectChannel::toggleExpandedOrCollapsedEvent);
 
 	private final Component containerComponent;
 	private Component contentComponent;

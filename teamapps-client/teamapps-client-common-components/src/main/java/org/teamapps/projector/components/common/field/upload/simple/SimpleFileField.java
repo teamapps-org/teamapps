@@ -44,14 +44,14 @@ import java.util.stream.Collectors;
 @ProjectorComponent(library = CoreComponentLibrary.class)
 public class SimpleFileField extends AbstractField<List<FileItem>> {
 
-	public final ProjectorEvent<FileItem> onUploadInitiatedByUser = createProjectorEventBoundToUiEvent(DtoSimpleFileField.UploadInitiatedByUserEvent.TYPE_ID);
-	public final ProjectorEvent<FileItem> onUploadTooLarge = createProjectorEventBoundToUiEvent(DtoSimpleFileField.UploadTooLargeEvent.TYPE_ID);
-	public final ProjectorEvent<FileItem> onUploadStarted = createProjectorEventBoundToUiEvent(DtoSimpleFileField.UploadStartedEvent.TYPE_ID);
-	public final ProjectorEvent<FileItem> onUploadCanceledByUser = createProjectorEventBoundToUiEvent(DtoSimpleFileField.UploadCanceledEvent.TYPE_ID);
-	public final ProjectorEvent<FileItem> onUploadFailed = createProjectorEventBoundToUiEvent(DtoSimpleFileField.UploadFailedEvent.TYPE_ID);
-	public final ProjectorEvent<FileItem> onUploadSuccessful = createProjectorEventBoundToUiEvent(DtoSimpleFileField.UploadSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<FileItem> onFileItemClicked = createProjectorEventBoundToUiEvent(DtoSimpleFileField.FileItemClickedEvent.TYPE_ID);
-	public final ProjectorEvent<FileItem> onFileItemRemoved = createProjectorEventBoundToUiEvent(DtoSimpleFileField.FileItemRemovedEvent.TYPE_ID);
+	public final ProjectorEvent<FileItem> onUploadInitiatedByUser = new ProjectorEvent<>(clientObjectChannel::toggleUploadInitiatedByUserEvent);
+	public final ProjectorEvent<FileItem> onUploadTooLarge = new ProjectorEvent<>(clientObjectChannel::toggleUploadTooLargeEvent);
+	public final ProjectorEvent<FileItem> onUploadStarted = new ProjectorEvent<>(clientObjectChannel::toggleUploadStartedEvent);
+	public final ProjectorEvent<FileItem> onUploadCanceledByUser = new ProjectorEvent<>(clientObjectChannel::toggleUploadCanceledEvent);
+	public final ProjectorEvent<FileItem> onUploadFailed = new ProjectorEvent<>(clientObjectChannel::toggleUploadFailedEvent);
+	public final ProjectorEvent<FileItem> onUploadSuccessful = new ProjectorEvent<>(clientObjectChannel::toggleUploadSuccessfulEvent);
+	public final ProjectorEvent<FileItem> onFileItemClicked = new ProjectorEvent<>(clientObjectChannel::toggleFileItemClickedEvent);
+	public final ProjectorEvent<FileItem> onFileItemRemoved = new ProjectorEvent<>(clientObjectChannel::toggleFileItemRemovedEvent);
 
 	private final List<FileItem> fileItems = new ArrayList<>();
 

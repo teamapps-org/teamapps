@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 
 public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
-	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeClicked = createProjectorEventBoundToUiEvent(DtoNetworkGraph.NodeClickedEvent.TYPE_ID);
-	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeDoubleClicked = createProjectorEventBoundToUiEvent(DtoNetworkGraph.NodeDoubleClickedEvent.TYPE_ID);
-	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = createProjectorEventBoundToUiEvent(DtoNetworkGraph.NodeExpandedOrCollapsedEvent.TYPE_ID);
+	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeClicked = new ProjectorEvent<>(clientObjectChannel::toggleNodeClickedEvent);
+	public final ProjectorEvent<ForceLayoutNode<RECORD>> onNodeDoubleClicked = new ProjectorEvent<>(clientObjectChannel::toggleNodeDoubleClickedEvent);
+	public final ProjectorEvent<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new ProjectorEvent<>(clientObjectChannel::toggleNodeExpandedOrCollapsedEvent);
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
 	private final List<ForceLayoutLink<RECORD>> links;

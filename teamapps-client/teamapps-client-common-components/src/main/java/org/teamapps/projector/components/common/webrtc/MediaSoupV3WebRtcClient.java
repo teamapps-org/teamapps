@@ -36,17 +36,17 @@ import java.util.stream.Collectors;
 
 public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
-	public final ProjectorEvent<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent.TYPE_ID);
-	public final ProjectorEvent<SourceMediaTrackType> onSourceMediaTrackEnded = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent.TYPE_ID);
-	public final ProjectorEvent<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<TrackPublishingFailedEventData> onTrackPublishingFailed = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.TrackPublishingFailedEvent.TYPE_ID);
+	public final ProjectorEvent<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = new ProjectorEvent<>(clientObjectChannel::toggleSourceMediaTrackRetrievalFailedEvent);
+	public final ProjectorEvent<SourceMediaTrackType> onSourceMediaTrackEnded = new ProjectorEvent<>(clientObjectChannel::toggleSourceMediaTrackEndedEvent);
+	public final ProjectorEvent<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = new ProjectorEvent<>(clientObjectChannel::toggleTrackPublishingSuccessfulEvent);
+	public final ProjectorEvent<TrackPublishingFailedEventData> onTrackPublishingFailed = new ProjectorEvent<>(clientObjectChannel::toggleTrackPublishingFailedEvent);
 
-	public final ProjectorEvent<Void> onSubscribingSuccessful = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent.TYPE_ID);
-	public final ProjectorEvent<String> onSubscribingFailed = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.SubscribingFailedEvent.TYPE_ID);
+	public final ProjectorEvent<Void> onSubscribingSuccessful = new ProjectorEvent<>(clientObjectChannel::toggleSubscribingSuccessfulEvent);
+	public final ProjectorEvent<String> onSubscribingFailed = new ProjectorEvent<>(clientObjectChannel::toggleSubscribingFailedEvent);
 
-	public final ProjectorEvent<Boolean> onConnectionStateChanged = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.ConnectionStateChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Boolean> onVoiceActivityChanged = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.VoiceActivityChangedEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoMediaSoupV3WebRtcClient.ClickedEvent.TYPE_ID);
+	public final ProjectorEvent<Boolean> onConnectionStateChanged = new ProjectorEvent<>(clientObjectChannel::toggleConnectionStateChangedEvent);
+	public final ProjectorEvent<Boolean> onVoiceActivityChanged = new ProjectorEvent<>(clientObjectChannel::toggleVoiceActivityChangedEvent);
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
 
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;

@@ -32,12 +32,12 @@ import org.teamapps.projector.template.Template;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoTemplateFieldEventHandler {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoTemplateField.ClickedEvent.TYPE_ID);
+	private final DtoTemplateFieldClientObjectChannel clientObjectChannel = new DtoTemplateFieldClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
 
 	private Template template;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
-
-	private final DtoTemplateFieldClientObjectChannel clientObjectChannel = new DtoTemplateFieldClientObjectChannel(getClientObjectChannel());
 
 	public TemplateField(Template template) {
 		this.template = template;

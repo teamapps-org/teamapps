@@ -44,8 +44,8 @@ public class LocalDateField extends AbstractField<LocalDate> {
 		SUGGESTION_LIST
 	}
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoLocalDateField.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoLocalDateField.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;

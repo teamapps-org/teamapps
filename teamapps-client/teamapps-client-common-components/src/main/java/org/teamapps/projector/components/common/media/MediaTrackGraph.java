@@ -27,7 +27,7 @@ import org.teamapps.ux.component.AbstractComponent;
 
 public class MediaTrackGraph extends AbstractComponent {
 
-	public ProjectorEvent<TimeSelection> onTimeSelection = createProjectorEventBoundToUiEvent(DtoMediaTrackGraph.HandleTimeSelectionEvent.TYPE_ID);
+	public ProjectorEvent<TimeSelection> onTimeSelection = new ProjectorEvent<>(clientObjectChannel::toggleHandleTimeSelectionEvent);
 
 	private MediaTrackData data;
 

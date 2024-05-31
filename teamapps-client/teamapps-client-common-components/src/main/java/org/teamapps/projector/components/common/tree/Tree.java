@@ -44,8 +44,8 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public final ProjectorEvent<RECORD> onNodeSelected = createProjectorEventBoundToUiEvent(DtoTree.NodeSelectedEvent.TYPE_ID);
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoTree.TextInputEvent.TYPE_ID);
+	public final ProjectorEvent<RECORD> onNodeSelected = new ProjectorEvent<>(clientObjectChannel::toggleNodeSelectedEvent);
+	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
 
 	private TreeModel<RECORD> model;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();

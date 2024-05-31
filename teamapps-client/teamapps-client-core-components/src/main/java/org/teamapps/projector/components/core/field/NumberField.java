@@ -34,8 +34,8 @@ public class NumberField extends AbstractField<Number> implements DtoNumberField
 
 	private final DtoNumberFieldClientObjectChannel clientObjectChannel = new DtoNumberFieldClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<String> onTextInput = createProjectorEventBoundToUiEvent(DtoNumberField.TextInputEvent.TYPE_ID);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = createProjectorEventBoundToUiEvent(DtoNumberField.SpecialKeyPressedEvent.TYPE_ID);
+	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
+	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private int precision; // if == 0: integer, if < 0: maximum available precision
 	private String emptyText;

@@ -25,6 +25,7 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.FontStyle;
 import org.teamapps.projector.format.Spacing;
+import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.grid.dto.*;
 
@@ -51,7 +52,7 @@ public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 	List<AbstractGridTemplateElement<?>> elements = new ArrayList<>();
 
 	public GridTemplate() {
-
+		SessionContext.current().registerClientObject(this);
 	}
 
 	public GridTemplate(int minWidth, int maxWidth, int minHeight, int maxHeight, Spacing padding, int gridGap) {

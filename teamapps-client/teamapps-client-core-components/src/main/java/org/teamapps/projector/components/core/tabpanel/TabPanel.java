@@ -36,10 +36,10 @@ import static org.teamapps.commons.util.CollectionCastUtil.castList;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandler {
 
-	public final ProjectorEvent<Tab> onTabSelected = createProjectorEventBoundToUiEvent(DtoTabPanel.TabSelectedEvent.TYPE_ID);
-	public final ProjectorEvent<Tab> onTabClosed = createProjectorEventBoundToUiEvent(DtoTabPanel.TabClosedEvent.TYPE_ID);
-
 	private final DtoTabPanelClientObjectChannel clientObjectChannel = new DtoTabPanelClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Tab> onTabSelected = new ProjectorEvent<>(clientObjectChannel::toggleTabSelectedEvent);
+	public final ProjectorEvent<Tab> onTabClosed = new ProjectorEvent<>(clientObjectChannel::toggleTabClosedEvent);
 
 	private final List<Tab> tabs = new ArrayList<>();
 	private Tab selectedTab;

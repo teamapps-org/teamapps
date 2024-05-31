@@ -38,10 +38,10 @@ import org.teamapps.projector.event.ProjectorEvent;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class ProgressDisplay extends AbstractComponent implements DtoProgressDisplayEventHandler {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);
-	public final ProjectorEvent<Void> onCancelButtonClicked = createProjectorEventBoundToUiEvent(DtoProgressDisplay.ClickedEvent.TYPE_ID);
-
 	private final DtoProgressDisplayClientObjectChannel clientObjectChannel = new DtoProgressDisplayClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onCancelButtonClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
 
 	private Icon<?, ?> icon;
 	private String taskName;

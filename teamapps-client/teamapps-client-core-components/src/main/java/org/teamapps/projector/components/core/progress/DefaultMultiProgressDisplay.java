@@ -46,9 +46,9 @@ import java.util.stream.Collectors;
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class DefaultMultiProgressDisplay extends AbstractComponent implements MultiProgressDisplay, DtoMultiProgressDisplayEventHandler {
 
-	public final ProjectorEvent<Void> onClicked = createProjectorEventBoundToUiEvent(DtoDefaultMultiProgressDisplay.ClickedEvent.TYPE_ID);
-
 	private final DtoDefaultMultiProgressDisplayClientObjectChannel clientObjectChannel = new DtoDefaultMultiProgressDisplayClientObjectChannel(getClientObjectChannel());
+	
+	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
 
 	private final List<ObservableProgress> progresses = new ArrayList<>();
 	private final Notification progressListNotification;

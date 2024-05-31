@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 
 public class TimeGraph extends AbstractComponent {
 
-	public final ProjectorEvent<ZoomEventData> onZoomed = createProjectorEventBoundToUiEvent(DtoTimeGraph.ZoomedEvent.TYPE_ID);
-	public final ProjectorEvent<Interval> onIntervalSelected = createProjectorEventBoundToUiEvent(DtoTimeGraph.IntervalSelectedEvent.TYPE_ID);
+	public final ProjectorEvent<ZoomEventData> onZoomed = new ProjectorEvent<>(clientObjectChannel::toggleZoomedEvent);
+	public final ProjectorEvent<Interval> onIntervalSelected = new ProjectorEvent<>(clientObjectChannel::toggleIntervalSelectedEvent);
 	private final List<GraphListenInfo> graphsAndListeners = new ArrayList<>();
 
 	private static class GraphListenInfo {

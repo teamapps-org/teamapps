@@ -3,6 +3,8 @@ package org.teamapps.projector.dto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.function.BiFunction;
+
 /**
  * A wrapper around a JSON node sent by the client.
  * <p>
@@ -45,11 +47,7 @@ public class JsonWrapper {
 		return jsonNode.get("_type").textValue();
 	}
 
-	public <W extends JsonWrapper> W as(Class<W> clazz) {
-		try {
-			return clazz.getConstructor(ObjectMapper.class, JsonNode.class).newInstance(objectMapper, jsonNode);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	public <W extends JsonWrapper> W as(BiFunction<ObjectMapper, JsonNode, W> constructor) {
+		return constructor.apply(objectMapper, jsonNode);
 	}
 }
