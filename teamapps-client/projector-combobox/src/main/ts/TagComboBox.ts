@@ -18,38 +18,30 @@
  * =========================LICENSE_END==================================
  */
 
-import {parseHtml, TeamAppsEvent, Template} from "teamapps-client-core";
 import {isFreeTextEntry} from "./ComboBox";
 import {
-	AbstractField,
-	buildObjectTree,
-	DtoFieldEditingMode, SpecialKey,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent,
-	NodeWithChildren
-} from "teamapps-client-core-components";
-import {
+	DtoComboBox_TextInputEvent,
 	DtoComboBoxTreeRecord,
 	DtoTagComboBox,
 	DtoTagComboBoxCommandHandler,
-	DtoTagComboBoxEventSource,
-	DtoTagComboBoxWrappingMode
+	DtoTagComboBoxEventSource, DtoTagComboBoxServerObjectChannel, TagComboBoxWrappingMode,
 } from "./generated";
 import {TrivialTagComboBox} from "./trivial-components/TrivialTagComboBox";
 import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
+import {AbstractField, DebounceMode, FieldEditingMode, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
+import {
+	buildObjectTree,
+	DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	NodeWithChildren,
+	SpecialKey
+} from "teamapps-client-core-components";
 
 export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRecord[]> implements DtoTagComboBoxEventSource, DtoTagComboBoxCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent({
-		throttlingMode: "debounce",
-		delay: 250
-	});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent({
-		throttlingMode: "debounce",
-		delay: 250
-	});
+	public readonly onTextInput: TeamAppsEvent<DtoComboBox_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
@@ -61,6 +53,10 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 
 	private treeBoxDropdown: TreeBoxDropdown<DtoComboBoxTreeRecord & { __children?: NodeWithChildren<DtoComboBoxTreeRecord>[] }>;
 
+	constructor(config: DtoTagComboBox, private soc: DtoTagComboBoxServerObjectChannel) {
+		super(config, soc);
+	}
+
 	protected initialize(config: DtoTagComboBox) {
 		this.$originalInput = parseHtml(`<input type="text" autocomplete="no">`);
 
@@ -70,7 +66,10 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 			showExpanders: config.expandersVisible,
 			entryRenderingFunction: entry => this.renderRecord(entry, true),
 			idFunction: entry => entry && entry.id,
-			lazyChildrenQueryFunction: async (node: NodeWithChildren<DtoComboBoxTreeRecord>) => buildObjectTree(await config.lazyChildren({parentId: node.id}), "id", "parentId"),
+			lazyChildrenQueryFunction: async (node: NodeWithChildren<DtoComboBoxTreeRecord>) => {
+				let children = await this.soc.sendQuery("lazyChildren", node.id);
+				return buildObjectTree(children, "id", "parentId");
+			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			selectableDecider: entry => entry.selectable,
 			selectOnHover: true,
@@ -80,7 +79,7 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 		this.treeBoxDropdown = new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
 				this.onTextInput.fire({enteredString: queryString}); // TODO this is definitely the wrong place for this!!
-				return config.retrieveDropdownEntries({queryString})
+				return this.soc.sendQuery("retrieveDropdownEntries", queryString)
 					.then(entries => buildObjectTree(entries, "id", "parentId"));
 			},
 			textHighlightingEntryLimit: config.textHighlightingEntryLimit,
@@ -97,7 +96,7 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 			showClearButton: config.clearButtonEnabled,
 			autoComplete: !!config.autoCompletionEnabled,
 			showTrigger: config.dropDownButtonVisible,
-			editingMode: config.editingMode === DtoFieldEditingMode.READONLY ? 'readonly' : config.editingMode === DtoFieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
 			entryToEditorTextFunction: e => e.asString,
@@ -175,12 +174,12 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 		this.trivialTagComboBox.focus(); // TODO
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.values(AbstractField.editingModeCssClasses));
-		this.getMainElement().classList.add(AbstractField.editingModeCssClasses[editingMode]);
-		if (editingMode === DtoFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.add(editingMode);
+		if (editingMode === FieldEditingMode.READONLY) {
 			this.trivialTagComboBox.setEditingMode("readonly");
-		} else if (editingMode === DtoFieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingMode.DISABLED) {
 			this.trivialTagComboBox.setEditingMode("disabled");
 		} else {
 			this.trivialTagComboBox.setEditingMode("editable");
@@ -266,10 +265,10 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 		this.config.maxEntries = maxEntries;
 	}
 
-	setWrappingMode(wrappingMode: DtoTagComboBoxWrappingMode) {
+	setWrappingMode(wrappingMode: TagComboBoxWrappingMode) {
 		this.config.wrappingMode = wrappingMode;
-		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", wrappingMode === DtoTagComboBoxWrappingMode.SINGLE_LINE);
-		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-tag-per-line", wrappingMode === DtoTagComboBoxWrappingMode.SINGLE_TAG_PER_LINE);
+		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", wrappingMode === TagComboBoxWrappingMode.SINGLE_LINE);
+		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-tag-per-line", wrappingMode === TagComboBoxWrappingMode.SINGLE_TAG_PER_LINE);
 	}
 
 	setDistinct(distinct: boolean) {

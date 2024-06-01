@@ -21,12 +21,14 @@ export interface AServerObjectChannel extends ServerObjectChannel {
 
     sendEvent(eventName: "s", eventObject: S_SEvent): void;
 
+
 }
 export interface StaticAServerObjectChannel extends ServerObjectChannel {
 
     sendEvent(eventName: "z2", eventObject: A_Z2Event): void;
 
     sendEvent(eventName: "s2", eventObject: S_S2Event): void;
+
 
 }
 

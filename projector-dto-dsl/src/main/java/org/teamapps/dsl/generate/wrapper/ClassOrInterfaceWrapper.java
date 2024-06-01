@@ -212,7 +212,7 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.toList();
 	}
 
-	default boolean hasNonStaticEventsOrQueries() {
+	default boolean hasEventsOrQueries() {
 		return !getAllNonStaticEvents().isEmpty() || !getAllNonStaticQueries().isEmpty();
 	}
 
@@ -239,22 +239,22 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 								.map(Function.identity()), /* for the java compiler... */
 						getProperties().stream()
 								.map(p -> p.getType())
-								.filter(t -> t.referencesDtoType())
+								.filter(t -> t.isDtoTypeOrDtoTypeCollection())
 								.map(t -> t.findReferencedDtoType()),
 						getCommands().stream()
 								.flatMap(cd -> cd.getParameters().stream())
 								.map(p -> p.getType())
-								.filter(t -> t.referencesDtoType())
+								.filter(t -> t.isDtoTypeOrDtoTypeCollection())
 								.map(t -> t.findReferencedDtoType()),
 						getEvents().stream()
 								.flatMap(cd -> cd.getParameters().stream())
 								.map(p -> p.getType())
-								.filter(t -> t.referencesDtoType())
+								.filter(t -> t.isDtoTypeOrDtoTypeCollection())
 								.map(t -> t.findReferencedDtoType()),
 						getQueries().stream()
 								.flatMap(cd -> cd.getParameters().stream())
 								.map(p -> p.getType())
-								.filter(t -> t.referencesDtoType())
+								.filter(t -> t.isDtoTypeOrDtoTypeCollection())
 								.map(t -> t.findReferencedDtoType())
 				)
 				.flatMap(Function.identity())
@@ -313,7 +313,7 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 
 		imports.addImport("ClientObject", "projector-client-object-api", "../ClientObject", "org.teamapps.projector.clientobject");
 
-		List<TypeWrapper<?>> referencedTypesToConsider = typescript ? getAllReferencedTypes(true) : this.getReferencedTypes(false);
+		List<TypeWrapper<?>> referencedTypesToConsider = typescript ? getAllReferencedTypes(true) : getAllReferencedTypes(false);
 		referencedTypesToConsider.stream()
 				.forEach(t -> {
 					imports.addImport(t.getName(), t.getJsModuleName(), t.getPackageName());
@@ -349,4 +349,5 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 		return getEffectiveImports(false);
 	}
 
+	void checkSuperTypeResolvability();
 }

@@ -19,6 +19,8 @@
  */
 package org.teamapps.projector.session.config;
 
+import org.teamapps.projector.*;
+
 public class DateTimeFormatDescriptor {
 
 	// either dateStyle and/or timeStyle can be set, or the other fields. Both does not work. Exception: hourCycle
@@ -72,6 +74,24 @@ public class DateTimeFormatDescriptor {
 		this.hour = hour;
 		this.minute = minute;
 		this.second = second;
+	}
+
+	public DtoDateTimeFormatDescriptor toDateTimeFormatDescriptor() {
+		DtoDateTimeFormatDescriptor ui = new DtoDateTimeFormatDescriptor();
+		ui.setDateStyle(dateStyle != null ? dateStyle.toUiValue() : null);
+		ui.setTimeStyle(timeStyle != null ? timeStyle.toUiValue() : null);
+		ui.setFractionalSecondDigits(fractionalSecondDigits == null || fractionalSecondDigits == 0 ? null : fractionalSecondDigits); // 0 not accepted by Chrome!
+		ui.setDayPeriod(dayPeriod != null ? dayPeriod.toUiValue() : null);
+		ui.setHourCycle(hourCycle != null ? hourCycle.toUiValue() : null);
+		ui.setWeekday(weekday != null ? weekday.toUiValue() : null);
+		ui.setEra(era != null ? era.toUiValue() : null);
+		ui.setYear(year != null ? year.toUiValue() : null);
+		ui.setMonth(month != null ? month.toUiValue() : null);
+		ui.setDay(day != null ? day.toUiValue() : null);
+		ui.setHour(hour != null ? hour.toUiValue() : null);
+		ui.setMinute(minute != null ? minute.toUiValue() : null);
+		ui.setSecond(second != null ? second.toUiValue() : null);
+		return ui;
 	}
 
 	public FullLongMediumShortType getDateStyle() {
@@ -219,109 +239,84 @@ public class DateTimeFormatDescriptor {
 		}
 	}
 
+	// === ENUMS ===
 
 	public enum DayPeriodType {
-			NARROW("narrow"),
-			SHORT("short"),
-			LONG("long");
+		NARROW,
+		SHORT,
+		LONG;
 
-		private final String jsonValue;
-
-		DayPeriodType(String jsonValue) {
-			this.jsonValue = jsonValue;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonValue
-		public String jsonValue() {
-			return jsonValue;
-		}
-	}
-
-	public enum FullLongMediumShortType {
-			FULL("full"),
-			LONG("long"),
-			MEDIUM("medium"),
-			SHORT("short");
-
-		private final String jsonValue;
-
-		FullLongMediumShortType(String jsonValue) {
-			this.jsonValue = jsonValue;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonValue
-		public String jsonValue() {
-			return jsonValue;
+		public DtoDayPeriodType toUiValue() {
+			return DtoDayPeriodType.valueOf(this.name());
 		}
 	}
 
 	public enum HourCycleType {
-			H11("h11"),
-			H12("h12"),
-			H23("h23"),
-			H24("h24");
+		/**
+		 * 0-11
+		 */
+		H11,
 
-		private final String jsonValue;
+		/**
+		 * 1-12
+		 */
+		H12,
 
-		HourCycleType(String jsonValue) {
-			this.jsonValue = jsonValue;
+		/**
+		 * 0-23
+		 */
+		H23,
+
+		/**
+		 * 1-24
+		 */
+		H24;
+
+		public DtoHourCycleType toUiValue() {
+			return DtoHourCycleType.valueOf(name());
 		}
+	}
 
-		@com.fasterxml.jackson.annotation.JsonValue
-		public String jsonValue() {
-			return jsonValue;
+	public enum FullLongMediumShortType {
+		FULL,
+		LONG,
+		MEDIUM,
+		SHORT;
+
+		public DtoFullLongMediumShortType toUiValue() {
+			return DtoFullLongMediumShortType.valueOf(name());
 		}
 	}
 
 	public enum LongShortNarrowType {
-			LONG("long"),
-			SHORT("short"),
-			NARROW("narrow");
+		LONG,
+		SHORT,
+		NARROW;
 
-		private final String jsonValue;
-
-		LongShortNarrowType(String jsonValue) {
-			this.jsonValue = jsonValue;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonValue
-		public String jsonValue() {
-			return jsonValue;
-		}
-	}
-
-	public enum NumericOrLongShortNarrowType {
-			NUMERIC("numeric"),
-			TWO_DIGIT("2-digit"),
-			LONG("long"),
-			SHORT("short"),
-			NARROW("narrow");
-
-		private final String jsonValue;
-
-		NumericOrLongShortNarrowType(String jsonValue) {
-			this.jsonValue = jsonValue;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonValue
-		public String jsonValue() {
-			return jsonValue;
+		public DtoLongShortNarrowType toUiValue() {
+			return DtoLongShortNarrowType.valueOf(name());
 		}
 	}
 
 	public enum NumericType {
-			NUMERIC("numeric"),
-			TWO_DIGIT("2-digit");
+		NUMERIC(),
+		TWO_DIGIT();
 
-		private final String jsonValue;
-
-		NumericType(String jsonValue) {
-			this.jsonValue = jsonValue;
-		}
-
-		@com.fasterxml.jackson.annotation.JsonValue
-		public String jsonValue() {
-			return jsonValue;
+		public DtoNumericType toUiValue() {
+			return DtoNumericType.valueOf(name());
 		}
 	}
+
+	public enum NumericOrLongShortNarrowType {
+		NUMERIC,
+		TWO_DIGIT,
+		LONG,
+		SHORT,
+		NARROW;
+
+		public DtoNumericOrLongShortNarrowType toUiValue() {
+			return DtoNumericOrLongShortNarrowType.valueOf(name());
+		}
+	}
+
 }

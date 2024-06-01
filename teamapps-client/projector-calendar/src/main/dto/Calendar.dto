@@ -19,9 +19,9 @@
  */
 package "projector-calendar":org.teamapps.projector.components.calendar.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoTemplate;
-import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 enum DtoCalendarViewMode {
 	YEAR = "year",

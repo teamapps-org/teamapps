@@ -21,8 +21,8 @@
 import {
 	AbstractLegacyComponent,
 	Component,
-	DtoAlignItems,
-	DtoFlexDirection, DtoJustifyContent,
+	AlignItems,
+	FlexDirection, JustifyContent,
 	insertAtIndex,
 	parseHtml,
 	ServerObjectChannel
@@ -62,17 +62,17 @@ export class FlexContainer extends AbstractLegacyComponent<DtoFlexContainer> imp
 		}
 	}
 
-	setAlignItems(alignItems: DtoAlignItems): any {
+	setAlignItems(alignItems: AlignItems): any {
 		this.config.alignItems = alignItems;
 		this.$main.style.alignItems = alignItems;
 	}
 
-	setFlexDirection(flexDirection: DtoFlexDirection): any {
+	setFlexDirection(flexDirection: FlexDirection): any {
 		this.config.flexDirection = flexDirection;
 		this.$main.style.flexDirection = flexDirection;
 	}
 
-	setJustifyContent(justifyContent: DtoJustifyContent): any {
+	setJustifyContent(justifyContent: JustifyContent): any {
 		this.config.justifyContent = justifyContent;
 		this.$main.style.justifyContent = justifyContent;
 	}

@@ -15,5 +15,6 @@ export interface DtoCalendar {
 export interface DtoCalendarServerObjectChannel extends ServerObjectChannel {
 
 
+
 }
 

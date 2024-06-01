@@ -21,9 +21,9 @@
 import {Panel} from "./Panel";
 import {
 	DtoPanel_WindowButtonClickedEvent,
-	DtoPanelHeaderComponentMinimizationPolicy,
+	HeaderComponentMinimizationPolicy,
 	DtoPanelHeaderField,
-	DtoPanelHeaderFieldIconVisibilityPolicy,
+	HeaderFieldIconVisibilityPolicy,
 	DtoWindow,
 	WindowButtonType,
 	DtoWindowCommandHandler,
@@ -32,7 +32,7 @@ import {
 import {
 	AbstractLegacyComponent,
 	Component,
-	DtoEntranceAnimation, DtoExitAnimation,
+	EntranceAnimation, ExitAnimation,
 	noOpServerObjectChannel,
 	parseHtml,
 	ServerObjectChannel,
@@ -98,7 +98,7 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 
 		this.$main.classList.remove("hidden");
 		this.$main.classList.add("open");
-		animateCSS(this.$panelWrapper, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[DtoEntranceAnimation.ZOOM_IN], animationDuration);
+		animateCSS(this.$panelWrapper, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[EntranceAnimation.ZOOM_IN], animationDuration);
 
 		this.escapeKeyListener = (e) => {
 			if (this.closeOnEscape && e.key === "Escape") {
@@ -131,7 +131,7 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 	public close(animationDuration: number) {
 		this.setMaximized(false);
 		this.$main.classList.remove("open");
-		animateCSS(this.$panelWrapper, Constants.EXIT_ANIMATION_CSS_CLASSES[DtoExitAnimation.ZOOM_OUT], animationDuration, () => {
+		animateCSS(this.$panelWrapper, Constants.EXIT_ANIMATION_CSS_CLASSES[ExitAnimation.ZOOM_OUT], animationDuration, () => {
 			this.$main.classList.add("hidden");
 			this.getMainElement().remove();
 		});
@@ -170,11 +170,11 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 		this.panel.setTitle(title);
 	}
 
-	public setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy: DtoPanelHeaderComponentMinimizationPolicy): any {
+	public setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy: HeaderComponentMinimizationPolicy): any {
 		this.panel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy);
 	}
 
-	public setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy: DtoPanelHeaderFieldIconVisibilityPolicy): any {
+	public setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy: HeaderFieldIconVisibilityPolicy): any {
 		this.panel.setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy);
 	}
 

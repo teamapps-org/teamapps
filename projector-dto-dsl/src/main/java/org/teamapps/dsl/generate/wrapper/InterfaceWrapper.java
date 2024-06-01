@@ -5,8 +5,10 @@ import org.teamapps.dsl.TeamAppsDtoParser.InterfaceDeclarationContext;
 import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.findImport;
+import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.getQualifiedTypeName;
 
 public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclarationContext> {
 
@@ -42,6 +44,21 @@ public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclar
 	@Override
 	public String getName() {
 		return context.Identifier().getText();
+	}
+
+	@Override
+	public void checkSuperTypeResolvability() {
+		if (context.superInterfaceDecl() != null) {
+			for (TeamAppsDtoParser.TypeNameContext typeNameContext : context.superInterfaceDecl().classList().typeName()) {
+				String interfaceName = typeNameContext.getText();
+				Boolean isExternal = findImport(context, interfaceName).map(i -> i.externalInterfaceTypeModifier() != null).orElse(false);
+				if (isExternal) {
+					continue;
+				}
+				String qualifiedName = getQualifiedTypeName(interfaceName, context.superInterfaceDecl());
+				model.findClassByQualifiedName(qualifiedName).orElseThrow(() -> model.createUnresolvedTypeReferenceException(interfaceName, context));
+			}
+		}
 	}
 
 	@Override

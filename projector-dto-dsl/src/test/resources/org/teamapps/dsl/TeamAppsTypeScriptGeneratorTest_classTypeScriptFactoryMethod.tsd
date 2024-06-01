@@ -25,5 +25,6 @@ export function createA(req1: string, req2: number, nonRequiredProperties?: {non
 export interface AServerObjectChannel extends ServerObjectChannel {
 
 
+
 }
 

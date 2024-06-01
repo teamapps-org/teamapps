@@ -19,10 +19,10 @@
  */
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoAbstractField;
-import org.teamapps.projector.dto.DtoTextInputHandlingField;
-import org.teamapps.projector.dto.DtoDateTimeFormatDescriptor;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.component.field.DtoAbstractField;
+import org.teamapps.projector.components.essential.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.session.config.DtoDateTimeFormatDescriptor;
 
 @TypeScriptFactory
 class DtoLocalDate {
@@ -31,7 +31,7 @@ class DtoLocalDate {
     required int day;
 }
 
-class DtoLocalDateField extends DtoAbstractField implements DtoTextInputHandlingField {
+class DtoLocalDateField extends DtoAbstractField {
     boolean showDropDownButton;
 	boolean showClearButton;
 	boolean favorPastDates;
@@ -39,12 +39,14 @@ class DtoLocalDateField extends DtoAbstractField implements DtoTextInputHandling
 	DtoDateTimeFormatDescriptor dateFormat; // if null, Configuration.dateFormat applies
 	DtoLocalDate defaultSuggestionDate; // null == today
 	boolean shuffledFormatSuggestionsEnabled;
-	LocalDateFieldDropDownMode dropDownMode;
+	DateFieldDropDownMode dropDownMode;
 	String placeholderText;
 
     command update(DtoLocalDateField config);
+
+    event textInput(String enteredString);
 }
 
-enum DtoLocalDateFieldDropDownMode {
+enum DateFieldDropDownMode {
     CALENDAR, CALENDAR_SUGGESTION_LIST, SUGGESTION_LIST;
 }

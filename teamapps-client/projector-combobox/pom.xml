@@ -14,17 +14,16 @@
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-core</artifactId>
-            <version>${project.version}</version>
+            <artifactId>projector-client-object-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-grid-template</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Only for DtoInputHandlingField -->
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-client-core-components</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ux</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -50,7 +49,7 @@
                 <configuration>
                     <jsResourcesTargetClassPath>org/teamapps/projector/components/trivial/resources/js</jsResourcesTargetClassPath>
                     <dtoDependencies>
-                        <dependency>org.teamapps:teamapps-client-core:${project.version}</dependency>
+                        <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
                         <dependency>org.teamapps:teamapps-client-core-components:${project.version}</dependency>
                     </dtoDependencies>
                 </configuration>

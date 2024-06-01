@@ -33,8 +33,8 @@ import {
 } from "../datetime-rendering";
 import {LocalDateTime} from "../LocalDateTime";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
-import {parseHtml, TeamAppsEvent} from "teamapps-client-core";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
+import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {selectElementContents} from "teamapps-client-core-components";
 
 enum Mode {

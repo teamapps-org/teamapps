@@ -1,4 +1,5 @@
-package "projector-client-object-api":org.teamapps.projector.dto;
+package "projector-client-object-api":org.teamapps.projector;
+
 
 class DtoGlobals {
 

@@ -19,10 +19,10 @@
  */
 import {
 	Component,
-	DtoEntranceAnimation,
-	DtoExitAnimation,
-	DtoPageTransition,
-	DtoRepeatableAnimation,
+	EntranceAnimation,
+	ExitAnimation,
+	PageTransition,
+	RepeatableAnimation,
 	parseHtml
 } from "projector-client-object-api";
 import {applyCss, extractCssValues} from "projector-client-object-api";
@@ -33,127 +33,127 @@ export class Constants {
 	private static _SCROLLBAR_WIDTH: number;
 
 	public static ENTRANCE_ANIMATION_CSS_CLASSES = {
-		[DtoEntranceAnimation.BACK_IN_DOWN]: "animate__animated animate__backInDown",
-		[DtoEntranceAnimation.BACK_IN_LEFT]: "animate__animated animate__backInLeft",
-		[DtoEntranceAnimation.BACK_IN_RIGHT]: "animate__animated animate__backInRight",
-		[DtoEntranceAnimation.BACK_IN_UP]: "animate__animated animate__backInUp",
+		[EntranceAnimation.BACK_IN_DOWN]: "animate__animated animate__backInDown",
+		[EntranceAnimation.BACK_IN_LEFT]: "animate__animated animate__backInLeft",
+		[EntranceAnimation.BACK_IN_RIGHT]: "animate__animated animate__backInRight",
+		[EntranceAnimation.BACK_IN_UP]: "animate__animated animate__backInUp",
 
-		[DtoEntranceAnimation.LIGHT_SPEED_IN_RIGHT]: "animate__animated animate__lightSpeedIn",
-		[DtoEntranceAnimation.LIGHT_SPEED_IN_LEFT]: "animate__animated animate__lightSpeedIn",
-		[DtoEntranceAnimation.JACK_IN_THE_BOX]: "animate__animated animate__lightSpeedIn",
-		[DtoEntranceAnimation.ROLL_IN]: "animate__animated animate__rollIn",
+		[EntranceAnimation.LIGHT_SPEED_IN_RIGHT]: "animate__animated animate__lightSpeedIn",
+		[EntranceAnimation.LIGHT_SPEED_IN_LEFT]: "animate__animated animate__lightSpeedIn",
+		[EntranceAnimation.JACK_IN_THE_BOX]: "animate__animated animate__lightSpeedIn",
+		[EntranceAnimation.ROLL_IN]: "animate__animated animate__rollIn",
 
-		[DtoEntranceAnimation.ZOOM_IN]: "animate__animated animate__zoomIn",
-		[DtoEntranceAnimation.ZOOM_IN_DOWN]: "animate__animated animate__zoomInDown",
-		[DtoEntranceAnimation.ZOOM_IN_LEFT]: "animate__animated animate__zoomInLeft",
-		[DtoEntranceAnimation.ZOOM_IN_RIGHT]: "animate__animated animate__zoomInRight",
-		[DtoEntranceAnimation.ZOOM_IN_UP]: "animate__animated animate__zoomInUp",
+		[EntranceAnimation.ZOOM_IN]: "animate__animated animate__zoomIn",
+		[EntranceAnimation.ZOOM_IN_DOWN]: "animate__animated animate__zoomInDown",
+		[EntranceAnimation.ZOOM_IN_LEFT]: "animate__animated animate__zoomInLeft",
+		[EntranceAnimation.ZOOM_IN_RIGHT]: "animate__animated animate__zoomInRight",
+		[EntranceAnimation.ZOOM_IN_UP]: "animate__animated animate__zoomInUp",
 
-		[DtoEntranceAnimation.SLIDE_IN_UP]: "animate__animated animate__slideInUp",
-		[DtoEntranceAnimation.SLIDE_IN_DOWN]: "animate__animated animate__slideInDown",
-		[DtoEntranceAnimation.SLIDE_IN_LEFT]: "animate__animated animate__slideInLeft",
-		[DtoEntranceAnimation.SLIDE_IN_RIGHT]: "animate__animated animate__slideInRight",
+		[EntranceAnimation.SLIDE_IN_UP]: "animate__animated animate__slideInUp",
+		[EntranceAnimation.SLIDE_IN_DOWN]: "animate__animated animate__slideInDown",
+		[EntranceAnimation.SLIDE_IN_LEFT]: "animate__animated animate__slideInLeft",
+		[EntranceAnimation.SLIDE_IN_RIGHT]: "animate__animated animate__slideInRight",
 
-		[DtoEntranceAnimation.ROTATE_IN]: "animate__animated animate__rotateIn",
-		[DtoEntranceAnimation.ROTATE_IN_DOWNLEFT]: "animate__animated animate__rotateInDownLeft",
-		[DtoEntranceAnimation.ROTATE_IN_DOWNRIGHT]: "animate__animated animate__rotateInDownRight",
-		[DtoEntranceAnimation.ROTATE_IN_UPLEFT]: "animate__animated animate__rotateInUpLeft",
-		[DtoEntranceAnimation.ROTATE_IN_UPRIGHT]: "animate__animated animate__rotateInUpRight",
+		[EntranceAnimation.ROTATE_IN]: "animate__animated animate__rotateIn",
+		[EntranceAnimation.ROTATE_IN_DOWNLEFT]: "animate__animated animate__rotateInDownLeft",
+		[EntranceAnimation.ROTATE_IN_DOWNRIGHT]: "animate__animated animate__rotateInDownRight",
+		[EntranceAnimation.ROTATE_IN_UPLEFT]: "animate__animated animate__rotateInUpLeft",
+		[EntranceAnimation.ROTATE_IN_UPRIGHT]: "animate__animated animate__rotateInUpRight",
 
-		[DtoEntranceAnimation.FLIP_IN_X]: "animate__animated animate__flipInX",
-		[DtoEntranceAnimation.FLIP_IN_Y]: "animate__animated animate__flipInY",
+		[EntranceAnimation.FLIP_IN_X]: "animate__animated animate__flipInX",
+		[EntranceAnimation.FLIP_IN_Y]: "animate__animated animate__flipInY",
 
-		[DtoEntranceAnimation.FADE_IN]: "animate__animated animate__fadeIn",
-		[DtoEntranceAnimation.FADE_IN_DOWN]: "animate__animated animate__fadeInDown",
-		[DtoEntranceAnimation.FADE_IN_DOWNBIG]: "animate__animated animate__fadeInDownBig",
-		[DtoEntranceAnimation.FADE_IN_LEFT]: "animate__animated animate__fadeInLeft",
-		[DtoEntranceAnimation.FADE_IN_LEFTBIG]: "animate__animated animate__fadeInLeftBig",
-		[DtoEntranceAnimation.FADE_IN_RIGHT]: "animate__animated animate__fadeInRight",
-		[DtoEntranceAnimation.FADE_IN_RIGHTBIG]: "animate__animated animate__fadeInRightBig",
-		[DtoEntranceAnimation.FADE_IN_UP]: "animate__animated animate__fadeInUp",
-		[DtoEntranceAnimation.FADE_IN_UPBIG]: "animate__animated animate__fadeInUpBig",
-		[DtoEntranceAnimation.FADE_IN_TOP_LEFT]: "animate__animated animate__fadeInTopLeft",
-		[DtoEntranceAnimation.FADE_IN_TOP_RIGHT]: "animate__animated animate__fadeInTopRight",
-		[DtoEntranceAnimation.FADE_IN_BOTTOM_LEFT]: "animate__animated animate__fadeInBottomLeft",
-		[DtoEntranceAnimation.FADE_IN_BOTTOM_RIGHT]: "animate__animated animate__fadeInBottomRight",
+		[EntranceAnimation.FADE_IN]: "animate__animated animate__fadeIn",
+		[EntranceAnimation.FADE_IN_DOWN]: "animate__animated animate__fadeInDown",
+		[EntranceAnimation.FADE_IN_DOWNBIG]: "animate__animated animate__fadeInDownBig",
+		[EntranceAnimation.FADE_IN_LEFT]: "animate__animated animate__fadeInLeft",
+		[EntranceAnimation.FADE_IN_LEFTBIG]: "animate__animated animate__fadeInLeftBig",
+		[EntranceAnimation.FADE_IN_RIGHT]: "animate__animated animate__fadeInRight",
+		[EntranceAnimation.FADE_IN_RIGHTBIG]: "animate__animated animate__fadeInRightBig",
+		[EntranceAnimation.FADE_IN_UP]: "animate__animated animate__fadeInUp",
+		[EntranceAnimation.FADE_IN_UPBIG]: "animate__animated animate__fadeInUpBig",
+		[EntranceAnimation.FADE_IN_TOP_LEFT]: "animate__animated animate__fadeInTopLeft",
+		[EntranceAnimation.FADE_IN_TOP_RIGHT]: "animate__animated animate__fadeInTopRight",
+		[EntranceAnimation.FADE_IN_BOTTOM_LEFT]: "animate__animated animate__fadeInBottomLeft",
+		[EntranceAnimation.FADE_IN_BOTTOM_RIGHT]: "animate__animated animate__fadeInBottomRight",
 
-		[DtoEntranceAnimation.BOUNCE_IN]: "animate__animated animate__bounceIn",
-		[DtoEntranceAnimation.BOUNCE_IN_DOWN]: "animate__animated animate__bounceInDown",
-		[DtoEntranceAnimation.BOUNCE_IN_LEFT]: "animate__animated animate__bounceInLeft",
-		[DtoEntranceAnimation.BOUNCE_IN_RIGHT]: "animate__animated animate__bounceInRight",
-		[DtoEntranceAnimation.BOUNCE_IN_UP]: "animate__animated animate__bounceInUp"
+		[EntranceAnimation.BOUNCE_IN]: "animate__animated animate__bounceIn",
+		[EntranceAnimation.BOUNCE_IN_DOWN]: "animate__animated animate__bounceInDown",
+		[EntranceAnimation.BOUNCE_IN_LEFT]: "animate__animated animate__bounceInLeft",
+		[EntranceAnimation.BOUNCE_IN_RIGHT]: "animate__animated animate__bounceInRight",
+		[EntranceAnimation.BOUNCE_IN_UP]: "animate__animated animate__bounceInUp"
 	};
 
 	public static EXIT_ANIMATION_CSS_CLASSES = {
-		[DtoExitAnimation.BACK_OUT_DOWN]: "animate__animated animate__backOutDown",
-		[DtoExitAnimation.BACK_OUT_LEFT]: "animate__animated animate__backOutLeft",
-		[DtoExitAnimation.BACK_OUT_RIGHT]: "animate__animated animate__backOutRight",
-		[DtoExitAnimation.BACK_OUT_UP]: "animate__animated animate__backOutUp",
+		[ExitAnimation.BACK_OUT_DOWN]: "animate__animated animate__backOutDown",
+		[ExitAnimation.BACK_OUT_LEFT]: "animate__animated animate__backOutLeft",
+		[ExitAnimation.BACK_OUT_RIGHT]: "animate__animated animate__backOutRight",
+		[ExitAnimation.BACK_OUT_UP]: "animate__animated animate__backOutUp",
 
-		[DtoExitAnimation.LIGHT_SPEED_OUT_RIGHT]: "animate__animated animate__lightSpeedOutRight",
-		[DtoExitAnimation.LIGHT_SPEED_OUT_LEFT]: "animate__animated animate__lightSpeedOutLeft",
-		[DtoExitAnimation.ROLL_OUT]: "animate__animated animate__rollOut",
-		[DtoExitAnimation.HINGE]: "animate__animated animate__hinge",
+		[ExitAnimation.LIGHT_SPEED_OUT_RIGHT]: "animate__animated animate__lightSpeedOutRight",
+		[ExitAnimation.LIGHT_SPEED_OUT_LEFT]: "animate__animated animate__lightSpeedOutLeft",
+		[ExitAnimation.ROLL_OUT]: "animate__animated animate__rollOut",
+		[ExitAnimation.HINGE]: "animate__animated animate__hinge",
 
-		[DtoExitAnimation.ZOOM_OUT]: "animate__animated animate__zoomOut",
-		[DtoExitAnimation.ZOOM_OUT_DOWN]: "animate__animated animate__zoomOutDown",
-		[DtoExitAnimation.ZOOM_OUT_LEFT]: "animate__animated animate__zoomOutLeft",
-		[DtoExitAnimation.ZOOM_OUT_RIGHT]: "animate__animated animate__zoomOutRight",
-		[DtoExitAnimation.ZOOM_OUT_UP]: "animate__animated animate__zoomOutUp",
+		[ExitAnimation.ZOOM_OUT]: "animate__animated animate__zoomOut",
+		[ExitAnimation.ZOOM_OUT_DOWN]: "animate__animated animate__zoomOutDown",
+		[ExitAnimation.ZOOM_OUT_LEFT]: "animate__animated animate__zoomOutLeft",
+		[ExitAnimation.ZOOM_OUT_RIGHT]: "animate__animated animate__zoomOutRight",
+		[ExitAnimation.ZOOM_OUT_UP]: "animate__animated animate__zoomOutUp",
 
-		[DtoExitAnimation.SLIDE_OUT_UP]: "animate__animated animate__slideOutUp",
-		[DtoExitAnimation.SLIDE_OUT_DOWN]: "animate__animated animate__slideOutDown",
-		[DtoExitAnimation.SLIDE_OUT_LEFT]: "animate__animated animate__slideOutLeft",
-		[DtoExitAnimation.SLIDE_OUT_RIGHT]: "animate__animated animate__slideOutRight",
+		[ExitAnimation.SLIDE_OUT_UP]: "animate__animated animate__slideOutUp",
+		[ExitAnimation.SLIDE_OUT_DOWN]: "animate__animated animate__slideOutDown",
+		[ExitAnimation.SLIDE_OUT_LEFT]: "animate__animated animate__slideOutLeft",
+		[ExitAnimation.SLIDE_OUT_RIGHT]: "animate__animated animate__slideOutRight",
 
-		[DtoExitAnimation.ROTATE_OUT]: "animate__animated animate__rotateOut",
-		[DtoExitAnimation.ROTATE_OUT_DOWNLEFT]: "animate__animated animate__rotateOutDownLeft",
-		[DtoExitAnimation.ROTATE_OUT_DOWNRIGHT]: "animate__animated animate__rotateOutDownRight",
-		[DtoExitAnimation.ROTATE_OUT_UPLEFT]: "animate__animated animate__rotateOutUpLeft",
-		[DtoExitAnimation.ROTATE_OUT_UPRIGHT]: "animate__animated animate__rotateOutUpRight",
+		[ExitAnimation.ROTATE_OUT]: "animate__animated animate__rotateOut",
+		[ExitAnimation.ROTATE_OUT_DOWNLEFT]: "animate__animated animate__rotateOutDownLeft",
+		[ExitAnimation.ROTATE_OUT_DOWNRIGHT]: "animate__animated animate__rotateOutDownRight",
+		[ExitAnimation.ROTATE_OUT_UPLEFT]: "animate__animated animate__rotateOutUpLeft",
+		[ExitAnimation.ROTATE_OUT_UPRIGHT]: "animate__animated animate__rotateOutUpRight",
 
-		[DtoExitAnimation.FLIP_OUT_X]: "animate__animated animate__flipOutX",
-		[DtoExitAnimation.FLIP_OUT_Y]: "animate__animated animate__flipOutY",
+		[ExitAnimation.FLIP_OUT_X]: "animate__animated animate__flipOutX",
+		[ExitAnimation.FLIP_OUT_Y]: "animate__animated animate__flipOutY",
 
-		[DtoExitAnimation.FADE_OUT]: "animate__animated animate__fadeOut",
-		[DtoExitAnimation.FADE_OUT_DOWN]: "animate__animated animate__fadeOutDown",
-		[DtoExitAnimation.FADE_OUT_DOWNBIG]: "animate__animated animate__fadeOutDownBig",
-		[DtoExitAnimation.FADE_OUT_LEFT]: "animate__animated animate__fadeOutLeft",
-		[DtoExitAnimation.FADE_OUT_LEFTBIG]: "animate__animated animate__fadeOutLeftBig",
-		[DtoExitAnimation.FADE_OUT_RIGHT]: "animate__animated animate__fadeOutRight",
-		[DtoExitAnimation.FADE_OUT_RIGHTBIG]: "animate__animated animate__fadeOutRightBig",
-		[DtoExitAnimation.FADE_OUT_UP]: "animate__animated animate__fadeOutUp",
-		[DtoExitAnimation.FADE_OUT_UPBIG]: "animate__animated animate__fadeOutUpBig",
-		[DtoExitAnimation.FADE_OUT_TOP_LEFT]: "animate__animated animate__fadeOutTopLeft",
-		[DtoExitAnimation.FADE_OUT_TOP_RIGHT]: "animate__animated animate__fadeOutTopRight",
-		[DtoExitAnimation.FADE_OUT_BOTTOM_RIGHT]: "animate__animated animate__fadeOutBottomRight",
-		[DtoExitAnimation.FADE_OUT_BOTTOM_LEFT]: "animate__animated animate__fadeOutBottomLeft",
+		[ExitAnimation.FADE_OUT]: "animate__animated animate__fadeOut",
+		[ExitAnimation.FADE_OUT_DOWN]: "animate__animated animate__fadeOutDown",
+		[ExitAnimation.FADE_OUT_DOWNBIG]: "animate__animated animate__fadeOutDownBig",
+		[ExitAnimation.FADE_OUT_LEFT]: "animate__animated animate__fadeOutLeft",
+		[ExitAnimation.FADE_OUT_LEFTBIG]: "animate__animated animate__fadeOutLeftBig",
+		[ExitAnimation.FADE_OUT_RIGHT]: "animate__animated animate__fadeOutRight",
+		[ExitAnimation.FADE_OUT_RIGHTBIG]: "animate__animated animate__fadeOutRightBig",
+		[ExitAnimation.FADE_OUT_UP]: "animate__animated animate__fadeOutUp",
+		[ExitAnimation.FADE_OUT_UPBIG]: "animate__animated animate__fadeOutUpBig",
+		[ExitAnimation.FADE_OUT_TOP_LEFT]: "animate__animated animate__fadeOutTopLeft",
+		[ExitAnimation.FADE_OUT_TOP_RIGHT]: "animate__animated animate__fadeOutTopRight",
+		[ExitAnimation.FADE_OUT_BOTTOM_RIGHT]: "animate__animated animate__fadeOutBottomRight",
+		[ExitAnimation.FADE_OUT_BOTTOM_LEFT]: "animate__animated animate__fadeOutBottomLeft",
 
-		[DtoExitAnimation.BOUNCE_OUT]: "animate__animated animate__bounceOut",
-		[DtoExitAnimation.BOUNCE_OUT_DOWN]: "animate__animated animate__bounceOutDown",
-		[DtoExitAnimation.BOUNCE_OUT_LEFT]: "animate__animated animate__bounceOutLeft",
-		[DtoExitAnimation.BOUNCE_OUT_RIGHT]: "animate__animated animate__bounceOutRight",
-		[DtoExitAnimation.BOUNCE_OUT_UP]: "animate__animated animate__bounceOutUp"
+		[ExitAnimation.BOUNCE_OUT]: "animate__animated animate__bounceOut",
+		[ExitAnimation.BOUNCE_OUT_DOWN]: "animate__animated animate__bounceOutDown",
+		[ExitAnimation.BOUNCE_OUT_LEFT]: "animate__animated animate__bounceOutLeft",
+		[ExitAnimation.BOUNCE_OUT_RIGHT]: "animate__animated animate__bounceOutRight",
+		[ExitAnimation.BOUNCE_OUT_UP]: "animate__animated animate__bounceOutUp"
 	};
 
 	public static REPEATABLE_ANIMATION_CSS_CLASSES = {
-		[DtoRepeatableAnimation.BOUNCE]: "animate__animated animate__bounce",
-		[DtoRepeatableAnimation.FLASH]: "animate__animated animate__flash",
-		[DtoRepeatableAnimation.PULSE]: "animate__animated animate__pulse",
-		[DtoRepeatableAnimation.RUBBER_BAND]: "animate__animated animate__rubberBand",
-		[DtoRepeatableAnimation.SHAKE_X]: "animate__animated animate__shakeX",
-		[DtoRepeatableAnimation.SHAKE_Y]: "animate__animated animate__shakeY",
-		[DtoRepeatableAnimation.HEAD_SHAKE]: "animate__animated animate__headShake",
-		[DtoRepeatableAnimation.SWING]: "animate__animated animate__swing",
-		[DtoRepeatableAnimation.TADA]: "animate__animated animate__tada",
-		[DtoRepeatableAnimation.WOBBLE]: "animate__animated animate__wobble",
-		[DtoRepeatableAnimation.JELLO]: "animate__animated animate__jello",
-		[DtoRepeatableAnimation.HEART_BEAT]: "animate__animated animate__heartBeat",
-		[DtoRepeatableAnimation.FLIP]: "animate__animated animate__flip",
+		[RepeatableAnimation.BOUNCE]: "animate__animated animate__bounce",
+		[RepeatableAnimation.FLASH]: "animate__animated animate__flash",
+		[RepeatableAnimation.PULSE]: "animate__animated animate__pulse",
+		[RepeatableAnimation.RUBBER_BAND]: "animate__animated animate__rubberBand",
+		[RepeatableAnimation.SHAKE_X]: "animate__animated animate__shakeX",
+		[RepeatableAnimation.SHAKE_Y]: "animate__animated animate__shakeY",
+		[RepeatableAnimation.HEAD_SHAKE]: "animate__animated animate__headShake",
+		[RepeatableAnimation.SWING]: "animate__animated animate__swing",
+		[RepeatableAnimation.TADA]: "animate__animated animate__tada",
+		[RepeatableAnimation.WOBBLE]: "animate__animated animate__wobble",
+		[RepeatableAnimation.JELLO]: "animate__animated animate__jello",
+		[RepeatableAnimation.HEART_BEAT]: "animate__animated animate__heartBeat",
+		[RepeatableAnimation.FLIP]: "animate__animated animate__flip",
 
 		// custom:
-		[DtoRepeatableAnimation.BLINK]: "ta-blink",
-		[DtoRepeatableAnimation.BLINK_SUBTLE]: "ta-blink-subtle"
+		[RepeatableAnimation.BLINK]: "ta-blink",
+		[RepeatableAnimation.BLINK_SUBTLE]: "ta-blink-subtle"
 	}
 
 	public static POINTER_EVENTS = {
@@ -802,12 +802,12 @@ export function animateCSS(el: HTMLElement, animationCssClasses: string, animati
 }
 
 export function fadeOut(el: HTMLElement) {
-	animateCSS(el, Constants.EXIT_ANIMATION_CSS_CLASSES[DtoExitAnimation.FADE_OUT], 300, () => el.classList.add("hidden"));
+	animateCSS(el, Constants.EXIT_ANIMATION_CSS_CLASSES[ExitAnimation.FADE_OUT], 300, () => el.classList.add("hidden"));
 }
 
 export function fadeIn(el: HTMLElement) {
 	el.classList.remove("hidden");
-	animateCSS(el, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[DtoEntranceAnimation.FADE_IN]);
+	animateCSS(el, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[EntranceAnimation.FADE_IN]);
 }
 
 export var pageTransitionAnimationPairs = {
@@ -1087,8 +1087,8 @@ export function animatePageTransition(outEl: HTMLElement, inEl: HTMLElement, ani
 	}
 }
 
-export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: DtoPageTransition, animationDuration: number = 300, callback?: () => any) {
-	let s = DtoPageTransition[pageTransition].toLowerCase().replace(/_{1,1}([a-z])/g, (g0, g1) => g1.toUpperCase()) as keyof typeof pageTransitionAnimationPairs;
+export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: PageTransition, animationDuration: number = 300, callback?: () => any) {
+	let s = PageTransition[pageTransition].toLowerCase().replace(/_{1,1}([a-z])/g, (g0, g1) => g1.toUpperCase()) as keyof typeof pageTransitionAnimationPairs;
 	animatePageTransition(outEl, inEl, s, animationDuration, callback);
 }
 

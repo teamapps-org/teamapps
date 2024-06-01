@@ -21,10 +21,10 @@ import {
 	DtoBorder,
 	DtoFontStyle,
 	DtoLine,
-	DtoLineType,
+	LineType,
 	DtoBoxShadow,
 	DtoSpacing,
-	DtoTextAlignment,
+	TextAlignment,
 } from "../generated";
 
 export type CssPropertyObject = { [cssProperty: string]: string };
@@ -39,8 +39,8 @@ export function createUiColorCssObject(cssProperty: string, uiColor: string) {
 	}
 }
 
-export function createTextAlignmentCssString(alignment: DtoTextAlignment) {
-	return alignment == null ? '' : 'text-align:' + DtoTextAlignment[alignment].toLowerCase() + ';';
+export function createTextAlignmentCssString(alignment: TextAlignment) {
+	return alignment == null ? '' : 'text-align:' + TextAlignment[alignment].toLowerCase() + ';';
 }
 
 export function createUiFontStyleCssString(fontStyle: DtoFontStyle) {
@@ -57,7 +57,7 @@ export function createUiFontStyleCssString(fontStyle: DtoFontStyle) {
 }
 
 export function createUiLineCssString(lineConfig: DtoLine) {
-	return lineConfig != null ? `${lineConfig.thickness}px ${DtoLineType[lineConfig.type]} ${(lineConfig.color ?? '')}` : '';
+	return lineConfig != null ? `${lineConfig.thickness}px ${lineConfig.type} ${(lineConfig.color ?? '')}` : '';
 }
 
 export function createUiBorderCssObject(borderConfig: DtoBorder): CssPropertyObject {

@@ -19,7 +19,7 @@
  */
 package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
 
 abstract class DtoAbstractInfiniteListComponent extends DtoComponent {
 	event displayedRangeChanged(int startIndex, int length);

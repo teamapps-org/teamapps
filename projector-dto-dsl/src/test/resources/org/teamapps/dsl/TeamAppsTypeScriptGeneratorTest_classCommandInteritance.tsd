@@ -32,6 +32,7 @@ export interface CServerObjectChannel extends ServerObjectChannel {
 
     sendEvent(eventName: "z", eventObject: A_ZEvent): void;
 
+
 }
 
 export interface CEventSource extends BEventSource, AEventSource {

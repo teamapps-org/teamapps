@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.session.event;
 
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.dto.KeyEventType;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.KeyEventType;
 
 public class KeyboardEvent {
 

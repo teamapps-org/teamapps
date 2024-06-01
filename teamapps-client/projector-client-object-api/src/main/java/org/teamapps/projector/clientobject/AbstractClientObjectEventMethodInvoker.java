@@ -32,9 +32,7 @@ public abstract class AbstractClientObjectEventMethodInvoker {
 			return;
 		}
 
-		ExceptionUtil.runWithSoftenedExceptions(() ->  {
-			invokeHandlerMethod(method, name, eventObject);
-		});
+		ExceptionUtil.runWithSoftenedExceptions(() -> invokeHandlerMethod(method, name, eventObject));
 	}
 
 	abstract protected void invokeHandlerMethod(Method method, String name, JsonWrapper eventObject) throws Exception;

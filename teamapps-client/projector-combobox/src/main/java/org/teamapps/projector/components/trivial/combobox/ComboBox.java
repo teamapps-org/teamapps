@@ -19,19 +19,19 @@
  */
 package org.teamapps.projector.components.trivial.combobox;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.dto.DtoAbstractField;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
+import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoComboBox;
 import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
 import org.teamapps.projector.components.trivial.tree.model.ComboBoxModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfoExtractor;
-import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.components.core.field.TextInputHandlingField;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.template.Template;
 
 import java.lang.invoke.MethodHandles;
@@ -115,17 +115,17 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> {
 	}
 
 	@Override
-	public RECORD convertClientValueToServerValue(Object value) {
+	public RECORD doConvertClientValueToServerValue(JsonNode jsonNode) {
 		this.freeTextEntry = null;
-		if (value == null) {
+
+		if (jsonNode.isNull()) {
 			return null;
-		} else if (value instanceof Integer) {
+		} else if (jsonNode.isNumber()) {
 			this.freeTextEntry = null;
-			RECORD record = recordCache.getRecordByClientId(((Integer) value));
 			// do not change the cache here ;-) No need.
-			return record;
-		} else if (value instanceof String) {
-			String freeText = (String) value;
+			return recordCache.getRecordByClientId(jsonNode.numberValue().intValue());
+		} else if (jsonNode.isTextual()) {
+			String freeText = jsonNode.textValue();
 			if (this.freeTextRecordFactory != null) {
 				RECORD record = freeTextRecordFactory.apply(freeText);
 				recordCache.replaceRecords(Collections.singletonList(record)).commit();
@@ -136,7 +136,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> {
 				return null;
 			}
 		} else {
-			throw new IllegalArgumentException("Unknown ui value type: " + value);
+			throw new IllegalArgumentException("Unknown ui value type: " + jsonNode);
 		}
 	}
 

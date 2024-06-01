@@ -17,19 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {deepEquals, TeamAppsEvent} from "teamapps-client-core";
-
 import {defaultListQueryFunctionFactory, isModifierKey, QueryFunction} from "./trivial-components/TrivialCore";
 import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "./trivial-components/TrivialUnitBox";
 import {
 	AbstractField,
-	BigDecimal, DtoFieldEditingMode, SpecialKey,
+	BigDecimal, FieldEditingMode, SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent, selectElementContents
+	DtoTextInputHandlingField_TextInputEvent, selectElementContents, TeamAppsEvent, DebounceMode, deepEquals
 } from "teamapps-client-core-components";
 import {
-	createDtoCurrencyValue,
-	DtoCurrencyField,
+	createDtoCurrencyValue, DtoComboBox_TextInputEvent,
+	DtoCurrencyField, DtoCurrencyField_TextInputEvent,
 	DtoCurrencyFieldCommandHandler,
 	DtoCurrencyFieldEventSource,
 	DtoCurrencyUnit,
@@ -38,8 +36,8 @@ import {
 
 export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyValue> implements DtoCurrencyFieldEventSource, DtoCurrencyFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<DtoCurrencyField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private trivialUnitBox: TrivialUnitBox<DtoCurrencyUnit>;
 	private queryFunction: QueryFunction<DtoCurrencyUnit>;
@@ -127,8 +125,8 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 		return v == null || typeof v === "object";
 	}
 
-	private convertToTrivialComponentsEditingMode(editingMode: DtoFieldEditingMode) {
-		return editingMode === DtoFieldEditingMode.READONLY ? 'readonly' : editingMode === DtoFieldEditingMode.DISABLED ? 'disabled' : 'editable';
+	private convertToTrivialComponentsEditingMode(editingMode: FieldEditingMode) {
+		return editingMode === FieldEditingMode.READONLY ? 'readonly' : editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable';
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
@@ -161,9 +159,9 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 		return createDtoCurrencyValue(this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(), this.trivialUnitBox.getAmount()?.value);
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.values(AbstractField.editingModeCssClasses));
-		this.getMainElement().classList.add(AbstractField.editingModeCssClasses[editingMode]);
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.add(editingMode);
 		this.trivialUnitBox.setEditingMode(this.convertToTrivialComponentsEditingMode(editingMode));
 	}
 

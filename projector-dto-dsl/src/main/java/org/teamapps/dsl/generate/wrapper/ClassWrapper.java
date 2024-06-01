@@ -1,5 +1,6 @@
 package org.teamapps.dsl.generate.wrapper;
 
+import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.TeamAppsDtoParser.ClassDeclarationContext;
 import org.teamapps.dsl.TeamAppsDtoParser.CommandDeclarationContext;
 import org.teamapps.dsl.generate.TeamAppsGeneratorException;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.findImport;
 import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.getQualifiedTypeName;
 
 public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationContext> {
@@ -46,6 +48,27 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 	@Override
 	public String getName() {
 		return context.Identifier().getText();
+	}
+
+	@Override
+	public void checkSuperTypeResolvability() {
+		if (context.superClassDecl() != null) {
+			String superClassName = context.superClassDecl().typeName().getText();
+			String qualifiedTypeName = getQualifiedTypeName(superClassName, context.superClassDecl());
+			model.findClassByQualifiedName(qualifiedTypeName).orElseThrow(() -> model.createUnresolvedTypeReferenceException(superClassName, context));
+		}
+
+		if (context.implementsDecl() != null) {
+			for (TeamAppsDtoParser.TypeNameContext typeNameContext : context.implementsDecl().classList().typeName()) {
+				String interfaceName = typeNameContext.getText();
+				Boolean isExternal = findImport(context, interfaceName).map(i -> i.externalInterfaceTypeModifier() != null).orElse(false);
+				if (isExternal) {
+					continue;
+				}
+				String qualifiedName = getQualifiedTypeName(interfaceName, context.superClassDecl());
+				model.findInterfaceByQualifiedName(qualifiedName).orElseThrow(() -> model.createUnresolvedTypeReferenceException(interfaceName, context));
+			}
+		}
 	}
 
 	public ClassWrapper getSuperClass() {

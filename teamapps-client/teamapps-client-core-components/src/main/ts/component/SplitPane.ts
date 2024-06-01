@@ -29,7 +29,7 @@ import {
 } from "projector-client-object-api";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {
-	DtoChildCollapsingPolicy,
+	ChildCollapsingPolicy,
 	SplitDirection,
 	DtoSplitPane,
 	DtoSplitPane_SplitResizedEvent,
@@ -272,11 +272,11 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 
 	private isChildCollapsible(childComponent: Component) {
 		switch (this.config.childCollapsingPolicy) {
-			case DtoChildCollapsingPolicy.NEVER:
+			case ChildCollapsingPolicy.NEVER:
 				return false;
-			case DtoChildCollapsingPolicy.IF_NULL:
+			case ChildCollapsingPolicy.IF_NULL:
 				return childComponent == null;
-			case DtoChildCollapsingPolicy.IF_EMPTY:
+			case ChildCollapsingPolicy.IF_EMPTY:
 				return isEmptyable(childComponent) && childComponent.empty;
 		}
 	}
@@ -313,7 +313,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 		this.onEmptyStateChanged.fireIfChanged(this.empty);
 	}
 
-	setChildCollapsingPolicy(childCollapsingPolicy: DtoChildCollapsingPolicy): any {
+	setChildCollapsingPolicy(childCollapsingPolicy: ChildCollapsingPolicy): any {
 		this.config.childCollapsingPolicy = childCollapsingPolicy;
 		this._updateChildContainerClasses();
 	}

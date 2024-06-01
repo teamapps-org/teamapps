@@ -21,36 +21,35 @@ package org.teamapps.projector.components.trivial.combobox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoTextInputHandlingField;
-import org.teamapps.dto.protocol.client.QueryWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
+import org.teamapps.projector.clientrecordcache.ClientRecordCache;
 import org.teamapps.projector.components.trivial.dto.DtoComboBox;
+import org.teamapps.projector.components.trivial.dto.DtoComboBoxClientObjectChannel;
+import org.teamapps.projector.components.trivial.dto.DtoComboBoxEventHandler;
 import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
 import org.teamapps.projector.components.trivial.tree.model.ComboBoxModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
-import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
-import org.teamapps.projector.field.AbstractField;
-import org.teamapps.projector.components.core.field.SpecialKey;
-import org.teamapps.projector.components.core.field.TextInputHandlingField;
-import org.teamapps.projector.template.Template;
-import org.teamapps.projector.template.TemplateDecider;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.TemplateDecider;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALUE> {
+public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALUE> implements DtoComboBoxEventHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+	private final DtoComboBoxClientObjectChannel clientObjectChannel = new DtoComboBoxClientObjectChannel(getClientObjectChannel());
+
 	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	protected final ClientRecordCache<RECORD, DtoComboBoxTreeRecord> recordCache;
 
@@ -115,59 +114,47 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		super.handleUiEvent(name, params);
-		switch (event.getTypeId()) {
-			case DtoTextInputHandlingField.TextInputEvent.TYPE_ID -> {
-				var textInputEvent = event.as(DtoTextInputHandlingField.TextInputEventWrapper.class);
-				String string = textInputEvent.getEnteredString() != null ? textInputEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
-				this.onTextInput.fire(string);
-			}
-			case DtoTextInputHandlingField.SpecialKeyPressedEvent.TYPE_ID -> {
-				var specialKeyPressedEvent = event.as(DtoTextInputHandlingField.SpecialKeyPressedEventWrapper.class);
-				this.onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
-			}
-		}
+	public void handleTextInput(String enteredString) {
+		this.onTextInput.fire(enteredString);
 	}
 
 	@Override
-	public Object handleUiQuery(QueryWrapper query) {
-		switch (query.getTypeId()) {
-			case DtoComboBox.RetrieveDropdownEntriesQuery.TYPE_ID -> {
-				var q = query.as(DtoComboBox.RetrieveDropdownEntriesQueryWrapper.class);
-				String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
-				if (model != null) {
-					List<RECORD> resultRecords = model.getRecords(string);
-					if (distinctModelResultFiltering) {
-						resultRecords = filterOutSelected(resultRecords);
-					}
-					CacheManipulationHandle<List<DtoComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
-					cacheResponse.commit();
-					return cacheResponse.getAndClearResult();
-				} else {
-					return List.of();
-				}
-			}
-			case DtoComboBox.LazyChildrenQuery.TYPE_ID -> {
-				var lazyChildrenQuery = query.as(DtoComboBox.LazyChildrenQueryWrapper.class);
-				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
-				if (parentRecord != null) {
-					if (model != null) {
-						List<RECORD> childRecords = model.getChildRecords(parentRecord);
-						if (distinctModelResultFiltering) {
-							childRecords = filterOutSelected(childRecords);
-						}
-						CacheManipulationHandle<List<DtoComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
-						cacheResponse.commit();
-						return cacheResponse.getAndClearResult();
-					}
-				} else {
-					return Collections.emptyList();
-				}
-			}
+	public Object handleQuery(String name, List<JsonWrapper> params) {
+		return super.handleQuery(name, params);
+	}
 
+	@Override
+	public List<DtoComboBoxTreeRecord> handleLazyChildren(int parentId) {
+		RECORD parentRecord = recordCache.getRecordByClientId(parentId);
+		if (parentRecord != null) {
+			if (model != null) {
+				List<RECORD> childRecords = model.getChildRecords(parentRecord);
+				if (distinctModelResultFiltering) {
+					childRecords = filterOutSelected(childRecords);
+				}
+				CacheManipulationHandle<List<DtoComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
+				cacheResponse.commit();
+				return cacheResponse.getAndClearResult();
+			}
 		}
-		return super.handleQuery(query);
+		// else
+		return Collections.emptyList();
+	}
+
+	@Override
+	public List<DtoComboBoxTreeRecord> handleRetrieveDropdownEntries(String queryString) {
+		String string = queryString != null ? queryString : "";
+		if (model != null) {
+			List<RECORD> resultRecords = model.getRecords(string);
+			if (distinctModelResultFiltering) {
+				resultRecords = filterOutSelected(resultRecords);
+			}
+			CacheManipulationHandle<List<DtoComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
+			cacheResponse.commit();
+			return cacheResponse.getAndClearResult();
+		} else {
+			return List.of();
+		}
 	}
 
 	private List<RECORD> filterOutSelected(List<RECORD> resultRecords) {
@@ -196,8 +183,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		DtoComboBoxTreeRecord uiTreeRecord = new DtoComboBoxTreeRecord();
 		uiTreeRecord.setValues(values);
 
-		uiTreeRecord.setDisplayTemplate(displayTemplate != null ? displayTemplate: null);
-		uiTreeRecord.setDropDownTemplate(dropdownTemplate != null ? dropdownTemplate: null);
+		uiTreeRecord.setDisplayTemplate(displayTemplate != null ? displayTemplate : null);
+		uiTreeRecord.setDropDownTemplate(dropdownTemplate != null ? dropdownTemplate : null);
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
@@ -438,16 +425,6 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	public void setDropDownMaxHeight(Integer dropDownMaxHeight) {
 		this.dropDownMaxHeight = dropDownMaxHeight;
 		clientObjectChannel.setDropDownMaxHeight(dropDownMaxHeight);
-	}
-
-	@Override
-	public ProjectorEvent<String> onTextInput() {
-		return this.onTextInput;
-	}
-
-	@Override
-	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
-		return this.onSpecialKeyPressed;
 	}
 
 }

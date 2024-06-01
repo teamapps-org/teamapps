@@ -17,19 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-client-object-api":org.teamapps.projector.dto;
+package "projector-client-object-api":org.teamapps.projector.component.field;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
 
-enum DtoFieldEditingMode {
-	EDITABLE,
-	EDITABLE_IF_FOCUSED, // DtoGridForm and CompositeField only!!
-	DISABLED,
-	READONLY
+enum FieldEditingMode {
+	EDITABLE = "editable",
+	EDITABLE_IF_FOCUSED = "editable-if-focused",
+	DISABLED = "disabled",
+	READONLY = "readonly"
 }
 
 abstract class DtoAbstractField extends DtoComponent {
-	DtoFieldEditingMode editingMode;
+	FieldEditingMode editingMode;
 	Object value;
 	List<DtoFieldMessage> fieldMessages;
 
@@ -37,7 +37,7 @@ abstract class DtoAbstractField extends DtoComponent {
 	event focus();
 	event blur();
 
-	command setEditingMode(DtoFieldEditingMode editingMode);
+	command setEditingMode(FieldEditingMode editingMode);
 	command setValue(Object value);
     command focus();
 	command setFieldMessages(List<DtoFieldMessage> fieldMessages);

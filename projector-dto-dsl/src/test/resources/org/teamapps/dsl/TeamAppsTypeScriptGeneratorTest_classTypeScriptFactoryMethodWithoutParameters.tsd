@@ -19,5 +19,6 @@ export function createA(): A {
 export interface AServerObjectChannel extends ServerObjectChannel {
 
 
+
 }
 

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DtoAbstractField} from "./DtoAbstractField";
-import {DtoFieldEditingMode} from "../../generated/DtoFieldEditingMode";
+import {FieldEditingMode} from "../../generated/FieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 
 import {
@@ -503,14 +503,14 @@ export class UiRichTextEditor extends AbstractField<DtoRichTextEditor, string> i
 		this.updateToolbar();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode, oldEditingMode: FieldEditingMode): void {
 		this.mceReadyExecutor?.invokeOnceWhenReady(() => {
 			// this MUST be done after initializing! Don't skip it when the editor is null,
 			// since the editor might just be initializing and thereby setting the readonly value to an old value! (actually happened!)
 			this.editor.setMode(this.isEditable() ? 'design' : 'readonly');
 			this.updateToolbar();
 		})
-		let wasEditable = !(oldEditingMode === DtoFieldEditingMode.DISABLED || oldEditingMode === DtoFieldEditingMode.READONLY);
+		let wasEditable = !(oldEditingMode === FieldEditingMode.DISABLED || oldEditingMode === FieldEditingMode.READONLY);
 		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.editor != null ? this.editor.getBody() : null);
 	}
 

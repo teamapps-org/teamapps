@@ -26,7 +26,7 @@ import org.teamapps.projector.application.assembler.AdditionalNavigationButton;
 import org.teamapps.projector.application.assembler.ApplicationAssembler;
 import org.teamapps.projector.application.assembler.DesktopApplicationAssembler;
 import org.teamapps.projector.application.perspective.Perspective;
-import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.component.Component;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.application.assembler.MobileApplicationAssembler;
 import org.teamapps.projector.application.view.View;

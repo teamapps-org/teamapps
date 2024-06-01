@@ -19,8 +19,6 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.dto.DtoAlignItems;
-import org.teamapps.projector.dto.DtoJustifyContent;
 import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.template.grid.dto.DtoAbstractGridTemplateElement;
@@ -54,8 +52,8 @@ public class FloatingElement extends AbstractGridTemplateElement<FloatingElement
 		DtoFloatingElement uiFloatingElement = new DtoFloatingElement(propertyName, row, column, uiElements);
 		mapAbstractGridTemplateElementAttributesToUiElement(uiFloatingElement);
 		uiFloatingElement.setWrap(wrap);
-		uiFloatingElement.setAlignItems(alignItems != null ? DtoAlignItems.valueOf(alignItems.name()) : null);
-		uiFloatingElement.setJustifyContent(justifyContent != null ? DtoJustifyContent.valueOf(justifyContent.name()) : null);
+		uiFloatingElement.setAlignItems(alignItems != null ? AlignItems.valueOf(alignItems.name()) : null);
+		uiFloatingElement.setJustifyContent(justifyContent != null ? JustifyContent.valueOf(justifyContent.name()) : null);
 		return uiFloatingElement;
 	}
 

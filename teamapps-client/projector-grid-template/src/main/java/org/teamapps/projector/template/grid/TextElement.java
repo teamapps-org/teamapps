@@ -64,7 +64,7 @@ public class TextElement extends AbstractGridTemplateElement<TextElement> {
 		uiTextElement.setLineHeight(lineHeight);
 		uiTextElement.setWrapLines(wrapLines);
 		uiTextElement.setPadding(padding != null ? padding.createUiSpacing() : null);
-		uiTextElement.setTextAlignment(textAlignment.toUiTextAlignment());
+		uiTextElement.setTextAlignment(textAlignment);
 	}
 
 	public String getProperty() {

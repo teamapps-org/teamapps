@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.workspacelayout.definition;
 
-import org.teamapps.projector.dto.SplitSizePolicy;
+import org.teamapps.projector.components.essential.dto.SplitSizePolicy;
 
 public class SplitSize {
 

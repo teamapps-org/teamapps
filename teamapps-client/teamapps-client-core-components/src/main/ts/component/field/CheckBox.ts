@@ -23,7 +23,7 @@ import {
 	DtoCheckBoxEventSource,
 } from "../../generated";
 import {
-	DtoFieldEditingMode,
+	FieldEditingMode,
 	DtoFieldMessage,
 	DtoFieldMessageSeverity,
 	generateUUID,
@@ -64,7 +64,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 			setTimeout(() => this.focus());
 		});
 		this.$main.addEventListener('click', () => {
-			if (this.getEditingMode() === DtoFieldEditingMode.DISABLED || this.getEditingMode() === DtoFieldEditingMode.READONLY) {
+			if (this.getEditingMode() === FieldEditingMode.DISABLED || this.getEditingMode() === FieldEditingMode.READONLY) {
 				return;
 			}
 			this.toggleCommittedValue();
@@ -154,8 +154,8 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 		return this.getCommittedValue();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
-		if (editingMode === DtoFieldEditingMode.DISABLED || editingMode === DtoFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		if (editingMode === FieldEditingMode.DISABLED || editingMode === FieldEditingMode.READONLY) {
 			this.$main.classList.add("disabled");
 			this.$check.removeAttribute("tabIndex");
 		} else {

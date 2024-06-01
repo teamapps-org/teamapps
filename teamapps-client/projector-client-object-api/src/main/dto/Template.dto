@@ -17,7 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-client-object-api":org.teamapps.projector.dto;
+package "projector-client-object-api":org.teamapps.projector.template;
+
+import org.teamapps.projector.clientobject.DtoClientObject;
 
 abstract class DtoTemplate extends DtoClientObject {
 

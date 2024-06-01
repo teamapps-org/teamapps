@@ -17,9 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.animation.PageTransition;
 
 class DtoRootPanel extends DtoComponent {
     String backgroundImageUrl;
@@ -28,7 +29,7 @@ class DtoRootPanel extends DtoComponent {
 	DtoComponent* content;
 
     command setBackground(String backgroundImageUrl, String blurredBackgroundImageUrl, String backgroundColor, long animationDuration);
-	command setContent(DtoComponent* content, DtoPageTransition transition, long animationDuration);
+	command setContent(DtoComponent* content, PageTransition transition, long animationDuration);
 }
 
 

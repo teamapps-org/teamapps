@@ -43,7 +43,7 @@ import {
 	DropDown,
 	DtoFieldMessage,
 	DtoFieldMessageSeverity,
-	DtoTextAlignment,
+	TextAlignment,
 	fadeIn,
 	fadeOut,
 	getHighestSeverity,
@@ -591,7 +591,7 @@ export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTable
 		if (highestSeverity != null) {
 			columnCssClasses.push(backgroundColorCssClassesByMessageSeverity[highestSeverity]);
 		}
-		columnCssClasses.push("align-" + DtoTextAlignment[column.uiConfig.headerAlignment].toLocaleLowerCase());
+		columnCssClasses.push("align-" + TextAlignment[column.uiConfig.headerAlignment].toLocaleLowerCase());
 		return columnCssClasses.join(" ");
 	}
 

@@ -26,19 +26,16 @@ public abstract class AbstractClientObjectQueryMethodInvoker {
 		this.targetObject = targetObject;
 	}
 
-	public void handleQuery(String name, List<JsonWrapper> parameters) {
+	public Object handleQuery(String name, List<JsonWrapper> parameters) {
 		Method method = getMethod(name);
 		if (method == null) {
-			LOGGER.warn("Could not find method to call for query: {}", name);
-			return;
+			throw new UnsupportedOperationException("Could not find method to call for query: " + name);
 		}
 
-		ExceptionUtil.runWithSoftenedExceptions(() ->  {
-			invokeHandlerMethod(method, name, parameters);
-		});
+		return ExceptionUtil.runWithSoftenedExceptions(() -> invokeHandlerMethod(method, name, parameters));
 	}
 
-	abstract protected void invokeHandlerMethod(Method method, String name, List<JsonWrapper> parameters) throws Exception;
+	abstract protected Object invokeHandlerMethod(Method method, String name, List<JsonWrapper> parameters) throws Exception;
 
 	protected Method getMethod(String name) {
 		String methodName = "handle" + StringUtils.capitalize(name) + "Query";

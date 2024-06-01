@@ -29,7 +29,7 @@ import {Constants, escapeHtml, hasVerticalScrollBar} from "../../Common";
 import {
 	AbstractField,
 	DebounceMode,
-	DtoFieldEditingMode,
+	FieldEditingMode,
 	executeWhenFirstDisplayed,
 	parseHtml,
 	TeamAppsEvent
@@ -64,11 +64,11 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 		this.setShowClearButton(config.showClearButton);
 
 		this.$field.addEventListener('focus', () => {
-			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
 			}
 		});
 		this.$field.addEventListener('blur', () => {
-			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
@@ -165,7 +165,7 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 		}
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 

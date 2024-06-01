@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "teamapps-client-core";
 import {TrivialCalendarBox} from "../TrivialCalendarBox";
 import {NavigationDirection} from "../TrivialCore";
 import {LocalDateTime} from "../../LocalDateTime";
 import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
+import {TeamAppsEvent} from "projector-client-object-api";
 
 export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 

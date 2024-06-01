@@ -30,10 +30,9 @@ import {
 import {Instance as Popper} from '@popperjs/core';
 import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import {DropDownComponent} from "./dropdown/DropDownComponent";
-import {parseHtml, TeamAppsEvent} from "teamapps-client-core";
 import {TreeBoxDropdown} from "./dropdown/TreeBoxDropdown";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
-import {BigDecimal, NumberParser} from "teamapps-client-core-components";
+import {BigDecimal, NumberParser, parseHtml, TeamAppsEvent} from "teamapps-client-core-components";
 
 export interface TrivialUnitBoxConfig<U> extends TrivialTreeBoxConfig<U> {
 	numberFormatFunction: (entry: U) => Intl.NumberFormat,

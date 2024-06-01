@@ -18,39 +18,34 @@
  * =========================LICENSE_END==================================
  */
 import {DateSuggestionEngine} from "./DateSuggestionEngine";
-import {deepEquals, TeamAppsEvent} from "teamapps-client-core";
 import {LocalDateTime} from "./LocalDateTime";
 import {createDateRenderer} from "./datetime-rendering";
 import {CalendarBoxDropdown} from "./trivial-components/dropdown/CalendarBoxDropdown";
 import {TrivialCalendarBox} from "./trivial-components/TrivialCalendarBox";
 import {
-	AbstractField, DtoDateTimeFormatDescriptor,
-	DtoFieldEditingMode, SpecialKey,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent
-} from "teamapps-client-core-components";
-import {
-	createDtoLocalDate,
+	createDtoLocalDate, DateFieldDropDownMode,
 	DtoLocalDate,
-	DtoLocalDateField,
+	DtoLocalDateField, DtoLocalDateField_TextInputEvent,
 	DtoLocalDateFieldCommandHandler,
-	DtoLocalDateFieldDropDownMode,
 	DtoLocalDateFieldEventSource
 } from "./generated";
 import {TrivialComboBox} from "./trivial-components/TrivialComboBox";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
+import {
+	AbstractField,
+	DebounceMode,
+	deepEquals,
+	DtoDateTimeFormatDescriptor,
+	FieldEditingMode,
+	TeamAppsEvent
+} from "projector-client-object-api";
+import {DtoTextInputHandlingField_SpecialKeyPressedEvent, SpecialKey} from "teamapps-client-core-components";
 
 export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDate> implements DtoLocalDateFieldEventSource, DtoLocalDateFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent>({
-		throttlingMode: "debounce",
-		delay: 250
-	});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent>({
-		throttlingMode: "debounce",
-		delay: 250
-	});
+	public readonly onTextInput: TeamAppsEvent<DtoLocalDateField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected dateSuggestionEngine: DateSuggestionEngine;
@@ -96,14 +91,14 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 				});
 				return suggestions.length > 0 ? suggestions[0] : null;
 			},
-			editingMode: config.editingMode === DtoFieldEditingMode.READONLY ? 'readonly' : config.editingMode === DtoFieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			showClearButton: config.showClearButton,
 			placeholderText: config.placeholderText
-		}, this.config.dropDownMode === DtoLocalDateFieldDropDownMode.CALENDAR ? this.calendarBoxDropdown : treeBoxDropdown);
+		}, this.config.dropDownMode === DateFieldDropDownMode.CALENDAR ? this.calendarBoxDropdown : treeBoxDropdown);
 		
 		[this.trivialComboBox.onBeforeQuery, this.trivialComboBox.onBeforeDropdownOpens].forEach(event => event.addListener(queryString => {
-			if (this.config.dropDownMode == DtoLocalDateFieldDropDownMode.CALENDAR
-				|| this.config.dropDownMode == DtoLocalDateFieldDropDownMode.CALENDAR_SUGGESTION_LIST && !queryString) {
+			if (this.config.dropDownMode == DateFieldDropDownMode.CALENDAR
+				|| this.config.dropDownMode == DateFieldDropDownMode.CALENDAR_SUGGESTION_LIST && !queryString) {
 				this.trivialComboBox.setDropDownComponent(this.calendarBoxDropdown);
 			} else {
 				this.trivialComboBox.setDropDownComponent(treeBoxDropdown);
@@ -164,12 +159,12 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.trivialComboBox.focus();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.values(AbstractField.editingModeCssClasses));
-		this.getMainElement().classList.add(AbstractField.editingModeCssClasses[editingMode]);
-		if (editingMode === DtoFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.add(editingMode);
+		if (editingMode === FieldEditingMode.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
-		} else if (editingMode === DtoFieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingMode.DISABLED) {
 			this.trivialComboBox.setEditingMode("disabled");
 		} else {
 			this.trivialComboBox.setEditingMode("editable");

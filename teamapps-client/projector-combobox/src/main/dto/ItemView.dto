@@ -19,9 +19,9 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoTemplate;
-import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 class DtoItemView extends DtoComponent {
 	List<DtoItemViewItemGroup> itemGroups;

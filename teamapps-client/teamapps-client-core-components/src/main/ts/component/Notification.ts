@@ -23,11 +23,11 @@ import {
 	DtoNotification_OpenedEvent,
 	DtoNotificationCommandHandler,
 	DtoNotificationEventSource,
-	DtoNotificationPosition
+	NotificationPosition
 } from "../generated";
 import {
 	AbstractLegacyComponent,
-	Component, DtoEntranceAnimation, DtoExitAnimation,
+	Component, EntranceAnimation, ExitAnimation,
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerObjectChannel,
@@ -38,38 +38,38 @@ import {createUiSpacingValueCssString} from "projector-client-object-api";
 import {ProgressBar} from "../micro-components/ProgressBar";
 
 const containersByPosition: {
-	[DtoNotificationPosition.TOP_LEFT]: HTMLElement,
-	[DtoNotificationPosition.TOP_CENTER]: HTMLElement,
-	[DtoNotificationPosition.TOP_RIGHT]: HTMLElement,
-	[DtoNotificationPosition.BOTTOM_LEFT]: HTMLElement,
-	[DtoNotificationPosition.BOTTOM_CENTER]: HTMLElement,
-	[DtoNotificationPosition.BOTTOM_RIGHT]: HTMLElement
+	[NotificationPosition.TOP_LEFT]: HTMLElement,
+	[NotificationPosition.TOP_CENTER]: HTMLElement,
+	[NotificationPosition.TOP_RIGHT]: HTMLElement,
+	[NotificationPosition.BOTTOM_LEFT]: HTMLElement,
+	[NotificationPosition.BOTTOM_CENTER]: HTMLElement,
+	[NotificationPosition.BOTTOM_RIGHT]: HTMLElement
 } = {
-	[DtoNotificationPosition.TOP_LEFT]: parseHtml(`<div class="Notification-container top-left"></div>`),
-	[DtoNotificationPosition.TOP_CENTER]: parseHtml(`<div class="Notification-container top-center"></div>`),
-	[DtoNotificationPosition.TOP_RIGHT]: parseHtml(`<div class="Notification-container top-right"></div>`),
-	[DtoNotificationPosition.BOTTOM_LEFT]: parseHtml(`<div class="Notification-container bottom-left"></div>`),
-	[DtoNotificationPosition.BOTTOM_CENTER]: parseHtml(`<div class="Notification-container bottom-center"></div>`),
-	[DtoNotificationPosition.BOTTOM_RIGHT]: parseHtml(`<div class="Notification-container bottom-right"></div>`)
+	[NotificationPosition.TOP_LEFT]: parseHtml(`<div class="Notification-container top-left"></div>`),
+	[NotificationPosition.TOP_CENTER]: parseHtml(`<div class="Notification-container top-center"></div>`),
+	[NotificationPosition.TOP_RIGHT]: parseHtml(`<div class="Notification-container top-right"></div>`),
+	[NotificationPosition.BOTTOM_LEFT]: parseHtml(`<div class="Notification-container bottom-left"></div>`),
+	[NotificationPosition.BOTTOM_CENTER]: parseHtml(`<div class="Notification-container bottom-center"></div>`),
+	[NotificationPosition.BOTTOM_RIGHT]: parseHtml(`<div class="Notification-container bottom-right"></div>`)
 };
 
 let notifications: {
 	notification: Notification;
-	position: DtoNotificationPosition;
+	position: NotificationPosition;
 	$wrapper: HTMLElement;
 }[] = [];
 
-function getNotificationsByPosition(position: DtoNotificationPosition) {
+function getNotificationsByPosition(position: NotificationPosition) {
 	return notifications.filter(n => n.position == position);
 }
 
 let updateContainerVisibilities = function () {
-	[DtoNotificationPosition.TOP_LEFT,
-		DtoNotificationPosition.TOP_CENTER,
-		DtoNotificationPosition.TOP_RIGHT,
-		DtoNotificationPosition.BOTTOM_LEFT,
-		DtoNotificationPosition.BOTTOM_CENTER,
-		DtoNotificationPosition.BOTTOM_RIGHT].forEach(pos => {
+	[NotificationPosition.TOP_LEFT,
+		NotificationPosition.TOP_CENTER,
+		NotificationPosition.TOP_RIGHT,
+		NotificationPosition.BOTTOM_LEFT,
+		NotificationPosition.BOTTOM_CENTER,
+		NotificationPosition.BOTTOM_RIGHT].forEach(pos => {
 		let hasNotifications = getNotificationsByPosition(pos).length > 0;
 		if (hasNotifications && containersByPosition[pos].parentNode !== document.body) {
 			document.body.appendChild(containersByPosition[pos]);
@@ -79,7 +79,7 @@ let updateContainerVisibilities = function () {
 	});
 };
 
-export function showNotification(notification: Notification, position: DtoNotificationPosition, entranceAnimation: DtoEntranceAnimation, exitAnimation: DtoExitAnimation) {
+export function showNotification(notification: Notification, position: NotificationPosition, entranceAnimation: EntranceAnimation, exitAnimation: ExitAnimation) {
 	let notif = notifications.filter(n => n.notification == notification)[0];
 
 	if (notif == null || notif.position != position) {
@@ -175,7 +175,7 @@ export class Notification extends AbstractLegacyComponent<DtoNotification> imple
 		}
 	}
 
-	public static showNotification(notification: Notification, position: DtoNotificationPosition, entranceAnimation: DtoEntranceAnimation, exitAnimation: DtoExitAnimation) {
+	public static showNotification(notification: Notification, position: NotificationPosition, entranceAnimation: EntranceAnimation, exitAnimation: ExitAnimation) {
 		showNotification(notification, position, entranceAnimation, exitAnimation);
 	}
 

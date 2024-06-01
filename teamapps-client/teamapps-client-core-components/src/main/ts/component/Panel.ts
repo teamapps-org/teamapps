@@ -24,9 +24,9 @@ import {
 	DtoPanel_WindowButtonClickedEvent,
 	DtoPanelCommandHandler,
 	DtoPanelEventSource,
-	DtoPanelHeaderComponentMinimizationPolicy,
+	HeaderComponentMinimizationPolicy,
 	DtoPanelHeaderField,
-	DtoPanelHeaderFieldIconVisibilityPolicy,
+	HeaderFieldIconVisibilityPolicy,
 	WindowButtonType
 } from "../generated";
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
@@ -290,7 +290,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	private setMinimizedFields(...minimizedHeaderFields: HeaderField[]) {
 		this.headerFields.forEach(headerField => {
 			headerField.$wrapper.classList.toggle("minimized", minimizedHeaderFields.indexOf(headerField) != -1);
-			headerField.$wrapper.classList.toggle("display-icon", minimizedHeaderFields.length > 0 || this.config.headerFieldIconVisibilityPolicy == DtoPanelHeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED);
+			headerField.$wrapper.classList.toggle("display-icon", minimizedHeaderFields.length > 0 || this.config.headerFieldIconVisibilityPolicy == HeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED);
 		});
 	}
 
@@ -423,7 +423,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 			+ buttonContainerWidth
 			+ windowButtonContainerWidth
 			+ this.headerFields
-				.map(headerField => this.config.headerFieldIconVisibilityPolicy == DtoPanelHeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED ? headerField.minExpandedWidthWithIcon : headerField.minExpandedWidth)
+				.map(headerField => this.config.headerFieldIconVisibilityPolicy == HeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED ? headerField.minExpandedWidthWithIcon : headerField.minExpandedWidth)
 				.reduce((totalWidth, fieldWidth) => (totalWidth + fieldWidth), 0);
 
 		if (this.numberOfVisibleHeaderFields() == 2) {
@@ -535,13 +535,13 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	}
 
 
-	setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy: DtoPanelHeaderComponentMinimizationPolicy) {
+	setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy: HeaderComponentMinimizationPolicy) {
 		this.config.headerComponentMinimizationPolicy = headerComponentMinimizationPolicy;
-		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == DtoPanelHeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST
+		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST
 		this.relayoutHeader();
 	}
 
-	setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy: DtoPanelHeaderFieldIconVisibilityPolicy) {
+	setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy: HeaderFieldIconVisibilityPolicy) {
 		this.config.headerFieldIconVisibilityPolicy = headerFieldIconVisibilityPolicy;
 		this.relayoutHeader();
 	}

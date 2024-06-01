@@ -24,7 +24,7 @@ import org.teamapps.icons.Icon;
 import org.teamapps.projector.application.ResponsiveApplication;
 import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.view.ViewSize;
-import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.component.Component;
 import org.teamapps.projector.application.ResponsiveApplicationToolbar;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.ux.component.animation.PageTransition;

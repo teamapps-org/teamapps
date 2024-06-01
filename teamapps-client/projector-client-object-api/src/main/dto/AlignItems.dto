@@ -1,6 +1,6 @@
-package "projector-client-object-api":org.teamapps.projector.dto;
+package "projector-client-object-api":org.teamapps.projector.format;
 
-enum DtoAlignItems {
+enum AlignItems {
 	STRETCH = "stretch",
     CENTER = "center",
     FLEX_START = "flex-start",

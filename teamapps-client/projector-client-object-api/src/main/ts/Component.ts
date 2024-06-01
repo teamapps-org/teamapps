@@ -21,6 +21,7 @@ import {ClientObject} from "./ClientObject";
 import {DtoComponentCommandHandler} from "./generated";
 import {TeamAppsEvent} from "./util";
 
+
 export interface Component extends ClientObject, DtoComponentCommandHandler {
 
 	/**

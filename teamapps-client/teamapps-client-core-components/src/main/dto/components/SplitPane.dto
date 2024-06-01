@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
 
 enum SplitSizePolicy {
 	FIRST_FIXED,
@@ -40,11 +40,11 @@ class DtoSplitPane extends DtoComponent {
 	mutable int firstChildMinSize; // in pixels
 	mutable int lastChildMinSize;  // in pixels
 	mutable boolean resizable;
-	mutable DtoChildCollapsingPolicy childCollapsingPolicy;
+	mutable ChildCollapsingPolicy childCollapsingPolicy;
 
 	event splitResized(double referenceChildSize);
 }
 
-enum DtoChildCollapsingPolicy {
+enum ChildCollapsingPolicy {
     NEVER, IF_NULL, IF_EMPTY
 }

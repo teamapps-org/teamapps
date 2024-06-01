@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {Component, noOpServerObjectChannel, parseHtml, TeamAppsEvent} from "projector-client-object-api";
-import {DtoTabPanelTabStyle, TabPanel, WindowButtonType} from "teamapps-client-core-components";
+import {TabPanelTabStyle, TabPanel, WindowButtonType} from "teamapps-client-core-components";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
@@ -69,7 +69,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		this.component = new MinimizableTabPanel({
 			_type: "DtoTabPanel",
 			hideTabBarIfSingleTab: true,
-			tabStyle: DtoTabPanelTabStyle.EARS
+			tabStyle: TabPanelTabStyle.EARS
 		}, noOpServerObjectChannel);
 		this.component.setWindowButtons(this.createWindowButtonList());
 		this.component.onWindowButtonClicked.addListener(eventObject => {

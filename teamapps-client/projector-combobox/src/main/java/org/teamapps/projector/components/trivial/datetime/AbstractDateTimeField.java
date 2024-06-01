@@ -20,16 +20,23 @@
 package org.teamapps.projector.components.trivial.datetime;
 
 import com.ibm.icu.util.ULocale;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoAbstractDateTimeField;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.field.AbstractField;
+import org.teamapps.projector.components.trivial.dto.DtoAbstractDateTimeFieldClientObjectChannel;
+import org.teamapps.projector.components.trivial.dto.DtoAbstractDateTimeFieldEventHandler;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.util.Locale;
 
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
-public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> {
+public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> implements DtoAbstractDateTimeFieldEventHandler {
+
+	private final DtoAbstractDateTimeFieldClientObjectChannel clientObjectChannel = new DtoAbstractDateTimeFieldClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<String> onFreeTextEntered = new ProjectorEvent<>();
 
 	private boolean showDropDownButton = true;
 	private boolean favorPastDates = false;
@@ -40,8 +47,8 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 	public AbstractDateTimeField() {
 		super();
 		this.locale = getSessionContext().getULocale();
-		this.dateFormat = getSessionContext().getConfiguration().getDateFormat();
-		this.timeFormat = getSessionContext().getConfiguration().getTimeFormat();
+		this.dateFormat = getSessionContext().getDateFormat();
+		this.timeFormat = getSessionContext().getTimeFormat();
 	}
 
 	protected void mapAbstractDateTimeFieldUiValues(DtoAbstractDateTimeField uiField) {
@@ -51,6 +58,11 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 		uiField.setLocale(locale.toLanguageTag());
 		uiField.setDateFormat(dateFormat.toDateTimeFormatDescriptor());
 		uiField.setTimeFormat(timeFormat.toDateTimeFormatDescriptor());
+	}
+
+	@Override
+	public void handleTextInput(String enteredString) {
+		onFreeTextEntered.fire(enteredString);
 	}
 
 	public boolean isShowDropDownButton() {

@@ -48,6 +48,7 @@ public class TeamAppsIntermediateDtoModel {
 	private final List<CommandWrapper> ownCommandDeclarations;
 	private final String debugName;
 	private final TeamAppsIntermediateDtoModel[] importedModels;
+	private final List<ClassCollectionContext> compilationUnits;
 
 	public TeamAppsIntermediateDtoModel(ClassCollectionContext classCollectionContext) {
 		this(Collections.singletonList(classCollectionContext), "test");
@@ -56,6 +57,7 @@ public class TeamAppsIntermediateDtoModel {
 	public TeamAppsIntermediateDtoModel(List<ClassCollectionContext> classCollectionContexts, String debugName, TeamAppsIntermediateDtoModel... importedModels) {
 		this.debugName = debugName;
 		this.importedModels = importedModels;
+		this.compilationUnits = classCollectionContexts;
 		classCollectionContexts.forEach(classCollectionContext -> {
 			List<TypeDeclarationContext> typeDeclarations = classCollectionContext.typeDeclaration();
 			classDeclarations.addAll(extractClassDeclarations(typeDeclarations));
@@ -82,6 +84,10 @@ public class TeamAppsIntermediateDtoModel {
 			queryDeclarations.addAll(delegate.queryDeclarations);
 			commandDeclarations.addAll(delegate.commandDeclarations);
 		}
+	}
+
+	public List<ClassCollectionContext> getCompilationUnits() {
+		return compilationUnits;
 	}
 
 	private List<ExternalInterfaceWrapper> extractExternalInterfaces(ClassCollectionContext classCollectionContext) {
@@ -139,6 +145,13 @@ public class TeamAppsIntermediateDtoModel {
 
 	public List<InterfaceWrapper> getOwnInterfaceDeclarations() {
 		return ownInterfaceDeclarations;
+	}
+
+	public List<ClassOrInterfaceWrapper<?>> getOwnClassAndInterfaceDeclarations() {
+		ArrayList<ClassOrInterfaceWrapper<?>> classOrInterfaces = new ArrayList<>();
+		classOrInterfaces.addAll(getOwnClassDeclarations());
+		classOrInterfaces.addAll(getOwnInterfaceDeclarations());
+		return classOrInterfaces;
 	}
 
 	public List<EnumWrapper> getOwnEnumDeclarations() {
@@ -266,4 +279,32 @@ public class TeamAppsIntermediateDtoModel {
 				.orElse(null);
 	}
 
+	public ModelValidationException createUnresolvedTypeReferenceException(String typeName, ParserRuleContext context) {
+		String errorMessage = "Cannot resolve " + typeName + " in " + getDeclaringClassOrInterface(context).getName() + ".";
+		Optional<String> importSuggestion = createImportSuggestion(typeName);
+		if (importSuggestion.isPresent()) {
+			errorMessage += " Did you forget to import it? Suggestion: import " + importSuggestion.get() + ";";
+		}
+		return new ModelValidationException(errorMessage);
+	}
+
+	public Optional<String> createImportSuggestion(String typeName) {
+		Optional<String> suggestion = getAllTypeDeclarations().stream()
+				.filter(t -> t.getName().equals(typeName))
+				.findFirst()
+				.or(() -> {
+					if (typeName.startsWith("Dto")) {
+						return getAllTypeDeclarations().stream()
+								.filter(t -> t.getName().equals(typeName.substring(3)))
+								.findFirst();
+					} else {
+						return getAllTypeDeclarations().stream()
+								.filter(t -> t.getName().equals("Dto" + typeName))
+								.findFirst();
+					}
+				})
+				.map(t -> t.getPackageName() + "." + t.getName());
+
+		return suggestion;
+	}
 }

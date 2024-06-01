@@ -22,5 +22,6 @@ export function createA(req1: string, req2: number): A {
 export interface AServerObjectChannel extends ServerObjectChannel {
 
 
+
 }
 

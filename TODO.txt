@@ -56,6 +56,7 @@ plugin: make projector-client-object-api an implicit DTO dependency
 add Script and StyleSheet client object implementations
 
 use external imports for references to concrete ClientObject instances instead of the generic ClientObject in DTOs. Example DtoTemplateField.template
+Also use this for DateTimeFormatDescriptor...
 
 Remove createProjectorEventBoundToUiEvent. A lambda toggling the event is trivial, now. And much more intuitive.
 
@@ -68,3 +69,13 @@ make Label NOT a field. It is not!
 switch to junit jupiter
 
 rework globalKeyEventOccurred - remove unnecessary clutter
+
+rewrite README
+
+enable TypeScript strict null checking for the core at least
+
+search for all "new ProjectorEvent" occurrences and check if they need to be bound to toggling the event on the ClientObjectChannel...
+
+change generation target packages:
+ - core-components: org.teamapps.projector.components.essential
+ - no .dto!! (nowhere!) Many classes are now fully integrated (especially enums!)

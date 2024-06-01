@@ -16,5 +16,6 @@ export interface A {
 export interface AServerObjectChannel extends ServerObjectChannel {
 
 
+
 }
 

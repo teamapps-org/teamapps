@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DtoComponentField, DtoComponentFieldCommandHandler, DtoComponentFieldEventSource} from "../../generated";
-import {Component, DtoFieldEditingMode, parseHtml} from "projector-client-object-api";
+import {Component, FieldEditingMode, parseHtml} from "projector-client-object-api";
 import {AbstractField} from "projector-client-object-api";
 
 
@@ -71,7 +71,7 @@ export class ComponentField extends AbstractField<DtoComponentField, void> imple
 	getTransientValue(): void {
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		// do nothing (default implementation)
 	}
 

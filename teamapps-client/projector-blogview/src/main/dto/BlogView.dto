@@ -19,11 +19,10 @@
  */
 package "projector-blogview":org.teamapps.projector.components.blogview;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoTemplate;
-import org.teamapps.projector.dto.DtoToolButton;
-import org.teamapps.projector.dto.DtoClientRecord;
-import org.teamapps.projector.dto.DtoHorizontalElementAlignment;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.components.essential.dto.DtoToolButton;
+import org.teamapps.projector.record.DtoClientRecord;
 
 class DtoBlogView extends DtoComponent {
 	List<DtoBlock> blocks;
@@ -42,10 +41,17 @@ enum BlockAlignment {
     LEFT, RIGHT, FULL
 }
 
+enum TopRecordElementAlignment {
+	LEFT = "left",
+	CENTER = "center",
+	RIGHT = "right",
+	STRETCH = "stretch"
+}
+
 class DtoMessageBlock extends DtoBlock {
 	DtoTemplate* topTemplate;
 	DtoClientRecord topRecord;
-	HorizontalElementAlignment topRecordAlignment;
+	TopRecordElementAlignment topRecordAlignment;
 	String html;
 	List<String> imageUrls;
 }

@@ -21,7 +21,6 @@ package org.teamapps.projector.format;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.projector.dto.DtoLine;
 
 public class Line {
 
@@ -55,7 +54,7 @@ public class Line {
 		DtoLine dtoLine = new DtoLine();
 		dtoLine.setThickness(thickness);
 		dtoLine.setColor(color!= null ? color.toHtmlColorString() : null);
-		dtoLine.setType(type != null ? type.createUiLineType() : null);
+		dtoLine.setType(type);
 		return dtoLine;
 	}
 }

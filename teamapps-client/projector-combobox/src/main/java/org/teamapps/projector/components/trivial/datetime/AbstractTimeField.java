@@ -20,21 +20,20 @@
 package org.teamapps.projector.components.trivial.datetime;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.dto.DtoTextInputHandlingField;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.trivial.dto.DtoAbstractTimeField;
-import org.teamapps.projector.field.AbstractField;
-import org.teamapps.projector.components.core.field.SpecialKey;
-import org.teamapps.projector.components.core.field.TextInputHandlingField;
+import org.teamapps.projector.components.trivial.dto.DtoAbstractTimeFieldClientObjectChannel;
+import org.teamapps.projector.components.trivial.dto.DtoAbstractTimeFieldEventHandler;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.util.Locale;
 
-public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> {
+public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> implements DtoAbstractTimeFieldEventHandler {
+
+	private final DtoAbstractTimeFieldClientObjectChannel clientObjectChannel = new DtoAbstractTimeFieldClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;
@@ -44,13 +43,12 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> {
 	public AbstractTimeField() {
 		super();
 		this.locale = getSessionContext().getULocale();
-		this.timeFormat = getSessionContext().getConfiguration().getTimeFormat();
+		this.timeFormat = getSessionContext().getTimeFormat();
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		super.handleUiEvent(name, params);
-		defaultHandleTextInputEvent(event);
+	public void handleTextInput(String enteredString) {
+		onTextInput.fire(enteredString);
 	}
 
 	public void mapAbstractTimeFieldUiValues(DtoAbstractTimeField uiTimeField) {
@@ -106,13 +104,4 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> {
 		clientObjectChannel.setShowClearButton(showClearButton);
 	}
 
-	@Override
-	public ProjectorEvent<String> onTextInput() {
-		return onTextInput;
-	}
-
-	@Override
-	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
-		return onSpecialKeyPressed;
-	}
 }

@@ -19,10 +19,13 @@
  */
 package org.teamapps.dsl.generate;
 
+import org.teamapps.dsl.generate.wrapper.ClassOrInterfaceWrapper;
 import org.teamapps.dsl.generate.wrapper.TypeWrapper;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TeamAppsDtoModelValidator {
@@ -35,6 +38,8 @@ public class TeamAppsDtoModelValidator {
 
 	public void validate() throws Exception {
 		validateNoDuplicateClassDeclarations(model.getAllTypeDeclarations());
+		validateImports();
+		validateReferences(model.getOwnClassAndInterfaceDeclarations());
 	}
 
 	private void validateNoDuplicateClassDeclarations(List<TypeWrapper<?>> typeDeclarations) {
@@ -47,6 +52,53 @@ public class TeamAppsDtoModelValidator {
 		if (errorMessage.length() > 0) {
 			throw new IllegalArgumentException(errorMessage);
 		}
+	}
+
+	private void validateImports() {
+		model.getCompilationUnits().stream()
+				.flatMap(cu -> cu.importDeclaration().stream())
+				.filter(i -> i.externalInterfaceTypeModifier() == null)
+				.forEach(i -> model.findTypeByQualifiedName(i.qualifiedTypeName().getText())
+						.orElseThrow(() -> {
+							String message = "Cannot resolve import " + i.qualifiedTypeName().getText();
+							String unqualifiedName = i.qualifiedTypeName().Identifier().getText();
+							Optional<String> importSuggestion = model.createImportSuggestion(unqualifiedName);
+							if (importSuggestion.isPresent()) {
+								message += " Did you mean: import " + importSuggestion.get() + ";";
+
+								try {
+									new FileSearchAndReplace("/home/yamass/Development/Idea-Projects/teamapps-github-ssh", ".dto", "import .*\\b" + unqualifiedName + ";", "import " + importSuggestion.get() + ";")
+											.execute();
+								} catch (IOException e) {
+									throw new RuntimeException(e);
+								}
+							}
+							
+							return new ModelValidationException(message);
+						}));
+	}
+
+	private void validateReferences(List<ClassOrInterfaceWrapper<?>> classesAndInterfaces) {
+		classesAndInterfaces.stream()
+				.forEach(t -> t.checkSuperTypeResolvability());
+		classesAndInterfaces.stream()
+				.flatMap(t -> t.getProperties().stream())
+				.forEach(p -> p.getType().checkResolvability());
+		classesAndInterfaces.stream()
+				.flatMap(t -> t.getCommands().stream())
+				.flatMap(c -> c.getParameters().stream())
+				.map(p -> p.getType())
+				.forEach(t -> t.checkResolvability());
+		classesAndInterfaces.stream()
+				.flatMap(t -> t.getEvents().stream())
+				.flatMap(c -> c.getParameters().stream())
+				.map(p -> p.getType())
+				.forEach(t -> t.checkResolvability());
+		classesAndInterfaces.stream()
+				.flatMap(t -> t.getQueries().stream())
+				.flatMap(c -> c.getParameters().stream())
+				.map(p -> p.getType())
+				.forEach(t -> t.checkResolvability());
 	}
 
 }

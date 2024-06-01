@@ -19,16 +19,14 @@
  */
 package "projector-grid-template":org.teamapps.projector.template.grid.dto;
 
-import org.teamapps.projector.dto.DtoTemplate;
-import org.teamapps.projector.dto.DtoSpacing;
-import org.teamapps.projector.dto.DtoBorder;
-import org.teamapps.projector.dto.DtoBoxShadow;
-import org.teamapps.projector.dto.DtoHorizontalElementAlignment;
-import org.teamapps.projector.dto.DtoVerticalElementAlignment;
-import org.teamapps.projector.dto.DtoFontStyle;
-import org.teamapps.projector.dto.DtoTextAlignment;
-import org.teamapps.projector.dto.DtoAlignItems;
-import org.teamapps.projector.dto.DtoJustifyContent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.format.DtoSpacing;
+import org.teamapps.projector.format.DtoBorder;
+import org.teamapps.projector.format.DtoBoxShadow;
+import org.teamapps.projector.format.DtoFontStyle;
+import org.teamapps.projector.format.TextAlignment;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.template.grid.DtoSizingPolicy;
 
 class DtoGridTemplate extends DtoTemplate {
@@ -65,8 +63,8 @@ abstract class DtoAbstractGridTemplateElement {
     required int column;
     int rowSpan;
     int colSpan;
-    DtoJustifyContent horizontalAlignment;
-    DtoAlignItems verticalAlignment;
+    JustifyContent horizontalAlignment;
+    AlignItems verticalAlignment;
     DtoSpacing margin;
     String backgroundColor;
 }
@@ -76,7 +74,7 @@ class DtoTextElement extends DtoAbstractGridTemplateElement {
 	double lineHeight;
 	boolean wrapLines;
 	DtoSpacing padding;
-	DtoTextAlignment textAlignment;
+	TextAlignment textAlignment;
 }
 
 class DtoBadgeElement extends DtoTextElement {
@@ -87,8 +85,8 @@ class DtoBadgeElement extends DtoTextElement {
 class DtoFloatingElement extends DtoAbstractGridTemplateElement {
 	required List<DtoAbstractGridTemplateElement> elements;
 	boolean wrap;
-    DtoAlignItems alignItems;
-    DtoJustifyContent justifyContent;
+    AlignItems alignItems;
+    JustifyContent justifyContent;
 }
 
 class DtoImageElement extends DtoAbstractGridTemplateElement {

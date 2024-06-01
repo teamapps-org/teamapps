@@ -49,8 +49,8 @@ formalParameter : type Identifier;
 
 type : typeReference | primitiveType ;
 
-typeReference : typeName referenceTypeModifier? typeArguments?;
-referenceTypeModifier : '*';
+typeReference : typeName pointerModifier? typeArguments?;
+pointerModifier : '*';
 
 typeName : Identifier ;
 qualifiedTypeName : packageName '.' Identifier ;

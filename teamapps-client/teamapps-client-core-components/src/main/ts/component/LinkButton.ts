@@ -24,7 +24,7 @@ import {
 	DtoLinkButton_ClickedEvent,
 	DtoLinkButtonCommandHandler,
 	DtoLinkButtonEventSource,
-	DtoLinkTarget
+	LinkTarget
 } from "../generated";
 
 export class LinkButton extends AbstractLegacyComponent<DtoLinkButton> implements DtoLinkButtonEventSource, DtoLinkButtonCommandHandler {
@@ -57,7 +57,7 @@ export class LinkButton extends AbstractLegacyComponent<DtoLinkButton> implement
 		} else {
 			this.$main.removeAttribute("href");
 		}
-		this.$main.target = '_' + DtoLinkTarget[config.target].toLocaleLowerCase();
+		this.$main.target = '_' + config.target;
 
 	}
 }

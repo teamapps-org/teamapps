@@ -19,9 +19,9 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoTemplate;
-import org.teamapps.projector.dto.DtoClientRecord;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.record.DtoClientRecord;
 
 class DtoNetworkGraph extends DtoComponent{
 	required List<DtoNetworkNode> nodes;

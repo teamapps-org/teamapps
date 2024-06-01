@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
 
 class DtoHtmlView extends DtoComponent {
 	String html;

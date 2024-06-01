@@ -19,15 +19,18 @@
  */
 package org.teamapps.projector.field.validator;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.teamapps.commons.event.Event;
 import org.teamapps.projector.clientobject.ClientObjectChannel;
-import org.teamapps.projector.clientobject.component.ComponentConfig;
+import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.field.validator.CustomValidator;
+import org.teamapps.projector.component.field.validator.MultiFieldValidator;
 import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.field.AbstractField;
-import org.teamapps.projector.field.FieldMessage;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.FieldMessage;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
 
@@ -225,9 +228,10 @@ public class MultiFieldValidatorTest {
         }
 
         @Override
-        public String doConvertClientValueToServerValue(JsonWrapper value) {
+        public String doConvertClientValueToServerValue(JsonNode value) {
             return "";
         }
+
     }
 
 }

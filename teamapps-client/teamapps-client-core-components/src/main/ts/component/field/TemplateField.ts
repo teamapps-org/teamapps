@@ -24,7 +24,7 @@ import {
 	DtoTemplateFieldCommandHandler,
 	DtoTemplateFieldEventSource
 } from "../../generated";
-import {DtoClientRecord, DtoFieldEditingMode, parseHtml, ServerObjectChannel, TeamAppsEvent, Template} from "projector-client-object-api";
+import {DtoClientRecord, FieldEditingMode, parseHtml, ServerObjectChannel, TeamAppsEvent, Template} from "projector-client-object-api";
 
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {
@@ -68,7 +68,7 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 		return true;
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode?: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode, oldEditingMode?: FieldEditingMode): void {
 		// nothing to do!
 	}
 

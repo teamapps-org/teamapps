@@ -26,7 +26,7 @@ import {
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {DtoFieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {FieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {escapeHtml} from "../../Common";
 
 export class TextField<C extends DtoTextField = DtoTextField> extends AbstractField<C, string> implements DtoTextFieldEventSource, DtoTextFieldCommandHandler {
@@ -60,12 +60,12 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 		this.setShowClearButton(config.showClearButton);
 
 		this.$field.addEventListener("focus", () => {
-			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
 				this.$field.select();
 			}
 		});
 		this.$field.addEventListener("change", () => {
-			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
@@ -83,7 +83,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 					key: SpecialKey.ESCAPE
 				});
 			} else if (e.key === 'Enter') {
-				if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
+				if (this.getEditingMode() !== FieldEditingMode.READONLY) {
 					// this needs to be done here, additionally, since otherwise the onSpecialKeyPressed gets fired before the commit...
 					this.commit();
 				}
@@ -148,7 +148,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 		this.$field.focus();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 

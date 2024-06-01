@@ -18,16 +18,6 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {DtoComponent} from "../generated/DtoComponent";
-import {DtoElegantPanelCommandHandler, DtoElegantPanel} from "../generated/DtoElegantPanel";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {createUiSpacingCssString} from "./util/CssFormatUtil";
-import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
-import {parseHtml} from "./Common";
-import {UiComponent} from "./UiComponent";
-
 export class UiElegantPanel extends AbstractLegacyComponent<DtoElegantPanel> implements DtoElegantPanelCommandHandler {
 
 	private $element: HTMLElement;

@@ -20,7 +20,7 @@
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {NavigationBar} from "./NavigationBar";
-import {AbstractLegacyComponent, Component, DtoPageTransition, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, PageTransition, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoMobileLayout, DtoMobileLayoutCommandHandler} from "../generated";
 
 import {pageTransition} from "../Common";
@@ -59,7 +59,7 @@ export class MobileLayout extends AbstractLegacyComponent<DtoMobileLayout> imple
 		}
 	}
 
-	public showView(view: Component, transition: DtoPageTransition = null, animationDuration = 0) {
+	public showView(view: Component, transition: PageTransition = null, animationDuration = 0) {
 		if (view === this.content) {
 			return;
 		}

@@ -1996,6 +1996,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"image-layout@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "image-layout@npm:0.4.1"
+  checksum: 482486732588b62faec84eb89d36bdaab078da77630c4e7a2166a17f3855a82581d57a9e4dab30d22d14998d761ee0e239d3c62a6e9acfbdf845ee93e547ca5e
+  languageName: node
+  linkType: hard
+
 "image-size@npm:~0.5.0":
   version: 0.5.5
   resolution: "image-size@npm:0.5.5"
@@ -2342,6 +2349,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"projector-blogview@workspace:projector-blogview":
+  version: 0.0.0-use.local
+  resolution: "projector-blogview@workspace:projector-blogview"
+  dependencies:
+    esbuild: ^0.15.13
+    image-layout: ^0.4.1
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-calendar@workspace:projector-calendar":
   version: 0.0.0-use.local
   resolution: "projector-calendar@workspace:projector-calendar"
@@ -2356,8 +2375,8 @@ __metadata:
     d3-luxon: ^1.0.2
     esbuild: ^0.15.13
     moment-timezone: ^0.5.43
+    projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
-    teamapps-client-core: "workspace:*"
     typescript: ^5.1
   languageName: unknown
   linkType: soft
@@ -2383,8 +2402,8 @@ __metadata:
     "@floating-ui/dom": ^1.6.3
     esbuild: ^0.15.13
     fastest-levenshtein: ^1.0.16
+    projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
-    teamapps-client-core: "workspace:*"
     teamapps-client-core-components: "workspace:*"
     typescript: ^5.1
   languageName: unknown
@@ -2407,9 +2426,9 @@ __metadata:
   dependencies:
     "@types/slickgrid": ^2.1.35
     esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     slickgrid: ^4.0.0
-    teamapps-client-core: "workspace:*"
     teamapps-client-core-components: "workspace:*"
     typescript: ^5.1
   languageName: unknown
@@ -2431,8 +2450,8 @@ __metadata:
   resolution: "projector-workspace-layout@workspace:projector-workspace-layout"
   dependencies:
     esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
-    teamapps-client-core: "workspace:*"
     typescript: ^5.1
   languageName: unknown
   linkType: soft
@@ -2738,7 +2757,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"teamapps-client-core@workspace:*, teamapps-client-core@workspace:teamapps-client-core":
+"teamapps-client-core@workspace:teamapps-client-core":
   version: 0.0.0-use.local
   resolution: "teamapps-client-core@workspace:teamapps-client-core"
   dependencies:

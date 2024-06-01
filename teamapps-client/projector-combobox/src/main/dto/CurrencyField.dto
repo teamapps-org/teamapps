@@ -19,19 +19,21 @@
  */
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoAbstractField;
-import org.teamapps.projector.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.component.field.DtoAbstractField;
+import org.teamapps.projector.components.essential.dto.DtoTextInputHandlingField;
 
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
 //the value is always a long in cents for accuracy
-class DtoCurrencyField extends DtoAbstractField implements DtoTextInputHandlingField {
+class DtoCurrencyField extends DtoAbstractField {
 	mutable String locale;
 	mutable List<DtoCurrencyUnit> currencyUnits; //list of ISO 4217 currencies - e.g. "USD", "EUR", etc. to be displayed as dropdown selection if available
 	mutable int fixedPrecision; // if >= 0, this overwrites the corresponding currency unit precision
 	mutable boolean showCurrencyBeforeAmount; // If true, the currency indicator is on the left of the amount. If false, it is on the right of the amount.
 	mutable boolean showCurrencySymbol; // If false, show "EUR", "USD", etc. as selected value of dropdown button. If true, show "$" for "USD", "€" for "EUR". The dopdown list shows always both ISO code and currency symbol (e.g. "$ (USD)" or "€ (EUR)"). Use "¤" as generic symbol (as defined in ISO standard).
 	mutable boolean alphabeticKeysQueryEnabled; //if true a hit on e will query all currencies starting with e; autocomplete
+
+	event textInput(String enteredString);
 }
 
 class DtoCurrencyUnit {

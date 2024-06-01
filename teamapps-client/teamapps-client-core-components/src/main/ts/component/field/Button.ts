@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {bind, Component, DtoFieldEditingMode, DtoFieldMessage, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
+import {bind, Component, FieldEditingMode, DtoFieldMessage, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
 import {DropDown} from "../../micro-components/DropDown";
 import {
 	DtoButton,
@@ -74,7 +74,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 		// It is necessary to commit only after a full "click", since fields commit on blur. E.g. a DtoTextField should blur-commit first, before the button click-commits. This would not work with "mousedown".
 		["click", "keypress"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
 			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
-				if (this.getEditingMode() === DtoFieldEditingMode.EDITABLE || this.getEditingMode() === DtoFieldEditingMode.EDITABLE_IF_FOCUSED) {
+				if (this.getEditingMode() === FieldEditingMode.EDITABLE || this.getEditingMode() === FieldEditingMode.EDITABLE_IF_FOCUSED) {
 					if (this.onClickJavaScript != null) {
 						// TODO let context = this._context; // make context available in evaluated javascript
 						eval(this.onClickJavaScript);
@@ -163,7 +163,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 		return null;
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$main);
 	}
 

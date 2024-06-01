@@ -19,11 +19,11 @@
  */
 package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
-import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
+import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.dto.DtoFieldMessage;
-import org.teamapps.projector.dto.DtoTextAlignment;
+import org.teamapps.projector.dto.TextAlignment;
 
 enum DtoSortDirection {
 	ASC, DESC
@@ -42,7 +42,7 @@ class DtoTableColumn {
 	boolean visible;
 	boolean hiddenIfOnlyEmptyCellsVisible;
 	List<DtoFieldMessage> messages;
-	DtoTextAlignment headerAlignment;
+	TextAlignment headerAlignment;
 }
 
 enum DtoTableDisplayStyle {

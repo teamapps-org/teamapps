@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.linkbutton;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
 
 class DtoLinkButton extends DtoComponent {
 	String text;
 	String url; // null = still render as link but do not open a page
-	DtoLinkTarget target;
+	LinkTarget target;
 	String onClickJavaScript;
 
 	command update(DtoLinkButton config);
@@ -32,6 +32,9 @@ class DtoLinkButton extends DtoComponent {
 	event clicked();
 }
 
-enum DtoLinkTarget {
-	SELF, BLANK, PARENT, TOP;
+enum LinkTarget {
+	SELF = "self",
+    BLANK = "blank",
+	PARENT = "parent",
+	TOP = "top";
 }

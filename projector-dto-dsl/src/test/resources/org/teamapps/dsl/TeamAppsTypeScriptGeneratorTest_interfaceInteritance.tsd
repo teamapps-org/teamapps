@@ -12,9 +12,5 @@ export interface B extends A {
 	b?: string
 }
 
-export interface BServerObjectChannel extends ServerObjectChannel {
-
-
-}
 
 

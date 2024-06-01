@@ -56,8 +56,8 @@
         <module>teamapps-client/projector-workspace-layout</module>
         <module>teamapps-client/projector-blogview</module>
         <!--        <module>teamapps-client/teamapps-client-common-components</module>-->
-        <module>teamapps-client/projector-infinite-scrolling-components</module>
         <module>teamapps-client/projector-combobox</module>
+        <module>teamapps-client/projector-infinite-scrolling-components</module>
         <module>teamapps-client/projector-calendar</module>
         <module>teamapps-session-stats-app</module>
 

@@ -21,6 +21,7 @@ package org.teamapps.projector.field.validator;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.teamapps.projector.component.field.validator.FieldValidator;
 
 public class FieldValidatorTest {
 

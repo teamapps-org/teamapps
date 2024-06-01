@@ -20,13 +20,21 @@
 import {TimeSuggestionEngine} from "./TimeSuggestionEngine";
 import {LocalDateTime} from "./LocalDateTime";
 import {
-	AbstractField, DtoDateTimeFormatDescriptor,
-	DtoFieldEditingMode, SpecialKey,
+	AbstractField,
+	DebounceMode,
+	DtoDateTimeFormatDescriptor,
+	FieldEditingMode,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent
+	DtoTextInputHandlingField_TextInputEvent,
+	SpecialKey,
+	TeamAppsEvent
 } from "teamapps-client-core-components";
-import {DtoAbstractTimeField, DtoAbstractTimeFieldCommandHandler, DtoAbstractTimeFieldEventSource} from "./generated";
-import {TeamAppsEvent} from "teamapps-client-core";
+import {
+	DtoAbstractTimeField,
+	DtoAbstractTimeField_TextInputEvent,
+	DtoAbstractTimeFieldCommandHandler,
+	DtoAbstractTimeFieldEventSource
+} from "./generated";
 import {TrivialComboBox} from "./trivial-components/TrivialComboBox";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
@@ -34,8 +42,8 @@ import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 
 export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> extends AbstractField<C, V> implements DtoAbstractTimeFieldEventSource, DtoAbstractTimeFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<DtoAbstractTimeField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected timeRenderer: (time: LocalDateTime) => string;
@@ -47,7 +55,7 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox = new TrivialComboBox<LocalDateTime>({
 			showTrigger: config.showDropDownButton,
 			entryToEditorTextFunction: entry => this.localDateTimeToString(entry),
-			editingMode: config.editingMode === DtoFieldEditingMode.READONLY ? 'readonly' : config.editingMode === DtoFieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			selectedEntryRenderingFunction: localDateTime => this.timeRenderer(localDateTime),
 		}, new TreeBoxDropdown({
 			queryFunction: (searchString: string) => timeSuggestionEngine.generateSuggestions(searchString),
@@ -94,12 +102,12 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox.focus();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
-		this.getMainInnerDomElement().classList.remove(...Object.values(AbstractField.editingModeCssClasses));
-		this.getMainInnerDomElement().classList.add(AbstractField.editingModeCssClasses[editingMode]);
-		if (editingMode === DtoFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		this.getMainInnerDomElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainInnerDomElement().classList.add(editingMode);
+		if (editingMode === FieldEditingMode.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
-		} else if (editingMode === DtoFieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingMode.DISABLED) {
 			this.trivialComboBox.setEditingMode("disabled");
 		} else {
 			this.trivialComboBox.setEditingMode("editable");

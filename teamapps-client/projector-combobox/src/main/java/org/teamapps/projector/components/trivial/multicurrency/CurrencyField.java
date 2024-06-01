@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,34 +19,31 @@
  */
 package org.teamapps.projector.components.trivial.multicurrency;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ibm.icu.util.ULocale;
-import org.teamapps.projector.dto.DtoAbstractField;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
-import org.teamapps.projector.components.trivial.dto.DtoCurrencyField;
-import org.teamapps.projector.components.trivial.dto.DtoCurrencyUnit;
-import org.teamapps.projector.components.trivial.dto.DtoCurrencyValue;
+import org.teamapps.projector.components.trivial.dto.*;
 import org.teamapps.projector.components.trivial.multicurrency.value.CurrencyUnit;
 import org.teamapps.projector.components.trivial.multicurrency.value.CurrencyValue;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.field.AbstractField;
-import org.teamapps.projector.components.core.field.SpecialKey;
-import org.teamapps.projector.components.core.field.TextInputHandlingField;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.session.SessionContext;
 
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
-public class CurrencyField extends AbstractField<CurrencyValue> {
+public class CurrencyField extends AbstractField<CurrencyValue> implements DtoCurrencyFieldEventHandler {
+
+	private final DtoCurrencyFieldClientObjectChannel clientObjectChannel = new DtoCurrencyFieldClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private ULocale locale = SessionContext.current().getULocale();
 
@@ -92,21 +89,15 @@ public class CurrencyField extends AbstractField<CurrencyValue> {
 		return field;
 	}
 
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		super.handleUiEvent(name, params);
-		defaultHandleTextInputEvent(event);
-	}
-
 	public List<CurrencyUnit> getCurrencies() {
 		return currencies;
 	}
 
 	public CurrencyField setCurrencies(List<CurrencyUnit> currencies) {
 		this.currencies = currencies;
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoCurrencyField.SetCurrencyUnitsCommand(currencies != null ? currencies.stream()
+		clientObjectChannel.setCurrencyUnits(currencies != null ? currencies.stream()
 				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
-				.collect(Collectors.toList()) : null)).get(), null);
+				.collect(Collectors.toList()) : null);
 		return this;
 	}
 
@@ -116,28 +107,22 @@ public class CurrencyField extends AbstractField<CurrencyValue> {
 	}
 
 	@Override
-	public CurrencyValue convertClientValueToServerValue(Object value) {
-		if (value == null) {
-			return null;
-		} else if (value instanceof DtoCurrencyValue) {
-			DtoCurrencyValue uiCurrencyValue = (DtoCurrencyValue) value;
-			String uiAmount = uiCurrencyValue.getAmount();
-			BigDecimal uxAmount = uiAmount != null ? new BigDecimal(uiAmount) : null;
+	public CurrencyValue doConvertClientValueToServerValue(@Nonnull JsonNode value) {
+		DtoCurrencyValueWrapper uiCurrencyValue = new DtoCurrencyValueWrapper(value);
+		String uiAmount = uiCurrencyValue.getAmount();
+		BigDecimal uxAmount = uiAmount != null ? new BigDecimal(uiAmount) : null;
 
-			DtoCurrencyUnit uiCurrencyUnit = uiCurrencyValue.getCurrencyUnit();
-			CurrencyUnit uxCurrencyUnit;
-			if (uiCurrencyUnit != null) {
-				uxCurrencyUnit = currencies.stream()
-						.filter(cu -> cu.getCode().equals(uiCurrencyUnit.getCode()) && cu.getFractionDigits() == uiCurrencyUnit.getFractionDigits())
-						.findFirst()
-						.orElseGet(() -> CurrencyUnit.from(uiCurrencyUnit.getCode(), uiCurrencyUnit.getFractionDigits(), uiCurrencyUnit.getName(), uiCurrencyUnit.getSymbol()));
-			} else {
-				uxCurrencyUnit = null;
-			}
-			return new CurrencyValue(uxCurrencyUnit, uxAmount);
+		DtoCurrencyUnitWrapper uiCurrencyUnit = uiCurrencyValue.getCurrencyUnit();
+		CurrencyUnit uxCurrencyUnit;
+		if (uiCurrencyUnit != null) {
+			uxCurrencyUnit = currencies.stream()
+					.filter(cu -> cu.getCode().equals(uiCurrencyUnit.getCode()) && cu.getFractionDigits() == uiCurrencyUnit.getFractionDigits())
+					.findFirst()
+					.orElseGet(() -> CurrencyUnit.from(uiCurrencyUnit.getCode(), uiCurrencyUnit.getFractionDigits(), uiCurrencyUnit.getName(), uiCurrencyUnit.getSymbol()));
 		} else {
-			throw new IllegalArgumentException("Unknown value type for CurrencyField: " + value.getClass().getCanonicalName());
+			uxCurrencyUnit = null;
 		}
+		return new CurrencyValue(uxCurrencyUnit, uxAmount);
 	}
 
 	public Optional<CurrencyUnit> getCurrency() {
@@ -217,13 +202,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> {
 	}
 
 	@Override
-	public ProjectorEvent<String> onTextInput() {
-		return onTextInput;
+	public void handleTextInput(String enteredString) {
+		onTextInput.fire(enteredString);
 	}
-
-	@Override
-	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
-		return onSpecialKeyPressed;
-	}
-
 }

@@ -18,15 +18,20 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, loadSensitiveThrottling, parseHtml, TeamAppsEvent, Template} from "teamapps-client-core";
 import {
 	DtoTree,
 	DtoTree_NodeSelectedEvent,
 	DtoTreeCommandHandler,
-	DtoTreeEventSource, DtoTreeRecord
+	DtoTreeEventSource, DtoTreeRecord, DtoTreeServerObjectChannel
 } from "./generated";
 import {TrivialTree} from "./trivial-components/TrivialTree";
-import {buildObjectTree, NodeWithChildren} from "teamapps-client-core-components";
+import {
+	AbstractLegacyComponent,
+	buildObjectTree, loadSensitiveThrottling,
+	NodeWithChildren, parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent, Template
+} from "teamapps-client-core-components";
 
 export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
 
@@ -36,8 +41,8 @@ export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCom
 	private trivialTree: TrivialTree<DtoTreeRecord>;
 	private nodes: DtoTreeRecord[];
 
-	constructor(config: DtoTree, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+	constructor(config: DtoTree, private soc: DtoTreeServerObjectChannel) {
+		super(config, soc);
 		this.$panel = parseHtml('<div class="UiTree">');
 
 		this.nodes = config.initialData;
@@ -49,7 +54,7 @@ export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCom
 			expandedProperty: "expanded",
 			entryRenderingFunction: entry => this.renderRecord(entry),
 			lazyChildrenFlag: 'lazyChildren',
-			lazyChildrenQueryFunction: async (node) => await this.config.lazyLoadChildren({parentNodeId: node && node.id}),
+			lazyChildrenQueryFunction: async (node) => await this.soc.sendQuery("lazyLoadChildren", node?.id),
 			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			showExpanders: config.expandersVisible,
 			expandOnSelection: config.expandOnSelection,

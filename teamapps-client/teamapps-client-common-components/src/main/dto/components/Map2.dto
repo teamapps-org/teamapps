@@ -19,8 +19,8 @@
  */
 package "teamapps-client-common-components":org.teamapps.projector.components.common.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoTemplate;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
 
 class DtoMap2 extends DtoComponent {
 	String baseApiUrl;

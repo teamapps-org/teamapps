@@ -18,17 +18,18 @@ package org.teamapps.projector.components.trivial.itemview;/*-
  * =========================LICENSE_END==================================
  */
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.components.trivial.dto.DtoItemView;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.projector.template.Template;
+import org.teamapps.projector.components.trivial.dto.DtoItemViewClientObjectChannel;
+import org.teamapps.projector.components.trivial.dto.DtoItemViewEventHandler;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
+public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent implements DtoItemViewEventHandler {
+
+	private final DtoItemViewClientObjectChannel clientObjectChannel = new DtoItemViewClientObjectChannel(getClientObjectChannel());
 
 	public ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = new ProjectorEvent<>(clientObjectChannel::toggleItemClickedEvent);
 
@@ -101,19 +104,17 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 			@Override
 			public void handleAddItem(DtoIdentifiableClientRecord itemClientRecord, Consumer<Void> uiCommandCallback) {
-				if (isRendered()) {
-					final DtoItemView.AddItemCommand addItemCommand = new DtoItemView.AddItemCommand(group.getClientId(), itemClientRecord);
-					getSessionContext().sendCommandIfRendered(ItemView.this, () -> addItemCommand.get(), uiCommandCallback);
-				} else {
+				boolean sent = clientObjectChannel.addItem(group.getClientId(), itemClientRecord, wrapper -> uiCommandCallback.accept(null));
+				if (!sent) {
 					uiCommandCallback.accept(null);
 				}
 			}
 
 			@Override
 			public void handleRemoveItem(int itemClientRecordId, Consumer<Void> uiCommandCallback) {
-				if (isRendered()) {
-					final DtoItemView.RemoveItemCommand removeItemCommand = new DtoItemView.RemoveItemCommand(group.getClientId(), itemClientRecordId);
-					getSessionContext().sendCommandIfRendered(ItemView.this, () -> removeItemCommand.get(), uiCommandCallback);
+				boolean sent = clientObjectChannel.removeItem(group.getClientId(), itemClientRecordId, wrapper -> uiCommandCallback.accept(null));
+				if (!sent) {
+					uiCommandCallback.accept(null);
 				}
 			}
 
@@ -208,16 +209,11 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoItemView.ItemClickedEvent.TYPE_ID -> {
-				var itemClickedEvent = event.as(DtoItemView.ItemClickedEventWrapper.class);
-				ItemGroup<HEADERRECORD, RECORD> itemGroup = getItemGroupByClientId(itemClickedEvent.getGroupId());
-				if (itemGroup != null) {
-					RECORD item = itemGroup.getItemByClientId(itemClickedEvent.getItemId());
-					this.onItemClicked.fire(new ItemClickedEventData<>(itemGroup, item));
-				}
-			}
+	public void handleItemClicked(DtoItemView.ItemClickedEventWrapper itemClickedEvent) {
+		ItemGroup<HEADERRECORD, RECORD> itemGroup = getItemGroupByClientId(itemClickedEvent.getGroupId());
+		if (itemGroup != null) {
+			RECORD item = itemGroup.getItemByClientId(itemClickedEvent.getItemId());
+			this.onItemClicked.fire(new ItemClickedEventData<>(itemGroup, item));
 		}
 	}
 

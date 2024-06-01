@@ -17,23 +17,23 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.common.pageview;
+package org.teamapps.projector.components.blogview;
 
-import org.teamapps.projector.components.common.dto.DtoPageView;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.component.AbstractComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PageView extends AbstractComponent {
+public class BlogView extends AbstractComponent implements DtoBlogViewEventHandler{
 
-	private List<AbstractPageViewBlock> blocks = new ArrayList<>();
+	private final DtoBlogViewClientObjectChannel clientObjectChannel = new DtoBlogViewClientObjectChannel(getClientObjectChannel());
+
+	private final List<AbstractBlock> blocks = new ArrayList<>();
 
 	@Override
-	public DtoPageView createDto() {
-		DtoPageView uiPageView = new DtoPageView();
+	public DtoBlogView createConfig() {
+		DtoBlogView uiPageView = new DtoBlogView();
 		mapAbstractUiComponentProperties(uiPageView);
 		uiPageView.setBlocks(blocks.stream()
 				.map(block -> block.createUiBlock())
@@ -41,18 +41,14 @@ public class PageView extends AbstractComponent {
 		return uiPageView;
 	}
 
-	public void addBlock(AbstractPageViewBlock block) {
+	public void addBlock(AbstractBlock block) {
 		blocks.add(block);
-		sendCommandIfRendered(() -> new DtoPageView.AddBlockCommand(block.createUiBlock(), false, null));
+		clientObjectChannel.addBlock(block.createUiBlock(), false, null);
 	}
 
-	public void removeBlock(AbstractPageViewBlock block) {
+	public void removeBlock(AbstractBlock block) {
 		blocks.add(block);
-		sendCommandIfRendered(() -> new DtoPageView.RemoveBlockCommand(block.getClientId()));
+		clientObjectChannel.removeBlock(block.getClientId());
 	}
 
-	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		// none
-	}
 }

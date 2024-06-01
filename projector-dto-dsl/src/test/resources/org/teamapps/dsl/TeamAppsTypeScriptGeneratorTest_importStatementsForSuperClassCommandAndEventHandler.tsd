@@ -28,6 +28,7 @@ export interface BServerObjectChannel extends ServerObjectChannel {
 
     sendEvent(eventName: "j", eventObject: I_JEvent): void;
 
+
 }
 
 export interface BEventSource extends AEventSource, IEventSource {

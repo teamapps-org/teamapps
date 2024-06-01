@@ -17,13 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoEntranceAnimation;
-import org.teamapps.projector.dto.DtoExitAnimation;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.format.DtoSpacing;
+import org.teamapps.projector.animation.EntranceAnimation;
+import org.teamapps.projector.animation.ExitAnimation;
 
-enum DtoNotificationPosition {
+enum NotificationPosition {
 	TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
 }
 
@@ -38,7 +39,7 @@ class DtoNotification extends DtoComponent {
 	DtoComponent* content;
 	int contentHeight; // <= 0: auto
 
-    static command showNotification(DtoNotification* notification, DtoNotificationPosition position, DtoEntranceAnimation entranceAnimation, DtoExitAnimation exitAnimation);
+    static command showNotification(DtoNotification* notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation);
 
 	command close();
 	command update(DtoNotification config);

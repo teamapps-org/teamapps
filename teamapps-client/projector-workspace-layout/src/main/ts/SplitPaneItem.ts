@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoChildCollapsingPolicy, SplitDirection, SplitSizePolicy} from "teamapps-client-core-components";
+import {ChildCollapsingPolicy, SplitDirection, SplitSizePolicy} from "teamapps-client-core-components";
 import {SplitPane} from "teamapps-client-core-components";
 import {Component, noOpServerObjectChannel} from "projector-client-object-api";
 import {ItemTreeItem} from "./ItemTree";
@@ -37,7 +37,7 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 			sizePolicy: sizePolicy,
 			referenceChildSize: firstChildRelativeSize,
 			resizable: true,
-			childCollapsingPolicy: DtoChildCollapsingPolicy.IF_EMPTY
+			childCollapsingPolicy: ChildCollapsingPolicy.IF_EMPTY
 		}, noOpServerObjectChannel);
 	}
 

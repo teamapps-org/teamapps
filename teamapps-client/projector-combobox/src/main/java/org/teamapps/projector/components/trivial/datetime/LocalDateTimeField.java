@@ -19,16 +19,19 @@
  */
 package org.teamapps.projector.components.trivial.datetime;
 
-import org.teamapps.projector.dto.DtoAbstractField;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Streams;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoLocalDateTimeField;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.components.trivial.dto.DtoLocalDateTimeFieldEventHandler;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
-public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime> {
+public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime> implements DtoLocalDateTimeFieldEventHandler {
 
 	public LocalDateTimeField() {
 		super();
@@ -42,11 +45,11 @@ public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime> {
 	}
 
 	@Override
-	public LocalDateTime convertClientValueToServerValue(Object value) {
+	public LocalDateTime doConvertClientValueToServerValue(JsonNode value) {
 		if (value == null) {
 			return null;
 		} else {
-			List<Integer> values = (List<Integer>) value;
+			List<Integer> values = Streams.stream(value).map(n -> n.intValue()).toList();
 			return LocalDateTime.of(values.get(0), values.get(1), values.get(2), values.get(3), values.get(4), values.get(5), values.get(6));
 		}
 	}

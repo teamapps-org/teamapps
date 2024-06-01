@@ -44,7 +44,7 @@ import {
 	DtoTabPanel_WindowButtonClickedEvent,
 	DtoTabPanelCommandHandler,
 	DtoTabPanelEventSource,
-	DtoTabPanelTabStyle,
+	TabPanelTabStyle,
 	WindowButtonType
 } from "../generated";
 import {maximizeComponent} from "../Common";
@@ -557,10 +557,10 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		}
 	}
 
-	public setTabStyle(tabStyle: DtoTabPanelTabStyle) {
+	public setTabStyle(tabStyle: TabPanelTabStyle) {
 		this.$tabPanel.classList.remove('tab-style-ears', 'tab-style-blocks');
-		this.$tabPanel.classList.add(tabStyle === DtoTabPanelTabStyle.EARS ? 'tab-style-ears' : 'tab-style-blocks');
-		this.$tabBar.classList.toggle("teamapps-blurredBackgroundImage", tabStyle === DtoTabPanelTabStyle.BLOCKS);
+		this.$tabPanel.classList.add(tabStyle === TabPanelTabStyle.EARS ? 'tab-style-ears' : 'tab-style-blocks');
+		this.$tabBar.classList.toggle("teamapps-blurredBackgroundImage", tabStyle === TabPanelTabStyle.BLOCKS);
 		this.onResize();
 	}
 

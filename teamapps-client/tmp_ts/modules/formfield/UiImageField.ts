@@ -19,7 +19,7 @@
  */
 import {DtoAbstractField} from "./DtoAbstractField";
 import {DtoImageFieldCommandHandler, DtoImageField, DtoImageFieldEventSource} from "../../generated/DtoImageField";
-import {DtoFieldEditingMode} from "../../generated/DtoFieldEditingMode";
+import {FieldEditingMode} from "../../generated/FieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 
 import {DtoBorder} from "../../generated/DtoBorder";
@@ -94,7 +94,7 @@ export class UiImageField extends AbstractField<DtoImageField, string> implement
 		return this.getCommittedValue();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => null);
 	}
 

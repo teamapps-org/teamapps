@@ -17,15 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.format.FlexDirection;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.format.JustifyContent;
 
 class DtoFlexContainer extends DtoComponent {
 	mutable List<DtoComponent*> components;
-	mutable DtoFlexDirection flexDirection;
-	mutable DtoAlignItems alignItems;
-	mutable DtoJustifyContent justifyContent;
+	mutable FlexDirection flexDirection;
+	mutable AlignItems alignItems;
+	mutable JustifyContent justifyContent;
 }
 
 

@@ -17,25 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.common.pageview;
+package org.teamapps.projector.components.blogview;
 
-import org.teamapps.projector.components.common.dto.DtoComponentPageViewBlock;
-import org.teamapps.ux.component.Component;
+import org.teamapps.projector.component.Component;
 
-public class ComponentPageViewBlock extends AbstractPageViewBlock {
+public class ComponentBlock extends AbstractBlock {
 	private Component component;
 	private int height = 400;
 	private String title;
 
-	public ComponentPageViewBlock(Component component, int height) {
+	public ComponentBlock(Component component, int height) {
 		this.component = component;
 		this.height = height;
 	}
 
-	public DtoComponentPageViewBlock createUiBlock() {
-		DtoComponentPageViewBlock uiBlock = new DtoComponentPageViewBlock();
-		mapAbstractPageViewBlockAttributes(uiBlock);
-		uiBlock.setComponent(component != null ? component.createDtoReference() : null);
+	public DtoComponentBlock createUiBlock() {
+		DtoComponentBlock uiBlock = new DtoComponentBlock();
+		mapAbstractBlockAttributes(uiBlock);
+		uiBlock.setComponent(component);
 		uiBlock.setHeight(height);
 		uiBlock.setTitle(title);
 		return uiBlock;
@@ -45,7 +44,7 @@ public class ComponentPageViewBlock extends AbstractPageViewBlock {
 		return component;
 	}
 
-	public ComponentPageViewBlock setComponent(Component component) {
+	public ComponentBlock setComponent(Component component) {
 		this.component = component;
 		return this;
 	}
@@ -54,7 +53,7 @@ public class ComponentPageViewBlock extends AbstractPageViewBlock {
 		return height;
 	}
 
-	public ComponentPageViewBlock setHeight(int height) {
+	public ComponentBlock setHeight(int height) {
 		this.height = height;
 		return this;
 	}
@@ -63,7 +62,7 @@ public class ComponentPageViewBlock extends AbstractPageViewBlock {
 		return title;
 	}
 
-	public ComponentPageViewBlock setTitle(String title) {
+	public ComponentBlock setTitle(String title) {
 		this.title = title;
 		return this;
 	}

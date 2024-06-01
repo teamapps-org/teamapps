@@ -21,7 +21,7 @@ import {DtoAbstractField} from "./DtoAbstractField";
 import {DtoColorPicker, DtoColorPickerEventSource} from "../../generated/DtoColorPicker";
 import {TeamAppsUiContext} from "teamapps-client-core";
 
-import {DtoFieldEditingMode} from "../../generated/DtoFieldEditingMode";
+import {FieldEditingMode} from "../../generated/FieldEditingMode";
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
 import {executeWhenFirstDisplayed} from "../util/executeWhenFirstDisplayed";
 import {keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
@@ -125,8 +125,8 @@ export class UiColorPicker extends AbstractField<DtoColorPicker, string> impleme
 		return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${color.a})`;
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
-		if (editingMode === DtoFieldEditingMode.DISABLED || editingMode === DtoFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		if (editingMode === FieldEditingMode.DISABLED || editingMode === FieldEditingMode.READONLY) {
 			this.pickr.disable();
 		} else {
 			this.pickr.enable();

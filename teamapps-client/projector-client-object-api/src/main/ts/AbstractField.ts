@@ -22,7 +22,7 @@ import {
 	DtoAbstractField, DtoAbstractField_BlurEvent, DtoAbstractField_FocusEvent,
 	DtoAbstractField_ValueChangedEvent,
 	DtoAbstractFieldCommandHandler,
-	DtoAbstractFieldEventSource, DtoFieldEditingMode,
+	DtoAbstractFieldEventSource, FieldEditingMode,
 	DtoFieldMessage, DtoFieldMessagePosition, DtoFieldMessageSeverity, DtoFieldMessageVisibilityMode
 } from "./generated";
 import {AbstractLegacyComponent} from "./AbstractLegacyComponent";
@@ -40,13 +40,6 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 	public readonly onFocus: TeamAppsEvent<DtoAbstractField_FocusEvent> = new TeamAppsEvent();
 	public readonly onBlur: TeamAppsEvent<DtoAbstractField_BlurEvent> = new TeamAppsEvent();
 	public readonly onUserManipulation: TeamAppsEvent<void> = new TeamAppsEvent();
-
-	public static editingModeCssClasses: { [x: number]: string } = {
-		[DtoFieldEditingMode.EDITABLE]: "editable",
-		[DtoFieldEditingMode.EDITABLE_IF_FOCUSED]: "editable-if-focused",
-		[DtoFieldEditingMode.DISABLED]: "disabled",
-		[DtoFieldEditingMode.READONLY]: "readonly"
-	};
 
 	private committedValue: V;
 
@@ -220,44 +213,44 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 		return changed;
 	}
 
-	public setEditingMode(editingMode: DtoFieldEditingMode = DtoFieldEditingMode.EDITABLE): void {
+	public setEditingMode(editingMode: FieldEditingMode = FieldEditingMode.EDITABLE): void {
 		const oldEditingMode = this.config.editingMode;
 		this.config.editingMode = editingMode;
 		this.onEditingModeChanged(editingMode, oldEditingMode);
 	}
 
-	protected abstract onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode?: DtoFieldEditingMode): void;
+	protected abstract onEditingModeChanged(editingMode: FieldEditingMode, oldEditingMode?: FieldEditingMode): void;
 
-	public getEditingMode(): DtoFieldEditingMode {
+	public getEditingMode(): FieldEditingMode {
 		return this.config.editingMode;
 	}
 
 	public isEditable(): boolean {
-		return this.getEditingMode() === DtoFieldEditingMode.EDITABLE || this.getEditingMode() === DtoFieldEditingMode.EDITABLE_IF_FOCUSED;
+		return this.getEditingMode() === FieldEditingMode.EDITABLE || this.getEditingMode() === FieldEditingMode.EDITABLE_IF_FOCUSED;
 	}
 
 	public static defaultOnEditingModeChangedImpl(field: AbstractField<DtoAbstractField, any>, $focusableElementProvider: () => HTMLElement) {
-		field.getMainElement().classList.remove(...Object.values(AbstractField.editingModeCssClasses));
-		field.getMainElement().classList.add(AbstractField.editingModeCssClasses[field.getEditingMode()]);
+		field.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		field.getMainElement().classList.add(field.getEditingMode());
 
 		const $focusableElement = $focusableElementProvider();
 		if ($focusableElement) {
 			switch (field.getEditingMode()) {
-				case DtoFieldEditingMode.EDITABLE:
+				case FieldEditingMode.EDITABLE:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "0");
 					break;
-				case DtoFieldEditingMode.EDITABLE_IF_FOCUSED:
+				case FieldEditingMode.EDITABLE_IF_FOCUSED:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "0");
 					break;
-				case DtoFieldEditingMode.DISABLED:
+				case FieldEditingMode.DISABLED:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.setAttribute("disabled", "disabled");
 					break;
-				case DtoFieldEditingMode.READONLY:
+				case FieldEditingMode.READONLY:
 					$focusableElement.setAttribute("readonly", "readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "-1");

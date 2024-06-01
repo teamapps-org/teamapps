@@ -20,8 +20,8 @@
 package org.teamapps.projector.components.trivial.tree.simple;
 
 import org.teamapps.projector.components.trivial.tree.Tree;
-import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.util.Arrays;
 import java.util.Collection;

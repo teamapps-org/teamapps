@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.field.DtoAbstractField;
 
 class DtoNumberField extends DtoAbstractField implements DtoTextInputHandlingField {
   	String locale;
@@ -28,13 +28,13 @@ class DtoNumberField extends DtoAbstractField implements DtoTextInputHandlingFie
 	boolean showClearButton;
 	double minValue;
     double maxValue;
-    DtoNumberFieldSliderMode sliderMode;
+    NumberFieldSliderMode sliderMode;
     double sliderStep;
     boolean commitOnSliderChange;
 
     command setMinValue(double min);
     command setMaxValue(double max);
-    command setSliderMode(DtoNumberFieldSliderMode sliderMode);
+    command setSliderMode(NumberFieldSliderMode sliderMode);
     command setSliderStep(double step);
     command setCommitOnSliderChange(boolean commitOnSliderChange);
 	command setPrecision(int displayPrecision);
@@ -43,6 +43,6 @@ class DtoNumberField extends DtoAbstractField implements DtoTextInputHandlingFie
 	command setLocale(String locale);
 }
 
-enum DtoNumberFieldSliderMode {
+enum NumberFieldSliderMode {
 	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED, SLIDER_ONLY
 }

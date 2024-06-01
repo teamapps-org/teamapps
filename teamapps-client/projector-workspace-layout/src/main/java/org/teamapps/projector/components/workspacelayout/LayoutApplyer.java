@@ -21,14 +21,14 @@ package org.teamapps.projector.components.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.projector.components.essential.dto.SplitDirection;
+import org.teamapps.projector.components.essential.dto.SplitSizePolicy;
 import org.teamapps.projector.components.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.projector.components.workspacelayout.definition.SplitPaneDefinition;
 import org.teamapps.projector.components.workspacelayout.definition.ViewGroupDefinition;
 import org.teamapps.projector.components.workspacelayout.dto.DtoWorkSpaceLayoutItemWrapper;
 import org.teamapps.projector.components.workspacelayout.dto.DtoWorkSpaceLayoutSplitItem;
 import org.teamapps.projector.components.workspacelayout.dto.DtoWorkSpaceLayoutViewGroupItem;
-import org.teamapps.projector.dto.SplitDirection;
-import org.teamapps.projector.dto.SplitSizePolicy;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;

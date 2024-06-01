@@ -19,7 +19,7 @@
  */
 import {NavigationDirection, TrivialComponent} from "./TrivialCore";
 import {LocalDateTime} from "../LocalDateTime";
-import {parseHtml, TeamAppsEvent} from "teamapps-client-core";
+import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
 
 export enum WeekDay {
     MONDAY = 1, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY

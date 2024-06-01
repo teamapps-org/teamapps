@@ -21,7 +21,7 @@ package org.teamapps.projector.components.trivial.tree.simple;
 
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
 
 import java.util.ArrayList;
 import java.util.List;

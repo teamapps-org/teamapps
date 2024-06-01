@@ -17,12 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.progress;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
 
 
-enum DtoProgressStatus {
+enum ProgressStatus {
 	NOT_YET_STARTED = "not-yet-started",
 	RUNNING = "running",
 	CANCELLATION_REQUESTED = "cancellation-requested",
@@ -36,7 +36,7 @@ class DtoProgressDisplay extends DtoComponent {
 	String taskName;
 	String statusMessage;
 	double progress;
-	DtoProgressStatus status;
+	ProgressStatus status;
 	boolean cancelable;
 
     command update(DtoProgressDisplay config);

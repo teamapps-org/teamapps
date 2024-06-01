@@ -19,7 +19,7 @@
  */
 
 import {DtoAbstractField} from "../DtoAbstractField";
-import {DtoFieldEditingMode} from "../../../generated/DtoFieldEditingMode";
+import {FieldEditingMode} from "../../../generated/FieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {humanReadableFileSize, parseHtml} from "../../Common";
 import {TeamAppsEvent} from "teamapps-client-core";
@@ -181,7 +181,7 @@ export class UiPictureChooser extends AbstractField<DtoPictureChooser, string> i
 		return v == null || typeof v === "string";
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode, oldEditingMode?: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode, oldEditingMode?: FieldEditingMode): void {
 		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}

@@ -48,8 +48,12 @@ public interface AEventHandler extends ClientMessageHandler {
 		new AEventMethodInvoker(this).handleEvent(name, eventObject);
 	}
 
-    void handleE(
-                                      A.EEventWrapper event
-    );
+    @Override
+    default Object handleQuery(String name, List<JsonWrapper> params) {
+        return new AQueryMethodInvoker(this).handleQuery(name, params);
+    }
+
+    void handleE(A.EEventWrapper event);
+
 
 }

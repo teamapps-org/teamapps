@@ -19,12 +19,12 @@
  */
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoAbstractField;
-import org.teamapps.projector.dto.DtoTextInputHandlingField;
-import org.teamapps.projector.dto.DtoDateTimeFormatDescriptor;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.component.field.DtoAbstractField;
+import org.teamapps.projector.components.essential.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.session.config.DtoDateTimeFormatDescriptor;
 
-abstract class DtoAbstractDateTimeField extends DtoAbstractField implements DtoTextInputHandlingField {
+abstract class DtoAbstractDateTimeField extends DtoAbstractField {
 	boolean showDropDownButton;
 	boolean favorPastDates; // TODO!!!
 	String locale;
@@ -34,6 +34,8 @@ abstract class DtoAbstractDateTimeField extends DtoAbstractField implements DtoT
 	command setShowDropDownButton(boolean showDropDownButton);
 	command setFavorPastDates(boolean favorPastDates);
 	command setLocaleAndFormats(String locale, DtoDateTimeFormatDescriptor dateFormat, DtoDateTimeFormatDescriptor timeFormat);
+
+	event textInput(String enteredString);
 }
 
 class DtoLocalDateTimeField extends DtoAbstractDateTimeField {

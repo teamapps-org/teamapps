@@ -19,22 +19,22 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.dto.DtoAlignItems;
+import org.teamapps.projector.format.AlignItems;
 
 public enum VerticalElementAlignment {
 
-	TOP(DtoAlignItems.FLEX_START),
-	CENTER(DtoAlignItems.CENTER),
-	BOTTOM(DtoAlignItems.FLEX_END),
-	STRETCH(DtoAlignItems.STRETCH);
+	TOP(AlignItems.FLEX_START),
+	CENTER(AlignItems.CENTER),
+	BOTTOM(AlignItems.FLEX_END),
+	STRETCH(AlignItems.STRETCH);
 
-	private final DtoAlignItems alignItems;
+	private final AlignItems alignItems;
 
-	VerticalElementAlignment(DtoAlignItems alignItems) {
+	VerticalElementAlignment(AlignItems alignItems) {
 		this.alignItems = alignItems;
 	}
 
-	public DtoAlignItems toUiVerticalElementAlignment() {
+	public AlignItems toUiVerticalElementAlignment() {
 		return alignItems;
 	}
 

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.infinitescroll.table;
 
-import org.teamapps.projector.field.AbstractField;
+import org.teamapps.projector.component.field.AbstractField;
 
 public class CellEditingStartedEvent<RECORD, VALUE> {
 

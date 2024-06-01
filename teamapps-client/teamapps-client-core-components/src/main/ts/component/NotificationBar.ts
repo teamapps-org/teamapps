@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, DtoExitAnimation, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, ExitAnimation, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {animateCSS, Constants, removeClassesByFunction} from "../Common";
 
 import {
@@ -75,7 +75,7 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 		}
 	}
 
-	removeItem(id: string, exitAnimation?: DtoExitAnimation): void {
+	removeItem(id: string, exitAnimation?: ExitAnimation): void {
 		let item = this.itemsById[id];
 		if (item != null) {
 			if (exitAnimation != null || item.config.exitAnimation != null) {

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import { createPopper, Instance as Popper } from '@popperjs/core';
-import {animateCSS, Constants, DtoEntranceAnimation} from "teamapps-client-core-components";
+import {animateCSS, Constants, EntranceAnimation} from "teamapps-client-core-components";
 import {parseHtml} from "projector-client-object-api";
 
 export class CalendarEventListPopper {
@@ -100,7 +100,7 @@ export class CalendarEventListPopper {
 					this.$popperElement.classList.remove("hidden");
 					this.popper.update();
 					if (wasHidden) {
-						animateCSS(this.$popperElement, Constants.EXIT_ANIMATION_CSS_CLASSES[DtoEntranceAnimation.FADE_IN], 200)
+						animateCSS(this.$popperElement, Constants.EXIT_ANIMATION_CSS_CLASSES[EntranceAnimation.FADE_IN], 200)
 					}
 				}, 200);
 			} else {

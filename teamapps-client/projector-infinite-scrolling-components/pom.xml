@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ux</artifactId>
+            <artifactId>projector-client-object-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -39,8 +39,7 @@
                 <configuration>
                     <jsResourcesTargetClassPath>org/teamapps/projector/components/infinitescroll/resources/js</jsResourcesTargetClassPath>
                     <dtoDependencies>
-                        <dependency>org.teamapps:teamapps-client-core:${project.version}</dependency>
-                        <dependency>org.teamapps:teamapps-client-core-components:${project.version}</dependency>
+                        <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
                     </dtoDependencies>
                 </configuration>
             </plugin>

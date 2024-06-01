@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
-import {TeamAppsEvent} from "teamapps-client-core";
 import {QueryFunction} from "../TrivialCore";
 import {TrivialTreeBox} from "../TrivialTreeBox";
+import {TeamAppsEvent} from "projector-client-object-api";
 
 type TreeBoxDropdownConfig<E> = {
 	queryFunction: QueryFunction<E>;

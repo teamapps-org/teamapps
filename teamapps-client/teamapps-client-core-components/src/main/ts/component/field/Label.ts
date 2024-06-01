@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractField} from "projector-client-object-api";
-import {Component, DtoFieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {Component, FieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {DtoLabel, DtoLabel_ClickedEvent, DtoLabelCommandHandler, DtoLabelEventSource} from "../../generated";
 
 export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEventSource, DtoLabelCommandHandler {
@@ -91,7 +91,7 @@ export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEv
 		this.$caption.textContent = this.getCommittedValue() || this.config.caption || "";
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		// does not have any editing mode support...
 	}
 

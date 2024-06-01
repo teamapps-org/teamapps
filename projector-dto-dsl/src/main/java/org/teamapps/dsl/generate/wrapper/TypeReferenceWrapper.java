@@ -69,7 +69,7 @@ public class TypeReferenceWrapper {
 	}
 
 	public String getName() {
-		return context.typeReference() != null ? context.typeReference().getText() : context.primitiveType().getText();
+		return context.typeReference() != null ? context.typeReference().typeName().getText() : context.primitiveType().getText();
 	}
 
 	public String getText() {
@@ -100,6 +100,10 @@ public class TypeReferenceWrapper {
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	public TypeReferenceWrapper getCollectionTypeOrThrow() {
+		return getCollectionType().orElseThrow(() -> new IllegalArgumentException(getText() + " must have a generic parameter!"));
 	}
 
 	public Optional<ClassWrapper> findReferencedClass() {
@@ -156,7 +160,7 @@ public class TypeReferenceWrapper {
 
 	public TypeWrapper<?> findReferencedDtoType() {
 		if (isCollection()) {
-			return getCollectionType().orElseThrow(() -> new IllegalArgumentException(getText() + " must have a generic parameter!")).findReferencedDtoType();
+			return getCollectionTypeOrThrow().findReferencedDtoType();
 		}
 		return Optional.<TypeWrapper<?>>empty()
 				.or(this::findReferencedClass)
@@ -172,6 +176,26 @@ public class TypeReferenceWrapper {
 				.isPresent();
 	}
 
+	public void checkResolvability() {
+		if (isCollection()) {
+			getCollectionTypeOrThrow().checkResolvability();
+			return;
+		}
+		if (!isBasicJavaType() && !isDtoType()) {
+			throw model.createUnresolvedTypeReferenceException(getName(), context);
+		}
+	}
+
+	private boolean isBasicJavaType() {
+		List<String> knownJavaTypes = List.of(
+				"Object", "java.lang.Object",
+				"String", "java.lang.String",
+				"boolean", "char", "byte", "short", "int", "long", "float", "double",
+				"Boolean", "Character", "Byte", "Short", "Integer", "Long", "Float", "Double"
+		);
+		return knownJavaTypes.contains(getText());
+	}
+
 	public boolean isDtoType() {
 		return Optional.empty()
 				.or(this::findReferencedClass)
@@ -180,15 +204,12 @@ public class TypeReferenceWrapper {
 				.isPresent();
 	}
 
-	public boolean referencesDtoType() {
-		List<String> knownJavaTypes = List.of(
-				"Object", "java.lang.Object",
-				"String", "java.lang.String",
-				"boolean", "char", "byte", "short", "int", "long", "float", "double",
-				"Boolean", "Character", "Byte", "Short", "Integer", "Long", "Float", "Double"
-		);
-		boolean isKnownJavaType = knownJavaTypes.contains(getText());
-		return !isKnownJavaType && (!isCollection() || getCollectionType().orElseThrow(() -> new IllegalArgumentException(getText() + " must have a generic parameter!")).referencesDtoType());
+	public boolean isDtoTypeOrDtoTypeCollection() {
+		TypeReferenceWrapper type = this;
+		if (isCollection()) {
+			type = getCollectionTypeOrThrow();
+		}
+		return type.isDtoType();
 	}
 
 	public boolean isObject() {
@@ -203,15 +224,8 @@ public class TypeReferenceWrapper {
 		}
 	}
 
-	public boolean isClientObjectReference() {
-		return context.typeReference() != null && context.typeReference().referenceTypeModifier() != null;
-	}
-
-	public boolean isUiClientObjectReferenceOrClientObjectCollection() {
-		if (isClientObjectReference()) {
-			return true;
-		}
-		return getCollectionType().map(t -> t.isUiClientObjectReferenceOrClientObjectCollection()).orElse(false);
+	public boolean isClientObjectPointer() {
+		return context.typeReference() != null && context.typeReference().pointerModifier() != null;
 	}
 
 	public String getTypeScriptTypeName() {
@@ -220,10 +234,10 @@ public class TypeReferenceWrapper {
 		} else if ("String".equals(getText())) {
 			return "string";
 		} else if (isList()) {
-			return getCollectionType().orElseThrow().getTypeScriptTypeName() + "[]";
+			return getCollectionTypeOrThrow().getTypeScriptTypeName() + "[]";
 		} else if (isDictionary()) {
-			return "{[name: string]: " + getCollectionType().orElseThrow().getTypeScriptTypeName() + "}";
-		} else if (isClientObjectReference()) {
+			return "{[name: string]: " + getCollectionTypeOrThrow().getTypeScriptTypeName() + "}";
+		} else if (isClientObjectPointer()) {
 			return "unknown";
 		} else if (isDtoType()) {
 			return getText();
@@ -244,20 +258,20 @@ public class TypeReferenceWrapper {
 
 	public String getJavaTypeString(boolean forceNonPrimitive) {
 		if (isList()) {
-			TypeReferenceWrapper firstTypeArgument = getCollectionType().orElseThrow(() -> new IllegalArgumentException("Collection type argument not provided!"));
+			TypeReferenceWrapper firstTypeArgument = getCollectionTypeOrThrow();
 			if (firstTypeArgument.isObject()) {
 				return "List<?>";
 			} else {
 				return "List<" + firstTypeArgument.getJavaTypeString() + ">";
 			}
 		} else if (isDictionary()) {
-			TypeReferenceWrapper firstTypeArgument = getCollectionType().orElseThrow(() -> new IllegalArgumentException("Collection type argument not provided!"));
+			TypeReferenceWrapper firstTypeArgument = getCollectionTypeOrThrow();
 			if (firstTypeArgument.isObject()) {
 				return "Map<String, ?>";
 			} else {
 				return "Map<String, " + firstTypeArgument.getJavaTypeString() + ">";
 			}
-		} else if (isClientObjectReference()) {
+		} else if (isClientObjectPointer()) {
 			return "ClientObject";
 		} else if (isDtoType()) {
 			return context.getText();
@@ -286,10 +300,10 @@ public class TypeReferenceWrapper {
 
 	public String getJavaJsonWrapperTypeString() {
 		if (isList()) {
-			return "List<" + getCollectionType().map(TypeReferenceWrapper::getJavaJsonWrapperTypeString).orElse("??") + ">";
+			return "List<" + getCollectionType().map(TypeReferenceWrapper::getJavaJsonWrapperTypeString).orElse("?") + ">";
 		} else if (isDictionary()) {
-			return "Map<String, " + getCollectionType().map(TypeReferenceWrapper::getJavaJsonWrapperTypeString).orElse("??") + ">";
-		} else if (isClientObjectReference()) {
+			return "Map<String, " + getCollectionType().map(TypeReferenceWrapper::getJavaJsonWrapperTypeString).orElse("?") + ">";
+		} else if (isClientObjectPointer()) {
 			return "ClientObject";
 		} else if (isDtoClassOrInterface()) {
 			return getJavaTypeString() + "Wrapper";
@@ -306,10 +320,6 @@ public class TypeReferenceWrapper {
 
 	public boolean isEnum() {
 		return findReferencedEnum().isPresent();
-	}
-
-	public boolean isReferenceList() {
-		return isList() && getCollectionType().map(t -> isDtoClassOrInterface()).orElse(false);
 	}
 
 	public String getDefaultValue() {

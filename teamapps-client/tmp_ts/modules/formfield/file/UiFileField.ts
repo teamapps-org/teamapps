@@ -19,7 +19,7 @@
  */
 import {DtoAbstractField} from "../DtoAbstractField";
 import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
-import {DtoFieldEditingMode} from "../../../generated/DtoFieldEditingMode";
+import {FieldEditingMode} from "../../../generated/FieldEditingMode";
 import {TeamAppsUiContext} from "teamapps-client-core";
 import {generateUUID, humanReadableFileSize, parseHtml, prependChild, removeClassesByFunction} from "../../Common";
 import {
@@ -321,7 +321,7 @@ export class UiFileField extends AbstractField<DtoFileField, DtoIdentifiableClie
 			.map(fileItem => fileItem.data);
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}

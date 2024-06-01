@@ -25,6 +25,7 @@ export interface AEventSource {
 export interface AServerObjectChannel extends ServerObjectChannel {
 
     sendEvent(eventName: "y", eventObject: A_YEvent): void;
+
     sendQuery(eventName: "z", s: string): Promise<string[]>;
 
 }

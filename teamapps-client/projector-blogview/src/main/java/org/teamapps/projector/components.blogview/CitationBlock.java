@@ -17,31 +17,29 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.common.pageview;
+package org.teamapps.projector.components.blogview;
 
-import org.teamapps.projector.components.common.dto.DtoCitationPageViewBlock;
-
-public class CitationPageViewBlock extends AbstractPageViewBlock {
+public class CitationBlock extends AbstractBlock {
 	
 	private String creatorImageUrl;
 	private CreatorImageAlignment creatorImageAlignment = CreatorImageAlignment.LEFT;
 	private String citation;
 	private String author;
 
-	public CitationPageViewBlock() {
+	public CitationBlock() {
 	}
 
-	public CitationPageViewBlock(String creatorImageUrl, String citation, String author) {
+	public CitationBlock(String creatorImageUrl, String citation, String author) {
 		this.creatorImageUrl = creatorImageUrl;
 		this.citation = citation;
 		this.author = author;
 	}
 
-	public DtoCitationPageViewBlock createUiBlock() {
-		DtoCitationPageViewBlock uiBlock = new DtoCitationPageViewBlock();
-		mapAbstractPageViewBlockAttributes(uiBlock);
+	public DtoCitationBlock createUiBlock() {
+		DtoCitationBlock uiBlock = new DtoCitationBlock();
+		mapAbstractBlockAttributes(uiBlock);
 		uiBlock.setCreatorImageUrl(creatorImageUrl);
-		uiBlock.setCreatorImageAlignment(creatorImageAlignment.toUiImageAligment());
+		uiBlock.setCreatorImageAlignment(creatorImageAlignment);
 		uiBlock.setCitation(citation);
 		uiBlock.setAuthor(author);
 		return uiBlock;
@@ -51,7 +49,7 @@ public class CitationPageViewBlock extends AbstractPageViewBlock {
 		return creatorImageUrl;
 	}
 
-	public CitationPageViewBlock setCreatorImageUrl(String creatorImageUrl) {
+	public CitationBlock setCreatorImageUrl(String creatorImageUrl) {
 		this.creatorImageUrl = creatorImageUrl;
 		return this;
 	}
@@ -60,7 +58,7 @@ public class CitationPageViewBlock extends AbstractPageViewBlock {
 		return creatorImageAlignment;
 	}
 
-	public CitationPageViewBlock setCreatorImageAlignment(CreatorImageAlignment creatorImageAlignment) {
+	public CitationBlock setCreatorImageAlignment(CreatorImageAlignment creatorImageAlignment) {
 		this.creatorImageAlignment = creatorImageAlignment;
 		return this;
 	}
@@ -69,7 +67,7 @@ public class CitationPageViewBlock extends AbstractPageViewBlock {
 		return citation;
 	}
 
-	public CitationPageViewBlock setCitation(String citation) {
+	public CitationBlock setCitation(String citation) {
 		this.citation = citation;
 		return this;
 	}
@@ -78,7 +76,7 @@ public class CitationPageViewBlock extends AbstractPageViewBlock {
 		return author;
 	}
 
-	public CitationPageViewBlock setAuthor(String author) {
+	public CitationBlock setAuthor(String author) {
 		this.author = author;
 		return this;
 	}

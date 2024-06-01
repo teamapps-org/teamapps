@@ -25,10 +25,9 @@ import {
 	TrivialComponent,
 	unProxyEntry
 } from "./TrivialCore";
-import {parseHtml} from "teamapps-client-core";
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
-import {TeamAppsEvent} from "teamapps-client-core";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
+import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
 
 type TextToEntryFunction<E> = (freeText: string) => E | any;
 

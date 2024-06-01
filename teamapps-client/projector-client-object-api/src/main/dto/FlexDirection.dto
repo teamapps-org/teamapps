@@ -1,6 +1,6 @@
-package "projector-client-object-api":org.teamapps.projector.dto;
+package "projector-client-object-api":org.teamapps.projector.format;
 
-enum DtoFlexDirection {
+enum FlexDirection {
 	ROW = "row",
     ROW_REVERSE = "row-reverse",
     COLUMN = "column",

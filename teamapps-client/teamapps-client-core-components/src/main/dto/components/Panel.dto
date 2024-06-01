@@ -1,3 +1,4 @@
+
 /*-
  * ========================LICENSE_START=================================
  * TeamApps
@@ -17,20 +18,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.panel;
 
-import org.teamapps.projector.dto.DtoComponent;
-
-import org.teamapps.projector.dto.DtoShowable;
-import org.teamapps.projector.dto.DtoJustifyContent;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.component.field.DtoAbstractField;
+import org.teamapps.projector.components.essential.toolbar.DtoToolbar;
+import org.teamapps.projector.components.essential.dto.DtoToolButton;
 
 class DtoPanel extends DtoComponent {
 	mutable String icon;
 	mutable String title;
 	mutable DtoPanelHeaderField leftHeaderField;
 	mutable DtoPanelHeaderField rightHeaderField;
-	mutable DtoPanelHeaderComponentMinimizationPolicy headerComponentMinimizationPolicy;
-	mutable DtoPanelHeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy;
+	mutable HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy;
+	mutable HeaderFieldIconVisibilityPolicy headerFieldIconVisibilityPolicy;
 	mutable boolean titleBarHidden;
 	mutable DtoToolbar* toolbar;
 	mutable DtoComponent* content;
@@ -44,11 +45,12 @@ class DtoPanel extends DtoComponent {
 	event windowButtonClicked(WindowButtonType windowButton);
 }
 
-enum DtoPanelHeaderComponentMinimizationPolicy {
-    LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST
+enum HeaderComponentMinimizationPolicy {
+    LEFT_COMPONENT_FIRST,
+    RIGHT_COMPONENT_FIRST
 }
 
-enum DtoPanelHeaderFieldIconVisibilityPolicy {
+enum HeaderFieldIconVisibilityPolicy {
     DISPLAYED_WHEN_MINIMIZED, ALWAYS_DISPLAYED
 }
 
@@ -57,38 +59,4 @@ class DtoPanelHeaderField {
 	String icon;
 	int minWidth;
 	int maxWidth;
-}
-
-class DtoWindow extends DtoPanel implements DtoShowable {
-	boolean modal;
-	int width; // 0 = full width
-	int height; // 0 = full height, -1 = auto
-	String headerBackgroundColor;
-	String modalBackgroundDimmingColor;
-    boolean closeable; // show "close" special tool button
-    boolean closeOnEscape; // close if the user presses escape
-    boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
-
-	command show(int animationDuration);
-	command close(int animationDuration);
-	command setCloseable(boolean closeable);
-	command setCloseOnEscape(boolean closeOnEscape);
-	command setCloseOnClickOutside(boolean closeOnClickOutside);
-	command setModal(boolean modal);
-	command setModalBackgroundDimmingColor(String modalBackgroundDimmingColor);
-	command setSize(int width, int height);
-}
-
-class DtoElegantPanel extends DtoComponent {
-	String bodyBackgroundColor;
-	DtoComponent* content;
-	DtoSpacing padding;
-	DtoJustifyContent horizontalContentAlignment;
-	int maxContentWidth; // 0 = 100%
-
-	command setContent(DtoComponent* content);
-}
-
-enum WindowButtonType {
-	MINIMIZE, MAXIMIZE_RESTORE, CLOSE
 }

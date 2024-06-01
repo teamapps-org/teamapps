@@ -18,21 +18,23 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiPageViewBlock_Alignment, DtoPageViewBlock} from "../generated/DtoPageViewBlock";
-import {DtoMessagePageViewBlock} from "../generated/DtoMessagePageViewBlock";
-import {insertAfter, insertBefore, parseHtml, removeClassesByFunction, removeDangerousTags} from "./Common";
-import {DtoComponent} from "../generated/DtoComponent";
-import {DtoCitationPageViewBlock} from "../generated/DtoCitationPageViewBlock";
-import {DtoComponentPageViewBlock} from "../generated/DtoComponentPageViewBlock";
-import {DtoPageView} from "../generated/DtoPageView";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiPageViewBlockCreatorImageAlignment} from "../generated/UiPageViewBlockCreatorImageAlignment";
-import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
-import {UiComponent} from "./UiComponent";
-import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
-import {UiToolButton} from "./micro-components/UiToolButton";
-// require("bootstrap/js/transition");
-// require("bootstrap/js/carousel");
+import {
+	AbstractLegacyComponent, Component,
+	executeWhenFirstDisplayed, insertAfter,
+	insertBefore,
+	parseHtml,
+	ServerObjectChannel, Template
+} from "projector-client-object-api";
+import {
+	BlockAlignment,
+	CreatorImageAlignment,
+	DtoBlock,
+	DtoBlogView,
+	DtoCitationBlock,
+	DtoComponentBlock,
+	DtoMessageBlock
+} from "./generated";
+import {removeClassesByFunction, removeDangerousTags, ToolButton} from "teamapps-client-core-components";
 import {fixed_partition} from "image-layout";
 
 
@@ -47,15 +49,15 @@ interface Row {
 interface Block {
 	$blockWrapper: HTMLElement;
 	$blockContentContainer: HTMLElement;
-	block: AbstractBlockComponent<DtoPageViewBlock>;
+	block: AbstractBlockComponent<DtoBlock>;
 }
 
-export class BlogView extends AbstractLegacyComponent<DtoPageView> {
+export class BlogView extends AbstractLegacyComponent<DtoBlogView> {
 
 	private $component: HTMLElement;
 	private rows: Row[] = [];
 
-	constructor(config: DtoPageView, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoBlogView, serverObjectChannel: ServerObjectChannel) {
 		super(config, serverObjectChannel);
 		this.$component = parseHtml(`<div class="UiPageView"></div>`);
 
@@ -71,17 +73,17 @@ export class BlogView extends AbstractLegacyComponent<DtoPageView> {
 	}
 
 	@executeWhenFirstDisplayed()
-	public addBlock(blockConfig: DtoPageViewBlock, before: boolean, otherBlockId?: string) {
+	public addBlock(blockConfig: DtoBlock, before: boolean, otherBlockId?: string) {
 		let row;
 		if (this.rows.length == 0) {
 			row = this.addRow(false);
 		} else if (before && otherBlockId == null) {
 			row = this.rows[0];
-			if (row.blocks[0].block.getAlignment() == UiPageViewBlock_Alignment.FULL) {
+			if (row.blocks[0].block.getAlignment() == BlockAlignment.FULL) {
 				row = this.addRow(true);
 			}
 		} else if (!before && otherBlockId == null) {
-			if (blockConfig.alignment === UiPageViewBlock_Alignment.FULL) {
+			if (blockConfig.alignment === BlockAlignment.FULL) {
 				this.addRow(false);
 			}
 			row = this.rows[this.rows.length - 1];
@@ -93,16 +95,16 @@ export class BlogView extends AbstractLegacyComponent<DtoPageView> {
     <div class="background-color-div"></div>
 </div>`);
 		let $blockContentContainer = $blockWrapper.querySelector<HTMLElement>(':scope .background-color-div');
-		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig) as AbstractBlockComponent<DtoPageViewBlock>;
+		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig) as AbstractBlockComponent<DtoBlock>;
 		$blockContentContainer.appendChild(block.getMainDomElement());
 		row.blocks.push({$blockWrapper, $blockContentContainer, block});
 
 		// TODO prepend vs append vs insert...
-		if (blockConfig.alignment === UiPageViewBlock_Alignment.FULL) {
+		if (blockConfig.alignment === BlockAlignment.FULL) {
 			row.$headerContainer.appendChild($blockWrapper);
-		} else if (blockConfig.alignment === UiPageViewBlock_Alignment.LEFT) {
+		} else if (blockConfig.alignment === BlockAlignment.LEFT) {
 			row.$leftColumn.appendChild($blockWrapper);
-		} else if (blockConfig.alignment === UiPageViewBlock_Alignment.RIGHT) {
+		} else if (blockConfig.alignment === BlockAlignment.RIGHT) {
 			row.$rightColumn.appendChild($blockWrapper);
 		}
 	}
@@ -155,7 +157,7 @@ export class BlogView extends AbstractLegacyComponent<DtoPageView> {
 
 }
 
-abstract class AbstractBlockComponent<C extends DtoPageViewBlock> {
+abstract class AbstractBlockComponent<C extends DtoBlock> {
 	constructor(protected config: C) {
 	}
 
@@ -174,7 +176,7 @@ abstract class AbstractBlockComponent<C extends DtoPageViewBlock> {
 	}
 }
 
-class UiMessagePageViewBlock extends AbstractBlockComponent<DtoMessagePageViewBlock> {
+class UiMessageBlock extends AbstractBlockComponent<DtoMessageBlock> {
 	private $main: HTMLElement;
 	private $toolButtons: Element;
 	private $topRecord: HTMLElement;
@@ -188,10 +190,10 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<DtoMessagePageViewBl
 
 	private readonly minIdealImageHeight = 250;
 
-	constructor(config: DtoMessagePageViewBlock, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+	constructor(config: DtoMessageBlock, serverObjectChannel: ServerObjectChannel) {
+		super(config);
 
-		this.$main = parseHtml(`<div class="pageview-block UiMessagePageViewBlock">
+		this.$main = parseHtml(`<div class="pageview-block UiMessageBlock">
 	<div class="tool-buttons"></div>
 	<div class="top-record"></div>
 	<div class="html"></div>
@@ -203,14 +205,13 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<DtoMessagePageViewBl
 		this.$images = this.$main.querySelector(":scope .images");
 
 		this.$toolButtons.innerHTML = '';
-		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
+		config.toolButtons && config.toolButtons.forEach((tb: ToolButton) => {
 			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 
 		removeClassesByFunction(this.$topRecord.classList, className => className.startsWith("align-"));
-		this.$topRecord.classList.add("align-" + UiHorizontalElementAlignment[config.topRecordAlignment].toLocaleLowerCase());
-		let topTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.topTemplate);
-		this.$topRecord.innerHTML = config.topRecord != null ? topTemplateRenderer.render(config.topRecord.values) : "";
+		this.$topRecord.classList.add("align-" + config.topRecordAlignment);
+		this.$topRecord.innerHTML = config.topRecord != null ? (config.topTemplate as Template).render(config.topRecord.values) : "";
 
 		this.$htmlContainer.innerHTML = config.html != null ? removeDangerousTags(config.html) : "";
 
@@ -267,18 +268,18 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<DtoMessagePageViewBl
 
 }
 
-class UiCitationPageViewBlock extends AbstractBlockComponent<DtoCitationPageViewBlock> {
+class UiCitationBlock extends AbstractBlockComponent<DtoCitationBlock> {
 
 	private $main: HTMLElement;
 	private $toolButtons: Element;
 
-	constructor(config: DtoCitationPageViewBlock, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+	constructor(config: DtoCitationBlock, serverObjectChannel: ServerObjectChannel) {
+		super(config);
 
-		this.$main = parseHtml(`<div class="pageview-block UiCitationPageViewBlock">
+		this.$main = parseHtml(`<div class="pageview-block UiCitationBlock">
     <div class="tool-buttons"></div>
     <div class="flex-container">
-	    <div class="creator-image-wrapper align-${UiPageViewBlockCreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
+	    <div class="creator-image-wrapper align-${CreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
 			${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"></img>` : ''}
 	    </div>
 	    <div class="content-wrapper"></div>
@@ -290,7 +291,7 @@ class UiCitationPageViewBlock extends AbstractBlockComponent<DtoCitationPageView
 
 		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 		this.$toolButtons.innerHTML = '';
-		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
+		config.toolButtons && config.toolButtons.forEach((tb: ToolButton) => {
 			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 
@@ -310,17 +311,17 @@ class UiCitationPageViewBlock extends AbstractBlockComponent<DtoCitationPageView
 	}
 }
 
-class UiComponentPageViewBlock extends AbstractBlockComponent<DtoComponentPageViewBlock> {
+class UiComponentBlock extends AbstractBlockComponent<DtoComponentBlock> {
 
 	private $main: HTMLElement;
-	private component: UiComponent<DtoComponent>;
+	private component: Component;
 	private $componentWrapper: HTMLElement;
 	private $toolButtons: Element;
 
-	constructor(config: DtoComponentPageViewBlock, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+	constructor(config: DtoComponentBlock, serverObjectChannel: ServerObjectChannel) {
+		super(config);
 
-		this.$main = parseHtml(`<div class="pageview-block UiComponentPageViewBlock" style="height:${config.height}px">
+		this.$main = parseHtml(`<div class="pageview-block UiComponentBlock" style="height:${config.height}px">
 	<div class="tool-buttons"></div>
                 <div class="component-wrapper"></div>
             </div>`);
@@ -328,7 +329,7 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<DtoComponentPageVi
 		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 
 		this.$toolButtons.innerHTML = '';
-		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
+		config.toolButtons && config.toolButtons.forEach((tb: ToolButton) => {
 			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 		
@@ -336,7 +337,7 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<DtoComponentPageVi
 			this.$main.prepend($(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
 		}
 
-		this.component = config.component as UiComponent;
+		this.component = config.component as Component;
 		this.$componentWrapper.appendChild(this.component.getMainElement());
 	}
 
@@ -349,9 +350,9 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<DtoComponentPageVi
 }
 
 var blockTypes = {
-	"UiMessagePageViewBlock": UiMessagePageViewBlock,
-	"UiCitationPageViewBlock": UiCitationPageViewBlock,
-	"UiComponentPageViewBlock": UiComponentPageViewBlock
+	"DtoMessageBlock": UiMessageBlock,
+	"DtoCitationBlock": UiCitationBlock,
+	"DtoComponentBlock": UiComponentBlock
 };
 
 

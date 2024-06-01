@@ -17,48 +17,46 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.common.pageview;
+package org.teamapps.projector.components.blogview;
 
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
-import org.teamapps.projector.components.common.dto.DtoClientRecord;
-import org.teamapps.projector.components.common.dto.DtoMessagePageViewBlock;
-import org.teamapps.projector.format.HorizontalElementAlignment;
-import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.projector.record.DtoClientRecord;
 import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.util.List;
 
-public class MessageBlogViewBlock<RECORD> extends AbstractPageViewBlock {
+public class MessageBlock<RECORD> extends AbstractBlock {
 
 	private Template topTemplate = BaseTemplates.LIST_ITEM_LARGE_ICON_TWO_LINES;
 	private RECORD topRecord;
 	private PropertyProvider<RECORD> topRecordPropertyProvider = new BeanPropertyExtractor<>();
-	private HorizontalElementAlignment topRecordAlignment = HorizontalElementAlignment.LEFT;
+	private TopRecordElementAlignment topRecordAlignment = TopRecordElementAlignment.LEFT;
 	private String html;
 	private List<String> imageUrls;
 
-	public MessageBlogViewBlock() {
+	public MessageBlock() {
 	}
 
-	public MessageBlogViewBlock(Template topTemplate, RECORD topRecord) {
+	public MessageBlock(Template topTemplate, RECORD topRecord) {
 		this.topTemplate = topTemplate;
 		this.topRecord = topRecord;
 	}
 
-	public MessageBlogViewBlock(PageViewBlockAlignment alignment, Template topTemplate, RECORD topRecord) {
+	public MessageBlock(BlockAlignment alignment, Template topTemplate, RECORD topRecord) {
 		super(alignment);
 		this.topTemplate = topTemplate;
 		this.topRecord = topRecord;
 	}
 
-	public DtoMessagePageViewBlock createUiBlock() {
-		DtoMessagePageViewBlock uiBlock = new DtoMessagePageViewBlock();
-		mapAbstractPageViewBlockAttributes(uiBlock);
-		uiBlock.setTopTemplate(topTemplate != null ? topTemplate.createDtoReference() : null);
+	public DtoMessageBlock createUiBlock() {
+		DtoMessageBlock uiBlock = new DtoMessageBlock();
+		mapAbstractBlockAttributes(uiBlock);
+		uiBlock.setTopTemplate(topTemplate != null ? topTemplate : null);
 		uiBlock.setTopRecord(topRecord != null ? new DtoClientRecord().setValues(topRecordPropertyProvider.getValues(topRecord, topTemplate.getPropertyNames())) : null);
-		uiBlock.setTopRecordAlignment(topRecordAlignment.toUiHorizontalElementAlignment());
+		uiBlock.setTopRecordAlignment(topRecordAlignment);
 		uiBlock.setHtml(html);
 		uiBlock.setImageUrls(imageUrls);
 		return uiBlock;
@@ -92,11 +90,11 @@ public class MessageBlogViewBlock<RECORD> extends AbstractPageViewBlock {
 		this.setTopRecordPropertyProvider(propertyExtractor);
 	}
 
-	public HorizontalElementAlignment getTopRecordAlignment() {
+	public TopRecordElementAlignment getTopRecordAlignment() {
 		return topRecordAlignment;
 	}
 
-	public void setTopRecordAlignment(HorizontalElementAlignment topRecordAlignment) {
+	public void setTopRecordAlignment(TopRecordElementAlignment topRecordAlignment) {
 		this.topRecordAlignment = topRecordAlignment;
 	}
 

@@ -21,18 +21,21 @@ import {TrivialDateTimeField} from "./trivial-components/TrivialDateTimeField";
 import {DateTime} from "luxon";
 import {DateSuggestionEngine} from "./DateSuggestionEngine";
 import {createDateRenderer, createTimeRenderer} from "./datetime-rendering";
-import {DtoAbstractDateTimeField, DtoAbstractDateTimeFieldCommandHandler, DtoAbstractDateTimeFieldEventSource} from "./generated";
 import {
-	AbstractField, DtoDateTimeFormatDescriptor, DtoFieldEditingMode,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent
+	DtoAbstractDateTimeField, DtoAbstractDateTimeField_TextInputEvent,
+	DtoAbstractDateTimeFieldCommandHandler,
+	DtoAbstractDateTimeFieldEventSource,
+	DtoComboBox_TextInputEvent
+} from "./generated";
+import {
+	AbstractField, DebounceMode, DtoDateTimeFormatDescriptor, FieldEditingMode, DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	DtoTextInputHandlingField_TextInputEvent, TeamAppsEvent
 } from "teamapps-client-core-components";
-import {TeamAppsEvent} from "teamapps-client-core";
 
 export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, V> extends AbstractField<C, V> implements DtoAbstractDateTimeFieldEventSource, DtoAbstractDateTimeFieldCommandHandler {
 
-	onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent();
-	onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent();
+	public readonly onTextInput: TeamAppsEvent<DtoAbstractDateTimeField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialDateTimeField: TrivialDateTimeField;
 	protected dateSuggestionEngine: DateSuggestionEngine;
@@ -50,7 +53,7 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 			dateFormat: config.dateFormat,
 			timeFormat: config.timeFormat,
 			showTrigger: config.showDropDownButton,
-			editingMode: config.editingMode === DtoFieldEditingMode.READONLY ? 'readonly' : config.editingMode === DtoFieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			favorPastDates: config.favorPastDates
 		});
 		this.trivialDateTimeField.getMainDomElement().classList.add("DtoAbstractDateTimeField");
@@ -99,12 +102,12 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 		this.trivialDateTimeField.focus();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.values(AbstractField.editingModeCssClasses));
-		this.getMainElement().classList.add(AbstractField.editingModeCssClasses[editingMode]);
-		if (editingMode === DtoFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.add(editingMode);
+		if (editingMode === FieldEditingMode.READONLY) {
 			this.trivialDateTimeField.setEditingMode("readonly");
-		} else if (editingMode === DtoFieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingMode.DISABLED) {
 			this.trivialDateTimeField.setEditingMode("disabled");
 		} else {
 			this.trivialDateTimeField.setEditingMode("editable");

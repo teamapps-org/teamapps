@@ -20,7 +20,6 @@
 package org.teamapps.projector.session;
 
 import com.devskiller.friendly_id.FriendlyId;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.ULocale;
@@ -37,8 +36,8 @@ import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.*;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
-import org.teamapps.projector.clientobject.component.Component;
-import org.teamapps.projector.dto.DtoGlobals;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.DtoGlobals;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.i18n.ResourceBundleTranslationProvider;

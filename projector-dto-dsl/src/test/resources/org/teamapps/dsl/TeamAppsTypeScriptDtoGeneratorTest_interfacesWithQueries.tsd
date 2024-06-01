@@ -12,6 +12,7 @@ export interface X {
 
 export interface XServerObjectChannel extends ServerObjectChannel {
 
+
     sendQuery(eventName: "queryEntries", x: number): Promise<string[]>;
 
 }

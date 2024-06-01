@@ -17,48 +17,44 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.common.pageview;
+package org.teamapps.projector.components.blogview;
 
-import org.teamapps.projector.components.common.dto.DtoPageViewBlock;
-import org.teamapps.ux.component.toolbutton.ToolButton;
+import org.teamapps.projector.components.essential.toolbutton.ToolButton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-public abstract class AbstractPageViewBlock {
+public abstract class AbstractBlock {
 
 	private final String clientId = UUID.randomUUID().toString();
-	private PageViewBlockAlignment alignment = PageViewBlockAlignment.FULL;
+	private BlockAlignment alignment = BlockAlignment.FULL;
 	private List<ToolButton> toolButtons = new ArrayList<>();
 
-	public AbstractPageViewBlock() {
+	public AbstractBlock() {
 	}
 
-	public AbstractPageViewBlock(PageViewBlockAlignment alignment) {
+	public AbstractBlock(BlockAlignment alignment) {
 		this.alignment = alignment;
 	}
 
-	public abstract DtoPageViewBlock createUiBlock();
+	public abstract DtoBlock createUiBlock();
 
-	protected void mapAbstractPageViewBlockAttributes(DtoPageViewBlock uiBlock) {
+	protected void mapAbstractBlockAttributes(DtoBlock uiBlock) {
 		uiBlock.setId(clientId);
-		uiBlock.setAlignment(alignment.toUiAlignment());
-		uiBlock.setToolButtons(toolButtons.stream()
-				.map(button -> button.createDtoReference())
-				.collect(Collectors.toList()));
+		uiBlock.setAlignment(alignment);
+		uiBlock.setToolButtons(List.copyOf(toolButtons));
 	}
 
 	/*package-private*/ String getClientId() {
 		return clientId;
 	}
 
-	public PageViewBlockAlignment getAlignment() {
+	public BlockAlignment getAlignment() {
 		return alignment;
 	}
 
-	public AbstractPageViewBlock setAlignment(PageViewBlockAlignment alignment) {
+	public AbstractBlock setAlignment(BlockAlignment alignment) {
 		this.alignment = alignment;
 		return this;
 	}
@@ -67,7 +63,7 @@ public abstract class AbstractPageViewBlock {
 		return toolButtons;
 	}
 
-	public AbstractPageViewBlock setToolButtons(List<ToolButton> toolButtons) {
+	public AbstractBlock setToolButtons(List<ToolButton> toolButtons) {
 		this.toolButtons = toolButtons;
 		return this;
 	}

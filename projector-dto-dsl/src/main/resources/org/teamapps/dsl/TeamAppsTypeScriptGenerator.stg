@@ -103,7 +103,7 @@ export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.supe
 }
 <endif>
 
-<serverObjectChannelInterface(c)>
+<if(c.hasEventsOrQueries)><serverObjectChannelInterface(c)><endif>
 <if(c.hasStaticEventsOrQueries)><staticServerObjectChannelInterface(c)><endif>
 
 <c.events:eventInterface(); separator="\n\n">
@@ -135,8 +135,9 @@ indexTs(classes, interfaces, enums) ::= <<
 serverObjectChannelInterface(c) ::= <<
 export interface <c.name>ServerObjectChannel extends ServerObjectChannel {
 
-    <c.allNonStaticEvents:eventServerObjectChannelEventMethodStub(); separator="\n\n">
-    <c.allNonStaticQueries:eventServerObjectChannelQueryMethodStub(); separator="\n\n">
+    <c.allNonStaticEvents:serverObjectChannelEventMethodStub(); separator="\n\n">
+
+    <c.allNonStaticQueries:serverObjectChannelQueryMethodStub(); separator="\n\n">
 
 }
 >>
@@ -144,16 +145,17 @@ export interface <c.name>ServerObjectChannel extends ServerObjectChannel {
 staticServerObjectChannelInterface(c) ::= <<
 export interface Static<c.name; format="cap">ServerObjectChannel extends ServerObjectChannel {
 
-    <c.allStaticEvents:eventServerObjectChannelEventMethodStub(); separator="\n\n">
-    <c.allStaticQueries:eventServerObjectChannelQueryMethodStub(); separator="\n\n">
+    <c.allStaticEvents:serverObjectChannelEventMethodStub(); separator="\n\n">
+
+    <c.allStaticQueries:serverObjectChannelQueryMethodStub(); separator="\n\n">
 
 }
 >>
 
-eventServerObjectChannelEventMethodStub(evt) ::= <<
+serverObjectChannelEventMethodStub(evt) ::= <<
 sendEvent(eventName: "<evt.name>", eventObject: <evt.typeScriptInterfaceName>): void;
 >>
 
-eventServerObjectChannelQueryMethodStub(q) ::= <<
+serverObjectChannelQueryMethodStub(q) ::= <<
 sendQuery(eventName: "<q.name>", <q.parameters:parameter(false); separator=", ">): Promise\<<q.returnType.typeScriptTypeName>\>;
 >>

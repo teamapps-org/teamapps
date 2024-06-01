@@ -22,12 +22,12 @@ import {
 	DtoNumberField,
 	DtoNumberFieldCommandHandler,
 	DtoNumberFieldEventSource,
-	DtoNumberFieldSliderMode,
+	NumberFieldSliderMode,
 	SpecialKey,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {DtoFieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {FieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {NumberParser} from "../../util/NumberParser";
 
 export class NumberField extends AbstractField<DtoNumberField, number> implements DtoNumberFieldEventSource, DtoNumberFieldCommandHandler {
@@ -44,7 +44,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 
 	private minValue: number;
 	private maxValue: number;
-	private sliderMode: DtoNumberFieldSliderMode;
+	private sliderMode: NumberFieldSliderMode;
 	private sliderStep: number;
 	private commitOnSliderChange: boolean;
 
@@ -92,12 +92,12 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		});
 
 		this.$field.addEventListener("focus", () => {
-			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
 				this.$field.select();
 			}
 		});
 		this.$field.addEventListener("blur", (e) => {
-			if (this.getEditingMode() !== DtoFieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
@@ -151,7 +151,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 
 	private handleDrag(e: PointerEvent & TouchEvent) {
 		const isSpecialMouseButton = e.button != null && e.button !== 0;
-		if (isSpecialMouseButton || this.getEditingMode() === DtoFieldEditingMode.DISABLED) {
+		if (isSpecialMouseButton || this.getEditingMode() === FieldEditingMode.DISABLED) {
 			return;
 		}
 		if (!this.hasFocus()) { // TODO && !this._context.config.optimizedForTouch
@@ -302,7 +302,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		this.$field.select();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
@@ -369,12 +369,12 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		this.setSliderPositionByValue(this.getTransientValue());
 	}
 
-	setSliderMode(sliderMode: DtoNumberFieldSliderMode): void {
+	setSliderMode(sliderMode: NumberFieldSliderMode): void {
 		this.sliderMode = sliderMode;
-		this.$wrapper.classList.toggle("slider-mode-disabled", sliderMode === DtoNumberFieldSliderMode.DISABLED);
-		this.$wrapper.classList.toggle("slider-mode-visible", sliderMode === DtoNumberFieldSliderMode.VISIBLE);
-		this.$wrapper.classList.toggle("slider-mode-visible-if-focused", sliderMode === DtoNumberFieldSliderMode.VISIBLE_IF_FOCUSED);
-		this.$wrapper.classList.toggle("slider-mode-slider-only", sliderMode === DtoNumberFieldSliderMode.SLIDER_ONLY);
+		this.$wrapper.classList.toggle("slider-mode-disabled", sliderMode === NumberFieldSliderMode.DISABLED);
+		this.$wrapper.classList.toggle("slider-mode-visible", sliderMode === NumberFieldSliderMode.VISIBLE);
+		this.$wrapper.classList.toggle("slider-mode-visible-if-focused", sliderMode === NumberFieldSliderMode.VISIBLE_IF_FOCUSED);
+		this.$wrapper.classList.toggle("slider-mode-slider-only", sliderMode === NumberFieldSliderMode.SLIDER_ONLY);
 	}
 
 	setSliderStep(sliderStep: number): void {

@@ -19,8 +19,6 @@
  */
 package org.teamapps.projector.format;
 
-import org.teamapps.projector.dto.DtoSpacing;
-
 public class Spacing {
 
 	private final Length top;

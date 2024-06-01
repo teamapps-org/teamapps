@@ -27,7 +27,7 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.event.Disposable;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
+import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.components.calendar.dto.DtoCalendar;
 import org.teamapps.projector.components.calendar.dto.DtoCalendarEventClientRecord;
 import org.teamapps.projector.components.calendar.dto.DtoCalendarEventRenderingStyle;

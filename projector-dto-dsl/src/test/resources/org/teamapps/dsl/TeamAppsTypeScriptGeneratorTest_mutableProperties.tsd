@@ -18,5 +18,6 @@ export interface ACommandHandler {
 export interface AServerObjectChannel extends ServerObjectChannel {
 
 
+
 }
 

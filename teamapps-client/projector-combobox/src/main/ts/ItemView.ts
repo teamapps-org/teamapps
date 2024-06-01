@@ -18,17 +18,24 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, DtoIdentifiableClientRecord, generateUUID, parseHtml, TeamAppsEvent, Template} from "teamapps-client-core";
 import {
 	DtoItemView,
 	DtoItemView_ItemClickedEvent,
 	DtoItemViewCommandHandler,
 	DtoItemViewEventSource,
 	DtoItemViewItemBackgroundMode,
-	DtoItemViewItemGroup
+	DtoItemViewItemGroup, DtoItemViewServerObjectChannel
 } from "./generated";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
-import {DEFAULT_TEMPLATES, trivialMatch} from "./trivial-components/TrivialCore";
+import {DEFAULT_TEMPLATES} from "./trivial-components/TrivialCore";
+import {
+	AbstractLegacyComponent,
+	DtoIdentifiableClientRecord,
+	generateUUID,
+	parseHtml,
+	TeamAppsEvent,
+	Template
+} from "projector-client-object-api";
 
 export class ItemView extends AbstractLegacyComponent<DtoItemView> implements DtoItemViewCommandHandler, DtoItemViewEventSource {
 
@@ -38,8 +45,8 @@ export class ItemView extends AbstractLegacyComponent<DtoItemView> implements Dt
 	private groupsByGroupId: { [index: string]: ItemGroup } = {};
 	private filterString: string = "";
 
-	constructor(config: DtoItemView, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+	constructor(config: DtoItemView, private soc: DtoItemViewServerObjectChannel) {
+		super(config, soc);
 
 		this.$itemView = parseHtml('<div class="UiItemView"></div>');
 		this.$itemView.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";
@@ -98,7 +105,7 @@ export class ItemView extends AbstractLegacyComponent<DtoItemView> implements Dt
 	public addItem(groupId: string, item: DtoIdentifiableClientRecord): void {
 		const itemGroup = this.groupsByGroupId[groupId];
 		if (!itemGroup) {
-			console.error(`Cannot find group ${groupId} in UiItemView ` + this.config.id);
+			console.error(`Cannot find group ${groupId}`);
 			return;
 		}
 		itemGroup.addItem(item);
@@ -107,7 +114,7 @@ export class ItemView extends AbstractLegacyComponent<DtoItemView> implements Dt
 	public removeItem(groupId: string, itemId: number): void {
 		const itemGroup = this.groupsByGroupId[groupId];
 		if (!itemGroup) {
-			console.error(`Cannot find group ${groupId} in UiItemView ` + this.config.id);
+			console.error(`Cannot find group ${groupId}`);
 			return;
 		}
 		itemGroup.removeItem(itemId);

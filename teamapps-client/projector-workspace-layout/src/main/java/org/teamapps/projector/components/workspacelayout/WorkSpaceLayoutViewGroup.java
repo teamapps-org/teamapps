@@ -20,7 +20,7 @@
 package org.teamapps.projector.components.workspacelayout;
 
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.component.Component;
 import org.teamapps.projector.components.workspacelayout.definition.ViewDefinition;
 import org.teamapps.projector.components.workspacelayout.definition.ViewGroupDefinition;
 import org.teamapps.projector.components.workspacelayout.dto.DtoWorkSpaceLayoutItem;

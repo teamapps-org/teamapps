@@ -20,22 +20,29 @@
 import {TrivialComboBox} from "./trivial-components/TrivialComboBox";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 
-import {DtoComboBox, DtoComboBoxCommandHandler, DtoComboBoxEventSource, DtoComboBoxTreeRecord} from "./generated";
+import {
+	DtoComboBox,
+	DtoComboBox_TextInputEvent,
+	DtoComboBoxCommandHandler,
+	DtoComboBoxEventSource, DtoComboBoxServerObjectChannel,
+	DtoComboBoxTreeRecord
+} from "./generated";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {
-	AbstractField, buildObjectTree, DtoFieldEditingMode, SpecialKey,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent, NodeWithChildren
+	AbstractField,
+	buildObjectTree,
+	DebounceMode,
+	FieldEditingMode, DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	NodeWithChildren, SpecialKey, TeamAppsEvent, Template
 } from "teamapps-client-core-components";
-import {TeamAppsEvent, Template} from "teamapps-client-core";
 
 export function isFreeTextEntry(o: DtoComboBoxTreeRecord): boolean {
 	return o != null && o.id < 0;
 }
 
 export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> implements DtoComboBoxEventSource, DtoComboBoxCommandHandler {
-	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<DtoComboBox_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private trivialComboBox: TrivialComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
 	private freeTextIdEntryCounter = -1;
@@ -43,6 +50,10 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 	private trivialTreeBox: TrivialTreeBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
 
 	private treeBoxDropdown: TreeBoxDropdown<DtoComboBoxTreeRecord & { __children?: NodeWithChildren<DtoComboBoxTreeRecord>[] }>;
+
+	constructor(config: DtoComboBox, private soc: DtoComboBoxServerObjectChannel) {
+		super(config, soc);
+	}
 
 	protected initialize(config: DtoComboBox) {
 
@@ -52,7 +63,10 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 			showExpanders: config.expandersVisible,
 			entryRenderingFunction: entry => this.renderRecord(entry, true),
 			idFunction: entry => entry && entry.id,
-			lazyChildrenQueryFunction: async (node: NodeWithChildren<DtoComboBoxTreeRecord>) => buildObjectTree(await config.lazyChildren({parentId: node.id}), "id", "parentId"),
+			lazyChildrenQueryFunction: async (node: NodeWithChildren<DtoComboBoxTreeRecord>) => {
+				let children = await this.soc.sendQuery("lazyChildren", node.id);
+				return buildObjectTree(children, "id", "parentId");
+			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			selectableDecider: entry => entry.selectable,
 			selectOnHover: true,
@@ -60,7 +74,7 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 		});
 		this.treeBoxDropdown = new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
-				return config.retrieveDropdownEntries({queryString})
+				return this.soc.sendQuery("retrieveDropdownEntries", queryString)
 					.then(entries => buildObjectTree(entries, "id", "parentId"));
 			},
 			textHighlightingEntryLimit: config.textHighlightingEntryLimit,
@@ -78,7 +92,7 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 			},
 			autoComplete: !!config.autoCompletionEnabled,
 			showTrigger: config.dropDownButtonVisible,
-			editingMode: config.editingMode === DtoFieldEditingMode.READONLY ? 'readonly' : config.editingMode === DtoFieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
 
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
 			showClearButton: config.clearButtonEnabled,
@@ -163,12 +177,12 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 		}
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.values(AbstractField.editingModeCssClasses));
-		this.getMainElement().classList.add(AbstractField.editingModeCssClasses[editingMode]);
-		if (editingMode === DtoFieldEditingMode.READONLY) {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.add(editingMode);
+		if (editingMode === FieldEditingMode.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
-		} else if (editingMode === DtoFieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingMode.DISABLED) {
 			this.trivialComboBox.setEditingMode("disabled");
 		} else {
 			this.trivialComboBox.setEditingMode("editable");

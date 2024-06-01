@@ -17,20 +17,23 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.dto;
+package "teamapps-client-core-components":org.teamapps.projector.components.essential.tabpanel;
 
-import org.teamapps.projector.dto.DtoComponent;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.components.essential.dto.DtoToolButton;
+import org.teamapps.projector.components.essential.panel.WindowButtonType;
+import org.teamapps.projector.components.essential.toolbar.DtoToolbar;
 
 class DtoTabPanel extends DtoComponent {
 	List<DtoTab> tabs;
 	String selectedTabId; // TODO
 	boolean hideTabBarIfSingleTab; // if true and there is only one tab, then the tab bar is hidden. Tool buttons pop up when hovering over the top 50px of the tab panel.
-	DtoTabPanelTabStyle tabStyle; // if true and there is only one tab, then the tab bar is hidden.
+	TabPanelTabStyle tabStyle; // if true and there is only one tab, then the tab bar is hidden.
 	List<DtoToolButton*> toolButtons; // shown inside a right-aligned space in the tab bar
 	List<WindowButtonType> windowButtons;
 
 	command setHideTabBarIfSingleTab(boolean hideTabBarIfSingleTab);
-	command setTabStyle(DtoTabPanelTabStyle tabStyle);
+	command setTabStyle(TabPanelTabStyle tabStyle);
 	command setToolButtons(List<DtoToolButton*> toolButtons);
 	command setWindowButtons(List<WindowButtonType> windowButtons);
 	command selectTab(String tabId);
@@ -47,7 +50,7 @@ class DtoTabPanel extends DtoComponent {
 	event windowButtonClicked(WindowButtonType windowButton);
 }
 
-enum DtoTabPanelTabStyle {
+enum TabPanelTabStyle {
     BLOCKS, EARS
 }
 

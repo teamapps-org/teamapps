@@ -19,7 +19,7 @@
  */
 import {DtoDisplayField, DtoDisplayFieldCommandHandler, DtoDisplayFieldEventSource} from "../../generated";
 import {AbstractField} from "projector-client-object-api";
-import {DtoFieldEditingMode, parseHtml} from "projector-client-object-api";
+import {FieldEditingMode, parseHtml} from "projector-client-object-api";
 import {escapeHtml, removeTags} from "../../Common";
 
 
@@ -81,7 +81,7 @@ export class DisplayField extends AbstractField<DtoDisplayField, string> impleme
 		return this.getCommittedValue();
 	}
 
-	protected onEditingModeChanged(editingMode: DtoFieldEditingMode): void {
+	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => null);
 	}
 

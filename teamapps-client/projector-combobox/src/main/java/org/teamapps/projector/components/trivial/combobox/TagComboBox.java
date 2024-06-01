@@ -19,18 +19,21 @@
  */
 package org.teamapps.projector.components.trivial.combobox;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.dto.DtoAbstractField;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
+import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
 import org.teamapps.projector.components.trivial.dto.DtoTagComboBox;
+import org.teamapps.projector.components.trivial.dto.DtoTagComboBoxClientObjectChannel;
+import org.teamapps.projector.components.trivial.dto.TagComboBoxWrappingMode;
 import org.teamapps.projector.components.trivial.tree.model.ComboBoxModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfoExtractor;
-import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.template.Template;
 
 import java.lang.invoke.MethodHandles;
@@ -42,11 +45,13 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+	private final DtoTagComboBoxClientObjectChannel clientObjectChannel = new DtoTagComboBoxClientObjectChannel(getClientObjectChannel());
+
 	public final ProjectorEvent<String> onFreeTextEntered = new ProjectorEvent<>();
 	public final ProjectorEvent<String> onFreeTextRemoved = new ProjectorEvent<>();
 
 	private int maxEntries; // if 0, then the list is unbounded
-	private TagBoxWrappingMode wrappingMode = TagBoxWrappingMode.MULTI_LINE;
+	private TagComboBoxWrappingMode wrappingMode = TagComboBoxWrappingMode.MULTI_LINE;
 	private boolean distinct = false; // if true, do not allow the same entry to be selected multiple times!
 	private boolean twoStepDeletionEnabled = false; // This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
 	private boolean deleteButtonsEnabled = false;
@@ -118,7 +123,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 		DtoTagComboBox comboBox = new DtoTagComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		comboBox.setMaxEntries(maxEntries);
-		comboBox.setWrappingMode(this.wrappingMode.toDtoValue());
+		comboBox.setWrappingMode(this.wrappingMode);
 		comboBox.setDistinct(distinct);
 		comboBox.setTwoStepDeletionEnabled(twoStepDeletionEnabled);
 		comboBox.setDeleteButtonsEnabled(deleteButtonsEnabled);
@@ -132,28 +137,30 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	@Override
-	public List<RECORD> convertClientValueToServerValue(Object value) {
-		if (value != null && !(value instanceof List)) {
-			throw new IllegalArgumentException("Invalid TagComboBox value coming from ui: " + value);
+	public List<RECORD> doConvertClientValueToServerValue(JsonNode node) {
+		if (node != null && !node.isArray()) {
+			throw new IllegalArgumentException("Invalid TagComboBox value coming from ui: " + node);
 		}
 
-		if (value == null) {
-			value = Collections.emptyList();
+		Iterable<JsonNode> values;
+		if (node == null || node.isNull()) {
+			values = Collections.emptyList();
+		} else {
+			values = node;
 		}
 
-		List<Object> uiValues = (List<Object>) value;
 		List<RECORD> records = new ArrayList<>();
 		List<String> uiFreeTextEntries = new ArrayList<>();
-		for (Object entry : uiValues) {
-			if (entry instanceof Integer) {
-				RECORD recordFromSelectedRecordCache = recordCache.getRecordByClientId((Integer) entry);
+		for (JsonNode entry : values) {
+			if (entry.isNumber()) {
+				RECORD recordFromSelectedRecordCache = recordCache.getRecordByClientId(entry.intValue());
 				if (recordFromSelectedRecordCache == null) {
 					LOGGER.error("Could not find record in client record cache: " + entry);
 				} else {
 					records.add(recordFromSelectedRecordCache);
 				}
 			} else {
-				uiFreeTextEntries.add("" + entry);
+				uiFreeTextEntries.add(entry.textValue());
 			}
 		}
 
@@ -167,12 +174,11 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 					CacheManipulationHandle<DtoComboBoxTreeRecord> cacheResponse = recordCache.addRecord(record);
 					records.add(record);
 
-					if (isRendered()) {
-						final DtoTagComboBox.ReplaceFreeTextEntryCommand replaceFreeTextEntryCommand = new DtoTagComboBox.ReplaceFreeTextEntryCommand(newFreeText, cacheResponse.getAndClearResult());
-						getSessionContext().sendCommandIfRendered(this, () -> replaceFreeTextEntryCommand.get(), aVoid -> cacheResponse.commit());
-					} else {
+					boolean sent = clientObjectChannel.replaceFreeTextEntry(newFreeText, cacheResponse.getAndClearResult(), unused -> cacheResponse.commit());
+					if (!sent) {
 						cacheResponse.commit();
 					}
+					
 					uiFreeTextEntries.remove(newFreeText);
 				} else {
 					this.onFreeTextEntered.fire(newFreeText);
@@ -216,13 +222,13 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 		clientObjectChannel.setMaxEntries(maxEntries);
 	}
 
-	public TagBoxWrappingMode getWrappingMode() {
+	public TagComboBoxWrappingMode getWrappingMode() {
 		return wrappingMode;
 	}
 
-	public void setWrappingMode(TagBoxWrappingMode wrappingMode) {
+	public void setWrappingMode(TagComboBoxWrappingMode wrappingMode) {
 		this.wrappingMode = wrappingMode;
-		clientObjectChannel.setWrappingMode(wrappingMode.toDtoValue());
+		clientObjectChannel.setWrappingMode(wrappingMode);
 	}
 
 	public boolean isDistinct() {

@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.projector.dto.DtoComponent;
 import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
 import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.component.Component;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
 import org.teamapps.projector.components.infinitescroll.table.InfiniteScrollingComponentLibrary;

@@ -1,12 +1,12 @@
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoTemplate;
-import org.teamapps.projector.dto.DtoTextInputHandlingField;
-import org.teamapps.projector.dto.DtoAbstractField;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.components.essential.dto.DtoTextInputHandlingField;
+import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.components.trivial.dto.DtoTreeRecord;
 
-class DtoComboBox extends DtoAbstractField implements DtoTextInputHandlingField {
+class DtoComboBox extends DtoAbstractField {
 	mutable boolean dropDownButtonVisible;
 	mutable boolean showDropDownAfterResultsArrive;
 	mutable boolean firstEntryAutoHighlight;
@@ -21,9 +21,12 @@ class DtoComboBox extends DtoAbstractField implements DtoTextInputHandlingField 
 	mutable Integer dropDownMaxHeight;
 	mutable int indentation;
 
+	command replaceFreeTextEntry(String freeText, DtoComboBoxTreeRecord newEntry);
+
+	event textInput(String enteredString);
+
 	query lazyChildren(int parentId) returns List<DtoComboBoxTreeRecord>;
 	query retrieveDropdownEntries(String queryString) returns List<DtoComboBoxTreeRecord>;
-	command replaceFreeTextEntry(String freeText, DtoComboBoxTreeRecord newEntry);
 }
 
 class DtoComboBoxTreeRecord extends DtoTreeRecord {

@@ -20,7 +20,6 @@
 package org.teamapps.projector.format;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.dto.DtoFontStyle;
 
 public class FontStyle {
 

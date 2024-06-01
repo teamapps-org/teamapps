@@ -110,8 +110,9 @@ public class TeamAppsJavaDtoGenerator {
 			generateClass(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + ".java")));
 			generateClassJsonWrapper(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "Wrapper.java")));
 			generateClientObjectChannel(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "ClientObjectChannel.java")));
-			if (classWrapper.getAllSuperTypes(false).stream().anyMatch(t -> t.getQualifiedName().equals("org.teamapps.projector.dto.DtoClientObject"))) {
+			if (classWrapper.getAllSuperTypes(false).stream().anyMatch(t -> t.getQualifiedName().equals("org.teamapps.projector.clientobject.DtoClientObject"))) {
 				generateClientObjectEventMethodInvoker(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "EventMethodInvoker.java")));
+				generateClientObjectQueryMethodInvoker(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "QueryMethodInvoker.java")));
 				generateClientObjectEventHandlerInterface(classWrapper, new FileWriter(new File(packageDir, classWrapper.getName() + "EventHandler.java")));
 			}
 		}
@@ -168,6 +169,17 @@ public class TeamAppsJavaDtoGenerator {
 			template.write(out, new StringTemplatesErrorListener());
 			writer.close();
 		}, "Error while generating ClientObjectEventMethodInvoker for " + classContext.getName());
+	}
+
+	void generateClientObjectQueryMethodInvoker(ClassWrapper classContext, Writer writer) throws IOException {
+		System.out.println("Generating ClientObjectQueryMethodInvoker " + classContext.getName());
+		runWithExceptionMessagePrefix(() -> {
+			ST template = stGroup.getInstanceOf("queryMethodInvoker")
+					.add("c", classContext);
+			AutoIndentWriter out = new AutoIndentWriter(writer);
+			template.write(out, new StringTemplatesErrorListener());
+			writer.close();
+		}, "Error while generating ClientObjectQueryMethodInvoker for " + classContext.getName());
 	}
 
 	void generateClientObjectEventHandlerInterface(ClassWrapper classContext, Writer writer) throws IOException {

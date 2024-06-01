@@ -26,7 +26,7 @@ import org.teamapps.projector.application.ResponsiveApplication;
 import org.teamapps.projector.application.ResponsiveApplicationToolbar;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.application.view.ViewSize;
-import org.teamapps.projector.clientobject.component.Component;
+import org.teamapps.projector.component.Component;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.ViewGroupPanelState;

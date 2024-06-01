@@ -19,7 +19,7 @@
   "dependencies": {
     "@floating-ui/dom": "^1.6.3",
     "fastest-levenshtein": "^1.0.16",
-    "teamapps-client-core": "workspace:*",
+    "projector-client-object-api": "workspace:*",
     "teamapps-client-core-components": "workspace:*"
   }
 }

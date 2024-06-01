@@ -19,33 +19,26 @@
  */
 package org.teamapps.projector.components.trivial.datetime;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ibm.icu.util.ULocale;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
-import org.teamapps.projector.components.trivial.dto.DtoLocalDate;
-import org.teamapps.projector.components.trivial.dto.DtoLocalDateField;
-import org.teamapps.projector.components.trivial.dto.DtoLocalDateFieldDropDownMode;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.field.AbstractField;
-import org.teamapps.projector.components.core.field.SpecialKey;
-import org.teamapps.projector.components.core.field.TextInputHandlingField;
+import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
+import org.teamapps.projector.components.trivial.dto.*;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.time.LocalDate;
 import java.util.Locale;
 
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
-public class LocalDateField extends AbstractField<LocalDate> {
+public class LocalDateField extends AbstractField<LocalDate> implements DtoLocalDateFieldEventHandler {
 
-	public enum DropDownMode {
-		CALENDAR,
-		CALENDAR_SUGGESTION_LIST,
-		SUGGESTION_LIST
-	}
+	private final DtoLocalDateFieldClientObjectChannel clientObjectChannel = new DtoLocalDateFieldClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
-	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;
@@ -54,12 +47,12 @@ public class LocalDateField extends AbstractField<LocalDate> {
 	private DateTimeFormatDescriptor dateFormat;
 	private LocalDate defaultSuggestionDate;
 	private boolean shuffledFormatSuggestionsEnabled = false;
-	private DropDownMode dropDownMode = DropDownMode.CALENDAR_SUGGESTION_LIST;
+	private DateFieldDropDownMode dropDownMode = DateFieldDropDownMode.CALENDAR_SUGGESTION_LIST;
 	private String emptyText;
 
 	public LocalDateField() {
 		this.locale = getSessionContext().getULocale();
-		this.dateFormat = getSessionContext().getConfiguration().getDateFormat();
+		this.dateFormat = getSessionContext().getDateFormat();
 	}
 
 	@Override
@@ -73,30 +66,29 @@ public class LocalDateField extends AbstractField<LocalDate> {
 		dateField.setShowClearButton(showClearButton);
 		dateField.setDefaultSuggestionDate(this.convertServerValueToClientValue(defaultSuggestionDate));
 		dateField.setShuffledFormatSuggestionsEnabled(shuffledFormatSuggestionsEnabled);
-		dateField.setDropDownMode(DtoLocalDateFieldDropDownMode.valueOf(dropDownMode.name()));
+		dateField.setDropDownMode(dropDownMode);
 		dateField.setPlaceholderText(this.emptyText);
 		return dateField;
 	}
 
 	@Override
-	public LocalDate convertClientValueToServerValue(Object value) {
-		if (value == null) {
-			return null;
-		} else {
-			DtoLocalDate uiLocalDate = (DtoLocalDate) value;
+	public void handleTextInput(String enteredString) {
+		onTextInput.fire(enteredString);
+	}
+
+	@Override
+	public LocalDate doConvertClientValueToServerValue(JsonNode value) {
+		try {
+			DtoLocalDate uiLocalDate = SessionContext.current().getObjectMapper().treeToValue(value, DtoLocalDate.class);
 			return LocalDate.of(uiLocalDate.getYear(), uiLocalDate.getMonth(), uiLocalDate.getDay());
+		} catch (JsonProcessingException e) {
+			return null;
 		}
 	}
 
 	@Override
 	public DtoLocalDate convertServerValueToClientValue(LocalDate localDate) {
 		return localDate != null ? new DtoLocalDate(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth()) : null;
-	}
-
-	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		super.handleUiEvent(name, params);
-		defaultHandleTextInputEvent(event);
 	}
 
 	public boolean isShowDropDownButton() {
@@ -152,16 +144,6 @@ public class LocalDateField extends AbstractField<LocalDate> {
 		clientObjectChannel.update(this.createConfig());
 	}
 
-	@Override
-	public ProjectorEvent<String> onTextInput() {
-		return onTextInput;
-	}
-
-	@Override
-	public ProjectorEvent<SpecialKey> onSpecialKeyPressed() {
-		return onSpecialKeyPressed;
-	}
-
 	public LocalDate getDefaultSuggestionDate() {
 		return defaultSuggestionDate;
 	}
@@ -180,11 +162,11 @@ public class LocalDateField extends AbstractField<LocalDate> {
 		clientObjectChannel.update(this.createConfig());
 	}
 
-	public DropDownMode getDropDownMode() {
+	public DateFieldDropDownMode getDropDownMode() {
 		return dropDownMode;
 	}
 
-	public void setDropDownMode(DropDownMode dropDownMode) {
+	public void setDropDownMode(DateFieldDropDownMode dropDownMode) {
 		this.dropDownMode = dropDownMode;
 		clientObjectChannel.update(this.createConfig());
 	}

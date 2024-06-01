@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
-import {AbstractLegacyComponent, Component, DtoPageTransition, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, PageTransition, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {pageTransition} from "../Common";
 
 // noinspection JSUnusedGlobalSymbols
@@ -44,7 +44,7 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 		return this.$root;
 	}
 
-	public setContent(content: Component, transition: DtoPageTransition | null = null, animationDuration: number = 0): void {
+	public setContent(content: Component, transition: PageTransition | null = null, animationDuration: number = 0): void {
 		if (content == this.content) {
 			return;
 		}

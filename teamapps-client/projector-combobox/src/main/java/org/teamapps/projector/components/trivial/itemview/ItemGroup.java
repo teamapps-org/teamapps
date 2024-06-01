@@ -19,15 +19,15 @@
  */
 package org.teamapps.projector.components.trivial.itemview;
 
-import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
+import org.teamapps.projector.clientrecordcache.ClientRecordCache;
 import org.teamapps.projector.components.trivial.dto.DtoItemViewItemGroup;
-import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
-import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.projector.template.Template;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.util.ArrayList;
 import java.util.Collections;

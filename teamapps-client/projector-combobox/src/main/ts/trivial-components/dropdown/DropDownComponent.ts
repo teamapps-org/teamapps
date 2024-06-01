@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {TrivialComponent} from "../TrivialCore";
-import {TeamAppsEvent} from "teamapps-client-core";
+import {TeamAppsEvent} from "projector-client-object-api";
 
 export interface DropDownComponent<E> extends TrivialComponent {
 

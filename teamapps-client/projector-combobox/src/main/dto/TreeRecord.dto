@@ -1,7 +1,7 @@
 package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
-import org.teamapps.projector.dto.DtoTemplate;
-import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 class DtoTreeRecord extends DtoIdentifiableClientRecord {
 	Integer parentId;

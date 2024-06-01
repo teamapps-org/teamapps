@@ -19,22 +19,22 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.dto.DtoJustifyContent;
+import org.teamapps.projector.format.JustifyContent;
 
 public enum HorizontalElementAlignment {
 
-	LEFT(DtoJustifyContent.START),
-	CENTER(DtoJustifyContent.CENTER),
-	RIGHT(DtoJustifyContent.END),
-	STRETCH(DtoJustifyContent.STRETCH);
+	LEFT(JustifyContent.START),
+	CENTER(JustifyContent.CENTER),
+	RIGHT(JustifyContent.END),
+	STRETCH(JustifyContent.STRETCH);
 
-	private final DtoJustifyContent dtoJustifyContent;
+	private final JustifyContent justifyContent;
 
-	HorizontalElementAlignment(DtoJustifyContent dtoJustifyContent) {
-		this.dtoJustifyContent = dtoJustifyContent;
+	HorizontalElementAlignment(JustifyContent JustifyContent) {
+		this.justifyContent = JustifyContent;
 	}
 
-	public DtoJustifyContent toUiHorizontalElementAlignment() {
-		return this.dtoJustifyContent;
+	public JustifyContent toUiHorizontalElementAlignment() {
+		return this.justifyContent;
 	}
 }

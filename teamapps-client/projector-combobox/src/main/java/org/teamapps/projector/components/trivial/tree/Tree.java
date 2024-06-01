@@ -21,24 +21,19 @@ package org.teamapps.projector.components.trivial.tree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.dto.protocol.client.QueryWrapper;
-import org.teamapps.event.Disposable;
-import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.commons.event.Disposable;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
-import org.teamapps.projector.components.trivial.dto.DtoComboBoxTreeRecord;
-import org.teamapps.projector.components.trivial.dto.DtoTree;
-import org.teamapps.projector.components.trivial.dto.DtoTreeRecord;
+import org.teamapps.projector.components.trivial.dto.*;
 import org.teamapps.projector.components.trivial.tree.model.TreeModel;
 import org.teamapps.projector.components.trivial.tree.model.TreeNodeInfo;
-import org.teamapps.projector.clientobject.component.AbstractComponent;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.template.Template;
-import org.teamapps.projector.template.TemplateDecider;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
-import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.TemplateDecider;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -46,9 +41,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
-public class Tree<RECORD> extends AbstractComponent {
+public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandler {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+	private final DtoTreeClientObjectChannel clientObjectChannel = new DtoTreeClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<RECORD> onNodeSelected = new ProjectorEvent<>(clientObjectChannel::toggleNodeSelectedEvent);
 
@@ -81,14 +78,11 @@ public class Tree<RECORD> extends AbstractComponent {
 	private void registerModelListeners() {
 		modelAllNodesChangedListener = model.onAllNodesChanged().addListener(this::refresh);
 		modelChangedListener = model.onChanged().addListener((changedEventData) -> {
-			if (isRendered()) {
-				List<Integer> removedUiIds = changedEventData.getRemovedNodes().stream()
-						.map(key -> uiRecordsByRecord.remove(key).getId())
-						.collect(Collectors.toList());
-				List<DtoTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
-				SessionContext sessionContext = getSessionContext();
-				sessionContext.sendCommandIfRendered(this, (DtoCommand<?>) new DtoTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords), null);
-			}
+			List<Integer> removedUiIds = changedEventData.getRemovedNodes().stream()
+					.map(key -> uiRecordsByRecord.remove(key).getId())
+					.collect(Collectors.toList());
+			List<DtoTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
+			clientObjectChannel.bulkUpdate(removedUiIds, addedOrUpdatedUiTreeRecords);
 		});
 	}
 
@@ -187,34 +181,23 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoTree.NodeSelectedEvent.TYPE_ID -> {
-				var nodeSelectedEvent = event.as(DtoTree.NodeSelectedEventWrapper.class);
-				RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
-				selectedNode = record;
-				if (record != null) {
-					onNodeSelected.fire(record);
-				}
-			}
+	public void handleNodeSelected(int nodeId) {
+		RECORD record = getRecordByUiId(nodeId);
+		selectedNode = record;
+		if (record != null) {
+			onNodeSelected.fire(record);
 		}
 	}
 
 	@Override
-	public Object handleUiQuery(QueryWrapper query) {
-		return switch (query.getTypeId()) {
-			case DtoTree.LazyLoadChildrenQuery.TYPE_ID -> {
-				var requestTreeDataEvent = query.as(DtoTree.LazyLoadChildrenQueryWrapper.class);
-				RECORD parentNode = getRecordByUiId(requestTreeDataEvent.getParentNodeId());
-				if (parentNode != null) {
-					List<RECORD> children = model.getChildRecords(parentNode);
-					yield createOrUpdateUiRecords(children);
-				} else {
-					yield List.of();
-				}
-			}
-			default -> null;
-		};
+	public List<DtoTreeRecord> handleLazyLoadChildren(int parentNodeId) {
+		RECORD parentNode = getRecordByUiId(parentNodeId);
+		if (parentNode != null) {
+			List<RECORD> children = model.getChildRecords(parentNode);
+			return createOrUpdateUiRecords(children);
+		} else {
+			return List.of();
+		}
 	}
 
 	public RECORD getSelectedNode() {
@@ -243,12 +226,9 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	public void refresh() {
-		if (isRendered()) {
-			uiRecordsByRecord.clear();
-			List<DtoTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
-			SessionContext sessionContext = getSessionContext();
-			sessionContext.sendCommandIfRendered(this, (DtoCommand<?>) new DtoTree.ReplaceNodesCommand(uiRecords), null);
-		}
+		uiRecordsByRecord.clear();
+		List<DtoTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
+		clientObjectChannel.replaceNodes(uiRecords);
 	}
 
 	public boolean isExpandAnimationEnabled() {

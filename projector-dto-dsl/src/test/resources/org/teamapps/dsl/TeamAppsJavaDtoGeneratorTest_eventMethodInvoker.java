@@ -38,7 +38,7 @@ import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.projector.clientobject.ClientObject;
 import java.lang.reflect.Method;
 import org.teamapps.projector.clientobject.AbstractClientObjectEventMethodInvoker;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class AEventMethodInvoker extends AbstractClientObjectEventMethodInvoker {
 

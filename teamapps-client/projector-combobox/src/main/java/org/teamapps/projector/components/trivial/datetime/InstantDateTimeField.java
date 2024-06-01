@@ -19,16 +19,21 @@
  */
 package org.teamapps.projector.components.trivial.datetime;
 
-import org.teamapps.projector.dto.DtoAbstractField;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.components.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.components.trivial.dto.DtoInstantDateTimeField;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.components.trivial.dto.DtoInstantDateTimeFieldClientObjectChannel;
+import org.teamapps.projector.components.trivial.dto.DtoInstantDateTimeFieldEventHandler;
 
 import java.time.Instant;
 import java.time.ZoneId;
 
 @ClientObjectLibrary(value = TrivialComponentsLibrary.class)
-public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
+public class InstantDateTimeField extends AbstractDateTimeField<Instant> implements DtoInstantDateTimeFieldEventHandler {
+
+	private final DtoInstantDateTimeFieldClientObjectChannel clientObjectChannel = new DtoInstantDateTimeFieldClientObjectChannel(getClientObjectChannel());
 
 	protected ZoneId timeZoneId;
 
@@ -55,12 +60,11 @@ public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 	}
 
 	@Override
-	public Instant convertClientValueToServerValue(Object value) {
-		if (value == null) {
+	public Instant doConvertClientValueToServerValue(JsonNode value) {
+		if (value == null || value.isNull()) {
 			return null;
 		} else {
-			return Instant.ofEpochMilli(((Number) value).longValue());
+			return Instant.ofEpochMilli(value.longValue());
 		}
 	}
-
 }
