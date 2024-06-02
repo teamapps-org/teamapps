@@ -24,11 +24,8 @@ import {
 	DebounceMode,
 	DtoDateTimeFormatDescriptor,
 	FieldEditingMode,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent,
-	SpecialKey,
 	TeamAppsEvent
-} from "teamapps-client-core-components";
+} from "projector-client-object-api";
 import {
 	DtoAbstractTimeField,
 	DtoAbstractTimeField_TextInputEvent,
@@ -43,7 +40,6 @@ import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> extends AbstractField<C, V> implements DtoAbstractTimeFieldEventSource, DtoAbstractTimeFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<DtoAbstractTimeField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected timeRenderer: (time: LocalDateTime) => string;
@@ -68,17 +64,6 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 		this.trivialComboBox.getMainDomElement().classList.add("DtoAbstractTimeField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
-		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
-			if (e.key === "Escape") {
-				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ESCAPE
-				});
-			} else if (e.key === "Enter") {
-				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ENTER
-				});
-			}
-		});
 
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");

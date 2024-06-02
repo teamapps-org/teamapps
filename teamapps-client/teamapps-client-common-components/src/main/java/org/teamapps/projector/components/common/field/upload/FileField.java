@@ -113,7 +113,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	public void cancelUploads() {
-		this.sendCommandIfRendered(() -> new DtoFileField.CancelAllUploadsCommand());
+		this.clientObjectChannel.cancelAllUploads();
 	}
 
 	private DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
@@ -222,7 +222,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setFileItemTemplate(Template fileItemTemplate) {
 		this.fileItemTemplate = fileItemTemplate;
-		sendCommandIfRendered(() -> new DtoFileField.SetItemTemplateCommand(fileItemTemplate != null ? fileItemTemplate.createDtoReference() : null));
+		clientObjectChannel.setItemTemplate(FileItemTemplate != Null ? fileItemTemplate.createDtoReference() : null);
 	}
 
 	public long getMaxBytesPerFile() {
@@ -231,7 +231,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setMaxBytesPerFile(long maxBytesPerFile) {
 		this.maxBytesPerFile = maxBytesPerFile;
-		sendCommandIfRendered(() -> new DtoFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
+		clientObjectChannel.setMaxBytesPerFile(MaxBytesPerFile);
 	}
 
 	public String getUploadUrl() {
@@ -240,7 +240,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		sendCommandIfRendered(() -> new DtoFileField.SetUploadUrlCommand(uploadUrl));
+		clientObjectChannel.setUploadUrl(UploadUrl);
 	}
 
 	public Template getUploadButtonTemplate() {
@@ -249,7 +249,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonTemplate(Template uploadButtonTemplate) {
 		this.uploadButtonTemplate = uploadButtonTemplate;
-		sendCommandIfRendered(() -> new DtoFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate != null ? uploadButtonTemplate.createDtoReference() : null));
+		clientObjectChannel.setUploadButtonTemplate(UploadButtonTemplate != Null ? uploadButtonTemplate.createDtoReference() : null);
 	}
 
 	public Object getUploadButtonData() {
@@ -258,7 +258,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonData(Object uploadButtonData) {
 		this.uploadButtonData = uploadButtonData;
-		sendCommandIfRendered(() -> new DtoFileField.SetUploadButtonDataCommand(uploadButtonData));
+		clientObjectChannel.setUploadButtonData(UploadButtonData);
 	}
 
 	public boolean isShowEntriesAsButtonsOnHover() {
@@ -267,7 +267,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover) {
 		this.showEntriesAsButtonsOnHover = showEntriesAsButtonsOnHover;
-		sendCommandIfRendered(() -> new DtoFileField.SetShowEntriesAsButtonsOnHoverCommand(showEntriesAsButtonsOnHover));
+		clientObjectChannel.setShowEntriesAsButtonsOnHover(ShowEntriesAsButtonsOnHover);
 	}
 
 	public FileFieldDisplayType getDisplayType() {
@@ -276,7 +276,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setDisplayType(FileFieldDisplayType displayType) {
 		this.displayType = displayType;
-		sendCommandIfRendered(() -> new DtoFileField.SetDisplayTypeCommand(displayType.toUiFileFieldDisplayType()));
+		clientObjectChannel.setDisplayType(DisplayType.ToUiFileFieldDisplayType());
 	}
 
 	public int getMaxFiles() {
@@ -285,7 +285,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setMaxFiles(int maxFiles) {
 		this.maxFiles = maxFiles;
-		sendCommandIfRendered(() -> new DtoFileField.SetMaxFilesCommand(maxFiles));
+		clientObjectChannel.setMaxFiles(MaxFiles);
 	}
 
 	public PropertyProvider getUploadButtonPropertyProvider() {

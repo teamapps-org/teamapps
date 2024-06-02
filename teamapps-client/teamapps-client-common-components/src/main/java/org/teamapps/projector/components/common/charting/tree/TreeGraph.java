@@ -117,18 +117,18 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public void setZoomFactor(float zoomFactor) {
 		this.zoomFactor = zoomFactor;
-		sendCommandIfRendered(() -> new DtoTreeGraph.SetZoomFactorCommand(zoomFactor));
+		clientObjectChannel.setZoomFactor(ZoomFactor);
 	}
 
 	public void setNodes(List<TreeGraphNode<RECORD>> nodes) {
 		this.nodesById.clear();
 		nodes.forEach(n -> nodesById.put(n.getId(), n));
-		sendCommandIfRendered(() -> new DtoTreeGraph.SetNodesCommand(createUiNodes(nodes)));
+		clientObjectChannel.setNodes(CreateUiNodes(Nodes));
 	}
 
 	public void addNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		sendCommandIfRendered(() -> new DtoTreeGraph.AddNodeCommand(createUiNode(node)));
+		clientObjectChannel.addNode(CreateUiNode(Node));
 	}
 
 	public void addNodes(List<TreeGraphNode<RECORD>> nodes) {
@@ -138,12 +138,12 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public void removeNode(TreeGraphNode<RECORD> node) {
 		this.nodesById.remove(node.getId());
-		sendCommandIfRendered(() -> new DtoTreeGraph.RemoveNodeCommand(node.getId()));
+		clientObjectChannel.removeNode(Node.GetId());
 	}
 
 	public void updateNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		sendCommandIfRendered(() -> new DtoTreeGraph.UpdateNodeCommand(createUiNode(node)));
+		clientObjectChannel.updateNode(CreateUiNode(Node));
 	}
 
 	@Override
@@ -194,15 +194,15 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoTreeGraph.UpdateCommand(createDto()));
+		clientObjectChannel.update(CreateDto());
 	}
 
 	public void moveToRootNode() {
-		sendCommandIfRendered(() -> new DtoTreeGraph.MoveToRootNodeCommand());
+		clientObjectChannel.moveToRootNode();
 	}
 
 	public void moveToNode(TreeGraphNode<RECORD> node) {
-		sendCommandIfRendered(() -> new DtoTreeGraph.MoveToNodeCommand(node.getId()));
+		clientObjectChannel.moveToNode(Node.GetId());
 	}
 
 	private Collection<TreeGraphNode<RECORD>> getAllDescendants(TreeGraphNode<RECORD> node, boolean includeSelf) {

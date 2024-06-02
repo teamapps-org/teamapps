@@ -65,7 +65,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleShapeChanged(AbstractMapShape shape) {
-			sendCommandIfRendered(() -> new DtoMap.UpdateShapeCommand(shape.getClientIdInternal(), shape.createUiMapShape()));
+			clientObjectChannel.updateShape(Shape.GetClientIdInternal(), shape.createUiMapShape());
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public class MapView<RECORD> extends AbstractComponent {
 
 		@Override
 		public void handleShapeRemoved(AbstractMapShape shape) {
-			sendCommandIfRendered(() -> new DtoMap.RemoveShapeCommand(shape.getClientIdInternal()));
+			clientObjectChannel.removeShape(Shape.GetClientIdInternal());
 		}
 	};
 
@@ -195,17 +195,17 @@ public class MapView<RECORD> extends AbstractComponent {
 	public void addShape(AbstractMapShape shape) {
 		shape.setListenerInternal(shapeListener);
 		shapesByClientId.put(shape.getClientIdInternal(), shape);
-		sendCommandIfRendered(() -> new DtoMap.AddShapeCommand(shape.getClientIdInternal(), shape.createUiMapShape()));
+		clientObjectChannel.addShape(Shape.GetClientIdInternal(), shape.createUiMapShape());
 	}
 
 	public void removeShape(AbstractMapShape shape) {
 		shapesByClientId.remove(shape.getClientIdInternal());
-		sendCommandIfRendered(() -> new DtoMap.RemoveShapeCommand(shape.getClientIdInternal()));
+		clientObjectChannel.removeShape(Shape.GetClientIdInternal());
 	}
 
 	public void clearShapes() {
 		shapesByClientId.clear();
-		sendCommandIfRendered(() -> new DtoMap.ClearShapesCommand());
+		clientObjectChannel.clearShapes();
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
@@ -224,7 +224,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	public void clearMarkerCluster() {
 		clusterMarkers.forEach(this.markersByClientId::removeValue);
 		clusterMarkers.clear();
-		sendCommandIfRendered(() -> new DtoMap.ClearMarkerClusterCommand());
+		clientObjectChannel.clearMarkerCluster();
 	}
 
 	public void unCacheMarkers(List<Marker<RECORD>> markers) {
@@ -234,15 +234,15 @@ public class MapView<RECORD> extends AbstractComponent {
 	public void setHeatMap(List<Location> locations) {
 		List<DtoHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new DtoHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
 		DtoHeatMapData heatMap = new DtoHeatMapData(heatMapElements);
-		sendCommandIfRendered(() -> new DtoMap.SetHeatMapCommand(heatMap));
+		clientObjectChannel.setHeatMap(HeatMap);
 	}
 
 	public void setHeatMap(DtoHeatMapData heatMap) {
-		sendCommandIfRendered(() -> new DtoMap.SetHeatMapCommand(heatMap));
+		clientObjectChannel.setHeatMap(HeatMap);
 	}
 
 	public void clearHeatMap() {
-		sendCommandIfRendered(() -> new DtoMap.ClearHeatMapCommand());
+		clientObjectChannel.clearHeatMap();
 	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
@@ -255,17 +255,17 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	public void setMapType(MapType mapType) {
 		this.mapType = mapType;
-		sendCommandIfRendered(() -> new DtoMap.SetMapTypeCommand(this.mapType.toUiMapType()));
+		clientObjectChannel.setMapType(This.MapType.toUiMapType());
 	}
 
 	public void setZoomLevel(int zoomLevel) {
 		this.zoomLevel = zoomLevel;
-		sendCommandIfRendered(() -> new DtoMap.SetZoomLevelCommand(zoomLevel));
+		clientObjectChannel.setZoomLevel(ZoomLevel);
 	}
 
 	public void setLocation(Location location) {
 		this.location = location;
-		sendCommandIfRendered(() -> new DtoMap.SetLocationCommand(location.createUiLocation()));
+		clientObjectChannel.setLocation(Location.CreateUiLocation());
 	}
 
 	public void setLocation(double latitude, double longitude) {
@@ -307,12 +307,12 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	public void clearMarkers() {
 		this.markersByClientId.values().removeIf(m -> !clusterMarkers.contains(m));
-		sendCommandIfRendered(() -> new DtoMap.ClearMarkersCommand());
+		clientObjectChannel.clearMarkers();
 	}
 
 	public void fitBounds(Location southWest, Location northEast) {
 		this.location = new Location((southWest.getLatitude() + northEast.getLatitude()) / 2, (southWest.getLongitude() + northEast.getLongitude()) / 2);
-		sendCommandIfRendered(() -> new DtoMap.FitBoundsCommand(southWest.createUiLocation(), northEast.createUiLocation()));
+		clientObjectChannel.fitBounds(SouthWest.CreateUiLocation(), northEast.createUiLocation());
 	}
 
 	public Template getDefaultTemplate() {
@@ -344,11 +344,11 @@ public class MapView<RECORD> extends AbstractComponent {
 	}
 
 	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
-		sendCommandIfRendered(() -> new DtoMap.StartDrawingShapeCommand(shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
+		clientObjectChannel.startDrawingShape(ShapeType.ToUiMapShapeType(), shapeProperties.createUiShapeProperties());
 	}
 
 	public void stopDrawingShape() {
-		sendCommandIfRendered(() -> new DtoMap.StopDrawingShapeCommand());
+		clientObjectChannel.stopDrawingShape();
 	}
 
 }

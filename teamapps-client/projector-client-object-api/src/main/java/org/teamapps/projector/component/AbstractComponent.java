@@ -23,12 +23,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.projector.clientobject.ClientObjectChannel;
 import org.teamapps.projector.css.CssStyles;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
 
 import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractComponent implements Component {
 
@@ -40,7 +40,6 @@ public abstract class AbstractComponent implements Component {
 	private final ClientObjectChannel clientObjectChannel;
 
 	private boolean visible = true;
-	private final Set<String> listeningEventNames = new HashSet<>();
 	private final Map<String, Map<String, Boolean>> cssClassesBySelector = new HashMap<>(0);
 	private final Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
 	private final Map<String, Map<String, String>> attributesBySelector = new HashMap<>(0);
@@ -62,31 +61,6 @@ public abstract class AbstractComponent implements Component {
 
 	protected ClientObjectChannel getClientObjectChannel() {
 		return clientObjectChannel;
-	}
-
-	protected <T> ProjectorEvent<T> createProjectorEventBoundToUiEvent(String qualifiedEventName) {
-		return createProjectorEventBoundToUiEvent(qualifiedEventName, false);
-	}
-
-	protected <T> ProjectorEvent<T> createProjectorEventBoundToUiEvent(String qualifiedEventName, boolean registerAlways) {
-		if (registerAlways) {
-			toggleEventListening(qualifiedEventName, true);
-			return new ProjectorEvent<>();
-		} else {
-			return new ProjectorEvent<>(hasListeners -> toggleEventListening(qualifiedEventName, hasListeners));
-		}
-	}
-
-	protected void toggleEventListening(String name, boolean enabled) {
-		boolean changed;
-		if (enabled) {
-			changed = listeningEventNames.add(name);
-		} else {
-			changed = listeningEventNames.remove(name);
-		}
-		if (changed) {
-			getClientObjectChannel().toggleEvent(name, enabled);
-		}
 	}
 
 	public SessionContext getSessionContext() {

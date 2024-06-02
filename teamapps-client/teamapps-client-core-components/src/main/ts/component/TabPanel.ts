@@ -47,7 +47,7 @@ import {
 	TabPanelTabStyle,
 	WindowButtonType
 } from "../generated";
-import {maximizeComponent} from "../Common";
+import {maximizeComponent} from "../util/Common";
 import {StaticIcons} from "../util/StaticIcons";
 import {positionDropdown} from "../util/dropdownPosition";
 import {contentWidth} from "projector-client-object-api";

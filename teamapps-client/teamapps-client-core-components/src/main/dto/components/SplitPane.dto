@@ -22,13 +22,14 @@ package "teamapps-client-core-components":org.teamapps.projector.components.esse
 import org.teamapps.projector.component.DtoComponent;
 
 enum SplitSizePolicy {
-	FIRST_FIXED,
-	LAST_FIXED,
-	RELATIVE
+	FIRST_FIXED = "first-fixed",
+	LAST_FIXED = "last-fixed",
+	RELATIVE = "relative"
 }
 
 enum SplitDirection {
-	HORIZONTAL, VERTICAL
+	HORIZONTAL = "horizontal",
+	VERTICAL = "vertical"
 }
 
 class DtoSplitPane extends DtoComponent {

@@ -30,7 +30,7 @@ import {
 	DtoWindowEventSource
 } from "../generated";
 import {
-	AbstractLegacyComponent,
+	AbstractLegacyComponent, animateCSS,
 	Component,
 	EntranceAnimation, ExitAnimation,
 	noOpServerObjectChannel,
@@ -41,7 +41,6 @@ import {
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
-import {animateCSS, Constants} from "../Common";
 import {applyCss} from "projector-client-object-api";
 
 export interface DtoWindowListener {
@@ -98,7 +97,7 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 
 		this.$main.classList.remove("hidden");
 		this.$main.classList.add("open");
-		animateCSS(this.$panelWrapper, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[EntranceAnimation.ZOOM_IN], animationDuration);
+		animateCSS(this.$panelWrapper, EntranceAnimation.ZOOM_IN, animationDuration);
 
 		this.escapeKeyListener = (e) => {
 			if (this.closeOnEscape && e.key === "Escape") {
@@ -131,7 +130,7 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 	public close(animationDuration: number) {
 		this.setMaximized(false);
 		this.$main.classList.remove("open");
-		animateCSS(this.$panelWrapper, Constants.EXIT_ANIMATION_CSS_CLASSES[ExitAnimation.ZOOM_OUT], animationDuration, () => {
+		animateCSS(this.$panelWrapper, ExitAnimation.ZOOM_OUT, animationDuration, () => {
 			this.$main.classList.add("hidden");
 			this.getMainElement().remove();
 		});

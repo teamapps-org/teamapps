@@ -31,7 +31,7 @@ import {Instance as Popper} from '@popperjs/core';
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
 import {elementIndex, insertAfter, insertAtIndex, insertBefore, parseHtml, TeamAppsEvent} from "projector-client-object-api";
-import {selectElementContents} from "teamapps-client-core-components";
+import {selectElementContents} from "../util";
 
 export interface TrivialTagComboBoxConfig<E> {
 	/**

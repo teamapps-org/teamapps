@@ -44,7 +44,7 @@ import {
 } from "projector-client-object-api";
 
 import {StaticIcons} from "../util/StaticIcons";
-import {maximizeComponent, outerWidthIncludingMargins} from "../Common";
+import {maximizeComponent, outerWidthIncludingMargins} from "../util/Common";
 import getComputedStyle from "@popperjs/core/lib/dom-utils/getComputedStyle";
 
 interface HeaderField {

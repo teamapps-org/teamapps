@@ -19,6 +19,11 @@
  */
 package org.teamapps.projector.clientrecordcache;
 
+/**
+ * Represents the result of a manipulation to the cache, on the server side.
+ * Also provides the facility to commit the change to the client side cache (when the client acknowledged the change).
+ * @param <R>
+ */
 public class CacheManipulationHandle<R> {
 	private R result;
 	private final Runnable committingActions;

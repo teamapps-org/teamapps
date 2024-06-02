@@ -19,9 +19,6 @@
  */
 package org.teamapps.uisession.statistics.app;
 
-import org.teamapps.event.ProjectorEvent;
-import org.teamapps.uisession.TeamAppsSessionManager;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

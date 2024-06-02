@@ -58,7 +58,7 @@ public class MediaTrackGraph extends AbstractComponent {
 	}
 
 	public void setCursorPosition(long time) {
-		sendCommandIfRendered(() -> new DtoMediaTrackGraph.SetCursorPositionCommand(time));
+		clientObjectChannel.setCursorPosition(Time);
 	}
 
 	public static class TimeSelection {

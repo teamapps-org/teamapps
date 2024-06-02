@@ -20,7 +20,7 @@
 import {DtoDisplayField, DtoDisplayFieldCommandHandler, DtoDisplayFieldEventSource} from "../../generated";
 import {AbstractField} from "projector-client-object-api";
 import {FieldEditingMode, parseHtml} from "projector-client-object-api";
-import {escapeHtml, removeTags} from "../../Common";
+import {escapeHtml, removeTags} from "../../util/Common";
 
 
 export class DisplayField extends AbstractField<DtoDisplayField, string> implements DtoDisplayFieldEventSource, DtoDisplayFieldCommandHandler {

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField, DebounceMode} from "projector-client-object-api";
+import {AbstractField, DebounceMode, NumberParser} from "projector-client-object-api";
 import {
 	DtoNumberField,
 	DtoNumberFieldCommandHandler,
@@ -28,7 +28,6 @@ import {
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
 import {FieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
-import {NumberParser} from "../../util/NumberParser";
 
 export class NumberField extends AbstractField<DtoNumberField, number> implements DtoNumberFieldEventSource, DtoNumberFieldCommandHandler {
 

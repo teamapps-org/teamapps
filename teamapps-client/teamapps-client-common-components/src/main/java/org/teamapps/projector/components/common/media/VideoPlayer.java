@@ -82,15 +82,15 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void play() {
-		sendCommandIfRendered(() -> new DtoVideoPlayer.PlayCommand());
+		clientObjectChannel.play();
 	}
 
 	public void pause() {
-		sendCommandIfRendered(() -> new DtoVideoPlayer.PauseCommand());
+		clientObjectChannel.pause();
 	}
 
 	public void setPosition(int timeInSeconds) {
-		sendCommandIfRendered(() -> new DtoVideoPlayer.JumpToCommand(timeInSeconds));
+		clientObjectChannel.jumpTo(TimeInSeconds);
 	}
 
 	public String getUrl() {
@@ -99,7 +99,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setUrl(String url) {
 		this.url = url;
-		sendCommandIfRendered(() -> new DtoVideoPlayer.SetUrlCommand(url));
+		clientObjectChannel.setUrl(Url);
 	}
 
 	public boolean isAutoplay() {
@@ -108,7 +108,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setAutoplay(boolean autoplay) {
 		this.autoplay = autoplay;
-		sendCommandIfRendered(() -> new DtoVideoPlayer.SetAutoplayCommand(autoplay));
+		clientObjectChannel.setAutoplay(Autoplay);
 	}
 
 	public boolean isShowControls() {
@@ -162,7 +162,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setPreloadMode(PreloadMode preloadMode) {
 		this.preloadMode = preloadMode;
-		sendCommandIfRendered(() -> new DtoVideoPlayer.SetPreloadModeCommand(preloadMode.toUiPreloadMode()));
+		clientObjectChannel.setPreloadMode(PreloadMode.ToUiPreloadMode());
 	}
 
 }

@@ -49,23 +49,23 @@ public class ChatDisplay extends AbstractComponent {
 		this.model = model;
 		model.onMessagesAdded().addListener(chatMessages -> {
 			updateEarliestKnownMessageId(chatMessages);
-			sendCommandIfRendered(() -> new DtoChatDisplay.AddMessagesCommand(createUiChatMessageBatch(chatMessages)));
+			clientObjectChannel.addMessages(CreateUiChatMessageBatch(ChatMessages));
 		});
 		model.onMessageChanged().addListener((chatMessage) -> {
 			if (earliestKnownMessageId <= chatMessage.getId()) {
-				sendCommandIfRendered(() -> new DtoChatDisplay.UpdateMessageCommand(createUiChatMessage(chatMessage)));
+				clientObjectChannel.updateMessage(CreateUiChatMessage(ChatMessage));
 			}
 		});
 		model.onMessageDeleted().addListener((messageId) -> {
 			if (earliestKnownMessageId <= messageId) {
-				sendCommandIfRendered(() -> new DtoChatDisplay.DeleteMessageCommand(messageId));
+				clientObjectChannel.deleteMessage(MessageId);
 			}
 		});
 		model.onAllDataChanged().addListener(aVoid -> {
 			ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);
 			this.earliestKnownMessageId = Integer.MAX_VALUE;
 			updateEarliestKnownMessageId(messageBatch);
-			sendCommandIfRendered(() -> new DtoChatDisplay.ClearMessagesCommand(createUiChatMessageBatch(messageBatch)));
+			clientObjectChannel.clearMessages(CreateUiChatMessageBatch(MessageBatch));
 		});
 	}
 
@@ -172,7 +172,7 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		sendCommandIfRendered(() -> new DtoChatDisplay.CloseContextMenuCommand());
+		clientObjectChannel.closeContextMenu();
 	}
 
 	public Icon<?, ?> getDeletedMessageIcon() {

@@ -44,8 +44,8 @@ public class A implements DtoObject {
     public static final String TYPE_ID = "A";  // TODO remove
 
 	protected Object x;
-	protected List<?> y;
-	protected Map<String, ?> z;
+	protected List<Object> y;
+	protected Map<String, Object> z;
 
 	public A() {
 	}
@@ -65,12 +65,12 @@ public class A implements DtoObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonGetter("y")
-	public List<?> getY() {
+	public List<Object> getY() {
 		return y;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonGetter("z")
-	public Map<String, ?> getZ() {
+	public Map<String, Object> getZ() {
 		return z;
 	}
 
@@ -81,13 +81,13 @@ public class A implements DtoObject {
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("y")
-	public A setY(List<?> y) {
+	public A setY(List<Object> y) {
 		this.y = y;
 		return this;
 	}
 
 	@com.fasterxml.jackson.annotation.JsonSetter("z")
-	public A setZ(Map<String, ?> z) {
+	public A setZ(Map<String, Object> z) {
 		this.z = z;
 		return this;
 	}

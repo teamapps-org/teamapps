@@ -18,8 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {ClickOutsideHandle, doOnceOnClickOutsideElement} from "../Common";
-import {Component, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {ClickOutsideHandle, Component, doOnceOnClickOutsideElement, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 import {Spinner} from "./Spinner";
 import {positionDropdownWithAutoUpdate} from "../util/dropdownPosition";
 

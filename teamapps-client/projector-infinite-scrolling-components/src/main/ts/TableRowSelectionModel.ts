@@ -20,7 +20,7 @@
 ///<reference types="slickgrid"/>
 ///<reference types="slickgrid/slick.rowselectionmodel"/>
 
-import {bind} from "teamapps-client-core";
+import {bind} from "projector-client-object-api";
 
 export class TableRowSelectionModel {
 

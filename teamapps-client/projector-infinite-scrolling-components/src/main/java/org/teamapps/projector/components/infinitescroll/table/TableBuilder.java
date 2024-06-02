@@ -1,9 +1,8 @@
 package org.teamapps.projector.components.infinitescroll.table;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.ux.cache.record.EqualsAndHashCode;
-import org.teamapps.projector.component.field.AbstractField;
-import org.teamapps.ux.data.extraction.*;
+import org.teamapps.projector.component.field.Field;
+import org.teamapps.projector.components.infinitescroll.recordcache.EqualsAndHashCode;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.BeanPropertyInjector;
 import org.teamapps.projector.dataextraction.PropertyInjector;
@@ -40,12 +39,12 @@ public class TableBuilder<RECORD> {
 	private int footerFieldsRowHeight = 28;
 
 	// other setters:
-	private Map<String, AbstractField<?>> headerFields = new HashMap<>(0);
+	private Map<String, Field<?>> headerFields = new HashMap<>(0);
 	private Color headerFieldsRowBackgroundColor = null;
 	private Color headerFieldsRowBorderColor = null;
 	private Integer headerFieldsRowBorderWidth = null;
 
-	private Map<String, AbstractField<?>> footerFields = new HashMap<>(0);
+	private Map<String, Field<?>> footerFields = new HashMap<>(0);
 	private Color footerFieldsRowBackgroundColor = null;
 	private Color footerFieldsRowBorderColor = null;
 	private Integer footerFieldsRowBorderWidth = null;
@@ -163,7 +162,7 @@ public class TableBuilder<RECORD> {
 		this.selectionFrame = selectionFrame;
 	}
 
-	public void withHeaderFields(Map<String, AbstractField<?>> headerFields) {
+	public void withHeaderFields(Map<String, Field<?>> headerFields) {
 		this.headerFields = headerFields;
 	}
 
@@ -187,7 +186,7 @@ public class TableBuilder<RECORD> {
 		this.headerFieldsRowBorderWidth = headerFieldsRowBorderWidth;
 	}
 
-	public void withFooterFields(Map<String, AbstractField<?>> footerFields) {
+	public void withFooterFields(Map<String, Field<?>> footerFields) {
 		this.footerFields = footerFields;
 	}
 

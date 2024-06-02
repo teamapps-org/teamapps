@@ -19,7 +19,7 @@
  */
 import {debounce, DebounceMode} from "./debounce";
 import {throttle} from "./throttle";
-import {deepEquals} from "./deepEquals";
+import {deepEquals} from "./equality";
 import {isServerObjectChannel, ServerObjectChannel} from "../ClientObject";
 
 export type TeamAppsEventListener<EO> = (eventObject?: EO) => void;

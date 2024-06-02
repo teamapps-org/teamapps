@@ -89,7 +89,7 @@ export class TimeGraphPopper {
 					this.$popperElement.classList.remove("hidden");
 					this.popper.update();
 					if (wasHidden) {
-						animateCSS(this.$popperElement, Constants.EXIT_ANIMATION_CSS_CLASSES[UiEntranceAnimation.FADE_IN], 200)
+						animateCSS(this.$popperElement, UiEntranceAnimation.FADE_IN, 200)
 					}
 				}, 200);
 			} else {

@@ -75,7 +75,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setWidth(int width) {
 		this.width = width;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetDimensionsCommand(width, height));
+		clientObjectChannel.setDimensions(Width, Height);
 	}
 
 	public int getHeight() {
@@ -84,7 +84,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setHeight(int height) {
 		this.height = height;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetDimensionsCommand(width, height));
+		clientObjectChannel.setDimensions(Width, Height);
 	}
 
 	public int getMarginX() {
@@ -93,7 +93,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setMarginX(int marginX) {
 		this.marginX = marginX;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetMarginsCommand(marginX, marginY));
+		clientObjectChannel.setMargins(MarginX, MarginY);
 	}
 
 	public int getMarginY() {
@@ -102,7 +102,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setMarginY(int marginY) {
 		this.marginY = marginY;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetMarginsCommand(marginX, marginY));
+		clientObjectChannel.setMargins(MarginX, MarginY);
 	}
 
 	public FloatingPosition getPosition() {
@@ -111,7 +111,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setPosition(FloatingPosition position) {
 		this.position = position;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetPositionCommand(position.toUiPosition()));
+		clientObjectChannel.setPosition(Position.ToUiPosition());
 	}
 
 	public Color getBackgroundColor() {
@@ -120,7 +120,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		clientObjectChannel.setBackgroundColor(BackgroundColor != Null ? backgroundColor.toHtmlColorString() : null);
 	}
 
 	public Color getExpanderHandleColor() {
@@ -129,7 +129,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanderHandleColor(Color expanderHandleColor) {
 		this.expanderHandleColor = expanderHandleColor;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetExpanderHandleColorCommand(expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null));
+		clientObjectChannel.setExpanderHandleColor(ExpanderHandleColor != Null ? expanderHandleColor.toHtmlColorString() : null);
 	}
 
 	public boolean isCollapsible() {
@@ -146,7 +146,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetExpandedCommand(expanded));
+		clientObjectChannel.setExpanded(Expanded);
 	}
 
 	public Component getContentComponent() {
@@ -155,7 +155,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setContentComponent(Component contentComponent) {
 		this.contentComponent = contentComponent;
-		sendCommandIfRendered(() -> new DtoFloatingComponent.SetContentComponentCommand(contentComponent != null ? contentComponent.createDtoReference() : null));
+		clientObjectChannel.setContentComponent(ContentComponent != Null ? contentComponent.createDtoReference() : null);
 	}
 
 	@Override

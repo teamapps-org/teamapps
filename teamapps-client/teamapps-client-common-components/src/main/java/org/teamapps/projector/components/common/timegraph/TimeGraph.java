@@ -113,11 +113,11 @@ public class TimeGraph extends AbstractComponent {
 		this.graphsAndListeners.forEach(g -> g.disposable.dispose());
 		this.graphsAndListeners.clear();
 		graphs.forEach(graph -> {
-			graph.setChangeListener(display -> sendCommandIfRendered(() -> new DtoTimeGraph.AddOrUpdateGraphCommand(display.createUiFormat())));
+			graph.setChangeListener(display -> clientObjectChannel.addOrUpdateGraph(Display.CreateUiFormat()));
 			Disposable disposable = graph.getModel().onDataChanged().addListener(aVoid -> handleGraphDataChanged(graph));
 			this.graphsAndListeners.add(new GraphListenInfo(graph, disposable));
 		});
-		sendCommandIfRendered(() -> new DtoTimeGraph.SetGraphsCommand(toUiLineFormats(graphs)));
+		clientObjectChannel.setGraphs(ToUiLineFormats(Graphs));
 		refresh();
 	}
 
@@ -167,7 +167,7 @@ public class TimeGraph extends AbstractComponent {
 					final Map<String, List<Interval>> neededIntervalsByGraphId = zoomedEvent.getNeededIntervalsByGraphId().entrySet().stream()
 							.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(i -> new Interval(i.getMin(), i.getMax())).collect(Collectors.toList())));
 					Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededIntervalsByGraphId);
-					sendCommandIfRendered(() -> new DtoTimeGraph.AddDataCommand(zoomedEvent.getZoomLevelIndex(), convertToUiData(data)));
+					clientObjectChannel.addData(ZoomedEvent.GetZoomLevelIndex(), convertToUiData(data));
 				}
 
 				this.displayedInterval = displayedInterval;
@@ -211,7 +211,7 @@ public class TimeGraph extends AbstractComponent {
 	public void refresh() {
 		Interval domainX = retrieveDomainX();
 		DtoLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
-		sendCommandIfRendered(() -> new DtoTimeGraph.ResetAllDataCommand(uiIntervalX, createUiZoomlevels()));
+		clientObjectChannel.resetAllData(UiIntervalX, CreateUiZoomlevels());
 	}
 
 	public void zoomTo(long minX, long maxX) {
@@ -229,7 +229,7 @@ public class TimeGraph extends AbstractComponent {
 
 	public void setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints) {
 		this.maxPixelsBetweenDataPoints = maxPixelsBetweenDataPoints;
-		sendCommandIfRendered(() -> new DtoTimeGraph.SetMaxPixelsBetweenDataPointsCommand(maxPixelsBetweenDataPoints));
+		clientObjectChannel.setMaxPixelsBetweenDataPoints(MaxPixelsBetweenDataPoints);
 	}
 
 	public LineChartMouseScrollZoomPanMode getMouseScrollZoomPanMode() {
@@ -238,7 +238,7 @@ public class TimeGraph extends AbstractComponent {
 
 	public void setMouseScrollZoomPanMode(LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode) {
 		this.mouseScrollZoomPanMode = mouseScrollZoomPanMode;
-		sendCommandIfRendered(() -> new DtoTimeGraph.SetMouseScrollZoomPanModeCommand(mouseScrollZoomPanMode.toUiLineChartMouseScrollZoomPanMode()));
+		clientObjectChannel.setMouseScrollZoomPanMode(MouseScrollZoomPanMode.ToUiLineChartMouseScrollZoomPanMode());
 	}
 
 	public Interval getSelectedInterval() {
@@ -247,14 +247,14 @@ public class TimeGraph extends AbstractComponent {
 
 	public void setSelectedInterval(Interval selectedInterval) {
 		this.selectedInterval = selectedInterval;
-		sendCommandIfRendered(() -> new DtoTimeGraph.SetSelectedIntervalCommand(selectedInterval.toUiLongInterval()));
+		clientObjectChannel.setSelectedInterval(SelectedInterval.ToUiLongInterval());
 	}
 
 	private void handleGraphDataChanged(AbstractGraph<?, ?> graph) {
 		Interval domainX = retrieveDomainX();
 		DtoLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
-		sendCommandIfRendered(() -> new DtoTimeGraph.SetIntervalXCommand(uiIntervalX));
-		sendCommandIfRendered(() -> new DtoTimeGraph.ResetGraphDataCommand(graph.getId()));
+		clientObjectChannel.setIntervalX(UiIntervalX);
+		clientObjectChannel.resetGraphData(Graph.GetId());
 	}
 
 	public Locale getLocale() {

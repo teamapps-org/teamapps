@@ -18,13 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import { createPopper, Instance as Popper } from '@popperjs/core';
-import {parseHtml} from "teamapps-client-core";
-import {
-	DtoFieldMessage,
-	DtoFieldMessagePosition,
-	DtoFieldMessageSeverity,
-	DtoFieldMessageVisibilityMode, getHighestSeverity
-} from "teamapps-client-core-components";
+import {parseHtml, DtoFieldMessage, getHighestSeverity, FieldMessageSeverity, FieldMessagePosition} from "projector-client-object-api";
 
 export class FieldMessagesPopper {
 
@@ -62,7 +56,7 @@ export class FieldMessagesPopper {
 		if (messages.length > 0) {
 			const highestSeverity = getHighestSeverity(messages);
 			this.$popperElement.classList.remove('ta-tooltip-info', 'ta-tooltip-success',  'ta-tooltip-warning', 'ta-tooltip-error');
-			this.$popperElement.classList.add(`ta-tooltip-${DtoFieldMessageSeverity[highestSeverity].toLowerCase()}`);
+			this.$popperElement.classList.add(`ta-tooltip-${highestSeverity}`);
 			messages.forEach(message => {
 				this.$messagesContainer.append(createMessageElement(message));
 			});
@@ -95,8 +89,8 @@ export class FieldMessagesPopper {
 }
 
 export function createMessageElement(message: DtoFieldMessage) {
-	const severityCssClass = `field-message-${DtoFieldMessageSeverity[message.severity].toLowerCase()}`;
-	const positionCssClass = `position-${DtoFieldMessagePosition[message.position].toLowerCase()}`;
-	const visibilityCssClass = `visibility-${DtoFieldMessageVisibilityMode[message.visibilityMode].toLowerCase()}`;
+	const severityCssClass = `field-message-${message.severity}`;
+	const positionCssClass = `position-${message.position}`;
+	const visibilityCssClass = `visibility-${message.visibilityMode}`;
 	return parseHtml(`<div class="field-message ${severityCssClass} ${positionCssClass} ${visibilityCssClass}">${message.message}</div>`);
 }

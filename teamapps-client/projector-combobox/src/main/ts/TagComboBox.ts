@@ -31,17 +31,11 @@ import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {AbstractField, DebounceMode, FieldEditingMode, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
-import {
-	buildObjectTree,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	NodeWithChildren,
-	SpecialKey
-} from "teamapps-client-core-components";
+import {buildObjectTree, NodeWithChildren} from "./util";
 
 export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRecord[]> implements DtoTagComboBoxEventSource, DtoTagComboBoxCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<DtoComboBox_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
@@ -118,17 +112,6 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox");
 		this.setWrappingMode(config.wrappingMode);
 		this.trivialTagComboBox.onValueChanged.addListener(() => this.commit());
-		this.trivialTagComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
-			if (e.key === "Escape") {
-				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ESCAPE
-				});
-			} else if (e.key === "Enter") {
-				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ENTER
-				});
-			}
-		});
 
 		this.trivialTagComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");

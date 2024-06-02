@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-calendar":org.teamapps.projector.components.calendar.dto;
+package "projector-calendar":org.teamapps.projector.components.calendar;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
@@ -32,7 +32,7 @@ enum DtoCalendarViewMode {
 enum DtoWeekDay {
 	SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
 }
-enum DtoCalendarEventRenderingStyle { // see http://fullcalendar.io/docs/event_rendering/Background_Events/
+enum CalendarEventRenderingStyle { // see http://fullcalendar.io/docs/event_rendering/Background_Events/
 	DEFAULT = "", // normal event display
 	BACKGROUND = "background", // only show colored shadow for the event. this may useful for subtly showing a secondary calendar with anonymous events inside the main one.
 	INVERSE_BACKGROUND = "inverse-background" // highlight the whole calendar except the time period of the event.
@@ -69,9 +69,9 @@ class DtoCalendar extends DtoComponent {
 	command clearCalendar();
 	command setTimeZoneId(String timeZoneId);
 
-	event eventClicked(int eventId, boolean isDoubleClick);
+	event eventClicked(int eventId, boolean doubleClick);
 	event eventMoved(int eventId, long newStart, long newEnd); // fired when an event gets moved or resized
-	event dayClicked(long date, boolean isDoubleClick);
+	event dayClicked(long date, boolean doubleClick);
 	event intervalSelected(long start, long end, boolean allDay);
 	event dayHeaderClicked(long date);
 	event weekHeaderClicked(int year, int week, long weekStartDate);
@@ -99,5 +99,5 @@ class DtoCalendarEventClientRecord extends DtoIdentifiableClientRecord {
 
     String backgroundColor;
     String borderColor;
-    DtoCalendarEventRenderingStyle rendering;
+    CalendarEventRenderingStyle rendering;
 }

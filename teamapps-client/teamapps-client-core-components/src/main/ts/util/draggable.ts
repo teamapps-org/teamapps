@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Constants} from "../Common";
+import {Constants} from "./Common";
 
 type Options = {
 	validDragStartDecider?: (e: PointerEvent & TouchEvent) => boolean

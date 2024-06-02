@@ -27,7 +27,7 @@ import {
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
 import {FieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
-import {escapeHtml} from "../../Common";
+import {escapeHtml} from "../../util/Common";
 
 export class TextField<C extends DtoTextField = DtoTextField> extends AbstractField<C, string> implements DtoTextFieldEventSource, DtoTextFieldCommandHandler {
 

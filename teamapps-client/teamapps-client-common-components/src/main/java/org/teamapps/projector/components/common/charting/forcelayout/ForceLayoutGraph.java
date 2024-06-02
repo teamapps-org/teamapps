@@ -151,7 +151,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	public void addNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink<RECORD>> links) {
 		this.nodes.addAll(nodes);
 		this.links.addAll(links);
-		sendCommandIfRendered(() -> new DtoNetworkGraph.AddNodesAndLinksCommand(createUiNodes(nodes), createUiLinks(links)));
+		clientObjectChannel.addNodesAndLinks(CreateUiNodes(Nodes), createUiLinks(links));
 	}
 
 	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes) {
@@ -167,7 +167,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		List<String> nodeIds = nodes.stream().map(n -> n.getId()).collect(Collectors.toList());
 		Map<String, List<String>> linksBySourceNodeId = links.stream()
 				.collect(Collectors.groupingBy(l -> l.getSource().getId(), Collectors.mapping(l -> l.getTarget().getId(), Collectors.toList())));
-		sendCommandIfRendered(() -> new DtoNetworkGraph.RemoveNodesAndLinksCommand(nodeIds, linksBySourceNodeId));
+		clientObjectChannel.removeNodesAndLinks(NodeIds, LinksBySourceNodeId);
 	}
 
 	public List<ForceLayoutNode<RECORD>> getNodes() {
@@ -191,6 +191,6 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	}
 
 	public void setDistance(float linkDistanceFactor, float nodeDistanceFactor) {
-		sendCommandIfRendered(() -> new DtoNetworkGraph.SetDistanceCommand(linkDistanceFactor, nodeDistanceFactor));
+		clientObjectChannel.setDistance(LinkDistanceFactor, NodeDistanceFactor);
 	}
 }

@@ -21,7 +21,6 @@ package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.field.DtoAbstractField;
-import org.teamapps.projector.components.essential.dto.DtoTextInputHandlingField;
 import org.teamapps.projector.session.config.DtoDateTimeFormatDescriptor;
 
 @TypeScriptFactory

@@ -79,3 +79,6 @@ search for all "new ProjectorEvent" occurrences and check if they need to be bou
 change generation target packages:
  - core-components: org.teamapps.projector.components.essential
  - no .dto!! (nowhere!) Many classes are now fully integrated (especially enums!)
+
+
+ distribute .less files! (currently most are in client-core-components)

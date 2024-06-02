@@ -21,6 +21,8 @@
     "projector-blogview",
     "projector-calendar",
     "projector-infinite-scrolling-components",
+    "projector-document-viewer",
+    "projector-elegant-panel",
     "teamapps-client-common-components",
     "projector-combobox"
   ],

@@ -32,7 +32,7 @@ import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import {DropDownComponent} from "./dropdown/DropDownComponent";
 import {TreeBoxDropdown} from "./dropdown/TreeBoxDropdown";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
-import {BigDecimal, NumberParser, parseHtml, TeamAppsEvent} from "teamapps-client-core-components";
+import {BigDecimal, NumberParser, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 
 export interface TrivialUnitBoxConfig<U> extends TrivialTreeBoxConfig<U> {
 	numberFormatFunction: (entry: U) => Intl.NumberFormat,

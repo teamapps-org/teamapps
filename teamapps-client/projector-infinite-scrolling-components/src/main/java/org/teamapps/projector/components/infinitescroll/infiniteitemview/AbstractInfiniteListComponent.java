@@ -21,29 +21,31 @@ package org.teamapps.projector.components.infinitescroll.infiniteitemview;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.databinding.ObservableValue;
-import org.teamapps.databinding.TwoWayBindableValueImpl;
-import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
-import org.teamapps.event.Disposable;
-import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.components.infinitescroll.dto.DtoAbstractInfiniteListComponent;
-import org.teamapps.projector.components.infinitescroll.dto.DtoTableClientRecord;
-import org.teamapps.ux.cache.record.EqualsAndHashCode;
-import org.teamapps.ux.cache.record.ItemRange;
-import org.teamapps.ux.cache.record.RecordAndClientRecord;
-import org.teamapps.ux.cache.record.RenderedRecordsCache;
+import org.teamapps.commons.databinding.ObservableValue;
+import org.teamapps.commons.databinding.TwoWayBindableValueImpl;
+import org.teamapps.commons.event.Disposable;
 import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.components.infinitescroll.DtoAbstractInfiniteListComponentClientObjectChannel;
+import org.teamapps.projector.components.infinitescroll.DtoAbstractInfiniteListComponentEventHandler;
+import org.teamapps.projector.components.infinitescroll.recordcache.EqualsAndHashCode;
+import org.teamapps.projector.components.infinitescroll.recordcache.ItemRange;
+import org.teamapps.projector.components.infinitescroll.recordcache.RecordAndClientRecord;
+import org.teamapps.projector.components.infinitescroll.recordcache.RenderedRecordsCache;
+import org.teamapps.projector.components.infinitescroll.table.DtoTableClientRecord;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends InfiniteListModel<RECORD>> extends AbstractComponent {
+public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends InfiniteListModel<RECORD>> extends AbstractComponent implements DtoAbstractInfiniteListComponentEventHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	// this event must be registered always (even if no application code depends on it), since it is reacted on internally
-	public final ProjectorEvent<ItemRange> onDisplayedRangeChanged = createProjectorEventBoundToUiEvent(DtoAbstractInfiniteListComponent.DisplayedRangeChangedEvent.TYPE_ID, true);
+	private final DtoAbstractInfiniteListComponentClientObjectChannel clientObjectChannel = new DtoAbstractInfiniteListComponentClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<ItemRange> onDisplayedRangeChanged = new ProjectorEvent<>();
 
 	private Disposable modelOnAllDataChangedListenerDisposable;
 	private Disposable modelOnRecordsAddedListenerDisposable;
@@ -59,6 +61,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 
 	public AbstractInfiniteListComponent(MODEL model) {
 		this.model = model;
+		clientObjectChannel.toggleDisplayedRangeChangedEvent(true);
 	}
 
 	public MODEL getModel() {
@@ -103,7 +106,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 	}
 
 	private void sendFullDisplayedRange() {
-		if (!isRendered()) {
+		if (!clientObjectChannel.isRendered()) {
 			return;
 		}
 		List<RECORD> records = retrieveRecords(displayedRange.getStart(), displayedRange.getLength());
@@ -154,7 +157,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 
 	protected void handleModelRecordsAdded(RecordsAddedEvent<RECORD> changeEvent) {
 		count.set(count.get() + changeEvent.getLength());
-		if (!isRendered()) {
+		if (!clientObjectChannel.isRendered()) {
 			return;
 		}
 		if (changeEvent.getStart() < displayedRange.getEnd()) {
@@ -173,7 +176,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 	}
 
 	protected void handleModelRecordsChanged(RecordsChangedEvent<RECORD> changeEvent) {
-		if (!isRendered()) {
+		if (!clientObjectChannel.isRendered()) {
 			return;
 		}
 		if (changeEvent.getItemRange().overlaps(displayedRange)) {
@@ -191,7 +194,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 
 	protected void handleModelRecordsRemoved(RecordsRemovedEvent<RECORD> deleteEvent) {
 		count.set(count.get() - deleteEvent.getLength());
-		if (!isRendered()) {
+		if (!clientObjectChannel.isRendered()) {
 			return;
 		}
 		if (deleteEvent.getStart() < displayedRange.getEnd()) {
@@ -207,7 +210,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 	}
 
 	protected void updateSingleRecordOnClient(RECORD record) {
-		if (isRendered()) {
+		if (clientObjectChannel.isRendered()) {
 			DtoTableClientRecord uiRecord = (DtoTableClientRecord) renderedRecords.getUiRecord(record);
 			int index = renderedRecords.getIndex(record);
 			sendUpdateDataCommandToClient(index, renderedRecords.getUiRecordIds(), List.of(uiRecord), getModelCount());

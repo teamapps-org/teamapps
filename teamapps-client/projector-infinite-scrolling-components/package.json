@@ -19,7 +19,6 @@
   "dependencies": {
     "@types/slickgrid": "^2.1.35",
     "projector-client-object-api": "workspace:*",
-    "slickgrid": "^4.0.0",
-    "teamapps-client-core-components": "workspace:*"
+    "slickgrid": "^4.0.0"
   }
 }

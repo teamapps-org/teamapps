@@ -31,9 +31,8 @@ import {
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent
+	TeamAppsEvent, animateCSS
 } from "projector-client-object-api";
-import {animateCSS, Constants} from "../Common";
 import {createUiSpacingValueCssString} from "projector-client-object-api";
 import {ProgressBar} from "../micro-components/ProgressBar";
 
@@ -98,7 +97,7 @@ export function showNotification(notification: Notification, position: Notificat
 
 		updateContainerVisibilities();
 
-		animateCSS(notification.getMainElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[entranceAnimation] as any, 700);
+		animateCSS(notification.getMainElement(), entranceAnimation, 700);
 
 		let closeListener = () => {
 			notification.onClosedAnyWay.removeListener(closeListener);
@@ -108,7 +107,7 @@ export function showNotification(notification: Notification, position: Notificat
 			notif.$wrapper.style.marginBottom = "0px";
 			notif.$wrapper.style.zIndex = "0";
 
-			animateCSS(notification.getMainElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation] as any, 700, () => {
+			animateCSS(notification.getMainElement(), exitAnimation, 700, () => {
 				notif.$wrapper.remove();
 				updateContainerVisibilities();
 			});

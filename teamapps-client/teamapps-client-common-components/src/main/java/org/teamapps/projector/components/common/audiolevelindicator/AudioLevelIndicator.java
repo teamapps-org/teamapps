@@ -39,7 +39,7 @@ public class AudioLevelIndicator extends AbstractComponent {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
-		sendCommandIfRendered(() -> new DtoAudioLevelIndicator.SetDeviceIdCommand(deviceId));
+		clientObjectChannel.setDeviceId(DeviceId);
 	}
 
 	public void setBarWidth(int barWidth) {

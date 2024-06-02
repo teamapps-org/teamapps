@@ -22,38 +22,34 @@ package org.teamapps.projector.components.infinitescroll.table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.Component;
-import org.teamapps.projector.dataextraction.*;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
-import org.teamapps.projector.components.infinitescroll.dto.DtoTable;
-import org.teamapps.projector.components.infinitescroll.dto.DtoTableClientRecord;
-import org.teamapps.projector.components.infinitescroll.dto.DtoTableColumn;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.component.field.*;
+import org.teamapps.projector.component.field.validator.FieldValidator;
+import org.teamapps.projector.components.infinitescroll.DtoAbstractInfiniteListComponent;
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.AbstractInfiniteListComponent;
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.RecordsChangedEvent;
 import org.teamapps.projector.components.infinitescroll.infiniteitemview.RecordsRemovedEvent;
-import org.teamapps.ux.cache.record.DuplicateEntriesException;
-import org.teamapps.ux.cache.record.ItemRange;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.component.field.AbstractField;
-import org.teamapps.projector.component.field.FieldMessage;
-import org.teamapps.projector.component.field.validator.FieldValidator;
-import org.teamapps.ux.data.extraction.*;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.ux.dataextraction.*;
+import org.teamapps.projector.components.infinitescroll.recordcache.DuplicateEntriesException;
+import org.teamapps.projector.components.infinitescroll.recordcache.ItemRange;
+import org.teamapps.projector.dataextraction.*;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ClientObjectLibrary(value = InfiniteScrollingComponentLibrary.class)
-public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component {
+public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component, DtoTableEventHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+	private final DtoTableClientObjectChannel clientObjectChannel = new DtoTableClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<CellEditingStartedEvent<RECORD, ?>> onCellEditingStarted = new ProjectorEvent<>(clientObjectChannel::toggleCellEditingStartedEvent);
 	public final ProjectorEvent<CellEditingStoppedEvent<RECORD, ?>> onCellEditingStopped = new ProjectorEvent<>(clientObjectChannel::toggleCellEditingStoppedEvent);
@@ -110,13 +106,13 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private boolean headerFieldsRowEnabled = false;
 	private int headerFieldsRowHeight = 28;
-	private Map<String, AbstractField> headerFields = new HashMap<>(0);
+	private Map<String, Field<?>> headerFields = new HashMap<>(0);
 
 	// ----- footer -----
 
 	private boolean footerFieldsRowEnabled = false;
 	private int footerFieldsRowHeight = 28;
-	private Map<String, AbstractField> footerFields = new HashMap<>(0);
+	private Map<String, Field<?>> footerFields = new HashMap<>(0);
 
 	private final List<RECORD> topNonModelRecords = new ArrayList<>();
 	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
@@ -177,15 +173,15 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		addColumns(List.of(column), index);
 	}
 
-	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, String title, AbstractField<VALUE> field) {
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, String title, Field<VALUE> field) {
 		return addColumn(propertyName, null, title, field, TableColumn.DEFAULT_WIDTH);
 	}
 
-	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field) {
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field) {
 		return addColumn(propertyName, icon, title, field, TableColumn.DEFAULT_WIDTH);
 	}
 
-	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field, int defaultWidth) {
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field, int defaultWidth) {
 		TableColumn<RECORD, VALUE> column = new TableColumn<>(propertyName, icon, title, field, defaultWidth);
 		addColumn(column);
 		return column;
@@ -195,16 +191,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.columns.addAll(index, newColumns);
 		newColumns.forEach(column -> {
 			column.setTable(this);
-			AbstractField<?> field = column.getField();
-			field.setParent(this);
 		});
-		if (isRendered()) {
-			SessionContext sessionContext = getSessionContext();
-			sessionContext.sendCommandIfRendered(this, (DtoCommand<?>) new DtoTable.AddColumnsCommand(newColumns.stream()
+			clientObjectChannel.addColumns(newColumns.stream()
 					.map(TableColumn::createUiTableColumn)
-					.collect(Collectors.toList()), index), null);
-			// TODO #table resend data
-		}
+					.collect(Collectors.toList()), index);
 	}
 
 	public void removeColumn(String propertyName) {
@@ -220,12 +210,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void removeColumns(List<TableColumn<RECORD, ?>> obsoleteColumns) {
 		this.columns.removeAll(obsoleteColumns);
-		if (isRendered()) {
-			SessionContext sessionContext = getSessionContext();
-			sessionContext.sendCommandIfRendered(this, (DtoCommand<?>) new DtoTable.RemoveColumnsCommand(obsoleteColumns.stream()
-					.map(TableColumn::getPropertyName)
-					.collect(Collectors.toList())), null);
-		}
+		clientObjectChannel.removeColumns(obsoleteColumns.stream()
+				.map(TableColumn::getPropertyName)
+				.collect(Collectors.toList()));
 	}
 
 	@Override
@@ -252,134 +239,133 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		uiTable.setNumberingColumnEnabled(numberingColumnEnabled);
 		uiTable.setTextSelectionEnabled(textSelectionEnabled);
 		uiTable.setSortField(sorting != null ? sorting.getFieldName() : null);
-		uiTable.setSortDirection(sorting != null ? sorting.getSortDirection().toUiSortDirection() : null);
+		uiTable.setSortDirection(sorting != null ? sorting.getSortDirection() : null);
 		uiTable.setEditable(editable);
 		uiTable.setHeaderFieldsRowEnabled(headerFieldsRowEnabled);
 		uiTable.setHeaderFieldsRowHeight(headerFieldsRowHeight);
-		uiTable.setHeaderFields(toDtoFieldMap(this.headerFields));
+		uiTable.setHeaderFields(Map.copyOf(this.headerFields));
 		uiTable.setFooterFieldsRowEnabled(footerFieldsRowEnabled);
 		uiTable.setFooterFieldsRowHeight(footerFieldsRowHeight);
-		uiTable.setFooterFields(toDtoFieldMap(this.footerFields));
+		uiTable.setFooterFields(Map.copyOf(this.footerFields));
 		uiTable.setContextMenuEnabled(contextMenuProvider != null);
 		return uiTable;
 	}
 
-	private Map<String, DtoReference> toDtoFieldMap(Map<String, AbstractField> fieldsMap) {
-		return fieldsMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue()));
+	@Override
+	public void handleDisplayedRangeChanged(DtoAbstractInfiniteListComponent.DisplayedRangeChangedEventWrapper event) {
+		try {
+			handleScrollOrResize(ItemRange.startLength(event.getStartIndex(), event.getLength()));
+		} catch (DuplicateEntriesException e) {
+			// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
+			// So try to refresh the whole data instead.
+			LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
+			refreshData();
+		}
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoTable.RowsSelectedEvent.TYPE_ID -> {
-				var rowsSelectedEvent = event.as(DtoTable.RowsSelectedEventWrapper.class);
-				selectedRecords = renderedRecords.getRecords(rowsSelectedEvent.getRecordIds());
-				this.onRowsSelected.fire(selectedRecords);
-				if (selectedRecords.size() == 1) {
-					this.onSingleRowSelected.fire(selectedRecords.get(0));
-				} else if (selectedRecords.size() > 1) {
-					this.onMultipleRowsSelected.fire(selectedRecords);
-				}
-			}
-			case DtoTable.CellClickedEvent.TYPE_ID -> {
-				var cellClickedEvent = event.as(DtoTable.CellClickedEventWrapper.class);
-				RECORD record = renderedRecords.getRecord(cellClickedEvent.getRecordId());
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
-				if (record != null && column != null) {
-					this.onCellClicked.fire(new CellClickedEvent<>(record, column));
-				}
-			}
-			case DtoTable.CellEditingStartedEvent.TYPE_ID -> {
-				var editingStartedEvent = event.as(DtoTable.CellEditingStartedEventWrapper.class);
-				RECORD record = renderedRecords.getRecord(editingStartedEvent.getRecordId());
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
-				if (record == null || column == null) {
-					return;
-				}
-				this.activeEditorCell = new TableCellCoordinates<>(record, editingStartedEvent.getColumnPropertyName());
-				this.selectedRecords = List.of(activeEditorCell.getRecord());
-				Object cellValue = getCellValue(record, column);
-				AbstractField activeEditorField = getActiveEditorField();
-				activeEditorField.setValue(cellValue);
-				List<FieldMessage> cellMessages = getCellMessages(record, editingStartedEvent.getColumnPropertyName());
-				List<FieldMessage> columnMessages = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName()).getMessages();
-				if (columnMessages == null) {
-					columnMessages = Collections.emptyList();
-				}
-				List<FieldMessage> messages = new ArrayList<>(cellMessages);
-				messages.addAll(columnMessages);
-				activeEditorField.setCustomFieldMessages(messages);
-				this.onCellEditingStarted.fire(new CellEditingStartedEvent(record, column, cellValue));
-			}
-			case DtoTable.CellEditingStoppedEvent.TYPE_ID -> {
-				var editingStoppedEvent = event.as(DtoTable.CellEditingStoppedEventWrapper.class);
-				this.activeEditorCell = null;
-				RECORD record = renderedRecords.getRecord(editingStoppedEvent.getRecordId());
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
-				if (record == null || column == null) {
-					return;
-				}
-				this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(record, column));
-			}
-			case DtoTable.CellValueChangedEvent.TYPE_ID -> {
-				var changeEvent = event.as(DtoTable.CellValueChangedEventWrapper.class);
-				RECORD record = renderedRecords.getRecord(changeEvent.getRecordId());
-				TableColumn<RECORD, ?> column = this.getColumnByPropertyName(changeEvent.getColumnPropertyName());
-				if (record == null || column == null) {
-					return;
-				}
-				Object value = column.getField().convertClientValueToServerValue(changeEvent.getValue());
-				transientChangesByRecordAndPropertyName
-						.computeIfAbsent(record, idValue -> new HashMap<>())
-						.put(column.getPropertyName(), value);
-				onCellValueChanged.fire(new FieldValueChangedEventData(record, column, value));
-			}
-			case DtoTable.SortingChangedEvent.TYPE_ID -> {
-				var sortingChangedEvent = event.as(DtoTable.SortingChangedEventWrapper.class);
-				var sortField = sortingChangedEvent.getSortField();
-				var sortDirection = SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection());
-				this.sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
-				getModel().setSorting(sorting);
-				onSortingChanged.fire(new SortingChangedEventData(sortingChangedEvent.getSortField(), SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection())));
-			}
-			case DtoTable.DisplayedRangeChangedEvent.TYPE_ID -> {
-				var d = event.as(DtoTable.DisplayedRangeChangedEventWrapper.class);
-				try {
-					handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
-				} catch (DuplicateEntriesException e) {
-					// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
-					// So try to refresh the whole data instead.
-					LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
-					refreshData();
-				}
-			}
-			case DtoTable.FieldOrderChangeEvent.TYPE_ID -> {
-				var fieldOrderChangeEvent = event.as(DtoTable.FieldOrderChangeEventWrapper.class);
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
-				onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, fieldOrderChangeEvent.getPosition()));
-			}
-			case DtoTable.ColumnSizeChangeEvent.TYPE_ID -> {
-				var columnSizeChangeEvent = event.as(DtoTable.ColumnSizeChangeEventWrapper.class);
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
-				onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, columnSizeChangeEvent.getSize()));
-			}
-			case DtoTable.ContextMenuRequestedEvent.TYPE_ID -> {
-				var e = event.as(DtoTable.ContextMenuRequestedEventWrapper.class);
-				lastSeenContextMenuRequestId = e.getRequestId();
-				RECORD record = renderedRecords.getRecord(e.getRecordId());
-				if (record != null && contextMenuProvider != null) {
-					Component contextMenuContent = contextMenuProvider.apply(record);
-					if (contextMenuContent != null) {
-						clientObjectChannel.setContextMenuContent(e.getRequestId(), contextMenuContent);
-					} else {
-						clientObjectChannel.closeContextMenu(e.getRequestId());
-					}
-				} else {
-					closeContextMenu();
-				}
-			}
-
+	public void handleCellClicked(DtoTable.CellClickedEventWrapper event) {
+		RECORD record = renderedRecords.getRecord(event.getRecordId());
+		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
+		if (record != null && column != null) {
+			this.onCellClicked.fire(new CellClickedEvent<>(record, column));
 		}
+	}
+
+	@Override
+	public void handleCellEditingStarted(DtoTable.CellEditingStartedEventWrapper event) {
+		RECORD record = renderedRecords.getRecord(event.getRecordId());
+		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
+		if (record == null || column == null) {
+			return;
+		}
+		this.activeEditorCell = new TableCellCoordinates<>(record, event.getColumnPropertyName());
+		this.selectedRecords = List.of(activeEditorCell.getRecord());
+		Object cellValue = getCellValue(record, column);
+		Field activeEditorField = getActiveEditorField();
+		activeEditorField.setValue(cellValue);
+		List<FieldMessage> cellMessages = getCellMessages(record, event.getColumnPropertyName());
+		List<FieldMessage> columnMessages = getColumnByPropertyName(event.getColumnPropertyName()).getMessages();
+		if (columnMessages == null) {
+			columnMessages = Collections.emptyList();
+		}
+		List<FieldMessage> messages = new ArrayList<>(cellMessages);
+		messages.addAll(columnMessages);
+		activeEditorField.setCustomFieldMessages(messages);
+		this.onCellEditingStarted.fire(new CellEditingStartedEvent(record, column, cellValue));
+	}
+
+	@Override
+	public void handleCellEditingStopped(DtoTable.CellEditingStoppedEventWrapper event) {
+		this.activeEditorCell = null;
+		RECORD record = renderedRecords.getRecord(event.getRecordId());
+		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
+		if (record == null || column == null) {
+			return;
+		}
+		this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(record, column));
+	}
+
+	@Override
+	public void handleCellValueChanged(DtoTable.CellValueChangedEventWrapper event) {
+		RECORD record = renderedRecords.getRecord(event.getRecordId());
+		TableColumn<RECORD, ?> column = this.getColumnByPropertyName(event.getColumnPropertyName());
+		if (record == null || column == null) {
+			return;
+		}
+		Object value = column.getField().convertClientValueToServerValue(event.getValue().getJsonNode());
+		transientChangesByRecordAndPropertyName
+				.computeIfAbsent(record, idValue -> new HashMap<>())
+				.put(column.getPropertyName(), value);
+		onCellValueChanged.fire(new FieldValueChangedEventData(record, column, value));
+	}
+
+	@Override
+	public void handleRowsSelected(List<Integer> recordIds) {
+		selectedRecords = renderedRecords.getRecords(recordIds);
+		this.onRowsSelected.fire(selectedRecords);
+		if (selectedRecords.size() == 1) {
+			this.onSingleRowSelected.fire(selectedRecords.get(0));
+		} else if (selectedRecords.size() > 1) {
+			this.onMultipleRowsSelected.fire(selectedRecords);
+		}
+	}
+
+	@Override
+	public void handleSortingChanged(DtoTable.SortingChangedEventWrapper event) {
+		var sortField = event.getSortField();
+		var sortDirection = event.getSortDirection();
+		this.sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
+		getModel().setSorting(sorting);
+		onSortingChanged.fire(new SortingChangedEventData(event.getSortField(), event.getSortDirection()));
+	}
+
+	@Override
+	public void handleContextMenuRequested(DtoTable.ContextMenuRequestedEventWrapper event) {
+		lastSeenContextMenuRequestId = event.getRequestId();
+		RECORD record = renderedRecords.getRecord(event.getRecordId());
+		if (record != null && contextMenuProvider != null) {
+			Component contextMenuContent = contextMenuProvider.apply(record);
+			if (contextMenuContent != null) {
+				clientObjectChannel.setContextMenuContent(event.getRequestId(), contextMenuContent);
+			} else {
+				clientObjectChannel.closeContextMenu(event.getRequestId());
+			}
+		} else {
+			closeContextMenu();
+		}
+	}
+
+	@Override
+	public void handleFieldOrderChange(DtoTable.FieldOrderChangeEventWrapper event) {
+		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
+		onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, event.getPosition()));
+	}
+
+	@Override
+	public void handleColumnSizeChange(DtoTable.ColumnSizeChangeEventWrapper event) {
+		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
+		onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, event.getSize()));
 	}
 
 	private <VALUE> VALUE getCellValue(RECORD record, TableColumn<RECORD, VALUE> column) {
@@ -422,7 +408,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return activeEditorCell;
 	}
 
-	public AbstractField getActiveEditorField() {
+	public Field<?> getActiveEditorField() {
 		if (activeEditorCell != null) {
 			return getColumnByPropertyName(activeEditorCell.getPropertyName()).getField();
 		} else {
@@ -536,9 +522,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	protected void updateColumnMessages(TableColumn<RECORD, ?> tableColumn) {
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoTable.SetColumnMessagesCommand(tableColumn.getPropertyName(), tableColumn.getMessages().stream()
-				.map(message -> message.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
-				.collect(Collectors.toList()))).get(), null);
+		clientObjectChannel.setColumnMessages(tableColumn.getPropertyName(), tableColumn.getMessages().stream()
+				.map(message -> message.createUiFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
+				.collect(Collectors.toList()));
 	}
 
 	public List<FieldMessage> getCellMessages(RECORD record, String propertyName) {
@@ -588,13 +574,13 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private void updateSingleCellMessages(RECORD record, String propertyName, List<FieldMessage> cellMessages) {
 		DtoIdentifiableClientRecord uiRecordId = renderedRecords.getUiRecord(record);
 		if (uiRecordId != null) {
-			getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> new DtoTable.SetSingleCellMessagesCommand(
+			clientObjectChannel.setSingleCellMessages(
 					uiRecordId.getId(),
 					propertyName,
 					cellMessages.stream()
-							.map(m -> m.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
+							.map(m -> m.createUiFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
 							.collect(Collectors.toList())
-			)).get(), null);
+			);
 		}
 	}
 
@@ -720,16 +706,14 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	@Override
 	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<DtoIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> {
-			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; newUiRecords.size: {}; totalCount: {}",
-					start, uiRecordIds.size(), renderedRecords.size(), newUiRecords.size(), totalNumberOfRecords);
-			return new DtoTable.UpdateDataCommand(
-					start,
-					uiRecordIds,
-					(List) newUiRecords,
-					totalNumberOfRecords
-			);
-		}).get(), null);
+		LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; newUiRecords.size: {}; totalCount: {}",
+				start, uiRecordIds.size(), renderedRecords.size(), newUiRecords.size(), totalNumberOfRecords);
+		clientObjectChannel.updateData(
+				start,
+				uiRecordIds,
+				(List) newUiRecords,
+				totalNumberOfRecords
+		);
 	}
 
 	private int getTotalRecordsCount() {
@@ -814,7 +798,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				.collect(Collectors.toMap(
 						entry -> entry.getKey(),
 						entry -> entry.getValue().stream()
-								.map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
+								.map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
 								.collect(Collectors.toList())
 				));
 	}
@@ -825,7 +809,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		clientRecord.setId(++clientRecordIdCounter);
 		Map<String, Object> uxValues = extractRecordProperties(record);
 		Map<String, Object> uiValues = columns.stream()
-				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), ((AbstractField) column.getField()).convertServerValueToClientValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
+				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), ((Field) column.getField()).convertServerValueToClientValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
 		clientRecord.setValues(uiValues);
 		clientRecord.setSelected(selectedRecords.stream().anyMatch(r -> customEqualsAndHashCode.getEquals().test(r, record)));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
@@ -938,18 +922,17 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setCssStyle(".slick-headerrow", "background-color", headerFieldsRowBackgroundColor != null ? headerFieldsRowBackgroundColor.toHtmlColorString() : null);
 	}
 
-	public Map<String, AbstractField> getHeaderFields() {
+	public Map<String, Field> getHeaderFields() {
 		return Collections.unmodifiableMap(headerFields);
 	}
 
-	public void setHeaderFields(Map<String, AbstractField<?>> headerFields) {
+	public void setHeaderFields(Map<String, Field<?>> headerFields) {
 		this.headerFields = new HashMap<>();
 		this.headerFields.putAll(headerFields);
-		this.headerFields.values().forEach(field -> field.setParent(this));
-		clientObjectChannel.setHeaderFields(toDtoFieldMap(this.headerFields));
+		clientObjectChannel.setHeaderFields(Map.copyOf(this.headerFields));
 	}
 
-	public void setHeaderRowField(String columnName, AbstractField<?> field) {
+	public void setHeaderRowField(String columnName, Field<?> field) {
 		this.headerFields.put(columnName, field);
 		clientObjectChannel.setHeaderRowField(columnName, field);
 	}
@@ -974,18 +957,17 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setCssStyle(".slick-footerrow", "background-color", footerFieldsRowBackgroundColor != null ? footerFieldsRowBackgroundColor.toHtmlColorString() : null);
 	}
 
-	public Map<String, AbstractField> getFooterFields() {
+	public Map<String, Field<?>> getFooterFields() {
 		return footerFields;
 	}
 
-	public void setFooterFields(Map<String, AbstractField<?>> footerFields) {
+	public void setFooterFields(Map<String, Field<?>> footerFields) {
 		this.footerFields = new HashMap<>();
 		this.footerFields.putAll(footerFields);
-		this.footerFields.values().forEach(field -> field.setParent(this));
-		clientObjectChannel.setFooterFields(toDtoFieldMap(this.footerFields));
+		clientObjectChannel.setFooterFields(Map.copyOf(this.footerFields));
 	}
 
-	public void setFooterRowField(String columnName, AbstractField<?> field) {
+	public void setFooterRowField(String columnName, Field<?> field) {
 		this.footerFields.put(columnName, field);
 		clientObjectChannel.setFooterRowField(columnName, field);
 	}
@@ -997,11 +979,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				.findFirst().orElse(null);
 	}
 
-	public AbstractField getHeaderRowFieldByName(String propertyName) {
+	public Field getHeaderRowFieldByName(String propertyName) {
 		return headerFields.get(propertyName);
 	}
 
-	public AbstractField getFooterRowFieldByName(String propertyName) {
+	public Field getFooterRowFieldByName(String propertyName) {
 		return footerFields.get(propertyName);
 	}
 

@@ -19,18 +19,18 @@
  */
 package org.teamapps.projector.components.infinitescroll.table;
 
-import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.Field;
 
 public class OuterFieldChangedEventData {
-	private final AbstractField<?> field;
+	private final Field<?> field;
 	private final Object value;
 
-	public OuterFieldChangedEventData(AbstractField<?> field, Object value) {
+	public OuterFieldChangedEventData(Field<?> field, Object value) {
 		this.field = field;
 		this.value = value;
 	}
 
-	public AbstractField<?> getField() {
+	public Field<?> getField() {
 		return field;
 	}
 

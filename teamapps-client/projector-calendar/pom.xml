@@ -14,11 +14,15 @@
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>projector-client-object-api</artifactId>
+            <artifactId>teamapps-client-core-components</artifactId>
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>projector-grid-template</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-material-icon-provider</artifactId>
         </dependency>
     </dependencies>
 

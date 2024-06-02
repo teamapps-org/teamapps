@@ -279,7 +279,7 @@ class UiCitationBlock extends AbstractBlockComponent<DtoCitationBlock> {
 		this.$main = parseHtml(`<div class="pageview-block UiCitationBlock">
     <div class="tool-buttons"></div>
     <div class="flex-container">
-	    <div class="creator-image-wrapper align-${CreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
+	    <div class="creator-image-wrapper align-${config.creatorImageAlignment}">
 			${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"></img>` : ''}
 	    </div>
 	    <div class="content-wrapper"></div>

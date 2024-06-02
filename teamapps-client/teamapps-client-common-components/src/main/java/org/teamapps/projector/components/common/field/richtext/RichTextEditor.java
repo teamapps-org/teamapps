@@ -99,7 +99,7 @@ public class RichTextEditor extends AbstractField<String> {
 						},
 						() -> getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid())
 				);
-				sendCommandIfRendered(() -> new DtoRichTextEditor.SetUploadedImageUrlCommand(fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
+				clientObjectChannel.setUploadedImageUrl(FileUuid, This.uploadedFileToUrlConverter.convert(uploadedFile));
 			}
 			case DtoRichTextEditor.ImageUploadFailedEvent.TYPE_ID -> {
 				var uploadFailedEvent = event.as(DtoRichTextEditor.ImageUploadFailedEventWrapper.class);
@@ -115,7 +115,7 @@ public class RichTextEditor extends AbstractField<String> {
 
 	public void setToolbarVisibilityMode(ToolbarVisibilityMode toolbarVisibilityMode) {
 		this.toolbarVisibilityMode = toolbarVisibilityMode;
-		sendCommandIfRendered(() -> new DtoRichTextEditor.SetToolbarVisibilityModeCommand(toolbarVisibilityMode.toToolbarVisibilityMode()));
+		clientObjectChannel.setToolbarVisibilityMode(ToolbarVisibilityMode.ToToolbarVisibilityMode());
 	}
 
 	public UploadedFileToUrlConverter getUploadedFileToUrlConverter() {
@@ -132,7 +132,7 @@ public class RichTextEditor extends AbstractField<String> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		sendCommandIfRendered(() -> new DtoRichTextEditor.SetUploadUrlCommand(uploadUrl));
+		clientObjectChannel.setUploadUrl(UploadUrl);
 	}
 
 	public int getMaxImageFileSizeInBytes() {
@@ -141,7 +141,7 @@ public class RichTextEditor extends AbstractField<String> {
 
 	public void setMaxImageFileSizeInBytes(int maxImageFileSizeInBytes) {
 		this.maxImageFileSizeInBytes = maxImageFileSizeInBytes;
-		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMaxImageFileSizeInBytesCommand(maxImageFileSizeInBytes));
+		clientObjectChannel.setMaxImageFileSizeInBytes(MaxImageFileSizeInBytes);
 	}
 
 	public int getMinHeight() {
@@ -150,7 +150,7 @@ public class RichTextEditor extends AbstractField<String> {
 
 	public void setMinHeight(int minHeight) {
 		this.minHeight = minHeight;
-		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMinHeightCommand(minHeight));
+		clientObjectChannel.setMinHeight(MinHeight);
 	}
 
 	public int getMaxHeight() {
@@ -159,14 +159,14 @@ public class RichTextEditor extends AbstractField<String> {
 
 	public void setMaxHeight(int maxHeight) {
 		this.maxHeight = maxHeight;
-		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMaxHeightCommand(maxHeight));
+		clientObjectChannel.setMaxHeight(MaxHeight);
 	}
 
 	public void setFixedHeight(int height) {
 		this.minHeight = height;
 		this.maxHeight = height;
-		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMinHeightCommand(height));
-		sendCommandIfRendered(() -> new DtoRichTextEditor.SetMaxHeightCommand(height));
+		clientObjectChannel.setMinHeight(Height);
+		clientObjectChannel.setMaxHeight(Height);
 	}
 
 	@Override

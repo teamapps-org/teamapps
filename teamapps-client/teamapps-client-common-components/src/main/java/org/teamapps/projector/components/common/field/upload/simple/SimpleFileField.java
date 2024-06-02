@@ -68,12 +68,12 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 		fileItem.setState(FileItemState.DONE);
 		this.fileItems.add(fileItem);
 		fileItem.setFileField(this);
-		sendCommandIfRendered(() -> new DtoSimpleFileField.AddFileItemCommand(fileItem.createUiFileItem()));
+		clientObjectChannel.addFileItem(FileItem.CreateUiFileItem());
 	}
 
 	public void removeFileItem(FileItem fileItem) {
 		removeFileItemInternal(fileItem);
-		sendCommandIfRendered(() -> new DtoSimpleFileField.RemoveFileItemCommand(fileItem.getUuid()));
+		clientObjectChannel.removeFileItem(FileItem.GetUuid());
 	}
 
 	private void removeFileItemInternal(FileItem fileItem) {
@@ -82,7 +82,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	/*package-private*/  void handleFileItemChanged(FileItem fileItem) {
-		sendCommandIfRendered(() -> new DtoSimpleFileField.UpdateFileItemCommand(fileItem.createUiFileItem()));
+		clientObjectChannel.updateFileItem(FileItem.CreateUiFileItem());
 	}
 
 	private FileItem getFileItemByUuid(String uuid) {
@@ -206,7 +206,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setDisplayType(FileFieldDisplayType displayType) {
 		this.displayType = displayType;
-		sendCommandIfRendered(() -> new DtoSimpleFileField.SetDisplayModeCommand(displayType.toUiFileFieldDisplayType()));
+		clientObjectChannel.setDisplayMode(DisplayType.ToUiFileFieldDisplayType());
 	}
 
 	public int getMaxFiles() {
@@ -215,7 +215,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setMaxFiles(int maxFiles) {
 		this.maxFiles = maxFiles;
-		sendCommandIfRendered(() -> new DtoSimpleFileField.SetMaxFilesCommand(maxFiles));
+		clientObjectChannel.setMaxFiles(MaxFiles);
 	}
 
 	public long getMaxBytesPerFile() {
@@ -224,8 +224,8 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setMaxBytesPerFile(long maxBytesPerFile) {
 		this.maxBytesPerFile = maxBytesPerFile;
-		sendCommandIfRendered(() -> new DtoSimpleFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
-		sendCommandIfRendered(() -> new DtoSimpleFileField.SetFileTooLargeMessageCommand(getSessionContext().getLocalized(TeamAppsTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1))));
+		clientObjectChannel.setMaxBytesPerFile(MaxBytesPerFile);
+		clientObjectChannel.setFileTooLargeMessage(GetSessionContext().GetLocalized(teamAppsTranslationKeys.file_Too_LARGE_SHORT_MESSAGE.GETKEY(), FILESIZEFORMATTER.humanReadableByteCount(MaxBytesPerFile, true, 1)));
 	}
 
 	public String getUploadUrl() {
@@ -234,7 +234,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		sendCommandIfRendered(() -> new DtoSimpleFileField.SetUploadUrlCommand(uploadUrl));
+		clientObjectChannel.setUploadUrl(UploadUrl);
 	}
 
 	public Icon<?, ?> getBrowseButtonIcon() {
@@ -243,7 +243,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setBrowseButtonIcon(Icon<?, ?> browseButtonIcon) {
 		this.browseButtonIcon = browseButtonIcon;
-		sendCommandIfRendered(() -> new DtoSimpleFileField.SetBrowseButtonIconCommand(getSessionContext().resolveIcon(browseButtonIcon)));
+		clientObjectChannel.setBrowseButtonIcon(GetSessionContext().ResolveIcon(browseButtonIcon));
 	}
 
 	public String getBrowseButtonCaption() {
@@ -252,6 +252,6 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setBrowseButtonCaption(String browseButtonCaption) {
 		this.browseButtonCaption = browseButtonCaption;
-		sendCommandIfRendered(() -> new DtoSimpleFileField.SetBrowseButtonCaptionCommand(browseButtonCaption));
+		clientObjectChannel.setBrowseButtonCaption(BrowseButtonCaption);
 	}
 }

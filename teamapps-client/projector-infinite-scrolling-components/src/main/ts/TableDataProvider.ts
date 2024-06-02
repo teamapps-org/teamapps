@@ -19,8 +19,7 @@
  */
 import DataProvider = Slick.DataProvider;
 import {DtoTableClientRecord} from "./generated";
-import {DtoIdentifiableClientRecord} from "teamapps-client-core";
-import {DtoFieldMessage} from "teamapps-client-core-components";
+import {DtoFieldMessage, DtoIdentifiableClientRecord} from "projector-client-object-api";
 
 export class TableDataProvider implements DataProvider<DtoTableClientRecord> {
 	public onDataLoading = new Slick.Event();

@@ -21,10 +21,8 @@ import {defaultListQueryFunctionFactory, isModifierKey, QueryFunction} from "./t
 import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "./trivial-components/TrivialUnitBox";
 import {
 	AbstractField,
-	BigDecimal, FieldEditingMode, SpecialKey,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent, selectElementContents, TeamAppsEvent, DebounceMode, deepEquals
-} from "teamapps-client-core-components";
+	BigDecimal, FieldEditingMode, TeamAppsEvent, DebounceMode, deepEquals
+} from "projector-client-object-api";
 import {
 	createDtoCurrencyValue, DtoComboBox_TextInputEvent,
 	DtoCurrencyField, DtoCurrencyField_TextInputEvent,
@@ -33,11 +31,11 @@ import {
 	DtoCurrencyUnit,
 	DtoCurrencyValue
 } from "./generated";
+import {selectElementContents} from "./util";
 
 export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyValue> implements DtoCurrencyFieldEventSource, DtoCurrencyFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<DtoCurrencyField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private trivialUnitBox: TrivialUnitBox<DtoCurrencyUnit>;
 	private queryFunction: QueryFunction<DtoCurrencyUnit>;
@@ -82,14 +80,6 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 				&& !isModifierKey(e)) {
 				this.onTextInput.fire({
 					enteredString: (this.trivialUnitBox.getEditor() as HTMLInputElement).value
-				});
-			} else 	if (e.key === "Escape") {
-				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ESCAPE
-				});
-			} else if (e.key === "Enter") {
-				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ENTER
 				});
 			}
 		});

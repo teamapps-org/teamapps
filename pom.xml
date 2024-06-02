@@ -59,6 +59,8 @@
         <module>teamapps-client/projector-combobox</module>
         <module>teamapps-client/projector-infinite-scrolling-components</module>
         <module>teamapps-client/projector-calendar</module>
+        <module>teamapps-client/projector-document-viewer</module>
+        <module>teamapps-client/projector-elegant-panel</module>
         <module>teamapps-session-stats-app</module>
 
         <module>teamapps-material-icon-provider</module>

@@ -20,8 +20,14 @@
 
 import {DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, TrivialComponent} from "./TrivialCore";
 import {highlightMatches} from "./util/highlight";
-import {insertAfter, insertBefore, parseHtml, TeamAppsEvent} from "projector-client-object-api";
-import {addDelegatedEventListener, closestAncestor, toggleElementCollapsed} from "teamapps-client-core-components";
+import {
+	addDelegatedEventListener, closestAncestor,
+	insertAfter,
+	insertBefore,
+	parseHtml,
+	TeamAppsEvent,
+	toggleElementCollapsed
+} from "projector-client-object-api";
 
 export interface TrivialTreeBoxConfig<E> {
 	/**

@@ -18,8 +18,16 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, Component, parseHtml, ServerObjectChannel, TeamAppsEvent, Template} from "projector-client-object-api";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins} from "../Common";
+import {
+	AbstractLegacyComponent,
+	ClickOutsideHandle,
+	Component, doOnceOnClickOutsideElement,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent,
+	Template
+} from "projector-client-object-api";
+import {outerHeightIncludingMargins} from "../util/Common";
 import {
 	DtoNavigationBar,
 	DtoNavigationBar_ButtonClickedEvent,

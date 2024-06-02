@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,18 @@ import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
+/**
+ * Caches and maps between client and server records.
+ * This cache keeps track of records not yet known to the client and records still known by the client (although obsolete).
+ * <p>
+ * This is useful for components like comboboxes where the user gets a suggestion by the server in the dropdown. While
+ * the user selects the item, the server might decide to send new suggestions. In that case, the selection of the user should still be
+ * honored. Otherwise, the user would see the item is selected on the UI, but the server would not remember it,
+ * and thereby have to remove it after the fact (bad ux).
+ *
+ * @param <RECORD>
+ * @param <UIRECORD>
+ */
 public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRecord> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClientRecordCache.class);
@@ -36,10 +48,9 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 	private final UiIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> postProcessor;
 	private int idCounter;
 
-	private ClientRecordCachePurgeListener purgeListener;
 	private BiPredicate<RECORD, Integer> purgeDecider = (record, clientRecordId) -> true;
 	private int maxCapacity = Integer.MAX_VALUE;
-	
+
 	/**
 	 * Always represents the current server-side state.
 	 */
@@ -152,11 +163,7 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 	private void purgeIfNeeded(int numberOfRecordsToBeAdded) {
 		int numberOfRecordsToBeRemoved = uiRecordsByRecord.size() + numberOfRecordsToBeAdded - maxCapacity;
 		if (numberOfRecordsToBeRemoved > 0) {
-			List<Integer> removedClientRecordIds = removeEldestEntries(uiRecordsByRecord, numberOfRecordsToBeRemoved, purgeDecider);
-
-			if (purgeListener != null) {
-				purgeListener.handleCacheEntriesPurged(new CacheManipulationHandle<>(removedClientRecordIds, () -> recordsByClientId.keySet().removeAll(removedClientRecordIds)));
-			}
+			removeEldestEntries(uiRecordsByRecord, numberOfRecordsToBeRemoved, purgeDecider);
 		}
 
 		// make sure we do not get huge memory leaks due to erroneous clients not acknowledging data
@@ -188,10 +195,6 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 	public void setMaxCapacity(int maxCapacity) {
 		this.maxCapacity = maxCapacity;
 		purgeIfNeeded(0);
-	}
-
-	public void setPurgeListener(ClientRecordCachePurgeListener purgeListener) {
-		this.purgeListener = purgeListener;
 	}
 
 	private UIRECORD createUiRecord(RECORD record) {

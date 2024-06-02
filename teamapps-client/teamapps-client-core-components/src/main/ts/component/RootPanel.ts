@@ -18,8 +18,14 @@
  * =========================LICENSE_END==================================
  */
 import {DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
-import {AbstractLegacyComponent, Component, PageTransition, parseHtml, ServerObjectChannel} from "projector-client-object-api";
-import {pageTransition} from "../Common";
+import {
+	AbstractLegacyComponent,
+	Component,
+	pageTransition,
+	PageTransition,
+	parseHtml,
+	ServerObjectChannel
+} from "projector-client-object-api";
 
 // noinspection JSUnusedGlobalSymbols
 export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements DtoRootPanelCommandHandler {

@@ -20,8 +20,8 @@
 import {LocalDateTime} from "./LocalDateTime";
 import {createTimeRenderer} from "./datetime-rendering";
 import {DtoLocalTimeField, DtoLocalTimeFieldCommandHandler, DtoLocalTimeFieldEventSource} from "./generated";
-import {arraysEqual} from "teamapps-client-core-components";
 import {AbstractTimeField} from "./AbstractTimeField";
+import {arraysEqual} from "projector-client-object-api";
 
 type LocalTime = [number, number, number, number];
 

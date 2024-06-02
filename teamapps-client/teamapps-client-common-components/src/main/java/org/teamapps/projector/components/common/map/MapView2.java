@@ -64,17 +64,17 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleShapeChanged(AbstractMapShape shape) {
-			sendCommandIfRendered(() -> new DtoMap2.UpdateShapeCommand(shape.getClientIdInternal(), shape.createUiMapShape()));
+			clientObjectChannel.updateShape(Shape.GetClientIdInternal(), shape.createUiMapShape());
 		}
 
 		@Override
 		public void handleShapeChanged(AbstractMapShape shape, DtoAbstractMapShapeChange change) {
-			sendCommandIfRendered(() -> new DtoMap2.ChangeShapeCommand(shape.getClientIdInternal(), change));
+			clientObjectChannel.changeShape(Shape.GetClientIdInternal(), change);
 		}
 
 		@Override
 		public void handleShapeRemoved(AbstractMapShape shape) {
-			sendCommandIfRendered(() -> new DtoMap2.RemoveShapeCommand(shape.getClientIdInternal()));
+			clientObjectChannel.removeShape(Shape.GetClientIdInternal());
 		}
 	};
 
@@ -193,15 +193,15 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void addShape(AbstractMapShape shape) {
 		shape.setListenerInternal(shapeListener);
 		shapesByClientId.put(shape.getClientIdInternal(), shape);
-		sendCommandIfRendered(() -> new DtoMap2.AddShapeCommand(shape.getClientIdInternal(), shape.createUiMapShape()));
+		clientObjectChannel.addShape(Shape.GetClientIdInternal(), shape.createUiMapShape());
 	}
 
 	public void removeShape(AbstractMapShape shape) {
-		sendCommandIfRendered(() -> new DtoMap2.RemoveShapeCommand(shape.getClientIdInternal()));
+		clientObjectChannel.removeShape(Shape.GetClientIdInternal());
 	}
 
 	public void clearShapes() {
-		sendCommandIfRendered(() -> new DtoMap2.ClearShapesCommand());
+		clientObjectChannel.clearShapes();
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
@@ -218,7 +218,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void clearMarkerCluster() {
 		markersByClientId.values().removeAll(clusterMarkers);
 		clusterMarkers.clear();
-		sendCommandIfRendered(() -> new DtoMap2.SetMapMarkerClusterCommand(new DtoMapMarkerCluster(Collections.emptyList())));
+		clientObjectChannel.setMapMarkerCluster(New DtoMapMarkerCluster(collections.EmptyList()));
 	}
 
 //	TODO
@@ -246,12 +246,12 @@ public class MapView2<RECORD> extends AbstractComponent {
 
 	public void setStyleUrl(String styleUrl) {
 		this.styleUrl = styleUrl;
-		sendCommandIfRendered(() -> new DtoMap2.SetStyleUrlCommand(styleUrl));
+		clientObjectChannel.setStyleUrl(StyleUrl);
 	}
 
 	public void setZoomLevel(int zoomLevel) {
 		this.zoomLevel = zoomLevel;
-		sendCommandIfRendered(() -> new DtoMap2.SetZoomLevelCommand(zoomLevel));
+		clientObjectChannel.setZoomLevel(ZoomLevel);
 	}
 
 	public void setLocation(Location location) {
@@ -265,7 +265,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void setLocation(Location location, long animationDurationMillis, int targetZoomLevel) {
 		this.location = location;
 		this.zoomLevel = targetZoomLevel;
-		sendCommandIfRendered(() -> new DtoMap2.SetLocationCommand(location.createUiLocation(), animationDurationMillis, targetZoomLevel));
+		clientObjectChannel.setLocation(Location.CreateUiLocation(), animationDurationMillis, targetZoomLevel);
 	}
 
 	public void setLatitude(double latitude) {
@@ -287,24 +287,24 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void addMarker(Marker<RECORD> marker) {
 		int clientId = clientIdCounter++;
 		this.markersByClientId.put(clientId, marker);
-		sendCommandIfRendered(() -> new DtoMap2.AddMarkerCommand(createUiMarkerRecord(marker, clientId)));
+		clientObjectChannel.addMarker(CreateUiMarkerRecord(Marker, clientId));
 	}
 
 	public void removeMarker(Marker<RECORD> marker) {
 		Integer clientId = markersByClientId.removeValue(marker);
 		if (clientId != null) {
-			sendCommandIfRendered(() -> new DtoMap2.RemoveMarkerCommand(clientId));
+			clientObjectChannel.removeMarker(ClientId);
 		}
 	}
 
 	public void clearMarkers() {
 		markersByClientId.clear();
-		sendCommandIfRendered(() -> new DtoMap2.ClearMarkersCommand());
+		clientObjectChannel.clearMarkers();
 	}
 
 	public void fitBounds(Location southWest, Location northEast) {
 		this.location = new Location((southWest.getLatitude() + northEast.getLatitude()) / 2, (southWest.getLongitude() + northEast.getLongitude()) / 2);
-		sendCommandIfRendered(() -> new DtoMap2.FitBoundsCommand(southWest.createUiLocation(), northEast.createUiLocation()));
+		clientObjectChannel.fitBounds(SouthWest.CreateUiLocation(), northEast.createUiLocation());
 	}
 
 	public Template getDefaultTemplate() {

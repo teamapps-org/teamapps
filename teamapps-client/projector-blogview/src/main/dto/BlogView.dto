@@ -64,7 +64,8 @@ class DtoCitationBlock extends DtoBlock {
 }
 
 enum CreatorImageAlignment {
-	LEFT, RIGHT
+	LEFT = "left",
+	RIGHT = "right"
 }
 
 class DtoComponentBlock extends DtoBlock {

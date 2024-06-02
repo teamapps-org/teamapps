@@ -17,8 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, ExitAnimation, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
-import {animateCSS, Constants, removeClassesByFunction} from "../Common";
+import {
+	AbstractLegacyComponent,
+	animateCSS,
+	ExitAnimation,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent
+} from "projector-client-object-api";
+import {removeClassesByFunction} from "../util/Common";
 
 import {
 	DtoNotificationBar,
@@ -57,7 +64,7 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 		this.itemsById[itemConfig.id] = item;
 		this.$main.appendChild(item.getMainElement());
 		if (itemConfig.entranceAnimation != null) {
-			animateCSS(item.getMainElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[itemConfig.entranceAnimation]);
+			animateCSS(item.getMainElement(), itemConfig.entranceAnimation);
 		}
 		item.startCloseTimeout();
 		item.onClicked.addListener(() => this.onItemClicked.fire({id: itemConfig.id}));
@@ -79,7 +86,7 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 		let item = this.itemsById[id];
 		if (item != null) {
 			if (exitAnimation != null || item.config.exitAnimation != null) {
-				animateCSS(item.getMainElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation || item.config.exitAnimation], 300, () => {
+				animateCSS(item.getMainElement(), exitAnimation || item.config.exitAnimation, 300, () => {
 					item.getMainElement().remove();
 				});
 			} else {
@@ -154,7 +161,7 @@ class NotificationBarItem {
 		removeClassesByFunction(this.$icon.classList, className => className.startsWith("animate__"));
 
 		if (config.iconAnimation != null) {
-			this.$icon.classList.add(...Constants.REPEATABLE_ANIMATION_CSS_CLASSES[config.iconAnimation].split(/ +/));
+			this.$icon.classList.add(...config.iconAnimation.split(/ +/));
 		}
 	}
 

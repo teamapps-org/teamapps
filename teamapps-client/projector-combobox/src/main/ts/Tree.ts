@@ -25,13 +25,8 @@ import {
 	DtoTreeEventSource, DtoTreeRecord, DtoTreeServerObjectChannel
 } from "./generated";
 import {TrivialTree} from "./trivial-components/TrivialTree";
-import {
-	AbstractLegacyComponent,
-	buildObjectTree, loadSensitiveThrottling,
-	NodeWithChildren, parseHtml,
-	ServerObjectChannel,
-	TeamAppsEvent, Template
-} from "teamapps-client-core-components";
+import {AbstractLegacyComponent, loadSensitiveThrottling, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
+import {buildObjectTree, NodeWithChildren} from "./util";
 
 export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
 

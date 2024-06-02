@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.infinitescroll.table;
 
-import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.Field;
 
 public class FieldValueChangedEventData<RECORD, VALUE> {
 
@@ -45,7 +45,7 @@ public class FieldValueChangedEventData<RECORD, VALUE> {
 		return value;
 	}
 
-	public AbstractField<VALUE> getField() {
+	public Field<VALUE> getField() {
 		return column.getField();
 	}
 

@@ -25,7 +25,7 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.Field;
 import org.teamapps.projector.components.essential.CoreComponentLibrary;
 import org.teamapps.projector.components.essential.toolbar.Toolbar;
 import org.teamapps.projector.components.essential.toolbutton.ToolButton;
@@ -45,11 +45,11 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 	private String title;
 	private Icon<?, ?> icon;
 
-	private AbstractField<?> leftHeaderField;
+	private Field<?> leftHeaderField;
 	private Icon<?, ?> leftHeaderFieldIcon;
 	private int leftHeaderFieldMinWidth = 100;
 	private int leftHeaderFieldMaxWidth = 300;
-	private AbstractField<?> rightHeaderField;
+	private Field<?> rightHeaderField;
 	private Icon<?, ?> rightHeaderFieldIcon;
 	private int rightHeaderFieldMinWidth = 100;
 	private int rightHeaderFieldMaxWidth = 300;
@@ -143,7 +143,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		uiPanel.setContentStretchingEnabled(contentStretchingEnabled);
 	}
 
-	public DtoPanelHeaderField createUiPanelHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public DtoPanelHeaderField createUiPanelHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		if (field == null) {
 			return null;
 		}
@@ -154,7 +154,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		return uiPanelHeaderField;
 	}
 
-	public Panel setLeftHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public Panel setLeftHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		this.leftHeaderField = field;
 		this.leftHeaderFieldIcon = icon;
 		this.leftHeaderFieldMinWidth = minWidth;
@@ -163,11 +163,11 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		return this;
 	}
 
-	public AbstractField<?> getLeftHeaderField() {
+	public Field<?> getLeftHeaderField() {
 		return leftHeaderField;
 	}
 
-	public Panel setRightHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public Panel setRightHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		this.rightHeaderField = field;
 		this.rightHeaderFieldIcon = icon;
 		this.rightHeaderFieldMinWidth = minWidth;
@@ -176,7 +176,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		return this;
 	}
 
-	public AbstractField<?> getRightHeaderField() {
+	public Field<?> getRightHeaderField() {
 		return rightHeaderField;
 	}
 
@@ -273,7 +273,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		updateWindowButtons();
 	}
 
-	public void setLeftHeaderField(AbstractField<?> leftHeaderField) {
+	public void setLeftHeaderField(Field<?> leftHeaderField) {
 		setLeftHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth);
 	}
 
@@ -301,7 +301,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		setLeftHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth);
 	}
 
-	public void setRightHeaderField(AbstractField<?> rightHeaderField) {
+	public void setRightHeaderField(Field<?> rightHeaderField) {
 		setRightHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth);
 	}
 

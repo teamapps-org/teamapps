@@ -21,32 +21,30 @@ package org.teamapps.projector.components.infinitescroll.infiniteitemview;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.dto.DtoComponent;
-import org.teamapps.projector.dto.DtoIdentifiableClientRecord;
-import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.component.Component;
-import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.components.infinitescroll.dto.DtoInfiniteItemView;
-import org.teamapps.projector.components.infinitescroll.table.InfiniteScrollingComponentLibrary;
-import org.teamapps.ux.cache.record.DuplicateEntriesException;
-import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.projector.template.Template;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.components.infinitescroll.DtoAbstractInfiniteListComponent;
+import org.teamapps.projector.components.infinitescroll.recordcache.DuplicateEntriesException;
+import org.teamapps.projector.components.infinitescroll.recordcache.ItemRange;
+import org.teamapps.projector.components.infinitescroll.table.InfiniteScrollingComponentLibrary;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
-import org.teamapps.projector.format.HorizontalElementAlignment;
-import org.teamapps.projector.format.VerticalElementAlignment;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @ClientObjectLibrary(value = InfiniteScrollingComponentLibrary.class)
-public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECORD, InfiniteItemViewModel<RECORD>> {
+public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECORD, InfiniteItemViewModel<RECORD>> implements DtoInfiniteItemViewEventHandler {
+
+	private final DtoInfiniteItemViewClientObjectChannel clientObjectChannel = new DtoInfiniteItemViewClientObjectChannel(getClientObjectChannel());
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -102,41 +100,38 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	}
 
 	@Override
-	public void handleUiEvent(String name, JsonWrapper params) {
-		switch (event.getTypeId()) {
-			case DtoInfiniteItemView.DisplayedRangeChangedEvent.TYPE_ID -> {
-				var d = event.as(DtoInfiniteItemView.DisplayedRangeChangedEventWrapper.class);
-				try {
-					handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
-				} catch (DuplicateEntriesException e) {
-					// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
-					// So try to refresh the whole data instead.
-					LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
-					refresh();
-				}
-			}
-			case DtoInfiniteItemView.ItemClickedEvent.TYPE_ID -> {
-				var e = event.as(DtoInfiniteItemView.ItemClickedEventWrapper.class);
-				RECORD record = renderedRecords.getRecord(e.getRecordId());
-				if (record != null) {
-					onItemClicked.fire(new ItemClickedEventData<>(record, e.isDoubleClick()));
-				}
-			}
-			case DtoInfiniteItemView.ContextMenuRequestedEvent.TYPE_ID -> {
-				var e = event.as(DtoInfiniteItemView.ContextMenuRequestedEventWrapper.class);
-				lastSeenContextMenuRequestId = e.getRequestId();
-				if (contextMenuProvider == null) {
-					closeContextMenu();
+	public void handleDisplayedRangeChanged(DtoAbstractInfiniteListComponent.DisplayedRangeChangedEventWrapper event) {
+		try {
+			handleScrollOrResize(ItemRange.startLength(event.getStartIndex(), event.getLength()));
+		} catch (DuplicateEntriesException e) {
+			// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
+			// So try to refresh the whole data instead.
+			LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
+			refresh();
+		}
+	}
+
+	@Override
+	public void handleItemClicked(DtoInfiniteItemView.ItemClickedEventWrapper event) {
+		RECORD record = renderedRecords.getRecord(event.getRecordId());
+		if (record != null) {
+			onItemClicked.fire(new ItemClickedEventData<>(record, event.isDoubleClick()));
+		}
+	}
+
+	@Override
+	public void handleContextMenuRequested(DtoInfiniteItemView.ContextMenuRequestedEventWrapper event) {
+		lastSeenContextMenuRequestId = event.getRequestId();
+		if (contextMenuProvider == null) {
+			closeContextMenu();
+		} else {
+			RECORD record = renderedRecords.getRecord(event.getRecordId());
+			if (record != null) {
+				Component contextMenuContent = contextMenuProvider.apply(record);
+				if (contextMenuContent != null) {
+					clientObjectChannel.setContextMenuContent(event.getRequestId(), contextMenuContent);
 				} else {
-					RECORD record = renderedRecords.getRecord(e.getRecordId());
-					if (record != null) {
-						Component contextMenuContent = contextMenuProvider.apply(record);
-						if (contextMenuContent != null) {
-							clientObjectChannel.setContextMenuContent(e.getRequestId(), contextMenuContent);
-						} else {
-							clientObjectChannel.closeContextMenu(e.getRequestId());
-						}
-					}
+					clientObjectChannel.closeContextMenu(event.getRequestId());
 				}
 			}
 		}
@@ -154,15 +149,12 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	@Override
 	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<DtoIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
-		getClientObjectChannel().sendCommandIfRendered(((Supplier<DtoCommand<?>>) () -> {
-			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}",
-					start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
-			return new DtoInfiniteItemView.SetDataCommand(start,
-					uiRecordIds,
-					newUiRecords,
-					totalNumberOfRecords
-			);
-		}).get(), null);
+		LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}",
+				start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
+		clientObjectChannel.setData(start,
+				uiRecordIds,
+				newUiRecords,
+				totalNumberOfRecords);
 	}
 
 	@Override
@@ -191,7 +183,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		clientObjectChannel.setItemTemplate(itemTemplate != null ? itemTemplate : null);
+		clientObjectChannel.setItemTemplate(itemTemplate);
 		return this;
 	}
 

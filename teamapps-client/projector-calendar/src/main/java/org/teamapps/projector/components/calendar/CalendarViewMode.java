@@ -19,8 +19,6 @@
  */
 package org.teamapps.projector.components.calendar;
 
-import org.teamapps.projector.components.calendar.dto.DtoCalendarViewMode;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 

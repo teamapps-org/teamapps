@@ -17,13 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.dto;
+package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.infiniteitemview;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
-import org.teamapps.projector.dto.HorizontalElementAlignment;
-import org.teamapps.projector.dto.DtoVerticalElementAlignment;
+import org.teamapps.projector.format.JustifyContent;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.components.infinitescroll.DtoAbstractInfiniteListComponent;
 
 class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
 	required DtoTemplate* itemTemplate;
@@ -33,8 +34,8 @@ class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
 	double horizontalSpacing;
 	double verticalSpacing;
 	double itemPositionAnimationTime; // ms
-	HorizontalElementAlignment itemContentHorizontalAlignment;
-	VerticalElementAlignment itemContentVerticalAlignment;
+	JustifyContent itemContentHorizontalAlignment;
+	AlignItems itemContentVerticalAlignment;
 	DtoItemJustification rowHorizontalAlignment;
 //	boolean autoHeight; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 
@@ -47,15 +48,15 @@ class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
     command setItemHeight(double itemHeight);
     command setHorizontalSpacing(double horizontalSpacing);
     command setVerticalSpacing(double verticalSpacing);
-    command setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment);
-    command setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment);
+    command setItemContentHorizontalAlignment(JustifyContent itemContentHorizontalAlignment);
+    command setItemContentVerticalAlignment(AlignItems itemContentVerticalAlignment);
     command setRowHorizontalAlignment(DtoItemJustification rowHorizontalAlignment);
     command setItemPositionAnimationTime(int animationMillis);
 
     command setContextMenuContent(int requestId, DtoComponent* component);
     command closeContextMenu(int requestId);
 
-	event itemClicked(int recordId, boolean isDoubleClick);
+	event itemClicked(int recordId, boolean doubleClick);
 	event contextMenuRequested(int requestId, int recordId);
 }
 

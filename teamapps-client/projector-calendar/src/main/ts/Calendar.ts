@@ -161,13 +161,13 @@ export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements Dt
 				arg.el.addEventListener('click', (e) => {
 					this.onEventClicked.fire({
 						eventId: parseInt(arg.event.id),
-						isDoubleClick: false
+						doubleClick: false
 					});
 				});
 				arg.el.addEventListener('dblclick', (e) => {
 					this.onEventClicked.fire({
 						eventId: parseInt(arg.event.id),
-						isDoubleClick: true
+						doubleClick: true
 					});
 				});
 			},
@@ -183,20 +183,20 @@ export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements Dt
 					jsEvent: MouseEvent;
 					view: View;
 				}) => {
-					let isDoubleClick = lastClickClickedDate != null && lastClickClickedDate.valueOf() == arg.date.valueOf() && arg.jsEvent.timeStamp - lastClickTimeStamp < 600;
-					if (isDoubleClick) {
+					let doubleClick = lastClickClickedDate != null && lastClickClickedDate.valueOf() == arg.date.valueOf() && arg.jsEvent.timeStamp - lastClickTimeStamp < 600;
+					if (doubleClick) {
 						lastClickTimeStamp = 0;
 						lastClickClickedDate = null;
 						this.onDayClicked.fire({
 							date: arg.date.valueOf(),
-							isDoubleClick: true
+							doubleClick: true
 						});
 					} else {
 						lastClickTimeStamp = arg.jsEvent.timeStamp;
 						lastClickClickedDate = arg.date;
 						this.onDayClicked.fire({
 							date: arg.date.valueOf(),
-							isDoubleClick: false
+							doubleClick: false
 						});
 					}
 				};

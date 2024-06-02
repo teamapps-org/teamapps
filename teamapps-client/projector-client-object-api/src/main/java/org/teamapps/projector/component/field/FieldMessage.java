@@ -23,71 +23,41 @@ import java.util.Objects;
 
 public class FieldMessage {
 
-	private final Severity severity;
+	private final FieldMessageSeverity severity;
 	private final String message;
-	private final Position position;
-	private final Visibility visibility;
+	private final FieldMessagePosition position;
+	private final FieldMessageVisibility visibility;
 
-	public enum Severity {
-		INFO,
-		SUCCESS,
-		WARNING,
-		ERROR;
 
-		public DtoFieldMessageSeverity toUiFieldMessageSeverity() {
-			return DtoFieldMessageSeverity.valueOf(name());
-		}
-	}
-
-	public enum Position {
-		ABOVE,
-		BELOW,
-		POPOVER;
-
-		public DtoFieldMessagePosition toUiFieldMessagePosition() {
-			return DtoFieldMessagePosition.valueOf(name());
-		}
-	}
-
-	public enum Visibility {
-		ALWAYS_VISIBLE,
-		ON_FOCUS,
-		ON_HOVER_OR_FOCUS;
-
-		public DtoFieldMessageVisibilityMode toUiFieldMessageVisibilityMode() {
-			return DtoFieldMessageVisibilityMode.valueOf(name());
-		}
-	}
-
-	public FieldMessage(Severity severity, String message) {
+	public FieldMessage(FieldMessageSeverity severity, String message) {
 		this(null, null, severity, message);
 	}
 
-	public FieldMessage(Position position, Visibility visibility, Severity severity, String message) {
+	public FieldMessage(FieldMessagePosition position, FieldMessageVisibility visibility, FieldMessageSeverity severity, String message) {
 		this.position = position;
 		this.visibility = visibility;
 		this.severity = severity;
 		this.message = message;
 	}
 
-	public DtoFieldMessage createUiFieldMessage(Position defaultPosition, Visibility defaultVisibility) {
+	public DtoFieldMessage createUiFieldMessage(FieldMessagePosition defaultPosition, FieldMessageVisibility defaultVisibility) {
 		return new DtoFieldMessage(
-				severity.toUiFieldMessageSeverity(),
+				severity,
 				message,
-				position != null ? position.toUiFieldMessagePosition(): defaultPosition.toUiFieldMessagePosition(),
-				visibility != null ? visibility.toUiFieldMessageVisibilityMode() : defaultVisibility.toUiFieldMessageVisibilityMode()
+				position != null ? position: defaultPosition,
+				visibility != null ? visibility : defaultVisibility
 		);
 	}
 
-	public Position getPosition() {
+	public FieldMessagePosition getPosition() {
 		return position;
 	}
 
-	public Visibility getVisibility() {
+	public FieldMessageVisibility getVisibility() {
 		return visibility;
 	}
 
-	public Severity getSeverity() {
+	public FieldMessageSeverity getSeverity() {
 		return severity;
 	}
 

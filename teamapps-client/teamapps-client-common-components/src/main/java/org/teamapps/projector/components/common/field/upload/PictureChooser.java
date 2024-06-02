@@ -219,7 +219,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setMaxFileSize(long maxFileSize) {
 		this.maxFileSize = maxFileSize;
-		sendCommandIfRendered(() -> new DtoPictureChooser.SetMaxFileSizeCommand(maxFileSize));
+		clientObjectChannel.setMaxFileSize(MaxFileSize);
 	}
 
 	public String getUploadUrl() {
@@ -228,7 +228,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		sendCommandIfRendered(() -> new DtoPictureChooser.SetUploadUrlCommand(uploadUrl));
+		clientObjectChannel.setUploadUrl(UploadUrl);
 	}
 
 	public String getFileTooLargeMessage() {
@@ -237,7 +237,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setFileTooLargeMessage(String fileTooLargeMessage) {
 		this.fileTooLargeMessage = fileTooLargeMessage;
-		sendCommandIfRendered(() -> new DtoPictureChooser.SetFileTooLargeMessageCommand(fileTooLargeMessage));
+		clientObjectChannel.setFileTooLargeMessage(FileTooLargeMessage);
 	}
 
 	public String getUploadErrorMessage() {
@@ -246,7 +246,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setUploadErrorMessage(String uploadErrorMessage) {
 		this.uploadErrorMessage = uploadErrorMessage;
-		sendCommandIfRendered(() -> new DtoPictureChooser.SetUploadErrorMessageCommand(uploadErrorMessage));
+		clientObjectChannel.setUploadErrorMessage(UploadErrorMessage);
 	}
 
 	public Icon<?, ?> getBrowseButtonIcon() {

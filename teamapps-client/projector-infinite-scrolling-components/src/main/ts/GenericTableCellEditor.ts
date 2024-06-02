@@ -18,8 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractTableEditor} from "./AbstractTableEditor";
-import {DtoIdentifiableClientRecord} from "teamapps-client-core";
-import {AbstractField} from "teamapps-client-core-components";
+import {AbstractField, DtoIdentifiableClientRecord} from "projector-client-object-api";
 
 
 export class GenericTableCellEditor extends AbstractTableEditor {

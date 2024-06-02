@@ -18,10 +18,17 @@
  * =========================LICENSE_END==================================
  */
 
-import {Component, insertAfter, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
+import {
+	Component,
+	doOnceOnClickOutsideElement,
+	insertAfter,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent
+} from "projector-client-object-api";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
-import {defaultSpinnerTemplate, doOnceOnClickOutsideElement} from "../../../Common";
+import {defaultSpinnerTemplate} from "../../../util/Common";
 import {
 	createDropDownButtonClickInfo,
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,

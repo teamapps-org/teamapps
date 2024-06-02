@@ -22,27 +22,27 @@ package "projector-client-object-api":org.teamapps.projector.component.field;
 import org.teamapps.projector.component.DtoComponent;
 
 class DtoFieldMessage {
-	required DtoFieldMessageSeverity severity;
+	required FieldMessageSeverity severity;
 	required String message;
-	required DtoFieldMessagePosition position;
-	required DtoFieldMessageVisibilityMode visibilityMode;
+	required FieldMessagePosition position;
+	required FieldMessageVisibility visibilityMode;
 }
 
-enum DtoFieldMessageSeverity {
-	INFO,
-	SUCCESS,
-	WARNING,
-	ERROR
+enum FieldMessageSeverity {
+	INFO = "info",
+	SUCCESS = "success",
+	WARNING = "warning",
+	ERROR = "error"
 }
 
-enum DtoFieldMessagePosition {
-	ABOVE,
-	BELOW,
-	POPOVER
+enum FieldMessagePosition {
+	ABOVE = "above",
+	BELOW = "below",
+	POPOVER = "popover"
 }
 
-enum DtoFieldMessageVisibilityMode {
-	ON_FOCUS,
-	ON_HOVER_OR_FOCUS,
-	ALWAYS_VISIBLE
+enum FieldMessageVisibility {
+	ON_FOCUS = "on-focus",
+	ON_HOVER_OR_FOCUS = "on-hover-or-focus",
+	ALWAYS_VISIBLE = "always-visible"
 }

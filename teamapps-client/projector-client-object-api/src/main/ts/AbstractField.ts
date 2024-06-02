@@ -23,11 +23,12 @@ import {
 	DtoAbstractField_ValueChangedEvent,
 	DtoAbstractFieldCommandHandler,
 	DtoAbstractFieldEventSource, FieldEditingMode,
-	DtoFieldMessage, DtoFieldMessagePosition, DtoFieldMessageSeverity, DtoFieldMessageVisibilityMode
+	DtoFieldMessage, FieldMessagePosition, FieldMessageSeverity, FieldMessageVisibility
 } from "./generated";
 import {AbstractLegacyComponent} from "./AbstractLegacyComponent";
 import {bind, parseHtml, prependChild, TeamAppsEvent} from "./util";
 import {ServerObjectChannel} from "./ClientObject";
+import {compareSeverities, highestSeverity} from "./util/fieldmessage-util";
 
 interface FieldMessage {
 	message: DtoFieldMessage,
@@ -97,21 +98,21 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 
 	private updateFieldMessageVisibilities() {
 		let highestVisibilityByPosition = this.getHighestVisibilitiesByMessagePosition();
-		let messagesVisible = (position: DtoFieldMessagePosition) => highestVisibilityByPosition[position] === DtoFieldMessageVisibilityMode.ALWAYS_VISIBLE
-			|| highestVisibilityByPosition[position] === DtoFieldMessageVisibilityMode.ON_HOVER_OR_FOCUS && this.hovering
+		let messagesVisible = (position: FieldMessagePosition) => highestVisibilityByPosition[position] === FieldMessageVisibility.ALWAYS_VISIBLE
+			|| highestVisibilityByPosition[position] === FieldMessageVisibility.ON_HOVER_OR_FOCUS && this.hovering
 			|| this.hasFocus();
-		if (messagesVisible(DtoFieldMessagePosition.ABOVE)) {
+		if (messagesVisible(FieldMessagePosition.ABOVE)) {
 			this.$messagesContainerAbove.classList.remove("hidden");
 		} else {
 			this.$messagesContainerAbove.classList.add("hidden");
 		}
-		if (messagesVisible(DtoFieldMessagePosition.BELOW)) {
+		if (messagesVisible(FieldMessagePosition.BELOW)) {
 			this.$messagesContainerBelow.classList.remove("hidden");
 		} else {
 			this.$messagesContainerBelow.classList.add("hidden");
 		}
 		if (this._messageTooltip != null) {
-			if (messagesVisible(DtoFieldMessagePosition.POPOVER)) {
+			if (messagesVisible(FieldMessagePosition.POPOVER)) {
 				this._messageTooltip.$popperElement.classList.remove("hidden");
 				this._messageTooltip.popper.update();
 			} else {
@@ -121,13 +122,13 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 	}
 
 	private getHighestVisibilitiesByMessagePosition() {
-		let highestVisibilityByPosition: { [position in DtoFieldMessagePosition]: DtoFieldMessageVisibilityMode } = {
-			[DtoFieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.ABOVE)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, DtoFieldMessageVisibilityMode.ON_FOCUS),
-			[DtoFieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.BELOW)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, DtoFieldMessageVisibilityMode.ON_FOCUS),
-			[DtoFieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.POPOVER)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, DtoFieldMessageVisibilityMode.ON_FOCUS)
+		let highestVisibilityByPosition: { [position in FieldMessagePosition]: FieldMessageVisibility } = {
+			[FieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.ABOVE)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibility.ON_FOCUS),
+			[FieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.BELOW)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibility.ON_FOCUS),
+			[FieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.POPOVER)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibility.ON_FOCUS)
 		};
 		return highestVisibilityByPosition;
 	}
@@ -283,31 +284,28 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 		}
 
 		this.fieldMessages = fieldMessageConfigs
-			.sort((a, b) => b.severity - a.severity)
+			.sort((a, b) => compareSeverities(a.severity, b.severity))
 			.map(message => {
 				const $message = this.createMessageElement(message);
 				return {message, $message};
 			});
 
-		let getHighestSeverity = function (messages: FieldMessage[]) {
-			return messages.reduce((highestSeverity, message) => message.message.severity > highestSeverity ? message.message.severity : highestSeverity, DtoFieldMessageSeverity.INFO);
-		};
 		if (this.fieldMessages && this.fieldMessages.length > 0) {
-			this.getMainElement().classList.add("message-" + DtoFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
+			this.getMainElement().classList.add("message-" + highestSeverity(this.fieldMessages.map(m => m.message.severity)));
 		}
 
-		let fieldMessagesByPosition: { [position in DtoFieldMessagePosition]: FieldMessage[] } = {
-			[DtoFieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.ABOVE),
-			[DtoFieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.BELOW),
-			[DtoFieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == DtoFieldMessagePosition.POPOVER)
+		let fieldMessagesByPosition: { [position in FieldMessagePosition]: FieldMessage[] } = {
+			[FieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.ABOVE),
+			[FieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.BELOW),
+			[FieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.POPOVER)
 		};
 
-		fieldMessagesByPosition[DtoFieldMessagePosition.ABOVE].forEach(message => prependChild(this.getMessagesContainer(message.message.position), message.$message));
-		fieldMessagesByPosition[DtoFieldMessagePosition.BELOW].forEach(message => this.getMessagesContainer(message.message.position).appendChild(message.$message));
-		if (fieldMessagesByPosition[DtoFieldMessagePosition.POPOVER].length > 0) {
-			const highestPopoverSeverity = getHighestSeverity(fieldMessagesByPosition[DtoFieldMessagePosition.POPOVER]);
-			this.messageTooltip.$popperElement.classList.add(`ta-tooltip-${DtoFieldMessageSeverity[highestPopoverSeverity].toLowerCase()}`);
-			fieldMessagesByPosition[DtoFieldMessagePosition.POPOVER].forEach(message => {
+		fieldMessagesByPosition[FieldMessagePosition.ABOVE].forEach(message => prependChild(this.getMessagesContainer(message.message.position), message.$message));
+		fieldMessagesByPosition[FieldMessagePosition.BELOW].forEach(message => this.getMessagesContainer(message.message.position).appendChild(message.$message));
+		if (fieldMessagesByPosition[FieldMessagePosition.POPOVER].length > 0) {
+			const highestPopoverSeverity = highestSeverity(fieldMessagesByPosition[FieldMessagePosition.POPOVER].map(m => m.message.severity));
+			this.messageTooltip.$popperElement.classList.add(`ta-tooltip-${highestPopoverSeverity}`);
+			fieldMessagesByPosition[FieldMessagePosition.POPOVER].forEach(message => {
 				this.messageTooltip.$messageContainer.appendChild(message.$message);
 			});
 			this.messageTooltip.$popperElement.classList.remove("empty");
@@ -320,9 +318,9 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 	}
 
 	private createMessageElement(message: DtoFieldMessage) {
-		const severityCssClass = `field-message-${DtoFieldMessageSeverity[message.severity].toLowerCase()}`;
-		const positionCssClass = `position-${DtoFieldMessagePosition[message.position].toLowerCase()}`;
-		const visibilityCssClass = `visibility-${DtoFieldMessageVisibilityMode[message.visibilityMode].toLowerCase()}`;
+		const severityCssClass = `field-message-${message.severity}`;
+		const positionCssClass = `position-${message.position}`;
+		const visibilityCssClass = `visibility-${message.visibilityMode}`;
 		return parseHtml(`<div class="field-message ${severityCssClass} ${positionCssClass} ${visibilityCssClass}">${message.message}</div>`);
 	}
 
@@ -380,19 +378,19 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 		this.messageTooltip.popper.update();
 	}
 
-	protected getMessagesContainer(position: DtoFieldMessagePosition) {
-		if (position === DtoFieldMessagePosition.ABOVE) {
+	protected getMessagesContainer(position: FieldMessagePosition) {
+		if (position === FieldMessagePosition.ABOVE) {
 			return this.$messagesContainerAbove;
-		} else if (position === DtoFieldMessagePosition.BELOW) {
+		} else if (position === FieldMessagePosition.BELOW) {
 			return this.$messagesContainerBelow;
-		} else if (position === DtoFieldMessagePosition.POPOVER) {
+		} else if (position === FieldMessagePosition.POPOVER) {
 			return this.messageTooltip.$messageContainer;
 		}
 	}
 
 }
 
-export function getHighestSeverity (messages: DtoFieldMessage[], defaultSeverity: DtoFieldMessageSeverity | null = DtoFieldMessageSeverity.INFO) {
+export function getHighestSeverity (messages: DtoFieldMessage[], defaultSeverity: FieldMessageSeverity | null = FieldMessageSeverity.INFO) {
 	if (messages == null) {
 		return defaultSeverity;
 	}

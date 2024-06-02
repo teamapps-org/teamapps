@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.dto;
+package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll;
 
 import org.teamapps.projector.component.DtoComponent;
 

@@ -148,9 +148,9 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 				if (contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.get();
 					if (contextMenuContent != null) {
-						sendCommandIfRendered(() -> new DtoInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createDtoReference()));
+						clientObjectChannel.setContextMenuContent(E.GetRequestId(), contextMenuContent.createDtoReference());
 					} else {
-						sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
+						clientObjectChannel.closeContextMenu(E.GetRequestId());
 					}
 				} else {
 					closeContextMenu();
@@ -216,7 +216,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	private void update() {
-		sendCommandIfRendered(() -> new DtoMediaSoupV3WebRtcClient.UpdateCommand(createDto()));
+		clientObjectChannel.update(CreateDto());
 	}
 
 	public boolean isActivityLineVisible() {
@@ -253,7 +253,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	public void setActive(boolean active) {
 		if (active != this.active) {
 			this.active = active;
-			sendCommandIfRendered(() -> new DtoMediaSoupV3WebRtcClient.SetActiveCommand(active));
+			clientObjectChannel.setActive(Active);
 		}
 	}
 
@@ -343,7 +343,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		sendCommandIfRendered(() -> new DtoInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
+		clientObjectChannel.closeContextMenu(This.LastSeenContextMenuRequestId);
 	}
 
 	public void reconnect() {

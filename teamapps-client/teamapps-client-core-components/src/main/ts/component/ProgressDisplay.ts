@@ -19,7 +19,7 @@
  */
 
 import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
-import {removeClassesByFunction} from "../Common";
+import {removeClassesByFunction} from "../util/Common";
 import {
 	DtoProgressDisplay,
 	DtoProgressDisplay_CancelButtonClickedEvent,

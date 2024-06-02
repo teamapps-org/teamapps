@@ -21,8 +21,8 @@ package "teamapps-client-common-components":org.teamapps.projector.components.co
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
-import org.teamapps.projector.dto.DtoBorder;
-import org.teamapps.projector.dto.DtoBoxShadow;
+import org.teamapps.projector.format.DtoBorder;
+import org.teamapps.projector.format.DtoBoxShadow;
 
 class DtoGridForm extends DtoComponent {
 	required List<DtoComponent*> fields;

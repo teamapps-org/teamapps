@@ -107,7 +107,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setTime(long timeMillis) {
 		this.timeMillis = timeMillis;
-		sendCommandIfRendered(() -> new DtoShakaPlayer.SetTimeCommand(timeMillis));
+		clientObjectChannel.setTime(TimeMillis);
 	}
 
 	public long getTime() {
@@ -118,7 +118,7 @@ public class ShakaPlayer extends AbstractComponent {
 		this.timeMillis = 0;
 		this.hlsUrl = hlsUrl;
 		this.dashUrl = dashUrl;
-		sendCommandIfRendered(() -> new DtoShakaPlayer.SetUrlsCommand(hlsUrl, dashUrl));
+		clientObjectChannel.setUrls(HlsUrl, DashUrl);
 	}
 
 	public String getHlsUrl() {
@@ -197,6 +197,6 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void selectAudioLanguage(String language, String role) {
 		this.audioLanguage = language;
-		sendCommandIfRendered(() -> new DtoShakaPlayer.SelectAudioLanguageCommand(language, role));
+		clientObjectChannel.selectAudioLanguage(Language, Role);
 	}
 }

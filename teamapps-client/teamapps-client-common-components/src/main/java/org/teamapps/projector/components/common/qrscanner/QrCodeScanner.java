@@ -54,15 +54,15 @@ public class QrCodeScanner extends AbstractComponent {
 	public void startScanning(boolean stopScanningAtFirstResult) {
 		scanning = true;
 		this.stopsScanningAtFirstResult = stopScanningAtFirstResult;
-		sendCommandIfRendered(() -> new DtoQrCodeScanner.StartScanningCommand(stopScanningAtFirstResult));
+		clientObjectChannel.startScanning(StopScanningAtFirstResult);
 	}
 
 	public void stopScanning() {
 		scanning = false;
-		sendCommandIfRendered(() -> new DtoQrCodeScanner.StopScanningCommand());
+		clientObjectChannel.stopScanning();
 	}
 
 	public void switchCamera() {
-		sendCommandIfRendered(() -> new DtoQrCodeScanner.SwitchCameraCommand());
+		clientObjectChannel.switchCamera();
 	}
 }

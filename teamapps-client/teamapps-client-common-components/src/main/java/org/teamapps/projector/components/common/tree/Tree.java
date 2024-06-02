@@ -213,7 +213,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	public void setSelectedNode(RECORD selectedNode) {
 		int uiRecordId = uiRecordsByRecord.get(selectedNode) != null ? uiRecordsByRecord.get(selectedNode).getId() : -1;
 		this.selectedNode = selectedNode;
-		sendCommandIfRendered(() -> new DtoTree.SetSelectedNodeCommand(uiRecordId));
+		clientObjectChannel.setSelectedNode(UiRecordId);
 	}
 
 	public TreeModel<RECORD> getModel() {

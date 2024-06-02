@@ -20,27 +20,27 @@
 package org.teamapps.projector.components.essential.panel;
 
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.Field;
 
 public class HeaderField {
 
-	private final AbstractField<?> field;
+	private final Field<?> field;
 	private final Icon<?, ?> icon;
 	private final int minWidth;
 	private final int maxWidth;
 
-	public HeaderField(AbstractField<?> field, Icon<?, ?> icon) {
+	public HeaderField(Field<?> field, Icon<?, ?> icon) {
 		this(field, icon, 50, 200);
 	}
 
-	public HeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public HeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		this.field = field;
 		this.icon = icon;
 		this.minWidth = minWidth;
 		this.maxWidth = maxWidth;
 	}
 
-	public AbstractField<?> getField() {
+	public Field<?> getField() {
 		return field;
 	}
 

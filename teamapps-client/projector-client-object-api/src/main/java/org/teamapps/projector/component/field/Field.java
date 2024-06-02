@@ -49,13 +49,13 @@ public interface Field<VALUE> extends Component {
 	void setCustomFieldMessages(List<FieldMessage> fieldMessages);
 
 
-	FieldMessage.Position getDefaultMessagePosition();
+	FieldMessagePosition getDefaultMessagePosition();
 
-	void setDefaultMessagePosition(FieldMessage.Position defaultMessagePosition);
+	void setDefaultMessagePosition(FieldMessagePosition defaultMessagePosition);
 
-	FieldMessage.Visibility getDefaultMessageVisibility();
+	FieldMessageVisibility getDefaultMessageVisibility();
 
-	void setDefaultMessageVisibility(FieldMessage.Visibility defaultMessageVisibility);
+	void setDefaultMessageVisibility(FieldMessageVisibility defaultMessageVisibility);
 
 	boolean isValueChangedByClient();
 
@@ -74,7 +74,7 @@ public interface Field<VALUE> extends Component {
 		setCustomFieldMessages(messages);
 	}
 
-	default FieldMessage.Severity getMaxFieldMessageSeverity() {
+	default FieldMessageSeverity getMaxFieldMessageSeverity() {
 		return getFieldMessages().stream()
 				.map(fieldMessage -> fieldMessage.getSeverity())
 				.max(Comparator.comparing(severity -> severity.ordinal()))
@@ -82,6 +82,6 @@ public interface Field<VALUE> extends Component {
 	}
 
 	default boolean hasErrorMessages() {
-		return getMaxFieldMessageSeverity() == FieldMessage.Severity.ERROR;
+		return getMaxFieldMessageSeverity() == FieldMessageSeverity.ERROR;
 	}
 }

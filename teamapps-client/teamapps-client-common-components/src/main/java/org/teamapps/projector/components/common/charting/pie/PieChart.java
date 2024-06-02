@@ -100,7 +100,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setLegendStyle(ChartLegendStyle legendStyle) {
 		this.legendStyle = legendStyle;
-		sendCommandIfRendered(() -> new DtoPieChart.SetLegendStyleCommand(legendStyle.toUiChartLegendStyle()));
+		clientObjectChannel.setLegendStyle(LegendStyle.ToUiChartLegendStyle());
 	}
 
 	public DataPointWeighting getDataPointWeighting() {
@@ -109,7 +109,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setDataPointWeighting(DataPointWeighting dataPointWeighting) {
 		this.dataPointWeighting = dataPointWeighting;
-		sendCommandIfRendered(() -> new DtoPieChart.SetDataPointWeightingCommand(dataPointWeighting.toUiDataPointWeighting()));
+		clientObjectChannel.setDataPointWeighting(DataPointWeighting.ToUiDataPointWeighting());
 	}
 
 	public float getRotation3D() {
@@ -118,7 +118,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setRotation3D(float rotation3D) {
 		this.rotation3D = rotation3D;
-		sendCommandIfRendered(() -> new DtoPieChart.SetRotation3DCommand(rotation3D));
+		clientObjectChannel.setRotation3D(Rotation3D);
 	}
 
 	public float getHeight3D() {
@@ -127,7 +127,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setHeight3D(float height3D) {
 		this.height3D = height3D;
-		sendCommandIfRendered(() -> new DtoPieChart.SetHeight3DCommand(height3D));
+		clientObjectChannel.setHeight3D(Height3D);
 	}
 
 	public float getRotationClockwise() {
@@ -136,7 +136,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setRotationClockwise(float rotationClockwise) {
 		this.rotationClockwise = rotationClockwise;
-		sendCommandIfRendered(() -> new DtoPieChart.SetRotationClockwiseCommand(rotationClockwise));
+		clientObjectChannel.setRotationClockwise(RotationClockwise);
 	}
 
 	public float getInnerRadiusProportion() {
@@ -145,7 +145,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setInnerRadiusProportion(float innerRadiusProportion) {
 		this.innerRadiusProportion = innerRadiusProportion;
-		sendCommandIfRendered(() -> new DtoPieChart.SetInnerRadiusProportionCommand(innerRadiusProportion));
+		clientObjectChannel.setInnerRadiusProportion(InnerRadiusProportion);
 	}
 
 	public List<ChartNamedDataPoint> getDataPoints() {
@@ -155,6 +155,6 @@ public class PieChart extends AbstractComponent {
 	public void setDataPoints(List<ChartNamedDataPoint> dataPoints) {
 		this.dataPoints.clear();
 		this.dataPoints.addAll(dataPoints);
-		sendCommandIfRendered(() -> new DtoPieChart.SetDataPointsCommand(createUiDataPoints(), animationDuration));
+		clientObjectChannel.setDataPoints(CreateUiDataPoints(), AnimationDuration);
 	}
 }

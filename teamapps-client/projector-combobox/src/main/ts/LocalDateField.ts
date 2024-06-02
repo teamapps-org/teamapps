@@ -40,12 +40,10 @@ import {
 	FieldEditingMode,
 	TeamAppsEvent
 } from "projector-client-object-api";
-import {DtoTextInputHandlingField_SpecialKeyPressedEvent, SpecialKey} from "teamapps-client-core-components";
 
 export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDate> implements DtoLocalDateFieldEventSource, DtoLocalDateFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<DtoLocalDateField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected dateSuggestionEngine: DateSuggestionEngine;
@@ -106,17 +104,6 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		}));
 		this.trivialComboBox.getMainDomElement().classList.add("DtoAbstractDateField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
-		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
-			if (e.key === "Escape") {
-				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ESCAPE
-				});
-			} else if (e.key === "Enter") {
-				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ENTER
-				});
-			}
-		});
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");

@@ -26,11 +26,12 @@ import org.mockito.Mockito;
 import org.teamapps.commons.event.Event;
 import org.teamapps.projector.clientobject.ClientObjectChannel;
 import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.FieldMessage;
+import org.teamapps.projector.component.field.FieldMessageSeverity;
 import org.teamapps.projector.component.field.validator.CustomValidator;
 import org.teamapps.projector.component.field.validator.MultiFieldValidator;
 import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.projector.component.field.AbstractField;
-import org.teamapps.projector.component.field.FieldMessage;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
 
@@ -52,7 +53,7 @@ public class MultiFieldValidatorTest {
             DummyField field2 = new DummyField();
 
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
-            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessage.Severity.ERROR, ERROR_MESSAGE)));
+            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
             MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, field1, field2);
 
@@ -70,7 +71,7 @@ public class MultiFieldValidatorTest {
             DummyField field2 = new DummyField();
 
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
-            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessage.Severity.ERROR, ERROR_MESSAGE)));
+            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
             MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, field1, field2);
 
@@ -93,7 +94,7 @@ public class MultiFieldValidatorTest {
             DummyField field2 = new DummyField();
 
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
-            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessage.Severity.ERROR, ERROR_MESSAGE)));
+            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
             MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, field1, field2);
 
@@ -118,7 +119,7 @@ public class MultiFieldValidatorTest {
             DummyField field2 = new DummyField();
 
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
-            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessage.Severity.ERROR, ERROR_MESSAGE)));
+            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
             MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, MultiFieldValidator.TriggeringPolicy.ON_FIELD_CHANGE, field1, field2);
 
@@ -136,7 +137,7 @@ public class MultiFieldValidatorTest {
             DummyField field2 = new DummyField();
 
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
-            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessage.Severity.ERROR, ERROR_MESSAGE)));
+            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
             MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, MultiFieldValidator.TriggeringPolicy.MANUALLY_WITH_AUTOCLEAR, field1, field2);
 
@@ -161,7 +162,7 @@ public class MultiFieldValidatorTest {
             DummyField field2 = new DummyField();
 
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
-            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessage.Severity.ERROR, ERROR_MESSAGE)));
+            Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
             MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, MultiFieldValidator.TriggeringPolicy.MANUALLY_WITH_AUTOCLEAR, field1, field2);
 

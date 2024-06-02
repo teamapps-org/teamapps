@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.infinitescroll.infiniteitemview;
 
-import org.teamapps.ux.cache.record.ItemRange;
+import org.teamapps.projector.components.infinitescroll.recordcache.ItemRange;
 
 import java.util.ArrayList;
 import java.util.Collections;

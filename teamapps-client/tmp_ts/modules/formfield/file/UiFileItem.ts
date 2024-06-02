@@ -145,7 +145,7 @@ export class UiFileItem {
 	private setState(state: FileItemState) {
 		this.state = state;
 		removeClassesByFunction(this.$main.classList, className => className.startsWith("state-"));
-		this.$main.classList.add("state-" + FileItemState[state].toLowerCase());
+		this.$main.classList.add("state-" + state);
 	}
 
 	public getMainDomElement() {
@@ -203,9 +203,9 @@ export class UiFileItem {
 }
 
 export enum FileItemState {
-	INITIATING,
-	TOO_LARGE,
-	UPLOADING,
-	FAILED,
-	DONE
+	INITIATING = "initiating",
+	TOO_LARGE = "too-large",
+	UPLOADING = "uploading",
+	FAILED = "failed",
+	DONE = "done"
 }

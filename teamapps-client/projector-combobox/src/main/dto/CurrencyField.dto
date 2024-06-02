@@ -21,7 +21,6 @@ package "projector-combobox":org.teamapps.projector.components.trivial.dto;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.field.DtoAbstractField;
-import org.teamapps.projector.components.essential.dto.DtoTextInputHandlingField;
 
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
 //the value is always a long in cents for accuracy

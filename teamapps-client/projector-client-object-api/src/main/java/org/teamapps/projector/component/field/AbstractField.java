@@ -39,12 +39,12 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
-			this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+			this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessageSeverity.ERROR,
 					CurrentSessionContext.get().getLocalized(TeamAppsTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
 
 	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
 			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmptyValue(value)) ?
-					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+					Collections.singletonList(new FieldMessage(FieldMessageSeverity.ERROR,
 							CurrentSessionContext.get().getLocalized(TeamAppsTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
 
 	private final DtoAbstractFieldClientObjectChannel clientObjectChannel = new DtoAbstractFieldClientObjectChannel(getClientObjectChannel());
@@ -58,8 +58,8 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 
 	private final Set<FieldValidator<VALUE>> validators = new HashSet<>();
 	private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>(); // null key for custom field messages (not bound to a validator)
-	private FieldMessage.Position defaultMessagePosition = FieldMessage.Position.BELOW;
-	private FieldMessage.Visibility defaultMessageVisibility = FieldMessage.Visibility.ALWAYS_VISIBLE;
+	private FieldMessagePosition defaultMessagePosition = FieldMessagePosition.BELOW;
+	private FieldMessageVisibility defaultMessageVisibility = FieldMessageVisibility.ALWAYS_VISIBLE;
 
 	private final MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
 
@@ -284,22 +284,22 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 	}
 
 	@Override
-	public FieldMessage.Position getDefaultMessagePosition() {
+	public FieldMessagePosition getDefaultMessagePosition() {
 		return defaultMessagePosition;
 	}
 
 	@Override
-	public void setDefaultMessagePosition(FieldMessage.Position defaultMessagePosition) {
+	public void setDefaultMessagePosition(FieldMessagePosition defaultMessagePosition) {
 		this.defaultMessagePosition = defaultMessagePosition;
 	}
 
 	@Override
-	public FieldMessage.Visibility getDefaultMessageVisibility() {
+	public FieldMessageVisibility getDefaultMessageVisibility() {
 		return defaultMessageVisibility;
 	}
 
 	@Override
-	public void setDefaultMessageVisibility(FieldMessage.Visibility defaultMessageVisibility) {
+	public void setDefaultMessageVisibility(FieldMessageVisibility defaultMessageVisibility) {
 		this.defaultMessageVisibility = defaultMessageVisibility;
 	}
 

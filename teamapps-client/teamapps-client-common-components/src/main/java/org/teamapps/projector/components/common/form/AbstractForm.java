@@ -78,7 +78,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent {
 	protected void addComponent(Component component) {
 		children.add(component);
 		component.setParent(this);
-		sendCommandIfRendered(() -> new DtoGridForm.AddOrReplaceFieldCommand(component.createDtoReference()));
+		clientObjectChannel.addOrReplaceField(Component.CreateDtoReference());
 	}
 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
@@ -119,7 +119,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent {
 
 	protected void updateLayoutPolicies() {
 		List<DtoFormLayoutPolicy> uiFormLayoutPolicies = getUiFormLayoutPolicies();
-		sendCommandIfRendered(() -> new DtoGridForm.UpdateLayoutPoliciesCommand(uiFormLayoutPolicies));
+		clientObjectChannel.updateLayoutPolicies(UiFormLayoutPolicies);
 	}
 
 	public void applyRecordValuesToFields(RECORD record) {
@@ -173,7 +173,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent {
 	}
 
 	public void setSectionCollapsed(String sectionId, boolean collapsed) {
-		sendCommandIfRendered(() -> new DtoGridForm.SetSectionCollapsedCommand(sectionId, collapsed));
+		clientObjectChannel.setSectionCollapsed(SectionId, Collapsed);
 	}
 
 	public void addMultiFieldValidator(MultiFieldValidator multiFieldValidator) {

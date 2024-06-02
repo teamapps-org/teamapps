@@ -21,7 +21,6 @@ package org.teamapps.projector.components.infinitescroll.table;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.projector.components.infinitescroll.dto.DtoSelectionFrame;
 
 public class SelectionFrame {
 

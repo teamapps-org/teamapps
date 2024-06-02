@@ -114,7 +114,7 @@ public class ChatInput extends AbstractComponent {
 	public void setAttachmentsEnabled(boolean attachmentsEnabled) {
 		if (attachmentsEnabled != this.attachmentsEnabled) {
 			this.attachmentsEnabled = attachmentsEnabled;
-			sendCommandIfRendered(() -> new DtoChatInput.SetAttachmentsEnabledCommand(attachmentsEnabled));
+			clientObjectChannel.setAttachmentsEnabled(AttachmentsEnabled);
 		}
 	}
 }

@@ -25,7 +25,7 @@ import {
 	DtoTextInputHandlingField_TextInputEvent,
 	SpecialKey
 } from "../../generated";
-import {Constants, escapeHtml, hasVerticalScrollBar} from "../../Common";
+import {Constants, escapeHtml, hasVerticalScrollBar} from "../../util/Common";
 import {
 	AbstractField,
 	DebounceMode,

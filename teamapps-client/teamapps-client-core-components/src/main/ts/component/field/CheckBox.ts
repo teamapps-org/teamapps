@@ -25,7 +25,7 @@ import {
 import {
 	FieldEditingMode,
 	DtoFieldMessage,
-	DtoFieldMessageSeverity,
+	FieldMessageSeverity,
 	generateUUID,
 	getHighestSeverity,
 	parseHtml
@@ -126,7 +126,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 
 	private updateStyles() {
 		const highestMessageSeverity = getHighestSeverity(this.getFieldMessages());
-		if (highestMessageSeverity > DtoFieldMessageSeverity.INFO) {
+		if (highestMessageSeverity > FieldMessageSeverity.INFO) {
 			this.setStyle(".checkbox-check", {
 				"background-color": null,
 				"color": null,

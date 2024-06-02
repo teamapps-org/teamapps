@@ -18,9 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractTableEditor} from "./AbstractTableEditor";
-import {DtoClientRecord} from "teamapps-client-core";
-import {AbstractField} from "teamapps-client-core-components";
-import {applyCss} from "teamapps-client-core-components";
+import {AbstractField, applyCss, DtoClientRecord} from "projector-client-object-api";
 
 
 export class FixedSizeTableCellEditor extends AbstractTableEditor {

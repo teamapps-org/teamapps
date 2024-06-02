@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.infinitescroll.table;
 
-import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.Field;
 
 public class ColumnSizeChangeEventData<RECORD, VALUE> {
 	private final int size;
@@ -38,7 +38,7 @@ public class ColumnSizeChangeEventData<RECORD, VALUE> {
 		return column.getPropertyName();
 	}
 
-	public AbstractField getField() {
+	public Field getField() {
 		return column.getField();
 	}
 

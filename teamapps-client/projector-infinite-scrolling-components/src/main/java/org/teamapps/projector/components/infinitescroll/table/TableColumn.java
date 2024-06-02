@@ -20,12 +20,9 @@
 package org.teamapps.projector.components.infinitescroll.table;
 
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.components.infinitescroll.dto.DtoTableColumn;
+import org.teamapps.projector.component.field.*;
 import org.teamapps.projector.dataextraction.ValueExtractor;
 import org.teamapps.projector.dataextraction.ValueInjector;
-import org.teamapps.projector.component.field.AbstractField;
-import org.teamapps.projector.component.field.Field;
-import org.teamapps.projector.component.field.FieldMessage;
 import org.teamapps.projector.format.TextAlignment;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
@@ -41,7 +38,7 @@ public class TableColumn<RECORD, VALUE> {
 	private final String propertyName;
 	private Icon<?, ?> icon;
 	private String title;
-	private AbstractField<VALUE> field;
+	private Field<VALUE> field;
 	private int minWidth;
 	private int defaultWidth;
 	private int maxWidth;
@@ -55,23 +52,23 @@ public class TableColumn<RECORD, VALUE> {
 
 	private List<FieldMessage> messages = new ArrayList<>();
 
-	public TableColumn(String propertyName, AbstractField<VALUE> field) {
+	public TableColumn(String propertyName, Field<VALUE> field) {
 		this(propertyName, null, null, field, 0, DEFAULT_WIDTH, 0);
 	}
 
-	public TableColumn(String propertyName, String title, AbstractField<VALUE> field) {
+	public TableColumn(String propertyName, String title, Field<VALUE> field) {
 		this(propertyName, null, title, field, 0, DEFAULT_WIDTH, 0);
 	}
 
-	public TableColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field) {
+	public TableColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field) {
 		this(propertyName, icon, title, field, 0, DEFAULT_WIDTH, 0);
 	}
 
-	public TableColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field, int defaultWidth) {
+	public TableColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field, int defaultWidth) {
 		this(propertyName, icon, title, field, 0, defaultWidth, 0);
 	}
 
-	public TableColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field, int minWidth, int defaultWidth, int maxWidth) {
+	public TableColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field, int minWidth, int defaultWidth, int maxWidth) {
 		this.propertyName = propertyName;
 		this.icon = icon;
 		this.title = title;
@@ -91,9 +88,9 @@ public class TableColumn<RECORD, VALUE> {
 		uiTableColumn.setSortable(sortable);
 		uiTableColumn.setResizeable(resizeable);
 		uiTableColumn.setVisible(visible);
-		uiTableColumn.setHeaderAlignment(headerAlignment.toUiTextAlignment());
+		uiTableColumn.setHeaderAlignment(headerAlignment);
 		uiTableColumn.setHiddenIfOnlyEmptyCellsVisible(hiddenIfOnlyEmptyCellsVisible);
-		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
+		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
 		return uiTableColumn;
 	}
 
@@ -144,7 +141,7 @@ public class TableColumn<RECORD, VALUE> {
 		return field;
 	}
 
-	public TableColumn<RECORD, VALUE> setField(AbstractField<VALUE> field) {
+	public TableColumn<RECORD, VALUE> setField(Field<VALUE> field) {
 		this.field = field;
 		return this;
 	}

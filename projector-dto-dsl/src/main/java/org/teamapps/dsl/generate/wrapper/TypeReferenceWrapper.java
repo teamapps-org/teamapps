@@ -260,14 +260,14 @@ public class TypeReferenceWrapper {
 		if (isList()) {
 			TypeReferenceWrapper firstTypeArgument = getCollectionTypeOrThrow();
 			if (firstTypeArgument.isObject()) {
-				return "List<?>";
+				return "List<Object>";
 			} else {
 				return "List<" + firstTypeArgument.getJavaTypeString() + ">";
 			}
 		} else if (isDictionary()) {
 			TypeReferenceWrapper firstTypeArgument = getCollectionTypeOrThrow();
 			if (firstTypeArgument.isObject()) {
-				return "Map<String, ?>";
+				return "Map<String, Object>";
 			} else {
 				return "Map<String, " + firstTypeArgument.getJavaTypeString() + ">";
 			}

@@ -20,12 +20,6 @@
             <groupId>org.teamapps</groupId>
             <artifactId>projector-grid-template</artifactId>
         </dependency>
-        <dependency>
-            <!-- Only for DtoInputHandlingField -->
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-core-components</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -50,7 +44,6 @@
                     <jsResourcesTargetClassPath>org/teamapps/projector/components/trivial/resources/js</jsResourcesTargetClassPath>
                     <dtoDependencies>
                         <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
-                        <dependency>org.teamapps:teamapps-client-core-components:${project.version}</dependency>
                     </dtoDependencies>
                 </configuration>
             </plugin>

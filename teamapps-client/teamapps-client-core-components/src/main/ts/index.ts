@@ -21,7 +21,7 @@
 import "@less/teamapps.less";
 import {ContextMenu} from "./micro-components/ContextMenu";
 
-export * from "./Common";
+export * from "./util/Common";
 
 export {Panel} from "./component/Panel";
 export {RootPanel} from "./component/RootPanel";
@@ -56,9 +56,6 @@ export {ComponentField} from "./component/field/ComponentField";
 export {ContextMenu} from "./micro-components/ContextMenu";
 
 export * from "./util/draggable";
-export * from "projector-client-object-api";
-export * from "./util/BigDecimal";
-export * from "./util/NumberParser";
 export * from "./util/Emptyable";
 export * from "./micro-components/DropDown";
 

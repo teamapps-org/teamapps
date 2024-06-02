@@ -20,7 +20,7 @@
 import {DateTime} from "luxon";
 import {AbstractDateTimeField} from "./AbstractDateTimeField";
 import {DtoLocalDateTimeField, DtoLocalDateTimeFieldCommandHandler, DtoLocalDateTimeFieldEventSource} from "./generated";
-import {arraysEqual} from "teamapps-client-core-components";
+import {arraysEqual} from "projector-client-object-api";
 
 type LocalDateTimeArray = [number, number, number, number, number, number, number];
 

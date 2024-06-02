@@ -17,15 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.dto;
+package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.table;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 import org.teamapps.projector.component.field.DtoAbstractField;
-import org.teamapps.projector.dto.DtoFieldMessage;
-import org.teamapps.projector.dto.TextAlignment;
+import org.teamapps.projector.component.field.DtoFieldMessage;
+import org.teamapps.projector.format.TextAlignment;
 
-enum DtoSortDirection {
+import org.teamapps.projector.components.infinitescroll.DtoAbstractInfiniteListComponent;
+
+enum SortDirection {
 	ASC, DESC
 }
 
@@ -69,7 +71,7 @@ class DtoTable extends DtoAbstractInfiniteListComponent {
 	boolean textSelectionEnabled;
 
 	String sortField; //if available the table is initially sorted by this field
-	DtoSortDirection sortDirection;
+	SortDirection sortDirection;
 
 	boolean editable; //only valid for tables
 
@@ -97,7 +99,7 @@ class DtoTable extends DtoAbstractInfiniteListComponent {
 
 	command clearTable();
 	command updateData(int startIndex, List<Integer> recordIds, List<DtoTableClientRecord> newRecords, int totalNumberOfRecords);
-	command setSorting(String sortField, DtoSortDirection sortDirection);
+	command setSorting(String sortField, SortDirection sortDirection);
     command setCellValue(int recordId, String columnPropertyName, Object value);
 	command markTableField(int recordId, String columnPropertyName, boolean mark); //mark or unmark the field to indicate errors or missing data
 	command clearAllFieldMarkings();
@@ -121,7 +123,7 @@ class DtoTable extends DtoAbstractInfiniteListComponent {
 	event cellEditingStopped(int recordId, String columnPropertyName);
 	event cellValueChanged(int recordId, String columnPropertyName, Object value);
 	event rowsSelected(List<Integer> recordIds);
-	event sortingChanged(String sortField, DtoSortDirection sortDirection); // sent when the user clicks on a sortable header column
+	event sortingChanged(String sortField, SortDirection sortDirection); // sent when the user clicks on a sortable header column
 	event contextMenuRequested(int requestId, int recordId);
 
 	event fieldOrderChange(String columnPropertyName, int position); //zero based
@@ -133,7 +135,7 @@ class DtoTableDataRequest {
 	required int startIndex;
 	required int length;
 	required String sortField;
-	required DtoSortDirection sortDirection;
+	required SortDirection sortDirection;
 }
 
 class DtoTableCellMessages {

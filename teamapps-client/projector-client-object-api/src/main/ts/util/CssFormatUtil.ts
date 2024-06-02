@@ -40,7 +40,7 @@ export function createUiColorCssObject(cssProperty: string, uiColor: string) {
 }
 
 export function createTextAlignmentCssString(alignment: TextAlignment) {
-	return alignment == null ? '' : 'text-align:' + TextAlignment[alignment].toLowerCase() + ';';
+	return alignment == null ? '' : 'text-align:' + alignment + ';';
 }
 
 export function createUiFontStyleCssString(fontStyle: DtoFontStyle) {

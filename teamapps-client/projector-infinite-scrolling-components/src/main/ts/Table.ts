@@ -21,37 +21,10 @@
 ///<reference types="slickgrid/slick.checkboxselectcolumn"/>
 ///<reference types="slickgrid/slick.rowselectionmodel"/>
 
-
-import {
-	AbstractLegacyComponent,
-	Component,
-	debouncedMethod,
-	DebounceMode,
-	executeWhenFirstDisplayed,
-	nonRecursive,
-	parseHtml,
-	TeamAppsEvent
-} from "teamapps-client-core";
-
 import {GenericTableCellEditor} from "./GenericTableCellEditor";
 import {TableDataProvider} from "./TableDataProvider";
 import {
-	AbstractField,
-	applyCss,
-	arraysEqual,
-	ContextMenu,
-	DropDown,
-	DtoFieldMessage,
-	DtoFieldMessageSeverity,
-	TextAlignment,
-	fadeIn,
-	fadeOut,
-	getHighestSeverity,
-	manipulateWithoutTransitions
-} from "teamapps-client-core-components";
-import {
 	DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent,
-	DtoSortDirection,
 	DtoTable,
 	DtoTable_CellClickedEvent,
 	DtoTable_CellEditingStartedEvent,
@@ -66,11 +39,21 @@ import {
 	DtoTableColumn,
 	DtoTableCommandHandler,
 	DtoTableDisplayStyle,
-	DtoTableEventSource
+	DtoTableEventSource, SortDirection
 } from "./generated";
 import {TableRowSelectionModel} from "./TableRowSelectionModel";
 import {FieldMessagesPopper} from "./FieldMessagesPopper";
 import EventData = Slick.EventData;
+import {
+	AbstractField,
+	AbstractLegacyComponent, applyCss, Component, debouncedMethod, DebounceMode,
+	DtoFieldMessage, executeWhenFirstDisplayed, fadeIn, fadeOut,
+	FieldMessageSeverity, getHighestSeverity, nonRecursive, parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent,
+	manipulateWithoutTransitions, arraysEqual
+} from "projector-client-object-api";
+import {ContextMenu, DropDown} from "teamapps-client-core-components";
 
 interface Column extends Slick.Column<any> {
 	id: string;
@@ -97,10 +80,10 @@ interface Column extends Slick.Column<any> {
 }
 
 const backgroundColorCssClassesByMessageSeverity = {
-	[DtoFieldMessageSeverity.INFO]: "bg-info",
-	[DtoFieldMessageSeverity.SUCCESS]: "bg-success",
-	[DtoFieldMessageSeverity.WARNING]: "bg-warning",
-	[DtoFieldMessageSeverity.ERROR]: "bg-danger",
+	[FieldMessageSeverity.INFO]: "bg-info",
+	[FieldMessageSeverity.SUCCESS]: "bg-success",
+	[FieldMessageSeverity.WARNING]: "bg-warning",
+	[FieldMessageSeverity.ERROR]: "bg-danger",
 };
 
 type ElementsByName = { [fieldName: string]: HTMLElement };
@@ -127,7 +110,7 @@ export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTable
 	private loadingIndicatorFadeInTimer: number;
 
 	private _sortField: string;
-	private _sortDirection: DtoSortDirection;
+	private _sortDirection: SortDirection;
 
 	private doNotFireEventBecauseSelectionIsCausedByApiCall: boolean = false; // slickgrid fires events even if we set the selection via api...
 
@@ -265,14 +248,14 @@ export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTable
 		if (config.sortField) {
 			this._sortField = config.sortField;
 			this._sortDirection = config.sortDirection;
-			this._grid.setSortColumn(config.sortField, config.sortDirection === DtoSortDirection.ASC);
+			this._grid.setSortColumn(config.sortField, config.sortDirection === SortDirection.ASC);
 		}
 		this._grid.onSort.subscribe((e, args: Slick.OnSortEventArgs<Slick.SlickData>) => {
 			this._sortField = args.sortCol.id;
-			this._sortDirection = args.sortAsc ? DtoSortDirection.ASC : DtoSortDirection.DESC;
+			this._sortDirection = args.sortAsc ? SortDirection.ASC : SortDirection.DESC;
 			this.onSortingChanged.fire({
 				sortField: this._sortField,
-				sortDirection: args.sortAsc ? DtoSortDirection.ASC : DtoSortDirection.DESC
+				sortDirection: args.sortAsc ? SortDirection.ASC : SortDirection.DESC
 			});
 		});
 		this._grid.onSelectedRowsChanged.subscribe((eventData, args) => {
@@ -591,7 +574,7 @@ export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTable
 		if (highestSeverity != null) {
 			columnCssClasses.push(backgroundColorCssClassesByMessageSeverity[highestSeverity]);
 		}
-		columnCssClasses.push("align-" + TextAlignment[column.uiConfig.headerAlignment].toLocaleLowerCase());
+		columnCssClasses.push("align-" + column.uiConfig.headerAlignment);
 		return columnCssClasses.join(" ");
 	}
 
@@ -650,8 +633,8 @@ export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTable
 		};
 	}
 
-	private getCellMessageCssClassName(severity: DtoFieldMessageSeverity) {
-		return "message-" + DtoFieldMessageSeverity[severity].toLowerCase();
+	private getCellMessageCssClassName(severity: FieldMessageSeverity) {
+		return "message-" + severity;
 	}
 
 	@executeWhenFirstDisplayed()
@@ -696,11 +679,11 @@ export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTable
 		}
 	}
 
-	setSorting(sortField: string, sortDirection: DtoSortDirection) {
+	setSorting(sortField: string, sortDirection: SortDirection) {
 		this._sortField = sortField;
 		this._sortDirection = sortDirection;
 		if (sortField) {
-			this._grid.setSortColumn(sortField, sortDirection === DtoSortDirection.ASC);
+			this._grid.setSortColumn(sortField, sortDirection === SortDirection.ASC);
 		}
 	}
 

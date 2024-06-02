@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.Field;
 import org.teamapps.projector.components.essential.dto.SplitDirection;
 import org.teamapps.projector.components.essential.dto.SplitSizePolicy;
 import org.teamapps.projector.components.essential.panel.Panel;
@@ -168,21 +168,21 @@ public class WorkSpaceLayoutView {
 		panel.setToolbar(toolbar);
 	}
 
-	public WorkSpaceLayoutView setLeftHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public WorkSpaceLayoutView setLeftHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		panel.setLeftHeaderField(field, icon, minWidth, maxWidth);
 		return this;
 	}
 
-	public AbstractField<?> getLeftHeaderField() {
+	public Field<?> getLeftHeaderField() {
 		return panel.getLeftHeaderField();
 	}
 
-	public WorkSpaceLayoutView setRightHeaderField(AbstractField<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public WorkSpaceLayoutView setRightHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		panel.setRightHeaderField(field, icon, minWidth, maxWidth);
 		return this;
 	}
 
-	public AbstractField<?> getRightHeaderField() {
+	public Field<?> getRightHeaderField() {
 		return panel.getRightHeaderField();
 	}
 

@@ -324,7 +324,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 	}
 
 	setSizePolicy(sizePolicy: SplitSizePolicy): any {
-		this._$divider.classList.add('splitpane-' + SplitSizePolicy[this.config.sizePolicy].toLowerCase());
+		this._$divider.classList.add('splitpane-' + this.config.sizePolicy);
 		this._updatePositions();
 	}
 
@@ -340,7 +340,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 
 	public setSplitDirection(splitDirection: SplitDirection) {
 		this._$splitPane.classList.remove('splitpane-horizontal', 'splitpane-vertical')
-		this._$splitPane.classList.add(`splitpane-${SplitDirection[splitDirection].toLowerCase()}`)
+		this._$splitPane.classList.add(`splitpane-${splitDirection}`)
 
 		this._offsetSizeAttribute = splitDirection === SplitDirection.HORIZONTAL ? 'offsetHeight' : 'offsetWidth';
 		const sizeAttribute = splitDirection === SplitDirection.HORIZONTAL ? 'height' : 'width';

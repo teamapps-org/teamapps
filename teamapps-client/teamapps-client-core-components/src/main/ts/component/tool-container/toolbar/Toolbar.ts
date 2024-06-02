@@ -42,7 +42,7 @@ import {DropDown} from "../../../micro-components/DropDown";
 import {Emptyable} from "../../../util/Emptyable";
 import {ToolbarButton} from "./ToolbarButton";
 import {ToolbarButtonGroup} from "./ToolbarButtonGroup";
-import {outerWidthIncludingMargins} from "../../../Common";
+import {outerWidthIncludingMargins} from "../../../util/Common";
 
 interface FQButtonId {
 	groupId: string,
