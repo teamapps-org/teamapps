@@ -23,7 +23,7 @@ import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.teamapps.dto.*;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.common.map.shape.*;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.map.shape.*;

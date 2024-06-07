@@ -1,0 +1,166 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "projector-timegraph":org.teamapps.projector.components.timegraph;
+
+import org.teamapps.projector.component.DtoComponent;
+
+class DtoTimeGraph extends DtoComponent {
+	LineChartYScaleZoomMode yScaleZoomMode;
+	required DtoLongInterval intervalX;
+	required List<DtoTimeChartZoomLevel> zoomLevels;
+	required int maxPixelsBetweenDataPoints;  // ... before switching to higher zoom level
+	required List<DtoGraph> graphs;
+	ScaleType yScaleType;
+	LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode;
+	String locale;
+	String timeZoneId;
+
+	command setIntervalX(DtoLongInterval intervalX);
+	command setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints);
+	command addData(int zoomLevel, Dictionary<DtoGraphData> data);
+	command resetGraphData(String graphId); // client will request data again (corresponding to zoom and component size)
+	command resetAllData(DtoLongInterval intervalX, List<DtoTimeChartZoomLevel> newZoomLevels); // resets all data
+	command setMouseScrollZoomPanMode(LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode);
+	command setSelectedInterval(DtoLongInterval intervalX);
+
+	command setGraphs(List<DtoGraph> graphs);
+	command addOrUpdateGraph(DtoGraph graph);
+
+	command zoomTo(DtoLongInterval intervalX);
+
+	event zoomed(DtoLongInterval displayedInterval, int zoomLevelIndex, double millisecondsPerPixel, Dictionary<List<DtoLongInterval>> neededIntervalsByGraphId);
+	event intervalSelected(DtoLongInterval intervalX);
+}
+
+enum LineChartYScaleZoomMode {
+    FIXED,
+    DYNAMIC,
+    DYNAMIC_INCLUDING_ZERO
+}
+
+enum LineChartMouseScrollZoomPanMode {
+	ENABLED,
+	WITH_MODIFIER_KEY,
+	DISABLED
+}
+
+class DtoTimeChartZoomLevel {
+	required long approximateMillisecondsPerDataPoint;
+}
+
+// ==== GRAPHS
+
+interface DtoGraph {
+	String id;
+	boolean yAxisVisible;
+	String yAxisColor;
+	ScaleType yScaleType;
+	DtoLongInterval intervalY;
+	LineChartYScaleZoomMode yScaleZoomMode;
+	boolean yZeroLineVisible;
+}
+
+class DtoLineGraph implements DtoGraph {
+	String dataSeriesId;
+	LineChartCurveType graphType;
+    double dataDotRadius;
+    String lineColorScaleMin;
+    String lineColorScaleMax;
+    String areaColorScaleMin;
+    String areaColorScaleMax;
+}
+
+class DtoHoseGraph implements DtoGraph {
+	String upperBoundDataSeriesId;
+	String middleLineDataSeriesId;
+	String lowerBoundDataSeriesId;
+	LineChartCurveType graphType;
+    double dataDotRadius;
+    String areaColor;
+    boolean stripedArea;
+    String middleLineColor;
+	String lowerLineColor;
+	String upperLineColor;
+}
+
+class DtoIncidentGraph implements DtoGraph {
+    // no config at the moment...
+}
+
+class DtoGraphGroup implements DtoGraph {
+	List<DtoGraph> graphs;
+}
+
+// ==== DATA
+
+interface DtoGraphData {
+     required DtoLongInterval interval;
+}
+class DtoLineGraphData implements DtoGraphData {
+    required List<DtoLineGraphDataPoint> dataPoints;
+}
+class DtoLineGraphDataPoint {
+	required double x;
+	required double y;
+}
+class DtoIncidentGraphData implements DtoGraphData {
+    required List<DtoIncidentGraphDataPoint> dataPoints;
+}
+class DtoIncidentGraphDataPoint {
+    required double x1;
+	required double x2;
+	required double y;
+	required String color;
+	required String tooltipHtml;
+}
+class DtoHoseGraphData implements DtoGraphData {
+    required DtoLineGraphData lowerLineData;
+    required DtoLineGraphData middleLineData;
+    required DtoLineGraphData upperLineData;
+}
+class DtoGraphGroupData implements DtoGraphData {
+    required Dictionary<DtoGraphData> graphDataByGraphId;
+}
+
+
+
+@TypeScriptFactory
+class DtoLongInterval {
+ 	required long min;
+ 	required long max;
+}
+
+enum LineChartCurveType {
+	LINEAR,
+    STEP,
+    STEPBEFORE,
+    STEPAFTER,
+    BASIS,
+    CARDINAL,
+	MONOTONE,
+    CATMULLROM
+}
+
+enum ScaleType {
+	LINEAR,
+	LOG10,
+	SYMLOG // see https://github.com/d3/d3-scale/blob/main/README.md#symlog-scales
+}
+

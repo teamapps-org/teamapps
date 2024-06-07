@@ -23,7 +23,7 @@ import com.ibm.icu.util.ULocale;
 import org.teamapps.projector.components.common.dto.DtoAbstractField;
 import org.teamapps.projector.components.common.dto.DtoRichTextEditor;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.common.field.upload.UploadedFile;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;

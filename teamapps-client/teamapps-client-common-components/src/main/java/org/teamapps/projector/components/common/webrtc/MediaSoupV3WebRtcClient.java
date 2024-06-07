@@ -21,7 +21,7 @@ package org.teamapps.projector.components.common.webrtc;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;

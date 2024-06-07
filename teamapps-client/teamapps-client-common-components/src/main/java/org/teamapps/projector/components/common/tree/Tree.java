@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.projector.components.common.dto.DtoComponent;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.common.dto.DtoComboBoxTreeRecord;
 import org.teamapps.projector.components.common.dto.DtoTree;
 import org.teamapps.projector.components.common.dto.DtoTreeRecord;

@@ -61,6 +61,7 @@
         <module>teamapps-client/projector-calendar</module>
         <module>teamapps-client/projector-document-viewer</module>
         <module>teamapps-client/projector-elegant-panel</module>
+        <module>teamapps-client/projector-timegraph</module>
         <module>teamapps-session-stats-app</module>
 
         <module>teamapps-material-icon-provider</module>

@@ -17,15 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.common.timegraph.model;
+package org.teamapps.projector.components.timegraph.model;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.teamapps.projector.components.common.timegraph.Interval;
-import org.teamapps.projector.components.common.timegraph.TimePartitioningUnit;
-import org.teamapps.projector.components.common.timegraph.datapoints.LineGraphDataPoint;
-import org.teamapps.projector.components.common.timegraph.datapoints.ListLineGraphData;
+import org.teamapps.projector.components.timegraph.Interval;
+import org.teamapps.projector.components.timegraph.TimePartitioningUnit;
+import org.teamapps.projector.components.timegraph.datapoints.LineGraphDataPoint;
+import org.teamapps.projector.components.timegraph.datapoints.ListLineGraphData;
 
 import java.time.ZoneOffset;
 import java.util.Arrays;

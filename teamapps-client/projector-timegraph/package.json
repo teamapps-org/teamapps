@@ -1,0 +1,28 @@
+{
+  "name": "projector-timegraph",
+  "version": "0.9.155-SNAPSHOT",
+  "type": "module",
+  "exports": "./target/js-dist/index.js",
+  "types": "./target/js-dist/lib/index.d.ts",
+  "scripts": {
+    "del_dist": "rimraf 'dist/*'",
+    "clean": "yarn run del_dist",
+    "tsc": "tsc",
+    "bundle": "node esbuild.mjs",
+    "build": "yarn run del_dist && yarn run tsc && yarn run bundle"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "esbuild": "^0.15.13",
+    "rimraf": "^3.0.2",
+    "typescript": "^5.1"
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.6.3",
+    "color-rgba": "^2.1.1",
+    "d3": "^7.9.0",
+    "d3-luxon": "/home/yamass/Development/Idea-Projects/d3-luxon",
+    "fastest-levenshtein": "^1.0.16",
+    "projector-client-object-api": "workspace:*"
+  }
+}

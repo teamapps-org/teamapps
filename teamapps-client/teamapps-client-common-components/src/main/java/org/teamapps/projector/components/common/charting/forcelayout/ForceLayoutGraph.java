@@ -21,7 +21,7 @@ package org.teamapps.projector.components.common.charting.forcelayout;
 
 import org.teamapps.dto.*;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;

@@ -54,7 +54,7 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 	public void checkSuperTypeResolvability() {
 		if (context.superClassDecl() != null) {
 			String superClassName = context.superClassDecl().typeName().getText();
-			String qualifiedTypeName = getQualifiedTypeName(superClassName, context.superClassDecl());
+			String qualifiedTypeName = getQualifiedTypeName(superClassName, context);
 			model.findClassByQualifiedName(qualifiedTypeName).orElseThrow(() -> model.createUnresolvedTypeReferenceException(superClassName, context));
 		}
 
@@ -65,7 +65,7 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 				if (isExternal) {
 					continue;
 				}
-				String qualifiedName = getQualifiedTypeName(interfaceName, context.superClassDecl());
+				String qualifiedName = getQualifiedTypeName(interfaceName, context);
 				model.findInterfaceByQualifiedName(qualifiedName).orElseThrow(() -> model.createUnresolvedTypeReferenceException(interfaceName, context));
 			}
 		}
@@ -74,7 +74,7 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 	public ClassWrapper getSuperClass() {
 		if (context.superClassDecl() != null) {
 			String superClassName = context.superClassDecl().typeName().getText();
-			String qualifiedTypeName = getQualifiedTypeName(superClassName, context.superClassDecl());
+			String qualifiedTypeName = getQualifiedTypeName(superClassName, context);
 			ClassWrapper superClass = model.findClassByQualifiedName(qualifiedTypeName).orElse(null);
 			if (superClass == null) {
 				throw new TeamAppsGeneratorException("Cannot find super class " + superClassName + " (" + qualifiedTypeName + ") of " + context.Identifier());

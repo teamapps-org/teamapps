@@ -23,7 +23,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.teamapps.projector.components.common.dto.DtoAbstractField;
 import org.teamapps.projector.components.common.dto.DtoPictureChooser;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.AbstractField;

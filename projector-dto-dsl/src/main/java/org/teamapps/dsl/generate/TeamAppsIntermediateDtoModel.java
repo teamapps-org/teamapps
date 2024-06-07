@@ -236,12 +236,12 @@ public class TeamAppsIntermediateDtoModel {
 		return getQualifiedTypeName(typeName, typeContext);
 	}
 
-	public static String getQualifiedTypeName(String potentiallyImportedTypeName, ParserRuleContext context) {
-		return findImport(context, potentiallyImportedTypeName)
+	public static String getQualifiedTypeName(String unqualifiedTypeName, ParserRuleContext context) {
+		return findImport(context, unqualifiedTypeName)
 				.map(i -> i.qualifiedTypeName().getText())
 				.or(() -> findAncestorOfType(context, ClassCollectionContext.class, false)
-						.map(ccc -> ccc.packageDeclaration().packageName().getText() + "." + potentiallyImportedTypeName))
-				.orElse(potentiallyImportedTypeName);
+						.map(ccc -> ccc.packageDeclaration().packageName().getText() + "." + unqualifiedTypeName))
+				.orElse(unqualifiedTypeName);
 	}
 
 	public static Optional<ImportDeclarationContext> findImport(ParserRuleContext parserRuleContext, String simpleTypeName) {

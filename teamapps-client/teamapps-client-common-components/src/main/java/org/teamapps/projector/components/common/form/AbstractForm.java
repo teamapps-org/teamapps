@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.*;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.components.common.form.layoutpolicy.FormLayoutPolicy;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;

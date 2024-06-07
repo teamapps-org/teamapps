@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.common.timegraph.partitioning;
+package org.teamapps.projector.components.timegraph.partitioning;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -21,7 +21,7 @@ package org.teamapps.projector.components.common.chat;
 
 import org.teamapps.projector.components.common.dto.DtoChatInput;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;

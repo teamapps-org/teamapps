@@ -273,13 +273,17 @@ export class MonthGridView extends View {
 		// 	.attr("stroke", "black")
 		// 	.attr("width", this.monthWidth)
 		// 	.attr("height", this.monthHeight);
+
+		var that = this;
 		_monthEnter
 			.append("text")
 			.classed("fc-month-grid-month-name", true)
 			.text(monthRange => this.context.dateEnv.format(strippedUtcLikeDate(monthRange.intervalStart), this.monthNameFormatter))
 			.attr("x", 0)
 			.attr("y", 10)
-			.on("click", (monthRange) => this.context.options.navLinkMonthClick && this.context.options.navLinkMonthClick(monthRange.intervalStart.toDate(), d3.event));
+			.on("click", function (event, monthRange) {
+				that.context.options.navLinkMonthClick && that.context.options.navLinkMonthClick(monthRange.intervalStart.toDate(), event)
+			});
 		_month.merge(_monthEnter)
 			.transition()
 			.attr("transform", calculateMonthPositionTransform);
@@ -323,7 +327,9 @@ export class MonthGridView extends View {
 			.classed("fc-month-grid-week-number", true)
 			.attr("x", 6)
 			.attr("y", this.textHangOffset)
-			.on("click", (d) => this.context.options.navLinkWeekClick && this.context.options.navLinkWeekClick(d.day.toDate(), d3.event));
+			.on("click", function (event, d) {
+				that.context.options.navLinkWeekClick && that.context.options.navLinkWeekClick(d.day.toDate(), event)
+			});
 		_weekNumber.merge(_weekNumberEnter)
 			.text(day => this.context.dateEnv.computeWeekNumber(day.day.toDate()))
 			.attr("transform", (week, i) => `scale(${subTileZoom})`);
@@ -342,7 +348,9 @@ export class MonthGridView extends View {
 				g.append("text")
 					.classed("day-number", true);
 			});
-		_dayEnter.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event));
+		_dayEnter.on("click", function (event, d) {
+			that.context.options.navLinkDayClick && that.context.options.navLinkDayClick(d.day.toDate(), event);
+		});
 		_day.merge(_dayEnter)
 			.attr("transform", (day, dayIndex) => `translate(${((dayIndex % 7) + (this.context.options.weekNumbers ? 1 : 0) + 0.5) * this.dayColumnWidth}, 0) scale(${subTileZoom})`)
 			.call((g) => {
@@ -367,12 +375,12 @@ export class MonthGridView extends View {
 		_day.exit()
 			.remove();
 
-		_dayEnter.on("pointerenter", (d, i, nodes) => {
+		_dayEnter.on("pointerenter", function (event, d) {
 			if (!d.foreignMonth) {
-				var bestTileCoverageInfo = this.getBestTileCoverageInfo(monthRanges.length);
-				let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.context.options.minMonthTileWidth) / (3 * this.context.options.minMonthTileWidth));
+				var bestTileCoverageInfo = that.getBestTileCoverageInfo(monthRanges.length);
+				let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - that.context.options.minMonthTileWidth) / (3 * that.context.options.minMonthTileWidth));
 				var strokeWidth = 1.7 / (subTileZoom * subTileZoom);
-				d3.select(nodes[i])
+				d3.select(this)
 					.selectAll("path.day-occupation")
 					.transition()
 					.ease(d3.easeQuad)
@@ -380,22 +388,22 @@ export class MonthGridView extends View {
 					.style("stroke-width", `${strokeWidth}px`)
 					.attr("d", (occupation: DayOccupationColorAmount, i, groups) => {
 						var radius = occupationRadius + (strokeWidth - 1) / 2;
-						return this.describeArc(0, occupationCircleCenterOffset, radius, occupation.startAngle, occupation.endAngle);
+						return that.describeArc(0, occupationCircleCenterOffset, radius, occupation.startAngle, occupation.endAngle);
 					});
-				let events = this.getEventsForDay(d);
-				this.updatePopper(d.day, events, nodes[i].querySelector(".day-occupation-background-circle"));
+				let events = that.getEventsForDay(d);
+				that.updatePopper(d.day, events, this.querySelector(".day-occupation-background-circle"));
 			}
-		}).on("pointerleave", (d, i, nodes) => {
-			d3.select(nodes[i])
+		}).on("pointerleave", function (event, d) {
+			d3.select(this)
 				.selectAll("path.day-occupation")
 				.transition()
 				.ease(d3.easeQuad)
 				.duration(200)
 				.style("stroke-width", "1px")
 				.attr("d", (occupation: DayOccupationColorAmount, i, groups) => {
-					return this.describeArc(0, occupationCircleCenterOffset, occupationRadius, occupation.startAngle, occupation.endAngle);
+					return that.describeArc(0, occupationCircleCenterOffset, occupationRadius, occupation.startAngle, occupation.endAngle);
 				});
-			this.eventsPopper.setVisible(false, false);
+			that.eventsPopper.setVisible(false, false);
 		});
 
 		let _dayOccupation = _day.merge(_dayEnter).selectAll("path.day-occupation")

@@ -23,8 +23,7 @@
     "@fullcalendar/moment": "4.4.2",
     "@fullcalendar/moment-timezone": "4.4.2",
     "@fullcalendar/timegrid": "4.4.2",
-    "d3": "^5.9.7",
-    "d3-luxon": "^1.0.2",
+    "d3": "^7.9.0",
     "moment-timezone": "^0.5.43",
     "projector-client-object-api": "workspace:*"
   }

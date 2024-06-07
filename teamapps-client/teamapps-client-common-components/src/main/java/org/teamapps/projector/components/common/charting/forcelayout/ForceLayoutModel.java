@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.common.charting.forcelayout;
 
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;

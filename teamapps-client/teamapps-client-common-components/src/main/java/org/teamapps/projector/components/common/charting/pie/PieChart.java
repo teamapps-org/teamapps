@@ -23,7 +23,7 @@ import org.teamapps.projector.components.common.dto.DtoChartNamedDataPoint;
 import org.teamapps.projector.components.common.dto.DtoComponent;
 import org.teamapps.projector.components.common.dto.DtoPieChart;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.projector.components.common.charting.ChartLegendStyle;
 import org.teamapps.projector.components.common.charting.DataPointWeighting;

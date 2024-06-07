@@ -26,7 +26,7 @@ import org.teamapps.projector.components.common.dto.DtoComponent;
 import org.teamapps.projector.components.common.dto.DtoShakaManifest;
 import org.teamapps.projector.components.common.dto.DtoShakaPlayer;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.projector.components.common.media.PosterImageSize;
 import org.teamapps.projector.components.common.media.TrackLabelFormat;

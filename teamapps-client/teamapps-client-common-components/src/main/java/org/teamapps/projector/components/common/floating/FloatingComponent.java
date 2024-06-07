@@ -23,7 +23,7 @@ import org.teamapps.common.format.Color;
 import org.teamapps.projector.components.common.dto.DtoComponent;
 import org.teamapps.projector.components.common.dto.DtoFloatingComponent;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;

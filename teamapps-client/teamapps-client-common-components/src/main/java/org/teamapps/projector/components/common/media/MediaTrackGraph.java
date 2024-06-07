@@ -22,7 +22,7 @@ package org.teamapps.projector.components.common.media;
 import org.teamapps.projector.components.common.dto.DtoComponent;
 import org.teamapps.projector.components.common.dto.DtoMediaTrackGraph;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class MediaTrackGraph extends AbstractComponent {

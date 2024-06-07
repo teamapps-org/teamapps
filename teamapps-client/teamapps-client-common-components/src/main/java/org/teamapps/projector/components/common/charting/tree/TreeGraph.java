@@ -24,7 +24,7 @@ import org.teamapps.projector.components.common.dto.DtoClientRecord;
 import org.teamapps.projector.components.common.dto.DtoTreeGraph;
 import org.teamapps.projector.components.common.dto.DtoTreeGraphNode;
 import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;

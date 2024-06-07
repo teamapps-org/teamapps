@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.components.common.map;
 
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.List;
 

@@ -21,7 +21,7 @@
 package org.teamapps.projector.components.common.field.upload.simple;
 
 import org.teamapps.projector.components.common.dto.DtoFileItem;
-import org.teamapps.event.ProjectorEvent;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
 
