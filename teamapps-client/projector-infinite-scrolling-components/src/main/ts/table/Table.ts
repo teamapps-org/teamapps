@@ -40,7 +40,7 @@ import {
 	DtoTableCommandHandler,
 	DtoTableDisplayStyle,
 	DtoTableEventSource, SortDirection
-} from "./generated";
+} from "../generated";
 import {TableRowSelectionModel} from "./TableRowSelectionModel";
 import {FieldMessagesPopper} from "./FieldMessagesPopper";
 import EventData = Slick.EventData;

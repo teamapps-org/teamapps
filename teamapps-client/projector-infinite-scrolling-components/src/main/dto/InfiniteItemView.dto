@@ -36,7 +36,7 @@ class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
 	double itemPositionAnimationTime; // ms
 	JustifyContent itemContentHorizontalAlignment;
 	AlignItems itemContentVerticalAlignment;
-	DtoItemJustification rowHorizontalAlignment;
+	JustifyContent rowHorizontalAlignment;
 //	boolean autoHeight; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 
 	boolean contextMenuEnabled;
@@ -50,7 +50,7 @@ class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
     command setVerticalSpacing(double verticalSpacing);
     command setItemContentHorizontalAlignment(JustifyContent itemContentHorizontalAlignment);
     command setItemContentVerticalAlignment(AlignItems itemContentVerticalAlignment);
-    command setRowHorizontalAlignment(DtoItemJustification rowHorizontalAlignment);
+    command setRowHorizontalAlignment(JustifyContent rowHorizontalAlignment);
     command setItemPositionAnimationTime(int animationMillis);
 
     command setContextMenuContent(int requestId, DtoComponent* component);
@@ -64,8 +64,4 @@ class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
 class DtoInfiniteItemViewDataRequest {
 	required int startIndex;
 	required int length;
-}
-
-enum DtoItemJustification {
-	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN, SPACE_EVENLY
 }

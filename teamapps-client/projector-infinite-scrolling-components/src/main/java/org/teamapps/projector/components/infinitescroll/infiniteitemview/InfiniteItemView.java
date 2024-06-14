@@ -32,6 +32,7 @@ import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
@@ -57,7 +58,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	// private float verticalSpacing; // TODO
 	private HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.STRETCH;
 	private VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
-	// private ItemViewRowJustification rowHorizontalAlignment = ItemViewRowJustification.LEFT; // TODO
+	 private JustifyContent rowHorizontalAlignment = JustifyContent.START;
 
 	private int itemPositionAnimationTime = 200;
 
@@ -93,7 +94,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 		// ui.setVerticalSpacing(verticalSpacing);
 		ui.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toUiHorizontalElementAlignment());
 		ui.setItemContentVerticalAlignment(itemContentVerticalAlignment.toUiVerticalElementAlignment());
-		// ui.setRowHorizontalAlignment(rowHorizontalAlignment.toUiItemJustification());
+		 ui.setRowHorizontalAlignment(rowHorizontalAlignment);
 		ui.setItemPositionAnimationTime(itemPositionAnimationTime);
 		ui.setContextMenuEnabled(contextMenuProvider != null);
 		return ui;
@@ -211,7 +212,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	// 	return horizontalSpacing;
 	// }
 	//
-	// public InfiniteItemView2<RECORD> setHorizontalSpacing(float horizontalSpacing) {
+	// public InfiniteItemView<RECORD> setHorizontalSpacing(float horizontalSpacing) {
 	// 	this.horizontalSpacing = horizontalSpacing;
 	// 	queueCommandIfRendered(() -> new DtoInfiniteItemView.SetHorizontalSpacingCommand(horizontalSpacing));
 	// 	return this;
@@ -221,7 +222,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	// 	return verticalSpacing;
 	// }
 	//
-	// public InfiniteItemView2<RECORD> setVerticalSpacing(float verticalSpacing) {
+	// public InfiniteItemView<RECORD> setVerticalSpacing(float verticalSpacing) {
 	// 	this.verticalSpacing = verticalSpacing;
 	// 	queueCommandIfRendered(() -> new DtoInfiniteItemView.SetVerticalSpacingCommand(verticalSpacing));
 	// 	return this;
@@ -251,7 +252,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	// 	return rowHorizontalAlignment;
 	// }
 
-	// public InfiniteItemView2<RECORD> setRowHorizontalAlignment(ItemViewRowJustification rowHorizontalAlignment) {
+	// public InfiniteItemView<RECORD> setRowHorizontalAlignment(ItemViewRowJustification rowHorizontalAlignment) {
 	// 	this.rowHorizontalAlignment = rowHorizontalAlignment;
 	// 	queueCommandIfRendered(() -> new DtoInfiniteItemView.SetRowHorizontalAlignmentCommand(rowHorizontalAlignment.toUiItemJustification()));
 	// 	return this;

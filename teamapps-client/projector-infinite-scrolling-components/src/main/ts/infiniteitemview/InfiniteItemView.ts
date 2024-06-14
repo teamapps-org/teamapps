@@ -18,27 +18,22 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {addDelegatedEventListener, parseHtml} from "./Common";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
+
 import {
-	DtoInfiniteItemView2_ContextMenuRequestedEvent, DtoInfiniteItemView2_DisplayedRangeChangedEvent,
-	DtoInfiniteItemView2_ItemClickedEvent,
-	DtoInfiniteItemView2CommandHandler,
-	DtoInfiniteItemView2,
-	DtoInfiniteItemView2EventSource
-} from "../generated/DtoInfiniteItemView2";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {DtoTemplate} from "../generated/DtoTemplate";
-import {UiItemJustification} from "../generated/UiItemJustification";
-import {DtoIdentifiableClientRecord} from "../generated/DtoIdentifiableClientRecord";
-import {ContextMenu} from "./micro-components/ContextMenu";
-import {UiComponent} from "./UiComponent";
-import {debouncedMethod, DebounceMode} from "./util/debounce";
-import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
-import {UiVerticalElementAlignment} from "../generated/UiVerticalElementAlignment";
+	AbstractLegacyComponent, addDelegatedEventListener, AlignItems, Component, debouncedMethod, DebounceMode,
+	DtoIdentifiableClientRecord, DtoTemplate, executeWhenFirstDisplayed, JustifyContent,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent, Template
+} from "projector-client-object-api";
+import {ContextMenu} from "teamapps-client-core-components";
+import {
+	DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent,
+	DtoInfiniteItemView, DtoInfiniteItemView_ContextMenuRequestedEvent,
+	DtoInfiniteItemView_ItemClickedEvent,
+	DtoInfiniteItemViewCommandHandler,
+	DtoInfiniteItemViewEventSource
+} from "../generated";
 
 type RenderedItem = {
 	item: DtoIdentifiableClientRecord,
@@ -50,29 +45,16 @@ type RenderedItem = {
 	height: number
 };
 
-export var cssJustifyContent = {
-	[UiHorizontalElementAlignment.LEFT]: "flex-start",
-	[UiHorizontalElementAlignment.RIGHT]: "flex-end",
-	[UiHorizontalElementAlignment.CENTER]: "center",
-	[UiHorizontalElementAlignment.STRETCH]: "stretch",
-};
-export var cssAlignItems = {
-	[UiVerticalElementAlignment.TOP]: "flex-start",
-	[UiVerticalElementAlignment.CENTER]: "center",
-	[UiVerticalElementAlignment.BOTTOM]: "flex-end",
-	[UiVerticalElementAlignment.STRETCH]: "stretch"
-};
+export class InfiniteItemView extends AbstractLegacyComponent<DtoInfiniteItemView> implements DtoInfiniteItemViewCommandHandler, DtoInfiniteItemViewEventSource {
 
-export class UiInfiniteItemView2 extends AbstractLegacyComponent<DtoInfiniteItemView2> implements DtoInfiniteItemView2CommandHandler, DtoInfiniteItemView2EventSource {
-
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<DtoInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent();
-	public readonly onItemClicked: TeamAppsEvent<DtoInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent();
-	public readonly onContextMenuRequested: TeamAppsEvent<DtoInfiniteItemView2_ContextMenuRequestedEvent> = new TeamAppsEvent();
+	public readonly onDisplayedRangeChanged: TeamAppsEvent<DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent> = new TeamAppsEvent();
+	public readonly onItemClicked: TeamAppsEvent<DtoInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent();
+	public readonly onContextMenuRequested: TeamAppsEvent<DtoInfiniteItemView_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;
 	private $styles: HTMLStyleElement;
-	private itemTemplateRenderer: Renderer;
+	private itemTemplateRenderer: Template;
 	private contextMenu: ContextMenu;
 
 	private renderedRange: [number, number] = [0, 0];
@@ -80,16 +62,16 @@ export class UiInfiniteItemView2 extends AbstractLegacyComponent<DtoInfiniteItem
 	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
 	private totalNumberOfRecords: number = null;
 
-	constructor(config: DtoInfiniteItemView2, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoInfiniteItemView, serverObjectChannel: ServerObjectChannel) {
 		super(config, serverObjectChannel);
-		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this.config.id}">
+		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.getCssUuid()}">
                 <div class="grid"></div>
                 <style></style>
             </div>`);
 		this.$grid = this.$mainDomElement.querySelector<HTMLElement>(":scope .grid");
 		this.$styles = this.$mainDomElement.querySelector<HTMLStyleElement>(":scope style");
 		this.updateStyles();
-		this.setItemTemplate(config.itemTemplate);
+		this.setItemTemplate(config.itemTemplate as Template);
 		this.setItemPositionAnimationTime(config.itemPositionAnimationTime);
 		this.contextMenu = new ContextMenu();
 
@@ -106,7 +88,7 @@ export class UiInfiniteItemView2 extends AbstractLegacyComponent<DtoInfiniteItem
 			let recordId = parseInt(element.getAttribute("data-id"));
 			this.onItemClicked.fire({
 				recordId: recordId,
-				isDoubleClick: false
+				doubleClick: false
 			});
 		});
 		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", "contextmenu", (element, ev) => {
@@ -122,7 +104,7 @@ export class UiInfiniteItemView2 extends AbstractLegacyComponent<DtoInfiniteItem
 			let recordId = parseInt(element.getAttribute("data-id"));
 			this.onItemClicked.fire({
 				recordId: recordId,
-				isDoubleClick: true
+				doubleClick: true
 			});
 		});
 	}
@@ -275,16 +257,16 @@ export class UiInfiniteItemView2 extends AbstractLegacyComponent<DtoInfiniteItem
 
 	private updateStyles() {
 		this.$styles.textContent = `
-            .grid-${this.config.id} .item-wrapper {
-                 align-items: ${cssAlignItems[this.config.itemContentVerticalAlignment]};
-                 justify-content: ${cssJustifyContent[this.config.itemContentHorizontalAlignment]};
+            .grid-${this.getCssUuid()} .item-wrapper {
+                 align-items: ${this.config.itemContentVerticalAlignment};
+                 justify-content: ${this.config.itemContentHorizontalAlignment};
             }
-            .grid-${this.config.id} .item-wrapper > * {
-                 flex: ${this.config.itemContentHorizontalAlignment == UiHorizontalElementAlignment.STRETCH ? "1 1 auto" : "0 1 auto"};
+            .grid-${this.getCssUuid()} .item-wrapper > * {
+                 flex: ${this.config.itemContentHorizontalAlignment == JustifyContent.STRETCH ? "1 1 auto" : "0 1 auto"};
             }`;
 	}
 
-	setItemTemplate(itemTemplate: DtoTemplate): void {
+	setItemTemplate(itemTemplate: Template): void {
 		this.itemTemplateRenderer = itemTemplate;
 		this.rerenderAllItems();
 	}
@@ -317,28 +299,28 @@ export class UiInfiniteItemView2 extends AbstractLegacyComponent<DtoInfiniteItem
 		this.updateItemPositions();
 	}
 
-	setItemContentHorizontalAlignment(itemContentHorizontalAlignment: UiHorizontalElementAlignment): void {
+	setItemContentHorizontalAlignment(itemContentHorizontalAlignment: JustifyContent): void {
 		this.config.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
 	}
 
-	setItemContentVerticalAlignment(itemContentVerticalAlignment: UiVerticalElementAlignment): void {
+	setItemContentVerticalAlignment(itemContentVerticalAlignment: AlignItems): void {
 		this.config.itemContentVerticalAlignment = itemContentVerticalAlignment;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
 	}
 
-	setRowHorizontalAlignment(rowHorizontalAlignment: UiItemJustification): void {
+	setRowHorizontalAlignment(rowHorizontalAlignment: JustifyContent): void {
 		this.config.rowHorizontalAlignment = rowHorizontalAlignment;
 		this.updateStyles();
 		this.requestDataIfNeeded();
 		this.updateItemPositions();
 	}
 
-	setContextMenuContent(requestId: number, component: UiComponent): void {
+	setContextMenuContent(requestId: number, component: Component): void {
 		this.contextMenu.setContent(component, requestId);
 	}
 

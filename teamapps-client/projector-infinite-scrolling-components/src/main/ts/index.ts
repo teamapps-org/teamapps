@@ -11,4 +11,5 @@ import "slickgrid/slick.editors";
 import "slickgrid/slick.grid";
 import "slickgrid/slick.interactions";
 
-export * from "./Table";
+export * from "./table/Table";
+export * from "./infiniteitemview/InfiniteItemView";

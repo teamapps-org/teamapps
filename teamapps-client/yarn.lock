@@ -278,21 +278,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/d3-scale@npm:*":
+"@types/d3-scale@npm:*, @types/d3-scale@npm:^4.0.8":
   version: 4.0.8
   resolution: "@types/d3-scale@npm:4.0.8"
   dependencies:
     "@types/d3-time": "*"
   checksum: 3b1906da895564f73bb3d0415033d9a8aefe7c4f516f970176d5b2ff7a417bd27ae98486e9a9aa0472001dc9885a9204279a1973a985553bdb3ee9bbc1b94018
-  languageName: node
-  linkType: hard
-
-"@types/d3-scale@npm:^3.2.0":
-  version: 3.3.2
-  resolution: "@types/d3-scale@npm:3.3.2"
-  dependencies:
-    "@types/d3-time": ^2
-  checksum: 65dbf85f07a4d6ac26396075b0faa1930cfebb96dc248629d4b82c22457c89161d0f070f9a5554adccee80b959e2c6d7c1ef6b7355743afe91050d71014fe3cf
   languageName: node
   linkType: hard
 
@@ -323,13 +314,6 @@ __metadata:
   version: 3.0.3
   resolution: "@types/d3-time@npm:3.0.3"
   checksum: a071826c80efdb1999e6406fef2db516d45f3906da3a9a4da8517fa863bae53c4c1056ca5347a20921660607d21ec874fd2febe0e961adb7be6954255587d08f
-  languageName: node
-  linkType: hard
-
-"@types/d3-time@npm:^2":
-  version: 2.1.1
-  resolution: "@types/d3-time@npm:2.1.1"
-  checksum: 115048d0cd312a3172ef7c03615dfbdbd8b92a93fd7b6d9ca93c49c704fcdb9575f4c57955eb54eb757b9834acaaf47fc52eae103d06246c59ae120de4559cbc
   languageName: node
   linkType: hard
 
@@ -1645,20 +1629,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-luxon@file:/home/yamass/Development/Idea-Projects/d3-luxon::locator=projector-timegraph%40workspace%3Aprojector-timegraph":
-  version: 1.1.0
-  resolution: "d3-luxon@file:/home/yamass/Development/Idea-Projects/d3-luxon#/home/yamass/Development/Idea-Projects/d3-luxon::hash=90b82f&locator=projector-timegraph%40workspace%3Aprojector-timegraph"
+"d3-luxon@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "d3-luxon@npm:2.0.0"
   dependencies:
-    "@types/d3-scale": ^3.2.0
+    "@types/d3-scale": ^4.0.8
     d3-array: ^3.2.4
     d3-scale: ^4.0.2
     d3-time: ^3.1.0
-    luxon: ^1.25.0
+    luxon: ^3.4.4
   peerDependencies:
     d3-array: ^3.2.4
     d3-scale: ^4.0.2
-    luxon: ^1.25.0
-  checksum: 474ae170fba4991435f9f5bf8955560a667b11b9c0665aa581852f1dd02d8669bc455738a4f205026130e3ec8c53d211025d95a1ddff62411cfb2b9b7717a80a
+    luxon: ^3.4.4
+  checksum: 61c533e22e05a5266a821dc1d675793d3aa1b6c5180c9e5e457dc7c26c87bed3156ae822756c7f04a899352ae9abe269678365cfbb3dbc0c53113c4b341f7a0d
   languageName: node
   linkType: hard
 
@@ -2416,10 +2400,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^1.25.0":
-  version: 1.28.1
-  resolution: "luxon@npm:1.28.1"
-  checksum: 2c62999adea79645fd1e931d685f61aeb33eda7f39fbf79b84261a233b62f9590f48336654ee9efd405848bd9e13dc7fe087c701b7126187201a88998dc68b04
+"luxon@npm:^3.4.4":
+  version: 3.4.4
+  resolution: "luxon@npm:3.4.4"
+  checksum: 36c1f99c4796ee4bfddf7dc94fa87815add43ebc44c8934c924946260a58512f0fd2743a629302885df7f35ccbd2d13f178c15df046d0e3b6eb71db178f1c60c
   languageName: node
   linkType: hard
 
@@ -2715,7 +2699,7 @@ __metadata:
     "@types/d3": ^7.4.3
     color-rgba: ^2.1.1
     d3: ^7.9.0
-    d3-luxon: /home/yamass/Development/Idea-Projects/d3-luxon
+    d3-luxon: ^2.0.0
     esbuild: ^0.15.13
     fastest-levenshtein: ^1.0.16
     projector-client-object-api: "workspace:*"

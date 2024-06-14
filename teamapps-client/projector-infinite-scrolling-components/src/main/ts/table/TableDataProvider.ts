@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import DataProvider = Slick.DataProvider;
-import {DtoTableClientRecord} from "./generated";
+import {DtoTableClientRecord} from "../generated";
 import {DtoFieldMessage, DtoIdentifiableClientRecord} from "projector-client-object-api";
 
 export class TableDataProvider implements DataProvider<DtoTableClientRecord> {
