@@ -20,14 +20,10 @@
 package org.teamapps.ux.cache.record.legacy;
 
 public class CacheManipulationHandle<R> {
-	private ClientRecordCache cache;
 	private R result;
-	private Runnable committingActions;
-	private int operationSequenceNumber;
+	private final Runnable committingActions;
 
-	public CacheManipulationHandle(ClientRecordCache cache, int operationSequenceNumber, R result, Runnable committingActions) {
-		this.cache = cache;
-		this.operationSequenceNumber = operationSequenceNumber;
+	public CacheManipulationHandle(R result, Runnable committingActions) {
 		this.result = result;
 		this.committingActions = committingActions;
 	}
@@ -39,8 +35,6 @@ public class CacheManipulationHandle<R> {
 	}
 
 	public void commit() {
-		if (cache.getOperationInvalidationSequenceNumber() < operationSequenceNumber) {
-			committingActions.run();
-		}
+		committingActions.run();
 	}
 }
