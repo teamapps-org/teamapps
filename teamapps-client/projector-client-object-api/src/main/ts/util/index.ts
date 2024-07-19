@@ -21,3 +21,7 @@ export * from "./NumberParser";
 export * from "./BigDecimal";
 export * from "./fieldmessage-util";
 export * from "./animations";
+export * from "./notifications-support";
+export * from "./slide";
+export * from "./layout-util";
+export * from "./FileUploader";

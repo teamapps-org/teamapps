@@ -2634,9 +2634,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "projector-document-viewer@workspace:projector-document-viewer"
   dependencies:
-    "@floating-ui/dom": ^1.6.3
     esbuild: ^0.15.13
-    fastest-levenshtein: ^1.0.16
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1
@@ -2651,6 +2649,18 @@ __metadata:
     esbuild: ^0.15.13
     fastest-levenshtein: ^1.0.16
     projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-file-field@workspace:projector-file-field":
+  version: 0.0.0-use.local
+  resolution: "projector-file-field@workspace:projector-file-field"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    projector-progress-indicator: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1
   languageName: unknown
@@ -2680,9 +2690,69 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-mobile-layout@workspace:projector-mobile-layout":
+  version: 0.0.0-use.local
+  resolution: "projector-mobile-layout@workspace:projector-mobile-layout"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    projector-progress-display: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-mustache-template@workspace:projector-mustache-template":
   version: 0.0.0-use.local
   resolution: "projector-mustache-template@workspace:projector-mustache-template"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-notification-bar@workspace:projector-notification-bar":
+  version: 0.0.0-use.local
+  resolution: "projector-notification-bar@workspace:projector-notification-bar"
+  dependencies:
+    esbuild: ^0.15.13
+    image-layout: ^0.4.1
+    projector-client-object-api: "workspace:*"
+    projector-progress-indicator: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-notification@workspace:projector-notification":
+  version: 0.0.0-use.local
+  resolution: "projector-notification@workspace:projector-notification"
+  dependencies:
+    esbuild: ^0.15.13
+    image-layout: ^0.4.1
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-progress-display@workspace:*, projector-progress-display@workspace:projector-progress-display":
+  version: 0.0.0-use.local
+  resolution: "projector-progress-display@workspace:projector-progress-display"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    projector-progress-indicator: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-progress-indicator@workspace:*, projector-progress-indicator@workspace:projector-progress-indicator":
+  version: 0.0.0-use.local
+  resolution: "projector-progress-indicator@workspace:projector-progress-indicator"
   dependencies:
     esbuild: ^0.15.13
     projector-client-object-api: "workspace:*"
@@ -2990,16 +3060,6 @@ __metadata:
   checksum: 899480ac858a650abcca4a02ae655555270e6ace833b15a74e4a2d3456f54cd19b6b12ce14e9bac997c18dd69a0596ee65b95ba013f209dd0f99ebfe87783e41
   languageName: node
   linkType: hard
-
-"teamapps-client-common-components@workspace:teamapps-client-common-components":
-  version: 0.0.0-use.local
-  resolution: "teamapps-client-common-components@workspace:teamapps-client-common-components"
-  dependencies:
-    esbuild: ^0.15.13
-    rimraf: ^3.0.2
-    typescript: ^5.1
-  languageName: unknown
-  linkType: soft
 
 "teamapps-client-communication@workspace:*, teamapps-client-communication@workspace:teamapps-client-communication":
   version: 0.0.0-use.local

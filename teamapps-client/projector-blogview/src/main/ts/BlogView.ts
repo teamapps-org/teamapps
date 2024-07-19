@@ -34,7 +34,7 @@ import {
 	DtoComponentBlock,
 	DtoMessageBlock
 } from "./generated";
-import {removeClassesByFunction, removeDangerousTags, ToolButton} from "teamapps-client-core-components";
+import {removeDangerousTags, ToolButton} from "teamapps-client-core-components";
 import {fixed_partition} from "image-layout";
 
 

@@ -24,6 +24,8 @@ import {
 	insertAfter,
 	parseHtml,
 	ServerObjectChannel,
+	slideDown,
+	slideUp,
 	TeamAppsEvent
 } from "projector-client-object-api";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
@@ -31,8 +33,8 @@ import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolba
 import {defaultSpinnerTemplate} from "../../../util/Common";
 import {
 	createDropDownButtonClickInfo,
-	DtoAbstractToolContainer_ToolbarButtonClickEvent,
 	DropDownButtonClickInfo,
+	DtoAbstractToolContainer_ToolbarButtonClickEvent,
 	DtoToolAccordion,
 	DtoToolAccordionCommandHandler,
 	DtoToolAccordionEventSource
@@ -40,7 +42,6 @@ import {
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
 import {AbstractToolContainer} from "../AbstractToolContainer";
 import {ToolAccordionButton} from "./ToolAccordionButton";
-import {slideDown, slideUp} from "../../../util/slide";
 
 export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> implements DtoToolAccordionCommandHandler, DtoToolAccordionEventSource {
 

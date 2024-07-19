@@ -1,0 +1,34 @@
+package "projector-mobile-layout":org.teamapps.projector.component.mobilelayout;
+
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.components.progress.DtoMultiProgressDisplay;
+
+class DtoNavigationBar extends DtoComponent {
+	List<DtoNavigationBarButton> buttons;
+	String backgroundColor;
+	String borderColor;
+	List<DtoComponent*> fanOutComponents;
+	DtoMultiProgressDisplay* multiProgressDisplay;
+
+	command setButtons(List<DtoNavigationBarButton> buttons);
+	command setButtonVisible(String buttonId, boolean visible);
+	command setBackgroundColor(String backgroundColor);
+	command setBorderColor(String borderColor);
+
+	command addFanOutComponent(DtoComponent* fanOutComponent); // TODO #componentRef No more necessary?
+	command removeFanOutComponent(DtoComponent* fanOutComponent); // TODO #componentRef No more necessary?
+	command showFanOutComponent(DtoComponent* fanOutComponent);
+	command hideFanOutComponent();
+	command setMultiProgressDisplay(DtoMultiProgressDisplay* multiProgressDisplay);
+
+	event buttonClicked(String buttonId, DtoComponent* visibleFanOutComponentId);
+	event fanoutClosedDueToClickOutsideFanout();
+}
+
+class DtoNavigationBarButton {
+	required String id;
+    required DtoTemplate* template;
+	required Object data;
+	boolean visible;
+}

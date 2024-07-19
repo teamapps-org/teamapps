@@ -15,7 +15,7 @@ esbuild.build({
     watch: process.argv.some(a => a === '--watch'),
     entryPoints: ['target/js-dist/lib/index.js'],
     bundle: true,
-    outfile: 'target/js-dist/index.js',
+    outfile: 'target/js-dist/projector-client-object-api.js',
     format: 'esm',
     platform: "node",
     mainFields: ["browser", "module", "main"],
@@ -35,7 +35,7 @@ esbuild.build({
         }),
         lessLoader(),
     ],
-    minify: process.env.NODE_ENV === 'production'
+    minify: false
 })
     .then(async (result, x, y) => {
         console.log("⚡ esbuild complete! ⚡")

@@ -36,7 +36,7 @@ import {
 	Component,
 	executeWhenFirstDisplayed,
 	insertBefore,
-	noOpServerObjectChannel,
+	noOpServerObjectChannel, outerWidthIncludingMargins,
 	parseHtml,
 	prependChild,
 	ServerObjectChannel,
@@ -44,7 +44,7 @@ import {
 } from "projector-client-object-api";
 
 import {StaticIcons} from "../util/StaticIcons";
-import {maximizeComponent, outerWidthIncludingMargins} from "../util/Common";
+import {maximizeComponent} from "../util/Common";
 import getComputedStyle from "@popperjs/core/lib/dom-utils/getComputedStyle";
 
 interface HeaderField {

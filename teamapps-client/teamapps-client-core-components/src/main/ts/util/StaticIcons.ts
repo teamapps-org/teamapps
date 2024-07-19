@@ -27,9 +27,7 @@ import dash from "bootstrap-icons/icons/dash-lg.svg";
 // @ts-ignore
 import windowStack from "bootstrap-icons/icons/window-stack.svg";
 
-export const StaticIcons = {
-	CLOSE: x as string,
-	MAXIMIZE: square as string,      
-	MINIMIZE: dash as string,
-	RESTORE: windowStack as string
-}
+export var SVG_CLOSE = x as string;
+export var SVG_MAXIMIZE = square as string;
+export var SVG_MINIMIZE = dash as string;
+export var SVG_RESTORE = windowStack as string;

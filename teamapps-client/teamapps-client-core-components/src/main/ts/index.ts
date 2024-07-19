@@ -28,18 +28,14 @@ export {RootPanel} from "./component/RootPanel";
 export {ToolAccordion} from "./component/tool-container/tool-accordion/ToolAccordion";
 export {Toolbar} from "./component/tool-container/toolbar/Toolbar";
 export {Window} from "./component/Window";
-export {Notification} from "./component/Notification";
 export {Div} from "./component/Div";
 export {ToolButton} from "./component/ToolButton";
 export {LinkButton} from "./component/LinkButton";
 export {FlexContainer} from "./component/FlexContainer";
 export {DummyComponent} from "./component/DummyComponent";
-export {MultiProgressDisplay} from "./component/MultiProgressDisplay";
-export {ProgressDisplay} from "./component/ProgressDisplay";
 export {HtmlView} from "./component/HtmlView";
 export {IFrame} from "./component/IFrame";
 export {AbsoluteLayout} from "./component/AbsoluteLayout";
-export {NotificationBar} from "./component/NotificationBar";
 export {SplitPane} from "./component/SplitPane";
 export {TabPanel} from "./component/TabPanel";
 

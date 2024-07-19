@@ -1,0 +1,118 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+import {
+	DtoNotification,
+	DtoNotification_ClosedEvent,
+	DtoNotification_OpenedEvent,
+	DtoNotificationCommandHandler,
+	DtoNotificationEventSource
+} from "./generated";
+import {
+	AbstractLegacyComponent,
+	Component, EntranceAnimation, ExitAnimation,
+	executeWhenFirstDisplayed,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent, animateCSS, NotificationPosition
+} from "projector-client-object-api";
+import {createUiSpacingValueCssString} from "projector-client-object-api";
+import {ProgressBar} from "projector-progress-indicator";
+import {NotificationHandle, showNotificationLike} from "projector-client-object-api";
+
+
+export class Notification extends AbstractLegacyComponent<DtoNotification> implements DtoNotificationCommandHandler, DtoNotificationEventSource {
+
+	public readonly onOpened: TeamAppsEvent<DtoNotification_OpenedEvent> = new TeamAppsEvent();
+	public readonly onClosed: TeamAppsEvent<DtoNotification_ClosedEvent> = new TeamAppsEvent();
+
+	private $main: HTMLElement;
+	private $contentContainer: HTMLElement;
+	private $progressBarContainer: HTMLElement;
+	private progressBar: ProgressBar;
+
+	private timeoutMillis: number;
+	private notificationHandle: NotificationHandle;
+
+	constructor(config: DtoNotification, serverObjectChannel: ServerObjectChannel) {
+		super(config, serverObjectChannel);
+
+		this.$main = parseHtml(`<div class="Notification">
+	<div class="close-button"></div>
+	<div class="content-container"></div>
+	<div class="progress-container"></div>
+</div>`);
+		this.$contentContainer = this.$main.querySelector(":scope > .content-container");
+		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container");
+		this.$main.querySelector(":scope > .close-button").addEventListener("mousedown", () => {
+			this.notificationHandle?.close();
+			this.onClosed.fire({byUser: true});
+		});
+		this.update(config);
+	}
+
+	public update(config: DtoNotification) {
+		this.config = config;
+		this.$main.style.backgroundColor = config.backgroundColor;
+		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
+		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
+		this.$main.classList.toggle("dismissible", config.dismissible);
+		this.$main.classList.toggle("show-progress", config.progressBarVisible && this.timeoutMillis > 0);
+
+		if (config.progressBarVisible && this.progressBar == null) {
+			this.progressBar = new ProgressBar(0, {height: 5});
+			this.$progressBarContainer.appendChild(this.progressBar.getMainDomElement());
+		} else if (!config.progressBarVisible && this.progressBar != null) {
+			this.progressBar.getMainDomElement().remove();
+			this.progressBar = null;
+		}
+
+		if (this.$contentContainer.firstChild !== (config.content && (config.content as Component).getMainElement())) {
+			this.$contentContainer.innerHTML = '';
+			if (config.content != null) {
+				this.$contentContainer.appendChild((config.content as Component).getMainElement());
+			}
+		}
+	}
+
+	public show(position: NotificationPosition, entranceAnimation: EntranceAnimation, exitAnimation: ExitAnimation, timeout: number) {
+		this.timeoutMillis = timeout;
+		this.notificationHandle = showNotificationLike(this, position, entranceAnimation, exitAnimation, timeout);
+		this.notificationHandle.onTimeout.addListener(() => this.onClosed.fire({byUser: false}));
+	}
+
+	close() {
+		this.notificationHandle.close();
+	}
+
+	@executeWhenFirstDisplayed(true)
+	public startCloseTimeout() {
+		if (this.progressBar != null) {
+			this.progressBar.reset();
+			this.progressBar.setProgress(1, this.timeoutMillis); // mind the css transition!
+		}
+	}
+
+	doGetMainElement(): HTMLElement {
+		return this.$main;
+	}
+
+}
+
+

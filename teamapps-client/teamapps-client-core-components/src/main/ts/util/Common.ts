@@ -301,19 +301,7 @@ export function removeDangerousTags(value: string) {
 	return removeTags(value, "script", "style");
 }
 
-export function outerWidthIncludingMargins(el: HTMLElement) {
-	let width = el.offsetWidth;
-	const style = getComputedStyle(el);
-	width += parseInt(style.marginLeft) + parseInt(style.marginRight);
-	return width;
-}
 
-export function outerHeightIncludingMargins(el: HTMLElement) {
-	let height = el.offsetHeight;
-	const style = getComputedStyle(el);
-	height += parseInt(style.marginTop) + parseInt(style.marginBottom);
-	return height;
-}
 
 
 
@@ -335,23 +323,6 @@ export async function createImageThumbnailUrl(file: File): Promise<string> {
 	} else {
 		return Promise.reject("Not a known image file type.");
 	}
-}
-
-export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: (className: string) => boolean) {
-	let matches = findClassesByFunction(classList, deleteDecider);
-	matches.forEach(function (value) {
-		classList.remove(value);
-	});
-}
-
-export function findClassesByFunction(classList: DOMTokenList, matcher: (className: string) => boolean) {
-	let matches: string[] = [];
-	classList.forEach(function (className) {
-		if (matcher(className)) {
-			matches.push(className);
-		}
-	});
-	return matches;
 }
 
 function transition(el: HTMLElement, targetValues: {[style: string]: string}, animationDuration: number = 300, callback?: () => any) {

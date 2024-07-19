@@ -82,3 +82,5 @@ change generation target packages:
 
 
  distribute .less files! (currently most are in client-core-components)
+
+ On the Java side: replace milliseconds with Duration

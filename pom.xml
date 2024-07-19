@@ -38,30 +38,32 @@
         <module>projector-dto-base</module>
         <module>projector-dto-dsl</module>
 
-        <module>teamapps-client/teamapps-client-communication</module>
         <module>teamapps-icon</module>
-        <module>teamapps-client/projector-client-object-api</module>
 
+        <module>teamapps-client/teamapps-client-communication</module>
+        <module>teamapps-client/teamapps-client-core</module>
+        <module>teamapps-client/projector-client-object-api</module>
         <module>teamapps-client/projector-grid-template</module>
         <module>teamapps-client/projector-mustache-template</module>
-
         <module>teamapps-client/teamapps-client-core-components</module>
-
-
-        <module>teamapps-client/teamapps-client-core</module>
-        <module>teamapps-ux</module>
-
-        <module>teamapps-server-jetty-embedded</module>
-
-        <module>teamapps-client/projector-workspace-layout</module>
-        <module>teamapps-client/projector-blogview</module>
-        <!--        <module>teamapps-client/teamapps-client-common-components</module>-->
+        <module>teamapps-client/projector-progress-indicator</module>
+        <module>teamapps-client/projector-progress-display</module>
+        <module>teamapps-client/projector-notification</module>
+        <module>teamapps-client/projector-notification-bar</module>
+        <module>teamapps-client/projector-mobile-layout</module>
         <module>teamapps-client/projector-combobox</module>
         <module>teamapps-client/projector-infinite-scrolling-components</module>
         <module>teamapps-client/projector-calendar</module>
         <module>teamapps-client/projector-document-viewer</module>
         <module>teamapps-client/projector-elegant-panel</module>
+        <module>teamapps-client/projector-file-field</module>
         <module>teamapps-client/projector-timegraph</module>
+        <module>teamapps-client/projector-workspace-layout</module>
+        <module>teamapps-client/projector-blogview</module>
+
+        <module>teamapps-ux</module>
+        <module>teamapps-server-jetty-embedded</module>
+
         <module>teamapps-session-stats-app</module>
 
         <module>teamapps-material-icon-provider</module>
@@ -173,6 +175,16 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-client-object-api</artifactId>
+                <version>0.9.155-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>projector-notification</artifactId>
+                <version>0.9.155-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>projector-progress-display</artifactId>
                 <version>0.9.155-SNAPSHOT</version>
             </dependency>
             <dependency>

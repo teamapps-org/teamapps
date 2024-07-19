@@ -19,12 +19,14 @@
  */
 package org.teamapps.projector.components.blogview;
 
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ClientObjectLibrary(BlogViewLibrary.class)
 public class BlogView extends AbstractComponent implements DtoBlogViewEventHandler{
 
 	private final DtoBlogViewClientObjectChannel clientObjectChannel = new DtoBlogViewClientObjectChannel(getClientObjectChannel());

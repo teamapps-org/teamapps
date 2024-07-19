@@ -34,7 +34,7 @@ import {
 	DtoChatInput,
 	DtoChatInputEventSource
 } from "../generated/DtoChatInput";
-import {FileUploader} from "./util/FileUploader";
+import {FileUploader} from "../../projector-client-object-api/src/main/ts/util/FileUploader";
 import {ProgressBar} from "./micro-components/ProgressBar";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import * as log from "loglevel";

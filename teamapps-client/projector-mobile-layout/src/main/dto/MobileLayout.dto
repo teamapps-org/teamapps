@@ -1,0 +1,15 @@
+package "projector-mobile-layout":org.teamapps.projector.component.mobilelayout;
+
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.animation.PageTransition;
+import org.teamapps.projector.components.essential.toolbar.DtoToolbar;
+
+class DtoMobileLayout extends DtoComponent {
+	DtoToolbar* toolbar;
+	DtoComponent* initialView;
+	DtoNavigationBar* navigationBar;
+
+	command setToolbar(DtoToolbar* toolbar); // null removes the toolbar
+	command setNavigationBar(DtoNavigationBar* navBar); // null removes the navigation bar
+	command showView(DtoComponent* component, PageTransition animation, int animationDuration);
+}

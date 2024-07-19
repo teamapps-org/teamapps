@@ -3,10 +3,11 @@ import {lessLoader} from 'esbuild-plugin-less';
 import path from "node:path";
 import alias from 'esbuild-plugin-alias';
 import {fileURLToPath} from 'url';
+import fs from 'node:fs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-esbuild.build({
+let result = await esbuild.build({
     watch: process.argv.some(a => a === '--watch'),
     entryPoints: ['target/js-dist/lib/index.js'],
     bundle: true,
@@ -26,10 +27,9 @@ esbuild.build({
         }),
         lessLoader(),
     ],
-    minify: process.env.NODE_ENV === 'production'
-})
-    .then(async (result, x, y) => {
-        console.log("⚡ esbuild complete! ⚡")
-    })
-    .catch(() => process.exit(1));
+    minify: process.env.NODE_ENV === 'production',
+    metafile: true
+});
+fs.writeFileSync('meta.json', JSON.stringify(result.metafile));
+console.log("⚡ esbuild complete! ⚡")
 

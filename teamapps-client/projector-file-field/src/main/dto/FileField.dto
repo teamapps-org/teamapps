@@ -1,0 +1,108 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "teamapps-client-common-components":org.teamapps.projector.components.filefield;
+
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.component.field.DtoAbstractField;
+import org.teamapps.projector.record.DtoIdentifiableClientRecord;
+
+class DtoFileField extends DtoAbstractField {
+	required DtoTemplate* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
+	long maxBytesPerFile;
+	String uploadUrl; // May point anywhere.
+	String fileTooLargeMessage;
+	String uploadErrorMessage;
+	FileFieldDisplayType displayType;
+	int maxFiles; // the max number of files to be uploaded in total for this field
+	required DtoTemplate* uploadButtonTemplate;
+	required Object uploadButtonData;
+	boolean showEntriesAsButtonsOnHover;
+
+    event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
+	event uploadStarted(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadCanceled(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadFailed(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadSuccessful(String fileItemUuid, String uploadedFileUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event fileItemClicked(int clientId);
+	event fileItemRemoveButtonClicked(int clientId);
+
+	command replaceFileItem(String fileItemUuid, DtoIdentifiableClientRecord data);
+	command setItemTemplate(DtoTemplate* itemTemplate);
+	command setMaxBytesPerFile(long maxBytesPerFile);
+	command setUploadUrl(String uploadUrl);
+	command setDisplayType (FileFieldDisplayType displayType);
+	command setMaxFiles(int maxFiles);
+	command setUploadButtonTemplate(DtoTemplate* uploadButtonTemplate);
+    command setUploadButtonData(Object uploadButtonData);
+    command setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover);
+    command cancelAllUploads();
+    command cancelUpload(String fileItemUuid);
+}
+
+enum FileFieldDisplayType {
+	LIST, FLOATING
+}
+
+class DtoSimpleFileField extends DtoAbstractField {
+	String browseButtonIcon;
+	String browseButtonCaption;
+	String uploadUrl; // May point anywhere.
+	long maxBytesPerFile;
+	String fileTooLargeMessage;
+	String uploadErrorMessage;
+	int maxFiles; // the max number of files to be uploaded in total for this field
+	FileFieldDisplayType displayMode;
+
+	List<DtoFileItem> fileItems;
+
+	event uploadInitiatedByUser(String uuid, String fileName, String mimeType, long sizeInBytes);
+    event uploadTooLarge(String fileItemUuid);
+	event uploadStarted(String fileItemUuid);
+	event uploadCanceled(String fileItemUuid);
+	event uploadFailed(String fileItemUuid);
+	event uploadSuccessful(String fileItemUuid, String uploadedFileUuid);
+	event fileItemClicked(String fileItemUuid);
+	event fileItemRemoved(String fileItemUuid);
+
+	command addFileItem(DtoFileItem item);
+	command updateFileItem(DtoFileItem item);
+	command removeFileItem(String itemUuid);
+
+	command setBrowseButtonIcon(String browseButtonIcon);
+	command setBrowseButtonCaption(String browseButtonCaption);
+	command setUploadUrl(String uploadUrl);
+	command setMaxBytesPerFile(long maxBytesPerFile);
+	command setFileTooLargeMessage(String fileTooLargeMessage);
+	command setUploadErrorMessage(String uploadErrorMessage);
+	command setMaxFiles(int maxFiles);
+	command setDisplayMode(FileFieldDisplayType displayType);
+}
+
+@TypeScriptFactory
+class DtoFileItem {
+	String uuid;
+	String icon;
+	String thumbnail;
+	String fileName;
+	String description;
+	long size;
+	String linkUrl; // If not null, the click triggers a new tab/window to open with the url. If null, nothing happens on click, except the fileItemClicked event being triggered.
+}

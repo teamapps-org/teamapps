@@ -20,12 +20,11 @@
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
 import {ToolbarButton} from "./ToolbarButton";
-import {Component, insertAfter, insertBefore, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {Component, insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml, TeamAppsEvent} from "projector-client-object-api";
 
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {ButtonVisibilities, Toolbar} from "./Toolbar";
 import {DropDownButtonClickInfo} from "../../../generated";
-import {outerWidthIncludingMargins} from "../../../util/Common";
 
 export class ToolbarButtonGroup {
 	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: DropDownButtonClickInfo}> = new TeamAppsEvent();

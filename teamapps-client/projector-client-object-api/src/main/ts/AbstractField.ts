@@ -35,7 +35,7 @@ interface FieldMessage {
 	$message: HTMLElement
 }
 
-export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractField, V = any> extends AbstractLegacyComponent<C> implements DtoAbstractFieldCommandHandler, DtoAbstractFieldEventSource {
+export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C extends DtoAbstractField = DtoAbstractField, V = any> extends AbstractLegacyComponent<C> {
 
 	public readonly onValueChanged: TeamAppsEvent<DtoAbstractField_ValueChangedEvent> = new TeamAppsEvent();
 	public readonly onFocus: TeamAppsEvent<DtoAbstractField_FocusEvent> = new TeamAppsEvent();
@@ -375,7 +375,7 @@ export abstract class AbstractField<C extends DtoAbstractField = DtoAbstractFiel
 
 	@bind
 	private updatePopperPosition() {
-		this.messageTooltip.popper.update();
+		this._messageTooltip.popper.update();
 	}
 
 	protected getMessagesContainer(position: FieldMessagePosition) {
