@@ -18,6 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
+/* @ts-ignore */
+import ICON_MINIMIZE from "@material-symbols/svg-400/outlined/minimize.svg";
+/* @ts-ignore */
+import ICON_MAXIMIZE from "@material-symbols/svg-400/outlined/web_asset.svg";
+/* @ts-ignore */
+import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
+/* @ts-ignore */
+import ICON_RESTORE from "@material-symbols/svg-400/outlined/select_window.svg";
+
 import {
 	createDtoToolButton,
 	DtoPanel,
@@ -43,7 +52,6 @@ import {
 	TeamAppsEvent
 } from "projector-client-object-api";
 
-import {StaticIcons} from "../util/StaticIcons";
 import {maximizeComponent} from "../util/Common";
 import getComputedStyle from "@popperjs/core/lib/dom-utils/getComputedStyle";
 
@@ -64,9 +72,9 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {visible: true, iconSize: 16}), noOpServerObjectChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {visible: true, iconSize: 16}), noOpServerObjectChannel),
-		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {visible: true, iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(ICON_MINIMIZE, "Minimize", {visible: true, iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(ICON_MAXIMIZE, "Maximize/Restore", {visible: true, iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(ICON_CLOSE, "Close", {visible: true, iconSize: 16}), noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		WindowButtonType.MINIMIZE,
@@ -181,12 +189,12 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	}
 
 	public maximize(): void {
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(ICON_RESTORE);
 		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(ICON_MAXIMIZE);
 		if (this.restoreFunction != null) {
 			this.restoreFunction();
 		}

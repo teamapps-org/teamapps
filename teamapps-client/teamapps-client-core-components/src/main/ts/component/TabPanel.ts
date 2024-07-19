@@ -17,7 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-
+/* @ts-ignore */
+import ICON_MINIMIZE from "@material-symbols/svg-400/outlined/minimize.svg";
+/* @ts-ignore */
+import ICON_MAXIMIZE from "@material-symbols/svg-400/outlined/web_asset.svg";
+/* @ts-ignore */
+import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
+/* @ts-ignore */
+import ICON_RESTORE from "@material-symbols/svg-400/outlined/select_window.svg";
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {
 	AbstractLegacyComponent,
@@ -48,7 +55,6 @@ import {
 	WindowButtonType
 } from "../generated";
 import {maximizeComponent} from "../util/Common";
-import {StaticIcons} from "../util/StaticIcons";
 import {positionDropdown} from "../util/dropdownPosition";
 import {contentWidth} from "projector-client-object-api";
 
@@ -77,9 +83,9 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	public readonly onWindowButtonClicked: TeamAppsEvent<DtoTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(StaticIcons.MINIMIZE, "Minimize", {iconSize: 16}), noOpServerObjectChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(StaticIcons.MAXIMIZE, "Maximize/Restore", {iconSize: 16}), noOpServerObjectChannel),
-		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(StaticIcons.CLOSE, "Close", {iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(ICON_MINIMIZE, "Minimize", {iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(ICON_MAXIMIZE, "Maximize/Restore", {iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(ICON_CLOSE, "Close", {iconSize: 16}), noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		WindowButtonType.MINIMIZE,
@@ -201,12 +207,12 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	}
 
 	public maximize(): void {
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(ICON_RESTORE);
 		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(ICON_MAXIMIZE);
 		if (this.restoreFunction != null) {
 			this.restoreFunction();
 		}

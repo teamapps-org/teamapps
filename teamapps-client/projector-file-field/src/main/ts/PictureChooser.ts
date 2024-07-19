@@ -19,10 +19,22 @@
  */
 
 
+import {AbstractField, FieldEditingMode, FileUploader, humanReadableFileSize, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {
+	DtoPictureChooser,
+	DtoPictureChooser_UploadCanceledEvent,
+	DtoPictureChooser_UploadFailedEvent,
+	DtoPictureChooser_UploadInitiatedByUserEvent,
+	DtoPictureChooser_UploadStartedEvent, DtoPictureChooser_UploadSuccessfulEvent, DtoPictureChooser_UploadTooLargeEvent,
+	DtoPictureChooserCommandHandler,
+	DtoPictureChooserEventSource
+} from "./generated";
+import {ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
+
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
-export class UiPictureChooser extends AbstractField<DtoPictureChooser, string> implements DtoPictureChooserEventSource, DtoPictureChooserCommandHandler {
+export class PictureChooser extends AbstractField<DtoPictureChooser, string> implements DtoPictureChooserEventSource, DtoPictureChooserCommandHandler {
 
 	public readonly onUploadCanceled: TeamAppsEvent<DtoPictureChooser_UploadCanceledEvent> = new TeamAppsEvent();
 	public readonly onUploadFailed: TeamAppsEvent<DtoPictureChooser_UploadFailedEvent> = new TeamAppsEvent();
@@ -87,7 +99,7 @@ export class UiPictureChooser extends AbstractField<DtoPictureChooser, string> i
 
 		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button');
 		["click", "keypress"].forEach(eventName => this.$uploadButton.addEventListener(eventName, (e: MouseEvent & KeyboardEvent) => {
-			if (e.button == 0 || e.keyCode === "Enter" || e.keyCode === keyCodes.space) {
+			if (e.button == 0 || e.key === "Enter" || e.key === " ") {
 				this.$fileInput.click();
 				e.stopPropagation();
 				return false; // no scrolling when space is pressed!
@@ -161,7 +173,7 @@ export class UiPictureChooser extends AbstractField<DtoPictureChooser, string> i
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode, oldEditingMode?: FieldEditingMode): void {
-		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}
 

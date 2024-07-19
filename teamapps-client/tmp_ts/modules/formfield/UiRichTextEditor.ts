@@ -35,7 +35,7 @@ import 'tinymce/themes/silver';
 import 'tinymce/icons/default';
 import {executeWhenFirstDisplayed} from "../util/executeWhenFirstDisplayed";
 import {DeferredExecutor} from "../util/DeferredExecutor";
-import {generateUUID, keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
+import {generateUUID} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 // Any plugins you want to use has to be imported
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/table';
@@ -343,11 +343,11 @@ export class UiRichTextEditor extends AbstractField<DtoRichTextEditor, string> i
 					this.fireTextInputEvent();
 				});
 				editor.on('keydown', (e) => {
-					if (e.keyCode === "Escape") {
+					if (e.key === "Escape") {
 						this.onSpecialKeyPressed.fire({
 							key: SpecialKey.ESCAPE
 						});
-					} else if (e.keyCode === "Enter") {
+					} else if (e.key === "Enter") {
 						this.onSpecialKeyPressed.fire({
 							key: SpecialKey.ENTER
 						});

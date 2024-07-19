@@ -11,6 +11,7 @@
     "test": "test"
   },
   "workspaces": [
+    "material-icons",
     "teamapps-client-communication",
     "projector-client-object-api",
     "projector-grid-template",

@@ -18,11 +18,29 @@
  * =========================LICENSE_END==================================
  */
 
+// @ts-ignore
+import ICON_UPLOAD from "@material-symbols/svg-400/outlined/upload.svg";
+import {AbstractField, arraysEqual, FieldEditingMode, generateUUID, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {
+	createDtoFileItem,
+	DtoFileItem,
+	DtoSimpleFileField,
+	DtoSimpleFileField_FileItemClickedEvent,
+	DtoSimpleFileField_FileItemRemovedEvent,
+	DtoSimpleFileField_UploadCanceledEvent,
+	DtoSimpleFileField_UploadFailedEvent,
+	DtoSimpleFileField_UploadInitiatedByUserEvent,
+	DtoSimpleFileField_UploadStartedEvent,
+	DtoSimpleFileField_UploadSuccessfulEvent, DtoSimpleFileField_UploadTooLargeEvent,
+	DtoSimpleFileFieldCommandHandler,
+	DtoSimpleFileFieldEventSource, FileFieldDisplayType
+} from "./generated";
+import {FileItem, FileItemState} from "./FileItem";
 
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
-export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileItem[]> implements DtoSimpleFileFieldEventSource, DtoSimpleFileFieldCommandHandler {
+export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileItem[]> implements DtoSimpleFileFieldEventSource, DtoSimpleFileFieldCommandHandler {
 
 	public readonly onFileItemClicked: TeamAppsEvent<DtoSimpleFileField_FileItemClickedEvent> = new TeamAppsEvent();
 	public readonly onFileItemRemoved: TeamAppsEvent<DtoSimpleFileField_FileItemRemovedEvent> = new TeamAppsEvent();
@@ -40,7 +58,7 @@ export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFile
 
 	private displayMode: any;
 	private maxFiles: number;
-	private fileItems: { [uuid: string]: UiFileItem };
+	private fileItems: { [uuid: string]: FileItem };
 	private maxBytesPerFile: number;
 	private fileTooLargeMessage: string;
 	private uploadErrorMessage: string;
@@ -50,7 +68,10 @@ export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFile
 		this.fileItems = {};
 
 		this.$main = parseHtml(`<div class="UiSimpleFileField drop-zone form-control field-border field-border-glow field-background">
-    <div class="file-list"></div>
+    <div class="file-list-wrapper">
+    	<img class="upload-icon" src="${ICON_UPLOAD}"></img>
+    	<div class="file-list"></div>
+	</div>
     <div class="upload-button field-border" tabindex="0">
     	<div class="icon img img-16" style="background-image: url('${config.browseButtonIcon}');"></div>
     	<div class="caption">${config.browseButtonCaption}</div>
@@ -84,7 +105,7 @@ export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFile
 
 		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button');
 		["click", "keypress"].forEach(eventName => this.$uploadButton.addEventListener(eventName, (e: any) => {
-			if (e.button == 0 || e.keyCode === "Enter" || e.keyCode === keyCodes.space) {
+			if (e.button == 0 || e.key === "Enter" || e.key === " ") {
 				this.$fileInput.click();
 				return false; // no scrolling when space is pressed!
 			}
@@ -151,7 +172,7 @@ export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFile
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode, oldEditingMode?: FieldEditingMode): void {
-		DtoAbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}
 
@@ -160,7 +181,7 @@ export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFile
 	}
 
 	addFileItem(itemConfig: DtoFileItem, state: FileItemState = FileItemState.DONE): void {
-		const fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state);
+		const fileItem = new FileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state);
 		this.fileItems[itemConfig.uuid] = fileItem;
 		this.$fileList.appendChild(fileItem.getMainDomElement());
 	}
@@ -180,10 +201,10 @@ export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFile
 			.style.backgroundImage = browseButtonIcon;
 	}
 
-	setDisplayMode(displayMode: UiFileFieldDisplayType): void {
+	setDisplayMode(displayMode: FileFieldDisplayType): void {
 		this.displayMode = displayMode;
-		this.$main.classList.toggle("float-style-vertical-list", displayMode === UiFileFieldDisplayType.LIST);
-		this.$main.classList.toggle("float-style-horizontal", displayMode === UiFileFieldDisplayType.FLOATING);
+		this.$main.classList.toggle("float-style-vertical-list", displayMode === FileFieldDisplayType.LIST);
+		this.$main.classList.toggle("float-style-horizontal", displayMode === FileFieldDisplayType.FLOATING);
 		Object.values(this.fileItems).forEach(item => item.setDisplayMode(displayMode));
 	}
 
@@ -260,7 +281,7 @@ export class UiSimpleFileField extends AbstractField<DtoSimpleFileField, DtoFile
 	}
 
 	private createUploadFileItem() {
-		let fileItem = new UiFileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, {
+		let fileItem = new FileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, {
 			uuid: generateUUID()
 		}, FileItemState.INITIATING);
 		fileItem.onClick.addListener(() => {

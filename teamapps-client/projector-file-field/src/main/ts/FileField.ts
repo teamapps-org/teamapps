@@ -18,13 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
+// @ts-ignore
+import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
 
 import {
 	AbstractField,
 	DtoIdentifiableClientRecord,
 	DtoTemplate, FieldEditingMode, FileUploader,
-	generateUUID,
-	parseHtml, prependChild,
+	generateUUID, humanReadableFileSize,
+	parseHtml, prependChild, removeClassesByFunction,
 	TeamAppsEvent,
 	Template
 } from "projector-client-object-api";
@@ -38,9 +40,9 @@ import {
 	DtoFileFieldCommandHandler,
 	DtoFileFieldEventSource, FileFieldDisplayType
 } from "./generated";
-import { ProgressIndicator } from "projector-progress-indicator";
+import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
 
-export class UiFileField extends AbstractField<DtoFileField, DtoIdentifiableClientRecord[]> implements DtoFileFieldEventSource, DtoFileFieldCommandHandler {
+export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClientRecord[]> implements DtoFileFieldEventSource, DtoFileFieldCommandHandler {
 
 	public readonly onFileItemClicked: TeamAppsEvent<DtoFileField_FileItemClickedEvent> = new TeamAppsEvent();
 	public readonly onFileItemRemoveButtonClicked: TeamAppsEvent<DtoFileField_FileItemRemoveButtonClickedEvent> = new TeamAppsEvent();
@@ -400,7 +402,7 @@ class UploadItem {
 				<div class="file-size"></div>
 			</div>
 			<div class="template-wrapper"></div>
-			<img class="delete-button img img-16" alt="delete" tabindex="0" src="${StaticIcons.CLOSE}"></img>
+			<img class="delete-button img img-16" alt="delete" tabindex="0" src="${ICON_CLOSE}"></img>
 		</div>`);
 		this.$fileInfo = this.$main.querySelector<HTMLElement>(":scope .file-info");
 		this.$fileName = this.$main.querySelector<HTMLElement>(":scope .file-name");

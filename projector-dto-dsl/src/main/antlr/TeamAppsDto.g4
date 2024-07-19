@@ -4,6 +4,7 @@ grammar TeamAppsDto;
 package org.teamapps.dsl;
 }
 
+SEMICOLON: ';';
 IMPORT: 'import';
 EXTERNAL: 'external';
 INTERFACE: 'interface';
@@ -17,16 +18,16 @@ Identifier : [a-zA-Z_][a-zA-Z0-9_]*;
 
 classCollection : packageDeclaration importDeclaration* typeDeclaration*;
 
-packageDeclaration : 'package' StringLiteral ':' packageName ';' ;
+packageDeclaration : 'package' StringLiteral ':' packageName SEMICOLON+ ;
 
 packageName : Identifier | packageName '.' Identifier;
 
-importDeclaration : IMPORT externalInterfaceTypeModifier? qualifiedTypeName ';';
+importDeclaration : IMPORT externalInterfaceTypeModifier? qualifiedTypeName SEMICOLON+;
 externalInterfaceTypeModifier : EXTERNAL;
 
 typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 
-enumDeclaration : notGeneratedAnnotation? 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? ';'? '}' ;
+enumDeclaration : notGeneratedAnnotation? 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? SEMICOLON* '}' ;
 enumConstant : Identifier ('=' StringLiteral)?;
 
 classDeclaration : notGeneratedAnnotation? typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
@@ -39,11 +40,11 @@ superClassDecl: 'extends' typeName;
 superInterfaceDecl: 'extends' classList;
 implementsDecl: 'implements' classList;
 classList: ((typeName ',')* typeName)?;
-propertyDeclaration : requiredModifier? mutableModifier? type Identifier ';';
+propertyDeclaration : requiredModifier? mutableModifier? type Identifier SEMICOLON+;
 
-commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ('returns' type)? ';';
-eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ';';
-queryDeclaration : staticModifier? 'query' Identifier '(' ((formalParameter ',')* formalParameter)? ')' 'returns' type ';';
+commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameter ',')* formalParameter)? ')' ('returns' type)? SEMICOLON+;
+eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameter ',')* formalParameter)? ')' SEMICOLON+;
+queryDeclaration : staticModifier? 'query' Identifier '(' ((formalParameter ',')* formalParameter)? ')' 'returns' type SEMICOLON+;
 
 formalParameter : type Identifier;
 

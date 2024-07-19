@@ -66,19 +66,18 @@ public class EventWrapper {
 	}
 
 	public List<FormalParameterWrapper> getAllProperties() {
-		System.out.println("EventWrapper.getAllProperties");
 		return getParameters();
 	}
+
 	public List<FormalParameterWrapper> getAllRequiredProperties() {
-		System.out.println("EventWrapper.getAllRequiredProperties");
 		return getParameters();
 	}
+
 	public List<FormalParameterWrapper> getRequiredPropertiesNotImplementedBySuperClasses() {
-		System.out.println("EventWrapper.getRequiredPropertiesNotImplementedBySuperClasses");
 		return getParameters();
 	}
+
 	public List<FormalParameterWrapper> simplePropertiesSortedByRelevance() {
-		System.out.println("EventWrapper.simplePropertiesSortedByRelevance");
 		return getParameters().stream()
 				.sorted((p1, p2) -> {
 					Function<FormalParameterWrapper, Integer> getPriority = (p) -> {
@@ -90,7 +89,7 @@ public class EventWrapper {
 							return 30;
 						} else if (p.getName().contains("Name")) {
 							return 20;
-						} else if (p.getType().findReferencedClass().isEmpty())  {
+						} else if (p.getType().findReferencedClass().isEmpty()) {
 							return 10;
 						} else {
 							return 0;
@@ -100,18 +99,16 @@ public class EventWrapper {
 				})
 				.collect(Collectors.toList());
 	}
+
 	public String getTypeScriptIdentifier() {
-		System.out.println("EventWrapper.getTypeScriptIdentifier");
 		return model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Event";
 	}
 
 	public String getJsonIdentifier() {
-		System.out.println("EventWrapper.getJsonIdentifier");
 		return model.getDeclaringClassOrInterface(context).getName() + "." + context.Identifier().getText();
 	}
 
 	public String getJavaClassName() {
-		System.out.println("EventWrapper.getJavaClassName");
 		return StringUtils.capitalize(context.Identifier().getText()) + "Event";
 	}
 

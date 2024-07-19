@@ -24,7 +24,6 @@ import {TeamAppsUiContext} from "teamapps-client-core";
 import {FieldEditingMode} from "../../generated/FieldEditingMode";
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
 import {executeWhenFirstDisplayed} from "../util/executeWhenFirstDisplayed";
-import {keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 import {parseHtml} from "../Common";
 
 export class UiColorPicker extends AbstractField<DtoColorPicker, string> implements DtoColorPickerEventSource {
@@ -78,7 +77,7 @@ export class UiColorPicker extends AbstractField<DtoColorPicker, string> impleme
 		this.doNotCommit = false;
 
 		this.$main.addEventListener("keydown", (e) => {
-			if (e.keyCode === "Enter" || e.keyCode === keyCodes.space) {
+			if (e.key === "Enter" || e.key === " ") {
 				this.pickr.show();
 			}
 		});

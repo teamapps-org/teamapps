@@ -21,7 +21,6 @@
 import {AbstractComponent} from "teamapps-client-core";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "teamapps-client-core";
-import {keyCodes} from "projector-combobox/target/js-dist/lib/trivial-components/TrivialCore";
 import {DtoCachedImage} from "../generated/DtoCachedImage";
 import {applyDisplayMode, enableScrollViaDragAndDrop, parseHtml} from "./Common";
 import {DtoImageDisplay_ImageDisplayedEvent, DtoImageDisplay_ImagesRequestEvent, DtoImageDisplayCommandHandler, DtoImageDisplay, DtoImageDisplayEventSource} from "../generated/DtoImageDisplay";
@@ -74,12 +73,12 @@ export class UiImageDisplay extends AbstractLegacyComponent<DtoImageDisplay> imp
                   <div class="image-cache-container"></div>
                 </div>`);
 		this.$componentWrapper.addEventListener("keydown", (e) => {
-			if (e.keyCode == keyCodes.left_arrow
-				|| e.keyCode == keyCodes.up_arrow) {
+			if (e.key == "ArrowLeft"
+				|| e.key == "ArrowUp") {
 				this.jumpToNextImage(-1);
-			} else if (e.keyCode == keyCodes.right_arrow
-				|| e.keyCode == keyCodes.down_arrow
-				|| e.keyCode == keyCodes.space) {
+			} else if (e.key == "ArrowRight"
+				|| e.key == "ArrowDown"
+				|| e.key == " ") {
 				this.jumpToNextImage(1);
 			}
 		});

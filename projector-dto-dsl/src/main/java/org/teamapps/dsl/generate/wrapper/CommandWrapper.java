@@ -41,27 +41,22 @@ public class CommandWrapper {
 
 
 	public ClassOrInterfaceWrapper<?> getDeclaringClass() {
-		System.out.println("CommandWrapper.getDeclaringClass");
 		return model.getDeclaringClassOrInterface(context);
 	}
 
 	public List<FormalParameterWrapper> getAllProperties() {
-		System.out.println("CommandWrapper.getAllProperties");
 		return getParameters();
 	}
 
 	public List<FormalParameterWrapper> getAllRequiredProperties() {
-		System.out.println("CommandWrapper.getAllRequiredProperties");
 		return getParameters();
 	}
 
 	public List<FormalParameterWrapper> getRequiredPropertiesNotImplementedBySuperClasses() {
-		System.out.println("CommandWrapper.getRequiredPropertiesNotImplementedBySuperClasses");
 		return getParameters();
 	}
 
 	public List<FormalParameterWrapper> simplePropertiesSortedByRelevance() {
-		System.out.println("CommandWrapper.simplePropertiesSortedByRelevance");
 		return getParameters().stream()
 				.sorted((p1, p2) -> {
 					Function<FormalParameterWrapper, Integer> getPriority = (p) -> {
@@ -85,17 +80,14 @@ public class CommandWrapper {
 	}
 
 	public String getTypeScriptIdentifier() {
-		System.out.println("CommandWrapper.getTypeScriptIdentifier");
 		return model.getDeclaringClassOrInterface(context).getName() + "_" + StringUtils.capitalize(context.Identifier().getText()) + "Command";
 	}
 
 	public String getJsonIdentifier() {
-		System.out.println("CommandWrapper.getJsonIdentifier");
 		return model.getDeclaringClassOrInterface(context).getName() + "." + context.Identifier().getText();
 	}
 
 	public String getJavaClassName() {
-		System.out.println("CommandWrapper.getJavaClassName");
 		return StringUtils.capitalize(context.Identifier().getText()) + "Command";
 	}
 

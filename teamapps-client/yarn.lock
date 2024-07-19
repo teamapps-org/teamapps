@@ -102,6 +102,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@material-symbols/svg-300@npm:latest":
+  version: 0.21.2
+  resolution: "@material-symbols/svg-300@npm:0.21.2"
+  checksum: 2013004b4213bd1990a18d9ad885d3e7b662b85911fdc334a61bf5cda41be3cca9d957bcccc79dbfcab96f5ebeab4a5a208b38e6fd1fdf0dbdff0fbe1b71a8ab
+  languageName: node
+  linkType: hard
+
+"@material-symbols/svg-400@npm:latest":
+  version: 0.21.2
+  resolution: "@material-symbols/svg-400@npm:0.21.2"
+  checksum: 09def4f326d25771b08242f57d00ef09f466b6d9b4c0c21eda27f827fe26f04676d154f113f22681cffc2ed54d3ca9de9919d6f305b7810dfcf91c3493557c2c
+  languageName: node
+  linkType: hard
+
 "@popperjs/core@npm:^2.11.8":
   version: 2.11.8
   resolution: "@popperjs/core@npm:2.11.8"
@@ -2417,6 +2431,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"material-icons@workspace:material-icons":
+  version: 0.0.0-use.local
+  resolution: "material-icons@workspace:material-icons"
+  dependencies:
+    "@material-symbols/svg-300": latest
+    esbuild: ^0.15.13
+    material-symbols: latest
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"material-symbols@npm:latest":
+  version: 0.21.2
+  resolution: "material-symbols@npm:0.21.2"
+  checksum: b52d34d1aee9b6fb1ab371d2cf307721a1a5acf9914613cb49a9c521cae9d0c2b441a4c0ff6fd15f022db1fbe530e7bf2af3b5acfd36b4a3a04647a5d89f6048
+  languageName: node
+  linkType: hard
+
 "mime@npm:^1.4.1":
   version: 1.6.0
   resolution: "mime@npm:1.6.0"
@@ -2658,6 +2691,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "projector-file-field@workspace:projector-file-field"
   dependencies:
+    "@material-symbols/svg-400": latest
     esbuild: ^0.15.13
     projector-client-object-api: "workspace:*"
     projector-progress-indicator: "workspace:*"

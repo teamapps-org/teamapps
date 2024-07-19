@@ -26,6 +26,8 @@ import org.teamapps.dsl.TeamAppsDtoParser;
 import java.io.IOException;
 import java.io.StringReader;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class TeamappsDtoLanguageTest {
 
 	@Test(expected = ParseCancellationException.class)
@@ -50,6 +52,18 @@ public class TeamappsDtoLanguageTest {
 				+ "  required List<DtoAbstractField> fields;"
 				+ "}"));
 		parser.classDeclaration();
+	}
+
+	@Test
+	public void testDoubleSemicolon() throws IOException {
+		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("""
+				package "asdf":org.teamapps.blah;
+				import org.teamapps.projector.component.field.DtoAbstractField;;
+				class A {
+				  required List<DtoAbstractField> fields;\
+				}"""));
+		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = parser.classCollection();
+		assertThat(classCollectionContext.typeDeclaration()).hasSize(1);
 	}
 
 }

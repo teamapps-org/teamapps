@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+// @ts-ignore
+import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
 import {
 	DtoNotification,
 	DtoNotification_ClosedEvent,
@@ -54,7 +56,7 @@ export class Notification extends AbstractLegacyComponent<DtoNotification> imple
 		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="Notification">
-	<div class="close-button"></div>
+	<div class="close-button"><img src="${ICON_CLOSE}"></div>
 	<div class="content-container"></div>
 	<div class="progress-container"></div>
 </div>`);

@@ -17,11 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-common-components":org.teamapps.projector.dto;
+package "projector-file-field":org.teamapps.projector.component.filefield;
 
 import org.teamapps.projector.component.DtoComponent;
-
-
+import org.teamapps.projector.component.field.DtoAbstractField;
 
 class DtoPictureChooser extends DtoAbstractField {
 	String uploadUrl; // May point anywhere.

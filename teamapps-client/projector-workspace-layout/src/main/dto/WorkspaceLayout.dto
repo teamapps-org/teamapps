@@ -21,7 +21,7 @@ package "projector-workspace-layout":org.teamapps.projector.components.workspace
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.components.essential.toolbar.DtoToolbar;
-import org.teamapps.projector.components.essential.progress.DtoMultiProgressDisplay;
+import org.teamapps.projector.components.progress.DtoMultiProgressDisplay;
 import org.teamapps.projector.components.essential.dto.SplitSizePolicy;
 import org.teamapps.projector.components.essential.dto.SplitDirection;
 

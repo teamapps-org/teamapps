@@ -18,7 +18,13 @@
  * =========================LICENSE_END==================================
  */
 
-export class UiFileItem {
+// @ts-ignore
+import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
+import {FileUploader, humanReadableFileSize, parseHtml, removeClassesByFunction, TeamAppsEvent} from "projector-client-object-api";
+import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
+import {DtoFileItem, FileFieldDisplayType} from "./generated";
+
+export class FileItem {
 	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
 	public readonly onDeleteButtonClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
 	public readonly onUploadCanceled: TeamAppsEvent<void> = new TeamAppsEvent();
@@ -38,7 +44,7 @@ export class UiFileItem {
 	private uploader: FileUploader;
 
 	constructor(
-		private displayMode: UiFileFieldDisplayType,
+		private displayMode: FileFieldDisplayType,
 		private maxBytes: number,
 		private fileTooLargeMessage: string,
 		private uploadErrorMessage: string,
@@ -48,7 +54,7 @@ export class UiFileItem {
 	) {
 		this.$main = parseHtml(`<a class="file-item">
 			<div class="delete-button-wrapper">
-				<img class="delete-button img img-16" alt="delete" tabindex="0" src="${StaticIcons.CLOSE}"></img>
+				<img class="delete-button img img-16" alt="delete" tabindex="0" src="${ICON_CLOSE}"></img>
 			</div>
 			<div class="progress-indicator"></div>
 			<div class="file-icon img img-48"></div>
@@ -85,7 +91,7 @@ export class UiFileItem {
 		this.config.size = file.size;
 		this.update(this.config);
 
-		this.progressIndicator = UiFileItem.createProgressIndicator(this.displayMode);
+		this.progressIndicator = FileItem.createProgressIndicator(this.displayMode);
 		this.$progressIndicator.appendChild(this.progressIndicator.getMainDomElement());
 
 		if (file.size > this.maxBytes) {
@@ -111,22 +117,22 @@ export class UiFileItem {
 		}
 	}
 
-	private static createProgressIndicator(displayMode: UiFileFieldDisplayType) {
-		return displayMode == UiFileFieldDisplayType.FLOATING ? new ProgressCircle(0, {
+	private static createProgressIndicator(displayMode: FileFieldDisplayType) {
+		return displayMode == FileFieldDisplayType.FLOATING ? new ProgressCircle(0, {
 			circleRadius: 24, circleStrokeWidth: 3
 		}) : new ProgressBar(0, {});
 	}
 
-	public setDisplayMode(displayMode: UiFileFieldDisplayType) {
+	public setDisplayMode(displayMode: FileFieldDisplayType) {
 		this.displayMode = displayMode;
 		if (this.progressIndicator != null) {
 			this.progressIndicator.getMainDomElement().remove();
-			this.progressIndicator = UiFileItem.createProgressIndicator(displayMode);
+			this.progressIndicator = FileItem.createProgressIndicator(displayMode);
 			this.$progressIndicator.appendChild(this.progressIndicator.getMainDomElement());
 		}
-		this.$fileName.classList.toggle("line-clamp-2", displayMode == UiFileFieldDisplayType.FLOATING);
-		this.$fileIcon.classList.toggle("img-48", displayMode == UiFileFieldDisplayType.FLOATING);
-		this.$fileIcon.classList.toggle("img-32", displayMode == UiFileFieldDisplayType.LIST);
+		this.$fileName.classList.toggle("line-clamp-2", displayMode == FileFieldDisplayType.FLOATING);
+		this.$fileIcon.classList.toggle("img-48", displayMode == FileFieldDisplayType.FLOATING);
+		this.$fileIcon.classList.toggle("img-32", displayMode == FileFieldDisplayType.LIST);
 	}
 
 	private setState(state: FileItemState) {
