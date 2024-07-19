@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.blogview;
+package org.teamapps.projector.component.blogview;
 
-import org.teamapps.projector.components.essential.toolbutton.ToolButton;
+import org.teamapps.projector.component.essential.toolbutton.ToolButton;
 
 import java.util.ArrayList;
 import java.util.List;

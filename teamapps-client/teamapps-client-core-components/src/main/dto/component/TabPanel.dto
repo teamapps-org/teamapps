@@ -1,0 +1,67 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "teamapps-client-core-components":org.teamapps.projector.component.essential.tabpanel;
+
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.component.essential.dto.DtoToolButton;
+import org.teamapps.projector.component.essential.panel.WindowButtonType;
+import org.teamapps.projector.component.essential.toolbar.DtoToolbar;
+
+class DtoTabPanel extends DtoComponent {
+	List<DtoTab> tabs;
+	String selectedTabId; // TODO
+	boolean hideTabBarIfSingleTab; // if true and there is only one tab, then the tab bar is hidden. Tool buttons pop up when hovering over the top 50px of the tab panel.
+	TabPanelTabStyle tabStyle; // if true and there is only one tab, then the tab bar is hidden.
+	List<DtoToolButton*> toolButtons; // shown inside a right-aligned space in the tab bar
+	List<WindowButtonType> windowButtons;
+
+	command setHideTabBarIfSingleTab(boolean hideTabBarIfSingleTab);
+	command setTabStyle(TabPanelTabStyle tabStyle);
+	command setToolButtons(List<DtoToolButton*> toolButtons);
+	command setWindowButtons(List<WindowButtonType> windowButtons);
+	command selectTab(String tabId);
+	command addTab(DtoTab tab, boolean select);
+	command removeTab(String tabId);
+
+	command setTabToolbar(String tabId, DtoToolbar* toolbar);
+	command setTabContent(String tabId, DtoComponent* component);
+	command setTabConfiguration(String tabId, String icon, String caption, boolean closeable, boolean visible, boolean rightSide);
+
+	event tabSelected(String tabId);
+	event tabNeedsRefresh(String tabId);
+	event tabClosed(String tabId);
+	event windowButtonClicked(WindowButtonType windowButton);
+}
+
+enum TabPanelTabStyle {
+    BLOCKS, EARS
+}
+
+class DtoTab {
+	required String tabId;
+	required String icon;
+	required String caption;
+	boolean closeable;
+	boolean lazyLoading;
+	boolean rightSide; //if true show on the right
+	boolean visible;
+	DtoToolbar* toolbar;
+	DtoComponent* content;
+}

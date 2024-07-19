@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.blogview;
+package org.teamapps.projector.component.blogview;
 
 public class CitationBlock extends AbstractBlock {
 	

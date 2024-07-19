@@ -1,9 +1,9 @@
-package "projector-combobox":org.teamapps.projector.components.trivial.dto;
+package "projector-combobox":org.teamapps.projector.component.trivial.dto;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.component.field.DtoAbstractField;
-import org.teamapps.projector.components.trivial.dto.DtoTreeRecord;
+import org.teamapps.projector.component.trivial.dto.DtoTreeRecord;
 
 class DtoComboBox extends DtoAbstractField {
 	mutable boolean dropDownButtonVisible;

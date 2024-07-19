@@ -2,7 +2,7 @@ package "projector-mobile-layout":org.teamapps.projector.component.mobilelayout;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
-import org.teamapps.projector.components.progress.DtoMultiProgressDisplay;
+import org.teamapps.projector.component.progress.DtoMultiProgressDisplay;
 
 class DtoNavigationBar extends DtoComponent {
 	List<DtoNavigationBarButton> buttons;

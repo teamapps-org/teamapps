@@ -1,4 +1,4 @@
-package org.teamapps.projector.components.blogview;
+package org.teamapps.projector.component.blogview;
 
 import org.teamapps.projector.clientobject.ClientObjectLibrary;
 import org.teamapps.projector.resource.ClassPathResource;

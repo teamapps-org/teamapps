@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.infiniteitemview;
+package "projector-infinite-scrolling-components":org.teamapps.projector.component.infinitescroll.infiniteitemview;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.format.AlignItems;
-import org.teamapps.projector.components.infinitescroll.DtoAbstractInfiniteListComponent;
+import org.teamapps.projector.component.infinitescroll.DtoAbstractInfiniteListComponent;
 
 class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
 	required DtoTemplate* itemTemplate;

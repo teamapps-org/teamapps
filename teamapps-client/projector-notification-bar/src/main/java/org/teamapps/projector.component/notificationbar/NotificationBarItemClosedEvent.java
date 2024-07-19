@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.essential.notification;
+package org.teamapps.projector.component.essential.notification;
 
 public class NotificationBarItemClosedEvent {
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-infinite-scrolling-components":org.teamapps.projector.components.infinitescroll.table;
+package "projector-infinite-scrolling-components":org.teamapps.projector.component.infinitescroll.table;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
@@ -25,7 +25,7 @@ import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.field.DtoFieldMessage;
 import org.teamapps.projector.format.TextAlignment;
 
-import org.teamapps.projector.components.infinitescroll.DtoAbstractInfiniteListComponent;
+import org.teamapps.projector.component.infinitescroll.DtoAbstractInfiniteListComponent;
 
 enum SortDirection {
 	ASC, DESC

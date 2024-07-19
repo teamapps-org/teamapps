@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-workspace-layout":org.teamapps.projector.components.workspacelayout.dto;
+package "projector-workspace-layout":org.teamapps.projector.component.workspacelayout.dto;
 
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.components.essential.toolbar.DtoToolbar;
-import org.teamapps.projector.components.progress.DtoMultiProgressDisplay;
-import org.teamapps.projector.components.essential.dto.SplitSizePolicy;
-import org.teamapps.projector.components.essential.dto.SplitDirection;
+import org.teamapps.projector.component.essential.toolbar.DtoToolbar;
+import org.teamapps.projector.component.progress.DtoMultiProgressDisplay;
+import org.teamapps.projector.component.essential.dto.SplitSizePolicy;
+import org.teamapps.projector.component.essential.dto.SplitDirection;
 
 class DtoWorkSpaceLayout extends DtoComponent {
 	required List<DtoWorkSpaceLayoutView> views;

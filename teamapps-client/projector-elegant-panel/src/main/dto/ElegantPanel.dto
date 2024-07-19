@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-elegant-panel":org.teamapps.projector.components.elegantpanel;
+package "projector-elegant-panel":org.teamapps.projector.component.elegantpanel;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.format.JustifyContent;

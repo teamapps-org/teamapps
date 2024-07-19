@@ -77,7 +77,7 @@ enable TypeScript strict null checking for the core at least
 search for all "new ProjectorEvent" occurrences and check if they need to be bound to toggling the event on the ClientObjectChannel...
 
 change generation target packages:
- - core-components: org.teamapps.projector.components.essential
+ - core-components: org.teamapps.projector.component.essential
  - no .dto!! (nowhere!) Many classes are now fully integrated (especially enums!)
 
 

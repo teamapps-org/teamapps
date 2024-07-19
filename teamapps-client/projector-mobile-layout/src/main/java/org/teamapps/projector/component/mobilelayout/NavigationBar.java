@@ -25,8 +25,8 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.components.essential.CoreComponentLibrary;
-import org.teamapps.projector.components.progress.MultiProgressDisplay;
+import org.teamapps.projector.component.essential.CoreComponentLibrary;
+import org.teamapps.projector.component.progress.MultiProgressDisplay;
 import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.ArrayList;

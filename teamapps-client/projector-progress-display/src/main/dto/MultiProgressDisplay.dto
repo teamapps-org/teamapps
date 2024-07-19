@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-progress-display":org.teamapps.projector.components.progress;
+package "projector-progress-display":org.teamapps.projector.component.progress;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.notification.NotificationPosition;

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-notification":org.teamapps.projector.components.notification;
+package "projector-notification":org.teamapps.projector.component.notification;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.format.DtoSpacing;

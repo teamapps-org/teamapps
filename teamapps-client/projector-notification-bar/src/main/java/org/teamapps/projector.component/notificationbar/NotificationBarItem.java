@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.components.essential.notification;
+package org.teamapps.projector.component.essential.notification;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.animation.EntranceAnimation;
 import org.teamapps.projector.animation.ExitAnimation;
 import org.teamapps.projector.animation.RepeatableAnimation;
-import org.teamapps.projector.components.essential.dto.DtoNotificationBarItem;
+import org.teamapps.projector.component.essential.dto.DtoNotificationBarItem;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.Spacing;
 import org.teamapps.projector.session.SessionContext;

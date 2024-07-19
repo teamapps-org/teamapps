@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-document-viewer":org.teamapps.projector.components.documentviewer;
+package "projector-document-viewer":org.teamapps.projector.component.documentviewer;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.format.DtoBorder;

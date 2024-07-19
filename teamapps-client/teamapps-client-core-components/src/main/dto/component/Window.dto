@@ -1,0 +1,27 @@
+package "teamapps-client-core-components":org.teamapps.projector.component.essential.panel;
+
+import org.teamapps.projector.component.DtoShowable;
+
+class DtoWindow extends DtoPanel implements DtoShowable {
+	boolean modal;
+	int width; // 0 = full width
+	int height; // 0 = full height, -1 = auto
+	String headerBackgroundColor;
+	String modalBackgroundDimmingColor;
+    boolean closeable; // show "close" special tool button
+    boolean closeOnEscape; // close if the user presses escape
+    boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
+
+	command show(int animationDuration);
+	command close(int animationDuration);
+	command setCloseable(boolean closeable);
+	command setCloseOnEscape(boolean closeOnEscape);
+	command setCloseOnClickOutside(boolean closeOnClickOutside);
+	command setModal(boolean modal);
+	command setModalBackgroundDimmingColor(String modalBackgroundDimmingColor);
+	command setSize(int width, int height);
+}
+
+enum WindowButtonType {
+	MINIMIZE, MAXIMIZE_RESTORE, CLOSE
+}

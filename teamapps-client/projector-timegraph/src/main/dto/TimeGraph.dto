@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-timegraph":org.teamapps.projector.components.timegraph;
+package "projector-timegraph":org.teamapps.projector.component.timegraph;
 
 import org.teamapps.projector.component.DtoComponent;
 

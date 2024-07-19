@@ -20,11 +20,11 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.components.essential.dummy.DummyComponent;
-import org.teamapps.projector.components.essential.field.Button;
-import org.teamapps.projector.components.essential.flexcontainer.VerticalLayout;
-import org.teamapps.projector.components.essential.rootpanel.RootPanel;
-import org.teamapps.projector.components.essential.window.Window;
+import org.teamapps.projector.component.essential.dummy.DummyComponent;
+import org.teamapps.projector.component.essential.field.Button;
+import org.teamapps.projector.component.essential.flexcontainer.VerticalLayout;
+import org.teamapps.projector.component.essential.rootpanel.RootPanel;
+import org.teamapps.projector.component.essential.window.Window;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
