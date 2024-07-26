@@ -10,17 +10,17 @@ public class CoreComponentLibrary implements ClientObjectLibrary {
 	private final ClassPathResourceProvider resourceProvider;
 
 	public CoreComponentLibrary() {
-		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/components/essential/resources/js");
+		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/component/essential/resources/js");
 	}
 
 	@Override
 	public Resource getMainJsResource() {
-		return new ClassPathResource("org/teamapps/projector/components/essential/resources/js/index.js", "text/javascript");
+		return new ClassPathResource("org/teamapps/projector/component/essential/resources/js/index.js", "text/javascript");
 	}
 
 	@Override
 	public Resource getMainCssResource() {
-		return new ClassPathResource("org/teamapps/projector/components/essential/resources/js/index.css", "text/css");
+		return new ClassPathResource("org/teamapps/projector/component/essential/resources/js/index.css", "text/css");
 	}
 
 	@Override

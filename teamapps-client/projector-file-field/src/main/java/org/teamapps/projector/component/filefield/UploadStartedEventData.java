@@ -17,19 +17,36 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.projector.component.filefield;
 
-package org.teamapps.projector.component.common.field.upload.simple;
+public class UploadStartedEventData {
 
-/**
- * @author Yann Massard (yamass@gmail.com)
- */
-public enum FileItemState {
+	private final String fileName;
+	private final String mimeType;
+	private final long sizeInBytes;
+	private final Runnable uploadCanceler;
 
-	INITIATING,
-	TOO_LARGE,
-	UPLOADING,
-	CANCELED,
-	FAILED,
-	DONE
+	public UploadStartedEventData(String fileName, String mimeType, long sizeInBytes, Runnable uploadCanceler) {
+		this.fileName = fileName;
+		this.mimeType = mimeType;
+		this.sizeInBytes = sizeInBytes;
+		this.uploadCanceler = uploadCanceler;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public long getSizeInBytes() {
+		return sizeInBytes;
+	}
+
+	public void cancelUpload() {
+		uploadCanceler.run();
+	}
 
 }

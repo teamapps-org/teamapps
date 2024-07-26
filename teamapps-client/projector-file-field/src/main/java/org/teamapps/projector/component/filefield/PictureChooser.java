@@ -17,34 +17,36 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.field.upload;
+package org.teamapps.projector.component.filefield;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import net.coobird.thumbnailator.Thumbnails;
-import org.teamapps.projector.component.common.dto.DtoAbstractField;
-import org.teamapps.projector.component.common.dto.DtoPictureChooser;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.component.field.Button;
-import org.teamapps.ux.component.flexcontainer.HorizontalLayout;
-import org.teamapps.ux.component.flexcontainer.VerticalLayout;
-import org.teamapps.projector.component.common.imagecropper.ImageCropper;
-import org.teamapps.projector.component.common.imagecropper.ImageCropperSelection;
-import org.teamapps.projector.component.common.imagecropper.ImageCropperSelectionMode;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
-import org.teamapps.ux.component.window.Window;
+import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.common.dto.ImageCropperSelection;
+import org.teamapps.projector.component.common.dto.ImageCropperSelectionMode;
+import org.teamapps.projector.component.essential.field.Button;
+import org.teamapps.projector.component.essential.flexcontainer.HorizontalLayout;
+import org.teamapps.projector.component.essential.flexcontainer.VerticalLayout;
+import org.teamapps.projector.component.essential.window.Window;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.filefield.imagecropper.ImageCropper;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
-import org.teamapps.ux.resource.FileResource;
-import org.teamapps.ux.resource.Resource;
+import org.teamapps.projector.resource.FileResource;
+import org.teamapps.projector.resource.Resource;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.file.Files;
 
-public class PictureChooser extends AbstractField<Resource> {
+public class PictureChooser extends AbstractField<Resource> implements DtoPictureChooserEventHandler {
 
+	private final DtoPictureChooserClientObjectChannel clientObjectChannel = new DtoPictureChooserClientObjectChannel(getClientObjectChannel());
+
+	public final ProjectorEvent<UploadTooLargeEventData> onUploadInitiatedByUser = new ProjectorEvent<>(clientObjectChannel::toggleUploadInitiatedByUserEvent);
 	public final ProjectorEvent<UploadTooLargeEventData> onUploadTooLarge = new ProjectorEvent<>(clientObjectChannel::toggleUploadTooLargeEvent);
 	public final ProjectorEvent<UploadStartedEventData> onUploadStarted = new ProjectorEvent<>(clientObjectChannel::toggleUploadStartedEvent);
 	public final ProjectorEvent<UploadCanceledEventData> onUploadCanceled = new ProjectorEvent<>(clientObjectChannel::toggleUploadCanceledEvent);
@@ -75,11 +77,11 @@ public class PictureChooser extends AbstractField<Resource> {
 		imageCropper.setAspectRatio(targetImageWidth / (float) targetImageHeight);
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.addComponentFillRemaining(imageCropper);
-		Button<BaseTemplateRecord<?>> cancelButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.CANCEL.getKey()));
+		Button cancelButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.CANCEL.getKey()));
 		cancelButton.setCssStyle("margin-right", "5px");
-		Button<BaseTemplateRecord<?>> rotateButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.ROTATE.getKey()));
+		Button rotateButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.ROTATE.getKey()));
 		rotateButton.setCssStyle("margin-right", "5px");
-		Button<BaseTemplateRecord<?>> okButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.OK.getKey()));
+		Button okButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.OK.getKey()));
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.addComponentAutoSize(cancelButton);
 		horizontalLayout.addComponentAutoSize(rotateButton);
@@ -133,24 +135,12 @@ public class PictureChooser extends AbstractField<Resource> {
 	}
 
 	@Override
-	public Object convertUxValueToUiValue(Resource resource) {
-		return getSessionContext().createResourceLink(resource);
-	}
-
-	private Resource cropAndConvertImage(UploadedFile uploadedFile, ImageCropperSelection selection, int targetWidth, int targetHeight) throws IOException {
-		File tempFile = Files.createTempFile("cropped-image", ".jpg").toFile();
-		Thumbnails.of(uploadedFile.getAsInputStream()).sourceRegion(selection.getLeft(), selection.getTop(), selection.getWidth(), selection.getHeight()).size(targetWidth, targetHeight).outputFormat("jpg").toFile(tempFile);
-		return new FileResource(tempFile);
-	}
-
-	private File rotateImage(File imageFile) throws IOException {
-		File newImageFile = File.createTempFile("rotated-image", ".jpg");
-		Thumbnails.of(imageFile).scale(1).rotate(90).toFile(newImageFile);
-		return newImageFile;
+	public Resource doConvertClientValueToServerValue(@Nonnull JsonNode value) {
+		return null; // never needed. The value is only set by the server.
 	}
 
 	@Override
-	public DtoAbstractField createDto() {
+	public ComponentConfig createConfig() {
 		DtoPictureChooser uiField = new DtoPictureChooser();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setUploadUrl(uploadUrl);
@@ -165,43 +155,62 @@ public class PictureChooser extends AbstractField<Resource> {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
-		switch (event.getTypeId()) {
-			case DtoPictureChooser.UploadTooLargeEvent.TYPE_ID -> {
-				var tooLargeEvent = event.as(DtoPictureChooser.UploadTooLargeEventWrapper.class);
-				this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
-			}
-			case DtoPictureChooser.UploadStartedEvent.TYPE_ID -> {
-				var uploadStartedEvent = event.as(DtoPictureChooser.UploadStartedEventWrapper.class);
-				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(), null /*TODO*/));
+	public void handleUploadInitiatedByUser(DtoPictureChooser.UploadInitiatedByUserEventWrapper event) {
+		// do nothing.
+	}
 
-			}
-			case DtoPictureChooser.UploadCanceledEvent.TYPE_ID -> {
-				var canceledEvent = event.as(DtoPictureChooser.UploadCanceledEventWrapper.class);
-				this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()));
-			}
-			case DtoPictureChooser.UploadFailedEvent.TYPE_ID -> {
-				var failedEvent = event.as(DtoPictureChooser.UploadFailedEventWrapper.class);
-				this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()));
+	@Override
+	public void handleUploadTooLarge(DtoPictureChooser.UploadTooLargeEventWrapper event) {
+		this.onUploadTooLarge.fire(new UploadTooLargeEventData(event.getFileName(), event.getMimeType(), event.getSizeInBytes()));
+	}
 
-			}
-			case DtoPictureChooser.UploadSuccessfulEvent.TYPE_ID -> {
-				var uploadedEvent = event.as(DtoPictureChooser.UploadSuccessfulEventWrapper.class);
-				this.uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
-						() -> {
-							try {
-								return new FileInputStream(getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid()));
-							} catch (FileNotFoundException e) {
-								throw new UploadedFileAccessException(e);
-							}
-						},
-						() -> getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid())
-				);
-				onUploadSuccessful.fire(uploadedFile);
-				showImageCropperWindow();
-			}
-		}
+	@Override
+	public void handleUploadStarted(DtoPictureChooser.UploadStartedEventWrapper event) {
+		this.onUploadStarted.fire(new UploadStartedEventData(event.getFileName(), event.getMimeType(), event.getSizeInBytes(), null /*TODO*/));
+
+	}
+
+	@Override
+	public void handleUploadCanceled(DtoPictureChooser.UploadCanceledEventWrapper event) {
+		this.onUploadCanceled.fire(new UploadCanceledEventData(event.getFileName(), event.getMimeType(), event.getSizeInBytes()));
+	}
+
+	@Override
+	public void handleUploadFailed(DtoPictureChooser.UploadFailedEventWrapper event) {
+		this.onUploadFailed.fire(new UploadFailedEventData(event.getFileName(), event.getMimeType(), event.getSizeInBytes()));
+	}
+
+	@Override
+	public void handleUploadSuccessful(DtoPictureChooser.UploadSuccessfulEventWrapper event) {
+		this.uploadedFile = new UploadedFile(event.getUploadedFileUuid(), event.getFileName(), event.getSizeInBytes(), event.getMimeType(),
+				() -> {
+					try {
+						return new FileInputStream(getSessionContext().getUploadedFileByUuid(event.getUploadedFileUuid()));
+					} catch (FileNotFoundException e) {
+						throw new UploadedFileAccessException(e);
+					}
+				},
+				() -> getSessionContext().getUploadedFileByUuid(event.getUploadedFileUuid())
+		);
+		onUploadSuccessful.fire(uploadedFile);
+		showImageCropperWindow();
+	}
+
+	@Override
+	public Object convertServerValueToClientValue(Resource resource) {
+		return getSessionContext().createResourceLink(resource);
+	}
+
+	private Resource cropAndConvertImage(UploadedFile uploadedFile, ImageCropperSelection selection, int targetWidth, int targetHeight) throws IOException {
+		File tempFile = Files.createTempFile("cropped-image", ".jpg").toFile();
+		Thumbnails.of(uploadedFile.getAsInputStream()).sourceRegion(selection.getLeft(), selection.getTop(), selection.getWidth(), selection.getHeight()).size(targetWidth, targetHeight).outputFormat("jpg").toFile(tempFile);
+		return new FileResource(tempFile);
+	}
+
+	private File rotateImage(File imageFile) throws IOException {
+		File newImageFile = File.createTempFile("rotated-image", ".jpg");
+		Thumbnails.of(imageFile).scale(1).rotate(90).toFile(newImageFile);
+		return newImageFile;
 	}
 
 	public void setImageCropperSelectionMode(ImageCropperSelectionMode selectionMode) {

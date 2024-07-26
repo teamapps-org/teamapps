@@ -27,9 +27,7 @@ let result = await esbuild.build({
         }),
         lessLoader(),
     ],
-    minify: process.env.NODE_ENV === 'production',
-    metafile: true
+    minify: process.env.NODE_ENV === 'production'
 });
-fs.writeFileSync('meta.json', JSON.stringify(result.metafile));
 console.log("⚡ esbuild complete! ⚡")
 

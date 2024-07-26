@@ -24,8 +24,6 @@ import {RelativeDropPosition} from "./RelativeDropPosition";
 import {LocalViewContainer} from "./LocalViewContainer";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {SplitSizePolicy, Toolbar} from "teamapps-client-core-components";
-import {ProgressDisplay} from "teamapps-client-core-components";
-import {MultiProgressDisplay} from "teamapps-client-core-components";
 import {
 	DtoRelativeWorkSpaceViewPosition,
 	DtoViewGroupPanelState,
@@ -45,6 +43,7 @@ import {
 	DtoWorkSpaceLayoutView,
 	DtoWorkSpaceLayoutViewGroupItem
 } from "./generated";
+import {MultiProgressDisplay, ProgressDisplay} from "projector-progress-display";
 
 export type DtoWorkspaceLayoutDndDataTransfer = {
 	// sourceUiSessionId: string,   // sourceUiSessionId: this.context.sessionId, // TODO replace with workspace layout uuid to uniquely identify the workspace layout, even inside a session!
@@ -85,7 +84,7 @@ export class WorkSpaceLayout extends AbstractLegacyComponent<DtoWorkSpaceLayout>
 			handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
 			handleViewDroppedFromOtherWindow: (sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition) => this.handleViewDroppedFromOtherWindow(sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition),
 			handleLocalLayoutChangedByUser: (windowId: string) => this.handleLocalLayoutChangedByUser(windowId)
-		}, config.multiProgressDisplay as ProgressDisplay);
+		}, config.multiProgressDisplay as MultiProgressDisplay);
 
 		this.localViewContainer.setToolbar(config.toolbar as Toolbar);
 

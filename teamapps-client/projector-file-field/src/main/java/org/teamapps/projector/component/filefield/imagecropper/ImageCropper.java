@@ -17,16 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.imagecropper;
+package org.teamapps.projector.component.filefield.imagecropper;
 
-import org.teamapps.projector.component.common.dto.DtoComponent;
+import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.common.dto.DtoImageCropper;
+import org.teamapps.projector.component.common.dto.DtoImageCropperClientObjectChannel;
+import org.teamapps.projector.component.common.dto.DtoImageCropperEventHandler;
 import org.teamapps.projector.component.common.dto.DtoImageCropperSelectionWrapper;
-import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
 
-public class ImageCropper extends AbstractComponent {
+public class ImageCropper extends AbstractComponent implements DtoImageCropperEventHandler {
+
+	private final DtoImageCropperClientObjectChannel clientObjectChannel = new DtoImageCropperClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<ImageCropperSelection> onSelectionChanged = new ProjectorEvent<>(clientObjectChannel::toggleSelectionChangedEvent);
 
@@ -39,22 +43,17 @@ public class ImageCropper extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public ComponentConfig createConfig() {
 		DtoImageCropper uiImageCropper = new DtoImageCropper(imageUrl, selectionMode.toUiImageCropperSelectionMode(), aspectRatio);
 		mapAbstractUiComponentProperties(uiImageCropper);
 		return uiImageCropper;
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		switch (event.getTypeId()) {
-			case DtoImageCropper.SelectionChangedEvent.TYPE_ID -> {
-				DtoImageCropperSelectionWrapper uiSelection = event.as(DtoImageCropper.SelectionChangedEventWrapper.class).getSelection();
-				ImageCropperSelection selection = new ImageCropperSelection(uiSelection.getLeft(), uiSelection.getTop(), uiSelection.getWidth(), uiSelection.getHeight());
-				this.selection = selection;
-				this.onSelectionChanged.fire(selection);
-			}
-		}
+	public void handleSelectionChanged(DtoImageCropperSelectionWrapper selectionWrapper) {
+		ImageCropperSelection selection = new ImageCropperSelection(selectionWrapper.getLeft(), selectionWrapper.getTop(), selectionWrapper.getWidth(), selectionWrapper.getHeight());
+		this.selection = selection;
+		this.onSelectionChanged.fire(selection);
 	}
 
 	public String getImageUrl() {
@@ -63,7 +62,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
-		clientObjectChannel.setImageUrl(ImageUrl);
+		clientObjectChannel.setImageUrl(imageUrl);
 	}
 
 	public ImageCropperSelectionMode getSelectionMode() {

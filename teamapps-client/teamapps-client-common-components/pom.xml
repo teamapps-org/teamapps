@@ -45,7 +45,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jsResourcesTargetClassPath>org/teamapps/projector/components/common/resources/js</jsResourcesTargetClassPath>
+                    <jsResourcesTargetClassPath>org/teamapps/projector/component/common/resources/js</jsResourcesTargetClassPath>
                     <dtoDependencies>
                         <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
                         <dependency>org.teamapps:teamapps-client-core-components:${project.version}</dependency>

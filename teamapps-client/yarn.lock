@@ -102,13 +102,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-symbols/svg-300@npm:latest":
-  version: 0.21.2
-  resolution: "@material-symbols/svg-300@npm:0.21.2"
-  checksum: 2013004b4213bd1990a18d9ad885d3e7b662b85911fdc334a61bf5cda41be3cca9d957bcccc79dbfcab96f5ebeab4a5a208b38e6fd1fdf0dbdff0fbe1b71a8ab
-  languageName: node
-  linkType: hard
-
 "@material-symbols/svg-400@npm:latest":
   version: 0.21.2
   resolution: "@material-symbols/svg-400@npm:0.21.2"
@@ -2428,25 +2421,6 @@ __metadata:
     pify: ^4.0.1
     semver: ^5.6.0
   checksum: 043548886bfaf1820323c6a2997e6d2fa51ccc2586ac14e6f14634f7458b4db2daf15f8c310e2a0abd3e0cddc64df1890d8fc7263033602c47bb12cbfcf86aab
-  languageName: node
-  linkType: hard
-
-"material-icons@workspace:material-icons":
-  version: 0.0.0-use.local
-  resolution: "material-icons@workspace:material-icons"
-  dependencies:
-    "@material-symbols/svg-300": latest
-    esbuild: ^0.15.13
-    material-symbols: latest
-    rimraf: ^3.0.2
-    typescript: ^5.1
-  languageName: unknown
-  linkType: soft
-
-"material-symbols@npm:latest":
-  version: 0.21.2
-  resolution: "material-symbols@npm:0.21.2"
-  checksum: b52d34d1aee9b6fb1ab371d2cf307721a1a5acf9914613cb49a9c521cae9d0c2b441a4c0ff6fd15f022db1fbe530e7bf2af3b5acfd36b4a3a04647a5d89f6048
   languageName: node
   linkType: hard
 

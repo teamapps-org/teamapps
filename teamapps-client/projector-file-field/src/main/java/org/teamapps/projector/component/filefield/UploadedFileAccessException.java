@@ -17,36 +17,23 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.field.upload;
+package org.teamapps.projector.component.filefield;
 
-public class UploadStartedEventData {
+public class UploadedFileAccessException extends RuntimeException {
 
-	private final String fileName;
-	private final String mimeType;
-	private final long sizeInBytes;
-	private final Runnable uploadCanceler;
-
-	public UploadStartedEventData(String fileName, String mimeType, long sizeInBytes, Runnable uploadCanceler) {
-		this.fileName = fileName;
-		this.mimeType = mimeType;
-		this.sizeInBytes = sizeInBytes;
-		this.uploadCanceler = uploadCanceler;
+	public UploadedFileAccessException(String message) {
+		super(message);
 	}
 
-	public String getFileName() {
-		return fileName;
+	public UploadedFileAccessException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	public String getMimeType() {
-		return mimeType;
+	public UploadedFileAccessException(Throwable cause) {
+		super(cause);
 	}
 
-	public long getSizeInBytes() {
-		return sizeInBytes;
+	public UploadedFileAccessException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
 	}
-
-	public void cancelUpload() {
-		uploadCanceler.run();
-	}
-
 }

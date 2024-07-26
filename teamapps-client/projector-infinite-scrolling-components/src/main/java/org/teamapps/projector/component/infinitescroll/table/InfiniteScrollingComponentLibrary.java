@@ -10,17 +10,17 @@ public class InfiniteScrollingComponentLibrary implements ClientObjectLibrary {
 	private final ClassPathResourceProvider resourceProvider;
 
 	public InfiniteScrollingComponentLibrary() {
-		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/components/infinitescroll/resources/js");
+		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/component/infinitescroll/resources/js");
 	}
 
 	@Override
 	public Resource getMainJsResource() {
-		return new ClassPathResource("org/teamapps/projector/components/infinitescroll/resources/js/index.js", "text/javascript");
+		return new ClassPathResource("org/teamapps/projector/component/infinitescroll/resources/js/index.js", "text/javascript");
 	}
 
 	@Override
 	public Resource getMainCssResource() {
-		return new ClassPathResource("org/teamapps/projector/components/infinitescroll/resources/js/index.css", "text/css");
+		return new ClassPathResource("org/teamapps/projector/component/infinitescroll/resources/js/index.css", "text/css");
 	}
 
 	@Override

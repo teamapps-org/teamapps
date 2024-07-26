@@ -16,6 +16,18 @@
             <groupId>org.teamapps</groupId>
             <artifactId>projector-client-object-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-grid-template</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-material-icon-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-client-core-components</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -37,7 +49,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jsResourcesTargetClassPath>org/teamapps/projector/components/documentviewer/resources/js</jsResourcesTargetClassPath>
+                    <jsResourcesTargetClassPath>org/teamapps/projector/component/filefield/resources/js</jsResourcesTargetClassPath>
                     <dtoDependencies>
                         <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
                     </dtoDependencies>

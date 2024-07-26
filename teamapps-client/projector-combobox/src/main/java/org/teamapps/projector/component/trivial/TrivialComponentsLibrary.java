@@ -10,18 +10,18 @@ public class TrivialComponentsLibrary implements ClientObjectLibrary {
 	private final ClassPathResourceProvider resourceProvider;
 
 	public TrivialComponentsLibrary() {
-		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/components/core/resources/js");
+		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/component/core/resources/js");
 	}
 
 
 	@Override
 	public Resource getMainJsResource() {
-		return new ClassPathResource("org/teamapps/projector/components/trivial/resources/js/index.js", "text/javascript");
+		return new ClassPathResource("org/teamapps/projector/component/trivial/resources/js/index.js", "text/javascript");
 	}
 
 	@Override
 	public Resource getMainCssResource() {
-		return new ClassPathResource("org/teamapps/projector/components/trivial/resources/js/index.css", "text/css");
+		return new ClassPathResource("org/teamapps/projector/component/trivial/resources/js/index.css", "text/css");
 	}
 
 	@Override

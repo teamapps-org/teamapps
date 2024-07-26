@@ -43,7 +43,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <jsResourcesTargetClassPath>org/teamapps/projector/template/mustache/resources/js</jsResourcesTargetClassPath>
+                        <jsResourcesTargetClassPath>org/teamapps/projector/template/grid/resources/js</jsResourcesTargetClassPath>
                         <dtoDependencies>
                             <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
                         </dtoDependencies>

@@ -18,12 +18,12 @@
  * =========================LICENSE_END==================================
  */
 
-package org.teamapps.projector.component.common.field.upload.simple;
+package org.teamapps.projector.component.filefield.simple;
 
-import org.teamapps.projector.component.common.dto.DtoFileItem;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.projector.component.filefield.DtoFileItem;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.io.File;
 import java.util.UUID;

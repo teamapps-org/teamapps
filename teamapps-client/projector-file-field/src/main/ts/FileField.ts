@@ -38,7 +38,7 @@ import {
 	DtoFileField_UploadFailedEvent,
 	DtoFileField_UploadStartedEvent, DtoFileField_UploadSuccessfulEvent, DtoFileField_UploadTooLargeEvent,
 	DtoFileFieldCommandHandler,
-	DtoFileFieldEventSource, FileFieldDisplayType
+	DtoFileFieldEventSource, DtoSimpleFileField_UploadInitiatedByUserEvent, FileFieldDisplayType
 } from "./generated";
 import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
 

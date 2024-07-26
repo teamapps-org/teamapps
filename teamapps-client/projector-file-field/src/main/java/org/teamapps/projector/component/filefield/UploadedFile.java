@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.field.upload;
+package org.teamapps.projector.component.filefield;
 
 import java.io.File;
 import java.io.InputStream;

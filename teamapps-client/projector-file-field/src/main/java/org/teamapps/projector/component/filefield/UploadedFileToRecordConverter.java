@@ -17,18 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.field.upload;
+package org.teamapps.projector.component.filefield;
 
-public class FileSizeFormatter {
+public interface UploadedFileToRecordConverter<RECORD> {
 
-	public static String humanReadableByteCount(long bytes, boolean decimal, int precision) {
-		int unit = decimal ? 1000 : 1024;
-		if (bytes < unit) {
-			return bytes + "B";
-		}
-		int exp = (int) (Math.log(bytes) / Math.log(unit));
-		String pre = "" + (decimal ? "kMGTPE" : "KMGTPE").charAt(exp - 1);
-		return String.format("%." + precision + "f %sB", bytes / Math.pow(unit, exp), pre);
-	}
+	RECORD convert(UploadedFile file);
 
 }

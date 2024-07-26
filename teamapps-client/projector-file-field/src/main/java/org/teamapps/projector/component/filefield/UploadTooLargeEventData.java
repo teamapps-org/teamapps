@@ -17,23 +17,29 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.field.upload;
+package org.teamapps.projector.component.filefield;
 
-public class UploadSuccessfulEventData<RECORD> {
+public class UploadTooLargeEventData {
 
-	private final UploadedFile uploadedFile;
-	private final RECORD record;
+	private final String fileName;
+	private final String mimeType;
+	private final long sizeInBytes;
 
-	public UploadSuccessfulEventData(UploadedFile uploadedFile, RECORD record) {
-		this.uploadedFile = uploadedFile;
-		this.record = record;
+	public UploadTooLargeEventData(String fileName, String mimeType, long sizeInBytes) {
+		this.fileName = fileName;
+		this.mimeType = mimeType;
+		this.sizeInBytes = sizeInBytes;
 	}
 
-	public UploadedFile getUploadedFile() {
-		return uploadedFile;
+	public String getFileName() {
+		return fileName;
 	}
 
-	public RECORD getRecord() {
-		return record;
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public long getSizeInBytes() {
+		return sizeInBytes;
 	}
 }

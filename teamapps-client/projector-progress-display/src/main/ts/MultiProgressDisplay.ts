@@ -53,7 +53,7 @@ export class MultiProgressDisplay extends AbstractLegacyComponent<DtoMultiProgre
 	constructor(config: DtoMultiProgressDisplay, serverObjectChannel: ServerObjectChannel) {
 		super(config, serverObjectChannel);
 
-		this.$main = parseHtml(`<div class="DefaultMultiProgressDisplay">
+		this.$main = parseHtml(`<div class="MultiProgressDisplay">
 	<div class="spinner teamapps-spinner"></div>					
 	<div class="running-count">0</div>					
 </div>`);

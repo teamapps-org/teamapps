@@ -10,17 +10,17 @@ public class NotificationLibrary implements ClientObjectLibrary {
 	private final ClassPathResourceProvider resourceProvider;
 
 	public NotificationLibrary() {
-		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/components/notification/resources/js");
+		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/component/notification/resources/js");
 	}
 
 	@Override
 	public Resource getMainJsResource() {
-		return new ClassPathResource("org/teamapps/projector/components/notification/resources/js/index.js", "text/javascript");
+		return new ClassPathResource("org/teamapps/projector/component/notification/resources/js/index.js", "text/javascript");
 	}
 
 	@Override
 	public Resource getMainCssResource() {
-		return new ClassPathResource("org/teamapps/projector/components/notification/resources/js/index.css", "text/css");
+		return new ClassPathResource("org/teamapps/projector/component/notification/resources/js/index.css", "text/css");
 	}
 
 	@Override

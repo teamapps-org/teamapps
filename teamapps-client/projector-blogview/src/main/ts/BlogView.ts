@@ -22,7 +22,7 @@ import {
 	AbstractLegacyComponent, Component,
 	executeWhenFirstDisplayed, insertAfter,
 	insertBefore,
-	parseHtml,
+	parseHtml, removeClassesByFunction,
 	ServerObjectChannel, Template
 } from "projector-client-object-api";
 import {

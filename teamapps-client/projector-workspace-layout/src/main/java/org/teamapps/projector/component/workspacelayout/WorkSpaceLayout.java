@@ -28,9 +28,8 @@ import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.essential.dto.SplitSizePolicy;
 import org.teamapps.projector.component.essential.panel.Panel;
-import org.teamapps.projector.component.essential.progress.DefaultMultiProgressDisplay;
-import org.teamapps.projector.component.essential.progress.MultiProgressDisplay;
 import org.teamapps.projector.component.essential.toolbar.Toolbar;
+import org.teamapps.projector.component.progress.MultiProgressDisplay;
 import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.projector.component.workspacelayout.dto.*;
 import org.teamapps.projector.event.ProjectorEvent;
@@ -58,7 +57,7 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 	private Toolbar toolbar;
 	private String newWindowBackgroundImage;
 	private String newWindowBlurredBackgroundImage;
-	private MultiProgressDisplay multiProgressDisplay = new DefaultMultiProgressDisplay();
+	private MultiProgressDisplay multiProgressDisplay = new MultiProgressDisplay();
 
 	private Map<String, WorkSpaceLayoutItem> rootItemsByWindowId = new HashMap<>();
 

@@ -18,31 +18,29 @@
  * =========================LICENSE_END==================================
  */
 
-package org.teamapps.projector.component.common.field.upload.simple;
+package org.teamapps.projector.component.filefield.simple;
 
-import org.teamapps.projector.component.common.dto.DtoComponent;
-import org.teamapps.projector.component.common.dto.DtoSimpleFileField;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.teamapps.commons.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.component.common.field.upload.FileSizeFormatter;
-import org.teamapps.ux.component.CoreComponentLibrary;
-import org.teamapps.ux.component.ProjectorComponent;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.projector.component.common.field.upload.FileFieldDisplayType;
+import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.filefield.*;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author Yann Massard (yamass@gmail.com)
- */
-@ProjectorComponent(library = CoreComponentLibrary.class)
-public class SimpleFileField extends AbstractField<List<FileItem>> {
+@ClientObjectLibrary(FileFieldLibrary.class)
+public class SimpleFileField extends AbstractField<List<FileItem>> implements DtoSimpleFileFieldEventHandler {
+
+	private final DtoSimpleFileFieldClientObjectChannel clientObjectChannel = new DtoSimpleFileFieldClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<FileItem> onUploadInitiatedByUser = new ProjectorEvent<>(clientObjectChannel::toggleUploadInitiatedByUserEvent);
 	public final ProjectorEvent<FileItem> onUploadTooLarge = new ProjectorEvent<>(clientObjectChannel::toggleUploadTooLargeEvent);
@@ -68,12 +66,12 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 		fileItem.setState(FileItemState.DONE);
 		this.fileItems.add(fileItem);
 		fileItem.setFileField(this);
-		clientObjectChannel.addFileItem(FileItem.CreateUiFileItem());
+		clientObjectChannel.addFileItem(fileItem.createUiFileItem());
 	}
 
 	public void removeFileItem(FileItem fileItem) {
 		removeFileItemInternal(fileItem);
-		clientObjectChannel.removeFileItem(FileItem.GetUuid());
+		clientObjectChannel.removeFileItem(fileItem.getUuid());
 	}
 
 	private void removeFileItemInternal(FileItem fileItem) {
@@ -82,7 +80,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	/*package-private*/  void handleFileItemChanged(FileItem fileItem) {
-		clientObjectChannel.updateFileItem(FileItem.CreateUiFileItem());
+		clientObjectChannel.updateFileItem(fileItem.createUiFileItem());
 	}
 
 	private FileItem getFileItemByUuid(String uuid) {
@@ -92,7 +90,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
-	public List<FileItem> convertUiValueToUxValue(Object value) {
+	public List<FileItem> doConvertClientValueToServerValue(@Nonnull JsonNode value) {
 		return fileItems; // the list is up to date anyways!
 	}
 
@@ -107,7 +105,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public ComponentConfig createConfig() {
 		DtoSimpleFileField field = new DtoSimpleFileField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));
@@ -117,7 +115,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 		field.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
 		field.setUploadErrorMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD_ERROR_MESSAGE.getKey()));
 		field.setMaxFiles(maxFiles);
-		field.setDisplayMode(displayType.toUiFileFieldDisplayType());
+		field.setDisplayMode(displayType);
 		field.setFileItems(fileItems.stream()
 				.map(fi -> fi.createUiFileItem())
 				.collect(Collectors.toList()));
@@ -125,78 +123,79 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		super.handleUiEvent(event);
-		switch (event.getTypeId()) {
-			case DtoSimpleFileField.UploadInitiatedByUserEvent.TYPE_ID -> {
-				var initEvent = event.as(DtoSimpleFileField.UploadInitiatedByUserEventWrapper.class);
-				FileItem fileItem = new FileItem(initEvent.getUuid(), initEvent.getFileName(), FileItemState.INITIATING, initEvent.getMimeType(), initEvent.getSizeInBytes());
-				fileItem.setFileField(this);
-				this.fileItems.add(fileItem);
-				onUploadInitiatedByUser.fire(fileItem);
+	public void handleUploadInitiatedByUser(DtoSimpleFileField.UploadInitiatedByUserEventWrapper initEvent) {
+		FileItem fileItem = new FileItem(initEvent.getUuid(), initEvent.getFileName(), FileItemState.INITIATING, initEvent.getMimeType(), initEvent.getSizeInBytes());
+		fileItem.setFileField(this);
+		this.fileItems.add(fileItem);
+		onUploadInitiatedByUser.fire(fileItem);
+	}
+
+	@Override
+	public void handleUploadTooLarge(String fileItemUuid) {
+		FileItem fileItem = getFileItemByUuid(fileItemUuid);
+		if (fileItem != null) {
+			fileItem.setState(FileItemState.TOO_LARGE);
+			onUploadTooLarge.fire(fileItem);
+		}
+	}
+
+	@Override
+	public void handleUploadStarted(String fileItemUuid) {
+		FileItem fileItem = getFileItemByUuid(fileItemUuid);
+		if (fileItem != null) {
+			fileItem.setState(FileItemState.UPLOADING);
+			onUploadStarted.fire(fileItem);
+		}
+	}
+
+	@Override
+	public void handleUploadCanceled(String fileItemUuid) {
+		FileItem fileItem = getFileItemByUuid(fileItemUuid);
+		if (fileItem != null) {
+			fileItem.setState(FileItemState.CANCELED);
+			onUploadCanceledByUser.fire(fileItem);
+		}
+	}
+
+	@Override
+	public void handleUploadFailed(String fileItemUuid) {
+		FileItem fileItem = getFileItemByUuid(fileItemUuid);
+		if (fileItem != null) {
+			fileItem.setState(FileItemState.FAILED);
+			onUploadFailed.fire(fileItem);
+		}
+	}
+
+	@Override
+	public void handleUploadSuccessful(DtoSimpleFileField.UploadSuccessfulEventWrapper event) {
+		FileItem fileItem = getFileItemByUuid(event.getFileItemUuid());
+		if (fileItem != null) {
+			fileItem.setState(FileItemState.DONE);
+			fileItem.setIcon(this.defaultItemIcon);
+			File uploadedFile = getSessionContext().getUploadedFileByUuid(event.getUploadedFileUuid());
+			if (uploadedFile != null) {
+				fileItem.setLinkUrl(getSessionContext().createFileLink(uploadedFile));
+				fileItem.setFile(uploadedFile);
 			}
-			case DtoSimpleFileField.UploadTooLargeEvent.TYPE_ID -> {
-				var tooLargeEvent = event.as(DtoSimpleFileField.UploadTooLargeEventWrapper.class);
-				FileItem fileItem = getFileItemByUuid(tooLargeEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.TOO_LARGE);
-					onUploadTooLarge.fire(fileItem);
-				}
-			}
-			case DtoSimpleFileField.UploadStartedEvent.TYPE_ID -> {
-				var startedEvent = event.as(DtoSimpleFileField.UploadStartedEventWrapper.class);
-				FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.UPLOADING);
-					onUploadStarted.fire(fileItem);
-				}
-			}
-			case DtoSimpleFileField.UploadCanceledEvent.TYPE_ID -> {
-				var canceledEvent = event.as(DtoSimpleFileField.UploadCanceledEventWrapper.class);
-				FileItem fileItem = getFileItemByUuid(canceledEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.CANCELED);
-					onUploadCanceledByUser.fire(fileItem);
-				}
-			}
-			case DtoSimpleFileField.UploadFailedEvent.TYPE_ID -> {
-				var startedEvent = event.as(DtoSimpleFileField.UploadFailedEventWrapper.class);
-				FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.FAILED);
-					onUploadFailed.fire(fileItem);
-				}
-			}
-			case DtoSimpleFileField.UploadSuccessfulEvent.TYPE_ID -> {
-				var successEvent = event.as(DtoSimpleFileField.UploadSuccessfulEventWrapper.class);
-				FileItem fileItem = getFileItemByUuid(successEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.DONE);
-					fileItem.setIcon(this.defaultItemIcon);
-					File uploadedFile = getSessionContext().getUploadedFileByUuid(successEvent.getUploadedFileUuid());
-					if (uploadedFile != null) {
-						fileItem.setLinkUrl(getSessionContext().createFileLink(uploadedFile));
-						fileItem.setFile(uploadedFile);
-					}
-					onUploadSuccessful.fire(fileItem);
-					onValueChanged.fire(getValue());
-				}
-			}
-			case DtoSimpleFileField.FileItemClickedEvent.TYPE_ID -> {
-				var clickEvent = event.as(DtoSimpleFileField.FileItemClickedEventWrapper.class);
-				FileItem fileItem = getFileItemByUuid(clickEvent.getFileItemUuid());
-				if (fileItem != null) {
-					onFileItemClicked.fire(fileItem);
-				}
-			}
-			case DtoSimpleFileField.FileItemRemovedEvent.TYPE_ID -> {
-				var removedEvent = event.as(DtoSimpleFileField.FileItemRemovedEventWrapper.class);
-				FileItem fileItem = getFileItemByUuid(removedEvent.getFileItemUuid());
-				if (fileItem != null) {
-					removeFileItemInternal(fileItem);
-					onFileItemRemoved.fire(fileItem);
-				}
-			}
+			onUploadSuccessful.fire(fileItem);
+			onValueChanged.fire(getValue());
+		}
+	}
+
+	@Override
+	public void handleFileItemClicked(String fileItemUuid) {
+		FileItem fileItem = getFileItemByUuid(fileItemUuid);
+		if (fileItem != null) {
+			onFileItemClicked.fire(fileItem);
+		}
+	}
+
+	@Override
+	public void handleFileItemRemoved(String fileItemUuid) {
+		FileItem fileItem = getFileItemByUuid(fileItemUuid);
+		if (fileItem != null) {
+			removeFileItemInternal(fileItem);
+			onFileItemRemoved.fire(fileItem);
 		}
 	}
 
@@ -206,7 +205,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setDisplayType(FileFieldDisplayType displayType) {
 		this.displayType = displayType;
-		clientObjectChannel.setDisplayMode(DisplayType.ToUiFileFieldDisplayType());
+		clientObjectChannel.setDisplayMode(displayType);
 	}
 
 	public int getMaxFiles() {
@@ -215,7 +214,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setMaxFiles(int maxFiles) {
 		this.maxFiles = maxFiles;
-		clientObjectChannel.setMaxFiles(MaxFiles);
+		clientObjectChannel.setMaxFiles(maxFiles);
 	}
 
 	public long getMaxBytesPerFile() {
@@ -224,8 +223,8 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setMaxBytesPerFile(long maxBytesPerFile) {
 		this.maxBytesPerFile = maxBytesPerFile;
-		clientObjectChannel.setMaxBytesPerFile(MaxBytesPerFile);
-		clientObjectChannel.setFileTooLargeMessage(GetSessionContext().GetLocalized(teamAppsTranslationKeys.file_Too_LARGE_SHORT_MESSAGE.GETKEY(), FILESIZEFORMATTER.humanReadableByteCount(MaxBytesPerFile, true, 1)));
+		clientObjectChannel.setMaxBytesPerFile(maxBytesPerFile);
+		clientObjectChannel.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
 	}
 
 	public String getUploadUrl() {
@@ -234,7 +233,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		clientObjectChannel.setUploadUrl(UploadUrl);
+		clientObjectChannel.setUploadUrl(uploadUrl);
 	}
 
 	public Icon<?, ?> getBrowseButtonIcon() {
@@ -243,7 +242,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setBrowseButtonIcon(Icon<?, ?> browseButtonIcon) {
 		this.browseButtonIcon = browseButtonIcon;
-		clientObjectChannel.setBrowseButtonIcon(GetSessionContext().ResolveIcon(browseButtonIcon));
+		clientObjectChannel.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));
 	}
 
 	public String getBrowseButtonCaption() {
@@ -252,6 +251,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setBrowseButtonCaption(String browseButtonCaption) {
 		this.browseButtonCaption = browseButtonCaption;
-		clientObjectChannel.setBrowseButtonCaption(BrowseButtonCaption);
+		clientObjectChannel.setBrowseButtonCaption(browseButtonCaption);
 	}
+
 }

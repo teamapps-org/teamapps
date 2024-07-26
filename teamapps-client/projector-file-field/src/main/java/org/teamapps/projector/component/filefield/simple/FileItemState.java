@@ -17,15 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.field.upload;
 
-import org.teamapps.projector.component.common.dto.DtoFileFieldDisplayType;
+package org.teamapps.projector.component.filefield.simple;
 
-public enum FileFieldDisplayType {
+/**
+ * @author Yann Massard (yamass@gmail.com)
+ */
+public enum FileItemState {
 
-	LIST, FLOATING;
+	INITIATING,
+	TOO_LARGE,
+	UPLOADING,
+	CANCELED,
+	FAILED,
+	DONE
 
-	public DtoFileFieldDisplayType toUiFileFieldDisplayType() {
-		return DtoFileFieldDisplayType.valueOf(this.name());
-	}
 }

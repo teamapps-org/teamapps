@@ -22,6 +22,11 @@
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
+            <artifactId>projector-progress-display</artifactId>
+        </dependency>
+        <dependency>
+<!--            needed for toolbar... -->
+            <groupId>org.teamapps</groupId>
             <artifactId>teamapps-client-core-components</artifactId>
         </dependency>
     </dependencies>
@@ -45,9 +50,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jsResourcesTargetClassPath>org/teamapps/projector/components/workspacelayout/resources/js</jsResourcesTargetClassPath>
+                    <jsResourcesTargetClassPath>org/teamapps/projector/component/workspacelayout/resources/js</jsResourcesTargetClassPath>
                     <dtoDependencies>
                         <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
+                        <dependency>org.teamapps:projector-progress-display:${project.version}</dependency>
                         <dependency>org.teamapps:teamapps-client-core-components:${project.version}</dependency>
                     </dtoDependencies>
                 </configuration>

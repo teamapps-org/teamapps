@@ -30,7 +30,6 @@ import {ViewContainer, ViewContainerListener} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
-import {MultiProgressDisplay} from "teamapps-client-core-components";
 import {computePosition, size} from "@floating-ui/dom";
 import {
 	createDtoWorkSpaceLayoutSplitItem, createDtoWorkSpaceLayoutViewGroupItem,
@@ -39,6 +38,7 @@ import {
 	DtoWorkSpaceLayoutView,
 	DtoWorkSpaceLayoutViewGroupItem
 } from "./generated";
+import {MultiProgressDisplay} from "projector-progress-display";
 
 export class LocalViewContainer implements ViewContainer {
 
