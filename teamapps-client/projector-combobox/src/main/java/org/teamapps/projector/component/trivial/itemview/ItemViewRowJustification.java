@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.trivial.itemview;
 
 
-import org.teamapps.projector.component.trivial.dto.DtoItemJustification;
+import org.teamapps.projector.component.trivial.DtoItemJustification;
 
 public enum ItemViewRowJustification {
 

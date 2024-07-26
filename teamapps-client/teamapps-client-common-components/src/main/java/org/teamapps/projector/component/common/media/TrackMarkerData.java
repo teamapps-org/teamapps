@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.common.media;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.dto.DtoMediaTrackMarker;
+import org.teamapps.projector.component.common.DtoMediaTrackMarker;
 
 public class TrackMarkerData {
 

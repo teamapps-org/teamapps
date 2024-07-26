@@ -24,9 +24,9 @@ import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoHtmlView;
-import org.teamapps.projector.component.essential.dto.DtoHtmlViewClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoHtmlViewEventHandler;
+import org.teamapps.projector.component.essential.DtoHtmlView;
+import org.teamapps.projector.component.essential.DtoHtmlViewClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoHtmlViewEventHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -21,11 +21,7 @@ package org.teamapps.projector.component.filefield.imagecropper;
 
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.ComponentConfig;
-import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.common.dto.DtoImageCropper;
-import org.teamapps.projector.component.common.dto.DtoImageCropperClientObjectChannel;
-import org.teamapps.projector.component.common.dto.DtoImageCropperEventHandler;
-import org.teamapps.projector.component.common.dto.DtoImageCropperSelectionWrapper;
+import org.teamapps.projector.component.common.*;
 import org.teamapps.projector.event.ProjectorEvent;
 
 public class ImageCropper extends AbstractComponent implements DtoImageCropperEventHandler {
@@ -44,16 +40,15 @@ public class ImageCropper extends AbstractComponent implements DtoImageCropperEv
 
 	@Override
 	public ComponentConfig createConfig() {
-		DtoImageCropper uiImageCropper = new DtoImageCropper(imageUrl, selectionMode.toUiImageCropperSelectionMode(), aspectRatio);
+		DtoImageCropper uiImageCropper = new DtoImageCropper(imageUrl, selectionMode, aspectRatio);
 		mapAbstractUiComponentProperties(uiImageCropper);
 		return uiImageCropper;
 	}
 
 	@Override
-	public void handleSelectionChanged(DtoImageCropperSelectionWrapper selectionWrapper) {
-		ImageCropperSelection selection = new ImageCropperSelection(selectionWrapper.getLeft(), selectionWrapper.getTop(), selectionWrapper.getWidth(), selectionWrapper.getHeight());
-		this.selection = selection;
-		this.onSelectionChanged.fire(selection);
+	public void handleSelectionChanged(ImageCropperSelectionWrapper selection) {
+		this.selection = selection.unwrap();
+		this.onSelectionChanged.fire(this.selection);
 	}
 
 	public String getImageUrl() {
@@ -71,7 +66,7 @@ public class ImageCropper extends AbstractComponent implements DtoImageCropperEv
 
 	public void setSelectionMode(ImageCropperSelectionMode selectionMode) {
 		this.selectionMode = selectionMode;
-		clientObjectChannel.setSelectionMode(SelectionMode.ToUiImageCropperSelectionMode());
+		clientObjectChannel.setSelectionMode(selectionMode);
 	}
 
 	public Float getAspectRatio() {
@@ -80,7 +75,7 @@ public class ImageCropper extends AbstractComponent implements DtoImageCropperEv
 
 	public void setAspectRatio(Float aspectRatio) {
 		this.aspectRatio = aspectRatio;
-		clientObjectChannel.setAspectRatio(AspectRatio);
+		clientObjectChannel.setAspectRatio(aspectRatio);
 	}
 
 	public ImageCropperSelection getSelection() {
@@ -89,7 +84,7 @@ public class ImageCropper extends AbstractComponent implements DtoImageCropperEv
 
 	public void setSelection(ImageCropperSelection selection) {
 		this.selection = selection;
-		clientObjectChannel.setSelection(Selection.CreateUiImageCropperSelection());
+		clientObjectChannel.setSelection(selection);
 	}
 
 }

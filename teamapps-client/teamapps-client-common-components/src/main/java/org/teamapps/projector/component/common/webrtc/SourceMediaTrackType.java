@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.webrtc;
 
-import org.teamapps.projector.component.common.dto.DtoSourceMediaTrackType;
+import org.teamapps.projector.component.common.DtoSourceMediaTrackType;
 
 public enum SourceMediaTrackType {
 

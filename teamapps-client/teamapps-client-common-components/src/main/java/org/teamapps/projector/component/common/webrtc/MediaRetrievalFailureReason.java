@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.webrtc;
 
-import org.teamapps.projector.component.common.dto.DtoMediaRetrievalFailureReason;
+import org.teamapps.projector.component.common.DtoMediaRetrievalFailureReason;
 
 public enum MediaRetrievalFailureReason {
 	MIC_MEDIA_RETRIEVAL_FAILED,

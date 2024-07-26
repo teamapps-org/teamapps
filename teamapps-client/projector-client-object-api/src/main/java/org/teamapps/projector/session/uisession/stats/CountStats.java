@@ -17,25 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.uisession.statistics;
+package org.teamapps.projector.session.uisession.stats;
 
-import org.teamapps.projector.session.uisession.UiSessionState;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
 
-public interface UiSessionStats {
+public interface CountStats {
 
-	long getStartTime();
-	long getEndTime();
-	String getSessionId();
-	String getName();
-	UiSessionState getState();
+	long getCount();
 
-	CountStats getCommandStats();
-	CountStats getCommandResultStats();
-	CountStats getEventStats();
-	CountStats getQueryStats();
-	CountStats getQueryResultStats();
+	long getCountLastMinute();
 
-	SumStats getSentDataStats();
-	SumStats getReceivedDataStats();
+	long getCountLast10Seconds();
+
+	Object2LongMap<String> getCountByTypeId();
 
 }

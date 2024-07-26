@@ -20,9 +20,9 @@
 package org.teamapps.projector.component.trivial.datetime;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.projector.component.trivial.dto.DtoAbstractTimeField;
-import org.teamapps.projector.component.trivial.dto.DtoAbstractTimeFieldClientObjectChannel;
-import org.teamapps.projector.component.trivial.dto.DtoAbstractTimeFieldEventHandler;
+import org.teamapps.projector.component.trivial.DtoAbstractTimeField;
+import org.teamapps.projector.component.trivial.DtoAbstractTimeFieldClientObjectChannel;
+import org.teamapps.projector.component.trivial.DtoAbstractTimeFieldEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;

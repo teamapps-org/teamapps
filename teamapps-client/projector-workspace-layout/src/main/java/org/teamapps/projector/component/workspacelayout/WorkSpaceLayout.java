@@ -26,12 +26,11 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.essential.dto.SplitSizePolicy;
+import org.teamapps.projector.component.essential.SplitSizePolicy;
 import org.teamapps.projector.component.essential.panel.Panel;
 import org.teamapps.projector.component.essential.toolbar.Toolbar;
 import org.teamapps.projector.component.progress.MultiProgressDisplay;
 import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
-import org.teamapps.projector.component.workspacelayout.dto.*;
 import org.teamapps.projector.event.ProjectorEvent;
 
 import java.lang.invoke.MethodHandles;

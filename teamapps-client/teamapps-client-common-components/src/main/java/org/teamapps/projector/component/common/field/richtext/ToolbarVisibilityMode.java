@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.field.richtext;
 
-import org.teamapps.projector.component.common.dto.DtoToolbarVisibilityMode;
+import org.teamapps.projector.component.common.DtoToolbarVisibilityMode;
 
 public enum ToolbarVisibilityMode {
 	HIDDEN, VISIBLE, VISIBLE_IF_FOCUSED;

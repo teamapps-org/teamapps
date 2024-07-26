@@ -20,8 +20,8 @@
 package org.teamapps.projector.template.grid;
 
 import org.teamapps.projector.format.*;
-import org.teamapps.projector.template.grid.dto.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.dto.DtoImageElement;
+import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
+import org.teamapps.projector.template.grid.DtoImageElement;
 
 public class ImageElement extends AbstractGridTemplateElement {
 

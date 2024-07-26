@@ -17,4 +17,8 @@ public interface UiSession {
 	ClientBackPressureInfo getClientBackPressureInfo();
 
 	void close(SessionClosingReason reason);
+
+	UiSessionState getState();
+
+	UiSessionStats getStatistics();
 }

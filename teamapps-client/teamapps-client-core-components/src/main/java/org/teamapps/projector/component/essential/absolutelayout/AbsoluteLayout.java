@@ -22,8 +22,7 @@ package org.teamapps.projector.component.essential.absolutelayout;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.*;
+import org.teamapps.projector.component.essential.*;
 
 import java.util.HashMap;
 import java.util.List;

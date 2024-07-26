@@ -19,10 +19,10 @@
  */
 package org.teamapps.projector.component.common.charting.tree;
 
-import org.teamapps.projector.component.common.dto.DtoBaseTreeGraphNode;
-import org.teamapps.projector.component.common.dto.DtoClientRecord;
-import org.teamapps.projector.component.common.dto.DtoTreeGraph;
-import org.teamapps.projector.component.common.dto.DtoTreeGraphNode;
+import org.teamapps.projector.component.common.DtoBaseTreeGraphNode;
+import org.teamapps.projector.component.common.DtoClientRecord;
+import org.teamapps.projector.component.common.DtoTreeGraph;
+import org.teamapps.projector.component.common.DtoTreeGraphNode;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;

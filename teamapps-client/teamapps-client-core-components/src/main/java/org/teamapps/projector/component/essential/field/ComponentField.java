@@ -25,9 +25,9 @@ import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoComponentField;
-import org.teamapps.projector.component.essential.dto.DtoComponentFieldClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoComponentFieldEventHandler;
+import org.teamapps.projector.component.essential.DtoComponentField;
+import org.teamapps.projector.component.essential.DtoComponentFieldClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoComponentFieldEventHandler;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class ComponentField extends AbstractField<Void> implements DtoComponentFieldEventHandler {

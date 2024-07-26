@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.template.grid.dto.DtoGridRow;
+import org.teamapps.projector.template.grid.DtoGridRow;
 
 public class GridRow {
 

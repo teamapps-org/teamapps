@@ -25,8 +25,8 @@ import it.unimi.dsi.fastutil.ints.IntConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.dto.protocol.server.*;
+import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.session.uisession.ClientBackPressureInfo;
 import org.teamapps.projector.session.uisession.CommandWithResultCallback;
 import org.teamapps.projector.session.uisession.UiSession;
@@ -35,6 +35,7 @@ import org.teamapps.uisession.messagebuffer.ServerMessageBuffer;
 import org.teamapps.uisession.messagebuffer.ServerMessageBufferException;
 import org.teamapps.uisession.messagebuffer.ServerMessageBufferMessage;
 import org.teamapps.uisession.statistics.RunningUiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStats;
 import org.teamapps.ux.servlet.TeamAppsCommunicationException;
 
 import java.lang.invoke.MethodHandles;
@@ -379,11 +380,13 @@ public class UiSessionImpl implements UiSession {
 		}
 	}
 
+	@Override
 	public UiSessionState getState() {
 		return this.state;
 	}
 
-	public RunningUiSessionStats getStatistics() {
+	@Override
+	public UiSessionStats getStatistics() {
 		return statistics;
 	}
 

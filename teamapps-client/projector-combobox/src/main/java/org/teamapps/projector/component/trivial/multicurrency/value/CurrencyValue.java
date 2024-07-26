@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.trivial.multicurrency.value;
 
-import org.teamapps.projector.component.trivial.dto.DtoCurrencyValue;
+import org.teamapps.projector.component.trivial.DtoCurrencyValue;
 
 import java.math.BigDecimal;
 import java.util.Locale;

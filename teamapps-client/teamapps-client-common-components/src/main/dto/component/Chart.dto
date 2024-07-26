@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-common-components":org.teamapps.projector.component.common.dto;
+package "teamapps-client-common-components":org.teamapps.projector.component.common;
 
 import org.teamapps.projector.component.DtoComponent;
 
-//import org.teamapps.projector.dto.DtoAbcde;
+//import org.teamapps.projector.DtoAbcde;
 
 
 class DtoAbstractChart extends DtoComponent {

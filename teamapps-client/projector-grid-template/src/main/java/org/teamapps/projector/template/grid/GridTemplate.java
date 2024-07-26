@@ -27,7 +27,6 @@ import org.teamapps.projector.format.FontStyle;
 import org.teamapps.projector.format.Spacing;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.template.Template;
-import org.teamapps.projector.template.grid.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;

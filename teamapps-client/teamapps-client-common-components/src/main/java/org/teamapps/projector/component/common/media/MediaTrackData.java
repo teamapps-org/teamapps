@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.common.media;
 
-import org.teamapps.projector.component.common.dto.DtoMediaTrackData;
-import org.teamapps.projector.component.common.dto.DtoMediaTrackMarker;
+import org.teamapps.projector.component.common.DtoMediaTrackData;
+import org.teamapps.projector.component.common.DtoMediaTrackMarker;
 
 import java.util.ArrayList;
 import java.util.List;

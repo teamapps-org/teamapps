@@ -19,11 +19,11 @@
  */
 package org.teamapps.projector.component.workspacelayout;
 
-import org.teamapps.projector.component.essential.dto.SplitDirection;
-import org.teamapps.projector.component.essential.dto.SplitSizePolicy;
+import org.teamapps.projector.component.essential.SplitDirection;
+import org.teamapps.projector.component.essential.SplitSizePolicy;
 import org.teamapps.projector.component.workspacelayout.definition.SplitPaneDefinition;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutItem;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutSplitItem;
+import org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutItem;
+import org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutSplitItem;
 
 import java.util.ArrayList;
 import java.util.List;

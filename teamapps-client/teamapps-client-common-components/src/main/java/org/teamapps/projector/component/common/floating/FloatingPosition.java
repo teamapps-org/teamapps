@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.floating;
 
-import org.teamapps.projector.component.common.dto.DtoFloatingComponentPosition;
+import org.teamapps.projector.component.common.DtoFloatingComponentPosition;
 
 public enum FloatingPosition {
 

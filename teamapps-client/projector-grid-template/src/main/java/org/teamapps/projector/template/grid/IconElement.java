@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.template.grid.dto.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.dto.DtoIconElement;
+import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
+import org.teamapps.projector.template.grid.DtoIconElement;
 
 public class IconElement extends AbstractGridTemplateElement<IconElement> {
 

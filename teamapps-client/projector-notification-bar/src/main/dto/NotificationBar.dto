@@ -1,4 +1,4 @@
-package "teamapps-client-core-components":org.teamapps.projector.component.essential.dto;
+package "teamapps-client-core-components":org.teamapps.projector.component.essential;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.animation.RepeatableAnimation;

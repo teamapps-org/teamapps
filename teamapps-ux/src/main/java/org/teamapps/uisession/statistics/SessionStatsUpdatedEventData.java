@@ -19,6 +19,7 @@
  */
 package org.teamapps.uisession.statistics;
 
+import org.teamapps.projector.session.uisession.stats.UiSessionStats;
 import org.teamapps.uisession.SessionPair;
 
 import java.util.List;

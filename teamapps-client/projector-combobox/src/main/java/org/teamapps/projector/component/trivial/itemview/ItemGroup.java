@@ -21,7 +21,7 @@ package org.teamapps.projector.component.trivial.itemview;
 
 import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
 import org.teamapps.projector.clientrecordcache.ClientRecordCache;
-import org.teamapps.projector.component.trivial.dto.DtoItemViewItemGroup;
+import org.teamapps.projector.component.trivial.DtoItemViewItemGroup;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;

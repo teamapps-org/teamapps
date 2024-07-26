@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.component.common.map.shape;
 
-import org.teamapps.projector.component.common.dto.DtoMapLocation;
-import org.teamapps.projector.component.common.dto.DtoMapPolyline;
-import org.teamapps.projector.component.common.dto.DtoPolylineAppend;
+import org.teamapps.projector.component.common.DtoMapLocation;
+import org.teamapps.projector.component.common.DtoMapPolyline;
+import org.teamapps.projector.component.common.DtoPolylineAppend;
 import org.teamapps.projector.component.common.map.Location;
 
 import java.util.ArrayList;

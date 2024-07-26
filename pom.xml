@@ -199,6 +199,11 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
+                <artifactId>projector-infinite-scrolling-components</artifactId>
+                <version>0.9.155-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-ux</artifactId>
                 <version>${project.version}</version>
             </dependency>

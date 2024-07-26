@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.trivial.itemview;
 
 
-import org.teamapps.projector.component.trivial.dto.DtoItemViewFloatStyle;
+import org.teamapps.projector.component.trivial.DtoItemViewFloatStyle;
 
 public enum ItemViewFloatStyle {
 

@@ -26,9 +26,9 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoCheckBox;
-import org.teamapps.projector.component.essential.dto.DtoCheckBoxClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoCheckBoxEventHandler;
+import org.teamapps.projector.component.essential.DtoCheckBox;
+import org.teamapps.projector.component.essential.DtoCheckBoxClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoCheckBoxEventHandler;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class CheckBox extends AbstractField<Boolean> implements DtoCheckBoxEventHandler {

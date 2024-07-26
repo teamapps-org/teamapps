@@ -21,13 +21,13 @@ package org.teamapps.projector.component.common.tree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.component.common.dto.DtoComponent;
+import org.teamapps.projector.component.common.DtoComponent;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.event.Disposable;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.component.common.dto.DtoComboBoxTreeRecord;
-import org.teamapps.projector.component.common.dto.DtoTree;
-import org.teamapps.projector.component.common.dto.DtoTreeRecord;
+import org.teamapps.projector.component.common.DtoComboBoxTreeRecord;
+import org.teamapps.projector.component.common.DtoTree;
+import org.teamapps.projector.component.common.DtoTreeRecord;
 import org.teamapps.projector.component.common.model.TreeModel;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.projector.template.Template;

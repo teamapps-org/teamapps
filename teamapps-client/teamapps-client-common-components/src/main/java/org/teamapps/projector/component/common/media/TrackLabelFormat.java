@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.media;
 
-import org.teamapps.projector.component.common.dto.DtoTrackLabelFormat;
+import org.teamapps.projector.component.common.DtoTrackLabelFormat;
 
 public enum TrackLabelFormat {
 

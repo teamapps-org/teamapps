@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.webrtc;
 
-import org.teamapps.projector.component.common.dto.DtoScreenSharingConstraints;
+import org.teamapps.projector.component.common.DtoScreenSharingConstraints;
 
 public class ScreenSharingConstraints {
 

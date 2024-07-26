@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.charting;
 
-import org.teamapps.projector.component.common.dto.DtoChartLegendStyle;
+import org.teamapps.projector.component.common.DtoChartLegendStyle;
 
 public enum ChartLegendStyle {
 

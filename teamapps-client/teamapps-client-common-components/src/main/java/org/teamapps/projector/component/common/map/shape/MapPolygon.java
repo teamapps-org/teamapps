@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.map.shape;
 
-import org.teamapps.projector.component.common.dto.DtoMapPolygon;
+import org.teamapps.projector.component.common.DtoMapPolygon;
 import org.teamapps.projector.component.common.map.Location;
 
 import java.util.List;

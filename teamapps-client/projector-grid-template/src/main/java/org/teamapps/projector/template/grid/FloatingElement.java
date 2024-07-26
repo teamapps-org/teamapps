@@ -21,8 +21,8 @@ package org.teamapps.projector.template.grid;
 
 import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.JustifyContent;
-import org.teamapps.projector.template.grid.dto.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.dto.DtoFloatingElement;
+import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
+import org.teamapps.projector.template.grid.DtoFloatingElement;
 
 import java.util.ArrayList;
 import java.util.List;

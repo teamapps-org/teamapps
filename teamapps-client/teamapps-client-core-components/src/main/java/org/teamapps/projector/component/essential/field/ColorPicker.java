@@ -24,8 +24,8 @@ import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.DtoAbstractField;
-import org.teamapps.projector.component.essential.dto.DtoColorPicker;
-import org.teamapps.projector.component.essential.dto.DtoColorPickerEventHandler;
+import org.teamapps.projector.component.essential.DtoColorPicker;
+import org.teamapps.projector.component.essential.DtoColorPickerEventHandler;
 
 public class ColorPicker extends AbstractField<Color> implements DtoColorPickerEventHandler {
 

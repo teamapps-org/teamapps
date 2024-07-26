@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.map;
 
-import org.teamapps.projector.component.common.dto.DtoMapType;
+import org.teamapps.projector.component.common.DtoMapType;
 
 public enum MapType {
 	INTERNAL,

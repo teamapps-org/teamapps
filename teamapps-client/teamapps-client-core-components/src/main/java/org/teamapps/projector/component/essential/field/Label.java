@@ -26,9 +26,9 @@ import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoLabel;
-import org.teamapps.projector.component.essential.dto.DtoLabelClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoLabelEventHandler;
+import org.teamapps.projector.component.essential.DtoLabel;
+import org.teamapps.projector.component.essential.DtoLabelClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoLabelEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 
 // TODO label is NOT a field!

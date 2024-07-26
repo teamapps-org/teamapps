@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.component.common.form.layoutpolicy;
 
-import org.teamapps.projector.component.common.dto.DtoFormSectionFloatingField;
-import org.teamapps.projector.component.common.dto.DtoFormSectionFloatingFieldsPlacement;
-import org.teamapps.projector.component.common.dto.DtoFormSectionPlacement;
+import org.teamapps.projector.component.common.DtoFormSectionFloatingField;
+import org.teamapps.projector.component.common.DtoFormSectionFloatingFieldsPlacement;
+import org.teamapps.projector.component.common.DtoFormSectionPlacement;
 import org.teamapps.projector.format.HorizontalElementAlignment;
 import org.teamapps.projector.format.VerticalElementAlignment;
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-mustache-template":org.teamapps.projector.template.mustache.dto;
+package "projector-mustache-template":org.teamapps.projector.template.mustache;
 
 import org.teamapps.projector.template.DtoTemplate;
 

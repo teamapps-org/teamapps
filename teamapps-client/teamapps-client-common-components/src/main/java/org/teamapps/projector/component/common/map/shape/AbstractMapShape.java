@@ -20,8 +20,8 @@
 package org.teamapps.projector.component.common.map.shape;
 
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.projector.component.common.dto.DtoAbstractMapShape;
-import org.teamapps.projector.component.common.dto.DtoAbstractMapShapeChange;
+import org.teamapps.projector.component.common.DtoAbstractMapShape;
+import org.teamapps.projector.component.common.DtoAbstractMapShapeChange;
 
 import java.util.UUID;
 

@@ -21,8 +21,8 @@ package org.teamapps.projector.component.common.media;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.projector.component.common.dto.DtoComponent;
-import org.teamapps.projector.component.common.dto.DtoVideoPlayer;
+import org.teamapps.projector.component.common.DtoComponent;
+import org.teamapps.projector.component.common.DtoVideoPlayer;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;

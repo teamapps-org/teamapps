@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.component.common.charting.pie;
 
-import org.teamapps.projector.component.common.dto.DtoChartNamedDataPoint;
-import org.teamapps.projector.component.common.dto.DtoComponent;
-import org.teamapps.projector.component.common.dto.DtoPieChart;
+import org.teamapps.projector.component.common.DtoChartNamedDataPoint;
+import org.teamapps.projector.component.common.DtoComponent;
+import org.teamapps.projector.component.common.DtoPieChart;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;

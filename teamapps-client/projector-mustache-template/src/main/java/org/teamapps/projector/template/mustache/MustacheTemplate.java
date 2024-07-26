@@ -22,8 +22,8 @@ package org.teamapps.projector.template.mustache;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.template.Template;
-import org.teamapps.projector.template.mustache.dto.DtoMustacheTemplate;
-import org.teamapps.projector.template.mustache.dto.DtoMustacheTemplateEventHandler;
+import org.teamapps.projector.template.mustache.DtoMustacheTemplate;
+import org.teamapps.projector.template.mustache.DtoMustacheTemplateEventHandler;
 
 import java.util.List;
 import java.util.regex.Pattern;

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.charting;
 
-import org.teamapps.projector.component.common.dto.DtoDataPointWeighting;
+import org.teamapps.projector.component.common.DtoDataPointWeighting;
 
 public enum DataPointWeighting {
 

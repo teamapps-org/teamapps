@@ -20,8 +20,8 @@
 package org.teamapps.projector.component.common.floating;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.dto.DtoComponent;
-import org.teamapps.projector.component.common.dto.DtoFloatingComponent;
+import org.teamapps.projector.component.common.DtoComponent;
+import org.teamapps.projector.component.common.DtoFloatingComponent;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;

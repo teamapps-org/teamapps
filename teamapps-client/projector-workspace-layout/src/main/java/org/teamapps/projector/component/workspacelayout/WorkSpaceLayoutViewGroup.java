@@ -23,8 +23,8 @@ import org.teamapps.icons.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.workspacelayout.definition.ViewDefinition;
 import org.teamapps.projector.component.workspacelayout.definition.ViewGroupDefinition;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutItem;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutViewGroupItem;
+import org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutItem;
+import org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutViewGroupItem;
 
 import java.util.*;
 import java.util.stream.Collectors;

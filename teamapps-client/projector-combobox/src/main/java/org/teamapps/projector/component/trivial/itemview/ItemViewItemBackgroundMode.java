@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.trivial.itemview;
 
 
-import org.teamapps.projector.component.trivial.dto.DtoItemViewItemBackgroundMode;
+import org.teamapps.projector.component.trivial.DtoItemViewItemBackgroundMode;
 
 public enum ItemViewItemBackgroundMode {
 	LIGHT, OPAQUE, DARK;

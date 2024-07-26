@@ -24,10 +24,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoTextField;
-import org.teamapps.projector.component.essential.dto.DtoTextFieldClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoTextFieldEventHandler;
-import org.teamapps.projector.component.essential.dto.SpecialKey;
+import org.teamapps.projector.component.essential.DtoTextField;
+import org.teamapps.projector.component.essential.DtoTextFieldClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoTextFieldEventHandler;
+import org.teamapps.projector.component.essential.SpecialKey;
 import org.teamapps.projector.event.ProjectorEvent;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)

@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.common.map.shape;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.dto.DtoMapCircle;
+import org.teamapps.projector.component.common.DtoMapCircle;
 import org.teamapps.projector.component.common.map.Location;
 
 public class MapCircle extends AbstractMapShape {

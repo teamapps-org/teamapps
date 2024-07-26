@@ -21,14 +21,11 @@ package org.teamapps.projector.component.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.component.essential.dto.SplitDirection;
-import org.teamapps.projector.component.essential.dto.SplitSizePolicy;
+import org.teamapps.projector.component.essential.SplitDirection;
+import org.teamapps.projector.component.essential.SplitSizePolicy;
 import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.projector.component.workspacelayout.definition.SplitPaneDefinition;
 import org.teamapps.projector.component.workspacelayout.definition.ViewGroupDefinition;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutItemWrapper;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutSplitItem;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutViewGroupItem;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -246,10 +243,10 @@ class LayoutApplyer {
 	private static LayoutItemWrapper createWrapperFromUi(DtoWorkSpaceLayoutItemWrapper child) {
 		switch (child.getTypeId()) {
 			case DtoWorkSpaceLayoutSplitItem.TYPE_ID -> {
-				return new DtoWorkSpaceLayoutSplitItemWrapper(child.as(org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutSplitItemWrapper::new));
+				return new DtoWorkSpaceLayoutSplitItemWrapper(child.as(org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutSplitItemWrapper::new));
 			}
 			case DtoWorkSpaceLayoutViewGroupItem.TYPE_ID -> {
-				return new DtoWorkSpaceLayoutViewGroupItemWrapper(child.as(org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutViewGroupItemWrapper::new));
+				return new DtoWorkSpaceLayoutViewGroupItemWrapper(child.as(org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutViewGroupItemWrapper::new));
 			}
 			default -> throw new IllegalArgumentException("Unknown layout item type " + child.getClass().getCanonicalName());
 		}
@@ -292,9 +289,9 @@ class LayoutApplyer {
 	}
 
 	private static class DtoWorkSpaceLayoutSplitItemWrapper implements SplitPaneWrapper {
-		private final org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutSplitItemWrapper item;
+		private final org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutSplitItemWrapper item;
 
-		public DtoWorkSpaceLayoutSplitItemWrapper(org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutSplitItemWrapper item) {
+		public DtoWorkSpaceLayoutSplitItemWrapper(org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutSplitItemWrapper item) {
 			this.item = item;
 		}
 
@@ -331,9 +328,9 @@ class LayoutApplyer {
 	}
 
 	private static class DtoWorkSpaceLayoutViewGroupItemWrapper implements ViewGroupWrapper {
-		private final org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutViewGroupItemWrapper item;
+		private final org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutViewGroupItemWrapper item;
 
-		public DtoWorkSpaceLayoutViewGroupItemWrapper(org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutViewGroupItemWrapper item) {
+		public DtoWorkSpaceLayoutViewGroupItemWrapper(org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutViewGroupItemWrapper item) {
 			this.item = item;
 		}
 

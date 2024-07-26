@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.template.grid.dto.DtoImageSizing;
+import org.teamapps.projector.template.grid.DtoImageSizing;
 
 public enum ImageSizing {
 	COVER, CONTAIN, ORIGINAL, STRETCH;

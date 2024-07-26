@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.form.layoutpolicy;
 
-import org.teamapps.projector.component.common.dto.DtoFormSectionFloatingField;
+import org.teamapps.projector.component.common.DtoFormSectionFloatingField;
 import org.teamapps.ux.component.field.AbstractField;
 
 public class FormSectionFloatingField {

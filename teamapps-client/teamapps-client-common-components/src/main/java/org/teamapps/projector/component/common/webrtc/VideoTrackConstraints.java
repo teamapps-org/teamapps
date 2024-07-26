@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.webrtc;
 
-import org.teamapps.projector.component.common.dto.DtoVideoTrackConstraints;
+import org.teamapps.projector.component.common.DtoVideoTrackConstraints;
 
 import java.util.Objects;
 

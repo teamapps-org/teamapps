@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.map;
 
-import org.teamapps.projector.component.common.dto.DtoMapShapeType;
+import org.teamapps.projector.component.common.DtoMapShapeType;
 
 public enum MapShapeType {
 

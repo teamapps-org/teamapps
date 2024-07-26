@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.common.map;
 
-import org.teamapps.projector.component.common.dto.DtoMapLocation;
-import org.teamapps.projector.component.common.dto.DtoMapLocationWrapper;
+import org.teamapps.projector.component.common.DtoMapLocation;
+import org.teamapps.projector.component.common.DtoMapLocationWrapper;
 
 public class Location {
 

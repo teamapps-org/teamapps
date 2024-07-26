@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.common.qrscanner;
 
-import org.teamapps.projector.component.common.dto.DtoComponent;
-import org.teamapps.projector.component.common.dto.DtoQrCodeScanner;
+import org.teamapps.projector.component.common.DtoComponent;
+import org.teamapps.projector.component.common.DtoQrCodeScanner;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;

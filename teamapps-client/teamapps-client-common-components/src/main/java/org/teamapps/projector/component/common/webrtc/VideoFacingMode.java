@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.webrtc;
 
-import org.teamapps.projector.component.common.dto.DtoVideoFacingMode;
+import org.teamapps.projector.component.common.DtoVideoFacingMode;
 
 public enum VideoFacingMode {
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-grid-template":org.teamapps.projector.template.grid.dto;
+package "projector-grid-template":org.teamapps.projector.template.grid;
 
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.format.DtoSpacing;

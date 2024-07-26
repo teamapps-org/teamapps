@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.media;
 
-import org.teamapps.projector.component.common.dto.DtoPosterImageSize;
+import org.teamapps.projector.component.common.DtoPosterImageSize;
 
 public enum PosterImageSize {
 

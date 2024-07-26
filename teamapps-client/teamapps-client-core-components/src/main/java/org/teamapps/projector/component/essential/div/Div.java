@@ -24,9 +24,9 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoDiv;
-import org.teamapps.projector.component.essential.dto.DtoDivClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoDivEventHandler;
+import org.teamapps.projector.component.essential.DtoDiv;
+import org.teamapps.projector.component.essential.DtoDivClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoDivEventHandler;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class Div extends AbstractComponent implements DtoDivEventHandler {

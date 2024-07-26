@@ -23,9 +23,9 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoIFrame;
-import org.teamapps.projector.component.essential.dto.DtoIFrameClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoIFrameEventHandler;
+import org.teamapps.projector.component.essential.DtoIFrame;
+import org.teamapps.projector.component.essential.DtoIFrameClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoIFrameEventHandler;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class IFrame extends AbstractComponent implements DtoIFrameEventHandler {

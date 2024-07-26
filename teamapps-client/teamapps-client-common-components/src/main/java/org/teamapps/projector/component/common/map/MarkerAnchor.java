@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.map;
 
-import org.teamapps.projector.component.common.dto.DtoMapMarkerAnchor;
+import org.teamapps.projector.component.common.DtoMapMarkerAnchor;
 
 public enum MarkerAnchor {
 

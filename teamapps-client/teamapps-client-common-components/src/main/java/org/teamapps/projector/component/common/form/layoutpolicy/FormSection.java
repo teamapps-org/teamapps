@@ -20,10 +20,10 @@
 package org.teamapps.projector.component.common.form.layoutpolicy;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.dto.DtoFormSection;
-import org.teamapps.projector.component.common.dto.DtoFormSectionPlacement;
-import org.teamapps.projector.component.common.dto.DtoGridColumn;
-import org.teamapps.projector.component.common.dto.DtoGridRow;
+import org.teamapps.projector.component.common.DtoFormSection;
+import org.teamapps.projector.component.common.DtoFormSectionPlacement;
+import org.teamapps.projector.component.common.DtoGridColumn;
+import org.teamapps.projector.component.common.DtoGridRow;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.BoxShadow;
 import org.teamapps.projector.format.Spacing;

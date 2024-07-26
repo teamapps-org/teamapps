@@ -24,13 +24,13 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.field.Field;
-import org.teamapps.projector.component.essential.dto.SplitDirection;
-import org.teamapps.projector.component.essential.dto.SplitSizePolicy;
+import org.teamapps.projector.component.essential.SplitDirection;
+import org.teamapps.projector.component.essential.SplitSizePolicy;
 import org.teamapps.projector.component.essential.panel.Panel;
 import org.teamapps.projector.component.essential.panel.WindowButtonType;
 import org.teamapps.projector.component.essential.toolbar.Toolbar;
 import org.teamapps.projector.component.workspacelayout.definition.ViewDefinition;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutView;
+import org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutView;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.session.SessionContext;
 

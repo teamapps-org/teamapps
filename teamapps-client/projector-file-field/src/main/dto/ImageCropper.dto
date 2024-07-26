@@ -17,18 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-common-components":org.teamapps.projector.component.common.dto;
+package "teamapps-client-common-components":org.teamapps.projector.component.common;
 
 import org.teamapps.projector.component.DtoComponent;
 
 class DtoImageCropper extends DtoComponent {
 	required String imageUrl;
-	required ImageCropperSelection selectionMode;
+	required ImageCropperSelectionMode selectionMode;
 	required double aspectRatio; // width/height; 0 = no aspect ratio constraint!
 	ImageCropperSelection selection;
 
 	command setImageUrl(String imageUrl);
-	command setSelectionMode(ImageCropperSelection selectionMode);
+	command setSelectionMode(ImageCropperSelectionMode selectionMode);
 	command setAspectRatio(double aspectRatio);
 	command setSelection(ImageCropperSelection selection);
 

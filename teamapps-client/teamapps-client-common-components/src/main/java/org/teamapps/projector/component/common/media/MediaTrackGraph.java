@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.common.media;
 
-import org.teamapps.projector.component.common.dto.DtoComponent;
-import org.teamapps.projector.component.common.dto.DtoMediaTrackGraph;
+import org.teamapps.projector.component.common.DtoComponent;
+import org.teamapps.projector.component.common.DtoMediaTrackGraph;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.ux.component.AbstractComponent;

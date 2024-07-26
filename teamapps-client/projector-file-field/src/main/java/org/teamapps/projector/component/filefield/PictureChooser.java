@@ -24,8 +24,8 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.component.ComponentConfig;
-import org.teamapps.projector.component.common.dto.ImageCropperSelection;
-import org.teamapps.projector.component.common.dto.ImageCropperSelectionMode;
+import org.teamapps.projector.component.common.ImageCropperSelection;
+import org.teamapps.projector.component.common.ImageCropperSelectionMode;
 import org.teamapps.projector.component.essential.field.Button;
 import org.teamapps.projector.component.essential.flexcontainer.HorizontalLayout;
 import org.teamapps.projector.component.essential.flexcontainer.VerticalLayout;
@@ -219,7 +219,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 
 	private void showImageCropperWindow() {
 		imageCropper.setImageUrl(getSessionContext().createFileLink(uploadedFile.getAsFile()));
-		getSessionContext().showWindow(imageCropperWindow, 200);
+		imageCropperWindow.show();
 	}
 
 	public long getMaxFileSize() {
@@ -228,7 +228,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 
 	public void setMaxFileSize(long maxFileSize) {
 		this.maxFileSize = maxFileSize;
-		clientObjectChannel.setMaxFileSize(MaxFileSize);
+		clientObjectChannel.setMaxFileSize(maxFileSize);
 	}
 
 	public String getUploadUrl() {
@@ -237,7 +237,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		clientObjectChannel.setUploadUrl(UploadUrl);
+		clientObjectChannel.setUploadUrl(uploadUrl);
 	}
 
 	public String getFileTooLargeMessage() {
@@ -246,7 +246,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 
 	public void setFileTooLargeMessage(String fileTooLargeMessage) {
 		this.fileTooLargeMessage = fileTooLargeMessage;
-		clientObjectChannel.setFileTooLargeMessage(FileTooLargeMessage);
+		clientObjectChannel.setFileTooLargeMessage(fileTooLargeMessage);
 	}
 
 	public String getUploadErrorMessage() {
@@ -255,7 +255,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 
 	public void setUploadErrorMessage(String uploadErrorMessage) {
 		this.uploadErrorMessage = uploadErrorMessage;
-		clientObjectChannel.setUploadErrorMessage(UploadErrorMessage);
+		clientObjectChannel.setUploadErrorMessage(uploadErrorMessage);
 	}
 
 	public Icon<?, ?> getBrowseButtonIcon() {

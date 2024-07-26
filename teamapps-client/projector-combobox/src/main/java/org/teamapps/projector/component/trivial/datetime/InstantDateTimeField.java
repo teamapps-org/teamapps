@@ -23,9 +23,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.trivial.TrivialComponentsLibrary;
-import org.teamapps.projector.component.trivial.dto.DtoInstantDateTimeField;
-import org.teamapps.projector.component.trivial.dto.DtoInstantDateTimeFieldClientObjectChannel;
-import org.teamapps.projector.component.trivial.dto.DtoInstantDateTimeFieldEventHandler;
+import org.teamapps.projector.component.trivial.DtoInstantDateTimeField;
+import org.teamapps.projector.component.trivial.DtoInstantDateTimeFieldClientObjectChannel;
+import org.teamapps.projector.component.trivial.DtoInstantDateTimeFieldEventHandler;
 
 import java.time.Instant;
 import java.time.ZoneId;

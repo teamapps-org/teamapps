@@ -21,7 +21,7 @@ package org.teamapps.projector.component.essential.field;
 
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoPasswordField;
+import org.teamapps.projector.component.essential.DtoPasswordField;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class PasswordField extends TextField {

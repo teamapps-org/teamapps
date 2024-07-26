@@ -86,3 +86,7 @@ change generation target packages:
  On the Java side: replace milliseconds with Duration
 
  rename document-viewer to document-previewer
+
+ rename "public .* (to|create)Ui\w+\(\)" methods to something more DTO like (or get rid of them)
+
+ rename teamapps-ux to projector-server-core

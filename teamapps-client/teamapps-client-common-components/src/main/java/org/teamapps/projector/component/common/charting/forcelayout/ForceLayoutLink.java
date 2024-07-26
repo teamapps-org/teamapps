@@ -21,7 +21,7 @@ package org.teamapps.projector.component.common.charting.forcelayout;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.dto.DtoNetworkLink;
+import org.teamapps.projector.component.common.DtoNetworkLink;
 
 public class ForceLayoutLink<RECORD> {
 

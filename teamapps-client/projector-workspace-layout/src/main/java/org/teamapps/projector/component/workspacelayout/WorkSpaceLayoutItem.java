@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.workspacelayout;
 
 import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
-import org.teamapps.projector.component.workspacelayout.dto.DtoWorkSpaceLayoutItem;
+import org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutItem;
 import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.List;

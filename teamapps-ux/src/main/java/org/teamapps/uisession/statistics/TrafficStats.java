@@ -19,6 +19,8 @@
  */
 package org.teamapps.uisession.statistics;
 
+import org.teamapps.projector.session.uisession.stats.SumStats;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.atomic.AtomicLong;

@@ -20,9 +20,9 @@ package org.teamapps.projector.component.trivial.itemview;/*-
 
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.trivial.dto.DtoItemView;
-import org.teamapps.projector.component.trivial.dto.DtoItemViewClientObjectChannel;
-import org.teamapps.projector.component.trivial.dto.DtoItemViewEventHandler;
+import org.teamapps.projector.component.trivial.DtoItemView;
+import org.teamapps.projector.component.trivial.DtoItemViewClientObjectChannel;
+import org.teamapps.projector.component.trivial.DtoItemViewEventHandler;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;

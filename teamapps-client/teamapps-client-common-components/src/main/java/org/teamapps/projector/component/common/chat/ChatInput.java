@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.chat;
 
-import org.teamapps.projector.component.common.dto.DtoChatInput;
+import org.teamapps.projector.component.common.DtoChatInput;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.icon.material.MaterialIcon;

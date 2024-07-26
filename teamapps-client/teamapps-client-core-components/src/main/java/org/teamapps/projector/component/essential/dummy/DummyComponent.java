@@ -23,9 +23,9 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoDummyComponent;
-import org.teamapps.projector.component.essential.dto.DtoDummyComponentClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoDummyComponentEventHandler;
+import org.teamapps.projector.component.essential.DtoDummyComponent;
+import org.teamapps.projector.component.essential.DtoDummyComponentClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoDummyComponentEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)

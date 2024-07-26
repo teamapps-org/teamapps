@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.common.audiolevelindicator;
 
-import org.teamapps.projector.component.common.dto.DtoAudioLevelIndicator;
-import org.teamapps.projector.component.common.dto.DtoComponent;
+import org.teamapps.projector.component.common.DtoAudioLevelIndicator;
+import org.teamapps.projector.component.common.DtoComponent;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class AudioLevelIndicator extends AbstractComponent {

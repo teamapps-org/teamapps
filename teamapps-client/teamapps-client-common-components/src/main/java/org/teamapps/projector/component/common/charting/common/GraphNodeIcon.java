@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.charting.common;
 
-import org.teamapps.projector.component.common.dto.DtoTreeGraphNodeIcon;
+import org.teamapps.projector.component.common.DtoTreeGraphNodeIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
 

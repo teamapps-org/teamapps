@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.common.form.layoutpolicy;
 
-import org.teamapps.projector.component.common.dto.DtoFormLayoutPolicy;
-import org.teamapps.projector.component.common.dto.DtoFormSection;
+import org.teamapps.projector.component.common.DtoFormLayoutPolicy;
+import org.teamapps.projector.component.common.DtoFormSection;
 
 import java.util.ArrayList;
 import java.util.List;

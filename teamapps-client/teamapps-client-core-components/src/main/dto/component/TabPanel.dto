@@ -20,7 +20,7 @@
 package "teamapps-client-core-components":org.teamapps.projector.component.essential.tabpanel;
 
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.essential.dto.DtoToolButton;
+import org.teamapps.projector.component.essential.DtoToolButton;
 import org.teamapps.projector.component.essential.panel.WindowButtonType;
 import org.teamapps.projector.component.essential.toolbar.DtoToolbar;
 

@@ -21,7 +21,7 @@ package org.teamapps.projector.component.trivial.multicurrency.value;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.component.trivial.dto.DtoCurrencyUnit;
+import org.teamapps.projector.component.trivial.DtoCurrencyUnit;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;

@@ -26,9 +26,9 @@ import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoRootPanel;
-import org.teamapps.projector.component.essential.dto.DtoRootPanelClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoRootPanelEventHandler;
+import org.teamapps.projector.component.essential.DtoRootPanel;
+import org.teamapps.projector.component.essential.DtoRootPanelClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoRootPanelEventHandler;
 
 import java.time.Duration;
 

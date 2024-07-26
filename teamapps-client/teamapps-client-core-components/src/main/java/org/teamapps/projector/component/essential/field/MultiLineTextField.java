@@ -22,10 +22,10 @@ package org.teamapps.projector.component.essential.field;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.MultiWriteLockableValue;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoMultiLineTextField;
-import org.teamapps.projector.component.essential.dto.DtoMultiLineTextFieldClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoTextField;
-import org.teamapps.projector.component.essential.dto.DtoTextFieldEventHandler;
+import org.teamapps.projector.component.essential.DtoMultiLineTextField;
+import org.teamapps.projector.component.essential.DtoMultiLineTextFieldClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoTextField;
+import org.teamapps.projector.component.essential.DtoTextFieldEventHandler;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class MultiLineTextField extends TextField implements DtoTextFieldEventHandler {

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.map.shape;
 
-import org.teamapps.projector.component.common.dto.DtoMapRectangle;
+import org.teamapps.projector.component.common.DtoMapRectangle;
 import org.teamapps.projector.component.common.map.Location;
 
 public class MapRectangle extends AbstractMapShape {

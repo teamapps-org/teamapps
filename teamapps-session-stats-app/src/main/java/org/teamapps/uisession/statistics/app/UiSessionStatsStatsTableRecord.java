@@ -21,7 +21,7 @@ package org.teamapps.uisession.statistics.app;
 
 import org.teamapps.uisession.ClientBackPressureInfo;
 import org.teamapps.uisession.UiSession;
-import org.teamapps.uisession.statistics.UiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStats;
 
 public class UiSessionStatsStatsTableRecord implements SessionStatsTableRecord {
 

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.common.media;
 
-import org.teamapps.projector.component.common.dto.DtoMediaPreloadMode;
+import org.teamapps.projector.component.common.DtoMediaPreloadMode;
 
 public enum  PreloadMode {
 	/**

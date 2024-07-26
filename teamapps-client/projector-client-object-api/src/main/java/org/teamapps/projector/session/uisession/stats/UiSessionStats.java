@@ -17,14 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.uisession.statistics;
+package org.teamapps.projector.session.uisession.stats;
 
-public interface SumStats {
+import org.teamapps.projector.session.uisession.UiSessionState;
 
-	long getSum();
+public interface UiSessionStats {
 
-	long getSumLastMinute();
+	long getStartTime();
+	long getEndTime();
+	String getSessionId();
+	String getName();
+	UiSessionState getState();
 
-	long getSumLast10Seconds();
+	CountStats getCommandStats();
+	CountStats getCommandResultStats();
+	CountStats getEventStats();
+	CountStats getQueryStats();
+	CountStats getQueryResultStats();
+
+	SumStats getSentDataStats();
+	SumStats getReceivedDataStats();
 
 }

@@ -21,8 +21,8 @@ package org.teamapps.projector.component.common.charting.common;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.dto.DtoTreeGraphNodeImage;
-import org.teamapps.projector.component.common.dto.DtoTreeGraphNodeImageCornerShape;
+import org.teamapps.projector.component.common.DtoTreeGraphNodeImage;
+import org.teamapps.projector.component.common.DtoTreeGraphNodeImageCornerShape;
 
 public class GraphNodeImage {
 

@@ -48,7 +48,7 @@ import org.teamapps.projector.session.uisession.CommandWithResultCallback;
 import org.teamapps.projector.session.uisession.UiSessionState;
 import org.teamapps.threading.SequentialExecutorFactory;
 import org.teamapps.uisession.statistics.SessionStatsUpdatedEventData;
-import org.teamapps.uisession.statistics.UiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStats;
 import org.teamapps.webcontroller.WebController;
 
 import java.lang.invoke.MethodHandles;

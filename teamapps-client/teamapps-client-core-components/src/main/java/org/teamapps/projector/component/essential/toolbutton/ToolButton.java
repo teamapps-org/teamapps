@@ -25,9 +25,9 @@ import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.DtoToolButton;
-import org.teamapps.projector.component.essential.dto.DtoToolButtonClientObjectChannel;
-import org.teamapps.projector.component.essential.dto.DtoToolButtonEventHandler;
+import org.teamapps.projector.component.essential.DtoToolButton;
+import org.teamapps.projector.component.essential.DtoToolButtonClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoToolButtonEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)

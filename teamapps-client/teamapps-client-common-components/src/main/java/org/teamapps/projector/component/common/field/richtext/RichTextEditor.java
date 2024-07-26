@@ -20,8 +20,8 @@
 package org.teamapps.projector.component.common.field.richtext;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.projector.component.common.dto.DtoAbstractField;
-import org.teamapps.projector.component.common.dto.DtoRichTextEditor;
+import org.teamapps.projector.component.common.DtoAbstractField;
+import org.teamapps.projector.component.common.DtoRichTextEditor;
 import org.teamapps.dto.protocol.DtoEventWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.component.common.field.upload.UploadedFile;

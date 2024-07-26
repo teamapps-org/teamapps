@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.common.charting.forcelayout;
 
-import org.teamapps.projector.component.common.dto.DtoNetworkNode;
-import org.teamapps.projector.component.common.dto.DtoNetworkNodeExpandState;
+import org.teamapps.projector.component.common.DtoNetworkNode;
+import org.teamapps.projector.component.common.DtoNetworkNodeExpandState;
 
 public enum ExpandedState {
 

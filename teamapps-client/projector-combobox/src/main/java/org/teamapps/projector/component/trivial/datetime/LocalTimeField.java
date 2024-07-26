@@ -24,8 +24,8 @@ import com.google.common.collect.Streams;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.trivial.TrivialComponentsLibrary;
-import org.teamapps.projector.component.trivial.dto.DtoLocalTimeField;
-import org.teamapps.projector.component.trivial.dto.DtoLocalTimeFieldEventHandler;
+import org.teamapps.projector.component.trivial.DtoLocalTimeField;
+import org.teamapps.projector.component.trivial.DtoLocalTimeFieldEventHandler;
 
 import java.time.LocalTime;
 import java.util.List;

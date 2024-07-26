@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.common.charting.pie;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.dto.DtoChartNamedDataPoint;
+import org.teamapps.projector.component.common.DtoChartNamedDataPoint;
 
 public class ChartNamedDataPoint {
 

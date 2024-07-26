@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.common.form.layoutpolicy;
 
-import org.teamapps.projector.component.common.dto.DtoFormSectionFieldPlacement;
-import org.teamapps.projector.component.common.dto.DtoFormSectionPlacement;
+import org.teamapps.projector.component.common.DtoFormSectionFieldPlacement;
+import org.teamapps.projector.component.common.DtoFormSectionPlacement;
 import org.teamapps.ux.component.Component;
 import org.teamapps.projector.format.HorizontalElementAlignment;
 import org.teamapps.projector.format.VerticalElementAlignment;

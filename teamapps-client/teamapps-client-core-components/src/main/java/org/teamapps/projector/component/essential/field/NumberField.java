@@ -22,10 +22,9 @@ package org.teamapps.projector.component.essential.field;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ibm.icu.util.ULocale;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.component.essential.*;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.DtoAbstractField;
-import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.dto.*;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.session.SessionContext;
 

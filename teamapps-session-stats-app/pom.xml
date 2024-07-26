@@ -14,7 +14,15 @@
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-client-common-components</artifactId>
+            <artifactId>teamapps-client-core-components</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-infinite-scrolling-components</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-ux</artifactId>
         </dependency>
     </dependencies>
 

@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "projector-combobox":org.teamapps.projector.component.trivial.dto;
+package "projector-combobox":org.teamapps.projector.component.trivial;
 
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.trivial.dto.DtoComboBox;
+import org.teamapps.projector.component.trivial.DtoComboBox;
 
 class DtoTagComboBox extends DtoComboBox {
 	mutable int maxEntries; // if 0, then the list is unbounded
