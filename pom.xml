@@ -60,7 +60,8 @@
         <module>teamapps-client/projector-timegraph</module>
         <module>teamapps-client/projector-workspace-layout</module>
         <module>teamapps-client/projector-blogview</module>
-        <module>teamapps-client/projector-map</module>
+        <module>teamapps-client/projector-map-view</module>
+        <module>teamapps-client/projector-shaka-player</module>
 
         <module>teamapps-ux</module>
         <module>teamapps-server-jetty-embedded</module>

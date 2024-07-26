@@ -28,10 +28,10 @@ export function executeWhenFirstDisplayed(onlyOnce?: boolean) {
 				console.error("Could not find displayedDeferredExecutor!!");
 			}
 			if (onlyOnce) {
-				this.displayedDeferredExecutor.invokeOnceWhenReady(originalMethod, this, arguments);
+				return this.displayedDeferredExecutor.invokeOnceWhenReady(originalMethod, this, arguments);
 			} else {
 				console.log("will invoke when ready: " + context.name.toString());
-				this.displayedDeferredExecutor.invokeWhenReady(originalMethod, this, arguments);
+				return this.displayedDeferredExecutor.invokeWhenReady(originalMethod, this, arguments);
 			}
 		};
 	};

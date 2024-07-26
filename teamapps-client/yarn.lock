@@ -1942,6 +1942,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eme-encryption-scheme-polyfill@npm:^2.1.1":
+  version: 2.1.5
+  resolution: "eme-encryption-scheme-polyfill@npm:2.1.5"
+  checksum: d0ea494b6f01c5083f81e8409b6c4e16eb17bae4d4f6c01cad178bfaa336d9a773366fa0ba6f357fe4fcf9c567021da712bfccc090e29d97dce43897148052c6
+  languageName: node
+  linkType: hard
+
 "emoji-regex@npm:^8.0.0":
   version: 8.0.0
   resolution: "emoji-regex@npm:8.0.0"
@@ -2892,9 +2899,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"projector-mapview@workspace:projector-map":
+"projector-map-view@workspace:projector-map-view":
   version: 0.0.0-use.local
-  resolution: "projector-mapview@workspace:projector-map"
+  resolution: "projector-map-view@workspace:projector-map-view"
   dependencies:
     "@types/maplibre-gl": ^1.13.0
     d3: ^7.9.0
@@ -2973,6 +2980,18 @@ __metadata:
     esbuild: ^0.15.13
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-shaka-player@workspace:projector-shaka-player":
+  version: 0.0.0-use.local
+  resolution: "projector-shaka-player@workspace:projector-shaka-player"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    shaka-player: ^3.1.0
     typescript: ^5.1
   languageName: unknown
   linkType: soft
@@ -3170,6 +3189,15 @@ __metadata:
   bin:
     semver: ./bin/semver
   checksum: 57fd0acfd0bac382ee87cd52cd0aaa5af086a7dc8d60379dfe65fea491fb2489b6016400813930ecd61fd0952dae75c115287a1b16c234b1550887117744dfaf
+  languageName: node
+  linkType: hard
+
+"shaka-player@npm:^3.1.0":
+  version: 3.3.19
+  resolution: "shaka-player@npm:3.3.19"
+  dependencies:
+    eme-encryption-scheme-polyfill: ^2.1.1
+  checksum: 5c42aa9267726614c2285cc5bf80208cd0a12c2f436aa75886d2af99708b66506faf1e9df214946335bfe17e026b933189937b12fc075b69c9291a264f00fbbe
   languageName: node
   linkType: hard
 

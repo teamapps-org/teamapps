@@ -31,7 +31,8 @@
     "projector-timegraph",
     "projector-file-field",
     "projector-combobox",
-    "projector-map"
+    "projector-map-view",
+    "projector-shaka-player"
   ],
   "comments": {},
   "engines": {

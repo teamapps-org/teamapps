@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-common-components":org.teamapps.projector.component.common;
+package "projector-shaka-player":org.teamapps.projector.component.shakaplayer;
 
 import org.teamapps.projector.component.DtoComponent;
 
@@ -25,11 +25,11 @@ class DtoShakaPlayer extends DtoComponent {
     String hlsUrl;
     String dashUrl;
     String posterImageUrl;
-    DtoPosterImageSize posterImageSize;
+    PosterImageSize posterImageSize;
     int timeUpdateEventThrottleMillis;
     String backgroundColor;
     boolean autoplay;
-    DtoTrackLabelFormat trackLabelFormat;
+    TrackLabelFormat trackLabelFormat;
     boolean videoDisabled;
     long timeMillis;
     String preferredAudioLanguage;
@@ -37,6 +37,10 @@ class DtoShakaPlayer extends DtoComponent {
 	command setUrls(String hlsUrl, String dashUrl);
 	command setTime(long timeMillis);
 	command selectAudioLanguage(String language, String role);
+	command setPosterImageUrl(String posterImageUrl);
+    command setPosterImageSize(PosterImageSize posterImageSize);
+    command setBackgroundColor(String backgroundColor);
+    command setVideoDisabled(boolean videoDisabled);
 
 	event errorLoading();
 	event manifestLoaded(DtoShakaManifest manifest);
@@ -46,7 +50,7 @@ class DtoShakaPlayer extends DtoComponent {
 	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
 }
 
-enum DtoTrackLabelFormat {
+enum TrackLabelFormat {
 	LABEL,
 	LANGUAGE,
 	LANGUAGE_ROLE,
@@ -85,4 +89,10 @@ class DtoShakaVideoStream extends DtoAbstractShakaStream {
     String pixelAspectRatio;
     int width;
     int height;
+}
+
+enum PosterImageSize {
+    CONTAIN = "contain",
+    COVER = "cover",
+    FILL = "fill"
 }

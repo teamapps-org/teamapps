@@ -17,22 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.media.shaka;
+package org.teamapps.projector.component.shakaplayer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.teamapps.common.format.Color;
-import org.teamapps.common.util.ExceptionUtil;
-import org.teamapps.projector.component.common.DtoComponent;
-import org.teamapps.projector.component.common.DtoShakaManifest;
-import org.teamapps.projector.component.common.DtoShakaPlayer;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.ComponentConfig;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.projector.component.common.media.PosterImageSize;
-import org.teamapps.projector.component.common.media.TrackLabelFormat;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.SessionContext;
 
-public class ShakaPlayer extends AbstractComponent {
+public class ShakaPlayer extends AbstractComponent implements DtoShakaPlayerEventHandler {
+
+	private final DtoShakaPlayerClientObjectChannel clientObjectChannel = new DtoShakaPlayerClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<Void> onErrorLoading = new ProjectorEvent<>(clientObjectChannel::toggleErrorLoadingEvent);
 	public final ProjectorEvent<DtoShakaManifest> onManifestLoaded = new ProjectorEvent<>(clientObjectChannel::toggleManifestLoadedEvent);
@@ -40,9 +35,9 @@ public class ShakaPlayer extends AbstractComponent {
 	public final ProjectorEvent<Void> onEnded = new ProjectorEvent<>(clientObjectChannel::toggleEndedEvent);
 
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
-		SessionContext.current().sendStaticCommand(ShakaPlayer.class, new DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
+		SessionContext.current().sendStaticCommand(ShakaPlayer.class, DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand.CMD_NAME,
+				new DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
-
 
 	private String hlsUrl;
 	private String dashUrl;
@@ -65,16 +60,16 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
+	public ComponentConfig createConfig() {
 		DtoShakaPlayer ui = new DtoShakaPlayer();
 		mapAbstractUiComponentProperties(ui);
 		ui.setHlsUrl(hlsUrl);
 		ui.setDashUrl(dashUrl);
 		ui.setPosterImageUrl(posterImageUrl);
-		ui.setPosterImageSize(posterImageSize.toUiPosterImageSize());
+		ui.setPosterImageSize(posterImageSize);
 		ui.setTimeUpdateEventThrottleMillis(timeUpdateEventThrottleMillis);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
-		ui.setTrackLabelFormat(trackLabelFormat.toUiTrackLabelFormat());
+		ui.setTrackLabelFormat(trackLabelFormat);
 		ui.setVideoDisabled(videoDisabled);
 		ui.setTimeMillis(timeMillis);
 		ui.setPreferredAudioLanguage(audioLanguage);
@@ -82,32 +77,29 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		switch (event.getTypeId()) {
-			case DtoShakaPlayer.ErrorLoadingEvent.TYPE_ID -> {
-				var e = event.as(DtoShakaPlayer.ErrorLoadingEventWrapper.class);
-				onErrorLoading.fire(null);
-			}
-			case DtoShakaPlayer.ManifestLoadedEvent.TYPE_ID -> {
-				var e = event.as(DtoShakaPlayer.ManifestLoadedEventWrapper.class);
-				DtoShakaManifest manifest = ExceptionUtil.softenExceptions(() -> new ObjectMapper().treeToValue(e.getManifest().getJsonNode(), DtoShakaManifest.class));
-				onManifestLoaded.fire(manifest);
-			}
-			case DtoShakaPlayer.TimeUpdateEvent.TYPE_ID -> {
-				var e = event.as(DtoShakaPlayer.TimeUpdateEventWrapper.class);
-				onTimeUpdate.fire(e.getTimeMillis());
-				this.timeMillis = e.getTimeMillis();
-			}
-			case DtoShakaPlayer.EndedEvent.TYPE_ID -> {
-				var e = event.as(DtoShakaPlayer.EndedEventWrapper.class);
-				onEnded.fire();
-			}
-		}
+	public void handleErrorLoading() {
+		onErrorLoading.fire(null);
+	}
+
+	@Override
+	public void handleManifestLoaded(DtoShakaManifestWrapper manifest) {
+		onManifestLoaded.fire(manifest.unwrap());
+	}
+
+	@Override
+	public void handleTimeUpdate(long timeMillis) {
+		onTimeUpdate.fire(timeMillis);
+		this.timeMillis = timeMillis;
+	}
+
+	@Override
+	public void handleEnded() {
+		onEnded.fire();
 	}
 
 	public void setTime(long timeMillis) {
 		this.timeMillis = timeMillis;
-		clientObjectChannel.setTime(TimeMillis);
+		clientObjectChannel.setTime(timeMillis);
 	}
 
 	public long getTime() {
@@ -118,7 +110,7 @@ public class ShakaPlayer extends AbstractComponent {
 		this.timeMillis = 0;
 		this.hlsUrl = hlsUrl;
 		this.dashUrl = dashUrl;
-		clientObjectChannel.setUrls(HlsUrl, DashUrl);
+		clientObjectChannel.setUrls(hlsUrl, dashUrl);
 	}
 
 	public String getHlsUrl() {
@@ -143,7 +135,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setPosterImageUrl(String posterImageUrl) {
 		this.posterImageUrl = posterImageUrl;
-		reRenderIfRendered();
+		clientObjectChannel.setPosterImageUrl(posterImageUrl);
 	}
 
 	public PosterImageSize getPosterImageSize() {
@@ -152,7 +144,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setPosterImageSize(PosterImageSize posterImageSize) {
 		this.posterImageSize = posterImageSize;
-		reRenderIfRendered();
+		clientObjectChannel.setPosterImageSize(posterImageSize);
 	}
 
 	public int getTimeUpdateEventThrottleMillis() {
@@ -160,8 +152,10 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setTimeUpdateEventThrottleMillis(int timeUpdateEventThrottleMillis) {
+		if (clientObjectChannel.isRendered()) {
+			throw new IllegalStateException("This cannot be set after rendering the player!");
+		}
 		this.timeUpdateEventThrottleMillis = timeUpdateEventThrottleMillis;
-		reRenderIfRendered();
 	}
 
 	public Color getBackgroundColor() {
@@ -170,7 +164,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		reRenderIfRendered();
+		clientObjectChannel.setBackgroundColor(backgroundColor.toHtmlColorString());
 	}
 
 	public TrackLabelFormat getTrackLabelFormat() {
@@ -178,8 +172,10 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setTrackLabelFormat(TrackLabelFormat trackLabelFormat) {
+		if (clientObjectChannel.isRendered()) {
+			throw new IllegalStateException("This cannot be set after rendering the player!");
+		}
 		this.trackLabelFormat = trackLabelFormat;
-		reRenderIfRendered();
 	}
 
 	public boolean isVideoDisabled() {
@@ -188,7 +184,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setVideoDisabled(boolean videoDisabled) {
 		this.videoDisabled = videoDisabled;
-		reRenderIfRendered();
+		clientObjectChannel.setVideoDisabled(videoDisabled);
 	}
 
 	public void selectAudioLanguage(String language) {
@@ -197,6 +193,6 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void selectAudioLanguage(String language, String role) {
 		this.audioLanguage = language;
-		clientObjectChannel.selectAudioLanguage(Language, Role);
+		clientObjectChannel.selectAudioLanguage(language, role);
 	}
 }

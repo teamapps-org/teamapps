@@ -18,30 +18,29 @@
  * =========================LICENSE_END==================================
  */
 
-import "shaka-player/dist/controls.css"
-import "@less/components/UiShakaPlayer.less"
-
-import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "teamapps-client-core";
+import "shaka-player";
+import "shaka-player/dist/shaka-player.ui";
 import {
+	DtoShakaManifest,
+	DtoShakaPlayer,
 	DtoShakaPlayer_EndedEvent,
-	DtoShakaPlayer_ErrorLoadingEvent, DtoShakaPlayer_ManifestLoadedEvent,
+	DtoShakaPlayer_ErrorLoadingEvent,
+	DtoShakaPlayer_ManifestLoadedEvent,
 	DtoShakaPlayer_TimeUpdateEvent,
 	DtoShakaPlayerCommandHandler,
-	DtoShakaPlayer,
 	DtoShakaPlayerEventSource,
-} from "../generated/DtoShakaPlayer";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {parseHtml} from "./Common";
-import {UiPosterImageSize} from "../generated/UiPosterImageSize";
-import {throttle} from "./util/throttle";
-import {UiTrackLabelFormat} from "../generated/UiTrackLabelFormat";
-
-(window as any).shaka = require("shaka-player");
-(window as any).shaka = require("../../node_modules/shaka-player/dist/shaka-player.ui");
-
+	PosterImageSize,
+	TrackLabelFormat as DtoTrackLabelFormat
+} from "./generated";
+import {
+	AbstractLegacyComponent,
+	executeWhenFirstDisplayed,
+	parseHtml,
+	removeClassesByFunction,
+	ServerObjectChannel,
+	TeamAppsEvent,
+	throttle
+} from "projector-client-object-api";
 import Player = shaka.Player;
 import UIConfiguration = shaka.extern.UIConfiguration;
 import Overlay = shaka.ui.Overlay;
@@ -49,10 +48,9 @@ import ManifestConfiguration = shaka.extern.ManifestConfiguration;
 import ManifestParser = shaka.extern.ManifestParser;
 import PlayerInterface = shaka.extern.ManifestParser.PlayerInterface;
 import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
-import {DtoShakaManifest} from "../generated/DtoShakaManifest";
 import Manifest = shaka.extern.Manifest;
 
-export class UiShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
+export class ShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
 
 	public readonly onManifestLoaded: TeamAppsEvent<DtoShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();
 	public readonly onTimeUpdate: TeamAppsEvent<DtoShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
@@ -60,7 +58,7 @@ export class UiShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> imple
 	public readonly onErrorLoading: TeamAppsEvent<DtoShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent();
 
 	private $componentWrapper: HTMLElement;
-	private $video: HTMLMediaElement;
+	private $video: HTMLVideoElement;
 	private player: Player;
 
 	private ui: Overlay;
@@ -70,15 +68,18 @@ export class UiShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> imple
 
 		console.log(config.hlsUrl, config.dashUrl, config.posterImageUrl)
 
-		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
 		this.$componentWrapper = parseHtml(
-			`<div class="UiShakaPlayer" style="background-color: ${config.backgroundColor}">
-				<video id="video" poster="${config.posterImageUrl}" class="${posterImageSizeCssClass}"></video>
+			`<div class="UiShakaPlayer">
+				<video id="video" ></video>
 			</div>`);
-		this.$video = this.$componentWrapper.querySelector(":scope video");
 
+		this.$video = this.$componentWrapper.querySelector(":scope video");
 		this.$video.addEventListener("timeupdate", throttle(e => this.onTimeUpdate.fire({timeMillis: this.$video.currentTime * 1000}), config.timeUpdateEventThrottleMillis))
 		this.$video.addEventListener("ended", e => this.onEnded.fire({}))
+
+		this.setPosterImageUrl(config.posterImageUrl);
+		this.setPosterImageSize(config.posterImageSize);
+		this.setBackgroundColor(config.backgroundColor);
 
 		this.displayedDeferredExecutor.invokeWhenReady(() => {
 			this.player = new shaka.Player(this.$video);
@@ -110,10 +111,10 @@ export class UiShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> imple
 				overflowMenuButtons: this.getOverflowMenuButtonsConfig(),
 				seekBarColors: undefined,
 				showUnbufferedStart: false,
-				trackLabelFormat: config.trackLabelFormat == UiTrackLabelFormat.LABEL ? TrackLabelFormat.LABEL
-					: config.trackLabelFormat == UiTrackLabelFormat.LANGUAGE ? TrackLabelFormat.LANGUAGE
-						: config.trackLabelFormat == UiTrackLabelFormat.ROLE ? TrackLabelFormat.ROLE
-							: config.trackLabelFormat == UiTrackLabelFormat.LANGUAGE_ROLE ? TrackLabelFormat.LANGUAGE_ROLE
+				trackLabelFormat: config.trackLabelFormat == DtoTrackLabelFormat.LABEL ? TrackLabelFormat.LABEL
+					: config.trackLabelFormat == DtoTrackLabelFormat.LANGUAGE ? TrackLabelFormat.LANGUAGE
+						: config.trackLabelFormat == DtoTrackLabelFormat.ROLE ? TrackLabelFormat.ROLE
+							: config.trackLabelFormat == DtoTrackLabelFormat.LANGUAGE_ROLE ? TrackLabelFormat.LANGUAGE_ROLE
 								: undefined,
 				volumeBarColors: undefined,
 				addSeekBar: true
@@ -204,6 +205,23 @@ export class UiShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> imple
 		this.player.selectAudioLanguage(language, role);
 	}
 
+	setPosterImageUrl(posterImageUrl: string) {
+		this.config.posterImageUrl = posterImageUrl;
+		this.$video.poster = posterImageUrl;
+	}
+	setPosterImageSize(posterImageSize: PosterImageSize) {
+		this.config.posterImageSize = posterImageSize;
+		removeClassesByFunction(this.$video.classList, className => className.startsWith("poster-"));
+		this.$video.classList.add(`poster-${this.config.posterImageSize}`)
+	}
+	setBackgroundColor(backgroundColor: string) {
+		this.$componentWrapper.style.backgroundColor = backgroundColor;
+	}
+	setVideoDisabled(videoDisabled: boolean) {
+		this.config.videoDisabled = videoDisabled;
+		this.reconfigurePlayer();
+	}
+
 	public onResize(): void {
 
 	}
@@ -211,8 +229,8 @@ export class UiShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> imple
 	public destroy(): void {
 	}
 
-	@executeWhenFirstDisplayed(true)
-	async setUrls(hlsUrl: string, dashUrl: string) {
+	@executeWhenFirstDisplayed()
+	async setUrls(hlsUrl: string, dashUrl: string): Promise<void> {
 		const support = await shaka.Player.probeSupport();
 		let url = support.manifest.mpd && dashUrl ? dashUrl : hlsUrl;
 		console.log(url)

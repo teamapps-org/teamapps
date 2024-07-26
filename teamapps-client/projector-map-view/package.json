@@ -1,5 +1,5 @@
 {
-  "name": "projector-mapview",
+  "name": "projector-map-view",
   "version": "0.9.155-SNAPSHOT",
   "type": "module",
   "exports": "./target/js-dist/index.js",
