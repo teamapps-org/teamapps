@@ -17,88 +17,63 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-common-components":org.teamapps.projector.component.common;
+package "teamapps-client-common-components":org.teamapps.projector.component.mapview;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
-class DtoMap extends DtoComponent {
+class DtoMapView extends DtoComponent {
+	String baseApiUrl;
 	String accessToken;
-	DtoMapConfig mapConfig;
+	String styleUrl;
+	boolean displayAttributionControl;
 
-	DtoMapType mapType;
-	int zoomLevel;
-	DtoMapLocation mapPosition;
+	double zoomLevel;
+	Location mapPosition;
 	Dictionary<DtoAbstractMapShape> shapes;
 	List<DtoMapMarkerClientRecord> markers;
 	DtoMapMarkerCluster markerCluster;
 
 	command addMarker(DtoMapMarkerClientRecord marker);
 	command removeMarker(int id);
+	command clearMarkers();
+
 	command setMapMarkerCluster(DtoMapMarkerCluster cluster);
+
+	command setHeatMap(DtoHeatMapData data);
 
 	command addShape(String shapeId, DtoAbstractMapShape shape);
 	command updateShape(String shapeId, DtoAbstractMapShape shape);
+	command changeShape(String shapeId, DtoAbstractMapShapeChange change);
 	command removeShape(String shapeId);
 	command clearShapes();
-	command clearMarkers();
-	command clearMarkerCluster();
-	command clearHeatMap();
 
-	command startDrawingShape(DtoMapShapeType shapeType, DtoShapeProperties shapeProperties);
+	command startDrawingShape(ShapeType shapeType, DtoShapeProperties shapeProperties);
 	command stopDrawingShape();
 	
-	command setZoomLevel(int zoom);
-	command setLocation(DtoMapLocation location);
-	command setMapType(DtoMapType mapType);
-	command setHeatMap(DtoHeatMapData data);
-	command fitBounds(DtoMapLocation southWest, DtoMapLocation northEast);
+	command setZoomLevel(double zoom);
+	command setLocation(Location location, long animationDurationMillis, double targetZoomLevel);
+	command setStyleUrl(String styleUrl);
 
-	event zoomLevelChanged(int zoomLevel);
-	event locationChanged(DtoMapLocation center, DtoMapArea displayedArea);
-	event mapClicked(DtoMapLocation location);
+	command fitBounds(Location southWest, Location northEast);
+
+	event zoomLevelChanged(double zoomLevel);
+	event locationChanged(Location center, Area displayedArea);
+	event mapClicked(Location location);
 	event markerClicked(int markerId);
 	event shapeDrawn(String shapeId, DtoAbstractMapShape shape);
 }
 
-class DtoMapConfig {
-	String urlTemplate;
-	String id;
-	int minZoom;
-	int maxZoom;
-	String attribution;
-}
-
-enum DtoMapType {
-	INTERNAL,
-	INTERNAL_DARK,
-	INTERNAL_DARK_HIGH_RES,
-	MAP_BOX_STREETS,
-	MAP_BOX_STREETS_BASIC,
-	MAP_BOX_STREETS_SATELLITE,
-	MAP_BOX_SATELLITE,
-	MAP_BOX_RUN_BIKE_HIKE,
-	MAP_BOX_DARK,
-	MAP_BOX_EMERALD,
-	MAP_BOX_OUTDOORS,
-	MAP_QUEST_OSM, MAP_QUEST_SATELLITE,
-	OSM_TOPO_MAP,
-	NASA_EARTH_AT_NIGHT,
-	INFO_WEATHER_TEMPERATURE,
-	THUNDERFOREST_DARK,
-	THUNDERFOREST_TRANSPORT,
-	WIKIMEDIA
-}
 
 @TypeScriptFactory
-class DtoMapLocation {
+class Location {
 	required double latitude;
 	required double longitude;
 }
 
 @TypeScriptFactory
-class DtoMapArea {
+class Area {
 	required double minLatitude;
 	required double maxLatitude;
 	required double minLongitude;
@@ -106,14 +81,14 @@ class DtoMapArea {
 }
 
 class DtoMapMarkerClientRecord extends DtoIdentifiableClientRecord {
-	DtoMapLocation location;
+	Location location;
     DtoTemplate* template; // null == use asString
-    DtoMapMarkerAnchor anchor;
+    MarkerAnchorType anchor;
     int offsetPixelsX;
     int offsetPixelsY;
 }
 
-enum DtoMapMarkerAnchor {
+enum MarkerAnchorType {
 	CENTER = "center",
 	TOP = "top",
 	BOTTOM = "bottom",
@@ -142,7 +117,7 @@ class DtoHeatMapDataElement {
 	required int count;
 }
 
-enum DtoMapShapeType {
+enum ShapeType {
 	CIRCLE,
     POLYGON,
     POLYLINE,
@@ -158,26 +133,26 @@ abstract class DtoAbstractMapShapeChange {
 }
 
 class DtoMapCircle extends DtoAbstractMapShape {
-	DtoMapLocation center;
+	Location center;
 	int radius; // meters
 }
 
 class DtoMapPolygon extends DtoAbstractMapShape {
-	List<DtoMapLocation> path;
+	List<Location> path;
 }
 
 class DtoMapPolyline extends DtoAbstractMapShape {
-	List<DtoMapLocation> path;
+	List<Location> path;
 }
 
 
 class DtoPolylineAppend extends DtoAbstractMapShapeChange {
-    required List<DtoMapLocation> appendedPath;
+    required List<Location> appendedPath;
 }
 
 class DtoMapRectangle extends DtoAbstractMapShape {
-	DtoMapLocation l1;
-	DtoMapLocation l2;
+	Location l1;
+	Location l2;
 }
 
 class DtoShapeProperties {

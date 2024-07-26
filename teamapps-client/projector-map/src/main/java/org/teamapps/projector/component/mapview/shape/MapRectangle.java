@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map.shape;
+package org.teamapps.projector.component.mapview.shape;
 
-import org.teamapps.projector.component.common.DtoMapRectangle;
-import org.teamapps.projector.component.common.map.Location;
+import org.teamapps.projector.component.mapview.DtoMapRectangle;
+import org.teamapps.projector.component.mapview.Location;
 
 public class MapRectangle extends AbstractMapShape {
 
@@ -41,8 +41,8 @@ public class MapRectangle extends AbstractMapShape {
 	public DtoMapRectangle createUiMapShape() {
 		DtoMapRectangle uiRect = new DtoMapRectangle();
 		mapAbstractUiShapeProperties(uiRect);
-		uiRect.setL1(location1.createUiLocation());
-		uiRect.setL2(location2.createUiLocation());
+		uiRect.setL1(location1);
+		uiRect.setL2(location2);
 		return uiRect;
 	}
 

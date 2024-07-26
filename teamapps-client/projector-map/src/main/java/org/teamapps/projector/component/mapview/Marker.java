@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map;
+package org.teamapps.projector.component.mapview;
 
 public class Marker<RECORD> {
 
 	private final Location location;
 	private final RECORD data;
-	private MarkerAnchor markerAnchor = MarkerAnchor.BOTTOM_LEFT;
+	private MarkerAnchorType markerAnchor = MarkerAnchorType.BOTTOM_LEFT;
 	private int offsetPixelsX = 0;
 	private int offsetPixelsY = 0;
 
@@ -46,11 +46,11 @@ public class Marker<RECORD> {
 		return data;
 	}
 
-	public MarkerAnchor getMarkerAnchor() {
+	public MarkerAnchorType getMarkerAnchor() {
 		return markerAnchor;
 	}
 
-	public void setMarkerAnchor(MarkerAnchor markerAnchor) {
+	public void setMarkerAnchor(MarkerAnchorType markerAnchor) {
 		this.markerAnchor = markerAnchor;
 	}
 

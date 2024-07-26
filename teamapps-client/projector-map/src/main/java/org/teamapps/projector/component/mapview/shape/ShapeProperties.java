@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map.shape;
+package org.teamapps.projector.component.mapview.shape;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.DtoShapeProperties;
+import org.teamapps.projector.component.mapview.DtoShapeProperties;
 
 import java.util.List;
 

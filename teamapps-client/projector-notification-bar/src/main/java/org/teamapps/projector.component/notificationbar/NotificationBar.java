@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.essential.notification;
+package org.teamapps.projector.component.notificationbar;
 
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
@@ -32,8 +32,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.teamapps.projector.component.essential.notification.NotificationBarItemClosedEvent.ClosingReason.TIMEOUT;
-import static org.teamapps.projector.component.essential.notification.NotificationBarItemClosedEvent.ClosingReason.USER;
+import static org.teamapps.projector.component.notificationbar.NotificationBarItemClosedEvent.ClosingReason.TIMEOUT;
+import static org.teamapps.projector.component.notificationbar.NotificationBarItemClosedEvent.ClosingReason.USER;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class NotificationBar extends AbstractComponent implements DtoNotificationBarEventHandler {

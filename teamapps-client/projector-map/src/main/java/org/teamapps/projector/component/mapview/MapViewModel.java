@@ -17,32 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map;
+package org.teamapps.projector.component.mapview;
 
-import org.teamapps.projector.component.common.DtoMapType;
+import org.teamapps.projector.event.ProjectorEvent;
 
-public enum MapType {
-	INTERNAL,
-	INTERNAL_DARK,
-	INTERNAL_DARK_HIGH_RES,
-	MAP_BOX_STREETS,
-	MAP_BOX_STREETS_BASIC,
-	MAP_BOX_STREETS_SATELLITE,
-	MAP_BOX_SATELLITE,
-	MAP_BOX_RUN_BIKE_HIKE,
-	MAP_BOX_DARK,
-	MAP_BOX_EMERALD,
-	MAP_BOX_OUTDOORS,
-	MAP_QUEST_OSM,
-	MAP_QUEST_SATELLITE,
-	OSM_TOPO_MAP,
-	NASA_EARTH_AT_NIGHT,
-	INFO_WEATHER_TEMPERATURE,
-	THUNDERFOREST_DARK,
-	THUNDERFOREST_TRANSPORT,
-	WIKIMEDIA;
+import java.util.List;
 
-	public DtoMapType toUiMapType() {
-		return DtoMapType.valueOf(this.name());
-	}
+public interface MapViewModel<RECORD> {
+
+	ProjectorEvent<Void> getOnMapViewDataChanged();
+
+	List<RECORD> getMapRecords();
+
+	List<RECORD> getMapRecords(float startLatitude, float startLongitude, float endLatitude, float endLongitude);
+
 }

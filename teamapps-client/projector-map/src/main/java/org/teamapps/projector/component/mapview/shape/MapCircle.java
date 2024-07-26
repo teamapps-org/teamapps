@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map.shape;
+package org.teamapps.projector.component.mapview.shape;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.DtoMapCircle;
-import org.teamapps.projector.component.common.map.Location;
+import org.teamapps.projector.component.mapview.DtoMapCircle;
+import org.teamapps.projector.component.mapview.Location;
 
 public class MapCircle extends AbstractMapShape {
 
@@ -56,7 +56,7 @@ public class MapCircle extends AbstractMapShape {
 	public DtoMapCircle createUiMapShape() {
 		DtoMapCircle uiCircle = new DtoMapCircle();
 		mapAbstractUiShapeProperties(uiCircle);
-		uiCircle.setCenter(center.createUiLocation());
+		uiCircle.setCenter(center);
 		uiCircle.setRadius(radiusMeters);
 		return uiCircle;
 	}

@@ -17,24 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map;
+package org.teamapps.projector.component.mapview;
 
-import org.teamapps.projector.component.common.DtoMapMarkerAnchor;
+public class LocationChangedEventData {
 
-public enum MarkerAnchor {
+	protected final Location center;
+	protected final Area displayedArea;
 
-	CENTER,
-	TOP,
-	BOTTOM,
-	LEFT,
-	RIGHT,
-	TOP_LEFT,
-	TOP_RIGHT,
-	BOTTOM_LEFT,
-	BOTTOM_RIGHT;
+	public LocationChangedEventData(Location center, Area displayedArea) {
+		this.center = center;
+		this.displayedArea = displayedArea;
+	}
 
-	public DtoMapMarkerAnchor toUiMapMarkerAnchor() {
-		return DtoMapMarkerAnchor.valueOf(name());
+	public Location getCenter() {
+		return center;
+	}
+
+	public Area getDisplayedArea() {
+		return displayedArea;
 	}
 
 }

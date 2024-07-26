@@ -17,13 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map.shape;
+package org.teamapps.projector.component.mapview.shape;
 
-import org.teamapps.projector.component.common.DtoMapPolygon;
-import org.teamapps.projector.component.common.map.Location;
+import org.teamapps.projector.component.mapview.DtoMapPolygon;
+import org.teamapps.projector.component.mapview.Location;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MapPolygon extends AbstractMapShape {
 
@@ -37,9 +36,7 @@ public class MapPolygon extends AbstractMapShape {
 	public DtoMapPolygon createUiMapShape() {
 		DtoMapPolygon uiPolygon = new DtoMapPolygon();
 		mapAbstractUiShapeProperties(uiPolygon);
-		uiPolygon.setPath(locations.stream()
-				.map(Location::createUiLocation)
-				.collect(Collectors.toList()));
+		uiPolygon.setPath(List.copyOf(locations));
 		return uiPolygon;
 	}
 

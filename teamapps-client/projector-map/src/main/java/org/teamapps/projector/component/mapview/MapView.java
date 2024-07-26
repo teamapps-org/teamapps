@@ -17,26 +17,29 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map;
+package org.teamapps.projector.component.mapview;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
-import org.teamapps.dto.*;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.component.common.map.shape.*;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.map.shape.*;
-import org.teamapps.projector.template.Template;
-import org.teamapps.ux.component.template.TemplateDecider;
+import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.mapview.shape.*;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.template.Template;
+import org.teamapps.projector.template.TemplateDecider;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MapView2<RECORD> extends AbstractComponent {
+public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEventHandler {
+
+	private final DtoMapViewClientObjectChannel clientObjectChannel = new DtoMapViewClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<LocationChangedEventData> onLocationChanged = new ProjectorEvent<>(clientObjectChannel::toggleLocationChangedEvent);
 	public final ProjectorEvent<Double> onZoomLevelChanged = new ProjectorEvent<>(clientObjectChannel::toggleZoomLevelChangedEvent);
@@ -64,29 +67,29 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleShapeChanged(AbstractMapShape shape) {
-			clientObjectChannel.updateShape(Shape.GetClientIdInternal(), shape.createUiMapShape());
+			clientObjectChannel.updateShape(shape.getClientIdInternal(), shape.createUiMapShape());
 		}
 
 		@Override
 		public void handleShapeChanged(AbstractMapShape shape, DtoAbstractMapShapeChange change) {
-			clientObjectChannel.changeShape(Shape.GetClientIdInternal(), change);
+			clientObjectChannel.changeShape(shape.getClientIdInternal(), change);
 		}
 
 		@Override
 		public void handleShapeRemoved(AbstractMapShape shape) {
-			clientObjectChannel.removeShape(Shape.GetClientIdInternal());
+			clientObjectChannel.removeShape(shape.getClientIdInternal());
 		}
 	};
 
-	public MapView2(String baseApiUrl, String accessToken, String styleUrl) {
+	public MapView(String baseApiUrl, String accessToken, String styleUrl) {
 		this.baseApiUrl = baseApiUrl;
 		this.accessToken = accessToken;
 		this.styleUrl = styleUrl;
 	}
 
 	@Override
-	public DtoComponent createDto() {
-		DtoMap2 uiMap = new DtoMap2();
+	public ComponentConfig createConfig() {
+		DtoMapView uiMap = new DtoMapView();
 		mapAbstractUiComponentProperties(uiMap);
 
 		uiMap.setBaseApiUrl(baseApiUrl);
@@ -99,7 +102,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 		shapesByClientId.forEach((id, shape) -> uiShapes.put(id, shape.createUiMapShape()));
 		uiMap.setShapes(uiShapes);
 		if (location != null) {
-			uiMap.setMapPosition(location.createUiLocation());
+			uiMap.setMapPosition(location);
 		}
 		if (clusterMarkers != null && !clusterMarkers.isEmpty()) {
 			uiMap.setMarkerCluster(new DtoMapMarkerCluster(clusterMarkers.stream()
@@ -112,78 +115,77 @@ public class MapView2<RECORD> extends AbstractComponent {
 		return uiMap;
 	}
 
+	@Override
+	public void handleZoomLevelChanged(double zoomLevel) {
+		this.onZoomLevelChanged.fire(zoomLevel);
+	}
+
+	@Override
+	public void handleLocationChanged(DtoMapView.LocationChangedEventWrapper event) {
+		this.location = event.getCenter().unwrap();
+		this.onLocationChanged.fire(new LocationChangedEventData(this.location, event.getDisplayedArea().unwrap()));
+	}
+
+	@Override
+	public void handleMapClicked(LocationWrapper location) {
+		this.onMapClicked.fire(new Location(location.getLatitude(), location.getLongitude()));
+	}
+
+	@Override
+	public void handleMarkerClicked(int markerId) {
+		Marker<RECORD> marker = markersByClientId.get(markerId);
+		this.onMarkerClicked.fire(marker);
+	}
+
+	@Override
+	public void handleShapeDrawn(DtoMapView.ShapeDrawnEventWrapper event) {
+		DtoAbstractMapShapeWrapper uiShape = event.getShape();
+		AbstractMapShape shape = switch (uiShape.getTypeId()) {
+			case DtoMapCircle.TYPE_ID -> {
+				var uiCircle = uiShape.as(DtoMapCircleWrapper::new);
+				yield new MapCircle(uiCircle.getCenter().unwrap(), uiCircle.getRadius());
+			}
+			case DtoMapPolygon.TYPE_ID -> {
+				var uiPolygon = uiShape.as(DtoMapPolygonWrapper::new);
+				yield new MapPolygon(uiPolygon.getPath().stream()
+						.map(LocationWrapper::unwrap)
+						.collect(Collectors.toList()), null);
+			}
+			case DtoMapPolyline.TYPE_ID -> {
+				var uiPolyLine = uiShape.as(DtoMapPolylineWrapper::new);
+				yield new MapPolyline(uiPolyLine.getPath().stream()
+						.map(LocationWrapper::unwrap)
+						.collect(Collectors.toList()), null);
+			}
+			case DtoMapRectangle.TYPE_ID -> {
+				var uiRect = uiShape.as(DtoMapRectangleWrapper::new);
+				yield new MapRectangle(uiRect.getL1().unwrap(), uiRect.getL2().unwrap(), null);
+			}
+			default -> {
+				throw new IllegalArgumentException("Unknown shape type from UI: " + event.getShape().getClass());
+			}
+		};
+		shape.setClientIdInternal(event.getShapeId());
+		shapesByClientId.put(event.getShapeId(), shape);
+		shape.setListenerInternal(shapeListener);
+		this.onShapeDrawn.fire(shape);
+	}
+
 	private DtoMapMarkerClientRecord createUiMarkerRecord(Marker<RECORD> marker, int clientId) {
 		DtoMapMarkerClientRecord clientRecord = new DtoMapMarkerClientRecord();
 		clientRecord.setId(clientId);
-		clientRecord.setLocation(marker.getLocation().createUiLocation());
+		clientRecord.setLocation(marker.getLocation());
 		Template template = getTemplateForRecord(marker, templateDecider);
 		if (template != null) {
-			clientRecord.setTemplate(template.createDtoReference());
+			clientRecord.setTemplate(template);
 			clientRecord.setValues(markerPropertyProvider.getValues(marker.getData(), template.getPropertyNames()));
 		} else {
 			clientRecord.setAsString("" + marker.getData());
 		}
 		clientRecord.setOffsetPixelsX(marker.getOffsetPixelsX());
 		clientRecord.setOffsetPixelsY(marker.getOffsetPixelsY());
-		clientRecord.setAnchor(marker.getMarkerAnchor().toUiMapMarkerAnchor());
+		clientRecord.setAnchor(marker.getMarkerAnchor());
 		return clientRecord;
-	}
-
-	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		switch (event.getTypeId()) {
-			case DtoMap2.MapClickedEvent.TYPE_ID -> {
-				var mapClickedEvent = event.as(DtoMap2.MapClickedEventWrapper.class);
-				this.onMapClicked.fire(new Location(mapClickedEvent.getLocation().getLatitude(), mapClickedEvent.getLocation().getLongitude()));
-			}
-			case DtoMap2.MarkerClickedEvent.TYPE_ID -> {
-				var markerClickedEvent = event.as(DtoMap2.MarkerClickedEventWrapper.class);
-				Marker<RECORD> marker = markersByClientId.get(markerClickedEvent.getMarkerId());
-				this.onMarkerClicked.fire(marker);
-			}
-			case DtoMap2.ZoomLevelChangedEvent.TYPE_ID -> {
-				var zoomEvent = event.as(DtoMap2.ZoomLevelChangedEventWrapper.class);
-				this.zoomLevel = zoomEvent.getZoomLevel();
-				this.onZoomLevelChanged.fire(zoomLevel);
-			}
-			case DtoMap2.LocationChangedEvent.TYPE_ID -> {
-				var locationEvent = event.as(DtoMap2.LocationChangedEventWrapper.class);
-				this.location = Location.fromUiMapLocationWrapper(locationEvent.getCenter());
-				DtoMapAreaWrapper displayedUiArea = locationEvent.getDisplayedArea();
-				Area displayedArea = new Area(displayedUiArea.getMinLatitude(), displayedUiArea.getMaxLatitude(), displayedUiArea.getMinLongitude(), displayedUiArea.getMaxLongitude());
-				this.onLocationChanged.fire(new LocationChangedEventData(this.location, displayedArea));
-			}
-			case DtoMap2.ShapeDrawnEvent.TYPE_ID -> {
-				var drawnEvent = event.as(DtoMap2.ShapeDrawnEventWrapper.class);
-				DtoAbstractMapShapeWrapper uiShape = drawnEvent.getShape();
-				AbstractMapShape shape = switch (uiShape.getTypeId()) {
-					case DtoMapCircle.TYPE_ID -> {
-						var uiCircle = uiShape.as(DtoMapCircleWrapper.class);
-						yield new MapCircle(Location.fromUiMapLocationWrapper(uiCircle.getCenter()), uiCircle.getRadius());
-					}
-					case DtoMapPolygon.TYPE_ID -> {
-						var uiPolygon = uiShape.as(DtoMapPolygonWrapper.class);
-						yield new MapPolygon(uiPolygon.getPath().stream().map(Location::fromUiMapLocationWrapper).collect(Collectors.toList()), null);
-					}
-					case DtoMapPolyline.TYPE_ID -> {
-						var uiPolyLine = uiShape.as(DtoMapPolylineWrapper.class);
-						yield new MapPolyline(uiPolyLine.getPath().stream().map(Location::fromUiMapLocationWrapper).collect(Collectors.toList()), null);
-					}
-					case DtoMapRectangle.TYPE_ID -> {
-						var uiRect = uiShape.as(DtoMapRectangleWrapper.class);
-						yield new MapRectangle(Location.fromUiMapLocationWrapper(uiRect.getL1()), Location.fromUiMapLocationWrapper(uiRect.getL2()), null);
-					}
-					default -> {
-						throw new IllegalArgumentException("Unknown shape type from UI: " + drawnEvent.getShape().getClass());
-					}
-				};
-				shape.setClientIdInternal(drawnEvent.getShapeId());
-				shapesByClientId.put(drawnEvent.getShapeId(), shape);
-				shape.setListenerInternal(shapeListener);
-				this.onShapeDrawn.fire(shape);
-			}
-
-		}
 	}
 
 	public void addPolyLine(MapPolyline polyline) {
@@ -193,11 +195,11 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void addShape(AbstractMapShape shape) {
 		shape.setListenerInternal(shapeListener);
 		shapesByClientId.put(shape.getClientIdInternal(), shape);
-		clientObjectChannel.addShape(Shape.GetClientIdInternal(), shape.createUiMapShape());
+		clientObjectChannel.addShape(shape.getClientIdInternal(), shape.createUiMapShape());
 	}
 
 	public void removeShape(AbstractMapShape shape) {
-		clientObjectChannel.removeShape(Shape.GetClientIdInternal());
+		clientObjectChannel.removeShape(shape.getClientIdInternal());
 	}
 
 	public void clearShapes() {
@@ -207,18 +209,17 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
 		clusterMarkers = markers;
 		markers.forEach(m -> this.markersByClientId.put(clientIdCounter++, m));
-		sendCommandIfRendered(() -> {
-			DtoMapMarkerCluster markerCluster = new DtoMapMarkerCluster(clusterMarkers.stream()
+		if (clientObjectChannel.isRendered()) {
+			clientObjectChannel.setMapMarkerCluster(new DtoMapMarkerCluster(clusterMarkers.stream()
 					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
-					.collect(Collectors.toList()));
-			return new DtoMap2.SetMapMarkerClusterCommand(markerCluster);
-		});
+					.collect(Collectors.toList())));
+		}
 	}
 
 	public void clearMarkerCluster() {
 		markersByClientId.values().removeAll(clusterMarkers);
 		clusterMarkers.clear();
-		clientObjectChannel.setMapMarkerCluster(New DtoMapMarkerCluster(collections.EmptyList()));
+		clientObjectChannel.setMapMarkerCluster(new DtoMapMarkerCluster(List.of()));
 	}
 
 //	TODO
@@ -246,12 +247,12 @@ public class MapView2<RECORD> extends AbstractComponent {
 
 	public void setStyleUrl(String styleUrl) {
 		this.styleUrl = styleUrl;
-		clientObjectChannel.setStyleUrl(StyleUrl);
+		clientObjectChannel.setStyleUrl(styleUrl);
 	}
 
 	public void setZoomLevel(int zoomLevel) {
 		this.zoomLevel = zoomLevel;
-		clientObjectChannel.setZoomLevel(ZoomLevel);
+		clientObjectChannel.setZoomLevel(zoomLevel);
 	}
 
 	public void setLocation(Location location) {
@@ -265,7 +266,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void setLocation(Location location, long animationDurationMillis, int targetZoomLevel) {
 		this.location = location;
 		this.zoomLevel = targetZoomLevel;
-		clientObjectChannel.setLocation(Location.CreateUiLocation(), animationDurationMillis, targetZoomLevel);
+		clientObjectChannel.setLocation(location, animationDurationMillis, targetZoomLevel);
 	}
 
 	public void setLatitude(double latitude) {
@@ -287,13 +288,13 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void addMarker(Marker<RECORD> marker) {
 		int clientId = clientIdCounter++;
 		this.markersByClientId.put(clientId, marker);
-		clientObjectChannel.addMarker(CreateUiMarkerRecord(Marker, clientId));
+		clientObjectChannel.addMarker(createUiMarkerRecord(marker, clientId));
 	}
 
 	public void removeMarker(Marker<RECORD> marker) {
 		Integer clientId = markersByClientId.removeValue(marker);
 		if (clientId != null) {
-			clientObjectChannel.removeMarker(ClientId);
+			clientObjectChannel.removeMarker(clientId);
 		}
 	}
 
@@ -304,7 +305,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 
 	public void fitBounds(Location southWest, Location northEast) {
 		this.location = new Location((southWest.getLatitude() + northEast.getLatitude()) / 2, (southWest.getLongitude() + northEast.getLongitude()) / 2);
-		clientObjectChannel.fitBounds(SouthWest.CreateUiLocation(), northEast.createUiLocation());
+		clientObjectChannel.fitBounds(southWest, northEast);
 	}
 
 	public Template getDefaultTemplate() {
@@ -344,7 +345,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	//  TODO
-//	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
+//	public void startDrawingShape(ShapeType shapeType, ShapeProperties shapeProperties) {
 //		queueCommandIfRendered(() -> new DtoMap2.StartDrawingShapeCommand(shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
 //	}
 //

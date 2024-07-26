@@ -19,55 +19,78 @@
  */
 
 
-import {AbstractComponent} from "teamapps-client-core";
-import {parseHtml} from "./Common";
-import {TeamAppsUiContext} from "teamapps-client-core";
 import {
-	DtoMap2_LocationChangedEvent,
-	DtoMap2_MapClickedEvent,
-	DtoMap2_MarkerClickedEvent,
-	DtoMap2_ShapeDrawnEvent,
-	DtoMap2_ZoomLevelChangedEvent,
-	DtoMap2CommandHandler,
-	DtoMap2,
-	DtoMap2EventSource
-} from "../generated/DtoMap2";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
+	AbstractLegacyComponent,
+	DeferredExecutor,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent,
+	Template
+} from "projector-client-object-api";
+import {
+	createArea,
+	createLocation,
+	DtoAbstractMapShape,
+	DtoMapView,
+	Location,
+	DtoMapCircle,
+	DtoMapPolygon,
+	DtoMapPolyline,
+	DtoMapRectangle,
+	DtoAbstractMapShapeChange,
+	DtoPolylineAppend,
+	DtoMapMarkerCluster,
+	DtoMapMarkerClientRecord,
+	DtoHeatMapData,
+	DtoShapeProperties,
+	ShapeType,
+	DtoMapViewCommandHandler,
+	DtoMapViewEventSource,
+	DtoMapView_ZoomLevelChangedEvent,
+	DtoMapView_ShapeDrawnEvent,
+	DtoMapView_MarkerClickedEvent,
+	DtoMapView_MapClickedEvent,
+	DtoMapView_LocationChangedEvent
+} from "./generated";
 import mapboxgl, {GeoJSONSource, LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
-import {createDtoMapLocation, DtoMapLocation} from "../generated/DtoMapLocation";
-import {createDtoMapArea} from "../generated/DtoMapArea";
-import {DtoMapMarkerClientRecord} from "../generated/DtoMapMarkerClientRecord";
-import {DtoTemplate} from "../generated/DtoTemplate";
-import {DtoAbstractMapShape} from "../generated/DtoAbstractMapShape";
-import {isUiMapCircle, isUiMapPolygon, isUiMapPolyline, isUiMapRectangle} from "./UiMap";
 import {Feature, Point, Position} from "geojson";
-import {DtoMapMarkerCluster} from "../generated/DtoMapMarkerCluster";
 import * as d3 from "d3";
-import {DeferredExecutor} from "./util/DeferredExecutor";
-import {DtoAbstractMapShapeChange} from "../generated/DtoAbstractMapShapeChange";
-import {DtoPolylineAppend} from "../generated/DtoPolylineAppend";
-import {DtoMapPolyline} from "../generated/DtoMapPolyline";
 
-export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2EventSource, DtoMap2CommandHandler {
+export function isCircle(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapCircle {
+	return shapeConfig._type === "MapCircle";
+}
 
-	public readonly onZoomLevelChanged: TeamAppsEvent<DtoMap2_ZoomLevelChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
-	public readonly onLocationChanged: TeamAppsEvent<DtoMap2_LocationChangedEvent> = new TeamAppsEvent({throttlingMode: "throttle", delay: 500});
-	public readonly onMapClicked: TeamAppsEvent<DtoMap2_MapClickedEvent> = new TeamAppsEvent();
-	public readonly onMarkerClicked: TeamAppsEvent<DtoMap2_MarkerClickedEvent> = new TeamAppsEvent();
-	public readonly onShapeDrawn: TeamAppsEvent<DtoMap2_ShapeDrawnEvent> = new TeamAppsEvent();
+export function isPolygon(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapPolygon {
+	return shapeConfig._type === "MapPolygon";
+}
+
+export function isPolyline(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapPolyline {
+	return shapeConfig._type === "MapPolyline";
+}
+
+export function isRectangle(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapRectangle {
+	return shapeConfig._type === "MapRectangle";
+}
+
+export class MapView extends AbstractLegacyComponent<DtoMapView> implements DtoMapViewEventSource, DtoMapViewCommandHandler {
+
+	public readonly onZoomLevelChanged: TeamAppsEvent<DtoMapView_ZoomLevelChangedEvent> = TeamAppsEvent.createThrottled(500);
+	public readonly onLocationChanged: TeamAppsEvent<DtoMapView_LocationChangedEvent> = TeamAppsEvent.createThrottled(500);
+	public readonly onMapClicked: TeamAppsEvent<DtoMapView_MapClickedEvent> = new TeamAppsEvent();
+	public readonly onMarkerClicked: TeamAppsEvent<DtoMapView_MarkerClickedEvent> = new TeamAppsEvent();
+	public readonly onShapeDrawn: TeamAppsEvent<DtoMapView_ShapeDrawnEvent> = new TeamAppsEvent();
 
 	private $map: HTMLElement;
 	private map: MapBoxMap;
-	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
+	private markerTemplateRenderers: { [templateName: string]: Template } = {};
 	private markersByClientId: { [id: number]: Marker } = {};
 	private shapesById: Map<string, { config: DtoAbstractMapShape }> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
-	constructor(config: DtoMap2, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoMapView, serverObjectChannel: ServerObjectChannel) {
 		super(config, serverObjectChannel);
-		this.$map = parseHtml('<div class="UiMap2">');
+		this.$map = parseHtml('<div class="Map">');
 
 		mapboxgl.baseApiUrl = config.baseApiUrl;
 		mapboxgl.accessToken = config.accessToken;
@@ -92,15 +115,13 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 			let center = this.map.getCenter();
 			let bounds = this.map.getBounds();
 			this.onLocationChanged.fire({
-				center: createDtoMapLocation(center.lat, center.lng),
-				displayedArea: createDtoMapArea(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
+				center: createLocation(center.lat, center.lng),
+				displayedArea: createArea(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
 			});
 		})
 		this.map.on("click", ev => {
-			this.onMapClicked.fire({location: createDtoMapLocation(ev.lngLat.lat, ev.lngLat.lng)})
+			this.onMapClicked.fire({location: createLocation(ev.lngLat.lat, ev.lngLat.lng)})
 		})
-
-		Object.keys(config.markerTemplates).forEach(templateName => this.registerTemplate(templateName, config.markerTemplates[templateName]));
 
 		Object.keys(config.shapes).forEach(shapeId => {
 			this.addShape(shapeId, config.shapes[shapeId]);
@@ -119,7 +140,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 	public addShape(shapeId: string, shapeConfig: DtoAbstractMapShape): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.shapesById.set(shapeId, {config: shapeConfig});
-			if (isUiMapCircle(shapeConfig)) {
+			if (isCircle(shapeConfig)) {
 				this.map.addSource(shapeId, {
 					type: "geojson",
 					data: {
@@ -149,7 +170,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 						...paintProperties,
 					},
 				});
-			} else if (isUiMapPolyline(shapeConfig)) {
+			} else if (isPolyline(shapeConfig)) {
 				shapeConfig.shapeProperties.strokeColor;
 				shapeConfig.shapeProperties.strokeWeight;
 				shapeConfig.shapeProperties.strokeDashArray;
@@ -172,7 +193,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 					},
 					'paint': paintProperties
 				});
-			} else if (isUiMapPolygon(shapeConfig)) {
+			} else if (isPolygon(shapeConfig)) {
 				let path = shapeConfig.path.map(loc => this.convertToPosition(loc));
 				if (path[0] != path[path.length - 1]) {
 					path.push(path[0]); // geojson spec demands that polygons be closed!
@@ -200,7 +221,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 					'layout': {},
 					'paint': paintProperties
 				});
-			} else if (isUiMapRectangle(shapeConfig)) {
+			} else if (isRectangle(shapeConfig)) {
 				this.map.addSource(shapeId, {
 					'type': 'geojson',
 					'data': {
@@ -373,7 +394,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 						.attr('fill', 'white')
 
 					svg.on('click', (e: any) => {
-						d3.event.stopPropagation();
+						e.stopPropagation();
 						var clusterId = props.cluster_id;
 						(this.map.getSource('cluster') as GeoJSONSource).getClusterExpansionZoom(
 							clusterId,
@@ -431,11 +452,11 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 		};
 	}
 
-	private convertToPosition(loc: DtoMapLocation): Position {
+	private convertToPosition(loc: Location): Position {
 		return [loc.longitude, loc.latitude];
 	}
 
-	private convertToLngLatLike(loc: DtoMapLocation): LngLatLike {
+	private convertToLngLatLike(loc: Location): LngLatLike {
 		return this.convertToPosition(loc) as LngLatLike;
 	}
 
@@ -462,7 +483,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 	}
 
 	private createMarker(markerConfig: DtoMapMarkerClientRecord) {
-		let renderer = markerConfig.template;
+		let renderer = markerConfig.template as Template;
 		let marker = new Marker(parseHtml(renderer.render(markerConfig.values)), {
 			anchor: markerConfig.anchor,
 			offset: [markerConfig.offsetPixelsX, markerConfig.offsetPixelsY]
@@ -476,12 +497,12 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 	};
 
 	// TODO
-	setHeatMap(data: import("../generated/DtoHeatMapData").DtoHeatMapData): void {
+	setHeatMap(data: DtoHeatMapData): void {
 		throw new Error("Method not implemented.");
 	}
 
 	// TODO
-	startDrawingShape(shapeType: import("../generated/UiMapShapeType").UiMapShapeType, shapeProperties: import("../generated/DtoShapeProperties").DtoShapeProperties): void {
+	startDrawingShape(shapeType: ShapeType, shapeProperties: DtoShapeProperties): void {
 		throw new Error("Method not implemented.");
 	}
 
@@ -494,7 +515,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 		this.map.zoomTo(zoom)
 	}
 
-	setLocation(location: DtoMapLocation, animationDurationMillis: number, targetZoomLevel: number): void {
+	setLocation(location: Location, animationDurationMillis: number, targetZoomLevel: number): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.easeTo({
 				center: [location.longitude, location.latitude],
@@ -504,7 +525,7 @@ export class UiMap2 extends AbstractLegacyComponent<DtoMap2> implements DtoMap2E
 		});
 	}
 
-	fitBounds(southWest: DtoMapLocation, northEast: DtoMapLocation): void {
+	fitBounds(southWest: Location, northEast: Location): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.fitBounds([
 				[southWest.longitude, southWest.latitude],

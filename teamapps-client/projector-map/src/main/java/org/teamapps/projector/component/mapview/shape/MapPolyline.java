@@ -17,16 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map.shape;
+package org.teamapps.projector.component.mapview.shape;
 
-import org.teamapps.projector.component.common.DtoMapLocation;
-import org.teamapps.projector.component.common.DtoMapPolyline;
-import org.teamapps.projector.component.common.DtoPolylineAppend;
-import org.teamapps.projector.component.common.map.Location;
+import org.teamapps.projector.component.mapview.DtoMapPolyline;
+import org.teamapps.projector.component.mapview.DtoPolylineAppend;
+import org.teamapps.projector.component.mapview.Location;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MapPolyline extends AbstractMapShape {
 
@@ -40,14 +38,8 @@ public class MapPolyline extends AbstractMapShape {
 	public DtoMapPolyline createUiMapShape() {
 		DtoMapPolyline uiPolyline = new DtoMapPolyline();
 		mapAbstractUiShapeProperties(uiPolyline);
-		uiPolyline.setPath(toUiMapLocations(points));
+		uiPolyline.setPath(List.copyOf(points));
 		return uiPolyline;
-	}
-
-	private List<DtoMapLocation> toUiMapLocations(List<Location> locations) {
-		return locations.stream()
-				.map(Location::createUiLocation)
-				.collect(Collectors.toList());
 	}
 
 	public MapPolyline addPoint(Location location) {
@@ -56,7 +48,7 @@ public class MapPolyline extends AbstractMapShape {
 
 	public MapPolyline addPoints(List<Location> points) {
 		this.points.addAll(points);
-		this.listener.handleShapeChanged(this, new DtoPolylineAppend(toUiMapLocations(points)));
+		this.listener.handleShapeChanged(this, new DtoPolylineAppend(points));
 		return this;
 	}
 

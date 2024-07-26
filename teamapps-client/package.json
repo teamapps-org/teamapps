@@ -30,7 +30,8 @@
     "projector-elegant-panel",
     "projector-timegraph",
     "projector-file-field",
-    "projector-combobox"
+    "projector-combobox",
+    "projector-map"
   ],
   "comments": {},
   "engines": {

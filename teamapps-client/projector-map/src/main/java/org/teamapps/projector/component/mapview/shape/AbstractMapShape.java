@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.map.shape;
+package org.teamapps.projector.component.mapview.shape;
 
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.projector.component.common.DtoAbstractMapShape;
-import org.teamapps.projector.component.common.DtoAbstractMapShapeChange;
+import org.teamapps.projector.component.mapview.DtoAbstractMapShape;
+import org.teamapps.projector.component.mapview.DtoAbstractMapShapeChange;
 
 import java.util.UUID;
 

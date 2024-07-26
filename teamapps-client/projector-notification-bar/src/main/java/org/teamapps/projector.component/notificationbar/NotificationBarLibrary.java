@@ -1,4 +1,4 @@
-package org.teamapps.projector.notification;
+package org.teamapps.projector.component.notificationbar;
 
 import org.teamapps.projector.clientobject.ClientObjectLibrary;
 import org.teamapps.projector.resource.ClassPathResource;
