@@ -21,13 +21,13 @@ package org.teamapps.uisession.statistics.app;
 
 import org.teamapps.projector.session.uisession.ClientBackPressureInfo;
 import org.teamapps.projector.session.uisession.UiSession;
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 
 public interface SessionStatsTableRecord {
 
 	UiSession getUiSession();
 
-	UiSessionStats getStatistics();
+	UiSessionStatistics getStatistics();
 
 	ClientBackPressureInfo getClientBackPressureInfo();
 

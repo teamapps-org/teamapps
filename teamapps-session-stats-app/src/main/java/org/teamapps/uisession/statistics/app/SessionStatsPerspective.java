@@ -24,24 +24,24 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.composite.CompositeIcon;
-import org.teamapps.projector.component.common.table.AbstractTableModel;
-import org.teamapps.projector.component.common.table.SortDirection;
-import org.teamapps.projector.component.common.table.Table;
-import org.teamapps.uisession.UiSessionState;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.essential.field.*;
+import org.teamapps.projector.component.essential.flexcontainer.FlexSizeUnit;
+import org.teamapps.projector.component.essential.flexcontainer.FlexSizingPolicy;
+import org.teamapps.projector.component.essential.flexcontainer.VerticalLayout;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButton;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.infinitescroll.table.AbstractTableModel;
+import org.teamapps.projector.component.infinitescroll.table.SortDirection;
+import org.teamapps.projector.component.infinitescroll.table.Table;
+import org.teamapps.projector.component.trivial.datetime.InstantDateTimeField;
+import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.session.uisession.UiSessionState;
 import org.teamapps.projector.session.uisession.stats.CountStats;
 import org.teamapps.projector.session.uisession.stats.SumStats;
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.field.*;
-import org.teamapps.ux.component.field.datetime.InstantDateTimeField;
-import org.teamapps.ux.component.flexcontainer.FlexSizeUnit;
-import org.teamapps.ux.component.flexcontainer.FlexSizingPolicy;
-import org.teamapps.ux.component.flexcontainer.VerticalLayout;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
-import org.teamapps.ux.component.toolbar.ToolbarButton;
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.session.SessionContext;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Instant;
@@ -71,7 +71,7 @@ public class SessionStatsPerspective {
 	}
 
 	private Table<SessionStatsTableRecord> createMasterTable(SessionStatsSharedBaseTableModel baseTableModel) {
-		Table<SessionStatsTableRecord> table = new Table<>();
+		Table<SessionStatsTableRecord> table = Table.<SessionStatsTableRecord>builder().build();
 		table.addColumn("startTime", "Start Time", new InstantDateTimeField()).setValueExtractor(record -> Instant.ofEpochMilli(record.getStatistics().getStartTime()));
 		table.addColumn("endTime", "End Time", new InstantDateTimeField()).setValueExtractor(record -> record.getStatistics().getEndTime() > 0 ? Instant.ofEpochMilli(record.getStatistics().getEndTime()) : null);
 		table.addColumn("sessionId", "ID", new TextField()).setDefaultWidth(50)
@@ -95,9 +95,9 @@ public class SessionStatsPerspective {
 					return new BaseTemplateRecord<>(icon, state.name());
 				});
 		table.addColumn("bufferSize", "Cmd Buf Size", new NumberField(0)).setDefaultWidth(90)
-				.setValueExtractor(record -> record.getClientBackPressureInfo() != null ? record.getClientBackPressureInfo().getUnconsumedCommandsCount() : null);
+				.setValueExtractor(record -> record.getClientBackPressureInfo() != null ? record.getClientBackPressureInfo().unconsumedCommandsCount() : null);
 		table.addColumn("readyToReceive", "Ready To Receive", new CheckBox()).setDefaultWidth(40)
-				.setValueExtractor(record -> record.getClientBackPressureInfo() != null && record.getClientBackPressureInfo().getRemainingRequestedCommands() > 0);
+				.setValueExtractor(record -> record.getClientBackPressureInfo() != null && record.getClientBackPressureInfo().remainingRequestedCommands() > 0);
 
 		addSumStatsColumns(table, "sentData", "Data Sent", record -> record.getStatistics().getSentDataStats());
 		addSumStatsColumns(table, "receivedData", "Data Recvd.", record -> record.getStatistics().getReceivedDataStats());
@@ -147,19 +147,19 @@ public class SessionStatsPerspective {
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setCssStyle("overflow", "auto");
 		verticalLayout.addComponent(new Label("Commands"));
-		commandStatsTableModel = new CountStatsTableModel(UiSessionStats::getCommandStats);
+		commandStatsTableModel = new CountStatsTableModel(UiSessionStatistics::getCommandStats);
 		verticalLayout.addComponent(createCountStatsTable(commandStatsTableModel), new FlexSizingPolicy(300, FlexSizeUnit.PIXEL, 0, 0));
 		verticalLayout.addComponent(new Label("Events"));
-		eventStatsTableModel = new CountStatsTableModel(UiSessionStats::getEventStats);
+		eventStatsTableModel = new CountStatsTableModel(UiSessionStatistics::getEventStats);
 		verticalLayout.addComponent(createCountStatsTable(eventStatsTableModel), new FlexSizingPolicy(300, FlexSizeUnit.PIXEL, 0, 0));
 		verticalLayout.addComponent(new Label("CommandResults"));
-		commandResultStatsTableModel = new CountStatsTableModel(UiSessionStats::getCommandResultStats);
+		commandResultStatsTableModel = new CountStatsTableModel(UiSessionStatistics::getCommandResultStats);
 		verticalLayout.addComponent(createCountStatsTable(commandResultStatsTableModel), new FlexSizingPolicy(300, FlexSizeUnit.PIXEL, 0, 0));
 		verticalLayout.addComponent(new Label("Queries"));
-		queryStatsTableModel = new CountStatsTableModel(UiSessionStats::getQueryStats);
+		queryStatsTableModel = new CountStatsTableModel(UiSessionStatistics::getQueryStats);
 		verticalLayout.addComponent(createCountStatsTable(queryStatsTableModel), new FlexSizingPolicy(300, FlexSizeUnit.PIXEL, 0, 0));
 		verticalLayout.addComponent(new Label("QueryResults"));
-		queryResultStatsTableModel = new CountStatsTableModel(UiSessionStats::getQueryResultStats);
+		queryResultStatsTableModel = new CountStatsTableModel(UiSessionStatistics::getQueryResultStats);
 		verticalLayout.addComponent(createCountStatsTable(queryResultStatsTableModel), new FlexSizingPolicy(300, FlexSizeUnit.PIXEL, 0, 0));
 		return verticalLayout;
 	}
@@ -195,10 +195,11 @@ public class SessionStatsPerspective {
 	}
 
 	private Table<CountStatEntry> createCountStatsTable(CountStatsTableModel model) {
-		Table<CountStatEntry> table = new Table<>();
+		Table<CountStatEntry> table = Table.<CountStatEntry>builder()
+				.withForceFitWidth(true)
+				.build();
 		table.addColumn("className", null, "Class", new TextField(), 400).setValueExtractor(entry -> entry.clazz);
 		table.addColumn("count", null, "Count", new NumberField(0), 80).setMinWidth(80).setMaxWidth(120).setValueExtractor(entry -> entry.count);
-		table.setForceFitWidth(true);
 		table.setModel(model);
 		return table;
 	}
@@ -209,7 +210,7 @@ public class SessionStatsPerspective {
 		public StatsTableModel(SessionStatsSharedBaseTableModel baseTableModel) {
 			this.baseTableModel = baseTableModel;
 			baseTableModel.onUpdated.addListener(() -> {
-				if (SessionContext.current().getClientBackPressureInfo().getUnconsumedCommandsCount() < 100) {
+				if (SessionContext.current().getClientBackPressureInfo().unconsumedCommandsCount() < 100) {
 					this.onAllDataChanged.fire();
 				} else {
 					LOGGER.info("Not sending updates due to high amount of unconsumed commands!");
@@ -243,10 +244,10 @@ public class SessionStatsPerspective {
 						comparator = Comparator.comparing(record -> record.getStatistics().getState());
 						break;
 					case "bufferSize":
-						comparator = Comparator.comparing(record -> record.getClientBackPressureInfo() != null ? record.getClientBackPressureInfo().getUnconsumedCommandsCount() : -1);
+						comparator = Comparator.comparing(record -> record.getClientBackPressureInfo() != null ? record.getClientBackPressureInfo().unconsumedCommandsCount() : -1);
 						break;
 					case "readyToReceive":
-						comparator = Comparator.comparing(record -> record.getClientBackPressureInfo() != null && record.getClientBackPressureInfo().getRemainingRequestedCommands() > 0);
+						comparator = Comparator.comparing(record -> record.getClientBackPressureInfo() != null && record.getClientBackPressureInfo().remainingRequestedCommands() > 0);
 						break;
 					case "sentDataTotal":
 						comparator = Comparator.comparing(record -> record.getStatistics().getSentDataStats().getSum());
@@ -306,14 +307,14 @@ public class SessionStatsPerspective {
 
 	private class CountStatsTableModel extends AbstractTableModel<CountStatEntry> {
 
-		private final Function<UiSessionStats, CountStats> countStatExtractor;
-		private UiSessionStats stats;
+		private final Function<UiSessionStatistics, CountStats> countStatExtractor;
+		private UiSessionStatistics stats;
 
-		private CountStatsTableModel(Function<UiSessionStats, CountStats> countStatExtractor) {
+		private CountStatsTableModel(Function<UiSessionStatistics, CountStats> countStatExtractor) {
 			this.countStatExtractor = countStatExtractor;
 		}
 
-		public void setStats(UiSessionStats stats) {
+		public void setStats(UiSessionStatistics stats) {
 			this.stats = stats;
 			onAllDataChanged.fire();
 		}
@@ -338,8 +339,8 @@ public class SessionStatsPerspective {
 					comparator = comparator.reversed();
 				}
 			}
-			return countStatExtractor.apply(stats).getCountByTypeId().object2LongEntrySet().stream()
-					.map(e -> new CountStatEntry(e.getKey(), e.getLongValue()))
+			return countStatExtractor.apply(stats).getCountByTypeId().entrySet().stream()
+					.map(e -> new CountStatEntry(e.getKey(), e.getValue()))
 					.sorted(comparator)
 					.skip(startIndex)
 					.limit(length)

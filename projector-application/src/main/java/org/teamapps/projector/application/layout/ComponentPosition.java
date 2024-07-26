@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.application.layout;
 
-import org.teamapps.ux.component.workspacelayout.WorkSpaceLayoutViewGroup;
-import org.teamapps.ux.component.workspacelayout.definition.ViewGroupDefinition;
+import org.teamapps.projector.component.workspacelayout.WorkSpaceLayoutViewGroup;
+import org.teamapps.projector.component.workspacelayout.definition.ViewGroupDefinition;
 
 public class ComponentPosition {
 

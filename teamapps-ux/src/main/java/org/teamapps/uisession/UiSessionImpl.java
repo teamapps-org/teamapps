@@ -34,8 +34,8 @@ import org.teamapps.projector.session.uisession.UiSessionState;
 import org.teamapps.uisession.messagebuffer.ServerMessageBuffer;
 import org.teamapps.uisession.messagebuffer.ServerMessageBufferException;
 import org.teamapps.uisession.messagebuffer.ServerMessageBufferMessage;
-import org.teamapps.uisession.statistics.RunningUiSessionStats;
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
+import org.teamapps.uisession.statistics.RunningUiSessionStatistics;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 import org.teamapps.ux.servlet.TeamAppsCommunicationException;
 
 import java.lang.invoke.MethodHandles;
@@ -75,7 +75,7 @@ public class UiSessionImpl implements UiSession {
 
 	private final Map<Integer, ResultCallbackWithCommandName> resultCallbacksByCmdId = new ConcurrentHashMap<>();
 
-	private final RunningUiSessionStats statistics;
+	private final RunningUiSessionStatistics statistics;
 
 	public UiSessionImpl(String sessionId, long creationTime, TeamAppsConfiguration config, ObjectMapper objectMapper, MessageSender messageSender) {
 		this.sessionId = sessionId;
@@ -85,7 +85,7 @@ public class UiSessionImpl implements UiSession {
 		this.timestampOfLastMessageFromClient.set(creationTime);
 		this.messageSender = messageSender;
 
-		statistics = new RunningUiSessionStats(System.currentTimeMillis(), sessionId, name);
+		statistics = new RunningUiSessionStatistics(System.currentTimeMillis(), sessionId, name);
 		serverMessageBuffer = new ServerMessageBuffer(config.getCommandBufferLength(), config.getCommandBufferTotalSize(), objectMapper);
 	}
 
@@ -124,14 +124,14 @@ public class UiSessionImpl implements UiSession {
 	@Override
 	public void sendCommand(CommandWithResultCallback commandWithCallback) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Sending command ({}): {}", sessionId.substring(0, 8), commandWithCallback.getCommandName());
+			LOGGER.debug("Sending command ({}): {}", sessionId.substring(0, 8), commandWithCallback.commandName());
 		}
-		statistics.commandSent(commandWithCallback.getParams().getClass().getCanonicalName());
-		CMD cmd = new CMD(commandWithCallback.getLibraryUuid(), commandWithCallback.getClientObjectId(),
-				commandWithCallback.getCommandName(), commandWithCallback.getParams(), commandWithCallback.getResultCallback() != null);
+		statistics.commandSent(commandWithCallback.params().getClass().getCanonicalName());
+		CMD cmd = new CMD(commandWithCallback.libraryUuid(), commandWithCallback.clientObjectId(),
+				commandWithCallback.commandName(), commandWithCallback.params(), commandWithCallback.resultCallback() != null);
 		sendReliableServerMessage(cmd, sequenceNumber -> {
-			if (commandWithCallback.getResultCallback() != null) {
-				resultCallbacksByCmdId.put(sequenceNumber, new ResultCallbackWithCommandName(commandWithCallback.getResultCallback(), commandWithCallback.getCommandName()));
+			if (commandWithCallback.resultCallback() != null) {
+				resultCallbacksByCmdId.put(sequenceNumber, new ResultCallbackWithCommandName(commandWithCallback.resultCallback(), commandWithCallback.commandName()));
 			}
 		});
 	}
@@ -386,7 +386,7 @@ public class UiSessionImpl implements UiSession {
 	}
 
 	@Override
-	public UiSessionStats getStatistics() {
+	public UiSessionStatistics getStatistics() {
 		return statistics;
 	}
 

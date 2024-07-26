@@ -19,11 +19,11 @@
  */
 package org.teamapps.projector.application.layout;
 
-import org.teamapps.ux.component.workspacelayout.SplitDirection;
-import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
-import org.teamapps.ux.component.workspacelayout.definition.SplitSize;
-import org.teamapps.ux.component.workspacelayout.definition.SplitPaneDefinition;
-import org.teamapps.ux.component.workspacelayout.definition.ViewGroupDefinition;
+import org.teamapps.projector.component.essential.SplitDirection;
+import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.projector.component.workspacelayout.definition.SplitPaneDefinition;
+import org.teamapps.projector.component.workspacelayout.definition.SplitSize;
+import org.teamapps.projector.component.workspacelayout.definition.ViewGroupDefinition;
 
 public class ExtendedLayout {
 
@@ -60,7 +60,7 @@ public class ExtendedLayout {
 	}
 	
 	public static LayoutItemDefinition createLayout(SplitSize superTopHeight, SplitSize leftWidth, SplitSize leftHeight, SplitSize innerLeftWidth, SplitSize innerLeftHeight,
-	                                                SplitSize topHeight, SplitSize centerWidth, SplitSize centerHeight, SplitSize rightWidth, SplitSize rightHeight, SplitSize outerRightHeight) {
+													SplitSize topHeight, SplitSize centerWidth, SplitSize centerHeight, SplitSize rightWidth, SplitSize rightHeight, SplitSize outerRightHeight) {
 		return new ExtendedLayout(superTopHeight, leftWidth, leftHeight, innerLeftWidth, innerLeftHeight, topHeight, centerWidth, centerHeight, rightWidth, rightHeight, outerRightHeight).getRootItem();
 	}
 

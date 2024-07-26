@@ -19,29 +19,9 @@
  */
 package org.teamapps.projector.session.uisession;
 
-public class ClientBackPressureInfo {
-
-	private final int maxCommandBufferSize;
-	private final int bufferedCommandsCount;
-	private final int unconsumedCommandsCount;
-
-	private final int minRequestedCommands;
-	private final int maxRequestedCommands;
-	private final int remainingRequestedCommands;
-
-	private final long requestedCommandsZeroReachingTimestamp;
-
-	public ClientBackPressureInfo(int maxCommandBufferSize, int bufferedCommandsCount, int unconsumedCommandsCount,
-								  int minRequestedCommands, int maxRequestedCommands, int remainingRequestedCommands,
-								  long requestedCommandsZeroReachingTimestamp) {
-		this.maxCommandBufferSize = maxCommandBufferSize;
-		this.bufferedCommandsCount = bufferedCommandsCount;
-		this.unconsumedCommandsCount = unconsumedCommandsCount;
-		this.minRequestedCommands = minRequestedCommands;
-		this.maxRequestedCommands = maxRequestedCommands;
-		this.remainingRequestedCommands = remainingRequestedCommands;
-		this.requestedCommandsZeroReachingTimestamp = requestedCommandsZeroReachingTimestamp;
-	}
+public record ClientBackPressureInfo(int maxCommandBufferSize, int bufferedCommandsCount, int unconsumedCommandsCount,
+									 int minRequestedCommands, int maxRequestedCommands, int remainingRequestedCommands,
+									 long requestedCommandsZeroReachingTimestamp) {
 
 	public boolean isBusy() {
 		boolean clientNotRequestingMoreCommands = requestedCommandsZeroReachingTimestamp > 0 && requestedCommandsZeroReachingTimestamp < System.currentTimeMillis() - 500;
@@ -49,44 +29,4 @@ public class ClientBackPressureInfo {
 		return clientNotRequestingMoreCommands || commandBufferCriticallyFull;
 	}
 
-	public int getMaxCommandBufferSize() {
-		return maxCommandBufferSize;
-	}
-
-	public int getBufferedCommandsCount() {
-		return bufferedCommandsCount;
-	}
-
-	public int getUnconsumedCommandsCount() {
-		return unconsumedCommandsCount;
-	}
-
-	public int getMinRequestedCommands() {
-		return minRequestedCommands;
-	}
-
-	public int getMaxRequestedCommands() {
-		return maxRequestedCommands;
-	}
-
-	public int getRemainingRequestedCommands() {
-		return remainingRequestedCommands;
-	}
-
-	public long getRequestedCommandsZeroReachingTimestamp() {
-		return requestedCommandsZeroReachingTimestamp;
-	}
-
-	@Override
-	public String toString() {
-		return "ClientBackPressureInfo{" +
-				"maxCommandBufferSize=" + maxCommandBufferSize +
-				", commandBufferFillSize=" + unconsumedCommandsCount +
-				", minRequestedCommands=" + minRequestedCommands +
-				", maxRequestedCommands=" + maxRequestedCommands +
-				", remainingRequestedCommands=" + remainingRequestedCommands +
-				", requestedCommandsBelowMinTimestamp=" + requestedCommandsZeroReachingTimestamp +
-				", timeSinceLastCommandRequestAfterZero=" + (System.currentTimeMillis() - requestedCommandsZeroReachingTimestamp) +
-				'}';
-	}
 }

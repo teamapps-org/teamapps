@@ -21,7 +21,7 @@ package org.teamapps.uisession.statistics.app;
 
 import org.teamapps.projector.session.uisession.ClientBackPressureInfo;
 import org.teamapps.projector.session.uisession.UiSession;
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 
 public class UiSessionSessionStatsTableRecord implements SessionStatsTableRecord {
 
@@ -39,7 +39,7 @@ public class UiSessionSessionStatsTableRecord implements SessionStatsTableRecord
 	}
 
 	@Override
-	public UiSessionStats getStatistics() {
+	public UiSessionStatistics getStatistics() {
 		return uiSession.getStatistics();
 	}
 

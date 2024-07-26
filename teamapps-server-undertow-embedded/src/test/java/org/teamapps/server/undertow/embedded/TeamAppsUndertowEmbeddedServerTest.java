@@ -20,13 +20,14 @@
 package org.teamapps.server.undertow.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.projector.notification.Notifications;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 public class TeamAppsUndertowEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> context.showNotification(MaterialIcon.MESSAGE, "Hello World");
+		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
 		TeamAppsUndertowEmbeddedServer.builder(controller)
 				.build()
 				.start();

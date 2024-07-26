@@ -23,9 +23,9 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import org.teamapps.projector.session.uisession.UiSessionState;
 import org.teamapps.projector.session.uisession.stats.CountStats;
 import org.teamapps.projector.session.uisession.stats.SumStats;
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 
-public class ImmutableUiSessionStats implements UiSessionStats {
+public class ImmutableUiSessionStatistics implements UiSessionStatistics {
 
 	private final long startTime;
 	private final long endTime;
@@ -101,15 +101,15 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 		}
 	}
 
-	public ImmutableUiSessionStats(long startTime, long endTime,
-								   String sessionId, String name, UiSessionState state,
-								   ImmutableCountStats commandStats         ,
-								   ImmutableCountStats commandResultStats   ,
-								   ImmutableCountStats eventStats           ,
-								   ImmutableCountStats queryStats           ,
-								   ImmutableCountStats queryResultStats     ,
-								   ImmutableSumStats sentDataStats,
-								   ImmutableSumStats receivedDataStats
+	public ImmutableUiSessionStatistics(long startTime, long endTime,
+										String sessionId, String name, UiSessionState state,
+										ImmutableCountStats commandStats         ,
+										ImmutableCountStats commandResultStats   ,
+										ImmutableCountStats eventStats           ,
+										ImmutableCountStats queryStats           ,
+										ImmutableCountStats queryResultStats     ,
+										ImmutableSumStats sentDataStats,
+										ImmutableSumStats receivedDataStats
 	) {
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -183,5 +183,10 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 	@Override
 	public SumStats getReceivedDataStats() {
 		return receivedDataStats;
+	}
+
+	@Override
+	public UiSessionStatistics immutable() {
+		return this;
 	}
 }

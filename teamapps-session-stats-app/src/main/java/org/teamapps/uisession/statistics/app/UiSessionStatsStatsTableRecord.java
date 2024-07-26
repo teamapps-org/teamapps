@@ -19,16 +19,16 @@
  */
 package org.teamapps.uisession.statistics.app;
 
-import org.teamapps.uisession.ClientBackPressureInfo;
-import org.teamapps.uisession.UiSession;
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
+import org.teamapps.projector.session.uisession.ClientBackPressureInfo;
+import org.teamapps.projector.session.uisession.UiSession;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 
 public class UiSessionStatsStatsTableRecord implements SessionStatsTableRecord {
 
-	private final UiSessionStats uiSessionStats;
+	private final UiSessionStatistics uiSessionStatistics;
 
-	public UiSessionStatsStatsTableRecord(UiSessionStats uiSessionStats) {
-		this.uiSessionStats = uiSessionStats;
+	public UiSessionStatsStatsTableRecord(UiSessionStatistics uiSessionStatistics) {
+		this.uiSessionStatistics = uiSessionStatistics;
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class UiSessionStatsStatsTableRecord implements SessionStatsTableRecord {
 	}
 
 	@Override
-	public UiSessionStats getStatistics() {
-		return uiSessionStats;
+	public UiSessionStatistics getStatistics() {
+		return uiSessionStatistics;
 	}
 
 	@Override

@@ -22,8 +22,8 @@ package org.teamapps.projector.application;
 import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.application.view.ViewSize;
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 
 import java.util.List;
 

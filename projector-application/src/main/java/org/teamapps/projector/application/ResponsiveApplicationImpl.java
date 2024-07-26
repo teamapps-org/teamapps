@@ -22,13 +22,13 @@ package org.teamapps.projector.application;
 import org.teamapps.common.format.Color;
 import org.teamapps.projector.application.assembler.ApplicationAssembler;
 import org.teamapps.projector.application.perspective.Perspective;
+import org.teamapps.projector.application.perspective.PerspectiveChangeHandler;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.application.view.ViewSize;
-import org.teamapps.projector.application.perspective.PerspectiveChangeHandler;
 import org.teamapps.projector.component.Component;
-import org.teamapps.ux.component.progress.MultiProgressDisplay;
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.progress.MultiProgressDisplay;
+import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -25,13 +25,13 @@ import org.teamapps.icons.Icon;
 import org.teamapps.projector.application.assembler.AdditionalNavigationButton;
 import org.teamapps.projector.application.assembler.ApplicationAssembler;
 import org.teamapps.projector.application.assembler.DesktopApplicationAssembler;
-import org.teamapps.projector.application.perspective.Perspective;
-import org.teamapps.projector.component.Component;
-import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.application.assembler.MobileApplicationAssembler;
+import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.view.View;
-import org.teamapps.ux.component.progress.MultiProgressDisplay;
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.progress.MultiProgressDisplay;
+import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.util.List;
 

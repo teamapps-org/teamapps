@@ -21,43 +21,11 @@ package org.teamapps.projector.session.uisession;
 
 import java.util.function.Consumer;
 
-public class CommandWithResultCallback {
-
-	private final String libraryUuid;
-	private final String clientObjectId;
-	private final String commandName;
-	private final Object[] params;
-	private final Consumer<Object> resultCallback;
-
-	public CommandWithResultCallback(String libraryUuid, String clientObjectId, String commandName, Object[] params, Consumer<Object> resultCallback) {
-		this.libraryUuid = libraryUuid;
-		this.clientObjectId = clientObjectId;
-		this.commandName = commandName;
-		this.params = params;
-		this.resultCallback = resultCallback;
-	}
-
+public record CommandWithResultCallback(String libraryUuid, String clientObjectId, String commandName, Object[] params,
+										Consumer<Object> resultCallback) {
+	
 	public CommandWithResultCallback(String libraryUuid, String clientObjectId, String commandName, Object... params) {
 		this(libraryUuid, clientObjectId, commandName, params, null);
 	}
 
-	public String getLibraryUuid() {
-		return libraryUuid;
-	}
-
-	public String getClientObjectId() {
-		return clientObjectId;
-	}
-
-	public String getCommandName() {
-		return commandName;
-	}
-
-	public Object[] getParams() {
-		return params;
-	}
-
-	public Consumer<Object> getResultCallback() {
-		return resultCallback;
-	}
 }

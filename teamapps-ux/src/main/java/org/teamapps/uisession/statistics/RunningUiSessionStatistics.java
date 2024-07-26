@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,13 +24,13 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import org.teamapps.projector.session.uisession.UiSessionState;
 import org.teamapps.projector.session.uisession.stats.CountStats;
 import org.teamapps.projector.session.uisession.stats.SumStats;
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class RunningUiSessionStats implements UiSessionStats {
+public class RunningUiSessionStatistics implements UiSessionStatistics {
 
 	private static class RunningCountStats implements CountStats {
 		private final AtomicLong count = new AtomicLong();
@@ -76,8 +76,8 @@ public class RunningUiSessionStats implements UiSessionStats {
 			return countByTypeId;
 		}
 
-		public ImmutableUiSessionStats.ImmutableCountStats toImmutable() {
-			return new ImmutableUiSessionStats.ImmutableCountStats(count.get(), getCountLastMinute(), getCountLast10Seconds(), countByTypeId);
+		public ImmutableUiSessionStatistics.ImmutableCountStats toImmutable() {
+			return new ImmutableUiSessionStatistics.ImmutableCountStats(count.get(), getCountLastMinute(), getCountLast10Seconds(), countByTypeId);
 		}
 	}
 
@@ -113,8 +113,8 @@ public class RunningUiSessionStats implements UiSessionStats {
 			return sumLast10Seconds;
 		}
 
-		public ImmutableUiSessionStats.ImmutableSumStats toImmutable() {
-			return new ImmutableUiSessionStats.ImmutableSumStats(total, sumLastMinute, sumLast10Seconds);
+		public ImmutableUiSessionStatistics.ImmutableSumStats toImmutable() {
+			return new ImmutableUiSessionStatistics.ImmutableSumStats(total, sumLastMinute, sumLast10Seconds);
 		}
 	}
 
@@ -134,7 +134,7 @@ public class RunningUiSessionStats implements UiSessionStats {
 	private final RunningSumStats receivedDataStats = new RunningSumStats();
 
 
-	public RunningUiSessionStats(long startTime, String sessionId, String name) {
+	public RunningUiSessionStatistics(long startTime, String sessionId, String name) {
 		this.startTime = startTime;
 		this.sessionId = sessionId;
 		this.name = name;
@@ -200,6 +200,18 @@ public class RunningUiSessionStats implements UiSessionStats {
 		return receivedDataStats;
 	}
 
+	@Override
+	public UiSessionStatistics immutable() {
+		return new ImmutableUiSessionStatistics(startTime, endTime, sessionId, name, state,
+				commandStats.toImmutable(),
+				commandResultStats.toImmutable(),
+				eventStats.toImmutable(),
+				queryStats.toImmutable(),
+				queryResultStats.toImmutable(),
+				sentDataStats.toImmutable(),
+				receivedDataStats.toImmutable());
+	}
+
 	public void nameChanged(String name) {
 		this.name = name;
 	}
@@ -230,17 +242,6 @@ public class RunningUiSessionStats implements UiSessionStats {
 		if (state == UiSessionState.CLOSED) {
 			endTime = System.currentTimeMillis();
 		}
-	}
-
-	public ImmutableUiSessionStats immutableCopy() {
-		return new ImmutableUiSessionStats(startTime, endTime, sessionId, name, state,
-				commandStats.toImmutable(),
-				commandResultStats.toImmutable(),
-				eventStats.toImmutable(),
-				queryStats.toImmutable(),
-				queryResultStats.toImmutable(),
-				sentDataStats.toImmutable(),
-				receivedDataStats.toImmutable());
 	}
 
 	public void update(long totalDataSent, long totalDataReceived) {

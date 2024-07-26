@@ -102,143 +102,178 @@ public class TableBuilder<RECORD> {
 		return table;
 	}
 
-	public void withModel(TableModel<RECORD> model) {
+	public TableBuilder<RECORD> withModel(TableModel<RECORD> model) {
 		this.model = model;
+		return this;
 	}
 
-	public void withColumns(List<TableColumn<RECORD, ?>> columns) {
+	public TableBuilder<RECORD> withColumns(List<TableColumn<RECORD, ?>> columns) {
 		this.columns = columns;
+		return this;
 	}
 
 	public void addColumn(TableColumn<RECORD, ?> column) {
 		this.columns.add(column);
 	}
 
-	public void withCustomEqualsAndHashCode(EqualsAndHashCode<RECORD> customEqualsAndHashCode) {
+	public TableBuilder<RECORD> withCustomEqualsAndHashCode(EqualsAndHashCode<RECORD> customEqualsAndHashCode) {
 		this.customEqualsAndHashCode = customEqualsAndHashCode;
+		return this;
 	}
 
-	public void withDisplayStyle(TableDisplayStyle displayStyle) {
+	public TableBuilder<RECORD> withDisplayStyle(TableDisplayStyle displayStyle) {
 		this.displayStyle = displayStyle;
+		return this;
 	}
 
-	public void withForceFitWidth(boolean forceFitWidth) {
+	public TableBuilder<RECORD> withForceFitWidth(boolean forceFitWidth) {
 		this.forceFitWidth = forceFitWidth;
+		return this;
 	}
 
-	public void withRowHeight(int rowHeight) {
+	public TableBuilder<RECORD> withRowHeight(int rowHeight) {
 		this.rowHeight = rowHeight;
+		return this;
 	}
 
-	public void withStripedRowsEnabled(boolean stripedRowsEnabled) {
+	public TableBuilder<RECORD> withStripedRowsEnabled(boolean stripedRowsEnabled) {
 		this.stripedRowsEnabled = stripedRowsEnabled;
+		return this;
 	}
 
-	public void withColumnHeadersVisible(boolean columnHeadersVisible) {
+	public TableBuilder<RECORD> withColumnHeadersVisible(boolean columnHeadersVisible) {
 		this.columnHeadersVisible = columnHeadersVisible;
+		return this;
 	}
 
-	public void withMultiRowSelectionEnabled(boolean multiRowSelectionEnabled) {
+	public TableBuilder<RECORD> withMultiRowSelectionEnabled(boolean multiRowSelectionEnabled) {
 		this.multiRowSelectionEnabled = multiRowSelectionEnabled;
+		return this;
 	}
 
-	public void withRowCheckBoxesEnabled(boolean rowCheckBoxesEnabled) {
+	public TableBuilder<RECORD> withRowCheckBoxesEnabled(boolean rowCheckBoxesEnabled) {
 		this.rowCheckBoxesEnabled = rowCheckBoxesEnabled;
+		return this;
 	}
 
-	public void withNumberingColumnEnabled(boolean numberingColumnEnabled) {
+	public TableBuilder<RECORD> withNumberingColumnEnabled(boolean numberingColumnEnabled) {
 		this.numberingColumnEnabled = numberingColumnEnabled;
+		return this;
 	}
 
-	public void withTextSelectionEnabled(boolean textSelectionEnabled) {
+	public TableBuilder<RECORD> withTextSelectionEnabled(boolean textSelectionEnabled) {
 		this.textSelectionEnabled = textSelectionEnabled;
+		return this;
 	}
 
-	public void withEditable(boolean editable) {
+	public TableBuilder<RECORD> withEditable(boolean editable) {
 		this.editable = editable;
+		return this;
 	}
 
-	public void withSelectionFrame(SelectionFrame selectionFrame) {
+	public TableBuilder<RECORD> withSelectionFrame(SelectionFrame selectionFrame) {
 		this.selectionFrame = selectionFrame;
+		return this;
 	}
 
-	public void withHeaderFields(Map<String, Field<?>> headerFields) {
+	public TableBuilder<RECORD> withHeaderFields(Map<String, Field<?>> headerFields) {
 		this.headerFields = headerFields;
+		return this;
 	}
 
-	public void withHeaderFieldsRowEnabled(boolean headerFieldsRowEnabled) {
+	public TableBuilder<RECORD> withHeaderFieldsRowEnabled(boolean headerFieldsRowEnabled) {
 		this.headerFieldsRowEnabled = headerFieldsRowEnabled;
+		return this;
 	}
 
-	public void withHeaderFieldsRowHeight(int headerFieldsRowHeight) {
+	public TableBuilder<RECORD> withHeaderFieldsRowHeight(int headerFieldsRowHeight) {
 		this.headerFieldsRowHeight = headerFieldsRowHeight;
+		return this;
 	}
 
-	public void withHeaderFieldsRowBackgroundColor(Color headerFieldsRowBackgroundColor) {
+	public TableBuilder<RECORD> withHeaderFieldsRowBackgroundColor(Color headerFieldsRowBackgroundColor) {
 		this.headerFieldsRowBackgroundColor = headerFieldsRowBackgroundColor;
+		return this;
 	}
 
-	public void withHeaderFieldsRowBorderColor(Color headerFieldsRowBorderColor) {
+	public TableBuilder<RECORD> withHeaderFieldsRowBorderColor(Color headerFieldsRowBorderColor) {
 		this.headerFieldsRowBorderColor = headerFieldsRowBorderColor;
+		return this;
 	}
 
-	public void withHeaderFieldsRowBorderWidth(Integer headerFieldsRowBorderWidth) {
+	public TableBuilder<RECORD> withHeaderFieldsRowBorderWidth(Integer headerFieldsRowBorderWidth) {
 		this.headerFieldsRowBorderWidth = headerFieldsRowBorderWidth;
+		return this;
 	}
 
-	public void withFooterFields(Map<String, Field<?>> footerFields) {
+	public TableBuilder<RECORD> withFooterFields(Map<String, Field<?>> footerFields) {
 		this.footerFields = footerFields;
+		return this;
 	}
 
-	public void withFooterFieldsRowEnabled(boolean footerFieldsRowEnabled) {
+	public TableBuilder<RECORD> withFooterFieldsRowEnabled(boolean footerFieldsRowEnabled) {
 		this.footerFieldsRowEnabled = footerFieldsRowEnabled;
+		return this;
 	}
 
-	public void withFooterFieldsRowHeight(int footerFieldsRowHeight) {
+	public TableBuilder<RECORD> withFooterFieldsRowHeight(int footerFieldsRowHeight) {
 		this.footerFieldsRowHeight = footerFieldsRowHeight;
+		return this;
 	}
 
-	public void withFooterFieldsRowBackgroundColor(Color footerFieldsRowBackgroundColor) {
+	public TableBuilder<RECORD> withFooterFieldsRowBackgroundColor(Color footerFieldsRowBackgroundColor) {
 		this.footerFieldsRowBackgroundColor = footerFieldsRowBackgroundColor;
+		return this;
 	}
 
-	public void withFooterFieldsRowBorderColor(Color footerFieldsRowBorderColor) {
+	public TableBuilder<RECORD> withFooterFieldsRowBorderColor(Color footerFieldsRowBorderColor) {
 		this.footerFieldsRowBorderColor = footerFieldsRowBorderColor;
+		return this;
 	}
 
-	public void withFooterFieldsRowBorderWidth(Integer footerFieldsRowBorderWidth) {
+	public TableBuilder<RECORD> withFooterFieldsRowBorderWidth(Integer footerFieldsRowBorderWidth) {
 		this.footerFieldsRowBorderWidth = footerFieldsRowBorderWidth;
+		return this;
 	}
 
-	public void withPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+	public TableBuilder<RECORD> withPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
+		return this;
 	}
 
-	public void withPropertyInjector(PropertyInjector<RECORD> propertyInjector) {
+	public TableBuilder<RECORD> withPropertyInjector(PropertyInjector<RECORD> propertyInjector) {
 		this.propertyInjector = propertyInjector;
+		return this;
 	}
 
-	public void withRowBorderColor(Color rowBorderColor) {
+	public TableBuilder<RECORD> withRowBorderColor(Color rowBorderColor) {
 		this.rowBorderColor = rowBorderColor;
+		return this;
 	}
 
-	public void withRowBorderWidth(Integer rowBorderWidth) {
+	public TableBuilder<RECORD> withRowBorderWidth(Integer rowBorderWidth) {
 		this.rowBorderWidth = rowBorderWidth;
+		return this;
 	}
 
-	public void withRowColor(Color rowColor) {
+	public TableBuilder<RECORD> withRowColor(Color rowColor) {
 		this.rowColor = rowColor;
+		return this;
 	}
 
-	public void withStripedRowColorOdd(Color stripedRowColorOdd) {
+	public TableBuilder<RECORD> withStripedRowColorOdd(Color stripedRowColorOdd) {
 		this.stripedRowColorOdd = stripedRowColorOdd;
+		return this;
 	}
 
-	public void withSelectionColor(Color selectionColor) {
+	public TableBuilder<RECORD> withSelectionColor(Color selectionColor) {
 		this.selectionColor = selectionColor;
+		return this;
 	}
 
-	public void withSorting(Sorting sorting) {
+	public TableBuilder<RECORD> withSorting(Sorting sorting) {
 		this.sorting = sorting;
+		return this;
 	}
 }
+

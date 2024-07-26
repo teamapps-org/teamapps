@@ -22,11 +22,11 @@ package org.teamapps.projector.application;
 import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.application.view.ViewSize;
-import org.teamapps.ux.component.toolbar.AbstractToolContainer;
-import org.teamapps.ux.component.toolbar.ToolAccordion;
-import org.teamapps.ux.component.toolbar.Toolbar;
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.projector.component.essential.toolbar.AbstractToolContainer;
+import org.teamapps.projector.component.essential.toolbar.ToolAccordion;
+import org.teamapps.projector.component.essential.toolbar.Toolbar;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
 

@@ -20,10 +20,10 @@
 package org.teamapps.uisession.statistics.app;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.application.ResponsiveApplication;
-import org.teamapps.ux.application.layout.ExtendedLayout;
-import org.teamapps.ux.application.perspective.Perspective;
-import org.teamapps.ux.application.view.View;
+import org.teamapps.projector.application.ResponsiveApplication;
+import org.teamapps.projector.application.layout.ExtendedLayout;
+import org.teamapps.projector.application.perspective.Perspective;
+import org.teamapps.projector.application.view.View;
 
 public class SessionStatsApplication {
 

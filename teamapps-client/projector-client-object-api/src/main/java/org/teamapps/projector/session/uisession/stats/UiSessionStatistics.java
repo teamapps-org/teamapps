@@ -21,7 +21,7 @@ package org.teamapps.projector.session.uisession.stats;
 
 import org.teamapps.projector.session.uisession.UiSessionState;
 
-public interface UiSessionStats {
+public interface UiSessionStatistics {
 
 	long getStartTime();
 	long getEndTime();
@@ -37,5 +37,7 @@ public interface UiSessionStats {
 
 	SumStats getSentDataStats();
 	SumStats getReceivedDataStats();
+
+	UiSessionStatistics immutable();
 
 }

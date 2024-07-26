@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.session.uisession.stats;
 
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import java.util.Map;
 
 public interface CountStats {
 
@@ -29,6 +29,6 @@ public interface CountStats {
 
 	long getCountLast10Seconds();
 
-	Object2LongMap<String> getCountByTypeId();
+	Map<String, Long> getCountByTypeId();
 
 }

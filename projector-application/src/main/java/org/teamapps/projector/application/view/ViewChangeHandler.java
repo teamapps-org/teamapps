@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.application.view;
 
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
 
 public interface ViewChangeHandler {
 

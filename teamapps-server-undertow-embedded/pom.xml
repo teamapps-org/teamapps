@@ -58,6 +58,11 @@
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-ux</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-notification</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

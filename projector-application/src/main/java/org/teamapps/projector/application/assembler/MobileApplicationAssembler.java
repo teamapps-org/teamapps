@@ -21,23 +21,22 @@ package org.teamapps.projector.application.assembler;
 
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
+import org.teamapps.projector.animation.PageTransition;
 import org.teamapps.projector.application.ResponsiveApplication;
+import org.teamapps.projector.application.ResponsiveApplicationToolbar;
 import org.teamapps.projector.application.perspective.Perspective;
+import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.application.view.ViewSize;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.application.ResponsiveApplicationToolbar;
-import org.teamapps.projector.application.view.View;
-import org.teamapps.ux.component.animation.PageTransition;
-import org.teamapps.ux.component.mobile.MobileLayout;
-import org.teamapps.ux.component.mobile.NavigationBar;
-import org.teamapps.ux.component.mobile.NavigationBarButton;
-import org.teamapps.ux.component.progress.MultiProgressDisplay;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
-import org.teamapps.ux.component.toolbar.AbstractToolContainer;
-import org.teamapps.ux.component.toolbar.ToolAccordion;
-import org.teamapps.ux.component.toolbar.ToolbarButton;
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
-import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.projector.component.essential.toolbar.AbstractToolContainer;
+import org.teamapps.projector.component.essential.toolbar.ToolAccordion;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButton;
+import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.mobilelayout.MobileLayout;
+import org.teamapps.projector.component.mobilelayout.NavigationBar;
+import org.teamapps.projector.component.mobilelayout.NavigationBarButton;
+import org.teamapps.projector.component.progress.MultiProgressDisplay;
+import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +45,14 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
 	private static final int PAGE_TRANSITION_ANIMATION_DURATION = 300;
 
-	private final NavigationBarButton<BaseTemplateRecord<?>> applicationLauncherButton;
-	private final NavigationBarButton<BaseTemplateRecord<?>> applicationTreeButton;
-	private final NavigationBarButton<BaseTemplateRecord<?>> applicationViewsButton;
-	private final NavigationBarButton<BaseTemplateRecord<?>> applicationToolbarButton;
-	private final NavigationBarButton<BaseTemplateRecord<?>> applicationBackButton;
+	private final NavigationBarButton applicationLauncherButton;
+	private final NavigationBarButton applicationTreeButton;
+	private final NavigationBarButton applicationViewsButton;
+	private final NavigationBarButton applicationToolbarButton;
+	private final NavigationBarButton applicationBackButton;
 
 	private final MobileLayout mobileLayout;
-	private final NavigationBar<BaseTemplateRecord<?>> navigationBar;
+	private final NavigationBar navigationBar;
 	private final ToolAccordion viewsItemView;
 	private AbstractToolContainer mainToolbar;
 
@@ -75,7 +74,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
 	public MobileApplicationAssembler(Icon<?, ?> launcherIcon, Icon<?, ?> treeIcon, Icon<?, ?> viewsIcon, Icon<?, ?> toolbarIcon, Icon<?, ?> backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
 		this.mobileLayout = new MobileLayout();
-		this.navigationBar = new NavigationBar<>();
+		this.navigationBar = new NavigationBar();
 		this.viewsItemView = new ToolAccordion();
 
 		navigationBar.preloadFanOutComponent(viewsItemView);
@@ -94,7 +93,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
 		if (additionalLeftButtons != null) {
 			for (AdditionalNavigationButton leftButton : additionalLeftButtons) {
-				NavigationBarButton<BaseTemplateRecord<?>> button = NavigationBarButton.create(leftButton.getIcon(), leftButton.getCaption());
+				NavigationBarButton button = NavigationBarButton.create(leftButton.getIcon());
 				navigationBar.addButton(button);
 				button.onClick.addListener(aVoid -> leftButton.getHandler().run());
 			}

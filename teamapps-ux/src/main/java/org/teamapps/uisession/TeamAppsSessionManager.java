@@ -48,7 +48,7 @@ import org.teamapps.projector.session.uisession.CommandWithResultCallback;
 import org.teamapps.projector.session.uisession.UiSessionState;
 import org.teamapps.threading.SequentialExecutorFactory;
 import org.teamapps.uisession.statistics.SessionStatsUpdatedEventData;
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 import org.teamapps.webcontroller.WebController;
 
 import java.lang.invoke.MethodHandles;
@@ -79,7 +79,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 
 	private final Map<String, SessionPair> sessionsById = new ConcurrentHashMap<>();
-	private final Deque<UiSessionStats> closedSessionsStatistics = Queues.synchronizedDeque(new ArrayDeque<>());
+	private final Deque<UiSessionStatistics> closedSessionsStatistics = Queues.synchronizedDeque(new ArrayDeque<>());
 
 	private final SequentialExecutorFactory sessionExecutorFactory;
 	private final WebController webController;
@@ -169,14 +169,14 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	public int getBufferedCommandsCount() {
 		return sessionsById.values().stream()
 				.map(SessionPair::getUiSession)
-				.mapToInt(uiSession -> uiSession.getClientBackPressureInfo().getBufferedCommandsCount())
+				.mapToInt(uiSession -> uiSession.getClientBackPressureInfo().bufferedCommandsCount())
 				.sum();
 	}
 
 	public int getUnconsumedCommandsCount() {
 		return sessionsById.values().stream()
 				.map(SessionPair::getUiSession)
-				.mapToInt(uiSession -> uiSession.getClientBackPressureInfo().getUnconsumedCommandsCount())
+				.mapToInt(uiSession -> uiSession.getClientBackPressureInfo().unconsumedCommandsCount())
 				.sum();
 	}
 
@@ -184,7 +184,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		return closedSessionsStatistics.size();
 	}
 
-	public List<UiSessionStats> getClosedSessionsStatistics() {
+	public List<UiSessionStatistics> getClosedSessionsStatistics() {
 		synchronized (closedSessionsStatistics) {
 			return List.copyOf(closedSessionsStatistics);
 		}
@@ -218,7 +218,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			public void onStateChanged(String sessionId, UiSessionState state) {
 				if (state == CLOSED) {
 					sessionsById.remove(uiSession.getSessionId());
-					closedSessionsStatistics.addLast(uiSession.getStatistics().immutableCopy());
+					closedSessionsStatistics.addLast(uiSession.getStatistics().immutable());
 					while (closedSessionsStatistics.size() > 10_000) {
 						closedSessionsStatistics.removeFirst();
 					}

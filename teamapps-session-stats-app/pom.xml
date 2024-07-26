@@ -24,6 +24,15 @@
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-ux</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-application</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-combobox</artifactId>
+            <version>0.9.155-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

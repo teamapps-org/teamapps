@@ -21,19 +21,19 @@ package org.teamapps.projector.application.assembler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.ResponsiveApplication;
 import org.teamapps.projector.application.ResponsiveApplicationToolbar;
+import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.application.view.ViewSize;
 import org.teamapps.projector.component.Component;
-import org.teamapps.ux.component.progress.MultiProgressDisplay;
-import org.teamapps.ux.component.toolbar.Toolbar;
-import org.teamapps.ux.component.workspacelayout.ViewGroupPanelState;
-import org.teamapps.ux.component.workspacelayout.WorkSpaceLayout;
-import org.teamapps.ux.component.workspacelayout.WorkSpaceLayoutView;
-import org.teamapps.ux.component.workspacelayout.WorkSpaceLayoutViewGroup;
-import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.projector.component.essential.toolbar.Toolbar;
+import org.teamapps.projector.component.progress.MultiProgressDisplay;
+import org.teamapps.projector.component.workspacelayout.ViewGroupPanelState;
+import org.teamapps.projector.component.workspacelayout.WorkSpaceLayout;
+import org.teamapps.projector.component.workspacelayout.WorkSpaceLayoutView;
+import org.teamapps.projector.component.workspacelayout.WorkSpaceLayoutViewGroup;
+import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;

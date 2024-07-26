@@ -19,16 +19,16 @@
  */
 package org.teamapps.uisession.statistics;
 
-import org.teamapps.projector.session.uisession.stats.UiSessionStats;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 import org.teamapps.uisession.SessionPair;
 
 import java.util.List;
 
 public class SessionStatsUpdatedEventData {
 	private final List<SessionPair> allSessions;
-	private final List<UiSessionStats> closedSessionsStatistics;
+	private final List<UiSessionStatistics> closedSessionsStatistics;
 
-	public SessionStatsUpdatedEventData(List<SessionPair> allSessions, List<UiSessionStats> closedSessionsStatistics) {
+	public SessionStatsUpdatedEventData(List<SessionPair> allSessions, List<UiSessionStatistics> closedSessionsStatistics) {
 		this.allSessions = allSessions;
 		this.closedSessionsStatistics = closedSessionsStatistics;
 	}
@@ -37,7 +37,7 @@ public class SessionStatsUpdatedEventData {
 		return allSessions;
 	}
 
-	public List<UiSessionStats> getClosedSessionsStatistics() {
+	public List<UiSessionStatistics> getClosedSessionsStatistics() {
 		return closedSessionsStatistics;
 	}
 }

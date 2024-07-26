@@ -209,6 +209,11 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
+                <artifactId>projector-application</artifactId>
+                <version>0.9.155-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-server-jetty-embedded</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -222,7 +227,11 @@
                 <artifactId>projector-workspace-layout</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>projector-mobile-layout</artifactId>
+                <version>0.9.155-SNAPSHOT</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.google.guava</groupId>
