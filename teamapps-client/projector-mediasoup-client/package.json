@@ -1,0 +1,26 @@
+{
+  "name": "projector-mediasoup-client",
+  "version": "0.9.155-SNAPSHOT",
+  "type": "module",
+  "exports": "./target/js-dist/index.js",
+  "types": "./target/js-dist/lib/index.d.ts",
+  "scripts": {
+    "del_dist": "rimraf 'dist/*'",
+    "clean": "yarn run del_dist",
+    "tsc": "tsc",
+    "bundle": "node esbuild.mjs",
+    "build": "yarn run del_dist && yarn run tsc && yarn run bundle"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.13",
+    "rimraf": "^3.0.2",
+    "typescript": "^5.1"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "mediasoup-client": "^3.6.28",
+    "projector-client-object-api": "workspace:*",
+    "socket.io-client": "^4.5.1",
+    "voice-activity-detection": "^0.0.5"
+  }
+}

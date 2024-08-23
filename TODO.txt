@@ -79,14 +79,17 @@ search for all "new ProjectorEvent" occurrences and check if they need to be bou
 change generation target packages:
  - core-components: org.teamapps.projector.component.essential
  - no .dto!! (nowhere!) Many classes are now fully integrated (especially enums!)
+rename "public .* (to|create)Ui\w+\(\)" methods to something more DTO like (or get rid of them)
+introduce simplistic record-based DTO data objects that can replace many Java copy classes (same reason as for enums. It's just unnecessary to have them unless they provide some functionality).
+
+distribute .less files! (currently most are in client-core-components)
+
+On the Java side: replace milliseconds with Duration
+
+rename document-viewer to document-previewer
 
 
- distribute .less files! (currently most are in client-core-components)
+rename teamapps-ux to projector-server-core
 
- On the Java side: replace milliseconds with Duration
+get rid of eval(...) in JS code by introducing Script as ClientObject (Script must be triggerable from the client side!)
 
- rename document-viewer to document-previewer
-
- rename "public .* (to|create)Ui\w+\(\)" methods to something more DTO like (or get rid of them)
-
- rename teamapps-ux to projector-server-core

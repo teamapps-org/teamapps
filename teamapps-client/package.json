@@ -32,7 +32,8 @@
     "projector-file-field",
     "projector-combobox",
     "projector-map-view",
-    "projector-shaka-player"
+    "projector-shaka-player",
+    "projector-mediasoup-client"
   ],
   "comments": {},
   "engines": {

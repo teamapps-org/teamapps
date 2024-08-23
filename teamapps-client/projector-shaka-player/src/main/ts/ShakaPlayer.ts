@@ -52,7 +52,7 @@ import Manifest = shaka.extern.Manifest;
 
 export class ShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
 
-	public readonly onManifestLoaded: TeamAppsEvent<DtoShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();
+	public readonly onManifestLoaded: TeamAppsEvent<DtoShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();       
 	public readonly onTimeUpdate: TeamAppsEvent<DtoShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
 	public readonly onEnded: TeamAppsEvent<DtoShakaPlayer_EndedEvent> = new TeamAppsEvent();
 	public readonly onErrorLoading: TeamAppsEvent<DtoShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent();

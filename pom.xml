@@ -62,6 +62,7 @@
         <module>teamapps-client/projector-blogview</module>
         <module>teamapps-client/projector-map-view</module>
         <module>teamapps-client/projector-shaka-player</module>
+        <module>teamapps-client/projector-mediasoup-client</module>
 
         <module>teamapps-ux</module>
         <module>teamapps-server-jetty-embedded</module>
