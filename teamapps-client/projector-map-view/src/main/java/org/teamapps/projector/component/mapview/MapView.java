@@ -90,7 +90,7 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 	@Override
 	public ComponentConfig createConfig() {
 		DtoMapView uiMap = new DtoMapView();
-		mapAbstractUiComponentProperties(uiMap);
+		mapAbstractConfigProperties(uiMap);
 
 		uiMap.setBaseApiUrl(baseApiUrl);
 		uiMap.setAccessToken(accessToken);

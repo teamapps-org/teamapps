@@ -57,7 +57,7 @@ public class HtmlView extends AbstractComponent implements DtoHtmlViewEventHandl
 	@Override
 	public DtoComponent createConfig() {
 		DtoHtmlView ui = new DtoHtmlView();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setHtml(html);
 		ui.setComponentsByContainerElementSelector(componentsByContainerElementSelector.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(c -> c).collect(Collectors.toList()))));

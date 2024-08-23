@@ -78,7 +78,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 	@Override
 	public DtoMediaSoupV3WebRtcClient createConfig() {
 		DtoMediaSoupV3WebRtcClient ui = new DtoMediaSoupV3WebRtcClient();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setPublishingParameters(publishingParameters);
 		ui.setPlaybackParameters(playbackParameters);
 		ui.setActivityLineVisible(activityLineVisible);

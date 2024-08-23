@@ -196,7 +196,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 	@Override
 	public DtoComponent createConfig() {
 		DtoCalendar uiCalendar = new DtoCalendar();
-		mapAbstractUiComponentProperties(uiCalendar);
+		mapAbstractConfigProperties(uiCalendar);
 		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());
 		uiCalendar.setDisplayedDate(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli());
 		uiCalendar.setShowHeader(showHeader);

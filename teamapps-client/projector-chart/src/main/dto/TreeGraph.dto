@@ -1,0 +1,108 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "projector-chart":org.teamapps.projector.component.chart.tree;
+
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+import org.teamapps.projector.record.DtoClientRecord;
+
+class DtoTreeGraph extends DtoComponent {
+    List<DtoTreeGraphNode> nodes;
+
+	String backgroundColor;
+    double zoomFactor;
+    boolean compact;
+
+    int verticalLayerGap;
+    int sideListIndent;
+    int sideListVerticalGap;
+    int horizontalSiblingGap;
+    int horizontalNonSignlingGap;
+
+    command update(DtoTreeGraph config);
+
+    command setZoomFactor(double zoomFactor); // > 0
+    command setNodes(List<DtoTreeGraphNode> nodes);
+    command addNode(DtoTreeGraphNode node);
+    command removeNode(String nodeId);
+    command setNodeExpanded(String nodeId, boolean expanded);
+    command updateNode(DtoTreeGraphNode node);
+
+    command moveToRootNode();
+    command moveToNode(String nodeId);
+
+    event nodeClicked(String nodeId);
+    event nodeExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
+    event parentExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
+    event sideListExpandedOrCollapsed(String nodeId, boolean expanded);
+}
+
+class DtoBaseTreeGraphNode {
+	required String id;
+    required int width;
+    required int height;
+    String backgroundColor;
+    String borderColor;
+    double borderWidth;
+    double borderRadius;
+
+    DtoTreeGraphNodeImage image;
+    DtoTreeGraphNodeIcon icon;
+
+    DtoTemplate* template;     // will get embedded using foreignObject
+    DtoClientRecord record;   // will get embedded using foreignObject
+
+    String connectorLineColor; // line to parent node
+    int connectorLineWidth;
+    String dashArray;
+}
+
+class DtoTreeGraphNode extends DtoBaseTreeGraphNode{
+    String parentId;
+    boolean parentExpandable;
+    boolean parentExpanded;
+
+    boolean expanded;
+    boolean hasLazyChildren;
+
+    List<DtoBaseTreeGraphNode> sideListNodes;
+    boolean sideListExpanded;
+}
+
+class DtoTreeGraphNodeImage {
+    required String url;
+    required int width;
+    required int height;
+    int centerTopDistance; //top distance of image center from top-left corner of node, e.g. -10 and height 30 means image will be 25 pixels above the top line of the node
+    int centerLeftDistance; //left distance of image center from top-left corner of node
+    CornerShape cornerShape;
+    boolean shadow;
+    double borderWidth;
+    String borderColor;
+}
+
+enum CornerShape {
+    ORIGINAL, ROUNDED, CIRCLE;
+}
+
+class DtoTreeGraphNodeIcon {
+    required String icon;
+    required int size; //width = height
+}

@@ -22,7 +22,6 @@
     "color-rgba": "^2.1.1",
     "d3": "^7.9.0",
     "d3-luxon": "^2.0.0",
-    "fastest-levenshtein": "^1.0.16",
     "projector-client-object-api": "workspace:*"
   }
 }

@@ -66,7 +66,7 @@ public class SplitPane extends AbstractComponent implements DtoSplitPaneEventHan
 		DtoSplitPane uiSplitPane = new DtoSplitPane();
 		uiSplitPane.setSplitDirection(splitDirection);
 		uiSplitPane.setSizePolicy(sizePolicy);
-		mapAbstractUiComponentProperties(uiSplitPane);
+		mapAbstractConfigProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);
 		if (firstChild != null) {
 			uiSplitPane.setFirstChild(firstChild);

@@ -57,7 +57,7 @@ public class MultiProgressDisplay extends AbstractComponent implements DtoMultiP
 	@Override
 	public DtoMultiProgressDisplay createConfig() {
 		DtoMultiProgressDisplay ui = new DtoMultiProgressDisplay();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setPosition(notificationPosition);
 		return ui;
 	}

@@ -87,7 +87,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	@Override
 	public DtoComponent createConfig() {
 		DtoInfiniteItemView ui = new DtoInfiniteItemView(itemTemplate != null ? itemTemplate : null);
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setItemWidth(itemWidth);
 		ui.setItemHeight(itemHeight);
 		// ui.setHorizontalSpacing(horizontalSpacing);

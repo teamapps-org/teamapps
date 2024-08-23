@@ -50,7 +50,7 @@ public class Div extends AbstractComponent implements DtoDivEventHandler {
 	@Override
 	public DtoDiv createConfig() {
 		DtoDiv ui = new DtoDiv();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setContent(content != null ? content : null);
 		ui.setInnerHtml(innerHtml);
 		return ui;

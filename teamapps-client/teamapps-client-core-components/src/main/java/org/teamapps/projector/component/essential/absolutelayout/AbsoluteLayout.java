@@ -84,7 +84,7 @@ public class AbsoluteLayout extends AbstractComponent implements DtoAbsoluteLayo
 	@Override
 	public DtoAbsoluteLayout createConfig() {
 		DtoAbsoluteLayout uiAbsoluteLayout = new DtoAbsoluteLayout();
-		mapAbstractUiComponentProperties(uiAbsoluteLayout);
+		mapAbstractConfigProperties(uiAbsoluteLayout);
 		uiAbsoluteLayout.setComponents(createUiAbsolutePositionedComponents());
 		return uiAbsoluteLayout;
 	}

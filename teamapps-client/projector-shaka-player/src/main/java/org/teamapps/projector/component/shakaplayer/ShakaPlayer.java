@@ -62,7 +62,7 @@ public class ShakaPlayer extends AbstractComponent implements DtoShakaPlayerEven
 	@Override
 	public ComponentConfig createConfig() {
 		DtoShakaPlayer ui = new DtoShakaPlayer();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setHlsUrl(hlsUrl);
 		ui.setDashUrl(dashUrl);
 		ui.setPosterImageUrl(posterImageUrl);

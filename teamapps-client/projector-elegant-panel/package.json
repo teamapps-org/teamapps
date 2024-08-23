@@ -17,8 +17,6 @@
     "typescript": "^5.1"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.6.3",
-    "fastest-levenshtein": "^1.0.16",
     "projector-client-object-api": "workspace:*"
   }
 }

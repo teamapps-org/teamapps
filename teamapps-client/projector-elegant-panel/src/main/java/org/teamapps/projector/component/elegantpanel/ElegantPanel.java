@@ -47,7 +47,7 @@ public class ElegantPanel extends AbstractComponent implements DtoElegantPanelEv
 	@Override
 	public DtoComponent createConfig() {
 		DtoElegantPanel uiElegantPanel = new DtoElegantPanel();
-		mapAbstractUiComponentProperties(uiElegantPanel);
+		mapAbstractConfigProperties(uiElegantPanel);
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);
 		uiElegantPanel.setContent(content);
 		uiElegantPanel.setMaxContentWidth(maxContentWidth);

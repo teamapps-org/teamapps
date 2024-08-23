@@ -45,7 +45,7 @@ public class ToolAccordion extends AbstractToolContainer implements DtoToolAccor
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
 		DtoToolAccordion uiToolAccordion = new DtoToolAccordion(leftUiButtonGroups, rightUiButtonGroups);
-		mapAbstractUiComponentProperties(uiToolAccordion);
+		mapAbstractConfigProperties(uiToolAccordion);
 		return uiToolAccordion;
 	}
 

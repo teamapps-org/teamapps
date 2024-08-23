@@ -161,7 +161,7 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 	@Override
 	public DtoTree createConfig() {
 		DtoTree uiTree = new DtoTree();
-		mapAbstractUiComponentProperties(uiTree);
+		mapAbstractConfigProperties(uiTree);
 		List<RECORD> records = model.getRecords();
 		if (records != null) {
 			uiTree.setInitialData(createOrUpdateUiRecords(records));

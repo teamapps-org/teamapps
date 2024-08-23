@@ -54,7 +54,7 @@ public class ProgressDisplay extends AbstractComponent implements DtoProgressDis
 	@Override
 	public DtoProgressDisplay createConfig() {
 		DtoProgressDisplay ui = new DtoProgressDisplay();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setIcon(getSessionContext().resolveIcon(icon));
 		ui.setTaskName(taskName);
 		ui.setStatusMessage(progress.getStatusMessage());

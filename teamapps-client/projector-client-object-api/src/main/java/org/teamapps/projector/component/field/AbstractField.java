@@ -102,7 +102,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 	}
 
 	protected void mapAbstractFieldAttributesToUiField(DtoAbstractField uiField) {
-		mapAbstractUiComponentProperties(uiField);
+		mapAbstractConfigProperties(uiField);
 		uiField.setValue(convertServerValueToClientValue(this.value.read()));
 		uiField.setEditingMode(editingMode);
 		uiField.setFieldMessages(getFieldMessages().stream()

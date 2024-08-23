@@ -52,7 +52,7 @@ public class DocumentViewer extends AbstractComponent implements DtoDocumentView
 	@Override
 	public ComponentConfig createConfig() {
 		DtoDocumentViewer documentViewer = new DtoDocumentViewer();
-		mapAbstractUiComponentProperties(documentViewer);
+		mapAbstractConfigProperties(documentViewer);
 		documentViewer.setPageUrls(pageUrls);
 		documentViewer.setDisplayMode(displayMode);
 		documentViewer.setZoomFactor(zoomFactor);

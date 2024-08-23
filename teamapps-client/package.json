@@ -33,7 +33,8 @@
     "projector-combobox",
     "projector-map-view",
     "projector-shaka-player",
-    "projector-mediasoup-client"
+    "projector-mediasoup-client",
+    "projector-chart"
   ],
   "comments": {},
   "engines": {

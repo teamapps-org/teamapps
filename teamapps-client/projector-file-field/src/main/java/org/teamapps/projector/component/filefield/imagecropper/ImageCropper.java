@@ -41,7 +41,7 @@ public class ImageCropper extends AbstractComponent implements DtoImageCropperEv
 	@Override
 	public ComponentConfig createConfig() {
 		DtoImageCropper uiImageCropper = new DtoImageCropper(imageUrl, selectionMode, aspectRatio);
-		mapAbstractUiComponentProperties(uiImageCropper);
+		mapAbstractConfigProperties(uiImageCropper);
 		return uiImageCropper;
 	}
 

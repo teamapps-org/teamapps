@@ -149,7 +149,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 		);
 		uiTimeGraph.setLocale(locale.toLanguageTag());
 		uiTimeGraph.setTimeZoneId(timeZoneId.getId());
-		mapAbstractUiComponentProperties(uiTimeGraph);
+		mapAbstractConfigProperties(uiTimeGraph);
 		uiTimeGraph.setMouseScrollZoomPanMode(mouseScrollZoomPanMode);
 		return uiTimeGraph;
 	}

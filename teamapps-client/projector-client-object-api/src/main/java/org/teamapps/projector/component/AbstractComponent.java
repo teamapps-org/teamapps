@@ -52,7 +52,7 @@ public abstract class AbstractComponent implements Component {
 		this.clientObjectChannel = this.sessionContext.registerClientObject(this);
 	}
 
-	protected void mapAbstractUiComponentProperties(DtoComponent uiComponent) {
+	protected void mapAbstractConfigProperties(DtoComponent uiComponent) {
 		uiComponent.setVisible(visible);
 		uiComponent.setStylesBySelector((Map) stylesBySelector);
 		uiComponent.setClassNamesBySelector(cssClassesBySelector);

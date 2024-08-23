@@ -227,7 +227,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				.map(TableColumn::createUiTableColumn)
 				.collect(Collectors.toList());
 		DtoTable uiTable = new DtoTable(columns);
-		mapAbstractUiComponentProperties(uiTable);
+		mapAbstractConfigProperties(uiTable);
 		uiTable.setSelectionFrame(selectionFrame != null ? selectionFrame.createUiSelectionFrame() : null);
 		uiTable.setDisplayStyle(displayStyle.toDto());
 		uiTable.setForceFitWidth(forceFitWidth);

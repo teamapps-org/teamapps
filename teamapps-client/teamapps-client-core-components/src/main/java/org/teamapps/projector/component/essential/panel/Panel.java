@@ -127,7 +127,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 	}
 
 	protected void mapUiPanelProperties(DtoPanel uiPanel) {
-		mapAbstractUiComponentProperties(uiPanel);
+		mapAbstractConfigProperties(uiPanel);
 		uiPanel.setTitle(title);
 		uiPanel.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanel.setLeftHeaderField(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth));

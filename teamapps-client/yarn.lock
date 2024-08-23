@@ -1771,6 +1771,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"d3-flextree@npm:^2.1.1":
+  version: 2.1.2
+  resolution: "d3-flextree@npm:2.1.2"
+  dependencies:
+    d3-hierarchy: ^1.1.5
+  checksum: f6ee95d740aa8e7ee978971eba07bcbbd8e2455cd4b98b2b020a6f0f24e2e130761a4ef5f2570960f56aa356f14a971d750df3ea56438bf4571dd59c689288e5
+  languageName: node
+  linkType: hard
+
 "d3-force@npm:3":
   version: 3.0.0
   resolution: "d3-force@npm:3.0.0"
@@ -1802,6 +1811,13 @@ __metadata:
   version: 3.1.2
   resolution: "d3-hierarchy@npm:3.1.2"
   checksum: 0fd946a8c5fd4686d43d3e11bbfc2037a145fda29d2261ccd0e36f70b66af6d7638e2c0c7112124d63fc3d3127197a00a6aecf676bd5bd392a94d7235a214263
+  languageName: node
+  linkType: hard
+
+"d3-hierarchy@npm:^1.1.5":
+  version: 1.1.9
+  resolution: "d3-hierarchy@npm:1.1.9"
+  checksum: 5fd8761c302252cb9abe9ce2a0934fc97104dd0df8d1b5de6472532903416f40e13b4b58d03ce215a0b816d7129c4ed4503bd4fdbc00a130fdcf46a63d734a52
   languageName: node
   linkType: hard
 
@@ -3030,6 +3046,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-chart@workspace:projector-chart":
+  version: 0.0.0-use.local
+  resolution: "projector-chart@workspace:projector-chart"
+  dependencies:
+    d3-flextree: ^2.1.1
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-client-object-api@workspace:*, projector-client-object-api@workspace:projector-client-object-api":
   version: 0.0.0-use.local
   resolution: "projector-client-object-api@workspace:projector-client-object-api"
@@ -3072,9 +3100,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "projector-elegant-panel@workspace:projector-elegant-panel"
   dependencies:
-    "@floating-ui/dom": ^1.6.3
     esbuild: ^0.15.13
-    fastest-levenshtein: ^1.0.16
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1
@@ -3240,7 +3266,6 @@ __metadata:
     d3: ^7.9.0
     d3-luxon: ^2.0.0
     esbuild: ^0.15.13
-    fastest-levenshtein: ^1.0.16
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1

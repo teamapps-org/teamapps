@@ -48,7 +48,7 @@ public class FlexContainer extends AbstractComponent implements DtoFlexContainer
 	@Override
 	public DtoFlexContainer createConfig() {
 		DtoFlexContainer uiFlexContainer = new DtoFlexContainer();
-		mapAbstractUiComponentProperties(uiFlexContainer);
+		mapAbstractConfigProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()
 				.map(c -> c)
 				.collect(Collectors.toList()));

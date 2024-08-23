@@ -195,7 +195,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent implements
 	@Override
 	public DtoComponent createConfig() {
 		DtoItemView uiItemView = new DtoItemView();
-		mapAbstractUiComponentProperties(uiItemView);
+		mapAbstractConfigProperties(uiItemView);
 		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate : null);
 		uiItemView.setItemGroups(this.itemGroups.stream()
 				.map(group -> group.createUiItemViewItemGroup())

@@ -47,7 +47,7 @@ public class Toolbar extends AbstractToolContainer implements DtoToolbarEventHan
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
 		DtoToolbar uiToolbar = new DtoToolbar(leftUiButtonGroups, rightUiButtonGroups);
-		mapAbstractUiComponentProperties(uiToolbar);
+		mapAbstractConfigProperties(uiToolbar);
 		uiToolbar.setLogoImage(logoImageUrl);
 		return uiToolbar;
 	}

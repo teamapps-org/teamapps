@@ -48,7 +48,7 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 	@Override
 	public DtoLinkButton createConfig() {
 		DtoLinkButton ui = new DtoLinkButton();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setText(text);
 		ui.setUrl(url);
 		ui.setTarget(target);

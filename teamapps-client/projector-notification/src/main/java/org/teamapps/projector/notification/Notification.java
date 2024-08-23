@@ -79,7 +79,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 
 	public DtoNotification createConfig() {
 		DtoNotification ui = new DtoNotification();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setPadding(padding != null ? padding.createUiSpacing() : null);
 		ui.setDismissible(dismissible);
