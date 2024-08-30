@@ -138,6 +138,8 @@ export {UiTreeGraph} from "./UiTreeGraph";
 export {UiTestHarness} from "./UiTestHarness";
 export {draggable} from "./util/draggable";
 
+export {UiScript} from "./UiScript";
+
 // export {typescriptDeclarationFixConstant as AbstractUiChartConfig} from "./../generated/AbstractUiChartConfig";
 
 import * as log from "loglevel";

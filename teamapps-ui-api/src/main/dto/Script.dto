@@ -1,0 +1,5 @@
+class UiScript extends UiComponent {
+    required String script;
+
+    command callFunction(String name, List<Object> parameters);
+}
