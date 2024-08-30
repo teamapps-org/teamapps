@@ -20,11 +20,9 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.combobox.ComboBox;
-import org.teamapps.ux.component.field.combobox.TagComboBox;
-import org.teamapps.ux.component.field.datetime.LocalDateTimeField;
-import org.teamapps.ux.component.flexcontainer.VerticalLayout;
+import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.rootpanel.RootPanel;
+import org.teamapps.ux.component.script.Script;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
@@ -35,31 +33,14 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
-					RootPanel rootPanel = new RootPanel();
-					sessionContext.addRootPanel(null, rootPanel);
+					RootPanel rootPanel = sessionContext.addRootPanel();
 
+					Script script = new Script("export function hello(name) {console.log('hello ' + name)}");
+					script.render();
 
-					ComboBox<Object> combo = new ComboBox<>();
-					combo.setModel(s -> {
-						System.out.println("Combo Query: " + s);
-						return List.of(s);
-					});
-
-					TagComboBox<Object> tagCombo = new TagComboBox<>();
-					tagCombo.setModel(s -> {
-						System.out.println("TagCombo Query: " + s);
-						return List.of(s);
-					});
-
-					LocalDateTimeField dateTimeField = new LocalDateTimeField();
-
-
-
-					VerticalLayout verticalLayout = new VerticalLayout();
-					verticalLayout.addComponent(combo);
-					verticalLayout.addComponent(tagCombo);
-					verticalLayout.addComponent(dateTimeField);
-					rootPanel.setContent(verticalLayout);
+					var button = Button.create("click");
+					button.onClicked.addListener(() -> script.callFunction("hello", "World"));
+					rootPanel.setContent(button);
 				})
 				.setPort(8082)
 				.build()
