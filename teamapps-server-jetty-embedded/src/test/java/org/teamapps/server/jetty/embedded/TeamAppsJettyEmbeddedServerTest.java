@@ -19,10 +19,11 @@
  */
 package org.teamapps.server.jetty.embedded;
 
+import org.teamapps.dto.ClosedSessionHandlingType;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.script.Script;
+import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
@@ -33,13 +34,13 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
+					SessionConfiguration config = sessionContext.getConfiguration();
+					config.setClosedSessionHandling(ClosedSessionHandlingType.REFRESH_PAGE);
+					sessionContext.setConfiguration(config);
+
 					RootPanel rootPanel = sessionContext.addRootPanel();
-
-					Script script = new Script("export function hello(name) {console.log('hello ' + name)}");
-					script.render();
-
 					var button = Button.create("click");
-					button.onClicked.addListener(() -> script.callFunction("hello", "World"));
+					button.onClicked.addListener(() -> sessionContext.destroy());
 					rootPanel.setContent(button);
 				})
 				.setPort(8082)

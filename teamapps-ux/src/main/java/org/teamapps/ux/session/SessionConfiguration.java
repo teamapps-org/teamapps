@@ -21,6 +21,7 @@ package org.teamapps.ux.session;
 
 import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.ULocale;
+import org.teamapps.dto.ClosedSessionHandlingType;
 import org.teamapps.dto.UiConfiguration;
 import org.teamapps.ux.session.DateTimeFormatDescriptor.FullLongMediumShortType;
 
@@ -39,6 +40,7 @@ public class SessionConfiguration {
 	private boolean optimizedForTouch = false;
 	private String iconPath = "/icons";
 	private StylingTheme theme = StylingTheme.DEFAULT;
+	private ClosedSessionHandlingType closedSessionHandling = ClosedSessionHandlingType.MESSAGE_WINDOW;
 
 	public static SessionConfiguration createForClientInfo(ClientInfo clientInfo) {
 		boolean optimizedForTouch = false;
@@ -148,4 +150,11 @@ public class SessionConfiguration {
 		this.theme = theme;
 	}
 
+	public ClosedSessionHandlingType getClosedSessionHandling() {
+		return closedSessionHandling;
+	}
+
+	public void setClosedSessionHandling(ClosedSessionHandlingType closedSessionHandling) {
+		this.closedSessionHandling = closedSessionHandling;
+	}
 }
