@@ -65,7 +65,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.6.1</version>
+                <version>3.4.0</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -77,7 +77,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>generate DTOs</id>
@@ -108,7 +108,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
