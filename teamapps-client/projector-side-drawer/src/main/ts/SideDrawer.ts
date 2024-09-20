@@ -18,31 +18,37 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {DtoFloatingComponent_ExpandedOrCollapsedEvent, DtoFloatingComponentCommandHandler, DtoFloatingComponent, DtoFloatingComponentEventSource} from "../generated/DtoFloatingComponent";
-import {UiComponent} from "./UiComponent";
-import ResizeObserver from 'resize-observer-polyfill';
-import {parseHtml, prependChild, removeClassesByFunction} from "./Common";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiFloatingComponentPosition} from "../generated/UiFloatingComponentPosition";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
+import {
+	AbstractLegacyComponent, Component,
+	parseHtml,
+	prependChild,
+	removeClassesByFunction,
+	ServerObjectChannel,
+	TeamAppsEvent
+} from "projector-client-object-api";
+import {
+	DrawerPosition,
+	DtoSideDrawer,
+	DtoSideDrawer_ExpandedOrCollapsedEvent,
+	DtoSideDrawerCommandHandler,
+	DtoSideDrawerEventSource
+} from "./generated";
 
-export class UiFloatingComponent extends AbstractLegacyComponent<DtoFloatingComponent> implements DtoFloatingComponentCommandHandler, DtoFloatingComponentEventSource {
+export class SideDrawer extends AbstractLegacyComponent<DtoSideDrawer> implements DtoSideDrawerCommandHandler, DtoSideDrawerEventSource {
 
-	public readonly onExpandedOrCollapsed: TeamAppsEvent<DtoFloatingComponent_ExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onExpandedOrCollapsed: TeamAppsEvent<DtoSideDrawer_ExpandedOrCollapsedEvent> = new TeamAppsEvent();
 
-	private containerComponent: UiComponent;
-	private contentComponent: UiComponent;
+	private containerComponent: Component;
+	private contentComponent: Component;
 	private $main: HTMLElement;
 
 	private $expanderHandle: HTMLElement;
 
-	constructor(config: DtoFloatingComponent, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
-		this.containerComponent = config.containerComponent as UiComponent;
+	constructor(config: DtoSideDrawer, serverObjectChannel: ServerObjectChannel) {
+		super(config);
+		this.containerComponent = config.containerComponent as Component;
 
-		this.$main = parseHtml(`<div class="UiFloatingComponent"></div>`);
+		this.$main = parseHtml(`<div class="SideDrawer"></div>`);
 
 		this.setContentComponent(config.contentComponent);
 		this.$expanderHandle = parseHtml(`<div class="expander-handle"></div>`);
@@ -103,28 +109,28 @@ export class UiFloatingComponent extends AbstractLegacyComponent<DtoFloatingComp
 
 		// position X
 		if (this.config.expanded) {
-			if (this.config.position === UiFloatingComponentPosition.TOP_LEFT || this.config.position === UiFloatingComponentPosition.BOTTOM_LEFT) {
+			if (this.config.position === DrawerPosition.TOP_LEFT || this.config.position === DrawerPosition.BOTTOM_LEFT) {
 				this.getMainElement().style.left = this.config.marginX + "px";
 				this.getMainElement().style.right = null;
-			} else if (this.config.position === UiFloatingComponentPosition.TOP_RIGHT || this.config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
+			} else if (this.config.position === DrawerPosition.TOP_RIGHT || this.config.position === DrawerPosition.BOTTOM_RIGHT) {
 				this.getMainElement().style.left = null;
 				this.getMainElement().style.right = this.config.marginX + "px";
 			}
 		} else {
-			if (this.config.position === UiFloatingComponentPosition.TOP_LEFT || this.config.position === UiFloatingComponentPosition.BOTTOM_LEFT) {
+			if (this.config.position === DrawerPosition.TOP_LEFT || this.config.position === DrawerPosition.BOTTOM_LEFT) {
 				this.getMainElement().style.left = `-${contentWidth}px`;
 				this.getMainElement().style.right = null;
-			} else if (this.config.position === UiFloatingComponentPosition.TOP_RIGHT || this.config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
+			} else if (this.config.position === DrawerPosition.TOP_RIGHT || this.config.position === DrawerPosition.BOTTOM_RIGHT) {
 				this.getMainElement().style.left = null;
 				this.getMainElement().style.right = `-${contentWidth}px`;
 			}
 		}
 
 		// position Y
-		if (this.config.position === UiFloatingComponentPosition.TOP_LEFT || this.config.position === UiFloatingComponentPosition.TOP_RIGHT) {
+		if (this.config.position === DrawerPosition.TOP_LEFT || this.config.position === DrawerPosition.TOP_RIGHT) {
 			this.getMainElement().style.top = this.config.marginY + "px";
 			this.getMainElement().style.bottom = null;
-		} else if (this.config.position === UiFloatingComponentPosition.BOTTOM_LEFT || this.config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
+		} else if (this.config.position === DrawerPosition.BOTTOM_LEFT || this.config.position === DrawerPosition.BOTTOM_RIGHT) {
 			this.getMainElement().style.top = null;
 			this.getMainElement().style.bottom = this.config.marginY + "px";
 		}
@@ -148,7 +154,7 @@ export class UiFloatingComponent extends AbstractLegacyComponent<DtoFloatingComp
 
 	public setContentComponent(contentComponent: unknown) {
 		this.$main.innerHTML = '';
-		this.contentComponent = contentComponent as UiComponent;
+		this.contentComponent = contentComponent as Component;
 		if (contentComponent != null) {
 			this.$main.appendChild(this.contentComponent.getMainElement());
 		}
@@ -160,7 +166,7 @@ export class UiFloatingComponent extends AbstractLegacyComponent<DtoFloatingComp
 		this.updateFloatingPosition();
 	}
 
-	setPosition(position: UiFloatingComponentPosition): void {
+	setPosition(position: DrawerPosition): void {
 		this.config.position = position;
 		this.updateFloatingPosition();
 	}

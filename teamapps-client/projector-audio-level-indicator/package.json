@@ -17,7 +17,6 @@
     "typescript": "^5.1"
   },
   "dependencies": {
-    "projector-client-object-api": "workspace:*",
-    "projector-progress-indicator": "workspace:*"
+    "projector-client-object-api": "workspace:*"
   }
 }

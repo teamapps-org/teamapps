@@ -36,7 +36,8 @@
     "projector-mediasoup-client",
     "projector-chart",
     "projector-audio-level-indicator",
-    "projector-chat"
+    "projector-chat",
+    "projector-side-drawer"
   ],
   "comments": {},
   "engines": {

@@ -66,6 +66,7 @@
         <module>teamapps-client/projector-chart</module>
         <module>teamapps-client/projector-audio-level-indicator</module>
         <module>teamapps-client/projector-chat</module>
+        <module>teamapps-client/projector-side-drawer</module>
 
         <module>teamapps-ux</module>
         <module>teamapps-server-jetty-embedded</module>

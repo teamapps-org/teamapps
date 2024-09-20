@@ -17,18 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.floating;
+package org.teamapps.projector.component.sidedrawer;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.DtoComponent;
-import org.teamapps.projector.component.common.DtoFloatingComponent;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.common.DrawerPosition;
+import org.teamapps.projector.component.common.DtoSideDrawer;
+import org.teamapps.projector.component.common.DtoSideDrawerClientObjectChannel;
+import org.teamapps.projector.component.common.DtoSideDrawerEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.ClientObject;
-import org.teamapps.ux.component.Component;
 
-public class FloatingComponent extends AbstractComponent {
+public class SideDrawer extends AbstractComponent implements DtoSideDrawerEventHandler {
+
+	private final DtoSideDrawerClientObjectChannel clientObjectChannel = new DtoSideDrawerClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<Boolean> onExpandedOrCollapsed = new ProjectorEvent<>(clientObjectChannel::toggleExpandedOrCollapsedEvent);
 
@@ -38,7 +41,7 @@ public class FloatingComponent extends AbstractComponent {
 	private int height = -1;
 	private int marginX;
 	private int marginY;
-	private FloatingPosition position;
+	private DrawerPosition position;
 	private Color backgroundColor = null;
 	private Color expanderHandleColor = null;
 
@@ -46,27 +49,32 @@ public class FloatingComponent extends AbstractComponent {
 	private boolean expanded;
 
 
-	public FloatingComponent(Component containerComponent, Component contentComponent) {
+	public SideDrawer(Component containerComponent, Component contentComponent) {
 		this.containerComponent = containerComponent;
 		this.contentComponent = contentComponent;
 	}
 
 	@Override
-	public DtoComponent createDto() {
-		DtoFloatingComponent ui = new DtoFloatingComponent();
-		mapAbstractUiComponentProperties(ui);
-		ui.setContainerComponent(containerComponent.createDtoReference());
-		ui.setContentComponent(ClientObject.createDtoReference(contentComponent));
+	public ComponentConfig createConfig() {
+		DtoSideDrawer ui = new DtoSideDrawer();
+		mapAbstractConfigProperties(ui);
+		ui.setContainerComponent(containerComponent);
+		ui.setContentComponent(contentComponent);
 		ui.setWidth(width);
 		ui.setHeight(height);
 		ui.setMarginX(marginX);
 		ui.setMarginY(marginY);
-		ui.setPosition(position.toUiPosition());
+		ui.setPosition(position);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setExpanderHandleColor(expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null);
 		ui.setCollapsible(collapsible);
 		ui.setExpanded(expanded);
 		return ui;
+	}
+
+	@Override
+	public void handleExpandedOrCollapsed(boolean expanded) {
+		onExpandedOrCollapsed.fire(expanded);
 	}
 
 	public int getWidth() {
@@ -75,7 +83,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setWidth(int width) {
 		this.width = width;
-		clientObjectChannel.setDimensions(Width, Height);
+		clientObjectChannel.setDimensions(width, height);
 	}
 
 	public int getHeight() {
@@ -84,7 +92,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setHeight(int height) {
 		this.height = height;
-		clientObjectChannel.setDimensions(Width, Height);
+		clientObjectChannel.setDimensions(width, height);
 	}
 
 	public int getMarginX() {
@@ -93,7 +101,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setMarginX(int marginX) {
 		this.marginX = marginX;
-		clientObjectChannel.setMargins(MarginX, MarginY);
+		clientObjectChannel.setMargins(marginX, marginY);
 	}
 
 	public int getMarginY() {
@@ -102,16 +110,16 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setMarginY(int marginY) {
 		this.marginY = marginY;
-		clientObjectChannel.setMargins(MarginX, MarginY);
+		clientObjectChannel.setMargins(marginX, marginY);
 	}
 
-	public FloatingPosition getPosition() {
+	public DrawerPosition getPosition() {
 		return position;
 	}
 
-	public void setPosition(FloatingPosition position) {
+	public void setPosition(DrawerPosition position) {
 		this.position = position;
-		clientObjectChannel.setPosition(Position.ToUiPosition());
+		clientObjectChannel.setPosition(position);
 	}
 
 	public Color getBackgroundColor() {
@@ -120,7 +128,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		clientObjectChannel.setBackgroundColor(BackgroundColor != Null ? backgroundColor.toHtmlColorString() : null);
+		clientObjectChannel.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 	}
 
 	public Color getExpanderHandleColor() {
@@ -129,7 +137,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanderHandleColor(Color expanderHandleColor) {
 		this.expanderHandleColor = expanderHandleColor;
-		clientObjectChannel.setExpanderHandleColor(ExpanderHandleColor != Null ? expanderHandleColor.toHtmlColorString() : null);
+		clientObjectChannel.setExpanderHandleColor(expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null);
 	}
 
 	public boolean isCollapsible() {
@@ -146,7 +154,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
-		clientObjectChannel.setExpanded(Expanded);
+		clientObjectChannel.setExpanded(expanded);
 	}
 
 	public Component getContentComponent() {
@@ -155,16 +163,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setContentComponent(Component contentComponent) {
 		this.contentComponent = contentComponent;
-		clientObjectChannel.setContentComponent(ContentComponent != Null ? contentComponent.createDtoReference() : null);
+		clientObjectChannel.setContentComponent(contentComponent);
 	}
 
-	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		switch (event.getTypeId()) {
-			case DtoFloatingComponent.ExpandedOrCollapsedEvent.TYPE_ID -> {
-				var e = event.as(DtoFloatingComponent.ExpandedOrCollapsedEventWrapper.class);
-				onExpandedOrCollapsed.fire(e.getExpanded());
-			}
-		}
-	}
 }

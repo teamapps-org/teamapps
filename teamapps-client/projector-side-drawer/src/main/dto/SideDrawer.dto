@@ -21,7 +21,7 @@ package "teamapps-client-common-components":org.teamapps.projector.component.com
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoFloatingComponent extends DtoComponent {
+class DtoSideDrawer extends DtoComponent {
 
 	DtoComponent* containerComponent;
 	DtoComponent* contentComponent;
@@ -29,7 +29,7 @@ class DtoFloatingComponent extends DtoComponent {
 	int height; // 0 = full height, -1 = auto
 	int marginX;
 	int marginY;
-	DtoFloatingComponentPosition position;
+	DrawerPosition position;
 
     String backgroundColor;
     String expanderHandleColor;
@@ -39,7 +39,7 @@ class DtoFloatingComponent extends DtoComponent {
 
 	command setContentComponent(DtoComponent* contentComponent);
 	command setExpanded(boolean expanded);
-	command setPosition(DtoFloatingComponentPosition position);
+	command setPosition(DrawerPosition position);
 	command setDimensions(int width, int height);
 	command setMargins(int marginX, int marginY);
 	command setBackgroundColor(String backgroundColor);
@@ -49,7 +49,7 @@ class DtoFloatingComponent extends DtoComponent {
 
 }
 
-enum DtoFloatingComponentPosition {
+enum DrawerPosition {
 	TOP_LEFT = "top-left",
 	TOP_RIGHT = "top-right",
 	BOTTOM_LEFT = "bottom-left",
