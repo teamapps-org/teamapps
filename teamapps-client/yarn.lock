@@ -3015,6 +3015,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"projector-audio-level-indicator@workspace:projector-audio-level-indicator":
+  version: 0.0.0-use.local
+  resolution: "projector-audio-level-indicator@workspace:projector-audio-level-indicator"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    projector-progress-indicator: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-blogview@workspace:projector-blogview":
   version: 0.0.0-use.local
   resolution: "projector-blogview@workspace:projector-blogview"
@@ -3201,7 +3213,6 @@ __metadata:
   resolution: "projector-notification-bar@workspace:projector-notification-bar"
   dependencies:
     esbuild: ^0.15.13
-    image-layout: ^0.4.1
     projector-client-object-api: "workspace:*"
     projector-progress-indicator: "workspace:*"
     rimraf: ^3.0.2
@@ -3214,7 +3225,6 @@ __metadata:
   resolution: "projector-notification@workspace:projector-notification"
   dependencies:
     esbuild: ^0.15.13
-    image-layout: ^0.4.1
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1

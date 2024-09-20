@@ -34,7 +34,8 @@
     "projector-map-view",
     "projector-shaka-player",
     "projector-mediasoup-client",
-    "projector-chart"
+    "projector-chart",
+    "projector-audio-level-indicator"
   ],
   "comments": {},
   "engines": {

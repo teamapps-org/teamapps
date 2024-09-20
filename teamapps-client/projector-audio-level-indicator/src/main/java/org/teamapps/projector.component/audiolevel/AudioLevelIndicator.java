@@ -17,21 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.audiolevelindicator;
+package org.teamapps.projector.component.audiolevel;
 
+import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.ComponentConfig;
 import org.teamapps.projector.component.common.DtoAudioLevelIndicator;
-import org.teamapps.projector.component.common.DtoComponent;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.projector.component.common.DtoAudioLevelIndicatorClientObjectChannel;
+import org.teamapps.projector.component.common.DtoAudioLevelIndicatorEventHandler;
 
-public class AudioLevelIndicator extends AbstractComponent {
+public class AudioLevelIndicator extends AbstractComponent implements DtoAudioLevelIndicatorEventHandler {
+
+	private final DtoAudioLevelIndicatorClientObjectChannel clientObjectChannel = new DtoAudioLevelIndicatorClientObjectChannel(getClientObjectChannel());
 
 	private String deviceId;
 	private int barWidth = 1;
 
 	@Override
-	public DtoComponent createDto() {
+	public ComponentConfig createConfig() {
 		DtoAudioLevelIndicator ui = new DtoAudioLevelIndicator();
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractConfigProperties(ui);
 		ui.setDeviceId(this.deviceId);
 		ui.setBarWidth(this.barWidth);
 		return ui;
@@ -39,11 +43,11 @@ public class AudioLevelIndicator extends AbstractComponent {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
-		clientObjectChannel.setDeviceId(DeviceId);
+		clientObjectChannel.setDeviceId(deviceId);
 	}
 
 	public void setBarWidth(int barWidth) {
 		this.barWidth = barWidth;
-		reRenderIfRendered();
+		clientObjectChannel.setBarWidth(barWidth);
 	}
 }

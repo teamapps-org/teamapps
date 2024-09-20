@@ -18,13 +18,11 @@
  * =========================LICENSE_END==================================
  */
 
-import {parseHtml} from "./Common";
-import {AbstractComponent} from "teamapps-client-core";
-import {DtoAudioLevelIndicatorCommandHandler, DtoAudioLevelIndicator} from "../generated/DtoAudioLevelIndicator";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
-export class UiAudioLevelIndicator extends AbstractLegacyComponent<DtoAudioLevelIndicator> implements DtoAudioLevelIndicatorCommandHandler {
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {DtoAudioLevelIndicator, DtoAudioLevelIndicatorCommandHandler} from "./generated";
+
+export class AudioLevelIndicator extends AbstractLegacyComponent<DtoAudioLevelIndicator> implements DtoAudioLevelIndicatorCommandHandler {
 	private $main: HTMLElement;
 	private $activityDisplay: HTMLElement;
 	private $canvas: HTMLCanvasElement;
@@ -41,7 +39,7 @@ export class UiAudioLevelIndicator extends AbstractLegacyComponent<DtoAudioLevel
 		super(config, serverObjectChannel)
 
 		this.$main = parseHtml(`
-<div class="UiAudioLevelIndicator">
+<div class="AudioLevelIndicator">
 	<canvas></canvas>
 </div>`);
 		this.$activityDisplay = this.$main;
@@ -162,6 +160,11 @@ export class UiAudioLevelIndicator extends AbstractLegacyComponent<DtoAudioLevel
 			});
 			this.bindToStream(mediaStream, true);
 		}
+	}
+
+
+	setBarWidth(barWidth: number) {
+		this.config.barWidth = barWidth;
 	}
 }
 

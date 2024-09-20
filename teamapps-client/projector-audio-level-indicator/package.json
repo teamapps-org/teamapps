@@ -1,5 +1,5 @@
 {
-  "name": "projector-notification",
+  "name": "projector-audio-level-indicator",
   "version": "0.9.155-SNAPSHOT",
   "type": "module",
   "exports": "./target/js-dist/index.js",
@@ -17,6 +17,7 @@
     "typescript": "^5.1"
   },
   "dependencies": {
-    "projector-client-object-api": "workspace:*"
+    "projector-client-object-api": "workspace:*",
+    "projector-progress-indicator": "workspace:*"
   }
 }
