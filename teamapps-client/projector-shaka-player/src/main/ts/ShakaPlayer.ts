@@ -64,7 +64,7 @@ export class ShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> impleme
 	private ui: Overlay;
 
 	constructor(config: DtoShakaPlayer, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		console.log(config.hlsUrl, config.dashUrl, config.posterImageUrl)
 

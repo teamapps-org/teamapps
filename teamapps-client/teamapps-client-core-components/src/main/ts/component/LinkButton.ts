@@ -34,7 +34,7 @@ export class LinkButton extends AbstractLegacyComponent<DtoLinkButton> implement
 	private readonly $main: HTMLAnchorElement;
 
 	constructor(config: DtoLinkButton, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$main = parseHtml(`<a class="LinkButton" tabindex="0"></a>`)
 		this.$main.addEventListener("click", ev => {
 			if (this.config.onClickJavaScript != null) {

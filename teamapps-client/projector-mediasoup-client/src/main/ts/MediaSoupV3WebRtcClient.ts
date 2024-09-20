@@ -113,7 +113,7 @@ export class MediaSoupV3WebRtcClient extends AbstractLegacyComponent<DtoMediaSou
 	};
 
 	constructor(config: DtoMediaSoupV3WebRtcClient, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		// debug.enable(
 		// 	'conference-api* mediasoup-client*' //enable conference api and mediasoup client logs

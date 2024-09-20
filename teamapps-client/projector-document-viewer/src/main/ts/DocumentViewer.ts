@@ -52,7 +52,7 @@ export class DocumentViewer extends AbstractLegacyComponent<DtoDocumentViewer> i
 	private pageShadow: DtoBoxShadow;
 
 	constructor(config: DtoDocumentViewer, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.uuidClass = `UiDocumentViewer-${generateUUID()}`;
 

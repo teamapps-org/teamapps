@@ -43,7 +43,7 @@ export class DummyComponent extends AbstractLegacyComponent<DtoDummyComponent> i
 	private text: string = "";
 
 	constructor(config: DtoDummyComponent, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$panel = parseHtml('<div class="DummyComponent"></div>');
 		this.$panel.addEventListener("click", () => {
 			this.clickCount++;

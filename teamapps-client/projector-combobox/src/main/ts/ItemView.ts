@@ -46,7 +46,7 @@ export class ItemView extends AbstractLegacyComponent<DtoItemView> implements Dt
 	private filterString: string = "";
 
 	constructor(config: DtoItemView, private soc: DtoItemViewServerObjectChannel) {
-		super(config, soc);
+		super(config);
 
 		this.$itemView = parseHtml('<div class="UiItemView"></div>');
 		this.$itemView.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";

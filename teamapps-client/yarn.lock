@@ -607,6 +607,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"autolinker@npm:^3.11.1":
+  version: 3.16.2
+  resolution: "autolinker@npm:3.16.2"
+  dependencies:
+    tslib: ^2.3.0
+  checksum: 1d5d20ef23586629ec3c341052e6bb6250399cf5e66db21540c17b2f5b1137066435fb274a2115b57464d05e75b85afad61ef7cdf6ea693ef2920a3748b7249d
+  languageName: node
+  linkType: hard
+
 "awaitqueue@npm:^3.0.2":
   version: 3.0.2
   resolution: "awaitqueue@npm:3.0.2"
@@ -3065,6 +3074,19 @@ __metadata:
     d3-flextree: ^2.1.1
     esbuild: ^0.15.13
     projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-chat@workspace:projector-chat":
+  version: 0.0.0-use.local
+  resolution: "projector-chat@workspace:projector-chat"
+  dependencies:
+    autolinker: ^3.11.1
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    projector-progress-indicator: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1
   languageName: unknown

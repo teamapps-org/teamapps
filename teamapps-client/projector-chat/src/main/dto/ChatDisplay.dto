@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-common-components":org.teamapps.projector.component.common;
+package "projector-chat":org.teamapps.projector.component.chat;
 
 import org.teamapps.projector.component.DtoComponent;
 
@@ -34,25 +34,6 @@ class DtoChatDisplay extends DtoComponent {
 
 	query requestPreviousMessages() returns DtoChatMessageBatch;
     query requestContextMenu(int chatMessageId) returns DtoComponent*;
-}
-
-class DtoChatInput extends DtoComponent {
-	required String defaultFileIcon;
-	long maxBytesPerUpload;
-	String uploadUrl;
-	int messageLengthLimit;
-	boolean attachmentsEnabled;
-
-	command setAttachmentsEnabled(boolean attachmentsEnabled);
-
-	event messageSent(DtoNewChatMessage message);
-	event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
-	event uploadStarted(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
-	event uploadCanceled(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
-	event uploadFailed(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
-	event uploadSuccessful(String fileItemUuid, String uploadedFileUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
-	event fileItemClicked(String fileItemUuid);
-	event fileItemRemoved(String fileItemUuid);
 }
 
 class DtoChatMessageBatch {
@@ -84,14 +65,4 @@ class DtoChatFile {
 	String downloadUrl;
 }
 
-@TypeScriptFactory
-class DtoNewChatMessage {
-	String text;
-	List<DtoChatNewFile> uploadedFiles;
-}
 
-@TypeScriptFactory
-class DtoChatNewFile {
-	String uploadedFileUuid;
-	String fileName;
-}

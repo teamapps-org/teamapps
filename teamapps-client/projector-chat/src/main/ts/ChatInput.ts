@@ -17,31 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {createImageThumbnailUrl, fadeOut, insertAtCursorPosition, parseHtml} from "./Common";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+
+import {AbstractLegacyComponent, fadeOut, FileUploader, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
+	createDtoChatNewFile,
+	createDtoNewChatMessage,
+	DtoChatInput,
 	DtoChatInput_FileItemClickedEvent,
 	DtoChatInput_FileItemRemovedEvent,
 	DtoChatInput_MessageSentEvent,
 	DtoChatInput_UploadCanceledEvent,
 	DtoChatInput_UploadFailedEvent,
-	DtoChatInput_UploadStartedEvent,
-	DtoChatInput_UploadSuccessfulEvent,
-	DtoChatInput_UploadTooLargeEvent,
+	DtoChatInput_UploadStartedEvent, DtoChatInput_UploadSuccessfulEvent, DtoChatInput_UploadTooLargeEvent,
 	DtoChatInputCommandHandler,
-	DtoChatInput,
 	DtoChatInputEventSource
-} from "../generated/DtoChatInput";
-import {FileUploader} from "../../projector-client-object-api/src/main/ts/util/FileUploader";
-import {ProgressBar} from "./micro-components/ProgressBar";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import * as log from "loglevel";
-import {createDtoNewChatMessage} from "../generated/DtoNewChatMessage";
-import {createDtoChatNewFile} from "../generated/DtoChatNewFile";
+} from "./generated";
+import {createImageThumbnailUrl, insertAtCursorPosition} from "teamapps-client-core-components";
+import {ProgressBar} from "projector-progress-indicator";
 
-export class UiChatInput extends AbstractLegacyComponent<DtoChatInput> implements DtoChatInputCommandHandler, DtoChatInputEventSource {
+export class ChatInput extends AbstractLegacyComponent<DtoChatInput> implements DtoChatInputCommandHandler, DtoChatInputEventSource {
 
 	onFileItemClicked: TeamAppsEvent<DtoChatInput_FileItemClickedEvent> = new TeamAppsEvent();
 	onFileItemRemoved: TeamAppsEvent<DtoChatInput_FileItemRemovedEvent> = new TeamAppsEvent();
@@ -60,8 +54,8 @@ export class UiChatInput extends AbstractLegacyComponent<DtoChatInput> implement
 	private $attachmentButton: Element;
 
 	constructor(config: DtoChatInput, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
-		this.$main = parseHtml(`<div class="UiChatInput drop-zone">
+		super(config);
+		this.$main = parseHtml(`<div class="ChatInput drop-zone">
 	<div class="upload-items"></div>
 	<textarea class="text-input" maxlength="${config.messageLengthLimit}"></textarea>
 	<div class="button attachment-button glyphicon glyphicon-paperclip glyphicon-button glyphicon-button-md"></div>
@@ -195,8 +189,6 @@ enum UploadState {
 }
 
 class FileUploadItem {
-	private static LOGGER: log.Logger = log.getLogger("UploadItem");
-
 	public readonly onComplete: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
@@ -211,7 +203,7 @@ class FileUploadItem {
 		const $icon = this.$main.querySelector<HTMLElement>(":scope .icon");
 		createImageThumbnailUrl(file)
 			.then(url => $icon.style.backgroundImage = `url('${url}')`)
-			.catch(reason => FileUploadItem.LOGGER.debug(`Could not create thumbnail for file ${file}. Reason: ${reason}.`));
+			.catch(reason => console.debug(`Could not create thumbnail for file ${file}. Reason: ${reason}.`));
 		const progressBar = new ProgressBar(0, {});
 
 		this.$main.appendChild(progressBar.getMainDomElement());

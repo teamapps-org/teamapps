@@ -39,7 +39,7 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 	}
 
 	constructor(config: C, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 	}
 
 	public static optimizeButtonWidth($buttonWrapper: HTMLElement, $button: HTMLElement, maxHeight: number): number {

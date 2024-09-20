@@ -64,7 +64,7 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 	private modalBackgroundDimmingColor: string;
 
 	constructor(config: DtoWindow, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.$main = parseHtml(`<div class="Window">
 	<div class="panel-wrapper"></div>

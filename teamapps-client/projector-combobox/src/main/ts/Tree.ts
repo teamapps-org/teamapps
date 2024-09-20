@@ -37,7 +37,7 @@ export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCom
 	private nodes: DtoTreeRecord[];
 
 	constructor(config: DtoTree, private soc: DtoTreeServerObjectChannel) {
-		super(config, soc);
+		super(config);
 		this.$panel = parseHtml('<div class="UiTree">');
 
 		this.nodes = config.initialData;

@@ -47,7 +47,7 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 	protected styleManager: StyleManager;
 	private cssUuid: string;
 
-	constructor(protected config: C, private serverObjectChannel: ServerObjectChannel) {
+	constructor(protected config: C) {
 		this.cssUuid = generateUUID();
 
 		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-css-id="${this.cssUuid}"]`, `[data-css-id="${this.cssUuid}"]`);

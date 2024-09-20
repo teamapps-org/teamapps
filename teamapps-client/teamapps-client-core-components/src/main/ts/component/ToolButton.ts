@@ -44,7 +44,7 @@ export class ToolButton extends AbstractLegacyComponent<DtoToolButton> implement
 	private openDropDownIfNotSet: boolean;
 
 	constructor(config: DtoToolButton, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.minDropDownWidth = config.minDropDownWidth;
 		this.minDropDownHeight = config.minDropDownHeight;

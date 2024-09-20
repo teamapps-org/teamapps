@@ -53,7 +53,7 @@ export class Notification extends AbstractLegacyComponent<DtoNotification> imple
 	private notificationHandle: NotificationHandle;
 
 	constructor(config: DtoNotification, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.$main = parseHtml(`<div class="Notification">
 	<div class="close-button"><img src="${ICON_CLOSE}"></div>

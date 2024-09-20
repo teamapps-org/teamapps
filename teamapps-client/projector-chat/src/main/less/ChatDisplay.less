@@ -96,15 +96,24 @@
       }
 
       .deleted-icon {
-        .img;
-        .img-16;
-        margin-left: 4px;
         grid-area: deletedicon;
+        margin-left: 4px;
+
+        background: center center / 16px 16px no-repeat transparent;
+        display: inline-block;
+        vertical-align: top;
+        width: 16px;
+        height: 16px;
       }
     }
 
     &:not(:last-child) {
       margin-bottom: 3px;
     }
+  }
+
+  .teamapps-spinner {
+    width: 20px;
+    height: 20px;
   }
 }

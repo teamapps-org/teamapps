@@ -60,7 +60,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
 	constructor(config: DtoSplitPane, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.referenceChildSize = config.referenceChildSize;
 		this.config.sizePolicy = config.sizePolicy;
 		this._$splitPane = parseHtml(`<div class="splitpane">

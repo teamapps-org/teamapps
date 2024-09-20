@@ -58,7 +58,7 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 	private focused: boolean;
 
 	constructor(config: C, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
 		this.$fieldWrapper = parseHtml(`<div class="Field"></div>`);

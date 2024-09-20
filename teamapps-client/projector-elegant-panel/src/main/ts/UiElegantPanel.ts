@@ -35,7 +35,7 @@ export class UiElegantPanel extends AbstractLegacyComponent<DtoElegantPanel> imp
 	private contentComponent: Component;
 
 	constructor(config: DtoElegantPanel, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$element = parseHtml(`<div class="UiElegantPanel">
                 <div class="flex-container">
                     <div class="background-image-div teamapps-blurredBackgroundImage">

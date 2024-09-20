@@ -36,7 +36,7 @@ export class AudioLevelIndicator extends AbstractLegacyComponent<DtoAudioLevelIn
 	private lastDrawingTimestamp = 0;
 
 	constructor(config: DtoAudioLevelIndicator, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel)
+		super(config)
 
 		this.$main = parseHtml(`
 <div class="AudioLevelIndicator">

@@ -26,7 +26,7 @@ export class IFrame extends AbstractLegacyComponent<DtoIFrame> implements DtoIFr
 	private $iframe: HTMLIFrameElement;
 
 	constructor(config: DtoIFrame, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$iframe = parseHtml(`<iframe class="IFrame" src="${config.url}"></iframe>`);
 		// this.$iframe.addEventListener("load", e => {
 		// 	console.log(`load: ${this.$iframe.src}`);

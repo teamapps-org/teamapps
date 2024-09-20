@@ -41,7 +41,7 @@ export class ProgressDisplay extends AbstractLegacyComponent<DtoProgressDisplay>
 	private progressBar: ProgressBar;
 
 	constructor(config: DtoProgressDisplay, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.$main = parseHtml(`<div class="ProgressDisplay">
 			<div class="title">

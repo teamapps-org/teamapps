@@ -58,7 +58,7 @@ export class NavigationBar extends AbstractLegacyComponent<DtoNavigationBar> imp
 	private $multiProgressDisplayContainer: HTMLElement;
 
 	constructor(config: DtoNavigationBar, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$bar = parseHtml(`<div class="NavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>

@@ -111,7 +111,7 @@ export class TimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implements 
 	}
 
 	constructor(config: DtoTimeGraph, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		const me = this;
 		this.graphContext = {

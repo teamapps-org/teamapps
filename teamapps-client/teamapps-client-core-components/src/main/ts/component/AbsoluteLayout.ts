@@ -34,7 +34,7 @@ export class AbsoluteLayout extends AbstractLegacyComponent<DtoAbsoluteLayout> i
 	private $main: HTMLElement;
 
 	constructor(config: DtoAbsoluteLayout, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$main = parseHtml(`<div class="AbsoluteLayout">
 </div>`);
 		this.update(config.components, 0, DtoAnimationEasing.EASE);

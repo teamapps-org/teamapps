@@ -34,7 +34,7 @@ export class FlexContainer extends AbstractLegacyComponent<DtoFlexContainer> imp
 	private $main: HTMLDivElement;
 
 	constructor(config: DtoFlexContainer, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$main = parseHtml(`<div class="FlexContainer"></div>`);
 
 		this.setAlignItems(config.alignItems);

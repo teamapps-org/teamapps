@@ -63,7 +63,7 @@ export class InfiniteItemView extends AbstractLegacyComponent<DtoInfiniteItemVie
 	private totalNumberOfRecords: number = null;
 
 	constructor(config: DtoInfiniteItemView, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.getCssUuid()}">
                 <div class="grid"></div>
                 <style></style>

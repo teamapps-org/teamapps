@@ -118,7 +118,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	private restoreFunction: (animationCallback?: () => void) => void;
 
 	constructor(config: DtoTabPanel, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.$tabPanel = parseHtml(`<div class="TabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">

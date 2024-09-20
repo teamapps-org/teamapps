@@ -44,7 +44,7 @@ export class MobileLayout extends AbstractLegacyComponent<DtoMobileLayout> imple
 	private $contentContainer: HTMLElement;
 
 	constructor(config: DtoMobileLayout, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$mainDiv = parseHtml(`<div class="MobileLayout">
                              <div class="toolbar-container"></div>
                              <div class="content-container-wrapper"></div>

@@ -65,7 +65,7 @@ export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements Dt
 	private calendar: FullCalendar;
 
 	constructor(config: DtoCalendar, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.$main = parseHtml(`<div class="Calendar">
 	<div class="calendar"></div>

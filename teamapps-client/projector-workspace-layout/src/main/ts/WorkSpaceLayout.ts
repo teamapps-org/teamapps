@@ -78,7 +78,7 @@ export class WorkSpaceLayout extends AbstractLegacyComponent<DtoWorkSpaceLayout>
 	private viewContainersByWindowId: { [windowId: string]: ViewContainer } = {};
 
 	constructor(config: DtoWorkSpaceLayout, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.localViewContainer = new LocalViewContainer(this, this.windowId, config.views, config.initialLayout, {
 			handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),
 			handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),

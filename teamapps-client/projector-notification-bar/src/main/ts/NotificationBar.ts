@@ -44,7 +44,7 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 	private itemsById: { [id: string]: NotificationBarItem } = {};
 
 	constructor(config: DtoNotificationBar, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$main = parseHtml(`<div class="NotificationBar"></div>`);
 		config.initialItems.forEach(item => this.addItem(item))
 	}

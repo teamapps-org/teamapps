@@ -25,7 +25,7 @@ export class HtmlView extends AbstractLegacyComponent<DtoHtmlView> implements Dt
 	private $main: HTMLDivElement;
 
 	constructor(config: DtoHtmlView, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$main = parseHtml(`<div class="HtmlView">${config.html}</div>`);
 		for (let selector in config.componentsByContainerElementSelector) {
 			let components = config.componentsByContainerElementSelector[selector] as Component[];

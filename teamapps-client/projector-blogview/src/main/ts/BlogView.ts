@@ -58,7 +58,7 @@ export class BlogView extends AbstractLegacyComponent<DtoBlogView> {
 	private rows: Row[] = [];
 
 	constructor(config: DtoBlogView, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$component = parseHtml(`<div class="UiPageView"></div>`);
 
 		if (config.blocks) {

@@ -51,7 +51,7 @@ export class MultiProgressDisplay extends AbstractLegacyComponent<DtoMultiProgre
 	private progressDisplays: ProgressDisplay[] = [];
 
 	constructor(config: DtoMultiProgressDisplay, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.$main = parseHtml(`<div class="MultiProgressDisplay">
 	<div class="spinner teamapps-spinner"></div>					

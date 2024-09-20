@@ -107,7 +107,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	private restoreFunction: (animationCallback?: () => void) => void;
 
 	constructor(config: DtoPanel, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$panel = parseHtml(`<div class="Panel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">
                     <div class="panel-icon"></div>

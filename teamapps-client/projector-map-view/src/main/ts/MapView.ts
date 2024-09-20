@@ -89,7 +89,7 @@ export class MapView extends AbstractLegacyComponent<DtoMapView> implements DtoM
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
 	constructor(config: DtoMapView, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$map = parseHtml('<div class="Map">');
 
 		mapboxgl.baseApiUrl = config.baseApiUrl;

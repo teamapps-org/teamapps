@@ -17,19 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {addDelegatedEventListener, humanReadableFileSize, parseHtml, prependChild, removeDangerousTags} from "./Common";
-import {DtoChatMessage} from "../generated/DtoChatMessage";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {DtoChatDisplayCommandHandler, DtoChatDisplay,} from "../generated/DtoChatDisplay";
-import {UiSpinner} from "./micro-components/UiSpinner";
-import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
-import {Autolinker} from "autolinker";
-import {ContextMenu} from "./micro-components/ContextMenu";
-import {UiComponent} from "./UiComponent";
-import {DtoChatMessageBatch} from "../generated/DtoChatMessageBatch";
-import {debounce, debouncedMethod, DebounceMode} from "./util/debounce";
 
-export class UiChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
+import {
+	AbstractLegacyComponent,
+	addDelegatedEventListener,
+	Component,
+	debouncedMethod, DebounceMode, executeWhenFirstDisplayed, humanReadableFileSize,
+	parseHtml, prependChild,
+} from "projector-client-object-api";
+import {
+	DtoChatDisplay,
+	DtoChatDisplayCommandHandler,
+	DtoChatDisplayServerObjectChannel,
+	DtoChatMessage,
+	DtoChatMessageBatch
+} from "./generated";
+import {ContextMenu, removeDangerousTags} from "teamapps-client-core-components";
+import {Autolinker} from "autolinker";
+
+export class ChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
 
 	private $main: HTMLElement;
 	private gotFirstMessage: boolean = false;
@@ -39,15 +45,16 @@ export class UiChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> imple
 	private $messages: HTMLElement;
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoChatDisplay, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
-		this.$main = parseHtml(`<div class="UiChatDisplay">
-	<div class="loading-indicator-wrapper hidden"></div>
+	constructor(config: DtoChatDisplay, private serverObjectChannel: DtoChatDisplayServerObjectChannel) {
+		super(config);
+		this.$main = parseHtml(`<div class="ChatDisplay">
+	<div class="loading-indicator-wrapper hidden">
+		<div class="teamapps-spinner"></div>
+	</div>
 	<div class="messages"></div>
 </div>`);
 		this.setStyle(".message.deleted .deleted-icon", {"background-image": `url('${config.deletedMessageIcon}')`})
 		this.$loadingIndicatorWrapper = this.$main.querySelector(":scope .loading-indicator-wrapper");
-		this.$loadingIndicatorWrapper.appendChild(new UiSpinner({fixedSize: 20}).getMainDomElement());
 		this.$messages = this.$main.querySelector(":scope .messages");
 		this.$main.addEventListener("scroll", () => {
 			if (this.$main.scrollTop == 0 && !this.gotFirstMessage) {
@@ -67,7 +74,7 @@ export class UiChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> imple
 			if (this.config.contextMenuEnabled) {
 				let chatMessageId = Number(element.getAttribute("data-id"));
 				this.contextMenu.open(ev, async requestId => {
-					let contentComponent = await config.requestContextMenu({chatMessageId}) as UiComponent;
+					let contentComponent  = await serverObjectChannel.sendQuery("requestContextMenu", chatMessageId) as Component;
 					if (contentComponent != null) {
 						this.contextMenu.setContent(contentComponent, requestId);
 					} else {
@@ -82,7 +89,7 @@ export class UiChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> imple
 	private requestPreviousMessages() {
 		if (!this.requestingPreviousMessages) {
 			this.requestingPreviousMessages = true;
-			this.config.requestPreviousMessages({}).then(batch => {
+			this.serverObjectChannel.sendQuery("requestPreviousMessages").then(batch => {
 				const heightBefore = this.$messages.offsetHeight;
 				batch.messages.reverse().forEach(messageConfig => {
 					const uiChatMessage = new UiChatMessage(messageConfig);

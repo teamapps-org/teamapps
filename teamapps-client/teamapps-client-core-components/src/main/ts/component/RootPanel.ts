@@ -36,7 +36,7 @@ export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements 
 	private $imagePreloadDiv: HTMLElement;
 
 	constructor(config: DtoRootPanel, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.$root = parseHtml(`<div class="RootPanel">
               <div class="image-preload-div"></div>
