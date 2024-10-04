@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.media;
+package org.teamapps.projector.component.videoplayer;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.projector.component.common.DtoComponent;
-import org.teamapps.projector.component.common.DtoVideoPlayer;
-import org.teamapps.dto.protocol.DtoEventWrapper;
+import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.ComponentConfig;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.ux.component.AbstractComponent;
 
-public class VideoPlayer extends AbstractComponent {
+public class VideoPlayer extends AbstractComponent implements DtoVideoPlayerEventHandler {
+
+	private final DtoVideoPlayerClientObjectChannel clientObjectChannel = new DtoVideoPlayerClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<Void> onErrorLoading = new ProjectorEvent<>(clientObjectChannel::toggleErrorLoadingEvent);
 	public final ProjectorEvent<Integer> onProgress = new ProjectorEvent<>(clientObjectChannel::togglePlayerProgressEvent);
@@ -35,10 +35,10 @@ public class VideoPlayer extends AbstractComponent {
 
 	private String url; //the url of the video
 	private boolean autoplay; // if set...
-	private boolean showControls;
+	private boolean controlsVisible;
 	private String posterImageUrl;
 	private PosterImageSize posterImageSize = PosterImageSize.COVER;
-	private int sendPlayerProgressEventsEachXSeconds = 1; // if 0, then send NO events
+	private int playerProgressIntervalSeconds = 1; // if 0, then send NO events
 	private Color backgroundColor = new RgbaColor(68, 68, 68);
 	private PreloadMode preloadMode = PreloadMode.METADATA;
 
@@ -50,35 +50,33 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public DtoComponent createDto() {
-		DtoVideoPlayer uiVideoPlayer = new DtoVideoPlayer(url);
-		mapAbstractUiComponentProperties(uiVideoPlayer);
+	public ComponentConfig createConfig() {
+		DtoVideoPlayer uiVideoPlayer = new DtoVideoPlayer();
+		mapAbstractConfigProperties(uiVideoPlayer);
+		uiVideoPlayer.setUrl(url);
 		uiVideoPlayer.setAutoplay(autoplay);
-		uiVideoPlayer.setShowControls(showControls);
+		uiVideoPlayer.setControlsVisible(controlsVisible);
 		uiVideoPlayer.setPosterImageUrl(posterImageUrl);
-		uiVideoPlayer.setPosterImageSize(posterImageSize.toUiPosterImageSize());
-		uiVideoPlayer.setSendPlayerProgressEventsEachXSeconds(sendPlayerProgressEventsEachXSeconds);
+		uiVideoPlayer.setPosterImageSize(posterImageSize);
+		uiVideoPlayer.setPlayerProgressIntervalSeconds(playerProgressIntervalSeconds);
 		uiVideoPlayer.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
-		uiVideoPlayer.setPreloadMode(preloadMode.toUiPreloadMode());
+		uiVideoPlayer.setPreloadMode(preloadMode);
 		return uiVideoPlayer;
 	}
 
 	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-		switch (event.getTypeId()) {
-			case DtoVideoPlayer.ErrorLoadingEvent.TYPE_ID -> {
-				var e = event.as(DtoVideoPlayer.ErrorLoadingEventWrapper.class);
-				onErrorLoading.fire(null);
-			}
-			case DtoVideoPlayer.PlayerProgressEvent.TYPE_ID -> {
-				var e = event.as(DtoVideoPlayer.PlayerProgressEventWrapper.class);
-				onProgress.fire(e.getPositionInSeconds());
-			}
-			case DtoVideoPlayer.EndedEvent.TYPE_ID -> {
-				var e = event.as(DtoVideoPlayer.EndedEventWrapper.class);
-				onEnded.fire();
-			}
-		}
+	public void handleErrorLoading() {
+		onErrorLoading.fire();
+	}
+
+	@Override
+	public void handlePlayerProgress(int positionInSeconds) {
+		onProgress.fire(positionInSeconds);
+	}
+
+	@Override
+	public void handleEnded() {
+		onEnded.fire();
 	}
 
 	public void play() {
@@ -90,7 +88,7 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void setPosition(int timeInSeconds) {
-		clientObjectChannel.jumpTo(TimeInSeconds);
+		clientObjectChannel.jumpTo(timeInSeconds);
 	}
 
 	public String getUrl() {
@@ -99,7 +97,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setUrl(String url) {
 		this.url = url;
-		clientObjectChannel.setUrl(Url);
+		clientObjectChannel.setUrl(url);
 	}
 
 	public boolean isAutoplay() {
@@ -108,16 +106,16 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setAutoplay(boolean autoplay) {
 		this.autoplay = autoplay;
-		clientObjectChannel.setAutoplay(Autoplay);
+		clientObjectChannel.setAutoplay(autoplay);
 	}
 
-	public boolean isShowControls() {
-		return showControls;
+	public boolean isControlsVisible() {
+		return controlsVisible;
 	}
 
-	public void setShowControls(boolean showControls) {
-		this.showControls = showControls;
-		reRenderIfRendered();
+	public void setControlsVisible(boolean controlsVisible) {
+		this.controlsVisible = controlsVisible;
+		clientObjectChannel.setControlsVisible(controlsVisible);
 	}
 
 	public String getPosterImageUrl() {
@@ -126,7 +124,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setPosterImageUrl(String posterImageUrl) {
 		this.posterImageUrl = posterImageUrl;
-		reRenderIfRendered();
+		clientObjectChannel.setPosterImageUrl(posterImageUrl);
 	}
 
 	public PosterImageSize getPosterImageSize() {
@@ -135,16 +133,16 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setPosterImageSize(PosterImageSize posterImageSize) {
 		this.posterImageSize = posterImageSize;
-		reRenderIfRendered();
+		clientObjectChannel.setPosterImageSize(posterImageSize);
 	}
 
-	public int getSendPlayerProgressEventsEachXSeconds() {
-		return sendPlayerProgressEventsEachXSeconds;
+	public int getPlayerProgressIntervalSeconds() {
+		return playerProgressIntervalSeconds;
 	}
 
-	public void setSendPlayerProgressEventsEachXSeconds(int sendPlayerProgressEventsEachXSeconds) {
-		this.sendPlayerProgressEventsEachXSeconds = sendPlayerProgressEventsEachXSeconds;
-		reRenderIfRendered();
+	public void setPlayerProgressIntervalSeconds(int playerProgressIntervalSeconds) {
+		this.playerProgressIntervalSeconds = playerProgressIntervalSeconds;
+		clientObjectChannel.setPlayerProgressIntervalSeconds(playerProgressIntervalSeconds);
 	}
 
 	public Color getBackgroundColor() {
@@ -153,7 +151,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		reRenderIfRendered();
+		clientObjectChannel.setBackgroundColor(backgroundColor.toHtmlColorString());
 	}
 
 	public PreloadMode getPreloadMode() {
@@ -162,7 +160,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setPreloadMode(PreloadMode preloadMode) {
 		this.preloadMode = preloadMode;
-		clientObjectChannel.setPreloadMode(PreloadMode.ToUiPreloadMode());
+		clientObjectChannel.setPreloadMode(preloadMode);
 	}
 
 }

@@ -682,7 +682,7 @@ export class MediaSoupV3WebRtcClient extends AbstractLegacyComponent<DtoMediaSou
 		let videoSize = calculateDisplayModeInnerSize(
 			{width: this.getWidth(), height: availableHeight},
 			{width: 100, height: 100 / displayAreaAspectRatio},
-			"FIT_SIZE",
+			"fit-size",
 			1,
 			false
 		);

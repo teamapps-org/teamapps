@@ -65,7 +65,7 @@ export function hasVerticalScrollBar(element: HTMLElement): boolean {
 
 export function calculateDisplayModeInnerSize(containerDimensions: { width: number, height: number },
 											  innerPreferredDimensions: { width: number, height: number },
-											  displayMode: "FIT_WIDTH" | "FIT_HEIGHT" | "FIT_SIZE" | "COVER" | "ORIGINAL_SIZE",
+											  displayMode: "fit-width" | "fit-height" | "fit-size" | "cover" | "original-size",
 											  zoomFactor: number = 1,
 											  considerScrollbars = false
 ): { width: number, height: number } {
@@ -76,7 +76,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 	console.debug(`inner dimensions: ${innerPreferredDimensions.width}x${innerPreferredDimensions.height}`);
 	console.debug(`displayMode: ${displayMode}`);
 
-	if (displayMode === "FIT_WIDTH") {
+	if (displayMode === "fit-width") {
 		let width = Math.floor(containerDimensions.width * zoomFactor);
 		if (considerScrollbars && zoomFactor <= 1 && Math.ceil(width / imageAspectRatio) > containerDimensions.height) {
 			// There will be a vertical scroll bar, so make sure the width will not result in a horizontal scrollbar, too
@@ -84,7 +84,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			width = Math.min(width, containerDimensions.width - Constants.SCROLLBAR_WIDTH);
 		}
 		return {width: width, height: width / imageAspectRatio};
-	} else if (displayMode === "FIT_HEIGHT") {
+	} else if (displayMode === "fit-height") {
 		let height = Math.floor(containerDimensions.height * zoomFactor);
 		if (considerScrollbars && zoomFactor <= 1 && height * imageAspectRatio > containerDimensions.width) {
 			// There will be a horizontal scroll bar, so make sure the width will not result in a vertical scrollbar, too
@@ -92,7 +92,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			height = Math.min(height, containerDimensions.height - Constants.SCROLLBAR_WIDTH);
 		}
 		return {width: height * imageAspectRatio, height: height};
-	} else if (displayMode === "FIT_SIZE") {
+	} else if (displayMode === "fit-size") {
 		if (imageAspectRatio > viewPortAspectRatio) {
 			let width = Math.floor(containerDimensions.width * zoomFactor);
 			return {width: width, height: width / imageAspectRatio};
@@ -100,7 +100,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 			let height = Math.floor(containerDimensions.height * zoomFactor);
 			return {width: height * imageAspectRatio, height: height};
 		}
-	} else if (displayMode === "COVER") {
+	} else if (displayMode === "cover") {
 		if (imageAspectRatio < viewPortAspectRatio) {
 			let width = Math.floor(containerDimensions.width * zoomFactor);
 			return {width: width, height: width / imageAspectRatio};
@@ -114,82 +114,44 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 	}
 }
 
-export type Direction = "n" | "e" | "s" | "w" | "ne" | "se" | "nw" | "sw";
-
-export function boundSelection(
-	selection: { left: number, top: number, width: number, height: number },
-	bounds: { width: number, height: number },
-	aspectRatio?: number,
-	fixedAt?: Direction
-) {
-	let newSelection = {...selection};
-
-	if (fixedAt == null) {
-		if (newSelection.width > bounds.width) {
-			newSelection.width = bounds.width;
-		}
-		if (newSelection.height > bounds.height) {
-			newSelection.height = bounds.height;
-		}
-		if (aspectRatio != null && aspectRatio > 0) {
-			if (newSelection.width / newSelection.height > aspectRatio) {
-				newSelection.width = newSelection.height * aspectRatio;
-			} else {
-				newSelection.height = newSelection.width / aspectRatio;
+export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displayMode: "fit-width" | "fit-height" | "fit-size" | "cover" | "original-size", options?: {
+	innerPreferredDimensions?: { // only needed for ORIGINAL_SIZE!
+		width: number,
+		height: number,
+	},
+	zoomFactor?: number,
+	padding?: number,
+	considerScrollbars?: boolean
+}) {
+	options = $.extend({}, options); // copy the options as we are potentially making changes to the object...
+	if (options.innerPreferredDimensions == null || !options.innerPreferredDimensions.width || !options.innerPreferredDimensions.height) {
+		if ($inner instanceof HTMLImageElement && $inner.naturalHeight > 0) {
+			let imgElement = <HTMLImageElement>$($inner)[0];
+			options.innerPreferredDimensions = {
+				width: imgElement.naturalWidth,
+				height: imgElement.naturalHeight
 			}
+		} else {
+			$inner.style.width = "100%";
+			$inner.style.height = "100%";
+			return;
 		}
-		if (newSelection.left < 0) {
-			newSelection.left = 0;
-		}
-		if (newSelection.left + newSelection.width > bounds.width) {
-			newSelection.left = bounds.width - newSelection.width;
-		}
-		if (newSelection.top < 0) {
-			newSelection.top = 0;
-		}
-		if (newSelection.top + newSelection.height > bounds.height) {
-			newSelection.top = bounds.height - newSelection.height;
-		}
-	} else {
-		let selectionXCenter = selection.left + selection.width / 2;
-		let selectionYCenter = selection.top + selection.height / 2;
-		let maxWidth =
-			fixedAt == "n" || fixedAt == "s" ? Math.min(Math.min(selectionXCenter, bounds.width - selectionXCenter) * 2, bounds.width) :
-				fixedAt == "e" || fixedAt == "ne" || fixedAt == "se" ? Math.min(selection.left + selection.width, bounds.width) :
-					fixedAt == "w" || fixedAt == "nw" || fixedAt == "sw" ? Math.min(bounds.width - selection.left, bounds.width)
-						: bounds.width;
-		let maxHeight =
-			fixedAt == "e" || fixedAt == "w" ? Math.min(Math.min(selectionYCenter, bounds.height - selectionYCenter) * 2, bounds.height) :
-				fixedAt == "s" || fixedAt == "se" || fixedAt == "sw" ? Math.min(selection.top + selection.height, bounds.height) :
-					fixedAt == "n" || fixedAt == "ne" || fixedAt == "nw" ? Math.min(bounds.height - selection.top, bounds.height)
-						: bounds.height;
-
-		newSelection.width = Math.min(newSelection.width, maxWidth);
-		newSelection.height = Math.min(newSelection.height, maxHeight);
-
-		if (aspectRatio != null && aspectRatio > 0) {
-			if (aspectRatio > newSelection.width / newSelection.height) {
-				newSelection.height = newSelection.width / aspectRatio;
-			} else if (aspectRatio < newSelection.width / newSelection.height) {
-				newSelection.width = newSelection.height * aspectRatio;
-			}
-		}
-
-		newSelection.left =
-			fixedAt == "n" || fixedAt == "s" ? selectionXCenter - newSelection.width / 2 :
-				fixedAt == "e" || fixedAt == "ne" || fixedAt == "se" ? selection.left + selection.width - newSelection.width :
-					fixedAt == "w" || fixedAt == "nw" || fixedAt == "sw" ? selection.left
-						: 0;
-		newSelection.top =
-			fixedAt == "e" || fixedAt == "w" ? selectionYCenter - newSelection.height / 2 :
-				fixedAt == "s" || fixedAt == "se" || fixedAt == "sw" ? selection.top + selection.height - newSelection.height :
-					fixedAt == "n" || fixedAt == "ne" || fixedAt == "nw" ? selection.top
-						: 0;
 	}
-	return newSelection;
+	if (options.padding == null) {
+		options.padding = parseInt($outer.style.paddingLeft) || 0;
+	}
+	let availableWidth = $outer.offsetWidth - 2 * options.padding;
+	let availableHeight = $outer.offsetHeight - 2 * options.padding;
+
+	let size = calculateDisplayModeInnerSize({
+		width: availableWidth,
+		height: availableHeight
+	}, options.innerPreferredDimensions, displayMode, options.zoomFactor, options.considerScrollbars);
+	$inner.style.width = size.width + "px";
+	$inner.style.height = size.height + "px";
 }
 
-
+export type Direction = "n" | "e" | "s" | "w" | "ne" | "se" | "nw" | "sw";
 
 const entityMap: { [c: string]: string } = {
 	'&': '&amp;',

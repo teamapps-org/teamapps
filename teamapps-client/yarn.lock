@@ -2069,6 +2069,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dom-walk@npm:^0.1.0":
+  version: 0.1.2
+  resolution: "dom-walk@npm:0.1.2"
+  checksum: 19eb0ce9c6de39d5e231530685248545d9cd2bd97b2cb3486e0bfc0f2a393a9addddfd5557463a932b52fdfcf68ad2a619020cd2c74a5fe46fbecaa8e80872f3
+  languageName: node
+  linkType: hard
+
 "earcut@npm:^2.2.2":
   version: 2.2.4
   resolution: "earcut@npm:2.2.4"
@@ -2492,6 +2499,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"global@npm:^4.3.1":
+  version: 4.4.0
+  resolution: "global@npm:4.4.0"
+  dependencies:
+    min-document: ^2.19.0
+    process: ^0.11.10
+  checksum: 9c057557c8f5a5bcfbeb9378ba4fe2255d04679452be504608dd5f13b54edf79f7be1db1031ea06a4ec6edd3b9f5f17d2d172fb47e6c69dae57fd84b7e72b77f
+  languageName: node
+  linkType: hard
+
 "globals@npm:^9.18.0":
   version: 9.18.0
   resolution: "globals@npm:9.18.0"
@@ -2801,6 +2818,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mediaelement@npm:^4.2.16":
+  version: 4.2.17
+  resolution: "mediaelement@npm:4.2.17"
+  dependencies:
+    global: ^4.3.1
+  checksum: 2207297ddff8e88e4a42cee12691732edd1ac39b7a07b3d98034feb63be24a9d3bea8f4039c465997e7d8a7a4e0674874c6f6bfa6bbfdba19f715cf8e02828a7
+  languageName: node
+  linkType: hard
+
 "mediasoup-client@npm:^3.6.28":
   version: 3.7.16
   resolution: "mediasoup-client@npm:3.7.16"
@@ -2842,6 +2868,15 @@ __metadata:
   bin:
     mime: cli.js
   checksum: fef25e39263e6d207580bdc629f8872a3f9772c923c7f8c7e793175cee22777bbe8bba95e5d509a40aaa292d8974514ce634ae35769faa45f22d17edda5e8557
+  languageName: node
+  linkType: hard
+
+"min-document@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "min-document@npm:2.19.0"
+  dependencies:
+    dom-walk: ^0.1.0
+  checksum: da6437562ea2228041542a2384528e74e22d1daa1a4ec439c165abf0b9d8a63e17e3b8a6dc6e0c731845e85301198730426932a0e813d23f932ca668340c9623
   languageName: node
   linkType: hard
 
@@ -3021,6 +3056,13 @@ __metadata:
   version: 0.1.8
   resolution: "private@npm:0.1.8"
   checksum: a00abd713d25389f6de7294f0e7879b8a5d09a9ec5fd81cc2f21b29d4f9a80ec53bc4222927d3a281d4aadd4cd373d9a28726fca3935921950dc75fd71d1fdbb
+  languageName: node
+  linkType: hard
+
+"process@npm:^0.11.10":
+  version: 0.11.10
+  resolution: "process@npm:0.11.10"
+  checksum: bfcce49814f7d172a6e6a14d5fa3ac92cc3d0c3b9feb1279774708a719e19acd673995226351a082a9ae99978254e320ccda4240ddc474ba31a76c79491ca7c3
   languageName: node
   linkType: hard
 
@@ -3307,6 +3349,18 @@ __metadata:
     d3: ^7.9.0
     d3-luxon: ^2.0.0
     esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-video-player@workspace:projector-video-player":
+  version: 0.0.0-use.local
+  resolution: "projector-video-player@workspace:projector-video-player"
+  dependencies:
+    esbuild: ^0.15.13
+    mediaelement: ^4.2.16
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1

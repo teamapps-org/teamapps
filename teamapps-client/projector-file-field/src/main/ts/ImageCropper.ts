@@ -18,28 +18,27 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {applyDisplayMode, boundSelection, css, Direction, parseHtml} from "./Common";
-import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
 import {
+	AbstractLegacyComponent, applyCss,
+	executeWhenFirstDisplayed,
+	parseHtml,
+	ServerObjectChannel,
+	TeamAppsEvent
+} from "projector-client-object-api";
+import {
+	createImageCropperSelection,
+	DtoImageCropper,
 	DtoImageCropper_SelectionChangedEvent,
 	DtoImageCropperCommandHandler,
-	DtoImageCropper,
-	DtoImageCropperEventSource
-} from "../generated/DtoImageCropper";
-import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {createDtoImageCropperSelection, DtoImageCropperSelection} from "../generated/DtoImageCropperSelection";
-import {UiImageCropperSelectionMode} from "../generated/UiImageCropperSelectionMode";
-import {draggable} from "./util/draggable";
+	DtoImageCropperEventSource, ImageCropperSelection, ImageCropperSelectionMode
+} from "./generated";
+import {applyDisplayMode, Direction, draggable} from "teamapps-client-core-components";
 
-type Selection = Omit<DtoImageCropperSelection, '_type'>;
+type Selection = Omit<ImageCropperSelection, '_type'>;
 
 type Rect = { x: number, y: number, width: number, height: number }
 
-export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> implements DtoImageCropperCommandHandler, DtoImageCropperEventSource {
+export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> implements DtoImageCropperCommandHandler, DtoImageCropperEventSource {
 
 	public readonly onSelectionChanged: TeamAppsEvent<DtoImageCropper_SelectionChangedEvent> = new TeamAppsEvent<DtoImageCropper_SelectionChangedEvent>();
 
@@ -52,7 +51,7 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 	private imageNaturalHeight: number = null;
 
 	constructor(config: DtoImageCropper, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
 		this.$element = parseHtml(`<div data-id="' + config.id + '" class="UiImageCropper">
     <img></img>
@@ -67,7 +66,7 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 		this.htmlImageElement.onload = () => {
 			this.imageNaturalWidth = this.htmlImageElement.naturalWidth;
 			this.imageNaturalHeight = this.htmlImageElement.naturalHeight;
-			applyDisplayMode(this.getMainElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE);
+			applyDisplayMode(this.getMainElement(), this.htmlImageElement, "fit-size");
 			this.resetSelectionFrame(config.aspectRatio);
 			this.updateCroppingFramePosition(this.selection);
 		};
@@ -156,7 +155,7 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 
 	private resetSelectionFrame(aspectRatio: number) {
 		if (this.imageNaturalWidth != null) {
-			this.selection = createDtoImageCropperSelection(0, 0, 0, 0);
+			this.selection = createImageCropperSelection(0, 0, 0, 0);
 			let naturalImageAspectRatio = this.imageNaturalWidth / this.imageNaturalHeight;
 			if (aspectRatio === 0) {
 				this.selection.width = 0.8 * this.imageNaturalWidth;
@@ -175,7 +174,7 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 			this.selection = this.boundSelection(this.selection);
 			this.updateCroppingFramePosition(this.selection);
 			this.onSelectionChanged.fire({
-				selection: createDtoImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
+				selection: createImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
 			});
 		}
 	}
@@ -188,7 +187,7 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 		this.selection = selection;
 		console.debug("selection: ", this.selection);
 		this.onSelectionChanged.fire({
-			selection: createDtoImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
+			selection: createImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
 		});
 	}
 
@@ -225,19 +224,19 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 		this.resetSelectionFrame(aspectRatio);
 	}
 
-	setSelection(selection: DtoImageCropperSelection): void {
+	setSelection(selection: ImageCropperSelection): void {
 		this.selection = selection;
 		this.updateCroppingFramePosition(this.selection);
 	}
 
-	setSelectionMode(selectionMode: UiImageCropperSelectionMode): void {
+	setSelectionMode(selectionMode: ImageCropperSelectionMode): void {
 		this.$selectionFrame.className = this.$selectionFrame.className.replace(/mode-\w+/, '');
-		this.$selectionFrame.classList.add(`mode-${UiImageCropperSelectionMode[selectionMode].toLowerCase()}`)
+		this.$selectionFrame.classList.add(`mode-${ImageCropperSelectionMode[selectionMode].toLowerCase()}`)
 	}
 
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
-		applyDisplayMode(this.getMainElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE, {
+		applyDisplayMode(this.getMainElement(), this.htmlImageElement, "fit-size", {
 			innerPreferredDimensions: {
 				width: this.imageNaturalWidth,
 				height: this.imageNaturalHeight
@@ -263,7 +262,7 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 	private frameRectToSelection(frameSelectionPos: Rect) {
 		let correctionFactor = this.calculateCoordinateCorrectionFactor();
 		// let correctionOffsetX =
-		return createDtoImageCropperSelection(
+		return createImageCropperSelection(
 			(frameSelectionPos.x - this.htmlImageElement.offsetLeft) * correctionFactor,
 			(frameSelectionPos.y - this.htmlImageElement.offsetTop) * correctionFactor,
 			frameSelectionPos.width * correctionFactor,
@@ -286,5 +285,79 @@ export class UiImageCropper extends AbstractLegacyComponent<DtoImageCropper> imp
 	}
 
 }
+
+export function boundSelection(
+	selection: { left: number, top: number, width: number, height: number },
+	bounds: { width: number, height: number },
+	aspectRatio?: number,
+	fixedAt?: Direction
+) {
+	let newSelection = {...selection};
+
+	if (fixedAt == null) {
+		if (newSelection.width > bounds.width) {
+			newSelection.width = bounds.width;
+		}
+		if (newSelection.height > bounds.height) {
+			newSelection.height = bounds.height;
+		}
+		if (aspectRatio != null && aspectRatio > 0) {
+			if (newSelection.width / newSelection.height > aspectRatio) {
+				newSelection.width = newSelection.height * aspectRatio;
+			} else {
+				newSelection.height = newSelection.width / aspectRatio;
+			}
+		}
+		if (newSelection.left < 0) {
+			newSelection.left = 0;
+		}
+		if (newSelection.left + newSelection.width > bounds.width) {
+			newSelection.left = bounds.width - newSelection.width;
+		}
+		if (newSelection.top < 0) {
+			newSelection.top = 0;
+		}
+		if (newSelection.top + newSelection.height > bounds.height) {
+			newSelection.top = bounds.height - newSelection.height;
+		}
+	} else {
+		let selectionXCenter = selection.left + selection.width / 2;
+		let selectionYCenter = selection.top + selection.height / 2;
+		let maxWidth =
+			fixedAt == "n" || fixedAt == "s" ? Math.min(Math.min(selectionXCenter, bounds.width - selectionXCenter) * 2, bounds.width) :
+				fixedAt == "e" || fixedAt == "ne" || fixedAt == "se" ? Math.min(selection.left + selection.width, bounds.width) :
+					fixedAt == "w" || fixedAt == "nw" || fixedAt == "sw" ? Math.min(bounds.width - selection.left, bounds.width)
+						: bounds.width;
+		let maxHeight =
+			fixedAt == "e" || fixedAt == "w" ? Math.min(Math.min(selectionYCenter, bounds.height - selectionYCenter) * 2, bounds.height) :
+				fixedAt == "s" || fixedAt == "se" || fixedAt == "sw" ? Math.min(selection.top + selection.height, bounds.height) :
+					fixedAt == "n" || fixedAt == "ne" || fixedAt == "nw" ? Math.min(bounds.height - selection.top, bounds.height)
+						: bounds.height;
+
+		newSelection.width = Math.min(newSelection.width, maxWidth);
+		newSelection.height = Math.min(newSelection.height, maxHeight);
+
+		if (aspectRatio != null && aspectRatio > 0) {
+			if (aspectRatio > newSelection.width / newSelection.height) {
+				newSelection.height = newSelection.width / aspectRatio;
+			} else if (aspectRatio < newSelection.width / newSelection.height) {
+				newSelection.width = newSelection.height * aspectRatio;
+			}
+		}
+
+		newSelection.left =
+			fixedAt == "n" || fixedAt == "s" ? selectionXCenter - newSelection.width / 2 :
+				fixedAt == "e" || fixedAt == "ne" || fixedAt == "se" ? selection.left + selection.width - newSelection.width :
+					fixedAt == "w" || fixedAt == "nw" || fixedAt == "sw" ? selection.left
+						: 0;
+		newSelection.top =
+			fixedAt == "e" || fixedAt == "w" ? selectionYCenter - newSelection.height / 2 :
+				fixedAt == "s" || fixedAt == "se" || fixedAt == "sw" ? selection.top + selection.height - newSelection.height :
+					fixedAt == "n" || fixedAt == "ne" || fixedAt == "nw" ? selection.top
+						: 0;
+	}
+	return newSelection;
+}
+
 
 

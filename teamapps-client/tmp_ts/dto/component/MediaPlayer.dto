@@ -17,6 +17,32 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-.FormDesignerFieldChooser {
-  background-color: #ddd;
+package "teamapps-client-common-components":org.teamapps.projector.component.common;
+
+import org.teamapps.projector.component.DtoComponent;
+
+class DtoMediaTrackGraph extends DtoComponent {
+	int trackCount;
+	List<DtoMediaTrackData> trackData;
+	List<DtoMediaTrackMarker> markers;
+
+	command setCursorPosition(long time);
+
+	event handleTimeSelection(long start, long end);
 }
+
+class DtoMediaTrackData {
+	long time;
+	List<Integer> values;
+}
+
+class DtoMediaTrackMarker {
+	int track;
+	long start;
+	long end;
+	String color;
+	String backgroundColor;
+}
+
+
+

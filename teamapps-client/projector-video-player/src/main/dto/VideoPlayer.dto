@@ -1,0 +1,37 @@
+package "projector-video-player":org.teamapps.projector.component.videoplayer;
+
+import org.teamapps.projector.component.DtoComponent;
+
+/**
+ * May also be used as audio player...
+ */
+class DtoVideoPlayer extends DtoComponent {
+	mutable String url; //the url of the video
+	mutable boolean autoplay;
+	mutable boolean controlsVisible;
+	mutable String posterImageUrl;
+	mutable PosterImageSize posterImageSize;
+	mutable int playerProgressIntervalSeconds; // if 0, then send NO events
+	mutable String backgroundColor;
+	mutable PreloadMode preloadMode;
+
+	command play();
+	command pause();
+	command jumpTo(int timeInSeconds);
+
+	event errorLoading();
+	event playerProgress(int positionInSeconds);
+	event ended();
+}
+
+enum PosterImageSize {
+    CONTAIN = "contain",
+    COVER = "cover",
+    FILL = "fill"
+}
+
+enum PreloadMode {
+	NONE = "none",
+	METADATA = "metadata",
+	AUTO = "auto"
+}

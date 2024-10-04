@@ -17,35 +17,27 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-///<reference path="../custom-declarations/mediaelement.d.ts"/>
 
 import "mediaelement/full";
-
-
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiContext} from "teamapps-client-core";
+import {AbstractLegacyComponent, parseHtml, removeClassesByFunction, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
+	DtoVideoPlayer,
 	DtoVideoPlayer_EndedEvent,
 	DtoVideoPlayer_ErrorLoadingEvent,
 	DtoVideoPlayer_PlayerProgressEvent,
 	DtoVideoPlayerCommandHandler,
-	DtoVideoPlayer,
-	DtoVideoPlayerEventSource
-} from "../generated/DtoVideoPlayer";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiMediaPreloadMode} from "../generated/UiMediaPreloadMode";
-import {parseHtml} from "./Common";
-import {UiPosterImageSize} from "../generated/UiPosterImageSize";
+	DtoVideoPlayerEventSource, PreloadMode, PosterImageSize
+} from "./generated";
 
-export class UiVideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> implements DtoVideoPlayerCommandHandler, DtoVideoPlayerEventSource {
+
+export class VideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> implements DtoVideoPlayerCommandHandler, DtoVideoPlayerEventSource {
 
 	public readonly onPlayerProgress: TeamAppsEvent<DtoVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<DtoVideoPlayer_PlayerProgressEvent>();
 	public readonly onEnded: TeamAppsEvent<DtoVideoPlayer_EndedEvent> = new TeamAppsEvent<DtoVideoPlayer_EndedEvent>();
 	public readonly onErrorLoading: TeamAppsEvent<DtoVideoPlayer_ErrorLoadingEvent> = new TeamAppsEvent<DtoVideoPlayer_ErrorLoadingEvent>();
 
 	private $componentWrapper: HTMLElement;
-	private $video: HTMLElement;
+	private $video: HTMLVideoElement;
 	private mediaPlayer: any;
 	private playerInitialized: boolean = false;
 	private jumpToPositionWhenReady: number = 0;
@@ -55,16 +47,16 @@ export class UiVideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> imple
 	private playState: "initial" | "playing" | "paused" = "initial";
 
 	constructor(config: DtoVideoPlayer, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 
-		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
-		let preload = `${config.preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : config.preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`;
 		this.$componentWrapper = parseHtml(
 			`<div class="UiVideoPlayer ${config.url == null ? "not-playable" : ""}">
-                    <video class="${posterImageSizeCssClass}" src="${config.url || ""}" width="100%" height="100%" poster="${config.posterImageUrl || ''}" preload="${preload}" ${config.autoplay ? "autoplay" : ""}></video>
+                    <video src="${config.url || ""}" width="100%" height="100%" preload="${(config.preloadMode)}" ${config.autoplay ? "autoplay" : ""}></video>
                 </div>`);
-		this.$componentWrapper.classList.toggle("hide-controls", !config.showControls);
-		this.$video = this.$componentWrapper.querySelector<HTMLElement>(":scope video");
+		this.$video = this.$componentWrapper.querySelector(":scope video");
+		this.setControlsVisible(config.controlsVisible)
+		this.setPosterImageUrl(config.posterImageUrl);
+		this.setPosterImageSize(config.posterImageSize);
 
 		// TODO this is the point where the element was inserted to the DOM
 
@@ -85,7 +77,7 @@ export class UiVideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> imple
 				let lastPlayTime = 0;
 				mediaElement.addEventListener('timeupdate', (e) => {
 					let currentPlayTime = mediaElement.currentTime;
-					if (lastPlayTime < currentPlayTime && lastPlayTime % config.sendPlayerProgressEventsEachXSeconds > currentPlayTime % config.sendPlayerProgressEventsEachXSeconds) {
+					if (lastPlayTime < currentPlayTime && lastPlayTime % config.playerProgressIntervalSeconds > currentPlayTime % config.playerProgressIntervalSeconds) {
 						this.onPlayerProgress.fire({
 							positionInSeconds: Math.floor(currentPlayTime)
 						});
@@ -103,8 +95,7 @@ export class UiVideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> imple
 			}
 		});
 
-		this.$componentWrapper.style.backgroundColor = config.backgroundColor;
-		this.$componentWrapper.querySelector<HTMLElement>(':scope .mejs__container').style.backgroundColor = config.backgroundColor;
+		this.setBackgroundColor(config.backgroundColor);
 
 		this.setPreloadMode(config.preloadMode);
 		this.setAutoplay(config.autoplay);
@@ -115,6 +106,26 @@ export class UiVideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> imple
 			}
 		});
 	}
+
+	setControlsVisible(controlsVisible: boolean) {
+		this.config.controlsVisible = controlsVisible;
+		this.$componentWrapper.classList.toggle("hide-controls", !controlsVisible);
+    }
+    setPosterImageUrl(posterImageUrl: string) {
+		this.config.posterImageUrl = posterImageUrl;
+		this.$video.poster = posterImageUrl ?? '';
+    }
+    setPosterImageSize(posterImageSize: PosterImageSize) {
+		removeClassesByFunction(this.$componentWrapper.classList, className => className.startsWith("poster-"))
+		this.$componentWrapper.classList.add(`poster-${posterImageSize}`);
+    }
+    setPlayerProgressIntervalSeconds(playerProgressIntervalSeconds: number) {
+       	this.config.playerProgressIntervalSeconds = playerProgressIntervalSeconds;
+	}
+    setBackgroundColor(backgroundColor: string) {
+		this.$componentWrapper.style.backgroundColor = backgroundColor;
+		this.$componentWrapper.querySelector<HTMLElement>(':scope .mejs__container').style.backgroundColor = backgroundColor;
+    }
 
 	public doGetMainElement(): HTMLElement {
 		return this.$componentWrapper;
@@ -180,8 +191,8 @@ export class UiVideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> imple
 		}
 	}
 
-	setPreloadMode(preloadMode: UiMediaPreloadMode): void {
-		this.$video.setAttribute("preload", `${preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`);
+	setPreloadMode(preloadMode: PreloadMode): void {
+		this.$video.setAttribute("preload", preloadMode);
 	}
 
 	setUrl(url: string): void {
