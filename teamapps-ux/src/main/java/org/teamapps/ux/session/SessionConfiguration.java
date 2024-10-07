@@ -75,6 +75,7 @@ public class SessionConfiguration {
 		config.setLocale(locale.toLanguageTag());
 		config.setOptimizedForTouch(optimizedForTouch);
 		config.setThemeClassName(theme.getCssClass());
+		config.setClosedSessionHandling(closedSessionHandling);
 		return config;
 	}
 
