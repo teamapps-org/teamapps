@@ -35,6 +35,7 @@ import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class AbstractForm<RECORD> extends AbstractComponent implements Component {
@@ -168,6 +169,9 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 		return new ArrayList<>(logicalForm.getFields().values());
 	}
 
+	public Map<String, AbstractField<?>> getFieldsMap() {
+		return Map.copyOf(logicalForm.getFields());
+	}
 
 	public <V> AbstractField<V> getFieldByPropertyName(String propertyName) {
 		return (AbstractField<V>) logicalForm.getFields().get(propertyName);
