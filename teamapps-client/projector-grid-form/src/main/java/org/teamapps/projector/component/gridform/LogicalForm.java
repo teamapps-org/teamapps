@@ -17,14 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form;
+package org.teamapps.projector.component.gridform;
 
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.FieldMessage;
+import org.teamapps.projector.component.field.FieldMessageSeverity;
+import org.teamapps.projector.component.field.validator.MultiFieldValidator;
 import org.teamapps.projector.dataextraction.*;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.component.field.FieldMessage;
-import org.teamapps.ux.component.field.validator.MultiFieldValidator;
-import org.teamapps.ux.data.extraction.*;
-import org.teamapps.ux.dataextraction.*;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -107,7 +106,7 @@ public class LogicalForm<RECORD> {
 		this.multiFieldValidators.add(multiFieldValidator);
 	}
 
-	public FieldMessage.Severity validate() {
+	public FieldMessageSeverity validate() {
 		return Stream.concat(
 				fieldsByPropertyName.values().stream()
 						.flatMap(f -> f.validate().stream())

@@ -3194,6 +3194,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-grid-form@workspace:projector-grid-form":
+  version: 0.0.0-use.local
+  resolution: "projector-grid-form@workspace:projector-grid-form"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-grid-template@workspace:projector-grid-template":
   version: 0.0.0-use.local
   resolution: "projector-grid-template@workspace:projector-grid-template"

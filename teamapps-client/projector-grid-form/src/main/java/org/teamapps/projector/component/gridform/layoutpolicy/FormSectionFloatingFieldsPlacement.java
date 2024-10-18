@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form.layoutpolicy;
+package org.teamapps.projector.component.gridform.layoutpolicy;
 
-import org.teamapps.projector.component.common.DtoFormSectionFloatingField;
-import org.teamapps.projector.component.common.DtoFormSectionFloatingFieldsPlacement;
-import org.teamapps.projector.component.common.DtoFormSectionPlacement;
-import org.teamapps.projector.format.HorizontalElementAlignment;
-import org.teamapps.projector.format.VerticalElementAlignment;
+import org.teamapps.projector.component.gridform.DtoFormSectionFloatingField;
+import org.teamapps.projector.component.gridform.DtoFormSectionFloatingFieldsPlacement;
+import org.teamapps.projector.component.gridform.DtoFormSectionPlacement;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.format.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +42,8 @@ public class FormSectionFloatingFieldsPlacement implements FormSectionPlacement 
 	private int colSpan;
 	private int minWidth;
 	private int maxWidth;
-	private VerticalElementAlignment verticalAlignment = VerticalElementAlignment.CENTER;
-	private HorizontalElementAlignment horizontalAlignment = HorizontalElementAlignment.LEFT;
+	private AlignItems verticalAlignment = AlignItems.CENTER;
+	private JustifyContent horizontalAlignment = JustifyContent.START;
 
 	public FormSectionFloatingFieldsPlacement(int row, int column) {
 		this.row = row;
@@ -151,20 +151,20 @@ public class FormSectionFloatingFieldsPlacement implements FormSectionPlacement 
 	}
 
 	@Override
-	public VerticalElementAlignment getVerticalAlignment() {
+	public AlignItems getVerticalAlignment() {
 		return verticalAlignment;
 	}
 
-	public void setVerticalAlignment(VerticalElementAlignment verticalAlignment) {
+	public void setVerticalAlignment(AlignItems verticalAlignment) {
 		this.verticalAlignment = verticalAlignment;
 	}
 
 	@Override
-	public HorizontalElementAlignment getHorizontalAlignment() {
+	public JustifyContent getHorizontalAlignment() {
 		return horizontalAlignment;
 	}
 
-	public void setHorizontalAlignment(HorizontalElementAlignment horizontalAlignment) {
+	public void setHorizontalAlignment(JustifyContent horizontalAlignment) {
 		this.horizontalAlignment = horizontalAlignment;
 	}
 
@@ -183,8 +183,8 @@ public class FormSectionFloatingFieldsPlacement implements FormSectionPlacement 
 				.setColSpan(colSpan)
 				.setMinWidth(minWidth)
 				.setMaxWidth(maxWidth)
-				.setVerticalAlignment(verticalAlignment.toUiVerticalElementAlignment())
-				.setHorizontalAlignment(horizontalAlignment.toUiHorizontalElementAlignment());
+				.setVerticalAlignment(verticalAlignment)
+				.setHorizontalAlignment(horizontalAlignment);
 
 		return placement;
 	}

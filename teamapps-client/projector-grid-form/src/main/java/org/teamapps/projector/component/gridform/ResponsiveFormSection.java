@@ -17,13 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form;
+package org.teamapps.projector.component.gridform;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.form.layoutpolicy.FormSection;
-import org.teamapps.projector.component.common.form.layoutpolicy.FormSectionFieldPlacement;
-import org.teamapps.projector.component.common.grid.layout.GridColumn;
-import org.teamapps.projector.component.common.grid.layout.GridRow;
+import org.teamapps.projector.component.gridform.layoutpolicy.FormSection;
+import org.teamapps.projector.component.gridform.layoutpolicy.FormSectionFieldPlacement;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.BoxShadow;
 import org.teamapps.projector.format.Spacing;

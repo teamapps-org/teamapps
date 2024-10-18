@@ -17,15 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form;
+package org.teamapps.projector.component.gridform;
 
-import org.teamapps.projector.component.common.form.layoutpolicy.FormSection;
-import org.teamapps.projector.component.common.form.layoutpolicy.FormSectionFieldPlacement;
-import org.teamapps.projector.component.common.grid.layout.GridColumn;
-import org.teamapps.projector.component.common.grid.layout.GridRow;
-import org.teamapps.projector.format.*;
-import org.teamapps.ux.component.format.*;
-import org.teamapps.ux.format.*;
+
+import org.teamapps.projector.component.gridform.layoutpolicy.FormSection;
+import org.teamapps.projector.component.gridform.layoutpolicy.FormSectionFieldPlacement;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.format.JustifyContent;
+import org.teamapps.projector.format.Spacing;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,17 +63,17 @@ public class ResponsiveFormConfigurationTemplate {
 
 		template.setPlacementTemplate(
 				new FormSectionFieldPlacement()
-				.setHorizontalAlignment(HorizontalElementAlignment.LEFT)
-				.setVerticalAlignment(VerticalElementAlignment.CENTER));
+				.setHorizontalAlignment(JustifyContent.START)
+				.setVerticalAlignment(AlignItems.CENTER));
 
 		FormSectionFieldPlacement labelPlacement = new FormSectionFieldPlacement()
-				.setHorizontalAlignment(HorizontalElementAlignment.LEFT)
-				.setVerticalAlignment(VerticalElementAlignment.CENTER)
+				.setHorizontalAlignment(JustifyContent.START)
+				.setVerticalAlignment(AlignItems.CENTER)
 				.setMinWidth(minLabelWidth);
 
 		FormSectionFieldPlacement fieldPlacement = new FormSectionFieldPlacement()
-				.setHorizontalAlignment(HorizontalElementAlignment.STRETCH)
-				.setVerticalAlignment(VerticalElementAlignment.CENTER)
+				.setHorizontalAlignment(JustifyContent.STRETCH)
+				.setVerticalAlignment(AlignItems.CENTER)
 				.setMinWidth(fieldMinWidth)
 				.setMaxWidth(fieldMaxWidth);
 
@@ -103,8 +102,8 @@ public class ResponsiveFormConfigurationTemplate {
 
 		template.setPlacementTemplate(
 				new FormSectionFieldPlacement()
-				.setHorizontalAlignment(HorizontalElementAlignment.STRETCH)
-				.setVerticalAlignment(VerticalElementAlignment.CENTER));
+				.setHorizontalAlignment(JustifyContent.STRETCH)
+				.setVerticalAlignment(AlignItems.CENTER));
 
 		template.setRowTemplate(
 				new GridRow(new SizingPolicy(SizeType.AUTO, 0, 0), 2, 2));

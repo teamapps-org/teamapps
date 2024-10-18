@@ -17,30 +17,34 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form.layoutpolicy;
+package org.teamapps.projector.component.gridform;
 
-import org.teamapps.projector.component.common.DtoFormSectionPlacement;
-import org.teamapps.projector.format.HorizontalElementAlignment;
-import org.teamapps.projector.format.VerticalElementAlignment;
 
-public interface FormSectionPlacement {
+import org.teamapps.projector.component.gridform.layoutpolicy.FormLayoutPolicy;
+import org.teamapps.projector.dto.JsonWrapper;
 
-	int getRow();
+import java.util.List;
 
-	int getColumn();
+public class GenericGridForm<R> extends AbstractGridForm<R> {
 
-	int getRowSpan();
+	private List<FormLayoutPolicy> layoutPolicies;
 
-	int getColSpan();
+	public GenericGridForm(List<FormLayoutPolicy> layoutPolicies) {
+		super();
+		this.layoutPolicies = layoutPolicies;
+	}
 
-	int getMinWidth();
+	@Override
+	public List<FormLayoutPolicy> getLayoutPolicies() {
+		return layoutPolicies;
+	}
 
-	int getMaxWidth();
+	public void addLayoutPolicy(FormLayoutPolicy layoutPolicy) {
+		this.layoutPolicies.add(layoutPolicy);
+	}
 
-	VerticalElementAlignment getVerticalAlignment();
+	@Override
+	public void handleEvent(String name, JsonWrapper eventObject) {
 
-	HorizontalElementAlignment getHorizontalAlignment();
-
-	DtoFormSectionPlacement createUiFormSectionPlacement();
-
+	}
 }

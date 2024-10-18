@@ -17,28 +17,31 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form;
+package org.teamapps.projector.component.gridform;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.*;
-import org.teamapps.dto.protocol.DtoEventWrapper;
-import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.component.common.form.layoutpolicy.FormLayoutPolicy;
-import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.component.field.FieldMessage;
-import org.teamapps.ux.component.field.validator.MultiFieldValidator;
+import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.Field;
+import org.teamapps.projector.component.field.FieldMessageSeverity;
+import org.teamapps.projector.component.field.validator.MultiFieldValidator;
+import org.teamapps.projector.component.gridform.layoutpolicy.FormLayoutPolicy;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyInjector;
 import org.teamapps.projector.dataextraction.PropertyProvider;
+import org.teamapps.projector.event.ProjectorEvent;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractForm<RECORD> extends AbstractComponent {
+public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
+
+	private final DtoGridFormClientObjectChannel clientObjectChannel = new DtoGridFormClientObjectChannel(getClientObjectChannel());
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -77,20 +80,19 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent {
 
 	protected void addComponent(Component component) {
 		children.add(component);
-		component.setParent(this);
-		clientObjectChannel.addOrReplaceField(Component.CreateDtoReference());
+		clientObjectChannel.addOrReplaceField(component);
 	}
 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
 
+
 	@Override
-	public DtoComponent createDto() {
-		List<DtoReference> uiFields = logicalForm.getFields().values().stream()
-				.map(field -> field != null ? field.createDtoReference() : null)
+	public ComponentConfig createConfig() {
+		List<Field> uiFields = logicalForm.getFields().values().stream()
 				.collect(Collectors.toList());
 		List<DtoFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();
-		DtoGridForm uiForm = new DtoGridForm(uiFields, uiLayoutPolicies);
-		mapAbstractUiComponentProperties(uiForm);
+		DtoGridForm uiForm = new DtoGridForm(List.copyOf(uiFields), uiLayoutPolicies);
+		mapAbstractConfigProperties(uiForm);
 		return uiForm;
 	}
 
@@ -118,8 +120,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent {
 	}
 
 	protected void updateLayoutPolicies() {
-		List<DtoFormLayoutPolicy> uiFormLayoutPolicies = getUiFormLayoutPolicies();
-		clientObjectChannel.updateLayoutPolicies(UiFormLayoutPolicies);
+		clientObjectChannel.updateLayoutPolicies(getUiFormLayoutPolicies());
 	}
 
 	public void applyRecordValuesToFields(RECORD record) {
@@ -151,10 +152,6 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent {
 	}
 
 
-	@Override
-	public void handleUiEvent(DtoEventWrapper event) {
-	}
-
 	private List<String> getPropertyNames() {
 		return new ArrayList<>(logicalForm.getFields().keySet());
 	}
@@ -173,14 +170,14 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent {
 	}
 
 	public void setSectionCollapsed(String sectionId, boolean collapsed) {
-		clientObjectChannel.setSectionCollapsed(SectionId, Collapsed);
+		clientObjectChannel.setSectionCollapsed(sectionId, collapsed);
 	}
 
 	public void addMultiFieldValidator(MultiFieldValidator multiFieldValidator) {
 		this.logicalForm.addMultiFieldValidator(multiFieldValidator);
 	}
 
-	public FieldMessage.Severity validate() {
+	public FieldMessageSeverity validate() {
 		return this.logicalForm.validate();
 	}
 }

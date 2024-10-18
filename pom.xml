@@ -68,6 +68,7 @@
         <module>teamapps-client/projector-chat</module>
         <module>teamapps-client/projector-side-drawer</module>
         <module>teamapps-client/projector-video-player</module>
+        <module>teamapps-client/projector-grid-form</module>
 
         <module>teamapps-ux</module>
         <module>teamapps-server-jetty-embedded</module>

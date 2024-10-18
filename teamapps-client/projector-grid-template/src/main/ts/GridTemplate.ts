@@ -33,7 +33,7 @@ import {
 	DtoGlyphIconElement,
 	DtoGridTemplate,
 	DtoIconElement,
-	DtoImageElement, DtoImageSizing, DtoSizeType, DtoSizingPolicy,
+	DtoImageElement, DtoImageSizing, SizeType, DtoSizingPolicy,
 	DtoTextElement
 } from "./generated";
 import {Template} from "projector-client-object-api";
@@ -266,9 +266,9 @@ export function createImageSizingCssObject(imageSizing: DtoImageSizing): CssProp
 
 export function createCssGridRowOrColumnString(sizePolicy: DtoSizingPolicy) {
 	let maxSizeString: string;
-	if (sizePolicy.type === DtoSizeType.AUTO) {
+	if (sizePolicy.type === SizeType.AUTO) {
 		maxSizeString = 'auto';
-	} else if (sizePolicy.type === DtoSizeType.RELATIVE) {
+	} else if (sizePolicy.type === SizeType.RELATIVE) {
 		maxSizeString = (sizePolicy.value * 100) + sizePolicy.type;
 	} else {
 		maxSizeString = sizePolicy.value + sizePolicy.type;

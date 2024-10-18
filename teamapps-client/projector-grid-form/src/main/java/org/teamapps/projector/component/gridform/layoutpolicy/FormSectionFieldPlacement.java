@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form.layoutpolicy;
+package org.teamapps.projector.component.gridform.layoutpolicy;
 
-import org.teamapps.projector.component.common.DtoFormSectionFieldPlacement;
-import org.teamapps.projector.component.common.DtoFormSectionPlacement;
-import org.teamapps.ux.component.Component;
-import org.teamapps.projector.format.HorizontalElementAlignment;
-import org.teamapps.projector.format.VerticalElementAlignment;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.gridform.DtoFormSectionFieldPlacement;
+import org.teamapps.projector.component.gridform.DtoFormSectionPlacement;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.format.JustifyContent;
 
 public class FormSectionFieldPlacement implements FormSectionPlacement {
 
@@ -36,8 +36,8 @@ public class FormSectionFieldPlacement implements FormSectionPlacement {
 	private int maxWidth;
 	private int minHeight;
 	private int maxHeight;
-	private VerticalElementAlignment verticalAlignment = VerticalElementAlignment.CENTER;
-	private HorizontalElementAlignment horizontalAlignment = HorizontalElementAlignment.LEFT;
+	private AlignItems verticalAlignment = AlignItems.CENTER;
+	private JustifyContent horizontalAlignment = JustifyContent.START;
 
 	public FormSectionFieldPlacement() {
 
@@ -118,20 +118,20 @@ public class FormSectionFieldPlacement implements FormSectionPlacement {
 		return this;
 	}
 
-	public VerticalElementAlignment getVerticalAlignment() {
+	public AlignItems getVerticalAlignment() {
 		return verticalAlignment;
 	}
 
-	public FormSectionFieldPlacement setVerticalAlignment(VerticalElementAlignment verticalAlignment) {
+	public FormSectionFieldPlacement setVerticalAlignment(AlignItems verticalAlignment) {
 		this.verticalAlignment = verticalAlignment;
 		return this;
 	}
 
-	public HorizontalElementAlignment getHorizontalAlignment() {
+	public JustifyContent getHorizontalAlignment() {
 		return horizontalAlignment;
 	}
 
-	public FormSectionFieldPlacement setHorizontalAlignment(HorizontalElementAlignment horizontalAlignment) {
+	public FormSectionFieldPlacement setHorizontalAlignment(JustifyContent horizontalAlignment) {
 		this.horizontalAlignment = horizontalAlignment;
 		return this;
 	}
@@ -157,7 +157,7 @@ public class FormSectionFieldPlacement implements FormSectionPlacement {
 
 	@Override
 	public DtoFormSectionPlacement createUiFormSectionPlacement() {
-		return new DtoFormSectionFieldPlacement(field.createDtoReference())
+		return new DtoFormSectionFieldPlacement(field)
 				.setRow(row)
 				.setColumn(column)
 				.setRowSpan(rowSpan)
@@ -166,8 +166,8 @@ public class FormSectionFieldPlacement implements FormSectionPlacement {
 				.setMaxWidth(maxWidth)
 				.setMinHeight(minHeight)
 				.setMaxHeight(maxHeight)
-				.setVerticalAlignment(verticalAlignment.toUiVerticalElementAlignment())
-				.setHorizontalAlignment(horizontalAlignment.toUiHorizontalElementAlignment());
+				.setVerticalAlignment(verticalAlignment)
+				.setHorizontalAlignment(horizontalAlignment);
 	}
 
 	@Override

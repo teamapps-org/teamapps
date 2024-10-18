@@ -99,7 +99,7 @@ public class ChatDisplay extends AbstractComponent {
 				ChatMessage chatMessage = model.getChatMessageById(q.getChatMessageId());
 				if (chatMessage != null) {
 					Component component = contextMenuProvider.apply(chatMessage);
-					return component != null ? component.createDtoReference() : null;
+					return component != null ? component : null;
 				}
 			}
 		}

@@ -17,14 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form;
+package org.teamapps.projector.component.gridform;
 
-import org.teamapps.projector.component.common.form.layoutpolicy.FormSectionFieldPlacement;
-import org.teamapps.ux.component.Component;
-import org.teamapps.projector.format.HorizontalElementAlignment;
-import org.teamapps.projector.format.VerticalElementAlignment;
-import org.teamapps.projector.component.common.grid.layout.GridColumn;
-import org.teamapps.projector.component.common.grid.layout.GridRow;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.gridform.layoutpolicy.FormSectionFieldPlacement;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.format.JustifyContent;
 
 public class ResponsiveFormField {
 	private final ResponsiveFormSection responsiveFormSection;
@@ -38,8 +36,8 @@ public class ResponsiveFormField {
 	private int maxWidth;
 	private int minHeight;
 	private int maxHeight;
-	private VerticalElementAlignment verticalAlignment = VerticalElementAlignment.CENTER;
-	private HorizontalElementAlignment horizontalAlignment = HorizontalElementAlignment.LEFT;
+	private AlignItems verticalAlignment = AlignItems.CENTER;
+	private JustifyContent horizontalAlignment = JustifyContent.START;
 
 	protected ResponsiveFormField(ResponsiveFormSection responsiveFormSection, Component field, int row, int column, FormSectionFieldPlacement fieldPlacementTemplate) {
 		this.responsiveFormSection = responsiveFormSection;
@@ -150,20 +148,20 @@ public class ResponsiveFormField {
 		return this;
 	}
 
-	public VerticalElementAlignment getVerticalAlignment() {
+	public AlignItems getVerticalAlignment() {
 		return verticalAlignment;
 	}
 
-	public ResponsiveFormField setVerticalAlignment(VerticalElementAlignment verticalAlignment) {
+	public ResponsiveFormField setVerticalAlignment(AlignItems verticalAlignment) {
 		this.verticalAlignment = verticalAlignment;
 		return this;
 	}
 
-	public HorizontalElementAlignment getHorizontalAlignment() {
+	public JustifyContent getHorizontalAlignment() {
 		return horizontalAlignment;
 	}
 
-	public ResponsiveFormField setHorizontalAlignment(HorizontalElementAlignment horizontalAlignment) {
+	public ResponsiveFormField setHorizontalAlignment(JustifyContent horizontalAlignment) {
 		this.horizontalAlignment = horizontalAlignment;
 		return this;
 	}

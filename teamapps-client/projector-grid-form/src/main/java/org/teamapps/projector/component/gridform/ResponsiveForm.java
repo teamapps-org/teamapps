@@ -17,17 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form;
+package org.teamapps.projector.component.gridform;
 
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.projector.component.common.form.layoutpolicy.FormLayoutPolicy;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.gridform.layoutpolicy.FormLayoutPolicy;
+import org.teamapps.projector.dto.JsonWrapper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class ResponsiveForm<RECORD> extends AbstractForm<RECORD> {
+public class ResponsiveForm<RECORD> extends AbstractGridForm<RECORD> {
 
 	private List<ResponsiveFormLayout> responsiveFormLayouts = new ArrayList<>();
 	private boolean createSmallScreenLayoutIfMissing = true;
@@ -101,5 +102,10 @@ public class ResponsiveForm<RECORD> extends AbstractForm<RECORD> {
 
 	public void setConfigurationTemplate(ResponsiveFormConfigurationTemplate configurationTemplate) {
 		this.configurationTemplate = configurationTemplate;
+	}
+
+	@Override
+	public void handleEvent(String name, JsonWrapper eventObject) {
+
 	}
 }

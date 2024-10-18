@@ -56,7 +56,7 @@ public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclar
 					continue;
 				}
 				String qualifiedName = getQualifiedTypeName(interfaceName, context.superInterfaceDecl());
-				model.findClassByQualifiedName(qualifiedName).orElseThrow(() -> model.createUnresolvedTypeReferenceException(interfaceName, context));
+				model.findInterfaceByQualifiedName(qualifiedName).orElseThrow(() -> model.createUnresolvedTypeReferenceException(interfaceName, context));
 			}
 		}
 	}

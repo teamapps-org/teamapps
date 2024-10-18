@@ -38,7 +38,8 @@
     "projector-audio-level-indicator",
     "projector-chat",
     "projector-side-drawer",
-    "projector-video-player"
+    "projector-video-player",
+    "projector-grid-form"
   ],
   "comments": {},
   "engines": {

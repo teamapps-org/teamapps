@@ -17,12 +17,31 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-.ResponsiveGridLayout {
-  > .GridLayout {
-    display: grid;
-  }
+package org.teamapps.projector.component.gridform;
 
-  &.fill-height > .GridLayout {
-    min-height: 100%;
-  }
+import org.teamapps.projector.component.field.AbstractField;
+
+public class FieldChangeEventData {
+
+	private final String propertyName;
+	private final AbstractField<?> field;
+	private final Object value;
+
+	public FieldChangeEventData(String propertyName, AbstractField<?> field, Object value) {
+		this.propertyName = propertyName;
+		this.field = field;
+		this.value = value;
+	}
+
+	public String getPropertyName() {
+		return propertyName;
+	}
+
+	public AbstractField<?> getField() {
+		return field;
+	}
+
+	public Object getValue() {
+		return value;
+	}
 }

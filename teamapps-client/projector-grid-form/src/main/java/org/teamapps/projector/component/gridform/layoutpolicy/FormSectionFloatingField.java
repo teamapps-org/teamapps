@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form.layoutpolicy;
+package org.teamapps.projector.component.gridform.layoutpolicy;
 
-import org.teamapps.projector.component.common.DtoFormSectionFloatingField;
-import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.gridform.DtoFormSectionFloatingField;
 
 public class FormSectionFloatingField {
 
@@ -71,7 +71,7 @@ public class FormSectionFloatingField {
 	}
 
 	public DtoFormSectionFloatingField createUiFormSectionFloatingField() {
-		DtoFormSectionFloatingField floatingField = new DtoFormSectionFloatingField(field.createDtoReference());
+		DtoFormSectionFloatingField floatingField = new DtoFormSectionFloatingField(field);
 		floatingField.setMinWidth(minWidth);
 		floatingField.setMaxWidth(maxWidth);
 		floatingField.setMinHeight(minHeight);

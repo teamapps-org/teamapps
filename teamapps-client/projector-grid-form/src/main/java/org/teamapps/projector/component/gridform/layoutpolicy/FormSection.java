@@ -17,18 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form.layoutpolicy;
+package org.teamapps.projector.component.gridform.layoutpolicy;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.projector.component.common.DtoFormSection;
-import org.teamapps.projector.component.common.DtoFormSectionPlacement;
-import org.teamapps.projector.component.common.DtoGridColumn;
-import org.teamapps.projector.component.common.DtoGridRow;
+import org.teamapps.projector.component.gridform.*;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.BoxShadow;
 import org.teamapps.projector.format.Spacing;
-import org.teamapps.projector.component.common.grid.layout.GridColumn;
-import org.teamapps.projector.component.common.grid.layout.GridRow;
 import org.teamapps.projector.template.Template;
 
 import java.util.ArrayList;
@@ -266,7 +261,7 @@ public class FormSection {
 
 	public DtoFormSection createUiFormSection() {
 		List<DtoGridColumn> uiColumns = this.columns.stream()
-				.map(column -> column != null ? column.createUiGridColumn() : null)
+				.map(column -> column != null ? column.createDtoGridColumn() : null)
 				.collect(Collectors.toList());
 		List<DtoGridRow> rows = this.rows.stream()
 				.map(row -> row != null ? row.createUiGridRow() : null)
@@ -284,7 +279,7 @@ public class FormSection {
 		uiSection.setCollapsible(this.collapsible);
 		uiSection.setCollapsed(this.collapsed);
 		uiSection.setVisible(this.visible);
-		uiSection.setHeaderTemplate(this.headerTemplate != null ? this.headerTemplate.createDtoReference() : null);
+		uiSection.setHeaderTemplate(this.headerTemplate != null ? this.headerTemplate : null);
 		uiSection.setHeaderData(this.headerData);
 		uiSection.setGridGap(this.gridGap);
 		uiSection.setFillRemainingHeight(fillRemainingHeight);

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.template.grid;
+package org.teamapps.projector.component.gridform;
 
 public class SizingPolicy {
 

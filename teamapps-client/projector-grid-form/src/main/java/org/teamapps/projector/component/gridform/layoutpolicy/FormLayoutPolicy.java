@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form.layoutpolicy;
+package org.teamapps.projector.component.gridform.layoutpolicy;
 
-import org.teamapps.projector.component.common.DtoFormLayoutPolicy;
-import org.teamapps.projector.component.common.DtoFormSection;
+import org.teamapps.projector.component.gridform.DtoFormLayoutPolicy;
+import org.teamapps.projector.component.gridform.DtoFormSection;
 
 import java.util.ArrayList;
 import java.util.List;

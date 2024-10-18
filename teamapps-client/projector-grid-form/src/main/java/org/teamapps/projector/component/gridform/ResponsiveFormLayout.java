@@ -17,18 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.common.form;
+package org.teamapps.projector.component.gridform;
 
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.component.common.form.layoutpolicy.FormLayoutPolicy;
-import org.teamapps.projector.component.common.form.layoutpolicy.FormSectionFieldPlacement;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.component.field.Label;
-import org.teamapps.projector.component.common.grid.layout.GridColumn;
-import org.teamapps.projector.component.common.grid.layout.GridRow;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.projector.component.Component;
+import org.teamapps.projector.component.essential.field.Label;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.gridform.layoutpolicy.FormLayoutPolicy;
+import org.teamapps.projector.component.gridform.layoutpolicy.FormSectionFieldPlacement;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
+import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +34,6 @@ import java.util.UUID;
 
 public class ResponsiveFormLayout {
 
-	protected static final String LABEL_NAME_SUFFIX = "Label";
 	private final ResponsiveForm responsiveForm;
 	private final int minWidth;
 	private final List<ResponsiveFormSection> responsiveFormSections = new ArrayList<>();

@@ -18,37 +18,23 @@
  * =========================LICENSE_END==================================
  */
 
+
 import {
+	AbstractLegacyComponent, bind, Component, createUiBorderCssString, createUiShadowCssString, createUiSpacingCssString, DtoComponent,
+	executeWhenFirstDisplayed, generateUUID,
+	parseHtml,
+	ServerObjectChannel, slideDown, slideUp,
+	TeamAppsEvent, Template
+} from "projector-client-object-api";
+import {
+	DtoFormLayoutPolicy, DtoFormSection, DtoFormSectionFieldPlacement, DtoFormSectionFloatingFieldsPlacement, DtoFormSectionPlacement,
+	DtoGridForm,
 	DtoGridForm_SectionCollapsedStateChangedEvent,
 	DtoGridFormCommandHandler,
-	DtoGridForm,
-	DtoGridFormEventSource
-} from "../generated/DtoGridForm";
-import {DtoFormLayoutPolicy} from "../generated/DtoFormLayoutPolicy";
-import {DtoFormSection} from "../generated/DtoFormSection";
-import {AbstractComponent} from "teamapps-client-core";
-import {TeamAppsUiContext} from "teamapps-client-core";
-import {executeWhenFirstDisplayed} from "./util/executeWhenFirstDisplayed";
-import {
-	createCssGridRowOrColumnString,
-	createUiBorderCssString,
-	createUiShadowCssString,
-	createUiSpacingCssString,
-	cssHorizontalAlignmentByUiVerticalAlignment,
-	cssVerticalAlignmentByUiVerticalAlignment
-} from "./util/CssFormatUtil";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import * as log from "loglevel";
-import {DtoFormSectionFieldPlacement} from "../generated/DtoFormSectionFieldPlacement";
-import {DtoFormSectionPlacement} from "../generated/DtoFormSectionPlacement";
-import {DtoFormSectionFloatingFieldsPlacement} from "../generated/DtoFormSectionFloatingFieldsPlacement";
-import {generateUUID, parseHtml} from "./Common";
-import {bind} from "./util/Bind";
-import {UiComponent} from "./UiComponent";
-import {DtoAbstractField} from "./formfield/DtoAbstractField";
+	DtoGridFormEventSource, DtoSizingPolicy, SizeType
+} from "./generated";
 
-export class UiGridForm extends AbstractLegacyComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
+export class GridForm extends AbstractLegacyComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
 
 	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<DtoGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<DtoGridForm_SectionCollapsedStateChangedEvent>();
 
@@ -58,18 +44,18 @@ export class UiGridForm extends AbstractLegacyComponent<DtoGridForm> implements 
 
 	private layoutPoliciesFromLargeToSmall: DtoFormLayoutPolicy[];
 	private activeLayoutPolicyIndex: number;
-	private uiFields: UiComponent[] = [];
+	private uiFields: Component[] = [];
 	private fillRemainingHeightCheckerInterval: number;
 	private sectionCollapseOverrides: { [sectionId: string]: boolean };
 
-	private fieldWrappers = new Map<UiComponent, HTMLDivElement>();
+	private fieldWrappers = new Map<Component, HTMLDivElement>();
 
 	constructor(config: DtoGridForm, serverObjectChannel: ServerObjectChannel) {
-		super(config, serverObjectChannel);
+		super(config);
 		this.$mainDiv = parseHtml(`<div class="UiGridForm">
 </div>`);
 
-		config.fields.forEach(f => this.addField(f as UiComponent));
+		config.fields.forEach(f => this.addField(f as Component));
 		this.updateLayoutPolicies(config.layoutPolicies);
 
 		this.displayedDeferredExecutor.invokeWhenReady(() => {
@@ -81,8 +67,8 @@ export class UiGridForm extends AbstractLegacyComponent<DtoGridForm> implements 
 		})
 	}
 
-	private addField(uiField: UiComponent) {
-		this.uiFields.push(uiField);
+	private addField(field: Component) {
+		this.uiFields.push(field);
 	}
 
 	public doGetMainElement(): HTMLElement {
@@ -166,13 +152,13 @@ export class UiGridForm extends AbstractLegacyComponent<DtoGridForm> implements 
 		window.clearInterval(this.fillRemainingHeightCheckerInterval);
 	}
 
-	addOrReplaceField(field: UiComponent): void {
+	addOrReplaceField(field: Component): void {
 		this.addField(field);
 		this.applyLayoutPolicy(this.layoutPoliciesFromLargeToSmall[this.determineLayoutPolicyIndexToApply()]);
 	}
 
 
-	private getFieldWrapper(field: UiComponent): HTMLDivElement {
+	private getFieldWrapper(field: Component): HTMLDivElement {
 		let wrapper = this.fieldWrappers.get(field);
 		if (wrapper == null) {
 			wrapper = document.createElement("div");
@@ -186,10 +172,9 @@ export class UiGridForm extends AbstractLegacyComponent<DtoGridForm> implements 
 
 class UiFormSection {
 
-	private static readonly LOGGER = log.getLogger("UiFormSection");
 	public readonly onCollapsedStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>();
 
-	private uiFields: UiComponent[] = [];
+	private uiFields: Component[] = [];
 
 	private uuid: string;
 	private $div: HTMLElement;
@@ -200,7 +185,7 @@ class UiFormSection {
 	private $expander: HTMLElement;
 	private collapsed: boolean;
 
-	constructor(public config: DtoFormSection, collapsedOverride: boolean, private getFieldWrapper : (field: UiComponent) => HTMLDivElement) {
+	constructor(public config: DtoFormSection, collapsedOverride: boolean, private getFieldWrapper : (field: Component) => HTMLDivElement) {
 		this.uuid = generateUUID();
 
 		const headerLineClass = config.drawHeaderLine ? 'draw-header-line' : '';
@@ -239,7 +224,7 @@ class UiFormSection {
 		this.$header = this.$div.querySelector<HTMLElement>(":scope > .header");
 		this.$headerTemplateContainer = this.$header.querySelector<HTMLElement>(":scope .header-template-container");
 		if (config.headerTemplate && config.headerData) {
-			this.$headerTemplateContainer.appendChild(parseHtml(context.templateRegistry.createTemplateRenderer(config.headerTemplate).render(config.headerData)));
+			this.$headerTemplateContainer.appendChild(parseHtml((config.headerTemplate as Template).render(config.headerData)));
 		}
 
 		this.$expander = this.$div.querySelector<HTMLElement>(":scope .teamapps-expander");
@@ -259,8 +244,8 @@ class UiFormSection {
 			return {
 				"grid-column": `${placement.column + 1} / ${placement.column + placement.colSpan + 1}`,
 				"grid-row": `${placement.row + 1} / ${placement.row + placement.rowSpan + 1}`,
-				"justify-self": `${cssHorizontalAlignmentByUiVerticalAlignment[placement.horizontalAlignment]}`,
-				"align-self": `${cssVerticalAlignmentByUiVerticalAlignment[placement.verticalAlignment]}`,
+				"justify-self": `${placement.horizontalAlignment}`,
+				"align-self": `${placement.verticalAlignment}`,
 				"min-width": placement.minWidth ? `${placement.minWidth}px` : '',
 				"max-width": placement.maxWidth ? `${placement.maxWidth}px` : '',
 				"margin": `${this.config.rows[placement.row].topPadding}px ${this.config.columns[placement.column].rightPadding}px ${this.config.rows[placement.row].bottomPadding}px ${this.config.columns[placement.column].leftPadding}px`
@@ -271,7 +256,7 @@ class UiFormSection {
 		this.config.fieldPlacements.forEach(placement => {
 			const placementId = generateUUID(true);
 			if (this.isUiFormSectionFieldPlacement(placement)) {
-				const uiField = placement.field as UiComponent;
+				const uiField = placement.field as Component;
 				uiField.onVisibilityChanged.addListener(this.updateGroupVisibility);
 				this.uiFields.push(uiField);
 				allCssRules[placementId] = {
@@ -290,7 +275,7 @@ class UiFormSection {
 					"flex-wrap": placement.wrap ? "wrap" : "nowrap"
 				};
 				placement.floatingFields.forEach(floatingField => {
-					const uiField = floatingField.field as UiComponent;
+					const uiField = floatingField.field as Component;
 					uiField.onVisibilityChanged.addListener(this.updateGroupVisibility);
 					this.uiFields.push(uiField);
 					const floatingFieldPlacementId = generateUUID(true);
@@ -369,6 +354,18 @@ class UiFormSection {
 			this.$body.classList.toggle('hidden', collapsed);
 		}
 	}
+}
+
+export function createCssGridRowOrColumnString(sizePolicy: DtoSizingPolicy) {
+	let maxSizeString: string;
+	if (sizePolicy.type === SizeType.AUTO) {
+		maxSizeString = 'auto';
+	} else if (sizePolicy.type === SizeType.RELATIVE) {
+		maxSizeString = (sizePolicy.value * 100) + sizePolicy.type;
+	} else {
+		maxSizeString = sizePolicy.value + sizePolicy.type;
+	}
+	return sizePolicy.minAbsoluteSize ? `minmax(${sizePolicy.minAbsoluteSize}px, ${maxSizeString})` : maxSizeString;
 }
 
 class CssDeclarations {

@@ -17,12 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-common-components":org.teamapps.projector.component.common;
+package "projector-grid-form":org.teamapps.projector.component.gridform;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.format.DtoBorder;
 import org.teamapps.projector.format.DtoBoxShadow;
+import org.teamapps.projector.format.DtoSpacing;
+import org.teamapps.projector.format.AlignItems;
+import org.teamapps.projector.format.JustifyContent;
 
 class DtoGridForm extends DtoComponent {
 	required List<DtoComponent*> fields;
@@ -82,4 +85,62 @@ class DtoFormSectionFloatingField {
 	int maxWidth;
 	int minHeight;
     int maxHeight;
+}
+
+class DtoGridColumn {
+	DtoSizingPolicy widthPolicy;
+	int leftPadding;
+	int rightPadding;
+}
+
+class DtoGridRow {
+	DtoSizingPolicy heightPolicy;
+    int topPadding;
+    int bottomPadding;
+}
+
+interface DtoGridPlacement {
+    int row;
+    int column;
+    int rowSpan;
+    int colSpan;
+    int minWidth;
+    int maxWidth;
+	int minHeight;
+	int maxHeight;
+    AlignItems verticalAlignment; // fall back to default defined on layout level!
+    JustifyContent horizontalAlignment; // fall back to default defined on layout level!
+}
+
+class DtoComponentGridPlacement implements DtoGridPlacement {
+	required DtoComponent* component;
+}
+
+class DtoFloatingComponentGridPlacement implements DtoGridPlacement {
+	required List<DtoFloatingComponentGridPlacementItem> components;
+	boolean wrap;
+	int horizontalSpacing;
+	int verticalSpacing;
+	// we might also want to be able to align the items differently than "baseline" - maybe add a setting "verticalFieldAlignment"
+}
+
+class DtoFloatingComponentGridPlacementItem {
+	required DtoComponent* component;
+	int minWidth;
+	int maxWidth;
+	int minHeight;
+    int maxHeight;
+}
+
+class DtoSizingPolicy {
+	required SizeType type;
+    double value;
+    int minAbsoluteSize;
+}
+
+enum SizeType {
+	FIXED = "px",
+	RELATIVE = "%",
+	AUTO = "auto",
+	FRACTION = "fr"
 }
