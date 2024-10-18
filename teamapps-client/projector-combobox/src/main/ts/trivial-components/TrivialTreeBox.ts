@@ -220,7 +220,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	private config: TrivialTreeBoxConfig<E>;
 
 	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
-	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>();
+	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<{node: E, expanded: boolean}>();
 
 	private $componentWrapper: HTMLElement;
 	private $tree: HTMLElement;
@@ -346,7 +346,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		}
 
 		if (expansionStateChange) {
-			this.onNodeExpansionStateChanged.fire(node.entry);
+			this.onNodeExpansionStateChanged.fire({node: node.entry, expanded});
 		}
 	}
 
