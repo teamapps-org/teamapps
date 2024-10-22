@@ -22,6 +22,7 @@ package org.teamapps.ux.component.dialogue;
 import org.teamapps.event.Event;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldMessage;
@@ -39,56 +40,58 @@ import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class FormDialogue extends Window {
 
 	public Event<Boolean> onResult = new Event<>();
 	public Event<Void> onOk = new Event<>();
 	public Event<Void> onCancel = new Event<>();
 
-	private final TemplateField<BaseTemplateRecord<?>> titleField;
 	private Integer buttonLineIndex;
 	private final ResponsiveFormLayout formLayout;
 	private HorizontalLayout buttonRow;
-	private final List<AbstractField<?>> fields = new ArrayList<>();
 
 	private boolean autoCloseOnOk = true;
+	private final ResponsiveForm<?> form;
 
-	public static FormDialogue create(Icon icon, String title, String text) {
+	public static FormDialogue create(Icon<?, ?> icon, String title, String text) {
 		return new FormDialogue(icon, title, text);
 	}
 
-	public FormDialogue(Icon icon, String title, String text) {
+	public FormDialogue(Icon<?, ?> icon, String title, String text) {
 		this(icon, null, title, text);
 	}
 
-	public FormDialogue(Icon icon, String imageUrl, String title, String text) {
+	public FormDialogue(Icon<?, ?> icon, String imageUrl, String title, String text) {
 		this(icon, imageUrl, title, text, ResponsiveFormConfigurationTemplate.createDefaultTwoColumnTemplate(0, 200, 0));
 	}
 
-	public FormDialogue(Icon icon, String imageUrl, String title, String text, ResponsiveFormConfigurationTemplate configurationTemplate) {
+	public FormDialogue(Icon<?, ?> icon, String imageUrl, String title, String text, ResponsiveFormConfigurationTemplate configurationTemplate) {
 		setIcon(icon);
 		setTitle(title);
 		setWidth(550);
 		setHeight(350);
-		ResponsiveForm<?> responsiveForm = new ResponsiveForm<>(configurationTemplate);
-		formLayout = responsiveForm.addResponsiveFormLayout(450);
+		form = new ResponsiveForm<>(configurationTemplate);
+		formLayout = form.addResponsiveFormLayout(450);
 		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false).setMargin(new Spacing(10)).setGridGap(10);
-		titleField = new TemplateField<>(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, new BaseTemplateRecord<>(icon, imageUrl, title, text, null));
+		TemplateField<BaseTemplateRecord<?>> titleField = new TemplateField<>(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, new BaseTemplateRecord<>(icon, imageUrl, title, text, null));
 		formLayout.addField(0, 0, "header", titleField).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(2);
-		setContent(responsiveForm);
+		setContent(form);
 	}
 
 	public ResponsiveFormSection addSection(Icon<?, ?> icon, String caption) {
 		return formLayout.addSection(icon, caption);
 	}
 
-	public void addField(Icon icon, String caption, AbstractField<?> field) {
+	public void addField(Icon<?, ?> icon, String caption, AbstractField<?> field) {
 		formLayout.addLabelAndField(icon, caption, field).field.setColSpan(2);
-		this.fields.add(field);
+	}
+
+	public void addComponent(Icon<?, ?> icon, String caption, Component field) {
+		formLayout.addLabelAndComponent(icon, caption, field).field.setColSpan(2);
+	}
+
+	public ResponsiveFormLayout getFormLayout() {
+		return formLayout;
 	}
 
 	public void addOkCancelButtons(String okCaption, String cancelCaption) {
@@ -96,7 +99,7 @@ public class FormDialogue extends Window {
 		addCancelButton(cancelCaption);
 	}
 
-	public void addOkCancelButtons(Icon okIcon, String okCaption, Icon cancelIcon, String cancelCaption) {
+	public void addOkCancelButtons(Icon<?, ?> okIcon, String okCaption, Icon<?, ?> cancelIcon, String cancelCaption) {
 		addOkButton(okIcon, okCaption);
 		addCancelButton(cancelIcon, cancelCaption);
 	}
@@ -105,16 +108,12 @@ public class FormDialogue extends Window {
 		return addOkButton(MaterialIcon.CHECK, caption);
 	}
 
-	public Button<?> addOkButton(Icon icon, String caption) {
+	public Button<?> addOkButton(Icon<?, ?> icon, String caption) {
 		createButtonRowIfNotExists();
 
 		Button<?> okButton = Button.create(icon, caption);
 		okButton.onClicked.addListener(() -> {
-			List<FieldMessage> errorMessages = fields.stream()
-					.flatMap(f -> f.validate().stream())
-					.filter(validationMessag -> validationMessag.getSeverity() == FieldMessage.Severity.ERROR)
-					.collect(Collectors.toList());
-			if (errorMessages.size() == 0) {
+			if (form.validate() != FieldMessage.Severity.ERROR) {
 				onResult.fire(true);
 				onOk.fire();
 				if (autoCloseOnOk) {
@@ -138,7 +137,7 @@ public class FormDialogue extends Window {
 		return addCancelButton(MaterialIcon.CANCEL, caption);
 	}
 
-	public Button<?> addCancelButton(Icon icon, String caption) {
+	public Button<?> addCancelButton(Icon<?, ?> icon, String caption) {
 		createButtonRowIfNotExists();
 
 		Button<?> cancelButton = Button.create(icon, caption);
