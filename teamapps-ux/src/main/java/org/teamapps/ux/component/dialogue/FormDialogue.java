@@ -57,6 +57,10 @@ public class FormDialogue extends Window {
 		return new FormDialogue(icon, title, text);
 	}
 
+	public FormDialogue(Icon<?, ?> icon, String title) {
+		this(icon, null, title, null);
+	}
+
 	public FormDialogue(Icon<?, ?> icon, String title, String text) {
 		this(icon, null, title, text);
 	}
@@ -73,8 +77,10 @@ public class FormDialogue extends Window {
 		form = new ResponsiveForm<>(configurationTemplate);
 		formLayout = form.addResponsiveFormLayout(450);
 		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false).setMargin(new Spacing(10)).setGridGap(10);
-		TemplateField<BaseTemplateRecord<?>> titleField = new TemplateField<>(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, new BaseTemplateRecord<>(icon, imageUrl, title, text, null));
-		formLayout.addField(0, 0, "header", titleField).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(2);
+		if (text != null) {
+			TemplateField<BaseTemplateRecord<?>> titleField = new TemplateField<>(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, new BaseTemplateRecord<>(icon, imageUrl, title, text, null));
+			formLayout.addField(0, 0, "header", titleField).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(2);
+		}
 		setContent(form);
 	}
 
