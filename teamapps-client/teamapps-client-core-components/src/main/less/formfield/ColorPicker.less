@@ -18,21 +18,40 @@
  * =========================LICENSE_END==================================
  */
 .ColorPicker {
+  min-width: var(--ta-input-default-width);
+}
 
-  outline: none;
+.static-readonly-ColorPicker {
+  padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+}
 
-  .pickr {
-    z-index: 1;
+.clearable-field-wrapper {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  min-height: var(--ta-input-height);
+  padding: 0;
 
-    .pcr-button {
-      border-width: 1px;
-      border-style: solid;
-    }
+  input {
+    flex: 1 1 1px;
+    width: 0; // overridden by flex grow
+    border: none;
+    outline: none;
+    background: transparent;
+  }
 
-    .pcr-app {
-      z-index: 1;
+  .clear-button {
+    flex: 0 0 15px;
+    margin-right: var(--ta-padding-base-horizontal);
+  }
+
+  &.readonly, &.disabled, &:not(.clearable) {
+    .clear-button {
+      display: none;
     }
   }
 
+  &.disabled {
+    background-color: var(--ta-input-bg-disabled)
+  }
 }
-

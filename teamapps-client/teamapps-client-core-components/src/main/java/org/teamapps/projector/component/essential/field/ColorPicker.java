@@ -21,17 +21,17 @@ package org.teamapps.projector.component.essential.field;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.component.essential.DtoColorPicker;
+import org.teamapps.projector.component.essential.DtoColorPickerClientObjectChannel;
+import org.teamapps.projector.component.essential.DtoColorPickerEventHandler;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.DtoAbstractField;
-import org.teamapps.projector.component.essential.DtoColorPicker;
-import org.teamapps.projector.component.essential.DtoColorPickerEventHandler;
 
 public class ColorPicker extends AbstractField<Color> implements DtoColorPickerEventHandler {
 
-	private Color defaultColor = new RgbaColor(0, 0, 0);
-	private String saveButtonCaption = "Save";
-	private String clearButtonCaption = "Clear";
+	private final DtoColorPickerClientObjectChannel clientObjectChannel = new DtoColorPickerClientObjectChannel(getClientObjectChannel());
+
+	private boolean clearable;
 
 	public ColorPicker() {
 		super();
@@ -41,9 +41,7 @@ public class ColorPicker extends AbstractField<Color> implements DtoColorPickerE
 	public DtoAbstractField createConfig() {
 		DtoColorPicker uiColorPicker = new DtoColorPicker();
 		mapAbstractFieldAttributesToUiField(uiColorPicker);
-		uiColorPicker.setDefaultColor(defaultColor != null ? defaultColor.toHtmlColorString() : null);
-		uiColorPicker.setSaveButtonCaption(saveButtonCaption);
-		uiColorPicker.setClearButtonCaption(clearButtonCaption);
+		uiColorPicker.setClearable(clearable);
 		return uiColorPicker;
 	}
 
@@ -57,27 +55,12 @@ public class ColorPicker extends AbstractField<Color> implements DtoColorPickerE
 		return color != null ? color.toHtmlColorString() : null;
 	}
 
-	public Color getDefaultColor() {
-		return defaultColor;
+	public boolean isClearable() {
+		return clearable;
 	}
 
-	public void setDefaultColor(Color defaultColor) {
-		this.defaultColor = defaultColor;
-	}
-
-	public String getSaveButtonCaption() {
-		return saveButtonCaption;
-	}
-
-	public void setSaveButtonCaption(String saveButtonCaption) {
-		this.saveButtonCaption = saveButtonCaption;
-	}
-
-	public String getClearButtonCaption() {
-		return clearButtonCaption;
-	}
-
-	public void setClearButtonCaption(String clearButtonCaption) {
-		this.clearButtonCaption = clearButtonCaption;
+	public void setClearable(boolean clearable) {
+		this.clearable = clearable;
+		clientObjectChannel.setClearable(clearable);
 	}
 }
