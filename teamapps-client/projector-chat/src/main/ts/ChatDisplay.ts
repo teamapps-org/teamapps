@@ -53,7 +53,7 @@ export class ChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> impleme
 	</div>
 	<div class="messages"></div>
 </div>`);
-		this.setStyle(".message.deleted .deleted-icon", {"background-image": `url('${config.deletedMessageIcon}')`})
+		this.setDeletedMessageIcon(config.deletedMessageIcon);
 		this.$loadingIndicatorWrapper = this.$main.querySelector(":scope .loading-indicator-wrapper");
 		this.$messages = this.$main.querySelector(":scope .messages");
 		this.$main.addEventListener("scroll", () => {
@@ -84,6 +84,14 @@ export class ChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> impleme
 			}
 		})
 	}
+
+	public setDeletedMessageIcon(deletedMessageIcon: string) {
+		this.setStyle(".message.deleted .deleted-icon", {"background-image": `url('${deletedMessageIcon}')`})
+	}
+
+	setContextMenuEnabled(contextMenuEnabled: boolean) {
+		this.config.contextMenuEnabled = contextMenuEnabled;
+    }
 
 	@debouncedMethod(500, DebounceMode.LATER)
 	private requestPreviousMessages() {

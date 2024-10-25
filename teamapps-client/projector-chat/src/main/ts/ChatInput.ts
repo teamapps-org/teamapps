@@ -116,6 +116,23 @@ export class ChatInput extends AbstractLegacyComponent<DtoChatInput> implements 
 		this.updateSendability();
 	}
 
+	setDefaultFileIcon(defaultFileIcon: string) {
+		this.config.defaultFileIcon = defaultFileIcon;
+	}
+
+	setMaxBytesPerUpload(maxBytesPerUpload: number) {
+		this.config.maxBytesPerUpload = maxBytesPerUpload;
+	}
+
+	setUploadUrl(uploadUrl: string) {
+		this.config.uploadUrl = uploadUrl;
+	}
+
+	setMessageLengthLimit(messageLengthLimit: number) {
+		this.config.messageLengthLimit = messageLengthLimit;
+		this.$textInput.maxLength = messageLengthLimit;
+	}
+
 	private send() {
 		if (!this.sendable()) {
 			return;
@@ -149,6 +166,11 @@ export class ChatInput extends AbstractLegacyComponent<DtoChatInput> implements 
 		for (let i = 0; i < files.length; i++) {
 			const file = files[i];
 			const uploadItem = new FileUploadItem(file, this.config.defaultFileIcon, this.config.uploadUrl);
+			if (file.size <= this.config.maxBytesPerUpload) {
+				uploadItem.upload();
+			} else {
+				uploadItem.setError();
+			}
 			const $itemWrapper = parseHtml(`<div class="upload-item-wrapper">
 	<div class="delete-button glyphicon glyphicon-remove glyphicon-button"></div>
 </div>`);
@@ -194,8 +216,9 @@ class FileUploadItem {
 	private $main: HTMLElement;
 	public state: UploadState = UploadState.IN_PROGRESS;
 	public uploadedFileUuid: string;
+	private uploader: FileUploader;
 
-	constructor(public file: File, defaultFileIcon: string, uploadUrl: string) {
+	constructor(public file: File, defaultFileIcon: string, private uploadUrl: string) {
 		this.$main = parseHtml(`<div class="upload-item">
 	<div class="icon img img-24" style="background-image: url('${defaultFileIcon}')"></div>
 	<div class="name">${file.name}</div>
@@ -208,20 +231,25 @@ class FileUploadItem {
 
 		this.$main.appendChild(progressBar.getMainDomElement());
 
-		const uploader = new FileUploader();
-		uploader.onProgress.addListener(progress => progressBar.setProgress(progress));
-		uploader.onError.addListener(() => {
-			this.state = UploadState.ERROR;
-			this.$main.classList.add("error");
-			this.onComplete.fire(null);
-		});
-		uploader.onSuccess.addListener(uuid => {
+		this.uploader = new FileUploader();
+		this.uploader.onProgress.addListener(progress => progressBar.setProgress(progress));
+		this.uploader.onError.addListener(() => this.setError());
+		this.uploader.onSuccess.addListener(uuid => {
 			this.state = UploadState.SUCCESS;
 			this.uploadedFileUuid = uuid;
 			this.onComplete.fire(null);
 			fadeOut(progressBar.getMainDomElement());
 		});
-		uploader.upload(file, uploadUrl)
+	}
+
+	public upload() {
+		this.uploader.upload(this.file, this.uploadUrl);
+	}
+
+	public setError() {
+		this.state = UploadState.ERROR;
+		this.$main.classList.add("error");
+		this.onComplete.fire(null);
 	}
 
 	public getMainDomElement() {

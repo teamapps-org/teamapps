@@ -23,8 +23,8 @@ import org.teamapps.projector.component.DtoComponent;
 
 class DtoChatDisplay extends DtoComponent {
 	DtoChatMessageBatch initialMessages;
-    boolean contextMenuEnabled;
-    String deletedMessageIcon;
+    mutable boolean contextMenuEnabled;
+    mutable String deletedMessageIcon;
 
 	command addMessages(DtoChatMessageBatch messages);
 	command updateMessage(DtoChatMessage message);

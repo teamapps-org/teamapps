@@ -23,13 +23,11 @@ import org.teamapps.projector.component.DtoComponent;
 
 
 class DtoChatInput extends DtoComponent {
-	required String defaultFileIcon;
-	long maxBytesPerUpload;
-	String uploadUrl;
-	int messageLengthLimit;
-	boolean attachmentsEnabled;
-
-	command setAttachmentsEnabled(boolean attachmentsEnabled);
+	mutable String defaultFileIcon;
+	mutable long maxBytesPerUpload;
+	mutable String uploadUrl;
+	mutable int messageLengthLimit;
+	mutable boolean attachmentsEnabled;
 
 	event messageSent(DtoNewChatMessage message);
 	event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);

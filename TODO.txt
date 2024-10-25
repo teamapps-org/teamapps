@@ -33,7 +33,9 @@ requirements for the maven plugin:
 
 * Translations: Delete TranslationProvider.getTranslation(...)
 
-make icons non-generic
+ICONS:
+    make icons non-generic
+    make icons implement the Resolvable interface and refactor SessionContext.resolveIcon(Icon) to SessionContext.resolve(Resolvable)
 
 
 Low prio:
