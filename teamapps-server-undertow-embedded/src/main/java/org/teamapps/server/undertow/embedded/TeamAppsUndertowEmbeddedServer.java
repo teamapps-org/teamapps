@@ -31,8 +31,8 @@ import io.undertow.websockets.extensions.PerMessageDeflateHandshake;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 import jakarta.servlet.ServletContextListener;
 import org.teamapps.core.TeamAppsCore;
-import org.teamapps.ux.servlet.TeamAppsServletContextListener;
-import org.teamapps.ux.servlet.TeamAppsServletUtil;
+import org.teamapps.servlet.TeamAppsServletContextListener;
+import org.teamapps.servlet.TeamAppsServletUtil;
 import org.teamapps.projector.resourceprovider.ResourceProvider;
 import org.teamapps.webcontroller.WebController;
 

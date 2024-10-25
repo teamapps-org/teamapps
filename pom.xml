@@ -70,13 +70,13 @@
         <module>teamapps-client/projector-video-player</module>
         <module>teamapps-client/projector-grid-form</module>
 
-        <module>teamapps-ux</module>
+        <module>teamapps-server-core</module>
         <module>teamapps-server-jetty-embedded</module>
-
-        <module>teamapps-session-stats-app</module>
+        <module>teamapps-server-undertow-embedded</module>
 
         <module>teamapps-material-icon-provider</module>
-        <module>teamapps-server-undertow-embedded</module>
+        <module>teamapps-session-stats-app</module>
+
         <module>projector-application</module>
     </modules>
 
@@ -213,7 +213,7 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-ux</artifactId>
+                <artifactId>teamapps-server-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

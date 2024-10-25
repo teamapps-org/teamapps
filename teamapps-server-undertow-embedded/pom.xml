@@ -56,7 +56,7 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ux</artifactId>
+            <artifactId>teamapps-server-core</artifactId>
         </dependency>
 
         <dependency>

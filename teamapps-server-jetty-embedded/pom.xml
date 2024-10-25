@@ -62,7 +62,7 @@
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ux</artifactId>
+            <artifactId>teamapps-server-core</artifactId>
         </dependency>
         <dependency>
 <!--            TODO WHY IS THIS NECESSARY? UX SHOULD BE ENOUGH! -->
