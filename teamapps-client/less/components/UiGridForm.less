@@ -84,8 +84,8 @@
     .body {
       display: grid;
 
-      .field-wrapper {
-        // ?
+      .field-wrapper:has(.invisible-component) {
+        display: none;
       }
     }
 
