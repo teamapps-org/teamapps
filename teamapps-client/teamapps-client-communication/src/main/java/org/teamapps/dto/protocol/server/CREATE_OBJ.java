@@ -57,4 +57,14 @@ public class CREATE_OBJ extends AbstractReliableServerMessage {
 		return evtNames;
 	}
 
+	@Override
+	public String toString() {
+		return "CREATE_OBJ{" +
+			   "lid='" + lid + '\'' +
+			   ", typeName='" + typeName + '\'' +
+			   ", oid='" + oid + '\'' +
+			   ", config=" + config +
+			   ", evtNames=" + evtNames +
+			   '}';
+	}
 }

@@ -3,21 +3,26 @@ import {TeamAppsEvent} from "./TeamAppsEvent";
 import {EntranceAnimation, ExitAnimation, NotificationPosition} from "../generated";
 import {animateCSS} from "./animations";
 
-const containersByPosition: {
-	[pos: string]: HTMLElement,
-} = Object.keys(NotificationPosition).reduce((m, pos) => {
-	m[pos] = parseHtml(`<div class="Notification-container ${pos}"></div>`);
-	return m;
-}, {});
+let notificationPositions: NotificationPosition[] = Object.values(NotificationPosition);
+const containersByPosition = new Map<NotificationPosition, HTMLElement>();
 
-let notificationContainerWrapper = document.body.querySelector(".Notification-container-wrapper");
-if (notificationContainerWrapper == null) {
-	let notificationContainerWrapper = parseHtml(`<div class="Notification-container bottom-left"></div>`);
-	for (let p in containersByPosition) {
-		notificationContainerWrapper.append(containersByPosition[p]);
-	}
-	document.body.appendChild(notificationContainerWrapper);
+let notificationContainersWrapper = document.body.querySelector(".notification-containers");
+if (notificationContainersWrapper == null) {
+	// create the elements
+	let notificationContainersWrapper = document.createElement("div");
+	notificationContainersWrapper.classList.add("notification-containers");
+	notificationPositions.forEach(pos => {
+		let notificationContainer = document.createElement("div");
+		notificationContainer.classList.add("notification-container", pos);
+		notificationContainersWrapper.append(notificationContainer);
+	});
+	document.body.append(notificationContainersWrapper);
 }
+// register the elements
+notificationPositions.forEach(pos => {
+	containersByPosition.set(pos, document.body.querySelector(`.notification-container.${pos}`));
+})
+
 
 export interface ComponentLike {
 	getMainElement(): HTMLElement;
@@ -55,7 +60,7 @@ class NotificationWrapper implements NotificationHandle {
 		clearTimeout(this.timeoutId);
 		this.#open = true;
 
-		let container = containersByPosition[position];
+		let container = containersByPosition.get(position);
 
 		if (!container.contains(this.$wrapper)) {
 			this.position = position;

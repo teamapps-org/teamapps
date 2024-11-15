@@ -19,7 +19,6 @@
  */
 package org.teamapps.projector.session;
 
-import com.devskiller.friendly_id.FriendlyId;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.ULocale;
@@ -33,11 +32,11 @@ import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.dto.protocol.server.*;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
+import org.teamapps.projector.DtoGlobals;
 import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.*;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.DtoGlobals;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.i18n.ResourceBundleTranslationProvider;
@@ -430,6 +429,8 @@ public class SessionContext {
 		return getIconBasePath() + "/" + iconProvider.encodeIcon((Icon) icon, true);
 	}
 
+	static int counter = 0;
+
 	public ClientObjectChannel registerClientObject(ClientObject clientObject) {
 		Objects.requireNonNull(clientObject, "clientObject must not be null!");
 
@@ -438,7 +439,7 @@ public class SessionContext {
 			return channelsByClientObject.get(clientObject);
 		}
 
-		String clientId = clientObjectsById.inverseBidiMap().computeIfAbsent(clientObject, co -> co.getClass().getSimpleName() + "-" + FriendlyId.createFriendlyId());
+		String clientId = clientObjectsById.inverseBidiMap().computeIfAbsent(clientObject, co -> co.getClass().getSimpleName() + "-" + counter++);
 
 		ClientObjectChannel clientObjectChannel = new ClientObjectChannelImpl(clientObject, clientId);
 
@@ -452,7 +453,7 @@ public class SessionContext {
 		ClientObjectChannel clientObjectChannel = channelsByClientObject.get(clientObject);
 
 		if (clientObjectChannel == null) {
-			throw new IllegalStateException("Cannot render unregistered client object! Please call registerClientObject first. If you are not the developer of this component (" + clientObject.getClass() + "), please file a bug report to them.");
+			throw new IllegalStateException("Cannot render unregistered client object " + clientObject + "! Please call registerClientObject first. If you are not the developer of this component (" + clientObject.getClass() + "), please file a bug report to them.");
 		}
 
 		clientObjectChannel.forceRender();
@@ -682,11 +683,12 @@ public class SessionContext {
 		return (T) uiSessionListener;
 	}
 
-	private class ClientObjectChannelImpl implements ClientObjectChannel {
+	// TODO private
+	public class ClientObjectChannelImpl implements ClientObjectChannel {
 
 		private final Set<String> enabledEventNames;
 		private final ClientObject clientObject;
-		private final String clientId;
+		/*TODO private*/public final String clientId;
 
 		public ClientObjectChannelImpl(ClientObject clientObject, String clientId) {
 			this.clientObject = clientObject;

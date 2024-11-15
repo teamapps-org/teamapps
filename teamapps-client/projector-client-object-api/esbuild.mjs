@@ -2,20 +2,16 @@ import esbuild from 'esbuild';
 import {lessLoader} from 'esbuild-plugin-less';
 import path from "node:path";
 import alias from 'esbuild-plugin-alias';
-import {createReadStream, createWriteStream} from "fs";
-import {createGzip} from "zlib";
-
 
 import {fileURLToPath} from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 esbuild.build({
     watch: process.argv.some(a => a === '--watch'),
     entryPoints: ['target/js-dist/lib/index.js'],
     bundle: true,
-    outfile: 'target/js-dist/projector-client-object-api.js',
+    outfile: 'target/js-dist/index.js',
     format: 'esm',
     platform: "node",
     mainFields: ["browser", "module", "main"],
@@ -26,12 +22,12 @@ esbuild.build({
         ".woff2": "file",
         ".woff": "file",
         ".ttf": "file",
-        ".svg": "file",
+        ".svg": "dataurl"
     },
     assetNames: "assets/[name]-[hash]",
     plugins: [
         alias({
-            '@less/teamapps.less': path.resolve(__dirname, `src/main/less/teamapps.less`),
+            '@less/index.less': path.resolve(__dirname, `src/main/less/index.less`),
         }),
         lessLoader(),
     ],

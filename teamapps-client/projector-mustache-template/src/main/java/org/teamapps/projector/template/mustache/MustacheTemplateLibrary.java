@@ -12,11 +12,6 @@ public class MustacheTemplateLibrary implements ClientObjectLibrary {
 	}
 
 	@Override
-	public Resource getMainCssResource() {
-		return new ClassPathResource("org/teamapps/projector/template/grid/resources/js/index.css", "text/css");
-	}
-
-	@Override
 	public Resource getResource(String pathInfo) {
 		return null;
 	}

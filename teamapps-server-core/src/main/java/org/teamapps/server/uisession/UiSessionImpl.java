@@ -138,6 +138,7 @@ public class UiSessionImpl implements UiSession {
 
 	@Override
 	public void sendReliableServerMessage(AbstractReliableServerMessage serverMessage) {
+		LOGGER.info("Sending reliable messgae: {}", serverMessage);
 		sendReliableServerMessage(serverMessage, null);
 	}
 

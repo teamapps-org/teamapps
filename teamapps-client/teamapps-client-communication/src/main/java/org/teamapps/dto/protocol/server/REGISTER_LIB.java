@@ -37,4 +37,13 @@ public class REGISTER_LIB extends AbstractReliableServerMessage {
 	public String getCssUrl() {
 		return cssUrl;
 	}
+
+	@Override
+	public String toString() {
+		return "REGISTER_LIB{" +
+			   "lid='" + lid + '\'' +
+			   ", jsUrl='" + jsUrl + '\'' +
+			   ", cssUrl='" + cssUrl + '\'' +
+			   '}';
+	}
 }

@@ -1,3 +1,5 @@
+import "@less/index.less";
+
 export * from "./ClientObject";
 export * from "./Component";
 export * from "./AbstractLegacyComponent";

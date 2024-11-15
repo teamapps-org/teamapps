@@ -1,9 +1,3 @@
-Remove necessity for displayedDeferredExecutor, and thereby @executeWhenFirstDisplayed()
-
-fix queries
-
-make parseHtml return an array (not NodeList!!) of elements, since the current api leads error-prone usage of NodeList. See comment in HtmlView.setContentHtml()
-
 make Field an interfaces, so people can implement them more freely and creatively
 
 Check if specialized Components (like SimpleCalendar) work

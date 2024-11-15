@@ -5,7 +5,7 @@
   "exports": "./target/js-dist/index.js",
   "types": "./target/js-dist/lib/index.d.ts",
   "scripts": {
-    "del_dist": "rimraf 'dist/*'",
+    "del_dist": "rimraf 'target/js-dist/*'",
     "clean": "yarn run del_dist",
     "tsc": "tsc",
     "bundle": "node esbuild.mjs",

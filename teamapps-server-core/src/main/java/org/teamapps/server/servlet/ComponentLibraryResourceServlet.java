@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.projector.clientobject.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
 import org.teamapps.projector.resource.Resource;
@@ -79,6 +80,7 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 
 		if (hash.equals(NOT_FOUND_HASH)) {
 			resp.sendError(404);
+			return;
 		}
 
 		String existingFullPath = pathByResourceHash.computeIfAbsent(hash, s -> fullPath);
@@ -105,7 +107,7 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 				digest.update(buffer, 0, count);
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw ExceptionUtil.softenException(e);
 		}
 		return bytesToHex(digest.digest());
 	}
