@@ -138,14 +138,14 @@ export function createImageSizingCssObject(imageSizing: UiImageSizing): CssPrope
 		if (imageSizing === UiImageSizing.ORIGINAL) {
 			backgroundSize = "auto";
 		} else if (imageSizing === UiImageSizing.STRETCH) {
-			backgroundSize = "100% 100%";
+			backgroundSize = "100%";
 		} else if (imageSizing === UiImageSizing.CONTAIN) {
 			backgroundSize = "contain";
 		} else if (imageSizing ===UiImageSizing.COVER) {
 			backgroundSize = "cover";
 		}
 		return {
-			"backgroundSize": backgroundSize
+			"background-size": backgroundSize
 		}
 	}
 }

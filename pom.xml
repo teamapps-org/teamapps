@@ -41,6 +41,7 @@
         <module>teamapps-client</module>
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
+        <module>teamapps-demo</module>
     </modules>
 
     <properties>

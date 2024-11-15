@@ -47,7 +47,7 @@ public class PageView extends AbstractComponent {
 	}
 
 	public void removeBlock(AbstractPageViewBlock block) {
-		blocks.add(block);
+		blocks.remove(block);
 		queueCommandIfRendered(() -> new UiPageView.RemoveBlockCommand(getId(), block.getClientId()));
 	}
 
