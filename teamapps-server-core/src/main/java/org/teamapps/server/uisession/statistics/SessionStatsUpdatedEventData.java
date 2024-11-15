@@ -17,20 +17,27 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.uisession.statistics;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
+import org.teamapps.server.uisession.SessionPair;
 
-public class TeamAppsUndertowEmbeddedServerTest {
+import java.util.List;
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
+public class SessionStatsUpdatedEventData {
+	private final List<SessionPair> allSessions;
+	private final List<UiSessionStatistics> closedSessionsStatistics;
+
+	public SessionStatsUpdatedEventData(List<SessionPair> allSessions, List<UiSessionStatistics> closedSessionsStatistics) {
+		this.allSessions = allSessions;
+		this.closedSessionsStatistics = closedSessionsStatistics;
 	}
 
+	public List<SessionPair> getAllSessions() {
+		return allSessions;
+	}
+
+	public List<UiSessionStatistics> getClosedSessionsStatistics() {
+		return closedSessionsStatistics;
+	}
 }

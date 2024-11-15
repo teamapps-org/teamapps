@@ -17,20 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.uisession;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+import org.teamapps.dto.protocol.server.SessionClosingReason;
 
-public class TeamAppsUndertowEmbeddedServerTest {
+import java.util.List;
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
-	}
+public interface MessageSender {
+
+	void sendAsynchronously(List<String> messages, SendingErrorHandler sendingErrorHandler);
+
+	void close(SessionClosingReason closingReason, String message);
+
+	long getDataReceived();
+	
+	long getDataSent();
 
 }

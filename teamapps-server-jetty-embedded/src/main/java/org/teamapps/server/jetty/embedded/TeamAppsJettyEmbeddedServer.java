@@ -25,11 +25,11 @@ import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
-import org.teamapps.core.TeamAppsCore;
+import org.teamapps.server.core.TeamAppsServerCore;
 import org.teamapps.projector.resourceprovider.ResourceProvider;
-import org.teamapps.servlet.TeamAppsServletContextListener;
-import org.teamapps.servlet.TeamAppsServletUtil;
-import org.teamapps.webcontroller.WebController;
+import org.teamapps.server.servlet.TeamAppsServletContextListener;
+import org.teamapps.server.servlet.TeamAppsServletUtil;
+import org.teamapps.server.webcontroller.WebController;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class TeamAppsJettyEmbeddedServer {
 		return new TeamAppsJettyEmbeddedServerBuilder(webController);
 	}
 
-	TeamAppsJettyEmbeddedServer(TeamAppsCore teamAppsCore, int port, ResourceProvider baseResourceProvider, List<ServletContextListener> additionalServletContextListeners) {
+	TeamAppsJettyEmbeddedServer(TeamAppsServerCore teamAppsServerCore, int port, ResourceProvider baseResourceProvider, List<ServletContextListener> additionalServletContextListeners) {
 		server = new Server(port);
 		webapp = new WebAppContext();
 		webapp.setClassLoader(TeamAppsJettyEmbeddedServer.class.getClassLoader());
@@ -50,7 +50,7 @@ public class TeamAppsJettyEmbeddedServer {
 		webapp.setContextPath("/");
 
 		webapp.addEventListener(TeamAppsServletUtil.createResourceProviderServletContextListener("teamapps-base-resources-servlet", baseResourceProvider, "/*"));
-		webapp.addEventListener(new TeamAppsServletContextListener(teamAppsCore));
+		webapp.addEventListener(new TeamAppsServletContextListener(teamAppsServerCore));
 		additionalServletContextListeners.forEach(webapp::addEventListener);
 
 		webapp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");

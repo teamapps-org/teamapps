@@ -17,20 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.uisession.messagebuffer;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+public class ServerMessageBufferLengthOverflowException extends ServerMessageBufferException {
 
-public class TeamAppsUndertowEmbeddedServerTest {
+	public ServerMessageBufferLengthOverflowException() {
+		this(null);
+	}
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
+	public ServerMessageBufferLengthOverflowException(String message) {
+		super(message);
 	}
 
 }

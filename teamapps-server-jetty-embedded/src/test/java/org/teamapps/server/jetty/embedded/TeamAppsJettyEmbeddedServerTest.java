@@ -26,7 +26,7 @@ import org.teamapps.projector.component.essential.flexcontainer.VerticalLayout;
 import org.teamapps.projector.component.essential.rootpanel.RootPanel;
 import org.teamapps.projector.component.essential.window.Window;
 import org.teamapps.projector.session.SessionContext;
-import org.teamapps.webcontroller.WebController;
+import org.teamapps.server.webcontroller.WebController;
 
 public class TeamAppsJettyEmbeddedServerTest {
 

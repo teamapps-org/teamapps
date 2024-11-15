@@ -17,20 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.servlet;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.http.HttpServletRequest;
 
-public class TeamAppsUndertowEmbeddedServerTest {
+public class ServletRequestListener implements jakarta.servlet.ServletRequestListener {
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
+	@Override
+	public void requestInitialized(ServletRequestEvent sre) {
+		HttpServletRequest servletRequest = (HttpServletRequest) sre.getServletRequest();
+		servletRequest.getSession(true).setAttribute(WebSocketServerEndpointConfigurator.CLIENT_IP_PROPERTY_NAME, servletRequest.getRemoteAddr());
 	}
 
+	@Override
+	public void requestDestroyed(ServletRequestEvent sre) {
+
+	}
 }

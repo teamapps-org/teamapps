@@ -17,20 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.threading;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+import java.util.concurrent.ExecutorService;
 
-public class TeamAppsUndertowEmbeddedServerTest {
+/**
+ * Creates {@link ExecutorService}s that will guarantee the sequential execution of submitted tasks.
+ * Note that this guarantee is <b>NOT</b> given with {@link java.util.concurrent.ThreadPoolExecutor}.
+ * <p>
+ * The most naive implementation will just return {@link java.util.concurrent.Executors#newSingleThreadExecutor()},
+ * but most operating systems have limits on the number of threads allowed, so this is not a good solution,
+ * and not a good idea for other reasons, too.
+ */
+public interface SequentialExecutorFactory {
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
-	}
+	ExecutorService createExecutor(String name);
 
 }

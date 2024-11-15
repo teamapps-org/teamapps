@@ -30,17 +30,17 @@ import io.undertow.servlet.util.ImmediateInstanceHandle;
 import io.undertow.websockets.extensions.PerMessageDeflateHandshake;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 import jakarta.servlet.ServletContextListener;
-import org.teamapps.core.TeamAppsCore;
-import org.teamapps.servlet.TeamAppsServletContextListener;
-import org.teamapps.servlet.TeamAppsServletUtil;
+import org.teamapps.server.core.TeamAppsServerCore;
+import org.teamapps.server.servlet.TeamAppsServletContextListener;
+import org.teamapps.server.servlet.TeamAppsServletUtil;
 import org.teamapps.projector.resourceprovider.ResourceProvider;
-import org.teamapps.webcontroller.WebController;
+import org.teamapps.server.webcontroller.WebController;
 
 import java.util.List;
 
 public class TeamAppsUndertowEmbeddedServer {
 
-	private final TeamAppsCore teamAppsCore;
+	private final TeamAppsServerCore teamAppsServerCore;
 	private final int port;
 	private final ResourceProvider baseResourceProvider;
 	private final List<ServletContextListener> additionalServletContextListeners;
@@ -52,8 +52,8 @@ public class TeamAppsUndertowEmbeddedServer {
 		return new TeamAppsUndertowEmbeddedServerBuilder(webController);
 	}
 
-	public TeamAppsUndertowEmbeddedServer(TeamAppsCore teamAppsCore, int port, ResourceProvider baseResourceProvider, List<ServletContextListener> additionalServletContextListeners) {
-		this.teamAppsCore = teamAppsCore;
+	public TeamAppsUndertowEmbeddedServer(TeamAppsServerCore teamAppsServerCore, int port, ResourceProvider baseResourceProvider, List<ServletContextListener> additionalServletContextListeners) {
+		this.teamAppsServerCore = teamAppsServerCore;
 		this.port = port;
 		this.baseResourceProvider = baseResourceProvider;
 		this.additionalServletContextListeners = additionalServletContextListeners;
@@ -71,7 +71,7 @@ public class TeamAppsUndertowEmbeddedServer {
 				.addWelcomePage("index.html")
 				.setDeploymentName("teamapps")
 				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(
-						new TeamAppsServletContextListener(teamAppsCore))))
+						new TeamAppsServletContextListener(teamAppsServerCore))))
 				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(
 						TeamAppsServletUtil.createResourceProviderServletContextListener("teamapps-base-resources-servlet", baseResourceProvider, "/*"))))
 				.setAllowNonStandardWrappers(true)

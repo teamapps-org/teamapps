@@ -1,14 +1,14 @@
 package org.teamapps.server.undertow.embedded;
 
 import jakarta.servlet.ServletContextListener;
-import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.core.TeamAppsCore;
-import org.teamapps.threading.CompletableFutureChainSequentialExecutorFactory;
-import org.teamapps.threading.SequentialExecutorFactory;
+import org.teamapps.server.config.TeamAppsConfiguration;
+import org.teamapps.server.core.TeamAppsServerCore;
+import org.teamapps.server.threading.CompletableFutureChainSequentialExecutorFactory;
+import org.teamapps.server.threading.SequentialExecutorFactory;
 import org.teamapps.projector.resourceprovider.ClassPathResourceProvider;
 import org.teamapps.projector.resourceprovider.DirectoryResolutionStrategy;
 import org.teamapps.projector.resourceprovider.ResourceProvider;
-import org.teamapps.webcontroller.WebController;
+import org.teamapps.server.webcontroller.WebController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +66,8 @@ public class TeamAppsUndertowEmbeddedServerBuilder {
 	public TeamAppsUndertowEmbeddedServer build() {
 		SequentialExecutorFactory executorFactory = customSequentialExecutorFactory != null ? customSequentialExecutorFactory
 				: new CompletableFutureChainSequentialExecutorFactory(DEFAULT_NUMBER_OF_SESSION_EXECUTOR_THREADS);
-		TeamAppsCore teamAppsCore = new TeamAppsCore(config, executorFactory, webController);
-		return new TeamAppsUndertowEmbeddedServer(teamAppsCore, port, baseResourceProvider, servletContextListeners);
+		TeamAppsServerCore teamAppsServerCore = new TeamAppsServerCore(config, executorFactory, webController);
+		return new TeamAppsUndertowEmbeddedServer(teamAppsServerCore, port, baseResourceProvider, servletContextListeners);
 	}
 
 }

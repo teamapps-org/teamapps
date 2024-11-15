@@ -17,20 +17,29 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.servlet;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+public class ServerSideClientInfo {
 
-public class TeamAppsUndertowEmbeddedServerTest {
+	private final String ip;
+	private final String userAgentString;
+	private final String preferredLanguageIso;
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
+	public ServerSideClientInfo(String ip, String userAgentString, String preferredLanguageIso) {
+		this.ip = ip;
+		this.userAgentString = userAgentString;
+		this.preferredLanguageIso = preferredLanguageIso;
 	}
 
+	public String getIp() {
+		return ip;
+	}
+
+	public String getUserAgentString() {
+		return userAgentString;
+	}
+
+	public String getPreferredLanguageIso() {
+		return preferredLanguageIso;
+	}
 }

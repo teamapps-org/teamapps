@@ -17,20 +17,22 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.core;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+import java.io.File;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class TeamAppsUndertowEmbeddedServerTest {
+public class TeamAppsUploadManager {
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
+	private final Map<String, File> uploadedFilesByUuid = new ConcurrentHashMap<>();
+
+	public void addUploadedFile(File file, String uuid) {
+		this.uploadedFilesByUuid.put(uuid, file);
+	}
+
+	public File getUploadedFile(String uuid) {
+		return this.uploadedFilesByUuid.get(uuid);
 	}
 
 }

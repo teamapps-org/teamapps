@@ -17,20 +17,23 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.servlet;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpFilter;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-public class TeamAppsUndertowEmbeddedServerTest {
+public class IndexHtmlHeaderFilter extends HttpFilter {
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
+	@Override
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+		if (servletResponse instanceof HttpServletResponse) {
+			HttpServletResponse r = (HttpServletResponse) servletResponse;
+			r.setHeader("cache-control", "max-age=0, no-cache, no-store, must-revalidate");
+			r.setHeader("expires", "Thu, 01 Jan 1970 00:00:00 GMT");
+			r.setHeader("pragma", "no-cache");
+		}
+		filterChain.doFilter(servletRequest, servletResponse);
 	}
-
 }

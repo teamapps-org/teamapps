@@ -17,20 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.uisession;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+public class TeamAppsUiApiException extends RuntimeException {
 
-public class TeamAppsUndertowEmbeddedServerTest {
+	private final String sessionId;
+	private final String api;
 
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
+	public TeamAppsUiApiException(String sessionId, String api) {
+		super("Incompatible API call: " + api + "; session" + sessionId.toString());
+		this.sessionId = sessionId;
+		this.api = api;
 	}
 
+	public String getApi() {
+		return api;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
 }

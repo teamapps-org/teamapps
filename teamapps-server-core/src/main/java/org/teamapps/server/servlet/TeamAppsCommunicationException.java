@@ -17,20 +17,26 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.undertow.embedded;
+package org.teamapps.server.servlet;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.projector.notification.Notifications;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+public class TeamAppsCommunicationException extends RuntimeException {
 
-public class TeamAppsUndertowEmbeddedServerTest {
-
-	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		TeamAppsUndertowEmbeddedServer.builder(controller)
-				.build()
-				.start();
+	public TeamAppsCommunicationException() {
 	}
 
+	public TeamAppsCommunicationException(String message) {
+		super(message);
+	}
+
+	public TeamAppsCommunicationException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public TeamAppsCommunicationException(Throwable cause) {
+		super(cause);
+	}
+
+	public TeamAppsCommunicationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 }
