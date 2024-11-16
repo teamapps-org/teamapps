@@ -52,37 +52,33 @@
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
 
-<!--        <module>teamapps-client/projector-progress-indicator</module>-->
-<!--        <module>teamapps-client/projector-progress-display</module>-->
-<!--        <module>teamapps-client/projector-notification-bar</module>-->
-<!--        <module>teamapps-client/projector-mobile-layout</module>-->
-<!--        <module>teamapps-client/projector-combobox</module>-->
-<!--        <module>teamapps-client/projector-infinite-scrolling-components</module>-->
-<!--        <module>teamapps-client/projector-calendar</module>-->
-<!--        <module>teamapps-client/projector-document-viewer</module>-->
-<!--        <module>teamapps-client/projector-elegant-panel</module>-->
-<!--        <module>teamapps-client/projector-file-field</module>-->
-<!--        <module>teamapps-client/projector-timegraph</module>-->
-<!--        <module>teamapps-client/projector-workspace-layout</module>-->
-<!--        <module>teamapps-client/projector-blogview</module>-->
-<!--        <module>teamapps-client/projector-map-view</module>-->
-<!--        <module>teamapps-client/projector-shaka-player</module>-->
-<!--        <module>teamapps-client/projector-mediasoup-client</module>-->
-<!--        <module>teamapps-client/projector-chart</module>-->
-<!--        <module>teamapps-client/projector-audio-level-indicator</module>-->
-<!--        <module>teamapps-client/projector-chat</module>-->
-<!--        <module>teamapps-client/projector-side-drawer</module>-->
-<!--        <module>teamapps-client/projector-video-player</module>-->
-<!--        <module>teamapps-client/projector-grid-form</module>-->
-
-<!--        <module>teamapps-server-core</module>-->
-<!--        <module>teamapps-server-jetty-embedded</module>-->
-<!--        <module>teamapps-server-undertow-embedded</module>-->
+        <module>teamapps-client/projector-progress-indicator</module>
+        <module>teamapps-client/projector-progress-display</module>
+        <module>teamapps-client/projector-notification-bar</module>
+        <module>teamapps-client/projector-mobile-layout</module>
+        <module>teamapps-client/projector-combobox</module>
+        <module>teamapps-client/projector-infinite-scrolling-components</module>
+        <module>teamapps-client/projector-calendar</module>
+        <module>teamapps-client/projector-document-viewer</module>
+        <module>teamapps-client/projector-elegant-panel</module>
+        <module>teamapps-client/projector-file-field</module>
+        <module>teamapps-client/projector-timegraph</module>
+        <module>teamapps-client/projector-workspace-layout</module>
+        <module>teamapps-client/projector-blogview</module>
+        <module>teamapps-client/projector-map-view</module>
+        <module>teamapps-client/projector-shaka-player</module>
+        <module>teamapps-client/projector-mediasoup-client</module>
+        <module>teamapps-client/projector-chart</module>
+        <module>teamapps-client/projector-audio-level-indicator</module>
+        <module>teamapps-client/projector-chat</module>
+        <module>teamapps-client/projector-side-drawer</module>
+        <module>teamapps-client/projector-video-player</module>
+        <module>teamapps-client/projector-grid-form</module>
 
         <module>teamapps-material-icon-provider</module>
-<!--        <module>teamapps-session-stats-app</module>-->
+        <module>teamapps-session-stats-app</module>
 
-<!--        <module>projector-application</module>-->
+        <module>projector-application</module>
     </modules>
 
     <properties>

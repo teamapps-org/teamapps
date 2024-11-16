@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.component.essential.linkbutton;
+package org.teamapps.projector.component.core.linkbutton;
 
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
-import org.teamapps.projector.component.essential.CoreComponentLibrary;
+import org.teamapps.projector.component.core.CoreComponentLibrary;
 import org.teamapps.projector.event.ProjectorEvent;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
