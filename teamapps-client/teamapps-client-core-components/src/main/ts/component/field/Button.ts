@@ -21,7 +21,7 @@ import {bind, Component, FieldEditingMode, DtoFieldMessage, parseHtml, TeamAppsE
 import {DropDown} from "../../micro-components/DropDown";
 import {
 	DtoButton,
-	DtoButton_ClickedEvent,
+	DtoButton_ClickEvent,
 	DtoButton_DropDownOpenedEvent,
 	DtoButtonCommandHandler,
 	DtoButtonEventSource
@@ -30,7 +30,7 @@ import {AbstractField} from "projector-client-object-api";
 
 export class Button extends AbstractField<DtoButton, void> implements DtoButtonEventSource, DtoButtonCommandHandler {
 
-	public readonly onClicked: TeamAppsEvent<DtoButton_ClickedEvent> = new TeamAppsEvent();
+	public readonly onClick: TeamAppsEvent<DtoButton_ClickEvent> = new TeamAppsEvent();
 	public readonly onDropDownOpened: TeamAppsEvent<DtoButton_DropDownOpenedEvent> = new TeamAppsEvent();
 
 	private templateRecord: any;
@@ -79,7 +79,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 						// TODO let context = this._context; // make context available in evaluated javascript
 						eval(this.onClickJavaScript);
 					}
-					this.onClicked.fire({});
+					this.onClick.fire({});
 					this.commit(true);
 				}
 			}

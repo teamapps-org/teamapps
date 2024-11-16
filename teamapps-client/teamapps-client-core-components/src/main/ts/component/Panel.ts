@@ -147,7 +147,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 		}
 		this.setHeaderComponentMinimizationPolicy(config.headerComponentMinimizationPolicy);
 
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].onClick.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
 			} else {
@@ -155,7 +155,7 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 			}
 		});
 		this.orderedDefaultToolButtonTypes.forEach(windowButtonType => {
-			this.defaultToolButtons[windowButtonType].onClicked.addListener(() => {
+			this.defaultToolButtons[windowButtonType].onClick.addListener(() => {
 				this.onWindowButtonClicked.fire({
 					windowButton: windowButtonType
 				});

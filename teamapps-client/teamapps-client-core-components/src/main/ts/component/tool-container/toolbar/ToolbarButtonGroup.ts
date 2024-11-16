@@ -75,7 +75,7 @@ export class ToolbarButtonGroup {
 
 	private createButton(buttonConfig: DtoToolbarButton) {
 		const button = new ToolbarButton(buttonConfig);
-		button.onClicked.addListener(dropDownButtonClickInfo => this.onButtonClicked.fire({buttonId: buttonConfig.buttonId, dropDownButtonClickInfo}));
+		button.onClick.addListener(dropDownButtonClickInfo => this.onButtonClicked.fire({buttonId: buttonConfig.buttonId, dropDownButtonClickInfo}));
 		return button;
 	}
 

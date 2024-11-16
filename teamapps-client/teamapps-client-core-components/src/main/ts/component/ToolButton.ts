@@ -21,7 +21,7 @@
 import {AbstractLegacyComponent, bind, Component, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoToolButton,
-	DtoToolButton_ClickedEvent,
+	DtoToolButton_ClickEvent,
 	DtoToolButton_DropDownOpenedEvent,
 	DtoToolButtonCommandHandler,
 	DtoToolButtonEventSource
@@ -30,7 +30,7 @@ import {DropDown} from "../micro-components/DropDown";
 
 export class ToolButton extends AbstractLegacyComponent<DtoToolButton> implements DtoToolButtonEventSource, DtoToolButtonCommandHandler {
 
-	public readonly onClicked: TeamAppsEvent<DtoToolButton_ClickedEvent> = new TeamAppsEvent();
+	public readonly onClick: TeamAppsEvent<DtoToolButton_ClickEvent> = new TeamAppsEvent();
 	public readonly onDropDownOpened: TeamAppsEvent<DtoToolButton_DropDownOpenedEvent> = new TeamAppsEvent();
 
 	private $button: HTMLElement;
@@ -71,7 +71,7 @@ export class ToolButton extends AbstractLegacyComponent<DtoToolButton> implement
 					this.dropDown.close(); // not needed for clicks, but for keydown!
 				}
 			}
-			this.onClicked.fire({});
+			this.onClick.fire({});
 		});
 		this.setIconSize(config.iconSize);
 		this.setDropDownComponent(config.dropDownComponent as Component);

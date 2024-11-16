@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public class FileItem {
 
-	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>();
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>();
 	public final ProjectorEvent<Void> onRemoved = new ProjectorEvent<>();
 
 	private final String uuid;

@@ -38,7 +38,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 
 	private final DtoTemplateFieldClientObjectChannel clientObjectChannel = new DtoTemplateFieldClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
 	private Template template;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
@@ -53,8 +53,8 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 	}
 
 	@Override
-	public void handleClicked() {
-		onClicked.fire();
+	public void handleClick() {
+		onClick.fire();
 	}
 
 	@Override

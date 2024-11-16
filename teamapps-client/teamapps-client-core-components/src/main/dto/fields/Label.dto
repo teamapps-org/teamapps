@@ -27,7 +27,7 @@ class DtoLabel extends DtoAbstractField {
 	String icon;
 	DtoComponent* targetComponent; // if != null, this is the field that gets focused when this label gets clicked. This label also appears/disappears synchronously to its target field
 
-	event clicked();
+	event click();
 
 	command setCaption(String caption);
 	command setIcon(String icon);

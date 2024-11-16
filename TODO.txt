@@ -2,9 +2,6 @@ make Field an interfaces, so people can implement them more freely and creativel
 
 Check if specialized Components (like SimpleCalendar) work
 
-rename:
- clicked -> click
-
 check if queries actually work
 TeamAppsUndertowEmbeddedServer
 get rid of required keyword in dto dsl

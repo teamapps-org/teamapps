@@ -44,6 +44,6 @@ class DtoToolButton extends DtoComponent {
 	command setDropDownComponent(DtoComponent* dropDownComponent);
 	command closeDropDown();
 
-	event clicked();
+	event click();
 	event dropDownOpened();
 }

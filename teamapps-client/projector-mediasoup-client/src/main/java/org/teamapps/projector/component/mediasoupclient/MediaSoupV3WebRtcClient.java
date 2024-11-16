@@ -47,7 +47,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 
 	public final ProjectorEvent<Boolean> onConnectionStateChanged = new ProjectorEvent<>(clientObjectChannel::toggleConnectionStateChangedEvent);
 	public final ProjectorEvent<Boolean> onVoiceActivityChanged = new ProjectorEvent<>(clientObjectChannel::toggleVoiceActivityChangedEvent);
-	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;
@@ -142,8 +142,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 	}
 
 	@Override
-	public void handleClicked() {
-		this.onClicked.fire();
+	public void handleClick() {
+		this.onClick.fire();
 	}
 
 	@Override

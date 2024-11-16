@@ -42,6 +42,6 @@ class DtoButton extends DtoAbstractField {
 	command closeDropDown();
 	command setOnClickJavaScript(String onClickJavaScript);
 
-	event clicked();
+	event click();
 	event dropDownOpened();
 }

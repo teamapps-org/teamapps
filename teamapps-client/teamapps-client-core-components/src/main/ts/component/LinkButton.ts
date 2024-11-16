@@ -21,7 +21,7 @@ import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent} 
 
 import {
 	DtoLinkButton,
-	DtoLinkButton_ClickedEvent,
+	DtoLinkButton_ClickEvent,
 	DtoLinkButtonCommandHandler,
 	DtoLinkButtonEventSource,
 	LinkTarget
@@ -29,7 +29,7 @@ import {
 
 export class LinkButton extends AbstractLegacyComponent<DtoLinkButton> implements DtoLinkButtonEventSource, DtoLinkButtonCommandHandler {
 
-	public readonly onClicked: TeamAppsEvent<DtoLinkButton_ClickedEvent> = new TeamAppsEvent();
+	public readonly onClick: TeamAppsEvent<DtoLinkButton_ClickEvent> = new TeamAppsEvent();
 	
 	private readonly $main: HTMLAnchorElement;
 
@@ -40,7 +40,7 @@ export class LinkButton extends AbstractLegacyComponent<DtoLinkButton> implement
 			if (this.config.onClickJavaScript != null) {
 				eval(this.config.onClickJavaScript);
 			}
-			this.onClicked.fire({});
+			this.onClick.fire({});
 		});
 		this.update(config);
 	}

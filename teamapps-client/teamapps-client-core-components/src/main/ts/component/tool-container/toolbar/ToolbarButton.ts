@@ -36,7 +36,7 @@ import {createDropDownButtonClickInfo, DropDownButtonClickInfo} from "../../../g
 
 export class ToolbarButton {
 
-	public readonly onClicked: TeamAppsEvent<DropDownButtonClickInfo> = new TeamAppsEvent();
+	public readonly onClick: TeamAppsEvent<DropDownButtonClickInfo> = new TeamAppsEvent();
 
 	private $buttonWrapper: HTMLElement;
 	private $button: HTMLElement;
@@ -100,7 +100,7 @@ export class ToolbarButton {
 				}
 			}
 
-			setTimeout(() => this.onClicked.fire(dropdownClickInfo)); // make sure that any blur event is processed before this!
+			setTimeout(() => this.onClick.fire(dropdownClickInfo)); // make sure that any blur event is processed before this!
 		});
 	}
 

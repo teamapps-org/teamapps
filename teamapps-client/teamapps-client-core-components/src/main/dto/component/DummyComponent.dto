@@ -23,6 +23,6 @@ import org.teamapps.projector.component.DtoComponent;
 
 class DtoDummyComponent extends DtoComponent {
 	String text;
-	event clicked(int clickCount);
+	event click(int clickCount);
 	command setText(String text);
 }

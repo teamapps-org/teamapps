@@ -31,7 +31,7 @@ import {
 	DtoMediaSoupPlaybackParameters,
 	DtoMediaSoupPublishingParameters,
 	DtoMediaSoupV3WebRtcClient,
-	DtoMediaSoupV3WebRtcClient_ClickedEvent,
+	DtoMediaSoupV3WebRtcClient_ClickEvent,
 	DtoMediaSoupV3WebRtcClient_ConnectionStateChangedEvent,
 	DtoMediaSoupV3WebRtcClient_ContextMenuRequestedEvent,
 	DtoMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent,
@@ -73,7 +73,7 @@ export class MediaSoupV3WebRtcClient extends AbstractLegacyComponent<DtoMediaSou
 	public readonly onConnectionStateChanged: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_ConnectionStateChangedEvent> = new TeamAppsEvent();
 
 	public readonly onVoiceActivityChanged: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_VoiceActivityChangedEvent> = new TeamAppsEvent();
-	public readonly onClicked: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_ClickedEvent> = new TeamAppsEvent();
+	public readonly onClick: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_ClickEvent> = new TeamAppsEvent();
 	public readonly onContextMenuRequested: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLDivElement;
@@ -154,7 +154,7 @@ export class MediaSoupV3WebRtcClient extends AbstractLegacyComponent<DtoMediaSou
 		this.contextMenu = new ContextMenu();
 
 		[this.$videoContainer, this.$caption].forEach($element => $element.addEventListener("click", () => {
-			this.onClicked.fire({})
+			this.onClick.fire({})
 		}));
 		[this.$videoContainer, this.$caption].forEach($element => $element.addEventListener("contextmenu", (e) => {
 			if (this.config.contextMenuEnabled) {

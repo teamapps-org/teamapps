@@ -40,7 +40,7 @@ class DtoProgressDisplay extends DtoComponent {
 
     command update(DtoProgressDisplay config);
 
-    event clicked();
+    event click();
     event cancelButtonClicked();
 }
 

@@ -43,7 +43,7 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 
 	private final DtoButtonClientObjectChannel clientObjectChannel = new DtoButtonClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 	public final ProjectorEvent<Void> onDropDownOpened = new ProjectorEvent<>(clientObjectChannel::toggleDropDownOpenedEvent);
 
 
@@ -124,8 +124,8 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 	}
 
 	@Override
-	public void handleClicked() {
-		this.onClicked.fire();
+	public void handleClick() {
+		this.onClick.fire();
 	}
 
 	@Override

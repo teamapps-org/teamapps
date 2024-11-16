@@ -48,7 +48,7 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 	private Integer minDropDownWidth = 300;
 	private Integer minDropDownHeight = 300;
 
-	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
 	public ToolButton(Icon<?, ?> icon) {
 		this(icon, null, null);
@@ -89,7 +89,7 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 	}
 	
 	@Override
-	public void handleClicked() {
+	public void handleClick() {
 		this.onClick.fire();
 	}
 

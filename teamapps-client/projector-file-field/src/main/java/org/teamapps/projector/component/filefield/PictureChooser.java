@@ -95,7 +95,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 		imageCropperWindow.setModal(true);
 		imageCropperWindow.setCloseOnEscape(true);
 
-		okButton.onClicked.addListener(() -> {
+		okButton.onClick.addListener(() -> {
 			try {
 				ImageCropperSelection selection = imageCropper.getSelection();
 				Resource converted = imageCropperConverter.convert(uploadedFile, selection, this.targetImageWidth, this.targetImageHeight);
@@ -107,7 +107,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 			}
 		});
 
-		rotateButton.onClicked.addListener(() -> {
+		rotateButton.onClick.addListener(() -> {
 			try {
 				File rotatedImageFile = rotateImage(uploadedFile.getAsFile());
 				imageCropper.setImageUrl(getSessionContext().createFileLink(rotatedImageFile));
@@ -117,7 +117,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 			}
 		});
 
-		cancelButton.onClicked.addListener(() -> {
+		cancelButton.onClick.addListener(() -> {
 			imageCropperWindow.close();
 		});
 

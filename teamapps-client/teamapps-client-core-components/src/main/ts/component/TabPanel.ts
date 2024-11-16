@@ -181,7 +181,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		if (config.toolButtons != null) {
 			this.setToolButtons(config.toolButtons as ToolButton[]);
 		}
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
+		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].onClick.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
 			} else {
@@ -189,7 +189,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 			}
 		});
 		this.orderedDefaultToolButtonTypes.forEach(windowButtonType => {
-			this.defaultToolButtons[windowButtonType].onClicked.addListener(() => {
+			this.defaultToolButtons[windowButtonType].onClick.addListener(() => {
 				this.onWindowButtonClicked.fire({
 					windowButton: windowButtonType
 				});

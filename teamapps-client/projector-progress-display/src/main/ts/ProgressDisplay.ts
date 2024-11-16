@@ -21,7 +21,7 @@
 import {AbstractLegacyComponent, parseHtml, removeClassesByFunction, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoProgressDisplay,
-	DtoProgressDisplay_CancelButtonClickedEvent, DtoProgressDisplay_ClickedEvent,
+	DtoProgressDisplay_CancelButtonClickedEvent, DtoProgressDisplay_ClickEvent,
 	DtoProgressDisplayCommandHandler,
 	DtoProgressDisplayEventSource
 } from "./generated";
@@ -30,7 +30,7 @@ import {ProgressBar} from "projector-progress-indicator";
 
 export class ProgressDisplay extends AbstractLegacyComponent<DtoProgressDisplay> implements DtoProgressDisplayCommandHandler, DtoProgressDisplayEventSource {
 	onCancelButtonClicked: TeamAppsEvent<DtoProgressDisplay_CancelButtonClickedEvent> = new TeamAppsEvent();
-	onClicked: TeamAppsEvent<DtoProgressDisplay_ClickedEvent> = new TeamAppsEvent();
+	onClick: TeamAppsEvent<DtoProgressDisplay_ClickEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $icon: HTMLElement;

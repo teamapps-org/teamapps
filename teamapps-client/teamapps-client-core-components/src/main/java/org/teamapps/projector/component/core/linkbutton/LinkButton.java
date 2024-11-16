@@ -29,7 +29,7 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 
 	private final DtoLinkButtonClientObjectChannel clientObjectChannel = new DtoLinkButtonClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
 	private String text;
 	private String url;
@@ -57,8 +57,8 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 	}
 
 	@Override
-	public void handleClicked() {
-		onClicked.fire();
+	public void handleClick() {
+		onClick.fire();
 	}
 
 	private void update() {

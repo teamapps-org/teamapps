@@ -53,7 +53,7 @@ class DtoMediaSoupV3WebRtcClient extends DtoComponent {
 	event subscribingFailed(String errorMessage);
 	event subscriptionPlaybackFailed(String errorMessage);
 	event voiceActivityChanged(boolean active);
-	event clicked();
+	event click();
 	event contextMenuRequested(int requestId);
 
 	static command enumerateDevices() returns List<DtoMediaDeviceInfo>;

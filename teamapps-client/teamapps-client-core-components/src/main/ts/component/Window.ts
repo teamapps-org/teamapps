@@ -77,7 +77,7 @@ export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWin
 		if (config.closeable) {
 			this.panel.addWindowButton(WindowButtonType.CLOSE);
 		}
-		this.panel.getWindowButton(WindowButtonType.CLOSE).onClicked.addListener(() => this.close(500));
+		this.panel.getWindowButton(WindowButtonType.CLOSE).onClick.addListener(() => this.close(500));
 		this.panel.onWindowButtonClicked.addListener(eventObject => {
 			return this.onWindowButtonClicked.fire({
 				windowButton: eventObject.windowButton

@@ -29,7 +29,7 @@ class DtoLinkButton extends DtoComponent {
 
 	command update(DtoLinkButton config);
 
-	event clicked();
+	event click();
 }
 
 enum LinkTarget {

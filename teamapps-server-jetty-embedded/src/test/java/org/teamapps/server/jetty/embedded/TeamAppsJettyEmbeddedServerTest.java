@@ -37,16 +37,16 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.addRootComponent(rootPanel);
 			DummyComponent dummyComponent = new DummyComponent();
 			dummyComponent.onClick.addListener((eventData, disposable) -> {
-				System.out.println("Clicked!");
+				System.out.println("Click!");
 				disposable.dispose();
 			});
 			VerticalLayout verticalLayout = new VerticalLayout();
 			verticalLayout.addComponent(dummyComponent);
 			Button button = Button.create(MaterialIcon.CLOSED_CAPTION, "re-register");
-			button.onClicked.addListener(() -> {
-				System.out.println("button clicked");
+			button.onClick.addListener(() -> {
+				System.out.println("button click");
 				dummyComponent.onClick.addListener((e, d) -> {
-					System.out.println("dummy component clicked!");
+					System.out.println("dummy component click!");
 					d.dispose();
 				});
 			});

@@ -19,10 +19,10 @@
  */
 import {AbstractField} from "projector-client-object-api";
 import {Component, FieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
-import {DtoLabel, DtoLabel_ClickedEvent, DtoLabelCommandHandler, DtoLabelEventSource} from "../../generated";
+import {DtoLabel, DtoLabel_ClickEvent, DtoLabelCommandHandler, DtoLabelEventSource} from "../../generated";
 
 export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEventSource, DtoLabelCommandHandler {
-	public readonly onClicked: TeamAppsEvent<DtoLabel_ClickedEvent> = new TeamAppsEvent<DtoLabel_ClickedEvent>();
+	public readonly onClick: TeamAppsEvent<DtoLabel_ClickEvent> = new TeamAppsEvent<DtoLabel_ClickEvent>();
 
 	private $main: HTMLElement;
 	private $icon: HTMLElement;
@@ -36,7 +36,7 @@ export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEv
 		this.$caption = this.$main.querySelector<HTMLElement>(":scope .caption");
 		this.setIcon(config.icon);
 		this.$main.addEventListener('click',() => {
-			this.onClicked.fire({});
+			this.onClick.fire({});
 			if (this.targetComponent != null) {
 				if (this.targetComponent instanceof AbstractField) {
 					this.targetComponent.focus();

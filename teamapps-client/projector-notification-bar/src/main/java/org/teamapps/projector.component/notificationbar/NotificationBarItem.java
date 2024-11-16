@@ -33,7 +33,7 @@ import java.util.UUID;
 
 public class NotificationBarItem {
 
-	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>();
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>();
 	public final ProjectorEvent<Void> onActionLinkClicked = new ProjectorEvent<>();
 	public final ProjectorEvent<NotificationBarItemClosedEvent.ClosingReason> onClosed = new ProjectorEvent<>();
 

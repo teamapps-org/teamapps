@@ -21,7 +21,7 @@
 import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
 import {
 	DtoDummyComponent,
-	DtoDummyComponent_ClickedEvent,
+	DtoDummyComponent_ClickEvent,
 	DtoDummyComponentCommandHandler,
 	DtoDummyComponentEventSource
 } from "../generated";
@@ -29,7 +29,7 @@ import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export class DummyComponent extends AbstractLegacyComponent<DtoDummyComponent> implements DtoDummyComponentCommandHandler, DtoDummyComponentEventSource {
 
-	public readonly onClicked: TeamAppsEvent<DtoDummyComponent_ClickedEvent> = new TeamAppsEvent<DtoDummyComponent_ClickedEvent>();
+	public readonly onClick: TeamAppsEvent<DtoDummyComponent_ClickEvent> = new TeamAppsEvent<DtoDummyComponent_ClickEvent>();
 
 	private static allDummies: DummyComponent[] = [];
 
@@ -47,7 +47,7 @@ export class DummyComponent extends AbstractLegacyComponent<DtoDummyComponent> i
 		this.$panel = parseHtml('<div class="DummyComponent"></div>');
 		this.$panel.addEventListener("click", () => {
 			this.clickCount++;
-			this.onClicked.fire({
+			this.onClick.fire({
 				clickCount: this.clickCount
 			});
 			this.updateContent();

@@ -33,7 +33,7 @@ public class DummyComponent extends AbstractComponent implements DtoDummyCompone
 
 	private final DtoDummyComponentClientObjectChannel clientObjectChannel = new DtoDummyComponentClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
 	private String text;
 
@@ -54,7 +54,7 @@ public class DummyComponent extends AbstractComponent implements DtoDummyCompone
 	}
 
 	@Override
-	public void handleClicked(int clickCount) {
+	public void handleClick(int clickCount) {
 		onClick.fire();
 	}
 

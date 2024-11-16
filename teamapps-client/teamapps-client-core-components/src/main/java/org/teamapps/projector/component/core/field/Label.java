@@ -37,7 +37,7 @@ public class Label extends AbstractField<String> implements DtoLabelEventHandler
 
 	private final DtoLabelClientObjectChannel clientObjectChannel = new DtoLabelClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<Void> onClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickedEvent);
+	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
 	private String caption;
 	private Icon<?, ?> icon;
@@ -71,8 +71,8 @@ public class Label extends AbstractField<String> implements DtoLabelEventHandler
 	}
 
 	@Override
-	public void handleClicked() {
-		this.onClicked.fire();
+	public void handleClick() {
+		this.onClick.fire();
 	}
 
 	public String getCaption() {

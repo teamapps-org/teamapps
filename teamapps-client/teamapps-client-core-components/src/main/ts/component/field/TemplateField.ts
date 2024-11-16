@@ -20,7 +20,7 @@
 import {AbstractField} from "projector-client-object-api";
 import {
 	DtoTemplateField,
-	DtoTemplateField_ClickedEvent,
+	DtoTemplateField_ClickEvent,
 	DtoTemplateFieldCommandHandler,
 	DtoTemplateFieldEventSource
 } from "../../generated";
@@ -29,7 +29,7 @@ import {DtoClientRecord, FieldEditingMode, parseHtml, ServerObjectChannel, TeamA
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {
 
-    public readonly onClicked: TeamAppsEvent<DtoTemplateField_ClickedEvent> = new TeamAppsEvent();
+    public readonly onClick: TeamAppsEvent<DtoTemplateField_ClickEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 
@@ -39,7 +39,7 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 
 	protected initialize(config: DtoTemplateField): void {
 		this.$main = parseHtml(`<div class="TemplateField"></div>`);
-		this.$main.addEventListener("click", ev => this.onClicked.fire({}));
+		this.$main.addEventListener("click", ev => this.onClick.fire({}));
 		this.update(config);
 	}
 

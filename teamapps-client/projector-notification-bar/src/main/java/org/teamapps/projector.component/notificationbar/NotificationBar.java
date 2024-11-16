@@ -53,7 +53,7 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 	public void handleItemClicked(String id) {
 		NotificationBarItem item = itemsByUiId.get(id);
 		if (item != null) {
-			item.onClicked.fire();
+			item.onClick.fire();
 			onItemClicked.fire(item);
 		}
 	}

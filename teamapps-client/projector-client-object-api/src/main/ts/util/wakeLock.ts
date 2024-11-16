@@ -62,7 +62,7 @@ if ('wakeLock' in navigator && 'request' in (navigator as any).wakeLock) {
 				type: 'screen' as 'screen',
 				release: async () => {
 					noSleep.disable();
-					reject("released before clicked");
+					reject("released before click");
 					document.removeEventListener('click', enableHandler, false);
 
 					// HACK: this is needed to make iOS not show the player on the lock screen!!

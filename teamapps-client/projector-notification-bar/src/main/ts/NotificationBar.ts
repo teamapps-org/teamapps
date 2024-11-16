@@ -62,7 +62,7 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 			animateCSS(item.getMainElement(), itemConfig.entranceAnimation);
 		}
 		item.startCloseTimeout();
-		item.onClicked.addListener(() => this.onItemClicked.fire({id: itemConfig.id}));
+		item.onClick.addListener(() => this.onItemClicked.fire({id: itemConfig.id}));
 		item.onActionLinkClicked.addListener(() => this.onItemActionLinkClicked.fire({id: itemConfig.id}));
 		item.onClosed.addListener(wasTimeout => {
 			this.removeItem(itemConfig.id);
@@ -95,7 +95,7 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 
 class NotificationBarItem {
 
-	public readonly onClicked: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent();
 	public readonly onActionLinkClicked: TeamAppsEvent<void> = new TeamAppsEvent();
 	public readonly onClosed: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
@@ -129,7 +129,7 @@ class NotificationBarItem {
 		this.progressBar = new ProgressBar(0, {height: 3});
 		this.$progressBarContainer.appendChild(this.progressBar.getMainDomElement());
 
-		this.$main.addEventListener("click", () => this.onClicked.fire())
+		this.$main.addEventListener("click", () => this.onClick.fire())
 		this.$actionLink.addEventListener("click", (e) => this.onActionLinkClicked.fire())
 		this.$closeButton.addEventListener("click", ev => this.onClosed.fire(false));
 
