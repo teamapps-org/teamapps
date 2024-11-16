@@ -27,7 +27,7 @@ esbuild.build({
     assetNames: "assets/[name]-[hash]",
     plugins: [
         alias({
-            '@less/teamapps.less': path.resolve(__dirname, `src/main/less/teamapps.less`),
+            '@less/index.less': path.resolve(__dirname, `src/main/less/index.less`),
         }),
         lessLoader(),
     ],

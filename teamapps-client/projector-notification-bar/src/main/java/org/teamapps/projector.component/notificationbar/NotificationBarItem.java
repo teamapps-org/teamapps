@@ -24,7 +24,7 @@ import org.teamapps.icons.Icon;
 import org.teamapps.projector.animation.EntranceAnimation;
 import org.teamapps.projector.animation.ExitAnimation;
 import org.teamapps.projector.animation.RepeatableAnimation;
-import org.teamapps.projector.component.essential.DtoNotificationBarItem;
+import org.teamapps.projector.component.core.DtoNotificationBarItem;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.Spacing;
 import org.teamapps.projector.session.SessionContext;

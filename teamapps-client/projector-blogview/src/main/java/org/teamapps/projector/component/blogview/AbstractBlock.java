@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.blogview;
 
-import org.teamapps.projector.component.essential.toolbutton.ToolButton;
+import org.teamapps.projector.component.core.toolbutton.ToolButton;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,8 +24,8 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.toolbar.Toolbar;
+import org.teamapps.projector.component.core.CoreComponentLibrary;
+import org.teamapps.projector.component.core.toolbar.Toolbar;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class MobileLayout extends AbstractComponent implements DtoMobileLayoutEventHandler {

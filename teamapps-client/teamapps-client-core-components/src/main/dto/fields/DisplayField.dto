@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.component.essential;
+package "teamapps-client-core-components":org.teamapps.projector.component.core;
 
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.DtoComponent;

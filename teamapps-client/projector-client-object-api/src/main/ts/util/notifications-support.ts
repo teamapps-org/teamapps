@@ -74,6 +74,7 @@ class NotificationWrapper implements NotificationHandle {
 
 		if (timeout > 0) {
 			this.timeoutId = setTimeout(() => {
+				console.log("notification timeout over!");
 				this.close();
 				this.onTimeout.fire();
 			}, timeout);
@@ -94,7 +95,9 @@ class NotificationWrapper implements NotificationHandle {
 		this.$wrapper.style.marginBottom = "0px";
 		this.$wrapper.style.zIndex = "0";
 
-		animateCSS(this.content.getMainElement(), this.exitAnimation, 700, () => {
+		console.log("starting close animation");
+		animateCSS(this.$wrapper, this.exitAnimation, 700, () => {
+			console.log("close animation timeout over");
 			this.$wrapper.remove();
 		});
 	}

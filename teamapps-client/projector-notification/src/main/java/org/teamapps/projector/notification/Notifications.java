@@ -27,29 +27,45 @@ import java.time.Duration;
 public class Notifications {
 
 	public static void showNotification(SessionContext sessionContext, Icon<?, ?> icon, String caption) {
-		sessionContext.runWithContext(() -> showNotification(icon, caption));
+		sessionContext.runWithContext(() -> showNotification(icon, caption, null, true, Duration.ofSeconds(5), false));
 	}
 
 	public static void showNotification(SessionContext sessionContext, Icon<?, ?> icon, String caption, String description) {
-		sessionContext.runWithContext(() -> showNotification(icon, caption, description));
+		sessionContext.runWithContext(() -> showNotification(icon, caption, description, true, Duration.ofSeconds(5), false));
+	}
+
+	public static void showNotification(SessionContext sessionContext, NotificationPosition position, Icon<?, ?> icon, String caption, String description) {
+		sessionContext.runWithContext(() -> showNotification(position, icon, caption, description, true, Duration.ofSeconds(5), false));
 	}
 
 	public static void showNotification(SessionContext sessionContext, Icon<?, ?> icon, String caption, String description, boolean dismissable, Duration displayTimeout, boolean progressBarEnabled) {
-		sessionContext.runWithContext(() -> showNotification(icon, caption, description, dismissable, displayTimeout, progressBarEnabled));
+		sessionContext.runWithContext(() -> showNotification(NotificationPosition.TOP_RIGHT, icon, caption, description, dismissable, displayTimeout, progressBarEnabled));
+	}
+
+	public static void showNotification(SessionContext sessionContext, NotificationPosition position, Icon<?, ?> icon, String caption, String description, boolean dismissable, Duration displayTimeout, boolean progressBarEnabled) {
+		sessionContext.runWithContext(() -> showNotification(position, icon, caption, description, dismissable, displayTimeout, progressBarEnabled));
 	}
 
 	public static void showNotification(Icon<?, ?> icon, String caption) {
 		showNotification(icon, caption, null, true, Duration.ofSeconds(5), false);
 	}
 
-	private static void showNotification(Icon<?, ?> icon, String caption, String description) {
+	public static void showNotification(Icon<?, ?> icon, String caption, String description) {
 		showNotification(icon, caption, description, true, Duration.ofSeconds(5), false);
 	}
 
-	private static void showNotification(Icon<?, ?> icon, String caption, String description, boolean dismissable, Duration displayTimeout, boolean progressBarEnabled) {
+	public static void showNotification(NotificationPosition position, Icon<?, ?> icon, String caption, String description) {
+		showNotification(position, icon, caption, description, true, Duration.ofSeconds(5), false);
+	}
+
+	public static void showNotification(Icon<?, ?> icon, String caption, String description, boolean dismissable, Duration displayTimeout, boolean progressBarEnabled) {
+		showNotification(NotificationPosition.TOP_RIGHT, icon, caption, description, dismissable, displayTimeout, progressBarEnabled);
+	}
+
+	public static void showNotification(NotificationPosition position, Icon<?, ?> icon, String caption, String description, boolean dismissable, Duration displayTimeout, boolean progressBarEnabled) {
 		Notification notification = Notification.createWithIconCaptionDescription(icon, caption, description);
 		notification.setDismissible(dismissable);
 		notification.setProgressBarEnabled(progressBarEnabled);
-		notification.show(displayTimeout);
+		notification.show(displayTimeout, position);
 	}
 }

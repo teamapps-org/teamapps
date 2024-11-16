@@ -246,10 +246,14 @@ a {
   }
 }
 
-.close-button {
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAASUlEQVQoU2NkgABfBgaGzVA2OgWWY4QqgkmiKwYpAgOQQpiJ6IrhimAmwhQgSyBbD7YFZiIuxXCnkKWQKKtRHI7Ng2QFD94ABwB+/Q6lARmtogAAAABJRU5ErkJggg==');
-  background-position: center;
-  background-repeat: no-repeat;
+.hoverable-icon {
+  width: 16px;
+  height: 16px;
+  transition: opacity .2s;
+
+  &:not(:hover) {
+    opacity: 50%;
+  }
 }
 
 .string-template {

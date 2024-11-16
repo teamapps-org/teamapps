@@ -1,0 +1,117 @@
+@notifications-responsive-break-point: 800px;
+
+.notification-containers {
+  .notification-container {
+    max-width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    &.bottom-left, &.bottom-center, &.bottom-right {
+      flex-direction: column-reverse;
+    }
+  }
+
+  .notification-wrapper {
+    max-width: 100%;
+    z-index: 1000;
+    overflow: visible;
+    transition: height .7s, margin .7s;
+  }
+}
+
+@media (max-width: @notifications-responsive-break-point - 0.001px) {
+  .notification-containers {
+    pointer-events: none;
+
+    > * {
+      pointer-events: all;
+    }
+
+    display: grid;
+    height: 100%;
+    overflow: hidden;
+    grid-template-areas: "top-left" "top-center" "top-right" "filler" "bottom-left" "bottom-center" "bottom-right";
+    grid-template-rows: auto auto auto 1fr auto auto auto;
+
+    .notification-container {
+      align-items: center;
+
+      &.top-left {
+        grid-area: top-left;
+      }
+
+      &.top-center {
+        grid-area: top-center;
+      }
+
+      &.top-right {
+        grid-area: top-right;
+      }
+
+      &.bottom-left {
+        grid-area: bottom-left;
+      }
+
+      &.bottom-center {
+        grid-area: bottom-center;
+      }
+
+      &.bottom-right {
+        grid-area: bottom-right;
+      }
+    }
+
+    .notification-wrapper {
+      margin: 2px;
+    }
+  }
+}
+
+@media (min-width: @notifications-responsive-break-point) {
+  .notification-containers {
+    .notification-container {
+      position: fixed;
+      z-index: 1000;
+      padding: 16px 14px 26px 14px;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      > * {
+        pointer-events: all;
+      }
+
+
+      &.top-left {
+        align-items: flex-start;
+      }
+
+      &.top-center {
+        align-items: center;
+      }
+
+      &.top-right {
+        align-items: flex-end;
+      }
+
+      &.bottom-left {
+        align-items: flex-start;
+      }
+
+      &.bottom-center {
+        align-items: center;
+      }
+
+      &.bottom-right {
+        align-items: flex-end;
+      }
+    }
+
+    .notification-wrapper {
+      margin-bottom: 5px;
+    }
+  }
+}

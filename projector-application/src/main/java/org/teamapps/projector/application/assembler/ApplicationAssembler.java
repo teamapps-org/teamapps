@@ -25,7 +25,7 @@ import org.teamapps.projector.application.ResponsiveApplicationToolbar;
 import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.core.toolbar.ToolbarButtonGroup;
 import org.teamapps.projector.component.progress.MultiProgressDisplay;
 
 public interface ApplicationAssembler extends ApplicationChangeHandler {

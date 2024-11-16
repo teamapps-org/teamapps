@@ -22,8 +22,8 @@ package org.teamapps.projector.application.view;
 import org.teamapps.common.format.Color;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.essential.panel.Panel;
-import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.core.panel.Panel;
+import org.teamapps.projector.component.core.toolbar.ToolbarButtonGroup;
 
 import java.util.List;
 

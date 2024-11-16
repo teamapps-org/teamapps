@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.workspacelayout.definition;
 
-import org.teamapps.projector.component.essential.SplitDirection;
-import org.teamapps.projector.component.essential.SplitSizePolicy;
+import org.teamapps.projector.component.core.SplitDirection;
+import org.teamapps.projector.component.core.SplitSizePolicy;
 import org.teamapps.projector.component.workspacelayout.WorkSpaceLayout;
 import org.teamapps.projector.component.workspacelayout.WorkSpaceLayoutItem;
 import org.teamapps.projector.component.workspacelayout.WorkSpaceLayoutSplitPane;

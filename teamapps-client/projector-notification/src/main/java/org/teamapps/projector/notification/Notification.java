@@ -26,7 +26,7 @@ import org.teamapps.projector.animation.ExitAnimation;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.essential.field.TemplateField;
+import org.teamapps.projector.component.core.field.TemplateField;
 import org.teamapps.projector.component.notification.DtoNotification;
 import org.teamapps.projector.component.notification.DtoNotificationClientObjectChannel;
 import org.teamapps.projector.component.notification.DtoNotificationEventHandler;
@@ -163,7 +163,19 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 	}
 
 	public void show(Duration timeout, NotificationPosition position) {
-		show(timeout, position, EntranceAnimation.SLIDE_IN_LEFT, ExitAnimation.SLIDE_OUT_DOWN);
+		EntranceAnimation entranceAnimation = switch (position) {
+			case TOP_LEFT, BOTTOM_LEFT -> EntranceAnimation.FADE_IN_RIGHT;
+			case TOP_RIGHT, BOTTOM_RIGHT -> EntranceAnimation.FADE_IN_LEFT;
+			case TOP_CENTER -> EntranceAnimation.FADE_IN_UP;
+			case BOTTOM_CENTER -> EntranceAnimation.FADE_IN_DOWN;
+		};
+		ExitAnimation exitAnimation = switch (position) {
+			case TOP_LEFT, BOTTOM_LEFT -> ExitAnimation.FADE_OUT_LEFT;
+			case TOP_RIGHT, BOTTOM_RIGHT -> ExitAnimation.FADE_OUT_RIGHT;
+			case TOP_CENTER -> ExitAnimation.FADE_OUT_UP;
+			case BOTTOM_CENTER -> ExitAnimation.FADE_OUT_DOWN;
+		};
+		show(timeout, position, entranceAnimation, exitAnimation);
 	}
 
 	public void show(Duration timeout, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {

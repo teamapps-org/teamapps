@@ -21,8 +21,8 @@ package org.teamapps.projector.component.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.component.essential.SplitDirection;
-import org.teamapps.projector.component.essential.SplitSizePolicy;
+import org.teamapps.projector.component.core.SplitDirection;
+import org.teamapps.projector.component.core.SplitSizePolicy;
 import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.projector.component.workspacelayout.definition.SplitPaneDefinition;
 import org.teamapps.projector.component.workspacelayout.definition.ViewGroupDefinition;

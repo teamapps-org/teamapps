@@ -22,11 +22,9 @@ package org.teamapps.projector.template.grid;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.clientobject.ClientObjectChannel;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.FontStyle;
 import org.teamapps.projector.format.Spacing;
-import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.template.Template;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ import java.util.stream.Collectors;
 @ClientObjectLibrary(value = GridTemplateLibrary.class)
 public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 
-	private static volatile int counter = 0;
+	private static int counter = 0;
 	private final int count = counter++;
 
 	@Override
@@ -72,9 +70,6 @@ public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 		this.maxHeight = maxHeight;
 		this.padding = padding;
 		this.gridGap = gridGap;
-
-		ClientObjectChannel coc = SessionContext.current().registerClientObject(this);
-		System.out.println(((SessionContext.ClientObjectChannelImpl) coc).clientId);
 	}
 
 	public List<String> getPropertyNames() {

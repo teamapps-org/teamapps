@@ -17,6 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
 import {
 	AbstractLegacyComponent,
 	animateCSS,
@@ -116,7 +117,7 @@ class NotificationBarItem {
 			<span class="text"></span>
 			<a class="action-link"></a>
 		</div>
-		<div class="close-button"></div>
+		<div class="close-button"><img class="hoverable-icon" src="${ICON_CLOSE}"></div>
 	</div>
 	<div class="progress-container"></div>
 </div>`);

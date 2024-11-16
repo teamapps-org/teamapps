@@ -22,7 +22,7 @@ package org.teamapps.projector.application.perspective;
 import org.teamapps.projector.application.layout.ExtendedLayout;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.application.view.ViewSize;
-import org.teamapps.projector.component.essential.toolbar.ToolbarButtonGroup;
+import org.teamapps.projector.component.core.toolbar.ToolbarButtonGroup;
 import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 
 import java.util.List;

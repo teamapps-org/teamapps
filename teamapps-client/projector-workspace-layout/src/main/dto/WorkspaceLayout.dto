@@ -20,10 +20,10 @@
 package "projector-workspace-layout":org.teamapps.projector.component.workspacelayout;
 
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.essential.toolbar.DtoToolbar;
+import org.teamapps.projector.component.core.toolbar.DtoToolbar;
 import org.teamapps.projector.component.progress.DtoMultiProgressDisplay;
-import org.teamapps.projector.component.essential.SplitSizePolicy;
-import org.teamapps.projector.component.essential.SplitDirection;
+import org.teamapps.projector.component.core.SplitSizePolicy;
+import org.teamapps.projector.component.core.SplitDirection;
 
 class DtoWorkSpaceLayout extends DtoComponent {
 	required List<DtoWorkSpaceLayoutView> views;

@@ -26,6 +26,10 @@
   position: relative;
   background-color: var(--ta-bg-color);
 
+  @media (max-width: 400px) {
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, .3);
+  }
+
   > .content-container {
     padding: 4px;
   }
@@ -35,7 +39,7 @@
   }
 
   > .close-button {
-    //.ta-icon-window-close();
+    //.ta-icon-close();
     position: absolute;
     top: 0;
     right: 0;
@@ -46,9 +50,13 @@
     background-color: var(--ta-special-button-section-bg);
     border-top-right-radius: 3px;
     border-bottom-left-radius: calc(var(--ta-border-radius) + 2px);
-    background-size: 12px 12px;
-    background-position: center;
-    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
+
+
+
+
 

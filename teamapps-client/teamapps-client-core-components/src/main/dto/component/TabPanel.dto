@@ -17,12 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.component.essential.tabpanel;
+package "teamapps-client-core-components":org.teamapps.projector.component.core.tabpanel;
 
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.essential.DtoToolButton;
-import org.teamapps.projector.component.essential.panel.WindowButtonType;
-import org.teamapps.projector.component.essential.toolbar.DtoToolbar;
+import org.teamapps.projector.component.core.DtoToolButton;
+import org.teamapps.projector.component.core.panel.WindowButtonType;
+import org.teamapps.projector.component.core.toolbar.DtoToolbar;
 
 class DtoTabPanel extends DtoComponent {
 	List<DtoTab> tabs;

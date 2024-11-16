@@ -18,6 +18,8 @@
  * =========================LICENSE_END==================================
  */
 
+import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
+
 import {
 	AbstractLegacyComponent, animateCollapse,
 	ComponentLike,
@@ -61,7 +63,7 @@ export class MultiProgressDisplay extends AbstractLegacyComponent<DtoMultiProgre
 		this.$runningCount = this.$main.querySelector<HTMLElement>(":scope .running-count");
 
 		this.$popup = parseHtml(`<div class="MultiProgressDisplay-popup">
-	<div class="close-button"></div>
+	<div class="close-button"><img class="hoverable-icon" src="${ICON_CLOSE}"></div>
 	<div class="progress-list"></div>
 </div>`);
 		this.popupComponentLike = {getMainElement: () => this.$popup};

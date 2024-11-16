@@ -27,7 +27,7 @@ import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.view.View;
 import org.teamapps.projector.application.view.ViewSize;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.essential.toolbar.Toolbar;
+import org.teamapps.projector.component.core.toolbar.Toolbar;
 import org.teamapps.projector.component.progress.MultiProgressDisplay;
 import org.teamapps.projector.component.workspacelayout.ViewGroupPanelState;
 import org.teamapps.projector.component.workspacelayout.WorkSpaceLayout;

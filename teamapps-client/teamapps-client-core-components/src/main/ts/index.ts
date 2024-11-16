@@ -18,8 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import "@less/teamapps.less";
-import {ContextMenu} from "./micro-components/ContextMenu";
+import "@less/index.less";
 
 export * from "./util/Common";
 

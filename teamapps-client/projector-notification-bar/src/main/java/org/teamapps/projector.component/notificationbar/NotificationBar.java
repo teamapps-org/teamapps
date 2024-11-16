@@ -22,10 +22,10 @@ package org.teamapps.projector.component.notificationbar;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponent;
-import org.teamapps.projector.component.essential.CoreComponentLibrary;
-import org.teamapps.projector.component.essential.DtoNotificationBar;
-import org.teamapps.projector.component.essential.DtoNotificationBarClientObjectChannel;
-import org.teamapps.projector.component.essential.DtoNotificationBarEventHandler;
+import org.teamapps.projector.component.core.CoreComponentLibrary;
+import org.teamapps.projector.component.core.DtoNotificationBar;
+import org.teamapps.projector.component.core.DtoNotificationBarClientObjectChannel;
+import org.teamapps.projector.component.core.DtoNotificationBarEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.LinkedHashMap;

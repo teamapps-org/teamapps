@@ -56,7 +56,7 @@ export class Notification extends AbstractLegacyComponent<DtoNotification> imple
 		super(config);
 
 		this.$main = parseHtml(`<div class="Notification">
-	<div class="close-button"><img src="${ICON_CLOSE}"></div>
+	<div class="close-button"><img class="hoverable-icon" src="${ICON_CLOSE}"></div>
 	<div class="content-container"></div>
 	<div class="progress-container"></div>
 </div>`);
@@ -97,6 +97,7 @@ export class Notification extends AbstractLegacyComponent<DtoNotification> imple
 		this.timeoutMillis = timeout;
 		this.notificationHandle = showNotificationLike(this, position, entranceAnimation, exitAnimation, timeout);
 		this.notificationHandle.onTimeout.addListener(() => this.onClosed.fire({byUser: false}));
+
 	}
 
 	close() {

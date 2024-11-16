@@ -283,7 +283,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 
 		if (closeable) {
 			let closeButtonHtml = `<div class="tab-button-close-button">
-                        <div class="img img-12 ta-icon-window-close"></div>
+                        <div class="img img-12 ta-icon-close"></div>
                     </div>`;
 			const $closeButton1 = $tabButton.appendChild(parseHtml(closeButtonHtml));
 			$closeButton1.addEventListener("mousedown", () => {

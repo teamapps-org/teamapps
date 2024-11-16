@@ -1,4 +1,4 @@
-package "teamapps-client-core-components":org.teamapps.projector.component.essential.panel;
+package "teamapps-client-core-components":org.teamapps.projector.component.core.panel;
 
 import org.teamapps.projector.component.DtoShowable;
 

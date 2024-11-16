@@ -2,7 +2,7 @@ package "projector-mobile-layout":org.teamapps.projector.component.mobilelayout;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.animation.PageTransition;
-import org.teamapps.projector.component.essential.toolbar.DtoToolbar;
+import org.teamapps.projector.component.core.toolbar.DtoToolbar;
 
 class DtoMobileLayout extends DtoComponent {
 	DtoToolbar* toolbar;

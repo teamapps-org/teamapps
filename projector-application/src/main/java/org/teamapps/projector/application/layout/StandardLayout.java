@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.application.layout;
 
-import org.teamapps.projector.component.essential.SplitDirection;
+import org.teamapps.projector.component.core.SplitDirection;
 import org.teamapps.projector.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.projector.component.workspacelayout.definition.SplitPaneDefinition;
 import org.teamapps.projector.component.workspacelayout.definition.SplitSize;

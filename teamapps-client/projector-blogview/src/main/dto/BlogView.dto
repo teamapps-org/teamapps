@@ -21,7 +21,7 @@ package "projector-blogview":org.teamapps.projector.component.blogview;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
-import org.teamapps.projector.component.essential.DtoToolButton;
+import org.teamapps.projector.component.core.DtoToolButton;
 import org.teamapps.projector.record.DtoClientRecord;
 
 class DtoBlogView extends DtoComponent {

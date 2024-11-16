@@ -18,8 +18,6 @@
  * =========================LICENSE_END==================================
  */
 
-// @ts-ignore
-import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
 import {FileUploader, humanReadableFileSize, parseHtml, removeClassesByFunction, TeamAppsEvent} from "projector-client-object-api";
 import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
 import {DtoFileItem, FileFieldDisplayType} from "./generated";
@@ -54,7 +52,7 @@ export class FileItem {
 	) {
 		this.$main = parseHtml(`<a class="file-item">
 			<div class="delete-button-wrapper">
-				<img class="delete-button img img-16" alt="delete" tabindex="0" src="${ICON_CLOSE}"></img>
+				<div class="delete-button img img-16 ta-icon-close hoverable-icon" tabindex="0"></div>
 			</div>
 			<div class="progress-indicator"></div>
 			<div class="file-icon img img-48"></div>

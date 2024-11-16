@@ -20,7 +20,6 @@
 package org.teamapps.projector.template.mustache;
 
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.template.Template;
 
 import java.util.List;
@@ -40,8 +39,6 @@ public class MustacheTemplate implements Template, DtoMustacheTemplateEventHandl
 		this.propertyNames = PLACE_HOLDER_REGEX.matcher(this.templateString).results()
 				.map(matchResult -> matchResult.group(1))
 				.collect(Collectors.toList());
-
-		SessionContext.current().registerClientObject(this);
 	}
 
 	@Override

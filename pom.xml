@@ -79,7 +79,7 @@
 <!--        <module>teamapps-server-jetty-embedded</module>-->
 <!--        <module>teamapps-server-undertow-embedded</module>-->
 
-<!--        <module>teamapps-material-icon-provider</module>-->
+        <module>teamapps-material-icon-provider</module>
 <!--        <module>teamapps-session-stats-app</module>-->
 
 <!--        <module>projector-application</module>-->

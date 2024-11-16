@@ -18,12 +18,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package "teamapps-client-core-components":org.teamapps.projector.component.essential.panel;
+package "teamapps-client-core-components":org.teamapps.projector.component.core.panel;
 
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.field.DtoAbstractField;
-import org.teamapps.projector.component.essential.toolbar.DtoToolbar;
-import org.teamapps.projector.component.essential.DtoToolButton;
+import org.teamapps.projector.component.core.toolbar.DtoToolbar;
+import org.teamapps.projector.component.core.DtoToolButton;
 
 class DtoPanel extends DtoComponent {
 	mutable String icon;

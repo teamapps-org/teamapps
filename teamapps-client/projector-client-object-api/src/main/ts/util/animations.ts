@@ -2,6 +2,7 @@ import {EntranceAnimation, ExitAnimation, PageTransition} from "../generated";
 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
 	if (animationClassNames == null || animationClassNames.length == 0) {
+		console.log("directly calling callback");
 		callback();
 		return;
 	}
@@ -10,9 +11,11 @@ function animate(el: HTMLElement, animationClassNames: string[], animationDurati
 		callback && callback();
 		return;
 	}
+	console.log("setting animation duration");
 	let oldAnimationDurationValue = el.style.animationDuration;
 	el.style.animationDuration = animationDuration + "ms";
 	el.classList.add(...animationClassNames);
+	console.log("added animation classnames " + animationClassNames + " to ", el);
 
 	function handleAnimationEnd() {
 		el.classList.remove(...animationClassNames);

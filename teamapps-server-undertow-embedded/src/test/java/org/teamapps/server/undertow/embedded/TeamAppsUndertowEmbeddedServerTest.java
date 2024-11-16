@@ -20,14 +20,27 @@
 package org.teamapps.server.undertow.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.projector.notification.NotificationPosition;
 import org.teamapps.projector.notification.Notifications;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.server.webcontroller.WebController;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class TeamAppsUndertowEmbeddedServerTest {
 
+	private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
+
 	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> Notifications.showNotification(MaterialIcon.MESSAGE, "Hello World");
+		WebController controller = (SessionContext sessionContext) -> {
+			EXECUTOR.scheduleAtFixedRate(() -> {
+				for (NotificationPosition pos : NotificationPosition.values()) {
+					Notifications.showNotification(sessionContext, pos, MaterialIcon.MESSAGE, "Hello World", null);
+				}
+			}, 2, 2, TimeUnit.SECONDS);
+		};
 		TeamAppsUndertowEmbeddedServer.builder(controller)
 				.build()
 				.start();

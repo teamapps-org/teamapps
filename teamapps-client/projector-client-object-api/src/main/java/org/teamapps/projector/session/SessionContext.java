@@ -453,7 +453,7 @@ public class SessionContext {
 		ClientObjectChannel clientObjectChannel = channelsByClientObject.get(clientObject);
 
 		if (clientObjectChannel == null) {
-			throw new IllegalStateException("Cannot render unregistered client object " + clientObject + "! Please call registerClientObject first. If you are not the developer of this component (" + clientObject.getClass() + "), please file a bug report to them.");
+			clientObjectChannel = registerClientObject(clientObject);
 		}
 
 		clientObjectChannel.forceRender();
@@ -683,12 +683,11 @@ public class SessionContext {
 		return (T) uiSessionListener;
 	}
 
-	// TODO private
-	public class ClientObjectChannelImpl implements ClientObjectChannel {
+	private class ClientObjectChannelImpl implements ClientObjectChannel {
 
 		private final Set<String> enabledEventNames;
 		private final ClientObject clientObject;
-		/*TODO private*/public final String clientId;
+		private final String clientId;
 
 		public ClientObjectChannelImpl(ClientObject clientObject, String clientId) {
 			this.clientObject = clientObject;

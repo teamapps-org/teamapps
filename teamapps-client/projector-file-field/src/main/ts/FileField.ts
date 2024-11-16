@@ -18,9 +18,6 @@
  * =========================LICENSE_END==================================
  */
 
-// @ts-ignore
-import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
-
 import {
 	AbstractField,
 	DtoIdentifiableClientRecord,
@@ -402,7 +399,7 @@ class UploadItem {
 				<div class="file-size"></div>
 			</div>
 			<div class="template-wrapper"></div>
-			<img class="delete-button img img-16" alt="delete" tabindex="0" src="${ICON_CLOSE}"></img>
+			<div class="delete-button img img-16 ta-icon-close hoverable-icon" tabindex="0"></d>
 		</div>`);
 		this.$fileInfo = this.$main.querySelector<HTMLElement>(":scope .file-info");
 		this.$fileName = this.$main.querySelector<HTMLElement>(":scope .file-name");
