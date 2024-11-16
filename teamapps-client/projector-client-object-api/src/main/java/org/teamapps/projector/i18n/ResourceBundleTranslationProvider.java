@@ -49,7 +49,7 @@ public class ResourceBundleTranslationProvider implements TranslationProvider {
 	}
 
 	@Override
-	public String getTranslation(String key, Locale locale) {
+	public String getRawTranslationString(String key, Locale locale) {
 		ResourceBundle propertyResourceBundle = getResourceBundle(locale);
 			return propertyResourceBundle.getString(key);
 	}

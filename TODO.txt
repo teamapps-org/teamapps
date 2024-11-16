@@ -19,8 +19,6 @@ requirements for the maven plugin:
 * add result of JavaScript build process to JAR
 * sync pom version to package (optionally)
 
-* Translations: Delete TranslationProvider.getTranslation(...)
-
 ICONS:
     make icons non-generic
     make icons implement the Resolvable interface and refactor SessionContext.resolveIcon(Icon) to SessionContext.resolve(Resolvable)

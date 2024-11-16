@@ -31,9 +31,9 @@ public class ResourceBundleTranslationProviderTest {
 	public void shouldReturnAvailableTranslations() throws Exception {
 		var provider = new ResourceBundleTranslationProvider("translations/Translations", Locale.GERMAN);
 
-		Assertions.assertThat(provider.getTranslation("allLanguages", Locale.GERMAN)).isEqualTo("alle Sprachen");
-		Assertions.assertThat(provider.getTranslation("allLanguages", Locale.ENGLISH)).isEqualTo("all languages");
-		Assertions.assertThat(provider.getTranslation("allLanguages", Locale.FRENCH)).isEqualTo("toutes les langues");
+		Assertions.assertThat(provider.getRawTranslationString("allLanguages", Locale.GERMAN)).isEqualTo("alle Sprachen");
+		Assertions.assertThat(provider.getRawTranslationString("allLanguages", Locale.ENGLISH)).isEqualTo("all languages");
+		Assertions.assertThat(provider.getRawTranslationString("allLanguages", Locale.FRENCH)).isEqualTo("toutes les langues");
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class ResourceBundleTranslationProviderTest {
 				Locale.ENGLISH
 		);
 
-		Assertions.assertThat(provider.getTranslation("allLanguages", Locale.ITALIAN)).isEqualTo("all languages");
+		Assertions.assertThat(provider.getRawTranslationString("allLanguages", Locale.ITALIAN)).isEqualTo("all languages");
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class ResourceBundleTranslationProviderTest {
 				Locale.ENGLISH
 		);
 
-		Assertions.assertThatThrownBy(() -> provider.getTranslation("asdf", Locale.GERMAN))
+		Assertions.assertThatThrownBy(() -> provider.getRawTranslationString("asdf", Locale.GERMAN))
 				.isInstanceOf(MissingResourceException.class);
 	}
 

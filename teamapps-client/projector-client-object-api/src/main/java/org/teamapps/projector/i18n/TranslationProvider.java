@@ -28,12 +28,12 @@ public interface TranslationProvider {
 	/**
 	 * Returns the raw (not prefilled) translation.
 	 */
-	String getTranslation(String key, Locale locale);
+	String getRawTranslationString(String key, Locale locale);
 
 	Collection<String> getKeys(Locale locale);
 
 	default String getLocalized(Locale locale, String key, Object... parameters) {
-		String value = getTranslation(key, locale);
+		String value = getRawTranslationString(key, locale);
 		if (value != null) {
 			return MessageFormat.format(value, parameters); // always use format, even without parameters, for consistent escaping!
 		}
