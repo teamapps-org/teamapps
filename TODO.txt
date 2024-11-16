@@ -2,11 +2,8 @@ make Field an interfaces, so people can implement them more freely and creativel
 
 Check if specialized Components (like SimpleCalendar) work
 
-make components not have to depend on teamapps-ux
-
 rename:
  clicked -> click
- Java: createUiX(UxObject...) -> createDto()
 
 check if queries actually work
 TeamAppsUndertowEmbeddedServer

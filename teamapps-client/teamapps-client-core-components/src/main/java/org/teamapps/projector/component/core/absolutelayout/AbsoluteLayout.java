@@ -60,10 +60,10 @@ public class AbsoluteLayout extends AbstractComponent implements DtoAbsoluteLayo
 	}
 
 	private void updateUiLayout() {
-		clientObjectChannel.update(createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing());
+		clientObjectChannel.update(createDtoAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing());
 	}
 
-	private List<DtoAbsolutePositionedComponent> createUiAbsolutePositionedComponents() {
+	private List<DtoAbsolutePositionedComponent> createDtoAbsolutePositionedComponents() {
 		return positionsByComponent.entrySet().stream()
 				.map(entry -> {
 					Component component = entry.getKey();
@@ -85,7 +85,7 @@ public class AbsoluteLayout extends AbstractComponent implements DtoAbsoluteLayo
 	public DtoAbsoluteLayout createConfig() {
 		DtoAbsoluteLayout uiAbsoluteLayout = new DtoAbsoluteLayout();
 		mapAbstractConfigProperties(uiAbsoluteLayout);
-		uiAbsoluteLayout.setComponents(createUiAbsolutePositionedComponents());
+		uiAbsoluteLayout.setComponents(createDtoAbsolutePositionedComponents());
 		return uiAbsoluteLayout;
 	}
 

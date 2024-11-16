@@ -156,7 +156,7 @@ public class FormSectionFieldPlacement implements FormSectionPlacement {
 	}
 
 	@Override
-	public DtoFormSectionPlacement createUiFormSectionPlacement() {
+	public DtoFormSectionPlacement createDtoFormSectionPlacement() {
 		return new DtoFormSectionFieldPlacement(field)
 				.setRow(row)
 				.setColumn(column)

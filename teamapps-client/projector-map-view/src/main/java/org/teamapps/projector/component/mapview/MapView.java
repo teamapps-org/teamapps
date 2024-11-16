@@ -67,7 +67,7 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleShapeChanged(AbstractMapShape shape) {
-			clientObjectChannel.updateShape(shape.getClientIdInternal(), shape.createUiMapShape());
+			clientObjectChannel.updateShape(shape.getClientIdInternal(), shape.createDtoMapShape());
 		}
 
 		@Override
@@ -99,18 +99,18 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 
 		uiMap.setZoomLevel(zoomLevel);
 		Map<String, DtoAbstractMapShape> uiShapes = new HashMap<>();
-		shapesByClientId.forEach((id, shape) -> uiShapes.put(id, shape.createUiMapShape()));
+		shapesByClientId.forEach((id, shape) -> uiShapes.put(id, shape.createDtoMapShape()));
 		uiMap.setShapes(uiShapes);
 		if (location != null) {
 			uiMap.setMapPosition(location);
 		}
 		if (clusterMarkers != null && !clusterMarkers.isEmpty()) {
 			uiMap.setMarkerCluster(new DtoMapMarkerCluster(clusterMarkers.stream()
-					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
+					.map(marker -> createDtoMarkerRecord(marker, markersByClientId.getKey(marker)))
 					.collect(Collectors.toList())));
 		}
 		uiMap.setMarkers(markersByClientId.entrySet().stream()
-				.map(e -> createUiMarkerRecord(e.getValue(), e.getKey()))
+				.map(e -> createDtoMarkerRecord(e.getValue(), e.getKey()))
 				.collect(Collectors.toList()));
 		return uiMap;
 	}
@@ -171,7 +171,7 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 		this.onShapeDrawn.fire(shape);
 	}
 
-	private DtoMapMarkerClientRecord createUiMarkerRecord(Marker<RECORD> marker, int clientId) {
+	private DtoMapMarkerClientRecord createDtoMarkerRecord(Marker<RECORD> marker, int clientId) {
 		DtoMapMarkerClientRecord clientRecord = new DtoMapMarkerClientRecord();
 		clientRecord.setId(clientId);
 		clientRecord.setLocation(marker.getLocation());
@@ -195,7 +195,7 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 	public void addShape(AbstractMapShape shape) {
 		shape.setListenerInternal(shapeListener);
 		shapesByClientId.put(shape.getClientIdInternal(), shape);
-		clientObjectChannel.addShape(shape.getClientIdInternal(), shape.createUiMapShape());
+		clientObjectChannel.addShape(shape.getClientIdInternal(), shape.createDtoMapShape());
 	}
 
 	public void removeShape(AbstractMapShape shape) {
@@ -211,7 +211,7 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 		markers.forEach(m -> this.markersByClientId.put(clientIdCounter++, m));
 		if (clientObjectChannel.isRendered()) {
 			clientObjectChannel.setMapMarkerCluster(new DtoMapMarkerCluster(clusterMarkers.stream()
-					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
+					.map(marker -> createDtoMarkerRecord(marker, markersByClientId.getKey(marker)))
 					.collect(Collectors.toList())));
 		}
 	}
@@ -288,7 +288,7 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 	public void addMarker(Marker<RECORD> marker) {
 		int clientId = clientIdCounter++;
 		this.markersByClientId.put(clientId, marker);
-		clientObjectChannel.addMarker(createUiMarkerRecord(marker, clientId));
+		clientObjectChannel.addMarker(createDtoMarkerRecord(marker, clientId));
 	}
 
 	public void removeMarker(Marker<RECORD> marker) {
@@ -346,7 +346,7 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 
 	//  TODO
 //	public void startDrawingShape(ShapeType shapeType, ShapeProperties shapeProperties) {
-//		queueCommandIfRendered(() -> new DtoMap2.StartDrawingShapeCommand(shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
+//		queueCommandIfRendered(() -> new DtoMap2.StartDrawingShapeCommand(shapeType.toUiMapShapeType(), shapeProperties.createDtoShapeProperties()));
 //	}
 //
 //	public void stopDrawingShape() {

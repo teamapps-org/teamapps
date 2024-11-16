@@ -54,8 +54,8 @@ public class FormLayoutPolicy {
 		return this;
 	}
 
-	public DtoFormLayoutPolicy createUiLayoutPolicy() {
-		List<DtoFormSection> uiSections = sections.stream().map(section -> section != null ? section.createUiFormSection() : null).collect(Collectors.toList());
+	public DtoFormLayoutPolicy createDtoLayoutPolicy() {
+		List<DtoFormSection> uiSections = sections.stream().map(section -> section != null ? section.createDtoFormSection() : null).collect(Collectors.toList());
 		return new DtoFormLayoutPolicy(minWidth, uiSections);
 	}
 }

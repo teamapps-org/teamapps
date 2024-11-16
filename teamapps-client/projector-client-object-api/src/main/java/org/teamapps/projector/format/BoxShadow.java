@@ -62,7 +62,7 @@ public class BoxShadow {
 		return color;
 	}
 
-	public DtoBoxShadow createUiShadow() {
+	public DtoBoxShadow createDtoShadow() {
 		return new DtoBoxShadow(color != null ? color.toHtmlColorString() : null, blur)
 				.setOffsetX(offsetX)
 				.setOffsetY(offsetY)

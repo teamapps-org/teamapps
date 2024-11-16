@@ -66,7 +66,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 		fileItem.setState(FileItemState.DONE);
 		this.fileItems.add(fileItem);
 		fileItem.setFileField(this);
-		clientObjectChannel.addFileItem(fileItem.createUiFileItem());
+		clientObjectChannel.addFileItem(fileItem.createDtoFileItem());
 	}
 
 	public void removeFileItem(FileItem fileItem) {
@@ -80,7 +80,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 	}
 
 	/*package-private*/  void handleFileItemChanged(FileItem fileItem) {
-		clientObjectChannel.updateFileItem(fileItem.createUiFileItem());
+		clientObjectChannel.updateFileItem(fileItem.createDtoFileItem());
 	}
 
 	private FileItem getFileItemByUuid(String uuid) {
@@ -117,7 +117,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 		field.setMaxFiles(maxFiles);
 		field.setDisplayMode(displayType);
 		field.setFileItems(fileItems.stream()
-				.map(fi -> fi.createUiFileItem())
+				.map(fi -> fi.createDtoFileItem())
 				.collect(Collectors.toList()));
 		return field;
 	}

@@ -107,7 +107,7 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 	public CacheManipulationHandle<List<UIRECORD>> replaceRecords(List<RECORD> newRecords) {
 		purgeIfNeeded(maxCapacity);
 
-		LinkedHashMap<RECORD, UIRECORD> uiRecordsByRecord = createUiRecords(newRecords);
+		LinkedHashMap<RECORD, UIRECORD> uiRecordsByRecord = createDtoRecords(newRecords);
 
 		this.uiRecordsByRecord.clear();
 		this.uiRecordsByRecord.putAll(uiRecordsByRecord.entrySet().stream()
@@ -127,7 +127,7 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 	public CacheManipulationHandle<List<UIRECORD>> addRecords(List<RECORD> newRecords) {
 		purgeIfNeeded(newRecords.size());
 
-		LinkedHashMap<RECORD, UIRECORD> uiRecordsByRecord = createUiRecords(newRecords);
+		LinkedHashMap<RECORD, UIRECORD> uiRecordsByRecord = createDtoRecords(newRecords);
 		this.uiRecordsByRecord.putAll(uiRecordsByRecord.entrySet().stream().collect(StreamUtil.toLinkedHashMap(Map.Entry::getKey, entry -> entry.getValue().getId())));
 
 		Map<Integer, RECORD> newRecordsByClientId = uiRecordsByRecord.entrySet().stream()
@@ -143,7 +143,7 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 
 	public CacheManipulationHandle<UIRECORD> addRecord(RECORD record) {
 		purgeIfNeeded(1);
-		UIRECORD uiRecord = createUiRecord(record);
+		UIRECORD uiRecord = createDtoRecord(record);
 		postProcessor.postProcess(record, uiRecord, Collections.singletonMap(record, uiRecord));
 
 		uiRecordsByRecord.put(record, uiRecord.getId());
@@ -185,9 +185,9 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 		return removedRecords;
 	}
 
-	private LinkedHashMap<RECORD, UIRECORD> createUiRecords(List<RECORD> newRecords) {
+	private LinkedHashMap<RECORD, UIRECORD> createDtoRecords(List<RECORD> newRecords) {
 		LinkedHashMap<RECORD, UIRECORD> uiRecordsByRecord = newRecords.stream()
-				.collect(StreamUtil.toLinkedHashMap(record -> record, this::createUiRecord));
+				.collect(StreamUtil.toLinkedHashMap(record -> record, this::createDtoRecord));
 		uiRecordsByRecord.forEach((record, uiRecord) -> postProcessor.postProcess(record, uiRecord, uiRecordsByRecord));
 		return uiRecordsByRecord;
 	}
@@ -197,7 +197,7 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 		purgeIfNeeded(0);
 	}
 
-	private UIRECORD createUiRecord(RECORD record) {
+	private UIRECORD createDtoRecord(RECORD record) {
 		UIRECORD uiRecord = clientRecordFactory.create(record);
 		uiRecord.setId(++idCounter);
 		return uiRecord;

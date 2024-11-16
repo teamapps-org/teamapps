@@ -251,13 +251,13 @@ public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 	@Override
 	public DtoGridTemplate createConfig() {
 		List<DtoGridColumn> uiColumns = columns.stream()
-				.map(column -> column != null ? column.createUiGridColumn() : null)
+				.map(column -> column != null ? column.createDtoGridColumn() : null)
 				.collect(Collectors.toList());
 		List<DtoGridRow> uiRows = rows.stream()
-				.map(row -> row != null ? row.createUiGridRow() : null)
+				.map(row -> row != null ? row.createDtoGridRow() : null)
 				.collect(Collectors.toList());
 		List<DtoAbstractGridTemplateElement> uiTemplateElements = elements.stream()
-				.map(element -> element != null ? element.createUiTemplateElement() : null)
+				.map(element -> element != null ? element.createDtoTemplateElement() : null)
 				.collect(Collectors.toList());
 		DtoGridTemplate uiGridTemplate = new DtoGridTemplate(uiColumns, uiRows, uiTemplateElements);
 		uiGridTemplate.setMinWidth(minWidth);
@@ -265,10 +265,10 @@ public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 		uiGridTemplate.setMinHeight(minHeight);
 		uiGridTemplate.setMaxHeight(maxHeight);
 		if (padding != null) {
-			uiGridTemplate.setPadding(padding.createUiSpacing());
+			uiGridTemplate.setPadding(padding.createDtoSpacing());
 		}
 		uiGridTemplate.setGridGap(gridGap);
-		uiGridTemplate.setBorder(border != null ? border.createUiBorder() : null);
+		uiGridTemplate.setBorder(border != null ? border.createDtoBorder() : null);
 		uiGridTemplate.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiGridTemplate.setAriaLabelProperty(ariaLabelProperty);
 		uiGridTemplate.setTitleProperty(titleProperty);

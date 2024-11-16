@@ -113,7 +113,7 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 
 	private List<DtoFormLayoutPolicy> getUiFormLayoutPolicies() {
 		List<DtoFormLayoutPolicy> uiFormLayoutPolicies = getLayoutPolicies().stream()
-				.map(layoutPolicy -> layoutPolicy != null ? layoutPolicy.createUiLayoutPolicy() : null)
+				.map(layoutPolicy -> layoutPolicy != null ? layoutPolicy.createDtoLayoutPolicy() : null)
 				.collect(Collectors.toList());
 		validateLayoutPolicies(uiFormLayoutPolicies);
 		return uiFormLayoutPolicies;

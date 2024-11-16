@@ -115,7 +115,7 @@ public class NotificationBarItem {
 		ui.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
 		ui.setTextColor(textColor != null ? textColor.toHtmlColorString() : null);
 		ui.setActionLinkColor(actionLinkColor != null ? actionLinkColor.toHtmlColorString() : null);
-		ui.setPadding(padding != null ? padding.createUiSpacing() : null);
+		ui.setPadding(padding != null ? padding.createDtoSpacing() : null);
 		return ui;
 	}
 

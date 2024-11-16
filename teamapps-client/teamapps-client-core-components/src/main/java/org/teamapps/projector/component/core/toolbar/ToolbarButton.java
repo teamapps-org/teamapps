@@ -124,7 +124,7 @@ public class ToolbarButton {
 		return new ToolbarButton(template, Object, null, togglesFullScreenOnComponent, null, 0);
 	}
 
-	public DtoToolbarButton createUiToolbarButton() {
+	public DtoToolbarButton createDtoToolbarButton() {
 		Template template = getAppliedTemplate();
 		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getPropertyNames());
 

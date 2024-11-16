@@ -38,7 +38,7 @@ public class MapRectangle extends AbstractMapShape {
 		this.location2 = location2;
 	}
 
-	public DtoMapRectangle createUiMapShape() {
+	public DtoMapRectangle createDtoMapShape() {
 		DtoMapRectangle uiRect = new DtoMapRectangle();
 		mapAbstractUiShapeProperties(uiRect);
 		uiRect.setL1(location1);

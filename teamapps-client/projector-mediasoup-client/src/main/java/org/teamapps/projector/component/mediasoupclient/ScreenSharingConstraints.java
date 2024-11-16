@@ -32,7 +32,7 @@ public class ScreenSharingConstraints {
 		this.maxHeight = maxHeight;
 	}
 
-	public DtoScreenSharingConstraints createUiScreenSharingConstraints() {
+	public DtoScreenSharingConstraints createDtoScreenSharingConstraints() {
 		DtoScreenSharingConstraints ui = new DtoScreenSharingConstraints();
 		ui.setMaxWidth(maxWidth);
 		ui.setMaxHeight(maxHeight);

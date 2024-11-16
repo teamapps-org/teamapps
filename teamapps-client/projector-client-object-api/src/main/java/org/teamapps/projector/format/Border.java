@@ -81,12 +81,12 @@ public class Border {
 		return this;
 	}
 
-	public DtoBorder createUiBorder() {
+	public DtoBorder createDtoBorder() {
 		DtoBorder uiBorder = new DtoBorder();
-		uiBorder.setTop(top != null ? top.createUiLine() : null);
-		uiBorder.setLeft(left != null ? left.createUiLine() : null);
-		uiBorder.setBottom(bottom != null ? bottom.createUiLine() : null);
-		uiBorder.setRight(right != null ? right.createUiLine() : null);
+		uiBorder.setTop(top != null ? top.createDtoLine() : null);
+		uiBorder.setLeft(left != null ? left.createDtoLine() : null);
+		uiBorder.setBottom(bottom != null ? bottom.createDtoLine() : null);
+		uiBorder.setRight(right != null ? right.createDtoLine() : null);
 		uiBorder.setBorderRadius(borderRadius);
 		return uiBorder;
 	}

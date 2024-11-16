@@ -31,7 +31,7 @@ public class SelectionFrame {
 	private int shadowWidth = 0;
 	private boolean fullRow = false;
 
-	public DtoSelectionFrame createUiSelectionFrame() {
+	public DtoSelectionFrame createDtoSelectionFrame() {
 		DtoSelectionFrame uiSelectionFrame = new DtoSelectionFrame();
 		uiSelectionFrame.setColor(color != null ? color.toHtmlColorString() : null);
 		uiSelectionFrame.setBorderWidth(borderWidth);

@@ -76,7 +76,7 @@ public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 	}
 
 	@Override
-	public DtoWorkSpaceLayoutItem createUiItem() {
+	public DtoWorkSpaceLayoutItem createDtoItem() {
 		List<String> viewNames = getAllViews().stream()
 				.map(WorkSpaceLayoutView::getId)
 				.collect(Collectors.toList());

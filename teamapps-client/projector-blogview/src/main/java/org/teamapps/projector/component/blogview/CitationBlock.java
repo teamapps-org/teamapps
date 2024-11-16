@@ -35,7 +35,7 @@ public class CitationBlock extends AbstractBlock {
 		this.author = author;
 	}
 
-	public DtoCitationBlock createUiBlock() {
+	public DtoCitationBlock createDtoBlock() {
 		DtoCitationBlock uiBlock = new DtoCitationBlock();
 		mapAbstractBlockAttributes(uiBlock);
 		uiBlock.setCreatorImageUrl(creatorImageUrl);

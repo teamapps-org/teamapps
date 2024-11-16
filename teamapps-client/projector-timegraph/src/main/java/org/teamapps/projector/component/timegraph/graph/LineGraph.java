@@ -59,7 +59,7 @@ public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 	}
 
 	@Override
-	public DtoLineGraph createUiFormat() {
+	public DtoLineGraph createDtoFormat() {
 		DtoLineGraph ui = new DtoLineGraph();
 		mapAbstractLineChartDataDisplayProperties(ui);
 		ui.setGraphType(graphType);

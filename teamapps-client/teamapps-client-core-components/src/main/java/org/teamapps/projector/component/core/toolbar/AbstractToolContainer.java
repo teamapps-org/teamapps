@@ -75,7 +75,7 @@ public abstract class AbstractToolContainer extends AbstractComponent implements
 	public ToolbarButtonGroup addButtonGroup(ToolbarButtonGroup buttonGroup) {
 		buttonGroups.add(buttonGroup);
 		buttonGroup.setToolContainer(this);
-		clientObjectChannel.addButtonGroup(buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide());
+		clientObjectChannel.addButtonGroup(buttonGroup.createDtoToolbarButtonGroup(), buttonGroup.isRightSide());
 		return buttonGroup;
 	}
 
@@ -104,7 +104,7 @@ public abstract class AbstractToolContainer extends AbstractComponent implements
 	}
 
 	protected void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
-		clientObjectChannel.addButton(group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor);
+		clientObjectChannel.addButton(group.getClientId(), button.createDtoToolbarButton(), neighborButtonId, beforeNeighbor);
 	}
 
 	protected void handleButtonRemoved(ToolbarButtonGroup group, ToolbarButton button) {

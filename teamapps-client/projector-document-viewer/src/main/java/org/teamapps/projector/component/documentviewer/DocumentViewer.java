@@ -56,8 +56,8 @@ public class DocumentViewer extends AbstractComponent implements DtoDocumentView
 		documentViewer.setPageUrls(pageUrls);
 		documentViewer.setDisplayMode(displayMode);
 		documentViewer.setZoomFactor(zoomFactor);
-		documentViewer.setPageBorder(pageBorder != null ? pageBorder.createUiBorder() : null);
-		documentViewer.setPageShadow(pageShadow != null ? pageShadow.createUiShadow() : null);
+		documentViewer.setPageBorder(pageBorder != null ? pageBorder.createDtoBorder() : null);
+		documentViewer.setPageShadow(pageShadow != null ? pageShadow.createDtoShadow() : null);
 		documentViewer.setPadding(padding);
 		documentViewer.setPageSpacing(pageSpacing);
 		return documentViewer;
@@ -106,7 +106,7 @@ public class DocumentViewer extends AbstractComponent implements DtoDocumentView
 
 	public void setPageBorder(Border pageBorder) {
 		this.pageBorder = pageBorder;
-		clientObjectChannel.setPageBorder(pageBorder != null ? pageBorder.createUiBorder(): null);
+		clientObjectChannel.setPageBorder(pageBorder != null ? pageBorder.createDtoBorder(): null);
 	}
 
 	public BoxShadow getPageShadow() {
@@ -115,7 +115,7 @@ public class DocumentViewer extends AbstractComponent implements DtoDocumentView
 
 	public void setPageShadow(BoxShadow pageShadow) {
 		this.pageShadow = pageShadow;
-		clientObjectChannel.setPageShadow(pageShadow != null ? pageShadow.createUiShadow(): null);
+		clientObjectChannel.setPageShadow(pageShadow != null ? pageShadow.createDtoShadow(): null);
 	}
 
 	public int getPadding() {

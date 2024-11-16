@@ -37,12 +37,12 @@ public class ToolAccordion extends AbstractToolContainer implements DtoToolAccor
 		List<DtoToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
 				.filter(group -> !group.isRightSide())
 				.sorted()
-				.map(group -> group.createUiToolbarButtonGroup())
+				.map(group -> group.createDtoToolbarButtonGroup())
 				.collect(Collectors.toList());
 		List<DtoToolbarButtonGroup> rightUiButtonGroups = buttonGroups.stream()
 				.filter(group -> group.isRightSide())
 				.sorted()
-				.map(group -> group.createUiToolbarButtonGroup())
+				.map(group -> group.createDtoToolbarButtonGroup())
 				.collect(Collectors.toList());
 		DtoToolAccordion uiToolAccordion = new DtoToolAccordion(leftUiButtonGroups, rightUiButtonGroups);
 		mapAbstractConfigProperties(uiToolAccordion);

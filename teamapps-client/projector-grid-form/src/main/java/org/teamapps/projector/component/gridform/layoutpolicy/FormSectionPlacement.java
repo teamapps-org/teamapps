@@ -41,6 +41,6 @@ public interface FormSectionPlacement {
 
 	JustifyContent getHorizontalAlignment();
 
-	DtoFormSectionPlacement createUiFormSectionPlacement();
+	DtoFormSectionPlacement createDtoFormSectionPlacement();
 
 }

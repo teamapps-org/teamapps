@@ -56,14 +56,14 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
 	}
 
 
-	protected Component createUi() {
+	protected Component createDto() {
 		return assembler.createApplication(this);
 	}
 
 	@Override
 	public Component getUi() {
 		if (ui == null) {
-			ui = createUi();
+			ui = createDto();
 		}
 		return ui;
 	}

@@ -238,7 +238,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		List<RecordAndClientRecord<RECORD>> recordAndClientRecords = new ArrayList<>();
 		for (RECORD r : newRecords) {
 			DtoIdentifiableClientRecord existingUiRecord = renderedRecords.getUiRecord(r);
-			DtoIdentifiableClientRecord newUiRecord = createUiIdentifiableClientRecord(r);
+			DtoIdentifiableClientRecord newUiRecord = createDtoIdentifiableClientRecord(r);
 			boolean isNew = existingUiRecord == null || !existingUiRecord.getValues().equals(newUiRecord.getValues());
 			if (isNew) {
 				newUiRecords.add(newUiRecord);
@@ -248,7 +248,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		return new UiRecordMappingResult<>(recordAndClientRecords, newUiRecords);
 	}
 
-	protected abstract DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record);
+	protected abstract DtoIdentifiableClientRecord createDtoIdentifiableClientRecord(RECORD record);
 
 	private static class UiRecordMappingResult<RECORD> {
 		List<RecordAndClientRecord<RECORD>> recordAndClientRecords;

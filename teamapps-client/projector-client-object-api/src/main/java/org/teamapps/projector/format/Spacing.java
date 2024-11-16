@@ -69,7 +69,7 @@ public class Spacing {
 		return left;
 	}
 
-	public DtoSpacing createUiSpacing() {
+	public DtoSpacing createDtoSpacing() {
 		if (top.getUnit() != SizeUnit.PIXEL
 				|| left.getUnit() != SizeUnit.PIXEL
 				|| bottom.getUnit() != SizeUnit.PIXEL

@@ -91,18 +91,18 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 
 	private void updateClientSideLayout(List<WorkSpaceLayoutView> newViews) {
 		Map<String, DtoWorkSpaceLayoutItem> uiRootItemsByWindowId = rootItemsByWindowId.entrySet().stream()
-				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().createUiItem()));
+				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().createDtoItem()));
 		List<DtoWorkSpaceLayoutView> newUiViews = newViews.stream()
-				.map(WorkSpaceLayoutView::createUiView)
+				.map(WorkSpaceLayoutView::createDtoView)
 				.collect(Collectors.toList());
 		clientObjectChannel.redefineLayout(uiRootItemsByWindowId, newUiViews);
 	}
 
 	@Override
 	public DtoComponent createConfig() {
-		DtoWorkSpaceLayoutItem uiInitialLayout = getMainRootItem().createUiItem();
+		DtoWorkSpaceLayoutItem uiInitialLayout = getMainRootItem().createDtoItem();
 		List<DtoWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
-				.map(WorkSpaceLayoutView::createUiView)
+				.map(WorkSpaceLayoutView::createDtoView)
 				.collect(Collectors.toList());
 		DtoWorkSpaceLayout uiLayout = new DtoWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
 		mapAbstractConfigProperties(uiLayout);
@@ -130,7 +130,7 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 	@Override
 	public void handleViewNeedsRefresh(String viewName) {
 		WorkSpaceLayoutView view = getViewById(viewName);
-		clientObjectChannel.refreshViewComponent(viewName, view.createUiView().getComponent());
+		clientObjectChannel.refreshViewComponent(viewName, view.createDtoView().getComponent());
 	}
 
 	@Override
@@ -251,7 +251,7 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 	// ============== Internal API ======================
 
 	/*package-private*/ void handleViewAddedToGroup(WorkSpaceLayoutViewGroup workSpaceLayoutViewGroup, WorkSpaceLayoutView view, boolean selected) {
-		clientObjectChannel.addViewAsTab(view.createUiView(), workSpaceLayoutViewGroup.getId(), selected);
+		clientObjectChannel.addViewAsTab(view.createDtoView(), workSpaceLayoutViewGroup.getId(), selected);
 	}
 
 	/*package-private*/ void handleViewGroupPanelStateChangedViaApi(WorkSpaceLayoutViewGroup viewGroup, ViewGroupPanelState panelState) {

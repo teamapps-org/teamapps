@@ -71,7 +71,7 @@ public class BadgeElement extends TextElement {
 	}
 
 	@Override
-	public DtoAbstractGridTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
 		DtoBadgeElement uiBadgeElement = new DtoBadgeElement(propertyName, row, column);
 		mapAbstractGridTemplateElementAttributesToUiElement(uiBadgeElement);
 		mapTextElementAttributesToUiElement(uiBadgeElement);

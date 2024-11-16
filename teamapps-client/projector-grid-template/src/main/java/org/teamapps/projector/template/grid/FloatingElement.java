@@ -45,9 +45,9 @@ public class FloatingElement extends AbstractGridTemplateElement<FloatingElement
 	}
 
 	@Override
-	public DtoAbstractGridTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
 		List<DtoAbstractGridTemplateElement> uiElements = elements.stream()
-				.map(element -> element != null ? element.createUiTemplateElement() : null)
+				.map(element -> element != null ? element.createDtoTemplateElement() : null)
 				.collect(Collectors.toList());
 		DtoFloatingElement uiFloatingElement = new DtoFloatingElement(propertyName, row, column, uiElements);
 		mapAbstractGridTemplateElementAttributesToUiElement(uiFloatingElement);

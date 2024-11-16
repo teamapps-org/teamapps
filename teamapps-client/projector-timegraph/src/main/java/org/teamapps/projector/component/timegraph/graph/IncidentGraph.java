@@ -30,7 +30,7 @@ public class IncidentGraph extends AbstractGraph<IncidentGraphData, IncidentGrap
 	}
 
 	@Override
-	public DtoIncidentGraph createUiFormat() {
+	public DtoIncidentGraph createDtoFormat() {
 		final DtoIncidentGraph ui = new DtoIncidentGraph();
 		mapAbstractLineChartDataDisplayProperties(ui);
 		return ui;

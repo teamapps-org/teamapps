@@ -732,7 +732,7 @@ public class SessionContext {
 				Example: A panel contains a table. The panel's title is bound to the table's "count" ObservableValue. When the panel is rendered, the table also is rendered (as part of rendering the
 				panel). While rendering, the table sets its "count" value, so the panel's title is changed. However, the DtoPanel's setTitle() method already has been invoked, so the change will not have
 				any effect on the initialization of the DtoPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
-				the panel was rendered (which is only after completing its createUiComponent() method).
+				the panel was rendered (which is only after completing its createDtoComponent() method).
 				 */
 				runWithContext(() -> sendCommandInternal(clientObjectsById.getKey(clientObject), name, params, null), true);
 				return true;

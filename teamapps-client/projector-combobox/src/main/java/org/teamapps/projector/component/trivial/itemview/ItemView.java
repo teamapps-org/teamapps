@@ -120,10 +120,10 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent implements
 
 			@Override
 			public void handleRefreshRequired() {
-				clientObjectChannel.refreshItemGroup(group.createUiItemViewItemGroup());
+				clientObjectChannel.refreshItemGroup(group.createDtoItemViewItemGroup());
 			}
 		});
-		clientObjectChannel.addItemGroup(group.createUiItemViewItemGroup());
+		clientObjectChannel.addItemGroup(group.createDtoItemViewItemGroup());
 	}
 
 	public String getFilter() {
@@ -198,7 +198,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent implements
 		mapAbstractConfigProperties(uiItemView);
 		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate : null);
 		uiItemView.setItemGroups(this.itemGroups.stream()
-				.map(group -> group.createUiItemViewItemGroup())
+				.map(group -> group.createDtoItemViewItemGroup())
 				.collect(Collectors.toList()));
 		uiItemView.setHorizontalPadding(horizontalPadding);
 		uiItemView.setVerticalPadding(verticalPadding);

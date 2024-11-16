@@ -100,7 +100,7 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 		}
 		ArrayList<DtoTreeRecord> uiRecords = new ArrayList<>();
 		for (RECORD record : records) {
-			DtoTreeRecord uiRecord = createUiTreeRecordWithoutParentRelation(record);
+			DtoTreeRecord uiRecord = createDtoTreeRecordWithoutParentRelation(record);
 			uiRecordsByRecord.put(record, uiRecord);
 			uiRecords.add(uiRecord);
 		}
@@ -110,7 +110,7 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 		return uiRecords;
 	}
 
-	protected DtoTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
+	protected DtoTreeRecord createDtoTreeRecordWithoutParentRelation(RECORD record) {
 		if (record == null) {
 			return null;
 		}

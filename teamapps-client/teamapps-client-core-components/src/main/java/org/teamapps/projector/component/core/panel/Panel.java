@@ -130,8 +130,8 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		mapAbstractConfigProperties(uiPanel);
 		uiPanel.setTitle(title);
 		uiPanel.setIcon(getSessionContext().resolveIcon(icon));
-		uiPanel.setLeftHeaderField(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth));
-		uiPanel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
+		uiPanel.setLeftHeaderField(createDtoPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth));
+		uiPanel.setRightHeaderField(createDtoPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
 		uiPanel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy);
 		uiPanel.setTitleBarHidden(titleBarHidden);
 		uiPanel.setToolbar(toolbar);
@@ -143,7 +143,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		uiPanel.setContentStretchingEnabled(contentStretchingEnabled);
 	}
 
-	public DtoPanelHeaderField createUiPanelHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public DtoPanelHeaderField createDtoPanelHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
 		if (field == null) {
 			return null;
 		}
@@ -159,7 +159,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		this.leftHeaderFieldIcon = icon;
 		this.leftHeaderFieldMinWidth = minWidth;
 		this.leftHeaderFieldMaxWidth = maxWidth;
-		clientObjectChannel.setLeftHeaderField(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth));
+		clientObjectChannel.setLeftHeaderField(createDtoPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth));
 		return this;
 	}
 
@@ -172,7 +172,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		this.rightHeaderFieldIcon = icon;
 		this.rightHeaderFieldMinWidth = minWidth;
 		this.rightHeaderFieldMaxWidth = maxWidth;
-		clientObjectChannel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
+		clientObjectChannel.setRightHeaderField(createDtoPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
 		return this;
 	}
 

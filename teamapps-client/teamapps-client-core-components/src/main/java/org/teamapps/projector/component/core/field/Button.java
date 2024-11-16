@@ -103,7 +103,7 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 
 	@Override
 	public DtoAbstractField createConfig() {
-		DtoButton ui = new DtoButton(template, createUiRecord());
+		DtoButton ui = new DtoButton(template, createDtoRecord());
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setDropDownComponent(dropDownComponent);
 		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
@@ -113,7 +113,7 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 		return ui;
 	}
 
-	private Object createUiRecord() {
+	private Object createDtoRecord() {
 		Object uiRecord;
 		if (template != null) {
 			uiRecord = propertyProvider.getValues(templateRecord, template.getPropertyNames());

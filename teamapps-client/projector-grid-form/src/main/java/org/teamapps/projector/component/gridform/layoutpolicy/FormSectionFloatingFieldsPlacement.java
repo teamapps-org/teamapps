@@ -169,9 +169,9 @@ public class FormSectionFloatingFieldsPlacement implements FormSectionPlacement 
 	}
 
 	@Override
-	public DtoFormSectionPlacement createUiFormSectionPlacement() {
+	public DtoFormSectionPlacement createDtoFormSectionPlacement() {
 		List<DtoFormSectionFloatingField> uiFloatingFields = floatingFields.stream()
-				.map(floatingField -> floatingField.createUiFormSectionFloatingField())
+				.map(floatingField -> floatingField.createDtoFormSectionFloatingField())
 				.collect(Collectors.toList());
 		DtoFormSectionFloatingFieldsPlacement placement = new DtoFormSectionFloatingFieldsPlacement(uiFloatingFields)
 				.setRow(row)

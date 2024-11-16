@@ -72,7 +72,7 @@ public class GridColumn {
 
 	public org.teamapps.projector.component.gridform.DtoGridColumn createDtoGridColumn() {
 		return new org.teamapps.projector.component.gridform.DtoGridColumn()
-				.setWidthPolicy(widthPolicy != null ? widthPolicy.createUiSizingPolicy() : null)
+				.setWidthPolicy(widthPolicy != null ? widthPolicy.createDtoSizingPolicy() : null)
 				.setLeftPadding(leftPadding)
 				.setRightPadding(rightPadding);
 	}

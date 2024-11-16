@@ -59,7 +59,7 @@ public class NavigationBar extends AbstractComponent implements DtoNavigationBar
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiNavigationBar.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
 		if (buttons != null) {
-			List<DtoNavigationBarButton> uiNavigationBarButtons = createUiButtons();
+			List<DtoNavigationBarButton> uiNavigationBarButtons = createDtoButtons();
 			uiNavigationBar.setButtons(uiNavigationBarButtons);
 		}
 		if (fanOutComponents != null) {
@@ -69,9 +69,9 @@ public class NavigationBar extends AbstractComponent implements DtoNavigationBar
 		return uiNavigationBar;
 	}
 
-	private List<DtoNavigationBarButton> createUiButtons() {
+	private List<DtoNavigationBarButton> createDtoButtons() {
 		return buttons.stream()
-				.map(navigationBarButton -> navigationBarButton.createUiNavigationBarButton())
+				.map(navigationBarButton -> navigationBarButton.createDtoNavigationBarButton())
 				.collect(Collectors.toList());
 	}
 
@@ -102,7 +102,7 @@ public class NavigationBar extends AbstractComponent implements DtoNavigationBar
 		} else {
 			buttons.add(button);
 		}
-		clientObjectChannel.setButtons(createUiButtons());
+		clientObjectChannel.setButtons(createDtoButtons());
 		return this;
 	}
 
@@ -112,7 +112,7 @@ public class NavigationBar extends AbstractComponent implements DtoNavigationBar
 
 	public void removeButton(NavigationBarButton button) {
 		buttons.remove(button);
-		clientObjectChannel.setButtons(createUiButtons());
+		clientObjectChannel.setButtons(createDtoButtons());
 	}
 
 	/**

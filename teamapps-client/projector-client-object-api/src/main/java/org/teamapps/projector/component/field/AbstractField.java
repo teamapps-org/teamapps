@@ -106,7 +106,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 		uiField.setValue(convertServerValueToClientValue(this.value.read()));
 		uiField.setEditingMode(editingMode);
 		uiField.setFieldMessages(getFieldMessages().stream()
-				.map(message -> message.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
+				.map(message -> message.createDtoFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList()));
 	}
 
@@ -278,7 +278,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 
 	private void updateFieldMessages() {
 		List<DtoFieldMessage> uiFieldMessages = getFieldMessages().stream()
-				.map(fieldMessage -> fieldMessage.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
+				.map(fieldMessage -> fieldMessage.createDtoFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList());
 		clientObjectChannel.setFieldMessages(uiFieldMessages);
 	}

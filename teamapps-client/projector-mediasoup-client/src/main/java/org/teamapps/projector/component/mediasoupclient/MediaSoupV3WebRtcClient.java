@@ -171,9 +171,9 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 		DtoMediaSoupPublishingParameters params = new DtoMediaSoupPublishingParameters();
 		params.setServer(new DtoMediaServerUrlAndToken(serverUrl, worker, token));
 		params.setStreamUuid(streamUuid);
-		params.setAudioConstraints(audioConstraints != null ? audioConstraints.createUiAudioTrackConstraints() : null);
-		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createUiVideoTrackConstraints() : null);
-		params.setScreenSharingConstraints(screenSharingConstraints != null ? screenSharingConstraints.createUiScreenSharingConstraints() : null);
+		params.setAudioConstraints(audioConstraints != null ? audioConstraints.createDtoAudioTrackConstraints() : null);
+		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createDtoVideoTrackConstraints() : null);
+		params.setScreenSharingConstraints(screenSharingConstraints != null ? screenSharingConstraints.createDtoScreenSharingConstraints() : null);
 		params.setMaxBitrate(maxBitrate);
 		params.setSimulcast(simulcast);
 		params.setKeyFrameRequestDelay(keyFrameRequestDelayMillis);

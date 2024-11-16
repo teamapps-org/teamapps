@@ -118,7 +118,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 		this.graphsAndListeners.forEach(g -> g.disposable.dispose());
 		this.graphsAndListeners.clear();
 		graphs.forEach(graph -> {
-			graph.setChangeListener(display -> clientObjectChannel.addOrUpdateGraph(display.createUiFormat()));
+			graph.setChangeListener(display -> clientObjectChannel.addOrUpdateGraph(display.createDtoFormat()));
 			Disposable disposable = graph.getModel().onDataChanged().addListener(aVoid -> handleGraphDataChanged(graph));
 			this.graphsAndListeners.add(new GraphListenInfo(graph, disposable));
 		});
@@ -128,13 +128,13 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 
 	private List<DtoGraph> toUiLineFormats(List<? extends AbstractGraph<?, ?>> lineFormats) {
 		return lineFormats.stream()
-				.map(AbstractGraph::createUiFormat)
+				.map(AbstractGraph::createDtoFormat)
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public DtoComponent createConfig() {
-		List<DtoTimeChartZoomLevel> uiZoomLevels = createUiZoomlevels();
+		List<DtoTimeChartZoomLevel> uiZoomLevels = createDtoZoomlevels();
 
 		Interval domainX = retrieveDomainX();
 
@@ -154,7 +154,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 		return uiTimeGraph;
 	}
 
-	private List<DtoTimeChartZoomLevel> createUiZoomlevels() {
+	private List<DtoTimeChartZoomLevel> createDtoZoomlevels() {
 		return this.zoomLevels.stream()
 				.map(timePartitioning -> new DtoTimeChartZoomLevel(timePartitioning.getApproximateMillisecondsPerPartition()))
 				.collect(Collectors.toList());
@@ -212,7 +212,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 	public void refresh() {
 		Interval domainX = retrieveDomainX();
 		DtoLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
-		clientObjectChannel.resetAllData(uiIntervalX, createUiZoomlevels());
+		clientObjectChannel.resetAllData(uiIntervalX, createDtoZoomlevels());
 	}
 
 	public void zoomTo(long minX, long maxX) {

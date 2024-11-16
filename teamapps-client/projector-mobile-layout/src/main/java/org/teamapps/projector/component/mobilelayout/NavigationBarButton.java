@@ -45,7 +45,7 @@ public class NavigationBarButton {
 		return new NavigationBarButton(BaseTemplates.NAVIGATION_BAR_ICON_ONLY, new BaseTemplateRecord<Void>(icon, null));
 	}
 
-	public DtoNavigationBarButton createUiNavigationBarButton() {
+	public DtoNavigationBarButton createDtoNavigationBarButton() {
 		DtoNavigationBarButton uiNavigationBarButton = new DtoNavigationBarButton(clientId, template, data);
 		uiNavigationBarButton.setVisible(visible);
 		return uiNavigationBarButton;

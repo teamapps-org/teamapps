@@ -51,7 +51,7 @@ public class MessageBlock<RECORD> extends AbstractBlock {
 		this.topRecord = topRecord;
 	}
 
-	public DtoMessageBlock createUiBlock() {
+	public DtoMessageBlock createDtoBlock() {
 		DtoMessageBlock uiBlock = new DtoMessageBlock();
 		mapAbstractBlockAttributes(uiBlock);
 		uiBlock.setTopTemplate(topTemplate != null ? topTemplate : null);

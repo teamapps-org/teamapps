@@ -52,7 +52,7 @@ public class TextElement extends AbstractGridTemplateElement<TextElement> {
 	}
 
 	@Override
-	public DtoAbstractGridTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
 		DtoTextElement uiTextElement = new DtoTextElement(propertyName, row, column);
 		mapAbstractGridTemplateElementAttributesToUiElement(uiTextElement);
 		mapTextElementAttributesToUiElement(uiTextElement);
@@ -60,10 +60,10 @@ public class TextElement extends AbstractGridTemplateElement<TextElement> {
 	}
 
 	protected void mapTextElementAttributesToUiElement(DtoTextElement uiTextElement) {
-		uiTextElement.setFontStyle(fontStyle != null ? fontStyle.createUiFontStyle() : null);
+		uiTextElement.setFontStyle(fontStyle != null ? fontStyle.createDtoFontStyle() : null);
 		uiTextElement.setLineHeight(lineHeight);
 		uiTextElement.setWrapLines(wrapLines);
-		uiTextElement.setPadding(padding != null ? padding.createUiSpacing() : null);
+		uiTextElement.setPadding(padding != null ? padding.createDtoSpacing() : null);
 		uiTextElement.setTextAlignment(textAlignment);
 	}
 

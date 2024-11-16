@@ -45,7 +45,7 @@ public class AudioTrackConstraints {
 		this.noiseSuppression = noiseSuppression;
 	}
 
-	public DtoAudioTrackConstraints createUiAudioTrackConstraints() {
+	public DtoAudioTrackConstraints createDtoAudioTrackConstraints() {
 		DtoAudioTrackConstraints ui = new DtoAudioTrackConstraints();
 		ui.setChannelCount(channelCount);
 		ui.setAutoGainControl(autoGainControl);

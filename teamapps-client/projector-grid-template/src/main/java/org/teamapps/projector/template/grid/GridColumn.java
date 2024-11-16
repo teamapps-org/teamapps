@@ -72,9 +72,9 @@ public class GridColumn {
 		return this;
 	}
 
-	public DtoGridColumn createUiGridColumn() {
+	public DtoGridColumn createDtoGridColumn() {
 		return new DtoGridColumn()
-				.setWidthPolicy(widthPolicy != null ? widthPolicy.createUiSizingPolicy() : null)
+				.setWidthPolicy(widthPolicy != null ? widthPolicy.createDtoSizingPolicy() : null)
 				.setLeftPadding(leftPadding)
 				.setRightPadding(rightPadding);
 	}

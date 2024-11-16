@@ -73,7 +73,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;
 	private Template fileItemTemplate = BaseTemplates.FILE_ITEM_FLOATING;
 	private PropertyProvider<RECORD> fileItemPropertyProvider = new BeanPropertyExtractor<>();
-	private final ClientRecordCache<RECORD, DtoIdentifiableClientRecord> recordCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
+	private final ClientRecordCache<RECORD, DtoIdentifiableClientRecord> recordCache = new ClientRecordCache<>(this::createDtoIdentifiableClientRecord);
 
 	public FileField(UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter) {
 		super();
@@ -117,7 +117,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 		this.clientObjectChannel.cancelAllUploads();
 	}
 
-	private DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+	private DtoIdentifiableClientRecord createDtoIdentifiableClientRecord(RECORD record) {
 		DtoIdentifiableClientRecord clientRecord = new DtoIdentifiableClientRecord();
 		clientRecord.setValues(fileItemPropertyProvider.getValues(record, fileItemTemplate.getPropertyNames()));
 		return clientRecord;

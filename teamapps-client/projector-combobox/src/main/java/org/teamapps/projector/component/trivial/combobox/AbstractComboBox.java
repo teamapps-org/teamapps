@@ -90,7 +90,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	protected AbstractComboBox(ComboBoxModel<RECORD> model) {
 		this.model = model;
-		this.recordCache = new ClientRecordCache<>(this::createUiTreeRecordWithoutParentRelation, this::addParentLinkToUiRecord);
+		this.recordCache = new ClientRecordCache<>(this::createDtoTreeRecordWithoutParentRelation, this::addParentLinkToUiRecord);
 	}
 
 	protected AbstractComboBox() {
@@ -167,7 +167,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	protected abstract Set<RECORD> getSelectedRecords();
 
-	protected DtoComboBoxTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
+	protected DtoComboBoxTreeRecord createDtoTreeRecordWithoutParentRelation(RECORD record) {
 		if (record == null) {
 			return null;
 		}

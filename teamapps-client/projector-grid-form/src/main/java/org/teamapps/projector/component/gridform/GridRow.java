@@ -70,9 +70,9 @@ public class GridRow {
 		return this;
 	}
 
-	public DtoGridRow createUiGridRow() {
+	public DtoGridRow createDtoGridRow() {
 		return new DtoGridRow()
-				.setHeightPolicy(heightPolicy != null ? heightPolicy.createUiSizingPolicy() : null)
+				.setHeightPolicy(heightPolicy != null ? heightPolicy.createDtoSizingPolicy() : null)
 				.setTopPadding(topPadding)
 				.setBottomPadding(bottomPadding);
 	}

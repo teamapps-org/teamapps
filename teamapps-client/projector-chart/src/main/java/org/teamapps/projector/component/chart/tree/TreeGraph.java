@@ -60,7 +60,7 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 	public DtoTreeGraph createConfig() {
 		DtoTreeGraph ui = new DtoTreeGraph();
 		mapAbstractConfigProperties(ui);
-		ui.setNodes(createUiNodes(nodesById.values()));
+		ui.setNodes(createDtoNodes(nodesById.values()));
 		ui.setZoomFactor(zoomFactor);
 		ui.setCompact(compact);
 		ui.setVerticalLayerGap(verticalLayerGap);
@@ -71,13 +71,13 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 		return ui;
 	}
 
-	private List<DtoTreeGraphNode> createUiNodes(Collection<TreeGraphNode<RECORD>> nodes) {
+	private List<DtoTreeGraphNode> createDtoNodes(Collection<TreeGraphNode<RECORD>> nodes) {
 		return nodes.stream()
-				.map(this::createUiNode)
+				.map(this::createDtoNode)
 				.collect(Collectors.toList());
 	}
 
-	private DtoTreeGraphNode createUiNode(TreeGraphNode<RECORD> node) {
+	private DtoTreeGraphNode createDtoNode(TreeGraphNode<RECORD> node) {
 		DtoTreeGraphNode uiNode = new DtoTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
 		uiNode.setParentId(node.getParent() != null ? node.getParent().getId() : null);
@@ -101,16 +101,16 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 		uiNode.setBorderColor(node.getBorderColor() != null ? node.getBorderColor().toHtmlColorString() : null);
 		uiNode.setBorderWidth(node.getBorderWidth());
 		uiNode.setBorderRadius(node.getBorderRadius());
-		uiNode.setImage(node.getImage() != null ? node.getImage().createUiTreeGraphNodeImage() : null);
-		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createUiTreeGraphNodeIcon() : null);
+		uiNode.setImage(node.getImage() != null ? node.getImage().createDtoTreeGraphNodeImage() : null);
+		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createDtoTreeGraphNodeIcon() : null);
 		uiNode.setTemplate(node.getTemplate());
-		uiNode.setRecord(node.getRecord() != null ? createUiRecord(node.getRecord(), node.getTemplate()) : null);
+		uiNode.setRecord(node.getRecord() != null ? createDtoRecord(node.getRecord(), node.getTemplate()) : null);
 		uiNode.setConnectorLineColor(node.getConnectorLineColor() != null ? node.getConnectorLineColor().toHtmlColorString() : null);
 		uiNode.setConnectorLineWidth(node.getConnectorLineWidth());
 		uiNode.setDashArray(node.getDashArray());
 	}
 
-	private DtoClientRecord createUiRecord(RECORD record, Template template) {
+	private DtoClientRecord createDtoRecord(RECORD record, Template template) {
 		DtoClientRecord uiClientRecord = new DtoClientRecord();
 		uiClientRecord.setValues(propertyProvider.getValues(record, template.getPropertyNames()));
 		return uiClientRecord;
@@ -124,12 +124,12 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 	public void setNodes(List<TreeGraphNode<RECORD>> nodes) {
 		this.nodesById.clear();
 		nodes.forEach(n -> nodesById.put(n.getId(), n));
-		clientObjectChannel.setNodes(createUiNodes(nodes));
+		clientObjectChannel.setNodes(createDtoNodes(nodes));
 	}
 
 	public void addNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		clientObjectChannel.addNode(createUiNode(node));
+		clientObjectChannel.addNode(createDtoNode(node));
 	}
 
 	public void addNodes(List<TreeGraphNode<RECORD>> nodes) {
@@ -144,7 +144,7 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 
 	public void updateNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		clientObjectChannel.updateNode(createUiNode(node));
+		clientObjectChannel.updateNode(createDtoNode(node));
 	}
 
 	@Override

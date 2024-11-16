@@ -70,7 +70,7 @@ public class FormSectionFloatingField {
 		this.maxHeight = maxHeight;
 	}
 
-	public DtoFormSectionFloatingField createUiFormSectionFloatingField() {
+	public DtoFormSectionFloatingField createDtoFormSectionFloatingField() {
 		DtoFormSectionFloatingField floatingField = new DtoFormSectionFloatingField(field);
 		floatingField.setMinWidth(minWidth);
 		floatingField.setMaxWidth(maxWidth);

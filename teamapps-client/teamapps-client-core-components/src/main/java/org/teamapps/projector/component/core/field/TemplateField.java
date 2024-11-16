@@ -62,7 +62,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 		DtoTemplateField ui = new DtoTemplateField();
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setTemplate(template);
-		ui.setValue(createUiRecord(getValue()));
+		ui.setValue(createDtoRecord(getValue()));
 		return ui;
 	}
 
@@ -74,7 +74,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 		if (record == null) {
 			return null;
 		} else {
-			return createUiRecord(record);
+			return createDtoRecord(record);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 		return getValue(); // the ui does not pass the value anyway!
 	}
 
-	private DtoClientRecord createUiRecord(RECORD record) {
+	private DtoClientRecord createDtoRecord(RECORD record) {
 		if (record == null) {
 			return null;
 		}

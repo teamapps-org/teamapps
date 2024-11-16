@@ -77,42 +77,42 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent implements DtoNe
 
 	@Override
 	public DtoComponent createConfig() {
-		List<DtoNetworkNode> nodes = createUiNodes(this.nodes);
-		List<DtoNetworkLink> links = createUiLinks(this.links);
+		List<DtoNetworkNode> nodes = createDtoNodes(this.nodes);
+		List<DtoNetworkLink> links = createDtoLinks(this.links);
 		DtoNetworkGraph ui = new DtoNetworkGraph(nodes, links, Collections.emptyList());
 		ui.setAnimationDuration(animationDuration);
 		mapAbstractConfigProperties(ui);
 		return ui;
 	}
 
-	private List<DtoNetworkNode> createUiNodes(List<ForceLayoutNode<RECORD>> nodes) {
+	private List<DtoNetworkNode> createDtoNodes(List<ForceLayoutNode<RECORD>> nodes) {
 		return nodes.stream()
-				.map(n -> createUiNode(n))
+				.map(n -> createDtoNode(n))
 				.collect(Collectors.toList());
 	}
 
-	private List<DtoNetworkLink> createUiLinks(List<ForceLayoutLink<RECORD>> links) {
+	private List<DtoNetworkLink> createDtoLinks(List<ForceLayoutLink<RECORD>> links) {
 		return links.stream()
 				.map(l -> l.toUiNetworkLink())
 				.collect(Collectors.toList());
 	}
 
-	private DtoNetworkNode createUiNode(ForceLayoutNode<RECORD> node) {
+	private DtoNetworkNode createDtoNode(ForceLayoutNode<RECORD> node) {
 		DtoNetworkNode uiNode = new DtoNetworkNode(node.getId(), node.getWidth(), node.getHeight());
 		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? node.getBackgroundColor().toHtmlColorString() : null);
 		uiNode.setBorderColor(node.getBorderColor() != null ? node.getBorderColor().toHtmlColorString() : null);
 		uiNode.setBorderWidth(node.getBorderWidth());
 		uiNode.setBorderRadius(node.getBorderRadius());
 		uiNode.setTemplate(node.getTemplate());
-		uiNode.setRecord(node.getRecord() != null ? createUiRecord(node) : null);
+		uiNode.setRecord(node.getRecord() != null ? createDtoRecord(node) : null);
 		uiNode.setExpandState(node.getExpandState());
-		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createUiTreeGraphNodeIcon() : null);
-		uiNode.setImage(node.getImage() != null ? node.getImage().createUiTreeGraphNodeImage() : null);
+		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createDtoTreeGraphNodeIcon() : null);
+		uiNode.setImage(node.getImage() != null ? node.getImage().createDtoTreeGraphNodeImage() : null);
 		uiNode.setDistanceFactor(node.getDistanceFactor());
 		return uiNode;
 	}
 
-	private DtoClientRecord createUiRecord(ForceLayoutNode<RECORD> node) {
+	private DtoClientRecord createDtoRecord(ForceLayoutNode<RECORD> node) {
 		DtoClientRecord uiClientRecord = new DtoClientRecord();
 		uiClientRecord.setValues(propertyProvider.getValues(node.getRecord(), node.getTemplate().getPropertyNames()));
 		return uiClientRecord;
@@ -153,7 +153,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent implements DtoNe
 	public void addNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink<RECORD>> links) {
 		this.nodes.addAll(nodes);
 		this.links.addAll(links);
-		clientObjectChannel.addNodesAndLinks(createUiNodes(nodes), createUiLinks(links));
+		clientObjectChannel.addNodesAndLinks(createDtoNodes(nodes), createDtoLinks(links));
 	}
 
 	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes) {

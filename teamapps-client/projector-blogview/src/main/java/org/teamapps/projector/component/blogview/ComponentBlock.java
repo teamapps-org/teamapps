@@ -31,7 +31,7 @@ public class ComponentBlock extends AbstractBlock {
 		this.height = height;
 	}
 
-	public DtoComponentBlock createUiBlock() {
+	public DtoComponentBlock createDtoBlock() {
 		DtoComponentBlock uiBlock = new DtoComponentBlock();
 		mapAbstractBlockAttributes(uiBlock);
 		uiBlock.setComponent(component);

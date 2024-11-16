@@ -97,12 +97,12 @@ public class WorkSpaceLayoutSplitPane extends WorkSpaceLayoutItem {
 	}
 
 	@Override
-	public DtoWorkSpaceLayoutItem createUiItem() {
+	public DtoWorkSpaceLayoutItem createDtoItem() {
 		DtoWorkSpaceLayoutSplitItem item = new DtoWorkSpaceLayoutSplitItem(
 				getId(),
 				splitDirection,
-				firstChild != null ? firstChild.createUiItem() : null,
-				lastChild != null ? lastChild.createUiItem() : null
+				firstChild != null ? firstChild.createDtoItem() : null,
+				lastChild != null ? lastChild.createDtoItem() : null
 		);
 		item.setSizePolicy(sizePolicy);
 		item.setReferenceChildSize(referenceChildSize);

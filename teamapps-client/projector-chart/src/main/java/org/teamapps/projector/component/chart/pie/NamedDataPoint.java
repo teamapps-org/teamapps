@@ -33,7 +33,7 @@ public class NamedDataPoint {
 		this.color = color;
 	}
 
-	public DtoChartNamedDataPoint createUiChartNamedDataPoint() {
+	public DtoChartNamedDataPoint createDtoChartNamedDataPoint() {
 		DtoChartNamedDataPoint ui = new DtoChartNamedDataPoint(name, value);
 		ui.setColor(color != null ? color.toHtmlColorString() : null);
 		return ui;

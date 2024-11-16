@@ -105,7 +105,7 @@ public class FontStyle {
 		return relativeFontSize;
 	}
 
-	public DtoFontStyle createUiFontStyle() {
+	public DtoFontStyle createDtoFontStyle() {
 		DtoFontStyle uiFontStyle = new DtoFontStyle();
 		uiFontStyle.setFontColor(fontColor != null ? fontColor.toHtmlColorString() : null);
 		uiFontStyle.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);

@@ -259,21 +259,21 @@ public class FormSection {
 		return this;
 	}
 
-	public DtoFormSection createUiFormSection() {
+	public DtoFormSection createDtoFormSection() {
 		List<DtoGridColumn> uiColumns = this.columns.stream()
 				.map(column -> column != null ? column.createDtoGridColumn() : null)
 				.collect(Collectors.toList());
 		List<DtoGridRow> rows = this.rows.stream()
-				.map(row -> row != null ? row.createUiGridRow() : null)
+				.map(row -> row != null ? row.createDtoGridRow() : null)
 				.collect(Collectors.toList());
 		List<DtoFormSectionPlacement> uiFieldPlacements = fieldPlacements.stream()
-				.map(fieldPlacement -> fieldPlacement != null ? fieldPlacement.createUiFormSectionPlacement() : null)
+				.map(fieldPlacement -> fieldPlacement != null ? fieldPlacement.createDtoFormSectionPlacement() : null)
 				.collect(Collectors.toList());
 		DtoFormSection uiSection = new DtoFormSection(id, uiColumns, rows, uiFieldPlacements);
-		uiSection.setMargin(this.margin != null ? this.margin.createUiSpacing() : null);
-		uiSection.setPadding(this.padding != null ? this.padding.createUiSpacing() : null);
-		uiSection.setBorder(this.border != null ? this.border.createUiBorder() : null);
-		uiSection.setShadow(this.shadow != null ? this.shadow.createUiShadow() : null);
+		uiSection.setMargin(this.margin != null ? this.margin.createDtoSpacing() : null);
+		uiSection.setPadding(this.padding != null ? this.padding.createDtoSpacing() : null);
+		uiSection.setBorder(this.border != null ? this.border.createDtoBorder() : null);
+		uiSection.setShadow(this.shadow != null ? this.shadow.createDtoShadow() : null);
 		uiSection.setDrawHeaderLine(this.drawHeaderLine);
 		uiSection.setBackgroundColor(this.backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiSection.setCollapsible(this.collapsible);

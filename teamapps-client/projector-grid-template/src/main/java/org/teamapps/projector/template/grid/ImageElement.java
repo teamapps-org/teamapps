@@ -124,12 +124,12 @@ public class ImageElement extends AbstractGridTemplateElement {
 	}
 
 	@Override
-	public DtoAbstractGridTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
 		DtoImageElement uiImageElement = new DtoImageElement(propertyName, row, column, width, height);
 		mapAbstractGridTemplateElementAttributesToUiElement(uiImageElement);
-		uiImageElement.setBorder(border != null ? border.createUiBorder() : null);
-		uiImageElement.setPadding(padding != null ? padding.createUiSpacing() : null);
-		uiImageElement.setShadow(shadow != null ? shadow.createUiShadow() : null);
+		uiImageElement.setBorder(border != null ? border.createDtoBorder() : null);
+		uiImageElement.setPadding(padding != null ? padding.createDtoSpacing() : null);
+		uiImageElement.setShadow(shadow != null ? shadow.createDtoShadow() : null);
 		uiImageElement.setImageSizing(imageSizing.toUiImageSizing());
 		return uiImageElement;
 	}

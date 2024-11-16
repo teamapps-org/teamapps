@@ -193,7 +193,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			column.setTable(this);
 		});
 			clientObjectChannel.addColumns(newColumns.stream()
-					.map(TableColumn::createUiTableColumn)
+					.map(TableColumn::createDtoTableColumn)
 					.collect(Collectors.toList()), index);
 	}
 
@@ -224,11 +224,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	@Override
 	public DtoComponent createConfig() {
 		List<DtoTableColumn> columns = this.columns.stream()
-				.map(TableColumn::createUiTableColumn)
+				.map(TableColumn::createDtoTableColumn)
 				.collect(Collectors.toList());
 		DtoTable uiTable = new DtoTable(columns);
 		mapAbstractConfigProperties(uiTable);
-		uiTable.setSelectionFrame(selectionFrame != null ? selectionFrame.createUiSelectionFrame() : null);
+		uiTable.setSelectionFrame(selectionFrame != null ? selectionFrame.createDtoSelectionFrame() : null);
 		uiTable.setDisplayStyle(displayStyle.toDto());
 		uiTable.setForceFitWidth(forceFitWidth);
 		uiTable.setRowHeight(rowHeight);
@@ -523,7 +523,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	protected void updateColumnMessages(TableColumn<RECORD, ?> tableColumn) {
 		clientObjectChannel.setColumnMessages(tableColumn.getPropertyName(), tableColumn.getMessages().stream()
-				.map(message -> message.createUiFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
+				.map(message -> message.createDtoFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
 				.collect(Collectors.toList()));
 	}
 
@@ -578,7 +578,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 					uiRecordId.getId(),
 					propertyName,
 					cellMessages.stream()
-							.map(m -> m.createUiFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
+							.map(m -> m.createDtoFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
 							.collect(Collectors.toList())
 			);
 		}
@@ -793,18 +793,18 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		}
 	}
 
-	private Map<String, List<DtoFieldMessage>> createUiFieldMessagesForRecord(Map<String, List<FieldMessage>> recordFieldMessages) {
+	private Map<String, List<DtoFieldMessage>> createDtoFieldMessagesForRecord(Map<String, List<FieldMessage>> recordFieldMessages) {
 		return recordFieldMessages.entrySet().stream()
 				.collect(Collectors.toMap(
 						entry -> entry.getKey(),
 						entry -> entry.getValue().stream()
-								.map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
+								.map(fieldMessage -> fieldMessage.createDtoFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS))
 								.collect(Collectors.toList())
 				));
 	}
 
 	@Override
-	protected DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+	protected DtoIdentifiableClientRecord createDtoIdentifiableClientRecord(RECORD record) {
 		DtoTableClientRecord clientRecord = new DtoTableClientRecord();
 		clientRecord.setId(++clientRecordIdCounter);
 		Map<String, Object> uxValues = extractRecordProperties(record);
@@ -812,7 +812,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), ((Field) column.getField()).convertServerValueToClientValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
 		clientRecord.setValues(uiValues);
 		clientRecord.setSelected(selectedRecords.stream().anyMatch(r -> customEqualsAndHashCode.getEquals().test(r, record)));
-		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
+		clientRecord.setMessages(createDtoFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
 		clientRecord.setMarkings(new ArrayList<>(markedCells.getOrDefault(record, Collections.emptySet())));
 		applyTransientChangesToClientRecord(clientRecord);
 		return clientRecord;

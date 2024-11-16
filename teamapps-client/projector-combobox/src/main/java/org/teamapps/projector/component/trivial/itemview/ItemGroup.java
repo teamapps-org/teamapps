@@ -53,7 +53,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 
 	private ItemGroupContainer<HEADERRECORD, RECORD> container;
 	private PropertyProvider<RECORD> itemPropertyProvider = new BeanPropertyExtractor<>();
-	private final ClientRecordCache<RECORD, DtoIdentifiableClientRecord> itemCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
+	private final ClientRecordCache<RECORD, DtoIdentifiableClientRecord> itemCache = new ClientRecordCache<>(this::createDtoIdentifiableClientRecord);
 
 	public ItemGroup() {
 		this(null);
@@ -73,7 +73,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		this.items.addAll(items != null ? items : Collections.emptyList());
 	}
 
-	public DtoItemViewItemGroup createUiItemViewItemGroup() {
+	public DtoItemViewItemGroup createDtoItemViewItemGroup() {
 		DtoItemViewItemGroup itemGroup = new DtoItemViewItemGroup(itemTemplate != null ? itemTemplate : null);
 		itemGroup.setId(clientId);
 		if (headerRecord != null) {
@@ -94,7 +94,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		return itemGroup;
 	}
 
-	private DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+	private DtoIdentifiableClientRecord createDtoIdentifiableClientRecord(RECORD record) {
 		DtoIdentifiableClientRecord clientRecord = new DtoIdentifiableClientRecord();
 		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));
 		return clientRecord;

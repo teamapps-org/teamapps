@@ -84,7 +84,7 @@ public class ShapeProperties {
 		this.strokeDashArray = strokeDashArray;
 	}
 
-	public DtoShapeProperties createUiShapeProperties() {
+	public DtoShapeProperties createDtoShapeProperties() {
 		DtoShapeProperties properties = new DtoShapeProperties();
 		properties.setFillColor(fillColor != null ? fillColor.toHtmlColorString() : null);
 		properties.setStrokeColor(strokeColor != null ? strokeColor.toHtmlColorString() : null);

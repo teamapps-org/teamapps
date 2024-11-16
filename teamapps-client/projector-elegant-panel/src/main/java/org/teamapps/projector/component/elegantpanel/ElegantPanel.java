@@ -51,7 +51,7 @@ public class ElegantPanel extends AbstractComponent implements DtoElegantPanelEv
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);
 		uiElegantPanel.setContent(content);
 		uiElegantPanel.setMaxContentWidth(maxContentWidth);
-		uiElegantPanel.setPadding(padding.createUiSpacing());
+		uiElegantPanel.setPadding(padding.createDtoSpacing());
 		uiElegantPanel.setHorizontalContentAlignment(horizontalContentAlignment);
 		return uiElegantPanel;
 	}

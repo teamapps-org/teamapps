@@ -49,11 +49,11 @@ public class ChatDisplay extends AbstractComponent implements DtoChatDisplayEven
 		this.model = model;
 		model.onMessagesAdded().addListener(chatMessages -> {
 			updateEarliestKnownMessageId(chatMessages);
-			clientObjectChannel.addMessages(createUiChatMessageBatch(chatMessages));
+			clientObjectChannel.addMessages(createDtoChatMessageBatch(chatMessages));
 		});
 		model.onMessageChanged().addListener((chatMessage) -> {
 			if (earliestKnownMessageId <= chatMessage.getId()) {
-				clientObjectChannel.updateMessage(createUiChatMessage(chatMessage));
+				clientObjectChannel.updateMessage(createDtoChatMessage(chatMessage));
 			}
 		});
 		model.onMessageDeleted().addListener((messageId) -> {
@@ -65,7 +65,7 @@ public class ChatDisplay extends AbstractComponent implements DtoChatDisplayEven
 			ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);
 			this.earliestKnownMessageId = Integer.MAX_VALUE;
 			updateEarliestKnownMessageId(messageBatch);
-			clientObjectChannel.clearMessages(createUiChatMessageBatch(messageBatch));
+			clientObjectChannel.clearMessages(createDtoChatMessageBatch(messageBatch));
 		});
 	}
 
@@ -75,7 +75,7 @@ public class ChatDisplay extends AbstractComponent implements DtoChatDisplayEven
 		mapAbstractConfigProperties(uiChatDisplay);
 		ChatMessageBatch modelResponse = model.getLastChatMessages(messagesFetchSize);
 		updateEarliestKnownMessageId(modelResponse);
-		uiChatDisplay.setInitialMessages(createUiChatMessageBatch(modelResponse));
+		uiChatDisplay.setInitialMessages(createDtoChatMessageBatch(modelResponse));
 		uiChatDisplay.setContextMenuEnabled(contextMenuProvider != null);
 		uiChatDisplay.setDeletedMessageIcon(getSessionContext().resolveIcon(deletedMessageIcon));
 		return uiChatDisplay;
@@ -89,7 +89,7 @@ public class ChatDisplay extends AbstractComponent implements DtoChatDisplayEven
 	public DtoChatMessageBatch handleRequestPreviousMessages() {
 		ChatMessageBatch response = model.getPreviousMessages(earliestKnownMessageId, messagesFetchSize);
 		updateEarliestKnownMessageId(response);
-		return createUiChatMessageBatch(response);
+		return createDtoChatMessageBatch(response);
 	}
 
 	@Override
@@ -99,35 +99,35 @@ public class ChatDisplay extends AbstractComponent implements DtoChatDisplayEven
 	}
 
 
-	private DtoChatMessageBatch createUiChatMessageBatch(ChatMessageBatch batch) {
-		List<DtoChatMessage> uiMessages = batch.getMessages().stream().map(this::createUiChatMessage).collect(Collectors.toList());
+	private DtoChatMessageBatch createDtoChatMessageBatch(ChatMessageBatch batch) {
+		List<DtoChatMessage> uiMessages = batch.getMessages().stream().map(this::createDtoChatMessage).collect(Collectors.toList());
 		return new DtoChatMessageBatch(uiMessages, batch.isContainsFirstMessage());
 	}
 
-	private DtoChatMessage createUiChatMessage(ChatMessage message) {
+	private DtoChatMessage createDtoChatMessage(ChatMessage message) {
 		DtoChatMessage uiChatMessage = new DtoChatMessage();
 		uiChatMessage.setId(message.getId());
 		uiChatMessage.setUserNickname(message.getUserNickname());
 		uiChatMessage.setUserImageUrl(message.getUserImage().getUrl(getSessionContext()));
 		uiChatMessage.setText(message.getText());
 		uiChatMessage.setPhotos(message.getPhotos() != null ? message.getPhotos().stream()
-				.map(photo -> createUiChatPhoto(photo))
+				.map(photo -> createDtoChatPhoto(photo))
 				.collect(Collectors.toList()) : null);
 		uiChatMessage.setFiles(message.getFiles() != null ? message.getFiles().stream()
-				.map(file -> createUiChatFile(file))
+				.map(file -> createDtoChatFile(file))
 				.collect(Collectors.toList()) : null);
 		uiChatMessage.setDeleted(message.isDeleted());
 		return uiChatMessage;
 	}
 
-	private DtoChatPhoto createUiChatPhoto(ChatPhoto photo) {
+	private DtoChatPhoto createDtoChatPhoto(ChatPhoto photo) {
 		DtoChatPhoto uiChatPhoto = new DtoChatPhoto();
 		uiChatPhoto.setThumbnailUrl(photo.getThumbnail() != null ? photo.getThumbnail().getUrl(getSessionContext()) : null);
 		uiChatPhoto.setImageUrl(photo.getImage().getUrl(getSessionContext()));
 		return uiChatPhoto;
 	}
 
-	private DtoChatFile createUiChatFile(ChatFile file) {
+	private DtoChatFile createDtoChatFile(ChatFile file) {
 		DtoChatFile uiChatFile = new DtoChatFile();
 		uiChatFile.setName(file.getName());
 		uiChatFile.setIcon(getSessionContext().resolveIcon(file.getIcon()));

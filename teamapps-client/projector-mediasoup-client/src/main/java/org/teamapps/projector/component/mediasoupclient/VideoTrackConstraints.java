@@ -44,7 +44,7 @@ public class VideoTrackConstraints {
 		this.frameRate = frameRate;
 	}
 
-	public DtoVideoTrackConstraints createUiVideoTrackConstraints() {
+	public DtoVideoTrackConstraints createDtoVideoTrackConstraints() {
 		DtoVideoTrackConstraints ui = new DtoVideoTrackConstraints();
 		ui.setHeight(height);
 		ui.setWidth(width);

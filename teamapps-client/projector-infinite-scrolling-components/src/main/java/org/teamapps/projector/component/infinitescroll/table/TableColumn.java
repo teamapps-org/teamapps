@@ -78,7 +78,7 @@ public class TableColumn<RECORD, VALUE> {
 		this.maxWidth = maxWidth;
 	}
 
-	public DtoTableColumn createUiTableColumn() {
+	public DtoTableColumn createDtoTableColumn() {
 		SessionContext context = CurrentSessionContext.get();
 		DtoTableColumn uiTableColumn = new DtoTableColumn(propertyName, context.resolveIcon(icon), title, field);
 		uiTableColumn.setDefaultWidth(defaultWidth);
@@ -90,7 +90,7 @@ public class TableColumn<RECORD, VALUE> {
 		uiTableColumn.setVisible(visible);
 		uiTableColumn.setHeaderAlignment(headerAlignment);
 		uiTableColumn.setHiddenIfOnlyEmptyCellsVisible(hiddenIfOnlyEmptyCellsVisible);
-		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
+		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createDtoFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
 		return uiTableColumn;
 	}
 

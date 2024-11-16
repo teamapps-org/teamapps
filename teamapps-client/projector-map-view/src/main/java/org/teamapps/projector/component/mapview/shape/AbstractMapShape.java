@@ -40,10 +40,10 @@ public abstract class AbstractMapShape {
 		this.properties = properties;
 	}
 
-	public abstract DtoAbstractMapShape createUiMapShape();
+	public abstract DtoAbstractMapShape createDtoMapShape();
 
 	protected void mapAbstractUiShapeProperties(DtoAbstractMapShape uiShape) {
-		uiShape.setShapeProperties(properties.createUiShapeProperties());
+		uiShape.setShapeProperties(properties.createDtoShapeProperties());
 	}
 
 

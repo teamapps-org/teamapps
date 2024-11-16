@@ -40,7 +40,7 @@ public class FieldMessage {
 		this.message = message;
 	}
 
-	public DtoFieldMessage createUiFieldMessage(FieldMessagePosition defaultPosition, FieldMessageVisibility defaultVisibility) {
+	public DtoFieldMessage createDtoFieldMessage(FieldMessagePosition defaultPosition, FieldMessageVisibility defaultVisibility) {
 		return new DtoFieldMessage(
 				severity,
 				message,

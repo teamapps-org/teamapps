@@ -43,7 +43,7 @@ public class GraphNodeImage {
 		this.height = height;
 	}
 
-	public DtoTreeGraphNodeImage createUiTreeGraphNodeImage() {
+	public DtoTreeGraphNodeImage createDtoTreeGraphNodeImage() {
 		DtoTreeGraphNodeImage ui = new DtoTreeGraphNodeImage(url, width, height);
 		ui.setCenterTopDistance(centerTopDistance);
 		ui.setCenterLeftDistance(centerLeftDistance);

@@ -149,7 +149,7 @@ public class FileItem {
 		this.fileField = fileField;
 	}
 
-	public DtoFileItem createUiFileItem() {
+	public DtoFileItem createDtoFileItem() {
 		DtoFileItem uiFileItem = new DtoFileItem();
 		uiFileItem.setUuid(uuid);
 		uiFileItem.setFileName(fileName);

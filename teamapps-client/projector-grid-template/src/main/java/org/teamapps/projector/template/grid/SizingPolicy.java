@@ -51,7 +51,7 @@ public class SizingPolicy {
 		return minAbsoluteSize;
 	}
 
-	public DtoSizingPolicy createUiSizingPolicy() {
+	public DtoSizingPolicy createDtoSizingPolicy() {
 		return new DtoSizingPolicy(type)
 				.setValue(value)
 				.setMinAbsoluteSize(minAbsoluteSize);

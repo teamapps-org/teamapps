@@ -48,7 +48,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 		return id;
 	}
 
-	abstract public DtoGraph createUiFormat();
+	abstract public DtoGraph createDtoFormat();
 
 	public Interval getDisplayedIntervalY() {
 		return displayedIntervalY;

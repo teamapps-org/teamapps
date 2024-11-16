@@ -39,12 +39,12 @@ public class Toolbar extends AbstractToolContainer implements DtoToolbarEventHan
 		List<DtoToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
 				.filter(group -> !group.isRightSide())
 				.sorted()
-				.map(group -> group.createUiToolbarButtonGroup())
+				.map(group -> group.createDtoToolbarButtonGroup())
 				.collect(Collectors.toList());
 		List<DtoToolbarButtonGroup> rightUiButtonGroups = buttonGroups.stream()
 				.filter(group -> group.isRightSide())
 				.sorted()
-				.map(group -> group.createUiToolbarButtonGroup())
+				.map(group -> group.createDtoToolbarButtonGroup())
 				.collect(Collectors.toList());
 		DtoToolbar uiToolbar = new DtoToolbar(leftUiButtonGroups, rightUiButtonGroups);
 		mapAbstractConfigProperties(uiToolbar);

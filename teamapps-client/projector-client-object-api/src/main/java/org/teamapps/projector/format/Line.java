@@ -50,7 +50,7 @@ public class Line {
 		return color;
 	}
 
-	public DtoLine createUiLine() {
+	public DtoLine createDtoLine() {
 		DtoLine dtoLine = new DtoLine();
 		dtoLine.setThickness(thickness);
 		dtoLine.setColor(color!= null ? color.toHtmlColorString() : null);

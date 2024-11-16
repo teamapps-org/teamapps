@@ -159,7 +159,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	}
 
 	@Override
-	protected DtoIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+	protected DtoIdentifiableClientRecord createDtoIdentifiableClientRecord(RECORD record) {
 		DtoIdentifiableClientRecord clientRecord = new DtoIdentifiableClientRecord();
 		clientRecord.setId(++clientRecordIdCounter);
 		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));

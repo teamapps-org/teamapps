@@ -47,7 +47,7 @@ public class IconElement extends AbstractGridTemplateElement<IconElement> {
 	}
 
 	@Override
-	public DtoAbstractGridTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
 		DtoIconElement uiIconElement = new DtoIconElement(propertyName, row, column, size);
 		mapAbstractGridTemplateElementAttributesToUiElement(uiIconElement);
 		return uiIconElement;

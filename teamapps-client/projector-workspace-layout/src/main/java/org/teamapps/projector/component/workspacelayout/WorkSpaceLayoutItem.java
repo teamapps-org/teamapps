@@ -47,7 +47,7 @@ public abstract class WorkSpaceLayoutItem {
 		return id;
 	}
 
-	public abstract DtoWorkSpaceLayoutItem createUiItem();
+	public abstract DtoWorkSpaceLayoutItem createDtoItem();
 
 	public abstract LayoutItemDefinition createLayoutDefinitionItem();
 

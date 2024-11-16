@@ -38,7 +38,7 @@ public abstract class AbstractBlock {
 		this.alignment = alignment;
 	}
 
-	public abstract DtoBlock createUiBlock();
+	public abstract DtoBlock createDtoBlock();
 
 	protected void mapAbstractBlockAttributes(DtoBlock uiBlock) {
 		uiBlock.setId(clientId);

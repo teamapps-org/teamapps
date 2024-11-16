@@ -63,7 +63,7 @@ public class PieChart extends AbstractComponent implements DtoPieChartEventHandl
 		uiPieChart.setHeight3D(height3D);
 		uiPieChart.setRotationClockwise(rotationClockwise);
 		uiPieChart.setInnerRadiusProportion(innerRadiusProportion);
-		uiPieChart.setDataPoints(createUiDataPoints());
+		uiPieChart.setDataPoints(createDtoDataPoints());
 		return uiPieChart;
 	}
 
@@ -75,9 +75,9 @@ public class PieChart extends AbstractComponent implements DtoPieChartEventHandl
 				.ifPresent(onDataPointClicked::fire);
 	}
 
-	private List<DtoChartNamedDataPoint> createUiDataPoints() {
+	private List<DtoChartNamedDataPoint> createDtoDataPoints() {
 		return dataPoints != null ? dataPoints.stream()
-				.map(NamedDataPoint::createUiChartNamedDataPoint)
+				.map(NamedDataPoint::createDtoChartNamedDataPoint)
 				.collect(Collectors.toList()) : Collections.emptyList();
 	}
 
@@ -150,6 +150,6 @@ public class PieChart extends AbstractComponent implements DtoPieChartEventHandl
 	public void setDataPoints(List<NamedDataPoint> dataPoints) {
 		this.dataPoints.clear();
 		this.dataPoints.addAll(dataPoints);
-		clientObjectChannel.setDataPoints(createUiDataPoints(), animationDuration);
+		clientObjectChannel.setDataPoints(createDtoDataPoints(), animationDuration);
 	}
 }

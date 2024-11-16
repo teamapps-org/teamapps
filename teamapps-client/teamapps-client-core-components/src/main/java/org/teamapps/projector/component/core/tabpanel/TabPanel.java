@@ -67,7 +67,7 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 		}
 		tabs.add(tab);
 		tab.setTabPanel(this);
-		clientObjectChannel.addTab(tab.createUiTab(), select);
+		clientObjectChannel.addTab(tab.createDtoTab(), select);
 	}
 
 	public void removeTab(Tab tab) {
@@ -141,7 +141,7 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 		DtoTabPanel uiTabPanel = new DtoTabPanel();
 		mapAbstractConfigProperties(uiTabPanel);
 		List<DtoTab> uiTabs = tabs.stream()
-				.map(tab -> tab != null ? tab.createUiTab() : null)
+				.map(tab -> tab != null ? tab.createDtoTab() : null)
 				.collect(Collectors.toList());
 		uiTabPanel.setTabs(uiTabs);
 		uiTabPanel.setSelectedTabId(this.getSelectedTab() != null ? this.getSelectedTab().getClientId() : null);

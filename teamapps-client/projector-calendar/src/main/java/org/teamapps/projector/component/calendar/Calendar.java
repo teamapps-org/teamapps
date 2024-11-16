@@ -68,7 +68,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 	private CalendarModel<CEVENT> model;
 	private PropertyProvider<CEVENT> propertyProvider = new BeanPropertyExtractor<>();
 
-	private final ClientRecordCache<CEVENT, DtoCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
+	private final ClientRecordCache<CEVENT, DtoCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createDtoCalendarEventClientRecord);
 
 	private CalendarEventTemplateDecider<CEVENT> templateDecider = //(calendarEvent, viewMode) -> null;
 			createStaticTemplateDecider(
@@ -133,7 +133,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 		return new CalendarBuilder<>();
 	}
 
-	private DtoCalendarEventClientRecord createUiCalendarEventClientRecord(CEVENT calendarEvent) {
+	private DtoCalendarEventClientRecord createDtoCalendarEventClientRecord(CEVENT calendarEvent) {
 		Template timeGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.WEEK);
 		Template dayGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.MONTH);
 		Template monthGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.YEAR);

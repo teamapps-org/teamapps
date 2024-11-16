@@ -36,7 +36,7 @@ public class GraphNodeIcon {
 		this.size = size;
 	}
 
-	public DtoTreeGraphNodeIcon createUiTreeGraphNodeIcon() {
+	public DtoTreeGraphNodeIcon createDtoTreeGraphNodeIcon() {
 		return new DtoTreeGraphNodeIcon(CurrentSessionContext.get().resolveIcon(icon), size);
 	}
 

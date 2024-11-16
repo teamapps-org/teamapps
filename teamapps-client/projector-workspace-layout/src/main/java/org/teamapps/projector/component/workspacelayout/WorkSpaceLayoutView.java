@@ -115,7 +115,7 @@ public class WorkSpaceLayoutView {
 		return workSpaceLayout.getSessionContext();
 	}
 
-	public DtoWorkSpaceLayoutView createUiView() {
+	public DtoWorkSpaceLayoutView createDtoView() {
 		String icon = getSessionContext().resolveIcon(panel.getIcon());
 		String title;
 		if (tabTitle != null) {

@@ -53,7 +53,7 @@ public class GlyphIconElement extends AbstractGridTemplateElement<GlyphIconEleme
 	}
 
 	@Override
-	public DtoAbstractGridTemplateElement createUiTemplateElement() {
+	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
 		DtoGlyphIconElement uiElement = new DtoGlyphIconElement(propertyName, row, column, size);
 		uiElement.setFontColor(fontColor != null ? fontColor.toHtmlColorString() : null);
 		mapAbstractGridTemplateElementAttributesToUiElement(uiElement);

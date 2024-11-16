@@ -138,7 +138,7 @@ public abstract class AbstractGridTemplateElement<C extends AbstractGridTemplate
 		return this;
 	}
 
-	public abstract DtoAbstractGridTemplateElement createUiTemplateElement();
+	public abstract DtoAbstractGridTemplateElement createDtoTemplateElement();
 
 	public Color getBackgroundColor() {
 		return backgroundColor;
@@ -154,7 +154,7 @@ public abstract class AbstractGridTemplateElement<C extends AbstractGridTemplate
 		uiElement.setColSpan(colSpan);
 		uiElement.setHorizontalAlignment(horizontalAlignment.toUiHorizontalElementAlignment());
 		uiElement.setVerticalAlignment(verticalAlignment.toUiVerticalElementAlignment());
-		uiElement.setMargin(margin != null ? margin.createUiSpacing() : null);
+		uiElement.setMargin(margin != null ? margin.createDtoSpacing() : null);
 		uiElement.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 	}
 }

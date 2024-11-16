@@ -49,10 +49,10 @@ public class GraphGroup extends AbstractGraph<GraphGroupData, GraphGroupModel> {
 	}
 
 	@Override
-	public DtoGraphGroup createUiFormat() {
+	public DtoGraphGroup createDtoFormat() {
 		DtoGraphGroup ui = new DtoGraphGroup();
 		mapAbstractLineChartDataDisplayProperties(ui);
-		ui.setGraphs(graphs.stream().map(AbstractGraph::createUiFormat).collect(Collectors.toList()));
+		ui.setGraphs(graphs.stream().map(AbstractGraph::createDtoFormat).collect(Collectors.toList()));
 		return ui;
 	}
 

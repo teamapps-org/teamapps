@@ -62,7 +62,7 @@ public class Tab {
 		this.lazyLoading = lazyLoading;
 	}
 
-	public DtoTab createUiTab() {
+	public DtoTab createDtoTab() {
 		SessionContext context = CurrentSessionContext.get();
 		DtoTab uiTab = new DtoTab(clientId, context.resolveIcon(icon), title);
 		uiTab.setCloseable(closeable);

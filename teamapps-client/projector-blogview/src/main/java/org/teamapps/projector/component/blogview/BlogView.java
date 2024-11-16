@@ -38,14 +38,14 @@ public class BlogView extends AbstractComponent implements DtoBlogViewEventHandl
 		DtoBlogView uiPageView = new DtoBlogView();
 		mapAbstractConfigProperties(uiPageView);
 		uiPageView.setBlocks(blocks.stream()
-				.map(block -> block.createUiBlock())
+				.map(block -> block.createDtoBlock())
 				.collect(Collectors.toList()));
 		return uiPageView;
 	}
 
 	public void addBlock(AbstractBlock block) {
 		blocks.add(block);
-		clientObjectChannel.addBlock(block.createUiBlock(), false, null);
+		clientObjectChannel.addBlock(block.createDtoBlock(), false, null);
 	}
 
 	public void removeBlock(AbstractBlock block) {

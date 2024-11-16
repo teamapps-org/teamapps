@@ -60,7 +60,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 		this.stripedArea = stripedArea;
 	}
 
-	public DtoHoseGraph createUiFormat() {
+	public DtoHoseGraph createDtoFormat() {
 		DtoHoseGraph ui = new DtoHoseGraph();
 		mapAbstractLineChartDataDisplayProperties(ui);
 
