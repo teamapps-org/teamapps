@@ -17,21 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.icon.material;
+package org.teamapps.icons.spi.annotation;
 
-import org.teamapps.icons.IconEncoderContext;
-import org.teamapps.icons.spi.IconEncoder;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public class MaterialIconEncoder implements IconEncoder<MaterialIcon> {
+/**
+ * Specifies the icon library of this icon class.
+ * <p>
+ * Icon classes SHOULD be annotated with this annotation.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface IconLibrary {
 
-	@Override
-	public String encodeIcon(MaterialIcon icon, IconEncoderContext context) {
-		MaterialIconStyle style = icon.getStyle();
-		if (style == null) {
-			return icon.getIconName();
-		} else {
-			return icon.getIconName() + "." + style.getStyleType() + "." + String.join(".", style.getColors());
-		}
-	}
+	Class<? extends org.teamapps.icons.spi.IconLibrary<?>> value();
 
 }

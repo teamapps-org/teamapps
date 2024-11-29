@@ -1,58 +1,65 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
- * Copyright (C) 2014 - 2022 TeamApps.org
- * ---
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =========================LICENSE_END==================================
- */
 package org.teamapps.icons.spi;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import org.teamapps.icons.*;
 
 /**
- * Defines an IconLibrary. Icon classes SHOULD be annotated with this annotation.
+ * Icon library.
  * <p>
- * All of the classes specified in this annotation MUST provide a default constructor!
+ * Implementations MUST provide a default constructor!
+ *
+ * @param <I>
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface IconLibrary {
+public interface IconLibrary<I extends Icon> {
 
 	/**
 	 * @return The name of this icon library. Should consist only of characters, digits and underscores. No "." allowed!
 	 */
-	String name();
+	String getName();
+
+	Class<I> getIconClass();
 
 	/**
-	 * @return The {@link IconEncoder} class that handles these icons.
+	 * Get the default style for this icon library.
+	 *
+	 * @see org.teamapps.icons.spi.annotation.IconLibrary
 	 */
-	Class<? extends IconEncoder> encoder();
+	IconStyle<I> getDefaultStyle();
 
 	/**
-	 * @return The {@link IconDecoder} class that handles these icons.
+	 * Encodes an icon instance as a string. This encoded string contains information about the icon and its style.
+	 * The library name should not be part of this string.
+	 * <p>
+	 * The string representation may be an arbitrary string, as long as it is an allowed string for URL path segments.
+	 * It should be safe to use <code>a-z A-Z 0-9 . - _ ~ ! $ ' ( ) * + , ; = : @</code>.
+	 * If the String contains parenthesis ("(" or ")"), it must make sure to close any opening one of them.
+	 * <p>
+	 * Note that this method MUST support encoding unstyled icons, i.e. icons that have no style set (null).
+	 *
+	 * @param icon    The icon to encode.
+	 * @param context the icon encoder context
+	 * @return The encoded icon
 	 */
-	Class<? extends IconDecoder> decoder();
+	String encodeIcon(I icon, IconEncoderContext context);
 
 	/**
-	 * @return The {@link IconLoader} class that handles these icons.
+	 * Produces an icon instance from an encoded icon {@link String} such as produced by {@link #encodeIcon(I, IconEncoderContext)}.
+	 * <p>
+	 * Implementations MUST support unstyled icons.
+	 *
+	 * @param encodedIconString The encoded icon String as produced by the corresponding {@link IconEncoder}.
+	 * @return The icon.
 	 */
-	Class<? extends IconLoader> loader();
+	I decodeIcon(String encodedIconString, IconDecoderContext context);
 
 	/**
-	 * @return A supplier class supplying the default style for this icon library.
+	 * Used for loading actual binary icons. Provides an {@link IconResource} for icon instance.
+	 * <p>
+	 * The specified icon MUST have a style set (unless the STYLE type is {@link Void}). Callers need to ensure this!
+	 * <p>
+	 * Implementations MAY therefore assume the icon's to be styled.
+	 *
+	 * @param size The size of the requested icon.
+	 * @return The icon in binary form and type and size of the icon (as {@link IconResource}), or null, if the icon could not be loaded.
 	 */
-	Class<? extends DefaultStyleSupplier> defaultStyleSupplier();
-
+	IconResource loadIcon(I icon, int size, IconLoaderContext context);
 }

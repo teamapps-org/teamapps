@@ -19,12 +19,20 @@
  */
 package org.teamapps.icons.composite;
 
-import org.teamapps.icons.IconStyle;
-import org.teamapps.icons.spi.DefaultStyleSupplier;
+import org.junit.Assert;
+import org.junit.Test;
+import org.teamapps.icon.TestIcon;
 
-public class CompositeIconDefaultStyleSupplier implements DefaultStyleSupplier<CompositeIcon> {
-	@Override
-	public IconStyle<CompositeIcon> getDefaultStyle() {
-		return null;
+public class CompositeIconLibraryTest {
+
+	@Test
+	public void testDecode() throws Exception {
+		CompositeIcon compositeIcon = new CompositeIconLibrary().decodeIcon("0(x)3(x)", qualifiedEncodedIcon -> TestIcon.A);
+		Assert.assertEquals(TestIcon.A, compositeIcon.getBaseIcon());
+		Assert.assertEquals(TestIcon.A, compositeIcon.getTopLeftIcon());
+		Assert.assertNull(compositeIcon.getBottomRightIcon());
+		Assert.assertNull(compositeIcon.getBottomLeftIcon());
+		Assert.assertNull(compositeIcon.getTopRightIcon());
 	}
+
 }

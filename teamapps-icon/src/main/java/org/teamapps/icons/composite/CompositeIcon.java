@@ -21,15 +21,9 @@ package org.teamapps.icons.composite;
 
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.IconStyle;
-import org.teamapps.icons.spi.IconLibrary;
+import org.teamapps.icons.spi.annotation.IconLibrary;
 
-@IconLibrary(
-		name = "composite",
-		encoder = CompositeIconEncoder.class,
-		decoder = CompositeIconDecoder.class,
-		loader = CompositeIconLoader.class,
-		defaultStyleSupplier = CompositeIconDefaultStyleSupplier.class
-)
+@IconLibrary(CompositeIconLibrary.class)
 public class CompositeIcon implements Icon {
 
 	private final Icon baseIcon;

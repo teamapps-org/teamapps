@@ -20,19 +20,13 @@
 package org.teamapps.icon.material;
 
 import org.teamapps.icons.Icon;
-import org.teamapps.icons.spi.IconLibrary;
+import org.teamapps.icons.spi.annotation.IconLibrary;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@IconLibrary(
-		name = "material",
-		encoder = MaterialIconEncoder.class,
-		decoder = MaterialIconDecoder.class,
-		loader = MaterialIconLoader.class,
-		defaultStyleSupplier = MaterialIconDefaultIconSupplier.class
-)
+@IconLibrary(MaterialIconLibrary.class)
 public class MaterialIcon implements Icon {
 
 	private static final Map<String, MaterialIcon> ICONS_BY_NAME = new HashMap<>();

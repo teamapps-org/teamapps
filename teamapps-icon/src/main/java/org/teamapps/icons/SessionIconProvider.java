@@ -19,9 +19,7 @@
  */
 package org.teamapps.icons;
 
-import org.teamapps.icons.spi.IconDecoder;
-import org.teamapps.icons.spi.IconEncoder;
-import org.teamapps.icons.spi.IconLoader;
+import org.teamapps.icons.spi.IconLibrary;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,15 +43,14 @@ public class SessionIconProvider {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public String encodeIcon(Icon icon, boolean fallbackToDefaultStyle) {
-		IconEncoder encoder = iconProvider.getIconEncoder(icon.getClass());
+		IconLibrary library = iconProvider.getIconLibrary(icon.getClass());
 
 		if (icon.getStyle() == null && fallbackToDefaultStyle) {
-			IconStyle style = defaultStyleByIconClass.computeIfAbsent(icon.getClass(), iconProvider::getDefaultStyle);
-			icon = style.apply(icon);
+			IconStyle defaultStyle = defaultStyleByIconClass.computeIfAbsent(icon.getClass(), c -> library.getDefaultStyle());
+			icon = defaultStyle.apply(icon);
 		}
 
-		return iconProvider.getLibraryName(icon) + "."
-				+ encoder.encodeIcon(icon, i -> encodeIcon(i, fallbackToDefaultStyle));
+		return library.getName() + "." + library.encodeIcon(icon, i -> encodeIcon(i, fallbackToDefaultStyle));
 	}
 
 	public Icon decodeIcon(String qualifiedEncodedIconString) {
@@ -72,8 +69,8 @@ public class SessionIconProvider {
 		iconProvider.registerIconLibrary(iconClass);
 	}
 
-	public <I extends Icon> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I> iconEncoder, IconDecoder<I> iconDecoder, IconLoader<I> iconLoader, IconStyle<I> defaultStyle) {
-		iconProvider.registerIconLibrary(iconClass, libraryName, iconEncoder, iconDecoder, iconLoader, defaultStyle);
+	public <I extends Icon> void registerIconLibrary(IconLibrary<I> iconLibrary) {
+		iconProvider.registerIconLibrary(iconLibrary);
 	}
 
 	public <I extends Icon> void setDefaultStyleForIconClass(Class<I> iconClass, IconStyle<I> defaultStyle) {

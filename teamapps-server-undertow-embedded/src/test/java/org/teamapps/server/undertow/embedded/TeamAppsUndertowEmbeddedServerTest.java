@@ -20,6 +20,7 @@
 package org.teamapps.server.undertow.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.icon.material.MaterialIconStyles;
 import org.teamapps.projector.notification.NotificationPosition;
 import org.teamapps.projector.notification.Notifications;
 import org.teamapps.projector.session.SessionContext;
@@ -37,7 +38,7 @@ public class TeamAppsUndertowEmbeddedServerTest {
 		WebController controller = (SessionContext sessionContext) -> {
 			EXECUTOR.scheduleAtFixedRate(() -> {
 				for (NotificationPosition pos : NotificationPosition.values()) {
-					Notifications.showNotification(sessionContext, pos, MaterialIcon.MESSAGE, "Hello World", null);
+					Notifications.showNotification(sessionContext, pos, MaterialIcon.MESSAGE.withStyle(MaterialIconStyles.GRADIENT_RED), "Hello World", null);
 				}
 			}, 2, 2, TimeUnit.SECONDS);
 		};

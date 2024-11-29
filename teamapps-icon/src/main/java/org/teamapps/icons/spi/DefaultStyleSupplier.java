@@ -21,6 +21,7 @@ package org.teamapps.icons.spi;
 
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.IconStyle;
+import org.teamapps.icons.spi.annotation.IconLibrary;
 
 /**
  * Provides the default style for an icon library.
