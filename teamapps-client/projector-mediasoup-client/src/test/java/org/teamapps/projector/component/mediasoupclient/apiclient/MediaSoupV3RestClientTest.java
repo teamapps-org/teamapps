@@ -20,8 +20,7 @@
 package org.teamapps.projector.component.mediasoupclient.apiclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MediaSoupV3RestClientTest {
 
@@ -55,7 +56,7 @@ public class MediaSoupV3RestClientTest {
 
 	@Test
 	public void testSerialization() throws Exception {
-		Assert.assertEquals("{\"stream\":\"x\"}", new ObjectMapper().writeValueAsString(new StreamData("x")));
+		assertEquals("{\"stream\":\"x\"}", new ObjectMapper().writeValueAsString(new StreamData("x")));
 	}
 
 }

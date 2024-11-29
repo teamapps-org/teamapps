@@ -22,14 +22,14 @@ package org.teamapps.server.threading;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Test;
-import org.teamapps.server.threading.CompletableFutureChainSequentialExecutorFactory;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CompletableFutureChainSequentialExecutorFactoryTest {
 
@@ -104,7 +104,7 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 		})
 				.get();
 
-		Assert.assertTrue(secondWasExecuted[0]);
+		assertTrue(secondWasExecuted[0]);
 	}
 
 	private void checkIntListContents(IntList executionOrderCheckingList, int rangeMax) {

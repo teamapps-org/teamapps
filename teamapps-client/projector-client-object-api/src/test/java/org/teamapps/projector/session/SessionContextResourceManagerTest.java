@@ -20,7 +20,7 @@
 package org.teamapps.projector.session;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.teamapps.projector.resource.FileResource;
 
 import java.io.File;

@@ -22,19 +22,14 @@ package org.teamapps.server.uisession.messagebuffer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.teamapps.dto.protocol.server.CMD;
 import org.teamapps.server.json.TeamAppsObjectMapperFactory;
-import org.teamapps.server.uisession.messagebuffer.ServerMessageBuffer;
-import org.teamapps.server.uisession.messagebuffer.ServerMessageBufferException;
-import org.teamapps.server.uisession.messagebuffer.ServerMessageBufferLengthOverflowException;
-import org.teamapps.server.uisession.messagebuffer.ServerMessageBufferSizeOverflowException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ServerMessageBufferTest {
 
@@ -161,22 +156,22 @@ public class ServerMessageBufferTest {
 			}
 		}
 
-		Assert.assertEquals(10, buffer.getBufferedMessagesCount());
+		assertEquals(10, buffer.getBufferedMessagesCount());
 
 		buffer.purgeTillMessage(8);
-		Assert.assertEquals(8, buffer.getBufferedMessagesCount());
+		assertEquals(8, buffer.getBufferedMessagesCount());
 
 		buffer.purgeTillMessage(10);
-		Assert.assertEquals(6, buffer.getBufferedMessagesCount());
+		assertEquals(6, buffer.getBufferedMessagesCount());
 
 		buffer.purgeTillMessage(11);
-		Assert.assertEquals(5, buffer.getBufferedMessagesCount());
+		assertEquals(5, buffer.getBufferedMessagesCount());
 
 		buffer.purgeTillMessage(12);
-		Assert.assertEquals("must not purge next consumable command", 4, buffer.getBufferedMessagesCount());
+		assertEquals(4, buffer.getBufferedMessagesCount(), "must not purge next consumable command");
 
 		buffer.purgeTillMessage(100);
-		Assert.assertEquals("must not purge next consumable command", 4, buffer.getBufferedMessagesCount());
+		assertEquals(4, buffer.getBufferedMessagesCount(), "must not purge next consumable command");
 	}
 
 	@Test

@@ -19,7 +19,7 @@
  */
 package org.teamapps.dsl.generate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.dsl.TeamAppsDtoParser;
 

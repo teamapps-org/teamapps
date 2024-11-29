@@ -18,11 +18,8 @@ requirements for the maven plugin:
 * add generated sources to compilation path
 * add result of JavaScript build process to JAR
 * sync pom version to package (optionally)
-
-ICONS:
-    make icons non-generic
-    make icons implement the Resolvable interface and refactor SessionContext.resolveIcon(Icon) to SessionContext.resolve(Resolvable)
-
+* make sure the teamapps plugin checks that teamapps dependencies are marked as provided!
+* make projector-client-object-api an implicit DTO dependency
 
 Low prio:
 Table:
@@ -33,24 +30,15 @@ BaseTemplate: icon and image are technically the same thing. so remove one of th
 
 Upgrade FullCalendar to version 6 (and get rid of moment.js there)
 
-check if component.setStyle() removes all old styles for this selector? If so, wanted?
-
-make sure the teamapps plugin checks that teamapps dependencies are marked as provided!
+Check if component.setStyle() removes all old styles for this selector? If so, is that wanted?
 
 Search for ""\sto\w+String" in java files. Try to find a better solution (Jackson Serializers?)
 
-plugin: make projector-client-object-api an implicit DTO dependency
-
-add Script and StyleSheet client object implementations
+* add Script and StyleSheet client object implementations
+* Replace setOnClickJavaScript(...) with invocation of JavaScript client object
 
 use external imports for references to concrete ClientObject instances instead of the generic ClientObject in DTOs. Example DtoTemplateField.template
 Also use this for DateTimeFormatDescriptor...
-
-Remove createProjectorEventBoundToUiEvent. A lambda toggling the event is trivial, now. And much more intuitive.
-
-Replace setOnClickJavaScript(...) with invocation of JavaScript client object
-
-rename SessionContext.runWithContext() to run()
 
 make Label NOT a field. It is not!
 

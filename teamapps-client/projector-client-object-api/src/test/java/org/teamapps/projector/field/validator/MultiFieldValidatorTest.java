@@ -21,7 +21,7 @@ package org.teamapps.projector.field.validator;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.teamapps.commons.event.Event;
 import org.teamapps.projector.clientobject.ClientObjectChannel;

@@ -19,18 +19,19 @@
  */
 package org.teamapps.projector.resource;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FileResourceTest {
 
 	@Test
 	public void testMimeTypes() throws Exception {
-		Assert.assertEquals("text/plain", new FileResource(new File("myFile.txt")).getMimeType());
-		Assert.assertEquals("video/mp4", new FileResource(new File("myFile.mp4")).getMimeType());
-		Assert.assertEquals("audio/mp4", new FileResource(new File("myFile.m4a")).getMimeType());
-		Assert.assertEquals("application/octet-stream", new FileResource(new File("myFile.xyz")).getMimeType());
+		assertEquals("text/plain", new FileResource(new File("myFile.txt")).getMimeType());
+		assertEquals("video/mp4", new FileResource(new File("myFile.mp4")).getMimeType());
+		assertEquals("audio/mp4", new FileResource(new File("myFile.m4a")).getMimeType());
+		assertEquals("application/octet-stream", new FileResource(new File("myFile.xyz")).getMimeType());
 	}
 }

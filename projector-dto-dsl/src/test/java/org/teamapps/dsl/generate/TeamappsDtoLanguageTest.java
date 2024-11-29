@@ -20,21 +20,24 @@
 package org.teamapps.dsl.generate;
 
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.teamapps.dsl.TeamAppsDtoParser;
 
 import java.io.IOException;
 import java.io.StringReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class TeamappsDtoLanguageTest {
 
-	@Test(expected = ParseCancellationException.class)
+	@Test
 	public void testErrorHandling() throws IOException {
 		System.err.println("The following parser error message is intended by the test case: ");
 		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("interface asdf extends x blah"));
-		parser.interfaceDeclaration();
+		
+		assertThatThrownBy(() -> parser.interfaceDeclaration())
+				.isInstanceOf(ParseCancellationException.class);
 	}
 
 	@Test

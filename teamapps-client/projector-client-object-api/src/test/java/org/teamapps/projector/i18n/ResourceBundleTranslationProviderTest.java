@@ -20,7 +20,7 @@
 package org.teamapps.projector.i18n;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 import java.util.MissingResourceException;

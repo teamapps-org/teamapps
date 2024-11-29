@@ -19,11 +19,9 @@
  */
 package org.teamapps.projector.dataextraction;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.teamapps.projector.dataextraction.BeanPropertyInjector;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BeanPropertyInjectorTest {
 
@@ -67,7 +65,7 @@ public class BeanPropertyInjectorTest {
 		BeanPropertyInjector<A> injector = new BeanPropertyInjector<>(true);
 		A record = new A();
 		injector.setValue(record, "finalField", "foo");
-		Assert.assertEquals("finalFieldValue", record.finalField);
+		assertEquals("finalFieldValue", record.finalField);
 	}
 
 	@Test

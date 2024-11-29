@@ -1,8 +1,8 @@
 package org.teamapps.projector.component.timegraph.model;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.teamapps.projector.component.timegraph.Interval;
 import org.teamapps.projector.component.timegraph.TimePartitioningUnit;
 import org.teamapps.projector.component.timegraph.datapoints.LineGraphDataPoint;
@@ -16,7 +16,7 @@ public class AggregatingLineGraphModelTest {
 
 	private AggregatingLineGraphModel model;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		model = new AggregatingLineGraphModel();
 		model.setGraphData(new ListLineGraphData(List.of(

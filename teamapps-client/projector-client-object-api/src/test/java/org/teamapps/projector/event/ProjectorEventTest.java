@@ -22,8 +22,7 @@ package org.teamapps.projector.event;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.awaitility.Awaitility;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.teamapps.commons.event.Disposable;
 import org.teamapps.commons.util.ExceptionUtil;
@@ -46,6 +45,7 @@ import java.util.function.Consumer;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
 
 public class ProjectorEventTest {
@@ -53,63 +53,63 @@ public class ProjectorEventTest {
 	@Test
 	public void testAddRemoveConsumerNonBound() {
 		ProjectorEvent<String> event = new ProjectorEvent<>();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 
 		Consumer<String> listener = s -> {
 		};
 		Disposable disposable = event.addListener(listener);
-		Assert.assertEquals(1, event.getListeners().size());
+		assertEquals(1, event.getListeners().size());
 
 		disposable.dispose();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 	}
 
 	@Test
 	public void testAddRemoveConsumerBoundToSessionContext() throws ExecutionException, InterruptedException {
 		ProjectorEvent<String> event = new ProjectorEvent<>();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 		Consumer<String> listener = s -> {
 		};
 
 		AtomicReference<Disposable> disposable = new AtomicReference<>();
 		doWithMockedSessionContext(() -> {
 			disposable.set(event.addListener(listener));
-			Assert.assertEquals(1, event.getListeners().size());
+			assertEquals(1, event.getListeners().size());
 		}).get();
 
 		disposable.get().dispose();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 	}
 
 	@Test
 	public void testAddRemoveRunnableNonBound() {
 		ProjectorEvent<String> event = new ProjectorEvent<>();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 
 		Runnable listener = () -> {
 		};
 		Disposable disposable = event.addListener(listener);
-		Assert.assertEquals(1, event.getListeners().size());
+		assertEquals(1, event.getListeners().size());
 
 		disposable.dispose();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 	}
 
 	@Test
 	public void testAddRemoveRunnableBoundToSessionContext() throws ExecutionException, InterruptedException {
 		ProjectorEvent<String> event = new ProjectorEvent<>();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 		Runnable listener = () -> {
 		};
 
 		AtomicReference<Disposable> disposable = new AtomicReference<>();
 		doWithMockedSessionContext(() -> {
 			disposable.set(event.addListener(listener));
-			Assert.assertEquals(1, event.getListeners().size());
+			assertEquals(1, event.getListeners().size());
 		}).get();
 
 		disposable.get().dispose();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class ProjectorEventTest {
 		SessionContext sessionContext = createDummySessionContext();
 
 		ProjectorEvent<String> event = new ProjectorEvent<>();
-		Assert.assertEquals(0, event.getListeners().size());
+		assertEquals(0, event.getListeners().size());
 
 		Consumer<String> boundConsumerListener = s -> {
 		};
@@ -238,17 +238,17 @@ public class ProjectorEventTest {
 		};
 
 		event.addListener(unboundConsumerListener);
-		Assert.assertEquals(1, event.getListeners().size());
+		assertEquals(1, event.getListeners().size());
 		sessionContext.runWithContext(() -> {
 			event.addListener(boundConsumerListener);
 			event.addListener(boundRunnableListener);
-			Assert.assertEquals(3, event.getListeners().size());
+			assertEquals(3, event.getListeners().size());
 		}).get();
 		event.addListener(unboundRunnableListener);
-		Assert.assertEquals(4, event.getListeners().size());
+		assertEquals(4, event.getListeners().size());
 
 		sessionContext.onDestroyed().fire();
-		Assert.assertEquals(2, event.getListeners().size());
+		assertEquals(2, event.getListeners().size());
 	}
 
 	@Test
