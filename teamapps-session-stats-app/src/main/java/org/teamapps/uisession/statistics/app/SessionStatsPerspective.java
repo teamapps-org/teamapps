@@ -79,7 +79,7 @@ public class SessionStatsPerspective {
 		table.addColumn("name", "Name", new TextField()).setValueExtractor(record -> record.getStatistics().getName());
 		table.addColumn("state", "State", new TemplateField<>(BaseTemplates.LIST_ITEM_SMALL_ICON_SINGLE_LINE)).setDefaultWidth(120)
 				.setValueExtractor(record -> {
-					Icon<?, ?> icon;
+					Icon icon;
 					UiSessionState state = record.getStatistics().getState();
 					if (state == UiSessionState.ACTIVE) {
 						icon = MaterialIcon.CHECK;

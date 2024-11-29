@@ -20,20 +20,21 @@
 package org.teamapps.icon;
 
 import org.teamapps.icons.Icon;
+import org.teamapps.icons.IconStyle;
 
 //@IconLibrary("example")
-public enum TestIcon implements Icon<TestIcon, Void> {
+public enum TestIcon implements Icon {
 
 	A, B;
 
 	@Override
-	public TestIcon withStyle(Void unused) {
-		return this;
+	public IconStyle<TestIcon> getStyle() {
+		return null;
 	}
 
 	@Override
-	public Void getStyle() {
-		return null;
+	public Icon unstyled() {
+		return this;
 	}
 
 

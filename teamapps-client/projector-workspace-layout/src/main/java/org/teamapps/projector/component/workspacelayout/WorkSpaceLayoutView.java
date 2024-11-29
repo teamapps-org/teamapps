@@ -55,7 +55,7 @@ public class WorkSpaceLayoutView {
 	private String tabTitle;
 	private boolean visible = true;
 
-	public WorkSpaceLayoutView(WorkSpaceLayout workSpaceLayout, Icon<?, ?> icon, String title, Component component, boolean closeable, boolean lazyLoading) {
+	public WorkSpaceLayoutView(WorkSpaceLayout workSpaceLayout, Icon icon, String title, Component component, boolean closeable, boolean lazyLoading) {
 		this(workSpaceLayout, new Panel(icon, title, component), null, closeable, lazyLoading);
 	}
 
@@ -67,7 +67,7 @@ public class WorkSpaceLayoutView {
 		this.lazyLoading = lazyLoading;
 	}
 
-	public WorkSpaceLayoutView(WorkSpaceLayout workSpaceLayout, Icon<?, ?> icon, String title, Component component) {
+	public WorkSpaceLayoutView(WorkSpaceLayout workSpaceLayout, Icon icon, String title, Component component) {
 		this(workSpaceLayout, icon, title, component, true, false);
 	}
 
@@ -139,11 +139,11 @@ public class WorkSpaceLayoutView {
 		panel.setContent(component);
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return panel.getIcon();
 	}
 
-	public void setIcon(Icon<?, ?> icon) {
+	public void setIcon(Icon icon) {
 		panel.setIcon(icon);
 	}
 
@@ -167,7 +167,7 @@ public class WorkSpaceLayoutView {
 		panel.setToolbar(toolbar);
 	}
 
-	public WorkSpaceLayoutView setLeftHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public WorkSpaceLayoutView setLeftHeaderField(Field<?> field, Icon icon, int minWidth, int maxWidth) {
 		panel.setLeftHeaderField(field, icon, minWidth, maxWidth);
 		return this;
 	}
@@ -176,7 +176,7 @@ public class WorkSpaceLayoutView {
 		return panel.getLeftHeaderField();
 	}
 
-	public WorkSpaceLayoutView setRightHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public WorkSpaceLayoutView setRightHeaderField(Field<?> field, Icon icon, int minWidth, int maxWidth) {
 		panel.setRightHeaderField(field, icon, minWidth, maxWidth);
 		return this;
 	}

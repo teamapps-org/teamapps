@@ -43,14 +43,14 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 	public final ProjectorEvent<WindowButtonType> onWindowButtonClicked = new ProjectorEvent<>(clientObjectChannel::toggleWindowButtonClickedEvent);
 
 	private String title;
-	private Icon<?, ?> icon;
+	private Icon icon;
 
 	private Field<?> leftHeaderField;
-	private Icon<?, ?> leftHeaderFieldIcon;
+	private Icon leftHeaderFieldIcon;
 	private int leftHeaderFieldMinWidth = 100;
 	private int leftHeaderFieldMaxWidth = 300;
 	private Field<?> rightHeaderField;
-	private Icon<?, ?> rightHeaderFieldIcon;
+	private Icon rightHeaderFieldIcon;
 	private int rightHeaderFieldMinWidth = 100;
 	private int rightHeaderFieldMaxWidth = 300;
 	private HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy = HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
@@ -69,11 +69,11 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		this(null, null, null);
 	}
 
-	public Panel(Icon<?, ?> icon, String title) {
+	public Panel(Icon icon, String title) {
 		this(icon, title, null);
 	}
 
-	public Panel(Icon<?, ?> icon, String title, Component content) {
+	public Panel(Icon icon, String title, Component content) {
 		this.icon = icon;
 		this.title = title;
 		setContent(content);
@@ -143,7 +143,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		uiPanel.setContentStretchingEnabled(contentStretchingEnabled);
 	}
 
-	public DtoPanelHeaderField createDtoPanelHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public DtoPanelHeaderField createDtoPanelHeaderField(Field<?> field, Icon icon, int minWidth, int maxWidth) {
 		if (field == null) {
 			return null;
 		}
@@ -154,7 +154,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		return uiPanelHeaderField;
 	}
 
-	public Panel setLeftHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public Panel setLeftHeaderField(Field<?> field, Icon icon, int minWidth, int maxWidth) {
 		this.leftHeaderField = field;
 		this.leftHeaderFieldIcon = icon;
 		this.leftHeaderFieldMinWidth = minWidth;
@@ -167,7 +167,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		return leftHeaderField;
 	}
 
-	public Panel setRightHeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public Panel setRightHeaderField(Field<?> field, Icon icon, int minWidth, int maxWidth) {
 		this.rightHeaderField = field;
 		this.rightHeaderFieldIcon = icon;
 		this.rightHeaderFieldMinWidth = minWidth;
@@ -199,11 +199,11 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		clientObjectChannel.setTitle(title);
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon<?, ?> icon) {
+	public void setIcon(Icon icon) {
 		this.icon = icon;
 		clientObjectChannel.setIcon(getSessionContext().resolveIcon(icon));
 	}
@@ -277,11 +277,11 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		setLeftHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth);
 	}
 
-	public Icon<?, ?> getLeftHeaderFieldIcon() {
+	public Icon getLeftHeaderFieldIcon() {
 		return leftHeaderFieldIcon;
 	}
 
-	public void setLeftHeaderFieldIcon(Icon<?, ?> leftHeaderFieldIcon) {
+	public void setLeftHeaderFieldIcon(Icon leftHeaderFieldIcon) {
 		setLeftHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth);
 	}
 
@@ -305,11 +305,11 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		setRightHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth);
 	}
 
-	public Icon<?, ?> getRightHeaderFieldIcon() {
+	public Icon getRightHeaderFieldIcon() {
 		return rightHeaderFieldIcon;
 	}
 
-	public void setRightHeaderFieldIcon(Icon<?, ?> rightHeaderFieldIcon) {
+	public void setRightHeaderFieldIcon(Icon rightHeaderFieldIcon) {
 		setRightHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth);
 
 	}

@@ -57,8 +57,8 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 	private int maxFiles = Integer.MAX_VALUE;
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
-	private Icon<?, ?> browseButtonIcon = MaterialIcon.FILE_UPLOAD;
-	private final Icon<?, ?> defaultItemIcon = MaterialIcon.CARD_TRAVEL;
+	private Icon browseButtonIcon = MaterialIcon.FILE_UPLOAD;
+	private final Icon defaultItemIcon = MaterialIcon.CARD_TRAVEL;
 
 	private String browseButtonCaption = getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD.getKey());
 
@@ -236,11 +236,11 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 		clientObjectChannel.setUploadUrl(uploadUrl);
 	}
 
-	public Icon<?, ?> getBrowseButtonIcon() {
+	public Icon getBrowseButtonIcon() {
 		return browseButtonIcon;
 	}
 
-	public void setBrowseButtonIcon(Icon<?, ?> browseButtonIcon) {
+	public void setBrowseButtonIcon(Icon browseButtonIcon) {
 		this.browseButtonIcon = browseButtonIcon;
 		clientObjectChannel.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));
 	}

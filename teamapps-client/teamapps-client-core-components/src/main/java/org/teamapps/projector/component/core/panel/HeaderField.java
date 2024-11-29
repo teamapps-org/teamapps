@@ -25,15 +25,15 @@ import org.teamapps.projector.component.field.Field;
 public class HeaderField {
 
 	private final Field<?> field;
-	private final Icon<?, ?> icon;
+	private final Icon icon;
 	private final int minWidth;
 	private final int maxWidth;
 
-	public HeaderField(Field<?> field, Icon<?, ?> icon) {
+	public HeaderField(Field<?> field, Icon icon) {
 		this(field, icon, 50, 200);
 	}
 
-	public HeaderField(Field<?> field, Icon<?, ?> icon, int minWidth, int maxWidth) {
+	public HeaderField(Field<?> field, Icon icon, int minWidth, int maxWidth) {
 		this.field = field;
 		this.icon = icon;
 		this.minWidth = minWidth;
@@ -44,7 +44,7 @@ public class HeaderField {
 		return field;
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 

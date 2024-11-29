@@ -20,10 +20,11 @@
 package org.teamapps.icon.material;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.icons.IconStyle;
 
 import java.util.Arrays;
 
-public class MaterialIconStyle {
+public class MaterialIconStyle implements IconStyle<MaterialIcon> {
 
 	private final MaterialIconStyleType styleType;
 	private final String[] colors;
@@ -38,6 +39,11 @@ public class MaterialIconStyle {
 		this.colors = Arrays.stream(colors)
 				.map(Color::toHtmlColorString)
 				.toArray(String[]::new);
+	}
+
+	@Override
+	public MaterialIcon apply(MaterialIcon icon) {
+		return icon.withStyle(this);
 	}
 
 	public MaterialIconStyleType getStyleType() {

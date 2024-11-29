@@ -28,7 +28,7 @@ import org.teamapps.icons.IconResource;
  *
  * @param <ICON>  The icon class this encoder can handle.
  */
-public interface IconLoader<ICON extends Icon<ICON, ?>> {
+public interface IconLoader<ICON extends Icon> {
 
 	/**
 	 * Loads an icon.

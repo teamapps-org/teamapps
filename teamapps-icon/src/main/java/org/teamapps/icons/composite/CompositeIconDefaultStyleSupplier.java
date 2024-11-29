@@ -19,11 +19,12 @@
  */
 package org.teamapps.icons.composite;
 
+import org.teamapps.icons.IconStyle;
 import org.teamapps.icons.spi.DefaultStyleSupplier;
 
-public class CompositeIconDefaultStyleSupplier implements DefaultStyleSupplier<Void> {
+public class CompositeIconDefaultStyleSupplier implements DefaultStyleSupplier<CompositeIcon> {
 	@Override
-	public Void getDefaultStyle() {
+	public IconStyle<CompositeIcon> getDefaultStyle() {
 		return null;
 	}
 }

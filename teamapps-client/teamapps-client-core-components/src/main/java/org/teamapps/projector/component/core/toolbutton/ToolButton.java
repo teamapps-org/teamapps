@@ -37,7 +37,7 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 
 	public final ProjectorEvent<Void> onDropDownOpened = new ProjectorEvent<>(clientObjectChannel::toggleDropDownOpenedEvent);
 
-	private Icon<?, ?> icon;
+	private Icon icon;
 	private Integer iconSize = null; // null = default defined by CSS
 	private String caption;
 	private String popoverText;
@@ -50,15 +50,15 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 
 	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
-	public ToolButton(Icon<?, ?> icon) {
+	public ToolButton(Icon icon) {
 		this(icon, null, null);
 	}
 
-	public ToolButton(Icon<?, ?> icon, String popoverText) {
+	public ToolButton(Icon icon, String popoverText) {
 		this(icon, popoverText, null);
 	}
 
-	public ToolButton(Icon<?, ?> icon, String popoverText, Component dropDownComponent) {
+	public ToolButton(Icon icon, String popoverText, Component dropDownComponent) {
 		super();
 		this.icon = icon;
 		this.popoverText = popoverText;
@@ -98,11 +98,11 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 		this.onDropDownOpened.fire();
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon<?, ?> icon) {
+	public void setIcon(Icon icon) {
 		this.icon = icon;
 		clientObjectChannel.setIcon(getSessionContext().resolveIcon(icon));
 	}

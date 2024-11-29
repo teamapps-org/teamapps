@@ -42,15 +42,15 @@ public class SimpleTreeNodeImpl<PAYLOAD> extends BaseTemplateRecord<PAYLOAD> imp
 		super(caption);
 	}
 
-	public SimpleTreeNodeImpl(Icon<?, ?> icon, String caption) {
+	public SimpleTreeNodeImpl(Icon icon, String caption) {
 		super(icon, caption);
 	}
 
-	public SimpleTreeNodeImpl(Icon<?, ?> icon, String caption, String description) {
+	public SimpleTreeNodeImpl(Icon icon, String caption, String description) {
 		super(icon, caption, description);
 	}
 
-	public SimpleTreeNodeImpl(Icon<?, ?> icon, String caption, String description, String badge) {
+	public SimpleTreeNodeImpl(Icon icon, String caption, String description, String badge) {
 		super(icon, caption, description, badge);
 	}
 
@@ -66,11 +66,11 @@ public class SimpleTreeNodeImpl<PAYLOAD> extends BaseTemplateRecord<PAYLOAD> imp
 		super(image, caption, description, badge);
 	}
 
-	public SimpleTreeNodeImpl(Icon<?, ?> icon, String image, String caption, String description, String badge) {
+	public SimpleTreeNodeImpl(Icon icon, String image, String caption, String description, String badge) {
 		super(icon, image, caption, description, badge);
 	}
 
-	public SimpleTreeNodeImpl(Icon<?, ?> icon, String image, String caption, String description, String badge, PAYLOAD payload) {
+	public SimpleTreeNodeImpl(Icon icon, String image, String caption, String description, String badge, PAYLOAD payload) {
 		super(icon, image, caption, description, badge, payload);
 	}
 

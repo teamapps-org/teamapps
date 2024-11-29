@@ -33,29 +33,30 @@ public class SessionIconProvider {
 
 	private final IconProvider iconProvider;
 
-	private final Map<Class<? extends Icon>, Object> defaultStyleByIconClass = new HashMap<>();
+	private final Map<Class<? extends Icon>, IconStyle<?>> defaultStyleByIconClass = new HashMap<>();
 
 	public SessionIconProvider(IconProvider iconProvider) {
 		this.iconProvider = iconProvider;
 	}
 
-	public <I extends Icon<I, S>, S> String encodeIcon(I icon) {
+	public String encodeIcon(Icon icon) {
 		return encodeIcon(icon, false);
 	}
 
-	public <I extends Icon<I, S>, S> String encodeIcon(I icon, boolean fallbackToDefaultStyle) {
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public String encodeIcon(Icon icon, boolean fallbackToDefaultStyle) {
 		IconEncoder encoder = iconProvider.getIconEncoder(icon.getClass());
 
 		if (icon.getStyle() == null && fallbackToDefaultStyle) {
-			S style =  (S) defaultStyleByIconClass.computeIfAbsent(icon.getClass(), iClass -> iconProvider.getDefaultStyle(iClass));
-			icon = icon.withStyle(style);
+			IconStyle style = defaultStyleByIconClass.computeIfAbsent(icon.getClass(), iconProvider::getDefaultStyle);
+			icon = style.apply(icon);
 		}
 
 		return iconProvider.getLibraryName(icon) + "."
-				+ encoder.encodeIcon(icon, i -> encodeIcon((Icon) i, fallbackToDefaultStyle));
+				+ encoder.encodeIcon(icon, i -> encodeIcon(i, fallbackToDefaultStyle));
 	}
 
-	public Icon<?, ?> decodeIcon(String qualifiedEncodedIconString) {
+	public Icon decodeIcon(String qualifiedEncodedIconString) {
 		return iconProvider.decodeIcon(qualifiedEncodedIconString);
 	}
 
@@ -63,19 +64,19 @@ public class SessionIconProvider {
 		return iconProvider.loadIcon(qualifiedEncodedIconString, size);
 	}
 
-	public IconResource loadIcon(Icon<?, ?> icon, int size) {
+	public IconResource loadIcon(Icon icon, int size) {
 		return iconProvider.loadIcon(icon, size);
 	}
 
-	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass) {
+	public void registerIconLibrary(Class<? extends Icon> iconClass) {
 		iconProvider.registerIconLibrary(iconClass);
 	}
 
-	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I> iconEncoder, IconDecoder<I> iconDecoder, IconLoader<I> iconLoader, S defaultStyle) {
+	public <I extends Icon> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I> iconEncoder, IconDecoder<I> iconDecoder, IconLoader<I> iconLoader, IconStyle<I> defaultStyle) {
 		iconProvider.registerIconLibrary(iconClass, libraryName, iconEncoder, iconDecoder, iconLoader, defaultStyle);
 	}
 
-	public <I extends Icon<I, S>, S> void setDefaultStyleForIconClass(Class<I> iconClass, S defaultStyle) {
+	public <I extends Icon> void setDefaultStyleForIconClass(Class<I> iconClass, IconStyle<I> defaultStyle) {
 		iconProvider.registerIconLibrary(iconClass);
 		defaultStyleByIconClass.put(iconClass, defaultStyle);
 	}

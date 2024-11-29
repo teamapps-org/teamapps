@@ -40,7 +40,7 @@ public class Label extends AbstractField<String> implements DtoLabelEventHandler
 	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
 	private String caption;
-	private Icon<?, ?> icon;
+	private Icon icon;
 	private Component targetComponent;
 
 	public Label(String caption) {
@@ -51,11 +51,11 @@ public class Label extends AbstractField<String> implements DtoLabelEventHandler
 		this(caption, null, targetComponent);
 	}
 
-	public Label(String caption, Icon<?, ?> icon) {
+	public Label(String caption, Icon icon) {
 		this(caption, icon, null);
 	}
 
-	public Label(String caption, Icon<?, ?> icon, Component targetComponent) {
+	public Label(String caption, Icon icon, Component targetComponent) {
 		this.caption = caption;
 		this.icon = icon;
 		this.targetComponent = targetComponent;
@@ -84,11 +84,11 @@ public class Label extends AbstractField<String> implements DtoLabelEventHandler
 		clientObjectChannel.setCaption(caption);
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon<?, ?> icon) {
+	public void setIcon(Icon icon) {
 		this.icon = icon;
 		clientObjectChannel.setIcon(getSessionContext().resolveIcon(icon));
 	}

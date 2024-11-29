@@ -52,15 +52,15 @@ public class ViewImpl implements View {
         closable = false;
     }
 
-    public ViewImpl(Icon<?, ?> icon, String title, Component component) {
+    public ViewImpl(Icon icon, String title, Component component) {
         this(null, icon, title, component);
     }
 
-    public ViewImpl(String layoutPosition, Icon<?, ?> icon, String title, Component component) {
+    public ViewImpl(String layoutPosition, Icon icon, String title, Component component) {
         this(layoutPosition, icon, title, component, false);
     }
 
-    public ViewImpl(String layoutPosition, Icon<?, ?> icon, String title, Component component, boolean closable) {
+    public ViewImpl(String layoutPosition, Icon icon, String title, Component component, boolean closable) {
         this.layoutPosition = layoutPosition;
         panel.setIcon(icon);
         panel.setTitle(title);

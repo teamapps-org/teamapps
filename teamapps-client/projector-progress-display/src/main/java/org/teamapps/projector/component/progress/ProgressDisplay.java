@@ -39,13 +39,13 @@ public class ProgressDisplay extends AbstractComponent implements DtoProgressDis
 	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 	public final ProjectorEvent<Void> onCancelButtonClicked = new ProjectorEvent<>(clientObjectChannel::toggleClickEvent);
 
-	private Icon<?, ?> icon;
+	private Icon icon;
 	private String taskName;
 	private ObservableProgress progress;
 
 	private Disposable listenerDisposable;
 
-	public ProgressDisplay(Icon<?, ?> icon, String taskName, ObservableProgress progress) {
+	public ProgressDisplay(Icon icon, String taskName, ObservableProgress progress) {
 		this.icon = icon;
 		this.taskName = taskName;
 		setProgress(progress);
@@ -97,11 +97,11 @@ public class ProgressDisplay extends AbstractComponent implements DtoProgressDis
 		return progress;
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Icon<?, ?> icon) {
+	public void setIcon(Icon icon) {
 		this.icon = icon;
 		updateUi();
 	}

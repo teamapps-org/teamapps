@@ -73,11 +73,11 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 		return new Button(template, templateRecord, null);
 	}
 
-	public static Button create(Template template, Icon<?, ?> icon, String caption, Component dropDownComponent) {
+	public static Button create(Template template, Icon icon, String caption, Component dropDownComponent) {
 		return new Button(template, new BaseTemplateRecord<>(icon, caption), dropDownComponent);
 	}
 
-	public static Button create(Template template, Icon<?, ?> icon, String caption) {
+	public static Button create(Template template, Icon icon, String caption) {
 		return create(template, icon, caption, null);
 	}
 
@@ -85,7 +85,7 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 		return create(template, null, caption, null);
 	}
 
-	public static Button create(Icon<?, ?> icon, String caption, Component dropDownComponent) {
+	public static Button create(Icon icon, String caption, Component dropDownComponent) {
 		return create(BaseTemplates.BUTTON, icon, caption, dropDownComponent);
 	}
 
@@ -93,7 +93,7 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 		return create(BaseTemplates.BUTTON, null, caption, dropDownComponent);
 	}
 
-	public static Button create(Icon<?, ?> icon, String caption) {
+	public static Button create(Icon icon, String caption) {
 		return create(BaseTemplates.BUTTON, icon, caption, null);
 	}
 

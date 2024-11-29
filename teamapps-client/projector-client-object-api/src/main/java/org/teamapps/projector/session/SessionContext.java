@@ -31,6 +31,7 @@ import org.teamapps.commons.event.Event;
 import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.dto.protocol.server.*;
 import org.teamapps.icons.Icon;
+import org.teamapps.icons.IconStyle;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.projector.DtoGlobals;
 import org.teamapps.projector.annotation.ClientObjectTypeName;
@@ -104,7 +105,7 @@ public class SessionContext {
 	 * Allows for replacing icons with other icons, globally. This comes handy if components use icons that are not compatible
 	 * with the general appearance of the application.
 	 */
-	private Function<Icon<?, ?>, Icon<?, ?>> iconTransformer = Function.identity();
+	private Function<Icon, Icon> iconTransformer = Function.identity();
 
 	private final InternalUiSessionListener uiSessionListener = new InternalUiSessionListener();
 
@@ -237,7 +238,7 @@ public class SessionContext {
 		return translationProvider;
 	}
 
-	public void setIconTransformer(Function<Icon<?, ?>, Icon<?, ?>> iconTransformer) {
+	public void setIconTransformer(Function<Icon, Icon> iconTransformer) {
 		this.iconTransformer = iconTransformer;
 	}
 
@@ -415,13 +416,13 @@ public class SessionContext {
 		return iconProvider;
 	}
 
-	public <I extends Icon<I, S>, S> void setDefaultStyleForIconClass(Class<I> iconClass, S defaultStyle) {
+	public <I extends Icon> void setDefaultStyleForIconClass(Class<I> iconClass, IconStyle<I> defaultStyle) {
 		this.runWithContext(() -> {
 			iconProvider.setDefaultStyleForIconClass(iconClass, defaultStyle);
 		});
 	}
 
-	public String resolveIcon(Icon<?, ?> icon) {
+	public String resolveIcon(Icon icon) {
 		if (icon == null) {
 			return null;
 		}
@@ -553,7 +554,7 @@ public class SessionContext {
 		sendStaticCommand(null, "goToUrlCommand", "goToUrl", url, blankPage);
 	}
 
-	public void setFavicon(Icon<?, ?> icon) {
+	public void setFavicon(Icon icon) {
 		setFavicon(resolveIcon(icon));
 	}
 

@@ -25,12 +25,12 @@ import org.teamapps.projector.resolvable.Resolvable;
 public class SimpleChatFile implements ChatFile {
 
 	private final String name;
-	private final Icon<?, ?> icon;
+	private final Icon icon;
 	private final long length;
 	private final Resolvable thumbnail;
 	private final Resolvable download;
 
-	public SimpleChatFile(String name, Icon<?, ?> icon, Resolvable thumbnail, Resolvable download, long sizeInBytes) {
+	public SimpleChatFile(String name, Icon icon, Resolvable thumbnail, Resolvable download, long sizeInBytes) {
 		this.name = name;
 		this.icon = icon;
 		this.thumbnail = thumbnail;
@@ -44,7 +44,7 @@ public class SimpleChatFile implements ChatFile {
 	}
 
 	@Override
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 

@@ -33,7 +33,7 @@ import java.util.Map;
 		loader = MaterialIconLoader.class,
 		defaultStyleSupplier = MaterialIconDefaultIconSupplier.class
 )
-public class MaterialIcon implements Icon<MaterialIcon, MaterialIconStyle> {
+public class MaterialIcon implements Icon {
 
 	private static final Map<String, MaterialIcon> ICONS_BY_NAME = new HashMap<>();
 
@@ -1000,7 +1000,6 @@ public class MaterialIcon implements Icon<MaterialIcon, MaterialIconStyle> {
 		return iconName;
 	}
 
-	@Override
 	public MaterialIcon withStyle(MaterialIconStyle style) {
 		return new MaterialIcon(iconName, style);
 	}
@@ -1008,5 +1007,10 @@ public class MaterialIcon implements Icon<MaterialIcon, MaterialIconStyle> {
 	@Override
 	public MaterialIconStyle getStyle() {
 		return style;
+	}
+
+	@Override
+	public Icon unstyled() {
+		return new MaterialIcon(iconName, null);
 	}
 }

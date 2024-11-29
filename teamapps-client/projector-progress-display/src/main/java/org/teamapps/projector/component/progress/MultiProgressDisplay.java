@@ -72,7 +72,7 @@ public class MultiProgressDisplay extends AbstractComponent implements DtoMultiP
 		this.onClosed.fire();
 	}
 
-	public void addProgress(Icon<?, ?> icon, String taskName, ObservableProgress progress) {
+	public void addProgress(Icon icon, String taskName, ObservableProgress progress) {
 		ProgressDisplay progressDisplay = new ProgressDisplay(icon, taskName, progress);
 		this.progressDisplaysByProgress.put(progress, progressDisplay);
 		progress.onChanged().addListener(data -> {

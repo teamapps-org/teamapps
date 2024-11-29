@@ -58,8 +58,8 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 	private String fileTooLargeMessage;
 	private String uploadErrorMessage;
 
-	private Icon<?, ?> browseButtonIcon = MaterialIcon.EDIT;
-	private Icon<?, ?> deleteButtonIcon = MaterialIcon.DELETE;
+	private Icon browseButtonIcon = MaterialIcon.EDIT;
+	private Icon deleteButtonIcon = MaterialIcon.DELETE;
 
 	private int targetImageWidth = 240;
 	private int targetImageHeight = 240;
@@ -258,19 +258,19 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 		clientObjectChannel.setUploadErrorMessage(uploadErrorMessage);
 	}
 
-	public Icon<?, ?> getBrowseButtonIcon() {
+	public Icon getBrowseButtonIcon() {
 		return browseButtonIcon;
 	}
 
-	public void setBrowseButtonIcon(Icon<?, ?> browseButtonIcon) {
+	public void setBrowseButtonIcon(Icon browseButtonIcon) {
 		this.browseButtonIcon = browseButtonIcon;
 	}
 
-	public Icon<?, ?> getDeleteButtonIcon() {
+	public Icon getDeleteButtonIcon() {
 		return deleteButtonIcon;
 	}
 
-	public void setDeleteButtonIcon(Icon<?, ?> deleteButtonIcon) {
+	public void setDeleteButtonIcon(Icon deleteButtonIcon) {
 		this.deleteButtonIcon = deleteButtonIcon;
 	}
 

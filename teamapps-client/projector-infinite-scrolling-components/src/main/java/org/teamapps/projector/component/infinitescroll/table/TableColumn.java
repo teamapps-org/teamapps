@@ -36,7 +36,7 @@ public class TableColumn<RECORD, VALUE> {
 	private Table<RECORD> table;
 
 	private final String propertyName;
-	private Icon<?, ?> icon;
+	private Icon icon;
 	private String title;
 	private Field<VALUE> field;
 	private int minWidth;
@@ -60,15 +60,15 @@ public class TableColumn<RECORD, VALUE> {
 		this(propertyName, null, title, field, 0, DEFAULT_WIDTH, 0);
 	}
 
-	public TableColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field) {
+	public TableColumn(String propertyName, Icon icon, String title, Field<VALUE> field) {
 		this(propertyName, icon, title, field, 0, DEFAULT_WIDTH, 0);
 	}
 
-	public TableColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field, int defaultWidth) {
+	public TableColumn(String propertyName, Icon icon, String title, Field<VALUE> field, int defaultWidth) {
 		this(propertyName, icon, title, field, 0, defaultWidth, 0);
 	}
 
-	public TableColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field, int minWidth, int defaultWidth, int maxWidth) {
+	public TableColumn(String propertyName, Icon icon, String title, Field<VALUE> field, int minWidth, int defaultWidth, int maxWidth) {
 		this.propertyName = propertyName;
 		this.icon = icon;
 		this.title = title;
@@ -119,11 +119,11 @@ public class TableColumn<RECORD, VALUE> {
 		}
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 
-	public TableColumn<RECORD, VALUE> setIcon(Icon<?, ?> icon) {
+	public TableColumn<RECORD, VALUE> setIcon(Icon icon) {
 		this.icon = icon;
 		return this;
 	}

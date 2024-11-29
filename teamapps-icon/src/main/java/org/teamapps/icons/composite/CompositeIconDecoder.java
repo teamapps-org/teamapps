@@ -34,11 +34,11 @@ public class CompositeIconDecoder implements IconDecoder<CompositeIcon> {
 	public CompositeIcon decodeIcon(String encodedIconString, IconDecoderContext context) {
 		Map<Integer, String> subIconDescriptionsByPositionIndex = extractSubIconDescriptions(encodedIconString);
 
-		Icon<?, ?> baseIcon = context.decodeIcon(subIconDescriptionsByPositionIndex.get(0));
-		Icon<?, ?> bottomRight = subIconDescriptionsByPositionIndex.containsKey(1) ? context.decodeIcon(subIconDescriptionsByPositionIndex.get(1)) : null;
-		Icon<?, ?> bottomLeft = subIconDescriptionsByPositionIndex.containsKey(2) ? context.decodeIcon(subIconDescriptionsByPositionIndex.get(2)) : null;
-		Icon<?, ?> topLeft = subIconDescriptionsByPositionIndex.containsKey(3) ? context.decodeIcon(subIconDescriptionsByPositionIndex.get(3)) : null;
-		Icon<?, ?> topRight = subIconDescriptionsByPositionIndex.containsKey(4) ? context.decodeIcon(subIconDescriptionsByPositionIndex.get(4)) : null;
+		Icon baseIcon = context.decodeIcon(subIconDescriptionsByPositionIndex.get(0));
+		Icon bottomRight = subIconDescriptionsByPositionIndex.containsKey(1) ? context.decodeIcon(subIconDescriptionsByPositionIndex.get(1)) : null;
+		Icon bottomLeft = subIconDescriptionsByPositionIndex.containsKey(2) ? context.decodeIcon(subIconDescriptionsByPositionIndex.get(2)) : null;
+		Icon topLeft = subIconDescriptionsByPositionIndex.containsKey(3) ? context.decodeIcon(subIconDescriptionsByPositionIndex.get(3)) : null;
+		Icon topRight = subIconDescriptionsByPositionIndex.containsKey(4) ? context.decodeIcon(subIconDescriptionsByPositionIndex.get(4)) : null;
 		
 		return CompositeIcon.of(baseIcon, bottomRight, bottomLeft, topLeft, topRight);
 	}

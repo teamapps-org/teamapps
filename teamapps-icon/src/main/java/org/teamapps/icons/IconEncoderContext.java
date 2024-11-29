@@ -21,6 +21,6 @@ package org.teamapps.icons;
 
 public interface IconEncoderContext {
 
-	String encodeIcon(Icon<?, ?> icon);
+	String encodeIcon(Icon icon);
 
 }

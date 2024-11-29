@@ -41,7 +41,7 @@ public class ChatDisplay extends AbstractComponent implements DtoChatDisplayEven
 	private int messagesFetchSize = 50;
 	private int earliestKnownMessageId = Integer.MAX_VALUE;
 
-	private Icon<?, ?> deletedMessageIcon = MaterialIcon.DELETE.withStyle(MaterialIconStyles.OUTLINE_GREY_900);
+	private Icon deletedMessageIcon = MaterialIcon.DELETE.withStyle(MaterialIconStyles.OUTLINE_GREY_900);
 
 	private Function<ChatMessage, Component> contextMenuProvider = null;
 
@@ -162,11 +162,11 @@ public class ChatDisplay extends AbstractComponent implements DtoChatDisplayEven
 		clientObjectChannel.closeContextMenu();
 	}
 
-	public Icon<?, ?> getDeletedMessageIcon() {
+	public Icon getDeletedMessageIcon() {
 		return deletedMessageIcon;
 	}
 
-	public void setDeletedMessageIcon(Icon<?, ?> deletedMessageIcon) {
+	public void setDeletedMessageIcon(Icon deletedMessageIcon) {
 		this.deletedMessageIcon = deletedMessageIcon;
 		clientObjectChannel.setDeletedMessageIcon(getSessionContext().resolveIcon(deletedMessageIcon));
 	}

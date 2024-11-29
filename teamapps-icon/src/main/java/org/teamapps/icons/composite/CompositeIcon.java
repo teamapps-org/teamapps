@@ -20,6 +20,7 @@
 package org.teamapps.icons.composite;
 
 import org.teamapps.icons.Icon;
+import org.teamapps.icons.IconStyle;
 import org.teamapps.icons.spi.IconLibrary;
 
 @IconLibrary(
@@ -29,23 +30,23 @@ import org.teamapps.icons.spi.IconLibrary;
 		loader = CompositeIconLoader.class,
 		defaultStyleSupplier = CompositeIconDefaultStyleSupplier.class
 )
-public class CompositeIcon implements Icon<CompositeIcon, Void> {
+public class CompositeIcon implements Icon {
 
-	private final Icon<?, ?> baseIcon;
-	private	final Icon<?, ?> bottomRightIcon;
-	private	final Icon<?, ?> bottomLeftIcon;
-	private	final Icon<?, ?> topLeftIcon;
-	private	final Icon<?, ?> topRightIcon;
+	private final Icon baseIcon;
+	private	final Icon bottomRightIcon;
+	private	final Icon bottomLeftIcon;
+	private	final Icon topLeftIcon;
+	private	final Icon topRightIcon;
 
-	public static CompositeIcon of(Icon<?, ?> baseIcon, Icon<?, ?> bottomRightIcon) {
+	public static CompositeIcon of(Icon baseIcon, Icon bottomRightIcon) {
 		return new CompositeIcon(baseIcon, bottomRightIcon, null, null, null);
 	}
 
-	public static CompositeIcon of(Icon<?, ?> baseIcon, Icon<?, ?> bottomRightIcon, Icon<?, ?> bottomLeftIcon, Icon<?, ?> topLeftIcon, Icon<?, ?> topRightIcon) {
+	public static CompositeIcon of(Icon baseIcon, Icon bottomRightIcon, Icon bottomLeftIcon, Icon topLeftIcon, Icon topRightIcon) {
 		return new CompositeIcon(baseIcon, bottomRightIcon, bottomLeftIcon, topLeftIcon, topRightIcon);
 	}
 
-	private CompositeIcon(Icon<?, ?> baseIcon, Icon<?, ?> bottomRightIcon, Icon<?, ?> bottomLeftIcon, Icon<?, ?> topLeftIcon, Icon<?, ?> topRightIcon) {
+	private CompositeIcon(Icon baseIcon, Icon bottomRightIcon, Icon bottomLeftIcon, Icon topLeftIcon, Icon topRightIcon) {
 		this.baseIcon = baseIcon;
 		this.bottomRightIcon = bottomRightIcon;
 		this.bottomLeftIcon = bottomLeftIcon;
@@ -53,33 +54,33 @@ public class CompositeIcon implements Icon<CompositeIcon, Void> {
 		this.topRightIcon = topRightIcon;
 	}
 
-	public Icon<?, ?> getBaseIcon() {
+	public Icon getBaseIcon() {
 		return baseIcon;
 	}
 
-	public Icon<?, ?> getBottomRightIcon() {
+	public Icon getBottomRightIcon() {
 		return bottomRightIcon;
 	}
 
-	public Icon<?, ?> getBottomLeftIcon() {
+	public Icon getBottomLeftIcon() {
 		return bottomLeftIcon;
 	}
 
-	public Icon<?, ?> getTopLeftIcon() {
+	public Icon getTopLeftIcon() {
 		return topLeftIcon;
 	}
 
-	public Icon<?, ?> getTopRightIcon() {
+	public Icon getTopRightIcon() {
 		return topRightIcon;
 	}
 
 	@Override
-	public CompositeIcon withStyle(Void unused) {
-		return this;
+	public IconStyle<CompositeIcon> getStyle() {
+		return null;
 	}
 
 	@Override
-	public Void getStyle() {
-		return null;
+	public Icon unstyled() {
+		return this;
 	}
 }

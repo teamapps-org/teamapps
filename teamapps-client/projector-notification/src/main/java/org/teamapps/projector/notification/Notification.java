@@ -61,7 +61,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 		this.content = content;
 	}
 
-	public static Notification createWithIconAndCaption(Icon<?, ?> icon, String text) {
+	public static Notification createWithIconAndCaption(Icon icon, String text) {
 		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplates.NOTIFICATION_ICON_CAPTION);
 		templateField.setValue(new BaseTemplateRecord<>(icon, text));
 		Notification notification = new Notification();
@@ -69,7 +69,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 		return notification;
 	}
 
-	public static Notification createWithIconCaptionDescription(Icon<?, ?> icon, String caption, String description) {
+	public static Notification createWithIconCaptionDescription(Icon icon, String caption, String description) {
 		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplates.NOTIFICATION_ICON_CAPTION_DESCRIPTION);
 		templateField.setValue(new BaseTemplateRecord<>(icon, caption, description));
 		Notification notification = new Notification();

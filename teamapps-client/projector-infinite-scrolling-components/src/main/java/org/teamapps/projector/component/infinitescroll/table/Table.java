@@ -177,11 +177,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return addColumn(propertyName, null, title, field, TableColumn.DEFAULT_WIDTH);
 	}
 
-	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field) {
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon icon, String title, Field<VALUE> field) {
 		return addColumn(propertyName, icon, title, field, TableColumn.DEFAULT_WIDTH);
 	}
 
-	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, Field<VALUE> field, int defaultWidth) {
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon icon, String title, Field<VALUE> field, int defaultWidth) {
 		TableColumn<RECORD, VALUE> column = new TableColumn<>(propertyName, icon, title, field, defaultWidth);
 		addColumn(column);
 		return column;

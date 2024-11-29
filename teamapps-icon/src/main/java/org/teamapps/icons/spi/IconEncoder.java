@@ -36,7 +36,7 @@ import org.teamapps.icons.IconEncoderContext;
  *
  * @param <ICON>  The icon class this encoder can handle.
  */
-public interface IconEncoder<ICON extends Icon<ICON, ?>> {
+public interface IconEncoder<ICON extends Icon> {
 
 	/**
 	 * Creates a string representation of the provided icon.

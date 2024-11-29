@@ -28,10 +28,10 @@ import org.teamapps.projector.session.CurrentSessionContext;
 @ClientObjectLibrary(ChartLibrary.class)
 public class GraphNodeIcon {
 
-	private final Icon<?, ?> icon;
+	private final Icon icon;
 	private final int size;
 
-	public GraphNodeIcon(Icon<?, ?> icon, int size) {
+	public GraphNodeIcon(Icon icon, int size) {
 		this.icon = icon;
 		this.size = size;
 	}
@@ -40,7 +40,7 @@ public class GraphNodeIcon {
 		return new DtoTreeGraphNodeIcon(CurrentSessionContext.get().resolveIcon(icon), size);
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 

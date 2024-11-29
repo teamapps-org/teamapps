@@ -19,16 +19,19 @@
  */
 package org.teamapps.icons.spi;
 
+import org.teamapps.icons.Icon;
+import org.teamapps.icons.IconStyle;
+
 /**
  * Provides the default style for an icon library.
  * <p>
  * Implementations MUST provide a default constructor!
  *
- * @param <STYLE> The style class
+ * @param <I> The icon class
  * @see IconLibrary
  */
-public interface DefaultStyleSupplier<STYLE> {
+public interface DefaultStyleSupplier<I extends Icon> {
 
-	STYLE getDefaultStyle();
+	IconStyle<I> getDefaultStyle();
 
 }

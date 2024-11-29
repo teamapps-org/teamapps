@@ -51,12 +51,12 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 	 * Encodes the given icon. Does not provide any fallback style mechanism. If the icon's style is null, it is encoded without style.
 	 * @return the encoded icon
 	 */
-	public String encodeIcon(Icon<?, ?> icon) {
-		return getLibraryName(icon) + "." + getIconEncoder(icon.getClass()).encodeIcon(icon, this::encodeIcon);
+	public String encodeIcon(Icon icon) {
+		return getLibraryName(icon) + "." + ((IconEncoder)getIconEncoder(icon.getClass())).encodeIcon(icon, this::encodeIcon);
 	}
 
 	@Override
-	public Icon<?, ?> decodeIcon(String qualifiedEncodedIcon) {
+	public Icon decodeIcon(String qualifiedEncodedIcon) {
 		String libraryName = getLibraryName(qualifiedEncodedIcon);
 		IconDecoder iconDecoder = iconLibraryRegistry.getIconDecoder(libraryName);
 		String encodedIconString = qualifiedEncodedIcon.substring(libraryName.length() + 1);
@@ -74,7 +74,7 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 		String libraryName = getLibraryName(qualifiedEncodedIcon);
 		IconDecoder iconDecoder = iconLibraryRegistry.getIconDecoder(libraryName);
 		String encodedIconString = qualifiedEncodedIcon.substring(libraryName.length() + 1);
-		Icon<?, ?> icon = iconDecoder.decodeIcon(encodedIconString, this);
+		Icon icon = iconDecoder.decodeIcon(encodedIconString, this);
 
 		IconResource iconResource = loadIconWithoutCaching(icon, size);
 		if (iconResource == null) {
@@ -89,11 +89,11 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 	}
 
 	@Override
-	public IconResource loadIcon(Icon<?, ?> icon, int size) {
+	public IconResource loadIcon(Icon icon, int size) {
 		return loadIconWithoutCaching(icon, size);
 	}
 
-	private IconResource loadIconWithoutCaching(Icon<?, ?> icon, int size) {
+	private IconResource loadIconWithoutCaching(Icon icon, int size) {
 		String libraryName = getLibraryName(icon);
 		IconLoader iconLoader = iconLibraryRegistry.getIconLoader(libraryName);
 		IconResource iconResource = iconLoader.loadIcon(icon, size, this);
@@ -108,27 +108,27 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 		return iconResource;
 	}
 
-	public <I extends Icon<I, S>, S> IconEncoder<I> getIconEncoder(Class<I> iconClass) {
+	public <I extends Icon> IconEncoder<I> getIconEncoder(Class<I> iconClass) {
 		return iconLibraryRegistry.getIconEncoder(iconClass);
 	}
 
-	public <I extends Icon<I, S>, S> IconDecoder<I> getIconDecoder(String libraryName) {
+	public <I extends Icon> IconDecoder<I> getIconDecoder(String libraryName) {
 		return iconLibraryRegistry.getIconDecoder(libraryName);
 	}
 
-	public <I extends Icon<I, S>, S> String getLibraryName(Icon<?, ?> icon) {
+	public <I extends Icon> String getLibraryName(Icon icon) {
 		return iconLibraryRegistry.getLibraryName(icon);
 	}
 
-	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass) {
+	public <I extends Icon> void registerIconLibrary(Class<I> iconClass) {
 		iconLibraryRegistry.registerIconLibrary(iconClass);
 	}
 
-	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I> iconEncoder, IconDecoder<I> iconDecoder, IconLoader<I> iconLoader, S defaultStyle) {
+	public <I extends Icon> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I> iconEncoder, IconDecoder<I> iconDecoder, IconLoader<I> iconLoader, IconStyle<I> defaultStyle) {
 		iconLibraryRegistry.registerIconLibrary(iconClass, libraryName, iconEncoder, iconDecoder, iconLoader, defaultStyle);
 	}
 
-	public <I extends Icon<I, S>, S> S getDefaultStyle(Class<I> iconClass) {
+	public <I extends Icon> IconStyle<I> getDefaultStyle(Class<I> iconClass) {
 		return iconLibraryRegistry.getDefaultStyle(iconClass);
 	}
 

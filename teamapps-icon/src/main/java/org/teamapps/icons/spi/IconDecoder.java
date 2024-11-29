@@ -29,7 +29,7 @@ import org.teamapps.icons.IconDecoderContext;
  *
  * @param <ICON>  The icon class this provider will return.
  */
-public interface IconDecoder<ICON extends Icon<ICON, ?>> {
+public interface IconDecoder<ICON extends Icon> {
 
 	/**
 	 * Decodes an icon from an encoded icon {@link String}.

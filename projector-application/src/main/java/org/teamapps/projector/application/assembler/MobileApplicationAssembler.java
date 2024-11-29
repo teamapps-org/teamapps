@@ -72,7 +72,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 				null);
 	}
 
-	public MobileApplicationAssembler(Icon<?, ?> launcherIcon, Icon<?, ?> treeIcon, Icon<?, ?> viewsIcon, Icon<?, ?> toolbarIcon, Icon<?, ?> backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
+	public MobileApplicationAssembler(Icon launcherIcon, Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
 		this.mobileLayout = new MobileLayout();
 		this.navigationBar = new NavigationBar();
 		this.viewsItemView = new ToolAccordion();

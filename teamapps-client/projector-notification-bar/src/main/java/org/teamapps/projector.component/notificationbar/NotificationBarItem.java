@@ -45,7 +45,7 @@ public class NotificationBarItem {
 
 	private NotificationBarItemChangeListener listener;
 
-	private Icon<?, ?> icon;
+	private Icon icon;
 	private String text;
 	private String actionLinkText;
 	private RepeatableAnimation iconAnimation;
@@ -67,25 +67,25 @@ public class NotificationBarItem {
 		this(null, text, true);
 	}
 
-	public NotificationBarItem(Icon<?, ?> icon, String text) {
+	public NotificationBarItem(Icon icon, String text) {
 		this(icon, text, true);
 	}
 
-	public NotificationBarItem(Icon<?, ?> icon, String text, boolean dismissible) {
+	public NotificationBarItem(Icon icon, String text, boolean dismissible) {
 		this(icon, text, dismissible, 0, false);
 	}
 
-	public NotificationBarItem(Icon<?, ?> icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible) {
+	public NotificationBarItem(Icon icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible) {
 		this(icon, text, dismissible, displayTimeInMillis, progressBarVisible, null, null, null, null, null);
 	}
 
-	public NotificationBarItem(Icon<?, ?> icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible, Color backgroundColor, Color borderColor, Color textColor,
+	public NotificationBarItem(Icon icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible, Color backgroundColor, Color borderColor, Color textColor,
 							   Spacing padding, RepeatableAnimation iconAnimation) {
 		this(icon, text, dismissible, displayTimeInMillis, progressBarVisible, backgroundColor, borderColor, textColor, padding, iconAnimation,
 				EntranceAnimation.FADE_IN_DOWN, ExitAnimation.FADE_OUT_UP);
 	}
 
-	public NotificationBarItem(Icon<?, ?> icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible, Color backgroundColor, Color borderColor, Color textColor,
+	public NotificationBarItem(Icon icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible, Color backgroundColor, Color borderColor, Color textColor,
 							   Spacing padding, RepeatableAnimation iconAnimation, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		this.icon = icon;
 		this.text = text;
@@ -131,11 +131,11 @@ public class NotificationBarItem {
 		if (listener != null) listener.handleChagned();
 	}
 
-	public Icon<?, ?> getIcon() {
+	public Icon getIcon() {
 		return icon;
 	}
 
-	public NotificationBarItem setIcon(Icon<?, ?> icon) {
+	public NotificationBarItem setIcon(Icon icon) {
 		this.icon = icon;
 		fireChangeEvent();
 		return this;

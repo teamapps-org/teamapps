@@ -41,7 +41,7 @@ public class NavigationBarButton {
 		this.data = data;
 	}
 
-	public static NavigationBarButton create(Icon<?, ?> icon) {
+	public static NavigationBarButton create(Icon icon) {
 		return new NavigationBarButton(BaseTemplates.NAVIGATION_BAR_ICON_ONLY, new BaseTemplateRecord<Void>(icon, null));
 	}
 
