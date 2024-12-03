@@ -212,7 +212,10 @@ public class SessionContext {
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
-		runWithContext(this::updateSessionMessageWindows);
+		runWithContext(() -> {
+			sendConfigToClient();
+			updateSessionMessageWindows();
+		});
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 	}
 
@@ -561,8 +564,11 @@ public class SessionContext {
 
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
-		queueCommand(new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
-		updateSessionMessageWindows();
+		sendConfigToClient();
+	}
+
+	private void sendConfigToClient() {
+		queueCommand(new UiRootPanel.SetConfigCommand(this.sessionConfiguration.createUiConfiguration()));
 	}
 
 	public void showPopupAtCurrentMousePosition(Popup popup) {
