@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.*;
+import org.teamapps.event.Disposable;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
@@ -90,6 +91,7 @@ public class SessionContext {
 	 */
 	public final ExecutionDecoratorStack executionDecorators = new ExecutionDecoratorStack();
 	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();
+	public final Event<CustomMessageEvent> onCustomMessage = new Event<>();
 
 	private UiSessionState state = UiSessionState.ACTIVE;
 
@@ -872,6 +874,11 @@ public class SessionContext {
 				}
 				break;
 			}
+			case UI_ROOT_PANEL_CUSTOM_MESSAGE: {
+				UiRootPanel.CustomMessageEvent e = (UiRootPanel.CustomMessageEvent) event;
+				onCustomMessage.fire(new CustomMessageEvent(e.getType(), e.getMessage()));
+				break;
+			}
 			default:
 				throw new TeamAppsUiApiException(getSessionId(), uiEventType.toString());
 		}
@@ -936,6 +943,14 @@ public class SessionContext {
 	 */
 	public Event<UiSessionClosingReason> onDestroyed() {
 		return onDestroyed;
+	}
+
+	public Disposable subscribeToCustomMessages(String type, Consumer<CustomMessageEvent> handler) {
+		return onCustomMessage.addListener((customMessageEvent) -> {
+			if (Objects.equals(type, customMessageEvent.type())) {
+				handler.accept(customMessageEvent);
+			}
+		});
 	}
 
 }

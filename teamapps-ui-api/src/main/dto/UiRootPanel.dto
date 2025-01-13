@@ -66,6 +66,8 @@ class UiRootPanel extends UiComponent {
 	static command setTitle(String title);
 
     static event navigationStateChange(UiLocation location, boolean triggeredBrowserNavigation);
+
+    static event customMessage(String type, String message);
 }
 
 enum KeyEventType {
