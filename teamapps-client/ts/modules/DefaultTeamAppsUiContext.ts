@@ -48,6 +48,7 @@ import {QueryFunctionAdder} from "../generated/QueryFunctionAdder";
 import {UiQuery} from "../generated/UiQuery";
 import {componentEventDescriptors, staticComponentEventDescriptors} from "../generated/ComponentEventDescriptors";
 import {ClosedSessionHandlingType} from "../generated/ClosedSessionHandlingType";
+import {UiRootPanel_CustomMessageEvent} from "../generated/UiRootPanelConfig";
 
 declare var __TEAMAPPS_VERSION__: string;
 
@@ -308,5 +309,14 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		this.expiredMessageWindow = expiredMessageWindow;
 		this.errorMessageWindow = errorMessageWindow;
 		this.terminatedMessageWindow = terminatedMessageWindow;
+	}
+
+	public sendCustomMessage(type: string, message: string) {
+		const event: UiRootPanel_CustomMessageEvent = {
+			_type: "UiRootPanel.customMessage",
+			type,
+			message: message
+		};
+		this.connection.sendEvent(event);
 	}
 }

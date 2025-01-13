@@ -17,25 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.jetty.embedded;
+package org.teamapps.ux.session;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.session.SessionContext;
-
-import java.util.List;
-
-public class TeamAppsJettyEmbeddedServerTest {
-
-	public static final List<MaterialIcon> ALL_ICONS = List.copyOf(MaterialIcon.getAllIcons());
-
-	public static void main(String[] args) throws Exception {
-		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
-					sessionContext.subscribeToCustomMessages("myType", System.out::println);
-				})
-				.setPort(8082)
-				.build()
-				.start();
-	}
-
+public record CustomMessageEvent(String type, String message) {
 
 }
