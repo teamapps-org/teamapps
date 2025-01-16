@@ -73,14 +73,10 @@ public class SimpleTree<PAYLOAD> extends Tree<BaseTemplateTreeNode<PAYLOAD>> {
 
 	public void removeNode(BaseTemplateTreeNode<PAYLOAD> node) {
 		getModel().removeNode(node);
-		if (node == getSelectedNode()) {
-			setNoSelectedNode();
-		}
 	}
 
 	public void removeAllNodes() {
 		getModel().removeAllNodes();
-		setNoSelectedNode();
 	}
 
 	public SimpleTreeModel<PAYLOAD> getModel() {
@@ -98,9 +94,5 @@ public class SimpleTree<PAYLOAD> extends Tree<BaseTemplateTreeNode<PAYLOAD>> {
 	@Override
 	public void setEntryTemplate(Template entryTemplate) {
 		setTemplatesByDepth(entryTemplate);
-	}
-
-	public void setNoSelectedNode() {
-		setSelectedNode(null);
 	}
 }
