@@ -63,5 +63,5 @@ public interface ApplicationChangeHandler {
 
     void handleViewWorkspaceToolbarButtonGroupRemoved(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, ToolbarButtonGroup buttonGroup);
 
-    void handleViewSelect(  View view  );
+    void handleViewSelect(View view);
 }
