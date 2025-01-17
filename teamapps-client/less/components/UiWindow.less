@@ -51,6 +51,34 @@
         align-items: center;
         justify-content: center;
         pointer-events: all;
+        position: absolute;
+
+        .resizer {
+            position: absolute;
+            z-index: 1;
+            user-select: none;
+            &.t, &.b { width: 100%;height: 10px; }
+            &.l, &.r { width: 10px;height: 100%; }
+            &.t { cursor: n-resize; top: -7px; }
+            &.b { cursor: s-resize; bottom: -7px; }
+            &.l { cursor: w-resize; left: -7px; }
+            &.r { cursor: e-resize; right: -7px; }
+            &.corner {
+                width: 12px;
+                height: 12px;
+                z-index: 2;
+                &.t.l { cursor: nw-resize; top: -7px; left: -7px; }
+                &.t.r { cursor: ne-resize; top: -7px; right: -7px; }
+                &.b.l { cursor: sw-resize; bottom: -7px; left: -7px; }
+                &.b.r { cursor: se-resize; bottom: -7px; right: -7px; }
+            }
+        }
+
+        &:not(.resizable) {
+            .resizer {
+                display: none;
+            }
+        }
 
         > .UiPanel {
             width: 100%;

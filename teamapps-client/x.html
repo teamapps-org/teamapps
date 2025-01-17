@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./x.css">
+</head>
+<body>
+<div class="window">
+    <div class="resizer corner t l"></div>
+    <div class="resizer corner t r"></div>
+    <div class="resizer corner b l"></div>
+    <div class="resizer corner b r"></div>
+    <div class="resizer t"></div>
+    <div class="resizer b"></div>
+    <div class="resizer l"></div>
+    <div class="resizer r"></div>
+    <div class="body">
+        <div class="topbar">
+            <div class="btns">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <!-- your content here -->
+    </div>
+</div>
+
+<script>
+    const xwindow = document.querySelector(".window")
+    const topbar = document.querySelector(".topbar")
+    topbar.addEventListener("mousedown", mousedown)
+
+    const minWidth = 400;
+    const minHeight = 300;
+    const limitByViewPort = true;
+
+
+    function mousedown(e) {
+        const initialRect = getBoundingPageRect(xwindow);
+        const initialMouseX = e.pageX
+        const initialMouseY = e.pageY
+
+        window.addEventListener("mousemove", mousemove)
+        window.addEventListener("mouseup", mouseup)
+
+        function mousemove(e) {
+            const totalDeltaX = e.pageX - initialMouseX;
+            const totalDeltaY = e.pageY - initialMouseY;
+
+            const viewPortRect = getViewportRect();
+
+            const minX = limitByViewPort ? viewPortRect.left : Number.NEGATIVE_INFINITY;
+            const maxX = limitByViewPort ? viewPortRect.right - initialRect.width : Number.POSITIVE_INFINITY;
+            const minY = limitByViewPort ? viewPortRect.top : Number.NEGATIVE_INFINITY;
+            const maxY = limitByViewPort ? viewPortRect.bottom - initialRect.height : Number.POSITIVE_INFINITY;
+
+            xwindow.style.left = Math.min(maxX, Math.max(minX, initialRect.x + totalDeltaX)) + "px"
+            xwindow.style.top = Math.min(maxY, Math.max(minY, initialRect.y + totalDeltaY)) + "px"
+        }
+
+        function mouseup() {
+            window.removeEventListener("mousemove", mousemove)
+            window.removeEventListener("mouseup", mouseup)
+        }
+    }
+
+    const resizers = document.querySelectorAll(".resizer")
+    for (let resizer of resizers) {
+        resizer.addEventListener("mousedown", mousedown)
+
+        function mousedown(e) {
+            const currentResizer = e.target
+            const initialRect = getBoundingPageRect(xwindow);
+            const initialMouseX = e.pageX
+            const initialMouseY = e.pageY
+
+            window.addEventListener("mousemove", mousemove)
+            window.addEventListener("mouseup", mouseup)
+
+            function mousemove(e) {
+                const totalDeltaX = e.pageX - initialMouseX;
+                const totalDeltaY = e.pageY - initialMouseY;
+
+                const viewPortRect = getViewportRect();
+
+                if (currentResizer.classList.contains("t")) {
+                    const minYDueToViewPort = limitByViewPort ? viewPortRect.top : Number.NEGATIVE_INFINITY;
+                    const maxYDueToMinHeight = initialRect.bottom - minHeight;
+
+                    const newTop = Math.max(minYDueToViewPort, Math.min(maxYDueToMinHeight, initialRect.y + totalDeltaY));
+                    const newHeight = Math.max(minHeight, initialRect.bottom - newTop);
+
+                    xwindow.style.top = newTop + "px"
+                    xwindow.style.height = newHeight + "px"
+                }
+                if (currentResizer.classList.contains("b")) {
+                    const maxHeight = limitByViewPort ? viewPortRect.bottom - initialRect.top : Number.POSITIVE_INFINITY;
+                    const newHeight = Math.min(maxHeight, Math.max(minHeight, initialRect.height + totalDeltaY));
+                    xwindow.style.height = newHeight + "px";
+                }
+                if (currentResizer.classList.contains("l")) {
+                    const minXDueToViewPort = limitByViewPort ? viewPortRect.left : Number.NEGATIVE_INFINITY;
+                    const maxXDueToMinWidth = initialRect.right - minWidth;
+
+                    const newLeft = Math.max(minXDueToViewPort, Math.min(maxXDueToMinWidth, initialRect.x + totalDeltaX));
+                    const newWidth = Math.max(minWidth, initialRect.right - newLeft);
+
+                    xwindow.style.left = newLeft + "px"
+                    xwindow.style.width = newWidth + "px"
+                }
+                if (currentResizer.classList.contains("r")) {
+                    const maxWidth = limitByViewPort ? viewPortRect.right - initialRect.left : Number.POSITIVE_INFINITY;
+                    const newWidth = Math.min(maxWidth, Math.max(minWidth, initialRect.width + totalDeltaX));
+                    xwindow.style.width = newWidth + "px";
+                }
+            }
+
+            function mouseup() {
+                window.removeEventListener("mousemove", mousemove)
+                window.removeEventListener("mouseup", mouseup)
+            }
+        }
+    }
+
+    function getBoundingPageRect(element) {
+        const rect = element.getBoundingClientRect();
+        const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+        return {
+            left: rect.left + scrollLeft,
+            top: rect.top + scrollTop,
+            x: rect.left + scrollLeft,
+            y: rect.top + scrollTop,
+            right: rect.right + scrollLeft,
+            bottom: rect.bottom + scrollTop,
+            width: rect.width,
+            height: rect.height
+        };
+    }
+
+    function getViewportRect() {
+        const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        return {
+            left: scrollLeft,
+            top: scrollTop,
+            x: scrollLeft,
+            y: scrollTop,
+            right: scrollLeft + window.innerWidth,
+            bottom: scrollTop + window.innerHeight,
+            width: window.innerWidth,
+            height: window.innerHeight
+        };
+    }
+</script>
+</body>
+</html>

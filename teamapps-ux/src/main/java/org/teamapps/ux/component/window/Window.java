@@ -36,6 +36,11 @@ public class Window extends Panel {
 	private boolean modal = false;
 	private int width = 0; // 0 = full width
 	private int height = 0; // 0 = full height; -1 = auto
+	private int minWidth = 200; // 0 = full height; -1 = auto
+	private int minHeight = 100; // 0 = full height; -1 = auto
+	private boolean resizable = false;
+	private boolean movable = true;
+	private boolean keepInViewport = true;
 	private Color modalBackgroundDimmingColor = new RgbaColor(0, 0, 0, 0.2f);
 	private boolean closeable;
 	private boolean closeOnEscape;
@@ -72,6 +77,11 @@ public class Window extends Panel {
 		window.setModal(modal);
 		window.setWidth(width);
 		window.setHeight(height);
+		window.setMinWidth(minWidth);
+		window.setMinHeight(minHeight);
+		window.setResizable(resizable);
+		window.setMovable(movable);
+		window.setKeepInViewport(keepInViewport);
 		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
 			window.setStretchContent(false);
 		}
@@ -115,6 +125,46 @@ public class Window extends Panel {
 
 	public void setHeight(int height) {
 		setSize(width, height);
+	}
+
+	public int getMinWidth() {
+		return minWidth;
+	}
+
+	public void setMinWidth(int minWidth) {
+		this.minWidth = minWidth;
+	}
+
+	public int getMinHeight() {
+		return minHeight;
+	}
+
+	public void setMinHeight(int minHeight) {
+		this.minHeight = minHeight;
+	}
+
+	public boolean isResizable() {
+		return resizable;
+	}
+
+	public void setResizable(boolean resizable) {
+		this.resizable = resizable;
+	}
+
+	public boolean isMovable() {
+		return movable;
+	}
+
+	public void setMovable(boolean movable) {
+		this.movable = movable;
+	}
+
+	public boolean isKeepInViewport() {
+		return keepInViewport;
+	}
+
+	public void setKeepInViewport(boolean keepInViewport) {
+		this.keepInViewport = keepInViewport;
 	}
 
 	public void enableAutoHeight() {
