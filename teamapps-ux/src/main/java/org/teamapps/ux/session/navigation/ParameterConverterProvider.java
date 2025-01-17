@@ -80,16 +80,20 @@ public class ParameterConverterProvider implements ParamConverterProvider {
 		Constructor<? extends ParamConverterProvider>[] declaredConstructors = (Constructor<? extends ParamConverterProvider>[]) paramConverterClass.getDeclaredConstructors();
 		Optional<Constructor<? extends ParamConverterProvider>> noArgConstructor = Arrays.stream(declaredConstructors).filter(constructor -> constructor.getParameterCount() == 0).findFirst();
 		if (noArgConstructor.isPresent()) {
-			return noArgConstructor.get().newInstance();
+			Constructor<? extends ParamConverterProvider> constructor = noArgConstructor.get();
+			if (!Modifier.isPublic(constructor.getModifiers())) {
+				constructor.setAccessible(true);
+			}
+			return constructor.newInstance();
 		}
-		Constructor<? extends ParamConverterProvider> throwOnNullConstructor = Arrays.stream(declaredConstructors)
+		Constructor<? extends ParamConverterProvider> oneArgConstructor = Arrays.stream(declaredConstructors)
 				.filter(constructor -> Arrays.equals(constructor.getParameterTypes(), new Class[]{boolean.class}))
 				.findFirst()
 				.orElseThrow(InstantiationError::new);
-		if (Modifier.isPrivate(throwOnNullConstructor.getModifiers())) {
-			throwOnNullConstructor.setAccessible(true);
+		if (!Modifier.isPublic(oneArgConstructor.getModifiers())) {
+			oneArgConstructor.setAccessible(true);
 		}
-		return throwOnNullConstructor.newInstance(false); //"false" is the default of "jersey.config.paramconverters.throw.iae" in Jersey 3.1.3
+		return oneArgConstructor.newInstance(false); //"false" is the default of "jersey.config.paramconverters.throw.iae" in Jersey 3.1.3
 	}
 
 	@Override
