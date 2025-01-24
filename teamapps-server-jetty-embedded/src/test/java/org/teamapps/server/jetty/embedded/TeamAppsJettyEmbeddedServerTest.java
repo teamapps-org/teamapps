@@ -19,64 +19,73 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.application.ResponsiveApplication;
-import org.teamapps.ux.application.layout.StandardLayout;
-import org.teamapps.ux.application.perspective.Perspective;
-import org.teamapps.ux.application.view.View;
+import org.teamapps.common.format.RgbaColor;
+import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.toolbar.ToolbarButton;
-import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.ux.component.table.AbstractTableModel;
+import org.teamapps.ux.component.table.Table;
 import org.teamapps.webcontroller.WebController;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
-	public static final List<MaterialIcon> ALL_ICONS = List.copyOf(MaterialIcon.getAllIcons());
+	public static final List<RgbaColor> FOREGROUND_COLORS = Arrays.asList(
+			RgbaColor.MATERIAL_GREEN_500,
+			RgbaColor.MATERIAL_RED_700,
+			RgbaColor.MATERIAL_BLUE_600,
+			RgbaColor.MATERIAL_YELLOW_600,
+			RgbaColor.MATERIAL_PURPLE_500,
+			RgbaColor.MATERIAL_BROWN_500,
+			RgbaColor.MATERIAL_PINK_500,
+			RgbaColor.MATERIAL_DEEP_ORANGE_500
+	);
+
+	public static <T> T randomOf(Collection<T> collection) {
+		List<T> list = new ArrayList<>(collection);
+		return list.get(ThreadLocalRandom.current().nextInt(list.size()));
+	}
+
+	public static RgbaColor randomColor() {
+		return randomOf(FOREGROUND_COLORS);
+	}
 
 	public static void main(String[] args) throws Exception {
 		WebController controller = sessionContext -> {
 			RootPanel rootPanel = new RootPanel();
 			sessionContext.addRootPanel(null, rootPanel);
 
-			//create a responsive application that will run on desktops as well as on smart phones
-			ResponsiveApplication application = ResponsiveApplication.createApplication();
+			Table<String> table = new Table<>();
+			table.addColumn("a", "a", new TextField()).setValueExtractor(Objects::toString);
+			table.addColumn("b", "b", new TextField()).setValueExtractor(Objects::toString);
+			table.addColumn("c", "c", new TextField()).setValueExtractor(Objects::toString);
+			table.addColumn("d", "d", new TextField()).setValueExtractor(Objects::toString);
+			table.addColumn("e", "e", new TextField()).setValueExtractor(Objects::toString);
+			table.addColumn("f", "f", new TextField()).setValueExtractor(Objects::toString);
+			table.addColumn("g", "g", new TextField()).setValueExtractor(Objects::toString);
+			table.addColumn("h", "h", new TextField()).setValueExtractor(Objects::toString);
 
-			//create perspective with default layout
-			Perspective perspective = Perspective.createPerspective();
-			application.addPerspective(perspective);
+			table.setRowCssStyleProvider(s -> Map.of("background-color", randomColor().toHtmlColorString()));
 
-			//create an empty left panel
-			perspective.addView(View.createView(StandardLayout.LEFT, MaterialIcon.MESSAGE, "Left panel", null));
+			table.setModel(new AbstractTableModel<String>() {
 
-			//create a tabbed center panel
-			perspective.addView(View.createView(StandardLayout.CENTER, MaterialIcon.SEARCH, "Center panel", null));
-			perspective.addView(View.createView(StandardLayout.CENTER, MaterialIcon.PEOPLE, "Center panel 2", null));
+				private final List<String> data = IntStream.range(0, 10000).mapToObj(value -> "" + value).toList();
 
-			//create a right panel
-			perspective.addView(View.createView(StandardLayout.RIGHT, MaterialIcon.FOLDER, "Left panel", null));
+				@Override
+				public int getCount() {
+					return data.size();
+				}
 
-			//create a right bottom panel
-			perspective.addView(View.createView(StandardLayout.RIGHT_BOTTOM, MaterialIcon.VIEW_CAROUSEL, "Left bottom panel", null));
-
-			//create toolbar buttons
-			ToolbarButtonGroup buttonGroup = new ToolbarButtonGroup();
-			buttonGroup.addButton(ToolbarButton.create(MaterialIcon.SAVE, "Save", "Save changes")).onClick.addListener(toolbarButtonClickEvent -> {
-				sessionContext.showNotification(MaterialIcon.MESSAGE, "Save was clicked!");
+				@Override
+				public List<String> getRecords(int startIndex, int length) {
+					return data.stream().skip(startIndex).limit(length).toList();
+				}
 			});
-			buttonGroup.addButton(ToolbarButton.create(MaterialIcon.DELETE, "Delete", "Delete some items"));
+			table.setCellMarked("12", "x", true);
 
-			//display these buttons only when this perspective is visible
-			perspective.addWorkspaceButtonGroup(buttonGroup);
-
-			application.showPerspective(perspective);
-			rootPanel.setContent(application.getUi());
-
-			// set Background Image
-			String defaultBackground = "/resources/backgrounds/default-bl.jpg";
-			sessionContext.registerBackgroundImage("default", defaultBackground, defaultBackground);
-			sessionContext.setBackgroundImage("default", 0);
+			rootPanel.setContent(table);
 		};
 
 		TeamAppsJettyEmbeddedServer.builder(controller)
