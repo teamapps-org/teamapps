@@ -31,7 +31,8 @@ import {
 	UiTable_ColumnSizeChangeEvent,
 	UiTable_ContextMenuRequestedEvent,
 	UiTable_DisplayedRangeChangedEvent,
-	UiTable_FieldOrderChangeEvent, UiTable_RowsSelectedEvent,
+	UiTable_FieldOrderChangeEvent,
+	UiTable_RowsSelectedEvent,
 	UiTable_SortingChangedEvent,
 	UiTableCommandHandler,
 	UiTableConfig,
@@ -57,15 +58,14 @@ import {UiButton, UiCompositeField, UiFileField, UiMultiLineTextField, UiRichTex
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {FieldMessagesPopper, getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {nonRecursive} from "../util/nonRecursive";
-import {throttledMethod} from "../util/throttle";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
 import {UiTableRowSelectionModel} from "./UiTableRowSelectionModel";
 import {ContextMenu} from "../micro-components/ContextMenu";
 import {UiComponent} from "../UiComponent";
-import EventData = Slick.EventData;
 import {UiTextAlignment} from "../../generated/UiTextAlignment";
 import {UiRefreshableTableConfigUpdateConfig} from "../../generated/UiRefreshableTableConfigUpdateConfig";
+import EventData = Slick.EventData;
 
 interface Column extends Slick.Column<any> {
 	id: string;
@@ -263,6 +263,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			this._sortDirection = config.sortDirection;
 			this._grid.setSortColumn(config.sortField, config.sortDirection === UiSortDirection.ASC);
 		}
+		(this._grid as any).onRendered.subscribe(() => this.setRowCssStyles());
 		this._grid.onSort.subscribe((e, args: Slick.OnSortEventArgs<Slick.SlickData>) => {
 			this._sortField = args.sortCol.id;
 			this._sortDirection = args.sortAsc ? UiSortDirection.ASC : UiSortDirection.DESC;
@@ -433,6 +434,33 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			this.fieldMessagePopper.setVisible(false);
 		});
 		this._grid.init();
+	}
+
+	private setRowCssStyles() {
+		if (this._grid.getColumns().length == 0) {
+			return;
+		}
+		let viewport = this._grid.getViewport();
+		let top = viewport.top;
+		let bottom = viewport.bottom;
+		let firstVisibleColumnIndex = 0;
+		let sumOfColumnWidths = 0;
+		do {
+			sumOfColumnWidths += this._grid.getColumns()[firstVisibleColumnIndex].width
+		} while (sumOfColumnWidths < viewport.leftPx && firstVisibleColumnIndex < this._grid.getColumns().length);
+
+		for (let i = top; i < bottom; i++) {
+			if (this.dataProvider.getItem(i)?.cssStyle != null) {
+				let cellNode = this._grid.getCellNode(i, firstVisibleColumnIndex);
+				if (cellNode != null) {
+					let $row = closestAncestor(cellNode, ".slick-row", false, this.doGetMainElement());
+					$row.style.color = "blue"
+					for (const [name, value] of Object.entries(this.dataProvider.getItem(i).cssStyle)) {
+						$row.style.setProperty(name, value);
+					}
+				}
+			}
+		}
 	}
 
 	@debouncedMethod(150, DebounceMode.BOTH)

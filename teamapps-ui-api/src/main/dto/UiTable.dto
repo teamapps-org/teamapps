@@ -163,5 +163,6 @@ class UiTableClientRecord extends UiIdentifiableClientRecord {
 	List<String> markings;
 	boolean selected;
 	boolean bold;
+	Dictionary<String> cssStyle;
 	Dictionary<Dictionary<Object>> displayTemplateValues;
 }
