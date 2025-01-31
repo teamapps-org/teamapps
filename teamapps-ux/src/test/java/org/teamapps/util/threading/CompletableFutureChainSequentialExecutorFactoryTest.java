@@ -28,6 +28,7 @@ import org.teamapps.common.util.ExceptionUtil;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.IntStream;
 
 public class CompletableFutureChainSequentialExecutorFactoryTest {
@@ -41,7 +42,7 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 		IntList executionOrderCheckingList = new IntArrayList();
 
 		CyclicBarrier barrier = new CyclicBarrier(2);
-		CloseableExecutor executor = executorFactory.createExecutor();
+		ExecutorService executor = executorFactory.createExecutor();
 		for (int i = 0; i < numberOfExecutions; i++) {
 			final int iFinal = i;
 			executor.execute(() -> {
@@ -69,9 +70,9 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 		CompletableFuture<Boolean> lastFuture1 = null;
 		CompletableFuture<Boolean> lastFuture2 = null;
 		CompletableFuture<Boolean> lastFuture3 = null;
-		CloseableExecutor executor1 = executor.createExecutor();
-		CloseableExecutor executor2 = executor.createExecutor();
-		CloseableExecutor executor3 = executor.createExecutor();
+		ExecutorService executor1 = executor.createExecutor();
+		ExecutorService executor2 = executor.createExecutor();
+		ExecutorService executor3 = executor.createExecutor();
 		for (int i = 0; i < numberOfExecutions; i++) {
 			final int iFinal = i;
 			lastFuture1 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList1.add(iFinal), executor1);

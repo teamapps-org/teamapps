@@ -25,7 +25,6 @@ import org.mockito.Mockito;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.UiSession;
-import org.teamapps.util.threading.CloseableExecutor;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.CurrentSessionContextTestUtil;
 import org.teamapps.ux.session.SessionConfiguration;
@@ -49,7 +48,7 @@ public class UxTestUtil {
 		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", Mockito.mock(Location.class), Collections.emptyMap(), TEAMAPPS_VERSION);
 		return new SessionContext(
 				Mockito.mock(UiSession.class),
-				CloseableExecutor.fromExecutorService(Executors.newSingleThreadExecutor()),
+				Executors.newSingleThreadExecutor(),
 				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(SessionIconProvider.class),
