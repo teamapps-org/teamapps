@@ -27,6 +27,7 @@ import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.commons.event.Disposable;
 import org.teamapps.commons.event.Event;
 import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.dto.protocol.server.*;
@@ -34,6 +35,7 @@ import org.teamapps.icons.Icon;
 import org.teamapps.icons.IconStyle;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.projector.DtoGlobals;
+import org.teamapps.projector.KeyEventType;
 import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.*;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
@@ -70,7 +72,7 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
-	public final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(null, "globalKeyEventOccurred", hasListeners));
+	private final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(null, "globalKeyEventOccurred", hasListeners));
 	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(null, "navigationStateChange", hasListeners));
 	public final ProjectorEvent<SessionActivityState> onActivityStateChanged = new ProjectorEvent<>();
 	public final Event<SessionClosingReason> onDestroyed = new Event<>();
@@ -570,12 +572,58 @@ public class SessionContext {
 		sendStaticCommand(null, "SetTitle", title);
 	}
 
-	public void configureGlobalKeyEvents(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		sendStaticCommand(null, "configureGlobalKeyboardEvents", new Object[]{unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp});
-	}
-
 	public String getSessionId() {
 		return uiSession.getSessionId();
+	}
+
+	record KeyboardEventRegistration(boolean unmodified, boolean alt, boolean ctrl, boolean meta, boolean keyDown, boolean keyUp,
+									 boolean includingRepeats) {
+	}
+
+	private final List<KeyboardEventRegistration> keyboardEventRegistrations = new ArrayList<>();
+
+	public Disposable subscribeToGlobalKeyEvents(boolean unmodified, boolean alt, boolean ctrl, boolean meta, boolean keyDown, boolean keyUp, boolean includingRepeats, Consumer<KeyboardEvent> handler) {
+		KeyboardEventRegistration registration = new KeyboardEventRegistration(unmodified, alt, ctrl, meta, keyDown, keyUp, includingRepeats);
+		keyboardEventRegistrations.add(registration);
+
+		Disposable eventListenerDisposable = onGlobalKeyEventOccurred.addListener(e -> {
+			if ((!e.isAltKey() || alt)
+				&& (!e.isCtrlKey() || ctrl)
+				&& (!e.isMetaKey() || meta)
+				&& (!e.isRepeat() || includingRepeats)
+				&& (e.getEventType() == KeyEventType.KEY_DOWN && keyDown || e.getEventType() == KeyEventType.KEY_UP && keyUp)) {
+				handler.accept(e);
+			}
+		});
+
+		updateGlobalKeyboardEventConfiguration();
+
+		return () -> {
+			keyboardEventRegistrations.remove(registration);
+			eventListenerDisposable.dispose();
+		};
+	}
+
+	private void updateGlobalKeyboardEventConfiguration() {
+		boolean unmodified = false;
+		boolean alt = false;
+		boolean ctrl = false;
+		boolean meta = false;
+		boolean keyDown = false;
+		boolean keyUp = false;
+		boolean includingRepeats = false;
+
+		for (KeyboardEventRegistration registration : keyboardEventRegistrations) {
+			unmodified = unmodified || registration.unmodified();
+			alt = alt || registration.alt();
+			ctrl = ctrl || registration.ctrl();
+			meta = meta || registration.meta();
+			keyDown = keyDown || registration.keyDown();
+			keyUp = keyUp || registration.keyUp();
+			includingRepeats = includingRepeats || registration.includingRepeats();
+		}
+
+		sendStaticCommand(null, "configureGlobalKeyboardEvents", new Object[]{unmodified, alt, ctrl, meta, keyDown, keyUp, includingRepeats});
 	}
 
 	public void handleStaticEvent(String libraryId, String name, JsonWrapper eventObject) {

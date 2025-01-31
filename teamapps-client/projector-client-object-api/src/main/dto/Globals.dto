@@ -3,10 +3,10 @@ package "projector-client-object-api":org.teamapps.projector;
 
 class DtoGlobals {
 
-    static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean composing, String key, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
     static event navigationStateChange(String location, boolean triggeredByUser);
 
-    static command configureGlobalKeyboardEvents(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp);
+    static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean composing, String key, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
+    static command configureGlobalKeyboardEvents(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean keyDown, boolean keyUp, boolean includeRepeats);
 
 //    static command setConfig(Configuration config);
 //    static command setThemeClassName(String theme);

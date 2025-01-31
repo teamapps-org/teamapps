@@ -68,10 +68,10 @@ export var CoreLibrary = {
 
 	init(serverChan: ServerObjectChannel): void {
 		serverObjectChannel = serverChan;
-		this.configureGlobalKeyboardEvents(true, true, true, true, true, true, true);
 	},
 
-	configureGlobalKeyboardEvents(unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean, keyDown: boolean, keyUp: boolean) {
+	configureGlobalKeyboardEvents(unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, keyDown: boolean, keyUp: boolean, includeRepeats: boolean,) {
+		console.log("Configuring global key events.");
 		document.removeEventListener("keydown", keyboardEventListener, {capture: true});
 		document.removeEventListener("keyup", keyboardEventListener, {capture: true});
 		keyboardEventSettings = {unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats};

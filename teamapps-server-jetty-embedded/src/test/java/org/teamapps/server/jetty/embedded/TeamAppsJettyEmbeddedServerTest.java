@@ -54,9 +54,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 			rootPanel.setContent(verticalLayout);
 
-			sessionContext.onGlobalKeyEventOccurred.addListener((eventData, disposable) -> {
-				System.out.println(eventData);
-			});
+			sessionContext.subscribeToGlobalKeyEvents(true, false, false, false, false, true, true, System.out::println);
 
 
 			Window window = new Window(null, "asdf", null, 300, 300, true, true, true);

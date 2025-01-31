@@ -42,10 +42,6 @@ Also use this for DateTimeFormatDescriptor...
 
 make Label NOT a field. It is not!
 
-switch to junit jupiter
-
-rework globalKeyEventOccurred - remove unnecessary clutter
-
 rewrite README
 
 enable TypeScript strict null checking for the core at least

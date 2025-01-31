@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.commons.util.ExceptionUtil;
@@ -13,6 +14,7 @@ import org.teamapps.projector.resource.Resource;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,8 +26,6 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private static final String NOT_FOUND_HASH = "?NOT:FOUND";
-
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 	private final Map<String, String> hashByPath = new ConcurrentHashMap<>();
 	private final Map<String, String> pathByResourceHash = new ConcurrentHashMap<>();
@@ -36,52 +36,49 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		LOGGER.info("{}", req.getPathInfo());
-		String pathInfo = req.getPathInfo();
-		String componentLibraryId;
-		String resourcePath;
-		String pathInfoWithoutLeadingSlash =  pathInfo.startsWith("/") ? pathInfo.substring(1) : pathInfo;
-		if (pathInfoWithoutLeadingSlash.contains("/")) {
-			componentLibraryId = pathInfoWithoutLeadingSlash.substring(0, pathInfoWithoutLeadingSlash.indexOf('/'));
-			resourcePath = pathInfoWithoutLeadingSlash.substring(pathInfoWithoutLeadingSlash.indexOf('/'));
-		} else {
+		try {
+			LOGGER.info("{} {}", req.getMethod(), req.getPathInfo());
+			String pathInfo = req.getPathInfo();
+			String componentLibraryId;
+			String resourcePath;
+			String pathInfoWithoutLeadingSlash = pathInfo.startsWith("/") ? pathInfo.substring(1) : pathInfo;
+			if (pathInfoWithoutLeadingSlash.contains("/")) {
+				componentLibraryId = pathInfoWithoutLeadingSlash.substring(0, pathInfoWithoutLeadingSlash.indexOf('/'));
+				resourcePath = pathInfoWithoutLeadingSlash.substring(pathInfoWithoutLeadingSlash.indexOf('/'));
+			} else {
+				throw new NotFoundException();
+			}
+
+			ClientObjectLibrary componentLibrary = componentLibraryRegistry.getComponentLibraryById(componentLibraryId);
+			if (componentLibrary == null) {
+				throw new NotFoundException();
+			}
+
+			String fullPath = req.getServletPath() + req.getPathInfo();
+
+			if ("/".equals(resourcePath)) {
+				streamUniqueResource(fullPath, componentLibrary::getMainJsResource, resp);
+				return;
+			} else if (resourcePath.equals("/" + componentLibraryId + ".css")) {
+				streamUniqueResource(fullPath, componentLibrary::getMainCssResource, resp);
+				return;
+			}
+
+			streamUniqueResource(fullPath, () -> componentLibrary.getResource(resourcePath), resp);
+		} catch (NotFoundException notFoundException) {
 			resp.setStatus(404);
-			return;
 		}
-
-		ClientObjectLibrary componentLibrary = componentLibraryRegistry.getComponentLibraryById(componentLibraryId);
-		if (componentLibrary == null) {
-			resp.setStatus(404);
-			return;
-		}
-
-		String fullPath = req.getServletPath() + req.getPathInfo();
-
-		if ("/".equals(resourcePath)) {
-			streamUniqueResource(fullPath, componentLibrary::getMainJsResource, resp);
-			return;
-		} else if (resourcePath.equals("/" + componentLibraryId + ".css")) {
-			streamUniqueResource(fullPath, componentLibrary::getMainCssResource, resp);
-			return;
-		}
-
-		streamUniqueResource(fullPath, () -> componentLibrary.getResource(resourcePath), resp);
 	}
 
 	private void streamUniqueResource(String fullPath, Supplier<Resource> inputStreamSupplier, HttpServletResponse resp) throws IOException {
 		String hash = hashByPath.computeIfAbsent(fullPath, s -> {
 			Resource resource = inputStreamSupplier.get();
 			if (resource == null) {
-				return NOT_FOUND_HASH;
+				throw new NotFoundException();
 			} else {
 				return getResourceHash(resource);
 			}
 		});
-
-		if (hash.equals(NOT_FOUND_HASH)) {
-			resp.sendError(404);
-			return;
-		}
 
 		String existingFullPath = pathByResourceHash.computeIfAbsent(hash, s -> fullPath);
 
@@ -101,15 +98,20 @@ public class ComponentLibraryResourceServlet extends HttpServlet {
 	private static String getResourceHash(Resource resource) {
 		MessageDigest digest = createDigest();
 		byte[] buffer= new byte[8192];
-		try(BufferedInputStream bis = new BufferedInputStream(resource.getInputStream())) {
-			int count;
-			while ((count = bis.read(buffer)) > 0) {
-				digest.update(buffer, 0, count);
+		try (InputStream inputStream = resource.getInputStream()) {
+			if (inputStream == null) {
+				throw new NotFoundException("Not found: " + resource);
 			}
-		} catch (IOException e) {
+			try(BufferedInputStream bis = new BufferedInputStream(inputStream)) {
+				int count;
+				while ((count = bis.read(buffer)) > 0) {
+					digest.update(buffer, 0, count);
+				}
+			}
+			return bytesToHex(digest.digest());
+		}  catch (IOException e) {
 			throw ExceptionUtil.softenException(e);
 		}
-		return bytesToHex(digest.digest());
 	}
 
 
