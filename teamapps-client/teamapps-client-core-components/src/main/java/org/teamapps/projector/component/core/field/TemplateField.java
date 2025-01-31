@@ -58,7 +58,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 	}
 
 	@Override
-	public DtoTemplateField createConfig() {
+	public DtoTemplateField createDto() {
 		DtoTemplateField ui = new DtoTemplateField();
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setTemplate(template);
@@ -98,7 +98,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 
 	public TemplateField<RECORD> setTemplate(Template template) {
 		this.template = template;
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 		return this;
 	}
 
@@ -108,7 +108,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 
 	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 		return this;
 	}
 

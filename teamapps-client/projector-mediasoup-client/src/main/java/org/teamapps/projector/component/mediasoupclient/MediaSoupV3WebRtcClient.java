@@ -76,7 +76,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 	}
 
 	@Override
-	public DtoMediaSoupV3WebRtcClient createConfig() {
+	public DtoMediaSoupV3WebRtcClient createDto() {
 		DtoMediaSoupV3WebRtcClient ui = new DtoMediaSoupV3WebRtcClient();
 		mapAbstractConfigProperties(ui);
 		ui.setPublishingParameters(publishingParameters);
@@ -216,7 +216,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 	}
 
 	private void update() {
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public boolean isActivityLineVisible() {

@@ -99,7 +99,7 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoWorkSpaceLayoutItem uiInitialLayout = getMainRootItem().createDtoItem();
 		List<DtoWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
 				.map(WorkSpaceLayoutView::createDtoView)

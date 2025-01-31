@@ -25,7 +25,7 @@ import org.teamapps.commons.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.filefield.*;
 import org.teamapps.projector.event.ProjectorEvent;
@@ -105,7 +105,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoSimpleFileField field = new DtoSimpleFileField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));

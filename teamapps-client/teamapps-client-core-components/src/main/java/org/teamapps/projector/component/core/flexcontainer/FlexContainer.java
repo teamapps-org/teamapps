@@ -46,7 +46,7 @@ public class FlexContainer extends AbstractComponent implements DtoFlexContainer
 	private JustifyContent justifyContent = JustifyContent.START;
 
 	@Override
-	public DtoFlexContainer createConfig() {
+	public DtoFlexContainer createDto() {
 		DtoFlexContainer uiFlexContainer = new DtoFlexContainer();
 		mapAbstractConfigProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()

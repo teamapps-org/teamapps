@@ -74,7 +74,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements DtoCu
 	}
 
 	@Override
-	public DtoAbstractField createConfig() {
+	public DtoAbstractField createDto() {
 		DtoCurrencyField field = new DtoCurrencyField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setCurrencyUnits(currencies.stream()

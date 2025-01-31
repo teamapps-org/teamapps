@@ -102,7 +102,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> {
 	}
 
 	@Override
-	public DtoAbstractField createConfig() {
+	public DtoAbstractField createDto() {
 		DtoComboBox comboBox = new DtoComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		return comboBox;

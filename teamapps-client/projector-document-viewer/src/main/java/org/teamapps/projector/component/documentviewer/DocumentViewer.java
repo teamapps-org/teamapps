@@ -21,7 +21,7 @@ package org.teamapps.projector.component.documentviewer;
 
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.BoxShadow;
 
@@ -50,7 +50,7 @@ public class DocumentViewer extends AbstractComponent implements DtoDocumentView
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoDocumentViewer documentViewer = new DtoDocumentViewer();
 		mapAbstractConfigProperties(documentViewer);
 		documentViewer.setPageUrls(pageUrls);

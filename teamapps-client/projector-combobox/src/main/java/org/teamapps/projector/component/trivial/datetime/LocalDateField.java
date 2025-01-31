@@ -55,7 +55,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 	}
 
 	@Override
-	public DtoLocalDateField createConfig() {
+	public DtoLocalDateField createDto() {
 		DtoLocalDateField dateField = new DtoLocalDateField();
 		mapAbstractFieldAttributesToUiField(dateField);
 		dateField.setShowDropDownButton(showDropDownButton);
@@ -96,7 +96,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public boolean isFavorPastDates() {
@@ -105,7 +105,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setFavorPastDates(boolean favorPastDates) {
 		this.favorPastDates = favorPastDates;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public Locale getLocale() {
@@ -122,7 +122,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -131,7 +131,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public boolean isShowClearButton() {
@@ -140,7 +140,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public LocalDate getDefaultSuggestionDate() {
@@ -149,7 +149,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setDefaultSuggestionDate(LocalDate defaultSuggestionDate) {
 		this.defaultSuggestionDate = defaultSuggestionDate;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public boolean isShuffledFormatSuggestionsEnabled() {
@@ -158,7 +158,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setShuffledFormatSuggestionsEnabled(boolean shuffledFormatSuggestionsEnabled) {
 		this.shuffledFormatSuggestionsEnabled = shuffledFormatSuggestionsEnabled;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public DateFieldDropDownMode getDropDownMode() {
@@ -167,7 +167,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setDropDownMode(DateFieldDropDownMode dropDownMode) {
 		this.dropDownMode = dropDownMode;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public String getEmptyText() {
@@ -176,6 +176,6 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	public void setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		clientObjectChannel.update(this.createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 }

@@ -22,7 +22,7 @@ package org.teamapps.projector.component.mapview;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.teamapps.projector.component.AbstractComponent;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.mapview.shape.*;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
@@ -88,7 +88,7 @@ public class MapView<RECORD> extends AbstractComponent implements DtoMapViewEven
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoMapView uiMap = new DtoMapView();
 		mapAbstractConfigProperties(uiMap);
 

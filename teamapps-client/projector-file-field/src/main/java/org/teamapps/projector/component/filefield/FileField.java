@@ -27,7 +27,7 @@ import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
 import org.teamapps.projector.clientrecordcache.ClientRecordCache;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
@@ -85,7 +85,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoFileField uiField = new DtoFileField(fileItemTemplate, uploadButtonTemplate, uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getPropertyNames()));
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxBytesPerFile(maxBytesPerFile);

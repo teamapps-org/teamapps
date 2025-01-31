@@ -57,7 +57,7 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 	}
 
 	@Override
-	public DtoTreeGraph createConfig() {
+	public DtoTreeGraph createDto() {
 		DtoTreeGraph ui = new DtoTreeGraph();
 		mapAbstractConfigProperties(ui);
 		ui.setNodes(createDtoNodes(nodesById.values()));
@@ -192,7 +192,7 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 	}
 
 	private void update() {
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public void moveToRootNode() {

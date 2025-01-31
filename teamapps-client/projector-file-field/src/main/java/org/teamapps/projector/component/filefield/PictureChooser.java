@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import net.coobird.thumbnailator.Thumbnails;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.common.ImageCropperSelection;
 import org.teamapps.projector.component.common.ImageCropperSelectionMode;
 import org.teamapps.projector.component.core.field.Button;
@@ -140,7 +140,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoPictureChooser uiField = new DtoPictureChooser();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setUploadUrl(uploadUrl);

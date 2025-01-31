@@ -45,7 +45,7 @@ public class ElegantPanel extends AbstractComponent implements DtoElegantPanelEv
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoElegantPanel uiElegantPanel = new DtoElegantPanel();
 		mapAbstractConfigProperties(uiElegantPanel);
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor != null ? bodyBackgroundColor.toHtmlColorString() : null);

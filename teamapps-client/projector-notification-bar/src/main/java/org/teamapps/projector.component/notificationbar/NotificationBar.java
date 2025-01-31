@@ -79,7 +79,7 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoNotificationBar ui = new DtoNotificationBar();
 		mapAbstractConfigProperties(ui);
 		ui.setInitialItems(itemsByUiId.values().stream()

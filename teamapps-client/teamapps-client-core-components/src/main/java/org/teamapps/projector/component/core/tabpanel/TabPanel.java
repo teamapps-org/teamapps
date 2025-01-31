@@ -137,7 +137,7 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoTabPanel uiTabPanel = new DtoTabPanel();
 		mapAbstractConfigProperties(uiTabPanel);
 		List<DtoTab> uiTabs = tabs.stream()

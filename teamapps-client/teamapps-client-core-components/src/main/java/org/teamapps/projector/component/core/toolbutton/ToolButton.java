@@ -74,7 +74,7 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		String icon = getSessionContext().resolveIcon(this.icon);
 		DtoToolButton uiToolButton = new DtoToolButton(icon, popoverText);
 		uiToolButton.setIconSize(iconSize);

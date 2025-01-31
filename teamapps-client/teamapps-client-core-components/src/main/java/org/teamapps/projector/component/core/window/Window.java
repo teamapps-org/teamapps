@@ -70,7 +70,7 @@ public class Window extends Panel implements Showable, DtoWindowEventHandler {
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoWindow window = new DtoWindow();
 		mapUiPanelProperties(window);
 		window.setModal(modal);

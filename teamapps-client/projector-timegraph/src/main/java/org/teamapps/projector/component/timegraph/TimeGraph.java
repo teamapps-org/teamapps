@@ -133,7 +133,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		List<DtoTimeChartZoomLevel> uiZoomLevels = createDtoZoomlevels();
 
 		Interval domainX = retrieveDomainX();

@@ -24,7 +24,7 @@ import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class ChatInput extends AbstractComponent implements DtoChatInputEventHan
 	private boolean attachmentsEnabled = true;
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoChatInput uiChatInput = new DtoChatInput();
 		mapAbstractConfigProperties(uiChatInput);
 		uiChatInput.setDefaultFileIcon(getSessionContext().resolveIcon(defaultAttachmentIcon));

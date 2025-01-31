@@ -42,7 +42,7 @@ public class MustacheTemplate implements Template, DtoMustacheTemplateEventHandl
 	}
 
 	@Override
-	public DtoMustacheTemplate createConfig() {
+	public DtoMustacheTemplate createDto() {
 		DtoMustacheTemplate dto = new DtoMustacheTemplate(templateString);
 		return dto;
 	}

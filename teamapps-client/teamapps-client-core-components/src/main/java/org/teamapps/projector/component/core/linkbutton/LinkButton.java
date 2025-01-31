@@ -46,7 +46,7 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 	}
 
 	@Override
-	public DtoLinkButton createConfig() {
+	public DtoLinkButton createDto() {
 		DtoLinkButton ui = new DtoLinkButton();
 		mapAbstractConfigProperties(ui);
 		ui.setText(text);
@@ -62,7 +62,7 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 	}
 
 	private void update() {
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	public String getText() {

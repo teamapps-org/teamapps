@@ -38,7 +38,7 @@ public class LocalTimeField extends AbstractTimeField<LocalTime> implements DtoL
 	}
 
 	@Override
-	public DtoAbstractField createConfig() {
+	public DtoAbstractField createDto() {
 		DtoLocalTimeField uiTimeField = new DtoLocalTimeField();
 		mapAbstractTimeFieldUiValues(uiTimeField);
 		return uiTimeField;

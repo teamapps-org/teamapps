@@ -119,7 +119,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	@Override
-	public DtoAbstractField createConfig() {
+	public DtoAbstractField createDto() {
 		DtoTagComboBox comboBox = new DtoTagComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		comboBox.setMaxEntries(maxEntries);

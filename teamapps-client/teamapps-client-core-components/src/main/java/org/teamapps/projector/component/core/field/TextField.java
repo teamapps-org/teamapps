@@ -86,7 +86,7 @@ public class TextField extends AbstractField<String> implements DtoTextFieldEven
 	}
 
 	@Override
-	public DtoTextField createConfig() {
+	public DtoTextField createDto() {
 		DtoTextField uiField = new DtoTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(maxCharacters);

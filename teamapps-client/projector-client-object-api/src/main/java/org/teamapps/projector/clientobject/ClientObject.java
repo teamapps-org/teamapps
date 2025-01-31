@@ -33,6 +33,6 @@ public interface ClientObject extends ClientMessageHandler {
 
 	Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	Object createConfig();
+	Object createDto();
 
 }

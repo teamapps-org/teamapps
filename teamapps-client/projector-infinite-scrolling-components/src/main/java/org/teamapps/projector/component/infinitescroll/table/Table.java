@@ -222,7 +222,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		List<DtoTableColumn> columns = this.columns.stream()
 				.map(TableColumn::createDtoTableColumn)
 				.collect(Collectors.toList());

@@ -76,7 +76,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent implements DtoNe
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		List<DtoNetworkNode> nodes = createDtoNodes(this.nodes);
 		List<DtoNetworkLink> links = createDtoLinks(this.links);
 		DtoNetworkGraph ui = new DtoNetworkGraph(nodes, links, Collections.emptyList());

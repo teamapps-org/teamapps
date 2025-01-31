@@ -35,7 +35,7 @@ public class Toolbar extends AbstractToolContainer implements DtoToolbarEventHan
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		List<DtoToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
 				.filter(group -> !group.isRightSide())
 				.sorted()

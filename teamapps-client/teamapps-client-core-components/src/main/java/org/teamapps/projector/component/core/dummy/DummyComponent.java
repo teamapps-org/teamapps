@@ -46,7 +46,7 @@ public class DummyComponent extends AbstractComponent implements DtoDummyCompone
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoDummyComponent dummyComponent = new DtoDummyComponent();
 		mapAbstractConfigProperties(dummyComponent);
 		dummyComponent.setText(text);

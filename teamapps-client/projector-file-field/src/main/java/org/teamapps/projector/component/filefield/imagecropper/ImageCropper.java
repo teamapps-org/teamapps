@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.filefield.imagecropper;
 
 import org.teamapps.projector.component.AbstractComponent;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.common.*;
 import org.teamapps.projector.event.ProjectorEvent;
 
@@ -39,7 +39,7 @@ public class ImageCropper extends AbstractComponent implements DtoImageCropperEv
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoImageCropper uiImageCropper = new DtoImageCropper(imageUrl, selectionMode, aspectRatio);
 		mapAbstractConfigProperties(uiImageCropper);
 		return uiImageCropper;

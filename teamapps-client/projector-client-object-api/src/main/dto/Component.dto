@@ -21,9 +21,9 @@ package "projector-client-object-api":org.teamapps.projector.component;
 
 import org.teamapps.projector.clientobject.DtoClientObject;
 
-import external org.teamapps.projector.component.ComponentConfig;
+import external org.teamapps.projector.component.DtoComponentConfig;
 
-abstract class DtoComponent extends DtoClientObject implements ComponentConfig! {
+abstract class DtoComponent extends DtoClientObject implements DtoComponentConfig! {
 	boolean visible;
 	Dictionary<Dictionary<String>> stylesBySelector;
 	Dictionary<Dictionary<Boolean>> classNamesBySelector;

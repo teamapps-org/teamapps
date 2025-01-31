@@ -59,8 +59,8 @@ public class TeamAppsJavaDtoGeneratorTest {
 	@Test
 	public void classesImplementingExternalInterface() throws Exception {
 		String dslString = "package \"x\":org.teamapps.projector.dto;\n"
-						   + "import external org.teamapps.projector.clientobject.component.ComponentConfig;\n"
-						   + "class A implements ComponentConfig {}";
+						   + "import external org.teamapps.projector.clientobject.component.DtoComponentConfig;\n"
+						   + "class A implements DtoComponentConfig {}";
 		executeClassTest(
 				dslString,
 				"org.teamapps.projector.dto.A",

@@ -194,7 +194,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoCalendar uiCalendar = new DtoCalendar();
 		mapAbstractConfigProperties(uiCalendar);
 		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());

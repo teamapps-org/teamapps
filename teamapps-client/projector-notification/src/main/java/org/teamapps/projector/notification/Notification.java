@@ -77,7 +77,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 		return notification;
 	}
 
-	public DtoNotification createConfig() {
+	public DtoNotification createDto() {
 		DtoNotification ui = new DtoNotification();
 		mapAbstractConfigProperties(ui);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
@@ -110,7 +110,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 		return this;
 	}
 
@@ -120,7 +120,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 
 	public Notification setPadding(Spacing padding) {
 		this.padding = padding;
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 		return this;
 	}
 
@@ -130,7 +130,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 
 	public Notification setDismissible(boolean dismissible) {
 		this.dismissible = dismissible;
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 		return this;
 	}
 
@@ -140,7 +140,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 
 	public Notification setProgressBarEnabled(boolean progressBarEnabled) {
 		this.progressBarEnabled = progressBarEnabled;
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 		return this;
 	}
 
@@ -150,7 +150,7 @@ public class Notification extends AbstractComponent implements DtoNotificationEv
 
 	public Notification setContent(Component content) {
 		this.content = content;
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 		return this;
 	}
 

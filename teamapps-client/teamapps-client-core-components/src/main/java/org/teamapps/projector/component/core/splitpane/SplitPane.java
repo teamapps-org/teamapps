@@ -62,7 +62,7 @@ public class SplitPane extends AbstractComponent implements DtoSplitPaneEventHan
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoSplitPane uiSplitPane = new DtoSplitPane();
 		uiSplitPane.setSplitDirection(splitDirection);
 		uiSplitPane.setSizePolicy(sizePolicy);

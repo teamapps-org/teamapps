@@ -34,7 +34,7 @@ public class BlogView extends AbstractComponent implements DtoBlogViewEventHandl
 	private final List<AbstractBlock> blocks = new ArrayList<>();
 
 	@Override
-	public DtoBlogView createConfig() {
+	public DtoBlogView createDto() {
 		DtoBlogView uiPageView = new DtoBlogView();
 		mapAbstractConfigProperties(uiPageView);
 		uiPageView.setBlocks(blocks.stream()

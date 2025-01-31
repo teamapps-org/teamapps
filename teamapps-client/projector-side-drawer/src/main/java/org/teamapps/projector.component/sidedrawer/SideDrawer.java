@@ -22,7 +22,7 @@ package org.teamapps.projector.component.sidedrawer;
 import org.teamapps.common.format.Color;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.common.DrawerPosition;
 import org.teamapps.projector.component.common.DtoSideDrawer;
 import org.teamapps.projector.component.common.DtoSideDrawerClientObjectChannel;
@@ -55,7 +55,7 @@ public class SideDrawer extends AbstractComponent implements DtoSideDrawerEventH
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoSideDrawer ui = new DtoSideDrawer();
 		mapAbstractConfigProperties(ui);
 		ui.setContainerComponent(containerComponent);

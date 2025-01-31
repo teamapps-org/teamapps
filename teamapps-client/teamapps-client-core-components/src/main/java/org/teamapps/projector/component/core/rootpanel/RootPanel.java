@@ -43,7 +43,7 @@ public class RootPanel extends AbstractComponent implements DtoRootPanelEventHan
 	private Component content;
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoRootPanel uiRootPanel = new DtoRootPanel();
 		mapAbstractConfigProperties(uiRootPanel);
 		uiRootPanel.setBackgroundImageUrl(backgroundImageUrl);

@@ -2,7 +2,7 @@ package org.teamapps.projector.component;
 
 import java.util.Map;
 
-public interface ComponentConfig {
+public interface DtoComponentConfig {
 
 	boolean isVisible();
 

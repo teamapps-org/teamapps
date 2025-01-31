@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.Field;
 import org.teamapps.projector.component.field.FieldMessageSeverity;
@@ -87,7 +87,7 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		List<Field> uiFields = logicalForm.getFields().values().stream()
 				.collect(Collectors.toList());
 		List<DtoFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();

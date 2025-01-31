@@ -53,7 +53,7 @@ public class NavigationBar extends AbstractComponent implements DtoNavigationBar
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoNavigationBar uiNavigationBar = new DtoNavigationBar();
 		mapAbstractConfigProperties(uiNavigationBar);
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);

@@ -26,7 +26,7 @@ import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.ClientObject;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 
 import java.util.List;
 import java.util.function.Function;
@@ -70,7 +70,7 @@ public class ChatDisplay extends AbstractComponent implements DtoChatDisplayEven
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoChatDisplay uiChatDisplay = new DtoChatDisplay();
 		mapAbstractConfigProperties(uiChatDisplay);
 		ChatMessageBatch modelResponse = model.getLastChatMessages(messagesFetchSize);

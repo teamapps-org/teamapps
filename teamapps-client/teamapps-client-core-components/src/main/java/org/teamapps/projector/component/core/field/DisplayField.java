@@ -48,7 +48,7 @@ public class DisplayField extends AbstractField<String> implements DtoDisplayFie
 	}
 
 	@Override
-	public DtoAbstractField createConfig() {
+	public DtoAbstractField createDto() {
 		DtoDisplayField uiDisplayField = new DtoDisplayField();
 		mapAbstractFieldAttributesToUiField(uiDisplayField);
 		uiDisplayField.setShowBorder(showBorder);

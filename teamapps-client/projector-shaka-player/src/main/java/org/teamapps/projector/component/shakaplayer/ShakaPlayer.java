@@ -21,7 +21,7 @@ package org.teamapps.projector.component.shakaplayer;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.projector.component.AbstractComponent;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.session.SessionContext;
 
@@ -60,7 +60,7 @@ public class ShakaPlayer extends AbstractComponent implements DtoShakaPlayerEven
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoShakaPlayer ui = new DtoShakaPlayer();
 		mapAbstractConfigProperties(ui);
 		ui.setHlsUrl(hlsUrl);

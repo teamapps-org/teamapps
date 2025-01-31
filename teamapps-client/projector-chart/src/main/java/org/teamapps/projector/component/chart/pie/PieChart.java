@@ -55,7 +55,7 @@ public class PieChart extends AbstractComponent implements DtoPieChartEventHandl
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoPieChart uiPieChart = new DtoPieChart();
 		mapAbstractConfigProperties(uiPieChart);
 		uiPieChart.setDataPointWeighting(dataPointWeighting);

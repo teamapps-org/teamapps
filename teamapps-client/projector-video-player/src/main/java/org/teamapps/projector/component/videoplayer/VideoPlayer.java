@@ -22,7 +22,7 @@ package org.teamapps.projector.component.videoplayer;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.projector.component.AbstractComponent;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.event.ProjectorEvent;
 
 public class VideoPlayer extends AbstractComponent implements DtoVideoPlayerEventHandler {
@@ -50,7 +50,7 @@ public class VideoPlayer extends AbstractComponent implements DtoVideoPlayerEven
 	}
 
 	@Override
-	public ComponentConfig createConfig() {
+	public DtoComponentConfig createDto() {
 		DtoVideoPlayer uiVideoPlayer = new DtoVideoPlayer();
 		mapAbstractConfigProperties(uiVideoPlayer);
 		uiVideoPlayer.setUrl(url);

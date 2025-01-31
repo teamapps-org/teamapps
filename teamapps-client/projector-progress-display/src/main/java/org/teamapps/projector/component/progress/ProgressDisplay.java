@@ -52,7 +52,7 @@ public class ProgressDisplay extends AbstractComponent implements DtoProgressDis
 	}
 
 	@Override
-	public DtoProgressDisplay createConfig() {
+	public DtoProgressDisplay createDto() {
 		DtoProgressDisplay ui = new DtoProgressDisplay();
 		mapAbstractConfigProperties(ui);
 		ui.setIcon(getSessionContext().resolveIcon(icon));
@@ -65,7 +65,7 @@ public class ProgressDisplay extends AbstractComponent implements DtoProgressDis
 	}
 
 	private void updateUi() {
-		clientObjectChannel.update(createConfig());
+		clientObjectChannel.update(this.createDto());
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public class MobileLayout extends AbstractComponent implements DtoMobileLayoutEv
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoMobileLayout uiMobileLayout = new DtoMobileLayout();
 		mapAbstractConfigProperties(uiMobileLayout);
 		if (content != null) {

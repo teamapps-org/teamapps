@@ -36,11 +36,11 @@ import org.teamapps.commons.util.ExceptionUtil;
  */
 
 import org.teamapps.projector.clientobject.ClientObject;
-import org.teamapps.projector.clientobject.component.ComponentConfig;
+import org.teamapps.projector.clientobject.component.DtoComponentConfig;
 
 @JsonTypeName("A")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class A implements ComponentConfig, DtoObject {
+public class A implements DtoComponentConfig, DtoObject {
 
     public static final String TYPE_ID = "A";  // TODO remove
 

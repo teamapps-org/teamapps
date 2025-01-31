@@ -62,7 +62,7 @@ public class Label extends AbstractField<String> implements DtoLabelEventHandler
 	}
 
 	@Override
-	public DtoAbstractField createConfig() {
+	public DtoAbstractField createDto() {
 		DtoLabel uiLabel = new DtoLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));

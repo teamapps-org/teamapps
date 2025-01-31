@@ -48,7 +48,7 @@ public class ComponentField extends AbstractField<Void> implements DtoComponentF
     }
 
     @Override
-    public DtoAbstractField createConfig() {
+    public DtoAbstractField createDto() {
         DtoComponentField uiField = new DtoComponentField();
         mapAbstractFieldAttributesToUiField(uiField);
         uiField.setComponent(component);

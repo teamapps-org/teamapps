@@ -39,7 +39,7 @@ public class MultiLineTextField extends TextField implements DtoTextFieldEventHa
 	}
 
 	@Override
-	public DtoTextField createConfig() {
+	public DtoTextField createDto() {
 		DtoMultiLineTextField uiField = new DtoMultiLineTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());

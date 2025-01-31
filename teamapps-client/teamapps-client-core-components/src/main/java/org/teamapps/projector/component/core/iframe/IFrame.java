@@ -43,7 +43,7 @@ public class IFrame extends AbstractComponent implements DtoIFrameEventHandler {
 	}
 
 	@Override
-	public DtoComponent createConfig() {
+	public DtoComponent createDto() {
 		DtoIFrame uiIFrame = new DtoIFrame().setUrl(url);
 		mapAbstractConfigProperties(uiIFrame);
 		return uiIFrame;

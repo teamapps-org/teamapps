@@ -755,7 +755,7 @@ public class SessionContext {
 					ClientObjectTypeName typeNameAnnotation = clientObject.getClass().getAnnotation(ClientObjectTypeName.class);
 					String typeName = typeNameAnnotation != null ? typeNameAnnotation.value() : clientObject.getClass().getSimpleName();
 
-					uiSession.sendReliableServerMessage(new CREATE_OBJ(libraryUuid, typeName, clientId, clientObject.createConfig(), List.copyOf(enabledEventNames)));
+					uiSession.sendReliableServerMessage(new CREATE_OBJ(libraryUuid, typeName, clientId, clientObject.createDto(), List.copyOf(enabledEventNames)));
 				} finally {
 					renderingClientObjects.remove(clientObject);
 				}

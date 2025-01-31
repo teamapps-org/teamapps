@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.teamapps.commons.event.Event;
 import org.teamapps.projector.clientobject.ClientObjectChannel;
-import org.teamapps.projector.component.ComponentConfig;
+import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.FieldMessage;
 import org.teamapps.projector.component.field.FieldMessageSeverity;
@@ -214,7 +214,7 @@ public class MultiFieldValidatorTest {
 
     public static class DummyField extends AbstractField<String> {
         @Override
-        public ComponentConfig createConfig() {
+        public DtoComponentConfig createDto() {
             return null;
         }
 

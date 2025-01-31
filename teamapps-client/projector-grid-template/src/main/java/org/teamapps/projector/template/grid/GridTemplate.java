@@ -249,7 +249,7 @@ public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 	}
 
 	@Override
-	public DtoGridTemplate createConfig() {
+	public DtoGridTemplate createDto() {
 		List<DtoGridColumn> uiColumns = columns.stream()
 				.map(column -> column != null ? column.createDtoGridColumn() : null)
 				.collect(Collectors.toList());

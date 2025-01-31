@@ -24,7 +24,7 @@ import org.teamapps.projector.clientobject.ClientObject;
 public interface Component extends ClientObject {
 
 	@Override
-	ComponentConfig createConfig();
+	DtoComponentConfig createDto();
 
 	boolean isVisible();
 
