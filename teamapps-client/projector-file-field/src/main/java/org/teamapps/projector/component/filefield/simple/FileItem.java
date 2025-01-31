@@ -22,16 +22,12 @@ package org.teamapps.projector.component.filefield.simple;
 
 import org.teamapps.icons.Icon;
 import org.teamapps.projector.component.filefield.DtoFileItem;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.io.File;
 import java.util.UUID;
 
 public class FileItem {
-
-	public final ProjectorEvent<Void> onClick = new ProjectorEvent<>();
-	public final ProjectorEvent<Void> onRemoved = new ProjectorEvent<>();
 
 	private final String uuid;
 	private FileItemState state;

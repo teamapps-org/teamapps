@@ -45,6 +45,7 @@ public abstract class AbstractToolContainer extends AbstractComponent implements
 
 	public AbstractToolContainer() {
 		super();
+		clientObjectChannel.toggleToolbarButtonClickEvent(true); // delegated
 	}
 
 	@Override

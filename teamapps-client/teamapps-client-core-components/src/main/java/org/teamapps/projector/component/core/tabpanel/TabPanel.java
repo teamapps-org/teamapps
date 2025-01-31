@@ -39,8 +39,8 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 
 	private final DtoTabPanelClientObjectChannel clientObjectChannel = new DtoTabPanelClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<Tab> onTabSelected = new ProjectorEvent<>(clientObjectChannel::toggleTabSelectedEvent);
-	public final ProjectorEvent<Tab> onTabClosed = new ProjectorEvent<>(clientObjectChannel::toggleTabClosedEvent);
+	public final ProjectorEvent<Tab> onTabSelected = new ProjectorEvent<>();
+	public final ProjectorEvent<Tab> onTabClosed = new ProjectorEvent<>();
 
 	private final List<Tab> tabs = new ArrayList<>();
 	private Tab selectedTab;
@@ -49,6 +49,8 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	private TabPanelTabStyle tabStyle = TabPanelTabStyle.BLOCKS;
 
 	public TabPanel() {
+		clientObjectChannel.toggleTabSelectedEvent(true); // delegated
+		clientObjectChannel.toggleTabClosedEvent(true); // delegated
 	}
 
 	public TabPanel(List<Tab> tabs) {

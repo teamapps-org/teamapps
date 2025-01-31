@@ -40,13 +40,16 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 
 	private final DtoNotificationBarClientObjectChannel clientObjectChannel = new DtoNotificationBarClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = new ProjectorEvent<>(clientObjectChannel::toggleItemClosedEvent);
-	public final ProjectorEvent<NotificationBarItem> onItemClicked = new ProjectorEvent<>(clientObjectChannel::toggleItemClickedEvent);
-	public final ProjectorEvent<NotificationBarItem> onItemActionLinkClicked = new ProjectorEvent<>(clientObjectChannel::toggleItemActionLinkClickedEvent);
+	public final ProjectorEvent<NotificationBarItemClosedEvent> onItemClosed = new ProjectorEvent<>();
+	public final ProjectorEvent<NotificationBarItem> onItemClicked = new ProjectorEvent<>();
+	public final ProjectorEvent<NotificationBarItem> onItemActionLinkClicked = new ProjectorEvent<>();
 
 	private final Map<String, NotificationBarItem> itemsByUiId = new LinkedHashMap<>();
 
 	public NotificationBar() {
+		clientObjectChannel.toggleItemClosedEvent(true); // is delegated to items...
+		clientObjectChannel.toggleItemClickedEvent(true); // is delegated to items...
+		clientObjectChannel.toggleItemActionLinkClickedEvent(true); // is delegated to items...
 	}
 
 	@Override

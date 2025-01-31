@@ -35,7 +35,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	private final DtoAbstractDateTimeFieldClientObjectChannel clientObjectChannel = new DtoAbstractDateTimeFieldClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<String> onFreeTextEntered = new ProjectorEvent<>();
+	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
 
 	private boolean showDropDownButton = true;
 	private boolean favorPastDates = false;
@@ -61,7 +61,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	@Override
 	public void handleTextInput(String enteredString) {
-		onFreeTextEntered.fire(enteredString);
+		onTextInput.fire(enteredString);
 	}
 
 	public boolean isShowDropDownButton() {
