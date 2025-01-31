@@ -32,6 +32,7 @@ import org.teamapps.dto.protocol.server.*;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.IconStyle;
 import org.teamapps.icons.SessionIconProvider;
+import org.teamapps.projector.ClosedSessionHandlingType;
 import org.teamapps.projector.DtoGlobals;
 import org.teamapps.projector.KeyEventType;
 import org.teamapps.projector.annotation.ClientObjectTypeName;
@@ -70,7 +71,7 @@ public class SessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final ExecutorService sessionExecutor;
+	private ExecutorService sessionExecutor;
 
 	private final ProjectorEvent<KeyboardEvent> onGlobalKeyEventOccurred = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(null, "globalKeyEventOccurred", hasListeners));
 	public final ProjectorEvent<NavigationStateChangeEvent> onNavigationStateChange = new ProjectorEvent<>(hasListeners -> toggleStaticEvent(null, "navigationStateChange", hasListeners));
@@ -109,6 +110,8 @@ public class SessionContext {
 	 */
 	private Function<Icon, Icon> iconTransformer = Function.identity();
 
+	private boolean destroyed;
+
 	private final InternalUiSessionListener uiSessionListener = new InternalUiSessionListener();
 
 	private final Set<ClientObjectLibrary> loadedComponentLibraries = new HashSet<>();
@@ -120,6 +123,8 @@ public class SessionContext {
 	private ZoneId timeZone;
 	private DayOfWeek firstDayOfWeek; // null == determine by locale
 	private String iconBasePath = "/icons";
+	private ClosedSessionHandlingType closedSessionHandling = ClosedSessionHandlingType.MESSAGE_WINDOW;
+
 
 	public SessionContext(UiSession uiSession,
 						  ExecutorService sessionExecutor,
@@ -190,8 +195,12 @@ public class SessionContext {
 		public void onClosed(String sessionId, SessionClosingReason reason) {
 			runWithContext(() -> {
 				onDestroyed.fireIgnoringExceptions(reason);
-				// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
-				sessionExecutor.submit(sessionExecutor::shutdown);
+				synchronized (SessionContext.this) {
+					SessionContext.this.destroyed = true;
+					// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
+					sessionExecutor.submit(sessionExecutor::shutdown);
+					sessionExecutor = null; // GC (relevant only in case the sessionContext is retained in a memory leak)
+				}
 			});
 		}
 	}
@@ -254,6 +263,7 @@ public class SessionContext {
 
 	private void destroy(SessionClosingReason reason) {
 		uiSession.close(reason);
+		// the UiSession will call us back (onStateChanged(), onClosed())
 	}
 
 	public void sendStaticCommand(Class<? extends ClientObject> clientObjectClass, String name, Object... params) {
@@ -354,22 +364,28 @@ public class SessionContext {
 				throw new FastLaneExecutionException("Exception during fast lane execution!", t);
 			}
 		} else {
-			return CompletableFuture.supplyAsync(() -> {
-				CurrentSessionContext.set(this);
-				try {
-					Object[] resultHolder = new Object[1];
-					executionDecorators
-							.createWrappedRunnable(() -> resultHolder[0] = ExceptionUtil.runWithSoftenedExceptions(callable))
-							.run();
-					return ((R) resultHolder[0]);
-				} catch (Throwable t) {
-					LOGGER.error("Exception while executing within session context", t);
-					this.destroy(SessionClosingReason.SERVER_SIDE_ERROR);
-					throw t;
-				} finally {
-					CurrentSessionContext.unset();
+			synchronized (this) {
+				if (destroyed) {
+					return CompletableFuture.failedFuture(new SessionDestroyedException("Session " + getName() + " is already destroyed!"));
+				} else {
+					return CompletableFuture.supplyAsync(() -> {
+						CurrentSessionContext.set(this);
+						try {
+							Object[] resultHolder = new Object[1];
+							executionDecorators
+									.createWrappedRunnable(() -> resultHolder[0] = ExceptionUtil.runWithSoftenedExceptions(callable))
+									.run();
+							return ((R) resultHolder[0]);
+						} catch (Throwable t) {
+							LOGGER.error("Exception while executing within session context", t);
+							this.destroy(SessionClosingReason.SERVER_SIDE_ERROR);
+							throw t;
+						} finally {
+							CurrentSessionContext.unset();
+						}
+					}, sessionExecutor);
 				}
-			}, sessionExecutor);
+			}
 		}
 	}
 
@@ -707,6 +723,15 @@ public class SessionContext {
 
 	public void setIconBasePath(String iconBasePath) {
 		this.iconBasePath = iconBasePath;
+	}
+
+	public ClosedSessionHandlingType getClosedSessionHandling() {
+		return closedSessionHandling;
+	}
+
+	public void setClosedSessionHandling(ClosedSessionHandlingType closedSessionHandling) {
+		this.closedSessionHandling = closedSessionHandling;
+		sendStaticCommand(null, "setClosedSessionHandling", closedSessionHandling);
 	}
 
 	public <T> T getInternalApi() {

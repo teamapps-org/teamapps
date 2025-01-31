@@ -21,7 +21,6 @@ package org.teamapps.projector.component.trivial.datetime;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ibm.icu.util.ULocale;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.trivial.*;
@@ -42,7 +41,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;
 	private boolean favorPastDates = false; // TODO: fix in trivial-components!!!
-	private ULocale locale;
+	private Locale locale;
 	private DateTimeFormatDescriptor dateFormat;
 	private LocalDate defaultSuggestionDate;
 	private boolean shuffledFormatSuggestionsEnabled = false;
@@ -50,7 +49,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 	private String emptyText;
 
 	public LocalDateField() {
-		this.locale = getSessionContext().getULocale();
+		this.locale = getSessionContext().getLocale();
 		this.dateFormat = getSessionContext().getDateFormat();
 	}
 
@@ -109,18 +108,10 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 	}
 
 	public Locale getLocale() {
-		return locale.toLocale();
-	}
-
-	public ULocale getULocale() {
 		return locale;
 	}
 
 	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		clientObjectChannel.update(this.createDto());
 	}

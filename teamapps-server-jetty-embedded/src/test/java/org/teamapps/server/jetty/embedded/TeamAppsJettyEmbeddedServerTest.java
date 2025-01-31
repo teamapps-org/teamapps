@@ -20,13 +20,16 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.projector.ClosedSessionHandlingType;
 import org.teamapps.projector.component.core.dummy.DummyComponent;
 import org.teamapps.projector.component.core.field.Button;
 import org.teamapps.projector.component.core.flexcontainer.VerticalLayout;
 import org.teamapps.projector.component.core.rootpanel.RootPanel;
-import org.teamapps.projector.component.core.window.Window;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.server.webcontroller.WebController;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -57,11 +60,12 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.subscribeToGlobalKeyEvents(true, false, false, false, false, true, true, System.out::println);
 
 
-			Window window = new Window(null, "asdf", null, 300, 300, true, true, true);
-			window.enableAutoHeight();
-			window.setMaximizable(true);
-			window.setContent(new DummyComponent());
-			window.show();
+
+			sessionContext.setClosedSessionHandling(ClosedSessionHandlingType.MESSAGE_WINDOW);
+
+			Executors.newSingleThreadScheduledExecutor().schedule(() -> sessionContext.runWithContext(() -> {
+				throw new RuntimeException();
+			}), 1, TimeUnit.SECONDS);
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = TeamAppsJettyEmbeddedServer.builder(controller)

@@ -19,7 +19,6 @@
  */
 package org.teamapps.projector.component.timegraph;
 
-import com.ibm.icu.util.ULocale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.commons.event.Disposable;
@@ -95,7 +94,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 	private double millisecondsPerPixel;
 	private Interval selectedInterval;
 
-	private ULocale locale = SessionContext.current().getULocale();
+	private Locale locale = SessionContext.current().getLocale();
 	private ZoneId timeZoneId = SessionContext.current().getTimeZone();
 
 	public TimeGraph() {
@@ -258,18 +257,10 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 	}
 
 	public Locale getLocale() {
-		return locale.toLocale();
-	}
-
-	public ULocale getULocale() {
 		return locale;
 	}
 
 	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		if (clientObjectChannel.isRendered()) {
 			LOGGER.warn("Cannot set the locale after rendering.");

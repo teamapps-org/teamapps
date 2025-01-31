@@ -20,7 +20,6 @@
 package org.teamapps.projector.component.core.field;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ibm.icu.util.ULocale;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.core.*;
 import org.teamapps.projector.component.field.AbstractField;
@@ -48,7 +47,7 @@ public class NumberField extends AbstractField<Number> implements DtoNumberField
 	private double sliderStep = 1;
 	private boolean commitOnSliderChange = true;
 
-	private ULocale locale = SessionContext.current().getULocale();
+	private Locale locale = SessionContext.current().getLocale();
 
 	public NumberField(int precision) {
 		super();
@@ -162,18 +161,10 @@ public class NumberField extends AbstractField<Number> implements DtoNumberField
 	}
 
 	public Locale getLocale() {
-		return locale.toLocale();
-	}
-
-	public ULocale getULocale() {
 		return locale;
 	}
 
 	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		clientObjectChannel.setLocale(locale.toLanguageTag());
 	}

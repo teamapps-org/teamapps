@@ -20,7 +20,6 @@
 package org.teamapps.projector.component.trivial.multicurrency;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ibm.icu.util.ULocale;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.DtoAbstractField;
@@ -44,7 +43,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements DtoCu
 
 	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
 
-	private ULocale locale = SessionContext.current().getULocale();
+	private Locale locale = SessionContext.current().getLocale();
 
 	private List<CurrencyUnit> currencies;
 
@@ -78,7 +77,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements DtoCu
 		DtoCurrencyField field = new DtoCurrencyField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setCurrencyUnits(currencies.stream()
-				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
+				.map(unit -> unit.toUiCurrencyUnit(locale))
 				.collect(Collectors.toList()));
 		field.setFixedPrecision(fixedPrecision);
 		field.setShowCurrencyBeforeAmount(currencyBeforeAmount);
@@ -95,14 +94,14 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements DtoCu
 	public CurrencyField setCurrencies(List<CurrencyUnit> currencies) {
 		this.currencies = currencies;
 		clientObjectChannel.setCurrencyUnits(currencies != null ? currencies.stream()
-				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
+				.map(unit -> unit.toUiCurrencyUnit(locale))
 				.collect(Collectors.toList()) : null);
 		return this;
 	}
 
 	@Override
 	public Object convertServerValueToClientValue(CurrencyValue currencyValue) {
-		return currencyValue != null ? currencyValue.toUiCurrencyValue(locale.toLocale()) : null;
+		return currencyValue != null ? currencyValue.toUiCurrencyValue(locale) : null;
 	}
 
 	@Override
@@ -183,18 +182,10 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements DtoCu
 	}
 
 	public Locale getLocale() {
-		return locale.toLocale();
-	}
-
-	public ULocale getULocale() {
 		return locale;
 	}
 
 	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		setCurrencies(currencies);
 		clientObjectChannel.setLocale(locale.toLanguageTag());

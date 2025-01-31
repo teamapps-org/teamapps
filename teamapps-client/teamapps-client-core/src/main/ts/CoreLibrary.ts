@@ -1,4 +1,5 @@
 import {
+	ClosedSessionHandlingType,
 	Component,
 	exitFullScreen,
 	KeyEventType,
@@ -85,6 +86,9 @@ export var CoreLibrary = {
 
 	setSessionMessageWindows(expiredMessageWindow: Showable, errorMessageWindow: Showable, terminatedMessageWindow: Showable, context: DefaultUiContext) {
 		context.setSessionMessageWindows(expiredMessageWindow, errorMessageWindow, terminatedMessageWindow);
+	},
+	setClosedSessionHandling(closedSessionHandlingType: ClosedSessionHandlingType, context: DefaultUiContext) {
+		context.setClosedSessionHandling(closedSessionHandlingType);
 	},
 	setPageTitle(pageTitle: string) {
 		document.title = pageTitle;

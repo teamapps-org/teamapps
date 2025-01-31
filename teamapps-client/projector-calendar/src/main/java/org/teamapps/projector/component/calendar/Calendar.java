@@ -19,7 +19,6 @@
  */
 package org.teamapps.projector.component.calendar;
 
-import com.ibm.icu.util.ULocale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
@@ -94,7 +93,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 	private final int minYearViewMonthTileWidth;
 	private final int maxYearViewMonthTileWidth;
 
-	private ULocale locale = getSessionContext().getULocale();
+	private Locale locale = getSessionContext().getLocale();
 	private ZoneId timeZone = getSessionContext().getTimeZone();
 
 	private boolean navigateOnHeaderClicks = true;
@@ -110,7 +109,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 			DayOfWeek firstDayOfWeek,
 			List<DayOfWeek> workingDays,
 			Color tableHeaderBackgroundColor,
-			ULocale locale,
+			Locale locale,
 			int minYearViewMonthTileWidth,
 			int maxYearViewMonthTileWidth
 	) {
@@ -499,10 +498,6 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 
 
 	public Locale getLocale() {
-		return locale.toLocale();
-	}
-
-	public ULocale getULocale() {
 		return locale;
 	}
 

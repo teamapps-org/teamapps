@@ -202,17 +202,18 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 			try {
 				messageAsString = mapper.writeValueAsString(message);
 			} catch (JsonProcessingException e) {
-				throw new TeamAppsCommunicationException(e);
+				throw new TeamAppsCommunicationException("Could not serialize message " + message, e);
 			}
-			send(messageAsString, sendingSuccessHandler, sendingErrorHandler);
+			send(List.of(messageAsString), sendingSuccessHandler, sendingErrorHandler);
 		}
 
-		private void send(String messageString, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
+		private void send(List<String> messages, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
 			if (this.closed) {
 				sendingErrorHandler.onErrorWhileSending(new TeamAppsCommunicationException("Connection closed!"));
 				return;
 			}
 			try {
+				String messageString = messages.stream().collect(Collectors.joining(",", "[", "]"));
 
 				sendCount.addAndGet(messageString.length());
 				totalSendCount.addAndGet(messageString.length());
@@ -253,7 +254,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 		private class MessageSenderImpl implements MessageSender {
 			@Override
 			public void sendAsynchronously(List<String> messages, SendingErrorHandler sendingErrorHandler) {
-				send(messages.stream().collect(Collectors.joining(",", "[", "]")), null, sendingErrorHandler);
+				send(messages, null, sendingErrorHandler);
 			}
 
 			@Override

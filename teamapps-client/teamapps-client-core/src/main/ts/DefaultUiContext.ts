@@ -19,7 +19,14 @@
  */
 "use strict";
 
-import {ClientObject, ComponentLibrary, generateUUID, ServerObjectChannel, Showable} from "projector-client-object-api";
+import {
+	ClientObject,
+	ClosedSessionHandlingType,
+	ComponentLibrary,
+	generateUUID,
+	ServerObjectChannel,
+	Showable
+} from "projector-client-object-api";
 import {
 	ClientInfo,
 	SessionClosingReason,
@@ -29,6 +36,7 @@ import {
 } from "teamapps-client-communication";
 import {CoreLibrary} from "./CoreLibrary";
 import {createGenericErrorMessageShowable} from "./genericErrorMessages";
+
 
 class FilteredServerObjectChannel implements ServerObjectChannel {
 	private activeEventNames: Set<string> = new Set<string>();
@@ -95,6 +103,7 @@ export class DefaultUiContext implements TeamAppsConnectionListener {
 	private expiredMessageWindow: Showable;
 	private errorMessageWindow: Showable;
 	private terminatedMessageWindow: Showable;
+	private closedSessionHandling: ClosedSessionHandlingType;
 
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string } = {}) {
 		this.sessionId = generateUUID();
@@ -139,24 +148,28 @@ export class DefaultUiContext implements TeamAppsConnectionListener {
 						<h3>Caching problem!</h3>
 						<p>Your browser uses an old client version to connect to our server. Please <a onclick="location.reload()">refresh this page</a>. If this does not help, please clear your browser's cache.</p>
 					<div>`;
-		} else if (reason == SessionClosingReason.SESSION_NOT_FOUND || reason == SessionClosingReason.SESSION_TIMEOUT) {
-			if (this.expiredMessageWindow != null) {
-				this.expiredMessageWindow.show(500);
+		} else if (this.closedSessionHandling == ClosedSessionHandlingType.MESSAGE_WINDOW) {
+			if (reason == SessionClosingReason.SESSION_NOT_FOUND || reason == SessionClosingReason.SESSION_TIMEOUT) {
+				if (this.expiredMessageWindow != null) {
+					this.expiredMessageWindow.show(500);
+				} else {
+					createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", false).show(500);
+				}
+			} else if (reason == SessionClosingReason.TERMINATED_BY_APPLICATION) {
+				if (this.terminatedMessageWindow != null) {
+					this.terminatedMessageWindow.show(500);
+				} else {
+					createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
+				}
 			} else {
-				createGenericErrorMessageShowable("Session Expired", "Your session has expired.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", false).show(500);
-			}
-		} else if (reason == SessionClosingReason.TERMINATED_BY_APPLICATION) {
-			if (this.terminatedMessageWindow != null) {
-				this.terminatedMessageWindow.show(500);
-			} else {
-				createGenericErrorMessageShowable("Session Terminated", "Your session has been terminated.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
+				if (this.errorMessageWindow != null) {
+					this.errorMessageWindow.show(500);
+				} else {
+					createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
+				}
 			}
 		} else {
-			if (this.errorMessageWindow != null) {
-				this.errorMessageWindow.show(500);
-			} else {
-				createGenericErrorMessageShowable("Error", "A server-side error has occurred.<br/><br/>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.", true).show(500);
-			}
+			location.reload();
 		}
 	}
 
@@ -312,7 +325,7 @@ export class DefaultUiContext implements TeamAppsConnectionListener {
 			return await clientObject[commandName].apply(clientObject, params);
 		} else if (libraryUuid == null) {
 			// this is a core library command
-			return await (CoreLibrary[commandName] as Function).apply(null, params);
+			return await (CoreLibrary[commandName] as Function).apply(null, [...params, this]);
 		} else {
 			console.debug(`Trying to call global function ${libraryUuid}.${commandName}(${params.join(", ")})`);
 			const moduleWrapper = await this.libraryModulesById.get(libraryUuid ?? null);
@@ -360,4 +373,7 @@ export class DefaultUiContext implements TeamAppsConnectionListener {
 		this.terminatedMessageWindow = terminatedMessageWindow;
 	}
 
+	public setClosedSessionHandling(closedSessionHandling: ClosedSessionHandlingType) {
+		this.closedSessionHandling = closedSessionHandling;
+	}
 }

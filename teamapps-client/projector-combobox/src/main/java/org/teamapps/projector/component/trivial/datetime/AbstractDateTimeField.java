@@ -19,7 +19,6 @@
  */
 package org.teamapps.projector.component.trivial.datetime;
 
-import com.ibm.icu.util.ULocale;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.trivial.TrivialComponentsLibrary;
 import org.teamapps.projector.component.trivial.DtoAbstractDateTimeField;
@@ -40,13 +39,13 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	private boolean showDropDownButton = true;
 	private boolean favorPastDates = false;
-	private ULocale locale;
+	private Locale locale;
 	private DateTimeFormatDescriptor dateFormat;
 	private DateTimeFormatDescriptor timeFormat;
 
 	public AbstractDateTimeField() {
 		super();
-		this.locale = getSessionContext().getULocale();
+		this.locale = getSessionContext().getLocale();
 		this.dateFormat = getSessionContext().getDateFormat();
 		this.timeFormat = getSessionContext().getTimeFormat();
 	}
@@ -84,18 +83,10 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 	}
 
 	public Locale getLocale() {
-		return locale.toLocale();
-	}
-
-	public ULocale getULocale() {
 		return locale;
 	}
 
 	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		clientObjectChannel.setLocaleAndFormats(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor());
 	}

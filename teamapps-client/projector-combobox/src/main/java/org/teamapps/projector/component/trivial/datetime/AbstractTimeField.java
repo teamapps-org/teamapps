@@ -19,7 +19,6 @@
  */
 package org.teamapps.projector.component.trivial.datetime;
 
-import com.ibm.icu.util.ULocale;
 import org.teamapps.projector.component.trivial.DtoAbstractTimeField;
 import org.teamapps.projector.component.trivial.DtoAbstractTimeFieldClientObjectChannel;
 import org.teamapps.projector.component.trivial.DtoAbstractTimeFieldEventHandler;
@@ -37,12 +36,12 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;
-	private ULocale locale;
+	private Locale locale;
 	private DateTimeFormatDescriptor timeFormat;
 
 	public AbstractTimeField() {
 		super();
-		this.locale = getSessionContext().getULocale();
+		this.locale = getSessionContext().getLocale();
 		this.timeFormat = getSessionContext().getTimeFormat();
 	}
 
@@ -70,18 +69,10 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 
 	public Locale getLocale() {
-		return locale.toLocale();
-	}
-
-	public ULocale getULocale() {
 		return locale;
 	}
 
 	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		clientObjectChannel.setLocaleAndTimeFormat(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor());
 	}

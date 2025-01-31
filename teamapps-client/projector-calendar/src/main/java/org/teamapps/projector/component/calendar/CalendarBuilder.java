@@ -1,6 +1,5 @@
 package org.teamapps.projector.component.calendar;
 
-import com.ibm.icu.util.ULocale;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
@@ -13,6 +12,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Locale;
 
 public class CalendarBuilder<CEVENT extends CalendarEvent> {
 
@@ -40,7 +40,7 @@ public class CalendarBuilder<CEVENT extends CalendarEvent> {
 	private DayOfWeek firstDayOfWeek = CurrentSessionContext.get().getFirstDayOfWeek();
 	private List<DayOfWeek> workingDays = java.util.Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
 	private Color tableHeaderBackgroundColor;
-	private ULocale locale = SessionContext.current().getULocale();
+	private Locale locale = SessionContext.current().getLocale();
 	private int minYearViewMonthTileWidth = 175;
 	private int maxYearViewMonthTileWidth = 0;
 
@@ -141,7 +141,7 @@ public class CalendarBuilder<CEVENT extends CalendarEvent> {
 		this.maxYearViewMonthTileWidth = maxYearViewMonthTileWidth;
 	}
 
-	public void withLocale(ULocale locale) {
+	public void withLocale(Locale locale) {
 		this.locale = locale;
 	}
 
