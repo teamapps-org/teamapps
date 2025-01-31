@@ -37,7 +37,7 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 	public static final String SERVLET_CONTEXT_PROPERTY_NAME = "SERVLET_CONTEXT";
 	public static final String HTTP_SESSION_PROPERTY_NAME = "HTTP_SESSION";
 	public static final String USER_AGENT_PROPERTY_NAME = "USER_AGENT";
-	public static final String LANGUAGE_PROPERTY_NAME = "LANGUAGE";
+	public static final String ACCEPT_LANGUAGE_PROPERTY_NAME = "LANGUAGE";
 	public static final String CLIENT_IP_PROPERTY_NAME = "CLIENT_IP";
 	private final WebSocketCommunicationEndpoint webSocketCommunicationEndpoint;
 
@@ -53,18 +53,16 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 		if (acceptLanguageHeader == null) {
 			acceptLanguageHeader = "en";
 		}
-		String languageString = Locale.LanguageRange.parse(acceptLanguageHeader).stream()
-				.map(range -> new Locale(range.getRange()))
-				.findFirst()
-				.map(locale -> locale.getLanguage())
-				.orElse(null);
+		List<Locale> acceptedLanguages = Locale.LanguageRange.parse(acceptLanguageHeader).stream()
+				.map(range -> Locale.of(range.getRange()))
+				.toList();
 
 		String proxiedIp = getFirstHeaderOrNull(request, "X-Forwarded-For");
 
 		sec.getUserProperties().put(SERVLET_CONTEXT_PROPERTY_NAME, httpSession.getServletContext());
 		sec.getUserProperties().put(HTTP_SESSION_PROPERTY_NAME, httpSession);
 		sec.getUserProperties().put(USER_AGENT_PROPERTY_NAME, userAgentString);
-		sec.getUserProperties().put(LANGUAGE_PROPERTY_NAME, languageString);
+		sec.getUserProperties().put(ACCEPT_LANGUAGE_PROPERTY_NAME, acceptedLanguages);
 		sec.getUserProperties().put(CLIENT_IP_PROPERTY_NAME, proxiedIp != null ? proxiedIp : httpSession.getAttribute(CLIENT_IP_PROPERTY_NAME));
 	}
 

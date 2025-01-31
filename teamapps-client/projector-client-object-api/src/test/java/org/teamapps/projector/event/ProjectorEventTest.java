@@ -36,6 +36,8 @@ import org.teamapps.projector.session.uisession.UiSession;
 import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -323,7 +325,7 @@ public class ProjectorEventTest {
 
 	public static SessionContext createDummySessionContext() {
 		URL url = ExceptionUtil.runWithSoftenedExceptions(() -> URI.create("https://abc").toURL());
-		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", url, Collections.emptyMap(), TEAMAPPS_VERSION);
+		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, List.of(Locale.US), false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", url, Collections.emptyMap(), TEAMAPPS_VERSION);
 		ComponentLibraryRegistry componentLibraryRegistryMock = Mockito.mock(ComponentLibraryRegistry.class);
 		Mockito.when(componentLibraryRegistryMock.getComponentLibraryForClientObject(Mockito.any())).thenReturn(new ComponentLibraryRegistry.ClientObjectLibraryInfo(null, null, null, null));
 		return new SessionContext(

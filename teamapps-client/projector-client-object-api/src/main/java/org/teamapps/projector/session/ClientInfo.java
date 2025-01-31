@@ -20,10 +20,7 @@
 package org.teamapps.projector.session;
 
 import java.net.URL;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ClientInfo {
 
@@ -32,7 +29,7 @@ public class ClientInfo {
 	private final int screenHeight;
 	private final int viewPortWidth;
 	private final int viewPortHeight;
-	private final String preferredLanguageIso;
+	private final List<Locale> acceptedLanguages;
 	private final boolean highDensityScreen;
 	private final String timeZone;
 	private final int timeZoneOffsetMinutes;
@@ -43,14 +40,14 @@ public class ClientInfo {
 	private final String teamAppsVersion;
 
 	public ClientInfo(String ip, int screenWidth, int screenHeight, int viewPortWidth, int viewPortHeight,
-					  String preferredLanguageIso, boolean highDensityScreen, String timeZone, int timeZoneOffsetMinutes, List<String> clientTokens, String userAgent,
+					  List<Locale> acceptedLanguages, boolean highDensityScreen, String timeZone, int timeZoneOffsetMinutes, List<String> clientTokens, String userAgent,
 					  URL location, Map<String, String> clientParameters, String teamAppsVersion) {
 		this.ip = ip;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 		this.viewPortWidth = viewPortWidth;
 		this.viewPortHeight = viewPortHeight;
-		this.preferredLanguageIso = preferredLanguageIso;
+		this.acceptedLanguages = acceptedLanguages;
 		this.highDensityScreen = highDensityScreen;
 		this.timeZone = timeZone;
 		this.timeZoneOffsetMinutes = timeZoneOffsetMinutes;
@@ -89,8 +86,8 @@ public class ClientInfo {
 		return viewPortHeight;
 	}
 
-	public String getPreferredLanguageIso() {
-		return preferredLanguageIso;
+	public List<Locale> getAcceptedLanguages() {
+		return acceptedLanguages;
 	}
 
 	public boolean isHighDensityScreen() {

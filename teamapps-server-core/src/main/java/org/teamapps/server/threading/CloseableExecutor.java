@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2022 TeamApps.org
+ * Copyright (C) 2014 - 2024 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,32 +17,27 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server.servlet;
+package org.teamapps.server.threading;
 
-import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
-public class ServerSideClientInfo {
+public interface CloseableExecutor extends Executor {
 
-	private final String ip;
-	private final String userAgentString;
-	private final List<Locale> acceptedLanguages;
+	void close();
 
-	public ServerSideClientInfo(String ip, String userAgentString, List<Locale> acceptedLanguages) {
-		this.ip = ip;
-		this.userAgentString = userAgentString;
-		this.acceptedLanguages = acceptedLanguages;
+	static CloseableExecutor fromExecutorService(ExecutorService executorService) {
+		return new CloseableExecutor() {
+			@Override
+			public void close() {
+				executorService.shutdown();
+			}
+
+			@Override
+			public void execute(Runnable command) {
+				executorService.execute(command);
+			}
+		};
 	}
 
-	public String getIp() {
-		return ip;
-	}
-
-	public String getUserAgentString() {
-		return userAgentString;
-	}
-
-	public List<Locale> getAcceptedLanguages() {
-		return acceptedLanguages;
-	}
 }

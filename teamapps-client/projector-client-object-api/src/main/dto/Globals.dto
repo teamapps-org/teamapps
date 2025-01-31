@@ -8,7 +8,7 @@ class DtoGlobals {
     static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean composing, String key, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
     static command configureGlobalKeyboardEvents(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean keyDown, boolean keyUp, boolean includeRepeats);
 
-//    static command setConfig(Configuration config);
+    static command setClosedSessionHandling(ClosedSessionHandlingType ClosedSessionHandlingType);
 //    static command setThemeClassName(String theme);
 //    static command setOptimizedForTouch();
 
@@ -42,6 +42,11 @@ class DtoGlobals {
 
 enum KeyEventType {
     KEY_DOWN, KEY_UP
+}
+
+enum ClosedSessionHandlingType {
+    MESSAGE_WINDOW,
+    REFRESH_PAGE
 }
 
 //enum DtoGenericErrorMessageOption {

@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -133,7 +134,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 								dtoClientInfo.getScreenHeight(),
 								dtoClientInfo.getViewPortWidth(),
 								dtoClientInfo.getViewPortHeight(),
-								serverSideClientInfo.getPreferredLanguageIso(),
+								serverSideClientInfo.getAcceptedLanguages(),
 								dtoClientInfo.getHighDensityScreen(),
 								dtoClientInfo.getTimezoneIana(),
 								dtoClientInfo.getTimezoneOffsetMinutes(),
@@ -236,10 +237,11 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 
 		private ServerSideClientInfo createServerSideClientInfo(Session session) {
 			Map<String, Object> attributes = session.getUserProperties();
+			//noinspection unchecked
 			return new ServerSideClientInfo(
 					(String) attributes.get(WebSocketServerEndpointConfigurator.CLIENT_IP_PROPERTY_NAME),
 					(String) attributes.get(WebSocketServerEndpointConfigurator.USER_AGENT_PROPERTY_NAME),
-					(String) attributes.get(WebSocketServerEndpointConfigurator.LANGUAGE_PROPERTY_NAME)
+					(List<Locale>) attributes.get(WebSocketServerEndpointConfigurator.ACCEPT_LANGUAGE_PROPERTY_NAME)
 			);
 		}
 

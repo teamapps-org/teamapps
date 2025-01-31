@@ -169,7 +169,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 			this.setSliderPositionByValue(newValue);
 			this.$field.value = this.formatNumber(newValue);
 			// TODO if (!this._context.config.optimizedForTouch) {
-				this.$field.select();
+			this.$field.select();
 			this.ensureDecimalInput();
 			this.updateClearButton();
 		};

@@ -20,8 +20,6 @@
 package org.teamapps.projector.session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.ULocale;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -40,6 +38,7 @@ import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.*;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
 import org.teamapps.projector.component.Component;
+import org.teamapps.projector.databinding.TwoWayBindableValue;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.i18n.ResourceBundleTranslationProvider;
@@ -59,6 +58,7 @@ import java.net.URI;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.ZoneId;
+import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -114,14 +114,12 @@ public class SessionContext {
 	private final Set<ClientObjectLibrary> loadedComponentLibraries = new HashSet<>();
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 
-	private ULocale locale = ULocale.US;
+	private TwoWayBindableValue<Locale> locale = TwoWayBindableValue.create(Locale.US);
 	private DateTimeFormatDescriptor dateFormat = DateTimeFormatDescriptor.forDate(DateTimeFormatDescriptor.FullLongMediumShortType.SHORT);
 	private DateTimeFormatDescriptor timeFormat = DateTimeFormatDescriptor.forTime(DateTimeFormatDescriptor.FullLongMediumShortType.SHORT);
-	private ZoneId timeZone = ZoneId.of("Europe/Berlin");
+	private ZoneId timeZone;
 	private DayOfWeek firstDayOfWeek; // null == determine by locale
-	private boolean optimizedForTouch = false;
 	private String iconBasePath = "/icons";
-	private StylingTheme theme = StylingTheme.DEFAULT;
 
 	public SessionContext(UiSession uiSession,
 						  ExecutorService sessionExecutor,
@@ -143,18 +141,8 @@ public class SessionContext {
 
 		this.clientInfo = clientInfo;
 		this.currentLocation = clientInfo.getLocation();
-		boolean optimizedForTouch = false;
-		StylingTheme theme = StylingTheme.DEFAULT;
-		if (clientInfo.isMobileDevice()) {
-			optimizedForTouch = true;
-			theme = StylingTheme.MODERN;
-		}
-		ULocale locale1 = ULocale.forLanguageTag(clientInfo.getPreferredLanguageIso());
-		ZoneId timeZone1 = ZoneId.of(clientInfo.getTimeZone());
-		this.locale = locale1;
-		this.timeZone = timeZone1;
-		this.theme = theme;
-		this.optimizedForTouch = optimizedForTouch;
+		this.locale.set(clientInfo.getAcceptedLanguages().stream().findFirst().orElse(Locale.US));
+		this.timeZone = ZoneId.of(clientInfo.getTimeZone());
 	}
 
 	public class InternalUiSessionListener {
@@ -668,24 +656,17 @@ public class SessionContext {
 		return uiSession.getName();
 	}
 
-	private static DayOfWeek determineFirstDayOfWeek(ULocale locale) {
-		return DayOfWeek.of(GregorianCalendar.getInstance(locale).getFirstDayOfWeek()).minus(1);
+	private static DayOfWeek determineFirstDayOfWeek(Locale locale) {
+		return WeekFields.of(locale).getFirstDayOfWeek();
 	}
 
 	public Locale getLocale() {
-		return locale.toLocale();
-	}
-
-	public ULocale getULocale() {
-		return locale;
+		return locale.get();
 	}
 
 	public void setLocale(Locale locale) {
-		setULocale(ULocale.forLocale(locale));
-	}
-
-	public void setULocale(ULocale locale) {
-		this.locale = locale;
+		Objects.requireNonNull(locale);
+		this.locale.set(locale);
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -713,7 +694,7 @@ public class SessionContext {
 	}
 
 	public DayOfWeek getFirstDayOfWeek() {
-		return firstDayOfWeek != null ? firstDayOfWeek : determineFirstDayOfWeek(locale);
+		return firstDayOfWeek != null ? firstDayOfWeek : WeekFields.of(locale.get()).getFirstDayOfWeek();
 	}
 
 	public void setFirstDayOfWeek(DayOfWeek firstDayOfWeek) {
