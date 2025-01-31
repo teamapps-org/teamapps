@@ -31,6 +31,6 @@ import java.util.concurrent.ExecutorService;
  */
 public interface SequentialExecutorFactory {
 
-	CloseableExecutor createExecutor(String name);
+	ExecutorService createExecutor(String name);
 
 }

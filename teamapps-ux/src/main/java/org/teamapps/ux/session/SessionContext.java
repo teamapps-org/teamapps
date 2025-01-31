@@ -34,7 +34,6 @@ import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.uisession.statistics.UiSessionStats;
-import org.teamapps.util.threading.CloseableExecutor;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.EntranceAnimation;
@@ -64,6 +63,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -79,7 +79,7 @@ public class SessionContext {
 	private static final String DEFAULT_BACKGROUND_NAME = "defaultBackground";
 	private static final String DEFAULT_BACKGROUND_URL = "/resources/backgrounds/default-bl.jpg";
 
-	private CloseableExecutor sessionExecutor;
+	private ExecutorService sessionExecutor;
 
 	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
 
@@ -184,7 +184,7 @@ public class SessionContext {
 				synchronized (SessionContext.this) {
 					SessionContext.this.destroyed = true;
 					// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
-					sessionExecutor.execute(sessionExecutor::close);
+					sessionExecutor.execute(sessionExecutor::shutdown);
 					sessionExecutor = null; // GC (relevant only in case the sessionContext is retained in a memory leak)
 				}
 			});
@@ -192,7 +192,7 @@ public class SessionContext {
 	};
 
 	public SessionContext(UiSession uiSession,
-						  CloseableExecutor sessionExecutor,
+						  ExecutorService sessionExecutor,
 						  ClientInfo clientInfo,
 						  SessionConfiguration sessionConfiguration,
 						  HttpSession httpSession,
