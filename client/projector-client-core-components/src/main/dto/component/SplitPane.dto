@@ -1,0 +1,51 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package "projector-client-core-components":org.teamapps.projector.component.core;
+
+import org.teamapps.projector.component.DtoComponent;
+
+enum SplitSizePolicy {
+	FIRST_FIXED = "first-fixed",
+	LAST_FIXED = "last-fixed",
+	RELATIVE = "relative"
+}
+
+enum SplitDirection {
+	HORIZONTAL = "horizontal",
+	VERTICAL = "vertical"
+}
+
+class DtoSplitPane extends DtoComponent {
+	mutable SplitDirection splitDirection;
+	mutable SplitSizePolicy sizePolicy;
+	mutable double referenceChildSize; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
+	mutable DtoComponent* firstChild;
+	mutable DtoComponent* lastChild;
+	mutable int firstChildMinSize; // in pixels
+	mutable int lastChildMinSize;  // in pixels
+	mutable boolean resizable;
+	mutable ChildCollapsingPolicy childCollapsingPolicy;
+
+	event splitResized(double referenceChildSize);
+}
+
+enum ChildCollapsingPolicy {
+    NEVER, IF_NULL, IF_EMPTY
+}

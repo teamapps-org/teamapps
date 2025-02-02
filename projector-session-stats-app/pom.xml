@@ -9,26 +9,29 @@
         <version>0.9.155-SNAPSHOT</version>
     </parent>
 
-    <artifactId>projector-application</artifactId>
-
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <artifactId>projector-session-stats-app</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>projector-workspace-layout</artifactId>
+            <artifactId>projector-client-core-components</artifactId>
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>projector-mobile-layout</artifactId>
+            <artifactId>projector-infinite-scrolling-components</artifactId>
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>projector-material-icon-provider</artifactId>
+            <artifactId>projector-server-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-application</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-combobox</artifactId>
+            <version>0.9.155-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

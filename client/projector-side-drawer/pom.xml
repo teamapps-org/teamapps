@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>teamapps</artifactId>
+        <groupId>org.teamapps</groupId>
+        <version>0.9.155-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>projector-side-drawer</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-client-object-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-grid-template</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Needs TemplateField for the default content of Notifications... -->
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-client-core-components</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.teamapps</groupId>
+                <artifactId>projector-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>sync-pom-version</goal>
+                            <goal>generate-java-dtos</goal>
+                            <goal>generate-typescript-dtos</goal>
+                            <goal>add-js-dist-resources</goal>
+                            <goal>add-dto-resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jsResourcesTargetClassPath>org/teamapps/projector/component/sideDrawer/resources/js</jsResourcesTargetClassPath>
+                    <dtoDependencies>
+                        <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
+                    </dtoDependencies>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <nodeVersion>v19.0.1</nodeVersion>
+                    <yarnVersion>v1.22.19</yarnVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install node and yarn</id>
+                        <goals>
+                            <goal>install-node-and-yarn</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>yarn install</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>build</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

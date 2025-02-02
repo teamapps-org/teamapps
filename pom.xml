@@ -38,47 +38,50 @@
         <module>projector-dto-base</module>
         <module>projector-dto-dsl</module>
 
-        <module>teamapps-icon</module>
+        <module>projector-icon</module>
 
-        <module>teamapps-client/teamapps-client-communication</module>
-        <module>teamapps-client/projector-client-object-api</module>
-        <module>teamapps-client/teamapps-client-core</module>
-        <module>teamapps-client/projector-grid-template</module>
-        <module>teamapps-client/projector-mustache-template</module>
-        <module>teamapps-client/teamapps-client-core-components</module>
-        <module>teamapps-client/projector-notification</module>
+        <module>client/projector-client-communication</module>
+        <module>client/projector-client-object-api</module>
+        <module>client/projector-client-core</module>
+        <module>client/projector-grid-template</module>
+        <module>client/projector-mustache-template</module>
+        <module>client/projector-client-core-components</module>
+        <module>client/projector-notification</module>
 
-        <module>teamapps-server-core</module>
-        <module>teamapps-server-jetty-embedded</module>
-        <module>teamapps-server-undertow-embedded</module>
+        <module>projector-server-core</module>
+        <module>projector-server-jetty-embedded</module>
+        <module>projector-server-undertow-embedded</module>
 
-        <module>teamapps-client/projector-progress-indicator</module>
-        <module>teamapps-client/projector-progress-display</module>
-        <module>teamapps-client/projector-notification-bar</module>
-        <module>teamapps-client/projector-mobile-layout</module>
-        <module>teamapps-client/projector-combobox</module>
-        <module>teamapps-client/projector-infinite-scrolling-components</module>
-        <module>teamapps-client/projector-calendar</module>
-        <module>teamapps-client/projector-document-viewer</module>
-        <module>teamapps-client/projector-elegant-panel</module>
-        <module>teamapps-client/projector-file-field</module>
-        <module>teamapps-client/projector-timegraph</module>
-        <module>teamapps-client/projector-workspace-layout</module>
-        <module>teamapps-client/projector-blogview</module>
-        <module>teamapps-client/projector-map-view</module>
-        <module>teamapps-client/projector-shaka-player</module>
-        <module>teamapps-client/projector-mediasoup-client</module>
-        <module>teamapps-client/projector-chart</module>
-        <module>teamapps-client/projector-audio-level-indicator</module>
-        <module>teamapps-client/projector-chat</module>
-        <module>teamapps-client/projector-side-drawer</module>
-        <module>teamapps-client/projector-video-player</module>
-        <module>teamapps-client/projector-grid-form</module>
+        <module>client/projector-progress-indicator</module>
+        <module>client/projector-progress-display</module>
+        <module>client/projector-mobile-layout</module>
 
-        <module>teamapps-material-icon-provider</module>
-        <module>teamapps-session-stats-app</module>
+        <module>client/projector-notification-bar</module>
+        <module>client/projector-combobox</module>
+        <module>client/projector-infinite-scrolling-components</module>
+        <module>client/projector-calendar</module>
+        <module>client/projector-document-viewer</module>
+        <module>client/projector-elegant-panel</module>
+        <module>client/projector-file-field</module>
+        <module>client/projector-timegraph</module>
 
+        <module>client/projector-workspace-layout</module>
+
+        <module>client/projector-blogview</module>
+        <module>client/projector-map-view</module>
+        <module>client/projector-shaka-player</module>
+        <module>client/projector-mediasoup-client</module>
+        <module>client/projector-chart</module>
+        <module>client/projector-audio-level-indicator</module>
+        <module>client/projector-chat</module>
+        <module>client/projector-side-drawer</module>
+        <module>client/projector-video-player</module>
+        <module>client/projector-grid-form</module>
+
+        <module>projector-material-icon-provider</module>
         <module>projector-application</module>
+
+        <module>projector-session-stats-app</module>
     </modules>
 
     <properties>
@@ -141,12 +144,12 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-icon</artifactId>
+                <artifactId>projector-icon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-material-icon-provider</artifactId>
+                <artifactId>projector-material-icon-provider</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -161,22 +164,22 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-client-communication</artifactId>
+                <artifactId>projector-client-communication</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-client-core</artifactId>
+                <artifactId>projector-client-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-client-core-components</artifactId>
+                <artifactId>projector-client-core-components</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-client-common-components</artifactId>
+                <artifactId>projector-client-common-components</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -211,7 +214,7 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-server-core</artifactId>
+                <artifactId>projector-server-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -221,12 +224,12 @@
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-server-jetty-embedded</artifactId>
+                <artifactId>projector-server-jetty-embedded</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-server-undertow-embedded</artifactId>
+                <artifactId>projector-server-undertow-embedded</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -352,7 +355,7 @@
                     <useReleaseProfile>false</useReleaseProfile>
                     <!--<arguments>-Psonatype-oss-release -D${gpg.arguments}</arguments>-->
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <tagNameFormat>teamapps-@{version}</tagNameFormat>
+                    <tagNameFormat>projector-@{version}</tagNameFormat>
                     <releaseProfiles>javadoc-jar,sources-jar,license-handling,release</releaseProfiles>
                     <pushChanges>true</pushChanges>
                 </configuration>
