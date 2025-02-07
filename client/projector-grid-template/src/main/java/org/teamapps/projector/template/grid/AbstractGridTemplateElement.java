@@ -19,9 +19,8 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.format.Spacing;
-import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
 
 import java.util.Collections;
 import java.util.List;

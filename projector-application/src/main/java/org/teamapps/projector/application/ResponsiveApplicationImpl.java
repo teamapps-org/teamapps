@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.application;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.application.assembler.ApplicationAssembler;
 import org.teamapps.projector.application.perspective.Perspective;
 import org.teamapps.projector.application.perspective.PerspectiveChangeHandler;

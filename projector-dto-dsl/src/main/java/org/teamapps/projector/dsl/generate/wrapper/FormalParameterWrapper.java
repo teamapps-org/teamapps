@@ -1,6 +1,6 @@
 package org.teamapps.projector.dsl.generate.wrapper;
 
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
 public class FormalParameterWrapper {

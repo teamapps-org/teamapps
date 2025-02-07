@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.component.core.window;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.Showable;
 import org.teamapps.projector.component.Component;

@@ -20,8 +20,8 @@
 package org.teamapps.projector.component.core.field;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.field.DtoAbstractField;

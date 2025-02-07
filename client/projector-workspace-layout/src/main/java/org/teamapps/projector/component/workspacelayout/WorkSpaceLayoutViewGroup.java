@@ -19,12 +19,10 @@
  */
 package org.teamapps.projector.component.workspacelayout;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.workspacelayout.definition.ViewDefinition;
 import org.teamapps.projector.component.workspacelayout.definition.ViewGroupDefinition;
-import org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutItem;
-import org.teamapps.projector.component.workspacelayout.DtoWorkSpaceLayoutViewGroupItem;
 
 import java.util.*;
 import java.util.stream.Collectors;

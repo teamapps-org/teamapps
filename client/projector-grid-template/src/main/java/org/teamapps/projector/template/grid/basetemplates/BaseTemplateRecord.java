@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.template.grid.basetemplates;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 
 public class BaseTemplateRecord<PAYLOAD> {
 

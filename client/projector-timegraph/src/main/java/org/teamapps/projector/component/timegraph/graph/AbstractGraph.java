@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.timegraph.graph;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.component.timegraph.*;
 import org.teamapps.projector.component.timegraph.datapoints.GraphData;
 import org.teamapps.projector.component.timegraph.model.GraphModel;

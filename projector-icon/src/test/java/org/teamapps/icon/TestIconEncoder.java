@@ -19,8 +19,8 @@
  */
 package org.teamapps.icon;
 
-import org.teamapps.icons.spi.IconEncoder;
-import org.teamapps.icons.IconEncoderContext;
+import org.teamapps.projector.icon.spi.IconEncoder;
+import org.teamapps.projector.icon.IconEncoderContext;
 
 public class TestIconEncoder implements IconEncoder<TestIcon> {
 

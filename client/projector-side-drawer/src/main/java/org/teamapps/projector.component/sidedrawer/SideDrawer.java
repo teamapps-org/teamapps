@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.sidedrawer;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponentConfig;

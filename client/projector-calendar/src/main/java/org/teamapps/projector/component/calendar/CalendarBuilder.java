@@ -1,7 +1,7 @@
 package org.teamapps.projector.component.calendar;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.session.CurrentSessionContext;

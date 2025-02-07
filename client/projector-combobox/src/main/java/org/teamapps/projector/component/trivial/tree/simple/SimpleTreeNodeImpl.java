@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.trivial.tree.simple;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.trivial.tree.model.TreeNodeInfo;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
 

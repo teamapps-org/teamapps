@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.dsl.generate;
 
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
 
 import java.io.File;
 import java.io.FileInputStream;

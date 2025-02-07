@@ -21,8 +21,8 @@ package org.teamapps.projector.component.infinitescroll.table;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.common.format.Color;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;

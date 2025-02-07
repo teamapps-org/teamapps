@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.mapview.shape;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.mapview.DtoMapCircle;
 import org.teamapps.projector.component.mapview.Location;
 

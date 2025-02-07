@@ -27,14 +27,14 @@ import jakarta.servlet.http.HttpSessionListener;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.commons.event.Event;
 import org.teamapps.projector.session.uisession.UiSession;
 import org.teamapps.projector.server.config.ProjectorConfiguration;
 import org.teamapps.projector.server.core.UploadManager;
-import org.teamapps.dto.protocol.server.SessionClosingReason;
-import org.teamapps.icons.IconProvider;
-import org.teamapps.icons.SessionIconProvider;
+import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
+import org.teamapps.projector.icon.IconProvider;
+import org.teamapps.projector.icon.SessionIconProvider;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
 import org.teamapps.projector.component.core.div.Div;
 import org.teamapps.projector.component.core.field.Button;
@@ -58,8 +58,8 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static org.teamapps.common.ProjectorVersion.TEAMAPPS_DEV_SERVER_VERSION;
-import static org.teamapps.common.ProjectorVersion.TEAMAPPS_VERSION;
+import static org.teamapps.projector.common.ProjectorVersion.TEAMAPPS_DEV_SERVER_VERSION;
+import static org.teamapps.projector.common.ProjectorVersion.TEAMAPPS_VERSION;
 import static org.teamapps.projector.session.uisession.UiSessionState.*;
 
 /**

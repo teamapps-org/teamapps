@@ -21,8 +21,8 @@ package org.teamapps.projector.dsl.generate;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.teamapps.dsl.TeamAppsDtoLexer;
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoLexer;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
 
 import java.io.IOException;
 import java.io.Reader;

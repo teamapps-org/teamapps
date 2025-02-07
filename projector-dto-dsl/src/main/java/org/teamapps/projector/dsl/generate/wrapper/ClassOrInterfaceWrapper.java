@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.apache.commons.lang3.StringUtils;
 import org.teamapps.commons.util.ExceptionUtil;
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
 import org.teamapps.projector.dsl.generate.ParserFactory;
 
 import java.io.StringReader;

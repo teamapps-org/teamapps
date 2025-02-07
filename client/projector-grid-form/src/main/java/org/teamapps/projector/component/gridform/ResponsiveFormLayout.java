@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.gridform;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.core.field.Label;
 import org.teamapps.projector.component.field.AbstractField;

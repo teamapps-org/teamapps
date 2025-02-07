@@ -21,7 +21,7 @@ package org.teamapps.projector.dsl.generate;
 
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.jupiter.api.Test;
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
 
 import java.io.IOException;
 import java.io.StringReader;

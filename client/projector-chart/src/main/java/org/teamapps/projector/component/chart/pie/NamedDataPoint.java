@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.chart.pie;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 
 public class NamedDataPoint {
 

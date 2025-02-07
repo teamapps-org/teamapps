@@ -2,7 +2,7 @@ package org.teamapps.projector.dsl.generate.wrapper;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
 import org.teamapps.projector.dsl.generate.DtoGeneratorException;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 

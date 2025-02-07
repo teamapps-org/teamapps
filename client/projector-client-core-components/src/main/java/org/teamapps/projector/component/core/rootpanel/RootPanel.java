@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.core.rootpanel;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.animation.PageTransition;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;

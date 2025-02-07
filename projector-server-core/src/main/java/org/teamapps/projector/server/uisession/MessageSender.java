@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.server.uisession;
 
-import org.teamapps.dto.protocol.server.SessionClosingReason;
+import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
 
 import java.util.List;
 

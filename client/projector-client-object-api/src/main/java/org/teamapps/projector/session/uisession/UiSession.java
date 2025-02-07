@@ -1,7 +1,7 @@
 package org.teamapps.projector.session.uisession;
 
-import org.teamapps.dto.protocol.server.AbstractReliableServerMessage;
-import org.teamapps.dto.protocol.server.SessionClosingReason;
+import org.teamapps.projector.dto.protocol.server.AbstractReliableServerMessage;
+import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
 import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 
 public interface UiSession {

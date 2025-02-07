@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.application.assembler;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 
 public class AdditionalNavigationButton {
 

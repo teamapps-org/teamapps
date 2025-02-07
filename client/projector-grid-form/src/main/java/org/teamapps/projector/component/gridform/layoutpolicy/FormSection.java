@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.gridform.layoutpolicy;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.gridform.*;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.BoxShadow;

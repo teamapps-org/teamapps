@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.mobilelayout;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;

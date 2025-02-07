@@ -20,7 +20,7 @@
 package org.teamapps.projector.server.uisession;
 
 import org.teamapps.projector.dto.JsonWrapper;
-import org.teamapps.dto.protocol.server.SessionClosingReason;
+import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
 import org.teamapps.projector.session.uisession.UiSessionState;
 
 import java.util.List;

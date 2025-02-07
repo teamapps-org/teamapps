@@ -21,8 +21,8 @@ package org.teamapps.projector.component.filefield;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import net.coobird.thumbnailator.Thumbnails;
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.common.ImageCropperSelection;
 import org.teamapps.projector.component.common.ImageCropperSelectionMode;

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.calendar;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 
 import java.time.Instant;
 

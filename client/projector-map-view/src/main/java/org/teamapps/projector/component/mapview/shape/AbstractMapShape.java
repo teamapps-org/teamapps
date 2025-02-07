@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.mapview.shape;
 
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.component.mapview.DtoAbstractMapShape;
 import org.teamapps.projector.component.mapview.DtoAbstractMapShapeChange;
 

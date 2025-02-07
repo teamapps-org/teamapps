@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.progress;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;

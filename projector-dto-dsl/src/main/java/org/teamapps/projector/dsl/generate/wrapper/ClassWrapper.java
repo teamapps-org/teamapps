@@ -1,8 +1,8 @@
 package org.teamapps.projector.dsl.generate.wrapper;
 
-import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.TeamAppsDtoParser.ClassDeclarationContext;
-import org.teamapps.dsl.TeamAppsDtoParser.CommandDeclarationContext;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser.ClassDeclarationContext;
+import org.teamapps.projector.dsl.TeamAppsDtoParser.CommandDeclarationContext;
 import org.teamapps.projector.dsl.generate.DtoGeneratorException;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 

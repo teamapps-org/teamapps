@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.application;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.application.assembler.AdditionalNavigationButton;
 import org.teamapps.projector.application.assembler.ApplicationAssembler;
 import org.teamapps.projector.application.assembler.DesktopApplicationAssembler;

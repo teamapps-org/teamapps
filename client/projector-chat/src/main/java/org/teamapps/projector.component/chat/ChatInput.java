@@ -20,8 +20,8 @@
 package org.teamapps.projector.component.chat;
 
 import org.teamapps.commons.event.Event;
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponentConfig;

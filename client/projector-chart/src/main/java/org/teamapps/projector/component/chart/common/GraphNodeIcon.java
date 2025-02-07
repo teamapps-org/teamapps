@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.chart.common;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.chart.ChartLibrary;
 import org.teamapps.projector.component.chart.tree.DtoTreeGraphNodeIcon;

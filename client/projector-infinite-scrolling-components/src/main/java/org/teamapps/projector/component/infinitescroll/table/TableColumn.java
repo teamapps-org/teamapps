@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.infinitescroll.table;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.field.*;
 import org.teamapps.projector.dataextraction.ValueExtractor;
 import org.teamapps.projector.dataextraction.ValueInjector;

@@ -2,7 +2,7 @@ package org.teamapps.projector.dsl.generate.wrapper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.teamapps.commons.util.ExceptionUtil;
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
 import org.teamapps.projector.dsl.generate.ParserFactory;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 

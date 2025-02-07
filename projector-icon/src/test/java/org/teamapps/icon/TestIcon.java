@@ -19,8 +19,8 @@
  */
 package org.teamapps.icon;
 
-import org.teamapps.icons.Icon;
-import org.teamapps.icons.IconStyle;
+import org.teamapps.projector.icon.Icon;
+import org.teamapps.projector.icon.IconStyle;
 
 //@IconLibrary("example")
 public enum TestIcon implements Icon {

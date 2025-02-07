@@ -25,12 +25,12 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.projector.dto.protocol.client.*;
 import org.teamapps.projector.server.config.ProjectorConfiguration;
-import org.teamapps.dto.protocol.client.*;
-import org.teamapps.dto.protocol.server.AbstractServerMessage;
-import org.teamapps.dto.protocol.server.REINIT_NOK;
-import org.teamapps.dto.protocol.server.SESSION_CLOSED;
-import org.teamapps.dto.protocol.server.SessionClosingReason;
+import org.teamapps.projector.dto.protocol.server.AbstractServerMessage;
+import org.teamapps.projector.dto.protocol.server.REINIT_NOK;
+import org.teamapps.projector.dto.protocol.server.SESSION_CLOSED;
+import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
 import org.teamapps.projector.server.uisession.*;
 import org.teamapps.projector.session.ClientInfo;
 

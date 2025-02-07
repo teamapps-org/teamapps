@@ -21,10 +21,10 @@ package org.teamapps.projector.component.calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.commons.event.Disposable;
-import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.material.MaterialIcon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
 import org.teamapps.projector.clientrecordcache.ClientRecordCache;

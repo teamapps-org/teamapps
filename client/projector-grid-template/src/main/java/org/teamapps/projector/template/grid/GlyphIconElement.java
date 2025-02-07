@@ -19,9 +19,7 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.DtoGlyphIconElement;
+import org.teamapps.projector.common.format.Color;
 
 public class GlyphIconElement extends AbstractGridTemplateElement<GlyphIconElement> {
 

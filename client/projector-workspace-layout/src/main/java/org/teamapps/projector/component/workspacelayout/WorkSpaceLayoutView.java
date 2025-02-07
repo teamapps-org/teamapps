@@ -21,7 +21,7 @@ package org.teamapps.projector.component.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.field.Field;
 import org.teamapps.projector.component.core.SplitDirection;

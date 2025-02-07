@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.infinitescroll.table;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
 
 public class SelectionFrame {
 

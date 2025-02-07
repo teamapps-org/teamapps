@@ -19,11 +19,9 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.format.FontStyle;
 import org.teamapps.projector.format.Spacing;
-import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.DtoBadgeElement;
 
 public class BadgeElement extends TextElement {
 

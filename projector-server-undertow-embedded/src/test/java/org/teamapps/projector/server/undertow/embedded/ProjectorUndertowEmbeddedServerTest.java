@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.server.undertow.embedded;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icon.material.MaterialIconStyles;
+import org.teamapps.projector.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.material.MaterialIconStyles;
 import org.teamapps.projector.notification.NotificationPosition;
 import org.teamapps.projector.notification.Notifications;
 import org.teamapps.projector.session.SessionContext;

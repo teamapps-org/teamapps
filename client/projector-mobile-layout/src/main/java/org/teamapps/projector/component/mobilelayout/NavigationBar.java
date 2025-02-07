@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.mobilelayout;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.commons.util.CollectionCastUtil;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;

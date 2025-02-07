@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.application.view;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.core.panel.Panel;
 import org.teamapps.projector.component.core.toolbar.ToolbarButtonGroup;

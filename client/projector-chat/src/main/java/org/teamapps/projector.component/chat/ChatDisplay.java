@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.component.chat;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icon.material.MaterialIconStyles;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.material.MaterialIconStyles;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.ClientObject;
 import org.teamapps.projector.component.AbstractComponent;

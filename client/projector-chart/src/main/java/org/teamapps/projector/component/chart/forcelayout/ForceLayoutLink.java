@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.chart.forcelayout;
 
-import org.teamapps.common.format.RgbaColor;
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
+import org.teamapps.projector.common.format.Color;
 
 public class ForceLayoutLink<RECORD> {
 

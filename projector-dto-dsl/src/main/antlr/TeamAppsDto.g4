@@ -1,7 +1,7 @@
 grammar TeamAppsDto;
 
 @header {
-package org.teamapps.dsl;
+package org.teamapps.projector.dsl;
 }
 
 SEMICOLON: ';';

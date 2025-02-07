@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.core.tabpanel;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.core.toolbar.Toolbar;
 import org.teamapps.projector.event.ProjectorEvent;

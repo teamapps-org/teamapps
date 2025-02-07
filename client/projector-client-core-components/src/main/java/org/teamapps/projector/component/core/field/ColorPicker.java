@@ -20,7 +20,7 @@
 package org.teamapps.projector.component.core.field;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.core.DtoColorPicker;
 import org.teamapps.projector.component.core.DtoColorPickerClientObjectChannel;
 import org.teamapps.projector.component.core.DtoColorPickerEventHandler;

@@ -1,7 +1,7 @@
 package org.teamapps.projector.dsl.generate.wrapper;
 
-import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.TeamAppsDtoParser.EnumDeclarationContext;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser.EnumDeclarationContext;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
 import java.util.List;

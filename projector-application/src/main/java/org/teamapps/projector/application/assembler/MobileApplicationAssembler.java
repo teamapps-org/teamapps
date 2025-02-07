@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.application.assembler;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.animation.PageTransition;
 import org.teamapps.projector.application.ResponsiveApplication;
 import org.teamapps.projector.application.ResponsiveApplicationToolbar;

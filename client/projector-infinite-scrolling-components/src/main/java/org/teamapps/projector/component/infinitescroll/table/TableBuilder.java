@@ -1,6 +1,6 @@
 package org.teamapps.projector.component.infinitescroll.table;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.field.Field;
 import org.teamapps.projector.component.infinitescroll.recordcache.EqualsAndHashCode;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;

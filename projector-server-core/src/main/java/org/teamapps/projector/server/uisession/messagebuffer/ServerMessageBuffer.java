@@ -22,7 +22,7 @@ package org.teamapps.projector.server.uisession.messagebuffer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.protocol.server.AbstractReliableServerMessage;
+import org.teamapps.projector.dto.protocol.server.AbstractReliableServerMessage;
 
 import java.lang.invoke.MethodHandles;
 

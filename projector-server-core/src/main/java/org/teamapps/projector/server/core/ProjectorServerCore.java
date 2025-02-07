@@ -21,8 +21,8 @@ package org.teamapps.projector.server.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.teamapps.projector.server.config.ProjectorConfiguration;
-import org.teamapps.icons.IconLibraryRegistry;
-import org.teamapps.icons.IconProvider;
+import org.teamapps.projector.icon.IconLibraryRegistry;
+import org.teamapps.projector.icon.IconProvider;
 import org.teamapps.projector.server.json.ObjectMapperFactory;
 import org.teamapps.projector.server.uisession.SessionManager;
 import org.teamapps.projector.server.threading.SequentialExecutorFactory;

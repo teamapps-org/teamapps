@@ -1,7 +1,7 @@
 package org.teamapps.projector.dsl.generate.wrapper;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.projector.dsl.TeamAppsDtoParser;
 
 import static org.teamapps.projector.dsl.generate.IntermediateDtoModel.findAncestorOfType;
 

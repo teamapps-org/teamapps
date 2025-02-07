@@ -23,7 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.teamapps.commons.formatter.FileSizeFormatter;
-import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.material.MaterialIcon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
 import org.teamapps.projector.clientrecordcache.ClientRecordCache;

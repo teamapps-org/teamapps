@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.notification;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.session.SessionContext;
 
 import java.time.Duration;

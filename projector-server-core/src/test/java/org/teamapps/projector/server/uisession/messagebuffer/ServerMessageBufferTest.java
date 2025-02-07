@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.teamapps.dto.protocol.server.CMD;
+import org.teamapps.projector.dto.protocol.server.CMD;
 import org.teamapps.projector.server.json.ObjectMapperFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;

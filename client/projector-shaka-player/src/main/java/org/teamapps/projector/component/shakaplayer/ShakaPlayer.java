@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.shakaplayer;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.event.ProjectorEvent;

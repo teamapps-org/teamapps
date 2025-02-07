@@ -21,7 +21,7 @@ package org.teamapps.projector.dsl.generate;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
-import org.teamapps.dsl.TeamAppsDtoParser.*;
+import org.teamapps.projector.dsl.TeamAppsDtoParser.*;
 import org.teamapps.projector.dsl.generate.wrapper.*;
 
 import java.util.ArrayList;

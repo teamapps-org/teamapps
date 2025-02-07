@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.server.jetty.embedded;
 
-import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.material.MaterialIcon;
 import org.teamapps.projector.ClosedSessionHandlingType;
 import org.teamapps.projector.component.core.dummy.DummyComponent;
 import org.teamapps.projector.component.core.field.Button;

@@ -21,8 +21,8 @@ package org.teamapps.projector.resourceprovider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.icons.IconResource;
-import org.teamapps.icons.IconProvider;
+import org.teamapps.projector.icon.IconResource;
+import org.teamapps.projector.icon.IconProvider;
 import org.teamapps.projector.resource.Resource;
 
 import java.io.ByteArrayInputStream;

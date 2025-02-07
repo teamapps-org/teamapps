@@ -22,8 +22,8 @@ package org.teamapps.projector.component.filefield.simple;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.teamapps.commons.formatter.FileSizeFormatter;
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.material.MaterialIcon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.component.field.AbstractField;

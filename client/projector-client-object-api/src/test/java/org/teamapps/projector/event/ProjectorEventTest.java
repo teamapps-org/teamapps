@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.teamapps.commons.event.Disposable;
 import org.teamapps.commons.util.ExceptionUtil;
-import org.teamapps.icons.SessionIconProvider;
+import org.teamapps.projector.icon.SessionIconProvider;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
 import org.teamapps.projector.server.UxServerContext;
 import org.teamapps.projector.session.ClientInfo;
@@ -48,7 +48,7 @@ import java.util.function.Consumer;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.teamapps.common.ProjectorVersion.TEAMAPPS_VERSION;
+import static org.teamapps.projector.common.ProjectorVersion.TEAMAPPS_VERSION;
 
 public class ProjectorEventTest {
 

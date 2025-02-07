@@ -20,7 +20,7 @@
 
 package org.teamapps.projector.component.filefield.simple;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.filefield.DtoFileItem;
 import org.teamapps.projector.session.CurrentSessionContext;
 

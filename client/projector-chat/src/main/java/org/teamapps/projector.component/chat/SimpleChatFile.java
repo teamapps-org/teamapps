@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.chat;
 
-import org.teamapps.icons.Icon;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.resolvable.Resolvable;
 
 public class SimpleChatFile implements ChatFile {

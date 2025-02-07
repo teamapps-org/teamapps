@@ -27,7 +27,7 @@ import jakarta.websocket.server.ServerEndpointConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.projector.server.core.ProjectorServerCore;
-import org.teamapps.icons.IconProvider;
+import org.teamapps.projector.icon.IconProvider;
 import org.teamapps.projector.resourceprovider.IconResourceProvider;
 import org.teamapps.projector.resourceprovider.ResourceProviderServlet;
 import org.teamapps.projector.session.SessionContextResourceManager;

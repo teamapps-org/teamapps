@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.component.chart.tree;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.component.chart.common.GraphNodeIcon;
 import org.teamapps.projector.component.chart.common.GraphNodeImage;
 import org.teamapps.projector.template.Template;

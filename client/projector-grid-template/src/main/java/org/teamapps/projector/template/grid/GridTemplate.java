@@ -19,8 +19,8 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.common.format.Color;
-import org.teamapps.common.format.RgbaColor;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.FontStyle;
