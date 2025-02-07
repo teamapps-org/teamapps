@@ -3132,6 +3132,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-client-communication@workspace:*, projector-client-communication@workspace:projector-client-communication":
+  version: 0.0.0-use.local
+  resolution: "projector-client-communication@workspace:projector-client-communication"
+  dependencies:
+    esbuild: ^0.15.13
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-client-core-components@workspace:projector-client-core-components":
   version: 0.0.0-use.local
   resolution: "projector-client-core-components@workspace:projector-client-core-components"
@@ -3143,9 +3152,26 @@ __metadata:
     bootstrap-icons: ^1.10.2
     esbuild: ^0.15.13
     mustache: ^4.2.0
+    projector-client-communication: "workspace:*"
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
-    teamapps-client-communication: "workspace:*"
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-client-core@workspace:projector-client-core":
+  version: 0.0.0-use.local
+  resolution: "projector-client-core@workspace:projector-client-core"
+  dependencies:
+    cross-var: ^1.1.0
+    esbuild: ^0.15.13
+    esbuild-plugin-alias: ^0.2.1
+    esbuild-plugin-less: ^1.1.11
+    nosleep.js: ^0.12.0
+    projector-client-communication: "workspace:*"
+    projector-client-object-api: "workspace:*"
+    replace-in-file: ^7.0.1
+    rimraf: ^3.0.2
     typescript: ^5.1
   languageName: unknown
   linkType: soft
@@ -3170,9 +3196,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"projector-combobox@workspace:projector-combobox":
+"projector-combobox@workspace:projector-tree-components":
   version: 0.0.0-use.local
-  resolution: "projector-combobox@workspace:projector-combobox"
+  resolution: "projector-combobox@workspace:projector-tree-components"
   dependencies:
     "@floating-ui/dom": ^1.6.3
     esbuild: ^0.15.13
@@ -3253,9 +3279,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"projector-map-view@workspace:projector-map-view":
+"projector-map@workspace:projector-map":
   version: 0.0.0-use.local
-  resolution: "projector-map-view@workspace:projector-map-view"
+  resolution: "projector-map@workspace:projector-map"
   dependencies:
     "@types/maplibre-gl": ^1.13.0
     d3: ^7.9.0
@@ -3770,32 +3796,6 @@ __metadata:
   checksum: cb8ff8daeaf1db642156f69a9aa545b6c01dd9c4def4f90a49f46cbf24be0c245d392fcf37acd119cd1819b99dad2cc9b7e3260813f64bcfd7f5b18b5a1eefb8
   languageName: node
   linkType: hard
-
-"teamapps-client-communication@workspace:*, teamapps-client-communication@workspace:projector-client-communication":
-  version: 0.0.0-use.local
-  resolution: "teamapps-client-communication@workspace:projector-client-communication"
-  dependencies:
-    esbuild: ^0.15.13
-    typescript: ^5.1
-  languageName: unknown
-  linkType: soft
-
-"teamapps-client-core@workspace:projector-client-core":
-  version: 0.0.0-use.local
-  resolution: "teamapps-client-core@workspace:projector-client-core"
-  dependencies:
-    cross-var: ^1.1.0
-    esbuild: ^0.15.13
-    esbuild-plugin-alias: ^0.2.1
-    esbuild-plugin-less: ^1.1.11
-    nosleep.js: ^0.12.0
-    projector-client-object-api: "workspace:*"
-    replace-in-file: ^7.0.1
-    rimraf: ^3.0.2
-    teamapps-client-communication: "workspace:*"
-    typescript: ^5.1
-  languageName: unknown
-  linkType: soft
 
 "tinyqueue@npm:^2.0.3":
   version: 2.0.3

@@ -1,5 +1,5 @@
 {
-  "name": "teamapps-client-core",
+  "name": "projector-client-core",
   "version": "0.1.0-SNAPSHOT",
   "type": "module",
   "exports": "./target/js-dist/index.js",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "nosleep.js": "^0.12.0",
-    "projector-client-object-api": "workspace:*",
-    "teamapps-client-communication": "workspace:*"
+    "projector-client-communication": "workspace:*",
+    "projector-client-object-api": "workspace:*"
   }
 }

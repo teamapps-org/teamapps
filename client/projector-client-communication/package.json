@@ -1,5 +1,5 @@
 {
-  "name": "teamapps-client-communication",
+  "name": "projector-client-communication",
   "version": "0.1.0-SNAPSHOT",
   "type": "module",
   "exports": "./target/js-dist/index.js",

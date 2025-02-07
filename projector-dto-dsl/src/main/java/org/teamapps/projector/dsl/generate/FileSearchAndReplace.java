@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 
 public class FileSearchAndReplace {
 
-    private String directory;
-    private String fileTypeSuffix;
-    private String searchString;
-    private String replaceString;
+    private final Path directory;
+    private final String fileTypeSuffix;
+    private final String searchString;
+    private final String replaceString;
 
-    public FileSearchAndReplace(String directory, String fileTypeSuffix, String searchString, String replaceString) {
+    public FileSearchAndReplace(Path directory, String fileTypeSuffix, String searchString, String replaceString) {
         this.directory = directory;
         this.fileTypeSuffix = fileTypeSuffix;
         this.searchString = searchString;
@@ -24,13 +24,11 @@ public class FileSearchAndReplace {
     }
 
     public void execute() throws IOException {
-        Path dirPath = Paths.get(directory);
-
-        if (!Files.isDirectory(dirPath)) {
-            throw new IllegalArgumentException("The provided directory path is not valid: " + directory);
+        if (!Files.isDirectory(directory)) {
+            throw new IllegalArgumentException("The provided directory path is not valid: " + this.directory);
         }
 
-        Files.walkFileTree(dirPath, new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if (file.toString().endsWith(fileTypeSuffix)) {

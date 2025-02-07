@@ -50,29 +50,29 @@ public class ProjectorServletContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		ServletContext context = servletContextEvent.getServletContext();
 
-		FilterRegistration.Dynamic indexHtmlHeaderFilter = context.addFilter("teamapps-index-html-header-filter", new IndexHtmlHeaderFilter());
+		FilterRegistration.Dynamic indexHtmlHeaderFilter = context.addFilter("projector-index-html-header-filter", new IndexHtmlHeaderFilter());
 		indexHtmlHeaderFilter.setAsyncSupported(true);
 		indexHtmlHeaderFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/");
 		indexHtmlHeaderFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/index.html");
 
-		FilterRegistration.Dynamic downloadFilterRegistration = context.addFilter("teamapps-download-header-filter", new DownloadHttpHeaderFilter());
+		FilterRegistration.Dynamic downloadFilterRegistration = context.addFilter("projector-download-header-filter", new DownloadHttpHeaderFilter());
 		downloadFilterRegistration.setAsyncSupported(true);
 		downloadFilterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*");
 
-		Dynamic uploadServletRegistration = context.addServlet("teamapps-upload-servlet", new UploadServlet(projectorServerCore.getConfig().getUploadDirectory(), projectorServerCore.getUploadManager()::addUploadedFile));
+		Dynamic uploadServletRegistration = context.addServlet("projector-upload-servlet", new UploadServlet(projectorServerCore.getConfig().getUploadDirectory(), projectorServerCore.getUploadManager()::addUploadedFile));
 		uploadServletRegistration.addMapping("/upload/*");
 		uploadServletRegistration.setMultipartConfig(new MultipartConfigElement(null, -1L, -1L, 1000_000));
 
-		Dynamic leaveBeaconServletRegistration = context.addServlet("teamapps-leave", new LeaveBeaconServlet(projectorServerCore.getSessionManager()));
+		Dynamic leaveBeaconServletRegistration = context.addServlet("projector-leave", new LeaveBeaconServlet(projectorServerCore.getSessionManager()));
 		leaveBeaconServletRegistration.addMapping("/leave/*");
 
-		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProvider(projectorServerCore.getIconLibraryRegistry()))));
+		Dynamic iconServletRegistration = context.addServlet("projector-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProvider(projectorServerCore.getIconLibraryRegistry()))));
 		iconServletRegistration.addMapping("/icons/*");
 
-		Dynamic componentServletRegistration = context.addServlet("teamapps-components", new ComponentLibraryResourceServlet(projectorServerCore.getComponentLibraryRegistry()));
+		Dynamic componentServletRegistration = context.addServlet("projector-components", new ComponentLibraryResourceServlet(projectorServerCore.getComponentLibraryRegistry()));
 		componentServletRegistration.addMapping("/components/*");
 
-		Dynamic filesServletRegistration = context.addServlet("teamapps-files", new ResourceProviderServlet(new SessionResourceProvider(projectorServerCore.getSessionManager()::getSessionContextById)));
+		Dynamic filesServletRegistration = context.addServlet("projector-files", new ResourceProviderServlet(new SessionResourceProvider(projectorServerCore.getSessionManager()::getSessionContextById)));
 		filesServletRegistration.addMapping(SessionContextResourceManager.BASE_PATH + "*");
 
 		context.addListener(new ServletRequestListener());

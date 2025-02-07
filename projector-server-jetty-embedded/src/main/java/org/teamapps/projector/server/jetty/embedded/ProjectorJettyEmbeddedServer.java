@@ -49,7 +49,7 @@ public class ProjectorJettyEmbeddedServer {
 		webapp.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
 		webapp.setContextPath("/");
 
-		webapp.addEventListener(ServletUtil.createResourceProviderServletContextListener("teamapps-base-resources-servlet", baseResourceProvider, "/*"));
+		webapp.addEventListener(ServletUtil.createResourceProviderServletContextListener("projector-base-resources-servlet", baseResourceProvider, "/*"));
 		webapp.addEventListener(new ProjectorServletContextListener(projectorServerCore));
 		additionalServletContextListeners.forEach(webapp::addEventListener);
 

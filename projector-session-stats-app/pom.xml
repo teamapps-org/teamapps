@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>projector-combobox</artifactId>
+            <artifactId>projector-tree-components</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

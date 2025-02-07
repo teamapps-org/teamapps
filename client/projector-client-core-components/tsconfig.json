@@ -21,6 +21,6 @@
     "src/main/ts/**/*"
   ],
 //  "references": [
-//    {"teamapps-client-communication": "../teamapps-client-communication"}
+//    {"projector-client-communication": "../projector-client-communication"}
 //  ]
 }

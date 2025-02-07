@@ -33,7 +33,7 @@ public class DownloadHttpHeaderFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-		String downloadFileName = req.getParameter("teamapps-download-filename");
+		String downloadFileName = req.getParameter("projector-download-filename");
 
 		if (downloadFileName != null) {
 			HttpServletResponse response = (HttpServletResponse) res;

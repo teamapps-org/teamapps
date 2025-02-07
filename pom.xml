@@ -46,18 +46,14 @@
         <module>client/projector-grid-template</module>
         <module>client/projector-mustache-template</module>
         <module>client/projector-client-core-components</module>
-        <module>client/projector-notification</module>
-
-        <module>projector-server-core</module>
-        <module>projector-server-jetty-embedded</module>
-        <module>projector-server-undertow-embedded</module>
 
         <module>client/projector-progress-indicator</module>
+        <module>client/projector-notification</module>
         <module>client/projector-progress-display</module>
         <module>client/projector-mobile-layout</module>
 
         <module>client/projector-notification-bar</module>
-        <module>client/projector-combobox</module>
+        <module>client/projector-tree-components</module>
         <module>client/projector-infinite-scrolling-components</module>
         <module>client/projector-calendar</module>
         <module>client/projector-document-viewer</module>
@@ -68,7 +64,7 @@
         <module>client/projector-workspace-layout</module>
 
         <module>client/projector-blogview</module>
-        <module>client/projector-map-view</module>
+        <module>client/projector-map</module>
         <module>client/projector-shaka-player</module>
         <module>client/projector-mediasoup-client</module>
         <module>client/projector-chart</module>
@@ -80,6 +76,10 @@
 
         <module>projector-material-icon-provider</module>
         <module>projector-application</module>
+
+        <module>projector-server-core</module>
+        <module>projector-server-jetty-embedded</module>
+        <module>projector-server-undertow-embedded</module>
 
         <module>projector-session-stats-app</module>
     </modules>
@@ -370,6 +370,30 @@
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>false</autoReleaseAfterClose>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.ferstl</groupId>
+                <artifactId>depgraph-maven-plugin</artifactId>
+                <version>4.0.3</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>default-depgraph</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <reduceEdges>true</reduceEdges>
+                            <classpathScope>compile</classpathScope>
+                            <includes>org.teamapps*:*</includes>
+                            <showClassifiers>true</showClassifiers>
+                            <graphFormat>puml</graphFormat>
+                            <outputDirectory>${project.basedir}/</outputDirectory>
+                            <outputFileName>module-dependency-graph</outputFileName>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

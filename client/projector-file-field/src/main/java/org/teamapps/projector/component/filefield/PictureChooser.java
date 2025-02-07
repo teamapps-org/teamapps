@@ -21,20 +21,20 @@ package org.teamapps.projector.component.filefield;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import net.coobird.thumbnailator.Thumbnails;
-import org.teamapps.projector.icon.material.MaterialIcon;
-import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.DtoComponentConfig;
-import org.teamapps.projector.component.common.ImageCropperSelection;
-import org.teamapps.projector.component.common.ImageCropperSelectionMode;
 import org.teamapps.projector.component.core.field.Button;
 import org.teamapps.projector.component.core.flexcontainer.HorizontalLayout;
 import org.teamapps.projector.component.core.flexcontainer.VerticalLayout;
 import org.teamapps.projector.component.core.window.Window;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.filefield.imagecropper.ImageCropper;
+import org.teamapps.projector.component.filefield.imagecropper.ImageCropperSelection;
+import org.teamapps.projector.component.filefield.imagecropper.ImageCropperSelectionMode;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.i18n.ProjectorTranslationKeys;
+import org.teamapps.projector.icon.Icon;
+import org.teamapps.projector.icon.material.MaterialIcon;
 import org.teamapps.projector.resource.FileResource;
 import org.teamapps.projector.resource.Resource;
 

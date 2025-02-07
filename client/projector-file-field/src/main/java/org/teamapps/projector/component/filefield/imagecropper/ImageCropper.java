@@ -21,7 +21,6 @@ package org.teamapps.projector.component.filefield.imagecropper;
 
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponentConfig;
-import org.teamapps.projector.component.common.*;
 import org.teamapps.projector.event.ProjectorEvent;
 
 public class ImageCropper extends AbstractComponent implements DtoImageCropperEventHandler {

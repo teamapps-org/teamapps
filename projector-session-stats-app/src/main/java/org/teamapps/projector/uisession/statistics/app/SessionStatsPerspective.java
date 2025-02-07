@@ -34,7 +34,7 @@ import org.teamapps.projector.component.core.toolbar.ToolbarButtonGroup;
 import org.teamapps.projector.component.infinitescroll.table.AbstractTableModel;
 import org.teamapps.projector.component.infinitescroll.table.SortDirection;
 import org.teamapps.projector.component.infinitescroll.table.Table;
-import org.teamapps.projector.component.trivial.datetime.InstantDateTimeField;
+import org.teamapps.projector.component.treecomponents.datetime.InstantDateTimeField;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.session.uisession.UiSessionState;
 import org.teamapps.projector.session.uisession.stats.CountStats;

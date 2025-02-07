@@ -1,5 +1,3 @@
-make Field an interfaces, so people can implement them more freely and creatively
-
 Check if specialized Components (like SimpleCalendar) work
 
 check if queries actually work

@@ -34,7 +34,7 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 	public IconProvider(IconLibraryRegistry iconLibraryRegistry) {
 		this.iconLibraryRegistry = iconLibraryRegistry;
 		try {
-			this.iconCache = new FileIconCache(Files.createTempDirectory("teamapps-icon-cache").toFile());
+			this.iconCache = new FileIconCache(Files.createTempDirectory("projector-icon-cache").toFile());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

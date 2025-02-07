@@ -189,7 +189,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 					default -> throw new CommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
 				}
 			} catch (SessionNotFoundException e) {
-				LOGGER.warn("TeamApps session not found: " + e.getSessionId());
+				LOGGER.warn("Projector session not found: " + e.getSessionId());
 				send(new SESSION_CLOSED(SessionClosingReason.SESSION_NOT_FOUND, e.getMessage()), this::close, (t) -> close());
 			} catch (Exception e) {
 				LOGGER.error("Exception while processing client message!", e);

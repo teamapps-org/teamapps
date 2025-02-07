@@ -33,7 +33,7 @@ import {
 	Connection,
 	ConnectionImpl,
 	ConnectionListener
-} from "teamapps-client-communication";
+} from "projector-client-communication";
 import {CoreLibrary} from "./CoreLibrary";
 import {createGenericErrorMessageShowable} from "./genericErrorMessages";
 

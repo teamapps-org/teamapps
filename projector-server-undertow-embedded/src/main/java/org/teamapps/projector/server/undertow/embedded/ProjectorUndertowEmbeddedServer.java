@@ -73,7 +73,7 @@ public class ProjectorUndertowEmbeddedServer {
 				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(
 						new ProjectorServletContextListener(projectorServerCore))))
 				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(
-						ServletUtil.createResourceProviderServletContextListener("teamapps-base-resources-servlet", baseResourceProvider, "/*"))))
+						ServletUtil.createResourceProviderServletContextListener("projector-base-resources-servlet", baseResourceProvider, "/*"))))
 				.setAllowNonStandardWrappers(true)
 				.addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo()
 						.addExtension(new PerMessageDeflateHandshake(false, 6)))

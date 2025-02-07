@@ -113,7 +113,7 @@ export var CoreLibrary = {
 		const link = document.createElement('a');
 		link.href = fileUrl;
 		if (fileName != null) {
-			link.href += (fileUrl.indexOf('?') === -1 ? '?' : '&') + 'teamapps-download-filename=' + fileName;
+			link.href += (fileUrl.indexOf('?') === -1 ? '?' : '&') + 'projector-download-filename=' + fileName;
 			link.setAttribute("download", fileName);
 		}
 		if (document.createEvent) {

@@ -21,9 +21,6 @@ package org.teamapps.projector.component.audiolevel;
 
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponentConfig;
-import org.teamapps.projector.component.common.DtoAudioLevelIndicator;
-import org.teamapps.projector.component.common.DtoAudioLevelIndicatorClientObjectChannel;
-import org.teamapps.projector.component.common.DtoAudioLevelIndicatorEventHandler;
 
 public class AudioLevelIndicator extends AbstractComponent implements DtoAudioLevelIndicatorEventHandler {
 

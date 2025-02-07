@@ -22,7 +22,6 @@ package org.teamapps.projector.dsl.generate;
 import org.teamapps.projector.dsl.generate.wrapper.ClassOrInterfaceWrapper;
 import org.teamapps.projector.dsl.generate.wrapper.TypeWrapper;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,12 +65,12 @@ public class DtoModelValidator {
 							if (importSuggestion.isPresent()) {
 								message += " Did you mean: import " + importSuggestion.get() + ";";
 
-								try {
-									new FileSearchAndReplace("/home/yamass/Development/Idea-Projects/teamapps-github-ssh", ".dto", "import .*\\b" + unqualifiedName + ";", "import " + importSuggestion.get() + ";")
-											.execute();
-								} catch (IOException e) {
-									throw new RuntimeException(e);
-								}
+//								try {
+//									new FileSearchAndReplace(Path.of("."), ".dto", "import .*\\b" + unqualifiedName + ";", "import " + importSuggestion.get() + ";")
+//											.execute();
+//								} catch (IOException e) {
+//									throw new RuntimeException(e);
+//								}
 							}
 							
 							return new ModelValidationException(message);

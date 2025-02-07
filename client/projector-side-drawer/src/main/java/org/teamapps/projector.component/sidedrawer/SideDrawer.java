@@ -23,10 +23,6 @@ import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponentConfig;
-import org.teamapps.projector.component.common.DrawerPosition;
-import org.teamapps.projector.component.common.DtoSideDrawer;
-import org.teamapps.projector.component.common.DtoSideDrawerClientObjectChannel;
-import org.teamapps.projector.component.common.DtoSideDrawerEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 
 public class SideDrawer extends AbstractComponent implements DtoSideDrawerEventHandler {
