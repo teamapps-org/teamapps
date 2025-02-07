@@ -21,7 +21,7 @@ package org.teamapps.projector.icon.composite;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.teamapps.icon.TestIcon;
+import org.teamapps.projector.icon.TestIcon;
 
 public class CompositeIconLibraryTest {
 

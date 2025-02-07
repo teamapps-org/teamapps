@@ -140,7 +140,7 @@ public class SessionContext {
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
 		this.objectMapper = objectMapper;
-		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
+		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.projector.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 		this.componentLibraryRegistry = componentLibraryRegistry;
 

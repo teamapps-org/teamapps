@@ -31,15 +31,15 @@ public class JavaDtoGeneratorTest {
 	@Test
 	public void classProperties() throws Exception {
 		executeClassTest(
-				"package \"x\":org.teamapps.dto222; " +
-				"import org.teamapps.dto.blah.DtoComponent; " +
+				"package \"x\":org.teamapps.projector.dto222; " +
+				"import org.teamapps.projector.dto.blah.DtoComponent; " +
 				"class A { "
 				+ " required String aasdf; "
 				+ " String b; "
 				+ " int i; "
 				+ " List<Long> c; "
 				+ "}",
-				"org.teamapps.dto222.A",
+				"org.teamapps.projector.dto222.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_classProperties.java"
 		);
 	}
@@ -188,12 +188,12 @@ public class JavaDtoGeneratorTest {
 	@Test
 	public void eventMethodInvoker() throws Exception {
 		executeEventMethodInvokerTest(
-				"package \"x\":org.teamapps.dto222; " +
-				"import org.teamapps.dto.blah.DtoComponent; " +
+				"package \"x\":org.teamapps.projector.dto222; " +
+				"import org.teamapps.projector.dto.blah.DtoComponent; " +
 				"class A { "
 				+ " event e(int i, String s, Object o);"
 				+ "}",
-				"org.teamapps.dto222.A",
+				"org.teamapps.projector.dto222.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_eventMethodInvoker.java"
 		);
 	}
@@ -201,12 +201,12 @@ public class JavaDtoGeneratorTest {
 	@Test
 	public void eventHandlerInterface() throws Exception {
 		executeEventHandlerInterfaceTest(
-				"package \"x\":org.teamapps.dto222; " +
-				"import org.teamapps.dto.blah.DtoComponent; " +
+				"package \"x\":org.teamapps.projector.dto222; " +
+				"import org.teamapps.projector.dto.blah.DtoComponent; " +
 				"class A { "
 				+ " event e(int i, String s, Object o);"
 				+ "}",
-				"org.teamapps.dto222.A",
+				"org.teamapps.projector.dto222.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_eventHandlerInterface.java"
 		);
 	}
@@ -214,12 +214,12 @@ public class JavaDtoGeneratorTest {
 	@Test
 	public void jsonWrapper() throws Exception {
 		executeJsonWrapperTest(
-				"package \"x\":org.teamapps.dto222; " +
-				"import org.teamapps.dto.blah.DtoComponent; " +
+				"package \"x\":org.teamapps.projector.dto222; " +
+				"import org.teamapps.projector.dto.blah.DtoComponent; " +
 				"class A { "
 				+ " int i; String s; A a; List<String> l; Dictionary<A> d;"
 				+ "}",
-				"org.teamapps.dto222.A",
+				"org.teamapps.projector.dto222.A",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_jsonWrapper.java"
 		);
 	}

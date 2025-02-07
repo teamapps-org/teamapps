@@ -60,7 +60,7 @@ public class DtoLanguageTest {
 	@Test
 	public void testDoubleSemicolon() throws IOException {
 		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("""
-				package "asdf":org.teamapps.blah;
+				package "asdf":org.teamapps.projector.blah;
 				import org.teamapps.projector.component.field.DtoAbstractField;;
 				class A {
 				  required List<DtoAbstractField> fields;\

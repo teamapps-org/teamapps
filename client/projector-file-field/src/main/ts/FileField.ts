@@ -278,22 +278,22 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 			}
 			this.removeItem(fileItem);
 		});
-		fileItem.onUploadTooLarge.addListener(subEvent => {
-			this.onUploadTooLarge.fire(subEvent);
+		fileItem.onUploadTooLarge.addListener(e => {
+			this.onUploadTooLarge.fire(e);
 			this.updateVisibilities();
 		});
-		fileItem.onUploadSuccessful.addListener(subEvent => {
-			subEvent.incompleteUploadsCount = this.numberOfUploadingFileItems;
-			this.onUploadSuccessful.fire(subEvent);
+		fileItem.onUploadSuccessful.addListener(e => {
+			e.incompleteUploadsCount = this.numberOfUploadingFileItems;
+			this.onUploadSuccessful.fire(e);
 			this.updateVisibilities();
 		});
-		fileItem.onUploadCanceled.addListener(subEvent => {
-			subEvent.incompleteUploadsCount = this.numberOfUploadingFileItems;
-			this.onUploadCanceled.fire(subEvent);
+		fileItem.onUploadCanceled.addListener(e => {
+			e.incompleteUploadsCount = this.numberOfUploadingFileItems;
+			this.onUploadCanceled.fire(e);
 			this.updateVisibilities();
 		});
-		fileItem.onUploadFailed.addListener(subEvent => {
-			this.onUploadFailed.fire(subEvent);
+		fileItem.onUploadFailed.addListener(e => {
+			this.onUploadFailed.fire(e);
 			this.updateVisibilities();
 		});
 		return fileItem;

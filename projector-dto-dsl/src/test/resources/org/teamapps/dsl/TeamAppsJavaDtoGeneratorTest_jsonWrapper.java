@@ -1,4 +1,4 @@
-package org.teamapps.dto222;
+package org.teamapps.projector.dto222;
 
 import java.util.ArrayList;
 import java.util.Iterator;

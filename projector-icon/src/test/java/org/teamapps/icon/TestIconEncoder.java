@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.icon;
+package org.teamapps.projector.icon;
 
 import org.teamapps.projector.icon.spi.IconEncoder;
 import org.teamapps.projector.icon.IconEncoderContext;
