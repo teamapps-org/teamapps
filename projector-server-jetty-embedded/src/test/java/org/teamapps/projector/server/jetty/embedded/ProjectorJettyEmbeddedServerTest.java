@@ -19,23 +19,23 @@
  */
 package org.teamapps.projector.server.jetty.embedded;
 
-import org.teamapps.projector.icon.material.MaterialIcon;
 import org.teamapps.projector.ClosedSessionHandlingType;
 import org.teamapps.projector.component.core.dummy.DummyComponent;
 import org.teamapps.projector.component.core.field.Button;
 import org.teamapps.projector.component.core.flexcontainer.VerticalLayout;
 import org.teamapps.projector.component.core.rootpanel.RootPanel;
-import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.icon.material.MaterialIcon;
 import org.teamapps.projector.server.webcontroller.WebController;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import org.teamapps.projector.session.SessionContext;
 
 public class ProjectorJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 
 		WebController controller = (SessionContext sessionContext) -> {
+
+			sessionContext.setClosedSessionHandling(ClosedSessionHandlingType.MESSAGE_WINDOW);
+
 			RootPanel rootPanel = new RootPanel();
 			sessionContext.addRootComponent(rootPanel);
 			DummyComponent dummyComponent = new DummyComponent();
@@ -58,20 +58,11 @@ public class ProjectorJettyEmbeddedServerTest {
 			rootPanel.setContent(verticalLayout);
 
 			sessionContext.subscribeToGlobalKeyEvents(true, false, false, false, false, true, true, System.out::println);
-
-
-
-			sessionContext.setClosedSessionHandling(ClosedSessionHandlingType.MESSAGE_WINDOW);
-
-			Executors.newSingleThreadScheduledExecutor().schedule(() -> sessionContext.runWithContext(() -> {
-				throw new RuntimeException();
-			}), 1, TimeUnit.SECONDS);
 		};
 
 		ProjectorJettyEmbeddedServer jettyServer = ProjectorJettyEmbeddedServer.builder(controller)
 				.withPort(8082)
 				.build();
-//		System.out.println(jettyServer.getTeamAppsCore().getComponentLibraryRegistry().registerComponentLibrary(new CoreComponentLibrary()));
 		jettyServer.start();
 	}
 
