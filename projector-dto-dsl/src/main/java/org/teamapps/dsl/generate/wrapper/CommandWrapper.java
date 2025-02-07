@@ -2,7 +2,7 @@ package org.teamapps.dsl.generate.wrapper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
+import org.teamapps.dsl.generate.IntermediateDtoModel;
 
 import java.util.List;
 import java.util.function.Function;
@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 public class CommandWrapper {
 
 	private final TeamAppsDtoParser.CommandDeclarationContext context;
-	private final TeamAppsIntermediateDtoModel model;
+	private final IntermediateDtoModel model;
 	private final List<FormalParameterWrapper> parameters;
 
-	public CommandWrapper(TeamAppsDtoParser.CommandDeclarationContext context, TeamAppsIntermediateDtoModel model) {
+	public CommandWrapper(TeamAppsDtoParser.CommandDeclarationContext context, IntermediateDtoModel model) {
 		this.context = context;
 		this.model = model;
 

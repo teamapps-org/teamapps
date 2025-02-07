@@ -26,16 +26,16 @@ import {
 	DebounceMode,
 	DeferredExecutor,
 	generateUUID,
-	isTeamAppsEvent,
+	isProjectorEvent,
 	StyleManager,
-	TeamAppsEvent, uncapitalizeFirstLetter
+	ProjectorEvent, uncapitalizeFirstLetter
 } from "./util";
 
 export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoComponent> implements Component {
 
-	public readonly onVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
-	public readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
-	public readonly onResized: TeamAppsEvent<{ width: number; height: number }> = new TeamAppsEvent();
+	public readonly onVisibilityChanged: ProjectorEvent<boolean> = new ProjectorEvent();
+	public readonly deFactoVisibilityChanged: ProjectorEvent<boolean> = new ProjectorEvent();
+	public readonly onResized: ProjectorEvent<{ width: number; height: number }> = new ProjectorEvent();
 
 	private width: number = 0;
 	private height: number = 0;
@@ -64,7 +64,7 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 		for (const propertyName in this) {
 			if (propertyName.startsWith("on")) {
 				let propertyValue = this[propertyName];
-				if (isTeamAppsEvent(propertyValue)) {
+				if (isProjectorEvent(propertyValue)) {
 					let eventName = uncapitalizeFirstLetter(propertyName.substring(2));
 					propertyValue.addListener(eventObject => serverObjectChannel.sendEvent(eventName, eventObject))
 				}

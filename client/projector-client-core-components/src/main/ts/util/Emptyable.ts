@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "projector-client-object-api";
+import {ProjectorEvent} from "projector-client-object-api";
 
 export interface Emptyable {
 	readonly empty: boolean;
-	readonly onEmptyStateChanged: TeamAppsEvent<boolean>;
+	readonly onEmptyStateChanged: ProjectorEvent<boolean>;
 }
 
 export function isEmptyable(o: any): o is Emptyable {
-	return (typeof o.empty) === 'boolean' && o.onEmptyStateChanged instanceof TeamAppsEvent;
+	return (typeof o.empty) === 'boolean' && o.onEmptyStateChanged instanceof ProjectorEvent;
 }

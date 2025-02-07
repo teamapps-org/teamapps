@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, fadeOut, FileUploader, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, fadeOut, FileUploader, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	createDtoChatNewFile,
 	createDtoNewChatMessage,
@@ -37,14 +37,14 @@ import {ProgressBar} from "projector-progress-indicator";
 
 export class ChatInput extends AbstractLegacyComponent<DtoChatInput> implements DtoChatInputCommandHandler, DtoChatInputEventSource {
 
-	onFileItemClicked: TeamAppsEvent<DtoChatInput_FileItemClickedEvent> = new TeamAppsEvent();
-	onFileItemRemoved: TeamAppsEvent<DtoChatInput_FileItemRemovedEvent> = new TeamAppsEvent();
-	onMessageSent: TeamAppsEvent<DtoChatInput_MessageSentEvent> = new TeamAppsEvent();
-	onUploadCanceled: TeamAppsEvent<DtoChatInput_UploadCanceledEvent> = new TeamAppsEvent();
-	onUploadFailed: TeamAppsEvent<DtoChatInput_UploadFailedEvent> = new TeamAppsEvent();
-	onUploadStarted: TeamAppsEvent<DtoChatInput_UploadStartedEvent> = new TeamAppsEvent();
-	onUploadSuccessful: TeamAppsEvent<DtoChatInput_UploadSuccessfulEvent> = new TeamAppsEvent();
-	onUploadTooLarge: TeamAppsEvent<DtoChatInput_UploadTooLargeEvent> = new TeamAppsEvent();
+	onFileItemClicked: ProjectorEvent<DtoChatInput_FileItemClickedEvent> = new ProjectorEvent();
+	onFileItemRemoved: ProjectorEvent<DtoChatInput_FileItemRemovedEvent> = new ProjectorEvent();
+	onMessageSent: ProjectorEvent<DtoChatInput_MessageSentEvent> = new ProjectorEvent();
+	onUploadCanceled: ProjectorEvent<DtoChatInput_UploadCanceledEvent> = new ProjectorEvent();
+	onUploadFailed: ProjectorEvent<DtoChatInput_UploadFailedEvent> = new ProjectorEvent();
+	onUploadStarted: ProjectorEvent<DtoChatInput_UploadStartedEvent> = new ProjectorEvent();
+	onUploadSuccessful: ProjectorEvent<DtoChatInput_UploadSuccessfulEvent> = new ProjectorEvent();
+	onUploadTooLarge: ProjectorEvent<DtoChatInput_UploadTooLargeEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private $uploadItems: HTMLElement;
@@ -211,7 +211,7 @@ enum UploadState {
 }
 
 class FileUploadItem {
-	public readonly onComplete: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onComplete: ProjectorEvent<void> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	public state: UploadState = UploadState.IN_PROGRESS;

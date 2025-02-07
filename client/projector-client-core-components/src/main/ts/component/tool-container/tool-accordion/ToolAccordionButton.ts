@@ -24,7 +24,7 @@ import {
 	generateUUID,
 	isFullScreen,
 	parseHtml,
-	TeamAppsEvent,
+	ProjectorEvent,
 	Template
 } from "projector-client-object-api";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
@@ -33,7 +33,7 @@ import {ToolAccordion} from "./ToolAccordion";
 
 export class ToolAccordionButton {
 
-	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onClick: ProjectorEvent<void> = new ProjectorEvent();
 
 	private config: DtoToolbarButton;
 	private $buttonWrapper: HTMLElement;

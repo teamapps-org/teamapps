@@ -19,7 +19,7 @@
  */
 import {NavigationDirection, TrivialComponent} from "./TrivialCore";
 import {LocalDateTime} from "../LocalDateTime";
-import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {parseHtml, ProjectorEvent} from "projector-client-object-api";
 
 export enum WeekDay {
     MONDAY = 1, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -48,8 +48,8 @@ export class TrivialCalendarBox implements TrivialComponent {
     private $year: HTMLElement;
     private $month: HTMLElement;
 
-    public readonly onChange = new TeamAppsEvent<{ value: LocalDateTime, timeUnitEdited: TimeUnit}>();
-    public readonly onOnEditingTimeUnitChange = new TeamAppsEvent<TimeUnit>();
+    public readonly onChange = new ProjectorEvent<{ value: LocalDateTime, timeUnitEdited: TimeUnit}>();
+    public readonly onOnEditingTimeUnitChange = new ProjectorEvent<TimeUnit>();
 
     constructor(options: TrivialCalendarBoxConfig = {}) {
         let now = LocalDateTime.local();

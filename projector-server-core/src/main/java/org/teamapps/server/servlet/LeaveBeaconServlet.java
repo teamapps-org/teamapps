@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.protocol.server.SessionClosingReason;
-import org.teamapps.server.uisession.TeamAppsSessionManager;
+import org.teamapps.server.uisession.SessionManager;
 import org.teamapps.server.uisession.UiSessionImpl;
 
 import java.io.IOException;
@@ -35,9 +35,9 @@ import java.lang.invoke.MethodHandles;
 public class LeaveBeaconServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private final TeamAppsSessionManager uiSessionManager;
+	private final SessionManager uiSessionManager;
 
-	public LeaveBeaconServlet(TeamAppsSessionManager uiSessionManager) {
+	public LeaveBeaconServlet(SessionManager uiSessionManager) {
 		this.uiSessionManager = uiSessionManager;
 	}
 

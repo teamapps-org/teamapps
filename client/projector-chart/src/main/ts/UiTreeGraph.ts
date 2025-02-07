@@ -25,7 +25,7 @@ import {
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent, Template
+	ProjectorEvent, Template
 } from "projector-client-object-api";
 import {
 	DtoTreeGraph,
@@ -38,10 +38,10 @@ import {flextree} from "d3-flextree";
 
 export class UiTreeGraph extends AbstractLegacyComponent<DtoTreeGraph> implements DtoTreeGraphCommandHandler, DtoTreeGraphEventSource {
 
-	public readonly onNodeClicked: TeamAppsEvent<DtoTreeGraph_NodeClickedEvent> = new TeamAppsEvent();
-	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<DtoTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
-	public readonly onParentExpandedOrCollapsed: TeamAppsEvent<DtoTreeGraph_ParentExpandedOrCollapsedEvent> = new TeamAppsEvent();
-	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<DtoTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onNodeClicked: ProjectorEvent<DtoTreeGraph_NodeClickedEvent> = new ProjectorEvent();
+	public readonly onNodeExpandedOrCollapsed: ProjectorEvent<DtoTreeGraph_NodeExpandedOrCollapsedEvent> = new ProjectorEvent();
+	public readonly onParentExpandedOrCollapsed: ProjectorEvent<DtoTreeGraph_ParentExpandedOrCollapsedEvent> = new ProjectorEvent();
+	public readonly onSideListExpandedOrCollapsed: ProjectorEvent<DtoTreeGraph_SideListExpandedOrCollapsedEvent> = new ProjectorEvent();
 
 	private chart: TreeChart;
 	private $main: HTMLElement;

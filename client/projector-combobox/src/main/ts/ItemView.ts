@@ -33,13 +33,13 @@ import {
 	DtoIdentifiableClientRecord,
 	generateUUID,
 	parseHtml,
-	TeamAppsEvent,
+	ProjectorEvent,
 	Template
 } from "projector-client-object-api";
 
 export class ItemView extends AbstractLegacyComponent<DtoItemView> implements DtoItemViewCommandHandler, DtoItemViewEventSource {
 
-	public readonly onItemClicked: TeamAppsEvent<DtoItemView_ItemClickedEvent> = new TeamAppsEvent<DtoItemView_ItemClickedEvent>();
+	public readonly onItemClicked: ProjectorEvent<DtoItemView_ItemClickedEvent> = new ProjectorEvent<DtoItemView_ItemClickedEvent>();
 
 	private $itemView: HTMLElement;
 	private groupsByGroupId: { [index: string]: ItemGroup } = {};
@@ -164,7 +164,7 @@ class ItemGroup {
 	private itemTemplate: Template;
 	private filterString: string;
 
-	public readonly onItemClicked: TeamAppsEvent<DtoIdentifiableClientRecord> = new TeamAppsEvent<DtoIdentifiableClientRecord>();
+	public readonly onItemClicked: ProjectorEvent<DtoIdentifiableClientRecord> = new ProjectorEvent<DtoIdentifiableClientRecord>();
 
 	constructor(private itemView: ItemView, private config: DtoItemViewItemGroup, groupHeaderTemplateRenderer: Template) {
 		this.items = config.items;

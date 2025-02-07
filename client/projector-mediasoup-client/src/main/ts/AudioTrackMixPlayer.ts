@@ -18,11 +18,11 @@
  * =========================LICENSE_END==================================
  */
 
-import {TeamAppsEvent} from "projector-client-object-api";
+import {ProjectorEvent} from "projector-client-object-api";
 
 export class AudioTrackMixPlayer {
 
-	public readonly onResumeSuccessful: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onResumeSuccessful: ProjectorEvent<void> = new ProjectorEvent();
 	private audioContext: AudioContext;
 
 	constructor() {

@@ -24,7 +24,7 @@ import {
 	DeferredExecutor,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent,
+	ProjectorEvent,
 	Template
 } from "projector-client-object-api";
 import {
@@ -74,11 +74,11 @@ export function isRectangle(shapeConfig: DtoAbstractMapShape): shapeConfig is Dt
 
 export class MapView extends AbstractLegacyComponent<DtoMapView> implements DtoMapViewEventSource, DtoMapViewCommandHandler {
 
-	public readonly onZoomLevelChanged: TeamAppsEvent<DtoMapView_ZoomLevelChangedEvent> = TeamAppsEvent.createThrottled(500);
-	public readonly onLocationChanged: TeamAppsEvent<DtoMapView_LocationChangedEvent> = TeamAppsEvent.createThrottled(500);
-	public readonly onMapClicked: TeamAppsEvent<DtoMapView_MapClickedEvent> = new TeamAppsEvent();
-	public readonly onMarkerClicked: TeamAppsEvent<DtoMapView_MarkerClickedEvent> = new TeamAppsEvent();
-	public readonly onShapeDrawn: TeamAppsEvent<DtoMapView_ShapeDrawnEvent> = new TeamAppsEvent();
+	public readonly onZoomLevelChanged: ProjectorEvent<DtoMapView_ZoomLevelChangedEvent> = ProjectorEvent.createThrottled(500);
+	public readonly onLocationChanged: ProjectorEvent<DtoMapView_LocationChangedEvent> = ProjectorEvent.createThrottled(500);
+	public readonly onMapClicked: ProjectorEvent<DtoMapView_MapClickedEvent> = new ProjectorEvent();
+	public readonly onMarkerClicked: ProjectorEvent<DtoMapView_MarkerClickedEvent> = new ProjectorEvent();
+	public readonly onShapeDrawn: ProjectorEvent<DtoMapView_ShapeDrawnEvent> = new ProjectorEvent();
 
 	private $map: HTMLElement;
 	private map: MapBoxMap;

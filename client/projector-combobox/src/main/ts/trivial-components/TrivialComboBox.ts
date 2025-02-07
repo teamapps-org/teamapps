@@ -27,7 +27,7 @@ import {
 } from "./TrivialCore";
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
-import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {parseHtml, ProjectorEvent} from "projector-client-object-api";
 
 type TextToEntryFunction<E> = (freeText: string) => E | any;
 
@@ -109,11 +109,11 @@ export interface TrivialComboBoxConfig<E> {
 
 export class TrivialComboBox<E> implements TrivialComponent {
 
-	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
-	public readonly onFocus = new TeamAppsEvent<void>();
-	public readonly onBlur = new TeamAppsEvent<void>();
-	public readonly onBeforeQuery = new TeamAppsEvent<string>();
-	public readonly onBeforeDropdownOpens = new TeamAppsEvent<string>();
+	public readonly onSelectedEntryChanged = new ProjectorEvent<E>();
+	public readonly onFocus = new ProjectorEvent<void>();
+	public readonly onBlur = new ProjectorEvent<void>();
+	public readonly onBeforeQuery = new ProjectorEvent<string>();
+	public readonly onBeforeDropdownOpens = new ProjectorEvent<string>();
 
 	private config: TrivialComboBoxConfig<E>;
 

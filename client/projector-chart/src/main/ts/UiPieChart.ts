@@ -19,7 +19,7 @@
  */
 
 import * as d3 from "d3"
-import {AbstractLegacyComponent, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	ChartLegendStyle,
 	DataPointWeighting,
@@ -33,7 +33,7 @@ import {PatternifyParameter} from "./UiTreeGraph";
 
 export class UiPieChart extends AbstractLegacyComponent<DtoPieChart> implements DtoPieChartCommandHandler, DtoPieChartEventSource {
 
-	readonly onDataPointClicked: TeamAppsEvent<DtoPieChart_DataPointClickedEvent> = new TeamAppsEvent();
+	readonly onDataPointClicked: ProjectorEvent<DtoPieChart_DataPointClickedEvent> = new ProjectorEvent();
 
 	chart: Chart;
 	config: DtoPieChart;

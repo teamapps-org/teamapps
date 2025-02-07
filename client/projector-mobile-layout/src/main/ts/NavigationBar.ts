@@ -24,7 +24,7 @@ import {
 	Component, doOnceOnClickOutsideElement,
 	parseHtml,
 	ServerObjectChannel, slideDown, slideUp,
-	TeamAppsEvent,
+	ProjectorEvent,
 	Template
 } from "projector-client-object-api";
 import {
@@ -43,8 +43,8 @@ interface Button {
 
 export class NavigationBar extends AbstractLegacyComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
 
-	public readonly onButtonClicked: TeamAppsEvent<DtoNavigationBar_ButtonClickedEvent> = new TeamAppsEvent();
-	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent();
+	public readonly onButtonClicked: ProjectorEvent<DtoNavigationBar_ButtonClickedEvent> = new ProjectorEvent();
+	public readonly onFanoutClosedDueToClickOutsideFanout: ProjectorEvent<DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new ProjectorEvent();
 
 	private $bar: HTMLElement;
 	private $buttonsContainer: HTMLElement;

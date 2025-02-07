@@ -20,7 +20,7 @@
 
 // @ts-ignore
 import ICON_UPLOAD from "@material-symbols/svg-400/outlined/upload.svg";
-import {AbstractField, arraysEqual, FieldEditingMode, generateUUID, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractField, arraysEqual, FieldEditingMode, generateUUID, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {
 	createDtoFileItem,
 	DtoFileItem,
@@ -42,14 +42,14 @@ import {FileItem, FileItemState} from "./FileItem";
  */
 export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileItem[]> implements DtoSimpleFileFieldEventSource, DtoSimpleFileFieldCommandHandler {
 
-	public readonly onFileItemClicked: TeamAppsEvent<DtoSimpleFileField_FileItemClickedEvent> = new TeamAppsEvent();
-	public readonly onFileItemRemoved: TeamAppsEvent<DtoSimpleFileField_FileItemRemovedEvent> = new TeamAppsEvent();
-	public readonly onUploadCanceled: TeamAppsEvent<DtoSimpleFileField_UploadCanceledEvent> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<DtoSimpleFileField_UploadFailedEvent> = new TeamAppsEvent();
-	public readonly onUploadInitiatedByUser: TeamAppsEvent<DtoSimpleFileField_UploadInitiatedByUserEvent> = new TeamAppsEvent();
-	public readonly onUploadStarted: TeamAppsEvent<DtoSimpleFileField_UploadStartedEvent> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<DtoSimpleFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<DtoSimpleFileField_UploadTooLargeEvent> = new TeamAppsEvent();
+	public readonly onFileItemClicked: ProjectorEvent<DtoSimpleFileField_FileItemClickedEvent> = new ProjectorEvent();
+	public readonly onFileItemRemoved: ProjectorEvent<DtoSimpleFileField_FileItemRemovedEvent> = new ProjectorEvent();
+	public readonly onUploadCanceled: ProjectorEvent<DtoSimpleFileField_UploadCanceledEvent> = new ProjectorEvent();
+	public readonly onUploadFailed: ProjectorEvent<DtoSimpleFileField_UploadFailedEvent> = new ProjectorEvent();
+	public readonly onUploadInitiatedByUser: ProjectorEvent<DtoSimpleFileField_UploadInitiatedByUserEvent> = new ProjectorEvent();
+	public readonly onUploadStarted: ProjectorEvent<DtoSimpleFileField_UploadStartedEvent> = new ProjectorEvent();
+	public readonly onUploadSuccessful: ProjectorEvent<DtoSimpleFileField_UploadSuccessfulEvent> = new ProjectorEvent();
+	public readonly onUploadTooLarge: ProjectorEvent<DtoSimpleFileField_UploadTooLargeEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private $uploadButton: HTMLElement;

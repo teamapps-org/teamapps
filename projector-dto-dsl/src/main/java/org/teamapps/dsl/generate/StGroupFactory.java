@@ -28,7 +28,7 @@ import java.util.Optional;
 public class StGroupFactory {
     public static STGroupFile createStGroup(
             String templateFileResourcePath,
-            TeamAppsIntermediateDtoModel model
+            IntermediateDtoModel model
     ) {
         STGroupFile stGroup = new STGroupFile(StGroupFactory.class.getResource(templateFileResourcePath), "UTF-8", '<', '>');
         stGroup.registerRenderer(String.class, new StringRenderer());

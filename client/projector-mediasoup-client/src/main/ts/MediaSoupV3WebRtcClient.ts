@@ -24,7 +24,7 @@ import {
 	findClassesByFunction,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {
 	DtoAudioTrackConstraints, DtoMediaDeviceInfo,
@@ -60,21 +60,21 @@ import {ConferenceApi, Utils} from "./lib/avcore.client";
 
 
 export class MediaSoupV3WebRtcClient extends AbstractLegacyComponent<DtoMediaSoupV3WebRtcClient> implements DtoMediaSoupV3WebRtcClientCommandHandler, DtoMediaSoupV3WebRtcClientEventSource {
-	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent();
-	public readonly onSourceMediaTrackEnded: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent> = new TeamAppsEvent();
+	public readonly onSourceMediaTrackRetrievalFailed: ProjectorEvent<DtoMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new ProjectorEvent();
+	public readonly onSourceMediaTrackEnded: ProjectorEvent<DtoMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent> = new ProjectorEvent();
 
-	public readonly onTrackPublishingSuccessful: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_TrackPublishingSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onTrackPublishingFailed: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_TrackPublishingFailedEvent> = new TeamAppsEvent();
+	public readonly onTrackPublishingSuccessful: ProjectorEvent<DtoMediaSoupV3WebRtcClient_TrackPublishingSuccessfulEvent> = new ProjectorEvent();
+	public readonly onTrackPublishingFailed: ProjectorEvent<DtoMediaSoupV3WebRtcClient_TrackPublishingFailedEvent> = new ProjectorEvent();
 
-	public readonly onSubscribingSuccessful: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_SubscribingSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onSubscribingFailed: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_SubscribingFailedEvent> = new TeamAppsEvent();
-	public readonly onSubscriptionPlaybackFailed: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_SubscriptionPlaybackFailedEvent> = new TeamAppsEvent();
+	public readonly onSubscribingSuccessful: ProjectorEvent<DtoMediaSoupV3WebRtcClient_SubscribingSuccessfulEvent> = new ProjectorEvent();
+	public readonly onSubscribingFailed: ProjectorEvent<DtoMediaSoupV3WebRtcClient_SubscribingFailedEvent> = new ProjectorEvent();
+	public readonly onSubscriptionPlaybackFailed: ProjectorEvent<DtoMediaSoupV3WebRtcClient_SubscriptionPlaybackFailedEvent> = new ProjectorEvent();
 
-	public readonly onConnectionStateChanged: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_ConnectionStateChangedEvent> = new TeamAppsEvent();
+	public readonly onConnectionStateChanged: ProjectorEvent<DtoMediaSoupV3WebRtcClient_ConnectionStateChangedEvent> = new ProjectorEvent();
 
-	public readonly onVoiceActivityChanged: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_VoiceActivityChangedEvent> = new TeamAppsEvent();
-	public readonly onClick: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_ClickEvent> = new TeamAppsEvent();
-	public readonly onContextMenuRequested: TeamAppsEvent<DtoMediaSoupV3WebRtcClient_ContextMenuRequestedEvent> = new TeamAppsEvent();
+	public readonly onVoiceActivityChanged: ProjectorEvent<DtoMediaSoupV3WebRtcClient_VoiceActivityChangedEvent> = new ProjectorEvent();
+	public readonly onClick: ProjectorEvent<DtoMediaSoupV3WebRtcClient_ClickEvent> = new ProjectorEvent();
+	public readonly onContextMenuRequested: ProjectorEvent<DtoMediaSoupV3WebRtcClient_ContextMenuRequestedEvent> = new ProjectorEvent();
 
 	private $main: HTMLDivElement;
 	private $image: HTMLImageElement;

@@ -30,9 +30,9 @@ import {
 import {
 	ClientInfo,
 	SessionClosingReason,
-	TeamAppsConnection,
-	TeamAppsConnectionImpl,
-	TeamAppsConnectionListener
+	Connection,
+	ConnectionImpl,
+	ConnectionListener
 } from "teamapps-client-communication";
 import {CoreLibrary} from "./CoreLibrary";
 import {createGenericErrorMessageShowable} from "./genericErrorMessages";
@@ -90,11 +90,11 @@ class ClientObjectWrapper {
 	}
 }
 
-export class DefaultUiContext implements TeamAppsConnectionListener {
+export class DefaultUiContext implements ConnectionListener {
 
 	public readonly sessionId: string;
 
-	private connection: TeamAppsConnection;
+	private connection: Connection;
 
 	private libraryModulesById: Map<string, Promise<ModuleWrapper>> = new Map();
 	private clientObjectWrappersById: Map<string, ClientObjectWrapper> = new Map();
@@ -122,7 +122,7 @@ export class DefaultUiContext implements TeamAppsConnectionListener {
 			teamAppsVersion: '__TEAMAPPS_VERSION__'
 		};
 
-		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, this);
+		this.connection = new ConnectionImpl(webSocketUrl, this.sessionId, clientInfo, this);
 
 		window.addEventListener('unload', () => {
 			if (!navigator.sendBeacon) return;

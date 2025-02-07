@@ -18,11 +18,11 @@
  * =========================LICENSE_END==================================
  */
 import {TrivialComponent} from "../TrivialCore";
-import {TeamAppsEvent} from "projector-client-object-api";
+import {ProjectorEvent} from "projector-client-object-api";
 
 export interface DropDownComponent<E> extends TrivialComponent {
 
-	readonly onValueChanged: TeamAppsEvent<{ value: E, finalSelection: boolean }>;
+	readonly onValueChanged: ProjectorEvent<{ value: E, finalSelection: boolean }>;
 
 	setValue(value: E): void;
 

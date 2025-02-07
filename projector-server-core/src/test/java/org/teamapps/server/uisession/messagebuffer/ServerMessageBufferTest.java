@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.teamapps.dto.protocol.server.CMD;
-import org.teamapps.server.json.TeamAppsObjectMapperFactory;
+import org.teamapps.server.json.ObjectMapperFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ServerMessageBufferTest {
 
-	public static final ObjectMapper OBJECT_MAPPER = TeamAppsObjectMapperFactory.create();
+	public static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.create();
 
 	@Test
 	public void size() throws Exception {

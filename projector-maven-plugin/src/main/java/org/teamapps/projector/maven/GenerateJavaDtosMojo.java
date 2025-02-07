@@ -71,7 +71,7 @@ public class GenerateJavaDtosMojo extends AbstractMojo {
 				),
 				goal("java"),
 				configuration(
-						element(name("mainClass"), "org.teamapps.dsl.generate.TeamAppsJavaDtoGenerator"),
+						element(name("mainClass"), "org.teamapps.dsl.generate.JavaDtoGenerator"),
 						element(name("commandlineArgs"), commandlineArgs)
 				),
 				executionEnvironment(

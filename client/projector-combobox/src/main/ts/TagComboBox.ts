@@ -30,12 +30,12 @@ import {TrivialTagComboBox} from "./trivial-components/TrivialTagComboBox";
 import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
-import {AbstractField, DebounceMode, FieldEditingMode, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
+import {AbstractField, DebounceMode, FieldEditingMode, parseHtml, ProjectorEvent, Template} from "projector-client-object-api";
 import {buildObjectTree, NodeWithChildren} from "./util";
 
 export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRecord[]> implements DtoTagComboBoxEventSource, DtoTagComboBoxCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoComboBox_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;

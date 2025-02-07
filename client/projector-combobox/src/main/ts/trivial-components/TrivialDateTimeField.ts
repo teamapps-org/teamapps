@@ -34,7 +34,7 @@ import {
 import {LocalDateTime} from "../LocalDateTime";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
-import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {selectElementContents} from "../util";
 
 enum Mode {
@@ -63,9 +63,9 @@ export interface LocalTime {
 
 export class TrivialDateTimeField implements TrivialComponent {
 
-	public readonly onFocus = new TeamAppsEvent<void>();
-	public readonly onBlur = new TeamAppsEvent<void>();
-	public readonly onChange = new TeamAppsEvent<DateTime>();
+	public readonly onFocus = new ProjectorEvent<void>();
+	public readonly onBlur = new ProjectorEvent<void>();
+	public readonly onChange = new ProjectorEvent<DateTime>();
 
 	private config: TrivialDateTimeFieldConfig;
 

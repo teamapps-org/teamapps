@@ -3,28 +3,28 @@ package org.teamapps.dsl.generate.wrapper;
 import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.TeamAppsDtoParser.ClassDeclarationContext;
 import org.teamapps.dsl.TeamAppsDtoParser.CommandDeclarationContext;
-import org.teamapps.dsl.generate.TeamAppsGeneratorException;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
+import org.teamapps.dsl.generate.DtoGeneratorException;
+import org.teamapps.dsl.generate.IntermediateDtoModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.findImport;
-import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.getQualifiedTypeName;
+import static org.teamapps.dsl.generate.IntermediateDtoModel.findImport;
+import static org.teamapps.dsl.generate.IntermediateDtoModel.getQualifiedTypeName;
 
 public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationContext> {
 
 	private final ClassDeclarationContext context;
-	private final TeamAppsIntermediateDtoModel model;
+	private final IntermediateDtoModel model;
 
 	private List<PropertyWrapper> properties;
 	private List<CommandWrapper> commands;
 	private List<EventWrapper> events;
 	private List<QueryWrapper> queries;
 
-	public ClassWrapper(ClassDeclarationContext context, TeamAppsIntermediateDtoModel model) {
+	public ClassWrapper(ClassDeclarationContext context, IntermediateDtoModel model) {
 		this.context = context;
 		this.model = model;
 
@@ -77,7 +77,7 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 			String qualifiedTypeName = getQualifiedTypeName(superClassName, context);
 			ClassWrapper superClass = model.findClassByQualifiedName(qualifiedTypeName).orElse(null);
 			if (superClass == null) {
-				throw new TeamAppsGeneratorException("Cannot find super class " + superClassName + " (" + qualifiedTypeName + ") of " + context.Identifier());
+				throw new DtoGeneratorException("Cannot find super class " + superClassName + " (" + qualifiedTypeName + ") of " + context.Identifier());
 			}
 			return superClass;
 		} else {

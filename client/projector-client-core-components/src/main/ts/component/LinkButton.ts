@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 
 import {
 	DtoLinkButton,
@@ -29,7 +29,7 @@ import {
 
 export class LinkButton extends AbstractLegacyComponent<DtoLinkButton> implements DtoLinkButtonEventSource, DtoLinkButtonCommandHandler {
 
-	public readonly onClick: TeamAppsEvent<DtoLinkButton_ClickEvent> = new TeamAppsEvent();
+	public readonly onClick: ProjectorEvent<DtoLinkButton_ClickEvent> = new ProjectorEvent();
 	
 	private readonly $main: HTMLAnchorElement;
 

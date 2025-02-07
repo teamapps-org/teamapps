@@ -36,7 +36,7 @@ import {
 	noOpServerObjectChannel,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
@@ -49,7 +49,7 @@ export interface DtoWindowListener {
 
 export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWindowCommandHandler, DtoWindowEventSource {
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onWindowButtonClicked: ProjectorEvent<DtoPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private $panelWrapper: HTMLElement;

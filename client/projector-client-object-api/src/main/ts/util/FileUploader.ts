@@ -17,15 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsEvent} from "./TeamAppsEvent";
+import {ProjectorEvent} from "./ProjectorEvent";
 
 export class FileUploader {
 
 
-	public readonly onProgress: TeamAppsEvent<number> = new TeamAppsEvent();
-	public readonly onSuccess: TeamAppsEvent<string> = new TeamAppsEvent();
-	public readonly onError: TeamAppsEvent<void> = new TeamAppsEvent();
-	public readonly onComplete: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onProgress: ProjectorEvent<number> = new ProjectorEvent();
+	public readonly onSuccess: ProjectorEvent<string> = new ProjectorEvent();
+	public readonly onError: ProjectorEvent<void> = new ProjectorEvent();
+	public readonly onComplete: ProjectorEvent<void> = new ProjectorEvent();
 
 	private xhr: JQuery.jqXHR;
 

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, bind, Component, parseHtml, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, bind, Component, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	DtoToolButton,
 	DtoToolButton_ClickEvent,
@@ -30,8 +30,8 @@ import {DropDown} from "../micro-components/DropDown";
 
 export class ToolButton extends AbstractLegacyComponent<DtoToolButton> implements DtoToolButtonEventSource, DtoToolButtonCommandHandler {
 
-	public readonly onClick: TeamAppsEvent<DtoToolButton_ClickEvent> = new TeamAppsEvent();
-	public readonly onDropDownOpened: TeamAppsEvent<DtoToolButton_DropDownOpenedEvent> = new TeamAppsEvent();
+	public readonly onClick: ProjectorEvent<DtoToolButton_ClickEvent> = new ProjectorEvent();
+	public readonly onDropDownOpened: ProjectorEvent<DtoToolButton_DropDownOpenedEvent> = new ProjectorEvent();
 
 	private $button: HTMLElement;
 	private $icon: HTMLElement;

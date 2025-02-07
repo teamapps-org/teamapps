@@ -25,7 +25,7 @@ import {
 	unProxyEntry
 } from "./TrivialCore";
 import KeyDownEvent = JQuery.KeyDownEvent;
-import {parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {parseHtml, ProjectorEvent} from "projector-client-object-api";
 
 export interface TrivialTreeConfig<E> extends TrivialTreeBoxConfig<E> {
     directSelectionViaArrowKeys?: boolean
@@ -35,8 +35,8 @@ export class TrivialTree<E> implements TrivialComponent{
 
     private config: TrivialTreeConfig<E>;
 
-    public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
-    public readonly onNodeExpansionStateChanged = new TeamAppsEvent<{node: E, expanded: boolean}>();
+    public readonly onSelectedEntryChanged = new ProjectorEvent<E>();
+    public readonly onNodeExpansionStateChanged = new ProjectorEvent<{node: E, expanded: boolean}>();
 
     private treeBox: TrivialTreeBox<E>;
     private entries: E[];

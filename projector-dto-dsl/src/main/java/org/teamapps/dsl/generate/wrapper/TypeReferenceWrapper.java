@@ -3,12 +3,12 @@ package org.teamapps.dsl.generate.wrapper;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.generate.TeamAppsGeneratorException;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
+import org.teamapps.dsl.generate.DtoGeneratorException;
+import org.teamapps.dsl.generate.IntermediateDtoModel;
 
 import java.util.*;
 
-import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.getQualifiedTypeName;
+import static org.teamapps.dsl.generate.IntermediateDtoModel.getQualifiedTypeName;
 
 public class TypeReferenceWrapper {
 
@@ -54,10 +54,10 @@ public class TypeReferenceWrapper {
 	}
 
 	private final TeamAppsDtoParser.TypeContext context;
-	private final TeamAppsIntermediateDtoModel model;
+	private final IntermediateDtoModel model;
 	private final List<TypeReferenceWrapper> typeArguments;
 
-	public TypeReferenceWrapper(TeamAppsDtoParser.TypeContext context, TeamAppsIntermediateDtoModel model) {
+	public TypeReferenceWrapper(TeamAppsDtoParser.TypeContext context, IntermediateDtoModel model) {
 		this.context = context;
 		this.model = model;
 
@@ -166,7 +166,7 @@ public class TypeReferenceWrapper {
 				.or(this::findReferencedClass)
 				.or(this::findReferencedInterface)
 				.or(this::findReferencedEnum)
-				.orElseThrow(() -> new TeamAppsGeneratorException("Cannot find type with name '" + getText() + "'. Did you forget to import it?"));
+				.orElseThrow(() -> new DtoGeneratorException("Cannot find type with name '" + getText() + "'. Did you forget to import it?"));
 	}
 
 	public boolean isDtoClassOrInterface() {

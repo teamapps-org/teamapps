@@ -158,7 +158,7 @@ public class SessionContext {
 					if (clientObject != null) {
 						clientObject.handleEvent(name, eventObject);
 					} else {
-						throw new ProjectorComponentNotFoundException(sessionId, clientObjectId);
+						throw new ClientObjectNotFoundException(sessionId, clientObjectId);
 					}
 				} else {
 					handleStaticEvent(libraryId, name, eventObject);
@@ -174,7 +174,7 @@ public class SessionContext {
 						Object result = clientObject.handleQuery(name, params);
 						resultCallback.accept(result);
 					} else {
-						throw new ProjectorComponentNotFoundException(sessionId, clientObjectId);
+						throw new ClientObjectNotFoundException(sessionId, clientObjectId);
 					}
 				} else {
 					// TODO

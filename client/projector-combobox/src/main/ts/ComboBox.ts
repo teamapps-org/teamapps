@@ -32,7 +32,7 @@ import {
 	AbstractField,
 	DebounceMode,
 	FieldEditingMode,
-	TeamAppsEvent, Template
+	ProjectorEvent, Template
 } from "projector-client-object-api";
 import {buildObjectTree, NodeWithChildren} from "./util";
 
@@ -41,7 +41,7 @@ export function isFreeTextEntry(o: DtoComboBoxTreeRecord): boolean {
 }
 
 export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> implements DtoComboBoxEventSource, DtoComboBoxCommandHandler {
-	public readonly onTextInput: TeamAppsEvent<DtoComboBox_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private trivialComboBox: TrivialComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
 	private freeTextIdEntryCounter = -1;

@@ -18,11 +18,11 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractField} from "projector-client-object-api";
-import {Component, FieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {Component, FieldEditingMode, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {DtoLabel, DtoLabel_ClickEvent, DtoLabelCommandHandler, DtoLabelEventSource} from "../../generated";
 
 export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEventSource, DtoLabelCommandHandler {
-	public readonly onClick: TeamAppsEvent<DtoLabel_ClickEvent> = new TeamAppsEvent<DtoLabel_ClickEvent>();
+	public readonly onClick: ProjectorEvent<DtoLabel_ClickEvent> = new ProjectorEvent<DtoLabel_ClickEvent>();
 
 	private $main: HTMLElement;
 	private $icon: HTMLElement;

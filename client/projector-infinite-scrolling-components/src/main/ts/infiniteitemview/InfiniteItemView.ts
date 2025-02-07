@@ -24,7 +24,7 @@ import {
 	DtoIdentifiableClientRecord, DtoTemplate, executeWhenFirstDisplayed, JustifyContent,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent, Template
+	ProjectorEvent, Template
 } from "projector-client-object-api";
 import {ContextMenu} from "projector-client-core-components";
 import {
@@ -47,9 +47,9 @@ type RenderedItem = {
 
 export class InfiniteItemView extends AbstractLegacyComponent<DtoInfiniteItemView> implements DtoInfiniteItemViewCommandHandler, DtoInfiniteItemViewEventSource {
 
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent> = new TeamAppsEvent();
-	public readonly onItemClicked: TeamAppsEvent<DtoInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent();
-	public readonly onContextMenuRequested: TeamAppsEvent<DtoInfiniteItemView_ContextMenuRequestedEvent> = new TeamAppsEvent();
+	public readonly onDisplayedRangeChanged: ProjectorEvent<DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent> = new ProjectorEvent();
+	public readonly onItemClicked: ProjectorEvent<DtoInfiniteItemView_ItemClickedEvent> = new ProjectorEvent();
+	public readonly onContextMenuRequested: ProjectorEvent<DtoInfiniteItemView_ContextMenuRequestedEvent> = new ProjectorEvent();
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;

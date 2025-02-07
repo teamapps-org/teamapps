@@ -1,6 +1,6 @@
 package org.teamapps.dsl.generate.wrapper;
 
-import org.teamapps.dsl.generate.TeamAppsGeneratorException;
+import org.teamapps.dsl.generate.DtoGeneratorException;
 
 import java.util.*;
 
@@ -23,7 +23,7 @@ public class Imports {
 		Import existingImport = imports.get(newImport.name());
 		if (existingImport != null
 				&& (!Objects.equals(newImport.jsModuleName(), existingImport.jsModuleName()) || !Objects.equals(newImport.javaPackageName(), existingImport.javaPackageName()))) {
-			throw new TeamAppsGeneratorException("Inconsistent concurring imports: " + existingImport + ", " + newImport);
+			throw new DtoGeneratorException("Inconsistent concurring imports: " + existingImport + ", " + newImport);
 		}
 		imports.putIfAbsent(newImport.name(), newImport);
 	}

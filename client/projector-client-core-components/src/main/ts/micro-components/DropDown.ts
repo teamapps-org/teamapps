@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {ClickOutsideHandle, Component, doOnceOnClickOutsideElement, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {ClickOutsideHandle, Component, doOnceOnClickOutsideElement, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {Spinner} from "./Spinner";
 import {positionDropdownWithAutoUpdate} from "../util/dropdownPosition";
 
@@ -31,7 +31,7 @@ interface OpenConfig {
 
 export class DropDown {
 
-	public onClose: TeamAppsEvent<void> = new TeamAppsEvent();
+	public onClose: ProjectorEvent<void> = new ProjectorEvent();
 
 	protected $dropDown: HTMLElement;
 	protected $contentContainer: HTMLElement;

@@ -19,7 +19,7 @@
  */
 package org.teamapps.projector.component.field;
 
-import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
+import org.teamapps.projector.i18n.ProjectorTranslationKeys;
 import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.util.Arrays;
@@ -54,7 +54,7 @@ public final class FieldUtil {
      */
     @Deprecated
     public static boolean validateAllAsRequired(AbstractField<?>... fields) {
-        FieldMessage errorMessage = new FieldMessage(FieldMessageSeverity.ERROR, CurrentSessionContext.get().getLocalized(TeamAppsTranslationKeys.REQUIRED_FIELD.getKey()));
+        FieldMessage errorMessage = new FieldMessage(FieldMessageSeverity.ERROR, CurrentSessionContext.get().getLocalized(ProjectorTranslationKeys.REQUIRED_FIELD.getKey()));
         boolean isNotEmpty = true;
         for (AbstractField<?> field : fields) {
             if (field.isEmpty()) {

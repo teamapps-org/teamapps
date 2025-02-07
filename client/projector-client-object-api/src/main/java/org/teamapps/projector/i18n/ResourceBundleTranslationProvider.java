@@ -40,7 +40,7 @@ public class ResourceBundleTranslationProvider implements TranslationProvider {
 	}
 
 	public ResourceBundleTranslationProvider(String baseName, String resourceFileSuffix, Locale fallbackLocale) {
-		this(baseName, new TeamAppsResourceBundleControl(resourceFileSuffix, fallbackLocale));
+		this(baseName, new ProjectorResourceBundleControl(resourceFileSuffix, fallbackLocale));
 	}
 
 	public ResourceBundleTranslationProvider(String baseName, ResourceBundle.Control control) {

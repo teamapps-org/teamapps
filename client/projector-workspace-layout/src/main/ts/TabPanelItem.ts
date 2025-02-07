@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Component, noOpServerObjectChannel, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {Component, noOpServerObjectChannel, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {TabPanelTabStyle, TabPanel, WindowButtonType} from "projector-client-core-components";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
@@ -55,10 +55,10 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 
 	$minimizedTrayButton: HTMLElement = parseHtml(`<div class="minimized-tabpanel-button"></div>`);
 
-	public readonly onTabSelected: TeamAppsEvent<{ tabPanelItemId: string, tabId: string }> = new TeamAppsEvent();
-	public readonly onTabNeedsRefresh: TeamAppsEvent<{ tabId: string }> = new TeamAppsEvent();
-	public readonly onTabClosed: TeamAppsEvent<string> = new TeamAppsEvent();
-	public readonly onPanelStateChangeTriggered: TeamAppsEvent<DtoViewGroupPanelState> = new TeamAppsEvent();
+	public readonly onTabSelected: ProjectorEvent<{ tabPanelItemId: string, tabId: string }> = new ProjectorEvent();
+	public readonly onTabNeedsRefresh: ProjectorEvent<{ tabId: string }> = new ProjectorEvent();
+	public readonly onTabClosed: ProjectorEvent<string> = new ProjectorEvent();
+	public readonly onPanelStateChangeTriggered: ProjectorEvent<DtoViewGroupPanelState> = new ProjectorEvent();
 
 	private _state: DtoViewGroupPanelState = DtoViewGroupPanelState.NORMAL;
 

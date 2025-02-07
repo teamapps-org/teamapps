@@ -20,7 +20,7 @@
 package org.teamapps.uisession.statistics.app;
 
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.server.uisession.TeamAppsSessionManager;
+import org.teamapps.server.uisession.SessionManager;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +32,7 @@ public class SessionStatsSharedBaseTableModel {
 
 	private List<SessionStatsTableRecord> records = List.of();
 
-	public SessionStatsSharedBaseTableModel(TeamAppsSessionManager sessionManager) {
+	public SessionStatsSharedBaseTableModel(SessionManager sessionManager) {
 		sessionManager.onStatsUpdated.addListener(eventData -> {
 			this.records = Stream.concat(
 					eventData.getAllSessions().stream()

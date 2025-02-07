@@ -68,7 +68,7 @@ public class GenerateTypeScriptDtosMojo extends AbstractMojo {
 				),
 				goal("java"),
 				configuration(
-						element(name("mainClass"), "org.teamapps.dsl.generate.TeamAppsTypeScriptGenerator"),
+						element(name("mainClass"), "org.teamapps.dsl.generate.TypeScriptDtoGenerator"),
 						element(name("commandlineArgs"), commandlineArgs)
 				),
 				executionEnvironment(

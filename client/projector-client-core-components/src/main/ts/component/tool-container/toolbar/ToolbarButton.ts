@@ -27,7 +27,7 @@ import {
 	isFullScreen,
 	parseHtml,
 	prependChild,
-	TeamAppsEvent,
+	ProjectorEvent,
 	Template
 } from "projector-client-object-api";
 import {Toolbar} from "./Toolbar";
@@ -36,7 +36,7 @@ import {createDropDownButtonClickInfo, DropDownButtonClickInfo} from "../../../g
 
 export class ToolbarButton {
 
-	public readonly onClick: TeamAppsEvent<DropDownButtonClickInfo> = new TeamAppsEvent();
+	public readonly onClick: ProjectorEvent<DropDownButtonClickInfo> = new ProjectorEvent();
 
 	private $buttonWrapper: HTMLElement;
 	private $button: HTMLElement;
@@ -113,7 +113,7 @@ export class ToolbarButton {
 		if (this.dropDown != null) {
 			this.dropDown.setContentComponent(component?.getMainElement());
 			if ((component as any).onItemClicked) {
-				((component as any).onItemClicked as TeamAppsEvent<any>).addListener(eventObject => {
+				((component as any).onItemClicked as ProjectorEvent<any>).addListener(eventObject => {
 					this.dropDown.close();
 				});
 			}

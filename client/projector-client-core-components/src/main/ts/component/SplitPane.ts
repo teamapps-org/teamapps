@@ -25,7 +25,7 @@ import {
 	Component,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {
@@ -40,7 +40,7 @@ import {
 import {applyCss} from "projector-client-object-api";
 
 export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements Emptyable, DtoSplitPaneCommandHandler, DtoSplitPaneEventSource {
-	public readonly onSplitResized: TeamAppsEvent<DtoSplitPane_SplitResizedEvent> = new TeamAppsEvent<DtoSplitPane_SplitResizedEvent>();
+	public readonly onSplitResized: ProjectorEvent<DtoSplitPane_SplitResizedEvent> = new ProjectorEvent<DtoSplitPane_SplitResizedEvent>();
 
 	private _firstChildComponent: Component;
 	private _lastChildComponent: Component;
@@ -57,7 +57,7 @@ export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements 
 
 	public referenceChildSize: number;
 
-	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
+	public readonly onEmptyStateChanged: ProjectorEvent<boolean> = new ProjectorEvent();
 
 	constructor(config: DtoSplitPane, serverObjectChannel: ServerObjectChannel) {
 		super(config);

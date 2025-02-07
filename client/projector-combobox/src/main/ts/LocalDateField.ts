@@ -38,12 +38,12 @@ import {
 	deepEquals,
 	DtoDateTimeFormatDescriptor,
 	FieldEditingMode,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 
 export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDate> implements DtoLocalDateFieldEventSource, DtoLocalDateFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoLocalDateField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoLocalDateField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected dateSuggestionEngine: DateSuggestionEngine;

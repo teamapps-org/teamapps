@@ -2,25 +2,25 @@ package org.teamapps.dsl.generate.wrapper;
 
 import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.TeamAppsDtoParser.InterfaceDeclarationContext;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
+import org.teamapps.dsl.generate.IntermediateDtoModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.findImport;
-import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.getQualifiedTypeName;
+import static org.teamapps.dsl.generate.IntermediateDtoModel.findImport;
+import static org.teamapps.dsl.generate.IntermediateDtoModel.getQualifiedTypeName;
 
 public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclarationContext> {
 
 	private final InterfaceDeclarationContext context;
-	private final TeamAppsIntermediateDtoModel model;
+	private final IntermediateDtoModel model;
 
 	private List<PropertyWrapper> properties;
 	private List<CommandWrapper> commands;
 	private List<EventWrapper> events;
 	private List<QueryWrapper> queries;
 
-	public InterfaceWrapper(InterfaceDeclarationContext context, TeamAppsIntermediateDtoModel model) {
+	public InterfaceWrapper(InterfaceDeclarationContext context, IntermediateDtoModel model) {
 		this.context = context;
 		this.model = model;
 

@@ -4,13 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.generate.ParserFactory;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
+import org.teamapps.dsl.generate.IntermediateDtoModel;
 
 import java.io.StringReader;
 
 public class ExternalInterfaceWrapper extends InterfaceWrapper {
 
-	public ExternalInterfaceWrapper(TeamAppsDtoParser.ImportDeclarationContext context, TeamAppsIntermediateDtoModel model) {
+	public ExternalInterfaceWrapper(TeamAppsDtoParser.ImportDeclarationContext context, IntermediateDtoModel model) {
 		super(createImplicitInterface(context), model);
 	}
 

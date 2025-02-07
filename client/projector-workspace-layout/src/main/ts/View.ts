@@ -19,13 +19,13 @@
  */
 import {Panel} from "projector-client-core-components";
 import {DtoPanel_WindowButtonClickedEvent, WindowButtonType} from "projector-client-core-components";
-import {bind, Component, TeamAppsEvent} from "projector-client-object-api";
+import {bind, Component, ProjectorEvent} from "projector-client-object-api";
 import {TabPanelItem} from "./TabPanelItem";
 import {ViewInfo} from "./ViewInfo";
 
 export class View implements ViewInfo {
 
-	public readonly onPanelWindowButtonClicked: TeamAppsEvent<WindowButtonType> = new TeamAppsEvent();
+	public readonly onPanelWindowButtonClicked: ProjectorEvent<WindowButtonType> = new ProjectorEvent();
 
 	private _parent: TabPanelItem;
 	private _component: Component;

@@ -19,7 +19,7 @@
  */
 
 
-import {AbstractField, FieldEditingMode, FileUploader, humanReadableFileSize, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractField, FieldEditingMode, FileUploader, humanReadableFileSize, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {
 	DtoPictureChooser,
 	DtoPictureChooser_UploadCanceledEvent,
@@ -36,12 +36,12 @@ import {ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
  */
 export class PictureChooser extends AbstractField<DtoPictureChooser, string> implements DtoPictureChooserEventSource, DtoPictureChooserCommandHandler {
 
-	public readonly onUploadCanceled: TeamAppsEvent<DtoPictureChooser_UploadCanceledEvent> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<DtoPictureChooser_UploadFailedEvent> = new TeamAppsEvent();
-	public readonly onUploadInitiatedByUser: TeamAppsEvent<DtoPictureChooser_UploadInitiatedByUserEvent> = new TeamAppsEvent();
-	public readonly onUploadStarted: TeamAppsEvent<DtoPictureChooser_UploadStartedEvent> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<DtoPictureChooser_UploadSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<DtoPictureChooser_UploadTooLargeEvent> = new TeamAppsEvent();
+	public readonly onUploadCanceled: ProjectorEvent<DtoPictureChooser_UploadCanceledEvent> = new ProjectorEvent();
+	public readonly onUploadFailed: ProjectorEvent<DtoPictureChooser_UploadFailedEvent> = new ProjectorEvent();
+	public readonly onUploadInitiatedByUser: ProjectorEvent<DtoPictureChooser_UploadInitiatedByUserEvent> = new ProjectorEvent();
+	public readonly onUploadStarted: ProjectorEvent<DtoPictureChooser_UploadStartedEvent> = new ProjectorEvent();
+	public readonly onUploadSuccessful: ProjectorEvent<DtoPictureChooser_UploadSuccessfulEvent> = new ProjectorEvent();
+	public readonly onUploadTooLarge: ProjectorEvent<DtoPictureChooser_UploadTooLargeEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private $picture: HTMLElement;

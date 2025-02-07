@@ -44,6 +44,6 @@ public class StringTemplatesErrorListener implements STErrorListener {
 	}
 
 	private RuntimeException createException(STMessage stMessage) {
-		return new TeamAppsGeneratorException("ErrorType: " + stMessage.error + ", arg1: " + stMessage.arg + ", arg2: " + stMessage.arg2 + ", arg3: " + stMessage.arg3, stMessage.cause);
+		return new DtoGeneratorException("ErrorType: " + stMessage.error + ", arg1: " + stMessage.arg + ", arg2: " + stMessage.arg2 + ", arg3: " + stMessage.arg3, stMessage.cause);
 	}
 }

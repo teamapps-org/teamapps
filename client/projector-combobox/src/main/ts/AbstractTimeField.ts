@@ -24,7 +24,7 @@ import {
 	DebounceMode,
 	DtoDateTimeFormatDescriptor,
 	FieldEditingMode,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {
 	DtoAbstractTimeField,
@@ -39,7 +39,7 @@ import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 
 export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> extends AbstractField<C, V> implements DtoAbstractTimeFieldEventSource, DtoAbstractTimeFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoAbstractTimeField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoAbstractTimeField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected timeRenderer: (time: LocalDateTime) => string;

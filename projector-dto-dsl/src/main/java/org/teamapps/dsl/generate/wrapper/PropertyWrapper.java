@@ -1,15 +1,15 @@
 package org.teamapps.dsl.generate.wrapper;
 
 import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
+import org.teamapps.dsl.generate.IntermediateDtoModel;
 
 public class PropertyWrapper {
 
 	private final TeamAppsDtoParser.PropertyDeclarationContext context;
-	private final TeamAppsIntermediateDtoModel model;
+	private final IntermediateDtoModel model;
 	private final TypeReferenceWrapper type;
 
-	public PropertyWrapper(TeamAppsDtoParser.PropertyDeclarationContext context, TeamAppsIntermediateDtoModel model) {
+	public PropertyWrapper(TeamAppsDtoParser.PropertyDeclarationContext context, IntermediateDtoModel model) {
 		this.context = context;
 		this.model = model;
 		this.type = new TypeReferenceWrapper(context.type(), model);

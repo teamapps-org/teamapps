@@ -25,12 +25,12 @@ import {
 	DtoTreeEventSource, DtoTreeRecord, DtoTreeServerObjectChannel
 } from "./generated";
 import {TrivialTree} from "./trivial-components/TrivialTree";
-import {AbstractLegacyComponent, loadSensitiveThrottling, parseHtml, TeamAppsEvent, Template} from "projector-client-object-api";
+import {AbstractLegacyComponent, loadSensitiveThrottling, parseHtml, ProjectorEvent, Template} from "projector-client-object-api";
 import {buildObjectTree, NodeWithChildren} from "./util";
 
 export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
 
-	public readonly onNodeSelected: TeamAppsEvent<DtoTree_NodeSelectedEvent> = new TeamAppsEvent();
+	public readonly onNodeSelected: ProjectorEvent<DtoTree_NodeSelectedEvent> = new ProjectorEvent();
 
 	private $panel: HTMLElement;
 	private trivialTree: TrivialTree<DtoTreeRecord>;

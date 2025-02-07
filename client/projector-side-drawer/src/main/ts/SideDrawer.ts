@@ -24,7 +24,7 @@ import {
 	prependChild,
 	removeClassesByFunction,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {
 	DrawerPosition,
@@ -36,7 +36,7 @@ import {
 
 export class SideDrawer extends AbstractLegacyComponent<DtoSideDrawer> implements DtoSideDrawerCommandHandler, DtoSideDrawerEventSource {
 
-	public readonly onExpandedOrCollapsed: TeamAppsEvent<DtoSideDrawer_ExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onExpandedOrCollapsed: ProjectorEvent<DtoSideDrawer_ExpandedOrCollapsedEvent> = new ProjectorEvent();
 
 	private containerComponent: Component;
 	private contentComponent: Component;

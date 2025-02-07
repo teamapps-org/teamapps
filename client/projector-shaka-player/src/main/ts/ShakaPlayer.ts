@@ -38,7 +38,7 @@ import {
 	parseHtml,
 	removeClassesByFunction,
 	ServerObjectChannel,
-	TeamAppsEvent,
+	ProjectorEvent,
 	throttle
 } from "projector-client-object-api";
 import Player = shaka.Player;
@@ -52,10 +52,10 @@ import Manifest = shaka.extern.Manifest;
 
 export class ShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
 
-	public readonly onManifestLoaded: TeamAppsEvent<DtoShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();       
-	public readonly onTimeUpdate: TeamAppsEvent<DtoShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
-	public readonly onEnded: TeamAppsEvent<DtoShakaPlayer_EndedEvent> = new TeamAppsEvent();
-	public readonly onErrorLoading: TeamAppsEvent<DtoShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent();
+	public readonly onManifestLoaded: ProjectorEvent<DtoShakaPlayer_ManifestLoadedEvent> = new ProjectorEvent();
+	public readonly onTimeUpdate: ProjectorEvent<DtoShakaPlayer_TimeUpdateEvent> = new ProjectorEvent();
+	public readonly onEnded: ProjectorEvent<DtoShakaPlayer_EndedEvent> = new ProjectorEvent();
+	public readonly onErrorLoading: ProjectorEvent<DtoShakaPlayer_ErrorLoadingEvent> = new ProjectorEvent();
 
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLVideoElement;

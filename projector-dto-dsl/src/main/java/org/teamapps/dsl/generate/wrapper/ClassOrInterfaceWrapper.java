@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.teamapps.commons.util.StreamUtil.distinctByKey;
-import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.findAncestorOfType;
+import static org.teamapps.dsl.generate.IntermediateDtoModel.findAncestorOfType;
 
 public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends TypeWrapper<T> {
 

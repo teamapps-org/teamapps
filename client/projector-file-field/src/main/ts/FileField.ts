@@ -24,7 +24,7 @@ import {
 	DtoTemplate, FieldEditingMode, FileUploader,
 	generateUUID, humanReadableFileSize,
 	parseHtml, prependChild, removeClassesByFunction,
-	TeamAppsEvent,
+	ProjectorEvent,
 	Template
 } from "projector-client-object-api";
 import {
@@ -41,13 +41,13 @@ import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress
 
 export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClientRecord[]> implements DtoFileFieldEventSource, DtoFileFieldCommandHandler {
 
-	public readonly onFileItemClicked: TeamAppsEvent<DtoFileField_FileItemClickedEvent> = new TeamAppsEvent();
-	public readonly onFileItemRemoveButtonClicked: TeamAppsEvent<DtoFileField_FileItemRemoveButtonClickedEvent> = new TeamAppsEvent();
-	public readonly onUploadCanceled: TeamAppsEvent<DtoFileField_UploadCanceledEvent> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<DtoFileField_UploadFailedEvent> = new TeamAppsEvent();
-	public readonly onUploadStarted: TeamAppsEvent<DtoFileField_UploadStartedEvent> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<DtoFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<DtoFileField_UploadTooLargeEvent> = new TeamAppsEvent();
+	public readonly onFileItemClicked: ProjectorEvent<DtoFileField_FileItemClickedEvent> = new ProjectorEvent();
+	public readonly onFileItemRemoveButtonClicked: ProjectorEvent<DtoFileField_FileItemRemoveButtonClickedEvent> = new ProjectorEvent();
+	public readonly onUploadCanceled: ProjectorEvent<DtoFileField_UploadCanceledEvent> = new ProjectorEvent();
+	public readonly onUploadFailed: ProjectorEvent<DtoFileField_UploadFailedEvent> = new ProjectorEvent();
+	public readonly onUploadStarted: ProjectorEvent<DtoFileField_UploadStartedEvent> = new ProjectorEvent();
+	public readonly onUploadSuccessful: ProjectorEvent<DtoFileField_UploadSuccessfulEvent> = new ProjectorEvent();
+	public readonly onUploadTooLarge: ProjectorEvent<DtoFileField_UploadTooLargeEvent> = new ProjectorEvent();
 
 	private $wrapper: HTMLElement;
 	private $uploadButton: HTMLElement;
@@ -361,12 +361,12 @@ enum FileItemState {
 }
 
 class UploadItem {
-	public readonly onDeleteButtonClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
-	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
-	public readonly onUploadCanceled: TeamAppsEvent<DtoFileField_UploadCanceledEvent> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<DtoFileField_UploadFailedEvent> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<DtoFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<DtoFileField_UploadTooLargeEvent> = new TeamAppsEvent();
+	public readonly onDeleteButtonClick: ProjectorEvent<void> = new ProjectorEvent<void>();
+	public readonly onClick: ProjectorEvent<void> = new ProjectorEvent<void>();
+	public readonly onUploadCanceled: ProjectorEvent<DtoFileField_UploadCanceledEvent> = new ProjectorEvent();
+	public readonly onUploadFailed: ProjectorEvent<DtoFileField_UploadFailedEvent> = new ProjectorEvent();
+	public readonly onUploadSuccessful: ProjectorEvent<DtoFileField_UploadSuccessfulEvent> = new ProjectorEvent();
+	public readonly onUploadTooLarge: ProjectorEvent<DtoFileField_UploadTooLargeEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 

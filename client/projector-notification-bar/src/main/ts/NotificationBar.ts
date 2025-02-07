@@ -23,7 +23,7 @@ import {
 	ExitAnimation,
 	parseHtml, removeClassesByFunction,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {createUiSpacingValueCssString} from "projector-client-object-api";
 import {
@@ -36,9 +36,9 @@ import {ProgressBar} from "projector-progress-indicator";
 
 export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {
 
-	public readonly onItemClicked: TeamAppsEvent<DtoNotificationBar_ItemClickedEvent> = new TeamAppsEvent();
-	public readonly onItemActionLinkClicked: TeamAppsEvent<DtoNotificationBar_ItemActionLinkClickedEvent> = new TeamAppsEvent();
-	public readonly onItemClosed: TeamAppsEvent<DtoNotificationBar_ItemClosedEvent> = new TeamAppsEvent();
+	public readonly onItemClicked: ProjectorEvent<DtoNotificationBar_ItemClickedEvent> = new ProjectorEvent();
+	public readonly onItemActionLinkClicked: ProjectorEvent<DtoNotificationBar_ItemActionLinkClickedEvent> = new ProjectorEvent();
+	public readonly onItemClosed: ProjectorEvent<DtoNotificationBar_ItemClosedEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private itemsById: { [id: string]: NotificationBarItem } = {};
@@ -95,9 +95,9 @@ export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar>
 
 class NotificationBarItem {
 
-	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent();
-	public readonly onActionLinkClicked: TeamAppsEvent<void> = new TeamAppsEvent();
-	public readonly onClosed: TeamAppsEvent<boolean> = new TeamAppsEvent();
+	public readonly onClick: ProjectorEvent<void> = new ProjectorEvent();
+	public readonly onActionLinkClicked: ProjectorEvent<void> = new ProjectorEvent();
+	public readonly onClosed: ProjectorEvent<boolean> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private $progressBarContainer: HTMLElement;

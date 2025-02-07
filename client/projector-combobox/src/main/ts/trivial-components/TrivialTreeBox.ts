@@ -25,7 +25,7 @@ import {
 	insertAfter,
 	insertBefore,
 	parseHtml,
-	TeamAppsEvent,
+	ProjectorEvent,
 	toggleElementCollapsed
 } from "projector-client-object-api";
 
@@ -219,8 +219,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 
 	private config: TrivialTreeBoxConfig<E>;
 
-	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
-	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<{node: E, expanded: boolean}>();
+	public readonly onSelectedEntryChanged = new ProjectorEvent<E>();
+	public readonly onNodeExpansionStateChanged = new ProjectorEvent<{node: E, expanded: boolean}>();
 
 	private $componentWrapper: HTMLElement;
 	private $tree: HTMLElement;

@@ -21,11 +21,11 @@ import {TrivialCalendarBox} from "../TrivialCalendarBox";
 import {NavigationDirection} from "../TrivialCore";
 import {LocalDateTime} from "../../LocalDateTime";
 import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
-import {TeamAppsEvent} from "projector-client-object-api";
+import {ProjectorEvent} from "projector-client-object-api";
 
 export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 
-	public readonly onValueChanged: TeamAppsEvent<{ value: LocalDateTime; finalSelection: boolean }> = new TeamAppsEvent();
+	public readonly onValueChanged: ProjectorEvent<{ value: LocalDateTime; finalSelection: boolean }> = new ProjectorEvent();
 
 
 	constructor(

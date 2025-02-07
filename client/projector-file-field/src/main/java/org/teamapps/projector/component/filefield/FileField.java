@@ -33,7 +33,7 @@ import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
+import org.teamapps.projector.i18n.ProjectorTranslationKeys;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.template.Template;
@@ -67,7 +67,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Template uploadButtonTemplate = BaseTemplates.BUTTON;
-	private Object uploadButtonData = new BaseTemplateRecord<>(MaterialIcon.BACKUP, getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD.getKey()));
+	private Object uploadButtonData = new BaseTemplateRecord<>(MaterialIcon.BACKUP, getSessionContext().getLocalized(ProjectorTranslationKeys.UPLOAD.getKey()));
 	private PropertyProvider<Object> uploadButtonPropertyProvider = new BeanPropertyExtractor<>();
 
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;
@@ -91,8 +91,8 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
 		uiField.setUploadUrl(uploadUrl);
 
-		uiField.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
-		uiField.setUploadErrorMessage(getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD_ERROR_MESSAGE.getKey()));
+		uiField.setFileTooLargeMessage(getSessionContext().getLocalized(ProjectorTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
+		uiField.setUploadErrorMessage(getSessionContext().getLocalized(ProjectorTranslationKeys.UPLOAD_ERROR_MESSAGE.getKey()));
 
 		uiField.setDisplayType(displayType);
 		uiField.setMaxFiles(this.maxFiles);

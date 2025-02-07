@@ -24,12 +24,12 @@ import {
 	DtoTemplateFieldCommandHandler,
 	DtoTemplateFieldEventSource
 } from "../../generated";
-import {DtoClientRecord, FieldEditingMode, parseHtml, ServerObjectChannel, TeamAppsEvent, Template} from "projector-client-object-api";
+import {DtoClientRecord, FieldEditingMode, parseHtml, ServerObjectChannel, ProjectorEvent, Template} from "projector-client-object-api";
 
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {
 
-    public readonly onClick: TeamAppsEvent<DtoTemplateField_ClickEvent> = new TeamAppsEvent();
+    public readonly onClick: ProjectorEvent<DtoTemplateField_ClickEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 

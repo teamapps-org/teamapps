@@ -26,13 +26,13 @@ import {
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent
 } from "../../generated";
-import {FieldEditingMode, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {FieldEditingMode, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {escapeHtml} from "../../util/Common";
 
 export class TextField<C extends DtoTextField = DtoTextField> extends AbstractField<C, string> implements DtoTextFieldEventSource, DtoTextFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoTextInputHandlingField_TextInputEvent> = TeamAppsEvent.createDebounced<DtoTextInputHandlingField_TextInputEvent>(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = TeamAppsEvent.createDebounced<DtoTextInputHandlingField_SpecialKeyPressedEvent>(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoTextInputHandlingField_TextInputEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_TextInputEvent>(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_SpecialKeyPressedEvent>(250, DebounceMode.BOTH);
 
 	private $wrapper: HTMLElement;
 	protected $field: HTMLInputElement;

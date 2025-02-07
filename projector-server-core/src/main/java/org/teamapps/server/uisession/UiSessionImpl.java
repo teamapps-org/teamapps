@@ -24,7 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unimi.dsi.fastutil.ints.IntConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.server.config.TeamAppsConfiguration;
+import org.teamapps.projector.session.SessionContext;
+import org.teamapps.server.config.ProjectorConfiguration;
 import org.teamapps.dto.protocol.server.*;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.session.uisession.ClientBackPressureInfo;
@@ -36,7 +37,7 @@ import org.teamapps.server.uisession.messagebuffer.ServerMessageBufferException;
 import org.teamapps.server.uisession.messagebuffer.ServerMessageBufferMessage;
 import org.teamapps.server.uisession.statistics.RunningUiSessionStatistics;
 import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
-import org.teamapps.server.servlet.TeamAppsCommunicationException;
+import org.teamapps.server.servlet.CommunicationException;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -47,13 +48,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
+/**
+ * Low-level UI session implementation.
+ * <p>
+ * It focuses on the low-level
+ * session management like queuing, sending and receiving messages (from the client), including retries to send,
+ * based on the projector communication protocol.
+ * <p>
+ * In contrast to this, {@link SessionContext}
+ * provides a higher level facade for application developers.
+ */
 public class UiSessionImpl implements UiSession {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final String sessionId;
 	private String name;
-	private final TeamAppsConfiguration config;
+	private final ProjectorConfiguration config;
 	private final ObjectMapper objectMapper;
 	private final CopyOnWriteArrayList<UiSessionListener> sessionListeners = new CopyOnWriteArrayList<>();
 
@@ -77,7 +88,7 @@ public class UiSessionImpl implements UiSession {
 
 	private final RunningUiSessionStatistics statistics;
 
-	public UiSessionImpl(String sessionId, long creationTime, TeamAppsConfiguration config, ObjectMapper objectMapper, MessageSender messageSender) {
+	public UiSessionImpl(String sessionId, long creationTime, ProjectorConfiguration config, ObjectMapper objectMapper, MessageSender messageSender) {
 		this.sessionId = sessionId;
 		this.name = sessionId;
 		this.config = config;
@@ -327,7 +338,7 @@ public class UiSessionImpl implements UiSession {
 		try {
 			messageAsString = objectMapper.writeValueAsString(message);
 		} catch (JsonProcessingException e) {
-			throw new TeamAppsCommunicationException(e);
+			throw new CommunicationException(e);
 		}
 		sendAsyncWithErrorHandler(List.of(messageAsString));
 	}

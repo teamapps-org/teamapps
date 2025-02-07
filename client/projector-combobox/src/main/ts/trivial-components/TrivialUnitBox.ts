@@ -32,7 +32,7 @@ import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import {DropDownComponent} from "./dropdown/DropDownComponent";
 import {TreeBoxDropdown} from "./dropdown/TreeBoxDropdown";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
-import {BigDecimal, NumberParser, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {BigDecimal, NumberParser, parseHtml, ProjectorEvent} from "projector-client-object-api";
 
 export interface TrivialUnitBoxConfig<U> extends TrivialTreeBoxConfig<U> {
 	numberFormatFunction: (entry: U) => Intl.NumberFormat,
@@ -56,10 +56,10 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 
 	private config: TrivialUnitBoxConfig<U>;
 
-	public readonly onChange = new TeamAppsEvent<TrivialUnitBoxChangeEvent<U>>();
-	public readonly onSelectedEntryChanged = new TeamAppsEvent<U>();
-	public readonly onFocus = new TeamAppsEvent<void>();
-	public readonly onBlur = new TeamAppsEvent<void>();
+	public readonly onChange = new ProjectorEvent<TrivialUnitBoxChangeEvent<U>>();
+	public readonly onSelectedEntryChanged = new ProjectorEvent<U>();
+	public readonly onFocus = new ProjectorEvent<void>();
+	public readonly onBlur = new ProjectorEvent<void>();
 
 	private selectedEntry: U;
 	private clickInsideEditorWasWhileNotHavingFocus = false;

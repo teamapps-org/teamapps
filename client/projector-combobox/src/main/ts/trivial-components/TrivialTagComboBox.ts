@@ -30,7 +30,7 @@ import {
 import {Instance as Popper} from '@popperjs/core';
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
-import {elementIndex, insertAfter, insertAtIndex, insertBefore, parseHtml, TeamAppsEvent} from "projector-client-object-api";
+import {elementIndex, insertAfter, insertAtIndex, insertBefore, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {selectElementContents} from "../util";
 
 export interface TrivialTagComboBoxConfig<E> {
@@ -172,9 +172,9 @@ export interface TrivialTagComboBoxConfig<E> {
 
 export class TrivialTagComboBox<E> implements TrivialComponent {
 
-	public readonly onValueChanged = new TeamAppsEvent<E[]>();
-	public readonly onFocus = new TeamAppsEvent<void>();
-	public readonly onBlur = new TeamAppsEvent<void>();
+	public readonly onValueChanged = new ProjectorEvent<E[]>();
+	public readonly onFocus = new ProjectorEvent<void>();
+	public readonly onBlur = new ProjectorEvent<void>();
 
 	private config: TrivialTagComboBoxConfig<E>;
 

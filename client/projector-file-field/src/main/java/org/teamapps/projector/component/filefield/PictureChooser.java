@@ -34,7 +34,7 @@ import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.filefield.imagecropper.ImageCropper;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.JustifyContent;
-import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
+import org.teamapps.projector.i18n.ProjectorTranslationKeys;
 import org.teamapps.projector.resource.FileResource;
 import org.teamapps.projector.resource.Resource;
 
@@ -77,11 +77,11 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 		imageCropper.setAspectRatio(targetImageWidth / (float) targetImageHeight);
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.addComponentFillRemaining(imageCropper);
-		Button cancelButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.CANCEL.getKey()));
+		Button cancelButton = Button.create(getSessionContext().getLocalized(ProjectorTranslationKeys.CANCEL.getKey()));
 		cancelButton.setCssStyle("margin-right", "5px");
-		Button rotateButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.ROTATE.getKey()));
+		Button rotateButton = Button.create(getSessionContext().getLocalized(ProjectorTranslationKeys.ROTATE.getKey()));
 		rotateButton.setCssStyle("margin-right", "5px");
-		Button okButton = Button.create(getSessionContext().getLocalized(TeamAppsTranslationKeys.OK.getKey()));
+		Button okButton = Button.create(getSessionContext().getLocalized(ProjectorTranslationKeys.OK.getKey()));
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.addComponentAutoSize(cancelButton);
 		horizontalLayout.addComponentAutoSize(rotateButton);
@@ -89,7 +89,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 		horizontalLayout.setJustifyContent(JustifyContent.END);
 		horizontalLayout.setCssStyle("padding", "5px");
 		verticalLayout.addComponentAutoSize(horizontalLayout);
-		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized(TeamAppsTranslationKeys.CROP_IMAGE.getKey()), 700, 500, verticalLayout);
+		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized(ProjectorTranslationKeys.CROP_IMAGE.getKey()), 700, 500, verticalLayout);
 		imageCropperWindow.setCloseable(true);
 		imageCropperWindow.setMaximizable(true);
 		imageCropperWindow.setModal(true);
@@ -121,8 +121,8 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 			imageCropperWindow.close();
 		});
 
-		fileTooLargeMessage = getSessionContext().getLocalized(TeamAppsTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey());
-		uploadErrorMessage = getSessionContext().getLocalized(TeamAppsTranslationKeys.UPLOAD_ERROR_SHORT_MESSAGE.getKey());
+		fileTooLargeMessage = getSessionContext().getLocalized(ProjectorTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey());
+		uploadErrorMessage = getSessionContext().getLocalized(ProjectorTranslationKeys.UPLOAD_ERROR_SHORT_MESSAGE.getKey());
 	}
 
 	private InputStream createInputStream(File file) {

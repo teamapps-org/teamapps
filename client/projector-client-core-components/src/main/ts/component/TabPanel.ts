@@ -37,7 +37,7 @@ import {
 	parseHtml,
 	prependChild,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {DtoTab as DtoTab} from "../generated/DtoTab";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
@@ -74,13 +74,13 @@ interface Tab {
 
 export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements DtoTabPanelCommandHandler, DtoTabPanelEventSource, Emptyable {
 
-	public readonly onTabSelected: TeamAppsEvent<DtoTabPanel_TabSelectedEvent> = new TeamAppsEvent<DtoTabPanel_TabSelectedEvent>();
+	public readonly onTabSelected: ProjectorEvent<DtoTabPanel_TabSelectedEvent> = new ProjectorEvent<DtoTabPanel_TabSelectedEvent>();
 
-	public readonly onTabNeedsRefresh: TeamAppsEvent<DtoTabPanel_TabNeedsRefreshEvent> = new TeamAppsEvent<DtoTabPanel_TabNeedsRefreshEvent>();
-	public readonly onTabClosed: TeamAppsEvent<DtoTabPanel_TabClosedEvent> = new TeamAppsEvent<DtoTabPanel_TabClosedEvent>();
-	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
+	public readonly onTabNeedsRefresh: ProjectorEvent<DtoTabPanel_TabNeedsRefreshEvent> = new ProjectorEvent<DtoTabPanel_TabNeedsRefreshEvent>();
+	public readonly onTabClosed: ProjectorEvent<DtoTabPanel_TabClosedEvent> = new ProjectorEvent<DtoTabPanel_TabClosedEvent>();
+	public readonly onEmptyStateChanged: ProjectorEvent<boolean> = new ProjectorEvent();
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<DtoTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onWindowButtonClicked: ProjectorEvent<DtoTabPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 
 	private readonly defaultToolButtons = {
 		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(ICON_MINIMIZE, "Minimize", {iconSize: 16}), noOpServerObjectChannel),

@@ -48,7 +48,7 @@ import java.util.function.Consumer;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
+import static org.teamapps.common.ProjectorVersion.TEAMAPPS_VERSION;
 
 public class ProjectorEventTest {
 

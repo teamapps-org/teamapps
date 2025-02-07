@@ -21,7 +21,7 @@ import {defaultListQueryFunctionFactory, isModifierKey, QueryFunction} from "./t
 import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "./trivial-components/TrivialUnitBox";
 import {
 	AbstractField,
-	BigDecimal, FieldEditingMode, TeamAppsEvent, DebounceMode, deepEquals
+	BigDecimal, FieldEditingMode, ProjectorEvent, DebounceMode, deepEquals
 } from "projector-client-object-api";
 import {
 	createDtoCurrencyValue, DtoComboBox_TextInputEvent,
@@ -35,7 +35,7 @@ import {selectElementContents} from "./util";
 
 export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyValue> implements DtoCurrencyFieldEventSource, DtoCurrencyFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoCurrencyField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoCurrencyField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private trivialUnitBox: TrivialUnitBox<DtoCurrencyUnit>;
 	private queryFunction: QueryFunction<DtoCurrencyUnit>;

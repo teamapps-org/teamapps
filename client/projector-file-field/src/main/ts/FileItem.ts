@@ -18,17 +18,17 @@
  * =========================LICENSE_END==================================
  */
 
-import {FileUploader, humanReadableFileSize, parseHtml, removeClassesByFunction, TeamAppsEvent} from "projector-client-object-api";
+import {FileUploader, humanReadableFileSize, parseHtml, removeClassesByFunction, ProjectorEvent} from "projector-client-object-api";
 import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
 import {DtoFileItem, FileFieldDisplayType} from "./generated";
 
 export class FileItem {
-	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
-	public readonly onDeleteButtonClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
-	public readonly onUploadCanceled: TeamAppsEvent<void> = new TeamAppsEvent();
-	public readonly onUploadFailed: TeamAppsEvent<void> = new TeamAppsEvent();
-	public readonly onUploadSuccessful: TeamAppsEvent<string> = new TeamAppsEvent();
-	public readonly onUploadTooLarge: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onClick: ProjectorEvent<void> = new ProjectorEvent<void>();
+	public readonly onDeleteButtonClick: ProjectorEvent<void> = new ProjectorEvent<void>();
+	public readonly onUploadCanceled: ProjectorEvent<void> = new ProjectorEvent();
+	public readonly onUploadFailed: ProjectorEvent<void> = new ProjectorEvent();
+	public readonly onUploadSuccessful: ProjectorEvent<string> = new ProjectorEvent();
+	public readonly onUploadTooLarge: ProjectorEvent<void> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private $progressIndicator: HTMLElement;

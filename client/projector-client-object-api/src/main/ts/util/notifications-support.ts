@@ -1,5 +1,5 @@
 import {parseHtml} from "./parseHtml";
-import {TeamAppsEvent} from "./TeamAppsEvent";
+import {ProjectorEvent} from "./ProjectorEvent";
 import {EntranceAnimation, ExitAnimation, NotificationPosition} from "../generated";
 import {animateCSS} from "./animations";
 
@@ -28,7 +28,7 @@ export interface ComponentLike {
 	getMainElement(): HTMLElement;
 }
 export interface NotificationHandle {
-	onTimeout: TeamAppsEvent<void>;
+	onTimeout: ProjectorEvent<void>;
 	get isOpen(): boolean;
 	open(position: NotificationPosition, timeout: number): void;
 	close(): void;
@@ -45,7 +45,7 @@ export function showNotificationLike(content: ComponentLike, position: Notificat
 }
 
 class NotificationWrapper implements NotificationHandle {
-	public readonly onTimeout = new TeamAppsEvent<void>();
+	public readonly onTimeout = new ProjectorEvent<void>();
 	public readonly $wrapper: HTMLElement;
 	private timeoutId: number;
 	private position: NotificationPosition;

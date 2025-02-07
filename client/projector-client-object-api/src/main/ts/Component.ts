@@ -19,7 +19,7 @@
  */
 import {ClientObject} from "./ClientObject";
 import {DtoComponentCommandHandler} from "./generated";
-import {TeamAppsEvent} from "./util";
+import {ProjectorEvent} from "./util";
 
 
 export interface Component extends ClientObject, DtoComponentCommandHandler {
@@ -29,7 +29,7 @@ export interface Component extends ClientObject, DtoComponentCommandHandler {
 	 */
 	getMainElement(): HTMLElement;
 
-	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
+	readonly onVisibilityChanged: ProjectorEvent<boolean>;
 
 	isVisible(): boolean;
 	

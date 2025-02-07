@@ -25,7 +25,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.server.config.TeamAppsConfiguration;
+import org.teamapps.server.config.ProjectorConfiguration;
 import org.teamapps.dto.protocol.client.*;
 import org.teamapps.dto.protocol.server.AbstractServerMessage;
 import org.teamapps.dto.protocol.server.REINIT_NOK;
@@ -59,10 +59,10 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 	private final AtomicLong totalSendCount = new AtomicLong();
 	private final AtomicLong totalReceiveCount = new AtomicLong();
 
-	private final TeamAppsSessionManager sessionManager;
-	private final TeamAppsConfiguration teamAppsConfig;
+	private final SessionManager sessionManager;
+	private final ProjectorConfiguration teamAppsConfig;
 
-	public WebSocketCommunicationEndpoint(TeamAppsSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig, ObjectMapper mapper) {
+	public WebSocketCommunicationEndpoint(SessionManager sessionManager, ProjectorConfiguration teamAppsConfig, ObjectMapper mapper) {
 		this.sessionManager = sessionManager;
 		this.teamAppsConfig = teamAppsConfig;
 		this.mapper = mapper;
@@ -186,9 +186,9 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 					case KEEPALIVEWrapper.TYPE_ID -> {
 						uiSession.handleKeepAlive();
 					}
-					default -> throw new TeamAppsCommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
+					default -> throw new CommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
 				}
-			} catch (TeamAppsSessionNotFoundException e) {
+			} catch (SessionNotFoundException e) {
 				LOGGER.warn("TeamApps session not found: " + e.getSessionId());
 				send(new SESSION_CLOSED(SessionClosingReason.SESSION_NOT_FOUND, e.getMessage()), this::close, (t) -> close());
 			} catch (Exception e) {
@@ -202,14 +202,14 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 			try {
 				messageAsString = mapper.writeValueAsString(message);
 			} catch (JsonProcessingException e) {
-				throw new TeamAppsCommunicationException("Could not serialize message " + message, e);
+				throw new CommunicationException("Could not serialize message " + message, e);
 			}
 			send(List.of(messageAsString), sendingSuccessHandler, sendingErrorHandler);
 		}
 
 		private void send(List<String> messages, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
 			if (this.closed) {
-				sendingErrorHandler.onErrorWhileSending(new TeamAppsCommunicationException("Connection closed!"));
+				sendingErrorHandler.onErrorWhileSending(new CommunicationException("Connection closed!"));
 				return;
 			}
 			try {

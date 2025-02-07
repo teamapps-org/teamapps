@@ -24,7 +24,7 @@ import {
 	executeWhenFirstDisplayed, generateUUID,
 	parseHtml,
 	ServerObjectChannel, slideDown, slideUp,
-	TeamAppsEvent, Template
+	ProjectorEvent, Template
 } from "projector-client-object-api";
 import {
 	DtoFormLayoutPolicy, DtoFormSection, DtoFormSectionFieldPlacement, DtoFormSectionFloatingFieldsPlacement, DtoFormSectionPlacement,
@@ -36,7 +36,7 @@ import {
 
 export class GridForm extends AbstractLegacyComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
 
-	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<DtoGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<DtoGridForm_SectionCollapsedStateChangedEvent>();
+	public readonly onSectionCollapsedStateChanged: ProjectorEvent<DtoGridForm_SectionCollapsedStateChangedEvent> = new ProjectorEvent<DtoGridForm_SectionCollapsedStateChangedEvent>();
 
 	private $mainDiv: HTMLElement;
 
@@ -172,7 +172,7 @@ export class GridForm extends AbstractLegacyComponent<DtoGridForm> implements Dt
 
 class UiFormSection {
 
-	public readonly onCollapsedStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>();
+	public readonly onCollapsedStateChanged: ProjectorEvent<boolean> = new ProjectorEvent<boolean>();
 
 	private uiFields: Component[] = [];
 

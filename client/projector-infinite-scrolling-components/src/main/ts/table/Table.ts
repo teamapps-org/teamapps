@@ -50,7 +50,7 @@ import {
 	DtoFieldMessage, executeWhenFirstDisplayed, fadeIn, fadeOut,
 	FieldMessageSeverity, getHighestSeverity, nonRecursive, parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent,
+	ProjectorEvent,
 	manipulateWithoutTransitions, arraysEqual
 } from "projector-client-object-api";
 import {ContextMenu, DropDown} from "projector-client-core-components";
@@ -91,16 +91,16 @@ type FieldsByName = { [fieldName: string]: AbstractField };
 
 export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTableCommandHandler, DtoTableEventSource {
 
-	public readonly onCellEditingStarted: TeamAppsEvent<DtoTable_CellEditingStartedEvent> = new TeamAppsEvent();
-	public readonly onCellEditingStopped: TeamAppsEvent<DtoTable_CellEditingStoppedEvent> = new TeamAppsEvent();
-	public readonly onCellValueChanged: TeamAppsEvent<DtoTable_CellValueChangedEvent> = new TeamAppsEvent();
-	public readonly onCellClicked: TeamAppsEvent<DtoTable_CellClickedEvent> = new TeamAppsEvent();
-	public readonly onSortingChanged: TeamAppsEvent<DtoTable_SortingChangedEvent> = new TeamAppsEvent();
-	public readonly onRowsSelected: TeamAppsEvent<DtoTable_RowsSelectedEvent> = new TeamAppsEvent();
-	public readonly onFieldOrderChange: TeamAppsEvent<DtoTable_FieldOrderChangeEvent> = new TeamAppsEvent();
-	public readonly onColumnSizeChange: TeamAppsEvent<DtoTable_ColumnSizeChangeEvent> = new TeamAppsEvent();
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent> = new TeamAppsEvent();
-	public readonly onContextMenuRequested: TeamAppsEvent<DtoTable_ContextMenuRequestedEvent> = new TeamAppsEvent();
+	public readonly onCellEditingStarted: ProjectorEvent<DtoTable_CellEditingStartedEvent> = new ProjectorEvent();
+	public readonly onCellEditingStopped: ProjectorEvent<DtoTable_CellEditingStoppedEvent> = new ProjectorEvent();
+	public readonly onCellValueChanged: ProjectorEvent<DtoTable_CellValueChangedEvent> = new ProjectorEvent();
+	public readonly onCellClicked: ProjectorEvent<DtoTable_CellClickedEvent> = new ProjectorEvent();
+	public readonly onSortingChanged: ProjectorEvent<DtoTable_SortingChangedEvent> = new ProjectorEvent();
+	public readonly onRowsSelected: ProjectorEvent<DtoTable_RowsSelectedEvent> = new ProjectorEvent();
+	public readonly onFieldOrderChange: ProjectorEvent<DtoTable_FieldOrderChangeEvent> = new ProjectorEvent();
+	public readonly onColumnSizeChange: ProjectorEvent<DtoTable_ColumnSizeChangeEvent> = new ProjectorEvent();
+	public readonly onDisplayedRangeChanged: ProjectorEvent<DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent> = new ProjectorEvent();
+	public readonly onContextMenuRequested: ProjectorEvent<DtoTable_ContextMenuRequestedEvent> = new ProjectorEvent();
 
 	private $component: HTMLElement;
 	private _grid: Slick.Grid<any>;

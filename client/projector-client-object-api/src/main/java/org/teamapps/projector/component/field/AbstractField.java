@@ -26,7 +26,7 @@ import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.field.validator.FieldValidator;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.i18n.TeamAppsTranslationKeys;
+import org.teamapps.projector.i18n.ProjectorTranslationKeys;
 import org.teamapps.projector.session.CurrentSessionContext;
 
 import javax.annotation.Nonnull;
@@ -40,12 +40,12 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
 
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
 			this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessageSeverity.ERROR,
-					CurrentSessionContext.get().getLocalized(TeamAppsTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
+					CurrentSessionContext.get().getLocalized(ProjectorTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
 
 	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
 			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmptyValue(value)) ?
 					Collections.singletonList(new FieldMessage(FieldMessageSeverity.ERROR,
-							CurrentSessionContext.get().getLocalized(TeamAppsTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
+							CurrentSessionContext.get().getLocalized(ProjectorTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
 
 	private final DtoAbstractFieldClientObjectChannel clientObjectChannel = new DtoAbstractFieldClientObjectChannel(getClientObjectChannel());
 

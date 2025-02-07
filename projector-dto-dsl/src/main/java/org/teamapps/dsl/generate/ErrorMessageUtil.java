@@ -8,7 +8,7 @@ class ErrorMessageUtil {
 		try {
 			runnable.run();
 		} catch (Exception e) {
-			throw new TeamAppsGeneratorException(errorMessageContext + ": " + e.getMessage(), e);
+			throw new DtoGeneratorException(errorMessageContext + ": " + e.getMessage(), e);
 		}
 	}
 

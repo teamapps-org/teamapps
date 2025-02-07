@@ -26,7 +26,7 @@ import {
 	ServerObjectChannel,
 	slideDown,
 	slideUp,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
@@ -47,7 +47,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
-	public readonly onToolbarButtonClick: TeamAppsEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent>();
+	public readonly onToolbarButtonClick: ProjectorEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent> = new ProjectorEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent>();
 
 	private buttonGroupsById: OrderedDictionary<DtoButtonGroup> = new OrderedDictionary<DtoButtonGroup>();
 

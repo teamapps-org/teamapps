@@ -26,7 +26,7 @@ import {
 	DtoFieldMessage, FieldMessagePosition, FieldMessageSeverity, FieldMessageVisibility
 } from "./generated";
 import {AbstractLegacyComponent} from "./AbstractLegacyComponent";
-import {bind, parseHtml, prependChild, TeamAppsEvent} from "./util";
+import {bind, parseHtml, prependChild, ProjectorEvent} from "./util";
 import {ServerObjectChannel} from "./ClientObject";
 import {compareSeverities, highestSeverity} from "./util/fieldmessage-util";
 
@@ -37,10 +37,10 @@ interface FieldMessage {
 
 export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C extends DtoAbstractField = DtoAbstractField, V = any> extends AbstractLegacyComponent<C> {
 
-	public readonly onValueChanged: TeamAppsEvent<DtoAbstractField_ValueChangedEvent> = new TeamAppsEvent();
-	public readonly onFocus: TeamAppsEvent<DtoAbstractField_FocusEvent> = new TeamAppsEvent();
-	public readonly onBlur: TeamAppsEvent<DtoAbstractField_BlurEvent> = new TeamAppsEvent();
-	public readonly onUserManipulation: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onValueChanged: ProjectorEvent<DtoAbstractField_ValueChangedEvent> = new ProjectorEvent();
+	public readonly onFocus: ProjectorEvent<DtoAbstractField_FocusEvent> = new ProjectorEvent();
+	public readonly onBlur: ProjectorEvent<DtoAbstractField_BlurEvent> = new ProjectorEvent();
+	public readonly onUserManipulation: ProjectorEvent<void> = new ProjectorEvent();
 
 	private committedValue: V;
 

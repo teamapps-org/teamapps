@@ -14,7 +14,7 @@ export * from "./resourceLoading";
 export * from "../Showable";
 export * from "./string-util";
 export * from "./StyleManager";
-export * from "./TeamAppsEvent";
+export * from "./ProjectorEvent";
 export * from "./throttle";
 export * from "./wakeLock";
 export * from "./NumberParser";

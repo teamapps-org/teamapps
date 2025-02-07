@@ -2,16 +2,16 @@ package org.teamapps.dsl.generate.wrapper;
 
 import org.teamapps.dsl.TeamAppsDtoParser;
 import org.teamapps.dsl.TeamAppsDtoParser.EnumDeclarationContext;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
+import org.teamapps.dsl.generate.IntermediateDtoModel;
 
 import java.util.List;
 
 public class EnumWrapper implements TypeWrapper<EnumDeclarationContext> {
 
 	private final EnumDeclarationContext context;
-	private final TeamAppsIntermediateDtoModel model;
+	private final IntermediateDtoModel model;
 
-	public EnumWrapper(EnumDeclarationContext context, TeamAppsIntermediateDtoModel model) {
+	public EnumWrapper(EnumDeclarationContext context, IntermediateDtoModel model) {
 		this.context = context;
 		this.model = model;
 	}

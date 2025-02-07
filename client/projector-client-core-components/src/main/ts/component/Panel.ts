@@ -49,7 +49,7 @@ import {
 	parseHtml,
 	prependChild,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 
 import {maximizeComponent} from "../util/Common";
@@ -69,7 +69,7 @@ interface HeaderField {
 
 export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanelCommandHandler, DtoPanelEventSource {
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<DtoPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onWindowButtonClicked: ProjectorEvent<DtoPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 
 	private readonly defaultToolButtons = {
 		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(ICON_MINIMIZE, "Minimize", {visible: true, iconSize: 16}), noOpServerObjectChannel),

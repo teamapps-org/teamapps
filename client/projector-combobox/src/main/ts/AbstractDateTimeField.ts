@@ -27,11 +27,11 @@ import {
 	DtoAbstractDateTimeFieldEventSource,
 	DtoComboBox_TextInputEvent
 } from "./generated";
-import {AbstractField, DebounceMode, DtoDateTimeFormatDescriptor, FieldEditingMode, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractField, DebounceMode, DtoDateTimeFormatDescriptor, FieldEditingMode, ProjectorEvent} from "projector-client-object-api";
 
 export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, V> extends AbstractField<C, V> implements DtoAbstractDateTimeFieldEventSource, DtoAbstractDateTimeFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<DtoAbstractDateTimeField_TextInputEvent> = TeamAppsEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoAbstractDateTimeField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialDateTimeField: TrivialDateTimeField;
 	protected dateSuggestionEngine: DateSuggestionEngine;

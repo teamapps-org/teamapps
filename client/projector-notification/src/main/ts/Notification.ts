@@ -32,7 +32,7 @@ import {
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent, animateCSS, NotificationPosition
+	ProjectorEvent, animateCSS, NotificationPosition
 } from "projector-client-object-api";
 import {createUiSpacingValueCssString} from "projector-client-object-api";
 import {ProgressBar} from "projector-progress-indicator";
@@ -41,8 +41,8 @@ import {NotificationHandle, showNotificationLike} from "projector-client-object-
 
 export class Notification extends AbstractLegacyComponent<DtoNotification> implements DtoNotificationCommandHandler, DtoNotificationEventSource {
 
-	public readonly onOpened: TeamAppsEvent<DtoNotification_OpenedEvent> = new TeamAppsEvent();
-	public readonly onClosed: TeamAppsEvent<DtoNotification_ClosedEvent> = new TeamAppsEvent();
+	public readonly onOpened: ProjectorEvent<DtoNotification_OpenedEvent> = new ProjectorEvent();
+	public readonly onClosed: ProjectorEvent<DtoNotification_ClosedEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private $contentContainer: HTMLElement;

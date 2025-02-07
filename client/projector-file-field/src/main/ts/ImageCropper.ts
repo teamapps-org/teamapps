@@ -23,7 +23,7 @@ import {
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {
 	createImageCropperSelection,
@@ -40,7 +40,7 @@ type Rect = { x: number, y: number, width: number, height: number }
 
 export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> implements DtoImageCropperCommandHandler, DtoImageCropperEventSource {
 
-	public readonly onSelectionChanged: TeamAppsEvent<DtoImageCropper_SelectionChangedEvent> = new TeamAppsEvent<DtoImageCropper_SelectionChangedEvent>();
+	public readonly onSelectionChanged: ProjectorEvent<DtoImageCropper_SelectionChangedEvent> = new ProjectorEvent<DtoImageCropper_SelectionChangedEvent>();
 
 	private $element: HTMLElement;
 	private $selectionFrame: HTMLElement;

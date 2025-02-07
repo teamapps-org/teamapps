@@ -25,7 +25,7 @@ import {
 	noOpServerObjectChannel, outerWidthIncludingMargins,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
@@ -53,9 +53,9 @@ export type ButtonVisibilities = { fittingButtons: FQButtonId[], nonFittingButto
 
 export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptyable, DtoToolbarCommandHandler, DtoToolbarEventSource {
 
-	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>();
+	public readonly onEmptyStateChanged: ProjectorEvent<boolean> = new ProjectorEvent<boolean>();
 
-	public readonly onToolbarButtonClick: TeamAppsEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent();
+	public readonly onToolbarButtonClick: ProjectorEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent> = new ProjectorEvent();
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 

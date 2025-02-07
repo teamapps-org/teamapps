@@ -25,7 +25,7 @@ import {
 	ExitAnimation, NotificationHandle,
 	parseHtml, prepareNotificationLike,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {
 	DtoMultiProgressDisplay,
@@ -38,8 +38,8 @@ import {ProgressDisplay} from "./ProgressDisplay";
 
 export class MultiProgressDisplay extends AbstractLegacyComponent<DtoMultiProgressDisplay> implements DtoMultiProgressDisplayCommandHandler, DtoMultiProgressDisplayEventSource {
 
-	public readonly onOpened: TeamAppsEvent<DtoMultiProgressDisplay_OpenedEvent> = new TeamAppsEvent();
-	public readonly onClosed: TeamAppsEvent<DtoMultiProgressDisplay_ClosedEvent> = new TeamAppsEvent();
+	public readonly onOpened: ProjectorEvent<DtoMultiProgressDisplay_OpenedEvent> = new ProjectorEvent();
+	public readonly onClosed: ProjectorEvent<DtoMultiProgressDisplay_ClosedEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private $spinner: HTMLElement;

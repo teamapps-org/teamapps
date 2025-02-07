@@ -46,19 +46,19 @@ import EventApi from "@fullcalendar/core/api/EventApi";
 import {Duration} from "@fullcalendar/core/datelib/duration";
 import {monthGridViewPlugin} from "./FullCalendarMonthGrid";
 import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
-import {AbstractLegacyComponent, bind, parseHtml, prependChild, ServerObjectChannel, TeamAppsEvent} from "projector-client-object-api";
+import {AbstractLegacyComponent, bind, parseHtml, prependChild, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 
 export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements DtoCalendarCommandHandler, DtoCalendarEventSource {
 
-	public readonly onEventClicked: TeamAppsEvent<DtoCalendar_EventClickedEvent> = new TeamAppsEvent();
-	public readonly onEventMoved: TeamAppsEvent<DtoCalendar_EventMovedEvent> = new TeamAppsEvent();
-	public readonly onDayClicked: TeamAppsEvent<DtoCalendar_DayClickedEvent> = new TeamAppsEvent();
-	public readonly onIntervalSelected: TeamAppsEvent<DtoCalendar_IntervalSelectedEvent> = new TeamAppsEvent();
-	public readonly onViewChanged: TeamAppsEvent<DtoCalendar_ViewChangedEvent> = new TeamAppsEvent();
-	public readonly onDataNeeded: TeamAppsEvent<DtoCalendar_DataNeededEvent> = new TeamAppsEvent();
-	public readonly onDayHeaderClicked: TeamAppsEvent<DtoCalendar_DayHeaderClickedEvent> = new TeamAppsEvent();
-	public readonly onWeekHeaderClicked: TeamAppsEvent<DtoCalendar_WeekHeaderClickedEvent> = new TeamAppsEvent();
-	public readonly onMonthHeaderClicked: TeamAppsEvent<DtoCalendar_MonthHeaderClickedEvent> = new TeamAppsEvent();
+	public readonly onEventClicked: ProjectorEvent<DtoCalendar_EventClickedEvent> = new ProjectorEvent();
+	public readonly onEventMoved: ProjectorEvent<DtoCalendar_EventMovedEvent> = new ProjectorEvent();
+	public readonly onDayClicked: ProjectorEvent<DtoCalendar_DayClickedEvent> = new ProjectorEvent();
+	public readonly onIntervalSelected: ProjectorEvent<DtoCalendar_IntervalSelectedEvent> = new ProjectorEvent();
+	public readonly onViewChanged: ProjectorEvent<DtoCalendar_ViewChangedEvent> = new ProjectorEvent();
+	public readonly onDataNeeded: ProjectorEvent<DtoCalendar_DataNeededEvent> = new ProjectorEvent();
+	public readonly onDayHeaderClicked: ProjectorEvent<DtoCalendar_DayHeaderClickedEvent> = new ProjectorEvent();
+	public readonly onWeekHeaderClicked: ProjectorEvent<DtoCalendar_WeekHeaderClickedEvent> = new ProjectorEvent();
+	public readonly onMonthHeaderClicked: ProjectorEvent<DtoCalendar_MonthHeaderClickedEvent> = new ProjectorEvent();
 
 	private $main: HTMLElement;
 	private eventSource: DtoCalendarFullCalendarEventSource;
@@ -380,8 +380,8 @@ export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements Dt
 export /* for testing ... */
 class DtoCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 
-	public readonly onViewChanged: TeamAppsEvent<DtoCalendar_ViewChangedEvent> = new TeamAppsEvent<DtoCalendar_ViewChangedEvent>();
-	public readonly onDataNeeded: TeamAppsEvent<DtoCalendar_DataNeededEvent> = new TeamAppsEvent<DtoCalendar_DataNeededEvent>();
+	public readonly onViewChanged: ProjectorEvent<DtoCalendar_ViewChangedEvent> = new ProjectorEvent<DtoCalendar_ViewChangedEvent>();
+	public readonly onDataNeeded: ProjectorEvent<DtoCalendar_DataNeededEvent> = new ProjectorEvent<DtoCalendar_DataNeededEvent>();
 
 	private cachedEvents: any[] = [];
 	private queriesDisabled: boolean;

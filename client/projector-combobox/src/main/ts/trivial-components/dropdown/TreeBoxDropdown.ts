@@ -20,7 +20,7 @@
 import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
 import {QueryFunction} from "../TrivialCore";
 import {TrivialTreeBox} from "../TrivialTreeBox";
-import {TeamAppsEvent} from "projector-client-object-api";
+import {ProjectorEvent} from "projector-client-object-api";
 
 type TreeBoxDropdownConfig<E> = {
 	queryFunction: QueryFunction<E>;
@@ -36,7 +36,7 @@ type TreeBoxDropdownConfig<E> = {
 
 export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 
-	public readonly onValueChanged: TeamAppsEvent<{ value: E; finalSelection: boolean }> = new TeamAppsEvent();
+	public readonly onValueChanged: ProjectorEvent<{ value: E; finalSelection: boolean }> = new ProjectorEvent();
 
 	private treeBox: TrivialTreeBox<E>;
 	private config: TreeBoxDropdownConfig<E>;

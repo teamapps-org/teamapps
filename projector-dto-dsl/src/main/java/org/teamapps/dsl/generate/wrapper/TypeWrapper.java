@@ -3,7 +3,7 @@ package org.teamapps.dsl.generate.wrapper;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.teamapps.dsl.TeamAppsDtoParser;
 
-import static org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel.findAncestorOfType;
+import static org.teamapps.dsl.generate.IntermediateDtoModel.findAncestorOfType;
 
 public interface TypeWrapper<T extends ParserRuleContext> {
 	T getParserRuleContext();

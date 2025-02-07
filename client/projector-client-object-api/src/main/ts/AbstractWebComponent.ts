@@ -1,13 +1,13 @@
 import {Component} from "./Component";
 import {CustomElement} from "./web-components";
 import {DtoComponent} from "./generated";
-import {debounce, DebounceMode, StyleManager, TeamAppsEvent} from "./util";
+import {debounce, DebounceMode, StyleManager, ProjectorEvent} from "./util";
 
 export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent> extends HTMLElement implements Component, CustomElement {
 
-	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
-	readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
-	readonly onResized: TeamAppsEvent<{ width: number; height: number }> = new TeamAppsEvent();
+	readonly onVisibilityChanged: ProjectorEvent<boolean>;
+	readonly deFactoVisibilityChanged: ProjectorEvent<boolean> = new ProjectorEvent();
+	readonly onResized: ProjectorEvent<{ width: number; height: number }> = new ProjectorEvent();
 
 	private config: DtoComponent;
 	private width: number = 0;

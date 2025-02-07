@@ -25,7 +25,7 @@ import {
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent, Template
+	ProjectorEvent, Template
 } from "projector-client-object-api";
 import {
 	DtoNetworkGraph,
@@ -38,10 +38,10 @@ import {patternify} from "./UiTreeGraph";
 
 export class UiNetworkGraph extends AbstractLegacyComponent<DtoNetworkGraph> implements DtoNetworkGraphCommandHandler, DtoNetworkGraphEventSource {
 
-	public readonly onNodeClicked: TeamAppsEvent<DtoNetworkGraph_NodeClickedEvent> = new TeamAppsEvent();
-	public readonly onNodeDoubleClicked: TeamAppsEvent<DtoNetworkGraph_NodeDoubleClickedEvent> = new TeamAppsEvent();
+	public readonly onNodeClicked: ProjectorEvent<DtoNetworkGraph_NodeClickedEvent> = new ProjectorEvent();
+	public readonly onNodeDoubleClicked: ProjectorEvent<DtoNetworkGraph_NodeDoubleClickedEvent> = new ProjectorEvent();
 
-	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<DtoNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onNodeExpandedOrCollapsed: ProjectorEvent<DtoNetworkGraph_NodeExpandedOrCollapsedEvent> = new ProjectorEvent();
 
 	private $graph: HTMLElement;
 	private svg: d3.Selection<SVGElement, any, null, undefined>;

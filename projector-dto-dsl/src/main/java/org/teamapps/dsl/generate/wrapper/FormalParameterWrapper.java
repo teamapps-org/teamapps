@@ -1,15 +1,15 @@
 package org.teamapps.dsl.generate.wrapper;
 
 import org.teamapps.dsl.TeamAppsDtoParser;
-import org.teamapps.dsl.generate.TeamAppsIntermediateDtoModel;
+import org.teamapps.dsl.generate.IntermediateDtoModel;
 
 public class FormalParameterWrapper {
 
 	private final TeamAppsDtoParser.FormalParameterContext context;
-	private final TeamAppsIntermediateDtoModel model;
+	private final IntermediateDtoModel model;
 	private final TypeReferenceWrapper type;
 
-	public FormalParameterWrapper(TeamAppsDtoParser.FormalParameterContext context, TeamAppsIntermediateDtoModel model) {
+	public FormalParameterWrapper(TeamAppsDtoParser.FormalParameterContext context, IntermediateDtoModel model) {
 		this.context = context;
 		this.model = model;
 		this.type = new TypeReferenceWrapper(context.type(), model);

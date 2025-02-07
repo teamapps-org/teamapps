@@ -41,7 +41,7 @@ import {
 	generateUUID,
 	parseHtml,
 	ServerObjectChannel,
-	TeamAppsEvent
+	ProjectorEvent
 } from "projector-client-object-api";
 import {
 	createDtoLongInterval,
@@ -58,8 +58,8 @@ export const yTickFormat = d3.format("-,.2s");
 
 export class TimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implements DtoTimeGraphCommandHandler, DtoTimeGraphEventSource {
 
-	public readonly onIntervalSelected: TeamAppsEvent<DtoTimeGraph_IntervalSelectedEvent> = new TeamAppsEvent<DtoTimeGraph_IntervalSelectedEvent>();
-	public readonly onZoomed: TeamAppsEvent<DtoTimeGraph_ZoomedEvent> = new TeamAppsEvent<DtoTimeGraph_ZoomedEvent>();
+	public readonly onIntervalSelected: ProjectorEvent<DtoTimeGraph_IntervalSelectedEvent> = new ProjectorEvent<DtoTimeGraph_IntervalSelectedEvent>();
+	public readonly onZoomed: ProjectorEvent<DtoTimeGraph_ZoomedEvent> = new ProjectorEvent<DtoTimeGraph_ZoomedEvent>();
 
 	public static readonly LOGSCALE_MIN_Y = 0.5;
 	public static readonly DROP_SHADOW_ID = "drop-shadow";

@@ -63,3 +63,5 @@ rename teamapps-ux to projector-server-core
 
 get rid of eval(...) in JS code by introducing Script as ClientObject (Script must be triggerable from the client side!)
 
+get rid of ProjectorTranslationKeys
+

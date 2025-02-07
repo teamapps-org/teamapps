@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, ServerObjectChannel, TeamAppsEvent,} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, ServerObjectChannel, ProjectorEvent,} from "projector-client-object-api";
 import {ViewInfo} from "./ViewInfo";
 import {ViewContainer} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
@@ -60,14 +60,14 @@ export type DtoWorkspaceLayoutDndDataTransfer = {
 
 export class WorkSpaceLayout extends AbstractLegacyComponent<DtoWorkSpaceLayout> implements DtoWorkSpaceLayoutCommandHandler, DtoWorkSpaceLayoutEventSource {
 
-	public readonly onLayoutChanged: TeamAppsEvent<DtoWorkSpaceLayout_LayoutChangedEvent> = new TeamAppsEvent();
-	public readonly onViewDraggedToNewWindow: TeamAppsEvent<DtoWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new TeamAppsEvent();
-	public readonly onViewNeedsRefresh: TeamAppsEvent<DtoWorkSpaceLayout_ViewNeedsRefreshEvent> = new TeamAppsEvent();
-	public readonly onChildWindowCreationFailed: TeamAppsEvent<DtoWorkSpaceLayout_ChildWindowCreationFailedEvent> = new TeamAppsEvent();
-	public readonly onChildWindowClosed: TeamAppsEvent<DtoWorkSpaceLayout_ChildWindowClosedEvent> = new TeamAppsEvent();
-	public readonly onViewSelected: TeamAppsEvent<DtoWorkSpaceLayout_ViewSelectedEvent> = new TeamAppsEvent();
-	public readonly onViewClosed: TeamAppsEvent<DtoWorkSpaceLayout_ViewClosedEvent> = new TeamAppsEvent();
-	public readonly onViewGroupPanelStateChanged: TeamAppsEvent<DtoWorkSpaceLayout_ViewGroupPanelStateChangedEvent> = new TeamAppsEvent();
+	public readonly onLayoutChanged: ProjectorEvent<DtoWorkSpaceLayout_LayoutChangedEvent> = new ProjectorEvent();
+	public readonly onViewDraggedToNewWindow: ProjectorEvent<DtoWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new ProjectorEvent();
+	public readonly onViewNeedsRefresh: ProjectorEvent<DtoWorkSpaceLayout_ViewNeedsRefreshEvent> = new ProjectorEvent();
+	public readonly onChildWindowCreationFailed: ProjectorEvent<DtoWorkSpaceLayout_ChildWindowCreationFailedEvent> = new ProjectorEvent();
+	public readonly onChildWindowClosed: ProjectorEvent<DtoWorkSpaceLayout_ChildWindowClosedEvent> = new ProjectorEvent();
+	public readonly onViewSelected: ProjectorEvent<DtoWorkSpaceLayout_ViewSelectedEvent> = new ProjectorEvent();
+	public readonly onViewClosed: ProjectorEvent<DtoWorkSpaceLayout_ViewClosedEvent> = new ProjectorEvent();
+	public readonly onViewGroupPanelStateChanged: ProjectorEvent<DtoWorkSpaceLayout_ViewGroupPanelStateChangedEvent> = new ProjectorEvent();
 
 	public static readonly ROOT_WINDOW_ID: string = "ROOT_WINDOW";
 
