@@ -1,6 +1,6 @@
 {
   "name": "projector-file-field",
-  "version": "0.9.155-SNAPSHOT",
+  "version": "0.1.0-SNAPSHOT",
   "type": "module",
   "exports": "./target/js-dist/index.js",
   "types": "./target/js-dist/lib/index.d.ts",

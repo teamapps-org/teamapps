@@ -6,7 +6,7 @@
     <groupId>org.teamapps</groupId>
     <artifactId>projector</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.155-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
 
     <name>TeamApps</name>
     <description>A Java web application framework</description>
@@ -185,32 +185,32 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-client-object-api</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>0.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-notification</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>0.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-progress-display</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>0.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-grid-template</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>0.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-mustache-template</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>0.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-infinite-scrolling-components</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>0.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
@@ -220,7 +220,7 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-application</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>0.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.teamapps</groupId>
@@ -240,7 +240,7 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>projector-mobile-layout</artifactId>
-                <version>0.9.155-SNAPSHOT</version>
+                <version>0.1.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>

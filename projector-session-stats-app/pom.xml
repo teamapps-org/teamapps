@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.teamapps</groupId>
         <artifactId>projector</artifactId>
-        <version>0.9.155-SNAPSHOT</version>
+        <version>0.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>projector-session-stats-app</artifactId>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>projector-combobox</artifactId>
-            <version>0.9.155-SNAPSHOT</version>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
