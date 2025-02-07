@@ -454,7 +454,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				let cellNode = this._grid.getCellNode(i, firstVisibleColumnIndex);
 				if (cellNode != null) {
 					let $row = closestAncestor(cellNode, ".slick-row", false, this.doGetMainElement());
-					$row.style.color = "blue"
 					for (const [name, value] of Object.entries(this.dataProvider.getItem(i).cssStyle)) {
 						$row.style.setProperty(name, value);
 					}
