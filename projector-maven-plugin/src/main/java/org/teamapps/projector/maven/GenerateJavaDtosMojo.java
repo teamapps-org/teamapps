@@ -6,7 +6,6 @@ import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuilder;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -71,7 +70,7 @@ public class GenerateJavaDtosMojo extends AbstractMojo {
 				),
 				goal("java"),
 				configuration(
-						element(name("mainClass"), "org.teamapps.dsl.generate.JavaDtoGenerator"),
+						element(name("mainClass"), "org.teamapps.projector.dsl.generate.JavaDtoGenerator"),
 						element(name("commandlineArgs"), commandlineArgs)
 				),
 				executionEnvironment(

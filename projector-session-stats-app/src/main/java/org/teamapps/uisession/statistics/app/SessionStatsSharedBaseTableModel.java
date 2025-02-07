@@ -20,7 +20,7 @@
 package org.teamapps.uisession.statistics.app;
 
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.server.uisession.SessionManager;
+import org.teamapps.projector.server.uisession.SessionManager;
 
 import java.util.List;
 import java.util.stream.Collectors;

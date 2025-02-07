@@ -25,11 +25,11 @@ import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
-import org.teamapps.server.core.ProjectorServerCore;
+import org.teamapps.projector.server.core.ProjectorServerCore;
 import org.teamapps.projector.resourceprovider.ResourceProvider;
-import org.teamapps.server.servlet.ProjectorServletContextListener;
-import org.teamapps.server.servlet.ServletUtil;
-import org.teamapps.server.webcontroller.WebController;
+import org.teamapps.projector.server.servlet.ProjectorServletContextListener;
+import org.teamapps.projector.server.servlet.ServletUtil;
+import org.teamapps.projector.server.webcontroller.WebController;
 
 import java.util.List;
 

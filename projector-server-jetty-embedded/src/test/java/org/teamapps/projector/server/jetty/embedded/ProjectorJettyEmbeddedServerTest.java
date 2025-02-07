@@ -26,7 +26,7 @@ import org.teamapps.projector.component.core.field.Button;
 import org.teamapps.projector.component.core.flexcontainer.VerticalLayout;
 import org.teamapps.projector.component.core.rootpanel.RootPanel;
 import org.teamapps.projector.session.SessionContext;
-import org.teamapps.server.webcontroller.WebController;
+import org.teamapps.projector.server.webcontroller.WebController;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
