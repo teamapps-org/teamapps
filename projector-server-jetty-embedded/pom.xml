@@ -75,5 +75,11 @@
             <artifactId>projector-client-core-components</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>projector-tree-components</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

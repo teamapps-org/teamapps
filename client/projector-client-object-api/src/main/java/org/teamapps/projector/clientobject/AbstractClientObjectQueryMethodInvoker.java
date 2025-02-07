@@ -38,8 +38,8 @@ public abstract class AbstractClientObjectQueryMethodInvoker {
 	abstract protected Object invokeHandlerMethod(Method method, String name, List<JsonWrapper> parameters) throws Exception;
 
 	protected Method getMethod(String name) {
-		String methodName = "handle" + StringUtils.capitalize(name) + "Query";
-		return cachedMethods.computeIfAbsent(new ClassAndMethodName(getClass(), methodName),
+		String methodName = "handle" + StringUtils.capitalize(name);
+		return cachedMethods.computeIfAbsent(new ClassAndMethodName(targetObject.getClass(), methodName),
 				classAndMethodName -> ReflectionUtil.findMethod(classAndMethodName.clazz, classAndMethodName.methodName));
 	}
 

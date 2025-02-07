@@ -30,7 +30,7 @@ export class DeferredExecutor {
 	private _ready: boolean = false;
 	private queue: Invocation<any>[] = [];
 
-	public async invokeWhenReady<T>(f: () => T, theThis?: any, args?: any[]): Promise<T> {
+	public invokeWhenReady<T>(f: () => T, theThis?: any, args?: any[]): Promise<T> {
 		if (this.ready) {
 			return Promise.resolve(f.apply(theThis, args));
 		} else {
@@ -40,9 +40,9 @@ export class DeferredExecutor {
 		}
 	}
 
-	public async invokeOnceWhenReady<T>(f: () => T, theThis?: any, args?: any[]) {
+	public invokeOnceWhenReady<T>(f: () => T, theThis?: any, args?: any[]) {
 		this.queue = this.queue.filter(invocation => f !== invocation.f);
-		return await this.invokeWhenReady(f, theThis, args);
+		return this.invokeWhenReady(f, theThis, args);
 	}
 
 	get ready() {

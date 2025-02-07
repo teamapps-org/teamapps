@@ -10,32 +10,34 @@ export class StyleManager {
 		this.styleElement.remove();
 	}
 
-	public setStyle(selector: string, style: { [property: string]: string }, replace?: boolean) {
+	public setStylesBySelector(stylesBySelector: { [selector: string]: {[name: string]: string}}) {
+		for (const [selector, styles] of Object.entries(stylesBySelector)) {
+			this.setStyle(selector, styles);
+		}
+	}
+
+	public setStyle(selector: string, style: { [property: string]: string }) {
 		if (selector == null || selector === '') {
 			selector = this.fallbackSelector;
 		} else {
 			selector = `${this.selectorPrefix} ${selector}`;
 		}
 
-		const ruleIndex = Array.from(this.sheet.rules)
+		const ruleIndex = Array.from(this.sheet.cssRules)
 			.findIndex(rule => this.isStyleRule(rule) && rule.selectorText === selector);
 		let rule: CSSStyleRule;
 		if (ruleIndex >= 0) {
-			rule = this.sheet.rules[ruleIndex] as CSSStyleRule;
-			if (replace) {
-				this.sheet.removeRule(ruleIndex);
-				rule = null;
-			}
+			rule = this.sheet.cssRules[ruleIndex] as CSSStyleRule;
 		}
 		if (rule == null) {
 			let index = this.sheet.insertRule(selector + "{}");
-			rule = this.sheet.rules[index] as CSSStyleRule;
+			rule = this.sheet.cssRules[index] as CSSStyleRule;
 		}
 		Object.assign(rule.style, style);
 	}
 
 	private isStyleRule(rule: CSSRule): rule is CSSStyleRule {
-		return rule.type == rule.STYLE_RULE;
+		return rule.constructor.name === 'CSSStyleRule';
 	}
 
 	public apply() {

@@ -23,14 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
 import org.teamapps.projector.clientrecordcache.ClientRecordCache;
+import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.treecomponents.tree.model.ComboBoxModel;
 import org.teamapps.projector.component.treecomponents.tree.model.TreeNodeInfo;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
-import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.TemplateDecider;
 
@@ -112,11 +111,6 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	@Override
 	public void handleTextInput(String enteredString) {
 		this.onTextInput.fire(enteredString);
-	}
-
-	@Override
-	public Object handleQuery(String name, List<JsonWrapper> params) {
-		return super.handleQuery(name, params);
 	}
 
 	@Override

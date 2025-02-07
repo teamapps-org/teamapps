@@ -98,7 +98,7 @@ export abstract class AbstractWebComponent<C extends DtoComponent = DtoComponent
 	}
 
 	public setStyle(selector: string, style: { [property: string]: string }) {
-		this.styleManager.setStyle(selector, style, true);
+		this.styleManager.setStyle(selector, style);
 		this.styleManager.apply()
 	}
 

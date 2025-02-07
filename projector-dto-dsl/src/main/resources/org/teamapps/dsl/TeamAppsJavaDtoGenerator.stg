@@ -439,7 +439,7 @@ public class <c.name>QueryMethodInvoker extends AbstractClientObjectQueryMethodI
 	protected Object invokeHandlerMethod(Method method, String name, List\<JsonWrapper> parameters) throws Exception {
 	    <if(c.allQueries)>
 		return switch (name) {
-		    <c.allQueries:{e|case "<e.name>" -> method.invoke(targetObject<if(e.parameters)>, <endif><e.parameters:queryMethodParameterExtractor(i0); separator=", ">);}; separator="\n">
+		    <c.allQueries:queryMethodInvocationCase(); separator="\n">
 			default -> throw new UnsupportedOperationException("Unknown query name: " + method.getName());
 		};
 		<else>
@@ -447,6 +447,10 @@ public class <c.name>QueryMethodInvoker extends AbstractClientObjectQueryMethodI
 		<endif>
 	}
 }
+>>
+
+queryMethodInvocationCase(q) ::= <<
+    case "<q.name>" -> method.invoke(targetObject<if(q.parameters)>, <endif><q.parameters:{p|<queryMethodParameterExtractor(p, i0)>}; separator=", ">);
 >>
 
 queryMethodParameterExtractor(p, index) ::= <<

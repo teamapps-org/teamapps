@@ -98,6 +98,19 @@ public class JavaDtoGeneratorTest {
 	}
 
 	@Test
+	public void queryMethodInvoker() throws Exception {
+		executeQueryMethodInvokerTest(
+				"package \"x\":org.teamapps.projector.dto; " +
+				"class X { "
+				+ " query q1(String x) returns int;"
+				+ " query q2(String x, int y) returns double;"
+				+ "}",
+				"org.teamapps.projector.dto.X",
+				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_queryMethodInvoker.java"
+		);
+	}
+
+	@Test
 	public void interfaceInteritance() throws Exception {
 		executeInterfaceTest(
 				"package \"x\":org.teamapps.projector.dto; interface A { String a; }"
@@ -237,6 +250,14 @@ public class JavaDtoGeneratorTest {
 
 		StringWriter stringWriter = new StringWriter();
 		new JavaDtoGenerator(model).generateInterface(model.findInterfaceByQualifiedName(qualifiedInterfaceName).orElseThrow(), stringWriter);
+		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
+	}
+
+	private void executeQueryMethodInvokerTest(String dslString, String qualifiedInterfaceName, String expectedResultResourceName) throws IOException {
+		IntermediateDtoModel model = createModel(dslString);
+
+		StringWriter stringWriter = new StringWriter();
+		new JavaDtoGenerator(model).generateClientObjectQueryMethodInvoker(model.findClassByQualifiedName(qualifiedInterfaceName).orElseThrow(), stringWriter);
 		GeneratorTestUtil.compareCodeWithResource(expectedResultResourceName, stringWriter.toString());
 	}
 

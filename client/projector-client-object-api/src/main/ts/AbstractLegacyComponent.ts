@@ -52,11 +52,11 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 
 		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-css-id="${this.cssUuid}"]`, `[data-css-id="${this.cssUuid}"]`);
 		this.displayedDeferredExecutor.invokeOnceWhenReady(() => this.styleManager.apply());
-
 		this.visible = config.visible ?? false;
 	}
 
-	init(config: any, serverObjectChannel: ServerObjectChannel): any {
+	init(config: C, serverObjectChannel: ServerObjectChannel): any {
+		this.styleManager.setStylesBySelector(config.stylesBySelector ?? {});
 		this.registerEvents(serverObjectChannel);
 	}
 
@@ -188,7 +188,7 @@ export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoCompon
 	}
 
 	public setStyle(selector: string, style: { [property: string]: string }) {
-		this.styleManager.setStyle(selector, style, true);
+		this.styleManager.setStyle(selector, style);
 		this.styleManager.apply()
 	}
 

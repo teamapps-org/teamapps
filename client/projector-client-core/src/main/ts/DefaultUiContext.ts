@@ -213,10 +213,10 @@ export class DefaultUiContext implements ConnectionListener {
 			if (!clazz) {
 				throw `Unknown client object type ${typeName} in library ${libraryId}`;
 			}
-			instance = new clazz(enhancedConfig);
+			instance = new clazz(enhancedConfig, serverObjectChannel);
 		}
 		if (typeof instance.init === "function") {
-			instance.init(config, serverObjectChannel);
+			instance.init(enhancedConfig, serverObjectChannel);
 		}
 		return instance;
 	}

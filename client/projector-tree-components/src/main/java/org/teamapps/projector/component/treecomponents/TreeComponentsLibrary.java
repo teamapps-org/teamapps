@@ -10,18 +10,18 @@ public class TreeComponentsLibrary implements ClientObjectLibrary {
 	private final ClassPathResourceProvider resourceProvider;
 
 	public TreeComponentsLibrary() {
-		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/component/core/resources/js");
+		this.resourceProvider = new ClassPathResourceProvider("org/teamapps/projector/component/treecomponents/resources/js");
 	}
 
 
 	@Override
 	public Resource getMainJsResource() {
-		return new ClassPathResource("org/teamapps/projector/component/treecomponents/trivial/resources/js/index.js", "text/javascript");
+		return new ClassPathResource("org/teamapps/projector/component/treecomponents/resources/js/index.js", "text/javascript");
 	}
 
 	@Override
 	public Resource getMainCssResource() {
-		return new ClassPathResource("org/teamapps/projector/component/treecomponents/trivial/resources/js/index.css", "text/css");
+		return new ClassPathResource("org/teamapps/projector/component/treecomponents/resources/js/index.css", "text/css");
 	}
 
 	@Override
