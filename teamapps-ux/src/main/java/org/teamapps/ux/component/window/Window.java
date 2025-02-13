@@ -38,7 +38,7 @@ public class Window extends Panel {
 	private int height = 0; // 0 = full height; -1 = auto
 	private int minWidth = 200; // 0 = full height; -1 = auto
 	private int minHeight = 100; // 0 = full height; -1 = auto
-	private boolean resizable = false;
+	private boolean resizable = true;
 	private boolean movable = true;
 	private boolean keepInViewport = true;
 	private Color modalBackgroundDimmingColor = new RgbaColor(0, 0, 0, 0.2f);
