@@ -145,7 +145,7 @@ export function createImageSizingCssObject(imageSizing: UiImageSizing): CssPrope
 			backgroundSize = "cover";
 		}
 		return {
-			"backgroundSize": backgroundSize
+			"background-size": backgroundSize
 		}
 	}
 }
