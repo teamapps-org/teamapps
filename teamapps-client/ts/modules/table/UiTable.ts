@@ -47,7 +47,7 @@ import {AbstractUiComponent} from "../AbstractUiComponent";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
-import {arraysEqual, closestAncestor, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml, Renderer} from "../Common";
+import {arraysEqual, closestAncestor, css, escapeHtml, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml, Renderer} from "../Common";
 import {UiSortDirection} from "../../generated/UiSortDirection";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiGenericTableCellEditor} from "./UiGenericTableCellEditor";
@@ -561,7 +561,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			field: columnConfig.name,
 			uiField: uiField,
 			name: `<div class="column-header-icon img img-16 ${columnConfig.icon == null ? "hidden" : ""}" style="background-image: url('${columnConfig.icon}')"></div>
-<div class="column-header-title">${columnConfig.title}</div>`,
+<div class="column-header-title">${escapeHtml(columnConfig.title)}</div>`,
 			width: columnConfig.defaultWidth || ((columnConfig.minWidth + columnConfig.maxWidth) / 2) || undefined,
 			minWidth: columnConfig.minWidth || 30,
 			maxWidth: columnConfig.maxWidth || undefined,
@@ -575,7 +575,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			hiddenIfOnlyEmptyCellsVisible: columnConfig.hiddenIfOnlyEmptyCellsVisible,
 			messages: columnConfig.messages,
 			uiConfig: columnConfig,
-			visible: columnConfig.visible
+			visible: columnConfig.visible,
+			toolTip: columnConfig.title
 		};
 
 		slickColumnConfig.headerCssClass = this.getColumnCssClass(slickColumnConfig);
