@@ -35,7 +35,7 @@ public class TypeScriptDtoGeneratorTest {
 	public void classProperties() throws Exception {
 		executeClassTest(
 				"org.teamapps.projector.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classProperties.tsd", "package \"x\":org.teamapps.projector.dto; class A {\n"
-						+ "\trequired String a;\n"
+						+ "\tString a;\n"
 						+ "\tString b;\n"
 						+ "\tList<Long> c;\n"
 						+ "}"
@@ -85,7 +85,7 @@ public class TypeScriptDtoGeneratorTest {
 		executeClassTest(
 				"org.teamapps.projector.dto.D", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classesImplementTheirInterfaces.tsd", "package \"x\":org.teamapps.projector.dto; class A {}"
 						+ "interface B { String bProperty; }"
-						+ "interface C { required List<Integer> cProperty; }"
+						+ "interface C { List<Integer> cProperty; }"
 						+ "class D extends A implements B, C {}"
 		);
 	}
@@ -95,7 +95,7 @@ public class TypeScriptDtoGeneratorTest {
 		executeInterfaceTest(
 				"org.teamapps.projector.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_interfaces.tsd", "package \"x\":org.teamapps.projector.dto; " +
 						"interface A { "
-						+ " required String a;"
+						+ " String a;"
 						+ " String b;"
 						+ " command x1(String x);"
 						+ " command x2(String x) returns List<Integer>;"
@@ -126,29 +126,7 @@ public class TypeScriptDtoGeneratorTest {
 	@Test
 	public void classTypeScriptFactoryMethod() throws Exception {
 		executeClassTest(
-				"org.teamapps.projector.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classTypeScriptFactoryMethod.tsd", "package \"x\":org.teamapps.projector.dto; @TypeScriptFactory class A { String nonReq1; required String req1; int nonReq2; required int req2;}"
-		);
-	}
-
-	@Test
-	public void classTypeScriptFactoryMethodWithoutParameters() throws Exception {
-		executeClassTest(
-				"org.teamapps.projector.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classTypeScriptFactoryMethodWithoutParameters.tsd", "package \"x\":org.teamapps.projector.dto; @TypeScriptFactory class A { }"
-		);
-	}
-
-	@Test
-	public void classTypeScriptFactoryMethodWithOnlyRequiredParameters() throws Exception {
-		executeClassTest(
-				"org.teamapps.projector.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classTypeScriptFactoryMethodWithOnlyRequiredParameters.tsd", "package \"x\":org.teamapps.projector.dto; @TypeScriptFactory class A { required String req1; required int req2;}"
-		);
-	}
-
-
-	@Test
-	public void classTypeScriptFactoryMethodWithOnlyNonRequiredParameters() throws Exception {
-		executeClassTest(
-				"org.teamapps.projector.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classTypeScriptFactoryMethodWithOnlyNonRequiredParameters.tsd", "package \"x\":org.teamapps.projector.dto; @TypeScriptFactory class A { String nonReq1; int nonReq2; }"
+				"org.teamapps.projector.dto.A", "org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_classTypeScriptFactoryMethod.tsd", "package \"x\":org.teamapps.projector.dto;  class A { String nonReq1; String req1; int nonReq2; int req2;}"
 		);
 	}
 

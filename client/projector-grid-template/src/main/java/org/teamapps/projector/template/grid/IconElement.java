@@ -19,9 +19,6 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.DtoIconElement;
-
 public class IconElement extends AbstractGridTemplateElement<IconElement> {
 
 	protected int size;
@@ -48,8 +45,12 @@ public class IconElement extends AbstractGridTemplateElement<IconElement> {
 
 	@Override
 	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
-		DtoIconElement uiIconElement = new DtoIconElement(propertyName, row, column, size);
+		DtoIconElement uiIconElement = new DtoIconElement();
 		mapAbstractGridTemplateElementAttributesToUiElement(uiIconElement);
+		uiIconElement.setProperty(propertyName);
+		uiIconElement.setRow(row);
+		uiIconElement.setColumn(column);
+		uiIconElement.setSize(size);
 		return uiIconElement;
 	}
 

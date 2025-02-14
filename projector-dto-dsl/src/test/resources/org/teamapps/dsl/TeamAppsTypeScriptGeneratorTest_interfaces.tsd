@@ -9,7 +9,7 @@ interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest
 
 export interface A {
 	_type?: string;
-	a: string;
+	a?: string;
 	b?: string
 }
 

@@ -28,8 +28,8 @@ import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.JustifyContent;
 
 class DtoGridForm extends DtoComponent {
-	required List<DtoComponent*> fields;
-	required List<DtoFormLayoutPolicy> layoutPolicies;
+	List<DtoComponent*> fields;
+	List<DtoFormLayoutPolicy> layoutPolicies;
 
 	command updateLayoutPolicies(List<DtoFormLayoutPolicy> layoutPolicies);
 	command setSectionCollapsed(String sectionId, boolean collapsed);
@@ -39,15 +39,15 @@ class DtoGridForm extends DtoComponent {
 }
 
 class DtoFormLayoutPolicy {
-	 required int minWidth;
-     required List<DtoFormSection> sections;
+	 int minWidth;
+     List<DtoFormSection> sections;
 }
 
 class DtoFormSection {
-	required String id;
-    required List<DtoGridColumn> columns;
-    required List<DtoGridRow> rows;
-    required List<DtoFormSectionPlacement> fieldPlacements;
+	String id;
+    List<DtoGridColumn> columns;
+    List<DtoGridRow> rows;
+    List<DtoFormSectionPlacement> fieldPlacements;
     DtoSpacing margin;
     DtoSpacing padding;
     DtoBorder border;
@@ -68,11 +68,11 @@ interface DtoFormSectionPlacement extends DtoGridPlacement {
 }
 
 class DtoFormSectionFieldPlacement implements DtoFormSectionPlacement {
-	required DtoComponent* field;
+	DtoComponent* field;
 }
 
 class DtoFormSectionFloatingFieldsPlacement implements DtoFormSectionPlacement {
-	required List<DtoFormSectionFloatingField> floatingFields;
+	List<DtoFormSectionFloatingField> floatingFields;
 	boolean wrap;
 	int horizontalSpacing;
 	int verticalSpacing;  
@@ -80,7 +80,7 @@ class DtoFormSectionFloatingFieldsPlacement implements DtoFormSectionPlacement {
 }
 
 class DtoFormSectionFloatingField {
-	required DtoComponent* field;
+	DtoComponent* field;
 	int minWidth;
 	int maxWidth;
 	int minHeight;
@@ -113,11 +113,11 @@ interface DtoGridPlacement {
 }
 
 class DtoComponentGridPlacement implements DtoGridPlacement {
-	required DtoComponent* component;
+	DtoComponent* component;
 }
 
 class DtoFloatingComponentGridPlacement implements DtoGridPlacement {
-	required List<DtoFloatingComponentGridPlacementItem> components;
+	List<DtoFloatingComponentGridPlacementItem> components;
 	boolean wrap;
 	int horizontalSpacing;
 	int verticalSpacing;
@@ -125,7 +125,7 @@ class DtoFloatingComponentGridPlacement implements DtoGridPlacement {
 }
 
 class DtoFloatingComponentGridPlacementItem {
-	required DtoComponent* component;
+	DtoComponent* component;
 	int minWidth;
 	int maxWidth;
 	int minHeight;
@@ -133,7 +133,7 @@ class DtoFloatingComponentGridPlacementItem {
 }
 
 class DtoSizingPolicy {
-	required SizeType type;
+	SizeType type;
     double value;
     int minAbsoluteSize;
 }

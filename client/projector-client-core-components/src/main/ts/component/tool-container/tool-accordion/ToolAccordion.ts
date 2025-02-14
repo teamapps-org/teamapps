@@ -32,7 +32,6 @@ import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {defaultSpinnerTemplate} from "../../../util/Common";
 import {
-	createDropDownButtonClickInfo,
 	DropDownButtonClickInfo,
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
 	DtoToolAccordion,
@@ -210,7 +209,7 @@ class DtoButtonGroup {
 					this.createDropDown(button);
 				}
 				let dropdownVisible = !button.$dropDown.classList.contains('hidden');
-				dropdownClickInfo = createDropDownButtonClickInfo(!dropdownVisible, button.dropDownComponent != null);
+				dropdownClickInfo = {opening: !dropdownVisible, contentSet: button.dropDownComponent != null};
 				if (!dropdownVisible) {
 					if (button.dropDownComponent != null) {
 						button.$dropDown.appendChild(button.dropDownComponent.getMainElement());

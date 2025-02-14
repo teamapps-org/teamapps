@@ -21,12 +21,12 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 
 import org.teamapps.projector.component.DtoComponent;
 
-@TypeScriptFactory
+
 class DtoToolButton extends DtoComponent {
-	required String icon;
+	String icon;
 	Integer iconSize; // if null, default (defined by css)
     String caption;
-	required String popoverText;
+	String popoverText;
 	boolean grayOutIfNotHovered;
 
 	int minDropDownWidth;

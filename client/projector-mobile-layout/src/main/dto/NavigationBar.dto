@@ -27,8 +27,8 @@ class DtoNavigationBar extends DtoComponent {
 }
 
 class DtoNavigationBarButton {
-	required String id;
-    required DtoTemplate* template;
-	required Object data;
+	String id;
+    DtoTemplate* template;
+	Object data;
 	boolean visible;
 }

@@ -22,7 +22,6 @@
 import ICON_UPLOAD from "@material-symbols/svg-400/outlined/upload.svg";
 import {AbstractField, arraysEqual, FieldEditingMode, generateUUID, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {
-	createDtoFileItem,
 	DtoFileItem,
 	DtoSimpleFileField,
 	DtoSimpleFileField_FileItemClickedEvent,
@@ -31,9 +30,11 @@ import {
 	DtoSimpleFileField_UploadFailedEvent,
 	DtoSimpleFileField_UploadInitiatedByUserEvent,
 	DtoSimpleFileField_UploadStartedEvent,
-	DtoSimpleFileField_UploadSuccessfulEvent, DtoSimpleFileField_UploadTooLargeEvent,
+	DtoSimpleFileField_UploadSuccessfulEvent,
+	DtoSimpleFileField_UploadTooLargeEvent,
 	DtoSimpleFileFieldCommandHandler,
-	DtoSimpleFileFieldEventSource, FileFieldDisplayType
+	DtoSimpleFileFieldEventSource,
+	FileFieldDisplayType
 } from "./generated";
 import {FileItem, FileItemState} from "./FileItem";
 
@@ -111,7 +112,7 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 			}
 		}));
 		this.$fileInput = this.$main.querySelector<HTMLInputElement>(':scope .file-input');
-		this.$fileInput.addEventListener('change',() => {
+		this.$fileInput.addEventListener('change', () => {
 			const files = (<HTMLInputElement>this.$fileInput).files;
 			this.handleFiles(files);
 		});
@@ -149,14 +150,15 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	focus(): void {
 		this.$uploadButton.focus();
 	}
+
 	getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
 
 	getTransientValue(): DtoFileItem[] {
 		return Object.values(this.fileItems)
-		// .filter(item => item.state === FileItemState.DONE)
-			.map(item => createDtoFileItem({
+			// .filter(item => item.state === FileItemState.DONE)
+			.map(item => ({
 				uuid: item.uuid,
 				icon: item.icon,
 				thumbnail: item.thumbnail,

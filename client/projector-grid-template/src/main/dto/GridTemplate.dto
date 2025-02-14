@@ -30,9 +30,9 @@ import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.template.grid.DtoSizingPolicy;
 
 class DtoGridTemplate extends DtoTemplate {
-    required List<DtoGridColumn> columns;
-    required List<DtoGridRow> rows;
-    required List<DtoAbstractGridTemplateElement> elements;
+    List<DtoGridColumn> columns;
+    List<DtoGridRow> rows;
+    List<DtoAbstractGridTemplateElement> elements;
     int minWidth;
     int maxWidth;
 	int minHeight;
@@ -58,9 +58,9 @@ class DtoGridRow {
 }
 
 abstract class DtoAbstractGridTemplateElement {
-	required String property;
-    required int row;
-    required int column;
+	String property;
+    int row;
+    int column;
     int rowSpan;
     int colSpan;
     JustifyContent horizontalAlignment;
@@ -83,15 +83,15 @@ class DtoBadgeElement extends DtoTextElement {
 }
 
 class DtoFloatingElement extends DtoAbstractGridTemplateElement {
-	required List<DtoAbstractGridTemplateElement> elements;
+	List<DtoAbstractGridTemplateElement> elements;
 	boolean wrap;
     AlignItems alignItems;
     JustifyContent justifyContent;
 }
 
 class DtoImageElement extends DtoAbstractGridTemplateElement {
-	required int width;
-	required int height;
+	int width;
+	int height;
 	DtoBorder border;
 	DtoSpacing padding;
 	DtoBoxShadow shadow;
@@ -103,11 +103,11 @@ enum DtoImageSizing {
 }
 
 class DtoIconElement extends DtoAbstractGridTemplateElement {
-	required int size;
+	int size;
 }
 
 class DtoGlyphIconElement extends DtoAbstractGridTemplateElement {
-	required int size;
+	int size;
 	String fontColor;
 }
 

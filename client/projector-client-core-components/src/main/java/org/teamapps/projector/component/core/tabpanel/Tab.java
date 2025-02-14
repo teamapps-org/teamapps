@@ -64,7 +64,10 @@ public class Tab {
 
 	public DtoTab createDtoTab() {
 		SessionContext context = CurrentSessionContext.get();
-		DtoTab uiTab = new DtoTab(clientId, context.resolveIcon(icon), title);
+		DtoTab uiTab = new DtoTab();
+		uiTab.setTabId(clientId);
+		uiTab.setIcon(context.resolveIcon(icon));
+		uiTab.setCaption(title);
 		uiTab.setCloseable(closeable);
 		uiTab.setLazyLoading(this.isLazyLoading());
 		uiTab.setRightSide(this.rightSide);

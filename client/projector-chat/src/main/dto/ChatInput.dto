@@ -39,13 +39,13 @@ class DtoChatInput extends DtoComponent {
 	event fileItemRemoved(String fileItemUuid);
 }
 
-@TypeScriptFactory
+
 class DtoNewChatMessage {
 	String text;
 	List<DtoChatNewFile> uploadedFiles;
 }
 
-@TypeScriptFactory
+
 class DtoChatNewFile {
 	String uploadedFileUuid;
 	String fileName;

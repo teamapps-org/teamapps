@@ -48,6 +48,11 @@ public class A implements DtoObject {
 	public A() {
 	}
 
+	public A(String a) {
+		this.a = a;
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public String toString() {
 		return new StringBuilder(getClass().getSimpleName()).append(": ")
@@ -77,17 +82,13 @@ public class A implements DtoObject {
 
 		protected String a;
 
-		/**
-		 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-		 */
-		@Deprecated
 		public SetACommand() {
-			// default constructor for Jackson
 		}
 
 		public SetACommand(String a) {
 			this.a = a;
 		}
+
 
 		@SuppressWarnings("unchecked")
 		public String toString() {

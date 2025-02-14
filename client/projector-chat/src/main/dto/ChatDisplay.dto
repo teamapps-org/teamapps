@@ -37,8 +37,8 @@ class DtoChatDisplay extends DtoComponent {
 }
 
 class DtoChatMessageBatch {
-    required List<DtoChatMessage> messages;
-    required boolean containsFirstMessage;
+    List<DtoChatMessage> messages;
+    boolean containsFirstMessage;
 }
 
 class DtoChatMessage {

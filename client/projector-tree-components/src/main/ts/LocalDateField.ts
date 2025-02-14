@@ -23,9 +23,10 @@ import {createDateRenderer} from "./datetime-rendering";
 import {CalendarBoxDropdown} from "./trivial-components/dropdown/CalendarBoxDropdown";
 import {TrivialCalendarBox} from "./trivial-components/TrivialCalendarBox";
 import {
-	createDtoLocalDate, DateFieldDropDownMode,
+	DateFieldDropDownMode,
 	DtoLocalDate,
-	DtoLocalDateField, DtoLocalDateField_TextInputEvent,
+	DtoLocalDateField,
+	DtoLocalDateField_TextInputEvent,
 	DtoLocalDateFieldCommandHandler,
 	DtoLocalDateFieldEventSource
 } from "./generated";
@@ -174,7 +175,9 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 	public getTransientValue(): DtoLocalDate {
 		let selectedEntry = this.trivialComboBox.getValue();
 		if (selectedEntry) {
-			return createDtoLocalDate(selectedEntry.year, selectedEntry.month, selectedEntry.day);
+			return {
+				year: selectedEntry.year, month: selectedEntry.month, day: selectedEntry.day
+			};
 		} else {
 			return null;
 		}

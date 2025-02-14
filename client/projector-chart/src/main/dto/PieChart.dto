@@ -58,19 +58,19 @@ enum ChartLegendStyle {
 }
 
 class DtoChartNamedDataPoint {
-	required String name;
-	required double y;
+	String name;
+	double y;
 	String color;
 }
 
 class DtoChartDataPoint2D {
-	required double x;
-	required double y;
+	double x;
+	double y;
 }
 
 class DtoChartDataPoint3D {
-	required double x;
-	required double y;
-	required double z;
+	double x;
+	double y;
+	double z;
 }
 

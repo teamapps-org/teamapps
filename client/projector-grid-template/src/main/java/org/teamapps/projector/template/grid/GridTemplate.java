@@ -259,7 +259,10 @@ public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 		List<DtoAbstractGridTemplateElement> uiTemplateElements = elements.stream()
 				.map(element -> element != null ? element.createDtoTemplateElement() : null)
 				.collect(Collectors.toList());
-		DtoGridTemplate uiGridTemplate = new DtoGridTemplate(uiColumns, uiRows, uiTemplateElements);
+		DtoGridTemplate uiGridTemplate = new DtoGridTemplate();
+		uiGridTemplate.setColumns(uiColumns);
+		uiGridTemplate.setRows(uiRows);
+		uiGridTemplate.setElements(uiTemplateElements);
 		uiGridTemplate.setMinWidth(minWidth);
 		uiGridTemplate.setMaxWidth(maxWidth);
 		uiGridTemplate.setMinHeight(minHeight);

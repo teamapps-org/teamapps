@@ -23,11 +23,11 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.session.config.DtoDateTimeFormatDescriptor;
 
-@TypeScriptFactory
+
 class DtoLocalDate {
-    required int year;
-    required int month;
-    required int day;
+    int year;
+    int month;
+    int day;
 }
 
 class DtoLocalDateField extends DtoAbstractField {

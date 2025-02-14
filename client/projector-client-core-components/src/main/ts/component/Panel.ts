@@ -28,7 +28,6 @@ import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
 import ICON_RESTORE from "@material-symbols/svg-400/outlined/select_window.svg";
 
 import {
-	createDtoToolButton,
 	DtoPanel,
 	DtoPanel_WindowButtonClickedEvent,
 	DtoPanelCommandHandler,
@@ -72,9 +71,9 @@ export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanel
 	public readonly onWindowButtonClicked: ProjectorEvent<DtoPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(ICON_MINIMIZE, "Minimize", {visible: true, iconSize: 16}), noOpServerObjectChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(ICON_MAXIMIZE, "Maximize/Restore", {visible: true, iconSize: 16}), noOpServerObjectChannel),
-		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(ICON_CLOSE, "Close", {visible: true, iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton({icon: ICON_MINIMIZE, popoverText: "Minimize", visible: true, iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton({icon: ICON_MAXIMIZE, popoverText: "Maximize/Restore", visible: true, iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonType.CLOSE]: new ToolButton({icon: ICON_CLOSE, popoverText: "Close", visible: true, iconSize: 16}, noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		WindowButtonType.MINIMIZE,

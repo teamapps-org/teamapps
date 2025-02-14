@@ -55,9 +55,9 @@ class DtoTreeGraph extends DtoComponent {
 }
 
 class DtoBaseTreeGraphNode {
-	required String id;
-    required int width;
-    required int height;
+	String id;
+    int width;
+    int height;
     String backgroundColor;
     String borderColor;
     double borderWidth;
@@ -87,9 +87,9 @@ class DtoTreeGraphNode extends DtoBaseTreeGraphNode{
 }
 
 class DtoTreeGraphNodeImage {
-    required String url;
-    required int width;
-    required int height;
+    String url;
+    int width;
+    int height;
     int centerTopDistance; //top distance of image center from top-left corner of node, e.g. -10 and height 30 means image will be 25 pixels above the top line of the node
     int centerLeftDistance; //left distance of image center from top-left corner of node
     CornerShape cornerShape;
@@ -103,6 +103,6 @@ enum CornerShape {
 }
 
 class DtoTreeGraphNodeIcon {
-    required String icon;
-    required int size; //width = height
+    String icon;
+    int size; //width = height
 }

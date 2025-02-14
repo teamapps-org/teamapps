@@ -45,7 +45,7 @@ class DtoItemView extends DtoComponent {
 
 class DtoItemViewItemGroup {
 	String id;
-	required DtoTemplate* itemTemplate;
+	DtoTemplate* itemTemplate;
 	DtoIdentifiableClientRecord headerData;
 	List<DtoIdentifiableClientRecord> items;
 	boolean headerVisible;

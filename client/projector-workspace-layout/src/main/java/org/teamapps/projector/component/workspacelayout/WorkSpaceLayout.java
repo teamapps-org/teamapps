@@ -104,8 +104,11 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 		List<DtoWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
 				.map(WorkSpaceLayoutView::createDtoView)
 				.collect(Collectors.toList());
-		DtoWorkSpaceLayout uiLayout = new DtoWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
+		DtoWorkSpaceLayout uiLayout = new DtoWorkSpaceLayout();
 		mapAbstractConfigProperties(uiLayout);
+		uiLayout.setViews(uiViews);
+		uiLayout.setInitialLayout(uiInitialLayout);
+		uiLayout.setChildWindowPageTitle(childWindowPageTitle);
 		if (toolbar != null) {
 			uiLayout.setToolbar(toolbar);
 		}

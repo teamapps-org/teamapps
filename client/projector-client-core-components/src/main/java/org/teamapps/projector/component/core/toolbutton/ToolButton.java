@@ -76,10 +76,12 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 	@Override
 	public DtoComponent createDto() {
 		String icon = getSessionContext().resolveIcon(this.icon);
-		DtoToolButton uiToolButton = new DtoToolButton(icon, popoverText);
-		uiToolButton.setIconSize(iconSize);
-		uiToolButton.setCaption(caption);
+		DtoToolButton uiToolButton = new DtoToolButton();
 		mapAbstractConfigProperties(uiToolButton);
+		uiToolButton.setIcon(icon);
+		uiToolButton.setIconSize(iconSize);
+		uiToolButton.setPopoverText(popoverText);
+		uiToolButton.setCaption(caption);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
 		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent : null);
 		uiToolButton.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);

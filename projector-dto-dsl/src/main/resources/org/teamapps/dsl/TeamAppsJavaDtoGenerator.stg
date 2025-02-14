@@ -56,7 +56,7 @@ interface(c) ::= <<
 public interface <c.javaClassName> extends <if(c.interfaces)><c.interfaces:{si|<si.javaClassName>}; separator=", ">, <endif>DtoObject {
 
 	<c.properties:getterStub(); separator="\n">
-	<c.nonRequiredProperties:setterStub(c); separator="\n">
+	<c.properties:setterStub(c); separator="\n">
 
     <c.eventsWithParameters:eventJsonWrapper(); separator="\n\n">
 
@@ -118,20 +118,15 @@ public <c.javaClassName> set<p.name; format="cap">(<p.type.javaTypeString> <p.na
 >>
 
 constructor(c, classNamePrefix, classNameSuffix) ::= <<
-<if(c.allRequiredProperties)>
-/**
- * @deprecated Only for Jackson deserialization. Use the other constructor instead.
- */
-@Deprecated
 public <classNamePrefix><c.name; format="cap"><classNameSuffix>() {
-	// default constructor for Jackson
+}
+
+<if(c.allProperties)>
+public <classNamePrefix><c.name; format="cap"><classNameSuffix>(<c.allProperties:parameter(); separator=", ">) {
+	<if(c.superClass)>super(<c.superClass.allProperties:{p|<p.name>}; separator=", ">);<endif>
+	<c.properties:propertyAssignment(); separator="\n">
 }
 <endif>
-
-public <classNamePrefix><c.name; format="cap"><classNameSuffix>(<c.allRequiredProperties:parameter(); separator=", ">) {
-	<if(c.superClass)>super(<c.superClass.allRequiredProperties:{p|<p.name>}; separator=", ">);<endif>
-	<c.requiredPropertiesNotImplementedBySuperClasses:propertyAssignment(); separator="\n">
-}
 >>
 
 toString(c) ::= <<

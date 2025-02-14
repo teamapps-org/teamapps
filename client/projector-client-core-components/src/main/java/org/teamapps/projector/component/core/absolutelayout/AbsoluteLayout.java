@@ -68,15 +68,18 @@ public class AbsoluteLayout extends AbstractComponent implements DtoAbsoluteLayo
 				.map(entry -> {
 					Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
-					return new DtoAbsolutePositionedComponent(component, new DtoAbsolutePositioning(
-							position.getTop() != null ? position.getTop().toCssString(): null,
-							position.getRight() != null ? position.getRight().toCssString(): null,
-							position.getBottom() != null ? position.getBottom().toCssString(): null,
-							position.getLeft() != null ? position.getLeft().toCssString(): null,
-							position.getWidth() != null ? position.getWidth().toCssString(): null,
-							position.getHeight() != null ? position.getHeight().toCssString(): null,
-							position.getZIndex()
-					));
+					DtoAbsolutePositioning dtoPos = new DtoAbsolutePositioning();
+					dtoPos.setTopCss(position.getTop() != null ? position.getTop().toCssString() : null);
+					dtoPos.setRightCss (position.getRight() != null ? position.getRight().toCssString() : null);
+					dtoPos.setBottomCss (position.getBottom() != null ? position.getBottom().toCssString() : null);
+					dtoPos.setLeftCss (position.getLeft() != null ? position.getLeft().toCssString() : null);
+					dtoPos.setWidthCss (position.getWidth() != null ? position.getWidth().toCssString() : null);
+					dtoPos.setHeightCss (position.getHeight() != null ? position.getHeight().toCssString() : null);
+					dtoPos.setZIndex (position.getZIndex());
+					DtoAbsolutePositionedComponent ui = new DtoAbsolutePositionedComponent();
+					ui.setComponent(component);
+					ui.setPosition(dtoPos);
+					return ui;
 				})
 				.collect(Collectors.toList());
 	}

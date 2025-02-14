@@ -153,7 +153,11 @@ var CurrencyField = /** @class */ (function (_super) {
     CurrencyField.prototype.getTransientValue = function () {
         var _a;
         var amount = this.trivialUnitBox.getAmount();
-        return (0, generated_1.createDtoCurrencyValue)(this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(), (_a = this.trivialUnitBox.getAmount()) === null || _a === void 0 ? void 0 : _a.value);
+        return (0, function (currencyUnit: DtoCurrencyUnit, amount: string): DtoCurrencyValue {
+            return {
+                currencyUnit, amount
+            };
+        })(this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(), (_a = this.trivialUnitBox.getAmount()) === null || _a === void 0 ? void 0 : _a.value);
     };
     CurrencyField.prototype.onEditingModeChanged = function (editingMode) {
         var _a;
@@ -187,7 +191,11 @@ var CurrencyField = /** @class */ (function (_super) {
         return "<div class=\"static-readonly-DtoCurrencyField\">".concat(content, "</div>");
     };
     CurrencyField.prototype.getDefaultValue = function () {
-        return (0, generated_1.createDtoCurrencyValue)(null, null);
+        return (0, function (currencyUnit: DtoCurrencyUnit, amount: string): DtoCurrencyValue {
+            return {
+                currencyUnit, amount
+            };
+        })(null, null);
     };
     CurrencyField.prototype.setCurrencyUnits = function (currencyUnits) {
         this.config.currencyUnits = currencyUnits;

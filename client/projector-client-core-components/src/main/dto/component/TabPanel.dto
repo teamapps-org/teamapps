@@ -55,9 +55,9 @@ enum TabPanelTabStyle {
 }
 
 class DtoTab {
-	required String tabId;
-	required String icon;
-	required String caption;
+	String tabId;
+	String icon;
+	String caption;
 	boolean closeable;
 	boolean lazyLoading;
 	boolean rightSide; //if true show on the right

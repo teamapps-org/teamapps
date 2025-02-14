@@ -91,7 +91,9 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 		List<Field> uiFields = logicalForm.getFields().values().stream()
 				.collect(Collectors.toList());
 		List<DtoFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();
-		DtoGridForm uiForm = new DtoGridForm(List.copyOf(uiFields), uiLayoutPolicies);
+		DtoGridForm uiForm = new DtoGridForm();
+		uiForm.setFields(List.copyOf(uiFields));
+		uiForm.setLayoutPolicies(uiLayoutPolicies);
 		mapAbstractConfigProperties(uiForm);
 		return uiForm;
 	}

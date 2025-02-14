@@ -70,10 +70,13 @@ public class BadgeElement extends TextElement {
 
 	@Override
 	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
-		DtoBadgeElement uiBadgeElement = new DtoBadgeElement(propertyName, row, column);
+		DtoBadgeElement uiBadgeElement = new DtoBadgeElement();
 		mapAbstractGridTemplateElementAttributesToUiElement(uiBadgeElement);
 		mapTextElementAttributesToUiElement(uiBadgeElement);
 		uiBadgeElement.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
+		uiBadgeElement.setProperty(propertyName);
+		uiBadgeElement.setRow(row);
+		uiBadgeElement.setColumn(column);
 		return uiBadgeElement;
 	}
 

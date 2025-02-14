@@ -173,7 +173,9 @@ public class FormSectionFloatingFieldsPlacement implements FormSectionPlacement 
 		List<DtoFormSectionFloatingField> uiFloatingFields = floatingFields.stream()
 				.map(floatingField -> floatingField.createDtoFormSectionFloatingField())
 				.collect(Collectors.toList());
-		DtoFormSectionFloatingFieldsPlacement placement = new DtoFormSectionFloatingFieldsPlacement(uiFloatingFields)
+
+		return new DtoFormSectionFloatingFieldsPlacement()
+				.setFloatingFields(uiFloatingFields)
 				.setRow(row)
 				.setColumn(column)
 				.setWrap(wrap)
@@ -185,7 +187,5 @@ public class FormSectionFloatingFieldsPlacement implements FormSectionPlacement 
 				.setMaxWidth(maxWidth)
 				.setVerticalAlignment(verticalAlignment)
 				.setHorizontalAlignment(horizontalAlignment);
-
-		return placement;
 	}
 }

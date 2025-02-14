@@ -23,8 +23,8 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 
 abstract class DtoAbstractToolContainer extends DtoComponent {
-	required List<DtoToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
-	required List<DtoToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
+	List<DtoToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
+	List<DtoToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
 	String backgroundColor;
 
 	command setButtonVisible(String groupId, String buttonId, boolean visible);
@@ -57,8 +57,8 @@ class DtoToolAccordion extends DtoAbstractToolContainer {
 }
 
 class DtoToolbarButtonGroup {
-	required String groupId;
-	required List<DtoToolbarButton> buttons;
+	String groupId;
+	List<DtoToolbarButton> buttons;
 	DtoToolbarButtonGroupPosition position;
 	boolean visible;
 	boolean showGroupSeparator; // separator on the RIGHT side!!
@@ -66,11 +66,11 @@ class DtoToolbarButtonGroup {
 }
 
 class DtoToolbarButton {
-	required String buttonId;
+	String buttonId;
 	String debuggingId;
-	required DtoTemplate* template;
+	DtoTemplate* template;
 	boolean visible;
-	required Object recordData;
+	Object recordData;
 	String openNewTabWithUrl; // If this is set, when the user clicks this button, the specified URL is navigated to in a new tab. The button still sends events to the server.
 	DtoComponent* togglesFullScreenOnComponent; // If this is set, this button makes the specified component will enter fullscreen. The button still sends events to the server.
 	DtoComponent* startPlaybackComponent; // If this is set, when the user clicks this button, the play() method of the specified component will be called (if it has such a method).
@@ -82,8 +82,8 @@ class DtoToolbarButton {
 	String hoverBackgroundColor;
 }
 
-@TypeScriptFactory
+
 class DropDownButtonClickInfo {
-	required boolean opening;
-	required boolean contentSet;
+	boolean opening;
+	boolean contentSet;
 }

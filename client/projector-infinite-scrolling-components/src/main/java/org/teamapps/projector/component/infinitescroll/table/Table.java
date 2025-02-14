@@ -226,8 +226,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		List<DtoTableColumn> columns = this.columns.stream()
 				.map(TableColumn::createDtoTableColumn)
 				.collect(Collectors.toList());
-		DtoTable uiTable = new DtoTable(columns);
+		DtoTable uiTable = new DtoTable();
 		mapAbstractConfigProperties(uiTable);
+		uiTable.setColumns(columns);
 		uiTable.setSelectionFrame(selectionFrame != null ? selectionFrame.createDtoSelectionFrame() : null);
 		uiTable.setDisplayStyle(displayStyle.toDto());
 		uiTable.setForceFitWidth(forceFitWidth);

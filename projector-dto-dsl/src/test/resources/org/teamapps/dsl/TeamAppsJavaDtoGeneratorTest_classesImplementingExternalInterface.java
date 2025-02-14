@@ -48,6 +48,8 @@ public class A implements DtoComponentConfig, DtoObject {
 	public A() {
 	}
 
+
+
 	@SuppressWarnings("unchecked")
 	public String toString() {
 		return new StringBuilder(getClass().getSimpleName()).append(": ")

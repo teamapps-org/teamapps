@@ -17,11 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {isEmptyable, Panel, SplitDirection, SplitSizePolicy} from "projector-client-core-components";
+import {getMicrosoftBrowserVersion, isEmptyable, Panel, SplitDirection, SplitSizePolicy, Toolbar} from "projector-client-core-components";
 import {DtoWorkspaceLayoutDndDataTransfer, WorkSpaceLayout} from "./WorkSpaceLayout";
-import {getMicrosoftBrowserVersion} from "projector-client-core-components";
 import {bind, Component, generateUUID, parseHtml} from "projector-client-object-api";
-import {Toolbar} from "projector-client-core-components";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
 import {ItemTree, ItemTreeItem} from "./ItemTree";
@@ -32,9 +30,10 @@ import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {computePosition, size} from "@floating-ui/dom";
 import {
-	createDtoWorkSpaceLayoutSplitItem, createDtoWorkSpaceLayoutViewGroupItem,
-	DtoRelativeWorkSpaceViewPosition, DtoViewGroupPanelState,
+	DtoRelativeWorkSpaceViewPosition,
+	DtoViewGroupPanelState,
 	DtoWorkSpaceLayoutItem,
+	DtoWorkSpaceLayoutSplitItem,
 	DtoWorkSpaceLayoutView,
 	DtoWorkSpaceLayoutViewGroupItem
 } from "./generated";
@@ -65,11 +64,11 @@ export class LocalViewContainer implements ViewContainer {
 	public readonly uuid = generateUUID();
 
 	constructor(private workSpaceLayout: WorkSpaceLayout,
-	            public readonly windowId: string,
-	            viewConfigs: DtoWorkSpaceLayoutView[],
-	            initialLayout: DtoWorkSpaceLayoutItem,
-	            private listener: ViewContainerListener,
-	            multiProgressDisplay: MultiProgressDisplay) {
+				public readonly windowId: string,
+				viewConfigs: DtoWorkSpaceLayoutView[],
+				initialLayout: DtoWorkSpaceLayoutItem,
+				private listener: ViewContainerListener,
+				multiProgressDisplay: MultiProgressDisplay) {
 		this.$mainDiv = parseHtml(`<div class="WorkSpaceLayout">
     <div class="toolbar-container"></div>
     <div class="content-container-wrapper">
@@ -89,7 +88,7 @@ export class LocalViewContainer implements ViewContainer {
 		this.$dndImage = this.$mainDiv.querySelector<HTMLElement>(':scope .dnd-drag-image');
 		this.$minimizedViewsBar = this.$mainDiv.querySelector<HTMLElement>(':scope .minimized-tabpanel-button-container');
 		this.$progressContainer = this.$mainDiv.querySelector<HTMLElement>(':scope .progress-container');
-		
+
 		this.setMultiProgressDisplay(multiProgressDisplay);
 
 		this.$maximizationContainerWrapper = parseHtml(`<div class="WorkSpaceLayout-maximization-container-wrapper"><div class="WorkSpaceLayout-maximization-container"></div></div>`);
@@ -714,16 +713,22 @@ export class LocalViewContainer implements ViewContainer {
 
 	private createLayoutDescriptor(item: ItemTreeItem<Component>): DtoWorkSpaceLayoutItem {
 		if (item instanceof SplitPaneItem) {
-			return createDtoWorkSpaceLayoutSplitItem(item.id, item.splitDirection, this.createLayoutDescriptor(item.firstChild), this.createLayoutDescriptor(item.lastChild), {
+			return {
+				id: item.id,
+				splitDirection: item.splitDirection,
+				firstChild: this.createLayoutDescriptor(item.firstChild),
+				lastChild: this.createLayoutDescriptor(item.lastChild),
 				sizePolicy: item.sizePolicy,
 				referenceChildSize: item.referenceChildSize
-			})
+			} as DtoWorkSpaceLayoutSplitItem;
 		} else if (item instanceof TabPanelItem) {
-			return createDtoWorkSpaceLayoutViewGroupItem(item.id, item.tabs.map(view => view.viewName), {
+			return {
+				id: item.id,
+				viewNames: item.tabs.map(view => view.viewName),
 				selectedViewName: item.component.getSelectedTabId(),
 				panelState: item.state,
 				persistent: item.persistent
-			});
+			} as DtoWorkSpaceLayoutViewGroupItem;
 		}
 	}
 

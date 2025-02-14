@@ -78,30 +78,6 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.toList();
 	}
 
-	default List<PropertyWrapper> getRequiredProperties() {
-		return getProperties().stream()
-				.filter(p -> p.isRequired())
-				.toList();
-	}
-
-	default List<PropertyWrapper> getAllRequiredProperties() {
-		return getAllProperties().stream()
-				.filter(p -> p.isRequired())
-				.toList();
-	}
-
-	default List<PropertyWrapper> getNonRequiredProperties() {
-		return getProperties().stream()
-				.filter(p -> !p.isRequired())
-				.toList();
-	}
-
-	default List<PropertyWrapper> getAllNonRequiredProperties() {
-		return getAllProperties().stream()
-				.filter(p -> !p.isRequired())
-				.toList();
-	}
-
 	default List<PropertyWrapper> getSimplePropertiesSortedByRelevance() {
 		return getAllProperties().stream()
 				.sorted((p1, p2) -> {

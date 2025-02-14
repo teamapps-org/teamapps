@@ -47,6 +47,8 @@ public abstract class A implements DtoObject {
 	public A() {
 	}
 
+
+
 	@SuppressWarnings("unchecked")
 	public String toString() {
 		return new StringBuilder(getClass().getSimpleName()).append(": ")
@@ -66,17 +68,13 @@ public abstract class A implements DtoObject {
 
 		protected String b;
 
-		/**
-		 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-		 */
-		@Deprecated
 		public ACommand() {
-			// default constructor for Jackson
 		}
 
 		public ACommand(String b) {
 			this.b = b;
 		}
+
 
 		@SuppressWarnings("unchecked")
 		public String toString() {

@@ -26,9 +26,9 @@ import org.teamapps.projector.component.core.SplitSizePolicy;
 import org.teamapps.projector.component.core.SplitDirection;
 
 class DtoWorkSpaceLayout extends DtoComponent {
-	required List<DtoWorkSpaceLayoutView> views;
-	required DtoWorkSpaceLayoutItem initialLayout;
-	required String childWindowPageTitle;
+	List<DtoWorkSpaceLayoutView> views;
+	DtoWorkSpaceLayoutItem initialLayout;
+	String childWindowPageTitle;
 	DtoToolbar* toolbar;
 	String newWindowBackgroundImage;
 	String newWindowBlurredBackgroundImage;
@@ -69,10 +69,10 @@ enum DtoViewGroupPanelState {
 }
 
 class DtoWorkSpaceLayoutView {
-	required String viewName;
-	required String tabIcon;
-    required String tabCaption;
-	required DtoComponent* component;
+	String viewName;
+	String tabIcon;
+    String tabCaption;
+	DtoComponent* component;
     boolean tabCloseable;
     boolean lazyLoading;
     boolean visible;
@@ -83,21 +83,21 @@ enum DtoRelativeWorkSpaceViewPosition {
 }
 
 abstract class DtoWorkSpaceLayoutItem {
-	required String id;
+	String id;
 }
 
-@TypeScriptFactory
+
 class DtoWorkSpaceLayoutSplitItem extends DtoWorkSpaceLayoutItem {
-    required SplitDirection splitDirection;
+    SplitDirection splitDirection;
     SplitSizePolicy sizePolicy;
     double referenceChildSize;
-    required DtoWorkSpaceLayoutItem firstChild;
-    required DtoWorkSpaceLayoutItem lastChild;
+    DtoWorkSpaceLayoutItem firstChild;
+    DtoWorkSpaceLayoutItem lastChild;
 }
 
-@TypeScriptFactory
+
 class DtoWorkSpaceLayoutViewGroupItem extends DtoWorkSpaceLayoutItem {
-    required List<String> viewNames;
+    List<String> viewNames;
     String selectedViewName;
     boolean persistent; // if true, this viewGroup will never be removed from the tree of items on the client side, even if there are no more views left inside it.
     DtoViewGroupPanelState panelState;

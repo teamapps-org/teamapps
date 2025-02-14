@@ -59,7 +59,6 @@ class DtoMediaSoupV3WebRtcClient extends DtoComponent {
 	static command enumerateDevices() returns List<DtoMediaDeviceInfo>;
 }
 
-@TypeScriptFactory
 class DtoMediaDeviceInfo {
 	 String deviceId;
 	 String groupId;

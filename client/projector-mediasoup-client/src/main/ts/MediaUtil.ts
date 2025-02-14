@@ -20,11 +20,11 @@
 import {listenStreamEnded, mixStreams} from "./utils";
 import {determineVideoSize, MediaStreamWithMixiSizingInfo, MixSizingInfo} from "./MultiStreamsMixer";
 import {
-	createDtoMediaDeviceInfo,
 	DtoAudioTrackConstraints,
 	DtoMediaDeviceInfo,
 	DtoScreenSharingConstraints,
-	DtoVideoTrackConstraints, MediaDeviceKind,
+	DtoVideoTrackConstraints,
+	MediaDeviceKind,
 	WebRtcPublishingFailureReason
 } from "./generated";
 import vad from "voice-activity-detection";
@@ -58,11 +58,14 @@ export function addVoiceActivityDetection(audioTrack: MediaStreamTrack, onVoiceS
 
 
 export async function retrieveUserMedia(audioConstraints: DtoAudioTrackConstraints, videoConstraints: DtoVideoTrackConstraints, screenSharingConstraints: DtoScreenSharingConstraints,
-                                        streamEndedHandler: (stream: MediaStream, isDisplay: boolean) => void) {
+										streamEndedHandler: (stream: MediaStream, isDisplay: boolean) => void) {
 	let micCamStream: MediaStream = null;
 	try {
 		if (audioConstraints != null || videoConstraints != null) {
-			micCamStream = await window.navigator.mediaDevices.getUserMedia({audio: audioConstraints, video: createVideoConstraints(videoConstraints)}); // rejected if user denies!
+			micCamStream = await window.navigator.mediaDevices.getUserMedia({
+				audio: audioConstraints,
+				video: createVideoConstraints(videoConstraints)
+			}); // rejected if user denies!
 			listenStreamEnded(micCamStream, () => streamEndedHandler(micCamStream, false));
 		}
 	} catch (e) {
@@ -176,7 +179,7 @@ export async function enumerateDevices(): Promise<DtoMediaDeviceInfo[]> {
 	} finally {
 		try {
 			let devices = await navigator.mediaDevices.enumerateDevices();
-			return devices.map((deviceInfo, i) => createDtoMediaDeviceInfo({
+			return devices.map((deviceInfo, i) => ({
 				deviceId: deviceInfo.deviceId,
 				groupId: deviceInfo.groupId,
 				kind: uiMediaDeviceKindByKindString[deviceInfo.kind],

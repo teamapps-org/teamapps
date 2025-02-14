@@ -20,8 +20,6 @@
 
 import {AbstractLegacyComponent, fadeOut, FileUploader, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
-	createDtoChatNewFile,
-	createDtoNewChatMessage,
 	DtoChatInput,
 	DtoChatInput_FileItemClickedEvent,
 	DtoChatInput_FileItemRemovedEvent,
@@ -139,15 +137,15 @@ export class ChatInput extends AbstractLegacyComponent<DtoChatInput> implements 
 		}
 
 		this.onMessageSent.fire({
-			message: createDtoNewChatMessage({
+			message: {
 				text: this.$textInput.value,
 				uploadedFiles: this.uploadItems
 					.filter(item => item.state === UploadState.SUCCESS)
-					.map(item => createDtoChatNewFile({
+					.map(item => ({
 						uploadedFileUuid: item.uploadedFileUuid,
 						fileName: item.file.name
 					}))
-			})
+			}
 		});
 		this.$uploadItems.innerHTML = "";
 		this.uploadItems = [];

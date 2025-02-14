@@ -86,7 +86,14 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 
 	@Override
 	public DtoLocalDate convertServerValueToClientValue(LocalDate localDate) {
-		return localDate != null ? new DtoLocalDate(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth()) : null;
+		if (localDate != null) {
+			DtoLocalDate dtoLocalDate = new DtoLocalDate();
+			dtoLocalDate.setYear(localDate.getYear());
+			dtoLocalDate.setMonth(localDate.getMonthValue());
+			dtoLocalDate.setDay(localDate.getDayOfMonth());
+			return dtoLocalDate;
+		}
+		return null;
 	}
 
 	public boolean isShowDropDownButton() {

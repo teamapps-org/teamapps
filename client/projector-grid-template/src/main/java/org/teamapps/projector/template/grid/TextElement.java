@@ -51,9 +51,12 @@ public class TextElement extends AbstractGridTemplateElement<TextElement> {
 
 	@Override
 	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
-		DtoTextElement uiTextElement = new DtoTextElement(propertyName, row, column);
+		DtoTextElement uiTextElement = new DtoTextElement();
 		mapAbstractGridTemplateElementAttributesToUiElement(uiTextElement);
 		mapTextElementAttributesToUiElement(uiTextElement);
+		uiTextElement.setProperty(propertyName);
+		uiTextElement.setRow(row);
+		uiTextElement.setColumn(column);
 		return uiTextElement;
 	}
 

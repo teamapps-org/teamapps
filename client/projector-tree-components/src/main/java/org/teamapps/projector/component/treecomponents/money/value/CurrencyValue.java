@@ -65,7 +65,10 @@ public class CurrencyValue {
 	}
 
 	public DtoCurrencyValue toUiCurrencyValue(Locale locale) {
-		return new DtoCurrencyValue(currency != null ? currency.toUiCurrencyUnit(locale) : null, amount != null ? amount.toString() : null);
+		DtoCurrencyValue dtoCurrencyValue = new DtoCurrencyValue();
+		dtoCurrencyValue.setCurrencyUnit(currency != null ? currency.toUiCurrencyUnit(locale) : null);
+		dtoCurrencyValue.setAmount(amount != null ? amount.toString() : null);
+		return dtoCurrencyValue;
 	}
 
 	@Override

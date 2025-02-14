@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.template.grid;
 
-import org.teamapps.projector.format.*;
-import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.DtoImageElement;
+import org.teamapps.projector.format.Border;
+import org.teamapps.projector.format.BoxShadow;
+import org.teamapps.projector.format.Spacing;
 
 public class ImageElement extends AbstractGridTemplateElement {
 
@@ -125,8 +125,13 @@ public class ImageElement extends AbstractGridTemplateElement {
 
 	@Override
 	public DtoAbstractGridTemplateElement createDtoTemplateElement() {
-		DtoImageElement uiImageElement = new DtoImageElement(propertyName, row, column, width, height);
+		DtoImageElement uiImageElement = new DtoImageElement();
 		mapAbstractGridTemplateElementAttributesToUiElement(uiImageElement);
+		uiImageElement.setProperty(propertyName);
+		uiImageElement.setRow(row);
+		uiImageElement.setColumn(column);
+		uiImageElement.setWidth(width);
+		uiImageElement.setHeight(height);
 		uiImageElement.setBorder(border != null ? border.createDtoBorder() : null);
 		uiImageElement.setPadding(padding != null ? padding.createDtoSpacing() : null);
 		uiImageElement.setShadow(shadow != null ? shadow.createDtoShadow() : null);

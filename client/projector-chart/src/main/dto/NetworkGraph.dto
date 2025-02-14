@@ -25,9 +25,9 @@ import org.teamapps.projector.record.DtoClientRecord;
 import org.teamapps.projector.component.chart.tree.DtoTreeGraphNodeImage;
 import org.teamapps.projector.component.chart.tree.DtoTreeGraphNodeIcon;
 class DtoNetworkGraph extends DtoComponent{
-	required List<DtoNetworkNode> nodes;
-	required List<DtoNetworkLink> links;
-	required List<DtoNetworkImage> images;
+	List<DtoNetworkNode> nodes;
+	List<DtoNetworkLink> links;
+	List<DtoNetworkImage> images;
 	double gravity;
 	double theta;
 	double alpha;
@@ -52,9 +52,9 @@ class DtoNetworkGraph extends DtoComponent{
 }
 
 class DtoNetworkNode {
-	required String id;
-	required int width;
-	required int height;
+	String id;
+	int width;
+	int height;
 
 	String backgroundColor;
 	String borderColor;
@@ -77,8 +77,8 @@ enum ExpandState {
 }
 
 class DtoNetworkLink {
-	required String source;
-	required String target;
+	String source;
+	String target;
 	String lineColor;
 	double lineWidth;
 	String lineDashArray;
@@ -86,7 +86,7 @@ class DtoNetworkLink {
 }
 
 class DtoNetworkImage {
-	required String imageId;
-	required String image;
+	String imageId;
+	String image;
 }
 

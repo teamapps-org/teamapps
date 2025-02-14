@@ -49,6 +49,11 @@ public class C implements DtoObject {
 	public C() {
 	}
 
+	public C(E e) {
+		this.e = e;
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public String toString() {
 		return new StringBuilder(getClass().getSimpleName()).append(": ")

@@ -186,7 +186,11 @@ var LocalDateField = /** @class */ (function (_super) {
     LocalDateField.prototype.getTransientValue = function () {
         var selectedEntry = this.trivialComboBox.getValue();
         if (selectedEntry) {
-            return (0, generated_1.createDtoLocalDate)(selectedEntry.year, selectedEntry.month, selectedEntry.day);
+            return (0, function (year: number, month: number, day: number): DtoLocalDate {
+                return {
+                    year, month, day
+                };
+            })(selectedEntry.year, selectedEntry.month, selectedEntry.day);
         }
         else {
             return null;

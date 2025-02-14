@@ -1,8 +1,8 @@
 package "projector-client-object-api":org.teamapps.projector.format;
 
 class DtoBoxShadow {
-	required String color;
-	required double blur;
+	String color;
+	double blur;
 	double offsetX;
 	double offsetY;
 	double spread;

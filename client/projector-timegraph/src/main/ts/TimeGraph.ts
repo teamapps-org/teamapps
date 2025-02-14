@@ -19,11 +19,7 @@
  */
 
 import * as d3 from "d3";
-import {Selection} from "d3";
-import {ScaleTime} from "d3";
-import {ZoomBehavior, ZoomedElementBaseType} from "d3";
-import {Axis} from "d3";
-import {BrushBehavior} from "d3";
+import {Axis, BrushBehavior, ScaleTime, Selection, ZoomBehavior, ZoomedElementBaseType} from "d3";
 import {LineGraph} from "./LineGraph";
 import {HoseGraph} from "./HoseGraph";
 import {GraphGroup} from "./GraphGroup";
@@ -36,22 +32,27 @@ import {TimeGraphPopper} from "./TimeGraphPopper";
 import {AbstractGraph} from "./AbstractGraph";
 import {GraphContext, PopperHandle} from "./GraphContext";
 import {
-	AbstractLegacyComponent, bind, debouncedMethod, DebounceMode,
+	AbstractLegacyComponent,
+	bind,
+	debouncedMethod,
+	DebounceMode,
 	executeWhenFirstDisplayed,
 	generateUUID,
 	parseHtml,
-	ServerObjectChannel,
-	ProjectorEvent
+	ProjectorEvent,
+	ServerObjectChannel
 } from "projector-client-object-api";
 import {
-	createDtoLongInterval,
-	DtoGraph, DtoGraphData,
-	DtoLongInterval, DtoTimeChartZoomLevel,
+	DtoGraph,
+	DtoGraphData,
+	DtoLongInterval,
+	DtoTimeChartZoomLevel,
 	DtoTimeGraph,
 	DtoTimeGraph_IntervalSelectedEvent,
 	DtoTimeGraph_ZoomedEvent,
 	DtoTimeGraphCommandHandler,
-	DtoTimeGraphEventSource, LineChartMouseScrollZoomPanMode
+	DtoTimeGraphEventSource,
+	LineChartMouseScrollZoomPanMode
 } from "./generated";
 
 export const yTickFormat = d3.format("-,.2s");
@@ -311,7 +312,9 @@ export class TimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implements 
 				.filter(i => !(i[0] == null || isNaN(i[0]) || i[1] == null || isNaN(i[1]))); // invalid intervals
 
 			if (uncoveredIntervals.length > 0) {
-				uncoveredIntervalsByGraphId[id] = uncoveredIntervals.map(i => createDtoLongInterval(i[0], i[1]));
+				uncoveredIntervalsByGraphId[id] = uncoveredIntervals.map(i => ({
+					min: i[0], max: i[1]
+				}));
 				uncoveredIntervals.forEach(i => graph.markIntervalAsCovered(zoomLevel, i));
 			}
 		}
@@ -321,7 +324,9 @@ export class TimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implements 
 				zoomLevelIndex: zoomLevel,
 				millisecondsPerPixel: this.getMillisecondsPerPixel(),
 				neededIntervalsByGraphId: uncoveredIntervalsByGraphId,
-				displayedInterval: createDtoLongInterval(domain[0], domain[1])
+				displayedInterval: {
+					min: domain[0], max: domain[1]
+				}
 			});
 		}
 
@@ -384,7 +389,9 @@ export class TimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implements 
 		}
 		let brushSelection = d3.brushSelection(this.$brush.node());
 		if (brushSelection != null) {
-			this.xSelection = createDtoLongInterval(+transformedScaleX.invert(brushSelection[0] as number), +transformedScaleX.invert(brushSelection[1] as number));
+			this.xSelection = {
+				min: +transformedScaleX.invert(brushSelection[0] as number), max: +transformedScaleX.invert(brushSelection[1] as number)
+			};
 			this.onIntervalSelected.fire({
 				intervalX: this.xSelection
 			});
@@ -496,7 +503,9 @@ export class TimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implements 
 		let currentZoomLevel = this.getCurrentZoomLevel();
 		this.onZoomed.fire({
 			millisecondsPerPixel: this.getMillisecondsPerPixel(),
-			displayedInterval: createDtoLongInterval(+domain[0], +domain[1]),
+			displayedInterval: {
+				min: +domain[0], max: +domain[1]
+			},
 			zoomLevelIndex: currentZoomLevel,
 			neededIntervalsByGraphId: null
 		});

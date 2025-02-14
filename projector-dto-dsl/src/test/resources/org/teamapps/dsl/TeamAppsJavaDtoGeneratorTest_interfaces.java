@@ -43,6 +43,7 @@ public interface A extends DtoObject {
 
 	public String getA();
 	public String getB();
+	public A setA(String a);
 	public A setB(String b);
 
     public static class YEventWrapper extends JsonWrapper {
@@ -90,17 +91,13 @@ public interface A extends DtoObject {
 
 		protected String x;
 
-		/**
-		 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-		 */
-		@Deprecated
 		public XCommand() {
-			// default constructor for Jackson
 		}
 
 		public XCommand(String x) {
 			this.x = x;
 		}
+
 
 		@SuppressWarnings("unchecked")
 		public String toString() {
@@ -129,17 +126,13 @@ public interface A extends DtoObject {
 
 		protected String x2;
 
-		/**
-		 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-		 */
-		@Deprecated
 		public X2Command() {
-			// default constructor for Jackson
 		}
 
 		public X2Command(String x2) {
 			this.x2 = x2;
 		}
+
 
 		@SuppressWarnings("unchecked")
 		public String toString() {

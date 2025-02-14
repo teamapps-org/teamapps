@@ -58,7 +58,7 @@ enum TrackLabelFormat {
 }
 
 class DtoShakaManifest {
-    required List<DtoShakaManifestVariant> variants;
+    List<DtoShakaManifestVariant> variants;
 }
 
 class DtoShakaManifestVariant {

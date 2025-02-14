@@ -73,8 +73,9 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 	}
 
 	public DtoItemViewItemGroup createDtoItemViewItemGroup() {
-		DtoItemViewItemGroup itemGroup = new DtoItemViewItemGroup(itemTemplate != null ? itemTemplate : null);
+		DtoItemViewItemGroup itemGroup = new DtoItemViewItemGroup();
 		itemGroup.setId(clientId);
+		itemGroup.setItemTemplate(itemTemplate != null ? itemTemplate : null);
 		if (headerRecord != null) {
 			itemGroup.setHeaderData(container.createHeaderClientRecord(headerRecord));
 		}

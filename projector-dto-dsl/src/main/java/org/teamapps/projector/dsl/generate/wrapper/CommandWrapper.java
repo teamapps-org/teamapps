@@ -44,15 +44,11 @@ public class CommandWrapper {
 		return model.getDeclaringClassOrInterface(context);
 	}
 
+	public List<FormalParameterWrapper> getProperties() {
+		return getParameters();
+	}
+
 	public List<FormalParameterWrapper> getAllProperties() {
-		return getParameters();
-	}
-
-	public List<FormalParameterWrapper> getAllRequiredProperties() {
-		return getParameters();
-	}
-
-	public List<FormalParameterWrapper> getRequiredPropertiesNotImplementedBySuperClasses() {
 		return getParameters();
 	}
 

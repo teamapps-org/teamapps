@@ -19,18 +19,20 @@
  */
 
 import {
-	AbstractLegacyComponent, applyCss,
+	AbstractLegacyComponent,
+	applyCss,
 	executeWhenFirstDisplayed,
 	parseHtml,
-	ServerObjectChannel,
-	ProjectorEvent
+	ProjectorEvent,
+	ServerObjectChannel
 } from "projector-client-object-api";
 import {
-	createImageCropperSelection,
 	DtoImageCropper,
 	DtoImageCropper_SelectionChangedEvent,
 	DtoImageCropperCommandHandler,
-	DtoImageCropperEventSource, ImageCropperSelection, ImageCropperSelectionMode
+	DtoImageCropperEventSource,
+	ImageCropperSelection,
+	ImageCropperSelectionMode
 } from "./generated";
 import {applyDisplayMode, Direction, draggable} from "projector-client-core-components";
 
@@ -155,7 +157,9 @@ export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> imple
 
 	private resetSelectionFrame(aspectRatio: number) {
 		if (this.imageNaturalWidth != null) {
-			this.selection = createImageCropperSelection(0, 0, 0, 0);
+			this.selection = {
+				left: 0, top: 0, width: 0, height: 0
+			};
 			let naturalImageAspectRatio = this.imageNaturalWidth / this.imageNaturalHeight;
 			if (aspectRatio === 0) {
 				this.selection.width = 0.8 * this.imageNaturalWidth;
@@ -174,7 +178,9 @@ export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> imple
 			this.selection = this.boundSelection(this.selection);
 			this.updateCroppingFramePosition(this.selection);
 			this.onSelectionChanged.fire({
-				selection: createImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
+				selection: {
+					left: this.selection.left, top: this.selection.top, width: this.selection.width, height: this.selection.height
+				}
 			});
 		}
 	}
@@ -187,7 +193,9 @@ export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> imple
 		this.selection = selection;
 		console.debug("selection: ", this.selection);
 		this.onSelectionChanged.fire({
-			selection: createImageCropperSelection(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
+			selection: {
+				left: this.selection.left, top: this.selection.top, width: this.selection.width, height: this.selection.height
+			}
 		});
 	}
 
@@ -259,15 +267,15 @@ export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> imple
 	}
 
 
-	private frameRectToSelection(frameSelectionPos: Rect) {
+	private frameRectToSelection(frameSelectionPos: Rect): Selection {
 		let correctionFactor = this.calculateCoordinateCorrectionFactor();
 		// let correctionOffsetX =
-		return createImageCropperSelection(
-			(frameSelectionPos.x - this.htmlImageElement.offsetLeft) * correctionFactor,
-			(frameSelectionPos.y - this.htmlImageElement.offsetTop) * correctionFactor,
-			frameSelectionPos.width * correctionFactor,
-			frameSelectionPos.height * correctionFactor
-		);
+		return {
+			left: (frameSelectionPos.x - this.htmlImageElement.offsetLeft) * correctionFactor,
+			top: (frameSelectionPos.y - this.htmlImageElement.offsetTop) * correctionFactor,
+			width: frameSelectionPos.width * correctionFactor,
+			height: frameSelectionPos.height * correctionFactor
+		};
 	}
 
 	private selectionToFrameRect(selection: Selection): Rect {
@@ -287,11 +295,11 @@ export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> imple
 }
 
 export function boundSelection(
-	selection: { left: number, top: number, width: number, height: number },
+	selection: Selection,
 	bounds: { width: number, height: number },
 	aspectRatio?: number,
 	fixedAt?: Direction
-) {
+): Selection {
 	let newSelection = {...selection};
 
 	if (fixedAt == null) {

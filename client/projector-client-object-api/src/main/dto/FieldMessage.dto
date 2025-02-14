@@ -22,10 +22,10 @@ package "projector-client-object-api":org.teamapps.projector.component.field;
 import org.teamapps.projector.component.DtoComponent;
 
 class DtoFieldMessage {
-	required FieldMessageSeverity severity;
-	required String message;
-	required FieldMessagePosition position;
-	required FieldMessageVisibility visibilityMode;
+	FieldMessageSeverity severity;
+	String message;
+	FieldMessagePosition position;
+	FieldMessageVisibility visibilityMode;
 }
 
 enum FieldMessageSeverity {

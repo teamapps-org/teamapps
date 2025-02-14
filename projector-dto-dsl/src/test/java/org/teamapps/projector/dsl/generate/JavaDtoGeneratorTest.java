@@ -34,7 +34,7 @@ public class JavaDtoGeneratorTest {
 				"package \"x\":org.teamapps.projector.dto222; " +
 				"import org.teamapps.projector.dto.blah.DtoComponent; " +
 				"class A { "
-				+ " required String aasdf; "
+				+ " String aasdf; "
 				+ " String b; "
 				+ " int i; "
 				+ " List<Long> c; "
@@ -49,7 +49,7 @@ public class JavaDtoGeneratorTest {
 		executeClassTest(
 				"package \"x\":org.teamapps.projector.dto; class A {}"
 				+ "interface B { String bProperty; }"
-				+ "interface C { required List<Integer> cProperty; }"
+				+ "interface C { List<Integer> cProperty; }"
 				+ "class D extends A implements B, C {}",
 				"org.teamapps.projector.dto.D",
 				"org/teamapps/dsl/TeamAppsJavaDtoGeneratorTest_classesImplementTheirInterfaces.java"
@@ -72,7 +72,7 @@ public class JavaDtoGeneratorTest {
 	public void doubleInheritedInterfaceProperties() throws Exception {
 		executeClassTest(
 				"package \"x\":org.teamapps.projector.dto; interface B { String bProperty; }"
-				+ "interface C { required List<Integer> cProperty; }"
+				+ "interface C { List<Integer> cProperty; }"
 				+ "class A implements B {} "
 				+ "class D extends A implements B, C {}",
 				"org.teamapps.projector.dto.D",
@@ -85,7 +85,7 @@ public class JavaDtoGeneratorTest {
 		executeInterfaceTest(
 				"package \"x\":org.teamapps.projector.dto; " +
 				"interface A { "
-				+ " required String a;"
+				+ " String a;"
 				+ " String b;"
 				+ " command x(String x);"
 				+ " command x2(String x2) returns boolean;"

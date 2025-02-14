@@ -25,15 +25,15 @@ import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 class DtoFileField extends DtoAbstractField {
-	required DtoTemplate* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
+	DtoTemplate* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
 	long maxBytesPerFile;
 	String uploadUrl; // May point anywhere.
 	String fileTooLargeMessage;
 	String uploadErrorMessage;
 	FileFieldDisplayType displayType;
 	int maxFiles; // the max number of files to be uploaded in total for this field
-	required DtoTemplate* uploadButtonTemplate;
-	required Object uploadButtonData;
+	DtoTemplate* uploadButtonTemplate;
+	Object uploadButtonData;
 	boolean showEntriesAsButtonsOnHover;
 
     event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
@@ -96,7 +96,7 @@ class DtoSimpleFileField extends DtoAbstractField {
 	command setDisplayMode(FileFieldDisplayType displayType);
 }
 
-@TypeScriptFactory
+
 class DtoFileItem {
 	String uuid;
 	String icon;

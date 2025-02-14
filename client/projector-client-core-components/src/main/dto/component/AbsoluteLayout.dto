@@ -28,18 +28,18 @@ class DtoAbsoluteLayout extends DtoComponent {
 }
 
 class DtoAbsolutePositionedComponent {
-	required DtoComponent* component;
-	required DtoAbsolutePositioning position;
+	DtoComponent* component;
+	DtoAbsolutePositioning position;
 }
 
 class DtoAbsolutePositioning {
-	required String topCss;
-	required String rightCss;
-	required String bottomCss;
-	required String leftCss;
-	required String widthCss;
-	required String heightCss;
-	required int zIndex;
+	String topCss;
+	String rightCss;
+	String bottomCss;
+	String leftCss;
+	String widthCss;
+	String heightCss;
+	int zIndex;
 }
 
 enum DtoAnimationEasing {

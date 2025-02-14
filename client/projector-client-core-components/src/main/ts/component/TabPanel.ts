@@ -43,7 +43,6 @@ import {DtoTab as DtoTab} from "../generated/DtoTab";
 import {Emptyable, isEmptyable} from "../util/Emptyable";
 import {ToolButton} from "./ToolButton";
 import {
-	createDtoToolButton,
 	DtoTabPanel,
 	DtoTabPanel_TabClosedEvent,
 	DtoTabPanel_TabNeedsRefreshEvent,
@@ -83,9 +82,9 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	public readonly onWindowButtonClicked: ProjectorEvent<DtoTabPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton(createDtoToolButton(ICON_MINIMIZE, "Minimize", {iconSize: 16}), noOpServerObjectChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton(createDtoToolButton(ICON_MAXIMIZE, "Maximize/Restore", {iconSize: 16}), noOpServerObjectChannel),
-		[WindowButtonType.CLOSE]: new ToolButton(createDtoToolButton(ICON_CLOSE, "Close", {iconSize: 16}), noOpServerObjectChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton({icon: ICON_MINIMIZE, popoverText: "Minimize", iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton({icon: ICON_MAXIMIZE, popoverText: "Maximize/Restore", iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonType.CLOSE]: new ToolButton({icon: ICON_CLOSE, popoverText: "Close", iconSize: 16}, noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		WindowButtonType.MINIMIZE,

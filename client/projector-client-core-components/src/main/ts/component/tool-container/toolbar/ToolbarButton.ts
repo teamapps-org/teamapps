@@ -32,7 +32,7 @@ import {
 } from "projector-client-object-api";
 import {Toolbar} from "./Toolbar";
 import {AbstractToolContainer} from "../AbstractToolContainer";
-import {createDropDownButtonClickInfo, DropDownButtonClickInfo} from "../../../generated";
+import {DropDownButtonClickInfo} from "../../../generated";
 
 export class ToolbarButton {
 
@@ -91,7 +91,10 @@ export class ToolbarButton {
 				if (this.dropDown == null) {
 					this.dropDown = new DropDown(this.dropDownComponent?.getMainElement());
 				}
-				dropdownClickInfo = createDropDownButtonClickInfo(!this.dropDown.isOpen, this.dropDownComponent != null);
+				dropdownClickInfo = {
+					opening: !this.dropDown.isOpen,
+					contentSet: this.dropDownComponent != null
+				};
 				if (!this.dropDown.isOpen) {
 					this.dropDown.setContentComponent(this.dropDownComponent?.getMainElement());
 					this.dropDown.open({$reference: this.$buttonWrapper, width: config.dropDownPanelWidth});

@@ -34,7 +34,9 @@ public class NamedDataPoint {
 	}
 
 	public DtoChartNamedDataPoint createDtoChartNamedDataPoint() {
-		DtoChartNamedDataPoint ui = new DtoChartNamedDataPoint(name, value);
+		DtoChartNamedDataPoint ui = new DtoChartNamedDataPoint();
+		ui.setName(name);
+		ui.setY(value);
 		ui.setColor(color != null ? color.toHtmlColorString() : null);
 		return ui;
 	}

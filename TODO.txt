@@ -1,11 +1,8 @@
 Check if specialized Components (like SimpleCalendar) work
 
-check if queries actually work
-TeamAppsUndertowEmbeddedServer
-get rid of required keyword in dto dsl
-
 remove unused stuff from Common.ts
 
+DTO: rename id properties named as [className]Id to just id.
 
 requirements for the maven plugin:
 * copy DTO files to JAR

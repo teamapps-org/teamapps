@@ -22,9 +22,9 @@ package "projector-file-field":org.teamapps.projector.component.filefield.imagec
 import org.teamapps.projector.component.DtoComponent;
 
 class DtoImageCropper extends DtoComponent {
-	required String imageUrl;
-	required ImageCropperSelectionMode selectionMode;
-	required double aspectRatio; // width/height; 0 = no aspect ratio constraint!
+	String imageUrl;
+	ImageCropperSelectionMode selectionMode;
+	double aspectRatio; // width/height; 0 = no aspect ratio constraint!
 	ImageCropperSelection selection;
 
 	command setImageUrl(String imageUrl);
@@ -39,10 +39,10 @@ enum ImageCropperSelectionMode {
 	RECTANGLE, ROUND
 }
 
-@TypeScriptFactory
+
 class ImageCropperSelection {
-	required int left;
-	required int top;
-	required int width;
-	required int height;
+	int left;
+	int top;
+	int width;
+	int height;
 }

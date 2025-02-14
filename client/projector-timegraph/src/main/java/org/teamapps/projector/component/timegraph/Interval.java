@@ -59,7 +59,10 @@ public class Interval {
 	}
 
 	public DtoLongInterval toUiLongInterval() {
-		return new DtoLongInterval(min, max);
+		DtoLongInterval interval = new DtoLongInterval();
+		interval.setMin(min);
+		interval.setMax(max);
+		return interval;
 	}
 
 	@Override

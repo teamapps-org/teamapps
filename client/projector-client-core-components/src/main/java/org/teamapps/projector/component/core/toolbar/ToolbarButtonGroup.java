@@ -101,10 +101,12 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 	}
 
 	public DtoToolbarButtonGroup createDtoToolbarButtonGroup() {
-		List<DtoToolbarButton> buttons = this.buttons.stream()
+		List<DtoToolbarButton> dtoButtons = this.buttons.stream()
 				.map(button -> button.createDtoToolbarButton())
 				.collect(Collectors.toList());
-		DtoToolbarButtonGroup buttonGroup = new DtoToolbarButtonGroup(clientId, buttons);
+		DtoToolbarButtonGroup buttonGroup = new DtoToolbarButtonGroup();
+		buttonGroup.setGroupId(clientId);
+		buttonGroup.setButtons(dtoButtons);
 		buttonGroup.setVisible(visible);
 		buttonGroup.setShowGroupSeparator(showGroupSeparator);
 		return buttonGroup;

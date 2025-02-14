@@ -78,7 +78,9 @@ public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 		List<String> viewNames = getAllViews().stream()
 				.map(WorkSpaceLayoutView::getId)
 				.collect(Collectors.toList());
-		DtoWorkSpaceLayoutViewGroupItem item = new DtoWorkSpaceLayoutViewGroupItem(getId(), viewNames);
+		DtoWorkSpaceLayoutViewGroupItem item = new DtoWorkSpaceLayoutViewGroupItem();
+		item.setId(getId());
+		item.setViewNames(viewNames);
 		item.setSelectedViewName(selectedView != null ? selectedView.getId() : null);
 		item.setPanelState(panelState.toUiViewGroupPanelState());
 		item.setPersistent(persistent);

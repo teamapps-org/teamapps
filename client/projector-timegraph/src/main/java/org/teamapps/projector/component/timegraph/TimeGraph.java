@@ -121,11 +121,11 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 			Disposable disposable = graph.getModel().onDataChanged().addListener(aVoid -> handleGraphDataChanged(graph));
 			this.graphsAndListeners.add(new GraphListenInfo(graph, disposable));
 		});
-		clientObjectChannel.setGraphs(toUiLineFormats(graphs));
+		clientObjectChannel.setGraphs(toDtoGraphs(graphs));
 		refresh();
 	}
 
-	private List<DtoGraph> toUiLineFormats(List<? extends AbstractGraph<?, ?>> lineFormats) {
+	private List<DtoGraph> toDtoGraphs(List<? extends AbstractGraph<?, ?>> lineFormats) {
 		return lineFormats.stream()
 				.map(AbstractGraph::createDtoFormat)
 				.collect(Collectors.toList());
@@ -140,12 +140,11 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 		this.displayedInterval = domainX;
 		DtoLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
 
-		DtoTimeGraph uiTimeGraph = new DtoTimeGraph(
-				uiIntervalX,
-				uiZoomLevels,
-				maxPixelsBetweenDataPoints,
-				toUiLineFormats(getGraphs())
-		);
+		DtoTimeGraph uiTimeGraph = new DtoTimeGraph();
+		uiTimeGraph.setIntervalX(uiIntervalX);
+		uiTimeGraph.setZoomLevels(uiZoomLevels);
+		uiTimeGraph.setMaxPixelsBetweenDataPoints(maxPixelsBetweenDataPoints);
+		uiTimeGraph.setGraphs(toDtoGraphs(getGraphs()));
 		uiTimeGraph.setLocale(locale.toLanguageTag());
 		uiTimeGraph.setTimeZoneId(timeZoneId.getId());
 		mapAbstractConfigProperties(uiTimeGraph);

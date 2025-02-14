@@ -124,7 +124,11 @@ public class WorkSpaceLayoutView {
 			title = panel.getTitle();
 		}
 
-		DtoWorkSpaceLayoutView view = new DtoWorkSpaceLayoutView(getId(), icon, title, lazyLoading ? null : panel);
+		DtoWorkSpaceLayoutView view = new DtoWorkSpaceLayoutView();
+		view.setViewName(getId());
+		view.setTabIcon(icon);
+		view.setTabCaption(title);
+		view.setComponent(lazyLoading ? null : panel);
 		view.setTabCloseable(closeable);
 		view.setLazyLoading(lazyLoading);
 		view.setVisible(visible);

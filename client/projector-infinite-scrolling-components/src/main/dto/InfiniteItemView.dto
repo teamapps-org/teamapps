@@ -27,7 +27,7 @@ import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.component.infinitescroll.DtoAbstractInfiniteListComponent;
 
 class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
-	required DtoTemplate* itemTemplate;
+	DtoTemplate* itemTemplate;
 
 	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width
 	double itemHeight;
@@ -60,8 +60,8 @@ class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
 	event contextMenuRequested(int requestId, int recordId);
 }
 
-@TypeScriptFactory
+
 class DtoInfiniteItemViewDataRequest {
-	required int startIndex;
-	required int length;
+	int startIndex;
+	int length;
 }

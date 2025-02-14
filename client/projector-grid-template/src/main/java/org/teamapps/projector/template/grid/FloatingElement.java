@@ -21,8 +21,6 @@ package org.teamapps.projector.template.grid;
 
 import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.JustifyContent;
-import org.teamapps.projector.template.grid.DtoAbstractGridTemplateElement;
-import org.teamapps.projector.template.grid.DtoFloatingElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,11 @@ public class FloatingElement extends AbstractGridTemplateElement<FloatingElement
 		List<DtoAbstractGridTemplateElement> uiElements = elements.stream()
 				.map(element -> element != null ? element.createDtoTemplateElement() : null)
 				.collect(Collectors.toList());
-		DtoFloatingElement uiFloatingElement = new DtoFloatingElement(propertyName, row, column, uiElements);
+		DtoFloatingElement uiFloatingElement = new DtoFloatingElement();
+		uiFloatingElement.setElements(uiElements);
+		uiFloatingElement.setProperty(propertyName);
+		uiFloatingElement.setRow(row);
+		uiFloatingElement.setColumn(column);
 		mapAbstractGridTemplateElementAttributesToUiElement(uiFloatingElement);
 		uiFloatingElement.setWrap(wrap);
 		uiFloatingElement.setAlignItems(alignItems != null ? AlignItems.valueOf(alignItems.name()) : null);

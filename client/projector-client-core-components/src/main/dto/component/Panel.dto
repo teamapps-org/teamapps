@@ -55,7 +55,7 @@ enum HeaderFieldIconVisibilityPolicy {
 }
 
 class DtoPanelHeaderField {
-	required DtoAbstractField* field;
+	DtoAbstractField* field;
 	String icon;
 	int minWidth;
 	int maxWidth;

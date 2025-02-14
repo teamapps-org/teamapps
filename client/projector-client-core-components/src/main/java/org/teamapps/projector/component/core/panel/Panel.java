@@ -147,7 +147,8 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		if (field == null) {
 			return null;
 		}
-		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField(field);
+		DtoPanelHeaderField uiPanelHeaderField = new DtoPanelHeaderField();
+		uiPanelHeaderField.setField(field);
 		uiPanelHeaderField.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanelHeaderField.setMinWidth(minWidth);
 		uiPanelHeaderField.setMaxWidth(maxWidth);

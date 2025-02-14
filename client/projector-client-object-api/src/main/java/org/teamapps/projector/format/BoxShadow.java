@@ -63,7 +63,9 @@ public class BoxShadow {
 	}
 
 	public DtoBoxShadow createDtoShadow() {
-		return new DtoBoxShadow(color != null ? color.toHtmlColorString() : null, blur)
+		return new DtoBoxShadow()
+				.setColor(color != null ? color.toHtmlColorString() : null)
+				.setBlur(blur)
 				.setOffsetX(offsetX)
 				.setOffsetY(offsetY)
 				.setSpread(spread);

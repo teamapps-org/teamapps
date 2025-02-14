@@ -19,13 +19,10 @@
  */
 import {defaultListQueryFunctionFactory, isModifierKey, QueryFunction} from "./trivial-components/TrivialCore";
 import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "./trivial-components/TrivialUnitBox";
+import {AbstractField, BigDecimal, DebounceMode, deepEquals, FieldEditingMode, ProjectorEvent} from "projector-client-object-api";
 import {
-	AbstractField,
-	BigDecimal, FieldEditingMode, ProjectorEvent, DebounceMode, deepEquals
-} from "projector-client-object-api";
-import {
-	createDtoCurrencyValue, DtoComboBox_TextInputEvent,
-	DtoCurrencyField, DtoCurrencyField_TextInputEvent,
+	DtoCurrencyField,
+	DtoCurrencyField_TextInputEvent,
 	DtoCurrencyFieldCommandHandler,
 	DtoCurrencyFieldEventSource,
 	DtoCurrencyUnit,
@@ -146,7 +143,10 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 
 	getTransientValue(): DtoCurrencyValue {
 		let amount = this.trivialUnitBox.getAmount();
-		return createDtoCurrencyValue(this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(), this.trivialUnitBox.getAmount()?.value);
+		return {
+			currencyUnit: this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(),
+			amount: this.trivialUnitBox.getAmount()?.value
+		};
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
@@ -179,7 +179,9 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 	}
 
 	getDefaultValue() {
-		return createDtoCurrencyValue(null, null);
+		return {
+			currencyUnit: null, amount: null
+		};
 	}
 
 	setCurrencyUnits(currencyUnits: DtoCurrencyUnit[]): void {

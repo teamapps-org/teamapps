@@ -23,34 +23,32 @@ import {
 	AbstractLegacyComponent,
 	DeferredExecutor,
 	parseHtml,
-	ServerObjectChannel,
 	ProjectorEvent,
+	ServerObjectChannel,
 	Template
 } from "projector-client-object-api";
 import {
-	createArea,
-	createLocation,
 	DtoAbstractMapShape,
-	DtoMapView,
-	Location,
+	DtoAbstractMapShapeChange,
+	DtoHeatMapData,
 	DtoMapCircle,
+	DtoMapMarkerClientRecord,
+	DtoMapMarkerCluster,
 	DtoMapPolygon,
 	DtoMapPolyline,
 	DtoMapRectangle,
-	DtoAbstractMapShapeChange,
-	DtoPolylineAppend,
-	DtoMapMarkerCluster,
-	DtoMapMarkerClientRecord,
-	DtoHeatMapData,
-	DtoShapeProperties,
-	ShapeType,
+	DtoMapView,
+	DtoMapView_LocationChangedEvent,
+	DtoMapView_MapClickedEvent,
+	DtoMapView_MarkerClickedEvent,
+	DtoMapView_ShapeDrawnEvent,
+	DtoMapView_ZoomLevelChangedEvent,
 	DtoMapViewCommandHandler,
 	DtoMapViewEventSource,
-	DtoMapView_ZoomLevelChangedEvent,
-	DtoMapView_ShapeDrawnEvent,
-	DtoMapView_MarkerClickedEvent,
-	DtoMapView_MapClickedEvent,
-	DtoMapView_LocationChangedEvent
+	DtoPolylineAppend,
+	DtoShapeProperties,
+	Location,
+	ShapeType
 } from "./generated";
 import mapboxgl, {GeoJSONSource, LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
 import {Feature, Point, Position} from "geojson";
@@ -115,12 +113,23 @@ export class MapView extends AbstractLegacyComponent<DtoMapView> implements DtoM
 			let center = this.map.getCenter();
 			let bounds = this.map.getBounds();
 			this.onLocationChanged.fire({
-				center: createLocation(center.lat, center.lng),
-				displayedArea: createArea(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
+				center: {
+					latitude: center.lat, longitude: center.lng
+				},
+				displayedArea: {
+					minLatitude: bounds.getNorth(),
+					maxLatitude: bounds.getSouth(),
+					minLongitude: bounds.getWest(),
+					maxLongitude: bounds.getEast()
+				}
 			});
 		})
 		this.map.on("click", ev => {
-			this.onMapClicked.fire({location: createLocation(ev.lngLat.lat, ev.lngLat.lng)})
+			this.onMapClicked.fire({
+				location: {
+					latitude: ev.lngLat.lat, longitude: ev.lngLat.lng
+				}
+			})
 		})
 
 		Object.keys(config.shapes).forEach(shapeId => {

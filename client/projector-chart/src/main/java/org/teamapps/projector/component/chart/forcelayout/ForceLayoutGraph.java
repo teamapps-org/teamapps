@@ -79,7 +79,10 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent implements DtoNe
 	public DtoComponent createDto() {
 		List<DtoNetworkNode> nodes = createDtoNodes(this.nodes);
 		List<DtoNetworkLink> links = createDtoLinks(this.links);
-		DtoNetworkGraph ui = new DtoNetworkGraph(nodes, links, Collections.emptyList());
+		DtoNetworkGraph ui = new DtoNetworkGraph();
+		ui.setNodes(nodes);
+		ui.setLinks(links);
+		ui.setImages(List.of());
 		ui.setAnimationDuration(animationDuration);
 		mapAbstractConfigProperties(ui);
 		return ui;
@@ -98,7 +101,10 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent implements DtoNe
 	}
 
 	private DtoNetworkNode createDtoNode(ForceLayoutNode<RECORD> node) {
-		DtoNetworkNode uiNode = new DtoNetworkNode(node.getId(), node.getWidth(), node.getHeight());
+		DtoNetworkNode uiNode = new DtoNetworkNode();
+		uiNode.setId(node.getId());
+		uiNode.setWidth(node.getWidth());
+		uiNode.setHeight(node.getHeight());
 		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? node.getBackgroundColor().toHtmlColorString() : null);
 		uiNode.setBorderColor(node.getBorderColor() != null ? node.getBorderColor().toHtmlColorString() : null);
 		uiNode.setBorderWidth(node.getBorderWidth());

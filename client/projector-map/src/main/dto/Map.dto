@@ -66,18 +66,18 @@ class DtoMapView extends DtoComponent {
 }
 
 
-@TypeScriptFactory
+
 class Location {
-	required double latitude;
-	required double longitude;
+	double latitude;
+	double longitude;
 }
 
-@TypeScriptFactory
+
 class Area {
-	required double minLatitude;
-	required double maxLatitude;
-	required double minLongitude;
-	required double maxLongitude;
+	double minLatitude;
+	double maxLatitude;
+	double minLongitude;
+	double maxLongitude;
 }
 
 class DtoMapMarkerClientRecord extends DtoIdentifiableClientRecord {
@@ -101,20 +101,20 @@ enum MarkerAnchorType {
 }
 
 class DtoMapMarkerCluster {
-	required List<DtoMapMarkerClientRecord> markers;
+	List<DtoMapMarkerClientRecord> markers;
 }
 
 class DtoHeatMapData {
-	required List<DtoHeatMapDataElement> elements;
+	List<DtoHeatMapDataElement> elements;
 	int maxCount;
 	int radius;
 	int blur;
 }
 
 class DtoHeatMapDataElement {
-	required double latitude;
-	required double longitude;
-	required int count;
+	double latitude;
+	double longitude;
+	int count;
 }
 
 enum ShapeType {
@@ -147,7 +147,7 @@ class DtoMapPolyline extends DtoAbstractMapShape {
 
 
 class DtoPolylineAppend extends DtoAbstractMapShapeChange {
-    required List<Location> appendedPath;
+    List<Location> appendedPath;
 }
 
 class DtoMapRectangle extends DtoAbstractMapShape {

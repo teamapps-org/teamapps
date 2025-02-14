@@ -52,7 +52,8 @@ public class SizingPolicy {
 	}
 
 	public DtoSizingPolicy createDtoSizingPolicy() {
-		return new DtoSizingPolicy(type)
+		return new DtoSizingPolicy()
+				.setType(type)
 				.setValue(value)
 				.setMinAbsoluteSize(minAbsoluteSize);
 	}

@@ -23,10 +23,10 @@ import org.teamapps.projector.component.DtoComponent;
 
 class DtoTimeGraph extends DtoComponent {
 	LineChartYScaleZoomMode yScaleZoomMode;
-	required DtoLongInterval intervalX;
-	required List<DtoTimeChartZoomLevel> zoomLevels;
-	required int maxPixelsBetweenDataPoints;  // ... before switching to higher zoom level
-	required List<DtoGraph> graphs;
+	DtoLongInterval intervalX;
+	List<DtoTimeChartZoomLevel> zoomLevels;
+	int maxPixelsBetweenDataPoints;  // ... before switching to higher zoom level
+	List<DtoGraph> graphs;
 	ScaleType yScaleType;
 	LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode;
 	String locale;
@@ -62,7 +62,7 @@ enum LineChartMouseScrollZoomPanMode {
 }
 
 class DtoTimeChartZoomLevel {
-	required long approximateMillisecondsPerDataPoint;
+	long approximateMillisecondsPerDataPoint;
 }
 
 // ==== GRAPHS
@@ -111,40 +111,40 @@ class DtoGraphGroup implements DtoGraph {
 // ==== DATA
 
 interface DtoGraphData {
-     required DtoLongInterval interval;
+     DtoLongInterval interval;
 }
 class DtoLineGraphData implements DtoGraphData {
-    required List<DtoLineGraphDataPoint> dataPoints;
+    List<DtoLineGraphDataPoint> dataPoints;
 }
 class DtoLineGraphDataPoint {
 	required double x;
 	required double y;
 }
 class DtoIncidentGraphData implements DtoGraphData {
-    required List<DtoIncidentGraphDataPoint> dataPoints;
+    List<DtoIncidentGraphDataPoint> dataPoints;
 }
 class DtoIncidentGraphDataPoint {
-    required double x1;
-	required double x2;
-	required double y;
-	required String color;
-	required String tooltipHtml;
+    double x1;
+	double x2;
+	double y;
+	String color;
+	String tooltipHtml;
 }
 class DtoHoseGraphData implements DtoGraphData {
-    required DtoLineGraphData lowerLineData;
-    required DtoLineGraphData middleLineData;
-    required DtoLineGraphData upperLineData;
+    DtoLineGraphData lowerLineData;
+    DtoLineGraphData middleLineData;
+    DtoLineGraphData upperLineData;
 }
 class DtoGraphGroupData implements DtoGraphData {
-    required Dictionary<DtoGraphData> graphDataByGraphId;
+    Dictionary<DtoGraphData> graphDataByGraphId;
 }
 
 
 
-@TypeScriptFactory
+
 class DtoLongInterval {
- 	required long min;
- 	required long max;
+ 	long min;
+ 	long max;
 }
 
 enum LineChartCurveType {

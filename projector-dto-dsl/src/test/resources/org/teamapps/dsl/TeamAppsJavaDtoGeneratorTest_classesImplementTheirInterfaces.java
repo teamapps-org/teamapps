@@ -52,18 +52,13 @@ public class D extends A implements B, C, DtoObject {
 	protected List<Integer> cProperty;
 	protected String bProperty;
 
-	/**
-	 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-	 */
-	@Deprecated
 	public D() {
-		// default constructor for Jackson
 	}
 
-	public D(List<Integer> cProperty) {
+	public D(List<Integer> cProperty, String bProperty) {
 		super();
-		this.cProperty = cProperty;
 	}
+
 
 	@SuppressWarnings("unchecked")
 	public String toString() {

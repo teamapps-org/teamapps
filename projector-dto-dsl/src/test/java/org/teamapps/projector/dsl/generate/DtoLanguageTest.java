@@ -52,7 +52,7 @@ public class DtoLanguageTest {
 	@Test
 	public void testListProperty() throws IOException {
 		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("class A {\n"
-				+ "  required List<DtoAbstractField> fields;"
+				+ "  List<DtoAbstractField> fields;"
 				+ "}"));
 		parser.classDeclaration();
 	}
@@ -63,7 +63,7 @@ public class DtoLanguageTest {
 				package "asdf":org.teamapps.projector.blah;
 				import org.teamapps.projector.component.field.DtoAbstractField;;
 				class A {
-				  required List<DtoAbstractField> fields;\
+				  List<DtoAbstractField> fields;\
 				}"""));
 		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = parser.classCollection();
 		assertThat(classCollectionContext.typeDeclaration()).hasSize(1);

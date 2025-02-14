@@ -50,6 +50,13 @@ public class A implements DtoObject {
 	public A() {
 	}
 
+	public A(Object x, List<Object> y, Map<String, Object> z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public String toString() {
 		return new StringBuilder(getClass().getSimpleName()).append(": ")

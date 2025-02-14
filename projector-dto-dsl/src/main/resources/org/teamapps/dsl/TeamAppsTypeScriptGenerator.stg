@@ -35,16 +35,6 @@ export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <
 	<c.properties:typeScriptPropertyDeclaration(false); separator=";\n">
 }
 
-<if(c.parserRuleContext.typescriptFactoryAnnotation)>
-export function create<c.typeScriptIdentifier; format="cap">(<c.allRequiredProperties:parameter(false); separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>, <endif><if(c.allNonRequiredProperties)>nonRequiredProperties?: {<c.allNonRequiredProperties:parameter(true); separator=", ">}<endif>): <c.typeScriptIdentifier> {
-	return {
-		_type: "<c.name>"<if(c.allProperties)>,<endif>
-		<c.allRequiredProperties:{p|<p.name>}; separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>,<endif>
-		<if(c.allNonRequiredProperties)>...(nonRequiredProperties||{})<endif>
-	};
-}
-<endif>
-
 <if(c.allCommands)>
 export interface <c.name>CommandHandler <if(c.superTypesWithCommands)>extends <c.superTypesWithCommands:{c|<c.name>CommandHandler}; separator=", "> <endif>{
 	<c.nonStaticCommands:commandMethodStub(); separator="\n">

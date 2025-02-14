@@ -42,8 +42,8 @@ class DtoCurrencyUnit {
     String symbol;
 }
 
-@TypeScriptFactory
+
 class DtoCurrencyValue {
-	required DtoCurrencyUnit currencyUnit;
-	required String amount; // big decimal!
+	DtoCurrencyUnit currencyUnit;
+	String amount; // big decimal!
 }

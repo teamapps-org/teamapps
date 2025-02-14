@@ -30,7 +30,7 @@ typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 enumDeclaration : notGeneratedAnnotation? 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? SEMICOLON* '}' ;
 enumConstant : Identifier ('=' StringLiteral)?;
 
-classDeclaration : notGeneratedAnnotation? typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
+classDeclaration : notGeneratedAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
 interfaceDeclaration : notGeneratedAnnotation? 'interface' Identifier superInterfaceDecl? '{'
@@ -75,7 +75,6 @@ primitiveType
     |   'double'
     ;
 
-typescriptFactoryAnnotation : '@TypeScriptFactory';
 notGeneratedAnnotation : '@NotGenerated';
 abstractModifier : 'abstract';
 requiredModifier : 'required';

@@ -44,7 +44,10 @@ public class GraphNodeImage {
 	}
 
 	public DtoTreeGraphNodeImage createDtoTreeGraphNodeImage() {
-		DtoTreeGraphNodeImage ui = new DtoTreeGraphNodeImage(url, width, height);
+		DtoTreeGraphNodeImage ui = new DtoTreeGraphNodeImage();
+		ui.setUrl(url);
+		ui.setWidth(width);
+		ui.setHeight(height);
 		ui.setCenterTopDistance(centerTopDistance);
 		ui.setCenterLeftDistance(centerLeftDistance);
 		ui.setCornerShape(cornerShape);

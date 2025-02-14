@@ -25,8 +25,8 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 
 class DtoButton extends DtoAbstractField {
-	required DtoTemplate* template;
-	required Object templateRecord;
+	DtoTemplate* template;
+	Object templateRecord;
 
 	int minDropDownWidth;
 	int minDropDownHeight;

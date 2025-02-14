@@ -78,8 +78,11 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 	}
 
 	private DtoTreeGraphNode createDtoNode(TreeGraphNode<RECORD> node) {
-		DtoTreeGraphNode uiNode = new DtoTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
+		DtoTreeGraphNode uiNode = new DtoTreeGraphNode();
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
+		uiNode.setId(node.getId());
+		uiNode.setWidth(node.getWidth());
+		uiNode.setHeight(node.getHeight());
 		uiNode.setParentId(node.getParent() != null ? node.getParent().getId() : null);
 		uiNode.setParentExpandable(node.isParentExpandable());
 		uiNode.setParentExpanded(node.isParentExpanded());
@@ -91,8 +94,11 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 	}
 
 	private DtoBaseTreeGraphNode createBaseUiNode(BaseTreeGraphNode<RECORD> node) {
-		DtoBaseTreeGraphNode uiNode = new DtoBaseTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
+		DtoBaseTreeGraphNode uiNode = new DtoBaseTreeGraphNode();
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
+		uiNode.setId(node.getId());
+		uiNode.setWidth(node.getWidth());
+		uiNode.setHeight(node.getHeight());
 		return uiNode;
 	}
 

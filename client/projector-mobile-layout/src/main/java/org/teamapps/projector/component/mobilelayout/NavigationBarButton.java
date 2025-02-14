@@ -46,7 +46,10 @@ public class NavigationBarButton {
 	}
 
 	public DtoNavigationBarButton createDtoNavigationBarButton() {
-		DtoNavigationBarButton uiNavigationBarButton = new DtoNavigationBarButton(clientId, template, data);
+		DtoNavigationBarButton uiNavigationBarButton = new DtoNavigationBarButton();
+		uiNavigationBarButton.setId(clientId);
+		uiNavigationBarButton.setTemplate(template);
+		uiNavigationBarButton.setData(data);
 		uiNavigationBarButton.setVisible(visible);
 		return uiNavigationBarButton;
 	}

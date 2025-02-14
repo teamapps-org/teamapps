@@ -38,7 +38,9 @@ public class ForceLayoutLink<RECORD> {
 	}
 
 	public DtoNetworkLink toUiNetworkLink() {
-		DtoNetworkLink ui = new DtoNetworkLink(source.getId(), target.getId());
+		DtoNetworkLink ui = new DtoNetworkLink();
+		ui.setSource(source.getId());
+		ui.setTarget(target.getId());
 		ui.setLineWidth(lineWidth);
 		ui.setLineColor(lineColor != null ? lineColor.toHtmlColorString(): null);
 		ui.setLineDashArray(lineDashArray);

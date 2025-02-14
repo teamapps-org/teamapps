@@ -269,7 +269,11 @@ public class FormSection {
 		List<DtoFormSectionPlacement> uiFieldPlacements = fieldPlacements.stream()
 				.map(fieldPlacement -> fieldPlacement != null ? fieldPlacement.createDtoFormSectionPlacement() : null)
 				.collect(Collectors.toList());
-		DtoFormSection uiSection = new DtoFormSection(id, uiColumns, rows, uiFieldPlacements);
+		DtoFormSection uiSection = new DtoFormSection();
+		uiSection.setId(id);
+		uiSection.setColumns(uiColumns);
+		uiSection.setRows(rows);
+		uiSection.setFieldPlacements(uiFieldPlacements);
 		uiSection.setMargin(this.margin != null ? this.margin.createDtoSpacing() : null);
 		uiSection.setPadding(this.padding != null ? this.padding.createDtoSpacing() : null);
 		uiSection.setBorder(this.border != null ? this.border.createDtoBorder() : null);

@@ -131,12 +131,6 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 		return List.copyOf(properties);
 	}
 
-	public List<PropertyWrapper> getRequiredPropertiesNotImplementedBySuperClasses() {
-		return getPropertiesNotImplementedBySuperClasses().stream()
-				.filter(p -> p.isRequired())
-				.toList();
-	}
-
 	@Override
 	public boolean isAbstract() {
 		return context.abstractModifier() != null;

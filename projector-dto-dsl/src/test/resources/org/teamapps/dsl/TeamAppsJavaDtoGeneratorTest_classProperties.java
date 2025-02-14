@@ -48,17 +48,16 @@ public class A implements DtoObject {
 	protected int i;
 	protected List<Long> c;
 
-	/**
-	 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
-	 */
-	@Deprecated
 	public A() {
-		// default constructor for Jackson
 	}
 
-	public A(String aasdf) {
+	public A(String aasdf, String b, int i, List<Long> c) {
 		this.aasdf = aasdf;
+		this.b = b;
+		this.i = i;
+		this.c = c;
 	}
+
 
 	@SuppressWarnings("unchecked")
 	public String toString() {
