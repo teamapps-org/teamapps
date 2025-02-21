@@ -40,7 +40,7 @@ import {
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	Component,
 	executeWhenFirstDisplayed,
 	insertBefore,
@@ -66,7 +66,7 @@ interface HeaderField {
 	minExpandedWidth?: number;
 }
 
-export class Panel extends AbstractLegacyComponent<DtoPanel> implements DtoPanelCommandHandler, DtoPanelEventSource {
+export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelCommandHandler, DtoPanelEventSource {
 
 	public readonly onWindowButtonClicked: ProjectorEvent<DtoPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 

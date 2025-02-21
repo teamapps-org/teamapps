@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	animateCSS,
 	ExitAnimation,
 	parseHtml, removeClassesByFunction,
@@ -34,7 +34,7 @@ import {
 } from "./generated";
 import {ProgressBar} from "projector-progress-indicator";
 
-export class NotificationBar extends AbstractLegacyComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {
+export class NotificationBar extends AbstractComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {
 
 	public readonly onItemClicked: ProjectorEvent<DtoNotificationBar_ItemClickedEvent> = new ProjectorEvent();
 	public readonly onItemActionLinkClicked: ProjectorEvent<DtoNotificationBar_ItemActionLinkClickedEvent> = new ProjectorEvent();

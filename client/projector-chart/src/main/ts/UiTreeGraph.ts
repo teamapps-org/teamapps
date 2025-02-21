@@ -21,7 +21,7 @@
 import * as d3 from "d3";
 import {BaseType, HierarchyNode, HierarchyPointLink, HierarchyPointNode, Selection, ZoomBehavior} from "d3";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerObjectChannel,
@@ -36,7 +36,7 @@ import {
 } from "./generated";
 import {flextree} from "d3-flextree";
 
-export class UiTreeGraph extends AbstractLegacyComponent<DtoTreeGraph> implements DtoTreeGraphCommandHandler, DtoTreeGraphEventSource {
+export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements DtoTreeGraphCommandHandler, DtoTreeGraphEventSource {
 
 	public readonly onNodeClicked: ProjectorEvent<DtoTreeGraph_NodeClickedEvent> = new ProjectorEvent();
 	public readonly onNodeExpandedOrCollapsed: ProjectorEvent<DtoTreeGraph_NodeExpandedOrCollapsedEvent> = new ProjectorEvent();

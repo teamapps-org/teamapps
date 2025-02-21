@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, ServerObjectChannel, ProjectorEvent,} from "projector-client-object-api";
+import {AbstractComponent, Component, ServerObjectChannel, ProjectorEvent,} from "projector-client-object-api";
 import {ViewInfo} from "./ViewInfo";
 import {ViewContainer} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
@@ -58,7 +58,7 @@ export type DtoWorkspaceLayoutDndDataTransfer = {
 	visible: boolean
 }
 
-export class WorkSpaceLayout extends AbstractLegacyComponent<DtoWorkSpaceLayout> implements DtoWorkSpaceLayoutCommandHandler, DtoWorkSpaceLayoutEventSource {
+export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> implements DtoWorkSpaceLayoutCommandHandler, DtoWorkSpaceLayoutEventSource {
 
 	public readonly onLayoutChanged: ProjectorEvent<DtoWorkSpaceLayout_LayoutChangedEvent> = new ProjectorEvent();
 	public readonly onViewDraggedToNewWindow: ProjectorEvent<DtoWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new ProjectorEvent();

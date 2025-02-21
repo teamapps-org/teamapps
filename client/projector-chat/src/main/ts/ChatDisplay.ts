@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	addDelegatedEventListener,
 	Component,
 	debouncedMethod, DebounceMode, executeWhenFirstDisplayed, humanReadableFileSize,
@@ -35,7 +35,7 @@ import {
 import {ContextMenu, removeDangerousTags} from "projector-client-core-components";
 import {Autolinker} from "autolinker";
 
-export class ChatDisplay extends AbstractLegacyComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
+export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
 
 	private $main: HTMLElement;
 	private gotFirstMessage: boolean = false;

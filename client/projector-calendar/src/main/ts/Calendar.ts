@@ -46,9 +46,9 @@ import EventApi from "@fullcalendar/core/api/EventApi";
 import {Duration} from "@fullcalendar/core/datelib/duration";
 import {monthGridViewPlugin} from "./FullCalendarMonthGrid";
 import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
-import {AbstractLegacyComponent, bind, parseHtml, prependChild, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, bind, parseHtml, prependChild, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 
-export class Calendar extends AbstractLegacyComponent<DtoCalendar> implements DtoCalendarCommandHandler, DtoCalendarEventSource {
+export class Calendar extends AbstractComponent<DtoCalendar> implements DtoCalendarCommandHandler, DtoCalendarEventSource {
 
 	public readonly onEventClicked: ProjectorEvent<DtoCalendar_EventClickedEvent> = new ProjectorEvent();
 	public readonly onEventMoved: ProjectorEvent<DtoCalendar_EventMovedEvent> = new ProjectorEvent();

@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent, animateCollapse,
+	AbstractComponent, animateCollapse,
 	ComponentLike,
 	EntranceAnimation,
 	ExitAnimation, NotificationHandle,
@@ -36,7 +36,7 @@ import {
 } from "./generated";
 import {ProgressDisplay} from "./ProgressDisplay";
 
-export class MultiProgressDisplay extends AbstractLegacyComponent<DtoMultiProgressDisplay> implements DtoMultiProgressDisplayCommandHandler, DtoMultiProgressDisplayEventSource {
+export class MultiProgressDisplay extends AbstractComponent<DtoMultiProgressDisplay> implements DtoMultiProgressDisplayCommandHandler, DtoMultiProgressDisplayEventSource {
 
 	public readonly onOpened: ProjectorEvent<DtoMultiProgressDisplay_OpenedEvent> = new ProjectorEvent();
 	public readonly onClosed: ProjectorEvent<DtoMultiProgressDisplay_ClosedEvent> = new ProjectorEvent();

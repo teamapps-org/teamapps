@@ -19,7 +19,7 @@
  */
 
 import "mediaelement/full";
-import {AbstractLegacyComponent, parseHtml, removeClassesByFunction, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, removeClassesByFunction, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	DtoVideoPlayer,
 	DtoVideoPlayer_EndedEvent,
@@ -30,7 +30,7 @@ import {
 } from "./generated";
 
 
-export class VideoPlayer extends AbstractLegacyComponent<DtoVideoPlayer> implements DtoVideoPlayerCommandHandler, DtoVideoPlayerEventSource {
+export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements DtoVideoPlayerCommandHandler, DtoVideoPlayerEventSource {
 
 	public readonly onPlayerProgress: ProjectorEvent<DtoVideoPlayer_PlayerProgressEvent> = new ProjectorEvent<DtoVideoPlayer_PlayerProgressEvent>();
 	public readonly onEnded: ProjectorEvent<DtoVideoPlayer_EndedEvent> = new ProjectorEvent<DtoVideoPlayer_EndedEvent>();

@@ -27,7 +27,7 @@ import {
 	DtoNotificationEventSource
 } from "./generated";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	Component, EntranceAnimation, ExitAnimation,
 	executeWhenFirstDisplayed,
 	parseHtml,
@@ -39,7 +39,7 @@ import {ProgressBar} from "projector-progress-indicator";
 import {NotificationHandle, showNotificationLike} from "projector-client-object-api";
 
 
-export class Notification extends AbstractLegacyComponent<DtoNotification> implements DtoNotificationCommandHandler, DtoNotificationEventSource {
+export class Notification extends AbstractComponent<DtoNotification> implements DtoNotificationCommandHandler, DtoNotificationEventSource {
 
 	public readonly onOpened: ProjectorEvent<DtoNotification_OpenedEvent> = new ProjectorEvent();
 	public readonly onClosed: ProjectorEvent<DtoNotification_ClosedEvent> = new ProjectorEvent();

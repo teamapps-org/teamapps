@@ -25,7 +25,7 @@ import {
 	DtoAbstractFieldEventSource, FieldEditingMode,
 	DtoFieldMessage, FieldMessagePosition, FieldMessageSeverity, FieldMessageVisibility
 } from "./generated";
-import {AbstractLegacyComponent} from "./AbstractLegacyComponent";
+import {AbstractComponent} from "./AbstractComponent";
 import {bind, parseHtml, prependChild, ProjectorEvent} from "./util";
 import {ServerObjectChannel} from "./ClientObject";
 import {compareSeverities, highestSeverity} from "./util/fieldmessage-util";
@@ -35,7 +35,7 @@ interface FieldMessage {
 	$message: HTMLElement
 }
 
-export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C extends DtoAbstractField = DtoAbstractField, V = any> extends AbstractLegacyComponent<C> {
+export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C extends DtoAbstractField = DtoAbstractField, V = any> extends AbstractComponent<C> {
 
 	public readonly onValueChanged: ProjectorEvent<DtoAbstractField_ValueChangedEvent> = new ProjectorEvent();
 	public readonly onFocus: ProjectorEvent<DtoAbstractField_FocusEvent> = new ProjectorEvent();

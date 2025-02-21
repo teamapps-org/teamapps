@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
 
 
@@ -27,7 +27,7 @@ interface Button {
 	$button: HTMLElement;
 }
 
-export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> extends AbstractLegacyComponent<C> {
+export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> extends AbstractComponent<C> {
 
 	protected static $sizeTestingContainer: HTMLElement;
 

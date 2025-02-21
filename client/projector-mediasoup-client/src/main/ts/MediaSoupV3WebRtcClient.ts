@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	arraysEqual,
 	Component,
 	deepEquals,
@@ -62,7 +62,7 @@ import {ConferenceInput} from "./lib/avcore";
 import {ConferenceApi, Utils} from "./lib/avcore.client";
 
 
-export class MediaSoupV3WebRtcClient extends AbstractLegacyComponent<DtoMediaSoupV3WebRtcClient> implements DtoMediaSoupV3WebRtcClientCommandHandler, DtoMediaSoupV3WebRtcClientEventSource {
+export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3WebRtcClient> implements DtoMediaSoupV3WebRtcClientCommandHandler, DtoMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: ProjectorEvent<DtoMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new ProjectorEvent();
 	public readonly onSourceMediaTrackEnded: ProjectorEvent<DtoMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent> = new ProjectorEvent();
 

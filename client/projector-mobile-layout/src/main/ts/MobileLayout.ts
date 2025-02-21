@@ -21,7 +21,7 @@
 import {Toolbar} from "projector-client-core-components";
 import {NavigationBar} from "./NavigationBar";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	Component,
 	pageTransition,
 	PageTransition,
@@ -30,7 +30,7 @@ import {
 } from "projector-client-object-api";
 import {DtoMobileLayout, DtoMobileLayoutCommandHandler} from "./generated";
 
-export class MobileLayout extends AbstractLegacyComponent<DtoMobileLayout> implements DtoMobileLayoutCommandHandler {
+export class MobileLayout extends AbstractComponent<DtoMobileLayout> implements DtoMobileLayoutCommandHandler {
 
 	private $mainDiv: HTMLElement;
 	private $toolbarContainer: HTMLElement;

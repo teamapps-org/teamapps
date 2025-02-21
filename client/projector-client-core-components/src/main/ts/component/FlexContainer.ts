@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	Component,
 	AlignItems,
 	FlexDirection, JustifyContent,
@@ -29,7 +29,7 @@ import {
 } from "projector-client-object-api";
 import {DtoFlexContainer, DtoFlexContainerCommandHandler} from "../generated";
 
-export class FlexContainer extends AbstractLegacyComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
+export class FlexContainer extends AbstractComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
 
 	private $main: HTMLDivElement;
 

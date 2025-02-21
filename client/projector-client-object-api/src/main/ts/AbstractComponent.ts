@@ -31,7 +31,7 @@ import {
 	ProjectorEvent, uncapitalizeFirstLetter
 } from "./util";
 
-export abstract class AbstractLegacyComponent<C extends DtoComponent = DtoComponent> implements Component {
+export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> implements Component {
 
 	public readonly onVisibilityChanged: ProjectorEvent<boolean> = new ProjectorEvent();
 	public readonly deFactoVisibilityChanged: ProjectorEvent<boolean> = new ProjectorEvent();

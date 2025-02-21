@@ -19,9 +19,9 @@
  */
 import {DtoDiv, DtoDivCommandHandler} from "../generated";
 
-import {AbstractLegacyComponent, Component, ServerObjectChannel} from "projector-client-object-api";
+import {AbstractComponent, Component, ServerObjectChannel} from "projector-client-object-api";
 
-export class Div extends AbstractLegacyComponent<DtoDiv> implements DtoDivCommandHandler {
+export class Div extends AbstractComponent<DtoDiv> implements DtoDivCommandHandler {
 
 	private readonly $div: HTMLDivElement;
 

@@ -30,7 +30,7 @@ import {
 	DtoWindowEventSource
 } from "../generated";
 import {
-	AbstractLegacyComponent, animateCSS,
+	AbstractComponent, animateCSS,
 	Component,
 	EntranceAnimation, ExitAnimation,
 	noOpServerObjectChannel,
@@ -47,7 +47,7 @@ export interface DtoWindowListener {
 	onWindowClosed: (window: Window, animationDuration: number) => void;
 }
 
-export class Window extends AbstractLegacyComponent<DtoWindow> implements DtoWindowCommandHandler, DtoWindowEventSource {
+export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCommandHandler, DtoWindowEventSource {
 
 	public readonly onWindowButtonClicked: ProjectorEvent<DtoPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 

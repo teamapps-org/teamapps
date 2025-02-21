@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	applyCss, createUiBorderCssString, createUiShadowCssString,
 	DtoBorder,
 	DtoBoxShadow,
@@ -36,7 +36,7 @@ interface Page {
 	naturalHeight?: number;
 }
 
-export class DocumentViewer extends AbstractLegacyComponent<DtoDocumentViewer> implements DtoDocumentViewerCommandHandler {
+export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> implements DtoDocumentViewerCommandHandler {
 
 	private $componentWrapper: HTMLElement;
 	private $pagesContainerWrapper: HTMLElement;

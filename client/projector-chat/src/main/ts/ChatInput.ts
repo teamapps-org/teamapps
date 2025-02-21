@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, fadeOut, FileUploader, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, fadeOut, FileUploader, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	DtoChatInput,
 	DtoChatInput_FileItemClickedEvent,
@@ -33,7 +33,7 @@ import {
 import {createImageThumbnailUrl, insertAtCursorPosition} from "projector-client-core-components";
 import {ProgressBar} from "projector-progress-indicator";
 
-export class ChatInput extends AbstractLegacyComponent<DtoChatInput> implements DtoChatInputCommandHandler, DtoChatInputEventSource {
+export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoChatInputCommandHandler, DtoChatInputEventSource {
 
 	onFileItemClicked: ProjectorEvent<DtoChatInput_FileItemClickedEvent> = new ProjectorEvent();
 	onFileItemRemoved: ProjectorEvent<DtoChatInput_FileItemRemovedEvent> = new ProjectorEvent();

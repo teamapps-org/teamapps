@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent, Component,
+	AbstractComponent, Component,
 	executeWhenFirstDisplayed, insertAfter,
 	insertBefore,
 	parseHtml, removeClassesByFunction,
@@ -52,7 +52,7 @@ interface Block {
 	block: AbstractBlockComponent<DtoBlock>;
 }
 
-export class BlogView extends AbstractLegacyComponent<DtoBlogView> {
+export class BlogView extends AbstractComponent<DtoBlogView> {
 
 	private $component: HTMLElement;
 	private rows: Row[] = [];

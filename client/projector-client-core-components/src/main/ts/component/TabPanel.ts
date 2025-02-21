@@ -27,7 +27,7 @@ import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
 import ICON_RESTORE from "@material-symbols/svg-400/outlined/select_window.svg";
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	bind,
 	Component,
 	executeWhenFirstDisplayed,
@@ -71,7 +71,7 @@ interface Tab {
 	visible: boolean;
 }
 
-export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements DtoTabPanelCommandHandler, DtoTabPanelEventSource, Emptyable {
+export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPanelCommandHandler, DtoTabPanelEventSource, Emptyable {
 
 	public readonly onTabSelected: ProjectorEvent<DtoTabPanel_TabSelectedEvent> = new ProjectorEvent<DtoTabPanel_TabSelectedEvent>();
 

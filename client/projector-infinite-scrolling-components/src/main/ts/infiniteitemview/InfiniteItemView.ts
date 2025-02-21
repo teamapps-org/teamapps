@@ -20,7 +20,7 @@
 
 
 import {
-	AbstractLegacyComponent, addDelegatedEventListener, AlignItems, Component, debouncedMethod, DebounceMode,
+	AbstractComponent, addDelegatedEventListener, AlignItems, Component, debouncedMethod, DebounceMode,
 	DtoIdentifiableClientRecord, DtoTemplate, executeWhenFirstDisplayed, JustifyContent,
 	parseHtml,
 	ServerObjectChannel,
@@ -45,7 +45,7 @@ type RenderedItem = {
 	height: number
 };
 
-export class InfiniteItemView extends AbstractLegacyComponent<DtoInfiniteItemView> implements DtoInfiniteItemViewCommandHandler, DtoInfiniteItemViewEventSource {
+export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> implements DtoInfiniteItemViewCommandHandler, DtoInfiniteItemViewEventSource {
 
 	public readonly onDisplayedRangeChanged: ProjectorEvent<DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent> = new ProjectorEvent();
 	public readonly onItemClicked: ProjectorEvent<DtoInfiniteItemView_ItemClickedEvent> = new ProjectorEvent();

@@ -20,7 +20,7 @@
 
 
 import {
-	AbstractLegacyComponent, bind, Component, createUiBorderCssString, createUiShadowCssString, createUiSpacingCssString, DtoComponent,
+	AbstractComponent, bind, Component, createUiBorderCssString, createUiShadowCssString, createUiSpacingCssString, DtoComponent,
 	executeWhenFirstDisplayed, generateUUID,
 	parseHtml,
 	ServerObjectChannel, slideDown, slideUp,
@@ -34,7 +34,7 @@ import {
 	DtoGridFormEventSource, DtoSizingPolicy, SizeType
 } from "./generated";
 
-export class GridForm extends AbstractLegacyComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
+export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
 
 	public readonly onSectionCollapsedStateChanged: ProjectorEvent<DtoGridForm_SectionCollapsedStateChangedEvent> = new ProjectorEvent<DtoGridForm_SectionCollapsedStateChangedEvent>();
 

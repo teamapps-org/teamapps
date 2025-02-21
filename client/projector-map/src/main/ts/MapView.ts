@@ -20,7 +20,7 @@
 
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	DeferredExecutor,
 	parseHtml,
 	ProjectorEvent,
@@ -70,7 +70,7 @@ export function isRectangle(shapeConfig: DtoAbstractMapShape): shapeConfig is Dt
 	return shapeConfig._type === "MapRectangle";
 }
 
-export class MapView extends AbstractLegacyComponent<DtoMapView> implements DtoMapViewEventSource, DtoMapViewCommandHandler {
+export class MapView extends AbstractComponent<DtoMapView> implements DtoMapViewEventSource, DtoMapViewCommandHandler {
 
 	public readonly onZoomLevelChanged: ProjectorEvent<DtoMapView_ZoomLevelChangedEvent> = ProjectorEvent.createThrottled(500);
 	public readonly onLocationChanged: ProjectorEvent<DtoMapView_LocationChangedEvent> = ProjectorEvent.createThrottled(500);

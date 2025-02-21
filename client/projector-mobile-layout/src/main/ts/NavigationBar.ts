@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	ClickOutsideHandle,
 	Component, doOnceOnClickOutsideElement,
 	parseHtml,
@@ -41,7 +41,7 @@ interface Button {
 	$button: HTMLElement;
 }
 
-export class NavigationBar extends AbstractLegacyComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
+export class NavigationBar extends AbstractComponent<DtoNavigationBar> implements DtoNavigationBarCommandHandler, DtoNavigationBarEventSource {
 
 	public readonly onButtonClicked: ProjectorEvent<DtoNavigationBar_ButtonClickedEvent> = new ProjectorEvent();
 	public readonly onFanoutClosedDueToClickOutsideFanout: ProjectorEvent<DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new ProjectorEvent();

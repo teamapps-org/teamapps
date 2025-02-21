@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, bind, Component, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, bind, Component, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	DtoToolButton,
 	DtoToolButton_ClickEvent,
@@ -28,7 +28,7 @@ import {
 } from "../generated";
 import {DropDown} from "../micro-components/DropDown";
 
-export class ToolButton extends AbstractLegacyComponent<DtoToolButton> implements DtoToolButtonEventSource, DtoToolButtonCommandHandler {
+export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoToolButtonEventSource, DtoToolButtonCommandHandler {
 
 	public readonly onClick: ProjectorEvent<DtoToolButton_ClickEvent> = new ProjectorEvent();
 	public readonly onDropDownOpened: ProjectorEvent<DtoToolButton_DropDownOpenedEvent> = new ProjectorEvent();

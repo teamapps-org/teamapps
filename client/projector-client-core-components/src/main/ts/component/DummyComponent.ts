@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	DtoDummyComponent,
 	DtoDummyComponent_ClickEvent,
@@ -27,7 +27,7 @@ import {
 } from "../generated";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
-export class DummyComponent extends AbstractLegacyComponent<DtoDummyComponent> implements DtoDummyComponentCommandHandler, DtoDummyComponentEventSource {
+export class DummyComponent extends AbstractComponent<DtoDummyComponent> implements DtoDummyComponentCommandHandler, DtoDummyComponentEventSource {
 
 	public readonly onClick: ProjectorEvent<DtoDummyComponent_ClickEvent> = new ProjectorEvent<DtoDummyComponent_ClickEvent>();
 

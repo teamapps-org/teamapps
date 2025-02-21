@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoIFrame, DtoIFrameCommandHandler} from "../generated";
 
 
-export class IFrame extends AbstractLegacyComponent<DtoIFrame> implements DtoIFrameCommandHandler {
+export class IFrame extends AbstractComponent<DtoIFrame> implements DtoIFrameCommandHandler {
 
 	private $iframe: HTMLIFrameElement;
 

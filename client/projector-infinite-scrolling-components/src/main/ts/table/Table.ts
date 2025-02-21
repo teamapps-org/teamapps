@@ -46,7 +46,7 @@ import {FieldMessagesPopper} from "./FieldMessagesPopper";
 import EventData = Slick.EventData;
 import {
 	AbstractField,
-	AbstractLegacyComponent, applyCss, Component, debouncedMethod, DebounceMode,
+	AbstractComponent, applyCss, Component, debouncedMethod, DebounceMode,
 	DtoFieldMessage, executeWhenFirstDisplayed, fadeIn, fadeOut,
 	FieldMessageSeverity, getHighestSeverity, nonRecursive, parseHtml,
 	ServerObjectChannel,
@@ -89,7 +89,7 @@ const backgroundColorCssClassesByMessageSeverity = {
 type ElementsByName = { [fieldName: string]: HTMLElement };
 type FieldsByName = { [fieldName: string]: AbstractField };
 
-export class Table extends AbstractLegacyComponent<DtoTable> implements DtoTableCommandHandler, DtoTableEventSource {
+export class Table extends AbstractComponent<DtoTable> implements DtoTableCommandHandler, DtoTableEventSource {
 
 	public readonly onCellEditingStarted: ProjectorEvent<DtoTable_CellEditingStartedEvent> = new ProjectorEvent();
 	public readonly onCellEditingStopped: ProjectorEvent<DtoTable_CellEditingStoppedEvent> = new ProjectorEvent();

@@ -32,7 +32,7 @@ import {TimeGraphPopper} from "./TimeGraphPopper";
 import {AbstractGraph} from "./AbstractGraph";
 import {GraphContext, PopperHandle} from "./GraphContext";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	bind,
 	debouncedMethod,
 	DebounceMode,
@@ -57,7 +57,7 @@ import {
 
 export const yTickFormat = d3.format("-,.2s");
 
-export class TimeGraph extends AbstractLegacyComponent<DtoTimeGraph> implements DtoTimeGraphCommandHandler, DtoTimeGraphEventSource {
+export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTimeGraphCommandHandler, DtoTimeGraphEventSource {
 
 	public readonly onIntervalSelected: ProjectorEvent<DtoTimeGraph_IntervalSelectedEvent> = new ProjectorEvent<DtoTimeGraph_IntervalSelectedEvent>();
 	public readonly onZoomed: ProjectorEvent<DtoTimeGraph_ZoomedEvent> = new ProjectorEvent<DtoTimeGraph_ZoomedEvent>();

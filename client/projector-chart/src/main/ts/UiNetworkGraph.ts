@@ -21,7 +21,7 @@
 import * as d3 from "d3";
 import {ForceLink, Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	executeWhenFirstDisplayed,
 	parseHtml,
 	ServerObjectChannel,
@@ -36,7 +36,7 @@ import {
 } from "./generated";
 import {patternify} from "./UiTreeGraph";
 
-export class UiNetworkGraph extends AbstractLegacyComponent<DtoNetworkGraph> implements DtoNetworkGraphCommandHandler, DtoNetworkGraphEventSource {
+export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implements DtoNetworkGraphCommandHandler, DtoNetworkGraphEventSource {
 
 	public readonly onNodeClicked: ProjectorEvent<DtoNetworkGraph_NodeClickedEvent> = new ProjectorEvent();
 	public readonly onNodeDoubleClicked: ProjectorEvent<DtoNetworkGraph_NodeDoubleClickedEvent> = new ProjectorEvent();

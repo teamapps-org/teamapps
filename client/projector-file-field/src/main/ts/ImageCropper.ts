@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	applyCss,
 	executeWhenFirstDisplayed,
 	parseHtml,
@@ -40,7 +40,7 @@ type Selection = Omit<ImageCropperSelection, '_type'>;
 
 type Rect = { x: number, y: number, width: number, height: number }
 
-export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> implements DtoImageCropperCommandHandler, DtoImageCropperEventSource {
+export class ImageCropper extends AbstractComponent<DtoImageCropper> implements DtoImageCropperCommandHandler, DtoImageCropperEventSource {
 
 	public readonly onSelectionChanged: ProjectorEvent<DtoImageCropper_SelectionChangedEvent> = new ProjectorEvent<DtoImageCropper_SelectionChangedEvent>();
 

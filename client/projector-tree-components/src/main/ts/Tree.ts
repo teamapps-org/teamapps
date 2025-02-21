@@ -25,10 +25,10 @@ import {
 	DtoTreeEventSource, DtoTreeRecord, DtoTreeServerObjectChannel
 } from "./generated";
 import {TrivialTree} from "./trivial-components/TrivialTree";
-import {AbstractLegacyComponent, loadSensitiveThrottling, parseHtml, ProjectorEvent, Template} from "projector-client-object-api";
+import {AbstractComponent, loadSensitiveThrottling, parseHtml, ProjectorEvent, Template} from "projector-client-object-api";
 import {buildObjectTree, NodeWithChildren} from "./util";
 
-export class Tree extends AbstractLegacyComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
+export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
 
 	public readonly onNodeSelected: ProjectorEvent<DtoTree_NodeSelectedEvent> = new ProjectorEvent();
 

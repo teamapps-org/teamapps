@@ -19,10 +19,10 @@
  */
 
 
-import {AbstractLegacyComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoAudioLevelIndicator, DtoAudioLevelIndicatorCommandHandler} from "./generated";
 
-export class AudioLevelIndicator extends AbstractLegacyComponent<DtoAudioLevelIndicator> implements DtoAudioLevelIndicatorCommandHandler {
+export class AudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndicator> implements DtoAudioLevelIndicatorCommandHandler {
 	private $main: HTMLElement;
 	private $activityDisplay: HTMLElement;
 	private $canvas: HTMLCanvasElement;

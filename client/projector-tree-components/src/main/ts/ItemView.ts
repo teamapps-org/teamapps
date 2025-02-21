@@ -29,7 +29,7 @@ import {
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {DEFAULT_TEMPLATES} from "./trivial-components/TrivialCore";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	DtoIdentifiableClientRecord,
 	generateUUID,
 	parseHtml,
@@ -37,7 +37,7 @@ import {
 	Template
 } from "projector-client-object-api";
 
-export class ItemView extends AbstractLegacyComponent<DtoItemView> implements DtoItemViewCommandHandler, DtoItemViewEventSource {
+export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemViewCommandHandler, DtoItemViewEventSource {
 
 	public readonly onItemClicked: ProjectorEvent<DtoItemView_ItemClickedEvent> = new ProjectorEvent<DtoItemView_ItemClickedEvent>();
 

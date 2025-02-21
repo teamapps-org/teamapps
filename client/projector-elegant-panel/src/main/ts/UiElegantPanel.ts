@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	Component,
 	createUiSpacingCssString,
 	DtoComponent,
@@ -28,7 +28,7 @@ import {
 } from "projector-client-object-api";
 import {DtoElegantPanel, DtoElegantPanelCommandHandler} from "./generated";
 
-export class UiElegantPanel extends AbstractLegacyComponent<DtoElegantPanel> implements DtoElegantPanelCommandHandler {
+export class UiElegantPanel extends AbstractComponent<DtoElegantPanel> implements DtoElegantPanelCommandHandler {
 
 	private $element: HTMLElement;
 	private $contentContainer: HTMLElement;

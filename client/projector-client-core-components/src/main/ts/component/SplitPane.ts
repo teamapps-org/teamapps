@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	bind,
 	capitalizeFirstLetter,
 	Component,
@@ -39,7 +39,7 @@ import {
 } from "../generated";
 import {applyCss} from "projector-client-object-api";
 
-export class SplitPane extends AbstractLegacyComponent<DtoSplitPane> implements Emptyable, DtoSplitPaneCommandHandler, DtoSplitPaneEventSource {
+export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptyable, DtoSplitPaneCommandHandler, DtoSplitPaneEventSource {
 	public readonly onSplitResized: ProjectorEvent<DtoSplitPane_SplitResizedEvent> = new ProjectorEvent<DtoSplitPane_SplitResizedEvent>();
 
 	private _firstChildComponent: Component;

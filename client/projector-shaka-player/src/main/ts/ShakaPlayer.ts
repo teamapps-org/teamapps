@@ -33,7 +33,7 @@ import {
 	TrackLabelFormat as DtoTrackLabelFormat
 } from "./generated";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	executeWhenFirstDisplayed,
 	parseHtml,
 	removeClassesByFunction,
@@ -50,7 +50,7 @@ import PlayerInterface = shaka.extern.ManifestParser.PlayerInterface;
 import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
 import Manifest = shaka.extern.Manifest;
 
-export class ShakaPlayer extends AbstractLegacyComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
+export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
 
 	public readonly onManifestLoaded: ProjectorEvent<DtoShakaPlayer_ManifestLoadedEvent> = new ProjectorEvent();
 	public readonly onTimeUpdate: ProjectorEvent<DtoShakaPlayer_TimeUpdateEvent> = new ProjectorEvent();

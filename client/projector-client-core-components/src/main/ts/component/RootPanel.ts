@@ -19,7 +19,7 @@
  */
 import {DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
 import {
-	AbstractLegacyComponent,
+	AbstractComponent,
 	Component,
 	pageTransition,
 	PageTransition,
@@ -28,7 +28,7 @@ import {
 } from "projector-client-object-api";
 
 // noinspection JSUnusedGlobalSymbols
-export class RootPanel extends AbstractLegacyComponent<DtoRootPanel> implements DtoRootPanelCommandHandler {
+export class RootPanel extends AbstractComponent<DtoRootPanel> implements DtoRootPanelCommandHandler {
 
 	private $root: HTMLElement;
 	private content: Component;

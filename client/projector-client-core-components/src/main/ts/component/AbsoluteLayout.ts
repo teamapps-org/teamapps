@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractLegacyComponent, Component, generateUUID, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {AbstractComponent, Component, generateUUID, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent, DtoAnimationEasing} from "../generated";
 
 const animationEasingCssValues = {
@@ -30,7 +30,7 @@ const animationEasingCssValues = {
 	[DtoAnimationEasing.STEP_END]: "step-end"
 };
 
-export class AbsoluteLayout extends AbstractLegacyComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
+export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 
 	constructor(config: DtoAbsoluteLayout, serverObjectChannel: ServerObjectChannel) {
@@ -71,7 +71,7 @@ export class AbsoluteLayout extends AbstractLegacyComponent<DtoAbsoluteLayout> i
 
 		this.setStyle("*", {"transition": `transition: top ${animationDuration}ms ${animationEasingCssValues[easing]}, right ${animationDuration}ms ${animationEasingCssValues[easing]}, bottom ${animationDuration}ms ${animationEasingCssValues[easing]}, left ${animationDuration}ms ${animationEasingCssValues[easing]}, width ${animationDuration}ms ${animationEasingCssValues[easing]}, height ${animationDuration}ms ${animationEasingCssValues[easing]};`})
 		components.forEach(c => {
-			const component = c.component as AbstractLegacyComponent;
+			const component = c.component as AbstractComponent;
 			component.getMainElement().addEventListener('transitionend', this.transitionEndEventListener);
 			// TODO when having many different (ever changing) children, this will generate a lot of CSS rules. Clean old ones up!
 			this.setStyle(`> [absolute-layout-child-id=${component.getMainElement().getAttribute("absolute-layout-child-id")}]`, {

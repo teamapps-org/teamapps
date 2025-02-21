@@ -19,7 +19,7 @@
  */
 
 import {
-	AbstractLegacyComponent, Component,
+	AbstractComponent, Component,
 	parseHtml,
 	prependChild,
 	removeClassesByFunction,
@@ -34,7 +34,7 @@ import {
 	DtoSideDrawerEventSource
 } from "./generated";
 
-export class SideDrawer extends AbstractLegacyComponent<DtoSideDrawer> implements DtoSideDrawerCommandHandler, DtoSideDrawerEventSource {
+export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoSideDrawerCommandHandler, DtoSideDrawerEventSource {
 
 	public readonly onExpandedOrCollapsed: ProjectorEvent<DtoSideDrawer_ExpandedOrCollapsedEvent> = new ProjectorEvent();
 

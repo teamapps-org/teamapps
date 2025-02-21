@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractLegacyComponent, parseHtml, removeClassesByFunction, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, removeClassesByFunction, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	DtoProgressDisplay,
 	DtoProgressDisplay_CancelButtonClickedEvent, DtoProgressDisplay_ClickEvent,
@@ -28,7 +28,7 @@ import {
 import {ProgressBar} from "projector-progress-indicator";
 
 
-export class ProgressDisplay extends AbstractLegacyComponent<DtoProgressDisplay> implements DtoProgressDisplayCommandHandler, DtoProgressDisplayEventSource {
+export class ProgressDisplay extends AbstractComponent<DtoProgressDisplay> implements DtoProgressDisplayCommandHandler, DtoProgressDisplayEventSource {
 	onCancelButtonClicked: ProjectorEvent<DtoProgressDisplay_CancelButtonClickedEvent> = new ProjectorEvent();
 	onClick: ProjectorEvent<DtoProgressDisplay_ClickEvent> = new ProjectorEvent();
 
