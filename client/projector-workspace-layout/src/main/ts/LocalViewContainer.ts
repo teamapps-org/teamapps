@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {getMicrosoftBrowserVersion, isEmptyable, Panel, SplitDirection, SplitSizePolicy, Toolbar} from "projector-client-core-components";
+import {isEmptyable, Panel, SplitDirection, SplitSizePolicy, Toolbar} from "projector-client-core-components";
 import {DtoWorkspaceLayoutDndDataTransfer, WorkSpaceLayout} from "./WorkSpaceLayout";
 import {bind, Component, generateUUID, parseHtml} from "projector-client-object-api";
 import {SplitPaneItem} from "./SplitPaneItem";
@@ -41,7 +41,7 @@ import {MultiProgressDisplay} from "projector-progress-display";
 
 export class LocalViewContainer implements ViewContainer {
 
-	private static DND_MIME_TYPE: string = getMicrosoftBrowserVersion() ? 'text' : 'teamapps/uiworkspaceview';
+	private static DND_MIME_TYPE: string = 'teamapps/uiworkspaceview';
 
 	private itemTree = new ItemTree();
 	private _toolbar: Toolbar;
@@ -330,14 +330,9 @@ export class LocalViewContainer implements ViewContainer {
 				this.listener.handleChildWindowCreated(childWindowId, channel.port1, this.itemTree.getViewByName(viewName).viewInfo);
 			};
 
-			if (getMicrosoftBrowserVersion()) {
-				// IE and Edge only return from the window.open() method _after_ the page has been loaded
+			childWindow.addEventListener('load', () => {
 				onWindowLoaded();
-			} else {
-				childWindow.addEventListener('load', () => {
-					onWindowLoaded();
-				});
-			}
+			});
 		}
 	}
 

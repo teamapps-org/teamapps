@@ -25,7 +25,7 @@ import {
 	DtoTextInputHandlingField_TextInputEvent,
 	SpecialKey
 } from "../../generated";
-import {Constants, escapeHtml, hasVerticalScrollBar} from "../../util/Common";
+import {Constants, escapeHtml} from "../../util/Common";
 import {
 	AbstractField,
 	DebounceMode,
@@ -181,6 +181,10 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 		return v1 !== v2;
 	}
 
+}
+
+function hasVerticalScrollBar(element: HTMLElement): boolean {
+	return element.scrollWidth < element.offsetWidth;
 }
 
 

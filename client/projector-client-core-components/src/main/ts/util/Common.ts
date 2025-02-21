@@ -49,102 +49,6 @@ export class Constants {
 	}
 }
 
-export function hasVerticalScrollBar(element: HTMLElement): boolean {
-	return element.scrollWidth < element.offsetWidth;
-}
-
-
-
-export function calculateDisplayModeInnerSize(containerDimensions: { width: number, height: number },
-											  innerPreferredDimensions: { width: number, height: number },
-											  displayMode: "fit-width" | "fit-height" | "fit-size" | "cover" | "original-size",
-											  zoomFactor: number = 1,
-											  considerScrollbars = false
-): { width: number, height: number } {
-	let viewPortAspectRatio = containerDimensions.width / containerDimensions.height;
-	let imageAspectRatio = innerPreferredDimensions.width / innerPreferredDimensions.height;
-
-	console.debug(`outer dimensions: ${containerDimensions.width}x${containerDimensions.height}`);
-	console.debug(`inner dimensions: ${innerPreferredDimensions.width}x${innerPreferredDimensions.height}`);
-	console.debug(`displayMode: ${displayMode}`);
-
-	if (displayMode === "fit-width") {
-		let width = Math.floor(containerDimensions.width * zoomFactor);
-		if (considerScrollbars && zoomFactor <= 1 && Math.ceil(width / imageAspectRatio) > containerDimensions.height) {
-			// There will be a vertical scroll bar, so make sure the width will not result in a horizontal scrollbar, too
-			// NOTE: Chrome still shows scrollbars sometimes. https://bugs.chromium.org/p/chromium/issues/detail?id=240772&can=2&start=0&num=100&q=&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified&groupby=&sort=
-			width = Math.min(width, containerDimensions.width - Constants.SCROLLBAR_WIDTH);
-		}
-		return {width: width, height: width / imageAspectRatio};
-	} else if (displayMode === "fit-height") {
-		let height = Math.floor(containerDimensions.height * zoomFactor);
-		if (considerScrollbars && zoomFactor <= 1 && height * imageAspectRatio > containerDimensions.width) {
-			// There will be a horizontal scroll bar, so make sure the width will not result in a vertical scrollbar, too
-			// NOTE: Chrome still shows scrollbars sometimes. https://bugs.chromium.org/p/chromium/issues/detail?id=240772&can=2&start=0&num=100&q=&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified&groupby=&sort=
-			height = Math.min(height, containerDimensions.height - Constants.SCROLLBAR_WIDTH);
-		}
-		return {width: height * imageAspectRatio, height: height};
-	} else if (displayMode === "fit-size") {
-		if (imageAspectRatio > viewPortAspectRatio) {
-			let width = Math.floor(containerDimensions.width * zoomFactor);
-			return {width: width, height: width / imageAspectRatio};
-		} else {
-			let height = Math.floor(containerDimensions.height * zoomFactor);
-			return {width: height * imageAspectRatio, height: height};
-		}
-	} else if (displayMode === "cover") {
-		if (imageAspectRatio < viewPortAspectRatio) {
-			let width = Math.floor(containerDimensions.width * zoomFactor);
-			return {width: width, height: width / imageAspectRatio};
-		} else {
-			let height = Math.floor(containerDimensions.height * zoomFactor);
-			return {width: height * imageAspectRatio, height: height};
-		}
-	} else { // ORIGINAL_SIZE
-		let width = innerPreferredDimensions.width * zoomFactor;
-		return {width: width, height: width / imageAspectRatio};
-	}
-}
-
-export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displayMode: "fit-width" | "fit-height" | "fit-size" | "cover" | "original-size", options?: {
-	innerPreferredDimensions?: { // only needed for ORIGINAL_SIZE!
-		width: number,
-		height: number,
-	},
-	zoomFactor?: number,
-	padding?: number,
-	considerScrollbars?: boolean
-}) {
-	options = {...options}; // copy the options as we are potentially making changes to the object...
-	if (options.innerPreferredDimensions == null || !options.innerPreferredDimensions.width || !options.innerPreferredDimensions.height) {
-		if ($inner instanceof HTMLImageElement && $inner.naturalHeight > 0) {
-			let imgElement = $inner;
-			options.innerPreferredDimensions = {
-				width: imgElement.naturalWidth,
-				height: imgElement.naturalHeight
-			}
-		} else {
-			$inner.style.width = "100%";
-			$inner.style.height = "100%";
-			return;
-		}
-	}
-	if (options.padding == null) {
-		options.padding = parseInt($outer.style.paddingLeft) || 0;
-	}
-	let availableWidth = $outer.offsetWidth - 2 * options.padding;
-	let availableHeight = $outer.offsetHeight - 2 * options.padding;
-
-	let size = calculateDisplayModeInnerSize({
-		width: availableWidth,
-		height: availableHeight
-	}, options.innerPreferredDimensions, displayMode, options.zoomFactor, options.considerScrollbars);
-	$inner.style.width = size.width + "px";
-	$inner.style.height = size.height + "px";
-}
-
-export type Direction = "n" | "e" | "s" | "w" | "ne" | "se" | "nw" | "sw";
-
 const entityMap: { [c: string]: string } = {
 	'&': '&amp;',
 	'<': '&lt;',
@@ -160,28 +64,6 @@ export function escapeHtml(string: string): string {
 	return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap(s: string) {
 		return entityMap[s] as string;
 	});
-}
-
-export function getMicrosoftBrowserVersion() {
-	const ua = window.navigator.userAgent;
-	const msie = ua.indexOf('MSIE ');
-	if (msie > 0) {
-		// IE 10 or older => return version number
-		return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-	}
-	const trident = ua.indexOf('Trident/');
-	if (trident > 0) {
-		// IE 11 => return version number
-		const rv = ua.indexOf('rv:');
-		return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-	}
-	const edge = ua.indexOf('Edge/');
-	if (edge > 0) {
-		// Edge (IE 12+) => return version number
-		return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-	}
-	// other browser
-	return false;
 }
 
 export function maximizeComponent(component: Component, animationDuration: number = 300, callback?: () => void) {
