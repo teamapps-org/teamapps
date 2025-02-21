@@ -3377,6 +3377,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-script@workspace:projector-script":
+  version: 0.0.0-use.local
+  resolution: "projector-script@workspace:projector-script"
+  dependencies:
+    esbuild: ^0.15.13
+    image-layout: ^0.4.1
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-shaka-player@workspace:projector-shaka-player":
   version: 0.0.0-use.local
   resolution: "projector-shaka-player@workspace:projector-shaka-player"

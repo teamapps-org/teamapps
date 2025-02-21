@@ -213,8 +213,6 @@ public static class <cmd.name; format="cap">Command {
 
 	<toString(cmd)>
 
-	<cmd.allProperties:getter(); separator="\n\n">
-
 	<cmdParametersGetter(cmd)>
 
 }

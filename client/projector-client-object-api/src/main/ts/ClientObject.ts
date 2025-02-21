@@ -70,7 +70,7 @@ export interface ClientObject {
 	/**
 	 * Additional init method, called right after instantiating. This method is guaranteed to be called, if implemented.
 	 */
-	init?(config: any, serverObjectChannel: ServerObjectChannel): any;
+	init?(config: any, serverObjectChannel?: ServerObjectChannel): any;
 
 	/**
 	 * ClientObject implementations may choose between implementing either an individual method for each command name (named by the command)

@@ -19,8 +19,6 @@ Table:
 
 Upgrade FullCalendar to version 6 (and get rid of moment.js there)
 
-Search for ""\sto\w+String" in java files. Try to find a better solution (Jackson Serializers?)
-
 * add Script and StyleSheet client object implementations
 * Replace setOnClickJavaScript(...) with invocation of JavaScript client object
 

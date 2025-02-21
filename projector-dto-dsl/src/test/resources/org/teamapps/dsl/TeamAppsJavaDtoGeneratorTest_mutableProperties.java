@@ -97,11 +97,6 @@ public class A implements DtoObject {
 					.toString();
 		}
 
-		@com.fasterxml.jackson.annotation.JsonGetter("a")
-		public String getA() {
-			return a;
-		}
-
 		public Object[] getParameters() {
 		    return new Object[] {a};
 		}

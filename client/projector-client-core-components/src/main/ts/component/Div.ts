@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoDiv, DtoDivCommandHandler, DtoDummyComponent} from "../generated";
+import {DtoDiv, DtoDivCommandHandler} from "../generated";
 
-import {AbstractLegacyComponent, AbstractWebComponent, Component, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {AbstractLegacyComponent, Component, ServerObjectChannel} from "projector-client-object-api";
 
 export class Div extends AbstractLegacyComponent<DtoDiv> implements DtoDivCommandHandler {
 

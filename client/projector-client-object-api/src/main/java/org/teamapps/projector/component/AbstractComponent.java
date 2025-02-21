@@ -48,9 +48,8 @@ public abstract class AbstractComponent implements Component {
 		this.sessionContext = CurrentSessionContext.get();
 		// This IS ok, since SessionContext does not do anything with "this" reference.
 		// The only usage of the "this" reference is going to be triggered by this.
-		// Go figure.
 		ClientObjectChannel coc = this.sessionContext.registerClientObject(this);
-		this.clientObjectChannel = new DtoComponentClientObjectChannel(coc);;
+		this.clientObjectChannel = new DtoComponentClientObjectChannel(coc);
 	}
 
 	protected void mapAbstractConfigProperties(DtoComponent uiComponent) {

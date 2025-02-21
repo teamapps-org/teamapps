@@ -106,11 +106,6 @@ public interface A extends DtoObject {
 					.toString();
 		}
 
-		@com.fasterxml.jackson.annotation.JsonGetter("x")
-		public String getX() {
-			return x;
-		}
-
 		public Object[] getParameters() {
 		    return new Object[] {x};
 		}
@@ -139,11 +134,6 @@ public interface A extends DtoObject {
 			return new StringBuilder(getClass().getSimpleName()).append(": ")
 					.append("x2=" + x2)
 					.toString();
-		}
-
-		@com.fasterxml.jackson.annotation.JsonGetter("x2")
-		public String getX2() {
-			return x2;
 		}
 
 		public Object[] getParameters() {

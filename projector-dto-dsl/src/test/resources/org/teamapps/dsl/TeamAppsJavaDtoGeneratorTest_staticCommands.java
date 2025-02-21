@@ -83,11 +83,6 @@ public abstract class A implements DtoObject {
 					.toString();
 		}
 
-		@com.fasterxml.jackson.annotation.JsonGetter("b")
-		public String getB() {
-			return b;
-		}
-
 		public Object[] getParameters() {
 		    return new Object[] {b};
 		}

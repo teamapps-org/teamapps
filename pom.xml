@@ -47,6 +47,8 @@
         <module>client/projector-mustache-template</module>
         <module>client/projector-client-core-components</module>
 
+        <module>client/projector-script</module>
+
         <module>client/projector-progress-indicator</module>
         <module>client/projector-notification</module>
         <module>client/projector-progress-display</module>
