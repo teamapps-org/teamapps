@@ -128,7 +128,7 @@ public class ToolbarButton {
 		Template template = getAppliedTemplate();
 		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getPropertyNames());
 		DtoToolbarButton ui = new DtoToolbarButton();
-		ui.setButtonId(clientId);
+		ui.setId(clientId);
 		ui.setTemplate(template);
 		ui.setRecordData(values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {

@@ -106,7 +106,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	public addTab(view: View, select: boolean, index = Number.MAX_SAFE_INTEGER): void {
 		this.component.addTab({
 			content: view.component,
-			tabId: view.viewName,
+			id: view.viewName,
 			icon: view.tabIcon,
 			caption: view.tabCaption,
 			closeable: view.tabCloseable,

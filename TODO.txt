@@ -1,9 +1,5 @@
 Check if specialized Components (like SimpleCalendar) work
 
-remove unused stuff from Common.ts
-
-DTO: rename id properties named as [className]Id to just id.
-
 requirements for the maven plugin:
 * copy DTO files to JAR
 * import all DTO models from dependencies while generating

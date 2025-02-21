@@ -232,12 +232,12 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	}
 
 	private _createTab(tabConfig: DtoTab, index: number = Number.MAX_SAFE_INTEGER): Tab {
-		const $tabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
-		const $dropDownTabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
-		$tabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.tabId, true));
-		$dropDownTabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.tabId, true));
+		const $tabButton = this.createTabButton(tabConfig.id, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
+		const $dropDownTabButton = this.createTabButton(tabConfig.id, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
+		$tabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.id, true));
+		$dropDownTabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.id, true));
 
-		const $tabContent = parseHtml(`<div class="tab-content-wrapper" data-tab-name="${tabConfig.tabId}">
+		const $tabContent = parseHtml(`<div class="tab-content-wrapper" data-tab-name="${tabConfig.id}">
                         <div class="tab-toolbar-container"></div>
                         <div class="tab-component-container"></div>
                     </div>`);
@@ -337,7 +337,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		this.onChildEmptyStateChanged();
 
 		// after (!!) the parent has been informed about the empty state change, we should think about setting attached (and resizing!!!)
-		if (this.selectedTab && this.selectedTab.config.tabId === tabId) {
+		if (this.selectedTab && this.selectedTab.config.id === tabId) {
 			if (!tab.contentComponent && tab.config.lazyLoading && fireLazyLoadEventIfNeeded) {
 				this.onTabNeedsRefresh.fire({
 					tabId: tabId
@@ -361,7 +361,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 			this.$leftButtonsWrapper.appendChild(tab.$button);
 			this.$dropButtonContainerLeft.appendChild(tab.$dropDownTabButton);
 		}
-		tab.config.tabId = tabId;
+		tab.config.id = tabId;
 		tab.config.icon = icon;
 		tab.config.caption = caption;
 		tab.config.closeable = closeable;
@@ -374,16 +374,16 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	}
 
 	public addTab(tabConfig: DtoTab, select: boolean, index = Number.MAX_SAFE_INTEGER) {
-		this.removeTab(tabConfig.tabId, false);
+		this.removeTab(tabConfig.id, false);
 		let tab = this._createTab(tabConfig, index);
 		if (tabConfig.rightSide) {
 			this.rightTabs.push(tab);
 		} else {
 			this.leftTabs.push(tab);
 		}
-		this.setTabContent(tabConfig.tabId, tabConfig.content as Component, true);
+		this.setTabContent(tabConfig.id, tabConfig.content as Component, true);
 		if (select || this.getAllTabs().length === 1) {
-			this.selectTab(tabConfig.tabId, false);
+			this.selectTab(tabConfig.id, false);
 		}
 		let tabBarVisibilityChanged = this.updateTabBarVisibility();
 		if (tabBarVisibilityChanged) {
@@ -425,8 +425,8 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 		tab.$dropDownTabButton.remove();
 		tab.$wrapper.remove();
 
-		this.leftTabs = this.leftTabs.filter(tab => tab.config.tabId !== tabId);
-		this.rightTabs = this.rightTabs.filter(tab => tab.config.tabId !== tabId);
+		this.leftTabs = this.leftTabs.filter(tab => tab.config.id !== tabId);
+		this.rightTabs = this.rightTabs.filter(tab => tab.config.id !== tabId);
 
 		if (tab === this.selectedTab) {
 			this.selectFirstVisibleTab();
@@ -442,7 +442,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 
 	private selectFirstVisibleTab() {
 		if (this.getVisibleTabs().length > 0) {
-			this.selectTab(this.getVisibleTabs()[0].config.tabId, true);
+			this.selectTab(this.getVisibleTabs()[0].config.id, true);
 		} else if (this.selectedTab != null) {
 			this.selectedTab = null;
 			this.onTabSelected.fire({
@@ -466,7 +466,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	}
 
 	private getTabById(tabId: string, warnIfNull: boolean = true): Tab {
-		const tab = this.getAllTabs().filter(tab => tab.config.tabId === tabId)[0];
+		const tab = this.getAllTabs().filter(tab => tab.config.id === tabId)[0];
 		if (tab == null && warnIfNull) {
 			console.error(`Cannot find tab by id: ${tabId}`);
 		}
@@ -503,7 +503,7 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 	}
 
 	public getSelectedTabId() {
-		return this.selectedTab && this.selectedTab.config.tabId;
+		return this.selectedTab && this.selectedTab.config.id;
 	}
 
 	public setToolButtons(toolButtons: ToolButton[]) {
@@ -514,10 +514,6 @@ export class TabPanel extends AbstractLegacyComponent<DtoTabPanel> implements Dt
 			this.$toolButtonContainer.appendChild(toolButton.getMainElement());
 		});
 		this.relayoutButtons();
-	}
-
-	public getToolButtons() {
-		return this.toolButtons;
 	}
 
 	public setWindowButtons(buttonTypes:WindowButtonType[]):void{

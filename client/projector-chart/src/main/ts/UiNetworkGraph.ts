@@ -129,7 +129,7 @@ export class UiNetworkGraph extends AbstractLegacyComponent<DtoNetworkGraph> imp
 		var defs = this.svg.append("defs").attr("id", "imgdefs");
 		for (let i = 0; i < images.length; i++) {
 			var img = images[i];
-			defs.append("pattern").attr("id", img.imageId)
+			defs.append("pattern").attr("id", img.id)
 				.attr("height", 1)
 				.attr("width", 1)
 				.attr("viewBox", "0 0 20 20")

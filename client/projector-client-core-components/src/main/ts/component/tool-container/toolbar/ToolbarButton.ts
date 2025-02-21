@@ -52,7 +52,7 @@ export class ToolbarButton {
 	private $styleTag: HTMLStyleElement;
 
 	constructor(public config: DtoToolbarButton) {
-		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.buttonId}">
+		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.id}">
 	<div class="toolbar-button-caret ${config.hasDropDown ? '' : 'hidden'}">
 	  <div class="caret"></div>
 	</div>
@@ -142,7 +142,7 @@ export class ToolbarButton {
 	}
 
 	get id() {
-		return this.config.buttonId;
+		return this.config.id;
 	}
 
 	setColors(backgroundColor: string, hoverBackgroundColor: string) {

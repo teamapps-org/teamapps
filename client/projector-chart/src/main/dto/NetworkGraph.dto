@@ -86,7 +86,7 @@ class DtoNetworkLink {
 }
 
 class DtoNetworkImage {
-	String imageId;
+	String id;
 	String image;
 }
 

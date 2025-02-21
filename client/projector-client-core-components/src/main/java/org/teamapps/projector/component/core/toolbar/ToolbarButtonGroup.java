@@ -105,7 +105,7 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 				.map(button -> button.createDtoToolbarButton())
 				.collect(Collectors.toList());
 		DtoToolbarButtonGroup buttonGroup = new DtoToolbarButtonGroup();
-		buttonGroup.setGroupId(clientId);
+		buttonGroup.setId(clientId);
 		buttonGroup.setButtons(dtoButtons);
 		buttonGroup.setVisible(visible);
 		buttonGroup.setShowGroupSeparator(showGroupSeparator);

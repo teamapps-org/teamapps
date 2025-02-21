@@ -51,7 +51,7 @@ export class ToolbarButtonGroup {
 		for (let j = 0; j < buttonGroupConfig.buttons.length; j++) {
 			const buttonConfig: DtoToolbarButton = buttonGroupConfig.buttons[j];
 			const button = this.createButton(buttonConfig);
-			this.buttons.push(buttonConfig.buttonId, button);
+			this.buttons.push(buttonConfig.id, button);
 			$buttonGroup.append(button.getMainDomElement());
 		}
 
@@ -66,7 +66,7 @@ export class ToolbarButtonGroup {
 	}
 
 	public getId() {
-		return this.config.groupId;
+		return this.config.id;
 	}
 
 	public get position() {
@@ -75,7 +75,7 @@ export class ToolbarButtonGroup {
 
 	private createButton(buttonConfig: DtoToolbarButton) {
 		const button = new ToolbarButton(buttonConfig);
-		button.onClick.addListener(dropDownButtonClickInfo => this.onButtonClicked.fire({buttonId: buttonConfig.buttonId, dropDownButtonClickInfo}));
+		button.onClick.addListener(dropDownButtonClickInfo => this.onButtonClicked.fire({buttonId: buttonConfig.id, dropDownButtonClickInfo}));
 		return button;
 	}
 
@@ -94,23 +94,23 @@ export class ToolbarButtonGroup {
 	public addButton(buttonConfig: DtoToolbarButton, neighborButtonId: string, beforeNeighbor: boolean) {
 		const button = this.createButton(buttonConfig);
 
-		const existingButton = this.buttons.getValue(buttonConfig.buttonId);
+		const existingButton = this.buttons.getValue(buttonConfig.id);
 		if (existingButton) {
-			this.removeButton(buttonConfig.buttonId);
+			this.removeButton(buttonConfig.id);
 		}
 
 		const neighborButton = this.buttons.getValue(neighborButtonId);
 		if (neighborButton) {
 			if (beforeNeighbor) {
 				insertBefore(button.getMainDomElement(), neighborButton.getMainDomElement());
-				this.buttons.insertBeforeValue(buttonConfig.buttonId, button, neighborButton);
+				this.buttons.insertBeforeValue(buttonConfig.id, button, neighborButton);
 			} else {
 				insertAfter(button.getMainDomElement(), neighborButton.getMainDomElement());
-				this.buttons.insertAfterValue(buttonConfig.buttonId, button, neighborButton);
+				this.buttons.insertAfterValue(buttonConfig.id, button, neighborButton);
 			}
 		} else {
 			this.$buttonGroup.appendChild(button.getMainDomElement());
-			this.buttons.push(buttonConfig.buttonId, button);
+			this.buttons.push(buttonConfig.id, button);
 		}
 
 		this.updateVisibility();
@@ -160,15 +160,15 @@ export class ToolbarButtonGroup {
 			if (this.visible && button.isVisible()) {
 				if (usedWidth + button.optimizedWidth <= availableWidth) {
 					this.buttonsShiftedToOverflowDropDown = this.buttonsShiftedToOverflowDropDown.filter(b => b !== button);
-					info.fittingButtons.push({groupId: this.config.groupId, buttonId: button.id, button});
+					info.fittingButtons.push({groupId: this.config.id, buttonId: button.id, button});
 				} else {
 					this.buttonsShiftedToOverflowDropDown.push(button);
-					info.nonFittingButtons.push({groupId: this.config.groupId, buttonId: button.id, button});
+					info.nonFittingButtons.push({groupId: this.config.id, buttonId: button.id, button});
 				}
 				usedWidth += button.optimizedWidth;
 			} else {
 				this.buttonsShiftedToOverflowDropDown = this.buttonsShiftedToOverflowDropDown.filter(b => b !== button);
-				info.hiddenButtons.push({groupId: this.config.groupId, buttonId: button.id, button});
+				info.hiddenButtons.push({groupId: this.config.id, buttonId: button.id, button});
 			}
 		});
 		this.updateVisibility();

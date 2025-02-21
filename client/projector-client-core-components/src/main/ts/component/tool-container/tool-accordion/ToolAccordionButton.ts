@@ -50,7 +50,7 @@ export class ToolAccordionButton {
 
 	constructor(config: DtoToolbarButton) {
 		this.config = config;
-		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.buttonId}" tabindex="0">
+		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.id}" tabindex="0">
 	${(this.config.template as Template).render(config.recordData)}
 	<div class="toolbar-button-caret ${config.hasDropDown ? '' : 'hidden'}">
 	  <div class="caret"></div>
@@ -89,7 +89,7 @@ export class ToolAccordionButton {
 
 
 	public get id() {
-		return this.config.buttonId;
+		return this.config.id;
 	}
 
 	public get visible() {

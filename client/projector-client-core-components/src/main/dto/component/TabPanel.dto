@@ -55,7 +55,7 @@ enum TabPanelTabStyle {
 }
 
 class DtoTab {
-	String tabId;
+	String id;
 	String icon;
 	String caption;
 	boolean closeable;

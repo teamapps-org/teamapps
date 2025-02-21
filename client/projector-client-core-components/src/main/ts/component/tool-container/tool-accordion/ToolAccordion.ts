@@ -62,7 +62,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 		for (let i = 0; i < allButtonGroups.length; i++) {
 			const buttonGroupConfig = allButtonGroups[i];
 			let buttonGroup = this.createButtonGroup(buttonGroupConfig);
-			this.buttonGroupsById.push(buttonGroupConfig.groupId, buttonGroup);
+			this.buttonGroupsById.push(buttonGroupConfig.id, buttonGroup);
 			this.$backgroundColorDiv.appendChild(buttonGroup.getMainDomElement());
 		}
 
@@ -104,13 +104,13 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 	}
 
 	public addButtonGroup(buttonGroupConfig: DtoToolbarButtonGroup) {
-		const existingButtonGroup = this.buttonGroupsById.getValue(buttonGroupConfig.groupId);
+		const existingButtonGroup = this.buttonGroupsById.getValue(buttonGroupConfig.id);
 		if (existingButtonGroup) {
-			this.removeButtonGroup(buttonGroupConfig.groupId);
+			this.removeButtonGroup(buttonGroupConfig.id);
 		}
 
 		const buttonGroup = this.createButtonGroup(buttonGroupConfig);
-		this.buttonGroupsById.push(buttonGroupConfig.groupId, buttonGroup);
+		this.buttonGroupsById.push(buttonGroupConfig.id, buttonGroup);
 
 		let allButtonGroups = this.buttonGroupsById.values;
 		let otherGroupIndex = 0;
@@ -221,7 +221,7 @@ class DtoButtonGroup {
 			}
 
 			this.toolAccordion.onToolbarButtonClick.fire({
-				groupId: this.config.groupId,
+				groupId: this.config.id,
 				buttonId: button.id,
 				dropDownClickInfo: dropdownClickInfo
 			});
@@ -320,12 +320,12 @@ class DtoButtonGroup {
 	public addButton(buttonConfig: DtoToolbarButton, neighborButtonId?: string, beforeNeighbor?: boolean) {
 		const button = this.createButton(buttonConfig);
 
-		const existingButton = this.buttonsById[buttonConfig.buttonId];
+		const existingButton = this.buttonsById[buttonConfig.id];
 		if (existingButton) {
-			this.removeButton(buttonConfig.buttonId);
+			this.removeButton(buttonConfig.id);
 		}
 
-		this.buttonsById[buttonConfig.buttonId] = button;
+		this.buttonsById[buttonConfig.id] = button;
 		const neighborButton = this.buttonsById[neighborButtonId];
 		if (neighborButton) {
 			let neighborButtonIndex = this.buttons.indexOf(neighborButton);

@@ -65,7 +65,7 @@ public class Tab {
 	public DtoTab createDtoTab() {
 		SessionContext context = CurrentSessionContext.get();
 		DtoTab uiTab = new DtoTab();
-		uiTab.setTabId(clientId);
+		uiTab.setId(clientId);
 		uiTab.setIcon(context.resolveIcon(icon));
 		uiTab.setCaption(title);
 		uiTab.setCloseable(closeable);

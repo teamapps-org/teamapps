@@ -174,9 +174,9 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	public addButtonGroup(groupConfig: DtoToolbarButtonGroup, rightSide: boolean) {
-		const existingButtonGroup = this.buttonGroupsById[groupConfig.groupId];
+		const existingButtonGroup = this.buttonGroupsById[groupConfig.id];
 		if (existingButtonGroup) {
-			this.removeButtonGroup(groupConfig.groupId);
+			this.removeButtonGroup(groupConfig.id);
 		}
 		let emptyStateChanges = this.empty;
 
@@ -184,12 +184,12 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 		buttonGroup.getMainDomElement().classList.toggle("right-side", rightSide);
 		buttonGroup.onButtonClicked.addListener(e => {
 			return this.onToolbarButtonClick.fire({
-				groupId: groupConfig.groupId,
+				groupId: groupConfig.id,
 				buttonId: e.buttonId,
 				dropDownClickInfo: e.dropDownButtonClickInfo
 			});
 		});
-		this.buttonGroupsById[groupConfig.groupId] = buttonGroup;
+		this.buttonGroupsById[groupConfig.id] = buttonGroup;
 		if (rightSide) {
 			this.rightButtonGroups.push(buttonGroup);
 		} else {
