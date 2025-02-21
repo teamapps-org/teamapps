@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Constants} from "./Common";
 
 type Options = {
 	validDragStartDecider?: (e: PointerEvent & TouchEvent) => boolean
@@ -33,11 +32,17 @@ type EventData = {
 	deltaY: number;
 };
 
+const POINTER_EVENTS = {
+	start: 'pointerdown',
+	move: 'pointermove',
+	end: 'pointerup'
+};
+
 export function draggable($elements: HTMLElement | HTMLElement[] | NodeListOf<HTMLElement>, callbacks: Options) {
 	let $els: HTMLElement[];
 	$els = $elements instanceof NodeList ? [].slice.call($elements) : [$elements].flat();
 	$els.forEach($element => {
-		$element.addEventListener(`${Constants.POINTER_EVENTS.start}`, (e: PointerEvent & TouchEvent) => {
+		$element.addEventListener(`${POINTER_EVENTS.start}`, (e: PointerEvent & TouchEvent) => {
 			const isSpecialMouseButton = e.button != null && e.button !== 0;
 			const isValidDragStart = callbacks.validDragStartDecider != null ? callbacks.validDragStartDecider(e) : !isSpecialMouseButton
 			if (!isValidDragStart) {
@@ -52,15 +57,15 @@ export function draggable($elements: HTMLElement | HTMLElement[] | NodeListOf<HT
 			let moveHandler = (e: any) => {
 				callbacks.drag(e, createEventData(e, startPosition));
 			};
-			document.addEventListener(`${Constants.POINTER_EVENTS.move}`, moveHandler);
+			document.addEventListener(`${POINTER_EVENTS.move}`, moveHandler);
 
 			let endHandler = () => {
-				document.removeEventListener(`${Constants.POINTER_EVENTS.move}`, moveHandler);
-				document.removeEventListener(`${Constants.POINTER_EVENTS.end}`, endHandler);
+				document.removeEventListener(`${POINTER_EVENTS.move}`, moveHandler);
+				document.removeEventListener(`${POINTER_EVENTS.end}`, endHandler);
 				callbacks.dragEnd(e, createEventData(e, startPosition));
 				$element.style.touchAction = oldTouchAction;
 			};
-			document.addEventListener(`${Constants.POINTER_EVENTS.end}`, endHandler);
+			document.addEventListener(`${POINTER_EVENTS.end}`, endHandler);
 		});
 	})
 }

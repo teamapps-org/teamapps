@@ -30,7 +30,6 @@ import {
 } from "projector-client-object-api";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
-import {defaultSpinnerTemplate} from "../../../util/Common";
 import {
 	DropDownButtonClickInfo,
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
@@ -239,7 +238,7 @@ class DtoButtonGroup {
 		if (button.dropDownComponent) {
 			this.setButtonDropDownComponent(button, button.dropDownComponent);
 		} else {
-			button.$dropDown.appendChild(parseHtml(defaultSpinnerTemplate));
+			button.$dropDown.appendChild(parseHtml(`<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`));
 		}
 
 		return button.$dropDown;

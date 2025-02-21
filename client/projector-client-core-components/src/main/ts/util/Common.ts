@@ -28,16 +28,8 @@ import {
 	RepeatableAnimation
 } from "projector-client-object-api";
 
-export const defaultSpinnerTemplate = `<div class="tr-default-spinner"><div class="spinner"></div><div>Fetching data...</div></div>`;
-
 export class Constants {
 	private static _SCROLLBAR_WIDTH: number;
-
-	public static POINTER_EVENTS = {
-		start: 'pointerdown',
-		move: 'pointermove',
-		end: 'pointerup'
-	};
 
 	static get SCROLLBAR_WIDTH() {
 		if (Constants._SCROLLBAR_WIDTH == null) {
@@ -123,10 +115,10 @@ export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displ
 	padding?: number,
 	considerScrollbars?: boolean
 }) {
-	options = $.extend({}, options); // copy the options as we are potentially making changes to the object...
+	options = {...options}; // copy the options as we are potentially making changes to the object...
 	if (options.innerPreferredDimensions == null || !options.innerPreferredDimensions.width || !options.innerPreferredDimensions.height) {
 		if ($inner instanceof HTMLImageElement && $inner.naturalHeight > 0) {
-			let imgElement = <HTMLImageElement>$($inner)[0];
+			let imgElement = $inner;
 			options.innerPreferredDimensions = {
 				width: imgElement.naturalWidth,
 				height: imgElement.naturalHeight
@@ -249,13 +241,6 @@ export function removeDangerousTags(value: string) {
 	return removeTags(value, "script", "style");
 }
 
-
-
-
-
-
-
-
 export async function createImageThumbnailUrl(file: File): Promise<string> {
 	if (["image/bmp", "image/gif", "image/heic", "image/heic-sequence", "image/heif", "image/heif-sequence", "image/ief", "image/jls", "image/jp2", "image/jpeg", "image/jpm", "image/jpx", "image/ktx", "image/png", "image/sgi", "image/svg+xml", "image/tiff", "image/webp", "image/wmf"].includes(file.type)) {
 		return new Promise<string | ArrayBuffer>((resolve, reject) => {
@@ -293,13 +278,6 @@ function transition(el: HTMLElement, targetValues: {[style: string]: string}, an
 		Object.assign(el.style, targetValues);
 }
 
-let lastPointerCoordinates: [number, number] = [0, 0];
-document.body.addEventListener("pointermove", ev => lastPointerCoordinates = [ev.clientX, ev.clientY], {capture: true});
-
-export function getLastPointerCoordinates() {
-	return lastPointerCoordinates;
-}
-
 export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaElement, text: string) {
 	if (input.selectionStart != null) {
 		const startPos = input.selectionStart;
@@ -310,21 +288,4 @@ export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaEle
 	} else {
 		input.value += text;
 	}
-}
-
-export function getScrollParent(element, includeHidden) {
-	let style = getComputedStyle(element);
-	const excludeStaticParent = style.position === "absolute";
-	const overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/;
-
-	if (style.position === "fixed") return document.body;
-	for (let parent = element; (parent = parent.parentElement);) {
-		style = getComputedStyle(parent);
-		if (excludeStaticParent && style.position === "static") {
-			continue;
-		}
-		if (overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) return parent;
-	}
-
-	return document.body;
 }

@@ -502,7 +502,6 @@
                                 <exclude>**/TeamAppsJavaDtoGeneratorTest_*.java</exclude>
                                 <exclude>**/TeamAppsTypeScriptGeneratorTest_*.tsd</exclude>
                                 <exclude>**/d3v3.d.ts</exclude>
-                                <exclude>**/jquery.event.drag-2.3.0-fixed.js</exclude>
                             </excludes>
                         </configuration>
                     </plugin>

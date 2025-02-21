@@ -43,31 +43,43 @@
     &.mode-rectangle {
       border-radius: 3px;
     }
+
     &.mode-round {
       border-radius: 10000px;
     }
 
     .ui-resizable-handle {
+      position: absolute;
       width: var(--ta-resize-square-handle-size);
       height: var(--ta-resize-square-handle-size);
       background-color: rgba(255, 255, 255, .5);
       border: 1px solid black;
     }
 
-  }
+    .ui-resizable-se {
+      cursor: se-resize;
+      right: calc(var(--ta-resize-square-handle-size) / -2);
+      bottom: calc(var(--ta-resize-square-handle-size) / -2);
+    }
 
-  .ui-resizable-n,
-  .ui-resizable-s {
-    left: calc(50% - var(--ta-resize-square-handle-size) / 2);
-  }
-  .ui-resizable-e,
-  .ui-resizable-w {
-    top: calc(50% - var(--ta-resize-square-handle-size) / 2);
-  }
+    .ui-resizable-sw {
+      cursor: sw-resize;
+      left: calc(var(--ta-resize-square-handle-size) / -2);
+      bottom: calc(var(--ta-resize-square-handle-size) / -2);
+    }
 
-  .ui-resizable-se {
-    right: -5px;
-    bottom: -5px;
+    .ui-resizable-nw {
+      cursor: nw-resize;
+      left: calc(var(--ta-resize-square-handle-size) / -2);
+      top: calc(var(--ta-resize-square-handle-size) / -2);
+    }
+
+    .ui-resizable-ne {
+      cursor: ne-resize;
+      right: calc(var(--ta-resize-square-handle-size) / -2);
+      top: calc(var(--ta-resize-square-handle-size) / -2);
+    }
+
   }
 
 }

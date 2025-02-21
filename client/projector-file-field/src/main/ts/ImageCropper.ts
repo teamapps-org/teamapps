@@ -55,8 +55,8 @@ export class ImageCropper extends AbstractLegacyComponent<DtoImageCropper> imple
 	constructor(config: DtoImageCropper, serverObjectChannel: ServerObjectChannel) {
 		super(config);
 
-		this.$element = parseHtml(`<div data-id="' + config.id + '" class="UiImageCropper">
-    <img></img>
+		this.$element = parseHtml(`<div data-id="' + config.id + '" class="ImageCropper">
+    <img draggable="false"></img>
     <div class="cropping-frame" tabindex="-1">
     	<div class="ui-resizable-handle ui-resizable-ne" data-direction="ne" data-fixed-at="sw"></div>
     	<div class="ui-resizable-handle ui-resizable-se" data-direction="se" data-fixed-at="nw"></div>

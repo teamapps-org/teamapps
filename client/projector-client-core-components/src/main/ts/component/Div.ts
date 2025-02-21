@@ -17,32 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoDiv, DtoDivCommandHandler} from "../generated";
+import {DtoDiv, DtoDivCommandHandler, DtoDummyComponent} from "../generated";
 
-import {AbstractWebComponent, Component} from "projector-client-object-api";
+import {AbstractLegacyComponent, AbstractWebComponent, Component, parseHtml, ServerObjectChannel} from "projector-client-object-api";
 
-const template = document.createElement("template");
-template.innerHTML = `
-<style>
-	:host {
-		display: block;
-	}
-</style>
-<slot></slot>
-`;
+export class Div extends AbstractLegacyComponent<DtoDiv> implements DtoDivCommandHandler {
 
-export class Div extends AbstractWebComponent<DtoDiv> implements DtoDivCommandHandler {
-	private $slot: HTMLSlotElement;
+	private readonly $div: HTMLDivElement;
 
-	constructor() {
-		super();
-
-		this.shadowRoot?.appendChild(template.content.cloneNode(true));
-		this.$slot = this.shadowRoot.querySelector("slot");
-	}
-
-	public setConfig(config: DtoDiv) {
-		super.setConfig(config);
+	constructor(config: DtoDiv, serverObjectChannel: ServerObjectChannel) {
+		super(config);
+		this.$div = document.createElement("div");
 		if (config.innerHtml != null) {
 			this.setInnerHtml(config.innerHtml);
 		}
@@ -53,19 +38,21 @@ export class Div extends AbstractWebComponent<DtoDiv> implements DtoDivCommandHa
 
 	setContent(content: unknown): any {
 		if (content == null) {
-			this.innerHTML = '';
+			this.$div.innerHTML = '';
 		} else {
-			this.appendChild((content as Component).getMainElement())
+			this.$div.appendChild((content as Component).getMainElement())
 		}
 	}
 
 	setInnerHtml(innerHtml: string): any {
 		if (innerHtml == null) {
-			this.innerHTML = '';
+			this.$div.innerHTML = '';
 		} else {
-			this.innerHTML = innerHtml;
+			this.$div.innerHTML = innerHtml;
 		}
 	}
-}
 
-window.customElements.define("ui-div", Div);
+	protected doGetMainElement(): HTMLElement {
+		return this.$div;
+	}
+}

@@ -19,10 +19,13 @@
  */
 package org.teamapps.projector.component.filefield.imagecropper;
 
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponentConfig;
+import org.teamapps.projector.component.filefield.FileFieldLibrary;
 import org.teamapps.projector.event.ProjectorEvent;
 
+@ClientObjectLibrary(FileFieldLibrary.class)
 public class ImageCropper extends AbstractComponent implements DtoImageCropperEventHandler {
 
 	private final DtoImageCropperClientObjectChannel clientObjectChannel = new DtoImageCropperClientObjectChannel(getClientObjectChannel());

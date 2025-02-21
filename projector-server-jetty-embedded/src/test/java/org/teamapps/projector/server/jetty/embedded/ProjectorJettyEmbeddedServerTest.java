@@ -20,16 +20,10 @@
 package org.teamapps.projector.server.jetty.embedded;
 
 import org.teamapps.projector.component.core.rootpanel.RootPanel;
-import org.teamapps.projector.component.treecomponents.combobox.ComboBox;
-import org.teamapps.projector.component.treecomponents.tree.model.ListTreeModel;
+import org.teamapps.projector.component.filefield.imagecropper.ImageCropper;
 import org.teamapps.projector.icon.Icon;
-import org.teamapps.projector.icon.material.MaterialIcon;
 import org.teamapps.projector.server.webcontroller.WebController;
 import org.teamapps.projector.session.SessionContext;
-import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
-
-import java.util.List;
-import java.util.Map;
 
 public class ProjectorJettyEmbeddedServerTest {
 
@@ -42,17 +36,11 @@ public class ProjectorJettyEmbeddedServerTest {
 			rootPanel.setCssStyle("border", "20px solid black");
 			sessionContext.addRootComponent(rootPanel);
 
-			ComboBox<User> comboBox = new ComboBox<>(BaseTemplates.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE);
-			comboBox.setPropertyProvider((user, propertyNames) -> Map.of("icon", user.icon, "caption", user.name));
-			comboBox.setModel(new ListTreeModel<>(List.of(
-					new User("Adam", MaterialIcon.ALARM_ON),
-					new User("Bob", MaterialIcon.GRID_ON),
-					new User("Joe", MaterialIcon.HD)
-			)));
+			ImageCropper imageCropper = new ImageCropper();
+			imageCropper.setImageUrl("https://307a6ed092846b809be7-9cfa4cf7c673a59966ad8296f4c88804.ssl.cf3.rackcdn.com/Data-Uri-Chrome/Chrome-Data-Uri-Data-URL.png");
 
-			rootPanel.setContent(comboBox);
 
-			sessionContext.subscribeToGlobalKeyEvents(true, false, false, false, false, true, true, System.out::println);
+			rootPanel.setContent(imageCropper);
 		};
 
 		ProjectorJettyEmbeddedServer jettyServer = ProjectorJettyEmbeddedServer.builder(controller)
