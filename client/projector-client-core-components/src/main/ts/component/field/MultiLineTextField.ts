@@ -25,12 +25,12 @@ import {
 	DtoTextInputHandlingField_TextInputEvent,
 	SpecialKey
 } from "../../generated";
-import {Constants, escapeHtml} from "../../util/Common";
+import {escapeHtml, getScrollbarWidth} from "../../util/Common";
 import {
 	AbstractField,
 	DebounceMode,
-	FieldEditingMode,
 	executeWhenFirstDisplayed,
+	FieldEditingMode,
 	parseHtml,
 	ProjectorEvent
 } from "projector-client-object-api";
@@ -131,7 +131,7 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 	@executeWhenFirstDisplayed()
 	private updateClearButton() {
 		this.$wrapper.classList.toggle("clearable", !!(this.showClearButton && this.$field.value));
-		this.$clearButton.style.right = hasVerticalScrollBar(this.$field) ? Constants.SCROLLBAR_WIDTH + "px" : "0";
+		this.$clearButton.style.right = hasVerticalScrollBar(this.$field) ? getScrollbarWidth() + "px" : "0";
 	}
 
 	public setPlaceholderText(placeholderText: string): void {

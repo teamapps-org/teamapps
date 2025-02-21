@@ -20,14 +20,17 @@
 
 import {
 	AbstractLegacyComponent,
-	arraysEqual, Component, deepEquals,
+	arraysEqual,
+	Component,
+	deepEquals,
 	findClassesByFunction,
 	parseHtml,
-	ServerObjectChannel,
-	ProjectorEvent
+	ProjectorEvent,
+	ServerObjectChannel
 } from "projector-client-object-api";
 import {
-	DtoAudioTrackConstraints, DtoMediaDeviceInfo,
+	DtoAudioTrackConstraints,
+	DtoMediaDeviceInfo,
 	DtoMediaSoupPlaybackParameters,
 	DtoMediaSoupPublishingParameters,
 	DtoMediaSoupV3WebRtcClient,
@@ -49,7 +52,7 @@ import {
 	MediaRetrievalFailureReason,
 	SourceMediaTrackType
 } from "./generated";
-import {Constants, ContextMenu} from "projector-client-core-components";
+import {ContextMenu, getScrollbarWidth} from "projector-client-core-components";
 import {MixSizingInfo, TrackWithMixSizingInfo, VideoTrackMixer} from "./VideoTrackMixer";
 import {MediaKind} from "mediasoup-client/lib/RtpParameters";
 import {addVoiceActivityDetection, createVideoConstraints, enumerateDevices, getDisplayStream} from "./MediaUtil";
@@ -727,7 +730,7 @@ function calculateDisplayModeInnerSize(containerDimensions: { width: number, hei
 		if (considerScrollbars && zoomFactor <= 1 && Math.ceil(width / imageAspectRatio) > containerDimensions.height) {
 			// There will be a vertical scroll bar, so make sure the width will not result in a horizontal scrollbar, too
 			// NOTE: Chrome still shows scrollbars sometimes. https://bugs.chromium.org/p/chromium/issues/detail?id=240772&can=2&start=0&num=100&q=&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified&groupby=&sort=
-			width = Math.min(width, containerDimensions.width - Constants.SCROLLBAR_WIDTH);
+			width = Math.min(width, containerDimensions.width - getScrollbarWidth());
 		}
 		return {width: width, height: width / imageAspectRatio};
 	} else if (displayMode === "fit-height") {
@@ -735,7 +738,7 @@ function calculateDisplayModeInnerSize(containerDimensions: { width: number, hei
 		if (considerScrollbars && zoomFactor <= 1 && height * imageAspectRatio > containerDimensions.width) {
 			// There will be a horizontal scroll bar, so make sure the width will not result in a vertical scrollbar, too
 			// NOTE: Chrome still shows scrollbars sometimes. https://bugs.chromium.org/p/chromium/issues/detail?id=240772&can=2&start=0&num=100&q=&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified&groupby=&sort=
-			height = Math.min(height, containerDimensions.height - Constants.SCROLLBAR_WIDTH);
+			height = Math.min(height, containerDimensions.height - getScrollbarWidth());
 		}
 		return {width: height * imageAspectRatio, height: height};
 	} else if (displayMode === "fit-size") {
