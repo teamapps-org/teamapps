@@ -37,7 +37,7 @@ public abstract class AbstractComponent implements Component {
 	private final static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final SessionContext sessionContext;
-	private final ClientObjectChannel clientObjectChannel;
+	private final DtoComponentClientObjectChannel clientObjectChannel;
 
 	private boolean visible = true;
 	private final Map<String, Map<String, Boolean>> cssClassesBySelector = new HashMap<>(0);
@@ -49,7 +49,8 @@ public abstract class AbstractComponent implements Component {
 		// This IS ok, since SessionContext does not do anything with "this" reference.
 		// The only usage of the "this" reference is going to be triggered by this.
 		// Go figure.
-		this.clientObjectChannel = this.sessionContext.registerClientObject(this);
+		ClientObjectChannel coc = this.sessionContext.registerClientObject(this);
+		this.clientObjectChannel = new DtoComponentClientObjectChannel(coc);;
 	}
 
 	protected void mapAbstractConfigProperties(DtoComponent uiComponent) {
@@ -59,7 +60,7 @@ public abstract class AbstractComponent implements Component {
 		uiComponent.setAttributesBySelector(attributesBySelector);
 	}
 
-	protected ClientObjectChannel getClientObjectChannel() {
+	protected DtoComponentClientObjectChannel getClientObjectChannel() {
 		return clientObjectChannel;
 	}
 
@@ -77,7 +78,7 @@ public abstract class AbstractComponent implements Component {
 		boolean changed = visible != this.visible;
 		this.visible = visible;
 		if (changed) {
-			getClientObjectChannel().sendCommandIfRendered("setVisibleCommand", visible);
+			clientObjectChannel.setVisible(visible);
 		}
 	}
 
@@ -89,8 +90,7 @@ public abstract class AbstractComponent implements Component {
 		CssStyles styles = this.stylesBySelector.computeIfAbsent(selector, s -> new CssStyles());
 		styles.put(propertyName, value);
 
-		final String selector2 = selector;
-		getClientObjectChannel().sendCommandIfRendered("setStyleCommand", selector2, styles);
+		clientObjectChannel.setStyle(selector, styles);
 	}
 
 	@Override
@@ -101,8 +101,7 @@ public abstract class AbstractComponent implements Component {
 		Map<String, Boolean> classNames = cssClassesBySelector.computeIfAbsent(selector, s -> new HashMap<>());
 		classNames.put(className, enabled);
 
-		final String selector2 = selector;
-		getClientObjectChannel().sendCommandIfRendered("setClassNamesCommand", selector2, classNames);
+		clientObjectChannel.setClassNames(selector, classNames);
 	}
 
 	@Override
@@ -117,8 +116,7 @@ public abstract class AbstractComponent implements Component {
 			attributes.put(attributeName, DELETED_ATTRIBUTE);
 		}
 
-		final String selector2 = selector;
-		getClientObjectChannel().sendCommandIfRendered("setAttributesCommand", selector2, attributes);
+		clientObjectChannel.setAttributes(selector, attributes);
 	}
 
 }

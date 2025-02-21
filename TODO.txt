@@ -16,12 +16,8 @@ Low prio:
 Table:
 * column builder; return one when invoking addColumn() and listen to build() method.
 * setHideHeaders() WTF...
-BaseTemplate: icon and image are technically the same thing. so remove one of them (image)
-* make count long! (see aviloo raw data perspective problem)
 
 Upgrade FullCalendar to version 6 (and get rid of moment.js there)
-
-Check if component.setStyle() removes all old styles for this selector? If so, is that wanted?
 
 Search for ""\sto\w+String" in java files. Try to find a better solution (Jackson Serializers?)
 
