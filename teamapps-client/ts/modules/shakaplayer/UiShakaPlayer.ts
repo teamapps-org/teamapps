@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,7 +78,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 		this.$componentWrapper = parseHtml(
 			`<div class="UiShakaPlayer" style="background-color: ${config.backgroundColor}">
 				<div class="video-wrapper">
-					<video id="video" poster="${config.posterImageUrl}" class="${posterImageSizeCssClass}"></video>				
+					<video id="video" poster="${config.posterImageUrl}" class="${posterImageSizeCssClass}"></video>
 				</div>
 			</div>`);
 		this.$video = this.$componentWrapper.querySelector(":scope video");
@@ -261,6 +261,7 @@ class DistinctAudioTracksManifestParserDecorator implements ManifestParser {
 
 	async start(uri: string, playerInterface: PlayerInterface) {
 		let manifest = await this.delegate.start(uri, playerInterface);
+		// Add a unique role for each audio track.
 		// manifest.variants.forEach((variant, i) => variant.language = variant.language + i)
 		manifest.variants.forEach((variant, i) => variant.audio.roles.push("role" + i));
 		return manifest;
@@ -276,6 +277,18 @@ class DistinctAudioTracksManifestParserDecorator implements ManifestParser {
 
 	update(): any {
 		return this.delegate.update();
+	}
+
+	banLocation(location: string): void {
+		return this.delegate.banLocation(location);
+	}
+
+	onInitialVariantChosen(variant: shaka.extern.Variant): void {
+		return this.delegate.onInitialVariantChosen(variant);
+	}
+
+	setMediaElement(mediaElement: HTMLMediaElement): void {
+		return this.delegate.setMediaElement(mediaElement);
 	}
 }
 
