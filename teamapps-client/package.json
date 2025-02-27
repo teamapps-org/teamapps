@@ -1,6 +1,6 @@
 {
   "name": "teamapps-client",
-  "version": "0.9.196",
+  "version": "0.9.197-SNAPSHOT",
   "description": "teamapps",
   "author": "TeamApps.org",
   "main": "dist/js/main.js",
@@ -129,7 +129,7 @@
     "react-jsx-parser": "^1.28.1",
     "resize-observer-polyfill": "^1.5.1",
     "seamless-scroll-polyfill": "^2.3.4",
-    "shaka-player": "^3.1.0",
+    "shaka-player": "^4.13.0",
     "slick-carousel": "^1.8.1",
     "slickgrid": "yamass/SlickGrid",
     "socket.io-client": "^4.5.1",
