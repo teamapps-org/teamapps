@@ -49,14 +49,18 @@ public class RenderedRecordsCache<RECORD> {
 	}
 
 	public int getIndex(RECORD record) {
-		int index = IntStream.range(0, recordPairs.size())
-				.filter(i -> customEqualsAndHashCode.getEquals().test(record, recordPairs.get(i).getRecord()))
-				.findFirst().orElse(-1);
+		int index = getRelativeIndex(record);
 		if (index >= 0) {
 			return startIndex + index;
 		} else {
 			return -1;
 		}
+	}
+
+	private int getRelativeIndex(RECORD record) {
+		return IntStream.range(0, recordPairs.size())
+				.filter(i -> customEqualsAndHashCode.getEquals().test(record, recordPairs.get(i).getRecord()))
+				.findFirst().orElse(-1);
 	}
 
 	public List<RECORD> getRecords() {
