@@ -50,7 +50,7 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 		this.minDropDownHeight = config.minDropDownHeight;
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
 
-		this.$button = parseHtml(`<div class="ToolButton">
+		this.$button = parseHtml(`<div class="ToolButton" title="${config.title ?? ''}">
 	<div class="img ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url('${config.icon}');"></div>
 	<div class="caption">${config.caption ?? ""}</div>
 </div>`);
@@ -145,8 +145,8 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 		this.$caption.innerText = caption;
 	}
 
-	setPopoverText(popoverText: string): void {
-		// TODO
+	setTitle(title: string) {
+		this.getMainElement().title = title;
 	}
 
 }

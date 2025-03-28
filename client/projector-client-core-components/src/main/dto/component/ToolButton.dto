@@ -23,25 +23,18 @@ import org.teamapps.projector.component.DtoComponent;
 
 
 class DtoToolButton extends DtoComponent {
-	String icon;
-	Integer iconSize; // if null, default (defined by css)
-    String caption;
-	String popoverText;
-	boolean grayOutIfNotHovered;
+	mutable String icon;
+	mutable Integer iconSize; // if null, default (defined by css)
+    mutable String caption;
+	mutable String title;
+	mutable boolean grayOutIfNotHovered;
 
 	int minDropDownWidth;
 	int minDropDownHeight;
-	boolean openDropDownIfNotSet;
-	DtoComponent* dropDownComponent;
+	mutable boolean openDropDownIfNotSet;
+	mutable DtoComponent* dropDownComponent;
 
-    command setIcon(String icon);
-    command setIconSize(Integer iconSize);
-    command setCaption(String caption);
-    command setPopoverText(String popoverText);
-    command setGrayOutIfNotHovered(boolean grayOutIfNotHovered);
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
-	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
-	command setDropDownComponent(DtoComponent* dropDownComponent);
 	command closeDropDown();
 
 	event click();

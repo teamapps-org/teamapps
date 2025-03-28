@@ -40,7 +40,7 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 	private Icon icon;
 	private Integer iconSize = null; // null = default defined by CSS
 	private String caption;
-	private String popoverText;
+	private String title;
 	private boolean grayOutIfNotHovered;
 
 	private boolean openDropDownIfNotSet = false;
@@ -54,14 +54,14 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 		this(icon, null, null);
 	}
 
-	public ToolButton(Icon icon, String popoverText) {
-		this(icon, popoverText, null);
+	public ToolButton(Icon icon, String title) {
+		this(icon, title, null);
 	}
 
-	public ToolButton(Icon icon, String popoverText, Component dropDownComponent) {
+	public ToolButton(Icon icon, String title, Component dropDownComponent) {
 		super();
 		this.icon = icon;
-		this.popoverText = popoverText;
+		this.title = title;
 		this.dropDownComponent = dropDownComponent;
 	}
 
@@ -80,7 +80,7 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 		mapAbstractConfigProperties(uiToolButton);
 		uiToolButton.setIcon(icon);
 		uiToolButton.setIconSize(iconSize);
-		uiToolButton.setPopoverText(popoverText);
+		uiToolButton.setTitle(title);
 		uiToolButton.setCaption(caption);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
 		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent : null);
@@ -127,13 +127,13 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 		clientObjectChannel.setCaption(caption);
 	}
 
-	public String getPopoverText() {
-		return popoverText;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setPopoverText(String popoverText) {
-		this.popoverText = popoverText;
-		clientObjectChannel.setPopoverText(popoverText);
+	public void setTitle(String title) {
+		this.title = title;
+		clientObjectChannel.setTitle(title);
 	}
 
 	public boolean isOpenDropDownIfNotSet() {

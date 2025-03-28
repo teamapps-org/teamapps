@@ -71,9 +71,9 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	public readonly onWindowButtonClicked: ProjectorEvent<DtoPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton({icon: ICON_MINIMIZE, popoverText: "Minimize", visible: true, iconSize: 16}, noOpServerObjectChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton({icon: ICON_MAXIMIZE, popoverText: "Maximize/Restore", visible: true, iconSize: 16}, noOpServerObjectChannel),
-		[WindowButtonType.CLOSE]: new ToolButton({icon: ICON_CLOSE, popoverText: "Close", visible: true, iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonType.MINIMIZE]: new ToolButton({icon: ICON_MINIMIZE, title : "Minimize", visible: true, iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton({icon: ICON_MAXIMIZE, title : "Maximize/Restore", visible: true, iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonType.CLOSE]: new ToolButton({icon: ICON_CLOSE, title : "Close", visible: true, iconSize: 16}, noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		WindowButtonType.MINIMIZE,
