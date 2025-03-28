@@ -31,6 +31,10 @@ import {UiPdfViewerCommandHandler, UiPdfViewerConfig} from "../generated/UiPdfVi
 import { UiPdfViewMode } from "../generated/UiPdfViewMode";
 
 
+/**
+ * Docs for Mozillas pdf.js: https://mozilla.github.io/pdf.js/
+ * NPM Package: pdfjs-dist (CAUTION: pdfjs (without -dist) is another package!)
+ */
 export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implements UiPdfViewerCommandHandler {
 
 	private uuidClass: string;
