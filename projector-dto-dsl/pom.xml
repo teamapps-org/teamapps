@@ -9,8 +9,8 @@
 
     <artifactId>projector-dto-dsl</artifactId>
 
-    <name>TeamApps UI DSL</name>
-    <description>TeamApps UI DSL</description>
+    <name>Projector UI DSL</name>
+    <description>Projector UI DSL</description>
     <url>https://github.com/teamapps-org/teamapps</url>
     <licenses>
         <license>

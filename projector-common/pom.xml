@@ -9,8 +9,8 @@
 
     <artifactId>projector-common</artifactId>
 
-    <name>TeamApps Common</name>
-    <description>TeamApps Common</description>
+    <name>Projector Common</name>
+    <description>Projector Common</description>
     <url>https://github.com/teamapps-org/teamapps</url>
     <licenses>
         <license>

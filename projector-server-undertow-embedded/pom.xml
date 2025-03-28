@@ -9,8 +9,8 @@
 
     <artifactId>projector-server-undertow-embedded</artifactId>
 
-    <name>TeamApps Server Undertow Embedded</name>
-    <description>TeamApps Server Undertow Embedded</description>
+    <name>Projector Server Undertow Embedded</name>
+    <description>Projector Server Undertow Embedded</description>
     <url>https://github.com/teamapps-org/teamapps</url>
     <licenses>
         <license>

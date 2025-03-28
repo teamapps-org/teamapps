@@ -9,8 +9,8 @@
 
     <artifactId>projector-server-core</artifactId>
 
-    <name>TeamApps UX</name>
-    <description>TeamApps UX</description>
+    <name>Projector UX</name>
+    <description>Projector UX</description>
     <url>https://github.com/teamapps-org/teamapps</url>
     <licenses>
         <license>

@@ -9,8 +9,8 @@
 
     <artifactId>projector-server-jetty-embedded</artifactId>
 
-    <name>TeamApps Server Jetty Embedded</name>
-    <description>TeamApps Server Jetty Embedded</description>
+    <name>Projector Server Jetty Embedded</name>
+    <description>Projector Server Jetty Embedded</description>
     <url>https://github.com/teamapps-org/teamapps</url>
     <licenses>
         <license>

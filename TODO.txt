@@ -50,3 +50,5 @@ get rid of eval(...) in JS code by introducing Script as ClientObject (Script mu
 
 get rid of ProjectorTranslationKeys
 
+update license headers (upgrade plugin - super outdated!)
+
