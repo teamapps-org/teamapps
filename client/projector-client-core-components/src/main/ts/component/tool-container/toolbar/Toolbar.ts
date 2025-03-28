@@ -25,7 +25,7 @@ import {
 	noOpServerObjectChannel, outerWidthIncludingMargins,
 	parseHtml,
 	ServerObjectChannel,
-	ProjectorEvent
+	ProjectorEvent, EventSubscription
 } from "projector-client-object-api";
 import {
 	DtoAbstractToolContainer_ToolbarButtonClickEvent,
@@ -59,7 +59,8 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
-	private buttonGroupsById: { [id: string]: ToolbarButtonGroup } = {};
+	private buttonGroupsById: Map<string, ToolbarButtonGroup> = new Map();
+	private buttonGroupEmptyEventSubscriptions: Map<string, EventSubscription> = new Map();
 	private leftButtonGroups: ToolbarButtonGroup[] = [];
 	private rightButtonGroups: ToolbarButtonGroup[] = [];
 
@@ -145,20 +146,20 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	public setDropDownComponent(groupId: string, buttonId: string, component: Component): void {
-		this.buttonGroupsById[groupId].setDropDownComponent(buttonId, component);
+		this.buttonGroupsById.get(groupId).setDropDownComponent(buttonId, component);
 		this.overflowToolAccordion.setDropDownComponent(groupId, buttonId, component);
 	}
 
 	public setButtonHasDropDown(groupId: string, buttonId: string, hasDropDown: boolean): void {
-		this.buttonGroupsById[groupId].setButtonHasDropDown(buttonId, hasDropDown);
+		this.buttonGroupsById.get(groupId).setButtonHasDropDown(buttonId, hasDropDown);
 	}
 
 	public closeDropDown(groupId: string, buttonId: string) {
-		this.buttonGroupsById[groupId].closeDropDown(buttonId);
+		this.buttonGroupsById.get(groupId).closeDropDown(buttonId);
 	}
 
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
-		Object.values(this.buttonGroupsById).forEach(buttonGroup => buttonGroup.setButtonVisible(buttonId, visible));
+		this.buttonGroupsById.forEach(buttonGroup => buttonGroup.setButtonVisible(buttonId, visible));
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.setButtonVisible(groupId, buttonId, visible);
 		}
@@ -166,7 +167,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	public setButtonGroupVisible(groupId: string, visible: boolean) {
-		this.buttonGroupsById[groupId] && this.buttonGroupsById[groupId].setVisible(visible);
+		this.buttonGroupsById.get(groupId)?.setVisible(visible);
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.setButtonGroupVisible(groupId, visible);
 		}
@@ -174,11 +175,10 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	public addButtonGroup(groupConfig: DtoToolbarButtonGroup, rightSide: boolean) {
-		const existingButtonGroup = this.buttonGroupsById[groupConfig.id];
+		const existingButtonGroup = this.buttonGroupsById.get(groupConfig.id);
 		if (existingButtonGroup) {
 			this.removeButtonGroup(groupConfig.id);
 		}
-		let emptyStateChanges = this.empty;
 
 		const buttonGroup = new ToolbarButtonGroup(groupConfig, this);
 		buttonGroup.getMainDomElement().classList.toggle("right-side", rightSide);
@@ -203,9 +203,9 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 		}
 		this.updateButtonOverflow();
 
-		if (emptyStateChanges) {
-			this.onEmptyStateChanged.fire(false);
-		}
+		this.buttonGroupEmptyEventSubscriptions.set(buttonGroup.getId(),
+			buttonGroup.onEmptyStateChanged.addListener(eventObject => this.updateEmptyState()));
+		this.updateEmptyState();
 	}
 
 	private insertGroupAtCorrectSortingPosition(buttonGroup: ToolbarButtonGroup, position: DtoToolbarButtonGroupPosition, rightSide: boolean) {
@@ -228,12 +228,10 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	public removeButtonGroup(groupId: string): void {
-		let wasAlreadyEmpty = this.empty;
-
-		const buttonGroup = this.buttonGroupsById[groupId];
+		const buttonGroup = this.buttonGroupsById.get(groupId);
 
 		if (buttonGroup) {
-			delete this.buttonGroupsById[groupId];
+			this.buttonGroupsById.delete(groupId);
 			this.leftButtonGroups = this.leftButtonGroups.filter(g => g.getId() !== groupId);
 			this.rightButtonGroups = this.rightButtonGroups.filter(g => g.getId() !== groupId);
 			buttonGroup.getMainDomElement().remove();
@@ -244,13 +242,16 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 		}
 		this.updateButtonOverflow();
 
-		if (this.empty && !wasAlreadyEmpty) {
-			this.onEmptyStateChanged.fire(true);
-		}
+		this.buttonGroupEmptyEventSubscriptions.get(buttonGroup.getId())?.unsubscribe();
+		this.updateEmptyState();
+	}
+
+	private updateEmptyState() {
+		this.onEmptyStateChanged.fireIfChanged(this.empty);
 	}
 
 	public addButton(groupId: string, buttonConfig: DtoToolbarButton, neighborButtonId: string, beforeNeighbor: boolean) {
-		this.buttonGroupsById[groupId] && this.buttonGroupsById[groupId].addButton(buttonConfig, neighborButtonId, beforeNeighbor);
+		this.buttonGroupsById.get(groupId)?.addButton(buttonConfig, neighborButtonId, beforeNeighbor);
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.addButton(groupId, buttonConfig, neighborButtonId, beforeNeighbor);
 		}
@@ -258,7 +259,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	public removeButton(groupId: string, buttonId: string): void {
-		Object.values(this.buttonGroupsById).forEach(group => group.removeButton(buttonId));
+		this.buttonGroupsById.forEach(group => group.removeButton(buttonId));
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.removeButton(groupId, buttonId);
 		}
@@ -308,7 +309,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	public get empty() {
-		return this.leftButtonGroups.length === 0 && this.rightButtonGroups.length === 0;
+		return ![...this.buttonGroupsById.values()].some(group => !group.empty);
 	}
 
 	public destroy(): void {
@@ -317,7 +318,7 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 	}
 
 	setButtonColors(groupId: string, buttonId: string, backgroundColor: string, hoverBackgroundColor: string): void {
-		this.buttonGroupsById[groupId].setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
+		this.buttonGroupsById.get(groupId)?.setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
 	}
 
 }

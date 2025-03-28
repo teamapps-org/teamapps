@@ -28,6 +28,7 @@ import {DropDownButtonClickInfo} from "../../../generated";
 
 export class ToolbarButtonGroup {
 	public readonly onButtonClicked: ProjectorEvent<{buttonId: string, dropDownButtonClickInfo: DropDownButtonClickInfo}> = new ProjectorEvent();
+	public readonly onEmptyStateChanged: ProjectorEvent<boolean> = new ProjectorEvent();
 
 	private config: DtoToolbarButtonGroup;
 	private visible: boolean = true;
@@ -64,6 +65,10 @@ export class ToolbarButtonGroup {
 
 
 	}
+
+	public get empty(): boolean {
+		return !this.buttons.values.some(b => b.isVisible());
+	};
 
 	public getId() {
 		return this.config.id;
@@ -143,6 +148,8 @@ export class ToolbarButtonGroup {
 			return button.isVisible() && this.buttonsShiftedToOverflowDropDown.indexOf(button) === -1;
 		});
 		this.$buttonGroupWrapper.classList.toggle("pseudo-hidden", !(this.visible && hasVisibleButton));
+
+		this.onEmptyStateChanged.fireIfChanged(this.empty);
 	}
 
 	setButtonColors(buttonId: string, backgroundColor: string, hoverBackgroundColor: string) {
