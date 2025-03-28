@@ -36,282 +36,286 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent implements Field<VALUE>, DtoAbstractFieldEventHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final FieldValidator<VALUE> requiredValidator = (value) ->
-			this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessageSeverity.ERROR,
-					CurrentSessionContext.get().getLocalized(ProjectorTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
+    private final FieldValidator<VALUE> requiredValidator = (value) ->
+            this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessageSeverity.ERROR,
+                    CurrentSessionContext.get().getLocalized(ProjectorTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
 
-	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
-			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmptyValue(value)) ?
-					Collections.singletonList(new FieldMessage(FieldMessageSeverity.ERROR,
-							CurrentSessionContext.get().getLocalized(ProjectorTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
+    private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
+            (this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmptyValue(value)) ?
+                    Collections.singletonList(new FieldMessage(FieldMessageSeverity.ERROR,
+                            CurrentSessionContext.get().getLocalized(ProjectorTranslationKeys.REQUIRED_FIELD.getKey()))) : List.of();
 
-	private final DtoAbstractFieldClientObjectChannel clientObjectChannel = new DtoAbstractFieldClientObjectChannel(getClientObjectChannel());
+    private final DtoAbstractFieldClientObjectChannel clientObjectChannel = new DtoAbstractFieldClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<VALUE> onFocus = new ProjectorEvent<>(clientObjectChannel::toggleFocusEvent);
-	public final ProjectorEvent<VALUE> onBlur = new ProjectorEvent<>(clientObjectChannel::toggleBlurEvent);
-	public final ProjectorEvent<VALUE> onValueChanged = new ProjectorEvent<>(clientObjectChannel::toggleValueChangedEvent);
-	public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
+    public final ProjectorEvent<VALUE> onFocus = new ProjectorEvent<>(clientObjectChannel::toggleFocusEvent);
+    public final ProjectorEvent<VALUE> onBlur = new ProjectorEvent<>(clientObjectChannel::toggleBlurEvent);
+    public final ProjectorEvent<VALUE> onValueChanged = new ProjectorEvent<>(clientObjectChannel::toggleValueChangedEvent);
+    public final ProjectorEvent<Boolean> onVisibilityChanged = new ProjectorEvent<>();
 
-	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
+    private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
 
-	private final Set<FieldValidator<VALUE>> validators = new HashSet<>();
-	private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>(); // null key for custom field messages (not bound to a validator)
-	private FieldMessagePosition defaultMessagePosition = FieldMessagePosition.BELOW;
-	private FieldMessageVisibility defaultMessageVisibility = FieldMessageVisibility.ALWAYS_VISIBLE;
+    private final Set<FieldValidator<VALUE>> validators = new HashSet<>();
+    private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>(); // null key for custom field messages (not bound to a validator)
+    private FieldMessagePosition defaultMessagePosition = FieldMessagePosition.BELOW;
+    private FieldMessageVisibility defaultMessageVisibility = FieldMessageVisibility.ALWAYS_VISIBLE;
 
-	private final MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
+    private final MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
 
-	private boolean valueChangedByClient;
+    private boolean valueChangedByClient;
 
-	@Override
-	public ProjectorEvent<VALUE> onFocus() {
-		return onFocus;
-	}
+    @Override
+    public ProjectorEvent<VALUE> onFocus() {
+        return onFocus;
+    }
 
-	@Override
-	public ProjectorEvent<VALUE> onBlur() {
-		return onBlur;
-	}
+    @Override
+    public ProjectorEvent<VALUE> onBlur() {
+        return onBlur;
+    }
 
-	@Override
-	public ProjectorEvent<VALUE> onValueChanged() {
-		return onValueChanged;
-	}
+    @Override
+    public ProjectorEvent<VALUE> onValueChanged() {
+        return onValueChanged;
+    }
 
-	@Override
-	public FieldEditingMode getEditingMode() {
-		return editingMode;
-	}
+    @Override
+    public FieldEditingMode getEditingMode() {
+        return editingMode;
+    }
 
-	@Override
-	public void setEditingMode(FieldEditingMode editingMode) {
-		this.editingMode = editingMode;
-		clientObjectChannel.setEditingMode(editingMode);
-	}
+    @Override
+    public void setEditingMode(FieldEditingMode editingMode) {
+        this.editingMode = editingMode;
+        clientObjectChannel.setEditingMode(editingMode);
+    }
 
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
-		onVisibilityChanged.fire(visible);
-	}
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        onVisibilityChanged.fire(visible);
+    }
 
-	@Override
-	public void focus() {
-		clientObjectChannel.focus();
-	}
+    @Override
+    public void focus() {
+        clientObjectChannel.focus();
+    }
 
-	protected void mapAbstractFieldAttributesToUiField(DtoAbstractField uiField) {
-		mapAbstractConfigProperties(uiField);
-		uiField.setValue(convertServerValueToClientValue(this.value.read()));
-		uiField.setEditingMode(editingMode);
-		uiField.setFieldMessages(getFieldMessages().stream()
-				.map(message -> message.createDtoFieldMessage(defaultMessagePosition, defaultMessageVisibility))
-				.collect(Collectors.toList()));
-	}
+    protected void mapAbstractFieldAttributesToUiField(DtoAbstractField uiField) {
+        mapAbstractConfigProperties(uiField);
+        uiField.setValue(convertServerValueToClientValue(this.value.read()));
+        uiField.setEditingMode(editingMode);
+        uiField.setFieldMessages(getFieldMessages().stream()
+                .map(message -> message.createDtoFieldMessage(defaultMessagePosition, defaultMessageVisibility))
+                .collect(Collectors.toList()));
+    }
 
-	@Override
-	public void setValue(VALUE value) {
-		valueChangedByClient = false;
-		MultiWriteLockableValue.Lock lock = this.value.writeAndLock(value);
-		Object uiValue = this.convertServerValueToClientValue(value);
+    @Override
+    public void setValue(VALUE value) {
+        valueChangedByClient = false;
+        MultiWriteLockableValue.Lock lock = this.value.writeAndLock(value);
+        Object uiValue = this.convertServerValueToClientValue(value);
 
-		boolean wasActuallySent = clientObjectChannel.setValue(uiValue, unused -> lock.release());
+        boolean wasActuallySent = clientObjectChannel.setValue(uiValue, unused -> lock.release());
 
-		if (!wasActuallySent) {
-			lock.release();
-		}
-	}
+        if (!wasActuallySent) {
+            lock.release();
+        }
+    }
 
-	protected MultiWriteLockableValue.Lock setAndLockValue(VALUE value) {
-		return this.value.writeAndLock(value);
-	}
+    protected MultiWriteLockableValue.Lock setAndLockValue(VALUE value) {
+        return this.value.writeAndLock(value);
+    }
 
-	/**
-	 * Converts a server-side value to a client-side field-specific value.
-	 * Implementations must not have any side effects to the component!
-	 *
-	 * @param value the server-side value
-	 * @return the object to be sent to the ui
-	 */
-	public Object convertServerValueToClientValue(VALUE value) {
-		return value;
-	}
+    /**
+     * Converts a server-side value to a client-side field-specific value.
+     * Implementations must not have any side effects to the component!
+     *
+     * @param value the server-side value
+     * @return the object to be sent to the ui
+     */
+    public Object convertServerValueToClientValue(VALUE value) {
+        return value;
+    }
 
-	@Override
-	public VALUE getValue() {
-		return value.read();
-	}
+    @Override
+    public VALUE getValue() {
+        return value.read();
+    }
 
-	@Override
-	public void handleValueChanged(JsonWrapper value) {
-		applyValueFromUi(value.getJsonNode());
-		validate();
-	}
+    @Override
+    public void handleValueChanged(JsonWrapper value) {
+        if (editingMode == FieldEditingMode.EDITABLE || editingMode == FieldEditingMode.EDITABLE_IF_FOCUSED) {
+            applyValueFromUi(value.getJsonNode());
+            validate();
+        } else {
+            LOGGER.warn("Got valueChanged event from non-editable field {}. This might come from a rogue client: {}", this.getClass().getSimpleName(), getSessionContext().getName());
+        }
+    }
 
-	@Override
-	public void handleFocus() {
-		onFocus.fire();
-	}
+    @Override
+    public void handleFocus() {
+        onFocus.fire();
+    }
 
-	@Override
-	public void handleBlur() {
-		onBlur.fire();
-	}
+    @Override
+    public void handleBlur() {
+        onBlur.fire();
+    }
 
-	protected void applyValueFromUi(JsonNode value) {
-		if (!this.value.isLocked()) {
-			VALUE transformedValue = convertClientValueToServerValue(value);
-			if (!this.value.isLocked()) {
-				this.value.writeIfNotLocked(transformedValue);
-				valueChangedByClient = true;
-				onValueChanged.fire(transformedValue);
-			}
-		}
-	}
+    protected void applyValueFromUi(JsonNode value) {
+        if (!this.value.isLocked()) {
+            VALUE transformedValue = convertClientValueToServerValue(value);
+            if (!this.value.isLocked()) {
+                this.value.writeIfNotLocked(transformedValue);
+                valueChangedByClient = true;
+                onValueChanged.fire(transformedValue);
+            }
+        }
+    }
 
-	public VALUE convertClientValueToServerValue(JsonNode value) {
-		if (value == null || value.isNull()) {
-			return null;
-		}
-		return doConvertClientValueToServerValue(value);
-	}
+    public VALUE convertClientValueToServerValue(JsonNode value) {
+        if (value == null || value.isNull()) {
+            return null;
+        }
+        return doConvertClientValueToServerValue(value);
+    }
 
-	abstract public VALUE doConvertClientValueToServerValue(@Nonnull JsonNode value);
+    abstract public VALUE doConvertClientValueToServerValue(@Nonnull JsonNode value);
 
-	/**
-	 * Whether this value be regarded as empty / "no user input".
-	 * Override for field-specific behaviour.
-	 *
-	 * @return true if the value can be regarded as "empty".
-	 */
-	protected boolean isEmptyValue(VALUE value) {
-		return value == null;
-	}
+    /**
+     * Whether this value be regarded as empty / "no user input".
+     * Override for field-specific behaviour.
+     *
+     * @return true if the value can be regarded as "empty".
+     */
+    protected boolean isEmptyValue(VALUE value) {
+        return value == null;
+    }
 
-	public boolean isEmpty() {
-		return isEmptyValue(getValue());
-	}
+    public boolean isEmpty() {
+        return isEmptyValue(getValue());
+    }
 
-	@Override
-	public Collection<FieldValidator<VALUE>> getValidators() {
-		return Collections.unmodifiableSet(validators);
-	}
+    @Override
+    public Collection<FieldValidator<VALUE>> getValidators() {
+        return Collections.unmodifiableSet(validators);
+    }
 
-	@Override
-	public void addValidator(FieldValidator<VALUE> validator) {
-		validators.add(validator);
-	}
+    @Override
+    public void addValidator(FieldValidator<VALUE> validator) {
+        validators.add(validator);
+    }
 
-	@Override
-	public void removeValidator(FieldValidator<VALUE> validator) {
-		validators.remove(validator);
-		fieldMessagesByValidator.remove(validator);
-		updateFieldMessages();
-	}
+    @Override
+    public void removeValidator(FieldValidator<VALUE> validator) {
+        validators.remove(validator);
+        fieldMessagesByValidator.remove(validator);
+        updateFieldMessages();
+    }
 
-	@Override
-	public List<FieldMessage> validate() {
-		List<FieldMessage> allValidatorMessages = new ArrayList<>();
-		if (!validators.isEmpty()) {
-			for (FieldValidator<VALUE> validator : validators) {
-				fieldMessagesByValidator.remove(validator);
-				List<FieldMessage> messages = validator.validate(getValue());
-				if (messages == null) {
-					messages = Collections.emptyList();
-				}
-				fieldMessagesByValidator.put(validator, messages);
-				allValidatorMessages.addAll(messages);
-			}
-			updateFieldMessages();
-		}
-		return allValidatorMessages;
-	}
+    @Override
+    public List<FieldMessage> validate() {
+        List<FieldMessage> allValidatorMessages = new ArrayList<>();
+        if (!validators.isEmpty()) {
+            for (FieldValidator<VALUE> validator : validators) {
+                fieldMessagesByValidator.remove(validator);
+                List<FieldMessage> messages = validator.validate(getValue());
+                if (messages == null) {
+                    messages = Collections.emptyList();
+                }
+                fieldMessagesByValidator.put(validator, messages);
+                allValidatorMessages.addAll(messages);
+            }
+            updateFieldMessages();
+        }
+        return allValidatorMessages;
+    }
 
-	@Override
-	public void clearValidatorMessages() {
-		fieldMessagesByValidator.clear();
-		updateFieldMessages();
-	}
+    @Override
+    public void clearValidatorMessages() {
+        fieldMessagesByValidator.clear();
+        updateFieldMessages();
+    }
 
-	/**
-	 * field may not be null (empty)
-	 */
-	public void setRequired(boolean required) {
-		if (required) {
-			addValidator(requiredValidator);
-		} else {
-			removeValidator(requiredValidator);
-		}
-	}
+    /**
+     * field may not be null (empty)
+     */
+    public void setRequired(boolean required) {
+        if (required) {
+            addValidator(requiredValidator);
+        } else {
+            removeValidator(requiredValidator);
+        }
+    }
 
-	public void setRequiredIfVisibleAndEditable(boolean required) {
-		if (required) {
-			addValidator(requiredIfVisibleAndEditableValidator);
-		} else {
-			removeValidator(requiredIfVisibleAndEditableValidator);
-		}
-	}
+    public void setRequiredIfVisibleAndEditable(boolean required) {
+        if (required) {
+            addValidator(requiredIfVisibleAndEditableValidator);
+        } else {
+            removeValidator(requiredIfVisibleAndEditableValidator);
+        }
+    }
 
-	public boolean isRequired() {
-		return validators.contains(requiredValidator);
-	}
+    public boolean isRequired() {
+        return validators.contains(requiredValidator);
+    }
 
-	@Override
-	public List<FieldMessage> getFieldMessages() {
-		return fieldMessagesByValidator.values().stream()
-				.filter(Objects::nonNull)
-				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
-	}
+    @Override
+    public List<FieldMessage> getFieldMessages() {
+        return fieldMessagesByValidator.values().stream()
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
 
-	@Override
-	public List<FieldMessage> getCustomFieldMessages() {
-		return fieldMessagesByValidator.computeIfAbsent(null, v -> new ArrayList<>());
-	}
+    @Override
+    public List<FieldMessage> getCustomFieldMessages() {
+        return fieldMessagesByValidator.computeIfAbsent(null, v -> new ArrayList<>());
+    }
 
-	@Override
-	public void setCustomFieldMessages(List<FieldMessage> fieldMessages) {
-		fieldMessagesByValidator.put(null, new ArrayList<>(fieldMessages));
-		updateFieldMessages();
-	}
+    @Override
+    public void setCustomFieldMessages(List<FieldMessage> fieldMessages) {
+        fieldMessagesByValidator.put(null, new ArrayList<>(fieldMessages));
+        updateFieldMessages();
+    }
 
-	private void updateFieldMessages() {
-		List<DtoFieldMessage> uiFieldMessages = getFieldMessages().stream()
-				.map(fieldMessage -> fieldMessage.createDtoFieldMessage(defaultMessagePosition, defaultMessageVisibility))
-				.collect(Collectors.toList());
-		clientObjectChannel.setFieldMessages(uiFieldMessages);
-	}
+    private void updateFieldMessages() {
+        List<DtoFieldMessage> uiFieldMessages = getFieldMessages().stream()
+                .map(fieldMessage -> fieldMessage.createDtoFieldMessage(defaultMessagePosition, defaultMessageVisibility))
+                .collect(Collectors.toList());
+        clientObjectChannel.setFieldMessages(uiFieldMessages);
+    }
 
-	@Override
-	public FieldMessagePosition getDefaultMessagePosition() {
-		return defaultMessagePosition;
-	}
+    @Override
+    public FieldMessagePosition getDefaultMessagePosition() {
+        return defaultMessagePosition;
+    }
 
-	@Override
-	public void setDefaultMessagePosition(FieldMessagePosition defaultMessagePosition) {
-		this.defaultMessagePosition = defaultMessagePosition;
-	}
+    @Override
+    public void setDefaultMessagePosition(FieldMessagePosition defaultMessagePosition) {
+        this.defaultMessagePosition = defaultMessagePosition;
+    }
 
-	@Override
-	public FieldMessageVisibility getDefaultMessageVisibility() {
-		return defaultMessageVisibility;
-	}
+    @Override
+    public FieldMessageVisibility getDefaultMessageVisibility() {
+        return defaultMessageVisibility;
+    }
 
-	@Override
-	public void setDefaultMessageVisibility(FieldMessageVisibility defaultMessageVisibility) {
-		this.defaultMessageVisibility = defaultMessageVisibility;
-	}
+    @Override
+    public void setDefaultMessageVisibility(FieldMessageVisibility defaultMessageVisibility) {
+        this.defaultMessageVisibility = defaultMessageVisibility;
+    }
 
-	@Override
-	public boolean isValueChangedByClient() {
-		return valueChangedByClient;
-	}
+    @Override
+    public boolean isValueChangedByClient() {
+        return valueChangedByClient;
+    }
 
-	@Override
-	public void resetValueChangedByClient() {
-		this.valueChangedByClient = false;
-	}
+    @Override
+    public void resetValueChangedByClient() {
+        this.valueChangedByClient = false;
+    }
 
 
 }
