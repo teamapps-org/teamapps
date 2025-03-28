@@ -10,7 +10,7 @@
  * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,30 +19,34 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {generateUUID, parseHtml} from "./Common";
+import * as pdfjsLib from "pdfjs-dist";
 import {UiBorderConfig} from "../generated/UiBorderConfig";
-import {UiShadowConfig} from "../generated/UiShadowConfig";
 import {UiPdfViewerCommandHandler, UiPdfViewerConfig} from "../generated/UiPdfViewerConfig";
 import {UiPdfViewMode} from "../generated/UiPdfViewMode";
+import {UiShadowConfig} from "../generated/UiShadowConfig";
+import {AbstractUiComponent} from "./AbstractUiComponent";
+import {generateUUID, parseHtml} from "./Common";
+import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "./TeamAppsUiContext";
 
 /**
  * Docs for Mozillas pdf.js: https://mozilla.github.io/pdf.js/
  * NPM Package: pdfjs-dist (CAUTION: pdfjs (without -dist) is another package!)
  */
 export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implements UiPdfViewerCommandHandler {
+    private config: UiPdfViewerConfig;
 
+    // internal state
     private uuidClass: string;
-    private pdfDocument: any;
     private $main: HTMLDivElement;
+    private pdfDocument: any;
+    private currentPage: number;
 
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
         super(config, context);
 
         this.uuidClass = `UiPdfViewer-${generateUUID()}`;
-
+        this.config = config;
         this.$main = parseHtml(`<div id="${this.uuidClass}"></div>`);
 
         this.setUrl(config.url);
@@ -61,37 +65,58 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         return this.$main;
     }
 
-
-    setUrl(url: string) {
+    /**
+     * bjesuiter  2025-03-28: only supports page-based rendering for now, sicne it's easier to implement.
+     * Continuous pdf page rendering is on the roadmap, but delayed indefinitely for now.
+     *
+     * @private
+     */
+    private renderPdfDocument() {
         throw new Error("Method not implemented.");
     }
 
-    setViewMode(viewMode: UiPdfViewMode) {
+    public setUrl(url: string) {
+        pdfjsLib.getDocument(url).then((pdf) => {
+            this.pdfDocument = pdf;
+            this.renderPdfDocument();
+        });
         throw new Error("Method not implemented.");
     }
 
-    showPage(page: number) {
-        throw new Error("Method not implemented.");
+    public setViewMode(viewMode: UiPdfViewMode) {
+        this.config.viewMode = viewMode;
+        this.renderPdfDocument();
     }
 
-    setZoomFactor(zoomFactor: number, zoomByAvailableWidth: boolean) {
-        throw new Error("Method not implemented.");
+    public showPage(page: number) {
+        this.currentPage = page;
+        // TODO: switch viewer to the new page
     }
 
-    setPageBorder(pageBorder: UiBorderConfig) {
-        throw new Error("Method not implemented.");
+    public setZoomFactor(zoomFactor: number, zoomByAvailableWidth: boolean) {
+        this.config.zoomFactor = zoomFactor;
+        this.config.zoomByAvailableWidth = zoomByAvailableWidth;
+        this.renderPdfDocument();
     }
 
-    setPageShadow(pageShadow: UiShadowConfig) {
-        throw new Error("Method not implemented.");
+    public setPageBorder(pageBorder: UiBorderConfig) {
+        this.config.pageBorder = pageBorder;
+        this.renderPdfDocument();
     }
 
-    setPadding(padding: number) {
-        throw new Error("Method not implemented.");
+    public setPageShadow(pageShadow: UiShadowConfig) {
+        this.config.pageShadow = pageShadow;
+        this.renderPdfDocument();
     }
 
-    setPageSpacing(pageSpacing: number) {
-        throw new Error("Method not implemented.");
+    public setPadding(padding: number) {
+        this.config.padding = padding;
+        this.renderPdfDocument();
+    }
+
+    public setPageSpacing(pageSpacing: number) {
+        this.config.pageSpacing = pageSpacing;
+        this.renderPdfDocument();
     }
 
 }
