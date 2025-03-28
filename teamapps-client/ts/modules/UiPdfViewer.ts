@@ -83,8 +83,36 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.renderPdfSinglePageMode();
     }
 
+    /**
+     * Based on Example:
+     * https://mozilla.github.io/pdf.js/examples/#:~:text=page*%20here%0A%7D)%3B-,Rendering%20the%20Page,-Each%20PDF%20page
+     * @private
+     */
     private renderPdfSinglePageMode() {
         const page = this.pdfDocument.getPage(this.currentPageNumber);
+        // TODO @bjesuiter: figure out what the result is for setting scale to 1.5
+        const pdfViewport = page.getViewport({scale: 1});
+        const hiDPIScale = window.devicePixelRatio || 1;
+
+        const canvas = this.$canvasTag;
+        const canvasContext = this.$canvasTag.getContext('2d');
+
+        canvas.width = Math.floor(pdfViewport.width * hiDPIScale);
+        canvas.height = Math.floor(pdfViewport.height * hiDPIScale);
+        canvas.style.width = Math.floor(pdfViewport.width) + "px";
+        canvas.style.height = Math.floor(pdfViewport.height) + "px";
+
+        const transform = hiDPIScale !== 1 ?
+            [hiDPIScale, 0, 0, hiDPIScale, 0, 0] :
+            null;
+
+        const renderContext = {
+            canvasContext,
+            transform,
+            viewport: pdfViewport
+        };
+
+        page.render(renderContext);
     }
 
     private updateStyles() {
