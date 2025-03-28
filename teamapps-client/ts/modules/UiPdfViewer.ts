@@ -28,6 +28,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {generateUUID, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {createUiBorderCssString, createUiShadowCssString, CssPropertyObject} from "./util/CssFormatUtil";
 
 /**
  * Docs for Mozillas pdf.js: https://mozilla.github.io/pdf.js/
@@ -39,26 +40,26 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // internal state
     private uuidClass: string;
     private $main: HTMLDivElement;
+    private $canvasTag: HTMLCanvasElement;
+    private $styleTag: HTMLElement;
     private pdfDocument: any;
-    private currentPage: number;
+    private currentPageNumber: number = 0;
 
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
         super(config, context);
 
         this.uuidClass = `UiPdfViewer-${generateUUID()}`;
         this.config = config;
-        this.$main = parseHtml(`<div id="${this.uuidClass}"></div>`);
+        this.$main = parseHtml(`
+        <div class="${this.uuidClass}">
+            <style class="${this.uuidClass}"></style>
+            <canvas class="${this.uuidClass}"></canvas>
+        </div>`);
+        this.$canvasTag = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
+        this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
 
+        // Load the pdf by setting it's url
         this.setUrl(config.url);
-
-        // this.$componentWrapper = parseHtml(`<div class="UiDocumentViewer ${this.uuidClass}">
-        //     <style></style>
-        // 	<div class="toolbar-container"></div>
-        // 	<div class="pages-container-wrapper">
-        // 	    <div class="pages-container"></div>
-        //     </div>
-        // </div>`);
-
     }
 
     protected doGetMainElement(): HTMLElement {
@@ -72,8 +73,36 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      * @private
      */
     private renderPdfDocument() {
-        throw new Error("Method not implemented.");
+        // Step 1: Validate configs
+        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
+            // TODO @bjesuiter: how to do logging in these components idiomatically?
+            throw new Error(`UiPdfViewMode.CONTINUOUS is not supported yet`);
+        }
+
+        // viewMode is SINGLE_PAGE from here on
+        this.renderPdfSinglePageMode();
     }
+
+    private renderPdfSinglePageMode() {
+        const page = this.pdfDocument.getPage(this.currentPageNumber);
+    }
+
+    private updateStyles() {
+        const uiBorderCssString = createUiBorderCssString(this.config.pageBorder);
+        const uiShadowCssString = createUiShadowCssString(this.config.pageShadow);
+        this.$styleTag.innerHTML = '';
+        // this.$styleTag.innerText = `
+        // .${this.uuidClass} .page {
+        //     ${createUiBorderCssString(this.pageBorder)}
+        //     ${createUiShadowCssString(this.pageShadow)}
+        // }
+        // .${this.uuidClass} .page:not(:last-child) {
+        //     margin-bottom: ${this.pageSpacing}px !important;
+        // }`;
+    }
+
+    // Setters for Server API
+    // -----------------------™
 
     public setUrl(url: string) {
         pdfjsLib.getDocument(url).then((pdf) => {
@@ -89,8 +118,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     }
 
     public showPage(page: number) {
-        this.currentPage = page;
-        // TODO: switch viewer to the new page
+        this.currentPageNumber = page;
+        this.renderPdfDocument();
     }
 
     public setZoomFactor(zoomFactor: number, zoomByAvailableWidth: boolean) {
