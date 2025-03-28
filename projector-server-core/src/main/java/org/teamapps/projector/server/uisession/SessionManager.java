@@ -27,30 +27,31 @@ import jakarta.servlet.http.HttpSessionListener;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.commons.event.Event;
-import org.teamapps.projector.session.uisession.UiSession;
-import org.teamapps.projector.server.config.ProjectorConfiguration;
-import org.teamapps.projector.server.core.UploadManager;
-import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
-import org.teamapps.projector.icon.IconProvider;
-import org.teamapps.projector.icon.SessionIconProvider;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.component.core.div.Div;
 import org.teamapps.projector.component.core.field.Button;
 import org.teamapps.projector.component.core.flexcontainer.VerticalLayout;
 import org.teamapps.projector.component.core.linkbutton.LinkButton;
 import org.teamapps.projector.component.core.window.Window;
 import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
+import org.teamapps.projector.icon.IconProvider;
+import org.teamapps.projector.icon.SessionIconProvider;
 import org.teamapps.projector.server.UxServerContext;
-import org.teamapps.projector.session.ClientInfo;
-import org.teamapps.projector.session.SessionContext;
-import org.teamapps.projector.session.uisession.CommandWithResultCallback;
-import org.teamapps.projector.session.uisession.UiSessionState;
+import org.teamapps.projector.server.config.ProjectorConfiguration;
+import org.teamapps.projector.server.core.UploadManager;
 import org.teamapps.projector.server.threading.SequentialExecutorFactory;
 import org.teamapps.projector.server.uisession.statistics.SessionStatsUpdatedEventData;
-import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 import org.teamapps.projector.server.webcontroller.WebController;
+import org.teamapps.projector.session.ClientInfo;
+import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.session.navigation.ParameterConverterProvider;
+import org.teamapps.projector.session.uisession.CommandWithResultCallback;
+import org.teamapps.projector.session.uisession.UiSession;
+import org.teamapps.projector.session.uisession.UiSessionState;
+import org.teamapps.projector.session.uisession.stats.UiSessionStatistics;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -209,7 +210,7 @@ public class SessionManager implements HttpSessionListener {
 					 + "maxRequestedCommandId = [" + maxRequestedCommandId + "], messageSender = [" + messageSender + "]");
 
 		UiSessionImpl uiSession = new UiSessionImpl(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender);
-		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession);
+		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession, config.getNavigationPathPrefix());
 		SessionContext.InternalUiSessionListener sessionUiSessionListenerImpl = sessionContext.getInternalApi();
 		uiSession.addSessionListener(new UiSessionListener() {
 			@Override
@@ -323,7 +324,7 @@ public class SessionManager implements HttpSessionListener {
 		houseKeepingScheduledExecutor.shutdown();
 	}
 
-	public SessionContext createSessionContext(UiSessionImpl uiSession, ClientInfo clientInfo, HttpSession httpSession) {
+	public SessionContext createSessionContext(UiSessionImpl uiSession, ClientInfo clientInfo, HttpSession httpSession, String navigationPathPrefix) {
 		SessionContext sessionContext = new SessionContext(
 				uiSession,
 				sessionExecutorFactory.createExecutor(uiSession.getSessionId()),
@@ -332,7 +333,9 @@ public class SessionManager implements HttpSessionListener {
 				uxServerContext,
 				new SessionIconProvider(iconProvider),
 				componentLibraryRegistry,
-				objectMapper
+				objectMapper,
+				navigationPathPrefix,
+				new ParameterConverterProvider()
 		);
 
 		sessionContext.runWithContext(() -> {

@@ -3,8 +3,6 @@ package "projector-client-object-api":org.teamapps.projector;
 
 class DtoGlobals {
 
-    static event navigationStateChange(String location, boolean triggeredByUser);
-
     static event globalKeyEventOccurred(KeyEventType eventType, String sourceComponentId, String code, boolean composing, String key, String locale, int location, boolean repeat, boolean altKey, boolean ctrlKey, boolean shiftKey, boolean metaKey);
     static command configureGlobalKeyboardEvents(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean keyDown, boolean keyUp, boolean includeRepeats);
 
@@ -32,8 +30,11 @@ class DtoGlobals {
 //
 //    static command goToUrl(String url, boolean blankPage);
 //
-//    static command pushHistoryState(String relativeUrl);
-//    static command navigateForward(int steps);
+
+	static command changeNavigationHistoryState(String pathOrUrl, boolean fireEvent, boolean push);
+    static command navigateForward(int steps);
+    static event navigationStateChange(String location, boolean triggeredBrowserNavigation);
+
 //
 //    static command setFavicon(String url);
 //    static command setTitle(String title);
@@ -53,3 +54,7 @@ enum ClosedSessionHandlingType {
 //enum DtoGenericErrorMessageOption {
 //	OK, RELOAD
 //}
+
+enum NavigationStateChangeType {
+	PUSH, REPLACE
+}

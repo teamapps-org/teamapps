@@ -40,6 +40,11 @@
             <groupId>com.devskiller.friendly-id</groupId>
             <artifactId>friendly-id</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>3.1.10</version>
+        </dependency>
 
     </dependencies>
 

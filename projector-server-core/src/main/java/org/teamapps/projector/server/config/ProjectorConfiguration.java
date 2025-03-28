@@ -19,7 +19,8 @@
  */
 package org.teamapps.projector.server.config;
 
-import org.teamapps.projector.event.ProjectorEvent;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionListener;
 import org.teamapps.projector.session.SessionContext;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class ProjectorConfiguration {
 	 * and removed from the map of known {@link String}s.
 	 * <p>
 	 * The {@link SessionContext} will also fire its
-	 * {@link SessionContext#onDestroyed() onDestroyed} event, which will detach any {@link ProjectorEvent SessionContext-bound event} listeners.
+	 * {@link SessionContext#onDestroyed onDestroyed} event, which will detach any {@link Event SessionContext-bound event} listeners.
 	 * <p>
 	 * From a user's perspective, the session is expired and the user most likely needs to reload the page (unless the developer
 	 * has implemented an alternative handling on the client side).
@@ -99,9 +100,9 @@ public class ProjectorConfiguration {
 	 *
 	 * @deprecated TeamApps does not care about HTTP sessions anymore. Please set the http session timeout in a different way.
 	 * This will be removed in some future version.
-	 * The cleanest way to set {@link jakarta.servlet.http.HttpSession#setMaxInactiveInterval(int)} would be by registering a
-	 * {@link jakarta.servlet.http.HttpSessionListener}.
-	 * Also note that the {@link jakarta.servlet.http.HttpSession} is still available via {@link SessionContext#getHttpSession()}.
+	 * The cleanest way to set {@link HttpSession#setMaxInactiveInterval(int)} would be by registering a
+	 * {@link HttpSessionListener}.
+	 * Also note that the {@link HttpSession} is still available via {@link SessionContext#getHttpSession()}.
 	 */
 	@Deprecated
 	private int httpSessionTimeoutSeconds = 24 * 3600;
@@ -149,6 +150,22 @@ public class ProjectorConfiguration {
 	 * The directory that uploaded files should get stored to (see UploadServlet).
 	 */
 	private File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
+
+	/**
+	 * Max number of threads that should be used for changing session state.
+	 * Note that you can also choose to write an own {@link SequentialExecutorFactory},
+	 * in which case this
+	 *
+	 * @see org.teamapps.uisession.TeamAppsSessionManager#sessionExecutorFactory
+	 */
+	private int maxNumberOfSessionExecutorThreads = Runtime.getRuntime().availableProcessors() * 2;
+
+	/**
+	 * Path prefix to be ignored when routing and added when creating URLs.
+	 *
+	 * @see RouteHandler
+	 */
+	private String navigationPathPrefix = "";
 
 	public ProjectorConfiguration() {
 	}
@@ -307,4 +324,25 @@ public class ProjectorConfiguration {
 		this.uploadDirectory = uploadDirectory;
 	}
 
+	/**
+	 * @see #maxNumberOfSessionExecutorThreads
+	 */
+	public int getMaxNumberOfSessionExecutorThreads() {
+		return maxNumberOfSessionExecutorThreads;
+	}
+
+	/**
+	 * @see #maxNumberOfSessionExecutorThreads
+	 */
+	public void setMaxNumberOfSessionExecutorThreads(int maxNumberOfSessionExecutorThreads) {
+		this.maxNumberOfSessionExecutorThreads = maxNumberOfSessionExecutorThreads;
+	}
+
+	public String getNavigationPathPrefix() {
+		return navigationPathPrefix;
+	}
+
+	public void setNavigationPathPrefix(String navigationPathPrefix) {
+		this.navigationPathPrefix = navigationPathPrefix;
+	}
 }

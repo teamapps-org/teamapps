@@ -145,6 +145,7 @@ export interface ClientInfo {
 	teamAppsVersion?: string
 }
 
+// TODO remove!
 export interface Location {
 	href?: string;
 	origin?: string;

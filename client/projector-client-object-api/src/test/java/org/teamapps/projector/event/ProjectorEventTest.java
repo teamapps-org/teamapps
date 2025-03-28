@@ -31,6 +31,7 @@ import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
 import org.teamapps.projector.server.UxServerContext;
 import org.teamapps.projector.session.ClientInfo;
 import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.session.navigation.ParameterConverterProvider;
 import org.teamapps.projector.session.uisession.UiSession;
 
 import java.net.URI;
@@ -335,6 +336,9 @@ public class ProjectorEventTest {
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(SessionIconProvider.class),
 				componentLibraryRegistryMock,
-				Mockito.mock(ObjectMapper.class));
+				Mockito.mock(ObjectMapper.class),
+				"",
+				Mockito.mock(ParameterConverterProvider.class)
+		);
 	}
 }

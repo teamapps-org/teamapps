@@ -61,7 +61,7 @@ let keyboardEventListener = (e: KeyboardEvent) => {
 window.addEventListener('popstate', (event) => {
 	serverObjectChannel?.sendEvent("navigationStateChange", {
 		location: location.href,
-		triggeredByUser: true
+		triggeredBrowserNavigation: true
 	});
 });
 
@@ -168,9 +168,21 @@ export var CoreLibrary = {
 			location.href = url;
 		}
 	},
-	async pushHistoryState(relativeUrl: string) {
-		window.history.pushState({}, "", relativeUrl);
-		// Globals.onNavigationStateChange.fire({location: createUiLocation(), triggeredByUser: false});
+	async changeNavigationHistoryState(relativeUrl: string, fireEvent: boolean, push: boolean) {
+		if (window.location.pathname + window.location.search === relativeUrl) {
+			return; // nothing to do here...
+		}
+		if (push) {
+			window.history.pushState({}, "", relativeUrl);
+		} else {
+			window.history.replaceState({}, "", relativeUrl);
+		}
+		if (fireEvent) {
+			serverObjectChannel?.sendEvent("navigationStateChange", {
+				location: window.location.href,
+				triggeredBrowserNavigation: false
+			});
+		}
 	},
 	async navigateForward(steps: number) {
 		window.history.go(steps);
@@ -188,5 +200,4 @@ export var CoreLibrary = {
 		document.title = title;
 	}
 };
-
 

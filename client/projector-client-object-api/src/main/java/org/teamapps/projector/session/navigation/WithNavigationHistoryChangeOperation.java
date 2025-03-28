@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2022 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,25 +17,23 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.session;
+package org.teamapps.projector.session.navigation;
 
-import java.net.URL;
+public class WithNavigationHistoryChangeOperation<T> {
 
-public class NavigationStateChangeEvent {
+	private final T value;
+	private final NavigationHistoryOperation navigationHistoryOperation;
 
-	private final URL location;
-	private final boolean triggeredBrowserNavigation;
-
-	public NavigationStateChangeEvent(URL location, boolean triggeredBrowserNavigation) {
-		this.location = location;
-		this.triggeredBrowserNavigation = triggeredBrowserNavigation;
+	public WithNavigationHistoryChangeOperation(T value, NavigationHistoryOperation navigationHistoryOperation) {
+		this.value = value;
+		this.navigationHistoryOperation = navigationHistoryOperation;
 	}
 
-	public URL getLocation() {
-		return location;
+	public T getValue() {
+		return value;
 	}
 
-	public boolean istriggeredBrowserNavigation() {
-		return triggeredBrowserNavigation;
+	public NavigationHistoryOperation getNavigationHistoryOperation() {
+		return navigationHistoryOperation;
 	}
 }
