@@ -46,7 +46,7 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 	private showClearButton: boolean;
 
 	protected initialize(config: DtoMultiLineTextField) {
-		this.$wrapper = parseHtml(`<div class="MultiLineTextField teamapps-input-wrapper field-border field-border-glow field-background">
+		this.$wrapper = parseHtml(`<div class="MultiLineTextField default-min-field-width teamapps-input-wrapper field-border field-border-glow field-background">
 	<textarea></textarea>
 	<div class="clear-button tr-remove-button"></div>
 </div>`);

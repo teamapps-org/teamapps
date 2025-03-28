@@ -52,3 +52,6 @@ get rid of ProjectorTranslationKeys
 
 update license headers (upgrade plugin - super outdated!)
 
+search and replace "Ui" in .less and .ts
+same for "Dto" when referring to CSS classes!
+

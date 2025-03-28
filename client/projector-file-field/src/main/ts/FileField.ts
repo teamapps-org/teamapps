@@ -325,7 +325,7 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 		} else {
 			content = "";
 		}
-		return `<div class="static-readonly-UiFileField">${content}</div>`
+		return `<div class="static-readonly-UiFileField default-min-field-width">${content}</div>`
 	}
 
 	getDefaultValue(): DtoIdentifiableClientRecord[] {

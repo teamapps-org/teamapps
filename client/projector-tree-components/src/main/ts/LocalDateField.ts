@@ -103,7 +103,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 				this.trivialComboBox.setDropDownComponent(treeBoxDropdown);
 			}
 		}));
-		this.trivialComboBox.getMainDomElement().classList.add("DtoAbstractDateField");
+		this.trivialComboBox.getMainDomElement().classList.add("DtoAbstractDateField", "default-min-field-width");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 

@@ -67,7 +67,7 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 			editingMode: this.convertToTrivialComponentsEditingMode(config.editingMode),
 			queryFunction: (queryString) => this.queryFunction(queryString)
 		});
-		this.trivialUnitBox.getMainDomElement().classList.add("DtoCurrencyField");
+		this.trivialUnitBox.getMainDomElement().classList.add("DtoCurrencyField", "default-min-field-width");
 		this.trivialUnitBox.onChange.addListener((value: TrivialUnitBoxChangeEvent<any>) => {
 			this.commit();
 		});

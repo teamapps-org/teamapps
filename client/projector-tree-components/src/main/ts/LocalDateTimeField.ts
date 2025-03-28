@@ -28,7 +28,7 @@ export class LocalDateTimeField extends AbstractDateTimeField<DtoLocalDateTimeFi
 
 	protected initialize(config: DtoLocalDateTimeField) {
 		super.initialize(config);
-		this.getMainInnerDomElement().classList.add("UiDateTimeField");
+		this.getMainInnerDomElement().classList.add("UiDateTimeField", "default-min-field-width");
 	}
 
 	protected getTimeZone(): string {

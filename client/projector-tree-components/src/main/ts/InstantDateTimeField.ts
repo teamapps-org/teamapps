@@ -25,7 +25,7 @@ export class InstantDateTimeField extends AbstractDateTimeField<DtoInstantDateTi
 
 	protected initialize(config: DtoInstantDateTimeField) {
 		super.initialize(config);
-		this.getMainInnerDomElement().classList.add("UiDateTimeField");
+		this.getMainInnerDomElement().classList.add("UiDateTimeField", "default-min-field-width");
 	}
 
 	protected getTimeZone(): string {

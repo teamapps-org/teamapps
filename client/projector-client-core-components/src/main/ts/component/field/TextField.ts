@@ -39,7 +39,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 	private showClearButton: boolean;
 
 	protected initialize(config: C) {
-		this.$wrapper = parseHtml(`<div class="TextField field-border field-border-glow field-background clearable-field-wrapper form-control">
+		this.$wrapper = parseHtml(`<div class="TextField default-min-field-width field-border field-border-glow field-background clearable-field-wrapper form-control">
     <input type="text"></input>
     <div class="clear-button tr-remove-button"></div>  
 </div>`);

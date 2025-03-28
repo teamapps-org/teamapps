@@ -102,7 +102,7 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 			dropDownMaxHeight: config.dropDownMaxHeight,
 			dropDownMinWidth: config.dropDownMinWidth
 		}, this.treeBoxDropdown);
-		this.trivialComboBox.getMainDomElement().classList.add("ComboBox");
+		this.trivialComboBox.getMainDomElement().classList.add("ComboBox", "default-min-field-width");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 

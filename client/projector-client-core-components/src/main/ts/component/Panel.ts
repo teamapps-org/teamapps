@@ -278,12 +278,11 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 		this.headerFields.forEach(headerField => {
 			if (!headerField.minimizedWidth || !headerField.minExpandedWidth || !headerField.minExpandedWidthWithIcon) {
 				headerField.$fieldWrapper.style.transition = "none";
-				this.setMinimizedFields(headerField);
-				this.$heading.classList.add("has-minimized-header-component");
+				this.setHeaderFieldDisplayMode(headerField, true, true);
 				headerField.minimizedWidth = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper);
-				this.setMinimizedFields();
+				this.setHeaderFieldDisplayMode(headerField, false, true);
 				headerField.minExpandedWidthWithIcon = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper) - headerField.$fieldWrapper.offsetWidth + headerField.config.minWidth;
-				this.$heading.classList.remove("has-minimized-header-component");
+				this.setHeaderFieldDisplayMode(headerField, false, false);
 				headerField.minExpandedWidth = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper) - headerField.$fieldWrapper.offsetWidth + headerField.config.minWidth;
 				headerField.$fieldWrapper.style.transition = "";
 			}
@@ -296,9 +295,15 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 
 	private setMinimizedFields(...minimizedHeaderFields: HeaderField[]) {
 		this.headerFields.forEach(headerField => {
-			headerField.$wrapper.classList.toggle("minimized", minimizedHeaderFields.indexOf(headerField) != -1);
-			headerField.$wrapper.classList.toggle("display-icon", minimizedHeaderFields.length > 0 || this.config.headerFieldIconVisibilityPolicy == HeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED);
+			let shouldBeMinimized = minimizedHeaderFields.indexOf(headerField) != -1;
+			let shouldDisplayIcon = minimizedHeaderFields.length > 0 || this.config.headerFieldIconVisibilityPolicy == HeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED;
+			this.setHeaderFieldDisplayMode(headerField, shouldBeMinimized, shouldDisplayIcon);
 		});
+	}
+
+	private setHeaderFieldDisplayMode(headerField: HeaderField, minimized: boolean, displayIcon: boolean) {
+		headerField.$wrapper.classList.toggle("minimized", minimized);
+		headerField.$wrapper.classList.toggle("display-icon", displayIcon);
 	}
 
 	public setLeftHeaderField(headerFieldConfig: DtoPanelHeaderField) {

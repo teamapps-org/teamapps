@@ -62,7 +62,7 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		})));
 
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
-		this.trivialComboBox.getMainDomElement().classList.add("DtoAbstractTimeField");
+		this.trivialComboBox.getMainDomElement().classList.add("TimeField", "default-min-field-width");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");

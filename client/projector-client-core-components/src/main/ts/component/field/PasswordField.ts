@@ -33,6 +33,7 @@ export class PasswordField extends TextField<DtoPasswordField> implements DtoPas
 			this.$field.setAttribute("autocapitalize", "off");
 			this.$field.setAttribute("spellcheck", "off");
 		}
+		this.getMainElement().classList.add("PasswordField")
 	}
 
 	getTransientValue(): string {

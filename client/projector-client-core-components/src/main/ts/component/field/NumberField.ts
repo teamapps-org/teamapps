@@ -58,7 +58,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		});
 		this.numberParser = new NumberParser(config.locale);
 
-		this.$wrapper = parseHtml(`<div class="NumberField form-control field-border field-border-glow field-background">
+		this.$wrapper = parseHtml(`<div class="NumberField default-min-field-width form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
 		<input autocomplete="no" type="text"></input>
 		<div class="clear-button tr-remove-button"></div> 
