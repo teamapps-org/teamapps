@@ -32,7 +32,7 @@ export class CalendarEventListPopper {
 
 	constructor(referenceElement?: Element | null) {
 		this.referenceElement = referenceElement;
-		this.$popperElement = parseHtml(`<div class="CalendarEventListPopper ta-tooltip calendar-event-list-popper ${referenceElement != null ? "" : "hidden"}" role="tooltip">
+		this.$popperElement = parseHtml(`<div class="CalendarEventListPopper ta-tooltip calendar-event-list-popper hidden}" role="tooltip">
 			<div class="ta-tooltip-arrow" x-arrow></div>
 			<div class="ta-tooltip-inner">
 				<div class="all-day-events"></div>
