@@ -118,4 +118,14 @@ public class LogicalForm<RECORD> {
 				.max(Comparator.comparing(Enum::ordinal))
 				.orElse(null);
 	}
+
+
+	/**
+	 * Checks whether any of the form fields have been mutated by the client.
+	 *
+	 * @return true if any of the form fields' values have been changed, false otherwise
+	 */
+	public boolean isChangedByClient() {
+		return getFields().values().stream().anyMatch(AbstractField::isValueChangedByClient);
+	}
 }
