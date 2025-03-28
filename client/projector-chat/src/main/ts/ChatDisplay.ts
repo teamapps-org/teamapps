@@ -156,10 +156,32 @@ export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements Dt
 
 	@executeWhenFirstDisplayed(true)
 	private scrollToBottom() {
-		this.$main.scroll({
-			top: 100000000,
-			behavior: 'smooth'
-		});
+		const scrollToBottom = ()=>  {
+			this.$main.scroll({
+				top: 100000000,
+				behavior: 'smooth'
+			});
+		}
+		this.doWhenAllImagesAreLoaded(scrollToBottom);
+	}
+
+	private doWhenAllImagesAreLoaded(action: () => void) {
+		let allImages = Array.from(this.$messages.querySelectorAll(":scope img"));
+		let incompleteImages: HTMLImageElement[] = allImages
+			.map(img => img as HTMLImageElement)
+			.filter(img => !img.complete);
+		if (incompleteImages.length > 0) {
+			Promise.all(incompleteImages.map(img => new Promise((resolve, reject) => {
+				img.addEventListener("load", resolve, {once:true});
+				img.addEventListener("error", resolve, {once:true}); // since we are only interested in when loading activity is done
+			}))).then(action)
+		} else {
+			action();
+		}
+	}
+
+	onResize() {
+		this.scrollToBottom(); // hack. actually, I want to scrollToBottom only when this component gets re-attached...
 	}
 
 	closeContextMenu(): void {
