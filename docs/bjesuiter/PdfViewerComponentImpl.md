@@ -78,3 +78,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 3. Run yarn install 
 4. Run ./start-dev-server 8082 (because the Jetty starts at that port)
 5. Goto localhost:9000 to see/debug the component
+
+## Todos
+
+- In PdfViewer.java: update all setters to update ts client
