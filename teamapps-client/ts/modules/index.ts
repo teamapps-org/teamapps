@@ -97,6 +97,7 @@ export {UiQrCodeScanner} from "./UiQrCodeScanner";
 export {UiMediaSoupV3WebRtcClient} from "./webrtc/mediasoup-v3/UiMediaSoupV3WebRtcClient";
 export {UiAudioLevelIndicator} from "./UiAudioLevelIndicator";
 export {UiHtmlView} from "./UiHtmlView";
+export {UiPdfViewer} from "./UiPdfViewer"
 
 export {UiGauge} from "./UiGauge";
 
