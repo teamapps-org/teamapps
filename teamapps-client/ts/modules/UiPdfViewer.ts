@@ -29,6 +29,16 @@ import {generateUUID, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {createUiBorderCssString, createUiShadowCssString, CssPropertyObject} from "./util/CssFormatUtil";
+import type {PDFDocumentProxy} from "pdfjs-dist"
+
+// @ts-ignore
+// import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
+// pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+// console.log(pdfjsWorker);
+
+// import pdfjsWorker = require('url-loader!pdfjs-dist/build/pdf.worker.mjs');
+// pdfjsLib.GlobalWorkerOptions.workerSrc = "resources/pdf.worker.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "static/pdf.worker.mjs";
 
 /**
  * Docs for Mozillas pdf.js: https://mozilla.github.io/pdf.js/
@@ -42,7 +52,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $main: HTMLDivElement;
     private $canvasTag: HTMLCanvasElement;
     private $styleTag: HTMLElement;
-    private pdfDocument: any;
+    private pdfDocument: PDFDocumentProxy;
     private currentPageNumber: number = 0;
 
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
@@ -72,7 +82,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      *
      * @private
      */
-    private renderPdfDocument() {
+    private async renderPdfDocument() {
         // Step 1: Validate configs
         if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
             // TODO @bjesuiter: how to do logging in these components idiomatically?
@@ -80,7 +90,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
 
         // viewMode is SINGLE_PAGE from here on
-        this.renderPdfSinglePageMode();
+        await this.renderPdfSinglePageMode();
     }
 
     /**
@@ -88,8 +98,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      * https://mozilla.github.io/pdf.js/examples/#:~:text=page*%20here%0A%7D)%3B-,Rendering%20the%20Page,-Each%20PDF%20page
      * @private
      */
-    private renderPdfSinglePageMode() {
-        const page = this.pdfDocument.getPage(this.currentPageNumber);
+    private async renderPdfSinglePageMode() {
+        const page = await this.pdfDocument.getPage(this.currentPageNumber);
         // TODO @bjesuiter: figure out what the result is for setting scale to 1.5
         const pdfViewport = page.getViewport({scale: 1});
         const hiDPIScale = window.devicePixelRatio || 1;
@@ -132,46 +142,44 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // Setters for Server API
     // -----------------------™
 
-    public setUrl(url: string) {
-        pdfjsLib.getDocument(url).then((pdf) => {
-            this.pdfDocument = pdf;
-            this.renderPdfDocument();
-        });
-        throw new Error("Method not implemented.");
+    public async setUrl(url: string) {
+        const pdf = await pdfjsLib.getDocument(url).promise
+        this.pdfDocument = pdf;
+        this.renderPdfDocument();
     }
 
-    public setViewMode(viewMode: UiPdfViewMode) {
+    public async setViewMode(viewMode: UiPdfViewMode) {
         this.config.viewMode = viewMode;
         this.renderPdfDocument();
     }
 
-    public showPage(page: number) {
+    public async showPage(page: number) {
         this.currentPageNumber = page;
         this.renderPdfDocument();
     }
 
-    public setZoomFactor(zoomFactor: number, zoomByAvailableWidth: boolean) {
+    public async setZoomFactor(zoomFactor: number, zoomByAvailableWidth: boolean) {
         this.config.zoomFactor = zoomFactor;
         this.config.zoomByAvailableWidth = zoomByAvailableWidth;
         this.renderPdfDocument();
     }
 
-    public setPageBorder(pageBorder: UiBorderConfig) {
+    public async setPageBorder(pageBorder: UiBorderConfig) {
         this.config.pageBorder = pageBorder;
         this.renderPdfDocument();
     }
 
-    public setPageShadow(pageShadow: UiShadowConfig) {
+    public async setPageShadow(pageShadow: UiShadowConfig) {
         this.config.pageShadow = pageShadow;
         this.renderPdfDocument();
     }
 
-    public setPadding(padding: number) {
+    public async setPadding(padding: number) {
         this.config.padding = padding;
         this.renderPdfDocument();
     }
 
-    public setPageSpacing(pageSpacing: number) {
+    public async setPageSpacing(pageSpacing: number) {
         this.config.pageSpacing = pageSpacing;
         this.renderPdfDocument();
     }
