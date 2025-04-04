@@ -129,6 +129,7 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 		this.setDisplayMode(config.displayMode);
 		this.setMaxBytesPerFile(config.maxBytesPerFile);
 		this.setMaxFiles(config.maxFiles);
+		this.setAcceptedFileTypes(config.acceptedFileTypes);
 		this.setFileTooLargeMessage(config.fileTooLargeMessage);
 		this.setUploadErrorMessage(config.uploadErrorMessage);
 		this.setUploadUrl(config.uploadUrl);
@@ -221,6 +222,10 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	setMaxFiles(maxFiles: number): void {
 		this.maxFiles = maxFiles || Number.MAX_SAFE_INTEGER;
 		this.updateVisibilities();
+	}
+
+	setAcceptedFileTypes(acceptedFileTypes: string[]) {
+		this.$fileInput.accept = acceptedFileTypes != null ? (acceptedFileTypes.join(',')) : null;
 	}
 
 	setUploadErrorMessage(uploadErrorMessage: string): void {

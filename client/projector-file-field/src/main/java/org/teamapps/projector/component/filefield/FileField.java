@@ -64,6 +64,13 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 	private boolean showEntriesAsButtonsOnHover = false;
 	private int maxFiles = Integer.MAX_VALUE;
 
+	/**
+	 * List of "unique file type specifiers".
+	 * Examples: ".png", "image/png", "image/*"
+	 * See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/accept#unique_file_type_specifiers
+	 */
+	private List<String> acceptedFileTypes = List.of();
+
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Template uploadButtonTemplate = BaseTemplates.BUTTON;
@@ -99,6 +106,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 
 		uiField.setDisplayType(displayType);
 		uiField.setMaxFiles(this.maxFiles);
+		uiField.setAcceptedFileTypes(acceptedFileTypes);
 		uiField.setShowEntriesAsButtonsOnHover(this.showEntriesAsButtonsOnHover);
 
 		return uiField;
@@ -322,5 +330,12 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 		this.setFileItemPropertyProvider(fileItemPropertyExtractor);
 	}
 
+	public List<String> getAcceptedFileTypes() {
+		return acceptedFileTypes;
+	}
 
+	public void setAcceptedFileTypes(List<String> acceptedFileTypes) {
+		this.acceptedFileTypes = List.copyOf(acceptedFileTypes);
+		clientObjectChannel.setAcceptedFileTypes(acceptedFileTypes);
+	}
 }

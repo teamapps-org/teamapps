@@ -55,6 +55,12 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 
 	private FileFieldDisplayType displayType = FileFieldDisplayType.FLOATING;
 	private int maxFiles = Integer.MAX_VALUE;
+	/**
+	 * List of "unique file type specifiers".
+	 * Examples: ".png", "image/png", "image/*"
+	 * See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/accept#unique_file_type_specifiers
+	 */
+	private List<String> acceptedFileTypes = List.of();
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Icon browseButtonIcon = MaterialIcon.FILE_UPLOAD;
@@ -115,6 +121,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 		field.setFileTooLargeMessage(getSessionContext().getLocalized(ProjectorTranslationKeys.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
 		field.setUploadErrorMessage(getSessionContext().getLocalized(ProjectorTranslationKeys.UPLOAD_ERROR_MESSAGE.getKey()));
 		field.setMaxFiles(maxFiles);
+		field.setAcceptedFileTypes(acceptedFileTypes);
 		field.setDisplayMode(displayType);
 		field.setFileItems(fileItems.stream()
 				.map(fi -> fi.createDtoFileItem())
@@ -252,6 +259,15 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 	public void setBrowseButtonCaption(String browseButtonCaption) {
 		this.browseButtonCaption = browseButtonCaption;
 		clientObjectChannel.setBrowseButtonCaption(browseButtonCaption);
+	}
+
+	public List<String> getAcceptedFileTypes() {
+		return acceptedFileTypes;
+	}
+
+	public void setAcceptedFileTypes(List<String> acceptedFileTypes) {
+		this.acceptedFileTypes = List.copyOf(acceptedFileTypes);
+		clientObjectChannel.setAcceptedFileTypes(acceptedFileTypes);
 	}
 
 }

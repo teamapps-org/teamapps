@@ -64,6 +64,9 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	private uploadUrl: string;
 	private $fileList: HTMLElement;
 
+	private fileTooLargeMessage: string;
+	private uploadErrorMessage: string;
+
 	protected initialize(config: DtoFileField) {
 		this.fileItems = [];
 		let uuid = "ui-file-field" + generateUUID();
@@ -120,6 +123,9 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 		this.setUploadUrl(config.uploadUrl);
 		this.setDisplayType(config.displayType);
 		this.setMaxFiles(config.maxFiles);
+		this.setAcceptedFileTypes(config.acceptedFileTypes);
+		this.setFileTooLargeMessage(config.fileTooLargeMessage);
+		this.setUploadErrorMessage(config.uploadErrorMessage);
 	}
 
 	isValidData(v: any[]): boolean {
@@ -140,6 +146,10 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	setMaxFiles(maxFiles: number): void {
 		this.maxFiles = maxFiles || Number.MAX_SAFE_INTEGER;
 		this.updateVisibilities();
+	}
+
+	setAcceptedFileTypes(acceptedFileTypes: string[]) {
+		this.$fileInput.accept = acceptedFileTypes != null ? (acceptedFileTypes.join(',')) : null;
 	}
 
 	public setMaxBytesPerFile(maxBytesPerFile: number): void {
@@ -350,6 +360,14 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 		} else {
 			console.warn("Could not cancel upload of non-existing file item");
 		}
+	}
+
+	setFileTooLargeMessage(fileTooLargeMessage: string): void {
+		this.fileTooLargeMessage = fileTooLargeMessage;
+	}
+
+	setUploadErrorMessage(uploadErrorMessage: string): void {
+		this.uploadErrorMessage = uploadErrorMessage;
 	}
 }
 

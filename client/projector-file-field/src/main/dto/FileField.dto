@@ -25,16 +25,17 @@ import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 class DtoFileField extends DtoAbstractField {
-	DtoTemplate* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
-	long maxBytesPerFile;
-	String uploadUrl; // May point anywhere.
-	String fileTooLargeMessage;
-	String uploadErrorMessage;
-	FileFieldDisplayType displayType;
-	int maxFiles; // the max number of files to be uploaded in total for this field
-	DtoTemplate* uploadButtonTemplate;
-	Object uploadButtonData;
-	boolean showEntriesAsButtonsOnHover;
+	mutable DtoTemplate* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
+	mutable long maxBytesPerFile;
+	mutable String uploadUrl; // May point anywhere.
+	mutable String fileTooLargeMessage;
+	mutable String uploadErrorMessage;
+	mutable FileFieldDisplayType displayType;
+	mutable int maxFiles; // the max number of files to be uploaded in total for this field
+    mutable List<String> acceptedFileTypes;
+	mutable DtoTemplate* uploadButtonTemplate;
+	mutable Object uploadButtonData;
+	mutable boolean showEntriesAsButtonsOnHover;
 
     event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
 	event uploadStarted(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
@@ -45,14 +46,6 @@ class DtoFileField extends DtoAbstractField {
 	event fileItemRemoveButtonClicked(int clientId);
 
 	command replaceFileItem(String fileItemUuid, DtoIdentifiableClientRecord data);
-	command setItemTemplate(DtoTemplate* itemTemplate);
-	command setMaxBytesPerFile(long maxBytesPerFile);
-	command setUploadUrl(String uploadUrl);
-	command setDisplayType (FileFieldDisplayType displayType);
-	command setMaxFiles(int maxFiles);
-	command setUploadButtonTemplate(DtoTemplate* uploadButtonTemplate);
-    command setUploadButtonData(Object uploadButtonData);
-    command setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover);
     command cancelAllUploads();
     command cancelUpload(String fileItemUuid);
 }
@@ -62,14 +55,15 @@ enum FileFieldDisplayType {
 }
 
 class DtoSimpleFileField extends DtoAbstractField {
-	String browseButtonIcon;
-	String browseButtonCaption;
-	String uploadUrl; // May point anywhere.
-	long maxBytesPerFile;
-	String fileTooLargeMessage;
-	String uploadErrorMessage;
-	int maxFiles; // the max number of files to be uploaded in total for this field
-	FileFieldDisplayType displayMode;
+	mutable String browseButtonIcon;
+	mutable String browseButtonCaption;
+	mutable String uploadUrl; // May point anywhere.
+	mutable long maxBytesPerFile;
+	mutable String fileTooLargeMessage;
+	mutable String uploadErrorMessage;
+	mutable int maxFiles; // the max number of files to be uploaded in total for this field
+    mutable List<String> acceptedFileTypes;
+	mutable FileFieldDisplayType displayMode;
 
 	List<DtoFileItem> fileItems;
 
@@ -85,15 +79,6 @@ class DtoSimpleFileField extends DtoAbstractField {
 	command addFileItem(DtoFileItem item);
 	command updateFileItem(DtoFileItem item);
 	command removeFileItem(String itemUuid);
-
-	command setBrowseButtonIcon(String browseButtonIcon);
-	command setBrowseButtonCaption(String browseButtonCaption);
-	command setUploadUrl(String uploadUrl);
-	command setMaxBytesPerFile(long maxBytesPerFile);
-	command setFileTooLargeMessage(String fileTooLargeMessage);
-	command setUploadErrorMessage(String uploadErrorMessage);
-	command setMaxFiles(int maxFiles);
-	command setDisplayMode(FileFieldDisplayType displayType);
 }
 
 
