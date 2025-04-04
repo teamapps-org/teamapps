@@ -25,7 +25,7 @@ import {
 	DtoShakaPlayer,
 	DtoShakaPlayer_EndedEvent,
 	DtoShakaPlayer_ErrorLoadingEvent,
-	DtoShakaPlayer_ManifestLoadedEvent,
+	DtoShakaPlayer_ManifestLoadedEvent, DtoShakaPlayer_SkipClickedEvent,
 	DtoShakaPlayer_TimeUpdateEvent,
 	DtoShakaPlayerCommandHandler,
 	DtoShakaPlayerEventSource,
@@ -39,7 +39,7 @@ import {
 	removeClassesByFunction,
 	ServerObjectChannel,
 	ProjectorEvent,
-	throttle
+	throttle, addDelegatedEventListener
 } from "projector-client-object-api";
 import Player = shaka.Player;
 import UIConfiguration = shaka.extern.UIConfiguration;
@@ -56,6 +56,7 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 	public readonly onTimeUpdate: ProjectorEvent<DtoShakaPlayer_TimeUpdateEvent> = new ProjectorEvent();
 	public readonly onEnded: ProjectorEvent<DtoShakaPlayer_EndedEvent> = new ProjectorEvent();
 	public readonly onErrorLoading: ProjectorEvent<DtoShakaPlayer_ErrorLoadingEvent> = new ProjectorEvent();
+	public readonly onSkipClicked: ProjectorEvent<DtoShakaPlayer_SkipClickedEvent> = new ProjectorEvent();
 
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLVideoElement;
@@ -70,7 +71,9 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 
 		this.$componentWrapper = parseHtml(
 			`<div class="UiShakaPlayer">
-				<video id="video" ></video>
+				<div class="video-wrapper">
+					<video id="video" ></video>
+				</div>
 			</div>`);
 
 		this.$video = this.$componentWrapper.querySelector(":scope video");
@@ -87,26 +90,18 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 			this.player.addEventListener('error', () => this.onErrorLoading.fire({}));
 			this.player.addEventListener('streaming', () => {
 				this.reconfigureUi();
-				this.setTime(this.config.timeMillis);
+				this.jumpTo(this.config.timeMillis);
 				this.onManifestLoaded.fire({manifest: this.createUiManifest(this.player.getManifest())});
 			});
 
 			this.ui = new shaka.ui.Overlay(this.player, this.$componentWrapper, this.$video);
 			const uiConfig: Partial<UIConfiguration> = {
-				addBigPlayButton: true,
-				controlPanelElements: [
-					"play_pause",
-					"time_and_duration",
-					"spacer",
-					"mute",
-					"volume",
-					"fullscreen",
-					"overflow_menu",
-				],
+				addBigPlayButton: config.bigPlayButtonEnabled,
+				controlPanelElements: config.controlPanelElements,
 				doubleClickForFullscreen: true,
 				enableFullscreenOnRotation: false,
 				enableKeyboardPlaybackControls: true,
-				fadeDelay: 0,
+				fadeDelay: config.controlFadeDelaySeconds,
 				forceLandscapeOnFullscreen: true,
 				overflowMenuButtons: this.getOverflowMenuButtonsConfig(),
 				seekBarColors: undefined,
@@ -120,10 +115,24 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 				addSeekBar: true
 			};
 			this.ui.configure(uiConfig as UIConfiguration);
+
+			addDelegatedEventListener(this.ui.getControls().getControlsContainer(), '.shaka-skip-button', 'click', (el, ev) => {
+				this.onSkipClicked.fire({
+					forward: el.classList.contains('shaka-skip-forward-button'),
+					playbackTimeMillis: this.player.getMediaElement().currentTime * 1000
+				})
+			}, {capture: true})
 		});
 
 		this.setUrls(config.hlsUrl, config.dashUrl);
 	}
+
+	setBigPlayButtonEnabled(bigPlayButtonEnabled: boolean) {
+		throw new Error("Method not implemented.");
+    }
+    setControlFadeDelaySeconds(controlFadeDelaySeconds: number) {
+        throw new Error("Method not implemented.");
+    }
 
 	private createUiManifest(manifest: Manifest): DtoShakaManifest {
 		return {
@@ -196,7 +205,16 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 		return this.$componentWrapper;
 	}
 
-	public setTime(timeMillis: number) {
+
+	public play(): any {
+		this.$video.play();
+	}
+
+	public pause(): any {
+		this.$video.pause();
+	}
+
+	public jumpTo(timeMillis: number) {
 		this.$video.currentTime = timeMillis / 1000;
 	}
 
@@ -229,7 +247,7 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 	public destroy(): void {
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeWhenFirstDisplayed(true)
 	async setUrls(hlsUrl: string, dashUrl: string): Promise<void> {
 		const support = await shaka.Player.probeSupport();
 		let url = support.manifest.mpd && dashUrl ? dashUrl : hlsUrl;
@@ -265,6 +283,7 @@ class DistinctAudioTracksManifestParserDecorator implements ManifestParser {
 
 	async start(uri: string, playerInterface: PlayerInterface) {
 		let manifest = await this.delegate.start(uri, playerInterface);
+		// Add a unique role for each audio track.
 		// manifest.variants.forEach((variant, i) => variant.language = variant.language + i)
 		manifest.variants.forEach((variant, i) => variant.audio.roles.push("role" + i));
 		return manifest;
@@ -280,6 +299,18 @@ class DistinctAudioTracksManifestParserDecorator implements ManifestParser {
 
 	update(): any {
 		return this.delegate.update();
+	}
+
+	banLocation(location: string): void {
+		return this.delegate.banLocation(location);
+	}
+
+	onInitialVariantChosen(variant: shaka.extern.Variant): void {
+		return this.delegate.onInitialVariantChosen(variant);
+	}
+
+	setMediaElement(mediaElement: HTMLMediaElement): void {
+		return this.delegate.setMediaElement(mediaElement);
 	}
 }
 

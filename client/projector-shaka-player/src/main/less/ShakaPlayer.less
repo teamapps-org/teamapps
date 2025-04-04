@@ -19,6 +19,16 @@
 */
 .ShakaPlayer {
   justify-content: center;
+  overflow-y: hidden;
+
+  .video-wrapper {
+    width: 100%;
+    height: 100%;
+    // Somehow, in Chrome, the video tag does not obey the height if embedded in a flex item,
+    // so we need to wrapp it in an element that does...
+    // This way, we still get a default size (from the video tag) in case the component is not embedded in a flex layout.
+    overflow: hidden;
+  }
 
   video {
     width: 100%;

@@ -2083,10 +2083,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eme-encryption-scheme-polyfill@npm:^2.1.1":
-  version: 2.1.5
-  resolution: "eme-encryption-scheme-polyfill@npm:2.1.5"
-  checksum: d0ea494b6f01c5083f81e8409b6c4e16eb17bae4d4f6c01cad178bfaa336d9a773366fa0ba6f357fe4fcf9c567021da712bfccc090e29d97dce43897148052c6
+"eme-encryption-scheme-polyfill@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "eme-encryption-scheme-polyfill@npm:2.2.1"
+  checksum: a7bd250275baf5a39ea7c628208b86b0f0837d512491c362c2f737a938d14b00afd951e7e78da41deeb18f95cf381b6f4e7ad6267d97e8fb55ba09ad61efd9c1
   languageName: node
   linkType: hard
 
@@ -3397,7 +3397,7 @@ __metadata:
     esbuild: ^0.15.13
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
-    shaka-player: ^3.1.0
+    shaka-player: ^4.13.0
     typescript: ^5.1
   languageName: unknown
   linkType: soft
@@ -3636,12 +3636,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shaka-player@npm:^3.1.0":
-  version: 3.3.19
-  resolution: "shaka-player@npm:3.3.19"
+"shaka-player@npm:^4.13.0":
+  version: 4.14.6
+  resolution: "shaka-player@npm:4.14.6"
   dependencies:
-    eme-encryption-scheme-polyfill: ^2.1.1
-  checksum: 5c42aa9267726614c2285cc5bf80208cd0a12c2f436aa75886d2af99708b66506faf1e9df214946335bfe17e026b933189937b12fc075b69c9291a264f00fbbe
+    eme-encryption-scheme-polyfill: ^2.2.1
+  checksum: d738d6655bb6a34cca5a4e1686ba82e40321631a03f64c0ca914ce07d93d7932d458183a5853f28b866571bc6adeb76f958291e9fa30aaad2b16bcf723affcc0
   languageName: node
   linkType: hard
 

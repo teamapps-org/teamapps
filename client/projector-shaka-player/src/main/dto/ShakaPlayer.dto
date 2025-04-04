@@ -24,30 +24,47 @@ import org.teamapps.projector.component.DtoComponent;
 class DtoShakaPlayer extends DtoComponent {
     String hlsUrl;
     String dashUrl;
-    String posterImageUrl;
-    PosterImageSize posterImageSize;
+    mutable String posterImageUrl;
+    mutable PosterImageSize posterImageSize;
     int timeUpdateEventThrottleMillis;
-    String backgroundColor;
+    mutable String backgroundColor;
     boolean autoplay;
     TrackLabelFormat trackLabelFormat;
-    boolean videoDisabled;
+    mutable boolean videoDisabled;
     long timeMillis;
     String preferredAudioLanguage;
+    mutable boolean bigPlayButtonEnabled;
+    mutable int controlFadeDelaySeconds;
+    List<ControlPanelElementType> controlPanelElements;
+
 
 	command setUrls(String hlsUrl, String dashUrl);
-	command setTime(long timeMillis);
+    command play();
+    command pause();
+    command jumpTo(long timeMillis);
 	command selectAudioLanguage(String language, String role);
-	command setPosterImageUrl(String posterImageUrl);
-    command setPosterImageSize(PosterImageSize posterImageSize);
-    command setBackgroundColor(String backgroundColor);
-    command setVideoDisabled(boolean videoDisabled);
 
 	event errorLoading();
 	event manifestLoaded(DtoShakaManifest manifest);
 	event timeUpdate(long timeMillis);
 	event ended();
+	event skipClicked(boolean forward, long playbackTimeMillis);
 
 	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
+}
+
+enum ControlPanelElementType {
+      REWIND                  = "rewind"                ,
+      FAST_FORWARD            = "fast_forward"          ,
+      SKIP_BACK               = "skip_back"             ,
+      SKIP_FORWARD            = "skip_forward"          ,
+      PLAY_PAUSE              = "play_pause"            ,
+      TIME_AND_DURATION       = "time_and_duration"     ,
+      SPACER                  = "spacer"                ,
+      MUTE                    = "mute"                  ,
+      VOLUME                  = "volume"                ,
+      FULLSCREEN              = "fullscreen"            ,
+      OVERFLOW_MENU           = "overflow_menu"
 }
 
 enum TrackLabelFormat {

@@ -25,174 +25,241 @@ import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.session.SessionContext;
 
+import java.util.List;
+
 public class ShakaPlayer extends AbstractComponent implements DtoShakaPlayerEventHandler {
 
-	private final DtoShakaPlayerClientObjectChannel clientObjectChannel = new DtoShakaPlayerClientObjectChannel(getClientObjectChannel());
+    private final DtoShakaPlayerClientObjectChannel clientObjectChannel = new DtoShakaPlayerClientObjectChannel(getClientObjectChannel());
 
-	public final ProjectorEvent<Void> onErrorLoading = new ProjectorEvent<>(clientObjectChannel::toggleErrorLoadingEvent);
-	public final ProjectorEvent<DtoShakaManifest> onManifestLoaded = new ProjectorEvent<>(clientObjectChannel::toggleManifestLoadedEvent);
-	public final ProjectorEvent<Long> onTimeUpdate = new ProjectorEvent<>(clientObjectChannel::toggleTimeUpdateEvent);
-	public final ProjectorEvent<Void> onEnded = new ProjectorEvent<>(clientObjectChannel::toggleEndedEvent);
+    public final ProjectorEvent<Void> onErrorLoading = new ProjectorEvent<>(clientObjectChannel::toggleErrorLoadingEvent);
+    public final ProjectorEvent<DtoShakaManifest> onManifestLoaded = new ProjectorEvent<>(clientObjectChannel::toggleManifestLoadedEvent);
+    public final ProjectorEvent<Long> onTimeUpdate = new ProjectorEvent<>(clientObjectChannel::toggleTimeUpdateEvent);
+    public final ProjectorEvent<Void> onEnded = new ProjectorEvent<>(clientObjectChannel::toggleEndedEvent);
+    public final ProjectorEvent<SkipClickedEvent> onSkipClicked = new ProjectorEvent<>();
 
-	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
-		SessionContext.current().sendStaticCommand(ShakaPlayer.class, DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand.CMD_NAME,
-				new DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
-	}
+    public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
+        SessionContext.current().sendStaticCommand(ShakaPlayer.class, DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand.CMD_NAME,
+                new DtoShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
+    }
 
-	private String hlsUrl;
-	private String dashUrl;
-	private String posterImageUrl;
-	private PosterImageSize posterImageSize = PosterImageSize.COVER;
-	private int timeUpdateEventThrottleMillis = 1000;
-	private Color backgroundColor = Color.BLACK;
-	private TrackLabelFormat trackLabelFormat = TrackLabelFormat.LABEL;
-	private boolean videoDisabled = false;
-	private String audioLanguage;
+    private String hlsUrl;
+    private String dashUrl;
+    private String posterImageUrl;
+    private PosterImageSize posterImageSize = PosterImageSize.CONTAIN;
+    private int timeUpdateEventThrottleMillis = 1000;
+    private Color backgroundColor = Color.BLACK;
+    private TrackLabelFormat trackLabelFormat = TrackLabelFormat.LABEL;
+    private boolean videoDisabled = false;
+    private String audioLanguage;
+    private boolean bigPlayButtonEnabled = true;
+    private int controlFadeDelaySeconds = 0; // 0 = default value (see shaka docs)
+    private List<ControlPanelElementType> controlPanelElements = List.of(
+            ControlPanelElementType.PLAY_PAUSE,
+            ControlPanelElementType.TIME_AND_DURATION,
+            ControlPanelElementType.SPACER,
+            ControlPanelElementType.MUTE,
+            ControlPanelElementType.VOLUME,
+            ControlPanelElementType.FULLSCREEN,
+            ControlPanelElementType.OVERFLOW_MENU
+    );
 
-	private long timeMillis = 0;
+    private long timeMillis = 0;
 
-	public ShakaPlayer() {
-	}
+    public ShakaPlayer() {
+    }
 
-	public ShakaPlayer(String hlsUrl, String dashUrl) {
-		this.hlsUrl = hlsUrl;
-		this.dashUrl = dashUrl;
-	}
+    public ShakaPlayer(String hlsUrl, String dashUrl) {
+        this.hlsUrl = hlsUrl;
+        this.dashUrl = dashUrl;
+    }
 
-	@Override
-	public DtoComponentConfig createDto() {
-		DtoShakaPlayer ui = new DtoShakaPlayer();
-		mapAbstractConfigProperties(ui);
-		ui.setHlsUrl(hlsUrl);
-		ui.setDashUrl(dashUrl);
-		ui.setPosterImageUrl(posterImageUrl);
-		ui.setPosterImageSize(posterImageSize);
-		ui.setTimeUpdateEventThrottleMillis(timeUpdateEventThrottleMillis);
-		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
-		ui.setTrackLabelFormat(trackLabelFormat);
-		ui.setVideoDisabled(videoDisabled);
-		ui.setTimeMillis(timeMillis);
-		ui.setPreferredAudioLanguage(audioLanguage);
-		return ui;
-	}
+    @Override
+    public DtoComponentConfig createDto() {
+        DtoShakaPlayer ui = new DtoShakaPlayer();
+        mapAbstractConfigProperties(ui);
+        ui.setHlsUrl(hlsUrl);
+        ui.setDashUrl(dashUrl);
+        ui.setPosterImageUrl(posterImageUrl);
+        ui.setPosterImageSize(posterImageSize);
+        ui.setTimeUpdateEventThrottleMillis(timeUpdateEventThrottleMillis);
+        ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
+        ui.setTrackLabelFormat(trackLabelFormat);
+        ui.setVideoDisabled(videoDisabled);
+        ui.setTimeMillis(timeMillis);
+        ui.setPreferredAudioLanguage(audioLanguage);
+        ui.setBigPlayButtonEnabled(bigPlayButtonEnabled);
+        ui.setControlFadeDelaySeconds(controlFadeDelaySeconds);
+        ui.setControlPanelElements(controlPanelElements);
+        return ui;
+    }
 
-	@Override
-	public void handleErrorLoading() {
-		onErrorLoading.fire(null);
-	}
+    @Override
+    public void handleErrorLoading() {
+        onErrorLoading.fire(null);
+    }
 
-	@Override
-	public void handleManifestLoaded(DtoShakaManifestWrapper manifest) {
-		onManifestLoaded.fire(manifest.unwrap());
-	}
+    @Override
+    public void handleManifestLoaded(DtoShakaManifestWrapper manifest) {
+        onManifestLoaded.fire(manifest.unwrap());
+    }
 
-	@Override
-	public void handleTimeUpdate(long timeMillis) {
-		onTimeUpdate.fire(timeMillis);
-		this.timeMillis = timeMillis;
-	}
+    @Override
+    public void handleTimeUpdate(long timeMillis) {
+        onTimeUpdate.fire(timeMillis);
+        this.timeMillis = timeMillis;
+    }
 
-	@Override
-	public void handleEnded() {
-		onEnded.fire();
-	}
+    @Override
+    public void handleEnded() {
+        onEnded.fire();
+    }
 
-	public void setTime(long timeMillis) {
-		this.timeMillis = timeMillis;
-		clientObjectChannel.setTime(timeMillis);
-	}
+    @Override
+    public void handleSkipClicked(DtoShakaPlayer.SkipClickedEventWrapper event) {
+        onSkipClicked.fire(new SkipClickedEvent(event.isForward(), event.getPlaybackTimeMillis()));
+    }
 
-	public long getTime() {
-		return timeMillis;
-	}
 
-	public void setUrls(String hlsUrl, String dashUrl) {
-		this.timeMillis = 0;
-		this.hlsUrl = hlsUrl;
-		this.dashUrl = dashUrl;
-		clientObjectChannel.setUrls(hlsUrl, dashUrl);
-	}
+    public void jumpTo(long timeMillis) {
+        this.timeMillis = timeMillis;
+        clientObjectChannel.jumpTo(timeMillis);
+    }
 
-	public String getHlsUrl() {
-		return hlsUrl;
-	}
+    public long getTime() {
+        return timeMillis;
+    }
 
-	public void setHlsUrl(String hlsUrl) {
-		setUrls(hlsUrl, dashUrl);
-	}
+    public void setUrls(String hlsUrl, String dashUrl) {
+        this.timeMillis = 0;
+        this.hlsUrl = hlsUrl;
+        this.dashUrl = dashUrl;
+        clientObjectChannel.setUrls(hlsUrl, dashUrl);
+    }
 
-	public String getDashUrl() {
-		return dashUrl;
-	}
+    public String getHlsUrl() {
+        return hlsUrl;
+    }
 
-	public void setDashUrl(String dashUrl) {
-		setUrls(hlsUrl, dashUrl);
-	}
+    public void setHlsUrl(String hlsUrl) {
+        setUrls(hlsUrl, dashUrl);
+    }
 
-	public String getPosterImageUrl() {
-		return posterImageUrl;
-	}
+    public String getDashUrl() {
+        return dashUrl;
+    }
 
-	public void setPosterImageUrl(String posterImageUrl) {
-		this.posterImageUrl = posterImageUrl;
-		clientObjectChannel.setPosterImageUrl(posterImageUrl);
-	}
+    public void setDashUrl(String dashUrl) {
+        setUrls(hlsUrl, dashUrl);
+    }
 
-	public PosterImageSize getPosterImageSize() {
-		return posterImageSize;
-	}
+    public String getPosterImageUrl() {
+        return posterImageUrl;
+    }
 
-	public void setPosterImageSize(PosterImageSize posterImageSize) {
-		this.posterImageSize = posterImageSize;
-		clientObjectChannel.setPosterImageSize(posterImageSize);
-	}
+    public void setPosterImageUrl(String posterImageUrl) {
+        this.posterImageUrl = posterImageUrl;
+        clientObjectChannel.setPosterImageUrl(posterImageUrl);
+    }
 
-	public int getTimeUpdateEventThrottleMillis() {
-		return timeUpdateEventThrottleMillis;
-	}
+    public PosterImageSize getPosterImageSize() {
+        return posterImageSize;
+    }
 
-	public void setTimeUpdateEventThrottleMillis(int timeUpdateEventThrottleMillis) {
-		if (clientObjectChannel.isRendered()) {
-			throw new IllegalStateException("This cannot be set after rendering the player!");
-		}
-		this.timeUpdateEventThrottleMillis = timeUpdateEventThrottleMillis;
-	}
+    public void setPosterImageSize(PosterImageSize posterImageSize) {
+        this.posterImageSize = posterImageSize;
+        clientObjectChannel.setPosterImageSize(posterImageSize);
+    }
 
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
+    public int getTimeUpdateEventThrottleMillis() {
+        return timeUpdateEventThrottleMillis;
+    }
 
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-		clientObjectChannel.setBackgroundColor(backgroundColor.toHtmlColorString());
-	}
+    public void setTimeUpdateEventThrottleMillis(int timeUpdateEventThrottleMillis) {
+        if (clientObjectChannel.isRendered()) {
+            throw new IllegalStateException("This cannot be set after rendering the player!");
+        }
+        this.timeUpdateEventThrottleMillis = timeUpdateEventThrottleMillis;
+    }
 
-	public TrackLabelFormat getTrackLabelFormat() {
-		return trackLabelFormat;
-	}
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
 
-	public void setTrackLabelFormat(TrackLabelFormat trackLabelFormat) {
-		if (clientObjectChannel.isRendered()) {
-			throw new IllegalStateException("This cannot be set after rendering the player!");
-		}
-		this.trackLabelFormat = trackLabelFormat;
-	}
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        clientObjectChannel.setBackgroundColor(backgroundColor.toHtmlColorString());
+    }
 
-	public boolean isVideoDisabled() {
-		return videoDisabled;
-	}
+    public TrackLabelFormat getTrackLabelFormat() {
+        return trackLabelFormat;
+    }
 
-	public void setVideoDisabled(boolean videoDisabled) {
-		this.videoDisabled = videoDisabled;
-		clientObjectChannel.setVideoDisabled(videoDisabled);
-	}
+    public void setTrackLabelFormat(TrackLabelFormat trackLabelFormat) {
+        if (clientObjectChannel.isRendered()) {
+            throw new IllegalStateException("This cannot be set after rendering the player!");
+        }
+        this.trackLabelFormat = trackLabelFormat;
+    }
 
-	public void selectAudioLanguage(String language) {
-		selectAudioLanguage(language, null);
-	}
+    public boolean isVideoDisabled() {
+        return videoDisabled;
+    }
 
-	public void selectAudioLanguage(String language, String role) {
-		this.audioLanguage = language;
-		clientObjectChannel.selectAudioLanguage(language, role);
-	}
+    public void setVideoDisabled(boolean videoDisabled) {
+        this.videoDisabled = videoDisabled;
+        clientObjectChannel.setVideoDisabled(videoDisabled);
+    }
+
+    public void selectAudioLanguage(String language) {
+        selectAudioLanguage(language, null);
+    }
+
+    public void selectAudioLanguage(String language, String role) {
+        this.audioLanguage = language;
+        clientObjectChannel.selectAudioLanguage(language, role);
+    }
+
+    public boolean isBigPlayButtonEnabled() {
+        return bigPlayButtonEnabled;
+    }
+
+    public void setBigPlayButtonEnabled(boolean bigPlayButtonEnabled) {
+        if (clientObjectChannel.isRendered()) {
+            throw new IllegalStateException("This cannot be set after rendering the player!");
+        }
+        this.bigPlayButtonEnabled = bigPlayButtonEnabled;
+        clientObjectChannel.setBigPlayButtonEnabled(bigPlayButtonEnabled);
+    }
+
+    public int getControlFadeDelaySeconds() {
+        return controlFadeDelaySeconds;
+    }
+
+    public void setControlFadeDelaySeconds(int controlFadeDelaySeconds) {
+        if (clientObjectChannel.isRendered()) {
+            throw new IllegalStateException("This cannot be set after rendering the player!");
+        }
+        this.controlFadeDelaySeconds = controlFadeDelaySeconds;
+        clientObjectChannel.setControlFadeDelaySeconds(controlFadeDelaySeconds);
+    }
+
+
+    public List<ControlPanelElementType> getControlPanelElements() {
+        return controlPanelElements;
+    }
+
+    public void setControlPanelElements(List<ControlPanelElementType> controlPanelElements) {
+        if (clientObjectChannel.isRendered()) {
+            throw new IllegalStateException("This cannot be set after rendering the player!");
+        }
+        this.controlPanelElements = controlPanelElements;
+    }
+
+    public void play() {
+        clientObjectChannel.play();
+    }
+
+    public void pause() {
+        clientObjectChannel.pause();
+    }
 }

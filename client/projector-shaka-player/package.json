@@ -18,6 +18,6 @@
   },
   "dependencies": {
     "projector-client-object-api": "workspace:*",
-    "shaka-player": "^3.1.0"
+    "shaka-player": "^4.13.0"
   }
 }
