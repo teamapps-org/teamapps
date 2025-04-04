@@ -26,7 +26,9 @@ import org.teamapps.projector.component.core.toolbar.DtoToolbar;
 
 class DtoTabPanel extends DtoComponent {
 	List<DtoTab> tabs;
-	String selectedTabId; // TODO
+	String selectedTabId;
+	mutable String tabBarHeight;
+    mutable boolean fillTabBarWidth;
 	boolean hideTabBarIfSingleTab; // if true and there is only one tab, then the tab bar is hidden. Tool buttons pop up when hovering over the top 50px of the tab panel.
 	TabPanelTabStyle tabStyle; // if true and there is only one tab, then the tab bar is hidden.
 	List<DtoToolButton*> toolButtons; // shown inside a right-aligned space in the tab bar

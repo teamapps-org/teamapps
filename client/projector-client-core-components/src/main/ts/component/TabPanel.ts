@@ -99,7 +99,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 	private $dropDown: HTMLElement;
 	private $dropButtonContainerLeft: HTMLElement;
 	private $dropButtonContainerRight: HTMLElement;
-	private $toolTabButton: HTMLElement;
+	private $toolsContainer: HTMLElement;
 	private $toolButtonContainer: HTMLElement;
 	private $windowButtonContainer: HTMLElement;
 	private $contentWrapper: HTMLElement;
@@ -126,7 +126,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 	        <div class="dropdown-button" tabindex="0"></div>
 	        <div class="spacer"></div>
 	        <div class="tab-button-container right"></div>
-	        <div class="tab-button tool-tab-button">
+	        <div class="tools-container">
 	            <div class="tool-button-container"></div>
 	            <div class="window-button-container"></div>
 			</div>  	
@@ -144,9 +144,9 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 		this.$tabsContainer = this.$tabBar.querySelector<HTMLElement>(':scope >.background-color-div');
 		this.$leftButtonsWrapper = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tab-button-container.left');
 		this.$rightButtonsWrapper = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tab-button-container.right');
-		this.$toolTabButton = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tool-tab-button');
-		this.$toolButtonContainer = this.$toolTabButton.querySelector<HTMLElement>(':scope >.tool-button-container');
-		this.$windowButtonContainer = this.$toolTabButton.querySelector<HTMLElement>(':scope >.window-button-container');
+		this.$toolsContainer = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tools-container');
+		this.$toolButtonContainer = this.$toolsContainer.querySelector<HTMLElement>(':scope >.tool-button-container');
+		this.$windowButtonContainer = this.$toolsContainer.querySelector<HTMLElement>(':scope >.window-button-container');
 		this.$dropDownButton = this.$tabsContainer.querySelector<HTMLElement>(':scope >.dropdown-button');
 		this.$dropDown = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tab-panel-dropdown');
 		this.$dropButtonContainerLeft = this.$dropDown.querySelector<HTMLElement>(':scope >.dropdown-button-container.left');
@@ -195,6 +195,8 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 			});
 		});
 		this.setWindowButtons(config.windowButtons);
+		this.setFillTabBarWidth(config.fillTabBarWidth ?? false);
+		this.setTabBarHeight(config.tabBarHeight);
 	}
 
 	public setMaximized(maximized: boolean) {
@@ -216,6 +218,22 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 			this.restoreFunction();
 		}
 		this.restoreFunction = null;
+	}
+
+	setFillTabBarWidth(fillTabBarWidth: boolean): any {
+		this.config.fillTabBarWidth = fillTabBarWidth;
+		this.$tabPanel.classList.toggle("fill-tab-bar-width", fillTabBarWidth);
+		this.relayoutButtons();
+	}
+
+	setTabBarHeight(tabBarHeight: string): any {
+		this.config.tabBarHeight = tabBarHeight;
+		if (tabBarHeight) {
+			this.$tabPanel.style.setProperty("--ta-tab-button-height", tabBarHeight);
+		} else {
+			this.$tabPanel.style.removeProperty("--ta-tab-button-height");
+		}
+		this.relayoutButtons();
 	}
 
 	public setHideTabBarIfSingleTab(hideTabBarIfSingleTab: boolean) {
@@ -277,7 +295,6 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 		const $tabButton = parseHtml(`<div class="tab-button" data-tab-name="${tabId}" draggable="true">
                      ${icon ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url('${icon}');"></div></div>` : ''}
                      <div class="tab-button-caption">${caption}</div>                                                                                                                          	
-                     <div class="tab-button-filler"></div>
                 </div>`);
 
 		if (closeable) {
@@ -516,16 +533,16 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 		this.relayoutButtons();
 	}
 
-	public setWindowButtons(buttonTypes:WindowButtonType[]):void{
+	public getToolButtons() {
+		return Object.values(this.toolButtons);
+	}
+
+	public setWindowButtons(buttonTypes: WindowButtonType[]): void {
 		this.windowButtons = [];
 		this.$windowButtonContainer.innerHTML = '';
-		if (buttonTypes && buttonTypes.length > 0) {
-			buttonTypes.forEach(toolButton => {
+		buttonTypes?.forEach(toolButton => {
 				this.addWindowButton(toolButton);
 			});
-		} else {
-			this.windowButtons.slice().forEach(button => this.removeWindowButton(button));
-		}
 	}
 
 	private addWindowButton(toolButtonType: WindowButtonType) {
@@ -575,14 +592,17 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 		if (this.$tabBar.classList.contains('hidden')) {
 			return;
 		}
-		let availableWidth = contentWidth(this.$tabsContainer) - this.$dropDownButton.offsetWidth - this.$toolTabButton.offsetWidth;
+		this.$toolsContainer.classList.toggle("hidden", this.toolButtons.length === 0 && this.windowButtons.length === 0);
+		let availableWidth = $(this.$tabsContainer).width() - this.$dropDownButton.offsetWidth - this.$toolsContainer.offsetWidth;
 		let sumOfButtonWidths = 0;
 		this.getAllTabs().forEach(tab => {
 			let tabFilled = !this.tabIsDeFactoEmpty(tab);
 
 			if (tabFilled) {
 				if (!tab.buttonWidth) {
-					tab.buttonWidth = tab.$button.offsetWidth
+					tab.$button.style.flex = "0 0 auto";
+					tab.buttonWidth = tab.$button.offsetWidth;
+					tab.$button.style.removeProperty("flex");
 				}
 				sumOfButtonWidths += tab.buttonWidth;
 

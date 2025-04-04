@@ -66,9 +66,6 @@
           overflow-x: hidden;
           text-overflow: ellipsis;
         }
-        .tab-button-filler {
-          flex: 1 1 0px;
-        }
 
         &.selected {
           box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, .09);
@@ -78,6 +75,10 @@
 
       > .tab-button-container {
         flex: 0 0 auto;
+
+        &:empty {
+          display: none !important;
+        }
       }
 
       .tool-button-container, .window-button-container {
@@ -95,7 +96,7 @@
         align-items: center;
         justify-content: center;
         width: var(--ta-tab-button-height);
-        height: auto;
+        height: var(--ta-tab-button-height);
         flex: 0 0 auto;
         text-align: center;
         padding-top: 1px;
@@ -142,6 +143,22 @@
             border-radius: 0 0 var(--ta-border-radius) var(--ta-border-radius);
           }
         }
+      }
+    }
+  }
+
+  &.fill-tab-bar-width {
+    .spacer {
+      display: none;
+    }
+
+    > .tab-panel-header > .background-color-div > .tab-button-container {
+      flex: 1 0 auto;
+      display: flex;
+
+      .tab-button {
+        flex: 1 0 auto;
+        justify-content: center;
       }
     }
   }
@@ -213,8 +230,8 @@
     }
 
     > .background-color-div > .tab-button-container {
-      > .tab-button:not(.tool-tab-button),
-      > .dropdown-button:not(.tool-tab-button) {
+      > .tab-button,
+      > .dropdown-button {
         transition: background-color var(--ta-color-transition-time);
         &:hover {
           background-color: var(--ta-hover-color);
@@ -291,6 +308,7 @@
     }
 
     .tab-button.tool-tab-button {
+      display: flex;
       border-top: 1px solid;
       border-left: 1px solid;
       border-top-left-radius: 4px;

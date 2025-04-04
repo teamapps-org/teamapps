@@ -26,6 +26,7 @@ import org.teamapps.projector.component.core.CoreComponentLibrary;
 import org.teamapps.projector.component.core.panel.WindowButtonType;
 import org.teamapps.projector.component.core.toolbutton.ToolButton;
 import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.format.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,8 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	private final List<Tab> tabs = new ArrayList<>();
 	private Tab selectedTab;
 	private final List<ToolButton> toolButtons = new ArrayList<>();
+	private Length tabBarHeight; // null == use default from CSS
+	private boolean fillTabBarWidth;
 	private boolean hideTabBarIfSingleTab = false;
 	private TabPanelTabStyle tabStyle = TabPanelTabStyle.BLOCKS;
 
@@ -129,6 +132,24 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 		clientObjectChannel.setHideTabBarIfSingleTab(hideTabBarIfSingleTab);
 	}
 
+	public Length getTabBarHeight() {
+		return tabBarHeight;
+	}
+
+	public void setTabBarHeight(Length tabBarHeight) {
+		this.tabBarHeight = tabBarHeight;
+		clientObjectChannel.setTabBarHeight(tabBarHeight != null ? tabBarHeight.toCssString() : null);
+	}
+
+	public boolean isFillTabBarWidth() {
+		return fillTabBarWidth;
+	}
+
+	public void setFillTabBarWidth(boolean fillTabBarWidth) {
+		this.fillTabBarWidth = fillTabBarWidth;
+		clientObjectChannel.setFillTabBarWidth(hideTabBarIfSingleTab);
+	}
+
 	public TabPanelTabStyle getTabStyle() {
 		return tabStyle;
 	}
@@ -147,6 +168,8 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 				.collect(Collectors.toList());
 		uiTabPanel.setTabs(uiTabs);
 		uiTabPanel.setSelectedTabId(this.getSelectedTab() != null ? this.getSelectedTab().getClientId() : null);
+		uiTabPanel.setTabBarHeight(tabBarHeight != null ? tabBarHeight.toCssString() : null);
+		uiTabPanel.setFillTabBarWidth(fillTabBarWidth);
 		uiTabPanel.setHideTabBarIfSingleTab(hideTabBarIfSingleTab);
 		uiTabPanel.setTabStyle(tabStyle);
 		uiTabPanel.setToolButtons(castList(toolButtons));
