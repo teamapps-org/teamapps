@@ -29,6 +29,7 @@ import org.teamapps.projector.component.core.DtoFlexContainerEventHandler;
 import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.FlexDirection;
 import org.teamapps.projector.format.JustifyContent;
+import org.teamapps.projector.format.Length;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +45,7 @@ public class FlexContainer extends AbstractComponent implements DtoFlexContainer
 	private FlexDirection flexDirection = FlexDirection.ROW;
 	private AlignItems alignItems = AlignItems.STRETCH;
 	private JustifyContent justifyContent = JustifyContent.START;
+	private Length gap = Length.ofPixels(0);
 
 	@Override
 	public DtoFlexContainer createDto() {
@@ -55,6 +57,7 @@ public class FlexContainer extends AbstractComponent implements DtoFlexContainer
 		uiFlexContainer.setFlexDirection(flexDirection);
 		uiFlexContainer.setAlignItems(alignItems);
 		uiFlexContainer.setJustifyContent(justifyContent);
+		uiFlexContainer.setGap(gap.toCssString());
 		return uiFlexContainer;
 	}
 
@@ -113,5 +116,14 @@ public class FlexContainer extends AbstractComponent implements DtoFlexContainer
 
 	public List<Component> getComponents() {
 		return Collections.unmodifiableList(components);
+	}
+
+	public Length getGap() {
+		return gap;
+	}
+
+	public void setGap(Length gap) {
+		this.gap = gap;
+		clientObjectChannel.setGap(gap.toCssString());
 	}
 }

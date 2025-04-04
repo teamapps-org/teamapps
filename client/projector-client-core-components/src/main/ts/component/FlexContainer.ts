@@ -40,6 +40,7 @@ export class FlexContainer extends AbstractComponent<DtoFlexContainer> implement
 		this.setAlignItems(config.alignItems);
 		this.setFlexDirection(config.flexDirection);
 		this.setJustifyContent(config.justifyContent);
+		this.setGap(config.gap);
 		this.setComponents(config.components as Component[]);
 	}
 
@@ -75,6 +76,11 @@ export class FlexContainer extends AbstractComponent<DtoFlexContainer> implement
 	setJustifyContent(justifyContent: JustifyContent): any {
 		this.config.justifyContent = justifyContent;
 		this.$main.style.justifyContent = justifyContent;
+	}
+
+	setGap(gap: string): any {
+		this.config.gap = gap;
+		this.$main.style.gap = this.config.gap;
 	}
 
 

@@ -29,6 +29,7 @@ class DtoFlexContainer extends DtoComponent {
 	mutable FlexDirection flexDirection;
 	mutable AlignItems alignItems;
 	mutable JustifyContent justifyContent;
+	mutable String gap;
 }
 
 
