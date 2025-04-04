@@ -27,7 +27,8 @@ import {
 	MediaDeviceKind,
 	WebRtcPublishingFailureReason
 } from "./generated";
-import vad from "voice-activity-detection";
+import vad, {VoiceActivityDetectionHandle} from "voice-activity-detection";
+
 
 export function addVoiceActivityDetectionToMediaStream(mediaStream: MediaStream, onVoiceStart: () => void, onVoiceStop: () => void) {
 	if (((window as any).AudioContext || (window as any).webkitAudioContext) && mediaStream.getAudioTracks().length > 0) {
@@ -42,17 +43,29 @@ export function addVoiceActivityDetectionToMediaStream(mediaStream: MediaStream,
 	}
 }
 
-export function addVoiceActivityDetection(audioTrack: MediaStreamTrack, onVoiceStart: () => void, onVoiceStop: () => void) {
+export function addVoiceActivityDetection(audioTrack: MediaStreamTrack, onVoiceStart: () => void, onVoiceStop: () => void): VoiceActivityDetectionHandle {
 	if ((window as any).AudioContext || (window as any).webkitAudioContext) {
-		console.log("AudioContext detected");
 		let audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
-		console.log("AudioContext created");
-		let vadHandle = vad(audioContext, new MediaStream([audioTrack]), {onVoiceStart, onVoiceStop});
-		console.log("vad attached");
-		audioTrack.addEventListener("ended", () => {
-			// destroying VAD
+		let mediaStream = new MediaStream([audioTrack]);
+		let vadHandle = vad(audioContext, mediaStream, {onVoiceStart, onVoiceStop});
+		console.log("VAD attached");
+		let destroy = () => {
+			console.log("destroying VAD");
 			vadHandle.destroy()
-		});
+			audioContext.close();
+		};
+		audioTrack.addEventListener("ended", () => destroy());
+		return {
+			connect: () => vadHandle.connect(),
+			disconnect: () => vadHandle.disconnect(),
+			destroy: () => destroy()
+		};
+	} else {
+		return {
+			connect: () => {},
+			disconnect: () => {},
+			destroy: () => {}
+		}
 	}
 }
 

@@ -61,6 +61,7 @@ import {determineVideoSize} from "./MultiStreamsMixer";
 import {ConferenceInput} from "./lib/avcore";
 import {ConferenceApi, Utils} from "./lib/avcore.client";
 import {GainController} from "./GainController";
+import {VoiceActivityDetectionHandle} from "voice-activity-detection";
 
 
 export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3WebRtcClient> implements DtoMediaSoupV3WebRtcClientCommandHandler, DtoMediaSoupV3WebRtcClientEventSource {
@@ -117,6 +118,7 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 		audioBitrate: 0,
 		videoBitrate: 0
 	};
+	private vad: VoiceActivityDetectionHandle;
 
 	constructor(config: DtoMediaSoupV3WebRtcClient, serverObjectChannel: ServerObjectChannel) {
 		super(config);
@@ -205,7 +207,6 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 		}; // make sure everything is regarded as new! _config will get set at the end again...
 
 		this.gainController = new GainController(1);
-		addVoiceActivityDetection(this.gainController.outputTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 
 		this.update(config);
 	}
@@ -242,6 +243,8 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 					console.error("Error while closing conference client! Retrying the hard way.", e);
 					conferenceClient.close(true);
 				});
+			this.vad?.destroy();
+			this.gainController.inputTrack?.stop();
 			this.conferenceClient = null;
 			this.$video.classList.remove("mirrored");
 		}
@@ -480,6 +483,7 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 
 		if (audioConstraintsChanged) {
 			console.log("updatePublishedTracks() --> audioConstraintsChanged", newAudioConstraints);
+			this.vad?.destroy();
 			this.gainController.inputTrack?.stop(); // this will release the microphone access
 				if (newAudioConstraints != null) {
 					try {
@@ -495,6 +499,7 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 							}
 						});
 					this.gainController.inputTrack = firstAudioTrack;
+					this.vad = addVoiceActivityDetection(firstAudioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 					} catch (e) {
 						console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
 					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
