@@ -20,7 +20,7 @@
 
 import {isFreeTextEntry} from "./ComboBox";
 import {
-	DtoComboBox_TextInputEvent,
+	DtoAbstractComboBox_TextInputEvent,
 	DtoComboBoxTreeRecord,
 	DtoTagComboBox,
 	DtoTagComboBoxCommandHandler,
@@ -35,7 +35,7 @@ import {buildObjectTree, NodeWithChildren} from "./util";
 
 export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRecord[]> implements DtoTagComboBoxEventSource, DtoTagComboBoxCommandHandler {
 
-	public readonly onTextInput: ProjectorEvent<DtoComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoAbstractComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;

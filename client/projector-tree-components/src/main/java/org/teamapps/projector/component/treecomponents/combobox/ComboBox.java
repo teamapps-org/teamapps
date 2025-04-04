@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientrecordcache.CacheManipulationHandle;
+import org.teamapps.projector.component.core.toolbutton.ToolButton;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.treecomponents.TreeComponentsLibrary;
 import org.teamapps.projector.component.treecomponents.tree.model.ComboBoxModel;
@@ -33,10 +34,7 @@ import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.template.Template;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(value = TreeComponentsLibrary.class)
@@ -44,9 +42,13 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+	private final DtoComboBoxClientObjectChannel clientObjectChannel = new DtoComboBoxClientObjectChannel(getClientObjectChannel());
+
 	public final ProjectorEvent<String> onFreeTextEntered = new ProjectorEvent<>();
 
 	private String freeTextEntry;
+
+	private final List<ToolButton> toolButtons = new ArrayList<>();
 
 	public ComboBox() {
 	}
@@ -103,6 +105,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> {
 	public DtoAbstractField createDto() {
 		DtoComboBox comboBox = new DtoComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
+		comboBox.setToolButtons(List.copyOf(this.toolButtons));
 		return comboBox;
 	}
 
@@ -152,4 +155,17 @@ public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> {
 		return freeTextEntry;
 	}
 
+	public void addToolButton(ToolButton toolButton) {
+		toolButtons.add(toolButton);
+		updateToolButtons();
+	}
+
+	public void removeToolButton(ToolButton toolButton) {
+		toolButtons.remove(toolButton);
+		updateToolButtons();
+	}
+
+	private void updateToolButtons() {
+		clientObjectChannel.setToolButtons(List.copyOf(this.toolButtons));
+	}
 }

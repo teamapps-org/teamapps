@@ -19,6 +19,7 @@
   "dependencies": {
     "@floating-ui/dom": "^1.6.3",
     "fastest-levenshtein": "^1.0.16",
+    "projector-client-core-components": "workspace:*",
     "projector-client-object-api": "workspace:*"
   }
 }

@@ -4,8 +4,9 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.treecomponents.tree.DtoTreeRecord;
+import org.teamapps.projector.component.core.DtoToolButton;
 
-class DtoComboBox extends DtoAbstractField {
+abstract class DtoAbstractComboBox extends DtoAbstractField {
 	mutable boolean dropDownButtonVisible;
 	mutable boolean showDropDownAfterResultsArrive;
 	mutable boolean firstEntryAutoHighlight;
@@ -28,6 +29,13 @@ class DtoComboBox extends DtoAbstractField {
 	query retrieveDropdownEntries(String queryString) returns List<DtoComboBoxTreeRecord>;
 }
 
+class DtoComboBox extends DtoAbstractComboBox {
+	List<DtoToolButton*> toolButtons;
+
+    command setToolButtons(List<DtoToolButton*> toolButtons);
+}
+
 class DtoComboBoxTreeRecord extends DtoTreeRecord {
 	DtoTemplate* dropDownTemplate; // null == use asString
 }
+

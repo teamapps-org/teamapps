@@ -28,6 +28,7 @@ import {
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
 import {parseHtml, ProjectorEvent} from "projector-client-object-api";
+import {ToolButton} from "projector-client-core-components";
 
 type TextToEntryFunction<E> = (freeText: string) => E | any;
 
@@ -123,6 +124,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	private $selectedEntryWrapper: HTMLElement;
 	private $trigger: HTMLElement;
 	private $clearButton: HTMLElement;
+	private $toolButtonsWrapper: HTMLElement;
 
 	private dropDownComponent: DropDownComponent<E>;
 
@@ -159,10 +161,13 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				<input type="text" class="tr-combobox-editor tr-editor" autocomplete="no"></input>
 				<div class="tr-combobox-selected-entry-wrapper"></div>			
 			</div>
-            <div class="tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
+            <div class="tr-tool-buttons">
+			  <div class="tr-tool-button tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
+			</div>
             <div class="tr-trigger ${this.config.showTrigger ? '' : 'hidden'}"><span class="tr-trigger-icon"></span></div>
         </div>`);
 		this.$selectedEntryWrapper = this.$comboBox.querySelector(':scope .tr-combobox-selected-entry-wrapper');
+		this.$toolButtonsWrapper = this.$comboBox.querySelector(':scope .tr-tool-buttons');
 		this.$clearButton = this.$comboBox.querySelector(':scope .tr-remove-button');
 		this.$clearButton.addEventListener("mousedown", (e) => {
 			this.$editor.value = "";
@@ -406,9 +411,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		if (changing && fireEventIfChanged) {
 			this.fireChangeEvents(entry, originalEvent);
 		}
-		if (this.$clearButton) {
-			this.$clearButton.classList.toggle("hidden", !this.config.showClearButton || entry == null);
-		}
+		this.$toolButtonsWrapper.classList.toggle("hidden", entry == null);
 		if (this.isEditorVisible) {
 			this.showEditor(); // reposition editor
 		}
@@ -520,7 +523,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	public setShowClearButton(showClearButton: boolean) {
 		this.config.showClearButton = showClearButton;
-		this.$clearButton.classList.toggle('hidden', !this.config.showClearButton || this.selectedEntry == null);
+		this.$clearButton.classList.toggle('hidden', !this.config.showClearButton);
 	}
 
 	public setShowTrigger(showTrigger: boolean) {
@@ -542,6 +545,13 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	public setTextToEntryFunction(textToEntryFunction: TextToEntryFunction<E>) {
 		this.config.textToEntryFunction = textToEntryFunction;
+	}
+
+	public setToolButtons(buttons: ToolButton[]) {
+		Array.from(this.$toolButtonsWrapper.children)
+			.filter(e => e != this.$clearButton)
+			.forEach(e => e.remove());
+		buttons.forEach(b => this.$toolButtonsWrapper.insertBefore(b.getMainElement(), this.$clearButton));
 	}
 
 	public isDropDownOpen(): boolean {

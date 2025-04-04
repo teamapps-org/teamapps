@@ -24,8 +24,7 @@ import {createDateRenderer, createTimeRenderer} from "./datetime-rendering";
 import {
 	DtoAbstractDateTimeField, DtoAbstractDateTimeField_TextInputEvent,
 	DtoAbstractDateTimeFieldCommandHandler,
-	DtoAbstractDateTimeFieldEventSource,
-	DtoComboBox_TextInputEvent
+	DtoAbstractDateTimeFieldEventSource
 } from "./generated";
 import {AbstractField, DebounceMode, DtoDateTimeFormatDescriptor, FieldEditingMode, ProjectorEvent} from "projector-client-object-api";
 

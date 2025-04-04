@@ -21,8 +21,8 @@ import {TrivialComboBox} from "./trivial-components/TrivialComboBox";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 
 import {
+	DtoAbstractComboBox_TextInputEvent,
 	DtoComboBox,
-	DtoComboBox_TextInputEvent,
 	DtoComboBoxCommandHandler,
 	DtoComboBoxEventSource, DtoComboBoxServerObjectChannel,
 	DtoComboBoxTreeRecord
@@ -35,13 +35,14 @@ import {
 	ProjectorEvent, Template
 } from "projector-client-object-api";
 import {buildObjectTree, NodeWithChildren} from "./util";
+import {ToolButton} from "projector-client-core-components";
 
 export function isFreeTextEntry(o: DtoComboBoxTreeRecord): boolean {
 	return o != null && o.id < 0;
 }
 
 export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> implements DtoComboBoxEventSource, DtoComboBoxCommandHandler {
-	public readonly onTextInput: ProjectorEvent<DtoComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoAbstractComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	private trivialComboBox: TrivialComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
 	private freeTextIdEntryCounter = -1;
@@ -109,6 +110,13 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
+		if (config.toolButtons != null) {
+			this.trivialComboBox.setToolButtons(config.toolButtons as ToolButton[]);
+		}
+	}
+
+	setToolButtons(toolButtons: unknown[]): any {
+		this.trivialComboBox.setToolButtons((toolButtons as ToolButton[]) ?? []);
 	}
 
 	private createTextToEntryFunction(freeTextEnabled: boolean) {

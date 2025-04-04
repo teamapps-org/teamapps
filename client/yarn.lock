@@ -3141,7 +3141,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"projector-client-core-components@workspace:projector-client-core-components":
+"projector-client-core-components@workspace:*, projector-client-core-components@workspace:projector-client-core-components":
   version: 0.0.0-use.local
   resolution: "projector-client-core-components@workspace:projector-client-core-components"
   dependencies:
@@ -3203,6 +3203,7 @@ __metadata:
     "@floating-ui/dom": ^1.6.3
     esbuild: ^0.15.13
     fastest-levenshtein: ^1.0.16
+    projector-client-core-components: "workspace:*"
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1

@@ -92,7 +92,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		this(query -> Collections.emptyList());
 	}
 
-	protected void mapCommonUiComboBoxProperties(DtoComboBox ui) {
+	protected void mapCommonUiComboBoxProperties(DtoAbstractComboBox ui) {
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setDropDownButtonVisible(dropDownButtonVisible);
 		ui.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);

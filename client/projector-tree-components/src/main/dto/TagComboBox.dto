@@ -22,7 +22,7 @@ package "projector-combobox":org.teamapps.projector.component.treecomponents.com
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.treecomponents.combobox.DtoComboBox;
 
-class DtoTagComboBox extends DtoComboBox {
+class DtoTagComboBox extends DtoAbstractComboBox {
 	mutable int maxEntries; // if 0, then the list is unbounded
 	mutable TagComboBoxWrappingMode wrappingMode;
 	mutable boolean distinct; // if true, do not allow the same entry to be selected multiple times!
