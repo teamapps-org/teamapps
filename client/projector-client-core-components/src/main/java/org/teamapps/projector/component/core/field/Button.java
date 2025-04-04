@@ -127,12 +127,16 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 
 	@Override
 	public void handleClick() {
-		this.onClick.fire();
+		if (isVisible()) {
+			this.onClick.fire();
+		}
 	}
 
 	@Override
 	public void handleDropDownOpened() {
-		this.onDropDownOpened.fire();
+		if (isVisible()) {
+			this.onDropDownOpened.fire();
+		}
 	}
 
 	public Template getTemplate() {

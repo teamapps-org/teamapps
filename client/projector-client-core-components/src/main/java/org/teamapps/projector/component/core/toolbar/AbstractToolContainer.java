@@ -51,7 +51,7 @@ public abstract class AbstractToolContainer extends AbstractComponent implements
 	@Override
 	public void handleToolbarButtonClick(DtoAbstractToolContainer.ToolbarButtonClickEventWrapper e) {
 		ToolbarButton button = getButtonByClientId(e.getGroupId(), e.getButtonId());
-		if (button != null) {
+		if (button != null && button.isVisible()) {
 			if (e.getDropDownClickInfo() != null && e.getDropDownClickInfo().isOpening() && !e.getDropDownClickInfo().isContentSet()) {
 				Component dropdownComponent = button.getDropDownComponent();
 				clientObjectChannel.setDropDownComponent(e.getGroupId(), e.getButtonId(), dropdownComponent);

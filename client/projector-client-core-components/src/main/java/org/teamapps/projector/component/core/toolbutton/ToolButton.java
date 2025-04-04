@@ -92,12 +92,16 @@ public class ToolButton extends AbstractComponent implements DtoToolButtonEventH
 	
 	@Override
 	public void handleClick() {
-		this.onClick.fire();
+		if (isVisible()) {
+			this.onClick.fire();
+		}
 	}
 
 	@Override
 	public void handleDropDownOpened() {
-		this.onDropDownOpened.fire();
+		if (isVisible()) {
+			this.onDropDownOpened.fire();
+		}
 	}
 
 	public Icon getIcon() {
