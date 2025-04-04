@@ -52,7 +52,7 @@ import {
 	MediaRetrievalFailureReason,
 	SourceMediaTrackType
 } from "./generated";
-import {ContextMenu, getScrollbarWidth} from "projector-client-core-components";
+import {ContextMenu, getScrollbarWidth, ToolButton} from "projector-client-core-components";
 import {MixSizingInfo, TrackWithMixSizingInfo, VideoTrackMixer} from "./VideoTrackMixer";
 import {MediaKind} from "mediasoup-client/lib/RtpParameters";
 import {addVoiceActivityDetection, createVideoConstraints, enumerateDevices, getDisplayStream} from "./MediaUtil";
@@ -60,6 +60,7 @@ import {determineVideoSize} from "./MultiStreamsMixer";
 
 import {ConferenceInput} from "./lib/avcore";
 import {ConferenceApi, Utils} from "./lib/avcore.client";
+import {GainController} from "./GainController";
 
 
 export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3WebRtcClient> implements DtoMediaSoupV3WebRtcClientCommandHandler, DtoMediaSoupV3WebRtcClientEventSource {
@@ -87,6 +88,8 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 	private $bitrateDisplayWrapper: HTMLElement;
 	private $audioBitrateDisplay: HTMLElement;
 	private $videoBitrateDisplay: HTMLElement;
+	private $toolsAndIconsBar: HTMLElement;
+	private $toolButtons: HTMLElement;
 	private $icons: HTMLImageElement;
 	private $caption: HTMLElement;
 	private $spinner: HTMLElement;
@@ -95,7 +98,7 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 	private contextMenu: ContextMenu;
 	private conferenceClient: ConferenceApi;
 
-	private audioTrack: MediaStreamTrack;
+	private gainController: GainController;
 	private webcamTrack: MediaStreamTrack;
 	private screenTrack: MediaStreamTrack;
 	private videoTrackMixer: VideoTrackMixer;
@@ -127,7 +130,10 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 	<div class="video-container">
 		<img class="image"></img>
 		<video class="video" playsinline></video>
+		<div class="tools-and-icons-bar">
+		    <div class="tool-buttons"></div>
 		<div class="icons"></div>
+		</div>
 		<div class="bitrate-display hidden">
 			<div class="bitrate-audio"></div>
 			<div class="bitrate-video"></div>
@@ -149,6 +155,8 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 		this.$bitrateDisplayWrapper = this.$main.querySelector(":scope .bitrate-display");
 		this.$audioBitrateDisplay = this.$main.querySelector(":scope .bitrate-audio");
 		this.$videoBitrateDisplay = this.$main.querySelector(":scope .bitrate-video");
+		this.$toolsAndIconsBar = this.$main.querySelector(":scope .tools-and-icons-bar");
+		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 		this.$icons = this.$main.querySelector(":scope .icons");
 		this.$caption = this.$main.querySelector(":scope .caption");
 		this.$spinner = this.$main.querySelector(":scope .spinner");
@@ -192,7 +200,13 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 			});
 		});
 
-		this.config = {}; // make sure everything is regarded as new! _config will get set at the end again...
+		this.config = {
+			toolButtons: config.toolButtons
+		}; // make sure everything is regarded as new! _config will get set at the end again...
+
+		this.gainController = new GainController(1);
+		addVoiceActivityDetection(this.gainController.outputTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
+
 		this.update(config);
 	}
 
@@ -254,6 +268,12 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 
 		this.$bitrateDisplayWrapper.classList.toggle('hidden', !config.bitrateDisplayEnabled);
 
+		if (!arraysEqual(config.toolButtons, this.config.toolButtons)) {
+			this.$toolButtons.innerHTML = '';
+			(config.toolButtons as ToolButton[]).forEach(toolButton => {
+				this.$toolButtons.append(toolButton.getMainElement());
+			});
+		}
 		if (!arraysEqual(config.icons, this.config.icons)) {
 			this.$icons.innerHTML = '';
 			config.icons.forEach(iconUrl => {
@@ -412,7 +432,7 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 						url: newParams.server.url,
 						worker: newParams.server.worker,
 						simulcast: newParams.simulcast,
-						stopTracks: true,
+						stopTracks: false, // never stop the gainController's output track!
 						keyFrameRequestDelay: newParams.keyFrameRequestDelay
 					};
 					console.log("ConferenceApi config: ", conferenceApiConfig);
@@ -458,38 +478,32 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 		const webcamConstraintsChanged = !deepEquals(oldWebcamConstraints, newWebcamConstraints);
 		const screenConstraintsChanged = !deepEquals(oldScreenConstraints, newScreenConstraints);
 
-		let minorAudioChange = false;
 		if (audioConstraintsChanged) {
 			console.log("updatePublishedTracks() --> audioConstraintsChanged", newAudioConstraints);
-			if (this.audioTrack != null && newAudioConstraints != null && oldAudioConstraints?.deviceId === newAudioConstraints?.deviceId && oldAudioConstraints?.channelCount === newAudioConstraints?.channelCount) {
-				this.audioTrack.applyConstraints(newAudioConstraints);
-				minorAudioChange = true;
-			} else {
-				if (this.audioTrack != null) {
-					this.audioTrack.stop();
-					this.audioTrack = null;
-				}
+			this.gainController.inputTrack?.stop(); // this will release the microphone access
 				if (newAudioConstraints != null) {
 					try {
 						let audioTracks = (await window.navigator.mediaDevices.getUserMedia({audio: newAudioConstraints, video: false})) // rejected if user denies!
 							.getAudioTracks();
-						this.audioTrack = audioTracks[0];
+					const firstAudioTrack = audioTracks[0];
 						for (let i = 1; i < audioTracks.length; i++) {
 							audioTracks[i].stop(); // stop all but the first (should never be more than one actually!)
 						}
-						this.audioTrack.addEventListener("ended", () => {
-							if (this.audioTrack != null) { // not intended stopping!
-								this.onSourceMediaTrackEnded.fire({trackType: SourceMediaTrackType.MIC});
+					firstAudioTrack.addEventListener("ended", () => {
+						if (this.gainController.inputTrack == firstAudioTrack) { // not intended stopping!
+							this.onSourceMediaTrackEnded.fire({trackType: SourceMediaTrackType.MIC});
 							}
 						});
-						addVoiceActivityDetection(this.audioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
+					this.gainController.inputTrack = firstAudioTrack;
 					} catch (e) {
 						console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
-						this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
 					}
+			} else {
+				this.gainController.inputTrack = null;
 				}
 			}
-		}
+		this.gainController.gain = newAudioConstraints?.gainFactor ?? 0;
 
 		if (webcamConstraintsChanged) {
 			console.log("updatePublishedTracks() --> webcamConstraintsChanged", newWebcamConstraints);
@@ -582,18 +596,18 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 		}
 
 		if (this.conferenceClient != null) {
-			if (audioConstraintsChanged && !minorAudioChange) {
+			if (oldAudioConstraints == null && newAudioConstraints != null) {
+					try {
+					await this.conferenceClient.addTrack(this.gainController.outputTrack);
+						this.onTrackPublishingSuccessful.fire({audio: true, video: false});
+					} catch (e) {
+					console.error("Could not add audio track!", e);
+						this.onTrackPublishingFailed.fire({audio: true, video: false, errorMessage: e.toString()})
+					}
+			} else if (oldAudioConstraints != null && newAudioConstraints == null) {
 				this.targetStream.getAudioTracks().forEach(t => {
 					this.conferenceClient.removeTrack(t);
 				});
-				if (this.audioTrack != null) {
-					try {
-						await this.conferenceClient.addTrack(this.audioTrack);
-						this.onTrackPublishingSuccessful.fire({audio: true, video: false});
-					} catch (e) {
-						this.onTrackPublishingFailed.fire({audio: true, video: false, errorMessage: e.toString()})
-					}
-				}
 			}
 			if (webcamConstraintsChanged || screenConstraintsChanged) {
 				try {
@@ -697,6 +711,8 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 		let spinnerSize = Math.min(this.getWidth(), this.getHeight()) / 4;
 		this.$spinner.style.width = spinnerSize + "px";
 		this.$spinner.style.height = spinnerSize + "px";
+
+		(this.config.toolButtons as ToolButton[]).forEach(tb => tb.setIconSize(this.$toolsAndIconsBar.offsetHeight))
 	}
 
 	setContextMenuContent(requestId: number, component: Component): void {

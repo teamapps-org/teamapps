@@ -20,6 +20,7 @@
 package org.teamapps.projector.component.mediasoupclient;
 
 import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.component.core.toolbutton.ToolButton;
 import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
@@ -54,6 +55,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 	private Color activityActiveColor;
 	private boolean active;
 
+	private List<ToolButton> toolButtons = Collections.emptyList();
 	private List<Icon> icons = Collections.emptyList();
 	private String caption;
 	private String noVideoImageUrl;
@@ -84,6 +86,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 		ui.setActivityLineVisible(activityLineVisible);
 		ui.setActivityInactiveColor(activityInactiveColor != null ? activityInactiveColor.toHtmlColorString() : null);
 		ui.setActivityActiveColor(activityActiveColor != null ? activityActiveColor.toHtmlColorString() : null);
+		ui.setToolButtons(List.copyOf(toolButtons));
 		ui.setIcons(icons.stream().map(icon -> getSessionContext().resolveIcon(icon)).collect(Collectors.toList()));
 		ui.setBitrateDisplayEnabled(bitrateDisplayEnabled);
 		ui.setCaption(caption);
@@ -266,7 +269,21 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent implements DtoMed
 			icons = Collections.emptyList();
 		}
 		if (!Objects.equals(icons, this.icons)) {
-			this.icons = icons;
+			this.icons = List.copyOf(icons);
+			update();
+		}
+	}
+
+	public List<ToolButton> getToolButtons() {
+		return toolButtons;
+	}
+
+	public void setToolButtons(List<ToolButton> toolButtons) {
+		if (toolButtons == null) {
+			toolButtons = Collections.emptyList();
+		}
+		if (!Objects.equals(toolButtons, this.toolButtons)) {
+			this.toolButtons = List.copyOf(toolButtons);
 			update();
 		}
 	}

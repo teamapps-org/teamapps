@@ -26,6 +26,11 @@ public class AudioTrackConstraints {
 	private String deviceId = null;
 	private int channelCount = 1;
 	private boolean autoGainControl = true;
+	/**
+	 * Factor multiplied to audio samples.
+	 * 1 means unchanged.
+	 */
+	private double gainFactor = 1;
 	private boolean echoCancellation = true;
 	private boolean noiseSuppression = true;
 
@@ -49,6 +54,7 @@ public class AudioTrackConstraints {
 		DtoAudioTrackConstraints ui = new DtoAudioTrackConstraints();
 		ui.setChannelCount(channelCount);
 		ui.setAutoGainControl(autoGainControl);
+		ui.setGainFactor(gainFactor);
 		ui.setEchoCancellation(echoCancellation);
 		ui.setNoiseSuppression(noiseSuppression);
 		ui.setDeviceId(deviceId);
@@ -95,6 +101,14 @@ public class AudioTrackConstraints {
 		this.deviceId = deviceId;
 	}
 
+	public double getGainFactor() {
+		return gainFactor;
+	}
+
+	public void setGainFactor(double gainFactor) {
+		this.gainFactor = gainFactor;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -104,15 +118,11 @@ public class AudioTrackConstraints {
 			return false;
 		}
 		AudioTrackConstraints that = (AudioTrackConstraints) o;
-		return channelCount == that.channelCount &&
-				autoGainControl == that.autoGainControl &&
-				echoCancellation == that.echoCancellation &&
-				noiseSuppression == that.noiseSuppression &&
-				Objects.equals(deviceId, that.deviceId);
+		return channelCount == that.channelCount && autoGainControl == that.autoGainControl && Double.compare(that.gainFactor, gainFactor) == 0 && echoCancellation == that.echoCancellation && noiseSuppression == that.noiseSuppression && Objects.equals(deviceId, that.deviceId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(deviceId, channelCount, autoGainControl, echoCancellation, noiseSuppression);
+		return Objects.hash(deviceId, channelCount, autoGainControl, gainFactor, echoCancellation, noiseSuppression);
 	}
 }
