@@ -48,6 +48,8 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 	private final DtoTreeClientObjectChannel clientObjectChannel = new DtoTreeClientObjectChannel(getClientObjectChannel());
 
 	public final ProjectorEvent<RECORD> onNodeSelected = new ProjectorEvent<>(clientObjectChannel::toggleNodeSelectedEvent);
+	public final ProjectorEvent<TreeNodeExpansionEvent<RECORD>> onNodeExpansionChanged = new ProjectorEvent<>();
+
 
 	private TreeModel<RECORD> model;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
@@ -186,6 +188,15 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 		selectedNode = record;
 		if (record != null) {
 			onNodeSelected.fire(record);
+		}
+	}
+
+	@Override
+	public void handleNodeExpansionChanged(DtoTree.NodeExpansionChangedEventWrapper event) {
+		RECORD record = getRecordByUiId(event.getNodeId());
+		selectedNode = record;
+		if (record != null) {
+			onNodeExpansionChanged.fire(new TreeNodeExpansionEvent<>(record, event.isExpanded()));
 		}
 	}
 

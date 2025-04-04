@@ -141,7 +141,7 @@ export class TrivialTree<E> implements TrivialComponent{
     }
 
     public getSelectedEntry() {
-    	unProxyEntry(this.treeBox.getSelectedEntry());
+    	return unProxyEntry(this.treeBox.getSelectedEntry());
     };
 
     public updateChildren(parentNodeId: any, children: E[]) {

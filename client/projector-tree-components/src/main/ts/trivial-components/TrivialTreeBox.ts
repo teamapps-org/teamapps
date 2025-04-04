@@ -196,7 +196,7 @@ class EntryWrapper<E> {
 	}
 
 	public get expanded() {
-		return (this.entry as any)[this.config.expandedProperty] || false;
+		return !!(this.entry as any)[this.config.expandedProperty] || false;
 	}
 
 	public set expanded(expanded: boolean) {
@@ -291,7 +291,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		if (!entry.isLeaf()) {
 			this.create$ChildrenWrapper(entry);
 		}
-		this.setNodeExpanded(entry, entry.expanded, false);
+		this.setNodeExpanded(entry, entry.expanded, false, false);
 		return $outerEntryWrapper;
 	}
 
@@ -313,7 +313,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		return $childrenWrapper;
 	}
 
-	private setNodeExpanded(node: EntryWrapper<E>, expanded: boolean, animate: boolean) {
+	private setNodeExpanded(node: EntryWrapper<E>, expanded: boolean, animate: boolean, fireEvent = true) {
 		let expansionStateChange = !!node.expanded != !!expanded;
 
 		if (expanded && this.config.enforceSingleExpandedPath) {
@@ -345,12 +345,12 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			}
 		}
 
-		if (expansionStateChange) {
+		if (expansionStateChange && fireEvent) {
 			this.onNodeExpansionStateChanged.fire({node: node.entry, expanded});
 		}
 	}
 
-	private enforceSingleExpandedPath(node: EntryWrapper<E>) {
+	private enforceSingleExpandedPath(node: EntryWrapper<E>, fireEvent: boolean = true) {
 		const currentlyExpandedNodes = this.findEntries((n) => {
 			return n.expanded;
 		});
@@ -360,7 +360,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		for (let i = 0; i < currentlyExpandedNodes.length; i++) {
 			const currentlyExpandedNode = currentlyExpandedNodes[i];
 			if (newExpandedPath.indexOf(currentlyExpandedNode) === -1) {
-				this.setNodeExpanded(currentlyExpandedNode, false, true);
+				this.setNodeExpanded(currentlyExpandedNode, false, true, fireEvent);
 			}
 		}
 	}

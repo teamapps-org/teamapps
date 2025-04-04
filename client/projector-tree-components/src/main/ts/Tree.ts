@@ -19,7 +19,7 @@
  */
 
 import {
-	DtoTree,
+	DtoTree, DtoTree_NodeExpansionChangedEvent,
 	DtoTree_NodeSelectedEvent,
 	DtoTreeCommandHandler,
 	DtoTreeEventSource, DtoTreeRecord, DtoTreeServerObjectChannel
@@ -31,6 +31,8 @@ import {buildObjectTree, NodeWithChildren} from "./util";
 export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
 
 	public readonly onNodeSelected: ProjectorEvent<DtoTree_NodeSelectedEvent> = new ProjectorEvent();
+	public readonly onNodeExpansionChanged: ProjectorEvent<DtoTree_NodeExpansionChangedEvent> = new ProjectorEvent();
+
 
 	private $panel: HTMLElement;
 	private trivialTree: TrivialTree<DtoTreeRecord>;

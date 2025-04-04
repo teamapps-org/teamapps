@@ -20,5 +20,6 @@ class DtoTree extends DtoComponent {
     command setSelectedNodeId(Integer recordId, boolean reveal);
 
 	event nodeSelected(int nodeId);
+	event nodeExpansionChanged(int nodeId, boolean expanded);
 	query lazyLoadChildren(int parentNodeId) returns List<DtoTreeRecord>;
 }
