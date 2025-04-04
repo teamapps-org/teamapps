@@ -27,6 +27,7 @@ import {
 	DtoToolButtonEventSource
 } from "../generated";
 import {DropDown} from "../micro-components/DropDown";
+import {stopEventPropagations} from "./util";
 
 export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoToolButtonEventSource, DtoToolButtonCommandHandler {
 
@@ -73,6 +74,7 @@ export class ToolButton extends AbstractComponent<DtoToolButton> implements DtoT
 			}
 			this.onClick.fire({});
 		});
+		stopEventPropagations(this.$button, "mousedown", "pointerdown", "click")
 		this.setIconSize(config.iconSize);
 		this.setDropDownComponent(config.dropDownComponent as Component);
 	}
