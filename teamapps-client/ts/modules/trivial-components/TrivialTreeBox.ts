@@ -105,7 +105,7 @@ export interface TrivialTreeBoxConfig<E> {
 	/**
 	 * Whether or not to expand a node when it is selected.
 	 */
-	expandOnSelection?: boolean,
+	toggleExpansionOnClick?: boolean,
 
 	/**
 	 * Special mode that allows only one path to be expanded.
@@ -242,7 +242,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			},
 			animationDuration: 70,
 			showExpanders: false,
-			expandOnSelection: false, // open expandable nodes when they are selected
+			toggleExpansionOnClick: false, // open expandable nodes when they are selected
 			enforceSingleExpandedPath: false, // only one path is expanded at any time
 			indentation: null,
 			selectableDecider: () => true,
@@ -391,9 +391,9 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			let entryWrapper = (element as any).trivialEntryWrapper as EntryWrapper<E>;
 			if (this.config.selectableDecider(entryWrapper.entry)) {
 				this.setSelectedEntry(entryWrapper, null, true);
-				if (entryWrapper && this.config.expandOnSelection) {
-					this.setNodeExpanded(entryWrapper, true, true);
-				}
+			}
+			if (entryWrapper && this.config.toggleExpansionOnClick) {
+				this.setNodeExpanded(entryWrapper, !entryWrapper.expanded, true);
 			}
 		});
 		addDelegatedEventListener(this.$tree, ".tr-tree-entry-and-expander-wrapper", "mouseenter", (element, ev) => {
@@ -495,9 +495,6 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	public setSelectedEntryById(nodeId: number | string, fireEvents = false) {
 		let entry = this.findEntryById(nodeId);
 		this.setSelectedEntry(entry, null, fireEvents);
-		if (entry && this.config.expandOnSelection) {
-			this.setNodeExpanded(entry, true, true);
-		}
 	}
 
 	private minimallyScrollTo($entryWrapper: HTMLElement) {

@@ -19,8 +19,18 @@
  */
 package org.teamapps.ux.component.tree;
 
+import org.teamapps.ux.component.node.TreeNode;
+
 public interface TreeNodeInfoExtractor<RECORD> {
 
-	TreeNodeInfo getTreeNodeInfo(RECORD record);
+	TreeNodeInfo DEFAULT_TREE_NODE_INFO = new TreeNodeInfoImpl<>(null, false, true, false);
+
+	default TreeNodeInfo getTreeNodeInfo(RECORD record) {
+		if (record instanceof TreeNode) {
+			return (TreeNode) record;
+		} else {
+			return DEFAULT_TREE_NODE_INFO;
+		}
+	};
 
 }
