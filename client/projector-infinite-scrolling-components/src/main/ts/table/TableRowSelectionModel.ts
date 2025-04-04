@@ -113,7 +113,7 @@ export class TableRowSelectionModel {
 
 	@bind
 	private handleActiveCellChange(e: any, data: any) {
-		if (this._options.selectActiveRow && data.row != null) {
+		if (this._options.selectActiveRow && data.row != null && data.grid.getSelectedRows().length === 1) {
 			this.setSelectedRanges([new Slick.Range(data.row, 0, data.row, this.grid.getColumns().length - 1)]);
 		}
 	}
