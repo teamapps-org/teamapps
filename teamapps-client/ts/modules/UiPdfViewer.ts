@@ -53,7 +53,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $canvasTag: HTMLCanvasElement;
     private $styleTag: HTMLElement;
     private pdfDocument: PDFDocumentProxy;
-    private currentPageNumber: number = 0;
+    private currentPageNumber: number = 1;
 
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
         super(config, context);
