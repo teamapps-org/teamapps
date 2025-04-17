@@ -19,8 +19,8 @@
  * =========================LICENSE_END==================================
  */
 
-import * as pdfjsLib from "pdfjs-dist";
 import type {PDFDocumentProxy} from "pdfjs-dist";
+import * as pdfjsLib from "pdfjs-dist";
 import {UiBorderConfig} from "../generated/UiBorderConfig";
 import {UiPdfViewerCommandHandler, UiPdfViewerConfig} from "../generated/UiPdfViewerConfig";
 import {UiPdfViewMode} from "../generated/UiPdfViewMode";
@@ -146,45 +146,44 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // -----------------------™
 
     public async setUrl(url: string) {
-        const pdf = await pdfjsLib.getDocument(url).promise
-        this.pdfDocument = pdf;
-        this.renderPdfDocument();
+        this.pdfDocument = await pdfjsLib.getDocument(url).promise;
+        await this.renderPdfDocument();
     }
 
     public async setViewMode(viewMode: UiPdfViewMode) {
         this.config.viewMode = viewMode;
-        this.renderPdfDocument();
+        await this.renderPdfDocument();
     }
 
     public async showPage(page: number) {
         this.currentPageNumber = page;
-        this.renderPdfDocument();
+        await this.renderPdfDocument();
     }
 
     public async setZoomFactor(zoomFactor: number, zoomByAvailableWidth: boolean) {
         this.config.zoomFactor = zoomFactor;
         this.config.zoomByAvailableWidth = zoomByAvailableWidth;
-        this.renderPdfDocument();
+        await this.renderPdfDocument();
     }
 
     public async setPageBorder(pageBorder: UiBorderConfig) {
         this.config.pageBorder = pageBorder;
-        this.renderPdfDocument();
+        await this.renderPdfDocument();
     }
 
     public async setPageShadow(pageShadow: UiShadowConfig) {
         this.config.pageShadow = pageShadow;
-        this.renderPdfDocument();
+        await this.renderPdfDocument();
     }
 
     public async setPadding(padding: number) {
         this.config.padding = padding;
-        this.renderPdfDocument();
+        await this.renderPdfDocument();
     }
 
     public async setPageSpacing(pageSpacing: number) {
         this.config.pageSpacing = pageSpacing;
-        this.renderPdfDocument();
+        await this.renderPdfDocument();
     }
 
 }
