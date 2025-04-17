@@ -20,6 +20,7 @@
  */
 
 import * as pdfjsLib from "pdfjs-dist";
+import type {PDFDocumentProxy} from "pdfjs-dist";
 import {UiBorderConfig} from "../generated/UiBorderConfig";
 import {UiPdfViewerCommandHandler, UiPdfViewerConfig} from "../generated/UiPdfViewerConfig";
 import {UiPdfViewMode} from "../generated/UiPdfViewMode";
@@ -28,8 +29,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {generateUUID, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {createUiBorderCssString, createUiShadowCssString, CssPropertyObject} from "./util/CssFormatUtil";
-import type {PDFDocumentProxy} from "pdfjs-dist"
+import {createUiBorderCssString, createUiShadowCssString} from "./util/CssFormatUtil";
 
 // @ts-ignore
 // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
