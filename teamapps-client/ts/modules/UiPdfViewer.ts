@@ -62,6 +62,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.config = config;
         this.$main = parseHtml(`
         <div class="${this.uuidClass}">
+            <h1>PDF Viewer</h1>
             <style class="${this.uuidClass}"></style>
             <canvas class="${this.uuidClass}"></canvas>
         </div>`);
@@ -69,7 +70,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
 
         // Load the pdf by setting it's url
-        this.setUrl(config.url);
+        // setTimeout(async () => {
+        //     await this.setUrl(config.url);
+        // }, 0);
     }
 
     protected doGetMainElement(): HTMLElement {
