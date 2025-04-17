@@ -73,7 +73,10 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 ## Run the Test environment 
 
-1. Run the Testfile (Jetty Embedded) via IntelliJ (Green Arrow in UI)
+Preparation: 
+- mvn clean install
+
+1. Run the Testfile (`teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`) via IntelliJ (Green Arrow in UI)
 2. Goto teamapps-client in a shell
 3. Run yarn install 
 4. Run ./start-dev-server 8082 (because the Jetty starts at that port)
