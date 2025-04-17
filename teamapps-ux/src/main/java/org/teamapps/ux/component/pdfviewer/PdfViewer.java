@@ -54,6 +54,7 @@ public class PdfViewer extends AbstractComponent {
 
     public void setViewMode(UiPdfViewMode viewMode) {
         this.viewMode = viewMode;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetViewModeCommand(getId(), viewMode));
     }
 
     public int getPadding() {
@@ -62,6 +63,7 @@ public class PdfViewer extends AbstractComponent {
 
     public void setPadding(int padding) {
         this.padding = padding;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetPaddingCommand(getId(), padding));
     }
 
     public int getPageSpacing() {
@@ -70,6 +72,7 @@ public class PdfViewer extends AbstractComponent {
 
     public void setPageSpacing(int pageSpacing) {
         this.pageSpacing = pageSpacing;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetPageSpacingCommand(getId(), pageSpacing));
     }
 
     public float getZoomFactor() {
@@ -78,6 +81,7 @@ public class PdfViewer extends AbstractComponent {
 
     public void setZoomFactor(float zoomFactor) {
         this.zoomFactor = zoomFactor;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetZoomFactorCommand(getId(), zoomFactor, this.isZoomByAvailableWidth()));
     }
 
     public boolean isZoomByAvailableWidth() {
@@ -86,6 +90,7 @@ public class PdfViewer extends AbstractComponent {
 
     public void setZoomByAvailableWidth(boolean zoomByAvailableWidth) {
         this.zoomByAvailableWidth = zoomByAvailableWidth;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetZoomFactorCommand(getId(), this.getPadding(), zoomByAvailableWidth ));
     }
 
     public UiBorder getPageBorder() {
@@ -94,6 +99,7 @@ public class PdfViewer extends AbstractComponent {
 
     public void setPageBorder(UiBorder pageBorder) {
         this.pageBorder = pageBorder;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetPageBorderCommand(getId(), pageBorder));
     }
 
     public UiShadow getPageShadow() {
@@ -102,5 +108,6 @@ public class PdfViewer extends AbstractComponent {
 
     public void setPageShadow(UiShadow pageShadow) {
         this.pageShadow = pageShadow;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetPageShadowCommand(getId(), pageShadow));
     }
 }
