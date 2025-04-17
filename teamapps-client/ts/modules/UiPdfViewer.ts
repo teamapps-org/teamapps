@@ -75,7 +75,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         // }, 0);
     }
 
-    protected doGetMainElement(): HTMLElement {
+    public doGetMainElement(): HTMLElement {
         return this.$main;
     }
 
