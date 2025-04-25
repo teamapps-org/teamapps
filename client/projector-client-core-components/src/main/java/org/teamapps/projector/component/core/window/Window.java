@@ -19,16 +19,17 @@
  */
 package org.teamapps.projector.component.core.window;
 
-import org.teamapps.projector.common.format.Color;
-import org.teamapps.projector.common.format.RgbaColor;
-import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.Showable;
+import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.core.CoreComponentLibrary;
 import org.teamapps.projector.component.core.panel.*;
 import org.teamapps.projector.dto.JsonWrapper;
+import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.icon.Icon;
 
 import java.util.List;
 
@@ -37,9 +38,16 @@ public class Window extends Panel implements Showable, DtoWindowEventHandler {
 
 	private final DtoWindowClientObjectChannel clientObjectChannel = new DtoWindowClientObjectChannel(getClientObjectChannel());
 
+	public final ProjectorEvent<Void> onClosed = new ProjectorEvent<>();
+
 	private boolean modal = false;
 	private int width = 0; // 0 = full width
 	private int height = 0; // 0 = full height; -1 = auto
+	private int minWidth = 200; // 0 = full height; -1 = auto
+	private int minHeight = 100; // 0 = full height; -1 = auto
+	private boolean resizable = true;
+	private boolean movable = true;
+	private boolean keepInViewport = true;
 	private Color modalBackgroundDimmingColor = new RgbaColor(0, 0, 0, 0.2f);
 	private boolean closeable;
 	private boolean closeOnEscape;
@@ -76,6 +84,11 @@ public class Window extends Panel implements Showable, DtoWindowEventHandler {
 		window.setModal(modal);
 		window.setWidth(width);
 		window.setHeight(height);
+		window.setMinWidth(minWidth);
+		window.setMinHeight(minHeight);
+		window.setResizable(resizable);
+		window.setMovable(movable);
+		window.setKeepInViewport(keepInViewport);
 		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
 			window.setContentStretchingEnabled(false);
 		}
@@ -96,6 +109,11 @@ public class Window extends Panel implements Showable, DtoWindowEventHandler {
 		return new DtoWindowQueryMethodInvoker(this).handleQuery(name, params);
 	}
 
+	@Override
+	public void handleClosed() {
+		onClosed.fire();
+	}
+
 	public boolean isModal() {
 		return modal;
 	}
@@ -110,7 +128,8 @@ public class Window extends Panel implements Showable, DtoWindowEventHandler {
 	}
 
 	public void setWidth(int width) {
-		setSize(width, height);
+		this.width = width;
+		this.clientObjectChannel.setWidth(width);
 	}
 
 	public int getHeight() {
@@ -118,7 +137,53 @@ public class Window extends Panel implements Showable, DtoWindowEventHandler {
 	}
 
 	public void setHeight(int height) {
-		setSize(width, height);
+		this.height = height;
+		this.clientObjectChannel.setHeight(height);
+	}
+
+	public int getMinWidth() {
+		return minWidth;
+	}
+
+	public void setMinWidth(int minWidth) {
+		this.minWidth = minWidth;
+		this.clientObjectChannel.setMinWidth(minWidth);
+	}
+
+	public int getMinHeight() {
+		return minHeight;
+	}
+
+	public void setMinHeight(int minHeight) {
+		this.minHeight = minHeight;
+		this.clientObjectChannel.setMinHeight(minHeight);
+	}
+
+	public boolean isResizable() {
+		return resizable;
+	}
+
+	public void setResizable(boolean resizable) {
+		this.resizable = resizable;
+		this.clientObjectChannel.setResizable(resizable);
+	}
+
+	public boolean isMovable() {
+		return movable;
+	}
+
+	public void setMovable(boolean movable) {
+		this.movable = movable;
+		this.clientObjectChannel.setMovable(movable);
+	}
+
+	public boolean isKeepInViewport() {
+		return keepInViewport;
+	}
+
+	public void setKeepInViewport(boolean keepInViewport) {
+		this.keepInViewport = keepInViewport;
+		this.clientObjectChannel.setKeepInViewport(keepInViewport);
 	}
 
 	public void enableAutoHeight() {

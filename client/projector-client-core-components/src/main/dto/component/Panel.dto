@@ -28,6 +28,7 @@ import org.teamapps.projector.component.core.DtoToolButton;
 class DtoPanel extends DtoComponent {
 	mutable String icon;
 	mutable String title;
+	mutable String badge;
 	mutable DtoPanelHeaderField leftHeaderField;
 	mutable DtoPanelHeaderField rightHeaderField;
 	mutable HeaderComponentMinimizationPolicy headerComponentMinimizationPolicy;

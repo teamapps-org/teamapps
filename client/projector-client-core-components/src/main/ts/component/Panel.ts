@@ -92,15 +92,17 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	private $windowButtonContainer: HTMLElement;
 	private $icon: HTMLElement;
 	private $title: HTMLElement;
+	private $badge: HTMLElement;
 
 	private leftHeaderField: HeaderField;
 	private rightHeaderField: HeaderField;
-	private leftComponentFirstMinimized: boolean; // defined by config, but then by user interaction!
+	private leftComponentFirstMinimized: boolean;
 	private toolbar: Toolbar;
 	private icon: string;
-	private title: string;
 
 	private titleNaturalWidth: number;
+	private badgeNaturalWidth: number;
+
 	private toolButtons: ToolButton[] = [];
 	private windowButtons: WindowButtonType[];
 	private restoreFunction: (animationCallback?: () => void) => void;
@@ -111,6 +113,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
                 <div class="panel-heading">
                     <div class="panel-icon"></div>
                     <div class="panel-title"></div>
+                    <div class="panel-badge"></div>
                     <div class="panel-component-wrapper panel-left-component-wrapper"></div>
                     <div class="panel-heading-spacer"></div>
                     <div class="panel-component-wrapper panel-right-component-wrapper"></div>
@@ -126,6 +129,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 		this.$heading = this.$panel.querySelector(':scope >.panel-heading');
 		this.$icon = this.$heading.querySelector(':scope >.panel-icon');
 		this.$title = this.$heading.querySelector(':scope >.panel-title');
+		this.$badge = this.$heading.querySelector(':scope >.panel-badge');
 		this.$leftComponentWrapper = this.$heading.querySelector(':scope >.panel-left-component-wrapper');
 		this.$headingSpacer = this.$heading.querySelector(':scope >.panel-heading-spacer');
 		this.$rightComponentWrapper = this.$heading.querySelector(':scope >.panel-right-component-wrapper');
@@ -135,6 +139,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 		this.setPadding(config.padding);
 		this.setIcon(config.icon);
 		this.setTitle(config.title);
+		this.setBadge(config.badge);
 		this.setLeftHeaderField(config.leftHeaderField);
 		this.setRightHeaderField(config.rightHeaderField);
 		this.setToolButtons(config.toolButtons as ToolButton[]);
@@ -370,24 +375,31 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	}
 
 	public setTitle(title: string) {
-		this.title = title;
+		this.config.title = title;
 		this.$title.textContent = title;
-		this.recalculateTitleNaturalWidth();
-		this.$title.classList.toggle('hidden', !title);
+		this.titleNaturalWidth = null;
 		this.relayoutHeader();
 	}
 
-	private recalculateTitleNaturalWidth() {
-		if (!this.title) {
-			this.titleNaturalWidth = 0;
+	setBadge(badge: string) {
+		this.config.badge = badge;
+		this.$badge.textContent = badge;
+		this.badgeNaturalWidth = null;
+		this.relayoutHeader();
+	}
+
+	private recalculateNaturalWidth(value: string, element: HTMLElement) {
+		if (!value) {
+			return 0;
 		} else {
-			this.$title.style.position = "absolute";
-			this.$title.style.display = "inline-block";
-			this.titleNaturalWidth = this.$title.offsetWidth;
-			this.$title.style.position = null;
-			this.$title.style.display = null;
+			element.style.position = "absolute";
+			element.style.display = "inline-block";
+			let width = element.offsetWidth;
+			element.style.position = null;
+			element.style.display = null;
+			return width;
 		}
-	};
+	}
 
 	public setToolbar(toolbar: Toolbar) {
 		if (this.toolbar != null) {
@@ -417,20 +429,22 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	private relayoutHeader() {
 		const computedHeadingStyle = getComputedStyle(this.$heading);
 		let availableHeaderContentWidth = this.$heading.offsetWidth - parseInt(computedHeadingStyle.paddingLeft) - parseInt(computedHeadingStyle.paddingRight);
-		if (this.title && this.titleNaturalWidth == 0) this.recalculateTitleNaturalWidth();
+		if (this.config.title && this.titleNaturalWidth == null) this.titleNaturalWidth = this.recalculateNaturalWidth(this.config.title, this.$title);
+		if (this.config.badge && this.badgeNaturalWidth == null) this.badgeNaturalWidth = this.recalculateNaturalWidth(this.config.badge, this.$badge);
 		if (this.headerFields.some(headerField => !headerField.minimizedWidth)) this.calculateFieldWrapperSizes();
 
-		let titleWidth = Math.floor(this.title ? this.titleNaturalWidth : 0);
-		let iconWidth = (this.icon ? this.$icon.offsetWidth + parseInt(getComputedStyle(this.$icon).marginRight) : 0);
+		let titleWidth = Math.ceil(this.config.title ? this.titleNaturalWidth + parseInt(getComputedStyle(this.$title).marginRight) : 0);
+		let badgeWidth = Math.ceil(this.config.badge ? this.badgeNaturalWidth + parseInt(getComputedStyle(this.$title).marginRight) : 0);
+		let iconComputedStyle = getComputedStyle(this.$icon);
+		let iconWidth = (this.icon ? this.$icon.offsetWidth + parseInt(iconComputedStyle.marginLeft) + parseInt(iconComputedStyle.marginRight) : 0);
 		let minSpacerWidth = parseInt(getComputedStyle(this.$headingSpacer).flexBasis);
 		let buttonContainerWidth = this.$buttonContainer.offsetWidth;
 		let windowButtonContainerWidth = this.$windowButtonContainer.offsetWidth;
 
 		let minAllExpandedWidth =
-			// 1 // the width of the title may be no integer
-			-1
-			+ iconWidth
+			iconWidth
 			+ titleWidth
+			+ badgeWidth
 			+ minSpacerWidth
 			+ buttonContainerWidth
 			+ windowButtonContainerWidth
@@ -439,18 +453,19 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 				.reduce((totalWidth, fieldWidth) => (totalWidth + fieldWidth), 0);
 
 		if (this.numberOfVisibleHeaderFields() == 2) {
+			this.$heading.classList.remove("no-header-fields");
 			let firstFieldToGetMinified = this.leftComponentFirstMinimized ? this.leftHeaderField : this.rightHeaderField;
 			let alwaysMaximizedField = this.leftComponentFirstMinimized ? this.rightHeaderField : this.leftHeaderField;
 			let minFirstMinimizedWidth =
-				1 // the width of the title may be no integer
 				+ iconWidth
 				+ titleWidth
+				+ badgeWidth
 				+ minSpacerWidth
 				+ buttonContainerWidth
 				+ windowButtonContainerWidth
 				+ firstFieldToGetMinified.minimizedWidth
 				+ alwaysMaximizedField.minExpandedWidthWithIcon;
-			let minWidthNeededWithHiddenHeaderAndOneMinimizedField = minFirstMinimizedWidth - titleWidth;
+			let minWidthNeededWithHiddenTitleAndOneMinimizedField = minFirstMinimizedWidth - titleWidth;
 
 			if (availableHeaderContentWidth >= minAllExpandedWidth) {
 				this.$title.classList.remove("hidden");
@@ -480,7 +495,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 				let availableAdditionalSpace = availableHeaderContentWidth - minFirstMinimizedWidth;
 				let newMaximizedFieldWidth = Math.min(alwaysMaximizedField.config.minWidth + availableAdditionalSpace, alwaysMaximizedField.config.maxWidth);
 				alwaysMaximizedField.$fieldWrapper.style.width = newMaximizedFieldWidth + "px";
-			} else if (availableHeaderContentWidth >= minWidthNeededWithHiddenHeaderAndOneMinimizedField + 30 /* less does not make sense for title */) {
+			} else if (availableHeaderContentWidth >= minWidthNeededWithHiddenTitleAndOneMinimizedField + 30 /* less does not make sense for title */) {
 				this.$title.classList.remove("hidden");
 				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
@@ -490,10 +505,11 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 				this.$title.classList.add("hidden");
 				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
-				const width = alwaysMaximizedField.config.minWidth + (availableHeaderContentWidth - minWidthNeededWithHiddenHeaderAndOneMinimizedField);
+				const width = alwaysMaximizedField.config.minWidth + (availableHeaderContentWidth - minWidthNeededWithHiddenTitleAndOneMinimizedField);
 				alwaysMaximizedField.$fieldWrapper.style.width = width + "px";
 			}
 		} else if (this.numberOfVisibleHeaderFields() == 1) {
+			this.$heading.classList.remove("no-header-fields");
 			this.$heading.classList.remove("has-minimized-header-component");
 			let headerField = this.leftHeaderField || this.rightHeaderField;
 			this.setMinimizedFields();
@@ -519,10 +535,11 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 				headerField.$fieldWrapper.style.width = (headerField.config.minWidth + widthLessThanNeeded) + "px";
 			}
 		} else {
+			this.$heading.classList.add("no-header-fields");
 			this.$heading.classList.remove("has-minimized-header-component");
 			this.$title.classList.remove("hidden");
 			let availableAdditionalSpace = availableHeaderContentWidth - minAllExpandedWidth;
-			this.$title.style.width = (this.titleNaturalWidth + availableAdditionalSpace) + "px";
+			this.$title.style.width = null;
 		}
 	};
 

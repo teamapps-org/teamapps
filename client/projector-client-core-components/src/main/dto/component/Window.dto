@@ -3,23 +3,24 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.DtoShowable;
 
 class DtoWindow extends DtoPanel implements DtoShowable {
-	boolean modal;
-	int width; // 0 = full width
-	int height; // 0 = full height, -1 = auto
-	String headerBackgroundColor;
-	String modalBackgroundDimmingColor;
-    boolean closeable; // show "close" special tool button
-    boolean closeOnEscape; // close if the user presses escape
-    boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
+	mutable boolean modal;
+	mutable int width; // 0 = full width
+	mutable int height; // 0 = full height, -1 = auto
+	mutable int minWidth;
+    mutable int minHeight;
+    mutable boolean resizable;
+    mutable boolean movable;
+    mutable boolean keepInViewport;
+	mutable String modalBackgroundDimmingColor;
+    mutable boolean closeable; // show "close" special tool button
+    mutable boolean closeOnEscape; // close if the user presses escape
+    mutable boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
 
 	command show(int animationDuration);
 	command close(int animationDuration);
-	command setCloseable(boolean closeable);
-	command setCloseOnEscape(boolean closeOnEscape);
-	command setCloseOnClickOutside(boolean closeOnClickOutside);
-	command setModal(boolean modal);
-	command setModalBackgroundDimmingColor(String modalBackgroundDimmingColor);
 	command setSize(int width, int height);
+
+	event closed();
 }
 
 enum WindowButtonType {
