@@ -19,6 +19,7 @@
  */
 import {DtoPasswordField, DtoPasswordFieldCommandHandler, DtoPasswordFieldEventSource} from "../../generated";
 import {TextField} from "./TextField";
+import {insertBefore, parseHtml} from "projector-client-object-api";
 
 
 export class PasswordField extends TextField<DtoPasswordField> implements DtoPasswordFieldEventSource, DtoPasswordFieldCommandHandler {
@@ -33,7 +34,15 @@ export class PasswordField extends TextField<DtoPasswordField> implements DtoPas
 			this.$field.setAttribute("autocapitalize", "off");
 			this.$field.setAttribute("spellcheck", "off");
 		}
-		this.getMainElement().classList.add("PasswordField")
+		this.getMainInnerDomElement().classList.add("PasswordField");
+		let $passwordVisibilityToggleButton: HTMLElement = parseHtml('<div class="password-visibility-button"></div>');
+		this.setPasswordVisibilityToggleEnabled(config.passwordVisibilityToggleEnabled);
+		insertBefore($passwordVisibilityToggleButton, this.getMainInnerDomElement().querySelector(':scope .clear-button'));
+
+		$passwordVisibilityToggleButton.addEventListener('click', ev => {
+			let visible = this.getMainInnerDomElement().classList.toggle('password-visible');
+			this.$field.type = visible ? 'text' : 'password';
+		})
 	}
 
 	getTransientValue(): string {
@@ -42,6 +51,11 @@ export class PasswordField extends TextField<DtoPasswordField> implements DtoPas
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
 		return `<div class="static-readonly-TextField static-readonly-DtoPasswordField">${value != null ? "&#8226;".repeat(value.length) : ""}</div>`;
+	}
+
+	setPasswordVisibilityToggleEnabled(enabled: boolean): any {
+		this.config.passwordVisibilityToggleEnabled = enabled;
+		this.getMainInnerDomElement().classList.toggle("password-visibility-toggle-enabled", enabled);
 	}
 }
 

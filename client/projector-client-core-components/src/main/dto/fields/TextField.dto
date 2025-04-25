@@ -43,6 +43,8 @@ class DtoTextField extends DtoAbstractField implements DtoTextInputHandlingField
 }
 
 class DtoPasswordField extends DtoTextField {
+	boolean passwordVisibilityToggleEnabled;
+	command setPasswordVisibilityToggleEnabled(boolean enabled);
 }
 
 class DtoMultiLineTextField extends DtoTextField {

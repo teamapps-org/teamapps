@@ -22,12 +22,15 @@ package org.teamapps.projector.component.core.field;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.core.CoreComponentLibrary;
 import org.teamapps.projector.component.core.DtoPasswordField;
+import org.teamapps.projector.component.core.DtoPasswordFieldClientObjectChannel;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class PasswordField extends TextField {
 
-	private boolean sendValueAsMd5;
-	private String salt; // if sendValueAsMd5 == true and salt != null, then submit md5(salt + md5(fieldValue))
+	private final DtoPasswordFieldClientObjectChannel clientObjectChannel = new DtoPasswordFieldClientObjectChannel(getClientObjectChannel());
+
+
+	private boolean passwordVisibilityToggleEnabled;
 
 	public PasswordField() {
 		super();
@@ -41,7 +44,17 @@ public class PasswordField extends TextField {
 		uiField.setShowClearButton(isShowClearButton());
 		uiField.setPlaceholderText(getPlaceholderText());
 		uiField.setAutofill(isAutofill());
+		uiField.setPasswordVisibilityToggleEnabled(passwordVisibilityToggleEnabled);
 		return uiField;
+	}
+
+	public boolean isPasswordVisibilityToggleEnabled() {
+		return passwordVisibilityToggleEnabled;
+	}
+
+	public void setPasswordVisibilityToggleEnabled(boolean enabled) {
+		this.passwordVisibilityToggleEnabled = enabled;
+		clientObjectChannel.setPasswordVisibilityToggleEnabled(enabled);
 	}
 
 }
