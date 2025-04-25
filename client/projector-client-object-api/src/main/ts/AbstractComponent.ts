@@ -193,11 +193,11 @@ export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> i
 	}
 
 	public setClassNames(selector: string, classNames: { [className: string]: boolean }) {
-		let targetElement = this.getElementForSelector(selector);
-		if (targetElement.length === 0) {
+		let targetElements = this.getElementForSelector(selector);
+		if (targetElements.length === 0) {
 			console.error("Cannot set css class on non-existing element. Selector: " + selector);
 		}
-		targetElement.forEach(el => {
+		targetElements.forEach(el => {
 			for (let [className, enabled] of Object.entries(classNames)) {
 				el.classList.toggle(className, enabled);
 			}

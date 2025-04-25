@@ -33,7 +33,10 @@ export class StyleManager {
 			let index = this.sheet.insertRule(selector + "{}");
 			rule = this.sheet.cssRules[index] as CSSStyleRule;
 		}
-		Object.assign(rule.style, style);
+		// Object.assign(rule.style, style); does not seem to work with CSS variables...
+		for (const [name, value] of Object.entries(style)) {
+			rule.style.setProperty(name, value);
+		}
 	}
 
 	private isStyleRule(rule: CSSRule): rule is CSSStyleRule {
