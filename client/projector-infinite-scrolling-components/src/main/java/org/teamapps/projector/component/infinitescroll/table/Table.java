@@ -1064,4 +1064,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		clientObjectChannel.closeContextMenu(this.lastSeenContextMenuRequestId);
 	}
 
+	public List<RECORD> getRenderedRecords() {
+		return renderedRecords.getRecords();
+	}
+
 }
