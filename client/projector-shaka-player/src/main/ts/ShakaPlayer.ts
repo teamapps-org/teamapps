@@ -50,6 +50,9 @@ import PlayerInterface = shaka.extern.ManifestParser.PlayerInterface;
 import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
 import Manifest = shaka.extern.Manifest;
 
+import "./SkipBackButton";
+import "./SkipForwardButton";
+
 export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements DtoShakaPlayerCommandHandler, DtoShakaPlayerEventSource {
 
 	public readonly onManifestLoaded: ProjectorEvent<DtoShakaPlayer_ManifestLoadedEvent> = new ProjectorEvent();
@@ -57,6 +60,7 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 	public readonly onEnded: ProjectorEvent<DtoShakaPlayer_EndedEvent> = new ProjectorEvent();
 	public readonly onErrorLoading: ProjectorEvent<DtoShakaPlayer_ErrorLoadingEvent> = new ProjectorEvent();
 	public readonly onSkipClicked: ProjectorEvent<DtoShakaPlayer_SkipClickedEvent> = new ProjectorEvent();
+
 
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLVideoElement;
