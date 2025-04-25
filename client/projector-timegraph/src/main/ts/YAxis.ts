@@ -125,32 +125,21 @@ export class YAxis {
 		}
 		this.axis.ticks(numberOfTicks);
 
-		if (isLogScale(this.scale)) {
-			this.axis.tickFormat((value: number) => {
-				const log10 = Math.log(value) / Math.LN10;
-				let isPowerOfTen = Math.abs(Math.round(log10) - log10) < 1e-6;
-				if (numberOfTicks <= 4 || isPowerOfTen) {
-					if (Math.ceil(Math.log10(value)) > this.config.maxTickDigits) {
-						// If the integer part alone is taking more digits than allowed, fallback to SI notation. No way to make this fit...
-						return largeNumberTickFormat(value);
-					} else {
-						return tickFormat(value)
-					}
-				} else {
-					// do not display all numbers on logarithmic scales, since they tend to be displayed very narrowly...
-					return "";
-				}
-			});
-		} else {
-			this.axis.tickFormat((domainValue: number) => {
-				if (Math.ceil(Math.log10(domainValue)) > this.config.maxTickDigits) {
+		this.axis.tickFormat((value: number) => {
+			const log10 = Math.log10(Math.abs(value));
+			let isPowerOfTen = value === 0 || Math.abs(Math.round(log10) - log10) < 1e-6;
+			if (!isLogScale(this.scale) || numberOfTicks <= 4 || isPowerOfTen) {
+				if (Math.ceil(log10) > this.config.maxTickDigits) {
 					// If the integer part alone is taking more digits than allowed, fallback to SI notation. No way to make this fit...
-					return largeNumberTickFormat(domainValue);
+					return largeNumberTickFormat(value);
 				} else {
-					return tickFormat(domainValue)
+					return tickFormat(value)
 				}
-			});
-		}
+			} else {
+				// do not display all numbers on logarithmic scales, since they tend to be displayed very narrowly...
+				return "";
+			}
+		});
 	}
 
 }
