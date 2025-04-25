@@ -384,10 +384,13 @@ class DtoButtonGroup {
 			}
 		}
 		// fill with dummy elements
-		for (let i = visibleButtonsCount; i % buttonsPerRow != 0; i++) {
-			let rowIndex = Math.floor(i / buttonsPerRow);
-			let $row = this.$buttonRows[rowIndex];
-			$row.appendChild(parseHtml(`<div class="row-filler" style="flex-basis: ${this.enforcedButtonWidth}px">`));
+		let numberOfRows = Math.floor(visibleButtonsCount - 1 / buttonsPerRow);
+		if (numberOfRows > 1) { // otherwise distribute space evenly!
+			for (let i = visibleButtonsCount; i % buttonsPerRow != 0; i++) {
+				let rowIndex = Math.floor(i / buttonsPerRow);
+				let $row = this.$buttonRows[rowIndex];
+				$row.appendChild(parseHtml(`<div class="row-filler" style="flex-basis: ${this.enforcedButtonWidth}px">`));
+			}
 		}
 
 		this.$buttonRows.forEach($row => {
