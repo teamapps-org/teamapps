@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2022 TeamApps.org
+ * Copyright (C) 2014 - 2023 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,28 +19,44 @@
  */
 import {Axis, NamespaceLocalObject} from "d3";
 import {SVGSelection} from "./Charting";
-import {ScaleContinuousNumeric, scaleLog, ScaleLogarithmic} from "d3";
-import {yTickFormat} from "./TimeGraph";
+import {ScaleContinuousNumeric, ScaleLogarithmic} from "d3-scale";
 
 import * as d3 from "d3";
-import {Selection} from "d3-selection";
 
 function isLogScale(scale: ScaleContinuousNumeric<unknown, unknown>): scale is ScaleLogarithmic<unknown, unknown> {
 	return typeof ((scale as any).base) === "function"
 		|| typeof ((scale as any).constant) === "function";
 }
 
+interface YAxisConfig {
+	color: string,
+	label: string,
+	maxTickDigits: number
+}
+
 export class YAxis {
 
-	private $axis: Selection<SVGGElement, any, any, any>;
+	private $axis: SVGSelection<any>;
+	private $label: SVGSelection<SVGTextElement>;
 	private axis: Axis<number | { valueOf(): number }>;
 	private scale: ScaleContinuousNumeric<number, number>;
 
-	constructor(
-		private color: string
-	) {
-		this.$axis = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement);
-		this.axis = d3.axisLeft(null);
+	constructor(private config: YAxisConfig) {
+		this.$axis = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement)
+			.classed("axis", true)
+			.classed("y-axis", true);
+		this.$label = this.$axis.append<SVGTextElement>("text")
+			.classed("label", true)
+			.attr("x", 0)
+			.attr("dy", -5)
+			.attr("fill", "currentColor");
+		this.scale = d3.scaleLinear(); // will be replaced...
+		this.axis = d3.axisLeft(this.scale);
+	}
+
+	setConfig(config: YAxisConfig) {
+		this.config = config;
+		this.draw();
 	}
 
 	getSelection(): SVGSelection<any> {
@@ -48,12 +64,14 @@ export class YAxis {
 	}
 
 	getWidth(): number {
-		return 33;
-
+		let fontSize = parseFloat(getComputedStyle(this.$axis.node()).fontSize);
+		return 10 + (this.config.maxTickDigits + 1) * .6 * fontSize;
 	}
 
 	setScale(scaleY: ScaleContinuousNumeric<number, number>) {
 		this.scale = scaleY;
+		// Note that the scale is dynamic. the reference to scaleY is set, not its values, so changes to scaleY (e.g. for animations)
+		// have an effect on the axis!
 		this.axis.scale(scaleY);
 		this.updateTickFormat();
 	}
@@ -61,59 +79,82 @@ export class YAxis {
 	public draw() {
 		this.updateTickFormat();
 
-		this.$axis.call(this.axis);
+		this.$label.text(this.config.label)
+		this.$axis.call(this.axis as any);
 
 		let $ticks = this.$axis.node().querySelectorAll('.tick');
 		for (let i = 0; i < $ticks.length; i++) {
 			let $text: SVGTextElement = $ticks[i].querySelector("text");
 			let querySelector: any = $ticks[i].querySelector('line');
 			if ($text.innerHTML === '') {
-				querySelector.setAttribute("visibility", 'hidden');
+				querySelector.setAttribute("opacity", '.3');
 			} else {
-				querySelector.setAttribute("visibility", 'visible');
+				querySelector.setAttribute("opacity", '1');
 			}
 		}
 
-		this.$axis.style("color", this.color);
+		this.$axis.style("color", this.config.color);
 	}
 
 	private updateTickFormat() {
+		const tickFormat = d3.format(`-,.${this.config.maxTickDigits}~r`);
+		const largeNumberTickFormat = d3.format(`-,.${this.config.maxTickDigits}~s`);
+
 		let availableHeight = Math.abs(this.scale.range()[1] - this.scale.range()[0]);
 		let minY = this.scale.domain()[0];
 		let maxY = this.scale.domain()[1];
-		let delta = maxY - minY;
-		let numberOfYTickGroups = Math.log10(delta) + 1;
-		let heightPerYTickGroup = availableHeight / numberOfYTickGroups;
+		const numberOfDisplayableTicks = Math.ceil(availableHeight / 20);
 
-		this.scale instanceof scaleLog
+		// make sure we only display as many ticks that all ticks have different (displayed) values!
+		let numberOfTicks = numberOfDisplayableTicks;
+		if (minY != maxY) {
+			while (numberOfTicks > 0) {
+				const integerPartLen = maxTickIntegerPartLength(minY, maxY, numberOfTicks);
+				const inc: number = d3.tickIncrement(minY, maxY, numberOfTicks);
+				const numberOfDigitsAddedByTickIncrements = inc < 0 ? Math.ceil(Math.log10(-inc)) : 0;
+				const numberOfSignificantDigits = integerPartLen + numberOfDigitsAddedByTickIncrements;
+				if (integerPartLen >= this.config.maxTickDigits) {
+					break;
+				} else if (numberOfSignificantDigits > this.config.maxTickDigits) {
+					console.debug(`Decreasing the number of ticks from ${numberOfTicks} to ${numberOfTicks - 1}`)
+					numberOfTicks--;
+				} else {
+					break;
+				}
+			}
+		}
+		this.axis.ticks(numberOfTicks);
+
 		if (isLogScale(this.scale)) {
 			this.axis.tickFormat((value: number) => {
-				if (value < 1) {
-					return d3.format("-,.2r")(value);
-				} else {
-					if (heightPerYTickGroup >= 150) {
-						return yTickFormat(value);
-					} else if (heightPerYTickGroup >= 80) {
-						let firstDigitOfValue = Number(("" + value)[0]);
-						return firstDigitOfValue <= 5 ? yTickFormat(value) : "";
-					} else if (heightPerYTickGroup >= 30) {
-						let firstDigitOfValue = Number(("" + value)[0]);
-						return firstDigitOfValue === 1 || firstDigitOfValue === 5 ? yTickFormat(value) : "";
+				const log10 = Math.log(value) / Math.LN10;
+				let isPowerOfTen = Math.abs(Math.round(log10) - log10) < 1e-6;
+				if (numberOfTicks <= 4 || isPowerOfTen) {
+					if (Math.ceil(Math.log10(value)) > this.config.maxTickDigits) {
+						// If the integer part alone is taking more digits than allowed, fallback to SI notation. No way to make this fit...
+						return largeNumberTickFormat(value);
 					} else {
-						let firstDigitOfValue = Number(("" + value)[0]);
-						return firstDigitOfValue === 1 ? yTickFormat(value) : "";
+						return tickFormat(value)
 					}
+				} else {
+					// do not display all numbers on logarithmic scales, since they tend to be displayed very narrowly...
+					return "";
 				}
 			});
 		} else {
 			this.axis.tickFormat((domainValue: number) => {
-				if (delta < 2) {
-					return d3.format("-,.3r")(domainValue)
+				if (Math.ceil(Math.log10(domainValue)) > this.config.maxTickDigits) {
+					// If the integer part alone is taking more digits than allowed, fallback to SI notation. No way to make this fit...
+					return largeNumberTickFormat(domainValue);
 				} else {
-					return yTickFormat(domainValue)
+					return tickFormat(domainValue)
 				}
-			})
-				.ticks(availableHeight / 20);
+			});
 		}
 	}
+
+}
+
+export function maxTickIntegerPartLength(minY: number, maxY: number, numberOfTicks: number) {
+	return Math.max(...d3.ticks(minY, maxY, numberOfTicks).map(t => Math.abs(t) < 1 ? 1 : Math.floor(Math.log10(Math.abs(t))) + 1));
 }

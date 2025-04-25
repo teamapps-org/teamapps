@@ -86,7 +86,6 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 	private zoom: ZoomBehavior<ZoomedElementBaseType, any>;
 	private xAxis: Axis<Date | number | { valueOf(): number }>;
 	private $xAxis: Selection<SVGGElement, any, any, any>;
-	private $horizontalPanRect: SVGSelection<any>;
 	private brush: BrushBehavior<number>;
 	private $brush: SVGGSelection<number>;
 	private $graphClipContainer: SVGGSelection<any>;
@@ -147,7 +146,7 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 
 		this.$xAxis = this.$rootG.append<SVGGElement>("g")
 			.classed("x-axis", true);
-		this.$horizontalPanRect = this.$xAxis.append<SVGRectElement>("rect")
+		this.$xAxis.append<SVGRectElement>("rect")
 			.classed("horizontal-pan-rect", true)
 			.attr("width", "100%")
 			.attr("height", 20);

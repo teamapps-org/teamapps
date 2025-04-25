@@ -21,7 +21,7 @@ import {SVGSelection} from "./Charting";
 import * as d3 from "d3";
 import {NamespaceLocalObject} from "d3";
 import {Graph} from "./Graph";
-import {YAxis} from "./YAxis";
+import {maxTickIntegerPartLength, YAxis} from "./YAxis";
 import {DtoGraph, DtoGraphData, LineChartYScaleZoomMode, ScaleType} from "./generated";
 import {generateUUID} from "projector-client-object-api";
 import {ScaleContinuousNumeric, ScaleTime} from "d3";
@@ -41,7 +41,11 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 	protected cssUuid = generateUUID();
 
 	constructor(config: C) {
-		this.yAxis = new YAxis(config.yAxisColor);
+		this.yAxis = new YAxis({
+			color: config.yAxisColor,
+			label: config.yAxisLabel,
+			maxTickDigits: config.maxTickDigits
+		});
 		this.setConfig(config)
 		this.$main = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as unknown as SVGGElement)
 			.attr("data-series-id", `${this.config.id}`);
@@ -69,15 +73,15 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 	}
 
 	public redraw() {
-		let yRange = this.getScaleYRangeOrNull();
+		let scaleYDomain = this.getScaleYDomain();
 
-		if (yRange != null && (yRange.minY !== this.scaleY.domain()[0] || yRange.maxY !== this.scaleY.domain()[1])) {
+		if (scaleYDomain != null && (scaleYDomain.minY !== this.scaleY.domain()[0] || scaleYDomain.maxY !== this.scaleY.domain()[1])) {
 			d3.transition(`${this.cssUuid}-zoomYToDisplayedDomain`)
 				.ease(d3.easeLinear)
 				.duration(300)
 				.tween(`${this.cssUuid}-zoomYToDisplayedDomain`, () => {
 					// create interpolator and do not show nasty floating numbers
-					let intervalInterpolator = d3.interpolateArray(this.scaleY.domain(), [yRange.minY, yRange.maxY]);
+					let intervalInterpolator = d3.interpolateArray(this.scaleY.domain(), [scaleYDomain.minY, scaleYDomain.maxY]);
 					return (t: number) => {
 						this.scaleY.domain(intervalInterpolator(t));
 						this.yAxis.draw();
@@ -90,7 +94,7 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 		}
 	}
 
-	private getScaleYRangeOrNull() {
+	private getScaleYDomain() {
 		let minY: number, maxY: number;
 
 		function crossesZero(bound: number, margin: number) {
@@ -111,6 +115,29 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 			minY = this.config.intervalY.min;
 			maxY = this.config.intervalY.max;
 		}
+
+		// if we use an auto-scaling zoom mode, we want at least two ticks to have a significant value.
+		if (minY != maxY && (this.config.yScaleZoomMode === LineChartYScaleZoomMode.DYNAMIC
+			|| this.config.yScaleZoomMode === LineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO)) {
+			let numberOfTicks = 3;
+			while (true) {
+				const integerPartLength = maxTickIntegerPartLength(minY, maxY, numberOfTicks);
+				const inc: number = d3.tickIncrement(minY, maxY, numberOfTicks);
+				const numberOfDigitsAddedByTickIncrements = inc < 0 ? Math.ceil(Math.log10(-inc)) : 0;
+				const numberOfSignificantDigits = integerPartLength + numberOfDigitsAddedByTickIncrements;
+				if (integerPartLength >= this.config.maxTickDigits) {
+					break;
+				} else if (numberOfSignificantDigits > this.config.maxTickDigits) {
+					const delta = maxY - minY;
+					console.debug(`Increasing dy from (${minY}:${maxY}) to (${minY - (delta / this.config.maxTickDigits)}:${maxY + (delta / this.config.maxTickDigits)})`)
+					minY = minY - (delta / this.config.maxTickDigits);
+					maxY = maxY + (delta / this.config.maxTickDigits);
+				} else {
+					break;
+				}
+			}
+		}
+
 		return {minY, maxY};
 	}
 
@@ -136,6 +163,11 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 
 	public setConfig(config: C) {
 		this.config = config;
+		this.yAxis.setConfig({
+			color: config.yAxisColor,
+			label: config.yAxisLabel,
+			maxTickDigits: config.maxTickDigits
+		})
 		this.updateYScale();
 	}
 

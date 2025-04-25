@@ -39,6 +39,8 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 	private boolean yZeroLineVisible = false;
 	private boolean yAxisVisible = true;
 	private Color yAxisColor = RgbaColor.BLACK;
+	private String yAxisLabel;
+	private int maxTickDigits = 3;
 
 	public AbstractGraph(M model) {
 		this.model = model;
@@ -88,6 +90,8 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 		ui.setId(id);
 		ui.setYAxisVisible(yAxisVisible);
 		ui.setYAxisColor(yAxisColor != null ? yAxisColor.toHtmlColorString() : null);
+		ui.setYAxisLabel(yAxisLabel);
+		ui.setMaxTickDigits(maxTickDigits);
 		ui.setIntervalY(displayedIntervalY != null ? displayedIntervalY.toUiLongInterval() : new DtoLongInterval(0, 1000));
 		ui.setYScaleType(yScaleType);
 		ui.setYScaleZoomMode(yScaleZoomMode);
@@ -120,6 +124,26 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 
 	public AbstractGraph setYAxisColor(Color yAxisColor) {
 		this.yAxisColor = yAxisColor;
+		fireChange();
+		return this;
+	}
+
+	public String getYAxisLabel() {
+		return yAxisLabel;
+	}
+
+	public AbstractGraph<D, M> setYAxisLabel(String yAxisLabel) {
+		this.yAxisLabel = yAxisLabel;
+		fireChange();
+		return this;
+	}
+
+	public int getMaxTickDigits() {
+		return maxTickDigits;
+	}
+
+	public AbstractGraph<D, M> setMaxTickDigits(int maxTickDigits) {
+		this.maxTickDigits = maxTickDigits;
 		fireChange();
 		return this;
 	}

@@ -71,6 +71,8 @@ interface DtoGraph {
 	String id;
 	boolean yAxisVisible;
 	String yAxisColor;
+	String yAxisLabel;
+    int maxTickDigits;
 	ScaleType yScaleType;
 	DtoLongInterval intervalY;
 	LineChartYScaleZoomMode yScaleZoomMode;

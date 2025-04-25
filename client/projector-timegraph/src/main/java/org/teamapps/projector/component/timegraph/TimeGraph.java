@@ -161,6 +161,10 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 
 	@Override
 	public void handleZoomed(DtoTimeGraph.ZoomedEventWrapper event) {
+		if (event.getMillisecondsPerPixel() <= 0) {
+			return; // this is an erroneous request, probably sent from a component that has not enough space to render graphs anyway!
+		}
+
 		Interval displayedInterval = new Interval(event.getDisplayedInterval().getMin(), event.getDisplayedInterval().getMax());
 		TimePartitioning timePartitioning = zoomLevels.get(event.getZoomLevelIndex());
 
