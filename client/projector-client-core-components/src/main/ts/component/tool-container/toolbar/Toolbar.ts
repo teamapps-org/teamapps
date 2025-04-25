@@ -51,6 +51,7 @@ interface FQButtonId {
 
 export type ButtonVisibilities = { fittingButtons: FQButtonId[], nonFittingButtons: FQButtonId[], hiddenButtons: FQButtonId[] };
 
+// # synched
 export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptyable, DtoToolbarCommandHandler, DtoToolbarEventSource {
 
 	public readonly onEmptyStateChanged: ProjectorEvent<boolean> = new ProjectorEvent<boolean>();
@@ -106,6 +107,11 @@ export class Toolbar extends AbstractToolContainer<DtoToolbar> implements Emptya
 
 		config.leftButtonGroups && config.leftButtonGroups.forEach(bg => this.addButtonGroup(bg, false))
 		config.rightButtonGroups && config.rightButtonGroups.forEach(bg => this.addButtonGroup(bg, true))
+
+		this.onEmptyStateChanged.addListener(empty =>  {
+			this.getMainElement().classList.toggle("empty", empty)
+		})
+		this.getMainElement().classList.toggle("empty", this.empty);
 	}
 
 	private createDropDownAccordion(): ToolAccordion {

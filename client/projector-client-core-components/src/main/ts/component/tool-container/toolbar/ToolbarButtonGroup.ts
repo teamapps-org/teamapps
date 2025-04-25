@@ -26,6 +26,7 @@ import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolba
 import {ButtonVisibilities, Toolbar} from "./Toolbar";
 import {DropDownButtonClickInfo} from "../../../generated";
 
+// #synched
 export class ToolbarButtonGroup {
 	public readonly onButtonClicked: ProjectorEvent<{buttonId: string, dropDownButtonClickInfo: DropDownButtonClickInfo}> = new ProjectorEvent();
 	public readonly onEmptyStateChanged: ProjectorEvent<boolean> = new ProjectorEvent();
@@ -63,7 +64,8 @@ export class ToolbarButtonGroup {
 
 		this.setVisible(buttonGroupConfig.visible);
 
-
+		this.onEmptyStateChanged.addListener(empty => this.$buttonGroupWrapper.classList.toggle("empty", empty));
+		this.$buttonGroupWrapper.classList.toggle("empty", this.empty);
 	}
 
 	public get empty(): boolean {
@@ -144,11 +146,6 @@ export class ToolbarButtonGroup {
 	}
 
 	private updateVisibility() {
-		let hasVisibleButton = this.buttons.values.some(button => {
-			return button.isVisible() && this.buttonsShiftedToOverflowDropDown.indexOf(button) === -1;
-		});
-		this.$buttonGroupWrapper.classList.toggle("pseudo-hidden", !(this.visible && hasVisibleButton));
-
 		this.onEmptyStateChanged.fireIfChanged(this.empty);
 	}
 
