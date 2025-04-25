@@ -174,6 +174,10 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
         }
     }
 
+    protected boolean isValueLocked() {
+        return this.value.isLocked();
+    }
+
     public VALUE convertClientValueToServerValue(JsonNode value) {
         if (value == null || value.isNull()) {
             return null;
