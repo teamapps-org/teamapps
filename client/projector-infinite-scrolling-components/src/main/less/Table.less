@@ -112,7 +112,7 @@
       }
 
       &.selected {
-        background-color: #7DB1EA;
+        background-color: var(--ta-selection-color);
       }
 
       &:not(.editable) {
@@ -166,14 +166,6 @@
         }
       }
 
-      .CompositeField { // see also CompositeField!
-        position: absolute;
-        width: ~"calc(100% + 2px)";
-        height: ~"calc(100% + 2px)";
-        top: -1px;
-        left: -1px;
-        border-radius: 0;
-      }
     }
 
     &.table-mode {
@@ -251,7 +243,7 @@
         margin: 0;
         order: 1;
         display: none;
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAMklEQVQYV2NkIAIwIqn5D2Uji4GF0AWwKsTQxcDAgKEQmyKQDSgKyTKJoJuI9h3WUAMAntIHCtDLLc8AAAAASUVORK5CYII=);
+        background-image: url("@material-symbols/svg-400/outlined/arrow_upward.svg");
         background-position: center;
         background-repeat: no-repeat;
       }
@@ -260,11 +252,8 @@
         display: block;
         margin-left: -3px;
       }
-      > .slick-sort-indicator-asc {
-        transform: rotate(0.75turn);
-      }
       > .slick-sort-indicator-desc {
-        transform: rotate(0.25turn);
+        transform: rotate(.5turn);
       }
 
       &.slick-header-column-sorted {

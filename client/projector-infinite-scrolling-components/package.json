@@ -17,6 +17,7 @@
     "typescript": "^5.1"
   },
   "dependencies": {
+    "@material-symbols/svg-400": "latest",
     "@types/slickgrid": "^2.1.35",
     "projector-client-object-api": "workspace:*",
     "slickgrid": "^4.0.0"

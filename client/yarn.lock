@@ -3271,6 +3271,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "projector-infinite-scrolling-components@workspace:projector-infinite-scrolling-components"
   dependencies:
+    "@material-symbols/svg-400": latest
     "@types/slickgrid": ^2.1.35
     esbuild: ^0.15.13
     projector-client-object-api: "workspace:*"
