@@ -29,6 +29,7 @@ import org.teamapps.projector.component.core.DtoNotificationBarEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -92,14 +93,22 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 	}
 
 	public void addItem(NotificationBarItem item) {
+		if (itemsByUiId.containsValue(item)) {
+			return;
+		}
 		itemsByUiId.put(item.getUiId(), item);
 		item.setListener(() -> clientObjectChannel.updateItem(item.toUiNotificationBarItem()));
 		clientObjectChannel.addItem(item.toUiNotificationBarItem());
 	}
 
 	public void removeItem(NotificationBarItem item) {
-		itemsByUiId.remove(item.getUiId());
-		item.setListener(null);
-		clientObjectChannel.removeItem(item.getUiId(), null);
+		if (itemsByUiId.remove(item.getUiId()) != null) {
+			item.setListener(null);
+			clientObjectChannel.removeItem(item.getUiId(), null);
+		}
+	}
+
+	public List<NotificationBarItem> getItems() {
+		return List.copyOf(itemsByUiId.values());
 	}
 }

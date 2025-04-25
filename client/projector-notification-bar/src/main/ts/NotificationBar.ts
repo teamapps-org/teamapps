@@ -34,6 +34,7 @@ import {
 } from "./generated";
 import {ProgressBar} from "projector-progress-indicator";
 
+// #synched
 export class NotificationBar extends AbstractComponent<DtoNotificationBar> implements DtoNotificationBarCommandHandler, DtoNotificationBarEventSource {
 
 	public readonly onItemClicked: ProjectorEvent<DtoNotificationBar_ItemClickedEvent> = new ProjectorEvent();
@@ -99,6 +100,8 @@ class NotificationBarItem {
 	public readonly onActionLinkClicked: ProjectorEvent<void> = new ProjectorEvent();
 	public readonly onClosed: ProjectorEvent<boolean> = new ProjectorEvent();
 
+	public config: DtoNotificationBarItem;
+
 	private $main: HTMLElement;
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
@@ -108,7 +111,7 @@ class NotificationBarItem {
 	private $text: HTMLElement;
 	private $actionLink: HTMLElement;
 
-	constructor(public readonly config: DtoNotificationBarItem) {
+	constructor(config: DtoNotificationBarItem) {
 		this.$main = parseHtml(`<div class="NotificationBarItem">
 	<div class="content-container">
 		<div class="icon img img-20"></div>
@@ -137,6 +140,9 @@ class NotificationBarItem {
 	}
 
 	public update(config: DtoNotificationBarItem) {
+		const oldConfig = this.config;
+		this.config = config;
+
 		this.$closeButton.classList.toggle("hidden", !config.dismissible);
 		this.$main.style.backgroundColor = config.backgroundColor;
 		this.$main.style.borderColor = config.borderColor;
@@ -151,12 +157,18 @@ class NotificationBarItem {
 
 		this.$main.classList.toggle("with-progress", config.displayTimeInMillis > 0 && config.progressBarVisible)
 
-		this.$icon.classList.toggle("hidden", config.icon == null)
-		this.$icon.style.backgroundImage = `url('${config.icon}')`;
-		removeClassesByFunction(this.$icon.classList, className => className.startsWith("animate__"));
+		if (oldConfig?.icon !== config.icon) {
+			console.log("updating icon", oldConfig?.icon, config.icon);
+			this.$icon.classList.toggle("hidden", config.icon == null)
+			this.$icon.style.backgroundImage = `url('${config.icon}')`;
+		}
 
-		if (config.iconAnimation != null) {
-			this.$icon.classList.add(...config.iconAnimation.split(/ +/));
+		if (oldConfig?.iconAnimation !== config.iconAnimation) {
+			console.log("updating icon animation", oldConfig?.iconAnimation, config.iconAnimation);
+			removeClassesByFunction(this.$icon.classList, className => className.startsWith("animate__"));
+			if (config.iconAnimation != null) {
+				this.$icon.classList.add(...config.iconAnimation.split(/ +/));
+			}
 		}
 	}
 
