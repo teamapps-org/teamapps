@@ -27,6 +27,7 @@ import org.teamapps.projector.session.SessionContext;
 
 import java.util.List;
 
+// #synched
 public class ShakaPlayer extends AbstractComponent implements DtoShakaPlayerEventHandler {
 
     private final DtoShakaPlayerClientObjectChannel clientObjectChannel = new DtoShakaPlayerClientObjectChannel(getClientObjectChannel());
@@ -224,9 +225,6 @@ public class ShakaPlayer extends AbstractComponent implements DtoShakaPlayerEven
     }
 
     public void setBigPlayButtonEnabled(boolean bigPlayButtonEnabled) {
-        if (clientObjectChannel.isRendered()) {
-            throw new IllegalStateException("This cannot be set after rendering the player!");
-        }
         this.bigPlayButtonEnabled = bigPlayButtonEnabled;
         clientObjectChannel.setBigPlayButtonEnabled(bigPlayButtonEnabled);
     }
@@ -236,9 +234,6 @@ public class ShakaPlayer extends AbstractComponent implements DtoShakaPlayerEven
     }
 
     public void setControlFadeDelaySeconds(int controlFadeDelaySeconds) {
-        if (clientObjectChannel.isRendered()) {
-            throw new IllegalStateException("This cannot be set after rendering the player!");
-        }
         this.controlFadeDelaySeconds = controlFadeDelaySeconds;
         clientObjectChannel.setControlFadeDelaySeconds(controlFadeDelaySeconds);
     }
