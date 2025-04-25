@@ -26,6 +26,7 @@ public class TableBuilder<RECORD> {
 	private boolean rowCheckBoxesEnabled = false;
 	private boolean numberingColumnEnabled = false;
 	private boolean textSelectionEnabled = true;
+	private boolean autoHeightEnabled = false;
 	private boolean editable = false;
 	private SelectionFrame selectionFrame = null;
 
@@ -69,6 +70,7 @@ public class TableBuilder<RECORD> {
 				rowCheckBoxesEnabled,
 				numberingColumnEnabled,
 				textSelectionEnabled,
+				autoHeightEnabled,
 				editable,
 				selectionFrame,
 				headerFieldsRowEnabled,
@@ -156,6 +158,11 @@ public class TableBuilder<RECORD> {
 
 	public TableBuilder<RECORD> withTextSelectionEnabled(boolean textSelectionEnabled) {
 		this.textSelectionEnabled = textSelectionEnabled;
+		return this;
+	}
+
+	public TableBuilder<RECORD> withAutoHeightEnabled(boolean autoHeightEnabled) {
+		this.autoHeightEnabled = autoHeightEnabled;
 		return this;
 	}
 

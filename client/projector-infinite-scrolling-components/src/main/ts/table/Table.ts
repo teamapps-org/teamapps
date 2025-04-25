@@ -51,7 +51,7 @@ import {
 	FieldMessageSeverity, getHighestSeverity, nonRecursive, parseHtml,
 	ServerObjectChannel,
 	ProjectorEvent,
-	manipulateWithoutTransitions, arraysEqual
+	manipulateWithoutTransitions, arraysEqual, closestAncestor, Template
 } from "projector-client-object-api";
 import {ContextMenu, DropDown} from "projector-client-core-components";
 
@@ -88,6 +88,7 @@ const backgroundColorCssClassesByMessageSeverity = {
 
 type FieldsByName = { [fieldName: string]: AbstractField };
 
+// #synched
 export class Table extends AbstractComponent<DtoTable> implements DtoTableCommandHandler, DtoTableEventSource {
 
 	public readonly onCellEditingStarted: ProjectorEvent<DtoTable_CellEditingStartedEvent> = new ProjectorEvent();
@@ -205,12 +206,17 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			createFooterRow: true,
 			showFooterRow: config.footerFieldsRowEnabled,
 			footerRowHeight: config.footerFieldsRowHeight,
+			autoHeight: config.autoHeightEnabled
 		};
 		this._grid = new Slick.Grid($table, this.dataProvider, this.getVisibleColumns(), options);
 
 		config.columns.forEach(c => {
-			this.headerRowFields[c.propertyName] = c.headerRowField as AbstractField;
-			this.footerRowFields[c.propertyName] = c.footerRowField as AbstractField;
+			if (c.headerRowField != null) {
+				this.headerRowFields[c.propertyName] = c.headerRowField as AbstractField;
+			}
+			if (c.footerRowField != null) {
+				this.footerRowFields[c.propertyName] = c.footerRowField as AbstractField;
+			}
 		});
 		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
 		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
@@ -245,6 +251,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			this._sortDirection = config.sortDirection;
 			this._grid.setSortColumn(config.sortField, config.sortDirection === SortDirection.ASC);
 		}
+		(this._grid as any).onRendered.subscribe(() => this.setRowCssStyles());
 		this._grid.onSort.subscribe((e, args: Slick.OnSortEventArgs<Slick.SlickData>) => {
 			this._sortField = args.sortCol.id;
 			this._sortDirection = args.sortAsc ? SortDirection.ASC : SortDirection.DESC;
@@ -252,6 +259,11 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 				sortField: this._sortField,
 				sortDirection: args.sortAsc ? SortDirection.ASC : SortDirection.DESC
 			});
+		});
+		this._grid.getCanvasNode().addEventListener("mousedown", ev => {
+			if (ev.shiftKey && this.config.multiRowSelectionEnabled) {
+				document.getSelection().removeAllRanges(); // make sure, no text is selected
+			}
 		});
 		this._grid.onSelectedRowsChanged.subscribe((eventData, args) => {
 			if (args.rows.some((row) => !this.dataProvider.getItem(row))) {
@@ -374,9 +386,6 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		});
 		this._grid.onMouseEnter.subscribe((e, args) => {
 			const cell = this._grid.getCellFromEvent(e as any);
-			if (cell == null) {
-				return;
-			}
 			const item = this.dataProvider.getItem(cell.row);
 			if (item == null) {
 				return;
@@ -401,6 +410,32 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			this.fieldMessagePopper.setVisible(false);
 		});
 		this._grid.init();
+	}
+
+	private setRowCssStyles() {
+		if (this._grid.getColumns().length == 0) {
+			return;
+		}
+		let viewport = this._grid.getViewport();
+		let top = viewport.top;
+		let bottom = viewport.bottom;
+		let firstVisibleColumnIndex = 0;
+		let sumOfColumnWidths = 0;
+		do {
+			sumOfColumnWidths += this._grid.getColumns()[firstVisibleColumnIndex].width
+		} while (sumOfColumnWidths < viewport.leftPx && firstVisibleColumnIndex < this._grid.getColumns().length);
+
+		for (let i = top; i < bottom; i++) {
+			if (this.dataProvider.getItem(i)?.cssStyle != null) {
+				let cellNode = this._grid.getCellNode(i, firstVisibleColumnIndex);
+				if (cellNode != null) {
+					let $row = closestAncestor(cellNode, ".slick-row", false, this.doGetMainElement());
+					for (const [name, value] of Object.entries(this.dataProvider.getItem(i).cssStyle)) {
+						$row.style.setProperty(name, value);
+					}
+				}
+			}
+		}
 	}
 
 	@debouncedMethod(150, DebounceMode.BOTH)
@@ -503,7 +538,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			width: columnConfig.defaultWidth || ((columnConfig.minWidth + columnConfig.maxWidth) / 2) || undefined,
 			minWidth: columnConfig.minWidth || 30,
 			maxWidth: columnConfig.maxWidth || undefined,
-			formatter: this.createCellFormatter(uiField),
+			formatter: this.createCellFormatter(uiField, columnConfig.displayTemplate as Template),
 			editor: editorFactory,
 			asyncEditorLoading: false,
 			autoEdit: true,
@@ -513,7 +548,8 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			hiddenIfOnlyEmptyCellsVisible: columnConfig.hiddenIfOnlyEmptyCellsVisible,
 			messages: columnConfig.messages,
 			uiConfig: columnConfig,
-			visible: columnConfig.visible
+			visible: columnConfig.visible,
+			toolTip: columnConfig.title
 		};
 
 		slickColumnConfig.headerCssClass = this.getColumnCssClass(slickColumnConfig);
@@ -552,9 +588,13 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		uiField.onVisibilityChanged.addListener(visible => this.setSlickGridColumns(this.getVisibleColumns()));
 	}
 
-	private createCellFormatter(field: AbstractField) {
+	private createCellFormatter(field: AbstractField, displayTemplate: Template | null | undefined) {
 		const createInnerCellFormatter = () => {
-			if (field.getReadOnlyHtml) {
+			if (displayTemplate != null) {
+				return (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => {
+					return displayTemplate.render(dataContext.displayTemplateValues[columnDef.id]);
+				};
+			} else if (field.getReadOnlyHtml) {
 				return (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => {
 					return field.getReadOnlyHtml(dataContext.values[columnDef.id], columnDef.width);
 				};
@@ -602,22 +642,30 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 
 	@executeWhenFirstDisplayed()
 	updateData(startIndex: number, recordIds: number[], newRecords: DtoTableClientRecord[], totalNumberOfRecords: number): any {
-		let editorCoordinates: { recordId: any; fieldName: any };
+		let editorCoordinates: { row: number, recordId: any; fieldName: any };
 		editorCoordinates = this._grid.getCellEditor() != null ? {
+			row: this._grid.getActiveCell().row,
 			recordId: this.getActiveCellRecordId(),
 			fieldName: this.getActiveCellFieldName()
 		} : null;
+		let editorRowChanged = false;
+		const countChanged = this.dataProvider.getLength() != totalNumberOfRecords;
+
 		// TODO necessary: this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
 
 		let changedRowNumbers = this.dataProvider.updateData(startIndex, recordIds, newRecords, totalNumberOfRecords);
 		if (changedRowNumbers === true) {
 			this._grid.invalidateAllRows();
+			editorRowChanged = editorCoordinates != null;
 		} else {
 			this._grid.invalidateRows(changedRowNumbers);
+			editorRowChanged = editorCoordinates != null && changedRowNumbers.indexOf(editorCoordinates.row) >= 0;
 		}
 
-		this._grid.updateRowCount();
-		this._grid.render();
+		if (countChanged) {
+			this._grid.updateRowCount(); // this will make the editor lose focus
+		}
+		this._grid.render(); // this will make the editor lose focus, if its row changed (and therefore was invalidated)
 		this.toggleColumnsThatAreHiddenWhenTheyContainNoVisibleNonEmptyCells();
 
 		this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(this.dataProvider.getSelectedRowsIndexes()));
@@ -625,11 +673,13 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		clearTimeout(this.loadingIndicatorFadeInTimer);
 		fadeOut(this._$loadingIndicator);
 
-		this._grid.resizeCanvas();
+		if (countChanged) {
+			this._grid.resizeCanvas(); // this will make the editor lose focus
+		}
 		this.updateSelectionFramePosition();
 
-		if (editorCoordinates != null) {
-			this.editCellIfAvailable(editorCoordinates.recordId, editorCoordinates.fieldName);
+		if (editorCoordinates != null && (editorRowChanged || countChanged)) {
+			this.editCellIfVisible(editorCoordinates.recordId, editorCoordinates.row, editorCoordinates.fieldName);
 		}
 	}
 
@@ -776,9 +826,10 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	editCellIfAvailable(recordId: number, propertyName: string): void {
-		const rowNumber = this.dataProvider.getRowIndexByRecordId(recordId);
-		if (rowNumber != null) {
+	editCellIfVisible(recordId: number, row: number, propertyName: string): void {
+		let rowNumberFromRecordId = this.dataProvider.getRowIndexByRecordId(recordId);
+		const rowNumber = rowNumberFromRecordId != -1 ? rowNumberFromRecordId : row;
+		if (rowNumber >= this._grid.getViewport().top && rowNumber <= this._grid.getViewport().bottom) {
 			this._grid.setActiveCell(rowNumber, this._grid.getColumns().findIndex(c => c.id === propertyName));
 			this._grid.editActiveCell(null);
 		}
@@ -808,11 +859,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 	private handleFieldValueChanged(fieldName: string, value: any): void {
 		let currentlyEditingThisColumn = !!this._grid.getCellEditor() && this.getActiveCellFieldName() === fieldName;
 		if (currentlyEditingThisColumn) {
-			this.onCellValueChanged.fire({
-				recordId: this.getActiveCellRecordId(),
-				columnPropertyName: fieldName,
-				value: value
-			})
+			this.onCellValueChanged.fire({recordId: this.getActiveCellRecordId(), columnPropertyName: fieldName, value: value})
 		}
 	}
 

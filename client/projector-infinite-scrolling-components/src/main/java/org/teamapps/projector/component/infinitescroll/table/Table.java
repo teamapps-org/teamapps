@@ -21,9 +21,8 @@ package org.teamapps.projector.component.infinitescroll.table;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.projector.common.format.Color;
-import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.field.*;
@@ -32,11 +31,15 @@ import org.teamapps.projector.component.infinitescroll.DtoAbstractInfiniteListCo
 import org.teamapps.projector.component.infinitescroll.infiniteitemview.AbstractInfiniteListComponent;
 import org.teamapps.projector.component.infinitescroll.infiniteitemview.RecordsChangedEvent;
 import org.teamapps.projector.component.infinitescroll.infiniteitemview.RecordsRemovedEvent;
+import org.teamapps.projector.component.infinitescroll.recordcache.CustomEqualsAndHashCodeMap;
 import org.teamapps.projector.component.infinitescroll.recordcache.DuplicateEntriesException;
+import org.teamapps.projector.component.infinitescroll.recordcache.EqualsAndHashCode;
 import org.teamapps.projector.component.infinitescroll.recordcache.ItemRange;
 import org.teamapps.projector.dataextraction.*;
 import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
+import org.teamapps.projector.template.Template;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -44,6 +47,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+// #synched
 @ClientObjectLibrary(value = InfiniteScrollingComponentLibrary.class)
 public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component, DtoTableEventHandler {
 
@@ -73,6 +77,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	public final ProjectorEvent<ColumnSizeChangeEventData<RECORD, ?>> onColumnSizeChange = new ProjectorEvent<>(clientObjectChannel::toggleColumnSizeChangeEvent);
 
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
+	private Function<RECORD, Map<String, String>> rowCssStyleProvider = record -> Map.of();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
 
 	private int clientRecordIdCounter = 0;
@@ -80,9 +85,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private List<RECORD> selectedRecords = List.of();
 	private TableCellCoordinates<RECORD> activeEditorCell;
 
-	private final Map<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new HashMap<>();
-	private final Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
-	private final Map<RECORD, Set<String>> markedCells = new HashMap<>();
+	private CustomEqualsAndHashCodeMap<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+	private CustomEqualsAndHashCodeMap<RECORD, Map<String, List<FieldMessage>>> cellMessages = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+	private CustomEqualsAndHashCodeMap<RECORD, Set<String>> markedCells = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
 
 	private final List<TableColumn<RECORD, ?>> columns = new ArrayList<>();
 
@@ -95,6 +100,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private boolean rowCheckBoxesEnabled; //if true, show check boxes on the left
 	private boolean numberingColumnEnabled; //if true, show numbering on the left
 	private boolean textSelectionEnabled = true;
+	private boolean autoHeightEnabled = false;
 
 	private Sorting sorting; // nullable
 
@@ -117,6 +123,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
+	private int rowBorderWidth;
 
 	Table(
 			TableModel<RECORD> model,
@@ -129,6 +136,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			boolean rowCheckBoxesEnabled,
 			boolean numberingColumnEnabled,
 			boolean textSelectionEnabled,
+			boolean autoHeightEnabled,
 			boolean editable,
 			SelectionFrame selectionFrame,
 			boolean headerFieldsRowEnabled,
@@ -146,7 +154,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.rowCheckBoxesEnabled = rowCheckBoxesEnabled;
 		this.numberingColumnEnabled = numberingColumnEnabled;
 		this.textSelectionEnabled = textSelectionEnabled;
-		this.editable = editable;
+        this.autoHeightEnabled = autoHeightEnabled;
+        this.editable = editable;
 		this.selectionFrame = selectionFrame;
 		this.headerFieldsRowEnabled = headerFieldsRowEnabled;
 		this.headerFieldsRowHeight = headerFieldsRowHeight;
@@ -181,6 +190,12 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon icon, String title, Field<VALUE> field, int defaultWidth) {
 		TableColumn<RECORD, VALUE> column = new TableColumn<>(propertyName, icon, title, field, defaultWidth);
+		addColumn(column);
+		return column;
+	}
+
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon icon, String title, Template displayTemplate) {
+		TableColumn<RECORD, VALUE> column = new TableColumn<>(propertyName, icon, title, displayTemplate);
 		addColumn(column);
 		return column;
 	}
@@ -246,18 +261,18 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		uiTable.setFooterFieldsRowEnabled(footerFieldsRowEnabled);
 		uiTable.setFooterFieldsRowHeight(footerFieldsRowHeight);
 		uiTable.setContextMenuEnabled(contextMenuProvider != null);
+		uiTable.setAutoHeightEnabled(autoHeightEnabled);
 		return uiTable;
 	}
 
 	@Override
-	public void handleDisplayedRangeChanged(DtoAbstractInfiniteListComponent.DisplayedRangeChangedEventWrapper event) {
-		try {
-			handleScrollOrResize(ItemRange.startLength(event.getStartIndex(), event.getLength()));
-		} catch (DuplicateEntriesException e) {
-			// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
-			// So try to refresh the whole data instead.
-			LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
-			refreshData();
+	public void handleRowsSelected(List<Integer> recordIds) {
+		selectedRecords = renderedRecords.getRecords(recordIds);
+		this.onRowsSelected.fire(selectedRecords);
+		if (selectedRecords.size() == 1) {
+			this.onSingleRowSelected.fire(selectedRecords.get(0));
+		} else if (selectedRecords.size() > 1) {
+			this.onMultipleRowsSelected.fire(selectedRecords);
 		}
 	}
 
@@ -319,23 +334,36 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	public void handleRowsSelected(List<Integer> recordIds) {
-		selectedRecords = renderedRecords.getRecords(recordIds);
-		this.onRowsSelected.fire(selectedRecords);
-		if (selectedRecords.size() == 1) {
-			this.onSingleRowSelected.fire(selectedRecords.get(0));
-		} else if (selectedRecords.size() > 1) {
-			this.onMultipleRowsSelected.fire(selectedRecords);
-		}
-	}
-
-	@Override
 	public void handleSortingChanged(DtoTable.SortingChangedEventWrapper event) {
 		var sortField = event.getSortField();
 		var sortDirection = event.getSortDirection();
 		this.sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
 		getModel().setSorting(sorting);
 		onSortingChanged.fire(new SortingChangedEventData(event.getSortField(), event.getSortDirection()));
+	}
+
+	@Override
+	public void handleDisplayedRangeChanged(DtoAbstractInfiniteListComponent.DisplayedRangeChangedEventWrapper event) {
+		try {
+			handleScrollOrResize(ItemRange.startLength(event.getStartIndex(), event.getLength()));
+		} catch (DuplicateEntriesException e) {
+			// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
+			// So try to refresh the whole data instead.
+			LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
+			refreshData();
+		}
+	}
+
+	@Override
+	public void handleFieldOrderChange(DtoTable.FieldOrderChangeEventWrapper event) {
+		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
+		onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, event.getPosition()));
+	}
+
+	@Override
+	public void handleColumnSizeChange(DtoTable.ColumnSizeChangeEventWrapper event) {
+		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
+		onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, event.getSize()));
 	}
 
 	@Override
@@ -352,18 +380,6 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		} else {
 			closeContextMenu();
 		}
-	}
-
-	@Override
-	public void handleFieldOrderChange(DtoTable.FieldOrderChangeEventWrapper event) {
-		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
-		onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, event.getPosition()));
-	}
-
-	@Override
-	public void handleColumnSizeChange(DtoTable.ColumnSizeChangeEventWrapper event) {
-		TableColumn<RECORD, ?> column = getColumnByPropertyName(event.getColumnPropertyName());
-		onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, event.getSize()));
 	}
 
 	private <VALUE> VALUE getCellValue(RECORD record, TableColumn<RECORD, VALUE> column) {
@@ -775,14 +791,6 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		}
 	}
 
-
-	private void applyTransientChangesToClientRecord(DtoTableClientRecord uiRecord) {
-		Map<String, Object> changes = transientChangesByRecordAndPropertyName.get(renderedRecords.getRecord(uiRecord.getId()));
-		if (changes != null) {
-			changes.forEach((key, value) -> uiRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertServerValueToClientValue(value)));
-		}
-	}
-
 	public void cancelEditing() {
 		TableCellCoordinates<RECORD> activeEditorCell = getActiveEditorCell();
 		DtoIdentifiableClientRecord uiRecord = renderedRecords.getUiRecord(activeEditorCell.getRecord());
@@ -808,11 +816,17 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		Map<String, Object> uxValues = extractRecordProperties(record);
 		Map<String, Object> uiValues = columns.stream()
 				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), ((Field) column.getField()).convertServerValueToClientValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
+		Map<String, Map<String, Object>> displayTemplateValues = columns.stream()
+				.filter(c -> c.getDisplayTemplate() != null)
+				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), column.getDisplayPropertyProvider().getValues(record, column.getDisplayTemplate().getPropertyNames())), HashMap::putAll);
 		clientRecord.setValues(uiValues);
+		clientRecord.setDisplayTemplateValues(displayTemplateValues);
 		clientRecord.setSelected(selectedRecords.stream().anyMatch(r -> customEqualsAndHashCode.getEquals().test(r, record)));
 		clientRecord.setMessages(createDtoFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
 		clientRecord.setMarkings(new ArrayList<>(markedCells.getOrDefault(record, Collections.emptySet())));
-		applyTransientChangesToClientRecord(clientRecord);
+		clientRecord.setCssStyle(rowCssStyleProvider.apply(record));
+		transientChangesByRecordAndPropertyName.getOrDefault(record, Map.of())
+				.forEach((key, value) -> clientRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertServerValueToClientValue(value)));
 		return clientRecord;
 	}
 
@@ -932,18 +946,6 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		clientObjectChannel.setHeaderRowField(column.getPropertyName(), column.getHeaderRowField());
 	}
 
-	/**
-	 * Use {@link TableColumn#setFooterRowField(AbstractField)} instead!
-	 */
-	@Deprecated
-	public void setFooterRowField(String columnName, AbstractField<?> field) {
-		getColumnByPropertyName(columnName).setFooterRowField(field);
-	}
-
-	void updateFooterRowField(TableColumn<RECORD, ?> column) {
-		clientObjectChannel.setFooterRowField(column.getPropertyName(), column.getFooterRowField());
-	}
-
 	public boolean isFooterFieldsRowEnabled() {
 		return footerFieldsRowEnabled;
 	}
@@ -962,6 +964,18 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setFooterFieldsRowBackgroundColor(Color footerFieldsRowBackgroundColor) {
 		this.setCssStyle(".slick-footerrow", "background-color", footerFieldsRowBackgroundColor != null ? footerFieldsRowBackgroundColor.toHtmlColorString() : null);
+	}
+
+	/**
+	 * Use {@link TableColumn#setFooterRowField(AbstractField)} instead!
+	 */
+	@Deprecated
+	public void setFooterRowField(String columnName, AbstractField<?> field) {
+		getColumnByPropertyName(columnName).setFooterRowField(field);
+	}
+
+	void updateFooterRowField(TableColumn<RECORD, ?> column) {
+		clientObjectChannel.setFooterRowField(column.getPropertyName(), column.getFooterRowField());
 	}
 
 	public <VALUE> TableColumn<RECORD, VALUE> getColumnByPropertyName(String propertyName) {
@@ -990,15 +1004,17 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void applyCellValuesToRecord(RECORD record) {
-		Map<String, Object> changedCellValues = getChangedCellValues(record);
-		changedCellValues.forEach((propertyName, value) -> {
-			ValueInjector<RECORD, Object> columnValueInjector = getColumnByPropertyName(propertyName).getValueInjector();
-			if (columnValueInjector != null) {
-				columnValueInjector.inject(record, value);
-			} else {
-				propertyInjector.setValue(record, propertyName, value);
-			}
-		});
+		Map<String, Object> changedCellValues = transientChangesByRecordAndPropertyName.remove(record);
+		if (changedCellValues != null) {
+			changedCellValues.forEach((propertyName, value) -> {
+				ValueInjector<RECORD, Object> columnValueInjector = getColumnByPropertyName(propertyName).getValueInjector();
+				if (columnValueInjector != null) {
+					columnValueInjector.inject(record, value);
+				} else {
+					propertyInjector.setValue(record, propertyName, value);
+				}
+			});
+		}
 	}
 
 	public void revertChanges() {
@@ -1026,6 +1042,14 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setPropertyProvider(propertyExtractor);
 	}
 
+	public Function<RECORD, Map<String, String>> getRowCssStyleProvider() {
+		return rowCssStyleProvider;
+	}
+
+	public void setRowCssStyleProvider(Function<RECORD, Map<String, String>> rowCssStyleProvider) {
+		this.rowCssStyleProvider = rowCssStyleProvider;
+	}
+
 	public PropertyInjector<RECORD> getPropertyInjector() {
 		return propertyInjector;
 	}
@@ -1050,4 +1074,15 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return renderedRecords.getRecords();
 	}
 
+	public boolean isautoHeightEnabled() {
+		return autoHeightEnabled;
+	}
+
+	@Override
+	public void setCustomEqualsAndHashCode(EqualsAndHashCode<RECORD> customEqualsAndHashCode) {
+		super.setCustomEqualsAndHashCode(customEqualsAndHashCode);
+		transientChangesByRecordAndPropertyName = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+		cellMessages = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+		markedCells = new CustomEqualsAndHashCodeMap<>(customEqualsAndHashCode);
+	}
 }

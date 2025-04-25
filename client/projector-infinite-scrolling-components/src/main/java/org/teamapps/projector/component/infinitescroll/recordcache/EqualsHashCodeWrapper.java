@@ -21,11 +21,11 @@ package org.teamapps.projector.component.infinitescroll.recordcache;
 
 public class EqualsHashCodeWrapper<T> {
 
-	private final T t;
+	private final T record;
 	private final EqualsAndHashCode<T> equalsAndHashCode;
 
-	public EqualsHashCodeWrapper(T t, EqualsAndHashCode<T> equalsAndHashCode) {
-		this.t = t;
+	public EqualsHashCodeWrapper(T record, EqualsAndHashCode<T> equalsAndHashCode) {
+		this.record = record;
 		this.equalsAndHashCode = equalsAndHashCode;
 	}
 
@@ -35,18 +35,22 @@ public class EqualsHashCodeWrapper<T> {
 			return false;
 		}
 		if (equalsAndHashCode == null) {
-			return this.t.equals(((EqualsHashCodeWrapper<?>) o).t);
+			return this.record.equals(((EqualsHashCodeWrapper<?>) o).record);
 		} else {
-			return equalsAndHashCode.getEquals().test(t, ((EqualsHashCodeWrapper<?>) o).t);
+			return equalsAndHashCode.getEquals().test(record, ((EqualsHashCodeWrapper<?>) o).record);
 		}
 	}
 
 	@Override
 	public int hashCode() {
 		if (equalsAndHashCode == null) {
-			return t.hashCode();
+			return record.hashCode();
 		} else {
-			return equalsAndHashCode.getHashCode().hash(t);
+			return equalsAndHashCode.getHashCode().hash(record);
 		}
+	}
+
+	public T getRecord() {
+		return record;
 	}
 }

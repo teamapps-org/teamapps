@@ -24,6 +24,7 @@ import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.field.DtoFieldMessage;
 import org.teamapps.projector.format.TextAlignment;
+import org.teamapps.projector.template.DtoTemplate;
 
 import org.teamapps.projector.component.infinitescroll.DtoAbstractInfiniteListComponent;
 
@@ -36,6 +37,7 @@ class DtoTableColumn {
 	String icon;
 	String title;
 	DtoAbstractField* field;
+	DtoTemplate* displayTemplate;
 	int minWidth;
 	int defaultWidth;
 	int maxWidth;
@@ -71,6 +73,7 @@ class DtoTable extends DtoAbstractInfiniteListComponent {
 	boolean rowCheckBoxesEnabled; //if true, show check boxes on the left
 	boolean numberingColumnEnabled; //if true, show numbering on the left
 	boolean textSelectionEnabled;
+	boolean autoHeightEnabled;
 
 	String sortField; //if available the table is initially sorted by this field
 	SortDirection sortDirection;
@@ -106,7 +109,6 @@ class DtoTable extends DtoAbstractInfiniteListComponent {
 	command setRecordBold(int recordId, boolean bold); //TODO
 	command selectRecords(List<Integer> recordIds, boolean scrollToFirstRecord);
 	command selectRows(List<Integer> rowIndexes, boolean scrollToFirstRowIndex);
-	command editCellIfAvailable(int recordId, String propertyName);
 	command cancelEditingCell(int recordId, String propertyName);
 	command focusCell(int recordId, String columnPropertyName);
     command setSingleCellMessages(int recordId, String columnPropertyName, List<DtoFieldMessage> messages);
@@ -157,4 +159,6 @@ class DtoTableClientRecord extends DtoIdentifiableClientRecord {
 	List<String> markings;
 	boolean selected;
 	boolean bold;
+    Dictionary<String> cssStyle;
+    Dictionary<Dictionary<Object>> displayTemplateValues;
 }

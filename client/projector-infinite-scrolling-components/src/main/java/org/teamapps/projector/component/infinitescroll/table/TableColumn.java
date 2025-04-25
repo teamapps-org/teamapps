@@ -19,18 +19,22 @@
  */
 package org.teamapps.projector.component.infinitescroll.table;
 
-import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.field.*;
+import org.teamapps.projector.dataextraction.PropertyExtractor;
+import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.dataextraction.ValueExtractor;
 import org.teamapps.projector.dataextraction.ValueInjector;
 import org.teamapps.projector.format.TextAlignment;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.session.CurrentSessionContext;
 import org.teamapps.projector.session.SessionContext;
+import org.teamapps.projector.template.Template;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// #synched
 public class TableColumn<RECORD, VALUE> {
 	public static final int DEFAULT_WIDTH = 150;
 	private Table<RECORD> table;
@@ -39,6 +43,7 @@ public class TableColumn<RECORD, VALUE> {
 	private Icon icon;
 	private String title;
 	private Field<VALUE> field;
+	private Template displayTemplate;
 	private AbstractField<?> headerRowField;
 	private AbstractField<?> footerRowField;
 	private int minWidth;
@@ -51,30 +56,36 @@ public class TableColumn<RECORD, VALUE> {
 	private TextAlignment headerAlignment = TextAlignment.LEFT;
 	private ValueExtractor<RECORD, VALUE> valueExtractor;
 	private ValueInjector<RECORD, VALUE> valueInjector;
+	private PropertyProvider<RECORD> displayPropertyProvider;
 
 	private List<FieldMessage> messages = new ArrayList<>();
 
 	public TableColumn(String propertyName, Field<VALUE> field) {
-		this(propertyName, null, null, field, 0, DEFAULT_WIDTH, 0);
+		this(propertyName, null, null, field, DEFAULT_WIDTH);
 	}
 
 	public TableColumn(String propertyName, String title, Field<VALUE> field) {
-		this(propertyName, null, title, field, 0, DEFAULT_WIDTH, 0);
+		this(propertyName, null, title, field, DEFAULT_WIDTH);
 	}
 
 	public TableColumn(String propertyName, Icon icon, String title, Field<VALUE> field) {
-		this(propertyName, icon, title, field, 0, DEFAULT_WIDTH, 0);
+		this(propertyName, icon, title, field, DEFAULT_WIDTH);
 	}
 
 	public TableColumn(String propertyName, Icon icon, String title, Field<VALUE> field, int defaultWidth) {
-		this(propertyName, icon, title, field, 0, defaultWidth, 0);
+		this(propertyName, icon, title, field, null, 0, defaultWidth, 0);
 	}
 
-	public TableColumn(String propertyName, Icon icon, String title, Field<VALUE> field, int minWidth, int defaultWidth, int maxWidth) {
+	public TableColumn(String propertyName, Icon icon, String title, Template displayTemplate) {
+		this(propertyName, icon, title, null, displayTemplate, 0, DEFAULT_WIDTH, 0);
+	}
+
+	public TableColumn(String propertyName, Icon icon, String title, Field<VALUE> field, Template displayTemplate, int minWidth, int defaultWidth, int maxWidth) {
 		this.propertyName = propertyName;
 		this.icon = icon;
 		this.title = title;
 		this.field = field;
+		this.displayTemplate = displayTemplate;
 		this.minWidth = minWidth;
 		this.defaultWidth = defaultWidth;
 		this.maxWidth = maxWidth;
@@ -99,6 +110,7 @@ public class TableColumn<RECORD, VALUE> {
 		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createDtoFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
 		uiTableColumn.setHeaderRowField(headerRowField);
 		uiTableColumn.setFooterRowField(footerRowField);
+		uiTableColumn.setDisplayTemplate(displayTemplate);
 		return uiTableColumn;
 	}
 
@@ -274,5 +286,28 @@ public class TableColumn<RECORD, VALUE> {
 	public void setFooterRowField(AbstractField<?> footerRowField) {
 		this.footerRowField = footerRowField;
 		table.updateFooterRowField(this);
+	}
+
+	public Template getDisplayTemplate() {
+		return displayTemplate;
+	}
+
+	public TableColumn<RECORD, VALUE> setDisplayTemplate(Template displayTemplate) {
+		this.displayTemplate = displayTemplate;
+		return this;
+	}
+
+	public PropertyProvider<RECORD> getDisplayPropertyProvider() {
+		return displayPropertyProvider;
+	}
+
+	public TableColumn<RECORD, VALUE> setDisplayPropertyProvider(PropertyProvider<RECORD> displayPropertyProvider) {
+		this.displayPropertyProvider = displayPropertyProvider;
+		return this;
+	}
+
+	public TableColumn<RECORD, VALUE> setDisplayPropertyExtractor(PropertyExtractor<RECORD> displayPropertyExtractor) {
+		this.setDisplayPropertyProvider(displayPropertyExtractor);
+		return this;
 	}
 }
