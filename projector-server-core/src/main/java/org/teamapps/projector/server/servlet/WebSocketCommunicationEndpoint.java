@@ -42,6 +42,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -77,7 +78,11 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 
 	@Override
 	public void onError(Session session, Throwable thr) {
-		LOGGER.warn("WebSocket communication error.", thr);
+		if (thr instanceof TimeoutException) { // Timeout errors are very common and totally taken care of.
+			LOGGER.debug("WebSocket communication error.", thr);
+		} else {
+			LOGGER.info("WebSocket communication error.", thr);
+		}
 		closeWebSocketSession(session);
 	}
 
