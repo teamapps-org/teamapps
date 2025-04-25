@@ -145,7 +145,7 @@ export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> i
 			let debouncedRelayout: (size?: { width: number, height: number }) => void = debounce((size?: { width: number, height: number }) => {
 				relayoutCalled = true;
 				this.reLayout(size.width, size.height);
-			}, 200, DebounceMode.BOTH);
+			}, 100, DebounceMode.BOTH);
 			const resizeObserver = new ResizeObserver(entries => {
 				for (let entry of entries) {
 					debouncedRelayout({width: entry.contentRect.width, height: entry.contentRect.height});
