@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2022 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.resource;
+package org.teamapps.ux.resource;
+
+import org.teamapps.projector.resource.Resource;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -28,10 +30,25 @@ public class ByteArrayResource implements Resource {
 
 	private final byte[] data;
 	private final String name;
+	private final String mimeType;
 
 	public ByteArrayResource(byte[] data, String name) {
+		this(data, name, null);
+	}
+
+	public ByteArrayResource(byte[] data, String name, String mimeType) {
 		this.data = data;
 		this.name = name;
+		this.mimeType = mimeType;
+	}
+
+	@Override
+	public String getMimeType() {
+		if (mimeType != null) {
+			return mimeType;
+		} else {
+			return Resource.super.getMimeType();
+		}
 	}
 
 	@Override
