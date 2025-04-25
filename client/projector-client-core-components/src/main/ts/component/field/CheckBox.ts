@@ -155,6 +155,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$check);
 		if (editingMode === FieldEditingMode.DISABLED || editingMode === FieldEditingMode.READONLY) {
 			this.$main.classList.add("disabled");
 			this.$check.removeAttribute("tabIndex");
