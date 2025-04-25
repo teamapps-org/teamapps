@@ -45,6 +45,8 @@ class DtoTableColumn {
 	boolean hiddenIfOnlyEmptyCellsVisible;
 	List<DtoFieldMessage> messages;
 	TextAlignment headerAlignment;
+    DtoAbstractField* headerRowField;
+    DtoAbstractField* footerRowField;
 }
 
 enum DtoTableDisplayStyle {
@@ -85,14 +87,12 @@ class DtoTable extends DtoAbstractInfiniteListComponent {
     String headerFieldsRowBorderColor;
     int headerFieldsRowHeight;
     String headerFieldsRowBackgroundColor;
-    mutable Dictionary<DtoAbstractField*> headerFields;
 
     boolean footerFieldsRowEnabled;
     int footerFieldsRowBorderWidth; // even in list mode! the border will be there but transparent!
     String footerFieldsRowBorderColor;
     int footerFieldsRowHeight;
     String footerFieldsRowBackgroundColor;
-    mutable Dictionary<DtoAbstractField*> footerFields;
 
     command setHeaderRowField(String columnName, DtoAbstractField* field);
     command setFooterRowField(String columnName, DtoAbstractField* field);

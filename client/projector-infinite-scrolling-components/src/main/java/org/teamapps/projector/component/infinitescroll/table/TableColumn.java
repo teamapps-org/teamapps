@@ -39,6 +39,8 @@ public class TableColumn<RECORD, VALUE> {
 	private Icon icon;
 	private String title;
 	private Field<VALUE> field;
+	private AbstractField<?> headerRowField;
+	private AbstractField<?> footerRowField;
 	private int minWidth;
 	private int defaultWidth;
 	private int maxWidth;
@@ -95,6 +97,8 @@ public class TableColumn<RECORD, VALUE> {
 		uiTableColumn.setHeaderAlignment(headerAlignment);
 		uiTableColumn.setHiddenIfOnlyEmptyCellsVisible(hiddenIfOnlyEmptyCellsVisible);
 		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createDtoFieldMessage(FieldMessagePosition.POPOVER, FieldMessageVisibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
+		uiTableColumn.setHeaderRowField(headerRowField);
+		uiTableColumn.setFooterRowField(footerRowField);
 		return uiTableColumn;
 	}
 
@@ -252,5 +256,23 @@ public class TableColumn<RECORD, VALUE> {
 	public TableColumn<RECORD, VALUE> setValueInjector(ValueInjector<RECORD, VALUE> valueInjector) {
 		this.valueInjector = valueInjector;
 		return this;
+	}
+
+	public AbstractField<?> getHeaderRowField() {
+		return headerRowField;
+	}
+
+	public void setHeaderRowField(AbstractField<?> headerRowField) {
+		this.headerRowField = headerRowField;
+		table.updateHeaderRowField(this);
+	}
+
+	public AbstractField<?> getFooterRowField() {
+		return footerRowField;
+	}
+
+	public void setFooterRowField(AbstractField<?> footerRowField) {
+		this.footerRowField = footerRowField;
+		table.updateFooterRowField(this);
 	}
 }

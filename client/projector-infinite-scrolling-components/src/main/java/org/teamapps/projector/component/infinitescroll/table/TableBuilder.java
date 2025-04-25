@@ -1,7 +1,6 @@
 package org.teamapps.projector.component.infinitescroll.table;
 
 import org.teamapps.projector.common.format.Color;
-import org.teamapps.projector.component.field.Field;
 import org.teamapps.projector.component.infinitescroll.recordcache.EqualsAndHashCode;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.BeanPropertyInjector;
@@ -9,9 +8,7 @@ import org.teamapps.projector.dataextraction.PropertyInjector;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TableBuilder<RECORD> {
 
@@ -39,12 +36,10 @@ public class TableBuilder<RECORD> {
 	private int footerFieldsRowHeight = 28;
 
 	// other setters:
-	private Map<String, Field<?>> headerFields = new HashMap<>(0);
 	private Color headerFieldsRowBackgroundColor = null;
 	private Color headerFieldsRowBorderColor = null;
 	private Integer headerFieldsRowBorderWidth = null;
 
-	private Map<String, Field<?>> footerFields = new HashMap<>(0);
 	private Color footerFieldsRowBackgroundColor = null;
 	private Color footerFieldsRowBorderColor = null;
 	private Integer footerFieldsRowBorderWidth = null;
@@ -83,11 +78,9 @@ public class TableBuilder<RECORD> {
 		);
 		table.setColumns(columns);
 		table.setCustomEqualsAndHashCode(customEqualsAndHashCode);
-		table.setHeaderFields(headerFields);
 		table.setHeaderFieldsRowBackgroundColor(headerFieldsRowBackgroundColor);
 		table.setHeaderFieldsRowBorderColor(headerFieldsRowBorderColor);
 		table.setHeaderFieldsRowBorderWidth(headerFieldsRowBorderWidth);
-		table.setFooterFields(footerFields);
 		table.setFooterFieldsRowBackgroundColor(footerFieldsRowBackgroundColor);
 		table.setFooterFieldsRowBorderColor(footerFieldsRowBorderColor);
 		table.setFooterFieldsRowBorderWidth(footerFieldsRowBorderWidth);
@@ -176,11 +169,6 @@ public class TableBuilder<RECORD> {
 		return this;
 	}
 
-	public TableBuilder<RECORD> withHeaderFields(Map<String, Field<?>> headerFields) {
-		this.headerFields = headerFields;
-		return this;
-	}
-
 	public TableBuilder<RECORD> withHeaderFieldsRowEnabled(boolean headerFieldsRowEnabled) {
 		this.headerFieldsRowEnabled = headerFieldsRowEnabled;
 		return this;
@@ -203,11 +191,6 @@ public class TableBuilder<RECORD> {
 
 	public TableBuilder<RECORD> withHeaderFieldsRowBorderWidth(Integer headerFieldsRowBorderWidth) {
 		this.headerFieldsRowBorderWidth = headerFieldsRowBorderWidth;
-		return this;
-	}
-
-	public TableBuilder<RECORD> withFooterFields(Map<String, Field<?>> footerFields) {
-		this.footerFields = footerFields;
 		return this;
 	}
 

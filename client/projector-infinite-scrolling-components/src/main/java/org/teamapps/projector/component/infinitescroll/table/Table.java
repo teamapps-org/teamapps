@@ -106,13 +106,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private boolean headerFieldsRowEnabled = false;
 	private int headerFieldsRowHeight = 28;
-	private Map<String, Field<?>> headerFields = new HashMap<>(0);
 
 	// ----- footer -----
 
 	private boolean footerFieldsRowEnabled = false;
 	private int footerFieldsRowHeight = 28;
-	private Map<String, Field<?>> footerFields = new HashMap<>(0);
 
 	private final List<RECORD> topNonModelRecords = new ArrayList<>();
 	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
@@ -245,10 +243,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		uiTable.setEditable(editable);
 		uiTable.setHeaderFieldsRowEnabled(headerFieldsRowEnabled);
 		uiTable.setHeaderFieldsRowHeight(headerFieldsRowHeight);
-		uiTable.setHeaderFields(Map.copyOf(this.headerFields));
 		uiTable.setFooterFieldsRowEnabled(footerFieldsRowEnabled);
 		uiTable.setFooterFieldsRowHeight(footerFieldsRowHeight);
-		uiTable.setFooterFields(Map.copyOf(this.footerFields));
 		uiTable.setContextMenuEnabled(contextMenuProvider != null);
 		return uiTable;
 	}
@@ -924,19 +920,28 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setCssStyle(".slick-headerrow", "background-color", headerFieldsRowBackgroundColor != null ? headerFieldsRowBackgroundColor.toHtmlColorString() : null);
 	}
 
-	public Map<String, Field> getHeaderFields() {
-		return Collections.unmodifiableMap(headerFields);
+	/**
+	 * @deprecated Use {@link TableColumn#setHeaderRowField(AbstractField)} instead!
+	 */
+	@Deprecated
+	public void setHeaderRowField(String columnName, AbstractField<?> field) {
+		getColumnByPropertyName(columnName).setHeaderRowField(field);
 	}
 
-	public void setHeaderFields(Map<String, Field<?>> headerFields) {
-		this.headerFields = new HashMap<>();
-		this.headerFields.putAll(headerFields);
-		clientObjectChannel.setHeaderFields(Map.copyOf(this.headerFields));
+	void updateHeaderRowField(TableColumn<RECORD, ?> column) {
+		clientObjectChannel.setHeaderRowField(column.getPropertyName(), column.getHeaderRowField());
 	}
 
-	public void setHeaderRowField(String columnName, Field<?> field) {
-		this.headerFields.put(columnName, field);
-		clientObjectChannel.setHeaderRowField(columnName, field);
+	/**
+	 * Use {@link TableColumn#setFooterRowField(AbstractField)} instead!
+	 */
+	@Deprecated
+	public void setFooterRowField(String columnName, AbstractField<?> field) {
+		getColumnByPropertyName(columnName).setFooterRowField(field);
+	}
+
+	void updateFooterRowField(TableColumn<RECORD, ?> column) {
+		clientObjectChannel.setFooterRowField(column.getPropertyName(), column.getFooterRowField());
 	}
 
 	public boolean isFooterFieldsRowEnabled() {
@@ -959,34 +964,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.setCssStyle(".slick-footerrow", "background-color", footerFieldsRowBackgroundColor != null ? footerFieldsRowBackgroundColor.toHtmlColorString() : null);
 	}
 
-	public Map<String, Field<?>> getFooterFields() {
-		return footerFields;
-	}
-
-	public void setFooterFields(Map<String, Field<?>> footerFields) {
-		this.footerFields = new HashMap<>();
-		this.footerFields.putAll(footerFields);
-		clientObjectChannel.setFooterFields(Map.copyOf(this.footerFields));
-	}
-
-	public void setFooterRowField(String columnName, Field<?> field) {
-		this.footerFields.put(columnName, field);
-		clientObjectChannel.setFooterRowField(columnName, field);
-	}
-
 	public <VALUE> TableColumn<RECORD, VALUE> getColumnByPropertyName(String propertyName) {
 		return columns.stream()
 				.filter(column -> column.getPropertyName().equals(propertyName))
 				.map(c -> (TableColumn<RECORD, VALUE>) c)
 				.findFirst().orElse(null);
-	}
-
-	public Field getHeaderRowFieldByName(String propertyName) {
-		return headerFields.get(propertyName);
-	}
-
-	public Field getFooterRowFieldByName(String propertyName) {
-		return footerFields.get(propertyName);
 	}
 
 	public List<RECORD> getRecordsWithChangedCellValues() {

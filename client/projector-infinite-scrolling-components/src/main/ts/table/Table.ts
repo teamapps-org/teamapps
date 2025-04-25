@@ -86,7 +86,6 @@ const backgroundColorCssClassesByMessageSeverity = {
 	[FieldMessageSeverity.ERROR]: "bg-danger",
 };
 
-type ElementsByName = { [fieldName: string]: HTMLElement };
 type FieldsByName = { [fieldName: string]: AbstractField };
 
 export class Table extends AbstractComponent<DtoTable> implements DtoTableCommandHandler, DtoTableEventSource {
@@ -116,19 +115,17 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 
 	private dropDown: DropDown;
 	private $selectionFrame: HTMLElement;
-
-	private headerRowFieldWrappers: ElementsByName = {};
-	private headerFields: FieldsByName = {};
-	private footerRowFieldWrappers: ElementsByName = {};
-	private footerFields: FieldsByName = {};
+	private headerRowFields: FieldsByName = {};
+	private footerRowFields: FieldsByName = {};
 
 	private $editorFieldTempContainer: HTMLElement;
 
 	private contextMenu: ContextMenu;
 
+	private rowSelectionCausedByApiCall: boolean;
+
 	constructor(config: DtoTable, serverObjectChannel: ServerObjectChannel) {
 		super(config);
-		console.log("new Table");
 		this.$component = parseHtml(`<div class="Table"">
     <div class="slick-table"></div>
     <div class="editor-field-temp-container hidden"></div>
@@ -156,14 +153,12 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 
 	@executeWhenFirstDisplayed()
 	private createSlickGrid(config: DtoTable, $table: HTMLElement) {
-		console.log("createGrid");
 		this.allColumns = this._createColumns();
 
 		if (config.rowCheckBoxesEnabled) {
 			var checkboxSelector = new Slick.CheckboxSelectColumn({});
 			this.allColumns.unshift(checkboxSelector.getColumnDefinition() as Column);
 		}
-		console.log("createGrid 2");
 		if (config.numberingColumnEnabled) {
 			const RowNumberFormatter: Slick.Formatter<DtoTableClientRecord> = (row: number, cell: number, value: any, columnDef: Slick.Column<DtoTableClientRecord>, dataContext: DtoTableClientRecord) => {
 				return "" + (row + 1);
@@ -185,8 +180,12 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 				visible: true
 			});
 		}
-		console.log("createGrid 3");
-		const options: Slick.GridOptions<any> & { createFooterRow: boolean, showFooterRow: boolean, footerRowHeight: number } = {
+
+		const options: Slick.GridOptions<any> & {
+			createFooterRow: boolean,
+			showFooterRow: boolean,
+			footerRowHeight: number
+		} = {
 			explicitInitialization: true,
 			enableCellNavigation: true,
 			enableColumnReorder: false,
@@ -207,18 +206,14 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			showFooterRow: config.footerFieldsRowEnabled,
 			footerRowHeight: config.footerFieldsRowHeight,
 		};
-		console.log("createGrid 4");
 		this._grid = new Slick.Grid($table, this.dataProvider, this.getVisibleColumns(), options);
-		console.log("createGrid 5");
 
-		if (config.headerFields) {
-			this.initializeOuterFieldWrappers(true);
-			this.headerFields = config.headerFields as FieldsByName;
-		}
-		if (config.footerFields) {
-			this.initializeOuterFieldWrappers(false);
-			this.footerFields = config.footerFields as FieldsByName;
-		}
+		config.columns.forEach(c => {
+			this.headerRowFields[c.propertyName] = c.headerRowField as AbstractField;
+			this.footerRowFields[c.propertyName] = c.footerRowField as AbstractField;
+		});
+		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
+		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
 
 		if (config.columnHeadersVisible) {
 			applyCss($table.querySelector<HTMLElement>(":scope .slick-header-columns"), {
@@ -450,56 +445,16 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	private initializeOuterFieldWrappers(header: boolean) {
-		const fieldsByColumnId: { [columnName: string]: AbstractField } = header ? this.headerFields : this.footerFields;
-		const wrapperElementsMap = header ? this.headerRowFieldWrappers : this.footerRowFieldWrappers;
-		const renderedEvent: Slick.Event<Slick.OnHeaderRowCellRenderedEventArgs<any>> = header ? this._grid.onHeaderRowCellRendered : (this._grid as any).onFooterRowCellRendered;
+	private configureOuterFields(fieldsByColumnId: { [columnName: string]: AbstractField }, header: boolean) {
+		let renderedEvent: Slick.Event<Slick.OnHeaderRowCellRenderedEventArgs<any>> = header ? this._grid.onHeaderRowCellRendered : (this._grid as any).onFooterRowCellRendered;
 		renderedEvent.subscribe((e, args) => {
-			args.node.innerHTML = '';
+			$(args.node)[0].innerHTML = '';
 			const columnName = args.column.id;
-
-			let wrapperElement = parseHtml(`<div class="outer-field-wrapper ${header ? 'header' : 'footer'}-field-wrapper"></div>`);
-			wrapperElementsMap[columnName] = wrapperElement;
-			args.node.appendChild(wrapperElement);
-
 			let field = fieldsByColumnId[columnName];
 			if (field) {
-				this.setOuterRowField(columnName, header, field);
+				args.node.appendChild(field.getMainElement());
 			}
 		});
-	}
-
-	private setOuterRowField(columnName: string, header: boolean, field: AbstractField) {
-		const fieldsByColumnId: { [columnName: string]: AbstractField } = header ? this.headerFields : this.footerFields;
-		fieldsByColumnId[columnName] = field;
-		let wrapperElementsMap = header ? this.headerRowFieldWrappers : this.footerRowFieldWrappers;
-		let wrapper = wrapperElementsMap[columnName];
-		if (wrapper == null) {
-			console.error(`Could not set ${header ? 'header' : 'footer'} field for column ${columnName}`);
-			return;
-		}
-		wrapper.innerHTML = '';
-		wrapper.appendChild(field.getMainElement());
-	}
-
-	public setHeaderFields(headerFields: { [p: string]: unknown }): any {
-		Object.entries(this.headerRowFieldWrappers).forEach(e => e[1].innerHTML = '');
-		this.headerFields = {}
-		Object.entries(this.headerFields).forEach(e => this.setHeaderRowField(e[0], e[1]));
-	}
-
-	public setHeaderRowField(columnName: string, field: AbstractField) {
-		this.setOuterRowField(columnName, true, field);
-	}
-
-	public setFooterFields(footerFields: { [p: string]: unknown }): any {
-		Object.entries(this.footerRowFieldWrappers).forEach(e => e[1].innerHTML = '');
-		this.footerFields = {}
-		Object.entries(this.footerFields).forEach(e => this.setFooterRowField(e[0], e[1]));
-	}
-
-	public setFooterRowField(columnName: string, field: AbstractField) {
-		this.setOuterRowField(columnName, false, field);
 	}
 
 	private getCurrentlyDisplayedRecordIds() {
@@ -647,7 +602,6 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 
 	@executeWhenFirstDisplayed()
 	updateData(startIndex: number, recordIds: number[], newRecords: DtoTableClientRecord[], totalNumberOfRecords: number): any {
-		console.log("updateData");
 		let editorCoordinates: { recordId: any; fieldName: any };
 		editorCoordinates = this._grid.getCellEditor() != null ? {
 			recordId: this.getActiveCellRecordId(),
@@ -854,7 +808,11 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 	private handleFieldValueChanged(fieldName: string, value: any): void {
 		let currentlyEditingThisColumn = !!this._grid.getCellEditor() && this.getActiveCellFieldName() === fieldName;
 		if (currentlyEditingThisColumn) {
-			this.onCellValueChanged.fire({recordId: this.getActiveCellRecordId(), columnPropertyName: fieldName, value: value})
+			this.onCellValueChanged.fire({
+				recordId: this.getActiveCellRecordId(),
+				columnPropertyName: fieldName,
+				value: value
+			})
 		}
 	}
 
@@ -923,8 +881,8 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 	}
 
 	private setSlickGridColumns(columns: Column[]) {
-		Object.values(this.headerFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
-		Object.values(this.footerFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
+		Object.values(this.headerRowFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
+		Object.values(this.footerRowFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
 		this._grid.setColumns(columns);
 	}
 
@@ -960,6 +918,19 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		this.contextMenu.close(requestId);
 	}
 
+	setHeaderRowField(columnName: string, field: unknown): any {
+		this.headerRowFields[columnName] = field as AbstractField;
+		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
+		if (this._grid != null) {
+			this._grid.setColumns(this._grid.getColumns());
+		}
+	}
+
+	setFooterRowField(columnName: string, field: unknown): any {
+		this.footerRowFields[columnName] = field as AbstractField;
+		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
+		if (this._grid != null) {
+			this._grid.setColumns(this._grid.getColumns());
+		}
+	}
 }
-
-
