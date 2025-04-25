@@ -641,6 +641,10 @@ public class SessionContext {
         return createResourceLink(resource, null);
     }
 
+    public void download(Resource resource) {
+        download(resource, resource.getName());
+    }
+
     public void download(Resource resource, String downloadFileName) {
         download(createResourceLink(resource), downloadFileName);
     }
