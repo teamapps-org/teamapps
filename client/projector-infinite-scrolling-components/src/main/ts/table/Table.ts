@@ -966,7 +966,11 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 	}
 
 	setHeaderRowField(columnName: string, field: unknown): any {
-		this.headerRowFields[columnName] = field as AbstractField;
+		if (field == null) {
+			delete this.headerRowFields[columnName];
+		} else {
+			this.headerRowFields[columnName] = field as AbstractField;
+		}
 		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
 		if (this._grid != null) {
 			this._grid.setColumns(this._grid.getColumns());
@@ -974,7 +978,11 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 	}
 
 	setFooterRowField(columnName: string, field: unknown): any {
-		this.footerRowFields[columnName] = field as AbstractField;
+		if (field == null) {
+			delete this.footerRowFields[columnName];
+		} else {
+			this.footerRowFields[columnName] = field as AbstractField;
+		}
 		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
 		if (this._grid != null) {
 			this._grid.setColumns(this._grid.getColumns());
