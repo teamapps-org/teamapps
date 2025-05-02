@@ -112,4 +112,9 @@ public class CheckBox extends AbstractField<Boolean> implements DtoCheckBoxEvent
 	public Boolean doConvertClientValueToServerValue(JsonNode value) {
 		return value.booleanValue();
 	}
+
+	@Override
+	public void setValue(Boolean value) {
+		super.setValue(value != null && value); // null -> false
+	}
 }
