@@ -26,7 +26,7 @@ import {
 	ServerObjectChannel,
 	slideDown,
 	slideUp,
-	ProjectorEvent
+	ProjectorEvent, executeWhenFirstDisplayed, deepEquals
 } from "projector-client-object-api";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
@@ -42,8 +42,6 @@ import {AbstractToolContainer} from "../AbstractToolContainer";
 import {ToolAccordionButton} from "./ToolAccordionButton";
 
 export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> implements DtoToolAccordionCommandHandler, DtoToolAccordionEventSource {
-
-	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
 	public readonly onToolbarButtonClick: ProjectorEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent> = new ProjectorEvent<DtoAbstractToolContainer_ToolbarButtonClickEvent>();
 
@@ -66,7 +64,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 			this.$backgroundColorDiv.appendChild(buttonGroup.getMainDomElement());
 		}
 
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public doGetMainElement(): HTMLElement {
@@ -91,7 +89,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
 		this.buttonGroupsById.getValue(groupId).setButtonVisible(buttonId, visible);
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	setButtonColors(groupId: string, buttonId: string, backgroundColor: string, hoverBackgroundColor: string): void {
@@ -100,7 +98,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 
 	public setButtonGroupVisible(groupId: string, visible: boolean) {
 		this.buttonGroupsById.getValue(groupId).setVisible(visible);
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public addButtonGroup(buttonGroupConfig: DtoToolbarButtonGroup) {
@@ -127,7 +125,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 			this.$backgroundColorDiv.appendChild(buttonGroup.getMainDomElement());
 		}
 
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public removeButtonGroup(groupId: string): void {
@@ -137,28 +135,38 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 			this.buttonGroupsById.remove(groupId);
 			buttonGroup.getMainDomElement().remove();
 		}
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public addButton(groupId: string, buttonConfig: DtoToolbarButton, neighborButtonId: string, beforeNeighbor: boolean) {
 		this.buttonGroupsById.getValue(groupId).addButton(buttonConfig, neighborButtonId, beforeNeighbor);
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	public removeButton(groupId: string, buttonId: string): void {
 		this.buttonGroupsById.getValue(groupId).removeButton(buttonId);
-		this.refreshEnforcedButtonWidth();
+		this.refreshforcedButtonWidth();
 	}
 
 	updateButtonGroups(buttonGroups: DtoToolbarButtonGroup[]): void {
 		// TODO implement only if really needed
 	}
 
-	public refreshEnforcedButtonWidth() {
+
+	@executeWhenFirstDisplayed()
+	public refreshforcedButtonWidth() {
 		let maxButtonWidth = this.buttonGroupsById.values
 			.filter(group => group.isVisible())
 			.reduce((maxButtonWidth, buttonGroup) => Math.max(maxButtonWidth, buttonGroup.getMaxOptimizedButtonWidth()), 1);
-		this.buttonGroupsById.values.forEach(group => group.setEnforcedButtonWidth(maxButtonWidth));
+
+		const computedStyle = getComputedStyle(this.getMainElement());
+		const availableWidth = this.getWidth() - parseInt(computedStyle.paddingLeft) - parseInt(computedStyle.paddingRight);
+		const numberOfColumns = Math.max(1, Math.floor(availableWidth / maxButtonWidth));
+
+		this.buttonGroupsById.values.forEach(group => {
+			group.setForcedNumberOfColumns(numberOfColumns);
+			group.updateRows();
+		});
 	}
 
 	public onResize(): void {
@@ -175,7 +183,8 @@ class DtoButtonGroup {
 	private buttonsById: { [index: string]: ToolAccordionButton } = {};
 	private buttons: ToolAccordionButton[] = [];
 	private $buttonRows: HTMLElement[] = [];
-	private enforcedButtonWidth: number = 1;
+	private forcedButtonWidth: number = 1;
+    private forcedNumberOfColumns: number = 1;
 
 	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolAccordion: ToolAccordion, private $sizeTestingContainer: HTMLElement) {
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
@@ -303,9 +312,12 @@ class DtoButtonGroup {
 			.reduce((maxWidth, button) => Math.max(maxWidth, button.optimizedWidth), 0);
 	}
 
-	public setEnforcedButtonWidth(enforcedButtonWidth: number) {
-		this.enforcedButtonWidth = enforcedButtonWidth;
-		this.updateRows();
+    public setForcedButtonWidth(forcedButtonWidth: number) {
+        this.forcedButtonWidth = forcedButtonWidth;
+    }
+
+    public setForcedNumberOfColumns(forcedNumberOfColumns: number) {
+        this.forcedNumberOfColumns = forcedNumberOfColumns;
 	}
 
 	public setButtonVisible(buttonId: string, visible: boolean) {
@@ -356,21 +368,24 @@ class DtoButtonGroup {
 		this.updateRows();
 	}
 
+    private lastParameters: {forcedButtonWidth: number, forcedNumberOfColumns: number, availableWidth: number} = null;
 	public updateRows() {
 		let availableWidth = this.$buttonGroupWrapper.offsetWidth;
 		if (availableWidth == 0) {
 			return;
 		}
+        let newParams = {availableWidth, forcedButtonWidth: this.forcedButtonWidth, forcedNumberOfColumns: this.forcedNumberOfColumns};
+        if (deepEquals(this.lastParameters, newParams)) {
+            return;
+        }
+        this.lastParameters = newParams;
 
 		this.$buttonRows.forEach($row => {
 			$row.remove();
 			$row.innerHTML = '';
 		});
-		let buttonsPerRow = Math.floor(availableWidth / Math.max(16, this.enforcedButtonWidth));
-
-		if (buttonsPerRow === 0) {
-			buttonsPerRow = 1;
-		}
+        let buttonsPerRow = this.forcedNumberOfColumns ?? Math.max(1, Math.floor(availableWidth / Math.max(16, this.forcedButtonWidth)));
+        let buttonWidth = this.forcedNumberOfColumns != null ? availableWidth / this.forcedNumberOfColumns : this.forcedButtonWidth ?? null;
 
 		let visibleButtonsCount = 0;
 		for (let i = 0; i < this.buttons.length; i++) {
@@ -378,7 +393,7 @@ class DtoButtonGroup {
 			if (button.visible) {
 				let rowIndex = Math.floor(visibleButtonsCount / buttonsPerRow);
 				let $row = this.$buttonRows[rowIndex] || (this.$buttonRows[rowIndex] = parseHtml(`<div class="button-row">`));
-				button.getMainDomElement().style.flexBasis = this.enforcedButtonWidth + "px";
+                button.getMainDomElement().style.flexBasis = buttonWidth + "px";
 				$row.appendChild(button.getMainDomElement());
 				visibleButtonsCount++;
 			}
@@ -389,7 +404,7 @@ class DtoButtonGroup {
 			for (let i = visibleButtonsCount; i % buttonsPerRow != 0; i++) {
 				let rowIndex = Math.floor(i / buttonsPerRow);
 				let $row = this.$buttonRows[rowIndex];
-				$row.appendChild(parseHtml(`<div class="row-filler" style="flex-basis: ${this.enforcedButtonWidth}px">`));
+                $row.appendChild(parseHtml(`<div class="row-filler" style="flex-basis: ${buttonWidth}px">`));
 			}
 		}
 

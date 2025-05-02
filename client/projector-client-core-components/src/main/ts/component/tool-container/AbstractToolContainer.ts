@@ -45,6 +45,8 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 	public static optimizeButtonWidth($buttonWrapper: HTMLElement, $button: HTMLElement, maxHeight: number): number {
 		this.$sizeTestingContainer.appendChild($buttonWrapper);
 		const $templateDiv = $button.querySelector<HTMLElement>(':scope >.custom-entry-template');
+
+		maxHeight = maxHeight ?? $button.offsetHeight;
 		let optimizedWidth;
 		if ($templateDiv != null) {
 			const oldHeightAttribute = $templateDiv.style.height; // read the style attribute of the templateDiv! (not the computed css!)
@@ -94,7 +96,7 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 			optimizedWidth = $buttonWrapper.offsetWidth;
 		}
 		$buttonWrapper.remove();
-		return optimizedWidth;
+		return optimizedWidth + 2;
 	}
 
 }
