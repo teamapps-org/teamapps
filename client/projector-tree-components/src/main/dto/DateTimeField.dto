@@ -33,8 +33,6 @@ abstract class DtoAbstractDateTimeField extends DtoAbstractField {
 	command setShowDropDownButton(boolean showDropDownButton);
 	command setFavorPastDates(boolean favorPastDates);
 	command setLocaleAndFormats(String locale, DtoDateTimeFormatDescriptor dateFormat, DtoDateTimeFormatDescriptor timeFormat);
-
-	event textInput(String enteredString);
 }
 
 class DtoLocalDateTimeField extends DtoAbstractDateTimeField {

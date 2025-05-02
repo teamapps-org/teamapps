@@ -306,21 +306,17 @@ export class TrivialDateTimeField implements TrivialComponent {
 								selectElementContents(this.getActiveEditor(), 0, this.getActiveEditor().innerText.length);
 							}
 							this.closeDropDown();
-						} else {
-							this.setDropDownMode(e.currentTarget === this.$dateEditor ? Mode.MODE_DATE_LIST : Mode.MODE_TIME_LIST);
-							this.openDropDown();
-							setTimeout(() => { // We need the new editor value (after the keydown event). Therefore setTimeout().
-								// if (this.$editor.val()) {
-								// this.query(1);
-								// } else {
-								// 	this.query(0);
-								// 	this.treeBox.setHighlightedEntryById(null);
-								// }
-								this.query(1);
-							});
 						}
 					}
-				)
+			);
+		});
+
+		[this.$dateEditor, this.$timeEditor].forEach(editor => {
+			editor.addEventListener("input", e => {
+				this.setDropDownMode(e.currentTarget === this.$dateEditor[0] ? Mode.MODE_DATE_LIST : Mode.MODE_TIME_LIST);
+				this.openDropDown();
+				this.query(1);
+			})
 		});
 
 		this.setValue(null);
@@ -381,8 +377,8 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private updateRenderers() {
 		this.dateIconRenderer = createDateIconRenderer(this.config.locale);
 		this.timeIconRenderer = createClockIconRenderer();
-		this.dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat);
-		this.timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat);
+		this.dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat, true);
+		this.timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat, true);
 	}
 
 	private isDropDownNeeded() {
@@ -562,13 +558,9 @@ export class TrivialDateTimeField implements TrivialComponent {
 	}
 
 	private getNonSelectedEditorValue() {
-		const editorText = this.getActiveEditor().innerText.replace(String.fromCharCode(160), " ");
+		const editorText = this.getActiveEditor().innerText;
 		const selection = window.getSelection();
-		if (selection.anchorOffset != selection.focusOffset) {
-			return editorText.substring(0, Math.min(selection.anchorOffset, selection.focusOffset));
-		} else {
-			return editorText;
-		}
+		return editorText.substring(0, Math.min(selection.anchorOffset, selection.focusOffset)).replace(String.fromCharCode(160), " ");
 	}
 
 	private autoCompleteIfPossible(delay: number) {

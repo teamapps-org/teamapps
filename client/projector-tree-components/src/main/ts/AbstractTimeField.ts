@@ -22,24 +22,29 @@ import {LocalDateTime} from "./LocalDateTime";
 import {
 	AbstractField,
 	DebounceMode,
-	DtoDateTimeFormatDescriptor,
+	DtoDateTimeFormatDescriptor, executeWhenFirstDisplayed,
 	FieldEditingMode,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
 	DtoAbstractTimeField,
-	DtoAbstractTimeField_TextInputEvent,
 	DtoAbstractTimeFieldCommandHandler,
 	DtoAbstractTimeFieldEventSource
 } from "./generated";
 import {TrivialComboBox} from "./trivial-components/TrivialComboBox";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
+import {
+	DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	DtoTextInputHandlingField_TextInputEvent,
+	SpecialKey
+} from "projector-client-core-components";
 
 
 export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> extends AbstractField<C, V> implements DtoAbstractTimeFieldEventSource, DtoAbstractTimeFieldCommandHandler {
 
-	public readonly onTextInput: ProjectorEvent<DtoAbstractTimeField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoTextInputHandlingField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected timeRenderer: (time: LocalDateTime) => string;
@@ -64,6 +69,17 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 		this.trivialComboBox.getMainDomElement().classList.add("TimeField", "default-min-field-width");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
+		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				this.onSpecialKeyPressed.fire({
+					key: SpecialKey.ESCAPE
+				});
+			} else if (e.key === "Enter") {
+				this.onSpecialKeyPressed.fire({
+					key: SpecialKey.ENTER
+				});
+			}
+		});
 
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
@@ -83,6 +99,7 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.trivialComboBox.focus();
 	}
@@ -121,6 +138,12 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 
 	setShowClearButton(showClearButton: boolean): void {
 		this.trivialComboBox.setShowClearButton(showClearButton);
+	}
+
+	setClockIconEnabled(clockIconEnabled: boolean) {
+		this.config.clockIconEnabled = clockIconEnabled;
+		this.timeRenderer = this.createTimeRenderer();
+		this.trivialComboBox.setValue(this.trivialComboBox.getValue());
 	}
 
 }

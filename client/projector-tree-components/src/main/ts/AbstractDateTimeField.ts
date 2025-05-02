@@ -22,15 +22,13 @@ import {DateTime} from "luxon";
 import {DateSuggestionEngine} from "./DateSuggestionEngine";
 import {createDateRenderer, createTimeRenderer} from "./datetime-rendering";
 import {
-	DtoAbstractDateTimeField, DtoAbstractDateTimeField_TextInputEvent,
+	DtoAbstractDateTimeField,
 	DtoAbstractDateTimeFieldCommandHandler,
 	DtoAbstractDateTimeFieldEventSource
 } from "./generated";
 import {AbstractField, DebounceMode, DtoDateTimeFormatDescriptor, FieldEditingMode, ProjectorEvent} from "projector-client-object-api";
 
 export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, V> extends AbstractField<C, V> implements DtoAbstractDateTimeFieldEventSource, DtoAbstractDateTimeFieldCommandHandler {
-
-	public readonly onTextInput: ProjectorEvent<DtoAbstractDateTimeField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialDateTimeField: TrivialDateTimeField;
 	protected dateSuggestionEngine: DateSuggestionEngine;
@@ -62,11 +60,11 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 	protected abstract getTimeZone(): string;
 
 	protected createDateRenderer(): (time: DateTime) => string {
-		return createDateRenderer(this.config.locale, this.config.dateFormat);
+		return createDateRenderer(this.config.locale, this.config.dateFormat, true);
 	}
 
 	protected createTimeRenderer(): (time: DateTime) => string {
-		return createTimeRenderer(this.config.locale, this.config.timeFormat);
+		return createTimeRenderer(this.config.locale, this.config.timeFormat, true);
 	}
 
 	protected dateTimeToDateString(dateTime: DateTime): string {

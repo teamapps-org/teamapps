@@ -22,7 +22,6 @@ package org.teamapps.projector.component.treecomponents.datetime;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.field.AbstractField;
 import org.teamapps.projector.component.treecomponents.TreeComponentsLibrary;
-import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 
 import java.util.Locale;
@@ -31,8 +30,6 @@ import java.util.Locale;
 public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> implements DtoAbstractDateTimeFieldEventHandler {
 
 	private final DtoAbstractDateTimeFieldClientObjectChannel clientObjectChannel = new DtoAbstractDateTimeFieldClientObjectChannel(getClientObjectChannel());
-
-	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
 
 	private boolean showDropDownButton = true;
 	private boolean favorPastDates = false;
@@ -54,11 +51,6 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 		uiField.setLocale(locale.toLanguageTag());
 		uiField.setDateFormat(dateFormat.toDateTimeFormatDescriptor());
 		uiField.setTimeFormat(timeFormat.toDateTimeFormatDescriptor());
-	}
-
-	@Override
-	public void handleTextInput(String enteredString) {
-		onTextInput.fire(enteredString);
 	}
 
 	public boolean isShowDropDownButton() {

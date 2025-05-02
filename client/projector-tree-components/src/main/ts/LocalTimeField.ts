@@ -75,7 +75,7 @@ export class LocalTimeField extends AbstractTimeField<DtoLocalTimeField, LocalTi
 	}
 
 	protected createTimeRenderer(): (time: LocalDateTime) => string {
-		let timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat);
+		let timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat, this.config.clockIconEnabled, "static-readonly-UiTimeField");
 		return entry => timeRenderer(entry?.toUTC());
 	}
 }

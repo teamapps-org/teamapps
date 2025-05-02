@@ -40,6 +40,7 @@ class DtoLocalDateField extends DtoAbstractField {
 	boolean shuffledFormatSuggestionsEnabled;
 	DateFieldDropDownMode dropDownMode;
 	String placeholderText;
+	boolean calendarIconEnabled;
 
     command update(DtoLocalDateField config);
 

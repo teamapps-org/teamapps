@@ -37,14 +37,16 @@ import {
 	AbstractField,
 	DebounceMode,
 	deepEquals,
-	DtoDateTimeFormatDescriptor,
+	DtoDateTimeFormatDescriptor, executeWhenFirstDisplayed,
 	FieldEditingMode,
 	ProjectorEvent
 } from "projector-client-object-api";
+import {DtoTextInputHandlingField_SpecialKeyPressedEvent, SpecialKey} from "projector-client-core-components";
 
 export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDate> implements DtoLocalDateFieldEventSource, DtoLocalDateFieldCommandHandler {
 
 	public readonly onTextInput: ProjectorEvent<DtoLocalDateField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected dateSuggestionEngine: DateSuggestionEngine;
@@ -105,6 +107,17 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		}));
 		this.trivialComboBox.getMainDomElement().classList.add("DtoAbstractDateField", "default-min-field-width");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
+		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				this.onSpecialKeyPressed.fire({
+					key: SpecialKey.ESCAPE
+				});
+			} else if (e.key === "Enter") {
+				this.onSpecialKeyPressed.fire({
+					key: SpecialKey.ENTER
+				});
+			}
+		});
 		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
@@ -123,7 +136,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 	}
 
 	protected createDateRenderer(): (time: LocalDateTime) => string {
-		let dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat);
+		let dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat, this.config.calendarIconEnabled, "static-readonly-UiDateField");
 		return entry => dateRenderer(entry?.toUTC());
 	}
 
@@ -143,6 +156,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
+	@executeWhenFirstDisplayed()
 	focus(): void {
 		this.trivialComboBox.focus();
 	}
@@ -211,6 +225,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.setLocaleAndDateFormat(config.locale, config.dateFormat);
 		this.trivialComboBox.setPlaceholderText(config.placeholderText);
 		this.calendarBoxDropdown.defaultDate = LocalDateField.UiLocalDateToLocalDateTime(config.defaultSuggestionDate);
+		this.setCalendarIconEnabled(config.calendarIconEnabled);
 		this.config = config;
 	}
 
@@ -237,6 +252,11 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.trivialComboBox.setShowClearButton(showClearButton);
 	}
 
+	setCalendarIconEnabled(calendarIconEnabled: boolean) {
+		this.config.calendarIconEnabled = calendarIconEnabled;
+		this.dateRenderer = this.createDateRenderer();
+		this.trivialComboBox.setValue(this.trivialComboBox.getValue());
+	}
 }
 
 
