@@ -21,7 +21,7 @@
 import {
 	AbstractField,
 	DtoIdentifiableClientRecord,
-	DtoTemplate, FieldEditingMode, FileUploader,
+	FieldEditingMode, FileUploader,
 	generateUUID, humanReadableFileSize,
 	parseHtml, prependChild, removeClassesByFunction,
 	ProjectorEvent,
@@ -35,7 +35,7 @@ import {
 	DtoFileField_UploadFailedEvent,
 	DtoFileField_UploadStartedEvent, DtoFileField_UploadSuccessfulEvent, DtoFileField_UploadTooLargeEvent,
 	DtoFileFieldCommandHandler,
-	DtoFileFieldEventSource, DtoSimpleFileField_UploadInitiatedByUserEvent, FileFieldDisplayType
+	DtoFileFieldEventSource, FileFieldDisplayType
 } from "./generated";
 import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
 
@@ -273,7 +273,7 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	}
 
 	private createFileItem() {
-		let fileItem = new UploadItem(this.displayType === FileFieldDisplayType.FLOATING, this.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.uploadUrl, this.itemRenderer);
+		let fileItem = new UploadItem(this.displayType === FileFieldDisplayType.FLOATING, this.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.isEditable());
 		fileItem.onClick.addListener((eventObject) => {
 			this.onFileItemClicked.fire({
 				clientId: fileItem.data.id
@@ -325,6 +325,7 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+		this.fileItems.forEach(fi => fi.deletable = this.isEditable());
 		this.updateVisibilities();
 	}
 
@@ -409,8 +410,9 @@ class UploadItem {
 		private uploadErrorMessage: string,
 		private uploadUrl: string,
 		private renderer: Template,
+		private _deletable: boolean
 	) {
-		this.$main = parseHtml(`<div class="file-item">
+		this.$main = parseHtml(`<div class="file-item ${this._deletable ? 'deletable' : ''}">
 			<div class="progress-indicator"></div>
 			<div class="file-info">
 				<div class="file-name"></div>
@@ -527,6 +529,11 @@ class UploadItem {
 
 	public getMainDomElement() {
 		return this.$main;
+	}
+
+	public set deletable(deletable: boolean) {
+		this._deletable = deletable;
+		this.$main.classList.toggle("deletable", deletable)
 	}
 
 }

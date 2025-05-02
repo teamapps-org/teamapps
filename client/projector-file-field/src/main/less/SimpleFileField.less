@@ -57,6 +57,10 @@
   overflow: hidden;
   height: auto;
 
+  .file-item:not(.deletable) .delete-button {
+    display: none;
+  }
+
   &.float-style-horizontal {
     .file-list {
       display: grid;

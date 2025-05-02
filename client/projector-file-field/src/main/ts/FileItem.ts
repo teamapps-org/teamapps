@@ -49,8 +49,9 @@ export class FileItem {
 		private uploadUrl: string,
 		private config: DtoFileItem,
 		public state: FileItemState,
+		private _deletable: boolean
 	) {
-		this.$main = parseHtml(`<a class="file-item">
+		this.$main = parseHtml(`<a class="file-item ${this._deletable ? 'deletable' : ''}">
 			<div class="delete-button-wrapper">
 				<div class="delete-button img img-16 ta-icon-close hoverable-icon" tabindex="0"></div>
 			</div>
@@ -190,6 +191,11 @@ export class FileItem {
 
 	public get linkUrl() {
 		return this.config.linkUrl
+	}
+
+	public set deletable(deletable: boolean) {
+		this._deletable = deletable;
+		this.$main.classList.toggle("deletable", deletable)
 	}
 }
 

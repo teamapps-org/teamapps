@@ -176,6 +176,7 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode, oldEditingMode?: FieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
+		Object.values(this.fileItems).forEach(fi => fi.deletable = this.isEditable());
 		this.updateVisibilities();
 	}
 
@@ -184,7 +185,7 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	}
 
 	addFileItem(itemConfig: DtoFileItem, state: FileItemState = FileItemState.DONE): void {
-		const fileItem = new FileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state);
+		const fileItem = new FileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state, this.isEditable());
 		this.fileItems[itemConfig.uuid] = fileItem;
 		this.$fileList.appendChild(fileItem.getMainDomElement());
 	}
@@ -290,7 +291,7 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	private createUploadFileItem() {
 		let fileItem = new FileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, {
 			uuid: generateUUID()
-		}, FileItemState.INITIATING);
+		}, FileItemState.INITIATING, this.isEditable());
 		fileItem.onClick.addListener(() => {
 			this.onFileItemClicked.fire({
 				fileItemUuid: fileItem.uuid
