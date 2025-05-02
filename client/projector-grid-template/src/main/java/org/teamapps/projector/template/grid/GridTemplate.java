@@ -45,9 +45,9 @@ public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 	}
 
 	private int minWidth = 0;
-	private int maxWidth = 0;
+	private int maxWidth = -1;
 	private int minHeight = 0;
-	private int maxHeight = 0;
+	private int maxHeight = -1;
 	private Spacing padding;
 	private int gridGap = 0;
 	private Color backgroundColor;

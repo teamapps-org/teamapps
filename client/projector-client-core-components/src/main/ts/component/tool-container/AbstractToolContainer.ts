@@ -46,7 +46,7 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 		this.$sizeTestingContainer.appendChild($buttonWrapper);
 		const $templateDiv = $button.querySelector<HTMLElement>(':scope >.custom-entry-template');
 
-		maxHeight = maxHeight ?? $button.offsetHeight;
+		maxHeight = maxHeight >= 0 ? maxHeight : $button.offsetHeight;
 		let optimizedWidth;
 		if ($templateDiv != null) {
 			const oldHeightAttribute = $templateDiv.style.height; // read the style attribute of the templateDiv! (not the computed css!)

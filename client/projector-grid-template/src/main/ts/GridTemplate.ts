@@ -73,8 +73,8 @@ export class GridTemplate implements Template {
 		const gridTemplateRowsString = 'grid-template-rows:' + config.rows.map(row => createCssGridRowOrColumnString(row.heightPolicy)).join(" ") + ';';
 		const paddingCss = createUiSpacingCssString("padding", config.padding);
 		const gridGapCss = 'grid-gap:' + config.gridGap + 'px;';
-		const maxWidthCss = config.maxWidth ? `max-width: ${config.maxWidth}px;` : '';
-		const maxHeightCss = config.maxHeight ? `max-height: ${config.maxHeight}px;` : '';
+		const maxWidthCss = config.maxWidth >= 0 ? `max-width: ${config.maxWidth}px;` : '';
+		const maxHeightCss = config.maxHeight >= 0? `max-height: ${config.maxHeight}px;` : '';
 		const minWidthCss = config.minWidth ? `min-width: ${config.minWidth}px;` : '';
 		const minHeightCss = config.minHeight ? `min-height: ${config.minHeight}px;` : '';
 		const backgroundColorCss = config.backgroundColor ? (`background-color: ${(config.backgroundColor ?? '')};`) : '';
