@@ -21,7 +21,7 @@
         </license>
     </licenses>
     <properties>
-        <jersey.version>3.0.4</jersey.version>
+        <jersey.version>3.0.10</jersey.version>
     </properties>
     <developers>
         <developer>
