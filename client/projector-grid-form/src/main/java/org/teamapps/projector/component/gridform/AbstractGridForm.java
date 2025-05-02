@@ -182,4 +182,13 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 	public FieldMessageSeverity validate() {
 		return this.logicalForm.validate();
 	}
+
+	/**
+	 * Checks whether any of the form fields have been mutated by the client.
+	 *
+	 * @return true if any of the form fields' values have been changed, false otherwise
+	 */
+	public boolean isChangedByClient() {
+		return logicalForm.isChangedByClient();
+	}
 }
