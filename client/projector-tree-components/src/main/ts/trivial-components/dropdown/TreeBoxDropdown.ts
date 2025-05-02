@@ -21,6 +21,7 @@ import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
 import {QueryFunction} from "../TrivialCore";
 import {TrivialTreeBox} from "../TrivialTreeBox";
 import {ProjectorEvent} from "projector-client-object-api";
+import { scrollIntoView } from "seamless-scroll-polyfill";
 
 type TreeBoxDropdownConfig<E> = {
 	queryFunction: QueryFunction<E>;
@@ -76,7 +77,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 		let results = await this.config.queryFunction(query) ?? [];
 		this.treeBox.setEntries(results);
 		this.treeBox.setSelectedEntryById(null); // make sure we don't remember the last selected value and go down/up from it
-		this.getMainDomElement().scrollIntoView({block: "start"}); // make sure we scroll up
+		scrollIntoView(this.getMainDomElement(), {block: "nearest", behavior: "smooth"}); // due to Safari iOS not implementing 'block: nearest' correctly, we need to call a polyfill...
 		this.treeBox.highlightTextMatches(results.length <= this.config.textHighlightingEntryLimit ? query : null);
 		if (selectionDirection === 0) {
 			this.treeBox.setSelectedEntryById(null)
