@@ -17,6 +17,7 @@
     "typescript": "^5.1"
   },
   "dependencies": {
+    "@material-symbols/svg-400": "latest",
     "projector-client-object-api": "workspace:*"
   }
 }

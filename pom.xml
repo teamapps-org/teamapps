@@ -72,6 +72,7 @@
         <module>client/projector-chart</module>
         <module>client/projector-audio-level-indicator</module>
         <module>client/projector-chat</module>
+        <module>client/projector-collapsible</module>
         <module>client/projector-side-drawer</module>
         <module>client/projector-video-player</module>
         <module>client/projector-grid-form</module>

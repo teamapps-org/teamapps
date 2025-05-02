@@ -38,6 +38,7 @@
     "projector-chart",
     "projector-audio-level-indicator",
     "projector-chat",
+    "projector-collapsible",
     "projector-side-drawer",
     "projector-video-player",
     "projector-grid-form"

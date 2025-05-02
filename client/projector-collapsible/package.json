@@ -1,5 +1,5 @@
 {
-  "name": "projector-combobox",
+  "name": "projector-collapsible",
   "version": "0.1.0-SNAPSHOT",
   "type": "module",
   "exports": "./target/js-dist/index.js",
@@ -17,10 +17,6 @@
     "typescript": "^5.1"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.6.3",
-    "@material-symbols/svg-400": "latest",
-    "fastest-levenshtein": "^1.0.16",
-    "projector-client-core-components": "workspace:*",
     "projector-client-object-api": "workspace:*"
   }
 }

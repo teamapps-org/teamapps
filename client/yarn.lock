@@ -3196,11 +3196,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"projector-collapsible@workspace:projector-collapsible":
+  version: 0.0.0-use.local
+  resolution: "projector-collapsible@workspace:projector-collapsible"
+  dependencies:
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
 "projector-combobox@workspace:projector-tree-components":
   version: 0.0.0-use.local
   resolution: "projector-combobox@workspace:projector-tree-components"
   dependencies:
     "@floating-ui/dom": ^1.6.3
+    "@material-symbols/svg-400": latest
     esbuild: ^0.15.13
     fastest-levenshtein: ^1.0.16
     projector-client-core-components: "workspace:*"
@@ -3407,6 +3419,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "projector-side-drawer@workspace:projector-side-drawer"
   dependencies:
+    "@material-symbols/svg-400": latest
     esbuild: ^0.15.13
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2

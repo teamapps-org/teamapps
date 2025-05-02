@@ -42,6 +42,7 @@ rectangle "projector-mediasoup-client\n" as org_teamapps_projector_mediasoup_cli
 rectangle "projector-chart\n" as org_teamapps_projector_chart_jar_compile
 rectangle "projector-audio-level-indicator\n" as org_teamapps_projector_audio_level_indicator_jar_compile
 rectangle "projector-chat\n" as org_teamapps_projector_chat_jar_compile
+rectangle "projector-collapsible\n" as org_teamapps_projector_collapsible_jar_compile
 rectangle "projector-side-drawer\n" as org_teamapps_projector_side_drawer_jar_compile
 rectangle "projector-video-player\n" as org_teamapps_projector_video_player_jar_compile
 rectangle "projector-grid-form\n" as org_teamapps_projector_grid_form_jar_compile
@@ -89,6 +90,7 @@ org_teamapps_projector_chart_jar_compile -[#000000]-> org_teamapps_projector_cli
 org_teamapps_projector_audio_level_indicator_jar_compile -[#000000]-> org_teamapps_projector_client_core_components_jar_compile
 org_teamapps_projector_chat_jar_compile -[#000000]-> org_teamapps_projector_client_core_components_jar_compile
 org_teamapps_projector_chat_jar_compile -[#000000]-> org_teamapps_projector_material_icon_provider_jar_compile
+org_teamapps_projector_collapsible_jar_compile -[#000000]-> org_teamapps_projector_client_object_api_jar_compile
 org_teamapps_projector_side_drawer_jar_compile -[#000000]-> org_teamapps_projector_client_core_components_jar_compile
 org_teamapps_projector_video_player_jar_compile -[#000000]-> org_teamapps_projector_client_object_api_jar_compile
 org_teamapps_projector_grid_form_jar_compile -[#000000]-> org_teamapps_projector_client_core_components_jar_compile

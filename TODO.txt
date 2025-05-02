@@ -55,3 +55,7 @@ update license headers (upgrade plugin - super outdated!)
 search and replace "Ui" in .less and .ts
 same for "Dto" when referring to CSS classes!
 
+Server-side: replace `new ProjectorEvent<>(clientObjectChannel::toggleXyzEvent);` with 'clientObjectChannel.getToggleXyzEvent() // will do the toggling internally
+Client-side: get rid of Component.registerEvents() and get the event instances from the serverObjectChannel instead?
+
+make icon a client object (represented as a simple string on the client?), so you don't have to manually resolve icons?
