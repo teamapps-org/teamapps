@@ -1014,6 +1014,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 					propertyInjector.setValue(record, propertyName, value);
 				}
 			});
+			rerenderRecord(record);
 		}
 	}
 

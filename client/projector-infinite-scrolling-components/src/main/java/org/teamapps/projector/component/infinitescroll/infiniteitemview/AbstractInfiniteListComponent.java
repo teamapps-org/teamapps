@@ -39,6 +39,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
+// #synched
 public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends InfiniteListModel<RECORD>> extends AbstractComponent implements DtoAbstractInfiniteListComponentEventHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -103,6 +104,17 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 	public void refresh() {
 		count.set(-1);
 		sendFullDisplayedRange();
+	}
+
+	public void rerenderRecord(RECORD record) {
+		int recordIndex = renderedRecords.getIndex(record);
+		if (recordIndex >= 0) {
+			List<RECORD> changedRecords = List.of(record);
+			UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(changedRecords);
+			RecordAndClientRecord<RECORD> recordRecordAndClientRecord = uiRecordMappingResult.recordAndClientRecords.get(0);
+			renderedRecords.updateRecord(recordRecordAndClientRecord.getRecord(), recordRecordAndClientRecord.getUiRecord());
+			updateClientRenderData(List.of(recordRecordAndClientRecord.getUiRecord()));
+		}
 	}
 
 	private void sendFullDisplayedRange() {
