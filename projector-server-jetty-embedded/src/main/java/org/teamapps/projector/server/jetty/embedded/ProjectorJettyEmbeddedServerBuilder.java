@@ -33,6 +33,7 @@ public class ProjectorJettyEmbeddedServerBuilder {
 	);
 	private SequentialExecutorFactory customSequentialExecutorFactory;
 	private final List<ServletContextListener> servletContextListeners = new ArrayList<>();
+	private boolean globalGzipCompression;
 
 	public ProjectorJettyEmbeddedServerBuilder(WebController webController) {
 		this.webController = webController;
@@ -63,11 +64,16 @@ public class ProjectorJettyEmbeddedServerBuilder {
 		return this;
 	}
 
+	public ProjectorJettyEmbeddedServerBuilder withGlobalGzipCompression(boolean globalGzipCompression) {
+		this.globalGzipCompression = globalGzipCompression;
+		return this;
+	}
+
 	public ProjectorJettyEmbeddedServer build() {
 		SequentialExecutorFactory executorFactory = customSequentialExecutorFactory != null ? customSequentialExecutorFactory
 				: new CompletableFutureChainSequentialExecutorFactory(DEFAULT_NUMBER_OF_SESSION_EXECUTOR_THREADS);
 		ProjectorServerCore projectorServerCore = new ProjectorServerCore(config, executorFactory, webController);
-		return new ProjectorJettyEmbeddedServer(projectorServerCore, port, baseResourceProvider, servletContextListeners);
+		return new ProjectorJettyEmbeddedServer(projectorServerCore, port, baseResourceProvider, servletContextListeners, globalGzipCompression);
 	}
 
 }

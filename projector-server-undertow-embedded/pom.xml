@@ -55,7 +55,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.teamapps</groupId>
+            <groupId>org.teamapps</groupId>                                                                                                                                  
             <artifactId>projector-server-core</artifactId>
         </dependency>
 
