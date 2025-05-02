@@ -25,6 +25,7 @@ import {maxTickIntegerPartLength, YAxis} from "./YAxis";
 import {DtoGraph, DtoGraphData, LineChartYScaleZoomMode, ScaleType} from "./generated";
 import {generateUUID} from "projector-client-object-api";
 import {ScaleContinuousNumeric, ScaleTime} from "d3";
+import * as ulp from "ulp";
 
 export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends DtoGraphData = DtoGraphData>
 	implements Graph<C, D> {
@@ -130,9 +131,11 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 				} else if (numberOfSignificantDigits > this.config.maxTickDigits) {
 					const delta = maxY - minY;
 					let boundaryExpansion = Math.max(delta / 4, 1e-14);
-					console.debug(`Increasing dy from (${minY}:${maxY}) to (${minY - boundaryExpansion}:${maxY + boundaryExpansion})`)
-					minY = minY - boundaryExpansion;
-					maxY = maxY + boundaryExpansion;
+					const nextMinY = Math.min(minY - boundaryExpansion, ulp.nextDown(minY))
+					const nextMaxY = Math.max(maxY + boundaryExpansion, ulp.nextUp(maxY))
+					console.debug(`Increasing dy from (${minY}:${maxY}) to (${nextMinY}:${nextMaxY})`)
+					minY = nextMinY;
+					maxY = nextMaxY;
 				} else {
 					break;
 				}

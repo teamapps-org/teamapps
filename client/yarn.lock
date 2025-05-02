@@ -3427,6 +3427,7 @@ __metadata:
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1
+    ulp: ^1.0.1
   languageName: unknown
   linkType: soft
 
@@ -3863,6 +3864,13 @@ __metadata:
   version: 1.0.38
   resolution: "ua-parser-js@npm:1.0.38"
   checksum: d0772b22b027338d806ab17d1ac2896ee7485bdf9217c526028159f3cd6bb10272bb18f6196d2f94dde83e3b36dc9d2533daf08a414764f6f4f1844842383838
+  languageName: node
+  linkType: hard
+
+"ulp@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "ulp@npm:1.0.1"
+  checksum: 4bd786a28402f0edd7cf06801ac6bb630ddbe3785debb8d2be56946da997522aff8f10b686a38d1ecef79205d06365c4174f8aee51b97252db66e772f7818e1e
   languageName: node
   linkType: hard
 
