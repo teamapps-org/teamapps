@@ -32,7 +32,6 @@ import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.event.ProjectorEvent;
-import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
@@ -50,15 +49,13 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final ProjectorEvent<ItemClickedEventData<RECORD>> onItemClicked = new ProjectorEvent<>(clientObjectChannel::toggleItemClickedEvent);
+	public final ProjectorEvent<RECORD> onItemSelected = new ProjectorEvent<>();
 
 	private Template itemTemplate;
 	private float itemWidth;
 	private float itemHeight;
-	// private float horizontalSpacing; // TODO
-	// private float verticalSpacing; // TODO
 	private HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.STRETCH;
 	private VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
-	 private JustifyContent rowHorizontalAlignment = JustifyContent.START;
 
 	private int itemPositionAnimationTime = 200;
 
@@ -68,6 +65,9 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
+
+	private boolean selectionEnabled;
+	private RECORD selectedRecord;
 
 	public InfiniteItemView(Template itemTemplate, float itemWidth, int itemHeight) {
 		super(new ListInfiniteItemViewModel<>());
@@ -95,9 +95,10 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 		// ui.setVerticalSpacing(verticalSpacing);
 		ui.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toUiHorizontalElementAlignment());
 		ui.setItemContentVerticalAlignment(itemContentVerticalAlignment.toUiVerticalElementAlignment());
-		 ui.setRowHorizontalAlignment(rowHorizontalAlignment);
+		// ui.setRowHorizontalAlignment(rowHorizontalAlignment.toUiItemJustification());
 		ui.setItemPositionAnimationTime(itemPositionAnimationTime);
 		ui.setContextMenuEnabled(contextMenuProvider != null);
+		ui.setSelectionEnabled(selectionEnabled);
 		return ui;
 	}
 
@@ -118,6 +119,10 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 		RECORD record = renderedRecords.getRecord(event.getRecordId());
 		if (record != null) {
 			onItemClicked.fire(new ItemClickedEventData<>(record, event.isDoubleClick()));
+		}
+		if (this.selectionEnabled) {
+			this.selectedRecord = record;
+			this.onItemSelected.fire(record);
 		}
 	}
 
@@ -155,15 +160,17 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 				start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
 		clientObjectChannel.setData(start,
 				uiRecordIds,
-				newUiRecords,
-				totalNumberOfRecords);
+				(List) newUiRecords,
+				totalNumberOfRecords
+		);
 	}
 
 	@Override
 	protected DtoIdentifiableClientRecord createDtoIdentifiableClientRecord(RECORD record) {
-		DtoIdentifiableClientRecord clientRecord = new DtoIdentifiableClientRecord();
+		DtoInfiniteItemViewClientRecord clientRecord = new DtoInfiniteItemViewClientRecord();
 		clientRecord.setId(++clientRecordIdCounter);
 		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));
+		clientRecord.setSelected(record.equals(selectedRecord));
 		return clientRecord;
 	}
 
@@ -278,6 +285,25 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public void setItemPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
 		this.setItemPropertyProvider(propertyExtractor);
+	}
+
+	public boolean isSelectionEnabled() {
+		return selectionEnabled;
+	}
+
+	public void setSelectionEnabled(boolean selectionEnabled) {
+		this.selectionEnabled = selectionEnabled;
+		clientObjectChannel.setSelectionEnabled(selectionEnabled);
+	}
+
+	public RECORD getSelectedRecord() {
+		return selectedRecord;
+	}
+
+	public void setSelectedRecord(RECORD record) {
+		this.selectedRecord = record;
+		DtoIdentifiableClientRecord uiRecord = renderedRecords.getUiRecord(record);
+		clientObjectChannel.setSelectedRecord(uiRecord.getId());
 	}
 
 }

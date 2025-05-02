@@ -38,10 +38,10 @@ class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
 	AlignItems itemContentVerticalAlignment;
 	JustifyContent rowHorizontalAlignment;
 //	boolean autoHeight; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
-
 	boolean contextMenuEnabled;
-	
-	command setData(int startIndex, List<Integer> recordIds, List<DtoIdentifiableClientRecord> newRecords, int totalNumberOfRecords);
+	boolean selectionEnabled;
+
+	command setData(int startIndex, List<Integer> recordIds, List<DtoInfiniteItemViewClientRecord> newRecords, int totalNumberOfRecords);
 
 	command setItemTemplate(DtoTemplate* itemTemplate);
     command setItemWidth(double itemWidth);
@@ -52,6 +52,8 @@ class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
     command setItemContentVerticalAlignment(AlignItems itemContentVerticalAlignment);
     command setRowHorizontalAlignment(JustifyContent rowHorizontalAlignment);
     command setItemPositionAnimationTime(int animationMillis);
+    command setSelectionEnabled(boolean selectionEnabled);
+    command setSelectedRecord(Integer uiRecordId);
 
     command setContextMenuContent(int requestId, DtoComponent* component);
     command closeContextMenu(int requestId);
@@ -65,3 +67,8 @@ class DtoInfiniteItemViewDataRequest {
 	int startIndex;
 	int length;
 }
+
+class DtoInfiniteItemViewClientRecord extends DtoIdentifiableClientRecord {
+	boolean selected;
+}
+

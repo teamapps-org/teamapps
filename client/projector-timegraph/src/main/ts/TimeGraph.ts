@@ -187,7 +187,7 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 
 		this.$yAxisContainer = this.$rootG.append<SVGGElement>("g")
 			.classed("y-axis-container", true);
-		this.dropShadowFilterId = `${TimeGraph.DROP_SHADOW_ID}-${this.getCssUuid()}`;
+		this.dropShadowFilterId = `${TimeGraph.DROP_SHADOW_ID}-${this.cssUuid}`;
 		let $defs = this.$svg.append<SVGDefsElement>("defs")
 			.html(navigator.vendor.indexOf("Apple") === -1 ? `<filter id="${this.dropShadowFilterId}" y="-50">
 	        <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur"></feGaussianBlur>
@@ -201,7 +201,7 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 	        </feMerge>
 	    </filter>` : '');
 		this.$dropShadowFilter = $defs.select(`#${this.dropShadowFilterId}`);
-		let clipPathId = this.getCssUuid() + "-clipping-path-" + generateUUID();
+		let clipPathId = this.cssUuid + "-clipping-path-" + generateUUID();
 		this.$clipPath = $defs.append("clipPath")
 			.attr("id", clipPathId)
 			.append("rect")

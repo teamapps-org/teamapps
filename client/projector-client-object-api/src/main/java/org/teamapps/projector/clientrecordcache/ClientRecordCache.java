@@ -44,8 +44,8 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClientRecordCache.class);
 
-	private final UiIdentifiableClientRecordFactory<RECORD, UIRECORD> clientRecordFactory;
-	private final UiIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> postProcessor;
+	private final DtoIdentifiableClientRecordFactory<RECORD, UIRECORD> clientRecordFactory;
+	private final DtoIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> postProcessor;
 	private int idCounter;
 
 	private BiPredicate<RECORD, Integer> purgeDecider = (record, clientRecordId) -> true;
@@ -68,12 +68,12 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 	 */
 	private final LinkedHashMap<Integer, RECORD> unacknowledgedRecordsByClientId = new LinkedHashMap<>();
 
-	public ClientRecordCache(UiIdentifiableClientRecordFactory<RECORD, UIRECORD> clientRecordFactory, UiIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> postProcessor) {
+	public ClientRecordCache(DtoIdentifiableClientRecordFactory<RECORD, UIRECORD> clientRecordFactory, DtoIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> postProcessor) {
 		this.clientRecordFactory = clientRecordFactory;
 		this.postProcessor = postProcessor;
 	}
 
-	public ClientRecordCache(UiIdentifiableClientRecordFactory<RECORD, UIRECORD> clientRecordFactory) {
+	public ClientRecordCache(DtoIdentifiableClientRecordFactory<RECORD, UIRECORD> clientRecordFactory) {
 		this(clientRecordFactory, (record, uiRecord, allNewUiRecords) -> {
 		});
 	}
@@ -203,11 +203,11 @@ public class ClientRecordCache<RECORD, UIRECORD extends DtoIdentifiableClientRec
 		return uiRecord;
 	}
 
-	public interface UiIdentifiableClientRecordFactory<RECORD, UIRECORD> {
+	public interface DtoIdentifiableClientRecordFactory<RECORD, UIRECORD> {
 		UIRECORD create(RECORD record);
 	}
 
-	public interface UiIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> {
+	public interface DtoIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> {
 		void postProcess(RECORD record, UIRECORD uiRecord, Map<RECORD, UIRECORD> allNewUiRecords);
 	}
 

@@ -20,23 +20,33 @@
 
 
 import {
-	AbstractComponent, addDelegatedEventListener, AlignItems, Component, debouncedMethod, DebounceMode,
-	DtoIdentifiableClientRecord, DtoTemplate, executeWhenFirstDisplayed, JustifyContent,
+	AbstractComponent,
+	addDelegatedEventListener,
+	AlignItems,
+	Component,
+	debouncedMethod,
+	DebounceMode,
+	executeWhenFirstDisplayed,
+	generateUUID,
+	JustifyContent,
 	parseHtml,
+	ProjectorEvent,
 	ServerObjectChannel,
-	ProjectorEvent, Template
+	Template
 } from "projector-client-object-api";
 import {ContextMenu} from "projector-client-core-components";
 import {
 	DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent,
-	DtoInfiniteItemView, DtoInfiniteItemView_ContextMenuRequestedEvent,
+	DtoInfiniteItemView,
+	DtoInfiniteItemView_ContextMenuRequestedEvent,
 	DtoInfiniteItemView_ItemClickedEvent,
+	DtoInfiniteItemViewClientRecord,
 	DtoInfiniteItemViewCommandHandler,
 	DtoInfiniteItemViewEventSource
 } from "../generated";
 
 type RenderedItem = {
-	item: DtoIdentifiableClientRecord,
+	item: DtoInfiniteItemViewClientRecord,
 	$element: HTMLElement,
 	$wrapper: HTMLElement,
 	x: number,
@@ -64,7 +74,7 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 
 	constructor(config: DtoInfiniteItemView, serverObjectChannel: ServerObjectChannel) {
 		super(config);
-		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.getCssUuid()}">
+		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.cssUuid} ${config.selectionEnabled ? 'selection-enabled' : ''}">
                 <div class="grid"></div>
                 <style></style>
             </div>`);
@@ -86,6 +96,7 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 
 		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", ["click"], (element, ev) => {
 			let recordId = parseInt(element.getAttribute("data-id"));
+			this.setSelectedItem(this.renderedItems.get(recordId));
 			this.onItemClicked.fire({
 				recordId: recordId,
 				doubleClick: false
@@ -175,10 +186,11 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 		}
 	}
 
-	private createRenderedItem(item: DtoIdentifiableClientRecord): RenderedItem {
+	private createRenderedItem(item: DtoInfiniteItemViewClientRecord): RenderedItem {
 		let $wrapper = document.createElement("div");
 		let $element = parseHtml(this.itemTemplateRenderer.render(item.values));
 		$wrapper.classList.add("item-wrapper");
+		$wrapper.classList.toggle("selected", item.selected);
 		$wrapper.setAttribute("data-id", "" + item.id);
 		$wrapper.appendChild($element);
 		return {
@@ -190,6 +202,13 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 			width: -1,
 			height: -1
 		};
+	}
+
+	private setSelectedItem(item: RenderedItem) {
+		this.renderedItems.forEach(item => item.$wrapper.classList.remove("selected"));
+		if (item != null) {
+			item.$wrapper.classList.add("selected");
+		}
 	}
 
 	private updateItemPosition(renderedItem: RenderedItem, positionX: number, positionY: number, itemWidth: number, itemHeight: number, absoluteIndex: number) {
@@ -218,7 +237,7 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 		}
 	}
 
-	setData(startIndex: number, recordIds: number[], newRecords: DtoIdentifiableClientRecord[], totalNumberOfRecords: number): void {
+	setData(startIndex: number, recordIds: number[], newRecords: DtoInfiniteItemViewClientRecord[], totalNumberOfRecords: number): void {
 		console.debug("got data ", startIndex, recordIds.length, newRecords.length, totalNumberOfRecords);
 		this.totalNumberOfRecords = totalNumberOfRecords;
 		this.updateGridHeight();
@@ -257,11 +276,11 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 
 	private updateStyles() {
 		this.$styles.textContent = `
-            .grid-${this.getCssUuid()} .item-wrapper {
+            .grid-${this.cssUuid} .item-wrapper {
                  align-items: ${this.config.itemContentVerticalAlignment};
                  justify-content: ${this.config.itemContentHorizontalAlignment};
             }
-            .grid-${this.getCssUuid()} .item-wrapper > * {
+            .grid-${this.cssUuid} .item-wrapper > * {
                  flex: ${this.config.itemContentHorizontalAlignment == JustifyContent.STRETCH ? "1 1 auto" : "0 1 auto"};
             }`;
 	}
@@ -328,6 +347,13 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 		this.contextMenu.close(requestId);
 	}
 
+	setSelectionEnabled(selectionEnabled: boolean): any {
+		this.config.selectionEnabled = selectionEnabled;
+		this.getMainElement().classList.toggle("selection-enabled", selectionEnabled);
+	}
+
+	setSelectedRecord(uiRecordId: number): any {
+		let item = this.renderedItems.get(uiRecordId);
+		this.setSelectedItem(item);
+	}
 }
-
-

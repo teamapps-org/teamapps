@@ -30,22 +30,31 @@
 
     .item-wrapper {
       position: absolute;
-      transition: top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
+      transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
       contain: strict; // !!!
       display: flex;
+    }
+  }
 
-      // TODO make hover and active styles configurable!
-      border: 1px solid transparent;
+  &.selection-enabled .grid .item-wrapper {
+    &:hover {
+      background-color: var(--ta-hover-color);
+    }
 
-      &:hover {
-        .button-style-item();
-        transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
-      }
+    &.selected {
+      background-color: var(--ta-selection-color);
+    }
+  }
 
-      &:active {
-        .button-style-item-lowered();
-        transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
-      }
+  &:not(.selection-enabled) .grid .item-wrapper {
+    border: 1px solid transparent;
+
+    &:hover {
+      .button-style-item();
+    }
+
+    &:active {
+      .button-style-item-lowered();
     }
   }
 }

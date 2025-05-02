@@ -44,12 +44,10 @@ export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> i
 
 	public displayedDeferredExecutor = new DeferredExecutor();
 
-	protected styleManager: StyleManager;
-	private cssUuid: string;
+	protected readonly styleManager: StyleManager;
+	protected readonly cssUuid = generateUUID();
 
 	constructor(protected config: C) {
-		this.cssUuid = generateUUID();
-
 		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-css-id="${this.cssUuid}"]`, `[data-css-id="${this.cssUuid}"]`);
 		this.displayedDeferredExecutor.invokeOnceWhenReady(() => this.styleManager.apply());
 		this.visible = config.visible ?? false;
