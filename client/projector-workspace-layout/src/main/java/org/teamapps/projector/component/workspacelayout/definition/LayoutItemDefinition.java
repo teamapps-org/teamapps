@@ -55,10 +55,15 @@ public abstract class LayoutItemDefinition {
 		return getAllLayoutPositions().contains(layoutPosition);
 	}
 
-	public List<ViewDefinition> getAllViews(boolean visible) {
+	public abstract List<ViewDefinition> getEffectivelyVisibleViews();
+
+	public List<ViewDefinition> getEffectivelyInvisibleViews() {
+		Set<String> visibleViewNames = getEffectivelyVisibleViews().stream()
+				.map(ViewDefinition::getId)
+				.collect(Collectors.toSet());
 		return getAllViews().stream()
-				.filter(viewDefinition -> viewDefinition.isVisible())
-				.collect(Collectors.toList());
+				.filter(view -> !visibleViewNames.contains(view.getId()))
+				.toList();
 	}
 
 	public abstract List<LayoutItemDefinition> getSelfAndAncestors();

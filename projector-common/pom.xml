@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-commons</artifactId>
-            <version>0.1.3-SNAPSHOT</version>
+            <version>0.1.2</version>
         </dependency>
     </dependencies>
 

@@ -107,7 +107,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		applicationLauncherButton.onClick.addListener(aVoid -> {
 			navigationBar.hideFanOutComponent();
 			mobileLayout.setContent(applicationLauncher.getPanel(), PageTransition.MOVE_TO_RIGHT_VS_MOVE_FROM_LEFT, PAGE_TRANSITION_ANIMATION_DURATION);
-			activeView = applicationLauncher;
+			updateActiveView(applicationLauncher);
 		});
 
 		applicationTreeButton.onClick.addListener(aVoid -> {
@@ -117,7 +117,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 				animation = PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT;
 			}
 			mobileLayout.setContent(appTree.getPanel(), animation, PAGE_TRANSITION_ANIMATION_DURATION);
-			activeView = appTree;
+			updateActiveView(appTree);
 		});
 
 		applicationViewsButton.onClick.addListener(aVoid -> {
@@ -136,6 +136,14 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		viewsItemView.onButtonClick.addListener(data -> {
 			navigationBar.hideFanOutComponent();
 		});
+	}
+
+	private void updateActiveView(View newActiveView) {
+		if (activeView != null && activeView != newActiveView) {
+			activeView.onEffectiveVisibilityChanged().fire(false);
+		}
+		activeView = newActiveView;
+		newActiveView.onEffectiveVisibilityChanged().fire(true);
 	}
 
 	public void setApplicationLauncher(View applicationLauncher) {
@@ -158,7 +166,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 			//todo check when to add to history
 			//viewHistory.add(view);
 		}
-		activeView = view;
+		updateActiveView(view);
 		mobileLayout.setContent(view.getPanel(), PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT, PAGE_TRANSITION_ANIMATION_DURATION);
 	}
 
@@ -171,7 +179,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		}
 		if (view != null) {
 			mobileLayout.setContent(view.getPanel(), PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT, PAGE_TRANSITION_ANIMATION_DURATION);
-			activeView = view;
+			updateActiveView(view);
 		}
 	}
 
@@ -203,7 +211,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		}
 
 		if (view != null) {
-			activeView = view;
+			updateActiveView(view);
 			mobileLayout.setContent(activeView.getPanel(), PageTransition.MOVE_TO_RIGHT_VS_MOVE_FROM_LEFT, PAGE_TRANSITION_ANIMATION_DURATION);
 		}
 	}
@@ -276,7 +284,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
 		if (!perspectiveViews.isEmpty()) {
 			View view = perspective.getFocusedView() != null ? perspective.getFocusedView() : perspectiveViews.get(0);
-			activeView = view;
+			updateActiveView(view);
 			mobileLayout.setContent(view.getPanel(), PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT, PAGE_TRANSITION_ANIMATION_DURATION);
 		}
 	}

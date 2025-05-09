@@ -20,6 +20,7 @@
 package org.teamapps.projector.application.view;
 
 import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.core.panel.Panel;
@@ -31,6 +32,7 @@ import java.util.List;
 
 public class ViewImpl implements View {
 
+    public final ProjectorEvent<Boolean> onEffectiveVisibilityChanged = new ProjectorEvent<>();
 
     private final boolean closable;
     private boolean visible = true;
@@ -50,6 +52,11 @@ public class ViewImpl implements View {
     public ViewImpl(String layoutPosition) {
         this.layoutPosition = layoutPosition;
         closable = false;
+    }
+
+    @Override
+    public ProjectorEvent<Boolean> onEffectiveVisibilityChanged() {
+        return onEffectiveVisibilityChanged;
     }
 
     public ViewImpl(Icon icon, String title, Component component) {
@@ -213,5 +220,10 @@ public class ViewImpl implements View {
     public void setLocalToolbarBackgroundColor(Color color) {
         checkToolbar();
         toolbar.setBackgroundColor(color);
+    }
+
+    @Override
+    public void select() {
+        changeHandlers.forEach(ViewChangeHandler::handleSelect);
     }
 }

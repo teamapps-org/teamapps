@@ -139,8 +139,14 @@ class LayoutApplyer {
 				if (lastChild != null) {
 					this.cleanupUnknownServerItems(lastChild, ((SplitPaneWrapper) descriptorItem).getLastChild(), splitPane);
 				}
-			} else if (item instanceof WorkSpaceLayoutViewGroup) {
-				removeUnknownViews((WorkSpaceLayoutViewGroup) item, ((ViewGroupWrapper) descriptorItem).getViewNames());
+			} else if (item instanceof WorkSpaceLayoutViewGroup viewGroupItem) {
+				ViewGroupWrapper viewGroupWrapper = (ViewGroupWrapper) descriptorItem;
+				List<String> viewNames = viewGroupWrapper.getViewNames();
+				removeUnknownViews(viewGroupItem, viewNames);
+				viewGroupItem.getAllViews().stream()
+						.filter(view -> view.getId().equals(viewGroupWrapper.getSelectedViewName()))
+						.findFirst()
+						.ifPresent(viewGroupItem::setSelectedViewSilently);
 			}
 		} else {
 			LayoutItemWrapper correspondingDescriptorItem = this.descriptorItemById.get(item.getId());

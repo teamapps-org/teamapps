@@ -168,4 +168,8 @@ public class ResponsiveApplicationToolbar implements ApplicationChangeHandler {
         }
     }
 
+    @Override
+    public void handleViewSelect(View view) {
+
+    }
 }

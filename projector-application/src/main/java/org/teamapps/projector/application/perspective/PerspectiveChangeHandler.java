@@ -51,5 +51,5 @@ public interface PerspectiveChangeHandler {
 
     void handleViewWorkspaceToolbarButtonGroupRemoved(Perspective perspective, View view, ToolbarButtonGroup buttonGroup);
 
-
+    void handleViewSelect(View view);
 }

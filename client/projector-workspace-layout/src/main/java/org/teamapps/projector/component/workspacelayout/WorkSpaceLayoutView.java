@@ -43,6 +43,9 @@ public class WorkSpaceLayoutView {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+	public final ProjectorEvent<Boolean> onEffectiveVisibilityChanged = new ProjectorEvent<>();
+	private boolean effectivelyVisible;
+
 	private final WorkSpaceLayout workSpaceLayout;
 	private final ProjectorEvent<Void> onRemoved = new ProjectorEvent<>();
 
@@ -250,6 +253,18 @@ public class WorkSpaceLayoutView {
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 		this.workSpaceLayout.handleViewAttributeChangedViaApi(this);
+	}
+
+	/*package-private*/ void setEffectivelyVisible(boolean effectivelyVisible) {
+		boolean wasEffectivelyVisible = this.effectivelyVisible;
+		this.effectivelyVisible = effectivelyVisible;
+		if (wasEffectivelyVisible != effectivelyVisible) {
+			onEffectiveVisibilityChanged.fire(effectivelyVisible);
+		}
+	}
+
+	public boolean isEffectivelyVisible() {
+		return effectivelyVisible;
 	}
 
 	public void updateWindowButtons(boolean showButtons) {

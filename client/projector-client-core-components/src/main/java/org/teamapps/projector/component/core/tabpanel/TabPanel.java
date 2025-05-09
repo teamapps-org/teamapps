@@ -33,8 +33,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.teamapps.commons.util.CollectionCastUtil.castList;
-
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandler {
 
@@ -116,7 +114,7 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 	}
 
 	private void updateToolButtons() {
-		clientObjectChannel.setToolButtons(castList(this.toolButtons));
+		clientObjectChannel.setToolButtons(List.copyOf(this.toolButtons));
 	}
 
 	public List<ToolButton> getToolButtons() {
@@ -172,7 +170,7 @@ public class TabPanel extends AbstractComponent implements DtoTabPanelEventHandl
 		uiTabPanel.setFillTabBarWidth(fillTabBarWidth);
 		uiTabPanel.setHideTabBarIfSingleTab(hideTabBarIfSingleTab);
 		uiTabPanel.setTabStyle(tabStyle);
-		uiTabPanel.setToolButtons(castList(toolButtons));
+		uiTabPanel.setToolButtons(List.copyOf(toolButtons));
 		return uiTabPanel;
 	}
 

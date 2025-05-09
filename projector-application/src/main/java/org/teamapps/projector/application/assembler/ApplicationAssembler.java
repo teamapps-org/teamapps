@@ -63,6 +63,9 @@ public interface ApplicationAssembler extends ApplicationChangeHandler {
 
     @Override
     default void handleViewWorkspaceToolbarButtonGroupRemoved(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, ToolbarButtonGroup buttonGroup) {
+    }
 
+    @Override
+    default void handleViewSelect(View view) {
     }
 }

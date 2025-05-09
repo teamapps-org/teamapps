@@ -20,6 +20,7 @@
 package org.teamapps.projector.application.view;
 
 import org.teamapps.projector.common.format.Color;
+import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.core.panel.Panel;
@@ -28,6 +29,8 @@ import org.teamapps.projector.component.core.toolbar.ToolbarButtonGroup;
 import java.util.List;
 
 public interface View {
+
+    ProjectorEvent<Boolean> onEffectiveVisibilityChanged();
 
     static View createView() {
         return new ViewImpl();
@@ -99,4 +102,5 @@ public interface View {
 
     void setLocalToolbarBackgroundColor(Color color);
 
+    void select();
 }

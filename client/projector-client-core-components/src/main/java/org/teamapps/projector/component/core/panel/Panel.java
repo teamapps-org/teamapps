@@ -33,8 +33,6 @@ import org.teamapps.projector.event.ProjectorEvent;
 
 import java.util.*;
 
-import static org.teamapps.commons.util.CollectionCastUtil.castList;
-
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 
@@ -98,7 +96,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 	}
 
 	private void updateToolButtons() {
-		clientObjectChannel.setToolButtons(castList(this.toolButtons));
+		clientObjectChannel.setToolButtons(List.copyOf(this.toolButtons));
 	}
 
 	public List<ToolButton> getToolButtons() {
@@ -138,7 +136,7 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 		uiPanel.setContent(content != null ? content : null);
 		uiPanel.setPadding(padding);
 		uiPanel.setWindowButtons(List.copyOf(windowButtons));
-		uiPanel.setToolButtons(castList(toolButtons));
+		uiPanel.setToolButtons(List.copyOf(toolButtons));
 		uiPanel.setHeaderFieldIconVisibilityPolicy(headerFieldIconVisibilityPolicy);
 		uiPanel.setContentStretchingEnabled(contentStretchingEnabled);
 	}

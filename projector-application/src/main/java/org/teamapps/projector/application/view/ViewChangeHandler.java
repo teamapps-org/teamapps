@@ -37,4 +37,5 @@ public interface ViewChangeHandler {
 
     void handleWorkspaceButtonGroupRemoved(ToolbarButtonGroup buttonGroup);
 
+    void handleSelect();
 }

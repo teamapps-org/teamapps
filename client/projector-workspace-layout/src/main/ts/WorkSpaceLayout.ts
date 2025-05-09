@@ -276,8 +276,13 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 	}
 
 	private async fireLayoutChanged() {
+		let layout = await this.getCurrentLayout();
+		if (layout[WorkSpaceLayout.ROOT_WINDOW_ID] == null) {
+			return; // event during initialization. Not worth it.
+		}
+
 		this.onLayoutChanged.fire({
-			layoutsByWindowId: await this.getCurrentLayout()
+			layoutsByWindowId: layout
 		});
 	}
 

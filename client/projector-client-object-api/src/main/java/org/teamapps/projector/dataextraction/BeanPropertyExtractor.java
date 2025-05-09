@@ -19,6 +19,7 @@
  */
 package org.teamapps.projector.dataextraction;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.commons.util.ReflectionUtil;
@@ -65,12 +66,9 @@ public class BeanPropertyExtractor<RECORD> implements PropertyExtractor<RECORD> 
 	}
 
 	private ValueExtractor<RECORD, ?> createValueExtractor(ClassAndPropertyName classAndPropertyName) {
-		Method getter = ReflectionUtil.findGetter(classAndPropertyName.clazz, classAndPropertyName.propertyName);
-		Method recordGetter = ReflectionUtil.findMethodByName(classAndPropertyName.clazz, classAndPropertyName.propertyName);
+		Method getter = findGetter(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 		if (getter != null) {
 			return record -> ReflectionUtil.invokeMethod(record, getter);
-		} else if (recordGetter != null) {
-			return record -> ReflectionUtil.invokeMethod(record, recordGetter);
 		} else if (fallbackToFields) {
 			Field field = ReflectionUtil.findField(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 			if (field != null) {
@@ -84,6 +82,18 @@ public class BeanPropertyExtractor<RECORD> implements PropertyExtractor<RECORD> 
 	public BeanPropertyExtractor<RECORD> addProperty(String propertyName, ValueExtractor<RECORD, ?> valueExtractor) {
 		this.customExtractors.put(propertyName, valueExtractor);
 		return this;
+	}
+
+	private static Method findGetter(Class<?> clazz, String propertyName) {
+		String normalGetterName = "get" + StringUtils.capitalize(propertyName);
+		String booleanGetterName = "is" + StringUtils.capitalize(propertyName);
+        return ReflectionUtil.findMethods(clazz,
+				method -> (method.getName().equals(normalGetterName)
+						|| method.getName().equals(booleanGetterName)
+						|| method.getName().equals(propertyName) // record getter name
+				) && method.getParameterCount() == 0)
+				.stream()
+				.findFirst().orElse(null);
 	}
 
 }
