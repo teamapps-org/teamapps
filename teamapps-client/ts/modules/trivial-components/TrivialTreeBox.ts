@@ -143,6 +143,11 @@ export interface TrivialTreeBoxConfig<E> {
 
 }
 
+export type ContextMenuEvent<E> = {
+	event: MouseEvent,
+	entry: E
+}
+
 class EntryWrapper<E> {
 	public entry: E;
 	public $element: HTMLElement;
@@ -214,6 +219,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	private config: TrivialTreeBoxConfig<E>;
 
 	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
+	public readonly onContextMenu = new TeamAppsEvent<ContextMenuEvent<E>>();
 	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<{node: E, expanded: boolean}>();
 
 	private $componentWrapper: HTMLElement;
@@ -396,6 +402,12 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 				this.setNodeExpanded(entryWrapper, !entryWrapper.expanded, true);
 			}
 		});
+		addDelegatedEventListener(this.$tree, ".tr-tree-entry-and-expander-wrapper", "contextmenu", (element, ev) => {
+			let entryWrapper = (element as any).trivialEntryWrapper as EntryWrapper<E>;
+			this.onContextMenu.fire({event: ev, entry: entryWrapper.entry});
+			ev.preventDefault();
+		});
+
 		addDelegatedEventListener(this.$tree, ".tr-tree-entry-and-expander-wrapper", "mouseenter", (element, ev) => {
 			let entryWrapper = (element as any).trivialEntryWrapper as EntryWrapper<E>;
 			if (this.config.selectOnHover && this.config.selectableDecider(entryWrapper.entry)) {

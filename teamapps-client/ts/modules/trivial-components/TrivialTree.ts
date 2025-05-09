@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
+import {ContextMenuEvent, TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import {
 	DEFAULT_TEMPLATES,
 	TrivialComponent,
@@ -37,6 +37,7 @@ export class TrivialTree<E> implements TrivialComponent{
     private config: TrivialTreeConfig<E>;
 
     public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
+    public readonly onContextMenu = new TeamAppsEvent<ContextMenuEvent<E>>();
     public readonly onNodeExpansionStateChanged = new TeamAppsEvent<{node: E, expanded: boolean}>();
 
     private treeBox: TrivialTreeBox<E>;
@@ -59,7 +60,6 @@ export class TrivialTree<E> implements TrivialComponent{
             spinnerTemplate: DEFAULT_TEMPLATES.defaultSpinnerTemplate,
             noEntriesTemplate: DEFAULT_TEMPLATES.defaultNoEntriesTemplate,
             entries: null,
-            selectedEntryId: null,
             matchingOptions: {
                 matchingMode: 'contains',
                 ignoreCase: true,
@@ -104,6 +104,7 @@ export class TrivialTree<E> implements TrivialComponent{
                 this.setSelectedEntry(selectedTreeBoxEntry);
             }
         });
+        this.treeBox.onContextMenu.addListener(e => this.onContextMenu.fire(e))
 
         this.setSelectedEntry((this.config.selectedEntryId !== undefined && this.config.selectedEntryId !== null) ? this.findEntryById(this.config.selectedEntryId) : null);
     }
