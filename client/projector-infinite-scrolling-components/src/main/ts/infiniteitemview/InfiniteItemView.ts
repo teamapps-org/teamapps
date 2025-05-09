@@ -26,7 +26,7 @@ import {
 	Component,
 	debouncedMethod,
 	DebounceMode,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	generateUUID,
 	JustifyContent,
 	parseHtml,
@@ -262,7 +262,7 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 		this.$grid.style.height = this.config.itemHeight * Math.ceil(this.totalNumberOfRecords / this.getItemsPerRow()) + "px";
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	public onResize(): void {
 		console.debug("onResize ", this.getWidth(), this.getHeight());
 		this.updateGridHeight();

@@ -6,7 +6,7 @@ export * from "./equality";
 export * from "./DeferredExecutor";
 export * from "./dom-util";
 export * from "./event-util";
-export * from "./executeWhenFirstDisplayed";
+export * from "./executeAfterAttached";
 export * from "./fullscreen";
 export * from "./nonRecursive";
 export * from "./parseHtml";

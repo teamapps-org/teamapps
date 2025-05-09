@@ -29,7 +29,7 @@ import {
 import {
 	AbstractComponent,
 	Component, EntranceAnimation, ExitAnimation,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	parseHtml,
 	ServerObjectChannel,
 	ProjectorEvent, animateCSS, NotificationPosition
@@ -104,7 +104,7 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 		this.notificationHandle.close();
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	public startCloseTimeout() {
 		if (this.progressBar != null) {
 			this.progressBar.reset();

@@ -28,7 +28,7 @@ import {
 	FieldMessageSeverity,
 	generateUUID,
 	getHighestSeverity,
-	parseHtml
+	parseHtml, executeAfterAttached
 } from "projector-client-object-api";
 import {AbstractField} from "projector-client-object-api";
 
@@ -146,6 +146,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 		this.$check.textContent = v ? "\ue013" : "";
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.$check.focus();
 	}

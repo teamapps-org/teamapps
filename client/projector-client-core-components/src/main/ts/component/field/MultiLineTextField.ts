@@ -29,7 +29,7 @@ import {escapeHtml, getScrollbarWidth} from "../../util/Common";
 import {
 	AbstractField,
 	DebounceMode,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	FieldEditingMode,
 	parseHtml,
 	ProjectorEvent
@@ -107,7 +107,7 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 		return v == null || typeof v === "string";
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	private updateTextareaHeight() {
 		if (this.config.adjustHeightToContent) {
 			this.$field.style.height = '2px';
@@ -128,7 +128,7 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 		this.updateClearButton();
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	private updateClearButton() {
 		this.$wrapper.classList.toggle("clearable", !!(this.showClearButton && this.$field.value));
 		this.$clearButton.style.right = hasVerticalScrollBar(this.$field) ? getScrollbarWidth() + "px" : "0";
@@ -152,7 +152,8 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 		return this.$field.value;
 	}
 
-	public focus(): void {
+	@executeAfterAttached()
+	focus(): void {
 		this.$field.focus();
 	}
 

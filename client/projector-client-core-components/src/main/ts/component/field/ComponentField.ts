@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DtoComponentField, DtoComponentFieldCommandHandler, DtoComponentFieldEventSource} from "../../generated";
-import {Component, FieldEditingMode, parseHtml} from "projector-client-object-api";
+import {Component, executeAfterAttached, FieldEditingMode, parseHtml} from "projector-client-object-api";
 import {AbstractField} from "projector-client-object-api";
 
 
@@ -64,6 +64,7 @@ export class ComponentField extends AbstractField<DtoComponentField, void> imple
 		// do nothing
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		// do nothing
 	}

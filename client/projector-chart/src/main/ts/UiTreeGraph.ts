@@ -22,7 +22,7 @@ import * as d3 from "d3";
 import {BaseType, HierarchyNode, HierarchyPointLink, HierarchyPointNode, Selection, ZoomBehavior} from "d3";
 import {
 	AbstractComponent,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	parseHtml,
 	ServerObjectChannel,
 	ProjectorEvent, Template
@@ -83,13 +83,13 @@ export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements DtoT
 		this.chart.render();
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	public moveToRootNode() {
 		this.onResize();
 		this.chart.moveToRootNode(400);
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	public moveToNode(nodeId: string) {
 		this.onResize();
 		this.chart.moveToNode(nodeId);

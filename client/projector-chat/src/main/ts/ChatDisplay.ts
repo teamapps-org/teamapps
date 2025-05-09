@@ -22,7 +22,7 @@ import {
 	AbstractComponent,
 	addDelegatedEventListener,
 	Component,
-	debouncedMethod, DebounceMode, executeWhenFirstDisplayed, humanReadableFileSize,
+	debouncedMethod, DebounceMode, executeAfterAttached, humanReadableFileSize,
 	parseHtml, prependChild,
 } from "projector-client-object-api";
 import {
@@ -154,7 +154,7 @@ export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements Dt
 		this.addMessages(batch);
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	private scrollToBottom() {
 		const scrollToBottom = ()=>  {
 			this.$main.scroll({

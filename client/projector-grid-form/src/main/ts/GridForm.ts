@@ -21,7 +21,7 @@
 
 import {
 	AbstractComponent, bind, Component, createUiBorderCssString, createUiShadowCssString, createUiSpacingCssString, DtoComponent,
-	executeWhenFirstDisplayed, generateUUID,
+	executeAfterAttached, generateUUID,
 	parseHtml,
 	ServerObjectChannel, slideDown, slideUp,
 	ProjectorEvent, Template
@@ -75,7 +75,7 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 		return this.$mainDiv;
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	public onResize(): void {
 		const newLayoutPolicyIndex = this.determineLayoutPolicyIndexToApply();
 		if (newLayoutPolicyIndex !== this.activeLayoutPolicyIndex) {
@@ -95,7 +95,7 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 		return policyIndex;
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	private applyLayoutPolicy(layoutPolicy: DtoFormLayoutPolicy) {
 		this.uiFields.forEach(uiField => {
 			let fieldWrapper = this.fieldWrappers.get(uiField);
@@ -127,7 +127,7 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 		this.sections.filter(s => s.config.id === sectionId).forEach(s => s.setCollapsed(collapsed));
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	public updateLayoutPolicies(layoutPolicies: DtoFormLayoutPolicy[]): void {
 		this.sectionCollapseOverrides = {};
 		this.layoutPoliciesFromLargeToSmall = layoutPolicies.sort((a, b) => b.minWidth - a.minWidth);

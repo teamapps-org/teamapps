@@ -30,7 +30,7 @@ import {
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {
 	AbstractField,
-	DebounceMode,
+	DebounceMode, executeAfterAttached,
 	FieldEditingMode,
 	ProjectorEvent, Template
 } from "projector-client-object-api";
@@ -167,6 +167,7 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 		return isFreeTextEntry(value) ? value.asString : value.id;
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		if (this.isEditable()) {
 			this.trivialComboBox.focus();

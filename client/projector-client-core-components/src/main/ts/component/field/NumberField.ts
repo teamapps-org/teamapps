@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField, DebounceMode, NumberParser} from "projector-client-object-api";
+import {AbstractField, DebounceMode, executeAfterAttached, NumberParser} from "projector-client-object-api";
 import {
 	DtoNumberField,
 	DtoNumberFieldCommandHandler,
@@ -297,6 +297,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		}
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.$field.select();
 	}

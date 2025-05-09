@@ -26,7 +26,14 @@ import {
 	DtoAbstractDateTimeFieldCommandHandler,
 	DtoAbstractDateTimeFieldEventSource
 } from "./generated";
-import {AbstractField, DebounceMode, DtoDateTimeFormatDescriptor, FieldEditingMode, ProjectorEvent} from "projector-client-object-api";
+import {
+	AbstractField,
+	DebounceMode,
+	DtoDateTimeFormatDescriptor,
+	executeAfterAttached,
+	FieldEditingMode,
+	ProjectorEvent
+} from "projector-client-object-api";
 
 export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, V> extends AbstractField<C, V> implements DtoAbstractDateTimeFieldEventSource, DtoAbstractDateTimeFieldCommandHandler {
 
@@ -91,6 +98,7 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 		this.trivialDateTimeField.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.trivialDateTimeField.focus();
 	}

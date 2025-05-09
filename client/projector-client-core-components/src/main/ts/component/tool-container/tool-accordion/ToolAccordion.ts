@@ -26,7 +26,7 @@ import {
 	ServerObjectChannel,
 	slideDown,
 	slideUp,
-	ProjectorEvent, executeWhenFirstDisplayed, deepEquals
+	ProjectorEvent, executeAfterAttached, deepEquals
 } from "projector-client-object-api";
 import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
@@ -153,7 +153,7 @@ export class ToolAccordion extends AbstractToolContainer<DtoToolAccordion> imple
 	}
 
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public refreshforcedButtonWidth() {
 		let maxButtonWidth = this.buttonGroupsById.values
 			.filter(group => group.isVisible())

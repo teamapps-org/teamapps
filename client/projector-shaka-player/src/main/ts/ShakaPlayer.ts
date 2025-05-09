@@ -34,7 +34,7 @@ import {
 } from "./generated";
 import {
 	AbstractComponent,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	parseHtml,
 	removeClassesByFunction,
 	ServerObjectChannel,
@@ -251,7 +251,7 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 	public destroy(): void {
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	async setUrls(hlsUrl: string, dashUrl: string): Promise<void> {
 		const support = await shaka.Player.probeSupport();
 		let url = support.manifest.mpd && dashUrl ? dashUrl : hlsUrl;

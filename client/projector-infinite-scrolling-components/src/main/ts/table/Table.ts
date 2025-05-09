@@ -47,7 +47,7 @@ import EventData = Slick.EventData;
 import {
 	AbstractField,
 	AbstractComponent, applyCss, Component, debouncedMethod, DebounceMode,
-	DtoFieldMessage, executeWhenFirstDisplayed, fadeIn, fadeOut,
+	DtoFieldMessage, executeAfterAttached, fadeIn, fadeOut,
 	FieldMessageSeverity, getHighestSeverity, nonRecursive, parseHtml,
 	ServerObjectChannel,
 	ProjectorEvent,
@@ -152,7 +152,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		});
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	private createSlickGrid(config: DtoTable, $table: HTMLElement) {
 		this.allColumns = this._createColumns();
 
@@ -632,7 +632,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		return "message-" + severity;
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public clearTable() {
 		this.dataProvider.clear();
 		this._grid.setData(this.dataProvider, true);
@@ -640,7 +640,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	updateData(startIndex: number, recordIds: number[], newRecords: DtoTableClientRecord[], totalNumberOfRecords: number): any {
 		let editorCoordinates: { row: number, recordId: any; fieldName: any };
 		editorCoordinates = this._grid.getCellEditor() != null ? {
@@ -691,7 +691,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public setCellValue(recordId: any, fieldName: string, data: any) {
 		const node = this.dataProvider.getRecordById(recordId);
 		if (node) {
@@ -761,13 +761,13 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		return this.allColumns.filter(column => column.id === id)[0];
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public markTableField(recordId: any, fieldName: string, mark: boolean) {
 		this.dataProvider.setCellMarked(recordId, fieldName, mark);
 		this.rerenderRecordRow(recordId);
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public clearAllFieldMarkings() {
 		this.dataProvider.clearAllCellMarkings();
 		for (let i = 0; i < this.dataProvider.getLength(); i++) {
@@ -776,7 +776,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		this._grid.render();
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public setRecordBold(recordId: any, bold: boolean) {
 		let rowIndex = this.dataProvider.getRowIndexByRecordId(recordId);
 		if (rowIndex == null) {
@@ -788,7 +788,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		this._grid.render();
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public selectRecords(recordIds: number[], scrollToFirstIfAvailable: boolean) {
 		const rowIndexes = recordIds.map(id => this.dataProvider.getRowIndexByRecordId(id));
 		this.doWithoutFiringSelectionEvent(() => {
@@ -803,7 +803,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		});
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public selectRows(rowIndexes: number[], scrollToFirst: boolean) {
 		this.doWithoutFiringSelectionEvent(() => {
 			if (rowIndexes.length > 0) {
@@ -835,7 +835,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public focusCell(recordId: any, columnPropertyName: string) {
 		const rowIndex = this.dataProvider.getRowIndexByRecordId(recordId);
 		if (rowIndex != null) {
@@ -847,7 +847,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	@debouncedMethod(300)
 	public onResize(): void {
 		this._grid.resizeCanvas();
@@ -917,7 +917,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	addColumns(columnConfigs: DtoTableColumn[], index: number): void {
 		const slickColumnConfigs = this._grid.getColumns();
 		const newSlickColumnConfigs = columnConfigs.map(columnConfig => this.createSlickColumnConfig(columnConfig));
@@ -933,7 +933,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		this._grid.setColumns(columns);
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	removeColumns(columnNames: string[]): void {
 		const slickColumnConfigs = this._grid.getColumns()
 			.filter(c => columnNames.indexOf(c.id) === -1);
@@ -942,7 +942,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		this.setSlickGridColumns(this.getVisibleColumns());
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	setColumnVisibility(propertyName: string, visible: boolean): void {
 		const column = this.getColumnById(propertyName);
 		if (column.visible !== visible) {

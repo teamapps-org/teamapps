@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField, FieldEditingMode, parseHtml} from "projector-client-object-api";
+import {AbstractField, executeAfterAttached, FieldEditingMode, parseHtml} from "projector-client-object-api";
 import {DtoColorPicker, DtoColorPickerCommandHandler, DtoColorPickerEventSource} from "../../generated";
 import {escapeHtml} from "../../util/Common";
 
@@ -76,6 +76,7 @@ export class ColorPicker<C extends DtoColorPicker = DtoColorPicker> extends Abst
 		return this.$field.value;
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.$field.focus();
 	}

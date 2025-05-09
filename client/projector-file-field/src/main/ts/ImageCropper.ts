@@ -21,7 +21,7 @@
 import {
 	AbstractComponent,
 	applyCss,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	parseHtml,
 	ProjectorEvent,
 	ServerObjectChannel
@@ -242,7 +242,7 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 		this.$selectionFrame.classList.add(`mode-${ImageCropperSelectionMode[selectionMode].toLowerCase()}`)
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	public onResize(): void {
 		applyDisplayMode(this.getMainElement(), this.htmlImageElement, "fit-size", {
 			innerPreferredDimensions: {
@@ -253,7 +253,7 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 		this.updateCroppingFramePosition(this.selection);
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	private updateCroppingFramePosition(selection: Selection) {
 		if (selection != null) {
 			let frameRect = this.selectionToFrameRect(selection);

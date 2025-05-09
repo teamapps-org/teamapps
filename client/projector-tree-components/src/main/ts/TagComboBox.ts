@@ -30,7 +30,15 @@ import {TrivialTagComboBox} from "./trivial-components/TrivialTagComboBox";
 import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
-import {AbstractField, DebounceMode, FieldEditingMode, parseHtml, ProjectorEvent, Template} from "projector-client-object-api";
+import {
+	AbstractField,
+	DebounceMode,
+	executeAfterAttached,
+	FieldEditingMode,
+	parseHtml,
+	ProjectorEvent,
+	Template
+} from "projector-client-object-api";
 import {buildObjectTree, NodeWithChildren} from "./util";
 
 export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRecord[]> implements DtoTagComboBoxEventSource, DtoTagComboBoxCommandHandler {
@@ -153,6 +161,7 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 		return values.map(value => isFreeTextEntry(value) ? value.asString : value.id);
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.trivialTagComboBox.focus(); // TODO
 	}

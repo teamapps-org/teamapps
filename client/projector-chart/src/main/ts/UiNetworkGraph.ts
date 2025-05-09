@@ -22,7 +22,7 @@ import * as d3 from "d3";
 import {ForceLink, Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
 import {
 	AbstractComponent,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	parseHtml,
 	ServerObjectChannel,
 	ProjectorEvent, Template
@@ -72,7 +72,7 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 		return this.$graph;
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public createGraph(gravity: any, images: any) {
 		this.linkForce = d3.forceLink(this.links)
 			.id(d => (d as DtoNetworkNode).id)

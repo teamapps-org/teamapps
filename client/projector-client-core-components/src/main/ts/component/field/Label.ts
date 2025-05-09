@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "projector-client-object-api";
+import {AbstractField, executeAfterAttached} from "projector-client-object-api";
 import {Component, FieldEditingMode, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {DtoLabel, DtoLabel_ClickEvent, DtoLabelCommandHandler, DtoLabelEventSource} from "../../generated";
 
@@ -75,7 +75,8 @@ export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEv
 		return this.$main;
 	}
 
-	focus() {
+	@executeAfterAttached()
+	focus(): void {
 		// do nothing
 	}
 

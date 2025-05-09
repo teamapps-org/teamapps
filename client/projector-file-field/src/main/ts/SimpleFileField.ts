@@ -20,7 +20,15 @@
 
 // @ts-ignore
 import ICON_UPLOAD from "@material-symbols/svg-400/outlined/upload.svg";
-import {AbstractField, arraysEqual, FieldEditingMode, generateUUID, parseHtml, ProjectorEvent} from "projector-client-object-api";
+import {
+	AbstractField,
+	arraysEqual,
+	executeAfterAttached,
+	FieldEditingMode,
+	generateUUID,
+	parseHtml,
+	ProjectorEvent
+} from "projector-client-object-api";
 import {
 	DtoFileItem,
 	DtoSimpleFileField,
@@ -148,6 +156,7 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 		return [];
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.$uploadButton.focus();
 	}

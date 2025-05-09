@@ -42,7 +42,7 @@ import {ToolButton} from "./ToolButton";
 import {
 	AbstractComponent,
 	Component,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	insertBefore,
 	noOpServerObjectChannel, outerWidthIncludingMargins,
 	parseHtml,
@@ -278,7 +278,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 		}
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	private calculateFieldWrapperSizes() {
 		this.headerFields.forEach(headerField => {
 			if (!headerField.minimizedWidth || !headerField.minExpandedWidth || !headerField.minExpandedWidthWithIcon) {
@@ -425,7 +425,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 		this.relayoutHeader();
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	private relayoutHeader() {
 		const computedHeadingStyle = getComputedStyle(this.$heading);
 		let availableHeaderContentWidth = this.$heading.offsetWidth - parseInt(computedHeadingStyle.paddingLeft) - parseInt(computedHeadingStyle.paddingRight);

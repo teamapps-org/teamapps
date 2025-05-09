@@ -20,7 +20,7 @@
 
 import {
 	AbstractComponent, Component,
-	executeWhenFirstDisplayed, insertAfter,
+	executeAfterAttached, insertAfter,
 	insertBefore,
 	parseHtml, removeClassesByFunction,
 	ServerObjectChannel, Template
@@ -72,7 +72,7 @@ export class BlogView extends AbstractComponent<DtoBlogView> {
 		return this.$component;
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	public addBlock(blockConfig: DtoBlock, before: boolean, otherBlockId?: string) {
 		let row;
 		if (this.rows.length == 0) {

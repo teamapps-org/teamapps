@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField, DebounceMode} from "projector-client-object-api";
+import {AbstractField, DebounceMode, executeAfterAttached} from "projector-client-object-api";
 import {
 	SpecialKey,
 	DtoTextField,
@@ -144,6 +144,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 		return this.$field.value;
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.$field.focus();
 	}

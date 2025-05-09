@@ -19,7 +19,15 @@
  */
 
 
-import {AbstractField, FieldEditingMode, FileUploader, humanReadableFileSize, parseHtml, ProjectorEvent} from "projector-client-object-api";
+import {
+	AbstractField,
+	executeAfterAttached,
+	FieldEditingMode,
+	FileUploader,
+	humanReadableFileSize,
+	parseHtml,
+	ProjectorEvent
+} from "projector-client-object-api";
 import {
 	DtoPictureChooser,
 	DtoPictureChooser_UploadCanceledEvent,
@@ -157,6 +165,7 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 		return null;
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.$uploadButton.focus();
 	}

@@ -36,7 +36,7 @@ import {
 	bind,
 	debouncedMethod,
 	DebounceMode,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	generateUUID,
 	parseHtml,
 	ProjectorEvent,
@@ -278,7 +278,7 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 		return zoomTransform.rescaleX(this.scaleX as any);
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	private redraw() {
 		if (this.getWidth() === 0 || this.getHeight() === 0) {
 			return;

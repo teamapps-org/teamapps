@@ -19,7 +19,15 @@
  */
 import {defaultListQueryFunctionFactory, isModifierKey, QueryFunction} from "./trivial-components/TrivialCore";
 import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "./trivial-components/TrivialUnitBox";
-import {AbstractField, BigDecimal, DebounceMode, deepEquals, FieldEditingMode, ProjectorEvent} from "projector-client-object-api";
+import {
+	AbstractField,
+	BigDecimal,
+	DebounceMode,
+	deepEquals,
+	executeAfterAttached,
+	FieldEditingMode,
+	ProjectorEvent
+} from "projector-client-object-api";
 import {
 	DtoCurrencyField,
 	DtoCurrencyField_TextInputEvent,
@@ -131,6 +139,7 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 		}
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.trivialUnitBox.focus();
 		selectElementContents(this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor"));

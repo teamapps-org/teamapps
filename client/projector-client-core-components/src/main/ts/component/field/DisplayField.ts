@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DtoDisplayField, DtoDisplayFieldCommandHandler, DtoDisplayFieldEventSource} from "../../generated";
-import {AbstractField} from "projector-client-object-api";
+import {AbstractField, executeAfterAttached} from "projector-client-object-api";
 import {FieldEditingMode, parseHtml} from "projector-client-object-api";
 import {escapeHtml, removeTags} from "../../util/Common";
 
@@ -73,6 +73,7 @@ export class DisplayField extends AbstractField<DtoDisplayField, string> impleme
 		}
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		// do nothing
 	}

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-export function executeWhenFirstDisplayed(onlyOnce?: boolean) {
+export function executeAfterAttached(onlyOnce?: boolean) {
 	return function<This, Args extends any[], Return>(
 		originalMethod: (this: This, ...args: Args) => Return,
 		context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>

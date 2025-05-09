@@ -25,7 +25,7 @@ import {
 	generateUUID, humanReadableFileSize,
 	parseHtml, prependChild, removeClassesByFunction,
 	ProjectorEvent,
-	Template
+	Template, executeAfterAttached
 } from "projector-client-object-api";
 import {
 	DtoFileField,
@@ -225,6 +225,7 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
+	@executeAfterAttached()
 	focus(): void {
 		this.$uploadButton.focus();
 	}

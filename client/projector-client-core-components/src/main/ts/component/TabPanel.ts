@@ -30,7 +30,7 @@ import {
 	AbstractComponent,
 	bind,
 	Component,
-	executeWhenFirstDisplayed,
+	executeAfterAttached,
 	insertAtIndex,
 	insertBefore,
 	noOpServerObjectChannel,
@@ -582,12 +582,12 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 		this.onResize();
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	public onResize(): void {
 		this.relayoutButtons();
 	}
 
-	@executeWhenFirstDisplayed(true)
+	@executeAfterAttached(true)
 	private relayoutButtons() {
 		if (this.$tabBar.classList.contains('hidden')) {
 			return;

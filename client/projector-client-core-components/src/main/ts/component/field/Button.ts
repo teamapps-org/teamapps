@@ -17,7 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {bind, Component, FieldEditingMode, DtoFieldMessage, parseHtml, ProjectorEvent, Template} from "projector-client-object-api";
+import {
+	bind,
+	Component,
+	FieldEditingMode,
+	DtoFieldMessage,
+	parseHtml,
+	ProjectorEvent,
+	Template,
+	executeAfterAttached
+} from "projector-client-object-api";
 import {DropDown} from "../../micro-components/DropDown";
 import {
 	DtoButton,
@@ -151,6 +160,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 		super.setFieldMessages(fieldMessageConfigs);
 	}
 
+	@executeAfterAttached()
 	focus(): void {
 		this.$main.focus();
 	}

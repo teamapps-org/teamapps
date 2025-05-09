@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField} from "projector-client-object-api";
+import {AbstractField, executeAfterAttached} from "projector-client-object-api";
 import {
 	DtoTemplateField,
 	DtoTemplateField_ClickEvent,
@@ -56,7 +56,8 @@ export class TemplateField extends AbstractField<DtoTemplateField, DtoClientReco
 		this.$main.innerHTML = (this.config.template as Template).render(this.getCommittedValue() && this.getCommittedValue().values);
 	}
 
-	focus() {
+	@executeAfterAttached()
+	focus(): void {
 		// do nothing
 	}
 

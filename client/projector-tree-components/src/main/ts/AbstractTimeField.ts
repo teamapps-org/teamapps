@@ -22,7 +22,7 @@ import {LocalDateTime} from "./LocalDateTime";
 import {
 	AbstractField,
 	DebounceMode,
-	DtoDateTimeFormatDescriptor, executeWhenFirstDisplayed,
+	DtoDateTimeFormatDescriptor, executeAfterAttached,
 	FieldEditingMode,
 	ProjectorEvent
 } from "projector-client-object-api";
@@ -99,7 +99,7 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
-	@executeWhenFirstDisplayed()
+	@executeAfterAttached()
 	focus(): void {
 		this.trivialComboBox.focus();
 	}
