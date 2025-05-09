@@ -675,8 +675,8 @@ public class SessionContext {
 
     public void setSessionMessages(Showable sessionExpiredShowable, Showable sessionErrorShowable, Showable sessionTerminatedShowable) {
         renderClientObject(sessionExpiredShowable);
-        renderClientObject(sessionExpiredShowable);
-        renderClientObject(sessionExpiredShowable);
+        renderClientObject(sessionErrorShowable);
+        renderClientObject(sessionTerminatedShowable);
     }
 
 
