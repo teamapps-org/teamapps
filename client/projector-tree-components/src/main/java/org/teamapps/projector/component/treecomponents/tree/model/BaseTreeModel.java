@@ -32,8 +32,4 @@ public interface BaseTreeModel<RECORD> extends TreeNodeInfoExtractor<RECORD> {
 		return Collections.emptyList();
 	}
 
-	default TreeNodeInfo<RECORD> getTreeNodeInfo(RECORD record) {
-		return null;
-	}
-
 }

@@ -181,8 +181,8 @@ export class TrivialTree<E> implements TrivialComponent{
         this.treeBox.setSelectedEntryById(nodeId, reveal);
     }
 
-    setExpandOnSelection(expandOnSelection: boolean) {
-        this.treeBox.setExpandOnSelection(expandOnSelection);
+    setToggleExpansionOnClick(expandOnSelection: boolean) {
+        this.treeBox.setToggleExpansionOnClick(expandOnSelection);
     }
 
     setEnforceSingleExpandedPath(enforceSingleExpandedPath: boolean) {

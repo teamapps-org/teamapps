@@ -61,7 +61,7 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 	private int indentation = 15;
 	private boolean expandAnimationEnabled = true;
 	private boolean expandersVisible = true;
-	private boolean expandOnSelection = false;
+	private boolean toggleExpansionOnClick = false;
 	private boolean enforceSingleExpandedPath = false;
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 
@@ -176,7 +176,7 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 
 		uiTree.setExpandersVisible(expandersVisible);
 		uiTree.setExpandAnimationEnabled(expandAnimationEnabled);
-		uiTree.setExpandOnSelection(expandOnSelection);
+		uiTree.setToggleExpansionOnClick(toggleExpansionOnClick);
 		uiTree.setEnforceSingleExpandedPath(enforceSingleExpandedPath);
 		uiTree.setIndentation(indentation);
 		return uiTree;
@@ -260,13 +260,13 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 		clientObjectChannel.setExpandersVisible(expandersVisible);
 	}
 
-	public boolean isExpandOnSelection() {
-		return expandOnSelection;
+	public boolean isToggleExpansionOnClick() {
+		return toggleExpansionOnClick;
 	}
 
-	public void setExpandOnSelection(boolean expandOnSelection) {
-		this.expandOnSelection = expandOnSelection;
-		clientObjectChannel.setExpandOnSelection(expandOnSelection);
+	public void setToggleExpansionOnClick(boolean toggleExpansionOnClick) {
+		this.toggleExpansionOnClick = toggleExpansionOnClick;
+		clientObjectChannel.setToggleExpansionOnClick(toggleExpansionOnClick);
 	}
 
 	public boolean isEnforceSingleExpandedPath() {

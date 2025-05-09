@@ -177,7 +177,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		uiTreeRecord.setDropDownTemplate(dropdownTemplate != null ? dropdownTemplate : null);
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
-		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
+		TreeNodeInfo<RECORD> treeNodeInfo = model.getTreeNodeInfo(record);
 		if (treeNodeInfo != null) {
 			uiTreeRecord.setExpanded(treeNodeInfo.isExpanded());
 			uiTreeRecord.setLazyChildren(treeNodeInfo.isLazyChildren());

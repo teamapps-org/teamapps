@@ -54,7 +54,7 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 			lazyChildrenQueryFunction: async (node) => await this.soc.sendQuery("lazyLoadChildren", node?.id),
 			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			showExpanders: config.expandersVisible,
-			expandOnSelection: config.expandOnSelection,
+			toggleExpansionOnClick: config.toggleExpansionOnClick,
 			enforceSingleExpandedPath: config.enforceSingleExpandedPath,
 			idFunction: entry => entry && entry.id,
 			indentation: config.indentation,
@@ -92,8 +92,8 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 	setExpandAnimationEnabled(expandAnimationEnabled: boolean) {
 		this.trivialTree.setAnimationDuration(expandAnimationEnabled ? 120 : 0);
 	}
-	setExpandOnSelection(expandOnSelection: boolean) {
-		this.trivialTree.setExpandOnSelection(expandOnSelection);
+	setToggleExpansionOnClick(expandOnSelection: boolean) {
+		this.trivialTree.setToggleExpansionOnClick(expandOnSelection);
 	}
 	setEnforceSingleExpandedPath(enforceSingleExpandedPath: boolean) {
 		this.trivialTree.setEnforceSingleExpandedPath(enforceSingleExpandedPath);

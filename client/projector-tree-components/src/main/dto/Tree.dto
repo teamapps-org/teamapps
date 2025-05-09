@@ -9,7 +9,7 @@ class DtoTree extends DtoComponent {
 
 	mutable boolean expandersVisible;
 	mutable boolean expandAnimationEnabled;
-	mutable boolean expandOnSelection;
+	mutable boolean toggleExpansionOnClick;
 	mutable boolean enforceSingleExpandedPath;
 	mutable int indentation;
 
