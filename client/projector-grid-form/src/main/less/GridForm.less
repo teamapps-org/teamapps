@@ -94,7 +94,7 @@
     .body {
       display: grid;
 
-      .field-wrapper:has(.invisible-component) {
+      .field-wrapper:has(> .invisible-component) {
         display: none;
       }
     }
