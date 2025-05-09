@@ -49,7 +49,7 @@ public class BlogView extends AbstractComponent implements DtoBlogViewEventHandl
 	}
 
 	public void removeBlock(AbstractBlock block) {
-		blocks.add(block);
+		blocks.remove(block);
 		clientObjectChannel.removeBlock(block.getClientId());
 	}
 
