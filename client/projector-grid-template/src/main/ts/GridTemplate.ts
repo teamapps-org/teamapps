@@ -259,7 +259,7 @@ export function createImageSizingCssObject(imageSizing: DtoImageSizing): CssProp
 			backgroundSize = "cover";
 		}
 		return {
-			"backgroundSize": backgroundSize
+			"background-size": backgroundSize
 		}
 	}
 }
