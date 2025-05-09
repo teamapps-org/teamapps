@@ -53,7 +53,7 @@ import {
 	ProjectorEvent,
 	manipulateWithoutTransitions, arraysEqual, closestAncestor, Template
 } from "projector-client-object-api";
-import {ContextMenu, DropDown} from "projector-client-core-components";
+import {ContextMenu, DropDown, escapeHtml} from "projector-client-core-components";
 
 interface Column extends Slick.Column<any> {
 	id: string;
@@ -534,7 +534,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			field: columnConfig.propertyName,
 			uiField: uiField,
 			name: `<div class="column-header-icon img img-16 ${columnConfig.icon == null ? "hidden" : ""}" style="background-image: url('${columnConfig.icon}')"></div>
-<div class="column-header-title">${columnConfig.title}</div>`,
+<div class="column-header-title">${escapeHtml(columnConfig.title)}</div>`,
 			width: columnConfig.defaultWidth || ((columnConfig.minWidth + columnConfig.maxWidth) / 2) || undefined,
 			minWidth: columnConfig.minWidth || 30,
 			maxWidth: columnConfig.maxWidth || undefined,
