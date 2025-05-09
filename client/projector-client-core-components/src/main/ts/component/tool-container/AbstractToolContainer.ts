@@ -22,10 +22,7 @@ import {AbstractComponent, parseHtml, ServerObjectChannel} from "projector-clien
 import {DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
 
 
-interface Button {
-	$buttonWrapper: HTMLElement;
-	$button: HTMLElement;
-}
+const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
 
 export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> extends AbstractComponent<C> {
 
@@ -82,6 +79,12 @@ export abstract class AbstractToolContainer<C extends DtoAbstractToolContainer> 
 				jumpDirection = (hasTextCellElementOverflow || $button.offsetHeight > maxHeight || $button.offsetWidth > width || childOverflow) ? 1 : -1;
 				width = width + (jumpSize * jumpDirection);
 				$button.style.width = width + "px";
+
+				if (isFirefox) {
+					// for some reason, firefox does not reflow here, even when calling $button.offsetHeight. So we need to do it the ugly way.
+					$buttonWrapper.remove();
+					this.$sizeTestingContainer.appendChild($buttonWrapper);
+				}
 			}
 			if ($button.offsetHeight > maxHeight || $button.offsetWidth > width) {
 				width += 2;
