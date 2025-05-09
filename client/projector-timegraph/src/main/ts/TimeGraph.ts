@@ -40,7 +40,7 @@ import {
 	generateUUID,
 	parseHtml,
 	ProjectorEvent,
-	ServerObjectChannel
+	ServerObjectChannel, throttledMethod
 } from "projector-client-object-api";
 import {
 	DtoGraph,
@@ -279,6 +279,7 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 	}
 
 	@executeAfterAttached()
+	@throttledMethod(200)
 	private redraw() {
 		if (this.getWidth() === 0 || this.getHeight() === 0) {
 			return;
