@@ -20,7 +20,6 @@
 package org.teamapps.projector.server.servlet;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,7 +36,6 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-@MultipartConfig(location="/tmp", fileSizeThreshold=1000_000, maxFileSize=-1L, maxRequestSize=-1L)
 public class UploadServlet extends HttpServlet {
 
 	private static final Logger LOGGER  = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

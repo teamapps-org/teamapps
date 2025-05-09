@@ -61,7 +61,7 @@ public class ProjectorServletContextListener implements ServletContextListener {
 
 		Dynamic uploadServletRegistration = context.addServlet("projector-upload-servlet", new UploadServlet(projectorServerCore.getConfig().getUploadDirectory(), projectorServerCore.getUploadManager()::addUploadedFile));
 		uploadServletRegistration.addMapping("/upload/*");
-		uploadServletRegistration.setMultipartConfig(new MultipartConfigElement(null, -1L, -1L, 1000_000));
+		uploadServletRegistration.setMultipartConfig(new MultipartConfigElement(System.getProperty("java.io.tmpdir"), -1L, -1L, 1000_000));
 
 		Dynamic leaveBeaconServletRegistration = context.addServlet("projector-leave", new LeaveBeaconServlet(projectorServerCore.getSessionManager()));
 		leaveBeaconServletRegistration.addMapping("/leave/*");
