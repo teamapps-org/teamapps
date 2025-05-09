@@ -20,12 +20,13 @@
 package org.teamapps.projector.i18n;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ResourceBundleTranslationProvider implements TranslationProvider {
 
 	private final String baseName;
 	private final ResourceBundle.Control resourceBundleControl;
-	private final Map<Locale, ResourceBundle> resourceBundleByLocale = new HashMap<>();
+	private final Map<Locale, ResourceBundle> resourceBundleByLocale = new ConcurrentHashMap<>();
 
 	public ResourceBundleTranslationProvider(String baseName) {
 		this(baseName, "properties");
