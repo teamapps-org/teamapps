@@ -508,7 +508,11 @@ public class SessionContext {
                             skipAutoUpdateNavigationHistoryStateOnce = false;
                             return ((R) resultHolder[0]);
                         } catch (Throwable t) {
-                            LOGGER.error("Exception while executing within session context", t);
+                            try {
+                                LOGGER.error("Exception while executing within session context", t);
+                            } catch (Throwable t2) {
+                                LOGGER.error("Exception while executing within session context. WAS NOT ABLE TO LOG THE EXCEPTION of type {}!", t.getClass());
+                            }
                             this.destroy(SessionClosingReason.SERVER_SIDE_ERROR);
                             throw t;
                         } finally {
