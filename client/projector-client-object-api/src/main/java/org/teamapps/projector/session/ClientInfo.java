@@ -59,8 +59,8 @@ public class ClientInfo {
 	}
 
 	public boolean isMobileDevice() {
-		int screenResolution = Math.max(getScreenWidth(), getScreenHeight());
-		if (screenResolution < 700) {
+		int minResolution = Math.min(getScreenWidth(), getScreenHeight());
+		if (minResolution < 470) {
 			return true;
 		}
 		return userAgent != null && userAgent.toLowerCase().contains(" mobile");
