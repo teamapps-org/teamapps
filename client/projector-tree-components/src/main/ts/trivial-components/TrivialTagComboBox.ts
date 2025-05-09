@@ -21,7 +21,8 @@ import {
 	DEFAULT_TEMPLATES,
 	EditingMode,
 	escapeSpecialRegexCharacter,
-	generateUUID, isModifierKey,
+	generateUUID,
+	isModifierKey,
 	RenderingFunction,
 	setTimeoutOrDoImmediately,
 	TrivialComponent,
@@ -30,7 +31,14 @@ import {
 import {Instance as Popper} from '@popperjs/core';
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
-import {elementIndex, insertAfter, insertAtIndex, insertBefore, parseHtml, ProjectorEvent} from "projector-client-object-api";
+import {
+	elementIndex,
+	insertAfter,
+	insertAtIndex,
+	insertBefore,
+	parseHtml,
+	ProjectorEvent
+} from "projector-client-object-api";
 import {selectElementContents} from "../util";
 
 export interface TrivialTagComboBoxConfig<E> {
@@ -161,8 +169,8 @@ export interface TrivialTagComboBoxConfig<E> {
 	 */
 	placeholderText?: string,
 
-	dropDownMinWidth? : number,
-	dropDownMaxHeight? : number,
+	dropDownMinWidth?: number,
+	dropDownMaxHeight?: number,
 
 	/**
 	 * The clear button is a the small 'x' at the right of the entry display that can be clicked to clear the selection.
@@ -385,17 +393,14 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					this.focus();
 				}
 				this.closeDropDown();
-			} else {
-				this.setTagToBeRemoved(null);
-				if (!this.config.showDropDownOnResultsOnly) {
-					this.openDropDown();
-				}
-
-				// We need the new editor value (after the keydown event). Therefore setTimeout().
-				setTimeout(() => this.query(this.config.preselectFirstQueryResult && this.$editor.textContent ? 1 : 0))
 			}
 		});
-		this.$editor.addEventListener("keyup", (e) => {
+		this.$editor.addEventListener("input", e => {
+			this.setTagToBeRemoved(null);
+			if (!this.config.showDropDownOnResultsOnly) {
+				this.openDropDown();
+			}
+
 			function splitStringBySeparatorChars(s: string, separatorChars: string[]) {
 				return s.split(new RegExp("[" + escapeSpecialRegexCharacter(separatorChars.join()) + "]"));
 			}
@@ -417,7 +422,9 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					this.closeDropDown();
 				}
 			}
-		});
+
+			this.query(this.config.preselectFirstQueryResult && this.$editor.textContent ? 1 : 0);
+		})
 		this.$editor.addEventListener("mousedown", () => {
 			if (this.editingMode === "editable") {
 				if (!this.config.showDropDownOnResultsOnly) {
@@ -751,7 +758,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 
 	public setShowClearButton(showClearButton: boolean) {
 		this.config.showClearButton = showClearButton;
-		this.$clearButton.classList.toggle('hidden',  !this.config.showClearButton || this.selectedEntries.length > 0);
+		this.$clearButton.classList.toggle('hidden', !this.config.showClearButton || this.selectedEntries.length > 0);
 	}
 
 	public setShowTrigger(showTrigger: boolean) {

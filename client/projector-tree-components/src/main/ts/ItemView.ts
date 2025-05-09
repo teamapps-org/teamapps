@@ -23,8 +23,9 @@ import {
 	DtoItemView_ItemClickedEvent,
 	DtoItemViewCommandHandler,
 	DtoItemViewEventSource,
-	ItemBackgroundMode,
-	DtoItemViewItemGroup, DtoItemViewServerObjectChannel
+	DtoItemViewItemGroup,
+	DtoItemViewServerObjectChannel,
+	ItemBackgroundMode
 } from "./generated";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {DEFAULT_TEMPLATES} from "./trivial-components/TrivialCore";
@@ -135,15 +136,19 @@ export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemV
 	setGroupHeaderTemplate(groupHeaderTemplate: unknown) {
 		this.config.groupHeaderTemplate = groupHeaderTemplate;
 	}
+
 	setHorizontalPadding(horizontalPadding: number) {
 		throw new Error("Method not implemented.");
 	}
+
 	setVerticalPadding(verticalPadding: number) {
 		throw new Error("Method not implemented.");
 	}
+
 	setGroupSpacing(groupSpacing: number) {
 		throw new Error("Method not implemented.");
 	}
+
 	setItemBackgroundMode(itemBackgroundMode: ItemBackgroundMode) {
 		throw new Error("Method not implemented.");
 	}

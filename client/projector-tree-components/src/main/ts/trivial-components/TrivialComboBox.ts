@@ -18,7 +18,8 @@
  * =========================LICENSE_END==================================
  */
 import {
-	EditingMode, isModifierKey,
+	EditingMode,
+	isModifierKey,
 	objectEquals,
 	RenderingFunction,
 	setTimeoutOrDoImmediately,
@@ -257,18 +258,18 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					this.$editor.value = "";
 				}
 				this.closeDropDown();
-			} else {
-				if (!this.isEditorVisible) {
-					this.showEditor();
-					this.$editor.select();
-				}
-				if (!this.config.showDropDownOnResultsOnly) {
-					this.openDropDown();
-				}
-
-				// We need the new editor value (after the keydown event). Therefore setTimeout().
-				setTimeout(() => this.query(this.getEditorValueLeftOfSelection(), this.config.preselectFirstQueryResult && this.$editor.value ? 1 : 0))
 			}
+		});
+		this.$editor.addEventListener("input", e => {
+			if (!this.isEditorVisible) {
+				this.showEditor();
+				this.$editor.select();
+			}
+			if (!this.config.showDropDownOnResultsOnly) {
+				this.openDropDown();
+			}
+
+			this.query(this.getEditorValueLeftOfSelection(), this.config.preselectFirstQueryResult && this.$editor.value ? 1 : 0);
 		});
 
 		[this.$comboBox, this.$dropDown].forEach(element => {
