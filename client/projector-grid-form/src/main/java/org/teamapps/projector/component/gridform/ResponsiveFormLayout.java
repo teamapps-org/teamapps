@@ -19,6 +19,7 @@
  */
 package org.teamapps.projector.component.gridform;
 
+import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.core.field.Label;
@@ -44,6 +45,26 @@ public class ResponsiveFormLayout {
 		this.responsiveForm = responsiveForm;
 		this.minWidth = minWidth;
 		this.configurationTemplate = configurationTemplate;
+	}
+
+	/**
+	 * Adds a field container to this form. The field container may contain multiple fields itself.
+	 * Those fields will be treated as part of this form (validation, injection, extraction).
+	 */
+	public void addFieldContainer(Icon icon, String label, FieldContainer fieldContainer) {
+		LabelAndField labelAndField = addLabelAndComponent(icon, label, fieldContainer.getMainComponent());
+		labelAndField.field.setHorizontalAlignment(JustifyContent.STRETCH);
+		fieldContainer.getFields().forEach(responsiveForm::addLayoutField);
+	}
+
+	/**
+	 * Adds a field container to this form. The field container may contain multiple fields itself.
+	 * Those fields will be treated as part of this form (validation, injection, extraction).
+	 */
+	public void addFieldContainer(FieldContainer fieldContainer) {
+		ResponsiveFormField responsiveFormField = addComponent(fieldContainer.getMainComponent(), 0, 2, true);
+		responsiveFormField.setHorizontalAlignment(JustifyContent.STRETCH);
+		fieldContainer.getFields().forEach(responsiveForm::addLayoutField);
 	}
 
 	public ResponsiveFormField addField(int row, int column, String propertyName, AbstractField field) {

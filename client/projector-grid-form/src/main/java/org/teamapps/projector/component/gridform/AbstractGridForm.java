@@ -37,6 +37,7 @@ import org.teamapps.projector.event.ProjectorEvent;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
@@ -158,10 +159,9 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 		return new ArrayList<>(logicalForm.getFields().keySet());
 	}
 
-	public List<AbstractField<?>> getFields() {
-		return new ArrayList<>(logicalForm.getFields().values());
+	public Map<String, AbstractField<?>> getFields() {
+		return Map.copyOf(getFields());
 	}
-
 
 	public <V> AbstractField<V> getFieldByPropertyName(String propertyName) {
 		return (AbstractField<V>) logicalForm.getFields().get(propertyName);
