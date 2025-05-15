@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,30 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.uisession.statistics;
+package org.teamapps.ux.component.script;
 
-public class TimestampedLong {
+import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.UiScript;
+import org.teamapps.ux.component.AbstractComponent;
 
-	private final long timestamp;
-	private final long value;
+import java.util.List;
 
-	public TimestampedLong(long timestamp, long value) {
-		this.timestamp = timestamp;
-		this.value = value;
+public class Script extends AbstractComponent {
+
+	private final String script;
+
+	public Script(String script) {
+		this.script = script;
 	}
 
-	public long getTimestamp() {
-		return timestamp;
+	@Override
+	public UiComponent createUiComponent() {
+		UiScript uiScript = new UiScript(script);
+		mapAbstractUiComponentProperties(uiScript);
+		return uiScript;
 	}
 
-	public long getValue() {
-		return value;
+	public void callFunction(String name, Object... parameters) {
+		queueCommandIfRendered(() -> new UiScript.CallFunctionCommand(getId(), name, List.of(parameters)));
 	}
 }

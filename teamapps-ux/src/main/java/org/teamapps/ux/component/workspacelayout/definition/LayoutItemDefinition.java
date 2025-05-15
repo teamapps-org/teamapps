@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,10 +55,15 @@ public abstract class LayoutItemDefinition {
 		return getAllLayoutPositions().contains(layoutPosition);
 	}
 
-	public List<ViewDefinition> getAllViews(boolean visible) {
+	public abstract List<ViewDefinition> getEffectivelyVisibleViews();
+
+	public List<ViewDefinition> getEffectivelyInvisibleViews() {
+		Set<String> visibleViewNames = getEffectivelyVisibleViews().stream()
+				.map(ViewDefinition::getId)
+				.collect(Collectors.toSet());
 		return getAllViews().stream()
-				.filter(viewDefinition -> viewDefinition.isVisible())
-				.collect(Collectors.toList());
+				.filter(view -> !visibleViewNames.contains(view.getId()))
+				.toList();
 	}
 
 	public abstract List<LayoutItemDefinition> getSelfAndAncestors();

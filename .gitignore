@@ -102,6 +102,7 @@ Temporary Items
 server-data*/
 tmp/
 */LICENSE.txt
+/.vscode
 
 
 ### JavaScript stuff

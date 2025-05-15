@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.teamapps.util.threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -57,15 +58,15 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 		}, 1, 1, TimeUnit.SECONDS);
 	}
 
-	public CloseableExecutor createExecutor() {
+	public ExecutorService createExecutor() {
 		return createExecutor("unnamed");
 	}
 
-	public CloseableExecutor createExecutor(String name) {
+	public ExecutorService createExecutor(String name) {
 		return new SequentialExecutor(name);
 	}
 
-	public class SequentialExecutor implements CloseableExecutor {
+	public class SequentialExecutor extends AbstractExecutorService {
 		private final String name;
 		private CompletableFuture<?> lastFuture = CompletableFuture.completedFuture(null);
 		private final AtomicInteger queueSize = new AtomicInteger(0);
@@ -101,8 +102,29 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 		}
 
 		@Override
-		public void close() {
+		public void shutdown() {
 			// nothing to do here
+		}
+
+		@Override
+		public List<Runnable> shutdownNow() {
+			return List.of();
+		}
+
+		@Override
+		public boolean isShutdown() {
+			return false;
+		}
+
+		@Override
+		public boolean isTerminated() {
+			return false;
+		}
+
+		@Override
+		public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+			Thread.sleep(10);
+			return false;
 		}
 	}
 

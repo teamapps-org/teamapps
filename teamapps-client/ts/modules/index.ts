@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,6 +138,8 @@ export {UiTreeGraph} from "./UiTreeGraph";
 
 export {UiTestHarness} from "./UiTestHarness";
 export {draggable} from "./util/draggable";
+
+export {UiScript} from "./UiScript";
 
 // export {typescriptDeclarationFixConstant as AbstractUiChartConfig} from "./../generated/AbstractUiChartConfig";
 

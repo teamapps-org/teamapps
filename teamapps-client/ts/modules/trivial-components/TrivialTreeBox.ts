@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ export interface TrivialTreeBoxConfig<E> {
 	/**
 	 * Whether or not to expand a node when it is selected.
 	 */
-	expandOnSelection?: boolean,
+	toggleExpansionOnClick?: boolean,
 
 	/**
 	 * Special mode that allows only one path to be expanded.
@@ -141,6 +141,11 @@ export interface TrivialTreeBoxConfig<E> {
 
 	selectOnHover?: boolean,
 
+}
+
+export type ContextMenuEvent<E> = {
+	event: MouseEvent,
+	entry: E
 }
 
 class EntryWrapper<E> {
@@ -214,6 +219,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	private config: TrivialTreeBoxConfig<E>;
 
 	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
+	public readonly onContextMenu = new TeamAppsEvent<ContextMenuEvent<E>>();
 	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<{node: E, expanded: boolean}>();
 
 	private $componentWrapper: HTMLElement;
@@ -242,7 +248,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			},
 			animationDuration: 70,
 			showExpanders: false,
-			expandOnSelection: false, // open expandable nodes when they are selected
+			toggleExpansionOnClick: false, // open expandable nodes when they are selected
 			enforceSingleExpandedPath: false, // only one path is expanded at any time
 			indentation: null,
 			selectableDecider: () => true,
@@ -391,11 +397,17 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			let entryWrapper = (element as any).trivialEntryWrapper as EntryWrapper<E>;
 			if (this.config.selectableDecider(entryWrapper.entry)) {
 				this.setSelectedEntry(entryWrapper, null, true);
-				if (entryWrapper && this.config.expandOnSelection) {
-					this.setNodeExpanded(entryWrapper, true, true);
-				}
+			}
+			if (entryWrapper && this.config.toggleExpansionOnClick) {
+				this.setNodeExpanded(entryWrapper, !entryWrapper.expanded, true);
 			}
 		});
+		addDelegatedEventListener(this.$tree, ".tr-tree-entry-and-expander-wrapper", "contextmenu", (element, ev) => {
+			let entryWrapper = (element as any).trivialEntryWrapper as EntryWrapper<E>;
+			this.onContextMenu.fire({event: ev, entry: entryWrapper.entry});
+			ev.preventDefault();
+		});
+
 		addDelegatedEventListener(this.$tree, ".tr-tree-entry-and-expander-wrapper", "mouseenter", (element, ev) => {
 			let entryWrapper = (element as any).trivialEntryWrapper as EntryWrapper<E>;
 			if (this.config.selectOnHover && this.config.selectableDecider(entryWrapper.entry)) {
@@ -495,9 +507,6 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	public setSelectedEntryById(nodeId: number | string, fireEvents = false) {
 		let entry = this.findEntryById(nodeId);
 		this.setSelectedEntry(entry, null, fireEvents);
-		if (entry && this.config.expandOnSelection) {
-			this.setNodeExpanded(entry, true, true);
-		}
 	}
 
 	private minimallyScrollTo($entryWrapper: HTMLElement) {

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -35,12 +36,12 @@ public class SequentialExecutionPerformanceTest {
 	@Test
 	@Ignore
 	public void testA() throws Exception {
-		SequentialExecutorFactory factory = name -> CloseableExecutor.fromExecutorService(Executors.newSingleThreadExecutor());
+		SequentialExecutorFactory factory = name -> Executors.newSingleThreadExecutor();
 
 		int numberOfThreads = 10_000;
 
 		// will fail on OSX!
-		List<CloseableExecutor> executors = IntStream.range(0, numberOfThreads)
+		List<ExecutorService> executors = IntStream.range(0, numberOfThreads)
 				.mapToObj(i -> factory.createExecutor("" + i))
 				.collect(Collectors.toList());
 

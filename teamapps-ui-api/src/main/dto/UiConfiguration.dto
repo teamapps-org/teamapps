@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@ class UiConfiguration {
     String locale = "en"; // general locale of the UI
 	String themeClassName = null; // null = default theme, others: "theme-modern", ...
 	boolean optimizedForTouch = false; // @MB #mobile This needs to be set to true if you want touch-friendly ui. I separated this from the naive "inside UiMobileLayout" approach to be able to support touch interaction in normal-style layout (UiSplitPanes etc...)
+	ClosedSessionHandlingType closedSessionHandling;
 }
 
-
+enum ClosedSessionHandlingType {
+    MESSAGE_WINDOW,
+    REFRESH_PAGE
+}

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,9 @@ import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFacto
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.webcontroller.WebController;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,13 +44,13 @@ public class TeamAppsJettyEmbeddedServer {
 	public static final int DEFAULT_PORT = 8080;
 
 	private final TeamAppsCore teamAppsCore;
-	private final File webAppDirectory;
+	private final Path webAppDirectory;
 	private final List<ServletContextListener> customServletContextListeners = new ArrayList<>();
 
 	private final Server server;
 	private final WebAppContext webapp;
 
-	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port, boolean globalGzipCompression) {
+	public TeamAppsJettyEmbeddedServer(WebController webController, Path webAppDirectory, TeamAppsConfiguration config, int port, boolean globalGzipCompression) {
 		teamAppsCore = new TeamAppsCore(config, new CompletableFutureChainSequentialExecutorFactory(config.getMaxNumberOfSessionExecutorThreads()), webController);
 		this.webAppDirectory = webAppDirectory;
 
@@ -58,10 +58,10 @@ public class TeamAppsJettyEmbeddedServer {
 		webapp = new WebAppContext();
 		webapp.setClassLoader(TeamAppsJettyEmbeddedServer.class.getClassLoader());
 		webapp.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
-		webapp.getServerClassMatcher().exclude("org.eclipse.jetty.");
+		webapp.getHiddenClassMatcher().exclude("org.eclipse.jetty.");
 		webapp.setContextPath("/");
 		webapp.addEventListener(new TeamAppsServletContextListener(teamAppsCore));
-		webapp.setBaseResourceAsPath(webAppDirectory.getAbsoluteFile().toPath());
+		webapp.setBaseResourceAsPath(webAppDirectory.toAbsolutePath());
 		webapp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
 		webapp.setInitParameter("org.eclipse.jetty.servlet.Default.precompressed", "true");
 		// The following will not actually set the secure flag on the cookie if the session is started without encryption.
@@ -98,7 +98,7 @@ public class TeamAppsJettyEmbeddedServer {
 	}
 
 	public void start() throws Exception {
-		ClientCodeExtractor.initializeWebserverDirectory(webAppDirectory);
+		ClientCodeExtractor.initializeWebserverDirectory(webAppDirectory.toFile());
 		customServletContextListeners.forEach(webapp::addEventListener);
 		server.start();
 		server.join();
@@ -115,7 +115,7 @@ public class TeamAppsJettyEmbeddedServer {
 	public static class Builder {
 
 		private final WebController webController;
-		private File webAppDirectory;
+		private Path webAppDirectory;
 		private TeamAppsConfiguration config = new TeamAppsConfiguration();
 		private int port = DEFAULT_PORT;
 		private boolean globalGzipCompression;
@@ -124,7 +124,7 @@ public class TeamAppsJettyEmbeddedServer {
 			this.webController = webController;
 		}
 
-		public Builder setWebAppDirectory(File webAppDirectory) {
+		public Builder setWebAppDirectory(Path webAppDirectory) {
 			this.webAppDirectory = webAppDirectory;
 			return this;
 		}
@@ -146,8 +146,10 @@ public class TeamAppsJettyEmbeddedServer {
 
 		public TeamAppsJettyEmbeddedServer build() throws IOException {
 			if (webAppDirectory == null) {
-				webAppDirectory = Files.createTempDirectory("teamapps").toFile();
+				webAppDirectory = Files.createTempDirectory("teamapps");
 			}
+			webAppDirectory = webAppDirectory.toRealPath();
+
 			return new TeamAppsJettyEmbeddedServer(webController, webAppDirectory, config, port, globalGzipCompression);
 		}
 	}

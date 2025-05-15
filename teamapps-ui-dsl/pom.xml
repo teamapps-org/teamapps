@@ -3,7 +3,7 @@
     <parent>
         <artifactId>teamapps</artifactId>
         <groupId>org.teamapps</groupId>
-        <version>0.9.188-SNAPSHOT</version>
+        <version>0.9.199-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,7 +34,7 @@
     </developers>
 
     <properties>
-        <antlr.version>4.12.0</antlr.version>
+        <antlr.version>4.13.1</antlr.version>
     </properties>
 
     <dependencies>

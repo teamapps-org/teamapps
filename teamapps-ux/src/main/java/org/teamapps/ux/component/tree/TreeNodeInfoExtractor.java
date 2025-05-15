@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,18 @@
  */
 package org.teamapps.ux.component.tree;
 
+import org.teamapps.ux.component.node.TreeNode;
+
 public interface TreeNodeInfoExtractor<RECORD> {
 
-	TreeNodeInfo getTreeNodeInfo(RECORD record);
+	TreeNodeInfo DEFAULT_TREE_NODE_INFO = new TreeNodeInfoImpl<>(null, false, true, false);
+
+	default TreeNodeInfo getTreeNodeInfo(RECORD record) {
+		if (record instanceof TreeNode) {
+			return (TreeNode) record;
+		} else {
+			return DEFAULT_TREE_NODE_INFO;
+		}
+	};
 
 }

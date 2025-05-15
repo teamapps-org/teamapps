@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,13 @@
 package org.teamapps.ux.i18n;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ResourceBundleTranslationProvider implements TranslationProvider {
 
 	private final String baseName;
 	private final ResourceBundle.Control resourceBundleControl;
-	private final Map<Locale, ResourceBundle> resourceBundleByLocale = new HashMap<>();
+	private final Map<Locale, ResourceBundle> resourceBundleByLocale = new ConcurrentHashMap<>();
 
 	public ResourceBundleTranslationProvider(String baseName) {
 		this(baseName, "properties");

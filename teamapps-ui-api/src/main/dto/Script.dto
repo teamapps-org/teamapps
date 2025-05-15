@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.util.threading;
+class UiScript extends UiComponent {
+    required String script;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-
-public interface CloseableExecutor extends Executor {
-
-	void close();
-
-	static CloseableExecutor fromExecutorService(ExecutorService executorService) {
-		return new CloseableExecutor() {
-			@Override
-			public void close() {
-				executorService.shutdown();
-			}
-
-			@Override
-			public void execute(Runnable command) {
-				executorService.execute(command);
-			}
-		};
-	}
-
+    command callFunction(String name, List<Object> parameters);
 }

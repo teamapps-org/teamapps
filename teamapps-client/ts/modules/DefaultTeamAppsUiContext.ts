@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,8 @@ import {UiWindow} from "./UiWindow";
 import {QueryFunctionAdder} from "../generated/QueryFunctionAdder";
 import {UiQuery} from "../generated/UiQuery";
 import {componentEventDescriptors, staticComponentEventDescriptors} from "../generated/ComponentEventDescriptors";
+import {ClosedSessionHandlingType} from "../generated/ClosedSessionHandlingType";
+import {UiRootPanel_CustomMessageEvent} from "../generated/UiRootPanelConfig";
 
 declare var __TEAMAPPS_VERSION__: string;
 
@@ -114,27 +116,31 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 						<h3>Caching problem!</h3>
 						<p>Your browser uses an old client version to connect to our server. Please <a onclick="location.reload()">refresh this page</a>. If this does not help, please clear your browser's cache.</p>
 					<div>`;
-				} else if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT) {
-					if (this.expiredMessageWindow != null) {
-						this.expiredMessageWindow.show(500);
+				} else if (this.config.closedSessionHandling == ClosedSessionHandlingType.MESSAGE_WINDOW) {
+					if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT) {
+						if (this.expiredMessageWindow != null) {
+							this.expiredMessageWindow.show(500);
+						} else {
+							UiRootPanel.createGenericErrorMessageWindow("Session Expired", "<p>Your session has expired.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+								false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+						}
+					} else if (reason == UiSessionClosingReason.TERMINATED_BY_APPLICATION) {
+						if (this.terminatedMessageWindow != null) {
+							this.terminatedMessageWindow.show(500);
+						} else {
+							UiRootPanel.createGenericErrorMessageWindow("Session Terminated", "<p>Your session has been terminated.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+								true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+						}
 					} else {
-						UiRootPanel.createGenericErrorMessageWindow("Session Expired", "<p>Your session has expired.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
-							false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
-					}
-				} else if (reason == UiSessionClosingReason.TERMINATED_BY_APPLICATION) {
-					if (this.terminatedMessageWindow != null) {
-						this.terminatedMessageWindow.show(500);
-					} else {
-						UiRootPanel.createGenericErrorMessageWindow("Session Terminated", "<p>Your session has been terminated.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
-							true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+						if (this.errorMessageWindow != null) {
+							this.errorMessageWindow.show(500);
+						} else {
+							UiRootPanel.createGenericErrorMessageWindow("Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+								true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+						}
 					}
 				} else {
-					if (this.errorMessageWindow != null) {
-						this.errorMessageWindow.show(500);
-					} else {
-						UiRootPanel.createGenericErrorMessageWindow("Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
-							true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
-					}
+					location.reload();
 				}
 			},
 			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand)
@@ -303,5 +309,14 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		this.expiredMessageWindow = expiredMessageWindow;
 		this.errorMessageWindow = errorMessageWindow;
 		this.terminatedMessageWindow = terminatedMessageWindow;
+	}
+
+	public sendCustomMessage(type: string, message: string) {
+		const event: UiRootPanel_CustomMessageEvent = {
+			_type: "UiRootPanel.customMessage",
+			type,
+			message: message
+		};
+		this.connection.sendEvent(event);
 	}
 }

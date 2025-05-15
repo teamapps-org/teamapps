@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,26 +23,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiWorkSpaceLayout;
-import org.teamapps.dto.UiWorkSpaceLayoutItem;
-import org.teamapps.dto.UiWorkSpaceLayoutView;
+import org.teamapps.commons.util.collections.ByKeyComparisonResult;
+import org.teamapps.commons.util.collections.CollectionUtil;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
-import org.teamapps.ux.component.progress.MultiProgressDisplay;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class WorkSpaceLayout extends AbstractComponent implements Component {
@@ -63,6 +57,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	private MultiProgressDisplay multiProgressDisplay = new DefaultMultiProgressDisplay();
 
 	private Map<String, WorkSpaceLayoutItem> rootItemsByWindowId = new HashMap<>();
+	private List<WorkSpaceLayoutView> cachedViews = List.of();
 
 	public WorkSpaceLayout(LayoutItemDefinition layoutDefinition) {
 		WorkSpaceLayoutItem rootItem = layoutDefinition.createHeavyWeightItem(this);
@@ -126,8 +121,11 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 		switch (event.getUiEventType()) {
 			case UI_WORK_SPACE_LAYOUT_LAYOUT_CHANGED: {
 				UiWorkSpaceLayout.LayoutChangedEvent layoutChangedEvent = (UiWorkSpaceLayout.LayoutChangedEvent) event;
+
 				this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, layoutChangedEvent.getLayoutsByWindowId());
 				printLayoutSyncTraceMessage(layoutChangedEvent.getLayoutsByWindowId());
+
+				evaluateLayoutChanges();
 				break;
 			}
 			case UI_WORK_SPACE_LAYOUT_VIEW_DRAGGED_TO_NEW_WINDOW: {
@@ -160,8 +158,8 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 							.filter(item -> item instanceof WorkSpaceLayoutViewGroup)
 							.map(item -> ((WorkSpaceLayoutViewGroup) item))
 							.findFirst().ifPresent(viewGroup -> {
-						windowRootItem.getAllViews().forEach(viewGroup::addView);
-					});
+								windowRootItem.getAllViews().forEach(viewGroup::addView);
+							});
 				}
 				this.onChildWindowClosed.fire(new ChildWindowClosedEventData(windowClosedEvent.getWindowId(), windowRootItem));
 				break;
@@ -170,10 +168,11 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 				UiWorkSpaceLayout.ViewSelectedEvent tabSelectedEvent = (UiWorkSpaceLayout.ViewSelectedEvent) event;
 				WorkSpaceLayoutViewGroup viewGroup = this.getViewGroupById(tabSelectedEvent.getViewGroupId());
 				if (viewGroup != null) {
-					viewGroup.handleViewSelectedByClient(tabSelectedEvent.getViewName());
 					WorkSpaceLayoutView view = getViewById(tabSelectedEvent.getViewName());
+					viewGroup.setSelectedViewSilently(view);
 					this.onViewSelected.fire(new ViewSelectedEventData(viewGroup, view));
 				}
+				evaluateLayoutChanges();
 				break;
 			}
 			case UI_WORK_SPACE_LAYOUT_VIEW_CLOSED: {
@@ -186,6 +185,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 					}
 					this.onViewClosed.fire(view);
 				}
+				evaluateLayoutChanges();
 				break;
 			}
 			case UI_WORK_SPACE_LAYOUT_VIEW_GROUP_PANEL_STATE_CHANGED: {
@@ -195,9 +195,27 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 					viewGroup.setPanelStateSilently(ViewGroupPanelState.valueOf(stateChangedEvent.getPanelState().name()));
 					this.onViewGroupPanelStateChanged.fire(viewGroup);
 				}
+				evaluateLayoutChanges();
 				break;
 			}
 		}
+	}
+
+	private void evaluateLayoutChanges() {
+		List<WorkSpaceLayoutView> allOldViews = cachedViews;
+
+		LayoutItemDefinition newLayoutDefinition = extractLayoutDefinition();
+
+		cachedViews = getAllViews();
+
+		newLayoutDefinition.getEffectivelyVisibleViews()
+				.forEach(viewDefinition -> getViewById(viewDefinition.getId()).setEffectivelyVisible(true));
+		newLayoutDefinition.getEffectivelyInvisibleViews()
+				.forEach(viewDefinition -> getViewById(viewDefinition.getId()).setEffectivelyVisible(false));
+		ByKeyComparisonResult<WorkSpaceLayoutView, WorkSpaceLayoutView, String> allViewsComparisonResult = CollectionUtil.compareByKey(allOldViews, cachedViews, WorkSpaceLayoutView::getId, WorkSpaceLayoutView::getId);
+		allViewsComparisonResult.forEachRemoved(view -> {
+			view.setEffectivelyVisible(false);
+		});
 	}
 
 	public WorkSpaceLayoutViewGroup getViewGroupById(String itemId) {
@@ -230,6 +248,12 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private List<WorkSpaceLayoutView> getAllViews() {
+		return rootItemsByWindowId.values().stream()
+				.flatMap(rootItem -> rootItem.getAllViews().stream())
+				.toList();
 	}
 
 	private WorkSpaceLayoutView getViewById(String viewName) {
@@ -265,18 +289,22 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	// ============== Internal API ======================
 
 	/*package-private*/ void handleViewAddedToGroup(WorkSpaceLayoutViewGroup workSpaceLayoutViewGroup, WorkSpaceLayoutView view, boolean selected) {
+		evaluateLayoutChanges();
 		queueCommandIfRendered(() -> new UiWorkSpaceLayout.AddViewAsTabCommand(getId(), view.createUiView(), workSpaceLayoutViewGroup.getId(), selected));
 	}
 
 	/*package-private*/ void handleViewGroupPanelStateChangedViaApi(WorkSpaceLayoutViewGroup viewGroup, ViewGroupPanelState panelState) {
+		evaluateLayoutChanges();
 		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetViewGroupPanelStateCommand(getId(), viewGroup.getId(), panelState.toUiViewGroupPanelState()));
 	}
 
 	/*package-private*/ void handleViewSelectedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView workSpaceLayoutView) {
+		evaluateLayoutChanges();
 		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SelectViewCommand(getId(), workSpaceLayoutView.getId()));
 	}
 
 	/*package-private*/ void handleViewRemovedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView view) {
+		evaluateLayoutChanges();
 		if (viewGroup.getViews().isEmpty() && !viewGroup.isPersistent()) {
 			removeEmptyViewGroupFromItemTree(viewGroup);
 		}
@@ -288,6 +316,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	/*package-private*/ void handleSplitPaneSizingChanged(SplitSizePolicy sizePolicy, float referenceChildSize) {
+		evaluateLayoutChanges();
 		this.updateClientSideLayout(Collections.emptyList());
 	}
 
@@ -341,6 +370,6 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {
-		   return multiProgressDisplay;
+		return multiProgressDisplay;
 	}
 }

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ class UiTree extends UiComponent {
 	boolean showExpanders = true;
 	boolean openOnSelection = false;
 	boolean enforceSingleExpandedPath = false;
+	boolean contextMenuEnabled;
 
 	int indentation = 15; // indentation in pixels per level
 
@@ -35,9 +36,12 @@ class UiTree extends UiComponent {
 	command bulkUpdate(List<Integer> nodesToBeRemoved, List<UiTreeRecord> nodesToBeAdded);
 	command setSelectedNode(Integer recordId); // null = none selected
 	command registerTemplate(String id, UiTemplate template);
+    command setContextMenuContent(int requestId, UiComponent* component);
+    command closeContextMenu(int requestId);
 
 	event textInput(String text);
 	event nodeSelected(int nodeId); // TODO boolean isRightMouseButton, boolean isDoubleClick
 	event nodeExpansionChanged(int nodeId, boolean expanded);
 	event requestTreeData(int parentNodeId);
+    event contextMenuRequested(int requestId, int recordId);
 }

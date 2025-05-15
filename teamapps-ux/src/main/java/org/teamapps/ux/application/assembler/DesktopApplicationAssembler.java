@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,7 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
 
     private static Logger LOGGER = LoggerFactory.getLogger(DesktopApplicationAssembler.class);
 
-    private ResponsiveApplicationToolbar responsiveApplicationToolbar;
-    private WorkSpaceLayout workSpaceLayout;
+	private final WorkSpaceLayout workSpaceLayout;
     private LayoutItemDefinition currentLayout;
 
     public DesktopApplicationAssembler() {
@@ -58,6 +57,7 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
 
         String tabTitle = view.getTabTitle() != null ? view.getTabTitle() : view.getPanel().getTitle();
         WorkSpaceLayoutView layoutView = new WorkSpaceLayoutView(workSpaceLayout, view.getPanel(), tabTitle, view.isClosable(), false);
+        layoutView.onEffectiveVisibilityChanged.addListener(effectivelyVisible -> view.onEffectiveVisibilityChanged().fire(effectivelyVisible));
         viewGroup.addView(layoutView);
 
         if (view.getCustomViewSize() != null) {
@@ -99,8 +99,7 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
 
     @Override
     public void setWorkSpaceToolbar(ResponsiveApplicationToolbar responsiveApplicationToolbar) {
-        this.responsiveApplicationToolbar = responsiveApplicationToolbar;
-        workSpaceLayout.setToolbar((Toolbar) responsiveApplicationToolbar.getToolbar());
+		workSpaceLayout.setToolbar((Toolbar) responsiveApplicationToolbar.getToolbar());
     }
 
     @Override
@@ -228,6 +227,11 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
         }
     }
 
+    @Override
+    public void handleViewSelect(View view) {
+        WorkSpaceLayoutView layoutView = workSpaceLayout.getViewByPanel(view.getPanel());
+        layoutView.select();
+    }
 
 
 }

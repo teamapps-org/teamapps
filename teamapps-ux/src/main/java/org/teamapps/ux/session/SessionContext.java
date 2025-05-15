@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.*;
+import org.teamapps.event.Disposable;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.uisession.statistics.UiSessionStats;
-import org.teamapps.util.threading.CloseableExecutor;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.EntranceAnimation;
@@ -63,6 +63,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,7 @@ public class SessionContext {
 	private static final String DEFAULT_BACKGROUND_NAME = "defaultBackground";
 	private static final String DEFAULT_BACKGROUND_URL = "/resources/backgrounds/default-bl.jpg";
 
-	private CloseableExecutor sessionExecutor;
+	private ExecutorService sessionExecutor;
 
 	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
 
@@ -90,6 +91,7 @@ public class SessionContext {
 	 */
 	public final ExecutionDecoratorStack executionDecorators = new ExecutionDecoratorStack();
 	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();
+	public final Event<CustomMessageEvent> onCustomMessage = new Event<>();
 
 	private UiSessionState state = UiSessionState.ACTIVE;
 
@@ -182,7 +184,7 @@ public class SessionContext {
 				synchronized (SessionContext.this) {
 					SessionContext.this.destroyed = true;
 					// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
-					sessionExecutor.execute(sessionExecutor::close);
+					sessionExecutor.execute(sessionExecutor::shutdown);
 					sessionExecutor = null; // GC (relevant only in case the sessionContext is retained in a memory leak)
 				}
 			});
@@ -190,7 +192,7 @@ public class SessionContext {
 	};
 
 	public SessionContext(UiSession uiSession,
-						  CloseableExecutor sessionExecutor,
+						  ExecutorService sessionExecutor,
 						  ClientInfo clientInfo,
 						  SessionConfiguration sessionConfiguration,
 						  HttpSession httpSession,
@@ -212,7 +214,10 @@ public class SessionContext {
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
-		runWithContext(this::updateSessionMessageWindows);
+		runWithContext(() -> {
+			sendConfigToClient();
+			updateSessionMessageWindows();
+		});
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 	}
 
@@ -510,7 +515,11 @@ public class SessionContext {
 							skipAutoUpdateNavigationHistoryStateOnce = false;
 							return ((R) resultHolder[0]);
 						} catch (Throwable t) {
-							LOGGER.error("Exception while executing within session context", t);
+							try {
+								LOGGER.error("Exception while executing within session context", t);
+							} catch (Throwable t2) {
+								LOGGER.error("Exception while executing within session context. WAS NOT ABLE TO LOG THE EXCEPTION of type {}!", t.getClass());
+							}
 							this.destroy(UiSessionClosingReason.SERVER_SIDE_ERROR);
 							throw t;
 						} finally {
@@ -557,8 +566,11 @@ public class SessionContext {
 
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
-		queueCommand(new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
-		updateSessionMessageWindows();
+		sendConfigToClient();
+	}
+
+	private void sendConfigToClient() {
+		queueCommand(new UiRootPanel.SetConfigCommand(this.sessionConfiguration.createUiConfiguration()));
 	}
 
 	public void showPopupAtCurrentMousePosition(Popup popup) {
@@ -862,6 +874,11 @@ public class SessionContext {
 				}
 				break;
 			}
+			case UI_ROOT_PANEL_CUSTOM_MESSAGE: {
+				UiRootPanel.CustomMessageEvent e = (UiRootPanel.CustomMessageEvent) event;
+				onCustomMessage.fire(new CustomMessageEvent(e.getType(), e.getMessage()));
+				break;
+			}
 			default:
 				throw new TeamAppsUiApiException(getSessionId(), uiEventType.toString());
 		}
@@ -926,6 +943,14 @@ public class SessionContext {
 	 */
 	public Event<UiSessionClosingReason> onDestroyed() {
 		return onDestroyed;
+	}
+
+	public Disposable subscribeToCustomMessages(String type, Consumer<CustomMessageEvent> handler) {
+		return onCustomMessage.addListener((customMessageEvent) -> {
+			if (Objects.equals(type, customMessageEvent.type())) {
+				handler.accept(customMessageEvent);
+			}
+		});
 	}
 
 }

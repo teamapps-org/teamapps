@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package org.teamapps.ux.session;
 
 import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.ULocale;
+import org.teamapps.dto.ClosedSessionHandlingType;
 import org.teamapps.dto.UiConfiguration;
 import org.teamapps.ux.session.DateTimeFormatDescriptor.FullLongMediumShortType;
 
@@ -39,6 +40,7 @@ public class SessionConfiguration {
 	private boolean optimizedForTouch = false;
 	private String iconPath = "/icons";
 	private StylingTheme theme = StylingTheme.DEFAULT;
+	private ClosedSessionHandlingType closedSessionHandling = ClosedSessionHandlingType.MESSAGE_WINDOW;
 
 	public static SessionConfiguration createForClientInfo(ClientInfo clientInfo) {
 		boolean optimizedForTouch = false;
@@ -73,6 +75,7 @@ public class SessionConfiguration {
 		config.setLocale(locale.toLanguageTag());
 		config.setOptimizedForTouch(optimizedForTouch);
 		config.setThemeClassName(theme.getCssClass());
+		config.setClosedSessionHandling(closedSessionHandling);
 		return config;
 	}
 
@@ -148,4 +151,11 @@ public class SessionConfiguration {
 		this.theme = theme;
 	}
 
+	public ClosedSessionHandlingType getClosedSessionHandling() {
+		return closedSessionHandling;
+	}
+
+	public void setClosedSessionHandling(ClosedSessionHandlingType closedSessionHandling) {
+		this.closedSessionHandling = closedSessionHandling;
+	}
 }

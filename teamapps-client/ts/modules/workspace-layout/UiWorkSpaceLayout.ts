@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -304,8 +304,13 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 	}
 
 	private async fireLayoutChanged() {
+		let layout = await this.getCurrentLayout();
+		if (layout[UiWorkSpaceLayout.ROOT_WINDOW_ID] == null) {
+			return; // event during initialization. Not worth it.
+		}
+
 		this.onLayoutChanged.fire({
-			layoutsByWindowId: await this.getCurrentLayout()
+			layoutsByWindowId: layout
 		});
 	}
 

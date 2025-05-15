@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 package org.teamapps.ux.application.view;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.panel.Panel;
@@ -29,6 +30,8 @@ import java.util.List;
 
 public interface View {
 
+    Event<Boolean> onEffectiveVisibilityChanged();
+    
     static View createView() {
         return new ViewImpl();
     }
@@ -99,4 +102,5 @@ public interface View {
 
     void setLocalToolbarBackgroundColor(Color color);
 
+    void select();
 }

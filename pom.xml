@@ -5,7 +5,7 @@
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.188-SNAPSHOT</version>
+    <version>0.9.199-SNAPSHOT</version>
 
     <name>TeamApps</name>
     <description>A Java web application framework</description>
@@ -48,11 +48,10 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
-        <slf4j-version>2.0.9</slf4j-version>
-        <jackson-version>2.16.0</jackson-version>
-        <guava-version>31.1-jre</guava-version>
-        <apache-commons-io>2.15.1</apache-commons-io>
+        <slf4j-version>2.0.16</slf4j-version>
+        <jackson-version>2.18.2</jackson-version>
+        <guava-version>33.4.0-jre</guava-version>
+        <apache-commons-io>2.18.0</apache-commons-io>
         <junit.version>4.13.2</junit.version>
         <cloning.version>1.9.9</cloning.version>
     </properties>
@@ -73,19 +72,19 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.24.2</version>
+            <version>3.26.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.2.0</version>
+            <version>4.2.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.5.1</version>
+            <version>5.13.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -97,6 +96,11 @@
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>teamapps-commons</artifactId>
+                <version>0.1.2</version>
             </dependency>
 
             <dependency>
@@ -160,7 +164,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.12.0</version>
+                <version>3.17.0</version>
             </dependency>
 
             <dependency>
@@ -205,7 +209,7 @@
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>13.0</version>
+                <version>24.1.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -226,7 +230,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.13.0</version>
                 <configuration>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
@@ -236,7 +240,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.1.1</version>
                 <configuration>
                     <!-- see https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven -->
                     <mavenExecutorId>forked-path</mavenExecutorId>
@@ -251,7 +255,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>1.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
@@ -270,7 +274,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.8.0</version>
                         <executions>
                             <execution>
                                 <id>generate-javadoc-jar</id>
@@ -290,7 +294,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.3.1</version>
                         <executions>
                             <execution>
                                 <id>generate-sources-jar</id>
@@ -380,7 +384,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.2.3</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
