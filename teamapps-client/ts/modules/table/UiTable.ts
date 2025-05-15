@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ import {
 	UiTable_ColumnSizeChangeEvent,
 	UiTable_ContextMenuRequestedEvent,
 	UiTable_DisplayedRangeChangedEvent,
-	UiTable_FieldOrderChangeEvent, UiTable_RowsSelectedEvent,
+	UiTable_FieldOrderChangeEvent,
+	UiTable_RowsSelectedEvent,
 	UiTable_SortingChangedEvent,
 	UiTableCommandHandler,
 	UiTableConfig,
@@ -46,7 +47,7 @@ import {AbstractUiComponent} from "../AbstractUiComponent";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
-import {arraysEqual, closestAncestor, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml, Renderer} from "../Common";
+import {arraysEqual, closestAncestor, css, escapeHtml, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml, Renderer} from "../Common";
 import {UiSortDirection} from "../../generated/UiSortDirection";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiGenericTableCellEditor} from "./UiGenericTableCellEditor";
@@ -57,15 +58,14 @@ import {UiButton, UiCompositeField, UiFileField, UiMultiLineTextField, UiRichTex
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {FieldMessagesPopper, getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {nonRecursive} from "../util/nonRecursive";
-import {throttledMethod} from "../util/throttle";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
 import {UiTableRowSelectionModel} from "./UiTableRowSelectionModel";
 import {ContextMenu} from "../micro-components/ContextMenu";
 import {UiComponent} from "../UiComponent";
-import EventData = Slick.EventData;
 import {UiTextAlignment} from "../../generated/UiTextAlignment";
 import {UiRefreshableTableConfigUpdateConfig} from "../../generated/UiRefreshableTableConfigUpdateConfig";
+import EventData = Slick.EventData;
 
 interface Column extends Slick.Column<any> {
 	id: string;
@@ -263,6 +263,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			this._sortDirection = config.sortDirection;
 			this._grid.setSortColumn(config.sortField, config.sortDirection === UiSortDirection.ASC);
 		}
+		(this._grid as any).onRendered.subscribe(() => this.setRowCssStyles());
 		this._grid.onSort.subscribe((e, args: Slick.OnSortEventArgs<Slick.SlickData>) => {
 			this._sortField = args.sortCol.id;
 			this._sortDirection = args.sortAsc ? UiSortDirection.ASC : UiSortDirection.DESC;
@@ -435,6 +436,32 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this._grid.init();
 	}
 
+	private setRowCssStyles() {
+		if (this._grid.getColumns().length == 0) {
+			return;
+		}
+		let viewport = this._grid.getViewport();
+		let top = viewport.top;
+		let bottom = viewport.bottom;
+		let firstVisibleColumnIndex = 0;
+		let sumOfColumnWidths = 0;
+		do {
+			sumOfColumnWidths += this._grid.getColumns()[firstVisibleColumnIndex].width
+		} while (sumOfColumnWidths < viewport.leftPx && firstVisibleColumnIndex < this._grid.getColumns().length);
+
+		for (let i = top; i < bottom; i++) {
+			if (this.dataProvider.getItem(i)?.cssStyle != null) {
+				let cellNode = this._grid.getCellNode(i, firstVisibleColumnIndex);
+				if (cellNode != null) {
+					let $row = closestAncestor(cellNode, ".slick-row", false, this.doGetMainElement());
+					for (const [name, value] of Object.entries(this.dataProvider.getItem(i).cssStyle)) {
+						$row.style.setProperty(name, value);
+					}
+				}
+			}
+		}
+	}
+
 	@debouncedMethod(150, DebounceMode.BOTH)
 	private throttledFireDisplayedRangeChanged() {
 		this.onDisplayedRangeChanged.fireIfChanged(this.createDisplayRangeChangedEvent());
@@ -534,7 +561,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			field: columnConfig.name,
 			uiField: uiField,
 			name: `<div class="column-header-icon img img-16 ${columnConfig.icon == null ? "hidden" : ""}" style="background-image: url('${columnConfig.icon}')"></div>
-<div class="column-header-title">${columnConfig.title}</div>`,
+<div class="column-header-title">${escapeHtml(columnConfig.title)}</div>`,
 			width: columnConfig.defaultWidth || ((columnConfig.minWidth + columnConfig.maxWidth) / 2) || undefined,
 			minWidth: columnConfig.minWidth || 30,
 			maxWidth: columnConfig.maxWidth || undefined,
@@ -548,7 +575,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			hiddenIfOnlyEmptyCellsVisible: columnConfig.hiddenIfOnlyEmptyCellsVisible,
 			messages: columnConfig.messages,
 			uiConfig: columnConfig,
-			visible: columnConfig.visible
+			visible: columnConfig.visible,
+			toolTip: columnConfig.title
 		};
 
 		slickColumnConfig.headerCssClass = this.getColumnCssClass(slickColumnConfig);

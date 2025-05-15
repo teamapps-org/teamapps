@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,5 +36,7 @@ public interface ViewChangeHandler {
     void handleWorkspaceButtonGroupAdded(ToolbarButtonGroup buttonGroup);
 
     void handleWorkspaceButtonGroupRemoved(ToolbarButtonGroup buttonGroup);
+
+    void handleSelect();
 
 }

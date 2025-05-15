@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.Label;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
 import org.teamapps.ux.component.form.layoutpolicy.FormSectionFieldPlacement;
+import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.grid.layout.GridColumn;
 import org.teamapps.ux.component.grid.layout.GridRow;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -47,6 +48,26 @@ public class ResponsiveFormLayout {
 		this.responsiveForm = responsiveForm;
 		this.minWidth = minWidth;
 		this.configurationTemplate = configurationTemplate;
+	}
+
+	/**
+	 * Adds a field container to this form. The field container may contain multiple fields itself.
+	 * Those fields will be treated as part of this form (validation, injection, extraction).
+	 */
+	public void addFieldContainer(Icon<?, ?> icon, String label, FieldContainer fieldContainer) {
+		LabelAndField labelAndField = addLabelAndComponent(icon, label, fieldContainer.getMainComponent());
+		labelAndField.field.setHorizontalAlignment(HorizontalElementAlignment.STRETCH);
+		fieldContainer.getFields().forEach(responsiveForm::addLayoutField);
+	}
+
+	/**
+	 * Adds a field container to this form. The field container may contain multiple fields itself.
+	 * Those fields will be treated as part of this form (validation, injection, extraction).
+	 */
+	public void addFieldContainer(FieldContainer fieldContainer) {
+		ResponsiveFormField responsiveFormField = addComponent(fieldContainer.getMainComponent(), 0, 2, true);
+		responsiveFormField.setHorizontalAlignment(HorizontalElementAlignment.STRETCH);
+		fieldContainer.getFields().forEach(responsiveForm::addLayoutField);
 	}
 
 	public ResponsiveFormField addField(int row, int column, String propertyName, AbstractField field) {

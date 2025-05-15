@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@
  */
 package org.teamapps.ux.model;
 
-import org.teamapps.ux.component.node.TreeNode;
-import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.component.tree.TreeNodeInfoExtractor;
 
 import java.util.Collections;
@@ -34,14 +32,6 @@ public interface BaseTreeModel<RECORD> extends TreeNodeInfoExtractor<RECORD> {
 	 */
 	default List<RECORD> getChildRecords(RECORD parentRecord) {
 		return Collections.emptyList();
-	}
-
-	default TreeNodeInfo getTreeNodeInfo(RECORD record) {
-		if (record instanceof TreeNode) {
-			return (TreeNode) record;
-		} else {
-			return null;
-		}
 	}
 
 }

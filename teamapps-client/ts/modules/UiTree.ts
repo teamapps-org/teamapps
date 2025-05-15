@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,9 @@ import {UiTreeRecordConfig} from "../generated/UiTreeRecordConfig";
 import {UiComboBoxTreeRecordConfig} from "../generated/UiComboBoxTreeRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {loadSensitiveThrottling} from "./util/throttle";
+import {UiInfiniteItemView2_ContextMenuRequestedEvent} from "../generated/UiInfiniteItemView2Config";
+import {ContextMenu} from "./micro-components/ContextMenu";
+import {UiComponent} from "./UiComponent";
 
 
 export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeCommandHandler, UiTreeEventSource {
@@ -45,12 +48,13 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 	public readonly onNodeSelected: TeamAppsEvent<UiTree_NodeSelectedEvent> = new TeamAppsEvent();
 	public readonly onRequestTreeData: TeamAppsEvent<UiTree_RequestTreeDataEvent> = new TeamAppsEvent();
 	public readonly onNodeExpansionChanged: TeamAppsEvent<UiTree_NodeExpansionChangedEvent> = new TeamAppsEvent();
+	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView2_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $panel: HTMLElement;
 	private trivialTree: TrivialTree<UiTreeRecordConfig>;
 	private nodes: UiTreeRecordConfig[];
 	private templateRenderers: { [name: string]: Renderer };
-
+	private contextMenu: ContextMenu;
 
 	constructor(config: UiTreeConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -75,7 +79,8 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 			},
 			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			showExpanders: config.showExpanders,
-			expandOnSelection: config.openOnSelection,
+			selectableDecider: entry => entry.selectable,
+			toggleExpansionOnClick: config.openOnSelection,
 			enforceSingleExpandedPath: config.enforceSingleExpandedPath,
 			idFunction: entry => entry && entry.id,
 			indentation: config.indentation,
@@ -93,6 +98,15 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		if (config.selectedNodeId != null) {
 			this.trivialTree.getTreeBox().revealSelectedEntry(false);
 		}
+		this.contextMenu = new ContextMenu();
+		this.trivialTree.onContextMenu.addListener(contextMenuEvent => {
+			if (this._config.contextMenuEnabled) {
+				this.contextMenu.open(contextMenuEvent.event, requestId => this.onContextMenuRequested.fire({
+					recordId: (contextMenuEvent.entry as UiTreeRecordConfig).id,
+					requestId
+				}));
+			}
+		})
 	}
 
 	private renderRecord(record: NodeWithChildren<UiComboBoxTreeRecordConfig>): string {
@@ -127,6 +141,14 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 
 	registerTemplate(id: string, template: UiTemplateConfig): void {
 		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
+	}
+
+	setContextMenuContent(requestId: number, component: UiComponent): void {
+		this.contextMenu.setContent(component, requestId);
+	}
+
+	closeContextMenu(requestId: number): void {
+		this.contextMenu.close(requestId);
 	}
 
 }

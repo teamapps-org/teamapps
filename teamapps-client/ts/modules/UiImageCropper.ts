@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 		super(config, context);
 
 		this.$element = parseHtml(`<div data-id="' + config.id + '" class="UiImageCropper">
-    <img></img>
+    <img draggable="false"></img>
     <div class="cropping-frame" tabindex="-1">
     	<div class="ui-resizable-handle ui-resizable-ne" data-direction="ne" data-fixed-at="sw"></div>
     	<div class="ui-resizable-handle ui-resizable-se" data-direction="se" data-fixed-at="nw"></div>

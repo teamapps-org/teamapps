@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +55,7 @@ import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
 import {UiGraphConfig} from "../../generated/UiGraphConfig";
 import {AbstractUiGraph} from "./AbstractUiGraph";
 import {GraphContext, PopperHandle} from "./GraphContext";
+import {throttledMethod} from "../util/throttle";
 
 export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implements UiTimeGraphCommandHandler, UiTimeGraphEventSource {
 
@@ -280,6 +281,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	}
 
 	@executeWhenFirstDisplayed()
+	@throttledMethod(200)
 	private redraw() {
 		if (this.getWidth() === 0 || this.getHeight() === 0) {
 			return;

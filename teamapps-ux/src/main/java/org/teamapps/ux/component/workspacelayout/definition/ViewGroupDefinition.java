@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,17 @@ public class ViewGroupDefinition extends LayoutItemDefinition {
 
 	@Override
 	public List<ViewDefinition> getAllViews() {
-		return views;
+		return List.copyOf(views);
+	}
+
+	@Override
+	public List<ViewDefinition> getEffectivelyVisibleViews() {
+		if (panelState == ViewGroupPanelState.MINIMIZED) {
+			return List.of();
+		} else if (selectedView != null && views.stream().anyMatch(v -> v.getId().equals(selectedView.getId()))) {
+			return List.of(selectedView);
+		}
+		return List.of();
 	}
 
 	@Override

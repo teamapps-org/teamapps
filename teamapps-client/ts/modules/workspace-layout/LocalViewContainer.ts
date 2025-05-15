@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,9 +44,7 @@ import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
 import {UiComponent} from "../UiComponent";
-import {UiMultiProgressDisplayConfig} from "../../generated/UiMultiProgressDisplayConfig";
 import {UiMultiProgressDisplay} from "../UiDefaultMultiProgressDisplay";
-import {UiProgressDisplay} from "../UiProgressDisplay";
 
 export class LocalViewContainer implements ViewContainer {
 
@@ -266,31 +264,36 @@ export class LocalViewContainer implements ViewContainer {
 			if (dropPosition && dataTransferString != null) {
 				let dataTransfer = JSON.parse(dataTransferString) as UiWorkspaceLayoutDndDataTransfer;
 				if (this.context.sessionId === dataTransfer.sourceUiSessionId && dataTransfer.sourceWorkspaceLayoutId === this.workSpaceLayoutId) {
-					if (dataTransfer.sourceWindowId === this.windowId) {
-						if (dropPosition.tabPanel) {
-							if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
-								this.moveViewToTab(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName);
+					this.viewEventsSuppressed = true;
+					try {
+						if (dataTransfer.sourceWindowId === this.windowId) {
+							if (dropPosition.tabPanel) {
+								if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
+									this.moveViewToTab(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName);
+								} else {
+									let uiRelativeWorkSpaceViewPosition = UiRelativeWorkSpaceViewPosition[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof UiRelativeWorkSpaceViewPosition];
+									this.moveViewRelativeToOtherView(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName, uiRelativeWorkSpaceViewPosition, UiSplitSizePolicy.RELATIVE, .5);
+								}
 							} else {
 								let uiRelativeWorkSpaceViewPosition = UiRelativeWorkSpaceViewPosition[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof UiRelativeWorkSpaceViewPosition];
-								this.moveViewRelativeToOtherView(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName, uiRelativeWorkSpaceViewPosition, UiSplitSizePolicy.RELATIVE, .5);
+								let isFirst = dropPosition.relativeDropPosition === RelativeDropPosition.LEFT || dropPosition.relativeDropPosition === RelativeDropPosition.TOP;
+								this.moveViewToTopLevel(dataTransfer.viewName, this.windowId, uiRelativeWorkSpaceViewPosition, UiSplitSizePolicy.RELATIVE, isFirst ? .3 : .7);
 							}
 						} else {
-							let uiRelativeWorkSpaceViewPosition = UiRelativeWorkSpaceViewPosition[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof UiRelativeWorkSpaceViewPosition];
-							let isFirst = dropPosition.relativeDropPosition === RelativeDropPosition.LEFT || dropPosition.relativeDropPosition === RelativeDropPosition.TOP;
-							this.moveViewToTopLevel(dataTransfer.viewName, this.windowId, uiRelativeWorkSpaceViewPosition, UiSplitSizePolicy.RELATIVE, isFirst ? .3 : .7);
+							if (this.workSpaceLayoutId === dataTransfer.sourceWorkspaceLayoutId) {
+								this.listener.handleViewDroppedFromOtherWindow(dataTransfer.sourceWindowId, this.windowId, {
+									viewName: dataTransfer.viewName,
+									tabIcon: dataTransfer.tabIcon,
+									tabCaption: dataTransfer.tabCaption,
+									tabCloseable: dataTransfer.tabCloseable,
+									lazyLoading: dataTransfer.lazyLoading,
+									visible: dataTransfer.visible
+								}, dropPosition.tabPanel && dropPosition.tabPanel.tabs[0].viewName, dropPosition.relativeDropPosition);
+							}
 						}
-						this.listener.handleLocalLayoutChangedByUser(this.windowId);
-					} else {
-						if (this.workSpaceLayoutId === dataTransfer.sourceWorkspaceLayoutId) {
-							this.listener.handleViewDroppedFromOtherWindow(dataTransfer.sourceWindowId, this.windowId, {
-								viewName: dataTransfer.viewName,
-								tabIcon: dataTransfer.tabIcon,
-								tabCaption: dataTransfer.tabCaption,
-								tabCloseable: dataTransfer.tabCloseable,
-								lazyLoading: dataTransfer.lazyLoading,
-								visible: dataTransfer.visible
-							}, dropPosition.tabPanel && dropPosition.tabPanel.tabs[0].viewName, dropPosition.relativeDropPosition);
-						}
+					} finally {
+						this.viewEventsSuppressed = false;
+						this.listener.handleLocalLayoutChangedByUser(this.windowId)
 					}
 				} else {
 					LocalViewContainer.logger.warn("The user dropped a view from another UiWorkSpaceLayout. Not accepting this.");
@@ -669,7 +672,7 @@ export class LocalViewContainer implements ViewContainer {
 			(viewGroupItem, panelState) => this.setViewGroupPanelState(viewGroupItem.id, panelState),
 			this.context
 		).apply(this.itemTree.rootItem, newLayout, addedViewConfigs);
-		this.setRootItem(newRootItem)
+		this.setRootItem(newRootItem);
 	}
 
 	selectViewTab(viewName: string) {

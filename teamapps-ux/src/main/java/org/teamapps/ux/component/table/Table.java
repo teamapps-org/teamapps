@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,6 +72,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	public final Event<ColumnSizeChangeEventData<RECORD, ?>> onColumnSizeChange = new Event<>();
 
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
+	private Function<RECORD, Map<String, String>> rowCssStyleProvider = record -> Map.of();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
 
 	private int clientRecordIdCounter = 0;
@@ -810,6 +811,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		clientRecord.setSelected(selectedRecords.stream().anyMatch(r -> customEqualsAndHashCode.getEquals().test(r, record)));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
 		clientRecord.setMarkings(new ArrayList<>(markedCells.getOrDefault(record, Collections.emptySet())));
+		clientRecord.setCssStyle(rowCssStyleProvider.apply(record));
 		transientChangesByRecordAndPropertyName.getOrDefault(record, Map.of())
 				.forEach((key, value) -> clientRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertUxValueToUiValue(value)));
 		return clientRecord;
@@ -1219,6 +1221,14 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
 		this.setPropertyProvider(propertyExtractor);
+	}
+
+	public Function<RECORD, Map<String, String>> getRowCssStyleProvider() {
+		return rowCssStyleProvider;
+	}
+
+	public void setRowCssStyleProvider(Function<RECORD, Map<String, String>> rowCssStyleProvider) {
+		this.rowCssStyleProvider = rowCssStyleProvider;
 	}
 
 	public PropertyInjector<RECORD> getPropertyInjector() {

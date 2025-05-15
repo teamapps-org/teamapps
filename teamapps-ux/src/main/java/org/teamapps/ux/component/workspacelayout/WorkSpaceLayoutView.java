@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,14 +34,14 @@ import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.definition.ViewDefinition;
 import org.teamapps.ux.session.SessionContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class WorkSpaceLayoutView {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSpaceLayout.class);
+
+	public final Event<Boolean> onEffectiveVisibilityChanged = new Event<>();
+	private boolean effectivelyVisible;
 
 	private final WorkSpaceLayout workSpaceLayout;
 	private final Event<Void> onRemoved = new Event<>();
@@ -251,6 +251,18 @@ public class WorkSpaceLayoutView {
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 		this.workSpaceLayout.handleViewAttributeChangedViaApi(this);
+	}
+
+	/*package-private*/ void setEffectivelyVisible(boolean effectivelyVisible) {
+		boolean wasEffectivelyVisible = this.effectivelyVisible;
+		this.effectivelyVisible = effectivelyVisible;
+		if (wasEffectivelyVisible != effectivelyVisible) {
+			onEffectiveVisibilityChanged.fire(effectivelyVisible);
+		}
+	}
+
+	public boolean isEffectivelyVisible() {
+		return effectivelyVisible;
 	}
 
 	public void updateWindowButtons(boolean showButtons) {

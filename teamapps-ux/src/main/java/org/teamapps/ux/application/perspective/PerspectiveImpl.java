@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -152,6 +152,11 @@ public class PerspectiveImpl implements Perspective {
             @Override
             public void handleWorkspaceButtonGroupRemoved(ToolbarButtonGroup buttonGroup) {
                 changeHandlers.forEach(changeHandler -> changeHandler.handleViewWorkspaceToolbarButtonGroupRemoved(perspective, view, buttonGroup));
+            }
+
+            @Override
+            public void handleSelect() {
+                changeHandlers.forEach(ch -> ch.handleViewSelect(view));
             }
         });
         changeHandlers.forEach(changeHandler -> changeHandler.handleViewAdded(this, view));

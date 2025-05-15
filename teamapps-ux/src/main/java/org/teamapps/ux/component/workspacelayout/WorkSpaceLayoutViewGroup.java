@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.workspacelayout;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.teamapps.dto.UiWorkSpaceLayoutItem;
 import org.teamapps.dto.UiWorkSpaceLayoutViewGroupItem;
 import org.teamapps.icons.Icon;
@@ -68,7 +69,7 @@ public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 				view.setViewGroup(this);
 			});
 		}
-		this.selectedView = selectedView;
+		this.selectedView = selectedView != null ? selectedView : CollectionUtils.isNotEmpty(views) ? views.get(0) : null;
 		this.persistent = persistent;
 		this.updateSelectedViewPanelWindowButtons();
 	}
@@ -147,8 +148,8 @@ public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 		if (removed && getWorkSpaceLayout() != null) {
 			getWorkSpaceLayout().handleViewRemovedViaApi(this, view);
 		}
-		if (views.size() == 0) {
-			selectedView = null;
+		if (!views.contains(selectedView)) {
+			selectedView = views.size() > 0 ? views.get(0) : null;
 		}
 		return this;
 	}
@@ -207,10 +208,12 @@ public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 	}
 
 	void addViewSilently(WorkSpaceLayoutView view, int index, boolean select) {
-		this.views.remove(view);
-		this.views.add(Math.min(views.size(), index), view);
-		view.setViewGroup(this);
-		if (select || this.views.size() == 1) {
+		if (this.views.size() <= index || this.views.get(index) != view) {
+			this.views.remove(view);
+			this.views.add(Math.min(views.size(), index), view);
+			view.setViewGroup(this);
+		}
+		if ((select && this.selectedView != view) || this.views.size() == 1) {
 			this.selectedView = view;
 			updateSelectedViewPanelWindowButtons();
 		}

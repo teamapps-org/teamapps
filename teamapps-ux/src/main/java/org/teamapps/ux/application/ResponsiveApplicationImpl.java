@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,6 +173,11 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
 			@Override
 			public void handleViewWorkspaceToolbarButtonGroupRemoved(Perspective perspective, View view, ToolbarButtonGroup buttonGroup) {
 				changeHandlers.forEach(changeHandler -> changeHandler.handleViewWorkspaceToolbarButtonGroupRemoved(application, isActivePerspective(perspective), perspective, view, buttonGroup));
+			}
+
+			@Override
+			public void handleViewSelect(View view) {
+				changeHandlers.forEach(ch -> ch.handleViewSelect(view));
 			}
 
 		});

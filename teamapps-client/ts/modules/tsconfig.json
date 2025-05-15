@@ -14,7 +14,8 @@
     "declaration": true,
     "declarationDir": "../../dist/tsd",
     "esModuleInterop": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "removeComments": false
   },
   "files": [
     "index.ts",

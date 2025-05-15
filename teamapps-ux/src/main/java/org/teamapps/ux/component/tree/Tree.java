@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2024 TeamApps.org
+ * Copyright (C) 2014 - 2025 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,10 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiComboBoxTreeRecord;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiTree;
-import org.teamapps.dto.UiTreeRecord;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.TreeModel;
@@ -67,6 +64,10 @@ public class Tree<RECORD> extends AbstractComponent {
 	private boolean showExpanders = true;
 	private boolean openOnSelection = false;
 	private boolean enforceSingleExpandedPath = false;
+
+	private Function<RECORD, Component> contextMenuProvider = null;
+	private int lastSeenContextMenuRequestId;
+
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 
 	private int clientRecordIdCounter = 0;
@@ -197,6 +198,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		uiTree.setShowExpanders(showExpanders);
 		uiTree.setOpenOnSelection(openOnSelection);
 		uiTree.setEnforceSingleExpandedPath(enforceSingleExpandedPath);
+		uiTree.setContextMenuEnabled(contextMenuProvider != null);
 		uiTree.setIndentation(indentation);
 		return uiTree;
 	}
@@ -230,6 +232,24 @@ public class Tree<RECORD> extends AbstractComponent {
 					List<UiTreeRecord> uiChildren = createOrUpdateUiRecords(children);
 					if (isRendered()) {
 						getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), Collections.emptyList(), uiChildren));
+					}
+				}
+				break;
+			}
+			case UI_TREE_CONTEXT_MENU_REQUESTED: {
+				UiTree.ContextMenuRequestedEvent e = (UiTree.ContextMenuRequestedEvent) event;
+				lastSeenContextMenuRequestId = e.getRequestId();
+				if (contextMenuProvider == null) {
+					closeContextMenu();
+				} else {
+					RECORD record = getRecordByUiId(e.getRecordId());
+					if (record != null) {
+						Component contextMenuContent = contextMenuProvider.apply(record);
+						if (contextMenuContent != null) {
+							queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+						} else {
+							queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), e.getRequestId()));
+						}
 					}
 				}
 				break;
@@ -308,6 +328,18 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (changed) {
 			reRenderIfRendered();
 		}
+	}
+
+	public Function<RECORD, Component> getContextMenuProvider() {
+		return contextMenuProvider;
+	}
+
+	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
+		this.contextMenuProvider = contextMenuProvider;
+	}
+
+	public void closeContextMenu() {
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
 	public int getIndentation() {
