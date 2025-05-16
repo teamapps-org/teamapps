@@ -19,26 +19,52 @@
  */
 package org.teamapps.projector.dsl.generate;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.teamapps.projector.dsl.TeamAppsDtoParser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DtoGeneratorUtil {
+
+	public static final Map<ParserRuleContext, String> originNamesByParserRuleContext = new HashMap<>();
 
 	public static List<TeamAppsDtoParser.ClassCollectionContext> parseClassCollections(File sourceDir) throws IOException {
 		return Files.find(Paths.get(sourceDir.getPath()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile() && filePath.toString().endsWith(".dto"))
 				.map(dtoFile -> {
 					try {
-						InputStreamReader reader = new InputStreamReader(new FileInputStream(dtoFile.toFile()), StandardCharsets.UTF_8);
-						return ParserFactory.createParser(reader, dtoFile.toAbsolutePath().toString()).classCollection();
+						TeamAppsDtoParser parser = ParserFactory.createParser(dtoFile);
+						parser.addParseListener(new ParseTreeListener() {
+							@Override
+							public void visitTerminal(TerminalNode terminalNode) {
+
+							}
+
+							@Override
+							public void visitErrorNode(ErrorNode errorNode) {
+
+							}
+
+							@Override
+							public void enterEveryRule(ParserRuleContext parserRuleContext) {
+
+							}
+
+							@Override
+							public void exitEveryRule(ParserRuleContext parserRuleContext) {
+								originNamesByParserRuleContext.put(parserRuleContext, dtoFile.toAbsolutePath().toString());
+							}
+						});
+						return parser.classCollection();
 					} catch (Exception e1) {
 						throw new IllegalArgumentException("Exception while parsing " + dtoFile + ": " + e1.getMessage(), e1);
 					}

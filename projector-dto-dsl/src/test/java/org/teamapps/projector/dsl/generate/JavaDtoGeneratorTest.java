@@ -294,7 +294,7 @@ public class JavaDtoGeneratorTest {
 	}
 
 	private static IntermediateDtoModel createModel(String dslString) throws IOException {
-		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(dslString))
+		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(dslString), null)
 				.classCollection();
 		return new IntermediateDtoModel(classCollectionContext);
 	}

@@ -11,6 +11,7 @@ class DtoTree extends DtoComponent {
 	mutable boolean expandAnimationEnabled;
 	mutable boolean toggleExpansionOnClick;
 	mutable boolean enforceSingleExpandedPath;
+    mutable boolean contextMenuEnabled;
 	mutable int indentation;
 
     Integer selectedNodeId;
@@ -18,8 +19,11 @@ class DtoTree extends DtoComponent {
 	command bulkUpdate(List<Integer> nodesToBeRemoved, List<DtoTreeRecord> nodesToBeAdded);
 	command replaceNodes(List<DtoTreeRecord> nodes);
     command setSelectedNodeId(Integer recordId, boolean reveal);
+    command setContextMenuContent(int requestId, DtoComponent* component);
+    command closeContextMenu(int requestId);
 
 	event nodeSelected(int nodeId);
 	event nodeExpansionChanged(int nodeId, boolean expanded);
+    event contextMenuRequested(int requestId, int recordId);
 	query lazyLoadChildren(int parentNodeId) returns List<DtoTreeRecord>;
 }

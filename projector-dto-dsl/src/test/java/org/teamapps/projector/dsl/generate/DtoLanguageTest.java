@@ -34,7 +34,7 @@ public class DtoLanguageTest {
 	@Test
 	public void testErrorHandling() throws IOException {
 		System.err.println("The following parser error message is intended by the test case: ");
-		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("interface asdf extends x blah"));
+		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("interface asdf extends x blah"), null);
 		
 		assertThatThrownBy(() -> parser.interfaceDeclaration())
 				.isInstanceOf(ParseCancellationException.class);
@@ -45,7 +45,7 @@ public class DtoLanguageTest {
 		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("interface A extends B, C {"
 				+ "  command showToolButtonDropDown(String fieldName, String toolButtonId, UiSymbolView dropDownSymbolView);"
 				+ "  event formDataSubmit(UiRecordData data);"
-				+ "}"));
+				+ "}"), null);
 		parser.interfaceDeclaration();
 	}
 
@@ -53,7 +53,7 @@ public class DtoLanguageTest {
 	public void testListProperty() throws IOException {
 		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("class A {\n"
 				+ "  List<DtoAbstractField> fields;"
-				+ "}"));
+				+ "}"), null);
 		parser.classDeclaration();
 	}
 
@@ -64,7 +64,7 @@ public class DtoLanguageTest {
 				import org.teamapps.projector.component.field.DtoAbstractField;;
 				class A {
 				  List<DtoAbstractField> fields;\
-				}"""));
+				}"""), null);
 		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = parser.classCollection();
 		assertThat(classCollectionContext.typeDeclaration()).hasSize(1);
 	}

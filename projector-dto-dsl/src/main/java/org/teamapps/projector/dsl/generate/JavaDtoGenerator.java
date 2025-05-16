@@ -61,9 +61,9 @@ public class JavaDtoGenerator {
 			for (String importedModelDir : importedModelDirs) {
 				try {
 					if (importedModel != null) {
-						importedModel = new IntermediateDtoModel(DtoGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModelDir.toString(), importedModel);
+						importedModel = new IntermediateDtoModel(DtoGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModel);
 					} else {
-						importedModel = new IntermediateDtoModel(DtoGeneratorUtil.parseClassCollections(new File(importedModelDir)), importedModelDir.toString());
+						importedModel = new IntermediateDtoModel(DtoGeneratorUtil.parseClassCollections(new File(importedModelDir)));
 					}
 				} catch (IOException e) {
 					throw new RuntimeException(e);
@@ -85,9 +85,9 @@ public class JavaDtoGenerator {
 
 		IntermediateDtoModel model;
 		if (importedModel != null) {
-			model = new IntermediateDtoModel(DtoGeneratorUtil.parseClassCollections(sourceDir), sourceDir.toString(), importedModel);
+			model = new IntermediateDtoModel(DtoGeneratorUtil.parseClassCollections(sourceDir), importedModel);
 		} else {
-			model = new IntermediateDtoModel(DtoGeneratorUtil.parseClassCollections(sourceDir), sourceDir.toString());
+			model = new IntermediateDtoModel(DtoGeneratorUtil.parseClassCollections(sourceDir));
 		}
 		new DtoModelValidator(model).validate();
 		new JavaDtoGenerator(model).generate(targetDir);

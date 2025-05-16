@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.commons.event.Disposable;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
+import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.treecomponents.TreeComponentsLibrary;
 import org.teamapps.projector.component.treecomponents.combobox.DtoComboBoxTreeRecord;
 import org.teamapps.projector.component.treecomponents.tree.model.TreeModel;
@@ -63,7 +64,9 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 	private boolean expandersVisible = true;
 	private boolean toggleExpansionOnClick = false;
 	private boolean enforceSingleExpandedPath = false;
-	private Function<RECORD, String> recordToStringFunction = Object::toString;
+
+	private Function<RECORD, Component> contextMenuProvider = null;
+	private int lastSeenContextMenuRequestId;
 
 	private int clientRecordIdCounter = 0;
 	private final Map<RECORD, DtoTreeRecord> uiRecordsByRecord = new HashMap<>();
@@ -130,7 +133,6 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 		}
 		uiTreeRecord.setValues(values);
 		uiTreeRecord.setDisplayTemplate(template != null ? template : null);
-		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
 		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
 		if (treeNodeInfo != null) {
@@ -178,6 +180,7 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 		uiTree.setExpandAnimationEnabled(expandAnimationEnabled);
 		uiTree.setToggleExpansionOnClick(toggleExpansionOnClick);
 		uiTree.setEnforceSingleExpandedPath(enforceSingleExpandedPath);
+		uiTree.setContextMenuEnabled(contextMenuProvider != null);
 		uiTree.setIndentation(indentation);
 		return uiTree;
 	}
@@ -188,6 +191,24 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 		selectedNode = record;
 		if (record != null) {
 			onNodeSelected.fire(record);
+		}
+	}
+
+	@Override
+	public void handleContextMenuRequested(DtoTree.ContextMenuRequestedEventWrapper event) {
+		lastSeenContextMenuRequestId = event.getRequestId();
+		if (contextMenuProvider == null) {
+			closeContextMenu();
+		} else {
+			RECORD record = getRecordByUiId(event.getRecordId());
+			if (record != null) {
+				Component contextMenuContent = contextMenuProvider.apply(record);
+				if (contextMenuContent != null) {
+					clientObjectChannel.setContextMenuContent(event.getRequestId(), contextMenuContent);
+				} else {
+					clientObjectChannel.closeContextMenu(event.getRequestId());
+				}
+			}
 		}
 	}
 
@@ -276,6 +297,18 @@ public class Tree<RECORD> extends AbstractComponent implements DtoTreeEventHandl
 	public void setEnforceSingleExpandedPath(boolean enforceSingleExpandedPath) {
 		this.enforceSingleExpandedPath = enforceSingleExpandedPath;
 		clientObjectChannel.setEnforceSingleExpandedPath(enforceSingleExpandedPath);
+	}
+
+	public Function<RECORD, Component> getContextMenuProvider() {
+		return contextMenuProvider;
+	}
+
+	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
+		this.contextMenuProvider = contextMenuProvider;
+	}
+
+	public void closeContextMenu() {
+		clientObjectChannel.closeContextMenu(lastSeenContextMenuRequestId);
 	}
 
 	public int getIndentation() {

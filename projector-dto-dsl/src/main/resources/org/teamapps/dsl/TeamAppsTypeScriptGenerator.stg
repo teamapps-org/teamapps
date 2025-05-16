@@ -46,7 +46,7 @@ export interface <c.name>CommandHandler <if(c.superTypesWithCommands)>extends <c
 
 <if(c.allEvents)>
 export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.superTypesWithEvents:{c|<c.name>EventSource}; separator=", "> <endif>{
-	<c.nonStaticEvents:teamAppsEventDeclaration(); separator="\n">
+	<c.nonStaticEvents:projectorEventDeclaration(); separator="\n">
 }
 <endif>
 
@@ -58,7 +58,7 @@ commandMethodStub(cmd) ::= <<
 <cmd.name>(<cmd.parameters:parameter(false); separator=", ">): <if(cmd.returnType)>Promise\<<cmd.returnType.typeScriptTypeName>\>|<cmd.returnType.typeScriptTypeName><else>any<endif>;
 >>
 
-teamAppsEventDeclaration(evt) ::= <<
+projectorEventDeclaration(evt) ::= <<
 on<evt.name; format="cap">: EventEmitter\<<evt.typeScriptInterfaceName>\>;
 >>
 
@@ -89,7 +89,7 @@ export interface <c.name>CommandHandler <if(c.superTypesWithCommands)>extends <c
 
 <if(c.allEvents)>
 export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.superInterfacesWithEvents:{c|<c.name>EventSource}; separator=", "> <endif>{
-	<c.events:teamAppsEventDeclaration(); separator="\n">
+	<c.events:projectorEventDeclaration(); separator="\n">
 }
 <endif>
 

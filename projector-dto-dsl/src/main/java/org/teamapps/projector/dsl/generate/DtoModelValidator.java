@@ -72,8 +72,8 @@ public class DtoModelValidator {
 //									throw new RuntimeException(e);
 //								}
 							}
-							
-							return new ModelValidationException(message);
+
+							return new ModelValidationException(i, message);
 						}));
 	}
 

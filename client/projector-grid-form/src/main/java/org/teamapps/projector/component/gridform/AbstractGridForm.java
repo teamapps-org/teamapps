@@ -53,7 +53,7 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 
 
 	public void clearAllFields() {
-		getFields().forEach(field -> field.setValue(null));
+		getFields().forEach((p, field) -> field.setValue(null));
 	}
 
 	/**

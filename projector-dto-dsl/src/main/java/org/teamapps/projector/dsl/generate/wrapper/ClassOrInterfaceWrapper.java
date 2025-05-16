@@ -270,7 +270,7 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 						() -> {
 							TeamAppsDtoParser.CommandDeclarationContext command =
 									ParserFactory.createParser(new StringReader("command set" + StringUtils.capitalize(property.Identifier().toString())
-																				+ "(" + property.type().getText() + " " + property.Identifier().toString() + ");")).commandDeclaration();
+											+ "(" + property.type().getText() + " " + property.Identifier().toString() + ");"), null).commandDeclaration();
 							command.setParent(property.getParent());
 							return command;
 						}

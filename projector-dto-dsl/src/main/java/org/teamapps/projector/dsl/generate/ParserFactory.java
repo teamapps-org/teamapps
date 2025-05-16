@@ -24,20 +24,25 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.teamapps.projector.dsl.TeamAppsDtoLexer;
 import org.teamapps.projector.dsl.TeamAppsDtoParser;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
 public class ParserFactory {
 
-	public static TeamAppsDtoParser createParser(Reader reader) throws IOException {
-		return createParser(reader, null);
+	public static TeamAppsDtoParser createParser(Path file) throws IOException {
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(file.toFile()), StandardCharsets.UTF_8);
+		return createParser(reader, file.toAbsolutePath().toString());
 	}
 
-	public static TeamAppsDtoParser createParser(Reader reader, String logContextName) throws IOException {
+	public static TeamAppsDtoParser createParser(Reader reader, String contextString) throws IOException {
 		TeamAppsDtoLexer lexer = new TeamAppsDtoLexer(CharStreams.fromReader(reader));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		TeamAppsDtoParser parser = new TeamAppsDtoParser(tokens);
-		parser.addErrorListener(new ThrowingErrorListener(logContextName));
+		parser.addErrorListener(new ThrowingErrorListener(contextString));
 		parser.setBuildParseTree(true);
 		return parser;
 	}

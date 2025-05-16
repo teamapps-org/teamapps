@@ -19,24 +19,33 @@
  */
 
 import {
-	DtoTree, DtoTree_NodeExpansionChangedEvent,
+	DtoTree, DtoTree_ContextMenuRequestedEvent, DtoTree_NodeExpansionChangedEvent,
 	DtoTree_NodeSelectedEvent,
 	DtoTreeCommandHandler,
 	DtoTreeEventSource, DtoTreeRecord, DtoTreeServerObjectChannel
 } from "./generated";
 import {TrivialTree} from "./trivial-components/TrivialTree";
-import {AbstractComponent, loadSensitiveThrottling, parseHtml, ProjectorEvent, Template} from "projector-client-object-api";
+import {
+	AbstractComponent,
+	Component,
+	loadSensitiveThrottling,
+	parseHtml,
+	ProjectorEvent,
+	Template
+} from "projector-client-object-api";
 import {buildObjectTree, NodeWithChildren} from "./util";
+import {ContextMenu} from "projector-client-core-components";
 
 export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
 
 	public readonly onNodeSelected: ProjectorEvent<DtoTree_NodeSelectedEvent> = new ProjectorEvent();
 	public readonly onNodeExpansionChanged: ProjectorEvent<DtoTree_NodeExpansionChangedEvent> = new ProjectorEvent();
-
+	public readonly onContextMenuRequested: ProjectorEvent<DtoTree_ContextMenuRequestedEvent> = new ProjectorEvent();
 
 	private $panel: HTMLElement;
 	private trivialTree: TrivialTree<DtoTreeRecord>;
 	private nodes: DtoTreeRecord[];
+	private contextMenu: ContextMenu;
 
 	constructor(config: DtoTree, private soc: DtoTreeServerObjectChannel) {
 		super(config);
@@ -71,6 +80,15 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 		if (config.selectedNodeId != null) {
 			this.trivialTree.getTreeBox().revealSelectedEntry(false);
 		}
+		this.contextMenu = new ContextMenu();
+		this.trivialTree.onContextMenu.addListener(contextMenuEvent => {
+			if (this.config.contextMenuEnabled) {
+				this.contextMenu.open(contextMenuEvent.event, requestId => this.onContextMenuRequested.fire({
+					recordId: (contextMenuEvent.entry as DtoTreeRecord).id,
+					requestId
+				}));
+			}
+		})
 	}
 
 	private renderRecord(record: NodeWithChildren<DtoTreeRecord>): string {
@@ -116,6 +134,18 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 		this.nodes.push(...nodesToBeAdded);
 		nodesToBeRemoved.forEach(nodeId => this.trivialTree.removeNode(nodeId));
 		nodesToBeAdded.forEach(node => this.trivialTree.addOrUpdateNode(node.parentId, node, false));
+	}
+
+	setContextMenuContent(requestId: number, component: unknown): void {
+		this.contextMenu.setContent(component as Component, requestId);
+	}
+
+	closeContextMenu(requestId: number): void {
+		this.contextMenu.close(requestId);
+	}
+
+	setContextMenuEnabled(contextMenuEnabled: boolean): any {
+		this.config.contextMenuEnabled = contextMenuEnabled;
 	}
 
 }

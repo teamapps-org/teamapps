@@ -46,17 +46,13 @@ public class IntermediateDtoModel {
 	private final List<EventWrapper> ownEventDeclarations;
 	private final List<QueryWrapper> ownQueryDeclarations;
 	private final List<CommandWrapper> ownCommandDeclarations;
-	private final String debugName;
-	private final IntermediateDtoModel[] importedModels;
 	private final List<ClassCollectionContext> compilationUnits;
 
 	public IntermediateDtoModel(ClassCollectionContext classCollectionContext) {
-		this(Collections.singletonList(classCollectionContext), "test");
+		this(Collections.singletonList(classCollectionContext));
 	}
 
-	public IntermediateDtoModel(List<ClassCollectionContext> classCollectionContexts, String debugName, IntermediateDtoModel... importedModels) {
-		this.debugName = debugName;
-		this.importedModels = importedModels;
+	public IntermediateDtoModel(List<ClassCollectionContext> classCollectionContexts, IntermediateDtoModel... importedModels) {
 		this.compilationUnits = classCollectionContexts;
 		classCollectionContexts.forEach(classCollectionContext -> {
 			List<TypeDeclarationContext> typeDeclarations = classCollectionContext.typeDeclaration();
@@ -285,7 +281,7 @@ public class IntermediateDtoModel {
 		if (importSuggestion.isPresent()) {
 			errorMessage += " Did you forget to import it? Suggestion: import " + importSuggestion.get() + ";";
 		}
-		return new ModelValidationException(errorMessage);
+		return new ModelValidationException(context, errorMessage);
 	}
 
 	public Optional<String> createImportSuggestion(String typeName) {

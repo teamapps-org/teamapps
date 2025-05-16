@@ -16,7 +16,7 @@ public class ExternalInterfaceWrapper extends InterfaceWrapper {
 
 	static TeamAppsDtoParser.InterfaceDeclarationContext createImplicitInterface(TeamAppsDtoParser.ImportDeclarationContext importDecl) {
 		return ExceptionUtil.runWithSoftenedExceptions(() -> {
-			TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader("package \"_external_\":" + importDecl.qualifiedTypeName().packageName().getText() + "; interface " + importDecl.qualifiedTypeName().Identifier().getText() + " {}")).classCollection();
+			TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader("package \"_external_\":" + importDecl.qualifiedTypeName().packageName().getText() + "; interface " + importDecl.qualifiedTypeName().Identifier().getText() + " {}"), null).classCollection();
 			return classCollectionContext.typeDeclaration().getFirst().interfaceDeclaration();
 		});
 	}
