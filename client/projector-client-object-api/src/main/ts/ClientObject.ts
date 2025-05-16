@@ -52,6 +52,15 @@ export interface ComponentLibrary {
 	 * @param serverObjectChannel the ServerObjectChannel to use for sending events/queries from this client object
 	 */
 	createClientObject?(typeName: string, config: any, serverObjectChannel: ServerObjectChannel): Promise<ClientObject>
+
+	/**
+	 * Invokes a function on this library (not on a client object). This can be regarded as "calling global function"
+	 * or "calling a static method" on the library.
+	 *
+	 * @param name name of the command
+	 * @param params parameters of the command
+	 */
+	executeCommand?(name: string, params: any[]): Promise<any>;
 }
 
 /**
@@ -70,7 +79,7 @@ export interface ClientObject {
 	/**
 	 * Additional init method, called right after instantiating. This method is guaranteed to be called, if implemented.
 	 */
-	init?(config: any, serverObjectChannel?: ServerObjectChannel): any;
+	init?(serverObjectChannel?: ServerObjectChannel): void;
 
 	/**
 	 * ClientObject implementations may choose between implementing either an individual method for each command name (named by the command)

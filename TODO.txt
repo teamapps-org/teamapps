@@ -19,9 +19,6 @@ Table:
 
 Upgrade FullCalendar to version 6 (and get rid of moment.js there)
 
-* add Script and StyleSheet client object implementations
-* Replace setOnClickJavaScript(...) with invocation of JavaScript client object
-
 use external imports for references to concrete ClientObject instances instead of the generic ClientObject in DTOs. Example DtoTemplateField.template
 Also use this for DateTimeFormatDescriptor...
 
@@ -59,3 +56,9 @@ Server-side: replace `new ProjectorEvent<>(clientObjectChannel::toggleXyzEvent);
 Client-side: get rid of Component.registerEvents() and get the event instances from the serverObjectChannel instead?
 
 make icon a client object (represented as a simple string on the client?), so you don't have to manually resolve icons?
+
+check if registering a client-side event listener is enough to render the object on the client side. If so, change this!!
+
+Simplify the button interface. For template-based buttons, introduce another component
+
+Make it two Script implementations: one inline, one loaded

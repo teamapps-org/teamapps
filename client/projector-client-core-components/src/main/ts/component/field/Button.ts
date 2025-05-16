@@ -51,7 +51,6 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 	private minDropDownWidth: number;
 	private minDropDownHeight: number;
 	private openDropDownIfNotSet: boolean;
-	private onClickJavaScript: string;
 
 	protected initialize(config: DtoButton) {
 		this.templateRecord = config.templateRecord;
@@ -84,17 +83,12 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 		["click", "keypress"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
 			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
 				if (this.getEditingMode() === FieldEditingMode.EDITABLE || this.getEditingMode() === FieldEditingMode.EDITABLE_IF_FOCUSED) {
-					if (this.onClickJavaScript != null) {
-						// TODO let context = this._context; // make context available in evaluated javascript
-						eval(this.onClickJavaScript);
-					}
 					this.onClick.fire({});
 					this.commit(true);
 				}
 			}
 		}));
 		this.setDropDownComponent(config.dropDownComponent as Component);
-		this.setOnClickJavaScript(config.onClickJavaScript);
 	}
 
 	setDropDownSize(minDropDownWidth: number, minDropDownHeight: number): void {
@@ -195,9 +189,6 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 		return true;
 	}
 
-	setOnClickJavaScript(onClickJavaScript: string): void {
-		this.onClickJavaScript = onClickJavaScript;
-	}
 }
 
 

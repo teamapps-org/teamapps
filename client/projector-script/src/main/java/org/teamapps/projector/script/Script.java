@@ -23,12 +23,13 @@ package org.teamapps.projector.script;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.ClientObject;
 import org.teamapps.projector.clientobject.ClientObjectChannel;
+import org.teamapps.projector.clientobject.ClientSideInvokable;
 import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.util.List;
 
 @ClientObjectLibrary(ScriptLibrary.class)
-public class Script implements ClientObject, DtoScriptEventHandler {
+public class Script implements ClientObject, DtoScriptEventHandler, ClientSideInvokable {
 
 	private final String script;
 	private final DtoScriptClientObjectChannel clientObjectChannel;
@@ -47,7 +48,7 @@ public class Script implements ClientObject, DtoScriptEventHandler {
 		return new DtoScript(script);
 	}
 
-	public void callFunction(String name, Object... parameters) {
-		clientObjectChannel.callFunction(name, List.of(parameters));
+	public void invoke(String name, Object... parameters) {
+		clientObjectChannel.invoke(name, List.of(parameters));
 	}
 }

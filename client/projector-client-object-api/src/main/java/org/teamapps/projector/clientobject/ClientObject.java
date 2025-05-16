@@ -19,19 +19,12 @@
  */
 package org.teamapps.projector.clientobject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.invoke.MethodHandles;
-
 /**
  * A client object has a representation on the client.
  * This representation is said to be rendered when the client holds a corresponding instance of it.
  * The server and the client refer to the {@link ClientObject} using the id (a UUID).
  */
 public interface ClientObject extends ClientMessageHandler {
-
-	Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	Object createDto();
 

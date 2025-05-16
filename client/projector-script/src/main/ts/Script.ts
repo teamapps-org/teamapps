@@ -1,7 +1,7 @@
-import {ClientObject, ServerObjectChannel} from "projector-client-object-api";
+import {ClientObject, Invokable, ServerObjectChannel} from "projector-client-object-api";
 import {DtoScript, DtoScriptCommandHandler} from "./generated";
 
-export class Script implements ClientObject, DtoScriptCommandHandler {
+export class Script implements ClientObject, DtoScriptCommandHandler, Invokable {
 	private scriptElement: HTMLScriptElement;
 
 	private modulePromise: Promise<any>;
@@ -16,8 +16,8 @@ export class Script implements ClientObject, DtoScriptCommandHandler {
 		this.modulePromise = loadModuleFromString(config.script);
 	}
 
-	async callFunction(name: string, parameters: any[]) {
-		((await this.modulePromise)[name] as Function).apply(null, parameters)
+	async invoke(name: string, parameters: any[]) {
+		return ((await this.modulePromise)[name] as Function).apply(null, parameters);
 	}
 
 	destroy(): void {

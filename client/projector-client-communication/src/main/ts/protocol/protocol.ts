@@ -1,7 +1,7 @@
 // =========== SERVER ============
 
 interface IServerMessage {
-	_type: 'INIT_OK' | 'INIT_NOK' | 'REINIT_OK' | 'REINIT_NOK' | 'PING' | 'SESSION_CLOSED' | 'REGISTER_LIB' | 'CREATE_OBJ' | 'DESTROY_OBJ' | 'TOGGLE_EVT' | 'CMD' | 'QUERY_RES';
+	_type: string;
 }
 
 export interface IReliableServerMessage extends IServerMessage {
@@ -19,10 +19,12 @@ export type ServerMessage =
 	| CREATE_OBJ
 	| DESTROY_OBJ
 	| TOGGLE_EVT
+	| ADD_EVT_HANDLER
+	| REMOVE_EVT_HANDLER
 	| CMD
 	| QUERY_RES;
 
-export type ReliableServerMessage = REGISTER_LIB | CREATE_OBJ | DESTROY_OBJ | TOGGLE_EVT | CMD | QUERY_RES;
+export type ReliableServerMessage = REGISTER_LIB | CREATE_OBJ | DESTROY_OBJ | TOGGLE_EVT | ADD_EVT_HANDLER | REMOVE_EVT_HANDLER | CMD | QUERY_RES;
 
 export interface INIT_OK extends IServerMessage {
 	_type: 'INIT_OK';
@@ -96,6 +98,26 @@ export interface TOGGLE_EVT extends IReliableServerMessage {
 	oid: string;
 	evtName: string;
 	enabled: boolean;
+}
+
+export interface ADD_EVT_HANDLER extends IReliableServerMessage {
+	_type: 'ADD_EVT_HANDLER';
+	lid: string;
+	oid: string;
+	evtName: string;
+	registrationId: string;
+	invokableId: string;
+	functionName: string;
+	evtObjAsFirstParam: boolean;
+	params: any[];
+}
+
+export interface REMOVE_EVT_HANDLER extends IReliableServerMessage {
+	_type: 'REMOVE_EVT_HANDLER';
+	lid: string;
+	oid: string;
+	evtName: string;
+	registrationId: string;
 }
 
 export interface CMD extends IReliableServerMessage {

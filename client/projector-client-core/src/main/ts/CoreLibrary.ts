@@ -1,4 +1,5 @@
 import {
+	ClientObject,
 	ClosedSessionHandlingType,
 	Component,
 	exitFullScreen,

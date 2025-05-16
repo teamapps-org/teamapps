@@ -5,5 +5,6 @@ export * from "./AbstractField";
 export * from "./Showable";
 export * from "./Template";
 export * from "./util";
+export * from "./Invokable";
 
 export * from "./generated";

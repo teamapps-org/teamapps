@@ -19,10 +19,14 @@
  */
 package org.teamapps.projector.component.core.linkbutton;
 
+import org.teamapps.commons.event.Disposable;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.clientobject.ClientSideInvokable;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.core.CoreComponentLibrary;
 import org.teamapps.projector.event.ProjectorEvent;
+
+import java.util.Arrays;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class LinkButton extends AbstractComponent implements DtoLinkButtonEventHandler {
@@ -52,7 +56,6 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 		ui.setText(text);
 		ui.setUrl(url);
 		ui.setTarget(target);
-		ui.setOnClickJavaScript(onClickJavaScript);
 		return ui;
 	}
 
@@ -92,12 +95,7 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 		update();
 	}
 
-	public String getOnClickJavaScript() {
-		return onClickJavaScript;
-	}
-
-	public void setOnClickJavaScript(String onClickJavaScript) {
-		this.onClickJavaScript = onClickJavaScript;
-		update();
+	public Disposable setOnClickClientSideEventHandler(ClientSideInvokable script, String functionName, boolean eventObjectAsFirstParameter, String... parameters) {
+		return clientObjectChannel.addClientSideClickEventHandler(script, functionName, eventObjectAsFirstParameter, Arrays.asList(parameters));
 	}
 }

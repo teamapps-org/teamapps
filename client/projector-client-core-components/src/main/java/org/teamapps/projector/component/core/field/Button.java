@@ -20,23 +20,27 @@
 package org.teamapps.projector.component.core.field;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.teamapps.projector.common.format.Color;
-import org.teamapps.projector.icon.Icon;
+import org.teamapps.commons.event.Disposable;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.clientobject.ClientSideInvokable;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.component.field.AbstractField;
-import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.core.CoreComponentLibrary;
 import org.teamapps.projector.component.core.DtoButton;
 import org.teamapps.projector.component.core.DtoButtonClientObjectChannel;
 import org.teamapps.projector.component.core.DtoButtonEventHandler;
+import org.teamapps.projector.component.field.AbstractField;
+import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
 import org.teamapps.projector.event.ProjectorEvent;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
+
+import java.util.Arrays;
 
 @ClientObjectLibrary(value = CoreComponentLibrary.class)
 public class Button extends AbstractField<Void> implements DtoButtonEventHandler {
@@ -55,8 +59,6 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 	private Component dropDownComponent;
 	private Integer minDropDownWidth = null;
 	private Integer minDropDownHeight = 300;
-
-	private String onClickJavaScript;
 
 	public Button(Template template, Object templateRecord, Component dropDownComponent) {
 		super();
@@ -111,7 +113,6 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		ui.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		ui.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
-		ui.setOnClickJavaScript(onClickJavaScript);
 		return ui;
 	}
 
@@ -227,13 +228,8 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 		clientObjectChannel.closeDropDown();
 	}
 
-	public String getOnClickJavaScript() {
-		return onClickJavaScript;
-	}
-
-	public void setOnClickJavaScript(String onClickJavaScript) {
-		this.onClickJavaScript = onClickJavaScript;
-		clientObjectChannel.setOnClickJavaScript(onClickJavaScript);
+	public Disposable setOnClickClientSideEventHandler(ClientSideInvokable script, String functionName, boolean eventObjectAsFirstParameter, String... parameters) {
+		return clientObjectChannel.addClientSideClickEventHandler(script, functionName, eventObjectAsFirstParameter, Arrays.asList(parameters));
 	}
 
 	@Override

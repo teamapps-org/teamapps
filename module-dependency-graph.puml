@@ -16,8 +16,8 @@ rectangle "projector-icon\n" as org_teamapps_projector_icon_jar_compile
 rectangle "projector-client-core\n" as org_teamapps_projector_client_core_jar_compile
 rectangle "projector-grid-template\n" as org_teamapps_projector_grid_template_jar_compile
 rectangle "projector-mustache-template\n" as org_teamapps_projector_mustache_template_jar_compile
-rectangle "projector-client-core-components\n" as org_teamapps_projector_client_core_components_jar_compile
 rectangle "projector-script\n" as org_teamapps_projector_script_jar_compile
+rectangle "projector-client-core-components\n" as org_teamapps_projector_client_core_components_jar_compile
 rectangle "projector-stylesheet\n" as org_teamapps_projector_stylesheet_jar_compile
 rectangle "projector-progress-indicator\n" as org_teamapps_projector_progress_indicator_jar_compile
 rectangle "projector-notification\n" as org_teamapps_projector_notification_jar_compile
@@ -61,8 +61,9 @@ org_teamapps_projector_client_object_api_jar_compile -[#000000]-> org_teamapps_p
 org_teamapps_projector_client_core_jar_compile -[#000000]-> org_teamapps_projector_client_communication_jar_compile
 org_teamapps_projector_grid_template_jar_compile -[#000000]-> org_teamapps_projector_client_object_api_jar_compile
 org_teamapps_projector_mustache_template_jar_compile -[#000000]-> org_teamapps_projector_client_object_api_jar_compile
-org_teamapps_projector_client_core_components_jar_compile -[#000000]-> org_teamapps_projector_grid_template_jar_compile
 org_teamapps_projector_script_jar_compile -[#000000]-> org_teamapps_projector_client_object_api_jar_compile
+org_teamapps_projector_client_core_components_jar_compile -[#000000]-> org_teamapps_projector_grid_template_jar_compile
+org_teamapps_projector_client_core_components_jar_compile -[#000000]-> org_teamapps_projector_script_jar_compile
 org_teamapps_projector_stylesheet_jar_compile -[#000000]-> org_teamapps_projector_client_object_api_jar_compile
 org_teamapps_projector_progress_indicator_jar_compile -[#000000]-> org_teamapps_projector_client_object_api_jar_compile
 org_teamapps_projector_notification_jar_compile -[#000000]-> org_teamapps_projector_client_core_components_jar_compile

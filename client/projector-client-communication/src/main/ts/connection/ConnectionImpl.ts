@@ -26,7 +26,7 @@ import {
 	EVT,
 	INIT,
 	INIT_NOK,
-	INIT_OK,
+	INIT_OK, IReliableServerMessage,
 	PING,
 	QUERY,
 	QUERY_RES,
@@ -153,6 +153,16 @@ export class ConnectionImpl implements Connection {
 						case "TOGGLE_EVT":
 							this.handleReliableServerMessage(message, async (message) => {
 								await connectionListener.toggleEvent(message.lid, message.oid, message.evtName, message.enabled);
+							});
+							break;
+						case "ADD_EVT_HANDLER":
+							this.handleReliableServerMessage(message, async (message) => {
+								await connectionListener.addEventHandler(message.lid, message.oid, message.evtName, message.registrationId, message.invokableId, message.functionName, message.evtObjAsFirstParam, message.params);
+							});
+							break;
+						case "REMOVE_EVT_HANDLER":
+							this.handleReliableServerMessage(message, async (message) => {
+								await connectionListener.removeEventHandler(message.lid, message.oid, message.evtName, message.registrationId);
 							});
 							break;
 						case "CMD":
@@ -320,7 +330,7 @@ export class ConnectionImpl implements Connection {
 	private log(...message: string[]) {
 		console.log("TeamAppsConnection: " + message);
 	}
-	private handleReliableServerMessage<M extends ReliableServerMessage>(message: M, action: (message: M) => Promise<any>) {
+	private handleReliableServerMessage<M extends IReliableServerMessage>(message: M, action: (message: M) => Promise<any>) {
 		this.lastReceivedCommandSequenceNumber = message.sn;
 		this.currentCommandExecutionPromise = this.currentCommandExecutionPromise.finally(async () => {
 			try {

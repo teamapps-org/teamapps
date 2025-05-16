@@ -24,69 +24,85 @@ import {
 	ClosedSessionHandlingType,
 	ComponentLibrary,
 	generateUUID,
+	Invokable,
 	ServerObjectChannel,
 	Showable
 } from "projector-client-object-api";
 import {
 	ClientInfo,
-	SessionClosingReason,
 	Connection,
 	ConnectionImpl,
-	ConnectionListener
+	ConnectionListener,
+	SessionClosingReason
 } from "projector-client-communication";
 import {CoreLibrary} from "./CoreLibrary";
 import {createGenericErrorMessageShowable} from "./genericErrorMessages";
+import {ServerObjectChannelImpl} from "./ServerObjectChannelImpl";
 
+abstract class AbstractClientObjectWrapper<WRAPPED extends ComponentLibrary | ClientObject> {
 
-class FilteredServerObjectChannel implements ServerObjectChannel {
-	private activeEventNames: Set<string> = new Set<string>();
+	public objectPromise: Promise<WRAPPED>;
 
-	constructor(private serverObjectChannel: ServerObjectChannel) {
+	constructor(protected id: string,
+	            promise: Promise<WRAPPED>,
+	            private serverObjectChannel: ServerObjectChannelImpl) {
+		this.objectPromise = promise.then(object => {
+			if (typeof object['init'] === "function") {
+				object.init(serverObjectChannel);
+			}
+			return object;
+		});
 	}
 
-	toggleEvent(name: string, enabled: boolean): void {
-		console.debug(`Toggling event ${name}: ${enabled}`)
-		if (enabled) {
-			this.activeEventNames.add(name);
+	async executeCommand?(name: string, params: any[]): Promise<any> {
+		let object = await this.objectPromise;
+		if (typeof object['executeCommand'] === "function") {
+			return object.executeCommand(name, params);
+		} else if (typeof object[name] === "function") {
+			return object[name].apply(object, params);
 		} else {
-			this.activeEventNames.delete(name);
-		}
-	};
-
-	sendEvent(name: string, params: any[]) {
-		if (this.activeEventNames.has(name)) {
-			console.debug(`sendEvent(${name}) will be forwarded to server.`);
-			this.serverObjectChannel.sendEvent(name, params);
-		} else {
-			console.debug(`Event swallowed (not enabled): ${name}.`);
+			throw new Error(`Cannot invoke command ${name} on ${(<any>object.constructor).name || 'object'} with id ${this.id} !`);
 		}
 	}
 
-	sendQuery(name: string, params: any[]): Promise<any> {
-		return this.serverObjectChannel.sendQuery(name, params);
+	toggleEvent(eventName: string, enabled: boolean) {
+		this.serverObjectChannel.toggleEvent(eventName, enabled);
+	}
+
+	addEventHandler(registrationId: string, eventName: string, handler: (any) => any): void {
+		this.serverObjectChannel.addEventHandler(eventName, registrationId, handler);
+	}
+
+	removeEventHandler(registrationId: string): void {
+		this.serverObjectChannel.removeEventHandler(registrationId);
 	}
 }
 
-class ModuleWrapper {
-	constructor(public module: ComponentLibrary,
-				private filteredServerObjectChannel: FilteredServerObjectChannel) {
-		if (typeof module.init === "function") {
-			module.init(filteredServerObjectChannel);
-		}
-	}
+class ModuleWrapper extends AbstractClientObjectWrapper<ComponentLibrary> {
 
-	toggleEvent(name: string, enabled: boolean) {
-		this.filteredServerObjectChannel.toggleEvent(name, enabled);
+	async instantiateClientObject(typeName: string, enhancedConfig: any, serverObjectChannel: ServerObjectChannel): Promise<ClientObject> {
+		let module = await this.objectPromise;
+
+		if (typeof module["createClientObject"] === "function") {
+			return module.createClientObject(typeName, enhancedConfig, serverObjectChannel);
+		} else {
+			// fallback behavior: try to get hold of the constructor and invoke it with the config
+			const clazz = module[typeName];
+			if (!clazz) {
+				throw `Unknown client object type ${typeName} in library ${this.id}`;
+			}
+			return new clazz(enhancedConfig, serverObjectChannel);
+		}
+
 	}
 }
 
-class ClientObjectWrapper {
-	constructor(public clientObjectPromise: Promise<ClientObject>,
-				private filteredServerObjectChannel: FilteredServerObjectChannel) {
-	}
-
-	toggleEvent(name: string, enabled: boolean) {
-		this.filteredServerObjectChannel.toggleEvent(name, enabled);
+class ClientObjectWrapper extends AbstractClientObjectWrapper<ClientObject> {
+	async destroy() {
+		let clientObject = await this.objectPromise;
+		if (typeof clientObject.destroy === 'function') {
+			clientObject.destroy();
+		}
 	}
 }
 
@@ -96,7 +112,7 @@ export class DefaultUiContext implements ConnectionListener {
 
 	private connection: Connection;
 
-	private libraryModulesById: Map<string, Promise<ModuleWrapper>> = new Map();
+	private libraryModulesById: Map<string, ModuleWrapper> = new Map();
 	private clientObjectWrappersById: Map<string, ClientObjectWrapper> = new Map();
 	private idByClientObject: Map<ClientObject, string> = new Map();
 
@@ -131,7 +147,7 @@ export class DefaultUiContext implements ConnectionListener {
 		});
 
 		console.debug(`Registering global library.`);
-		this.libraryModulesById.set(null, Promise.resolve(new ModuleWrapper(CoreLibrary, this.createfilteredServerObjectChannel(null, null))));
+		this.registerLibraryInternal(null, Promise.resolve(CoreLibrary), null);
 	}
 
 	public onConnectionInitialized() {
@@ -179,46 +195,54 @@ export class DefaultUiContext implements ConnectionListener {
 			const componentWrapper = this.clientObjectWrappersById.get(clientObjectId);
 			componentWrapper.toggleEvent(eventName, enabled);
 		} else {
-			// static event
 			const moduleWrapper = await this.libraryModulesById.get(libraryUuid ?? null);
 			moduleWrapper.toggleEvent(eventName, enabled);
+		}
+	}
+
+	async addEventHandler(libraryUuid: string, clientObjectId: string, eventName: string, registrationId: string, invokableId: string, functionName: string, evtObjAsFirstParam: boolean, params: any[]) {
+		console.log("Registering client-side event handler", libraryUuid, clientObjectId, eventName, functionName, params);
+		let invokable = (await this.clientObjectWrappersById.get(invokableId).objectPromise) as Invokable;
+		if (clientObjectId != null) {
+			let wrapper = await this.clientObjectWrappersById.get(clientObjectId);
+			wrapper.addEventHandler(registrationId, eventName, (eventObject) => {
+				let paramsArray = evtObjAsFirstParam ? [eventObject, ...params] : params;
+				return invokable.invoke(functionName, paramsArray);
+			});
+		} else {
+			const moduleWrapper = await this.libraryModulesById.get(libraryUuid ?? null);
+			moduleWrapper.addEventHandler(registrationId, eventName, (eventObject) => {
+				let paramsArray = evtObjAsFirstParam ? [eventObject, ...params] : params;
+				return invokable.invoke(functionName, paramsArray);
+			});
+		}
+	}
+
+	removeEventHandler(libraryUuid: string, clientObjectId: string, eventName: string, registrationId: string) {
+		console.log("Removing client-side event handler", registrationId);
+		if (clientObjectId != null) {
+			let wrapper = this.clientObjectWrappersById.get(clientObjectId);
+			wrapper.removeEventHandler(registrationId);
+		} else {
+			const moduleWrapper = this.libraryModulesById.get(libraryUuid ?? null);
+			moduleWrapper.removeEventHandler(registrationId);
 		}
 	}
 
 	public async createClientObject(libraryId: string, typeName: string, objectId: string, config: any, enabledEventNames: string[]) {
 		console.log("Creating ClientObject: ", libraryId, typeName, objectId, config, enabledEventNames);
 
-		let filteredServerObjectChannel = this.createfilteredServerObjectChannel(libraryId, objectId);
-		let clientObjectPromise = this.instantiateClientObject(libraryId, typeName, config, filteredServerObjectChannel);
-		let clientObjectWrapper = new ClientObjectWrapper(clientObjectPromise, filteredServerObjectChannel);
-
+		const moduleWrapper = await this.libraryModulesById.get(libraryId ?? null);
+		const enhancedConfig = await this.replaceComponentReferencesWithInstances(config);
+		let serverObjectChannel = this.createServerObjectChannel(libraryId, objectId);
+		let clientObjectPromise = moduleWrapper.instantiateClientObject(typeName, enhancedConfig, serverObjectChannel);
+		let clientObjectWrapper = new ClientObjectWrapper(objectId, clientObjectPromise, serverObjectChannel);
 		this.clientObjectWrappersById.set(objectId, clientObjectWrapper);
-		clientObjectWrapper.clientObjectPromise
+		clientObjectWrapper.objectPromise
 			.then(clientObject => this.idByClientObject.set(clientObject, objectId))
 
 		console.debug(`Listening on clientObject ${objectId} to events: ${enabledEventNames}`);
 		enabledEventNames?.forEach(name => clientObjectWrapper.toggleEvent(name, true));
-	}
-
-	private async instantiateClientObject(libraryId: string, typeName: string, config: any, serverObjectChannel: ServerObjectChannel): Promise<ClientObject> {
-		const moduleWrapper = await this.libraryModulesById.get(libraryId ?? null);
-		const enhancedConfig = await this.replaceComponentReferencesWithInstances(config);
-
-		let instance: ClientObject;
-		if (typeof moduleWrapper.module["createClientObject"] === "function") {
-			instance = await moduleWrapper.module.createClientObject(typeName, enhancedConfig, serverObjectChannel);
-		} else {
-			// fallback behavior: try to get hold of the constructor and invoke it with the config
-			const clazz = moduleWrapper.module[typeName];
-			if (!clazz) {
-				throw `Unknown client object type ${typeName} in library ${libraryId}`;
-			}
-			instance = new clazz(enhancedConfig, serverObjectChannel);
-		}
-		if (typeof instance.init === "function") {
-			instance.init(enhancedConfig, serverObjectChannel);
-		}
-		return instance;
 	}
 
 	async destroyClientObject(oid: string) {
@@ -228,14 +252,10 @@ export class DefaultUiContext implements ConnectionListener {
 			console.error("Could not find component to destroy: " + oid);
 			return;
 		}
-		const clientObject: ClientObject = await clientObjectWrapper.clientObjectPromise;
-
+		const clientObject: ClientObject = await clientObjectWrapper.objectPromise;
+		clientObjectWrapper.destroy();
 		this.clientObjectWrappersById.delete(oid);
 		this.idByClientObject.delete(clientObject);
-
-		if (typeof clientObject.destroy === 'function') {
-			clientObject.destroy();
-		}
 	}
 
 	public async getClientObjectById(id: string): Promise<ClientObject> {
@@ -244,7 +264,7 @@ export class DefaultUiContext implements ConnectionListener {
 			console.error(`Cannot find component with id ${id}`);
 			return null;
 		} else {
-			return await clientObjectWrapper.clientObjectPromise;
+			return await clientObjectWrapper.objectPromise;
 		}
 	}
 
@@ -314,36 +334,33 @@ export class DefaultUiContext implements ConnectionListener {
 		params = await this.replaceComponentReferencesWithInstances(params);
 		if (clientObjectId != null) {
 			console.debug(`Trying to call ${libraryUuid}.${clientObjectId}.${commandName}(${params.join(", ")})`);
-			const clientObjectPromise: any = this.getClientObjectById(clientObjectId);
-			if (!clientObjectPromise) {
-				throw new Error("The object " + clientObjectId + " does not exist, so cannot call " + commandName + "() on it.");
+			const clientObjectWrapper = this.clientObjectWrappersById.get(clientObjectId);
+			if (clientObjectWrapper == null) {
+				console.error(`Cannot find component with id ${clientObjectId}`);
+				return null;
 			}
-			const clientObject = await clientObjectPromise;
-			if (typeof clientObject[commandName] !== "function") {
-				throw new Error(`The ${(<any>clientObject.constructor).name || 'object'} ${clientObjectId} does not have a method ${commandName}()!`);
-			}
-			return await clientObject[commandName].apply(clientObject, params);
-		} else if (libraryUuid == null) {
-			// this is a core library command
-			return await (CoreLibrary[commandName] as Function).apply(null, [...params, this]);
+			return clientObjectWrapper.executeCommand(commandName, params);
 		} else {
 			console.debug(`Trying to call global function ${libraryUuid}.${commandName}(${params.join(", ")})`);
 			const moduleWrapper = await this.libraryModulesById.get(libraryUuid ?? null);
-			const method = moduleWrapper.module[commandName];
-			if (method == null) {
-				throw `Cannot find exported function ${method} from library ${libraryUuid}`;
-			} else {
-				return await (method.apply(moduleWrapper.module, params));
+			if (moduleWrapper == null) {
+				console.error(`Cannot find module with id ${clientObjectId}`);
+				return null;
 			}
+			return moduleWrapper.executeCommand(commandName, params);
 		}
 	}
 
 	registerLibrary(libraryId: string, mainJsUrl: string, mainCssUrl: string) {
-		console.log(`Register library`, libraryId, mainJsUrl, mainCssUrl);
+		console.log(`Registering library`, libraryId, mainJsUrl, mainCssUrl);
 		const module: Promise<ComponentLibrary> = import(mainJsUrl);
-		this.libraryModulesById.set(libraryId, module.then(module => {
-			return new ModuleWrapper(module, this.createfilteredServerObjectChannel(libraryId, null));
-		}));
+		this.registerLibraryInternal(libraryId, module, mainCssUrl);
+	}
+
+	private registerLibraryInternal(libraryId: string, module: Promise<ComponentLibrary>, mainCssUrl: string) {
+		let serverObjectChannel = this.createServerObjectChannel(libraryId, null);
+		let moduleWrapper = new ModuleWrapper(libraryId, module, serverObjectChannel);
+		this.libraryModulesById.set(libraryId, moduleWrapper);
 		if (mainCssUrl != null) {
 			const link = document.createElement('link');
 			link.rel = 'stylesheet';
@@ -353,13 +370,13 @@ export class DefaultUiContext implements ConnectionListener {
 		}
 	}
 
-	private createfilteredServerObjectChannel(libraryId: string, objectId: string) {
-		return new FilteredServerObjectChannel({
-			sendEvent: async (name: string, ...params: any[]) => {
+	private createServerObjectChannel(libraryId: string, objectId: string): ServerObjectChannelImpl {
+		return new ServerObjectChannelImpl({
+			handleEvent: async (name: string, ...params: any[]) => {
 				params = await this.replaceComponentInstancesWithReferences(params);
 				this.connection.sendEvent(libraryId, objectId, name, params);
 			},
-			sendQuery: async (name: string, ...params: any[]): Promise<any> => {
+			handleQuery: async (name: string, ...params: any[]): Promise<any> => {
 				params = await this.replaceComponentInstancesWithReferences(params);
 				const result = await this.connection.sendQuery(libraryId, objectId, name, params);
 				return await this.replaceComponentReferencesWithInstances(result);

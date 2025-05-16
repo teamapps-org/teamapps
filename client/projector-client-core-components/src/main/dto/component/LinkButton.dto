@@ -25,7 +25,6 @@ class DtoLinkButton extends DtoComponent {
 	String text;
 	String url; // null = still render as link but do not open a page
 	LinkTarget target;
-	String onClickJavaScript;
 
 	command update(DtoLinkButton config);
 

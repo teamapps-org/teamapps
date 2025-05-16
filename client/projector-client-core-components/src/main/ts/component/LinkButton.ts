@@ -36,12 +36,7 @@ export class LinkButton extends AbstractComponent<DtoLinkButton> implements DtoL
 	constructor(config: DtoLinkButton, serverObjectChannel: ServerObjectChannel) {
 		super(config);
 		this.$main = parseHtml(`<a class="LinkButton" tabindex="0"></a>`)
-		this.$main.addEventListener("click", ev => {
-			if (this.config.onClickJavaScript != null) {
-				eval(this.config.onClickJavaScript);
-			}
-			this.onClick.fire({});
-		});
+		this.$main.addEventListener("click", ev => this.onClick.fire({}));
 		this.update(config);
 	}
 

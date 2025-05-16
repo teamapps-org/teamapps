@@ -53,8 +53,8 @@ export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> i
 		this.visible = config.visible ?? false;
 	}
 
-	init(config: C, serverObjectChannel: ServerObjectChannel): any {
-		this.styleManager.setStylesBySelector(config.stylesBySelector ?? {});
+	init(serverObjectChannel: ServerObjectChannel): any {
+		this.styleManager.setStylesBySelector(this.config.stylesBySelector ?? {});
 		this.registerEvents(serverObjectChannel);
 	}
 

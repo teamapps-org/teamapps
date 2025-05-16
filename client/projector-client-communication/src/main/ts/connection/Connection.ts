@@ -33,4 +33,6 @@ export interface ConnectionListener {
 	destroyClientObject(oid: string): Promise<any>;
 	toggleEvent(libraryUuid: string | null, clientObjectId: string | null, eventName: string, enabled: boolean): Promise<any>;
 	executeCommand(libraryUuid: string, clientObjectId: string, commandName: string, params: any[]): Promise<any>;
+	addEventHandler(libraryUuid: string, clientObjectId: string, eventName: string, registrationId: string, invokableId: string, functionName: string, evtObjAsFirstParam: boolean, params: any[]);
+	removeEventHandler(libraryUuid: string, clientObjectId: string, eventName: string, registrationId: string);
 }

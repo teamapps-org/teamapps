@@ -24,5 +24,11 @@ import org.teamapps.projector.clientobject.DtoClientObject;
 class DtoScript extends DtoClientObject {
     required String script;
 
-    command callFunction(String name, List<Object> parameters);
+    command invoke(String name, List<Object> parameters);
+}
+
+class DtoScriptFunctionCall {
+    required DtoScript* script;
+    required String functionName;
+    required List<Object> parameters;
 }
