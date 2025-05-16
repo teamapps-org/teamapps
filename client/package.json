@@ -14,6 +14,7 @@
     "projector-client-communication",
     "projector-client-object-api",
     "projector-script",
+    "projector-stylesheet",
     "projector-grid-template",
     "projector-mustache-template",
     "projector-client-core",

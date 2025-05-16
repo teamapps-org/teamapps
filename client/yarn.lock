@@ -3397,7 +3397,6 @@ __metadata:
   resolution: "projector-script@workspace:projector-script"
   dependencies:
     esbuild: ^0.15.13
-    image-layout: ^0.4.1
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2
     typescript: ^5.1
@@ -3421,6 +3420,17 @@ __metadata:
   resolution: "projector-side-drawer@workspace:projector-side-drawer"
   dependencies:
     "@material-symbols/svg-400": latest
+    esbuild: ^0.15.13
+    projector-client-object-api: "workspace:*"
+    rimraf: ^3.0.2
+    typescript: ^5.1
+  languageName: unknown
+  linkType: soft
+
+"projector-stylesheet@workspace:projector-stylesheet":
+  version: 0.0.0-use.local
+  resolution: "projector-stylesheet@workspace:projector-stylesheet"
+  dependencies:
     esbuild: ^0.15.13
     projector-client-object-api: "workspace:*"
     rimraf: ^3.0.2

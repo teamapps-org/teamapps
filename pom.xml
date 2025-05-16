@@ -48,6 +48,7 @@
         <module>client/projector-client-core-components</module>
 
         <module>client/projector-script</module>
+        <module>client/projector-stylesheet</module>
 
         <module>client/projector-progress-indicator</module>
         <module>client/projector-notification</module>
