@@ -29,9 +29,9 @@ import {
 	DtoPieChartCommandHandler,
 	DtoPieChartEventSource
 } from "./generated";
-import {PatternifyParameter} from "./UiTreeGraph";
+import {PatternifyParameter} from "./TreeGraph";
 
-export class UiPieChart extends AbstractComponent<DtoPieChart> implements DtoPieChartCommandHandler, DtoPieChartEventSource {
+export class PieChart extends AbstractComponent<DtoPieChart> implements DtoPieChartCommandHandler, DtoPieChartEventSource {
 
 	readonly onDataPointClicked: ProjectorEvent<DtoPieChart_DataPointClickedEvent> = new ProjectorEvent();
 
@@ -47,7 +47,7 @@ export class UiPieChart extends AbstractComponent<DtoPieChart> implements DtoPie
 
 	createChart() {
 		let htmlDivElement = document.createElement("div");
-		htmlDivElement.classList.add("UiPieChart");
+		htmlDivElement.classList.add("PieChart");
 
 		//@ts-ignore
 		this.chart = new Chart()

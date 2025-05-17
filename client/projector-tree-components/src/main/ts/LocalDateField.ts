@@ -124,11 +124,11 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
 
-		this.getMainInnerDomElement().classList.add("UiLocalDateField");
+		this.getMainInnerDomElement().classList.add("LocalDateField");
 	}
 
 	private getDefaultDate() {
-		return LocalDateField.UiLocalDateToLocalDateTime(this.config.defaultSuggestionDate) ?? LocalDateTime.local();
+		return LocalDateField.DtoLocalDateToLocalDateTime(this.config.defaultSuggestionDate) ?? LocalDateTime.local();
 	}
 
 	protected localDateTimeToString(entry: LocalDateTime): string {
@@ -136,7 +136,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 	}
 
 	protected createDateRenderer(): (time: LocalDateTime) => string {
-		let dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat, this.config.calendarIconEnabled, "static-readonly-UiDateField");
+		let dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat, this.config.calendarIconEnabled, "static-readonly-DateField");
 		return entry => dateRenderer(entry?.toUTC());
 	}
 
@@ -174,13 +174,13 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 	}
 
 	isValidData(v: DtoLocalDate): boolean {
-		return v == null || v._type === "UiLocalDate";
+		return v == null || v._type === "LocalDate";
 	}
 
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
-			this.trivialComboBox.setValue(LocalDateField.UiLocalDateToLocalDateTime(uiValue));
+			this.trivialComboBox.setValue(LocalDateField.DtoLocalDateToLocalDateTime(uiValue));
 		} else {
 			this.trivialComboBox.setValue(null);
 		}
@@ -199,7 +199,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 
 	public getReadOnlyHtml(value: DtoLocalDate, availableWidth: number): string {
 		if (value != null) {
-			return this.dateRenderer(LocalDateField.UiLocalDateToLocalDateTime(value));
+			return this.dateRenderer(LocalDateField.DtoLocalDateToLocalDateTime(value));
 		} else {
 			return "";
 		}
@@ -209,7 +209,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		return !deepEquals(v1, v2);
 	}
 
-	private static UiLocalDateToLocalDateTime(uiValue: DtoLocalDate) {
+	private static DtoLocalDateToLocalDateTime(uiValue: DtoLocalDate) {
 		return uiValue != null ? LocalDateTime.fromObject({year: uiValue.year, month: uiValue.month, day: uiValue.day}) : null;
 	}
 
@@ -224,7 +224,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.setFavorPastDates(config.favorPastDates);
 		this.setLocaleAndDateFormat(config.locale, config.dateFormat);
 		this.trivialComboBox.setPlaceholderText(config.placeholderText);
-		this.calendarBoxDropdown.defaultDate = LocalDateField.UiLocalDateToLocalDateTime(config.defaultSuggestionDate);
+		this.calendarBoxDropdown.defaultDate = LocalDateField.DtoLocalDateToLocalDateTime(config.defaultSuggestionDate);
 		this.setCalendarIconEnabled(config.calendarIconEnabled);
 		this.config = config;
 	}

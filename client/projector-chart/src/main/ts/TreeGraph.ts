@@ -36,7 +36,7 @@ import {
 } from "./generated";
 import {flextree} from "d3-flextree";
 
-export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements DtoTreeGraphCommandHandler, DtoTreeGraphEventSource {
+export class TreeGraph extends AbstractComponent<DtoTreeGraph> implements DtoTreeGraphCommandHandler, DtoTreeGraphEventSource {
 
 	public readonly onNodeClicked: ProjectorEvent<DtoTreeGraph_NodeClickedEvent> = new ProjectorEvent();
 	public readonly onNodeExpandedOrCollapsed: ProjectorEvent<DtoTreeGraph_NodeExpandedOrCollapsedEvent> = new ProjectorEvent();
@@ -49,7 +49,7 @@ export class UiTreeGraph extends AbstractComponent<DtoTreeGraph> implements DtoT
 	constructor(config: DtoTreeGraph, serverObjectChannel: ServerObjectChannel) {
 		super(config);
 
-		this.$main = parseHtml(`<div class="UiTreeGraph">`);
+		this.$main = parseHtml(`<div class="TreeGraph">`);
 		this.chart = new TreeChart()
 			.container(this.$main);
 		this.update(config);

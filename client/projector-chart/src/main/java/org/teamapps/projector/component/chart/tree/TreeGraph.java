@@ -88,12 +88,12 @@ public class TreeGraph<RECORD> extends AbstractComponent implements DtoTreeGraph
 		uiNode.setParentExpanded(node.isParentExpanded());
 		uiNode.setExpanded(node.isExpanded());
 		uiNode.setHasLazyChildren(node.isHasLazyChildren());
-		uiNode.setSideListNodes(node.getSideListNodes() != null ? node.getSideListNodes().stream().map(this::createBaseUiNode).collect(Collectors.toList()) : null);
+		uiNode.setSideListNodes(node.getSideListNodes() != null ? node.getSideListNodes().stream().map(this::createDtoBaseTreeGraphNode).collect(Collectors.toList()) : null);
 		uiNode.setSideListExpanded(node.isSideListExpanded());
 		return uiNode;
 	}
 
-	private DtoBaseTreeGraphNode createBaseUiNode(BaseTreeGraphNode<RECORD> node) {
+	private DtoBaseTreeGraphNode createDtoBaseTreeGraphNode(BaseTreeGraphNode<RECORD> node) {
 		DtoBaseTreeGraphNode uiNode = new DtoBaseTreeGraphNode();
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
 		uiNode.setId(node.getId());

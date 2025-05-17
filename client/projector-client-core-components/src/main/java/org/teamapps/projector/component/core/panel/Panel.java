@@ -120,11 +120,11 @@ public class Panel extends AbstractComponent implements DtoPanelEventHandler {
 	@Override
 	public DtoComponent createDto() {
 		DtoPanel uiPanel = new DtoPanel();
-		mapUiPanelProperties(uiPanel);
+		mapPanelProperties(uiPanel);
 		return uiPanel;
 	}
 
-	protected void mapUiPanelProperties(DtoPanel uiPanel) {
+	protected void mapPanelProperties(DtoPanel uiPanel) {
 		mapAbstractConfigProperties(uiPanel);
 		uiPanel.setTitle(title);
 		uiPanel.setIcon(getSessionContext().resolveIcon(icon));

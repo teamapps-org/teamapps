@@ -253,7 +253,7 @@
     display: flex;
     flex-direction: column;
 
-    .UiFormSection {
+    .FormSection {
       flex: 0 0 auto;
       display: flex;
       flex-direction: column;
@@ -317,7 +317,7 @@
       }
     }
 
-    .UiFormSectionFloatingFieldsPlacement {
+    .FormSectionFloatingFieldsPlacement {
       display: flex;
       align-items: baseline;
 
@@ -331,7 +331,7 @@
     }
   }
 
-  .UiDropDown {
+  .DropDown {
     border-color: var(--ta-panel-border-color); // TODO @dark-border-color, chrome bug...
 
     .background-color-div {
@@ -339,7 +339,7 @@
     }
   }
 
-  .UiField {
+  .Field {
     .field-border,
     .field-border-visibility {
       border-color: @dark-input-border;
@@ -361,7 +361,7 @@
     }
   }
 
-  .UiButton {
+  .Button {
     &:hover,
     &:focus,
     &.focus {
@@ -369,7 +369,7 @@
     }
   }
 
-  .UiWorkSpaceLayout .minimized-tabpanel-bar {
+  .WorkSpaceLayout .minimized-tabpanel-bar {
     background-color: @dark-background-color;
 
     .minimized-tabpanel-button {
@@ -412,7 +412,7 @@
     }
   }
 
-  .UiMediaTrackGraph {
+  .MediaTrackGraph {
     .area {
       fill: rgb(96, 185, 255);
       fill-opacity:0.20;
@@ -510,11 +510,11 @@
     border: @dark-input-border;
   }
 
-  .UiFloatingComponent .expander-handle:after {
+  .FloatingComponent .expander-handle:after {
     filter: invert(100%);
   }
 
-  .UiProgressDisplay .cancel-button {
+  .ProgressDisplay .cancel-button {
     filter: invert(100%);
   }
 

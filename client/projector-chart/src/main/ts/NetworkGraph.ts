@@ -34,9 +34,9 @@ import {
 	DtoNetworkGraphCommandHandler,
 	DtoNetworkGraphEventSource, DtoNetworkLink, DtoNetworkNode, ExpandState, CornerShape
 } from "./generated";
-import {patternify} from "./UiTreeGraph";
+import {patternify} from "./TreeGraph";
 
-export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implements DtoNetworkGraphCommandHandler, DtoNetworkGraphEventSource {
+export class NetworkGraph extends AbstractComponent<DtoNetworkGraph> implements DtoNetworkGraphCommandHandler, DtoNetworkGraphEventSource {
 
 	public readonly onNodeClicked: ProjectorEvent<DtoNetworkGraph_NodeClickedEvent> = new ProjectorEvent();
 	public readonly onNodeDoubleClicked: ProjectorEvent<DtoNetworkGraph_NodeDoubleClickedEvent> = new ProjectorEvent();
@@ -60,7 +60,7 @@ export class UiNetworkGraph extends AbstractComponent<DtoNetworkGraph> implement
 
 	constructor(config: DtoNetworkGraph, serverObjectChannel: ServerObjectChannel) {
 		super(config);
-		this.$graph = parseHtml('<div class="UiNetworkGraph"></div>');
+		this.$graph = parseHtml('<div class="NetworkGraph"></div>');
 
 		this.links = config.links;
 		this.nodes = config.nodes;

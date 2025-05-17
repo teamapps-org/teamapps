@@ -54,7 +54,7 @@ public class CheckBox extends AbstractField<Boolean> implements DtoCheckBoxEvent
 	@Override
 	public DtoAbstractField createDto() {
 		DtoCheckBox uiCheckBox = new DtoCheckBox();
-		mapAbstractFieldAttributesToUiField(uiCheckBox);
+		mapAbstractFieldAttributes(uiCheckBox);
 		uiCheckBox.setCaption(caption);
 		uiCheckBox.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiCheckBox.setCheckColor(checkColor != null ? checkColor.toHtmlColorString() : null);

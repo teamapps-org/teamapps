@@ -80,7 +80,7 @@ public class Window extends Panel implements Showable, DtoWindowEventHandler {
 	@Override
 	public DtoComponent createDto() {
 		DtoWindow window = new DtoWindow();
-		mapUiPanelProperties(window);
+		mapPanelProperties(window);
 		window.setModal(modal);
 		window.setWidth(width);
 		window.setHeight(height);

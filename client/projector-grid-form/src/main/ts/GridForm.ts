@@ -20,7 +20,7 @@
 
 
 import {
-	AbstractComponent, bind, Component, createUiBorderCssString, createUiShadowCssString, createUiSpacingCssString, DtoComponent,
+	AbstractComponent, bind, Component, createBorderCssString, createShadowCssString, createSpacingCssString, DtoComponent,
 	executeAfterAttached, generateUUID,
 	parseHtml,
 	ServerObjectChannel, slideDown, slideUp,
@@ -40,7 +40,7 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 
 	private $mainDiv: HTMLElement;
 
-	private sections: UiFormSection[];
+	private sections: FormSection[];
 
 	private layoutPoliciesFromLargeToSmall: DtoFormLayoutPolicy[];
 	private activeLayoutPolicyIndex: number;
@@ -52,7 +52,7 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 
 	constructor(config: DtoGridForm, serverObjectChannel: ServerObjectChannel) {
 		super(config);
-		this.$mainDiv = parseHtml(`<div class="UiGridForm">
+		this.$mainDiv = parseHtml(`<div class="GridForm">
 </div>`);
 
 		config.fields.forEach(f => this.addField(f as Component));
@@ -108,7 +108,7 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 			section.getMainDomElement().remove();
 		});
 		this.sections = layoutPolicy.sections.map(sectionConfig => {
-			const section = new UiFormSection(sectionConfig, this.sectionCollapseOverrides[sectionConfig.id], field => this.getFieldWrapper(field));
+			const section = new FormSection(sectionConfig, this.sectionCollapseOverrides[sectionConfig.id], field => this.getFieldWrapper(field));
 			this.$mainDiv.appendChild(section.getMainDomElement());
 			section.placeFields();
 			section.onCollapsedStateChanged.addListener((collapsed) => {
@@ -170,7 +170,7 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 
 }
 
-class UiFormSection {
+class FormSection {
 
 	public readonly onCollapsedStateChanged: ProjectorEvent<boolean> = new ProjectorEvent<boolean>();
 
@@ -196,10 +196,10 @@ class UiFormSection {
 		const hiddenClass = config.visible ? '' : 'hidden'; // TODO discuss how the visible attribute will be handled when layout policies are updated. Does this attribute make sense at all?
 		const fillRemainingHeightClass = config.fillRemainingHeight ? 'fill-remaining-height' : '';
 
-		const marginCss = createUiSpacingCssString("margin", config.margin);
-		const paddingCss = createUiSpacingCssString("padding", config.padding);
-		const borderCss = createUiBorderCssString(config.border);
-		const shadowCss = createUiShadowCssString(config.shadow);
+		const marginCss = createSpacingCssString("margin", config.margin);
+		const paddingCss = createSpacingCssString("padding", config.padding);
+		const borderCss = createBorderCssString(config.border);
+		const shadowCss = createShadowCssString(config.shadow);
 		const backgroundColorCss = config.backgroundColor ? `background-color:${(config.backgroundColor ?? '')};` : '';
 
 		const gridTemplateColumnsCss = 'grid-template-columns:' + config.columns.map(column => createCssGridRowOrColumnString(column.widthPolicy)).join(" ") + ';';
@@ -207,7 +207,7 @@ class UiFormSection {
 		const gridGapCss = 'grid-gap:' + config.gridGap + 'px;';
 
 
-		this.$div = parseHtml(`<div data-id="${config.id}" data-section-uuid="${this.uuid}" class="UiFormSection ${headerLineClass} ${hasHeaderTemplateClass} ${hasHeaderDataClass} ${collapsibleClass} ${hiddenClass} ${fillRemainingHeightClass}" style="${marginCss}${borderCss}${shadowCss}${backgroundColorCss}">
+		this.$div = parseHtml(`<div data-id="${config.id}" data-section-uuid="${this.uuid}" class="FormSection ${headerLineClass} ${hasHeaderTemplateClass} ${hasHeaderDataClass} ${collapsibleClass} ${hiddenClass} ${fillRemainingHeightClass}" style="${marginCss}${borderCss}${shadowCss}${backgroundColorCss}">
 	<style></style>
     <div class="header">
         <div class="expand-button">
@@ -255,7 +255,7 @@ class UiFormSection {
 
 		this.config.fieldPlacements.forEach(placement => {
 			const placementId = generateUUID(true);
-			if (this.isUiFormSectionFieldPlacement(placement)) {
+			if (this.isFormSectionFieldPlacement(placement)) {
 				const uiField = placement.field as Component;
 				uiField.onVisibilityChanged.addListener(this.updateGroupVisibility);
 				this.uiFields.push(uiField);
@@ -268,8 +268,8 @@ class UiFormSection {
 				fieldWrapper.appendChild(uiField.getMainElement());
 				fieldWrapper.setAttribute("data-placement-id", placementId);
 				this.$body.appendChild(fieldWrapper);
-			} else if (this.isUiFormSectionFloatingFieldsPlacement(placement)) {
-				let $container = parseHtml(`<div class="UiFormSectionFloatingFieldsPlacement" data-placement-id="${placementId}"></div>`);
+			} else if (this.isFormSectionFloatingFieldsPlacement(placement)) {
+				let $container = parseHtml(`<div class="FormSectionFloatingFieldsPlacement" data-placement-id="${placementId}"></div>`);
 				allCssRules[placementId] = {
 					...createSectionPlacementStyles(placement),
 					"flex-wrap": placement.wrap ? "wrap" : "nowrap"
@@ -320,12 +320,12 @@ class UiFormSection {
 		}).join('\n');
 	}
 
-	private isUiFormSectionFieldPlacement(placement: DtoFormSectionPlacement): placement is DtoFormSectionFieldPlacement {
-		return placement._type === "DtoUiFormSectionFieldPlacement";
+	private isFormSectionFieldPlacement(placement: DtoFormSectionPlacement): placement is DtoFormSectionFieldPlacement {
+		return placement._type === "DtoFormSectionFieldPlacement";
 	}
 
-	private isUiFormSectionFloatingFieldsPlacement(placement: DtoFormSectionPlacement): placement is DtoFormSectionFloatingFieldsPlacement {
-		return placement._type === "DtoUiFormSectionFloatingFieldsPlacement";
+	private isFormSectionFloatingFieldsPlacement(placement: DtoFormSectionPlacement): placement is DtoFormSectionFloatingFieldsPlacement {
+		return placement._type === "DtoFormSectionFloatingFieldsPlacement";
 	}
 
 	public getMainDomElement(): HTMLElement {

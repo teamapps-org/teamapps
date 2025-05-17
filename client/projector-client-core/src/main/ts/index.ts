@@ -1,2 +1,2 @@
-export * from "./DefaultUiContext";
+export * from "./ProjectorUiManager";
 export * from "./getAllUrlParameters";

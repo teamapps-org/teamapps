@@ -42,7 +42,7 @@ public abstract class AbstractMapShape {
 
 	public abstract DtoAbstractMapShape createDtoMapShape();
 
-	protected void mapAbstractUiShapeProperties(DtoAbstractMapShape uiShape) {
+	protected void mapAbstractShapeProperties(DtoAbstractMapShape uiShape) {
 		uiShape.setShapeProperties(properties.createDtoShapeProperties());
 	}
 

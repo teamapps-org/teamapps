@@ -49,7 +49,7 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 
 	constructor(config: DtoTree, private soc: DtoTreeServerObjectChannel) {
 		super(config);
-		this.$panel = parseHtml('<div class="UiTree">');
+		this.$panel = parseHtml('<div class="Tree">');
 
 		this.nodes = config.initialData;
 
@@ -61,7 +61,7 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 			entryRenderingFunction: entry => this.renderRecord(entry),
 			lazyChildrenFlag: 'lazyChildren',
 			lazyChildrenQueryFunction: async (node) => await this.soc.sendQuery("lazyLoadChildren", node?.id),
-			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
+			spinnerTemplate: `<div class="Spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			showExpanders: config.expandersVisible,
 			toggleExpansionOnClick: config.toggleExpansionOnClick,
 			enforceSingleExpandedPath: config.enforceSingleExpandedPath,

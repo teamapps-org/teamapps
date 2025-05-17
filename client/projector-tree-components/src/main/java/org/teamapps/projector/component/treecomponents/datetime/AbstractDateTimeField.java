@@ -44,8 +44,8 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 		this.timeFormat = getSessionContext().getTimeFormat();
 	}
 
-	protected void mapAbstractDateTimeFieldUiValues(DtoAbstractDateTimeField uiField) {
-		mapAbstractFieldAttributesToUiField(uiField);
+	protected void mapAbstractDateTimeFieldDtoValues(DtoAbstractDateTimeField uiField) {
+		mapAbstractFieldAttributes(uiField);
 		uiField.setShowDropDownButton(showDropDownButton);
 		uiField.setFavorPastDates(favorPastDates);
 		uiField.setLocale(locale.toLanguageTag());

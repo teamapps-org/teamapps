@@ -37,7 +37,7 @@ public class MapPolyline extends AbstractMapShape {
 
 	public DtoMapPolyline createDtoMapShape() {
 		DtoMapPolyline uiPolyline = new DtoMapPolyline();
-		mapAbstractUiShapeProperties(uiPolyline);
+		mapAbstractShapeProperties(uiPolyline);
 		uiPolyline.setPath(List.copyOf(points));
 		return uiPolyline;
 	}

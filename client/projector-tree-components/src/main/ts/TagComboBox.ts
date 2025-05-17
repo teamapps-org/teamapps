@@ -117,7 +117,7 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 			dropDownMaxHeight: config.dropDownMaxHeight,
 			dropDownMinWidth: config.dropDownMinWidth
 		}, this.treeBoxDropdown);
-		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox", "default-min-field-width");
+		this.trivialTagComboBox.getMainDomElement().classList.add("TagComboBox", "default-min-field-width");
 		this.setWrappingMode(config.wrappingMode);
 		this.trivialTagComboBox.onValueChanged.addListener(() => this.commit());
 
@@ -292,7 +292,7 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 		} else {
 			content = "";
 		}
-		return `<div class="static-readonly-UiTagComboBox">${content}</div>`
+		return `<div class="static-readonly-TagComboBox">${content}</div>`
 	}
 
 	getDefaultValue(): any[] {

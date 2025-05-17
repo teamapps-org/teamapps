@@ -55,7 +55,7 @@ public class MapCircle extends AbstractMapShape {
 
 	public DtoMapCircle createDtoMapShape() {
 		DtoMapCircle uiCircle = new DtoMapCircle();
-		mapAbstractUiShapeProperties(uiCircle);
+		mapAbstractShapeProperties(uiCircle);
 		uiCircle.setCenter(center);
 		uiCircle.setRadius(radiusMeters);
 		return uiCircle;

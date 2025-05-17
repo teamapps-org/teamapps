@@ -25,7 +25,7 @@ import {
 	ServerObjectChannel,
 	ProjectorEvent
 } from "projector-client-object-api";
-import {createUiSpacingValueCssString} from "projector-client-object-api";
+import {createSpacingValueCssString} from "projector-client-object-api";
 import {
 	DtoNotificationBar, DtoNotificationBar_ItemActionLinkClickedEvent,
 	DtoNotificationBar_ItemClickedEvent, DtoNotificationBar_ItemClosedEvent,
@@ -146,7 +146,7 @@ class NotificationBarItem {
 		this.$closeButton.classList.toggle("hidden", !config.dismissible);
 		this.$main.style.backgroundColor = config.backgroundColor;
 		this.$main.style.borderColor = config.borderColor;
-		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
+		this.$contentContainer.style.padding = createSpacingValueCssString(config.padding);
 
 		this.$text.textContent = config.text;
 		this.$text.style.color = config.textColor;

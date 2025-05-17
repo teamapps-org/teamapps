@@ -34,13 +34,14 @@ import {
 } from "./generated";
 import {ContextMenu, removeDangerousTags} from "projector-client-core-components";
 import {Autolinker} from "autolinker";
+import {ChatMessage} from "./ChatMessage";
 
 export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
 
 	private $main: HTMLElement;
 	private gotFirstMessage: boolean = false;
 	private requestingPreviousMessages: boolean;
-	private uiChatMessages: UiChatMessage[] = [];
+	private uiChatMessages: ChatMessage[] = [];
 	private $loadingIndicatorWrapper: HTMLElement;
 	private $messages: HTMLElement;
 	private contextMenu: ContextMenu;
@@ -100,7 +101,7 @@ export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements Dt
 			this.serverObjectChannel.sendQuery("requestPreviousMessages").then(batch => {
 				const heightBefore = this.$messages.offsetHeight;
 				batch.messages.reverse().forEach(messageConfig => {
-					const uiChatMessage = new UiChatMessage(messageConfig);
+					const uiChatMessage = new ChatMessage(messageConfig);
 					prependChild(this.$messages, uiChatMessage.getMainDomElement());
 					this.uiChatMessages.splice(0, 0, uiChatMessage);
 				});
@@ -122,7 +123,7 @@ export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements Dt
 
 	addMessages(batch: DtoChatMessageBatch): void {
 		batch.messages.forEach(messageConfig => {
-			const chatMessage = new UiChatMessage(messageConfig);
+			const chatMessage = new ChatMessage(messageConfig);
 			this.$messages.appendChild(chatMessage.getMainDomElement());
 			this.uiChatMessages.push(chatMessage);
 		});
@@ -186,83 +187,5 @@ export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements Dt
 
 	closeContextMenu(): void {
 		this.contextMenu.close();
-	}
-}
-
-
-
-class UiChatMessage {
-
-	private static readonly AUTOLINKER = new Autolinker({
-		urls: {
-			schemeMatches: true,
-			wwwMatches: true,
-			tldMatches: true
-		},
-		email: true,
-		phone: true,
-		mention: false,
-		hashtag: false,
-
-		stripPrefix: false,
-		stripTrailingSlash: false,
-		newWindow: true,
-
-		truncate: {
-			length: 70,
-			location: 'smart'
-		},
-
-		className: ''
-	});
-
-	private $main: HTMLElement;
-	private $photos: HTMLElement;
-	private $files: HTMLElement;
-	private config: DtoChatMessage;
-
-	constructor(config: DtoChatMessage) {
-		this.$main = parseHtml(`<div class="message UiChatMessage" data-id="${config.id}"></div>`);
-		this.update(config);
-	}
-
-	public update(config: DtoChatMessage) {
-		this.config = config;
-		this.$main.classList.toggle("deleted", config.deleted);
-		this.$main.innerHTML = "";
-		let text = removeDangerousTags(this.config.text);
-		text = UiChatMessage.AUTOLINKER.link(text);
-		this.$main.appendChild(parseHtml(`<img class="user-image" src="${this.config.userImageUrl}"></img>`))
-		this.$main.appendChild(parseHtml(`<div class="user-nickname">${this.config.userNickname}</div>`))
-		this.$main.appendChild(parseHtml(`<div class="text">${text}</div>`))
-		this.$main.appendChild(parseHtml(`<div class="photos"></div>`))
-		this.$main.appendChild(parseHtml(`<div class="files"></div>`))
-		this.$main.appendChild(parseHtml(`<div class="deleted-icon"></div>`))
-
-		this.$photos = this.$main.querySelector(":scope .photos");
-		this.$files = this.$main.querySelector(":scope .files");
-
-		if (this.config.photos != null) {
-			this.config.photos.forEach(photo => {
-				this.$photos.appendChild(parseHtml(`<img class="photo" src="${photo.imageUrl}">`))
-			});
-		}
-		if (this.config.files != null) {
-			this.config.files.forEach(file => {
-				this.$files.appendChild(parseHtml(`<a class="file" target="_blank" href="${file.downloadUrl}">
-					<div class="file-icon img img-32" style="background-image: url('${file.thumbnailUrl || file.icon}')"> </div>
-					<div class="file-name">${file.name}</div>
-					<div class="file-size">${humanReadableFileSize(file.length)}</div>
-				</a>`))
-			});
-		}
-	}
-
-	public get id() {
-		return this.config.id;
-	}
-
-	public getMainDomElement(): HTMLElement {
-		return this.$main;
 	}
 }

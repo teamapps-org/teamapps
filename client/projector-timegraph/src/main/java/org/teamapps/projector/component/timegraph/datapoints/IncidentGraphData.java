@@ -39,7 +39,7 @@ public interface IncidentGraphData extends org.teamapps.projector.component.time
 	}
 
 	@Override
-	default DtoGraphData toUiGraphData() {
+	default DtoGraphData toDtoGraphData() {
 		return new DtoIncidentGraphData(getInterval().toDtoLongInterval(), streamDataPoints()
 				.map(d -> new DtoIncidentGraphDataPoint(d.getX1(), d.getX2(), d.getY(), d.getColor().toHtmlColorString(), d.getTooltipHtml()))
 				.collect(Collectors.toList()));

@@ -106,7 +106,7 @@ class ClientObjectWrapper extends AbstractClientObjectWrapper<ClientObject> {
 	}
 }
 
-export class DefaultUiContext implements ConnectionListener {
+export class ProjectorUiManager implements ConnectionListener {
 
 	public readonly sessionId: string;
 

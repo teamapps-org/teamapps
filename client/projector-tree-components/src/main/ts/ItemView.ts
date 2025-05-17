@@ -49,7 +49,7 @@ export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemV
 	constructor(config: DtoItemView, private soc: DtoItemViewServerObjectChannel) {
 		super(config);
 
-		this.$itemView = parseHtml('<div class="UiItemView"></div>');
+		this.$itemView = parseHtml('<div class="ItemView"></div>');
 		this.$itemView.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";
 		this.$itemView.classList.add("background-mode-" + config.itemBackgroundMode);
 

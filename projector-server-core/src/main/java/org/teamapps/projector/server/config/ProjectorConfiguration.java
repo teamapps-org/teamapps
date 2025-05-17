@@ -152,18 +152,14 @@ public class ProjectorConfiguration {
 	private File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
 
 	/**
-	 * Max number of threads that should be used for changing session state.
-	 * Note that you can also choose to write an own {@link SequentialExecutorFactory},
-	 * in which case this
-	 *
-	 * @see org.teamapps.uisession.TeamAppsSessionManager#sessionExecutorFactory
+	 * Max number of threads that should be used by TeamApps.
 	 */
 	private int maxNumberOfSessionExecutorThreads = Runtime.getRuntime().availableProcessors() * 2;
 
 	/**
 	 * Path prefix to be ignored when routing and added when creating URLs.
 	 *
-	 * @see RouteHandler
+	 * @see org.teamapps.projector.session.navigation.RouteHandler
 	 */
 	private String navigationPathPrefix = "";
 

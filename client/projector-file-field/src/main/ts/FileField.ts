@@ -70,7 +70,7 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	protected initialize(config: DtoFileField) {
 		this.fileItems = [];
 		let uuid = "ui-file-field" + generateUUID();
-		this.$wrapper = parseHtml(`<div class="UiFileField drop-zone" id="${uuid}">
+		this.$wrapper = parseHtml(`<div class="FileField drop-zone" id="${uuid}">
         <div class="list"></div>
         <div class="upload-button-wrapper field-border field-border-glow field-background" tabindex="0">
             <div class="upload-button-template"></div>
@@ -337,7 +337,7 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 		} else {
 			content = "";
 		}
-		return `<div class="static-readonly-UiFileField default-min-field-width">${content}</div>`
+		return `<div class="static-readonly-FileField default-min-field-width">${content}</div>`
 	}
 
 	getDefaultValue(): DtoIdentifiableClientRecord[] {

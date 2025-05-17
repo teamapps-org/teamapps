@@ -88,7 +88,7 @@ public class TextField extends AbstractField<String> implements DtoTextFieldEven
 	@Override
 	public DtoTextField createDto() {
 		DtoTextField uiField = new DtoTextField();
-		mapAbstractFieldAttributesToUiField(uiField);
+		mapAbstractFieldAttributes(uiField);
 		uiField.setMaxCharacters(maxCharacters);
 		uiField.setShowClearButton(showClearButton);
 		uiField.setPlaceholderText(placeholderText);

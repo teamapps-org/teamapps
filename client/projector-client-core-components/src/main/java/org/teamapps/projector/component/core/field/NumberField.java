@@ -57,7 +57,7 @@ public class NumberField extends AbstractField<Number> implements DtoNumberField
 	@Override
 	public DtoAbstractField createDto() {
 		DtoNumberField field = new DtoNumberField();
-		mapAbstractFieldAttributesToUiField(field);
+		mapAbstractFieldAttributes(field);
 		field.setPrecision(precision);
 		field.setPlaceholderText(emptyText);
 		field.setShowClearButton(showClearButton);

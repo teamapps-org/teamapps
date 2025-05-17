@@ -21,14 +21,14 @@
 import {
 	AbstractComponent,
 	Component,
-	createUiSpacingCssString,
+	createSpacingCssString,
 	DtoComponent,
 	parseHtml,
 	ServerObjectChannel
 } from "projector-client-object-api";
 import {DtoElegantPanel, DtoElegantPanelCommandHandler} from "./generated";
 
-export class UiElegantPanel extends AbstractComponent<DtoElegantPanel> implements DtoElegantPanelCommandHandler {
+export class ElegantPanel extends AbstractComponent<DtoElegantPanel> implements DtoElegantPanelCommandHandler {
 
 	private $element: HTMLElement;
 	private $contentContainer: HTMLElement;
@@ -36,11 +36,11 @@ export class UiElegantPanel extends AbstractComponent<DtoElegantPanel> implement
 
 	constructor(config: DtoElegantPanel, serverObjectChannel: ServerObjectChannel) {
 		super(config);
-		this.$element = parseHtml(`<div class="UiElegantPanel">
+		this.$element = parseHtml(`<div class="ElegantPanel">
                 <div class="flex-container">
                     <div class="background-image-div teamapps-blurredBackgroundImage">
                         <div class="background-color-div">
-                            <div class="content-container scroll-container ${config.horizontalContentAlignment}" style="${createUiSpacingCssString("padding", config.padding)}; max-width: ${config.maxContentWidth ? config.maxContentWidth + "px" : "100%"};"></div>
+                            <div class="content-container scroll-container ${config.horizontalContentAlignment}" style="${createSpacingCssString("padding", config.padding)}; max-width: ${config.maxContentWidth ? config.maxContentWidth + "px" : "100%"};"></div>
                         </div>
                     </div>
                 </div>

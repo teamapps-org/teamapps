@@ -20,19 +20,17 @@
 
 import {
 	AbstractComponent,
-	Component,
 	executeAfterAttached,
 	insertAfter,
 	insertBefore,
 	parseHtml,
-	removeClassesByFunction,
-	ServerObjectChannel,
-	Template
+	ServerObjectChannel
 } from "projector-client-object-api";
-import {BlockAlignment, DtoBlock, DtoBlogView, DtoCitationBlock, DtoComponentBlock, DtoMessageBlock} from "./generated";
-import {removeDangerousTags, ToolButton} from "projector-client-core-components";
-import {fixed_partition} from "image-layout";
-
+import {BlockAlignment, DtoBlock, DtoBlogView} from "./generated";
+import {MessageBlock} from "./MessageBlock";
+import {CitationBlock} from "./CitationBlock";
+import {AbstractBlockComponent} from "./AbstractBlockComponent";
+import {ComponentBlock} from "./ComponentBlock";
 
 interface Row {
 	$row: HTMLElement;
@@ -48,6 +46,12 @@ interface Block {
 	block: AbstractBlockComponent<DtoBlock>;
 }
 
+var blockTypes = {
+	"DtoMessageBlock": MessageBlock,
+	"DtoCitationBlock": CitationBlock,
+	"DtoComponentBlock": ComponentBlock
+}
+
 export class BlogView extends AbstractComponent<DtoBlogView> {
 
 	private $component: HTMLElement;
@@ -55,7 +59,7 @@ export class BlogView extends AbstractComponent<DtoBlogView> {
 
 	constructor(config: DtoBlogView, serverObjectChannel: ServerObjectChannel) {
 		super(config);
-		this.$component = parseHtml(`<div class="UiPageView"></div>`);
+		this.$component = parseHtml(`<div class="BlogView"></div>`);
 
 		if (config.blocks) {
 			for (var i = 0; i < config.blocks.length; i++) {
@@ -153,202 +157,5 @@ export class BlogView extends AbstractComponent<DtoBlogView> {
 
 }
 
-abstract class AbstractBlockComponent<C extends DtoBlock> {
-	constructor(protected config: C) {
-	}
-
-	public getAlignment() {
-		return this.config.alignment;
-	}
-
-	abstract getMainDomElement(): HTMLElement;
-
-	public reLayout() {
-		// default implementation
-	}
-
-	public destroy() {
-		// default implementation
-	}
-}
-
-class UiMessageBlock extends AbstractBlockComponent<DtoMessageBlock> {
-	private $main: HTMLElement;
-	private $toolButtons: Element;
-	private $topRecord: HTMLElement;
-	private $htmlContainer: HTMLElement;
-	private $images: HTMLElement;
-	private images: {
-		$img: HTMLImageElement,
-		width: number,
-		height: number
-	}[] = [];
-
-	private readonly minIdealImageHeight = 250;
-
-	constructor(config: DtoMessageBlock, serverObjectChannel: ServerObjectChannel) {
-		super(config);
-
-		this.$main = parseHtml(`<div class="pageview-block UiMessageBlock">
-	<div class="tool-buttons"></div>
-	<div class="top-record"></div>
-	<div class="html"></div>
-	<div class="images"></div>
-</div>`);
-		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
-		this.$topRecord = this.$main.querySelector(":scope .top-record");
-		this.$htmlContainer = this.$main.querySelector(":scope .html");
-		this.$images = this.$main.querySelector(":scope .images");
-
-		this.$toolButtons.innerHTML = '';
-		config.toolButtons && config.toolButtons.forEach((tb: ToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainElement());
-		});
-
-		removeClassesByFunction(this.$topRecord.classList, className => className.startsWith("align-"));
-		this.$topRecord.classList.add("align-" + config.topRecordAlignment);
-		this.$topRecord.innerHTML = config.topRecord != null ? (config.topTemplate as Template).render(config.topRecord.values) : "";
-
-		this.$htmlContainer.innerHTML = config.html != null ? removeDangerousTags(config.html) : "";
-
-		if (config.imageUrls && config.imageUrls.length > 0) {
-			for (var i = 0; i < this.config.imageUrls.length; i++) {
-				const $image = new Image();
-				let image = {
-					width: this.minIdealImageHeight,
-					height: this.minIdealImageHeight,
-					$img: $image
-				};
-				this.images.push(image);
-				$image.classList.add("image");
-				$image.onload = (event: Event) => {
-					image.width = (event.target as HTMLImageElement).naturalWidth;
-					image.height = (event.target as HTMLImageElement).naturalHeight;
-					this.reLayout();
-				};
-				$image.src = this.config.imageUrls[i];
-				this.$images.appendChild($image);
-			}
-		}
-
-	}
-
-	reLayout() {
-		if (this.images.length > 0) {
-			let availableWidth = this.$images.clientWidth;
-			let layout = fixed_partition(this.images, {
-				containerWidth: availableWidth,
-				idealElementHeight: Math.max(this.minIdealImageHeight, availableWidth / 3),
-				align: 'center',
-				spacing: 10
-			});
-			for (let i = 0; i < this.images.length; i++) {
-				this.images[i].$img.style.left = layout.positions[i].x + "px";
-				this.images[i].$img.style.top = layout.positions[i].y + "px";
-				this.images[i].$img.style.width = layout.positions[i].width + "px";
-				this.images[i].$img.style.height = layout.positions[i].height + "px";
-			}
-			this.$images.style.height = layout.height + "px";
-		} else {
-			this.$images.style.height = "0";
-		}
-	}
-
-	public getMainDomElement(): HTMLElement {
-		return this.$main;
-	}
-
-	public destroy(): void {
-		// nothing to do
-	}
-
-}
-
-class UiCitationBlock extends AbstractBlockComponent<DtoCitationBlock> {
-
-	private $main: HTMLElement;
-	private $toolButtons: Element;
-
-	constructor(config: DtoCitationBlock, serverObjectChannel: ServerObjectChannel) {
-		super(config);
-
-		this.$main = parseHtml(`<div class="pageview-block UiCitationBlock">
-    <div class="tool-buttons"></div>
-    <div class="flex-container">
-	    <div class="creator-image-wrapper align-${config.creatorImageAlignment}">
-			${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"></img>` : ''}
-	    </div>
-	    <div class="content-wrapper"></div>
-	</div>
-</div>`);
-		let $contentWrapper = this.$main.querySelector<HTMLElement>(':scope .content-wrapper');
-		$contentWrapper.appendChild(parseHtml(`<div class="citation">${removeDangerousTags(config.citation)}</div>`)[0]);
-		$contentWrapper.appendChild(parseHtml(`<div class="author">${removeDangerousTags(config.author)}</div>`)[0]);
-
-		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
-		this.$toolButtons.innerHTML = '';
-		config.toolButtons && config.toolButtons.forEach((tb: ToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainElement());
-		});
-
-	}
-
-
-	public getMainDomElement(): HTMLElement {
-		return this.$main;
-	}
-
-	public set attachedToDom(attachedToDom: boolean) {
-		// do nothing
-	}
-
-	public destroy(): void {
-		// nothing to do
-	}
-}
-
-class UiComponentBlock extends AbstractBlockComponent<DtoComponentBlock> {
-
-	private $main: HTMLElement;
-	private component: Component;
-	private $componentWrapper: HTMLElement;
-	private $toolButtons: Element;
-
-	constructor(config: DtoComponentBlock, serverObjectChannel: ServerObjectChannel) {
-		super(config);
-
-		this.$main = parseHtml(`<div class="pageview-block UiComponentBlock" style="height:${config.height}px">
-	<div class="tool-buttons"></div>
-                <div class="component-wrapper"></div>
-            </div>`);
-		this.$componentWrapper = this.$main.querySelector<HTMLElement>(':scope .component-wrapper');
-		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
-
-		this.$toolButtons.innerHTML = '';
-		config.toolButtons && config.toolButtons.forEach((tb: ToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainElement());
-		});
-		
-		if (config.title) {
-			this.$main.prepend(parseHtml(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
-		}
-
-		this.component = config.component as Component;
-		this.$componentWrapper.appendChild(this.component.getMainElement());
-	}
-
-	public getMainDomElement(): HTMLElement {
-		return this.$main;
-	}
-
-	public destroy(): void {
-	}
-}
-
-var blockTypes = {
-	"DtoMessageBlock": UiMessageBlock,
-	"DtoCitationBlock": UiCitationBlock,
-	"DtoComponentBlock": UiComponentBlock
-};
 
 

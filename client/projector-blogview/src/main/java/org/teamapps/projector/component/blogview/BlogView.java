@@ -35,12 +35,12 @@ public class BlogView extends AbstractComponent implements DtoBlogViewEventHandl
 
 	@Override
 	public DtoBlogView createDto() {
-		DtoBlogView uiPageView = new DtoBlogView();
-		mapAbstractConfigProperties(uiPageView);
-		uiPageView.setBlocks(blocks.stream()
+		DtoBlogView dtoBlogView = new DtoBlogView();
+		mapAbstractConfigProperties(dtoBlogView);
+		dtoBlogView.setBlocks(blocks.stream()
 				.map(block -> block.createDtoBlock())
 				.collect(Collectors.toList()));
-		return uiPageView;
+		return dtoBlogView;
 	}
 
 	public void addBlock(AbstractBlock block) {

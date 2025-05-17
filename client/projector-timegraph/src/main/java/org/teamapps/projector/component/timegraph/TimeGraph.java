@@ -172,7 +172,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 			final Map<String, List<Interval>> neededIntervalsByGraphId = event.getNeededIntervalsByGraphId().entrySet().stream()
 					.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(i -> new Interval(i.getMin(), i.getMax())).collect(Collectors.toList())));
 			Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededIntervalsByGraphId);
-			clientObjectChannel.addData(event.getZoomLevelIndex(), convertToUiData(data));
+			clientObjectChannel.addData(event.getZoomLevelIndex(), convertToDtoGraphData(data));
 		}
 
 		this.displayedInterval = displayedInterval;
@@ -206,9 +206,9 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 				));
 	}
 
-	private Map<String, DtoGraphData> convertToUiData(Map<String, GraphData> data) {
+	private Map<String, DtoGraphData> convertToDtoGraphData(Map<String, GraphData> data) {
 		return data.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toUiGraphData()));
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toDtoGraphData()));
 	}
 
 	public void refresh() {

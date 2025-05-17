@@ -128,7 +128,7 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 		// );
 
 
-		this.$main = parseHtml(`<div class="UiMediaSoupV3WebRtcClient state-idle">
+		this.$main = parseHtml(`<div class="MediaSoupV3WebRtcClient state-idle">
 	<div class="video-container">
 		<img class="image"></img>
 		<video class="video" playsinline></video>

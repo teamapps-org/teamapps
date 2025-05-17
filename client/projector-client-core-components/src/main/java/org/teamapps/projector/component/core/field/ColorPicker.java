@@ -40,7 +40,7 @@ public class ColorPicker extends AbstractField<Color> implements DtoColorPickerE
 	@Override
 	public DtoAbstractField createDto() {
 		DtoColorPicker uiColorPicker = new DtoColorPicker();
-		mapAbstractFieldAttributesToUiField(uiColorPicker);
+		mapAbstractFieldAttributes(uiColorPicker);
 		uiColorPicker.setClearable(clearable);
 		return uiColorPicker;
 	}

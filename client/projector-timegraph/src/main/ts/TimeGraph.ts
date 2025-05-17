@@ -133,7 +133,7 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 		this.zoomLevels = config.zoomLevels;
 		this.maxPixelsBetweenDataPoints = config.maxPixelsBetweenDataPoints;
 
-		this.$main = parseHtml('<div class="UiTimeGraph">');
+		this.$main = parseHtml('<div class="TimeGraph">');
 
 		this.scaleX = scaleZoned(config.timeZoneId, 1); // TODO first day of week...
 

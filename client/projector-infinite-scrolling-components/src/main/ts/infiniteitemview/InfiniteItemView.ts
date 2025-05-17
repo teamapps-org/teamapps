@@ -74,7 +74,7 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 
 	constructor(config: DtoInfiniteItemView, serverObjectChannel: ServerObjectChannel) {
 		super(config);
-		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.cssUuid} ${config.selectionEnabled ? 'selection-enabled' : ''}">
+		this.$mainDomElement = parseHtml(`<div class="InfiniteItemView grid-${this.cssUuid} ${config.selectionEnabled ? 'selection-enabled' : ''}">
                 <div class="grid"></div>
                 <style></style>
             </div>`);

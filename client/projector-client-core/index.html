@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes, shrink-to-fit=no">
     <script type="module">
         import {DefaultUiContext, getAllUrlParameters} from "./js/index.js"
+        import {ProjectorUiManager} from "./src/main/ts/index.js";
 
         window.addEventListener('load', function () {
             let allUrlParameters = getAllUrlParameters();
             const port = window.location.port || (window.location.protocol === "https:" ? "443" : "80");
             let webSocketUrl;webSocketUrl = (window.location.protocol === "https:" ? "wss:" : "ws:") + "//" + window.location.hostname + ':' + port + "/communication";
-            window.teamAppsContext = new DefaultUiContext(webSocketUrl, allUrlParameters);
+            window.teamAppsContext = new ProjectorUiManager(webSocketUrl, allUrlParameters);
         });
     </script>
 </head>

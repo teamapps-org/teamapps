@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ClientObjectLibrary(ChartLibrary.class)
-public class ForceLayoutGraph<RECORD> extends AbstractComponent implements DtoNetworkGraphEventHandler{
+public class ForceLayoutGraph<RECORD> extends AbstractComponent implements DtoNetworkGraphEventHandler {
 
 	private final DtoNetworkGraphClientObjectChannel clientObjectChannel = new DtoNetworkGraphClientObjectChannel(getClientObjectChannel());
 

@@ -94,7 +94,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> implements Dt
 	@Override
 	public DtoComponentConfig createDto() {
 		DtoFileField uiField = new DtoFileField();
-		mapAbstractFieldAttributesToUiField(uiField);
+		mapAbstractFieldAttributes(uiField);
 		uiField.setItemTemplate(fileItemTemplate);
 		uiField.setUploadButtonTemplate(uploadButtonTemplate);
 		uiField.setUploadButtonData(uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getPropertyNames()));

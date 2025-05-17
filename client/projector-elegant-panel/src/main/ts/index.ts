@@ -1,3 +1,3 @@
 import "@less/index.less";
 
-export * from "./UiElegantPanel";
+export * from "./ElegantPanel";

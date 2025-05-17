@@ -349,7 +349,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		});
 
 		if (config.selectionFrame) {
-			this.$selectionFrame = parseHtml(`<div class="UiTable-selection-frame">`);
+			this.$selectionFrame = parseHtml(`<div class="Table-selection-frame">`);
 			applyCss(this.$selectionFrame, {
 				border: `${this.config.selectionFrame.borderWidth}px solid ${(this.config.selectionFrame.color)}`,
 				boxShadow: `0 0 ${this.config.selectionFrame.shadowWidth}px 0 rgba(0, 0, 0, .5), 0 0 ${this.config.selectionFrame.glowingWidth}px 0 ${(this.config.selectionFrame.color)}`,

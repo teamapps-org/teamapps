@@ -34,19 +34,19 @@ public class ToolAccordion extends AbstractToolContainer implements DtoToolAccor
 
 	@Override
 	public DtoComponent createDto() {
-		List<DtoToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
+		List<DtoToolbarButtonGroup> leftButtonGroups = buttonGroups.stream()
 				.filter(group -> !group.isRightSide())
 				.sorted()
 				.map(group -> group.createDtoToolbarButtonGroup())
 				.collect(Collectors.toList());
-		List<DtoToolbarButtonGroup> rightUiButtonGroups = buttonGroups.stream()
+		List<DtoToolbarButtonGroup> rightButtonGroups = buttonGroups.stream()
 				.filter(group -> group.isRightSide())
 				.sorted()
 				.map(group -> group.createDtoToolbarButtonGroup())
 				.collect(Collectors.toList());
 		DtoToolAccordion uiToolAccordion = new DtoToolAccordion();
-		uiToolAccordion.setLeftButtonGroups(leftUiButtonGroups);
-		uiToolAccordion.setRightButtonGroups(rightUiButtonGroups);
+		uiToolAccordion.setLeftButtonGroups(leftButtonGroups);
+		uiToolAccordion.setRightButtonGroups(rightButtonGroups);
 		mapAbstractConfigProperties(uiToolAccordion);
 		return uiToolAccordion;
 	}

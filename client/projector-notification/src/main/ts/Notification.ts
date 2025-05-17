@@ -34,7 +34,7 @@ import {
 	ServerObjectChannel,
 	ProjectorEvent, animateCSS, NotificationPosition
 } from "projector-client-object-api";
-import {createUiSpacingValueCssString} from "projector-client-object-api";
+import {createSpacingValueCssString} from "projector-client-object-api";
 import {ProgressBar} from "projector-progress-indicator";
 import {NotificationHandle, showNotificationLike} from "projector-client-object-api";
 
@@ -72,8 +72,8 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 	public update(config: DtoNotification) {
 		this.config = config;
 		this.$main.style.backgroundColor = config.backgroundColor;
-		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
-		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
+		// this.$main.style.borderColor = createColorCssString(config.borderColor, "#00000022");
+		this.$contentContainer.style.padding = createSpacingValueCssString(config.padding);
 		this.$main.classList.toggle("dismissible", config.dismissible);
 		this.$main.classList.toggle("show-progress", config.progressBarVisible && this.timeoutMillis > 0);
 

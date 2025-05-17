@@ -50,7 +50,7 @@ public class ComponentField extends AbstractField<Void> implements DtoComponentF
     @Override
     public DtoAbstractField createDto() {
         DtoComponentField uiField = new DtoComponentField();
-        mapAbstractFieldAttributesToUiField(uiField);
+        mapAbstractFieldAttributes(uiField);
         uiField.setComponent(component);
         uiField.setHeight(height);
         uiField.setBordered(bordered);

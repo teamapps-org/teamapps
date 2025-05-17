@@ -50,7 +50,7 @@ export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements Dt
 		super(config);
 
 		this.$componentWrapper = parseHtml(
-			`<div class="UiVideoPlayer ${config.url == null ? "not-playable" : ""}">
+			`<div class="VideoPlayer ${config.url == null ? "not-playable" : ""}">
                     <video src="${config.url || ""}" width="100%" height="100%" preload="${(config.preloadMode)}" ${config.autoplay ? "autoplay" : ""}></video>
                 </div>`);
 		this.$video = this.$componentWrapper.querySelector(":scope video");

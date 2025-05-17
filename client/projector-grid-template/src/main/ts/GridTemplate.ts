@@ -20,10 +20,10 @@
 
 import {
 	createTextAlignmentCssString,
-	createUiBorderCssString,
-	createUiFontStyleCssString,
-	createUiShadowCssString,
-	createUiSpacingCssString,
+	createBorderCssString,
+	createFontStyleCssString,
+	createShadowCssString,
+	createSpacingCssString,
 	cssObjectToString, CssPropertyObject,
 } from "projector-client-object-api";
 import {
@@ -71,14 +71,14 @@ export class GridTemplate implements Template {
 
 		const gridTemplateColumnsString = 'grid-template-columns:' + config.columns.map(column => createCssGridRowOrColumnString(column.widthPolicy)).join(" ") + ';';
 		const gridTemplateRowsString = 'grid-template-rows:' + config.rows.map(row => createCssGridRowOrColumnString(row.heightPolicy)).join(" ") + ';';
-		const paddingCss = createUiSpacingCssString("padding", config.padding);
+		const paddingCss = createSpacingCssString("padding", config.padding);
 		const gridGapCss = 'grid-gap:' + config.gridGap + 'px;';
 		const maxWidthCss = config.maxWidth >= 0 ? `max-width: ${config.maxWidth}px;` : '';
 		const maxHeightCss = config.maxHeight >= 0? `max-height: ${config.maxHeight}px;` : '';
 		const minWidthCss = config.minWidth ? `min-width: ${config.minWidth}px;` : '';
 		const minHeightCss = config.minHeight ? `min-height: ${config.minHeight}px;` : '';
 		const backgroundColorCss = config.backgroundColor ? (`background-color: ${(config.backgroundColor ?? '')};`) : '';
-		const borderCss = createUiBorderCssString(config.border);
+		const borderCss = createBorderCssString(config.border);
 		this.gridCss = `${gridTemplateColumnsString} ${gridTemplateRowsString} ${paddingCss} ${gridGapCss} ${minWidthCss} ${minHeightCss} ${maxWidthCss} ${maxHeightCss} ${backgroundColorCss} ${borderCss}`;
 	}
 
@@ -106,10 +106,10 @@ export class GridTemplate implements Template {
 }
 
 function createTextElementRenderer(element: DtoTextElement, additionalCssClass?: string, additionalStyles?: string): RenderingFunction {
-	const fontStyleCssString = createUiFontStyleCssString(element.fontStyle);
+	const fontStyleCssString = createFontStyleCssString(element.fontStyle);
 	const elementStyleCssString = (element.lineHeight ? ('line-height:' + element.lineHeight + ';') : '')
 		+ (`white-space:${element.wrapLines ? 'normal' : 'nowrap'};`)
-		+ (createUiSpacingCssString("padding", element.padding))
+		+ (createSpacingCssString("padding", element.padding))
 		+ (createTextAlignmentCssString(element.textAlignment));
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
@@ -145,9 +145,9 @@ function createFloatingElementRenderer(element: DtoFloatingElement, additionalCs
 function createImageElementRenderer(element: DtoImageElement, additionalCss: string): RenderingFunction {
 	let style = (element.width ? ('width:' + element.width + 'px;') : '')
 		+ (element.height ? ('height:' + element.height + 'px;') : '')
-		+ createUiBorderCssString(element.border)
-		+ createUiSpacingCssString("padding", element.padding)
-		+ createUiShadowCssString(element.shadow)
+		+ createBorderCssString(element.border)
+		+ createSpacingCssString("padding", element.padding)
+		+ createShadowCssString(element.shadow)
 		+ cssObjectToString(createImageSizingCssObject(element.imageSizing))
 		+ (element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '');
 	return (data: any) => {
@@ -205,42 +205,42 @@ function createElementRenderer(element: DtoAbstractGridTemplateElement, addition
 
 	let totalCss = marginCss + additionalCss + column + row + horizontalAlignmentCss + verticalAlignmentCss;
 
-	if (isUiTextElement(element)) {
+	if (isTextElement(element)) {
 		return createTextElementRenderer(element, null, totalCss);
-	} else if (isUiBadgeElement(element)) {
+	} else if (isBadgeElement(element)) {
 		return createBadgeElementRenderer(element, totalCss);
-	} else if (isUiFloatingElement(element)) {
+	} else if (isFloatingElement(element)) {
 		return createFloatingElementRenderer(element, totalCss);
-	} else if (isUiImageElement(element)) {
+	} else if (isImageElement(element)) {
 		return createImageElementRenderer(element, totalCss);
-	} else if (isUiIconElement(element)) {
+	} else if (isIconElement(element)) {
 		return createIconElementRenderer(element, totalCss);
-	} else if (isUiGlyphIconElement(element)) {
+	} else if (isGlyphIconElement(element)) {
 		return createGlyphIconElementRenderer(element, totalCss);
 	}
 }
 
-export function isUiTextElement(element: DtoAbstractGridTemplateElement): element is DtoTextElement {
+export function isTextElement(element: DtoAbstractGridTemplateElement): element is DtoTextElement {
 	return element._type === "DtoTextElement";
 }
 
-export function isUiBadgeElement(element: DtoAbstractGridTemplateElement): element is DtoBadgeElement {
+export function isBadgeElement(element: DtoAbstractGridTemplateElement): element is DtoBadgeElement {
 	return element._type === "DtoBadgeElement";
 }
 
-export function isUiFloatingElement(element: DtoAbstractGridTemplateElement): element is DtoFloatingElement {
+export function isFloatingElement(element: DtoAbstractGridTemplateElement): element is DtoFloatingElement {
 	return element._type === "DtoFloatingElement";
 }
 
-export function isUiImageElement(element: DtoAbstractGridTemplateElement): element is DtoImageElement {
+export function isImageElement(element: DtoAbstractGridTemplateElement): element is DtoImageElement {
 	return element._type === "DtoImageElement";
 }
 
-export function isUiIconElement(element: DtoAbstractGridTemplateElement): element is DtoIconElement {
+export function isIconElement(element: DtoAbstractGridTemplateElement): element is DtoIconElement {
 	return element._type === "DtoIconElement";
 }
 
-export function isUiGlyphIconElement(element: DtoAbstractGridTemplateElement): element is DtoGlyphIconElement {
+export function isGlyphIconElement(element: DtoAbstractGridTemplateElement): element is DtoGlyphIconElement {
 	return element._type === "DtoGlyphIconElement";
 }
 

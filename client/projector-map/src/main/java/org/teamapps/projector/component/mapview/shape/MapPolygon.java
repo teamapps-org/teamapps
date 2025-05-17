@@ -35,7 +35,7 @@ public class MapPolygon extends AbstractMapShape {
 
 	public DtoMapPolygon createDtoMapShape() {
 		DtoMapPolygon uiPolygon = new DtoMapPolygon();
-		mapAbstractUiShapeProperties(uiPolygon);
+		mapAbstractShapeProperties(uiPolygon);
 		uiPolygon.setPath(List.copyOf(locations));
 		return uiPolygon;
 	}

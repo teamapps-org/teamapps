@@ -76,7 +76,7 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	protected initialize(config: DtoSimpleFileField): void {
 		this.fileItems = {};
 
-		this.$main = parseHtml(`<div class="UiSimpleFileField drop-zone form-control field-border field-border-glow field-background">
+		this.$main = parseHtml(`<div class="SimpleFileField drop-zone form-control field-border field-border-glow field-background">
     <div class="file-list-wrapper">
     	<img class="upload-icon" src="${ICON_UPLOAD}"></img>
     	<div class="file-list"></div>

@@ -101,7 +101,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
         clientObjectChannel.focus();
     }
 
-    protected void mapAbstractFieldAttributesToUiField(DtoAbstractField uiField) {
+    protected void mapAbstractFieldAttributes(DtoAbstractField uiField) {
         mapAbstractConfigProperties(uiField);
         uiField.setValue(convertServerValueToClientValue(this.value.read()));
         uiField.setEditingMode(editingMode);

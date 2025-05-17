@@ -9,7 +9,7 @@ import {
 	ServerObjectChannel,
 	Showable, StaticDtoGlobalsServerObjectChannel,
 } from "projector-client-object-api";
-import {DefaultUiContext} from "./DefaultUiContext";
+import {ProjectorUiManager} from "./ProjectorUiManager";
 
 let serverObjectChannel: StaticDtoGlobalsServerObjectChannel;
 
@@ -85,10 +85,10 @@ export var CoreLibrary = {
 		}
 	},
 
-	setSessionMessageWindows(expiredMessageWindow: Showable, errorMessageWindow: Showable, terminatedMessageWindow: Showable, context: DefaultUiContext) {
+	setSessionMessageWindows(expiredMessageWindow: Showable, errorMessageWindow: Showable, terminatedMessageWindow: Showable, context: ProjectorUiManager) {
 		context.setSessionMessageWindows(expiredMessageWindow, errorMessageWindow, terminatedMessageWindow);
 	},
-	setClosedSessionHandling(closedSessionHandlingType: ClosedSessionHandlingType, context: DefaultUiContext) {
+	setClosedSessionHandling(closedSessionHandlingType: ClosedSessionHandlingType, context: ProjectorUiManager) {
 		context.setClosedSessionHandling(closedSessionHandlingType);
 	},
 	setPageTitle(pageTitle: string) {

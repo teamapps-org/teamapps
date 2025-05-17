@@ -91,7 +91,7 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 	public DtoComponentConfig createDto() {
 		List<Field> uiFields = logicalForm.getFields().values().stream()
 				.collect(Collectors.toList());
-		List<DtoFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();
+		List<DtoFormLayoutPolicy> uiLayoutPolicies = getFormLayoutPolicies();
 		DtoGridForm uiForm = new DtoGridForm();
 		uiForm.setFields(List.copyOf(uiFields));
 		uiForm.setLayoutPolicies(uiLayoutPolicies);
@@ -114,7 +114,7 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 				});
 	}
 
-	private List<DtoFormLayoutPolicy> getUiFormLayoutPolicies() {
+	private List<DtoFormLayoutPolicy> getFormLayoutPolicies() {
 		List<DtoFormLayoutPolicy> uiFormLayoutPolicies = getLayoutPolicies().stream()
 				.map(layoutPolicy -> layoutPolicy != null ? layoutPolicy.createDtoLayoutPolicy() : null)
 				.collect(Collectors.toList());
@@ -123,7 +123,7 @@ public abstract class AbstractGridForm<RECORD> extends AbstractComponent {
 	}
 
 	protected void updateLayoutPolicies() {
-		clientObjectChannel.updateLayoutPolicies(getUiFormLayoutPolicies());
+		clientObjectChannel.updateLayoutPolicies(getFormLayoutPolicies());
 	}
 
 	public void applyRecordValuesToFields(RECORD record) {

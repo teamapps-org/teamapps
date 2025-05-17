@@ -43,8 +43,8 @@ public class DtoLanguageTest {
 	@Test
 	public void testInterface() throws IOException {
 		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("interface A extends B, C {"
-				+ "  command showToolButtonDropDown(String fieldName, String toolButtonId, UiSymbolView dropDownSymbolView);"
-				+ "  event formDataSubmit(UiRecordData data);"
+				+ "  command showToolButtonDropDown(String fieldName, String toolButtonId, SymbolView dropDownSymbolView);"
+				+ "  event formDataSubmit(RecordData data);"
 				+ "}"), null);
 		parser.interfaceDeclaration();
 	}

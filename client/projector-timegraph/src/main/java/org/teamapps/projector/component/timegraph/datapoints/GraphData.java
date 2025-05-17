@@ -26,6 +26,6 @@ public interface GraphData {
 
 	Interval getInterval();
 
-	DtoGraphData toUiGraphData();
+	DtoGraphData toDtoGraphData();
 
 }

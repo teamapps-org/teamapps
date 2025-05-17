@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-declare module "src/main/ts/image-layout"  {
+declare module "image-layout"  {
 	export function fixed_partition(images: {width: number, height: number}[], options: {
 		spacing: number,
 		containerWidth: number,

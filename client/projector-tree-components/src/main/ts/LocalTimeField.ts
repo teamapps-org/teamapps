@@ -29,7 +29,7 @@ export class LocalTimeField extends AbstractTimeField<DtoLocalTimeField, LocalTi
 
 	protected initialize(config: DtoLocalTimeField) {
 		super.initialize(config);
-		this.getMainInnerDomElement().classList.add("UiLocalTimeField");
+		this.getMainInnerDomElement().classList.add("LocalTimeField");
 	}
 
 	isValidData(v: LocalTime): boolean {
@@ -75,7 +75,7 @@ export class LocalTimeField extends AbstractTimeField<DtoLocalTimeField, LocalTi
 	}
 
 	protected createTimeRenderer(): (time: LocalDateTime) => string {
-		let timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat, this.config.clockIconEnabled, "static-readonly-UiTimeField");
+		let timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat, this.config.clockIconEnabled, "static-readonly-TimeField");
 		return entry => timeRenderer(entry?.toUTC());
 	}
 }

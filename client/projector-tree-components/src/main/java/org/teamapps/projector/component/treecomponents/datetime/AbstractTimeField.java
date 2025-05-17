@@ -47,8 +47,8 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 		onTextInput.fire(enteredString);
 	}
 
-	public void mapAbstractTimeFieldUiValues(DtoAbstractTimeField uiTimeField) {
-		mapAbstractFieldAttributesToUiField(uiTimeField);
+	public void mapAbstractTimeFieldDtoValues(DtoAbstractTimeField uiTimeField) {
+		mapAbstractFieldAttributes(uiTimeField);
 		uiTimeField.setShowDropDownButton(isShowDropDownButton());
 		uiTimeField.setLocale(locale.toLanguageTag());
 		uiTimeField.setTimeFormat(timeFormat.toDateTimeFormatDescriptor());

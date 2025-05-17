@@ -68,7 +68,7 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 	private progressIndicator: ProgressIndicator;
 
 	protected initialize(config: DtoPictureChooser): void {
-		this.$main = parseHtml(`<div class="UiPictureChooser drop-zone form-control field-border field-border-glow field-background">
+		this.$main = parseHtml(`<div class="PictureChooser drop-zone form-control field-border field-border-glow field-background">
     <div class="picture-wrapper">
     	<div class="picture hidden"></div>
 		<div class="progress-wrapper hidden"></div>

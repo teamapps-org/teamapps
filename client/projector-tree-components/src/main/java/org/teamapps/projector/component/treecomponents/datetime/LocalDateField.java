@@ -56,7 +56,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 	@Override
 	public DtoLocalDateField createDto() {
 		DtoLocalDateField dateField = new DtoLocalDateField();
-		mapAbstractFieldAttributesToUiField(dateField);
+		mapAbstractFieldAttributes(dateField);
 		dateField.setShowDropDownButton(showDropDownButton);
 		dateField.setFavorPastDates(favorPastDates);
 		dateField.setLocale(locale.toLanguageTag());

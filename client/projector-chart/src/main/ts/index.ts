@@ -1,5 +1,5 @@
 import "@less/index.less";
 
-export * from "./UiNetworkGraph";
-export * from "./UiPieChart";
-export * from "./UiTreeGraph";
+export * from "./NetworkGraph";
+export * from "./PieChart";
+export * from "./TreeGraph";

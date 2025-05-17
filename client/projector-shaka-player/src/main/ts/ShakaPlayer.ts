@@ -74,7 +74,7 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 		console.log(config.hlsUrl, config.dashUrl, config.posterImageUrl)
 
 		this.$componentWrapper = parseHtml(
-			`<div class="UiShakaPlayer">
+			`<div class="ShakaPlayer">
 				<div class="video-wrapper">
 					<video id="video" ></video>
 				</div>

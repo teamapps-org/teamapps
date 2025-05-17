@@ -44,15 +44,15 @@ public interface HoseGraphData extends GraphData {
 	}
 
 	@Override
-	default DtoGraphData toUiGraphData() {
+	default DtoGraphData toDtoGraphData() {
 		final LineGraphData lowerLineData = getLowerLineData();
 		final LineGraphData middleLineData = getMiddleLineData();
 		final LineGraphData upperLineData = getUpperLineData();
 		return new DtoHoseGraphData(
 				getInterval().toDtoLongInterval(),
-				lowerLineData != null ? lowerLineData.toUiGraphData() : null,
-				middleLineData != null ? middleLineData.toUiGraphData() : null,
-				upperLineData != null ? upperLineData.toUiGraphData() : null
+				lowerLineData != null ? lowerLineData.toDtoGraphData() : null,
+				middleLineData != null ? middleLineData.toDtoGraphData() : null,
+				upperLineData != null ? upperLineData.toDtoGraphData() : null
 		);
 	}
 }

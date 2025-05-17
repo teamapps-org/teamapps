@@ -60,7 +60,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> implements DtoT
 	@Override
 	public DtoTemplateField createDto() {
 		DtoTemplateField ui = new DtoTemplateField();
-		mapAbstractFieldAttributesToUiField(ui);
+		mapAbstractFieldAttributes(ui);
 		ui.setTemplate(template);
 		ui.setValue(convertServerValueToClientValue(getValue()));
 		return ui;

@@ -28,7 +28,7 @@ export class LocalDateTimeField extends AbstractDateTimeField<DtoLocalDateTimeFi
 
 	protected initialize(config: DtoLocalDateTimeField) {
 		super.initialize(config);
-		this.getMainInnerDomElement().classList.add("UiDateTimeField", "default-min-field-width");
+		this.getMainInnerDomElement().classList.add("DateTimeField", "default-min-field-width");
 	}
 
 	protected getTimeZone(): string {
@@ -72,7 +72,7 @@ export class LocalDateTimeField extends AbstractDateTimeField<DtoLocalDateTimeFi
 
 	public getReadOnlyHtml(value: LocalDateTimeArray, availableWidth: number): string {
 		if (value != null) {
-			return `<div class="static-readonly-UiDateTimeField">`
+			return `<div class="static-readonly-DateTimeField">`
 				+ this.dateRenderer(LocalDateTimeField.toDateTime(value))
 				+ this.timeRenderer(LocalDateTimeField.toDateTime(value))
 				+ '</div>';

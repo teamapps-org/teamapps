@@ -40,7 +40,7 @@ public class MapRectangle extends AbstractMapShape {
 
 	public DtoMapRectangle createDtoMapShape() {
 		DtoMapRectangle uiRect = new DtoMapRectangle();
-		mapAbstractUiShapeProperties(uiRect);
+		mapAbstractShapeProperties(uiRect);
 		uiRect.setL1(location1);
 		uiRect.setL2(location2);
 		return uiRect;

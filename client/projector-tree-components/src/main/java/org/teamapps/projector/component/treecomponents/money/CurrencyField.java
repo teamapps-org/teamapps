@@ -75,9 +75,9 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements DtoCu
 	@Override
 	public DtoAbstractField createDto() {
 		DtoCurrencyField field = new DtoCurrencyField();
-		mapAbstractFieldAttributesToUiField(field);
+		mapAbstractFieldAttributes(field);
 		field.setCurrencyUnits(currencies.stream()
-				.map(unit -> unit.toUiCurrencyUnit(locale))
+				.map(unit -> unit.toDtoCurrencyUnit(locale))
 				.collect(Collectors.toList()));
 		field.setFixedPrecision(fixedPrecision);
 		field.setShowCurrencyBeforeAmount(currencyBeforeAmount);
@@ -94,14 +94,14 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements DtoCu
 	public CurrencyField setCurrencies(List<CurrencyUnit> currencies) {
 		this.currencies = currencies;
 		clientObjectChannel.setCurrencyUnits(currencies != null ? currencies.stream()
-				.map(unit -> unit.toUiCurrencyUnit(locale))
+				.map(unit -> unit.toDtoCurrencyUnit(locale))
 				.collect(Collectors.toList()) : null);
 		return this;
 	}
 
 	@Override
 	public Object convertServerValueToClientValue(CurrencyValue currencyValue) {
-		return currencyValue != null ? currencyValue.toUiCurrencyValue(locale) : null;
+		return currencyValue != null ? currencyValue.toDtoCurrencyValue(locale) : null;
 	}
 
 	@Override

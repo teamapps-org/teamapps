@@ -142,7 +142,7 @@ public class PictureChooser extends AbstractField<Resource> implements DtoPictur
 	@Override
 	public DtoComponentConfig createDto() {
 		DtoPictureChooser uiField = new DtoPictureChooser();
-		mapAbstractFieldAttributesToUiField(uiField);
+		mapAbstractFieldAttributes(uiField);
 		uiField.setUploadUrl(uploadUrl);
 		uiField.setMaxFileSize(maxFileSize);
 		uiField.setFileTooLargeMessage(fileTooLargeMessage);

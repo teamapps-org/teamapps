@@ -113,7 +113,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> implements Dt
 	@Override
 	public DtoComponentConfig createDto() {
 		DtoSimpleFileField field = new DtoSimpleFileField();
-		mapAbstractFieldAttributesToUiField(field);
+		mapAbstractFieldAttributes(field);
 		field.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));
 		field.setBrowseButtonCaption(browseButtonCaption);
 		field.setUploadUrl(uploadUrl);

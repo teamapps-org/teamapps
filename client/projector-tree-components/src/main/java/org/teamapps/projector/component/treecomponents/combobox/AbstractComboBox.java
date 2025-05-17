@@ -93,7 +93,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	protected void mapCommonUiComboBoxProperties(DtoAbstractComboBox ui) {
-		mapAbstractFieldAttributesToUiField(ui);
+		mapAbstractFieldAttributes(ui);
 		ui.setDropDownButtonVisible(dropDownButtonVisible);
 		ui.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
 		ui.setFirstEntryAutoHighlight(firstEntryAutoHighlight);

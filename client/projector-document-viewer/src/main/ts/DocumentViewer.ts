@@ -20,7 +20,7 @@
 
 import {
 	AbstractComponent,
-	applyCss, createUiBorderCssString, createUiShadowCssString,
+	applyCss, createBorderCssString, createShadowCssString,
 	DtoBorder,
 	DtoBoxShadow,
 	generateUUID,
@@ -54,9 +54,9 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 	constructor(config: DtoDocumentViewer, serverObjectChannel: ServerObjectChannel) {
 		super(config);
 
-		this.uuidClass = `UiDocumentViewer-${generateUUID()}`;
+		this.uuidClass = `DocumentViewer-${generateUUID()}`;
 
-		this.$componentWrapper = parseHtml(`<div class="UiDocumentViewer ${this.uuidClass}">  
+		this.$componentWrapper = parseHtml(`<div class="DocumentViewer ${this.uuidClass}">  
 		    <style></style>
 			<div class="toolbar-container"></div>  
 			<div class="pages-container-wrapper">
@@ -201,8 +201,8 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 		this.$styleTag.innerHTML = '';
 		this.$styleTag.innerText = `
 		.${this.uuidClass} .page {
-            ${createUiBorderCssString(this.pageBorder)}
-            ${createUiShadowCssString(this.pageShadow)}
+            ${createBorderCssString(this.pageBorder)}
+            ${createShadowCssString(this.pageShadow)}
         }
         .${this.uuidClass} .page:not(:last-child) {
             margin-bottom: ${this.pageSpacing}px !important;

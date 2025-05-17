@@ -32,7 +32,7 @@ import {
     DtoCollapsibleEventSource
 } from "./generated";
 
-export class UiCollapsible extends AbstractComponent<DtoCollapsible> implements DtoCollapsibleCommandHandler, DtoCollapsibleEventSource {
+export class Collapsible extends AbstractComponent<DtoCollapsible> implements DtoCollapsibleCommandHandler, DtoCollapsibleEventSource {
 
     readonly onCollapseStateChanged: ProjectorEvent<DtoCollapsible_CollapseStateChangedEvent> = new ProjectorEvent();
 
@@ -44,7 +44,7 @@ export class UiCollapsible extends AbstractComponent<DtoCollapsible> implements 
 
     constructor(config: DtoCollapsible, serverObjectChannel: ServerObjectChannel) {
         super(config);
-        this.$main = parseHtml(`<div class="UiCollapsible">
+        this.$main = parseHtml(`<div class="Collapsible">
 	<div class="collapsible-header">
 		<div class="expander teamapps-expander ${config.collapsed ? '' : 'expanded'}"></div>
 		<div class="icon img img-16"></div>

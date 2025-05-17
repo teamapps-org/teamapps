@@ -29,21 +29,11 @@ import {
 
 export type CssPropertyObject = { [cssProperty: string]: string };
 
-export function createUiColorCssObject(cssProperty: string, uiColor: string) {
-	if (uiColor == null) {
-		return {};
-	} else {
-		return {
-			[cssProperty]: uiColor
-		}
-	}
-}
-
 export function createTextAlignmentCssString(alignment: TextAlignment) {
 	return alignment == null ? '' : 'text-align:' + alignment + ';';
 }
 
-export function createUiFontStyleCssString(fontStyle: DtoFontStyle) {
+export function createFontStyleCssString(fontStyle: DtoFontStyle) {
 	if (fontStyle == null) {
 		return '';
 	} else {
@@ -56,26 +46,26 @@ export function createUiFontStyleCssString(fontStyle: DtoFontStyle) {
 	}
 }
 
-export function createUiLineCssString(lineConfig: DtoLine) {
+export function createLineCssString(lineConfig: DtoLine) {
 	return lineConfig != null ? `${lineConfig.thickness}px ${lineConfig.type} ${(lineConfig.color ?? '')}` : '';
 }
 
-export function createUiBorderCssObject(borderConfig: DtoBorder): CssPropertyObject {
+export function createBorderCssObject(borderConfig: DtoBorder): CssPropertyObject {
 	if (borderConfig == null) {
 		return {};
 	} else {
 		let css: CssPropertyObject = {};
 		if (borderConfig.top) {
-			css['border-top'] = createUiLineCssString(borderConfig.top);
+			css['border-top'] = createLineCssString(borderConfig.top);
 		}
 		if (borderConfig.left) {
-			css['border-left'] = createUiLineCssString(borderConfig.left);
+			css['border-left'] = createLineCssString(borderConfig.left);
 		}
 		if (borderConfig.bottom) {
-			css['border-bottom'] = createUiLineCssString(borderConfig.bottom);
+			css['border-bottom'] = createLineCssString(borderConfig.bottom);
 		}
 		if (borderConfig.right) {
-			css['border-right'] = createUiLineCssString(borderConfig.right);
+			css['border-right'] = createLineCssString(borderConfig.right);
 		}
 		if (borderConfig.borderRadius) {
 			css['border-radius'] = borderConfig.borderRadius + 'px';
@@ -84,16 +74,16 @@ export function createUiBorderCssObject(borderConfig: DtoBorder): CssPropertyObj
 	}
 }
 
-export function createUiBorderCssString(borderConfig: DtoBorder) {
+export function createBorderCssString(borderConfig: DtoBorder) {
 	if (borderConfig == null) {
 		return '';
 	} else {
-		let cssObject = createUiBorderCssObject(borderConfig);
+		let cssObject = createBorderCssObject(borderConfig);
 		return Object.keys(cssObject).map(key => `${key}:${cssObject[key]};`).join("");
 	}
 }
 
-export function createUiShadowCssObject(shadowConfig: DtoBoxShadow): CssPropertyObject {
+export function createShadowCssObject(shadowConfig: DtoBoxShadow): CssPropertyObject {
 	if (shadowConfig == null) {
 		return {};
 	} else {
@@ -103,29 +93,29 @@ export function createUiShadowCssObject(shadowConfig: DtoBoxShadow): CssProperty
 	}
 }
 
-export function createUiShadowCssString(shadowConfig: DtoBoxShadow): string {
-	return cssObjectToString(createUiShadowCssObject(shadowConfig));
+export function createShadowCssString(shadowConfig: DtoBoxShadow): string {
+	return cssObjectToString(createShadowCssObject(shadowConfig));
 }
 
-export function createUiSpacingValueCssString(spacingConfig: DtoSpacing) {
+export function createSpacingValueCssString(spacingConfig: DtoSpacing) {
 	return spacingConfig != null ? `${spacingConfig.top}px ${spacingConfig.right}px ${spacingConfig.bottom}px ${spacingConfig.left}px` : null;
 }
 
-export function createUiSpacingCssObject(cssProperty: string, spacingConfig: DtoSpacing) {
+export function createSpacingCssObject(cssProperty: string, spacingConfig: DtoSpacing) {
 	if (spacingConfig == null) {
 		return {};
 	} else {
 		return {
-			[cssProperty]: createUiSpacingValueCssString(spacingConfig)
+			[cssProperty]: createSpacingValueCssString(spacingConfig)
 		};
 	}
 }
 
-export function createUiSpacingCssString(cssProperty: string, spacingConfig: DtoSpacing): string {
+export function createSpacingCssString(cssProperty: string, spacingConfig: DtoSpacing): string {
 	if (spacingConfig == null) {
 		return '';
 	} else {
-		return cssObjectToString(createUiSpacingCssObject(cssProperty, spacingConfig));
+		return cssObjectToString(createSpacingCssObject(cssProperty, spacingConfig));
 	}
 }
 

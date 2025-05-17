@@ -39,7 +39,7 @@ public class PasswordField extends TextField {
 	@Override
 	public DtoPasswordField createDto() {
 		DtoPasswordField uiField = new DtoPasswordField();
-		mapAbstractFieldAttributesToUiField(uiField);
+		mapAbstractFieldAttributes(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
 		uiField.setShowClearButton(isShowClearButton());
 		uiField.setPlaceholderText(getPlaceholderText());

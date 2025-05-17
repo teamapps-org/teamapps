@@ -81,7 +81,7 @@ public interface CurrencyUnit {
 		return getCurrencyName(locale);
 	}
 
-	default DtoCurrencyUnit toUiCurrencyUnit(Locale locale) {
+	default DtoCurrencyUnit toDtoCurrencyUnit(Locale locale) {
 		DtoCurrencyUnit uiCurrencyUnit = new DtoCurrencyUnit();
 		uiCurrencyUnit.setCode(getCode());
 		uiCurrencyUnit.setFractionDigits(getFractionDigits());
