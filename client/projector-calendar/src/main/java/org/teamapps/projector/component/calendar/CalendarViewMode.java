@@ -120,7 +120,7 @@ public enum CalendarViewMode {
 	 */
 	abstract LocalDate getDisplayEnd(LocalDate localDate, DayOfWeek firstDayOfWeek);
 
-	public DtoCalendarViewMode toUiCalendarViewMode() {
+	public DtoCalendarViewMode toDtoCalendarViewMode() {
 		return DtoCalendarViewMode.valueOf(this.name());
 	}
 

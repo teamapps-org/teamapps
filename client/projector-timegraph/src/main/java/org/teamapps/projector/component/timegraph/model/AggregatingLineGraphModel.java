@@ -58,8 +58,8 @@ public class AggregatingLineGraphModel extends AbstractLineGraphModel {
 
 	@Override
 	public LineGraphData getData(TimePartitioning zoomLevel, ZoneId zoneId, Interval neededIntervalX, Interval displayedInterval) {
-		final long queryStart = getPartitionStartMilli(displayedInterval.getMin(), zoomLevel, zoneId);
-		final long queryEnd = getPartitionEndMilli(displayedInterval.getMax(), zoomLevel, zoneId);
+		final long queryStart = getPartitionStartMilli(displayedInterval.min(), zoomLevel, zoneId);
+		final long queryEnd = getPartitionEndMilli(displayedInterval.max(), zoomLevel, zoneId);
 		return getAggregateDataPoints(graphData, zoomLevel, new Interval(queryStart, queryEnd), aggregationType, zoneId, addDataPointBeforeAndAfterQueryResult);
 	}
 
@@ -72,13 +72,13 @@ public class AggregatingLineGraphModel extends AbstractLineGraphModel {
 			boolean addDataPointBeforeAndAfterQueryResult
 	) {
 		List<LineGraphDataPoint> result = new ArrayList<>();
-		long startPartitionStartMilli = alignedInterval.getMin();
+		long startPartitionStartMilli = alignedInterval.min();
 		if (addDataPointBeforeAndAfterQueryResult) {
 			startPartitionStartMilli = zoomLevel.decrement(ZonedDateTime.ofInstant(Instant.ofEpochMilli(startPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
 		}
-		long endPartitionEndMilli = alignedInterval.getMax();
+		long endPartitionEndMilli = alignedInterval.max();
 		if (addDataPointBeforeAndAfterQueryResult) {
-			endPartitionEndMilli = zoomLevel.increment(Instant.ofEpochMilli(alignedInterval.getMax()).atZone(timeZone)).toInstant().toEpochMilli();
+			endPartitionEndMilli = zoomLevel.increment(Instant.ofEpochMilli(alignedInterval.max()).atZone(timeZone)).toInstant().toEpochMilli();
 		}
 		long currentPartitionStartMilli = startPartitionStartMilli;
 		long nextPartitionStartMilli = zoomLevel.increment(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentPartitionStartMilli), timeZone)).toInstant().toEpochMilli();

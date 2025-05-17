@@ -92,7 +92,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 		ui.setYAxisColor(yAxisColor != null ? yAxisColor.toHtmlColorString() : null);
 		ui.setYAxisLabel(yAxisLabel);
 		ui.setMaxTickDigits(maxTickDigits);
-		ui.setIntervalY(displayedIntervalY != null ? displayedIntervalY.toUiLongInterval() : new DtoLongInterval(0, 1000));
+		ui.setIntervalY(displayedIntervalY != null ? displayedIntervalY.toDtoLongInterval() : new DtoLongInterval(0, 1000));
 		ui.setYScaleType(yScaleType);
 		ui.setYScaleZoomMode(yScaleZoomMode);
 		ui.setYZeroLineVisible(yZeroLineVisible);

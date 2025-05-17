@@ -101,7 +101,7 @@ public class NotificationBarItem {
 		this.exitAnimation = exitAnimation;
 	}
 
-	public DtoNotificationBarItem toUiNotificationBarItem() {
+	public DtoNotificationBarItem toDtoNotificationBarItem() {
 		DtoNotificationBarItem ui = new DtoNotificationBarItem();
 		ui.setId(uiId);
 		ui.setIcon(SessionContext.current().resolveIcon(icon));

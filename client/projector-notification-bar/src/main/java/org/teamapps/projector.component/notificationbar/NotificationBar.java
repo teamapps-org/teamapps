@@ -87,7 +87,7 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 		DtoNotificationBar ui = new DtoNotificationBar();
 		mapAbstractConfigProperties(ui);
 		ui.setInitialItems(itemsByUiId.values().stream()
-				.map(NotificationBarItem::toUiNotificationBarItem)
+				.map(NotificationBarItem::toDtoNotificationBarItem)
 				.collect(Collectors.toList()));
 		return ui;
 	}
@@ -97,8 +97,8 @@ public class NotificationBar extends AbstractComponent implements DtoNotificatio
 			return;
 		}
 		itemsByUiId.put(item.getUiId(), item);
-		item.setListener(() -> clientObjectChannel.updateItem(item.toUiNotificationBarItem()));
-		clientObjectChannel.addItem(item.toUiNotificationBarItem());
+		item.setListener(() -> clientObjectChannel.updateItem(item.toDtoNotificationBarItem()));
+		clientObjectChannel.addItem(item.toDtoNotificationBarItem());
 	}
 
 	public void removeItem(NotificationBarItem item) {

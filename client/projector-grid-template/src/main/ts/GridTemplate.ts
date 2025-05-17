@@ -33,7 +33,7 @@ import {
 	DtoGlyphIconElement,
 	DtoGridTemplate,
 	DtoIconElement,
-	DtoImageElement, DtoImageSizing, SizeType, DtoSizingPolicy,
+	DtoImageElement, ImageSizing, SizeType, DtoSizingPolicy,
 	DtoTextElement
 } from "./generated";
 import {Template} from "projector-client-object-api";
@@ -244,18 +244,18 @@ export function isUiGlyphIconElement(element: DtoAbstractGridTemplateElement): e
 	return element._type === "DtoGlyphIconElement";
 }
 
-export function createImageSizingCssObject(imageSizing: DtoImageSizing): CssPropertyObject {
+export function createImageSizingCssObject(imageSizing: ImageSizing): CssPropertyObject {
 	if (imageSizing == null ) {
 		return {};
 	} else {
 		let backgroundSize: string;
-		if (imageSizing === DtoImageSizing.ORIGINAL) {
+		if (imageSizing === ImageSizing.ORIGINAL) {
 			backgroundSize = "auto";
-		} else if (imageSizing === DtoImageSizing.STRETCH) {
+		} else if (imageSizing === ImageSizing.STRETCH) {
 			backgroundSize = "100% 100%";
-		} else if (imageSizing === DtoImageSizing.CONTAIN) {
+		} else if (imageSizing === ImageSizing.CONTAIN) {
 			backgroundSize = "contain";
-		} else if (imageSizing ===DtoImageSizing.COVER) {
+		} else if (imageSizing ===ImageSizing.COVER) {
 			backgroundSize = "cover";
 		}
 		return {

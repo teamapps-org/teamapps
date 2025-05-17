@@ -151,8 +151,8 @@ public abstract class AbstractGridTemplateElement<C extends AbstractGridTemplate
 	protected void mapAbstractGridTemplateElementAttributesToUiElement(DtoAbstractGridTemplateElement uiElement) {
 		uiElement.setRowSpan(rowSpan);
 		uiElement.setColSpan(colSpan);
-		uiElement.setHorizontalAlignment(horizontalAlignment.toUiHorizontalElementAlignment());
-		uiElement.setVerticalAlignment(verticalAlignment.toUiVerticalElementAlignment());
+		uiElement.setHorizontalAlignment(horizontalAlignment.toJustifyContent());
+		uiElement.setVerticalAlignment(verticalAlignment.toAlignItems());
 		uiElement.setMargin(margin != null ? margin.createDtoSpacing() : null);
 		uiElement.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 	}

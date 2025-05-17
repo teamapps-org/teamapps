@@ -47,8 +47,8 @@ public class PartitioningTimestampsLineGraphModel extends AbstractLineGraphModel
 
 	@Override
 	public LineGraphData getData(TimePartitioning zoomLevel, ZoneId zoneId, Interval neededInterval, Interval displayedInterval) {
-		final long queryStart = zoomLevel.getPartitionStart(Instant.ofEpochMilli(displayedInterval.getMin()).atZone(zoneId)).toInstant().toEpochMilli();
-		final long queryEnd = zoomLevel.getPartitionEnd(Instant.ofEpochMilli(displayedInterval.getMax()).atZone(zoneId)).toInstant().toEpochMilli();
+		final long queryStart = zoomLevel.getPartitionStart(Instant.ofEpochMilli(displayedInterval.min()).atZone(zoneId)).toInstant().toEpochMilli();
+		final long queryEnd = zoomLevel.getPartitionEnd(Instant.ofEpochMilli(displayedInterval.max()).atZone(zoneId)).toInstant().toEpochMilli();
 		final long[] eventTimestamps = timestampsModel.getTimestamps(displayedInterval);
 		return new ListLineGraphData(TimestampsPartitioner.partition(queryStart, queryEnd, eventTimestamps, zoneId, zoomLevel, true)
 				.stream()

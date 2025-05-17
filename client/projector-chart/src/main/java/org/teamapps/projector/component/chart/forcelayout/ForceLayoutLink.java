@@ -37,7 +37,7 @@ public class ForceLayoutLink<RECORD> {
 		this.target = target;
 	}
 
-	public DtoNetworkLink toUiNetworkLink() {
+	public DtoNetworkLink toDtoNetworkLink() {
 		DtoNetworkLink ui = new DtoNetworkLink();
 		ui.setSource(source.getId());
 		ui.setTarget(target.getId());

@@ -34,7 +34,7 @@ public enum VerticalElementAlignment {
 		this.alignItems = alignItems;
 	}
 
-	public AlignItems toUiVerticalElementAlignment() {
+	public AlignItems toAlignItems() {
 		return alignItems;
 	}
 

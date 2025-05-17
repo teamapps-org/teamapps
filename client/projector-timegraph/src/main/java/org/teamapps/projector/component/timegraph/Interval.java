@@ -19,20 +19,10 @@
  */
 package org.teamapps.projector.component.timegraph;
 
-import java.util.Objects;
-
-public class Interval {
-
-	private final long min;
-	private final long max;
-
-	public Interval(long min, long max) {
-		this.min = min;
-		this.max = max;
-	}
+public record Interval(long min, long max) {
 
 	public static Interval union(Interval interval, Interval intervalB) {
-		return new Interval(Math.min(interval.getMin(), intervalB.getMin()), Math.max(interval.getMax(), intervalB.getMax()));
+		return new Interval(Math.min(interval.min(), intervalB.min()), Math.max(interval.max(), intervalB.max()));
 	}
 
 	public static Interval intersection(Interval a, Interval b) {
@@ -50,44 +40,11 @@ public class Interval {
 		return new Interval(0, 0);
 	}
 
-	public long getMin() {
-		return min;
-	}
-
-	public long getMax() {
-		return max;
-	}
-
-	public DtoLongInterval toUiLongInterval() {
+	public DtoLongInterval toDtoLongInterval() {
 		DtoLongInterval interval = new DtoLongInterval();
 		interval.setMin(min);
 		interval.setMax(max);
 		return interval;
 	}
 
-	@Override
-	public String toString() {
-		return "Interval{" +
-				"min=" + min +
-				", max=" + max +
-				'}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Interval interval = (Interval) o;
-		return min == interval.min &&
-				max == interval.max;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(min, max);
-	}
 }

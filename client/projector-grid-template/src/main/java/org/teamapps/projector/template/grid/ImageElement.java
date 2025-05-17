@@ -135,7 +135,7 @@ public class ImageElement extends AbstractGridTemplateElement {
 		uiImageElement.setBorder(border != null ? border.createDtoBorder() : null);
 		uiImageElement.setPadding(padding != null ? padding.createDtoSpacing() : null);
 		uiImageElement.setShadow(shadow != null ? shadow.createDtoShadow() : null);
-		uiImageElement.setImageSizing(imageSizing.toUiImageSizing());
+		uiImageElement.setImageSizing(imageSizing);
 		return uiImageElement;
 	}
 

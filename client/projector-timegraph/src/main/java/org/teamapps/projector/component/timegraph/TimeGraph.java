@@ -138,7 +138,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 		Interval domainX = retrieveDomainX();
 
 		this.displayedInterval = domainX;
-		DtoLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
+		DtoLongInterval uiIntervalX = new Interval(domainX.min(), domainX.max()).toDtoLongInterval();
 
 		DtoTimeGraph uiTimeGraph = new DtoTimeGraph();
 		uiTimeGraph.setIntervalX(uiIntervalX);
@@ -213,7 +213,7 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 
 	public void refresh() {
 		Interval domainX = retrieveDomainX();
-		DtoLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
+		DtoLongInterval uiIntervalX = new Interval(domainX.min(), domainX.max()).toDtoLongInterval();
 		clientObjectChannel.resetAllData(uiIntervalX, createDtoZoomlevels());
 	}
 
@@ -249,12 +249,12 @@ public class TimeGraph extends AbstractComponent implements DtoTimeGraphEventHan
 
 	public void setSelectedInterval(Interval selectedInterval) {
 		this.selectedInterval = selectedInterval;
-		clientObjectChannel.setSelectedInterval(selectedInterval.toUiLongInterval());
+		clientObjectChannel.setSelectedInterval(selectedInterval.toDtoLongInterval());
 	}
 
 	private void handleGraphDataChanged(AbstractGraph<?, ?> graph) {
 		Interval domainX = retrieveDomainX();
-		DtoLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
+		DtoLongInterval uiIntervalX = new Interval(domainX.min(), domainX.max()).toDtoLongInterval();
 		clientObjectChannel.setIntervalX(uiIntervalX);
 		clientObjectChannel.resetGraphData(graph.getId());
 	}

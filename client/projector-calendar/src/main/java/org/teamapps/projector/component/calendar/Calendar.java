@@ -196,7 +196,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 	public DtoComponent createDto() {
 		DtoCalendar uiCalendar = new DtoCalendar();
 		mapAbstractConfigProperties(uiCalendar);
-		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());
+		uiCalendar.setActiveViewMode(activeViewMode.toDtoCalendarViewMode());
 		uiCalendar.setDisplayedDate(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli());
 		uiCalendar.setShowHeader(showHeader);
 		uiCalendar.setTableBorder(tableBorder);
@@ -361,7 +361,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 
 	public void setActiveViewMode(CalendarViewMode activeViewMode) {
 		this.activeViewMode = activeViewMode;
-		clientObjectChannel.setViewMode(activeViewMode.toUiCalendarViewMode());
+		clientObjectChannel.setViewMode(activeViewMode.toDtoCalendarViewMode());
 		refreshEvents();
 	}
 

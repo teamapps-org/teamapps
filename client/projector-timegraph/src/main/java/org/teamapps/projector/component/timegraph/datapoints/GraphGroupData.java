@@ -43,6 +43,6 @@ public interface GraphGroupData extends org.teamapps.projector.component.timegra
 		final Map<String, DtoGraphData> uiGraphDataMap = getGraphData().entrySet().stream()
 				.filter(Objects::nonNull)
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toUiGraphData()));
-		return new DtoGraphGroupData(getInterval().toUiLongInterval(), uiGraphDataMap);
+		return new DtoGraphGroupData(getInterval().toDtoLongInterval(), uiGraphDataMap);
 	}
 }

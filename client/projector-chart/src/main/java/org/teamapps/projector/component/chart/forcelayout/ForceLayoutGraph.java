@@ -96,7 +96,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent implements DtoNe
 
 	private List<DtoNetworkLink> createDtoLinks(List<ForceLayoutLink<RECORD>> links) {
 		return links.stream()
-				.map(l -> l.toUiNetworkLink())
+				.map(l -> l.toDtoNetworkLink())
 				.collect(Collectors.toList());
 	}
 

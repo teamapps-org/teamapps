@@ -49,7 +49,7 @@ public interface HoseGraphData extends GraphData {
 		final LineGraphData middleLineData = getMiddleLineData();
 		final LineGraphData upperLineData = getUpperLineData();
 		return new DtoHoseGraphData(
-				getInterval().toUiLongInterval(),
+				getInterval().toDtoLongInterval(),
 				lowerLineData != null ? lowerLineData.toUiGraphData() : null,
 				middleLineData != null ? middleLineData.toUiGraphData() : null,
 				upperLineData != null ? upperLineData.toUiGraphData() : null

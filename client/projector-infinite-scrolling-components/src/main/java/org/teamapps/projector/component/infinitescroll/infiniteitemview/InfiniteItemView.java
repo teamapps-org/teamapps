@@ -93,8 +93,8 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 		ui.setItemHeight(itemHeight);
 		// ui.setHorizontalSpacing(horizontalSpacing);
 		// ui.setVerticalSpacing(verticalSpacing);
-		ui.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toUiHorizontalElementAlignment());
-		ui.setItemContentVerticalAlignment(itemContentVerticalAlignment.toUiVerticalElementAlignment());
+		ui.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toJustifyContent());
+		ui.setItemContentVerticalAlignment(itemContentVerticalAlignment.toAlignItems());
 		// ui.setRowHorizontalAlignment(rowHorizontalAlignment.toUiItemJustification());
 		ui.setItemPositionAnimationTime(itemPositionAnimationTime);
 		ui.setContextMenuEnabled(contextMenuProvider != null);
@@ -242,7 +242,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment) {
 		this.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
-		clientObjectChannel.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toUiHorizontalElementAlignment());
+		clientObjectChannel.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toJustifyContent());
 		return this;
 	}
 
@@ -252,7 +252,7 @@ public class InfiniteItemView<RECORD> extends AbstractInfiniteListComponent<RECO
 
 	public InfiniteItemView<RECORD> setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment) {
 		this.itemContentVerticalAlignment = itemContentVerticalAlignment;
-		clientObjectChannel.setItemContentVerticalAlignment(itemContentVerticalAlignment.toUiVerticalElementAlignment());
+		clientObjectChannel.setItemContentVerticalAlignment(itemContentVerticalAlignment.toAlignItems());
 		return this;
 	}
 

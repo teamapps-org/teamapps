@@ -95,10 +95,10 @@ class DtoImageElement extends DtoAbstractGridTemplateElement {
 	DtoBorder border;
 	DtoSpacing padding;
 	DtoBoxShadow shadow;
-	DtoImageSizing imageSizing;
+	ImageSizing imageSizing;
 }
 
-enum DtoImageSizing {
+enum ImageSizing {
 	COVER, CONTAIN, ORIGINAL, STRETCH
 }
 

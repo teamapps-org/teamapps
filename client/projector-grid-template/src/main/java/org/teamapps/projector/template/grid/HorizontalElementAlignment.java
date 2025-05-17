@@ -34,7 +34,7 @@ public enum HorizontalElementAlignment {
 		this.justifyContent = JustifyContent;
 	}
 
-	public JustifyContent toUiHorizontalElementAlignment() {
+	public JustifyContent toJustifyContent() {
 		return this.justifyContent;
 	}
 }
