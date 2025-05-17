@@ -23,7 +23,6 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
-import org.teamapps.projector.script.DtoScript;
 
 class DtoButton extends DtoAbstractField {
 	DtoTemplate* template;

@@ -923,7 +923,7 @@ public class SessionContext {
 
 	private class ClientObjectChannelImpl implements ClientObjectChannel {
 
-		record ClientSideEventRegistration(String eventName, ClientSideInvokable invokable, String functionName,
+		record ClientSideEventRegistration(String eventName, InvokableClientObject invokable, String functionName,
 		                                   boolean eventObjectAsFirstParameter, Object... params) {
 		}
 
@@ -1008,7 +1008,7 @@ public class SessionContext {
 		}
 
 		@Override
-		public Disposable addClientSideEventHandler(String eventName, ClientSideInvokable invokable, String functionName, boolean eventObjectAsFirstParameter, Object... params) {
+		public Disposable addClientSideEventHandler(String eventName, InvokableClientObject invokable, String functionName, boolean eventObjectAsFirstParameter, Object... params) {
 			CurrentSessionContext.throwIfNotSameAs(SessionContext.this);
 			String registrationId = FriendlyId.createFriendlyId();
 			clientEventRegistrationsById.put(registrationId, new ClientSideEventRegistration(eventName, invokable, functionName, eventObjectAsFirstParameter, params));

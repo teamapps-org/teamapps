@@ -23,29 +23,29 @@ package org.teamapps.projector.script;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.clientobject.ClientObject;
 import org.teamapps.projector.clientobject.ClientObjectChannel;
-import org.teamapps.projector.clientobject.ClientSideInvokable;
+import org.teamapps.projector.clientobject.InvokableClientObject;
 import org.teamapps.projector.session.CurrentSessionContext;
 
 import java.util.List;
 
 @ClientObjectLibrary(ScriptLibrary.class)
-public class Script implements ClientObject, DtoScriptEventHandler, ClientSideInvokable {
+public class UrlScript implements ClientObject, DtoUrlScriptEventHandler, InvokableClientObject {
 
 	private final String script;
-	private final DtoScriptClientObjectChannel clientObjectChannel;
+	private final DtoUrlScriptClientObjectChannel clientObjectChannel;
 
-	public Script(String script) {
+	public UrlScript(String script) {
 		this.script = script;
 
 		// This IS ok, since SessionContext does not do anything with "this" reference.
 		// The only usage of the "this" reference is going to be triggered by this.
 		ClientObjectChannel coc = CurrentSessionContext.get().registerClientObject(this);
-		this.clientObjectChannel = new DtoScriptClientObjectChannel(coc);
+		this.clientObjectChannel = new DtoUrlScriptClientObjectChannel(coc);
 	}
 
 	@Override
-	public DtoScript createDto() {
-		return new DtoScript(script);
+	public DtoUrlScript createDto() {
+		return new DtoUrlScript(script);
 	}
 
 	public void invoke(String name, Object... parameters) {

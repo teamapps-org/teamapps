@@ -1,2 +1,2 @@
 export * from "./generated";
-export * from "./Script";
+export * from "./StringScript";

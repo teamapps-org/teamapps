@@ -202,18 +202,13 @@ export class DefaultUiContext implements ConnectionListener {
 
 	async addEventHandler(libraryUuid: string, clientObjectId: string, eventName: string, registrationId: string, invokableId: string, functionName: string, evtObjAsFirstParam: boolean, params: any[]) {
 		console.log("Registering client-side event handler", libraryUuid, clientObjectId, eventName, functionName, params);
-		let invokable = (await this.clientObjectWrappersById.get(invokableId).objectPromise) as Invokable;
+		let invokableWrapper = this.clientObjectWrappersById.get(invokableId);
+		let clientObjectWrapper = clientObjectId != null ? this.clientObjectWrappersById.get(clientObjectId)
+			: this.libraryModulesById.get(libraryUuid ?? null);
 		if (clientObjectId != null) {
-			let wrapper = await this.clientObjectWrappersById.get(clientObjectId);
-			wrapper.addEventHandler(registrationId, eventName, (eventObject) => {
+			clientObjectWrapper.addEventHandler(registrationId, eventName, (eventObject) => {
 				let paramsArray = evtObjAsFirstParam ? [eventObject, ...params] : params;
-				return invokable.invoke(functionName, paramsArray);
-			});
-		} else {
-			const moduleWrapper = await this.libraryModulesById.get(libraryUuid ?? null);
-			moduleWrapper.addEventHandler(registrationId, eventName, (eventObject) => {
-				let paramsArray = evtObjAsFirstParam ? [eventObject, ...params] : params;
-				return invokable.invoke(functionName, paramsArray);
+				return invokableWrapper.executeCommand("invoke", [functionName, paramsArray]);
 			});
 		}
 	}

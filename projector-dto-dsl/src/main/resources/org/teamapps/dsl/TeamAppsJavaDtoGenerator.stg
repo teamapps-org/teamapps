@@ -326,7 +326,7 @@ clientObjectChannel(c) ::= <<
 
 <c.effectiveJavaImports:{im|import <im.javaPackageName>.<im.name>;}; separator="\n">
 import org.teamapps.projector.clientobject.ClientObjectChannel;
-import org.teamapps.projector.clientobject.ClientSideInvokable;
+import org.teamapps.projector.clientobject.InvokableClientObject;
 import org.teamapps.commons.event.Disposable;
 
 public class <c.name>ClientObjectChannel implements ClientObjectChannel {
@@ -362,7 +362,7 @@ public class <c.name>ClientObjectChannel implements ClientObjectChannel {
 	<c.allEvents:toggleEventMethod(); separator="\n\n">
 
     @Override
-    public Disposable addClientSideEventHandler(String eventName, ClientSideInvokable invokable, String functionName, boolean eventObjectAsFirstParameter, Object... params) {
+    public Disposable addClientSideEventHandler(String eventName, InvokableClientObject invokable, String functionName, boolean eventObjectAsFirstParameter, Object... params) {
         return delegate.addClientSideEventHandler(eventName, invokable, functionName, eventObjectAsFirstParameter, params);
     }
 
@@ -386,7 +386,7 @@ public void toggle<e.name; format="cap">Event(boolean enabled) {
 >>
 
 addClientSideEventHandlerMethod(e) ::= <<
-public Disposable addClientSide<e.name; format="cap">EventHandler(ClientSideInvokable invokable, String functionName, boolean eventObjectAsFirstParameter, Object... params) {
+public Disposable addClientSide<e.name; format="cap">EventHandler(InvokableClientObject invokable, String functionName, boolean eventObjectAsFirstParameter, Object... params) {
     return this.delegate.addClientSideEventHandler("<e.name>", invokable, functionName, eventObjectAsFirstParameter, params);
 }
 >>

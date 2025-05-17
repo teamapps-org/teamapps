@@ -22,7 +22,7 @@ package org.teamapps.projector.component.core.field;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.teamapps.commons.event.Disposable;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.clientobject.ClientSideInvokable;
+import org.teamapps.projector.clientobject.InvokableClientObject;
 import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.core.CoreComponentLibrary;
@@ -228,7 +228,7 @@ public class Button extends AbstractField<Void> implements DtoButtonEventHandler
 		clientObjectChannel.closeDropDown();
 	}
 
-	public Disposable setOnClickClientSideEventHandler(ClientSideInvokable script, String functionName, boolean eventObjectAsFirstParameter, String... parameters) {
+	public Disposable setOnClickClientSideEventHandler(InvokableClientObject script, String functionName, boolean eventObjectAsFirstParameter, String... parameters) {
 		return clientObjectChannel.addClientSideClickEventHandler(script, functionName, eventObjectAsFirstParameter, Arrays.asList(parameters));
 	}
 

@@ -21,7 +21,7 @@ package org.teamapps.projector.component.core.linkbutton;
 
 import org.teamapps.commons.event.Disposable;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
-import org.teamapps.projector.clientobject.ClientSideInvokable;
+import org.teamapps.projector.clientobject.InvokableClientObject;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.core.CoreComponentLibrary;
 import org.teamapps.projector.event.ProjectorEvent;
@@ -95,7 +95,7 @@ public class LinkButton extends AbstractComponent implements DtoLinkButtonEventH
 		update();
 	}
 
-	public Disposable setOnClickClientSideEventHandler(ClientSideInvokable script, String functionName, boolean eventObjectAsFirstParameter, String... parameters) {
+	public Disposable setOnClickClientSideEventHandler(InvokableClientObject script, String functionName, boolean eventObjectAsFirstParameter, String... parameters) {
 		return clientObjectChannel.addClientSideClickEventHandler(script, functionName, eventObjectAsFirstParameter, Arrays.asList(parameters));
 	}
 }

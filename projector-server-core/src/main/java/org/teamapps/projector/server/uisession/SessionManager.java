@@ -39,7 +39,7 @@ import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
 import org.teamapps.projector.icon.IconProvider;
 import org.teamapps.projector.icon.SessionIconProvider;
-import org.teamapps.projector.script.Script;
+import org.teamapps.projector.script.StringScript;
 import org.teamapps.projector.server.UxServerContext;
 import org.teamapps.projector.server.config.ProjectorConfiguration;
 import org.teamapps.projector.server.core.UploadManager;
@@ -364,7 +364,7 @@ public class SessionManager implements HttpSessionListener {
 		refreshButton.setCssStyle(".DtoButton", "color", RgbaColor.WHITE.toHtmlColorString());
 		refreshButton.setCssStyle(".DtoButton", "font-size", "120%");
 		refreshButton.setCssStyle(".DtoButton", "height", "50px");
-		refreshButton.setOnClickClientSideEventHandler(new Script("export function refresh() {window.location.reload()}"), "refresh", false);
+		refreshButton.setOnClickClientSideEventHandler(new StringScript("export function refresh() {window.location.reload()}"), "refresh", false);
 		verticalLayout.addComponentAutoSize(refreshButton);
 
 		if (cancelButtonCaption != null) {
