@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.component.workspacelayout.definition;
 
+import org.teamapps.projector.component.workspacelayout.ViewGroupPanelState;
 import org.teamapps.projector.component.workspacelayout.WorkSpaceLayout;
 import org.teamapps.projector.component.workspacelayout.WorkSpaceLayoutViewGroup;
-import org.teamapps.projector.component.workspacelayout.ViewGroupPanelState;
 import org.teamapps.projector.component.workspacelayout.WorkSpaceLayoutItem;
 
 import java.util.ArrayList;

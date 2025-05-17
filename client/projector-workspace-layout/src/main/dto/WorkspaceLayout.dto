@@ -51,7 +51,7 @@ class DtoWorkSpaceLayout extends DtoComponent {
 	command refreshViewAttributes(String viewName, String tabIcon, String tabCaption, boolean tabCloseable, boolean visible);
 	command refreshViewComponent(String viewName, DtoComponent* component);
 	command selectView(String viewName);
-	command setViewGroupPanelState(String viewGroupId, DtoViewGroupPanelState panelState);
+	command setViewGroupPanelState(String viewGroupId, ViewGroupPanelState panelState);
 	command setMultiProgressDisplay(DtoMultiProgressDisplay* multiProgressDisplay);
 
     event layoutChanged(Dictionary<DtoWorkSpaceLayoutItem> layoutsByWindowId); // root window has id "ROOT_WINDOW" TODO not yet sure if these events should get a little more fine-grained...
@@ -61,10 +61,10 @@ class DtoWorkSpaceLayout extends DtoComponent {
     event childWindowClosed(String windowId);
     event viewSelected(String viewGroupId, String viewName, List<String> siblingViewNames);
     event viewClosed(String viewName);
-    event viewGroupPanelStateChanged(String viewGroupId, DtoViewGroupPanelState panelState);
+    event viewGroupPanelStateChanged(String viewGroupId, ViewGroupPanelState panelState);
 }
 
-enum DtoViewGroupPanelState {
+enum ViewGroupPanelState {
 	NORMAL, MAXIMIZED, MINIMIZED
 }
 
@@ -100,5 +100,5 @@ class DtoWorkSpaceLayoutViewGroupItem extends DtoWorkSpaceLayoutItem {
     List<String> viewNames;
     String selectedViewName;
     boolean persistent; // if true, this viewGroup will never be removed from the tree of items on the client side, even if there are no more views left inside it.
-    DtoViewGroupPanelState panelState;
+    ViewGroupPanelState panelState;
 }

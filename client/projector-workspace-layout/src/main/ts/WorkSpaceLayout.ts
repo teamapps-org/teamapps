@@ -26,7 +26,7 @@ import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {SplitSizePolicy, Toolbar} from "projector-client-core-components";
 import {
 	DtoRelativeWorkSpaceViewPosition,
-	DtoViewGroupPanelState,
+	ViewGroupPanelState,
 	DtoWorkSpaceLayout,
 	DtoWorkSpaceLayout_ChildWindowClosedEvent,
 	DtoWorkSpaceLayout_ChildWindowCreationFailedEvent,
@@ -270,7 +270,7 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 		viewContainer.selectViewTab(viewName);
 	}
 
-	async setViewGroupPanelState(viewGroupId: string, panelState: DtoViewGroupPanelState) {
+	async setViewGroupPanelState(viewGroupId: string, panelState: ViewGroupPanelState) {
 		let viewContainer = await this.getViewContainerByItemId(viewGroupId);
 		viewContainer.setViewGroupPanelState(viewGroupId, panelState);
 	}
@@ -406,7 +406,7 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 		this.localViewContainer.destroy();
 	}
 
-	fireViewGroupPanelStateChanged(viewGroupId: string, panelState: DtoViewGroupPanelState) {
+	fireViewGroupPanelStateChanged(viewGroupId: string, panelState: ViewGroupPanelState) {
 		this.onViewGroupPanelStateChanged.fire({
 			viewGroupId: viewGroupId,
 			panelState: panelState

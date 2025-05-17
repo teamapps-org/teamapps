@@ -290,7 +290,7 @@ public class WorkSpaceLayout extends AbstractComponent implements DtoWorkSpaceLa
 
 	/*package-private*/ void handleViewGroupPanelStateChangedViaApi(WorkSpaceLayoutViewGroup viewGroup, ViewGroupPanelState panelState) {
 		evaluateLayoutChanges();
-		clientObjectChannel.setViewGroupPanelState(viewGroup.getId(), panelState.toUiViewGroupPanelState());
+		clientObjectChannel.setViewGroupPanelState(viewGroup.getId(), panelState);
 	}
 
 	/*package-private*/ void handleViewSelectedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView workSpaceLayoutView) {

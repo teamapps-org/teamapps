@@ -21,7 +21,7 @@ import {ViewInfo} from "./ViewInfo";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {Component} from "projector-client-object-api";
-import {DtoRelativeWorkSpaceViewPosition, DtoViewGroupPanelState, DtoWorkSpaceLayoutItem, DtoWorkSpaceLayoutView} from "./generated";
+import {DtoRelativeWorkSpaceViewPosition, ViewGroupPanelState, DtoWorkSpaceLayoutItem, DtoWorkSpaceLayoutView} from "./generated";
 import {SplitSizePolicy} from "projector-client-core-components";
 
 export interface ViewContainer {
@@ -57,7 +57,7 @@ export interface ViewContainer {
 
 	selectViewTab(viewName: string): void;
 
-	setViewGroupPanelState(viewGroupId: string, panelState: DtoViewGroupPanelState): void;
+	setViewGroupPanelState(viewGroupId: string, panelState: ViewGroupPanelState): void;
 }
 
 export interface ViewContainerListener {

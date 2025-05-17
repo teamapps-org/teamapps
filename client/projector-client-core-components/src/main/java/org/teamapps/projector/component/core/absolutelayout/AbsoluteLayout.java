@@ -19,6 +19,7 @@
  */
 package org.teamapps.projector.component.core.absolutelayout;
 
+import org.teamapps.projector.animation.AnimationEasing;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
@@ -60,7 +61,7 @@ public class AbsoluteLayout extends AbstractComponent implements DtoAbsoluteLayo
 	}
 
 	private void updateUiLayout() {
-		clientObjectChannel.update(createDtoAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing());
+		clientObjectChannel.update(createDtoAbsolutePositionedComponents(), animationDuration, animationEasing);
 	}
 
 	private List<DtoAbsolutePositionedComponent> createDtoAbsolutePositionedComponents() {

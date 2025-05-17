@@ -20,11 +20,12 @@
 package "projector-client-core-components":org.teamapps.projector.component.core;
 
 import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.animation.AnimationEasing;
 
 class DtoAbsoluteLayout extends DtoComponent {
 	List<DtoAbsolutePositionedComponent> components;
 
-	command update(List<DtoAbsolutePositionedComponent> components, int animationDuration, DtoAnimationEasing easing);
+	command update(List<DtoAbsolutePositionedComponent> components, int animationDuration, AnimationEasing easing);
 }
 
 class DtoAbsolutePositionedComponent {
@@ -40,14 +41,4 @@ class DtoAbsolutePositioning {
 	String widthCss;
 	String heightCss;
 	int zIndex;
-}
-
-enum DtoAnimationEasing {
-	EASE,
-	LINEAR,
-	EASE_IN,
-	EASE_OUT,
-	EASE_IN_OUT,
-	STEP_START,
-	STEP_END
 }

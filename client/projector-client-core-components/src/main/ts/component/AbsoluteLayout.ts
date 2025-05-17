@@ -17,18 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, Component, generateUUID, parseHtml, ServerObjectChannel} from "projector-client-object-api";
-import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent, DtoAnimationEasing} from "../generated";
-
-const animationEasingCssValues = {
-	[DtoAnimationEasing.EASE]: "ease",
-	[DtoAnimationEasing.LINEAR]: "linear",
-	[DtoAnimationEasing.EASE_IN]: "ease-in",
-	[DtoAnimationEasing.EASE_OUT]: "ease-out",
-	[DtoAnimationEasing.EASE_IN_OUT]: "ease-in-out",
-	[DtoAnimationEasing.STEP_START]: "step-start",
-	[DtoAnimationEasing.STEP_END]: "step-end"
-};
+import {
+	AbstractComponent,
+	AnimationEasing,
+	Component,
+	generateUUID,
+	parseHtml,
+	ServerObjectChannel
+} from "projector-client-object-api";
+import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent} from "../generated";
 
 export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
@@ -37,7 +34,7 @@ export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> impleme
 		super(config);
 		this.$main = parseHtml(`<div class="AbsoluteLayout">
 </div>`);
-		this.update(config.components, 0, DtoAnimationEasing.EASE);
+		this.update(config.components, 0, AnimationEasing.EASE);
 	}
 
 	doGetMainElement(): HTMLElement {
@@ -51,7 +48,7 @@ export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> impleme
 		this.onResize();
 	};
 
-	update(components: DtoAbsolutePositionedComponent[], animationDuration: number, easing: DtoAnimationEasing): void {
+	update(components: DtoAbsolutePositionedComponent[], animationDuration: number, easing: AnimationEasing): void {
 		Array.from(this.$main.querySelectorAll(":scope > :not(style)")).forEach(c => c.remove());
 
 		components
@@ -69,7 +66,7 @@ export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> impleme
 
 		this.$main.offsetWidth; // trigger reflow
 
-		this.setStyle("*", {"transition": `transition: top ${animationDuration}ms ${animationEasingCssValues[easing]}, right ${animationDuration}ms ${animationEasingCssValues[easing]}, bottom ${animationDuration}ms ${animationEasingCssValues[easing]}, left ${animationDuration}ms ${animationEasingCssValues[easing]}, width ${animationDuration}ms ${animationEasingCssValues[easing]}, height ${animationDuration}ms ${animationEasingCssValues[easing]};`})
+		this.setStyle("*", {"transition": `transition: top ${animationDuration}ms ${easing}, right ${animationDuration}ms ${easing}, bottom ${animationDuration}ms ${easing}, left ${animationDuration}ms ${easing}, width ${animationDuration}ms ${easing}, height ${animationDuration}ms ${easing};`})
 		components.forEach(c => {
 			const component = c.component as AbstractComponent;
 			component.getMainElement().addEventListener('transitionend', this.transitionEndEventListener);

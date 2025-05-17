@@ -83,7 +83,7 @@ public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 		item.setId(getId());
 		item.setViewNames(viewNames);
 		item.setSelectedViewName(selectedView != null ? selectedView.getId() : null);
-		item.setPanelState(panelState.toUiViewGroupPanelState());
+		item.setPanelState(panelState);
 		item.setPersistent(persistent);
 		return item;
 	}

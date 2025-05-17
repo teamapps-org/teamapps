@@ -31,7 +31,7 @@ import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {computePosition, size} from "@floating-ui/dom";
 import {
     DtoRelativeWorkSpaceViewPosition,
-    DtoViewGroupPanelState,
+    ViewGroupPanelState,
     DtoWorkSpaceLayoutItem,
     DtoWorkSpaceLayoutSplitItem,
     DtoWorkSpaceLayoutView,
@@ -436,7 +436,7 @@ export class LocalViewContainer implements ViewContainer {
         tabPanelItem.onPanelStateChangeTriggered.addListener(panelState => this.setViewGroupPanelState2(tabPanelItem, panelState, true));
         tabPanelItem.onTabClosed.addListener(tabId => {
             if (tabPanelItem.tabs.length === 0) {
-                this.setViewGroupPanelState2(tabPanelItem, DtoViewGroupPanelState.NORMAL, false);
+                this.setViewGroupPanelState2(tabPanelItem, ViewGroupPanelState.NORMAL, false);
             }
             this.workSpaceLayout.onViewClosed.fire({
                 viewName: tabId
@@ -651,19 +651,19 @@ export class LocalViewContainer implements ViewContainer {
     }
 
     @bind
-    setViewGroupPanelState(viewGroupId: string, panelState: DtoViewGroupPanelState): void {
+    setViewGroupPanelState(viewGroupId: string, panelState: ViewGroupPanelState): void {
         let tabPanel = this.itemTree.getTabPanelById(viewGroupId);
         if (tabPanel) {
             this.setViewGroupPanelState2(tabPanel, panelState, false);
         }
     }
 
-    private setViewGroupPanelState2(viewGroup: TabPanelItem, panelState: DtoViewGroupPanelState, firePanelStateChangeEvent: boolean) {
+    private setViewGroupPanelState2(viewGroup: TabPanelItem, panelState: ViewGroupPanelState, firePanelStateChangeEvent: boolean) {
         const oldPanelState = viewGroup.state;
         if (oldPanelState != panelState) {
-            if (panelState === DtoViewGroupPanelState.MAXIMIZED) {
+            if (panelState === ViewGroupPanelState.MAXIMIZED) {
                 this.maximizeTabPanel(viewGroup);
-            } else if (panelState === DtoViewGroupPanelState.MINIMIZED) {
+            } else if (panelState === ViewGroupPanelState.MINIMIZED) {
                 this.minimizeTabPanel(viewGroup);
             } else {
                 this.restoreTabPanel(viewGroup);
@@ -678,7 +678,7 @@ export class LocalViewContainer implements ViewContainer {
         if (tabPanelItem.maximized) {
             this.restoreTabPanel(tabPanelItem);
         }
-        tabPanelItem.state = DtoViewGroupPanelState.MINIMIZED;
+        tabPanelItem.state = ViewGroupPanelState.MINIMIZED;
         this.$minimizedViewsBar.append(tabPanelItem.$minimizedTrayButton);
     }
 
@@ -688,20 +688,20 @@ export class LocalViewContainer implements ViewContainer {
         this.$maximizationContainerWrapper.classList.add("show");
         this.$maximizationContainer.append($element);
         this.$maximizationContainer.classList.add("animate__animated", "animate__zoomIn");
-        tabPanelItem.state = DtoViewGroupPanelState.MAXIMIZED;
+        tabPanelItem.state = ViewGroupPanelState.MAXIMIZED;
     }
 
     private restoreTabPanel(tabPanelItem: TabPanelItem) {
-        if (tabPanelItem.state === DtoViewGroupPanelState.MAXIMIZED) {
+        if (tabPanelItem.state === ViewGroupPanelState.MAXIMIZED) {
             const $element = tabPanelItem.component.getMainElement();
             this.$maximizationContainerWrapper.classList.remove("show");
             this.$maximizationContainer.append($element);
             this.$maximizationContainer.classList.remove("animate__animated", "animate__zoomIn");
             this.$normalContainerOfMaximizedTabPanel.appendChild($element);
-            tabPanelItem.state = DtoViewGroupPanelState.NORMAL;
-        } else if (tabPanelItem.state === DtoViewGroupPanelState.MINIMIZED) {
+            tabPanelItem.state = ViewGroupPanelState.NORMAL;
+        } else if (tabPanelItem.state === ViewGroupPanelState.MINIMIZED) {
             tabPanelItem.$minimizedTrayButton.remove();
-            tabPanelItem.state = DtoViewGroupPanelState.NORMAL;
+            tabPanelItem.state = ViewGroupPanelState.NORMAL;
         }
     }
 

@@ -208,3 +208,35 @@ enum PageTransition {
 	ROTATE_SIDES_OUT_VS_ROTATE_SIDES_IN = "rotate-sides-out-vs-rotate-sides-in",
 	ROTATE_SLIDE_OUT_VS_ROTATE_SLIDE_IN = "rotate-slide-out-vs-rotate-slide-in"
 }
+
+enum AnimationEasing {
+    /**
+     * Default value.
+     * Specifies a transition effect with a slow start, then fast, then end slowly (equivalent to cubic-bezier(0.25,0.1,0.25,1))
+     */
+    EASE = "ease",
+    /**
+     * Specifies a transition effect with the same speed from start to end (equivalent to cubic-bezier(0,0,1,1))
+     */
+    LINEAR = "linear",
+    /**
+     * Specifies a transition effect with a slow start (equivalent to cubic-bezier(0.42,0,1,1))
+     */
+    EASE_IN = "ease-in",
+    /**
+     * Specifies a transition effect with a slow end (equivalent to cubic-bezier(0,0,0.58,1))
+     */
+    EASE_OUT = "ease-out",
+    /**
+     * Specifies a transition effect with a slow start and end (equivalent to cubic-bezier(0.42,0,0.58,1))
+     */
+    EASE_IN_OUT = "ease-in-out",
+    /**
+     * Equivalent to steps(1, start)
+     */
+    STEP_START = "step-start",
+    /**
+     * Equivalent to steps(1, end)
+     */
+    STEP_END = "step-end";
+}

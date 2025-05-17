@@ -12,21 +12,16 @@ requirements for the maven plugin:
 * make sure the teamapps plugin checks that teamapps dependencies are marked as provided!
 * make projector-client-object-api an implicit DTO dependency
 
-Low prio:
-Table:
-* column builder; return one when invoking addColumn() and listen to build() method.
-* setHideHeaders() WTF...
 
-Upgrade FullCalendar to version 6 (and get rid of moment.js there)
 
 use external imports for references to concrete ClientObject instances instead of the generic ClientObject in DTOs. Example DtoTemplateField.template
 Also use this for DateTimeFormatDescriptor...
 
-make Label NOT a field. It is not!
-
-rewrite README
-
-enable TypeScript strict null checking for the core at least
+- Simplify the button interface. For template-based buttons, introduce another component
+- make Label NOT a field. It is not!
+- rewrite README
+- Javadoc
+- enable TypeScript strict null checking on the core at least
 
 change generation target packages:
  - core-components: org.teamapps.projector.component.core
@@ -59,6 +54,12 @@ make icon a client object (represented as a simple string on the client?), so yo
 
 check if registering a client-side event listener is enough to render the object on the client side. If so, change this!!
 
-Simplify the button interface. For template-based buttons, introduce another component
 
-Make it two Script implementations: one inline, one loaded
+
+# Low prio:
+
+Table:
+* column builder; return one when invoking addColumn() and listen to build() method.
+* setHideHeaders() WTF...
+
+FullCalendar: Upgrade FullCalendar to version 6 (and get rid of moment.js there)

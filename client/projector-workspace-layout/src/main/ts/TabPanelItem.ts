@@ -22,7 +22,7 @@ import {TabPanelTabStyle, TabPanel, WindowButtonType} from "projector-client-cor
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
-import {DtoViewGroupPanelState} from "./generated";
+import {ViewGroupPanelState} from "./generated";
 
 class MinimizableTabPanel extends TabPanel {
 
@@ -58,9 +58,9 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	public readonly onTabSelected: ProjectorEvent<{ tabPanelItemId: string, tabId: string }> = new ProjectorEvent();
 	public readonly onTabNeedsRefresh: ProjectorEvent<{ tabId: string }> = new ProjectorEvent();
 	public readonly onTabClosed: ProjectorEvent<string> = new ProjectorEvent();
-	public readonly onPanelStateChangeTriggered: ProjectorEvent<DtoViewGroupPanelState> = new ProjectorEvent();
+	public readonly onPanelStateChangeTriggered: ProjectorEvent<ViewGroupPanelState> = new ProjectorEvent();
 
-	private _state: DtoViewGroupPanelState = DtoViewGroupPanelState.NORMAL;
+	private _state: ViewGroupPanelState = ViewGroupPanelState.NORMAL;
 
 	constructor(id: string, persistent: boolean, parent: SplitPaneItem) {
 		this.id = id;
@@ -75,7 +75,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		this.component.onWindowButtonClicked.addListener(eventObject => {
 			if (eventObject.windowButton === WindowButtonType.MINIMIZE) {
 				this.component.restore(); // could be maximized, so first restore!
-				this.onPanelStateChangeTriggered.fire(DtoViewGroupPanelState.MINIMIZED);
+				this.onPanelStateChangeTriggered.fire(ViewGroupPanelState.MINIMIZED);
 			}
 		});
 		this.component.onTabSelected.addListener(eventObject => this.onTabSelected.fire({tabPanelItemId: this.id, tabId: eventObject.tabId}));
@@ -118,7 +118,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 
 		const windowButtonListener = (windowButtonType: WindowButtonType) => {
 			if (windowButtonType === WindowButtonType.MINIMIZE) {
-				this.onPanelStateChangeTriggered.fire(DtoViewGroupPanelState.MINIMIZED);
+				this.onPanelStateChangeTriggered.fire(ViewGroupPanelState.MINIMIZED);
 			} else if (windowButtonType === WindowButtonType.CLOSE) {
 				this.removeTab(view);
 				this.onTabClosed.fire(view.viewName);
@@ -132,7 +132,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 
 		view.parent = this;
 
-		if (this.state === DtoViewGroupPanelState.MINIMIZED) {
+		if (this.state === ViewGroupPanelState.MINIMIZED) {
 			this.updateMinimizedButton();
 		}
 	}
@@ -148,7 +148,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		this._tabs = this._tabs.filter(tab => tab.view !== view);
 		this.updateWindowToolButtons();
 
-		if (this.state == DtoViewGroupPanelState.MINIMIZED) {
+		if (this.state == ViewGroupPanelState.MINIMIZED) {
 			this.updateMinimizedButton();
 		}
 	}
@@ -181,12 +181,12 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	}
 
 	get maximized() {
-		return this._state === DtoViewGroupPanelState.MAXIMIZED
+		return this._state === ViewGroupPanelState.MAXIMIZED
 	}
 
-	set state(state: DtoViewGroupPanelState) {
+	set state(state: ViewGroupPanelState) {
 		this._state = state;
-		let minimized = state === DtoViewGroupPanelState.MINIMIZED;
+		let minimized = state === ViewGroupPanelState.MINIMIZED;
 		this.component.minimized = minimized;
 		if (minimized) {
 			this.updateMinimizedButton();
@@ -200,10 +200,10 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		// noinspection CssUnknownTarget
 		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize} ta-icon-window-restore"></div>`));
 		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${tab.view.tabIcon}')"></div>`)));
-		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(DtoViewGroupPanelState.NORMAL));
+		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(ViewGroupPanelState.NORMAL));
 	}
 
-	get state(): DtoViewGroupPanelState {
+	get state(): ViewGroupPanelState {
 		return this._state;
 	}
 }

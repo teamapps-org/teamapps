@@ -24,7 +24,7 @@ import {TabPanelItem} from "./TabPanelItem";
 import {Component} from "projector-client-object-api";
 import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./WorkSpaceLayout";
 import {
-	DtoViewGroupPanelState,
+	ViewGroupPanelState,
 	DtoWorkSpaceLayoutItem,
 	DtoWorkSpaceLayoutSplitItem,
 	DtoWorkSpaceLayoutView,
@@ -44,7 +44,7 @@ export class LayoutDescriptorApplyer {
 	constructor(
 		private $rootItemContainer: HTMLElement,
 		private viewGroupFactory: (config: DtoWorkSpaceLayoutViewGroupItem, parent: SplitPaneItem) => TabPanelItem,
-		private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: DtoViewGroupPanelState) => void
+		private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: ViewGroupPanelState) => void
 	) {
 	}
 
