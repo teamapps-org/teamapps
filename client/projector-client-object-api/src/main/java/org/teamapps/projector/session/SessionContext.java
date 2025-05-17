@@ -49,6 +49,7 @@ import org.teamapps.projector.icon.SessionIconProvider;
 import org.teamapps.projector.resource.Resource;
 import org.teamapps.projector.server.UxServerContext;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
+import org.teamapps.projector.session.config.FullLongMediumShortType;
 import org.teamapps.projector.session.event.KeyboardEvent;
 import org.teamapps.projector.session.navigation.*;
 import org.teamapps.projector.session.uisession.ClientBackPressureInfo;
@@ -127,8 +128,8 @@ public class SessionContext {
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 
 	private TwoWayBindableValue<Locale> locale = TwoWayBindableValue.create(Locale.US);
-	private DateTimeFormatDescriptor dateFormat = DateTimeFormatDescriptor.forDate(DateTimeFormatDescriptor.FullLongMediumShortType.SHORT);
-	private DateTimeFormatDescriptor timeFormat = DateTimeFormatDescriptor.forTime(DateTimeFormatDescriptor.FullLongMediumShortType.SHORT);
+	private DateTimeFormatDescriptor dateFormat = DateTimeFormatDescriptor.forDate(FullLongMediumShortType.SHORT);
+	private DateTimeFormatDescriptor timeFormat = DateTimeFormatDescriptor.forTime(FullLongMediumShortType.SHORT);
 	private ZoneId timeZone;
 	private DayOfWeek firstDayOfWeek; // null == determine by locale
 	private String iconBasePath = "/icons";

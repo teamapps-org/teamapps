@@ -24,55 +24,55 @@ import org.teamapps.projector.component.DtoComponent;
 class DtoDateTimeFormatDescriptor {
 
 	// either dateStyle and/or timeStyle can be set, or the other fields. Both does not work. Exception: hourCycle
-	DtoFullLongMediumShortType dateStyle;
-	DtoFullLongMediumShortType timeStyle;
+	FullLongMediumShortType dateStyle;
+	FullLongMediumShortType timeStyle;
 
 	Integer fractionalSecondDigits;
-	DtoDayPeriodType dayPeriod;
-	DtoHourCycleType hourCycle;
+	DayPeriodType dayPeriod;
+	HourCycleType hourCycle;
 
-	DtoLongShortNarrowType weekday;
-	DtoLongShortNarrowType era;
-	DtoNumericType year;
-	DtoNumericOrLongShortNarrowType month;
-	DtoNumericType day;
-	DtoNumericType hour;
-	DtoNumericType minute;
-	DtoNumericType second;
+	LongShortNarrowType weekday;
+	LongShortNarrowType era;
+	NumericType year;
+	NumericOrLongShortNarrowType month;
+	NumericType day;
+	NumericType hour;
+	NumericType minute;
+	NumericType second;
 }
 
-enum DtoDayPeriodType {
+enum DayPeriodType {
     NARROW = "narrow",
     SHORT = "short",
     LONG = "long";
 }
 
-enum DtoHourCycleType {
+enum HourCycleType {
     H11 = "h11", // 0-11
     H12 = "h12", // 1-12
     H23 = "h23", // 0-23
     H24 = "h24"; // 1-24
 }
 
-enum DtoFullLongMediumShortType {
+enum FullLongMediumShortType {
     FULL = "full",
     LONG = "long",
     MEDIUM = "medium",
     SHORT = "short";
 }
 
-enum DtoLongShortNarrowType {
+enum LongShortNarrowType {
     LONG = "long",
     SHORT = "short",
     NARROW = "narrow";
 }
 
-enum DtoNumericType {
+enum NumericType {
     NUMERIC = "numeric",
     TWO_DIGIT = "2-digit";
 }
 
-enum DtoNumericOrLongShortNarrowType {
+enum NumericOrLongShortNarrowType {
     NUMERIC = "numeric",
     TWO_DIGIT = "2-digit",
     LONG = "long",

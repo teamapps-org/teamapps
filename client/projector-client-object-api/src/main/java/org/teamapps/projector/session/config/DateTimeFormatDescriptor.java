@@ -19,8 +19,6 @@
  */
 package org.teamapps.projector.session.config;
 
-import org.teamapps.projector.*;
-
 public class DateTimeFormatDescriptor {
 
 	// either dateStyle and/or timeStyle can be set, or the other fields. Both does not work. Exception: hourCycle
@@ -78,19 +76,19 @@ public class DateTimeFormatDescriptor {
 
 	public DtoDateTimeFormatDescriptor toDateTimeFormatDescriptor() {
 		DtoDateTimeFormatDescriptor ui = new DtoDateTimeFormatDescriptor();
-		ui.setDateStyle(dateStyle != null ? dateStyle.toUiValue() : null);
-		ui.setTimeStyle(timeStyle != null ? timeStyle.toUiValue() : null);
+		ui.setDateStyle(dateStyle);
+		ui.setTimeStyle(timeStyle);
 		ui.setFractionalSecondDigits(fractionalSecondDigits == null || fractionalSecondDigits == 0 ? null : fractionalSecondDigits); // 0 not accepted by Chrome!
-		ui.setDayPeriod(dayPeriod != null ? dayPeriod.toUiValue() : null);
-		ui.setHourCycle(hourCycle != null ? hourCycle.toUiValue() : null);
-		ui.setWeekday(weekday != null ? weekday.toUiValue() : null);
-		ui.setEra(era != null ? era.toUiValue() : null);
-		ui.setYear(year != null ? year.toUiValue() : null);
-		ui.setMonth(month != null ? month.toUiValue() : null);
-		ui.setDay(day != null ? day.toUiValue() : null);
-		ui.setHour(hour != null ? hour.toUiValue() : null);
-		ui.setMinute(minute != null ? minute.toUiValue() : null);
-		ui.setSecond(second != null ? second.toUiValue() : null);
+		ui.setDayPeriod(dayPeriod);
+		ui.setHourCycle(hourCycle);
+		ui.setWeekday(weekday);
+		ui.setEra(era);
+		ui.setYear(year);
+		ui.setMonth(month);
+		ui.setDay(day);
+		ui.setHour(hour);
+		ui.setMinute(minute);
+		ui.setSecond(second);
 		return ui;
 	}
 
@@ -236,86 +234,6 @@ public class DateTimeFormatDescriptor {
 					minute,
 					second
 			);
-		}
-	}
-
-	// === ENUMS ===
-
-	public enum DayPeriodType {
-		NARROW,
-		SHORT,
-		LONG;
-
-		public DtoDayPeriodType toUiValue() {
-			return DtoDayPeriodType.valueOf(this.name());
-		}
-	}
-
-	public enum HourCycleType {
-		/**
-		 * 0-11
-		 */
-		H11,
-
-		/**
-		 * 1-12
-		 */
-		H12,
-
-		/**
-		 * 0-23
-		 */
-		H23,
-
-		/**
-		 * 1-24
-		 */
-		H24;
-
-		public DtoHourCycleType toUiValue() {
-			return DtoHourCycleType.valueOf(name());
-		}
-	}
-
-	public enum FullLongMediumShortType {
-		FULL,
-		LONG,
-		MEDIUM,
-		SHORT;
-
-		public DtoFullLongMediumShortType toUiValue() {
-			return DtoFullLongMediumShortType.valueOf(name());
-		}
-	}
-
-	public enum LongShortNarrowType {
-		LONG,
-		SHORT,
-		NARROW;
-
-		public DtoLongShortNarrowType toUiValue() {
-			return DtoLongShortNarrowType.valueOf(name());
-		}
-	}
-
-	public enum NumericType {
-		NUMERIC(),
-		TWO_DIGIT();
-
-		public DtoNumericType toUiValue() {
-			return DtoNumericType.valueOf(name());
-		}
-	}
-
-	public enum NumericOrLongShortNarrowType {
-		NUMERIC,
-		TWO_DIGIT,
-		LONG,
-		SHORT,
-		NARROW;
-
-		public DtoNumericOrLongShortNarrowType toUiValue() {
-			return DtoNumericOrLongShortNarrowType.valueOf(name());
 		}
 	}
 
