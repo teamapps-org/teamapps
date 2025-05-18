@@ -6,13 +6,15 @@
   "types": "./target/js-dist/lib/index.d.ts",
   "scripts": {
     "del_dist": "rimraf 'target/js-dist/*'",
-    "clean": "yarn run del_dist",
+    "clean": "pnpm run del_dist",
     "tsc": "tsc",
     "bundle": "node esbuild.mjs",
-    "build": "yarn run del_dist && yarn run tsc && yarn run bundle"
+    "build": "pnpm run del_dist && pnpm run tsc && pnpm run bundle"
   },
   "devDependencies": {
     "esbuild": "^0.15.13",
+    "esbuild-plugin-alias": "^0.2.1",
+    "esbuild-plugin-less": "^1.1.11",
     "rimraf": "^3.0.2",
     "typescript": "^5.1"
   },
@@ -22,7 +24,6 @@
     "@popperjs/core": "^2.11.8",
     "animate.css": "^4.1.1",
     "bootstrap-icons": "^1.10.2",
-    "mustache": "^4.2.0",
     "projector-client-communication": "workspace:*",
     "projector-client-object-api": "workspace:*"
   }

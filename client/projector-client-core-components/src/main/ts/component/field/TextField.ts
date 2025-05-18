@@ -45,7 +45,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 </div>`);
 		this.$field = this.$wrapper.querySelector(":scope input");
 		if (!config.autofill) {
-			this.$field.autocomplete = "no";
+			this.$field.autocomplete = "off";
 		}
 		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
 		$clearButton.addEventListener('click',() => {

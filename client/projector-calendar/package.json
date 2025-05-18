@@ -6,13 +6,15 @@
   "types": "./target/js-dist/lib/index.d.ts",
   "scripts": {
     "del_dist": "rimraf 'dist/*'",
-    "clean": "yarn run del_dist",
+    "clean": "pnpm run del_dist",
     "tsc": "tsc",
     "bundle": "node esbuild.mjs",
-    "build": "yarn run del_dist && yarn run tsc && yarn run bundle"
+    "build": "pnpm run del_dist && pnpm run tsc && pnpm run bundle"
   },
   "devDependencies": {
     "esbuild": "^0.15.13",
+    "esbuild-plugin-alias": "^0.2.1",
+    "esbuild-plugin-less": "^1.1.11",
     "rimraf": "^3.0.2",
     "typescript": "^5.1"
   },
@@ -23,7 +25,9 @@
     "@fullcalendar/moment": "4.4.2",
     "@fullcalendar/moment-timezone": "4.4.2",
     "@fullcalendar/timegrid": "4.4.2",
+    "@popperjs/core": "^2.11.8",
     "d3": "^7.9.0",
+    "d3-selection": "^3.0.0",
     "moment-timezone": "^0.5.43",
     "projector-client-object-api": "workspace:*"
   }

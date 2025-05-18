@@ -24,7 +24,6 @@ import {
 	TrivialComponent,
 	unProxyEntry
 } from "./TrivialCore";
-import KeyDownEvent = JQuery.KeyDownEvent;
 import {parseHtml, ProjectorEvent} from "projector-client-object-api";
 
 export interface TrivialTreeConfig<E> extends TrivialTreeBoxConfig<E> {

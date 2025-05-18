@@ -122,7 +122,3 @@ generated/
 dist/
 stats.json
 
-### yarn
-.pnp.*
-.yarn/*
-yarn-error.log

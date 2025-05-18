@@ -24,7 +24,7 @@ esbuild.build({
         alias({
             '@less/index.less': path.resolve(__dirname, `src/main/less/index.less`),
         }),
-        lessLoader(),
+        lessLoader({paths: [path.resolve(__dirname, `src/main/less`), path.resolve(__dirname, `node_modules`)]}, {}),
     ],
     minify: process.env.NODE_ENV === 'production'
 })

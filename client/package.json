@@ -10,48 +10,12 @@
   "directories": {
     "test": "test"
   },
-  "workspaces": [
-    "projector-client-communication",
-    "projector-client-object-api",
-    "projector-script",
-    "projector-stylesheet",
-    "projector-grid-template",
-    "projector-mustache-template",
-    "projector-client-core",
-    "projector-client-core-components",
-    "projector-progress-indicator",
-    "projector-progress-display",
-    "projector-notification",
-    "projector-notification-bar",
-    "projector-workspace-layout",
-    "projector-mobile-layout",
-    "projector-blogview",
-    "projector-calendar",
-    "projector-infinite-scrolling-components",
-    "projector-document-viewer",
-    "projector-elegant-panel",
-    "projector-timegraph",
-    "projector-file-field",
-    "projector-tree-components",
-    "projector-map",
-    "projector-shaka-player",
-    "projector-mediasoup-client",
-    "projector-chart",
-    "projector-audio-level-indicator",
-    "projector-chat",
-    "projector-collapsible",
-    "projector-side-drawer",
-    "projector-video-player",
-    "projector-grid-form"
-  ],
   "comments": {},
   "engines": {
-    "node": ">= 18.4.0",
-    "yarn": ">= 3.2.4"
+    "node": ">= 18.4.0"
   },
   "browserslist": [
     "last 2 version",
     "> 1%"
-  ],
-  "packageManager": "yarn@3.2.4"
+  ]
 }

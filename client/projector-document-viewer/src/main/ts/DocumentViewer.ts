@@ -119,8 +119,8 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 	}
 
 	private updateImageSizes() {
-		let viewPortWidth = $(this.$pagesContainerWrapper).width() - 2 * this.config.padding;
-		let viewPortHeight = $(this.$pagesContainerWrapper).height() - 2 * this.config.padding;
+		let viewPortWidth = this.$pagesContainerWrapper.offsetWidth - 2 * this.config.padding;
+		let viewPortHeight = this.$pagesContainerWrapper.offsetHeight - 2 * this.config.padding;
 		let viewPortAspectRatio = viewPortWidth / viewPortHeight;
 
 		this.pages.forEach((p) => {

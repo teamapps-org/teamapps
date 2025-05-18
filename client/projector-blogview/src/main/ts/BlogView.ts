@@ -19,21 +19,17 @@
  */
 
 import {
-	AbstractComponent, Component,
-	executeAfterAttached, insertAfter,
+	AbstractComponent,
+	Component,
+	executeAfterAttached,
+	insertAfter,
 	insertBefore,
-	parseHtml, removeClassesByFunction,
-	ServerObjectChannel, Template
+	parseHtml,
+	removeClassesByFunction,
+	ServerObjectChannel,
+	Template
 } from "projector-client-object-api";
-import {
-	BlockAlignment,
-	CreatorImageAlignment,
-	DtoBlock,
-	DtoBlogView,
-	DtoCitationBlock,
-	DtoComponentBlock,
-	DtoMessageBlock
-} from "./generated";
+import {BlockAlignment, DtoBlock, DtoBlogView, DtoCitationBlock, DtoComponentBlock, DtoMessageBlock} from "./generated";
 import {removeDangerousTags, ToolButton} from "projector-client-core-components";
 import {fixed_partition} from "image-layout";
 
@@ -286,8 +282,8 @@ class UiCitationBlock extends AbstractBlockComponent<DtoCitationBlock> {
 	</div>
 </div>`);
 		let $contentWrapper = this.$main.querySelector<HTMLElement>(':scope .content-wrapper');
-		$contentWrapper.appendChild($(`<div class="citation">${removeDangerousTags(config.citation)}</div>`)[0]);
-		$contentWrapper.appendChild($(`<div class="author">${removeDangerousTags(config.author)}</div>`)[0]);
+		$contentWrapper.appendChild(parseHtml(`<div class="citation">${removeDangerousTags(config.citation)}</div>`)[0]);
+		$contentWrapper.appendChild(parseHtml(`<div class="author">${removeDangerousTags(config.author)}</div>`)[0]);
 
 		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 		this.$toolButtons.innerHTML = '';
@@ -334,7 +330,7 @@ class UiComponentBlock extends AbstractBlockComponent<DtoComponentBlock> {
 		});
 		
 		if (config.title) {
-			this.$main.prepend($(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
+			this.$main.prepend(parseHtml(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
 		}
 
 		this.component = config.component as Component;

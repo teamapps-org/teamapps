@@ -20,62 +20,74 @@
 import {ProjectorEvent} from "./ProjectorEvent";
 
 export class FileUploader {
-
-
 	public readonly onProgress: ProjectorEvent<number> = new ProjectorEvent();
 	public readonly onSuccess: ProjectorEvent<string> = new ProjectorEvent();
-	public readonly onError: ProjectorEvent<void> = new ProjectorEvent();
+	public readonly onError: ProjectorEvent<string> = new ProjectorEvent();
 	public readonly onComplete: ProjectorEvent<void> = new ProjectorEvent();
 
-	private xhr: JQuery.jqXHR;
+	private xhr: XMLHttpRequest | null = null;
 
-	public upload(file: File, url: string, fileFormDataName = "files") {
+	public upload(file: File, url: string, fileFormDataName = "files"): void {
 		const formData = new FormData();
 		formData.append(fileFormDataName, file, file.name);
 
-		this.xhr = $.ajax({
-			url: url,
-			data: formData,
-			processData: false,
-			contentType: false,
-			type: 'POST',
-			xhr: () => {
-				const xhr = $.ajaxSettings.xhr();
-				if (xhr.upload) {
-					xhr.upload.addEventListener('progress', (event) => {
-						let progress: number;
-						if (event.lengthComputable) {
-							const position = event.loaded || (event as any).position; // event.position is deprecated
-							const total = event.total;
-							progress = position / total;
-						} else {
-							progress = -1;
-							console.warn("Cannot calculate percentage progress of file upload!");
+		this.xhr = new XMLHttpRequest();
+
+		this.xhr.upload.addEventListener("progress", (event) => {
+			let progress: number;
+			if (event.lengthComputable) {
+				const position = event.loaded;
+				const total = event.total;
+				progress = position / total;
+			} else {
+				progress = -1;
+				console.warn("Cannot calculate percentage progress of file upload!");
+			}
+			this.onProgress.fire(progress);
+		}, false);
+
+		this.xhr.addEventListener("load", () => {
+			if (this.xhr) {
+				if (this.xhr.status >= 200 && this.xhr.status < 300) {
+					try {
+						const fileUuids: string[] = JSON.parse(this.xhr.responseText);
+						for (let j = 0; j < fileUuids.length; j++) { // it's actually only one uuid, since we upload the files sequentially!
+							const fileUuid = fileUuids[j];
+							this.onSuccess.fire(fileUuid);
 						}
-						this.onProgress.fire(progress);
-					}, false);
+					} catch (error) {
+						this.onError.fire("" + error);
+					}
+				} else {
+					this.onError.fire(`Upload failed with status ${this.xhr.status}: ${this.xhr.statusText}`);
 				}
-				return xhr;
-			},
-			success: (fileUuids: string[]) => {
-				for (let j = 0; j < fileUuids.length; j++) { // it's actually only one uuid, since we upload the files sequentially!
-					const fileUuid = fileUuids[j];
-					this.onSuccess.fire(fileUuid);
-				}
-			},
-			error: (e) => {
-				this.onError.fire(null);
-				this.onComplete.fire(null);
-			},
-			complete: () => {
-				this.xhr = null;
-				this.onComplete.fire(null);
 			}
 		});
+
+		this.xhr.addEventListener("error", () => {
+			this.onError.fire("An unknown error occurred during upload.");
+			this.onComplete.fire();
+		});
+
+		this.xhr.addEventListener("abort", () => {
+			// TODO anything to do here?
+		});
+
+		this.xhr.addEventListener("loadend", () => {
+			// This event fires after load, error, abort, or timeout
+			this.xhr = null;
+			this.onComplete.fire();
+		});
+
+		this.xhr.open("POST", url);
+		// this.xhr.setRequestHeader('Custom-Header', 'blah');
+		this.xhr.send(formData);
 	}
 
-	abort() {
-		this.xhr.abort();
+	public abort(): void {
+		if (this.xhr) {
+			this.xhr.abort();
+		}
 	}
 }
 

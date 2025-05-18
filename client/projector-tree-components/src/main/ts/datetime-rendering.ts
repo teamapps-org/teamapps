@@ -19,7 +19,6 @@
  */
 import {DateTime} from "luxon";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
-import moment from "moment-timezone";
 
 export function createDateIconRenderer(locale: string): (time: DateTime) => string {
 	const weekDayString = (dateTime: DateTime) => {
@@ -136,19 +135,6 @@ export function createTimseComboBoxEntry(h: number, m: number, locale: string, t
 		hourAngle: ((h % 12) + m / 60) * 30,
 		minuteAngle: m * 6,
 		isNight: h < 6 || h >= 20
-	};
-}
-
-export function createTimeComboBoxEntryFromMoment(mom: moment.Moment, timeFormat: string) {
-	return {
-		hour: mom.hour(),
-		minute: mom.minute(),
-		hourString: pad(mom.hour(), 2),
-		minuteString: pad(mom.minute(), 2),
-		displayString: mom.format(timeFormat),
-		hourAngle: ((mom.hour() % 12) + mom.minute() / 60) * 30,
-		minuteAngle: mom.minute() * 6,
-		isNight: mom.hour() < 6 || mom.hour() >= 20
 	};
 }
 

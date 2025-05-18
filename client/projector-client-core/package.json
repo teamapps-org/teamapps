@@ -6,11 +6,11 @@
   "types": "./target/js-dist/lib/index.d.ts",
   "scripts": {
     "del_dist": "rimraf 'target/js-dist/*'",
-    "clean": "yarn run del_dist",
+    "clean": "pnpm run del_dist",
     "tsc": "tsc",
     "build:insert-version": "cross-var replace-in-file \"__TEAMAPPS_VERSION__\" \"$npm_package_version\" \"target/js-dist/**/*.js\"",
     "bundle": "node esbuild.mjs",
-    "build": "yarn run clean && yarn run tsc && yarn run build:insert-version && yarn run bundle"
+    "build": "pnpm run clean && pnpm run tsc && pnpm run build:insert-version && pnpm run bundle"
   },
   "devDependencies": {
     "cross-var": "^1.1.0",
@@ -22,7 +22,6 @@
     "typescript": "^5.1"
   },
   "dependencies": {
-    "nosleep.js": "^0.12.0",
     "projector-client-communication": "workspace:*",
     "projector-client-object-api": "workspace:*"
   }

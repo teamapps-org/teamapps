@@ -593,7 +593,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 			return;
 		}
 		this.$toolsContainer.classList.toggle("hidden", this.toolButtons.length === 0 && this.windowButtons.length === 0);
-		let availableWidth = $(this.$tabsContainer).width() - this.$dropDownButton.offsetWidth - this.$toolsContainer.offsetWidth;
+		let availableWidth = this.$tabsContainer.offsetWidth - this.$dropDownButton.offsetWidth - this.$toolsContainer.offsetWidth;
 		let sumOfButtonWidths = 0;
 		this.getAllTabs().forEach(tab => {
 			let tabFilled = !this.tabIsDeFactoEmpty(tab);

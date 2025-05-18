@@ -66,30 +66,31 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.6</version>
+                <version>1.15.1</version>
                 <configuration>
-                    <nodeVersion>v19.0.1</nodeVersion>
-                    <yarnVersion>v1.22.19</yarnVersion>
+                    <nodeVersion>v22.15.1</nodeVersion>
+                    <pnpmVersion>v10.11.0</pnpmVersion>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>install node and yarn</id>
+                        <id>install node and pnpm</id>
                         <goals>
-                            <goal>install-node-and-yarn</goal>
+                            <goal>install-node-and-pnpm</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>yarn install</id>
+                        <id>pnpm install</id>
                         <goals>
-                            <goal>yarn</goal>
+                            <goal>pnpm</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>build</id>
                         <goals>
-                            <goal>yarn</goal>
+                            <goal>pnpm</goal>
                         </goals>
                         <configuration>
+                            <arguments>run</arguments>
                             <arguments>build</arguments>
                         </configuration>
                     </execution>
