@@ -21,8 +21,8 @@ export class CitationBlock extends AbstractBlockComponent<DtoCitationBlock> {
 	</div>
 </div>`);
 		let $contentWrapper = this.$main.querySelector<HTMLElement>(':scope .content-wrapper');
-		$contentWrapper.appendChild($(`<div class="citation">${removeDangerousTags(config.citation)}</div>`)[0]);
-		$contentWrapper.appendChild($(`<div class="author">${removeDangerousTags(config.author)}</div>`)[0]);
+		$contentWrapper.appendChild(parseHtml(`<div class="citation">${removeDangerousTags(config.citation)}</div>`)[0]);
+		$contentWrapper.appendChild(parseHtml(`<div class="author">${removeDangerousTags(config.author)}</div>`)[0]);
 
 		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 		this.$toolButtons.innerHTML = '';

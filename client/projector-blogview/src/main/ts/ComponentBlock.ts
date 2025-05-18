@@ -26,7 +26,7 @@ export class ComponentBlock extends AbstractBlockComponent<DtoComponentBlock> {
 		});
 
 		if (config.title) {
-			this.$main.prepend($(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
+			this.$main.prepend(parseHtml(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
 		}
 
 		this.component = config.component as Component;
