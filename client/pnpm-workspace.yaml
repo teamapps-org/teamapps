@@ -1,3 +1,5 @@
 packages:
-  - 'projector-*'
-
+  - projector-*
+onlyBuiltDependencies:
+  - core-js
+  - esbuild
