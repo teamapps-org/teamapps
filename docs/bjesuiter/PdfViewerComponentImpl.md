@@ -82,6 +82,11 @@ Preparation:
 4. Run ./start-dev-server.sh 8082 (because the Jetty starts at that port)
 5. Goto http://localhost:9000 to see/debug the component
 
+### Troubleshooting 
+
+- TeamApps => maven clean install
+- TeamApps Client => maven install (without clean)
+
 ## Todos
 
 - In PdfViewer.java: update all setters to update ts client
