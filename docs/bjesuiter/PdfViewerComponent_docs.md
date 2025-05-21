@@ -74,18 +74,14 @@ public class TeamAppsJettyEmbeddedServerTest {
 ## Run the Test environment 
 
 Preparation: 
-- mvn clean install
+- mvn clean install (aka TeamApps - clean + install)
+  - installs/compiles everything in project 
 
 1. Run the Testfile (`teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`) via IntelliJ (Green Arrow in UI)
 2. Goto teamapps-client in a shell
 3. Run yarn install 
-4. Run ./start-dev-server.sh 8082 (because the Jetty starts at that port)
+4. Run `./start-dev-server.sh 8082` (because the Jetty starts at that port)
 5. Goto http://localhost:9000 to see/debug the component
-
-### Troubleshooting 
-
-- TeamApps => maven clean install
-- TeamApps Client => maven install (without clean)
 
 ## Todos
 
