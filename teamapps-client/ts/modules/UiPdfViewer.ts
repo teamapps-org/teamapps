@@ -146,8 +146,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // -----------------------™
 
     public async setUrl(url: string) {
-        this.pdfDocument = await pdfjsLib.getDocument(url).promise;
-        await this.renderPdfDocument();
+        // this.pdfDocument = await pdfjsLib.getDocument(url).promise;
+        // await this.renderPdfDocument();
     }
 
     public async setViewMode(viewMode: UiPdfViewMode) {
