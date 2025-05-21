@@ -22,6 +22,7 @@ package org.teamapps.server.jetty.embedded;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.pdfviewer.PdfViewer;
+import org.teamapps.ux.component.playground.Playground;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.table.AbstractTableModel;
 import org.teamapps.ux.component.table.Table;
@@ -39,9 +40,11 @@ public class TeamAppsJettyEmbeddedServerTest {
 			RootPanel rootPanel = new RootPanel();
 			sessionContext.addRootPanel(null, rootPanel);
 
-			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
-			PdfViewer component = new PdfViewer(testPdfLink);
-			rootPanel.setContent(component);
+//			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
+//			PdfViewer component = new PdfViewer(testPdfLink);
+
+			Playground playground = new Playground();
+			rootPanel.setContent(playground);
 		};
 
 		TeamAppsJettyEmbeddedServer.builder(controller)

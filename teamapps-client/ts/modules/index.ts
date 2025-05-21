@@ -98,6 +98,7 @@ export {UiMediaSoupV3WebRtcClient} from "./webrtc/mediasoup-v3/UiMediaSoupV3WebR
 export {UiAudioLevelIndicator} from "./UiAudioLevelIndicator";
 export {UiHtmlView} from "./UiHtmlView";
 export {UiPdfViewer} from "./UiPdfViewer"
+export {UiPlayground} from "./UiPlayground";
 
 export {UiGauge} from "./UiGauge";
 

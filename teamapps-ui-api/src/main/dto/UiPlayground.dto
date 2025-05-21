@@ -1,0 +1,7 @@
+class UiPlayground extends UiComponent {
+    String title;
+
+    command setTitle(String title);
+
+    event rendered();
+}
