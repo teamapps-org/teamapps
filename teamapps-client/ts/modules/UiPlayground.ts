@@ -36,21 +36,20 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 export class UiPlayground extends AbstractUiComponent<UiPlaygroundConfig> implements UiPlaygroundCommandHandler {
     onRendered: TeamAppsEvent<UiPlayground_RenderedEvent> = new TeamAppsEvent();
 
-    private config: UiPlaygroundConfig;
-
     // internal state
     private uuidClass: string;
     private $main: HTMLDivElement;
+    private $p: HTMLDivElement;
 
     constructor(config: UiPlaygroundConfig, context: TeamAppsUiContext) {
         super(config, context);
 
         this.uuidClass = `UiPlayground-${generateUUID()}`;
-        this.config = config;
         this.$main = parseHtml(`<div class="${this.uuidClass}">
             <h1>Playground</h1>
-            <p>Title: ${this.config.title}</p>
+            <p>Title: ${this._config.title}</p>
         </div>`);
+        this.$p = this.$main.querySelector('p')
     }
 
     public doGetMainElement(): HTMLElement {
@@ -60,8 +59,9 @@ export class UiPlayground extends AbstractUiComponent<UiPlaygroundConfig> implem
     // Setters for Server API
     // -----------------------
 
-    public setTitle(url: string) {
-        this.config.title = url;
+    public setTitle(title: string) {
+        this._config.title = title;
+        this.$p.innerText = title;
     }
 
 }

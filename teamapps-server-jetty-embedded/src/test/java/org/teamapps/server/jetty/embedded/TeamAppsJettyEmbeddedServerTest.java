@@ -40,11 +40,13 @@ public class TeamAppsJettyEmbeddedServerTest {
 			RootPanel rootPanel = new RootPanel();
 			sessionContext.addRootPanel(null, rootPanel);
 
-//			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
-//			PdfViewer component = new PdfViewer(testPdfLink);
+			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
+			PdfViewer pdfViewer = new PdfViewer(testPdfLink);
 
-			Playground playground = new Playground();
-			rootPanel.setContent(playground);
+//			Playground playground = new Playground("Hello Default World");
+//			playground.setTitle("Hello World");
+
+			rootPanel.setContent(pdfViewer);
 		};
 
 		TeamAppsJettyEmbeddedServer.builder(controller)

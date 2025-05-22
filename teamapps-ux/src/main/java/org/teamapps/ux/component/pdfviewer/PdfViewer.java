@@ -27,6 +27,8 @@ public class PdfViewer extends AbstractComponent {
     @Override
     public UiComponent createUiComponent() {
         UiPdfViewer uiPdfViewer = new UiPdfViewer();
+        mapAbstractUiComponentProperties(uiPdfViewer);
+
         uiPdfViewer.setUrl(url);
         uiPdfViewer.setViewMode(viewMode);
         uiPdfViewer.setPadding(padding);
@@ -35,6 +37,7 @@ public class PdfViewer extends AbstractComponent {
         uiPdfViewer.setZoomByAvailableWidth(zoomByAvailableWidth);
         uiPdfViewer.setPageBorder(pageBorder);
         uiPdfViewer.setPageShadow(pageShadow);
+
         return uiPdfViewer;
     }
 

@@ -18,6 +18,10 @@ public class Playground extends AbstractComponent {
     @Override
     public UiComponent createUiComponent() {
         UiPlayground uiPlayground = new UiPlayground();
+        mapAbstractUiComponentProperties(uiPlayground);
+
+        uiPlayground.setTitle(title);
+
         return uiPlayground;
     }
 
