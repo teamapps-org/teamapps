@@ -70,9 +70,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
 
         // Load the pdf by setting it's url
-        // setTimeout(async () => {
-        //     await this.setUrl(config.url);
-        // }, 0);
+        setTimeout(async () => {
+            await this.setUrl(config.url);
+        }, 0);
     }
 
     public doGetMainElement(): HTMLElement {
@@ -146,8 +146,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // -----------------------™
 
     public async setUrl(url: string) {
-        // this.pdfDocument = await pdfjsLib.getDocument(url).promise;
-        // await this.renderPdfDocument();
+        this.pdfDocument = await pdfjsLib.getDocument(url).promise;
+        await this.renderPdfDocument();
     }
 
     public async setViewMode(viewMode: UiPdfViewMode) {
