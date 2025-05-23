@@ -33,7 +33,7 @@ import jakarta.servlet.ServletContextListener;
 import org.teamapps.projector.server.core.ProjectorServerCore;
 import org.teamapps.projector.server.servlet.ProjectorServletContextListener;
 import org.teamapps.projector.server.servlet.ServletUtil;
-import org.teamapps.projector.resourceprovider.ResourceProvider;
+import org.teamapps.projector.resource.provider.ResourceProvider;
 import org.teamapps.projector.server.webcontroller.WebController;
 
 import java.util.List;

@@ -3,7 +3,7 @@ package org.teamapps.projector.component.elegantpanel;
 import org.teamapps.projector.clientobject.ClientObjectLibrary;
 import org.teamapps.projector.resource.ClassPathResource;
 import org.teamapps.projector.resource.Resource;
-import org.teamapps.projector.resourceprovider.ClassPathResourceProvider;
+import org.teamapps.projector.resource.provider.ClassPathResourceProvider;
 
 public class ElegantPanelLibrary implements ClientObjectLibrary {
 

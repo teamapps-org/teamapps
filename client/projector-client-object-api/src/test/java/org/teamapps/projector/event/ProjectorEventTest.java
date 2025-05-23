@@ -28,7 +28,7 @@ import org.teamapps.commons.event.Disposable;
 import org.teamapps.commons.util.ExceptionUtil;
 import org.teamapps.projector.icon.SessionIconProvider;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry;
-import org.teamapps.projector.server.UxServerContext;
+import org.teamapps.projector.upload.UploadedFileResolver;
 import org.teamapps.projector.session.ClientInfo;
 import org.teamapps.projector.session.SessionContext;
 import org.teamapps.projector.session.navigation.ParameterConverterProvider;
@@ -333,7 +333,7 @@ public class ProjectorEventTest {
 				Mockito.mock(UiSession.class),
 				Executors.newSingleThreadExecutor(),
 				clientInfo, Mockito.mock(HttpSession.class),
-				Mockito.mock(UxServerContext.class),
+				Mockito.mock(UploadedFileResolver.class),
 				Mockito.mock(SessionIconProvider.class),
 				componentLibraryRegistryMock,
 				Mockito.mock(ObjectMapper.class),

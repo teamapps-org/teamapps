@@ -37,7 +37,6 @@ import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.*;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.databinding.ProjectorTwoWayBindableValue;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.protocol.server.*;
 import org.teamapps.projector.event.ProjectorEvent;
@@ -47,7 +46,7 @@ import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.icon.IconStyle;
 import org.teamapps.projector.icon.SessionIconProvider;
 import org.teamapps.projector.resource.Resource;
-import org.teamapps.projector.server.UxServerContext;
+import org.teamapps.projector.upload.UploadedFileResolver;
 import org.teamapps.projector.session.config.DateTimeFormatDescriptor;
 import org.teamapps.projector.session.config.FullLongMediumShortType;
 import org.teamapps.projector.session.event.KeyboardEvent;
@@ -101,7 +100,7 @@ public class SessionContext {
 	private URL currentLocation;
 
 	private final HttpSession httpSession;
-	private final UxServerContext serverContext;
+	private final UploadedFileResolver serverContext;
 	private final SessionIconProvider iconProvider;
 	private final ObjectMapper objectMapper;
 
@@ -148,7 +147,7 @@ public class SessionContext {
 	                      ExecutorService sessionExecutor,
 	                      ClientInfo clientInfo,
 	                      HttpSession httpSession,
-	                      UxServerContext serverContext,
+	                      UploadedFileResolver serverContext,
 	                      SessionIconProvider iconProvider,
 	                      ComponentLibraryRegistry componentLibraryRegistry,
 	                      ObjectMapper objectMapper,

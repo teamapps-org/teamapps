@@ -21,7 +21,7 @@ package org.teamapps.projector.server.servlet;
 
 import org.teamapps.projector.resource.Resource;
 import org.teamapps.projector.session.SessionContext;
-import org.teamapps.projector.resourceprovider.ResourceProvider;
+import org.teamapps.projector.resource.provider.ResourceProvider;
 
 import java.util.function.Function;
 

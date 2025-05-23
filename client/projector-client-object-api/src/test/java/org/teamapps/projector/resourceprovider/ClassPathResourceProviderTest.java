@@ -21,6 +21,7 @@ package org.teamapps.projector.resourceprovider;
 
 
 import org.junit.jupiter.api.Test;
+import org.teamapps.projector.resource.provider.ClassPathResourceProvider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

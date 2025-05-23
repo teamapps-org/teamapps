@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.server;
+package org.teamapps.projector.upload;
 
 import java.io.File;
 
-public interface UxServerContext {
+public interface UploadedFileResolver {
 
 	File getUploadedFileByUuid(String uuid);
 

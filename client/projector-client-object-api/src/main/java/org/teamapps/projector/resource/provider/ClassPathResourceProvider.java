@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.resourceprovider;
+package org.teamapps.projector.resource.provider;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.teamapps.projector.resource.ClassPathResource;

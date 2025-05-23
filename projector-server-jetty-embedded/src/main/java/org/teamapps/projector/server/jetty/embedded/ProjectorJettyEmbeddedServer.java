@@ -26,7 +26,7 @@ import org.eclipse.jetty.ee10.webapp.WebXmlConfiguration;
 import org.eclipse.jetty.ee10.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
-import org.teamapps.projector.resourceprovider.ResourceProvider;
+import org.teamapps.projector.resource.provider.ResourceProvider;
 import org.teamapps.projector.server.core.ProjectorServerCore;
 import org.teamapps.projector.server.servlet.ProjectorServletContextListener;
 import org.teamapps.projector.server.servlet.ServletUtil;

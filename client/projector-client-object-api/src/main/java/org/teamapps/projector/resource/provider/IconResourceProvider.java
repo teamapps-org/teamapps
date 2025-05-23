@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.resourceprovider;
+package org.teamapps.projector.resource.provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -17,12 +17,28 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.resourceprovider;
+package org.teamapps.projector.resource.provider;
 
 import org.teamapps.projector.resource.Resource;
 
+/**
+ * Interface for providing resources in a web application context.
+ * ResourceProvider implementations are responsible for locating and returning resources
+ * based on the servlet path, relative resource path, and HTTP session ID.
+ * <p>
+ * This interface is typically used for serving static resources like CSS, JavaScript, images,
+ * or other files that need to be accessible via HTTP.
+ */
 public interface ResourceProvider {
 
+    /**
+     * Retrieves a resource based on the provided paths and session information.
+     *
+     * @param servletPath The path of the servlet handling the request
+     * @param relativeResourcePath The path of the requested resource relative to the servlet path
+     * @param httpSessionId The ID of the HTTP session making the request
+     * @return The requested resource, or null if the resource cannot be found
+     */
     Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId);
 
 }

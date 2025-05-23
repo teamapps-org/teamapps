@@ -1,4 +1,4 @@
-package org.teamapps.projector.resourceprovider;
+package org.teamapps.projector.resource.provider;
 
 public class ResourceProviderUtil {
 

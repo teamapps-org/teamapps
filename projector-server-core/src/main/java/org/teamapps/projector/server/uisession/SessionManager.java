@@ -40,7 +40,7 @@ import org.teamapps.projector.dto.protocol.server.SessionClosingReason;
 import org.teamapps.projector.icon.IconProvider;
 import org.teamapps.projector.icon.SessionIconProvider;
 import org.teamapps.projector.script.StringScript;
-import org.teamapps.projector.server.UxServerContext;
+import org.teamapps.projector.upload.UploadedFileResolver;
 import org.teamapps.projector.server.config.ProjectorConfiguration;
 import org.teamapps.projector.server.core.UploadManager;
 import org.teamapps.projector.server.threading.SequentialExecutorFactory;
@@ -94,7 +94,7 @@ public class SessionManager implements HttpSessionListener {
 	private final SequentialExecutorFactory sessionExecutorFactory;
 	private final WebController webController;
 	private final IconProvider iconProvider;
-	private final UxServerContext uxServerContext;
+	private final UploadedFileResolver uxServerContext;
 
 	public SessionManager(ProjectorConfiguration config,
 						  ObjectMapper objectMapper,

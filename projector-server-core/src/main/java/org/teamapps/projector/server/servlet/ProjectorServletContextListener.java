@@ -28,8 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.projector.server.core.ProjectorServerCore;
 import org.teamapps.projector.icon.IconProvider;
-import org.teamapps.projector.resourceprovider.IconResourceProvider;
-import org.teamapps.projector.resourceprovider.ResourceProviderServlet;
+import org.teamapps.projector.resource.provider.IconResourceProvider;
+import org.teamapps.projector.resource.provider.ResourceProviderServlet;
 import org.teamapps.projector.session.SessionContextResourceManager;
 
 import java.lang.invoke.MethodHandles;
