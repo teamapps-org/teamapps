@@ -22,8 +22,28 @@ package org.teamapps.projector.dataextraction;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * An interface for providing property values from a record object.
+ * <p>
+ * This interface is used for many purposes. Here are some examples:
+ * <ul>
+ *     <li>Supplying {@link org.teamapps.projector.template.Template}s with their necessary values</li>
+ *     <li>Supplying tables with column values from records</li>
+ *     <li>Supplying forms with their fields' values from the underlying record</li>
+ * </ul>
+ * <p>
+ *
+ * @param <RECORD> the type of the record object
+ */
 public interface PropertyProvider<RECORD> {
 
+	/**
+	 * Gets multiple property values from a record object.
+	 *
+	 * @param record the record object to get the property values from
+	 * @param propertyNames the names of the properties to get
+	 * @return a map of property names to property values
+	 */
 	Map<String, Object> getValues(RECORD record, Collection<String> propertyNames);
 
 }

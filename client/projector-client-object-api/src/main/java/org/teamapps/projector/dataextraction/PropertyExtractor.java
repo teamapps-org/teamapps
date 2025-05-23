@@ -23,10 +23,32 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This interface extends {@link PropertyProvider}, providing an alternative way of implementing it that might
+ * in some cases be more convenient (but potentially has worse performing).
+ *
+ * @param <RECORD> the type of the record object
+ */
 public interface PropertyExtractor<RECORD> extends PropertyProvider<RECORD> {
 
+	/**
+	 * Gets a single property value from a record object.
+	 *
+	 * @param record the record object to get the property value from
+	 * @param propertyName the name of the property to get
+	 * @return the property value, or null
+	 */
 	Object getValue(RECORD record, String propertyName);
 
+	/**
+	 * Gets multiple property values from a record object.
+	 * <p>
+	 * This default implementation uses the {@link #getValue(Object, String)} method to get each property value.
+	 *
+	 * @param record the record object to get the property values from
+	 * @param propertyNames the names of the properties to get
+	 * @return a map of property names to property values
+	 */
 	default Map<String, Object> getValues(RECORD record, Collection<String> propertyNames) {
 		return propertyNames.stream()
 				.collect(

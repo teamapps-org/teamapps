@@ -19,8 +19,22 @@
  */
 package org.teamapps.projector.dataextraction;
 
+/**
+ * A functional interface for injecting a value into a record object.
+ * <p>
+ * This interface defines a single method for injecting a value of a specific type into a record object.
+ *
+ * @param <RECORD> the type of the record object
+ * @param <VALUE> the type of the value to inject
+ */
 public interface ValueInjector<RECORD, VALUE> {
 
+	/**
+	 * Injects a value into a record object.
+	 *
+	 * @param object the record object to inject the value into
+	 * @param value the value to inject
+	 */
 	void inject(RECORD object, VALUE value);
 
 }

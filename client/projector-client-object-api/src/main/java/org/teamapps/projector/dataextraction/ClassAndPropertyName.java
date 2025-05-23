@@ -19,29 +19,8 @@
  */
 package org.teamapps.projector.dataextraction;
 
-import java.util.Objects;
-
-class ClassAndPropertyName {
-	final Class<?> clazz;
-	final String propertyName;
-	final boolean fallbackToFields;
-
-	public ClassAndPropertyName(Class<?> clazz, String propertyName, boolean fallbackToFields) {
-		this.clazz = clazz;
-		this.propertyName = propertyName;
-		this.fallbackToFields = fallbackToFields;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ClassAndPropertyName that = (ClassAndPropertyName) o;
-		return fallbackToFields == that.fallbackToFields && Objects.equals(clazz, that.clazz) && Objects.equals(propertyName, that.propertyName);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(clazz, propertyName, fallbackToFields);
-	}
+/**
+ * A internal helper class that serves as a composite key for caching property extractors and injectors.
+ */
+record ClassAndPropertyName(Class<?> clazz, String propertyName, boolean fallbackToFields) {
 }

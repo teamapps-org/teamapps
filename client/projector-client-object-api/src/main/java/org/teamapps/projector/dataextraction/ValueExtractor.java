@@ -19,8 +19,22 @@
  */
 package org.teamapps.projector.dataextraction;
 
+/**
+ * A functional interface for extracting a value from a record object.
+ * <p>
+ * This interface defines a single method for extracting a value of a specific type from a record object.
+ *
+ * @param <RECORD> the type of the record object
+ * @param <VALUE> the type of the value to extract
+ */
 public interface ValueExtractor<RECORD, VALUE> {
 
+	/**
+	 * Extracts a value from a record object.
+	 *
+	 * @param object the record object to extract the value from
+	 * @return the extracted value
+	 */
 	VALUE extract(RECORD object);
 
 }

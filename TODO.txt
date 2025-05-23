@@ -67,3 +67,5 @@ FullCalendar: Upgrade FullCalendar to version 6 (and get rid of moment.js there)
 Shouldn't FieldMessage's position and visibility be properties of the Field? Or at least the default ones (if not explicitly set on the message)?
 
 Review the Resource interface. Especially things that affect HTTP headers should be implemented by setting headers.
+
+remove any setPropertyExtractor methods. Or maybe even get rid of PropertyExtractor and rename PropertyProvider to it, adding a static util method "oneByOne()"...
