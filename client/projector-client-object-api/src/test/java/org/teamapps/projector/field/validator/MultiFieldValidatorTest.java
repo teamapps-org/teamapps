@@ -41,6 +41,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.teamapps.projector.component.field.validator.MultiFieldValidator.TriggeringPolicy.MANUALLY;
 
 public class MultiFieldValidatorTest {
 
@@ -55,7 +56,7 @@ public class MultiFieldValidatorTest {
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
             Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
-            MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, field1, field2);
+            MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, MANUALLY, field1, field2);
 
             field1.onValueChanged.fire("asdf");
 
@@ -73,7 +74,7 @@ public class MultiFieldValidatorTest {
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
             Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
-            MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, field1, field2);
+            MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, MANUALLY, field1, field2);
 
             List<FieldMessage> messages = validator.validate();
             verifyFieldMessages(messages, ERROR_MESSAGE);
@@ -96,7 +97,7 @@ public class MultiFieldValidatorTest {
             CustomValidator customValidatorMock = Mockito.mock(CustomValidator.class);
             Mockito.when(customValidatorMock.validate()).thenReturn(List.of(new FieldMessage(FieldMessageSeverity.ERROR, ERROR_MESSAGE)));
 
-            MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, field1, field2);
+            MultiFieldValidator validator = new MultiFieldValidator(customValidatorMock, MANUALLY, field1, field2);
 
             List<FieldMessage> messages = validator.validate();
             verifyFieldMessages(messages, ERROR_MESSAGE);
