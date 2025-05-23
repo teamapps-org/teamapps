@@ -26,6 +26,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A validator that can validate multiple fields together using a custom validation logic.
+ * <p>
+ * This validator is useful for implementing cross-field validation rules, where the validity
+ * of one field depends on the values of other fields. It applies validation messages to all
+ * the fields that are being validated.
+ * </p>
+ */
 public class MultiFieldValidator {
 
 	private final Runnable runValidationHandler = this::validate;
@@ -36,22 +44,47 @@ public class MultiFieldValidator {
 
 	private List<FieldMessage> currentFieldMessages = List.of();
 
+	/**
+	 * Defines when the validation should be triggered.
+	 */
 	public enum TriggeringPolicy {
+		/**
+		 * Validation is only triggered manually by calling {@link #validate()}.
+		 */
 		MANUALLY,
+
+		/**
+		 * Validation is triggered manually, but validation messages are automatically cleared
+		 * when any of the fields' values change.
+		 */
 		MANUALLY_WITH_AUTOCLEAR,
+
+		/**
+		 * Validation is automatically triggered whenever any of the fields' values change.
+		 */
 		ON_FIELD_CHANGE
 	}
 
 	private final TriggeringPolicy triggeringPolicy;
 
-	public MultiFieldValidator(CustomValidator validation, Field<?>... fields) {
-		this(validation, TriggeringPolicy.MANUALLY, Arrays.asList(fields));
-	}
-
+	/**
+	 * Creates a new MultiFieldValidator with the specified triggering policy.
+	 *
+	 * @param validation the custom validation logic
+	 * @param triggeringPolicy when the validation should be triggered
+	 * @param fields the fields to validate
+	 */
 	public MultiFieldValidator(CustomValidator validation, TriggeringPolicy triggeringPolicy, Field<?>... fields) {
 		this(validation, triggeringPolicy, Arrays.asList(fields));
 	}
 
+	/**
+	 * Creates a new MultiFieldValidator with the specified triggering policy.
+	 *
+	 * @param validation the custom validation logic
+	 * @param triggeringPolicy when the validation should be triggered
+	 * @param fields the list of fields to validate
+	 */
 	public MultiFieldValidator(CustomValidator validation, TriggeringPolicy triggeringPolicy, List<Field<?>> fields) {
 		this.validation = validation;
 		this.fields = new ArrayList<>(fields);
@@ -59,6 +92,14 @@ public class MultiFieldValidator {
 		setupTriggeringPolicy();
 	}
 
+	/**
+	 * Validates the fields using the custom validation logic.
+	 * <p>
+	 * This method applies the validation messages to all the fields and returns the list of messages.
+	 * </p>
+	 *
+	 * @return the list of validation messages
+	 */
 	public List<FieldMessage> validate() {
 		List<FieldMessage> validationResult = validation.validate();
 		List<FieldMessage> newFieldMessages = validationResult != null ? validationResult : List.of();
@@ -90,6 +131,9 @@ public class MultiFieldValidator {
 		return triggeringPolicy;
 	}
 
+	/**
+	 * Clears all validation messages from the fields.
+	 */
 	public void clearMessages() {
 		fields.forEach(f -> {
 			currentFieldMessages.forEach(f::removeCustomFieldMessage);

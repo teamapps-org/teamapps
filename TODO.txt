@@ -63,3 +63,5 @@ Table:
 * setHideHeaders() WTF...
 
 FullCalendar: Upgrade FullCalendar to version 6 (and get rid of moment.js there)
+
+Shouldn't FieldMessage's position and visibility be properties of the Field? Or at least the default ones (if not explicitly set on the message)?

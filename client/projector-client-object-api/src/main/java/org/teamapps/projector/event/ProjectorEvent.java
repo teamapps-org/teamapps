@@ -54,15 +54,40 @@ public class ProjectorEvent<EVENT_DATA> extends Event<EVENT_DATA> {
 		super();
 	}
 
+    /**
+     * Creates a new ProjectorEvent with a custom listener registration status handler.
+     * <p>
+     * This allows custom behavior when listeners are registered or unregistered.
+     *
+     * @param listenerHandler The handler to be notified when listeners are registered or unregistered
+     */
 	public ProjectorEvent(EventListenerRegistrationStatusListener listenerHandler) {
 		super(listenerHandler);
 	}
 
+    /**
+     * Adds a listener to this event, binding it to the current session context if one exists.
+     * <p>
+     * This is equivalent to {@code addListener(listener, true)}.
+     *
+     * @param listener The listener to be added
+     * @return A Disposable that can be used to remove the listener
+     */
 	@Override
 	public Disposable addListener(Consumer<EVENT_DATA> listener) {
 		return addListener(listener, true);
 	}
 
+    /**
+     * Adds a listener to this event with optional session context binding.
+     * <p>
+     * If bindToSessionContext is true and a session context is currently active,
+     * the listener will be bound to that session context.
+     *
+     * @param listener The listener to be added
+     * @param bindToSessionContext Whether to bind the listener to the current session context
+     * @return A Disposable that can be used to remove the listener
+     */
 	public Disposable addListener(Consumer<EVENT_DATA> listener, boolean bindToSessionContext) {
 		SessionContext sessionContextToBindTo = bindToSessionContext ? CurrentSessionContext.getOrNull() : null;
 
@@ -82,11 +107,28 @@ public class ProjectorEvent<EVENT_DATA> extends Event<EVENT_DATA> {
 		};
 	}
 
+    /**
+     * Adds a self-disposing listener to this event, binding it to the current session context if one exists.
+     * <p>
+     * This is equivalent to {@code addListener(listener, true)}.
+     *
+     * @param listener The self-disposing listener to be added
+     * @return A Disposable that can be used to remove the listener
+     */
 	@Override
 	public Disposable addListener(SelfDisposingEventListener<EVENT_DATA> listener) {
 		return addListener(listener, true);
 	}
 
+    /**
+     * Adds a self-disposing listener to this event with optional session context binding.
+     * <p>
+     * A self-disposing listener receives a Disposable in its handle method that it can use to remove itself.
+     *
+     * @param listener The self-disposing listener to be added
+     * @param bindToSessionContext Whether to bind the listener to the current session context
+     * @return A Disposable that can be used to remove the listener
+     */
 	public Disposable addListener(SelfDisposingEventListener<EVENT_DATA> listener, boolean bindToSessionContext) {
 		AtomicReference<Disposable> disposable = new AtomicReference<>();
 		disposable.set(addListener(e -> {
@@ -95,11 +137,28 @@ public class ProjectorEvent<EVENT_DATA> extends Event<EVENT_DATA> {
 		return disposable.get();
 	}
 
+    /**
+     * Adds a Runnable as a listener to this event, binding it to the current session context if one exists.
+     * <p>
+     * This is equivalent to {@code addListener(listener, true)}.
+     *
+     * @param listener The Runnable to be added as a listener
+     * @return A Disposable that can be used to remove the listener
+     */
 	@Override
 	public Disposable addListener(Runnable listener) {
 		return addListener(listener, true);
 	}
 
+    /**
+     * Adds a Runnable as a listener to this event with optional session context binding.
+     * <p>
+     * The Runnable will be executed when the event is fired, ignoring the event data.
+     *
+     * @param listener The Runnable to be added as a listener
+     * @param bindToSessionContext Whether to bind the listener to the current session context
+     * @return A Disposable that can be used to remove the listener
+     */
 	public Disposable addListener(Runnable listener, boolean bindToSessionContext) {
 		return addListener(new RunnableWrapper<>(listener), bindToSessionContext);
 	}
@@ -107,7 +166,9 @@ public class ProjectorEvent<EVENT_DATA> extends Event<EVENT_DATA> {
 	/**
 	 * When the session gets destroyed, remove this listener (preventing memory-leaks and degrading performance due to stale listeners).
 	 *
-	 * @return
+	 * @param listener The listener to be removed when the session context is destroyed
+	 * @param currentSessionContext The session context that, when destroyed, should trigger listener removal
+	 * @return A Disposable that can be used to cancel this auto-removal behavior
 	 */
 	private Disposable removeWhenSessionDestroyed(Consumer<EVENT_DATA> listener, SessionContext currentSessionContext) {
 		// use a weak reference here, so the fact that this is registered to the sessionContext's destroyed event
@@ -121,6 +182,14 @@ public class ProjectorEvent<EVENT_DATA> extends Event<EVENT_DATA> {
 		});
 	}
 
+    /**
+     * An event listener implementation that ensures a listener is executed within a specific session context.
+     * <p>
+     * This wrapper ensures that when the event is fired, the delegate listener is executed
+     * within the session context it was bound to, regardless of the current thread's session context.
+     *
+     * @param <EVENT_DATA> The type of data the event fires
+     */
 	private static class SessionContextAwareEventListener<EVENT_DATA> implements Consumer<EVENT_DATA> {
 
 		private final SessionContext sessionContext;

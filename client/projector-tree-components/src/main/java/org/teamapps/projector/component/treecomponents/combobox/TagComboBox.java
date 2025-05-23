@@ -195,7 +195,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	}
 
 	@Override
-	protected boolean isEmptyValue(List<RECORD> records) {
+	public boolean isEmptyValue(List<RECORD> records) {
 		return records == null || records.isEmpty();
 	}
 

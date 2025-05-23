@@ -24,6 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A collection of CSS style properties with their corresponding values.
+ * <p>
+ * This class implements the Map interface where keys are CSS property names (e.g., "color", "font-size")
+ * and values are the corresponding CSS values (e.g., "#FF0000", "12px").
+ * It provides a convenient way to manipulate CSS styles programmatically.
+ */
 public class CssStyles implements Map<String, String> {
 
 	private final Map<String, String> properties = new HashMap<>();
@@ -31,10 +38,21 @@ public class CssStyles implements Map<String, String> {
 	public CssStyles() {
 	}
 
+	/**
+	 * Creates a CSS styles collection with the provided properties.
+	 *
+	 * @param properties A map of CSS property names to their values
+	 */
 	public CssStyles(Map<String, String> properties) {
 		this.properties.putAll(properties);
 	}
 
+	/**
+	 * Creates a CSS styles collection with a single property.
+	 *
+	 * @param propertyName The CSS property name
+	 * @param value The CSS property value
+	 */
 	public CssStyles(String propertyName, String value) {
 		this.properties.put(propertyName, value);
 	}
@@ -44,6 +62,11 @@ public class CssStyles implements Map<String, String> {
 		return properties.size();
 	}
 
+	/**
+	 * Checks if this collection contains no CSS properties.
+	 *
+	 * @return true if this collection contains no properties, false otherwise
+	 */
 	@Override
 	public boolean isEmpty() {
 		return properties.isEmpty();
@@ -59,26 +82,53 @@ public class CssStyles implements Map<String, String> {
 		return properties.containsValue(value);
 	}
 
+	/**
+	 * Returns the value for the specified CSS property.
+	 *
+	 * @param propertyName The CSS property name
+	 * @return The value for the property, or null if the property is not in this collection
+	 */
 	@Override
 	public String get(Object propertyName) {
 		return properties.get(propertyName);
 	}
 
+	/**
+	 * Associates the specified value with the specified CSS property.
+	 *
+	 * @param propertyName The CSS property name
+	 * @param value The CSS property value
+	 * @return The previous value associated with the property, or null if there was no mapping
+	 */
 	@Override
 	public String put(String propertyName, String value) {
 		return properties.put(propertyName, value);
 	}
 
+	/**
+	 * Removes the specified CSS property from this collection.
+	 *
+	 * @param propertyName The CSS property name to be removed
+	 * @return The previous value associated with the property, or null if there was no mapping
+	 */
 	@Override
 	public String remove(Object propertyName) {
 		return properties.remove(propertyName);
 	}
 
+	/**
+	 * Adds all the CSS properties from the specified map to this collection.
+	 *
+	 * @param m The map of CSS properties to be added
+	 */
 	@Override
 	public void putAll(Map<? extends String, ? extends String> m) {
         properties.putAll(m);
 	}
 
+	/**
+	 * Removes all CSS properties from this collection.
+	 */
 	@Override
 	public void clear() {
 		properties.clear();

@@ -9,6 +9,15 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+/**
+ * A registry for managing client object libraries in the projector framework.
+ * This class is responsible for registering, retrieving, and managing component libraries.
+ * It maintains mappings between {@link ClientObject} classes
+ * and their corresponding libraries, and provides methods to generate URLs for JavaScript
+ * and CSS resources associated with these libraries.
+ * <p>
+ * This class should be regarded as internal to the Projector Framework.
+ */
 public class ComponentLibraryRegistry {
 
 	private final String componentsUrlBasePath;

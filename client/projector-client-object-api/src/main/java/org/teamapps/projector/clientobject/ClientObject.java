@@ -20,12 +20,22 @@
 package org.teamapps.projector.clientobject;
 
 /**
- * A client object has a representation on the client.
- * This representation is said to be rendered when the client holds a corresponding instance of it.
- * The server and the client refer to the {@link ClientObject} using the id (a UUID).
+ * An object that has a client-side representation.
+ * <p>
+ * ClientObject extends ClientMessageHandler to handle messages from the client,
+ * and provides a method to create a data transfer object (DTO) that contains
+ * all the necessary information for the client to create or update the
+ * corresponding client-side representation of this object.
  */
 public interface ClientObject extends ClientMessageHandler {
 
+	/**
+	 * Creates a data transfer object (DTO) that represents this client object.
+	 * The DTO contains all the necessary information for the client to create
+	 * or update the corresponding client-side representation of this object.
+	 *
+	 * @return A DTO containing the object's configuration data
+	 */
 	Object createDto();
 
 }

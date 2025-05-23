@@ -41,29 +41,12 @@ public final class FieldUtil {
         return validateAll(fields.stream());
     }
 
-    public static boolean validateAll(Stream<Field<?>> stream) {
+    private static boolean validateAll(Stream<Field<?>> stream) {
         List<FieldMessage> errorMessage = stream
                 .flatMap(field -> field.validate().stream())
                 .filter(message -> message.getSeverity() == FieldMessageSeverity.ERROR)
                 .collect(Collectors.toList()); // to List because we want ALL validators to run!
         return errorMessage.size() == 0;
-    }
-
-    /**
-     * @deprecated really needed anywhere? what for?
-     */
-    @Deprecated
-    public static boolean validateAllAsRequired(AbstractField<?>... fields) {
-        FieldMessage errorMessage = new FieldMessage(FieldMessageSeverity.ERROR, CurrentSessionContext.get().getLocalized(ProjectorTranslationKeys.REQUIRED_FIELD.getKey()));
-        boolean isNotEmpty = true;
-        for (AbstractField<?> field : fields) {
-            if (field.isEmpty()) {
-                field.removeCustomFieldMessage(errorMessage);
-                field.addCustomFieldMessage(errorMessage);
-                isNotEmpty = false;
-            }
-        }
-        return isNotEmpty;
     }
 
 }

@@ -21,8 +21,19 @@ package org.teamapps.projector.resolvable;
 
 import org.teamapps.projector.session.SessionContext;
 
+/**
+ * An interface for objects that can be resolved to a URL.
+ * <p>
+ * Implementing classes provide a method for generating URLs that are specific to a given session context.
+ */
 public interface Resolvable {
 
+    /**
+     * Resolves this object to a URL string within the provided session context.
+     *
+     * @param sessionContext The session context in which this object should be resolved
+     * @return A URL string representing this object in the given context
+     */
 	String getUrl(SessionContext sessionContext);
 
 }

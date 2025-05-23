@@ -119,7 +119,6 @@ public class LogicalForm<RECORD> {
 				.orElse(null);
 	}
 
-
 	/**
 	 * Checks whether any of the form fields have been mutated by the client.
 	 *

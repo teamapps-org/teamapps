@@ -34,6 +34,22 @@ import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Abstract base implementation of the Field interface that provides common functionality
+ * for all field components. This class handles field validation, value management,
+ * field messages, and user interaction events.
+ * 
+ * <p>AbstractField implements the core behavior needed by input components, including:
+ * <ul>
+ *   <li>Value getting and setting with change events</li>
+ *   <li>Field validation with customizable validators</li>
+ *   <li>Field message management (errors, warnings, info)</li>
+ *   <li>Focus handling</li>
+ *   <li>Editing mode control (editable, read-only, disabled)</li>
+ * </ul>
+ *
+ * @param <VALUE> the type of value this field handles
+ */
 public abstract class AbstractField<VALUE> extends AbstractComponent implements Field<VALUE>, DtoAbstractFieldEventHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -193,7 +209,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
      *
      * @return true if the value can be regarded as "empty".
      */
-    protected boolean isEmptyValue(VALUE value) {
+    public boolean isEmptyValue(VALUE value) {
         return value == null;
     }
 
@@ -237,7 +253,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent implements 
     }
 
     @Override
-    public void clearValidatorMessages() {
+    public void clearValidationMessages() {
         fieldMessagesByValidator.clear();
         updateFieldMessages();
     }
