@@ -127,7 +127,7 @@ public class SessionContext {
 	private final Set<ClientObjectLibrary> loadedComponentLibraries = new HashSet<>();
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 
-	private ProjectorTwoWayBindableValue<Locale> locale = ProjectorTwoWayBindableValue.create(Locale.US);
+	private Locale locale;
 	private DateTimeFormatDescriptor dateFormat = DateTimeFormatDescriptor.forDate(FullLongMediumShortType.SHORT);
 	private DateTimeFormatDescriptor timeFormat = DateTimeFormatDescriptor.forTime(FullLongMediumShortType.SHORT);
 	private ZoneId timeZone;
@@ -163,13 +163,13 @@ public class SessionContext {
 		this.navigationPathPrefix = navigationPathPrefix;
 		this.navigationParamConverterProvider = navigationParamConverterProvider;
 		this.objectMapper = objectMapper;
-		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.projector.ux.i18n.DefaultCaptions", Locale.ENGLISH);
+		this.locale = clientInfo.getAcceptedLanguages().stream().findFirst().orElse(Locale.US);
+		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.projector.ux.i18n.DefaultCaptions", this.locale);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 		this.componentLibraryRegistry = componentLibraryRegistry;
 
 		this.clientInfo = clientInfo;
 		this.currentLocation = clientInfo.getLocation();
-		this.locale.set(clientInfo.getAcceptedLanguages().stream().findFirst().orElse(Locale.US));
 		this.timeZone = ZoneId.of(clientInfo.getTimeZone());
 	}
 
@@ -861,12 +861,12 @@ public class SessionContext {
 	}
 
 	public Locale getLocale() {
-		return locale.get();
+		return locale;
 	}
 
 	public void setLocale(Locale locale) {
 		Objects.requireNonNull(locale);
-		this.locale.set(locale);
+		this.locale = locale;
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -894,7 +894,7 @@ public class SessionContext {
 	}
 
 	public DayOfWeek getFirstDayOfWeek() {
-		return firstDayOfWeek != null ? firstDayOfWeek : WeekFields.of(locale.get()).getFirstDayOfWeek();
+		return firstDayOfWeek != null ? firstDayOfWeek : WeekFields.of(locale).getFirstDayOfWeek();
 	}
 
 	public void setFirstDayOfWeek(DayOfWeek firstDayOfWeek) {
