@@ -30,6 +30,13 @@ import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Base implementation of the {@link Component} interface that provides common functionality
+ * for all UI components in the system.
+ * <p>
+ * Concrete component implementations should extend this class to inherit the standard
+ * component behavior and focus on implementing their specific rendering and functionality.
+ */
 public abstract class AbstractComponent implements Component {
 
 	public static final String DELETED_ATTRIBUTE = "__ta-deleted-attribute__"; // null object

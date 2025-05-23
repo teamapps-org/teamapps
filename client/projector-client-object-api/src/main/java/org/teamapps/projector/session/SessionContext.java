@@ -37,7 +37,7 @@ import org.teamapps.projector.annotation.ClientObjectTypeName;
 import org.teamapps.projector.clientobject.*;
 import org.teamapps.projector.clientobject.ComponentLibraryRegistry.ClientObjectLibraryInfo;
 import org.teamapps.projector.component.Component;
-import org.teamapps.projector.databinding.TwoWayBindableValue;
+import org.teamapps.projector.databinding.ProjectorTwoWayBindableValue;
 import org.teamapps.projector.dto.JsonWrapper;
 import org.teamapps.projector.dto.protocol.server.*;
 import org.teamapps.projector.event.ProjectorEvent;
@@ -127,7 +127,7 @@ public class SessionContext {
 	private final Set<ClientObjectLibrary> loadedComponentLibraries = new HashSet<>();
 	private final ComponentLibraryRegistry componentLibraryRegistry;
 
-	private TwoWayBindableValue<Locale> locale = TwoWayBindableValue.create(Locale.US);
+	private ProjectorTwoWayBindableValue<Locale> locale = ProjectorTwoWayBindableValue.create(Locale.US);
 	private DateTimeFormatDescriptor dateFormat = DateTimeFormatDescriptor.forDate(FullLongMediumShortType.SHORT);
 	private DateTimeFormatDescriptor timeFormat = DateTimeFormatDescriptor.forTime(FullLongMediumShortType.SHORT);
 	private ZoneId timeZone;
