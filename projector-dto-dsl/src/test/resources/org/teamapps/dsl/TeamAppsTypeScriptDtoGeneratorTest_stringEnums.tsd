@@ -2,6 +2,8 @@
  * THIS IS GENERATED CODE!
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
-export enum E {
-	A = "a", B = "b"
-}
+export const Es = Object.freeze({
+    A: "a",
+    B: "b"
+} as const);
+export type E = typeof Es[keyof typeof Es]

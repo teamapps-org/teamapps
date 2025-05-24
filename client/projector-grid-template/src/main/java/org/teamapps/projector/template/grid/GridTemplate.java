@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,9 @@
  */
 package org.teamapps.projector.template.grid;
 
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.common.format.RgbaColor;
-import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.format.Border;
 import org.teamapps.projector.format.FontStyle;
 import org.teamapps.projector.format.Spacing;
@@ -34,22 +34,12 @@ import java.util.stream.Collectors;
 @ClientObjectLibrary(value = GridTemplateLibrary.class)
 public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 
-	private static int counter = 0;
-	private final int count = counter++;
-
-	@Override
-	public String toString() {
-		return "GridTemplate{" +
-			   "count=" + count +
-			   '}';
-	}
-
-	private int minWidth = 0;
-	private int maxWidth = -1;
-	private int minHeight = 0;
-	private int maxHeight = -1;
+	private int minWidth;
+	private int maxWidth;
+	private int minHeight;
+	private int maxHeight;
 	private Spacing padding;
-	private int gridGap = 0;
+	private int gridGap;
 	private Color backgroundColor;
 	private Border border;
 	private String ariaLabelProperty = "ariaLabel";
@@ -279,27 +269,27 @@ public class GridTemplate implements Template, DtoGridTemplateEventHandler {
 	}
 
 	public Template createDarkThemeTemplate() {
-			GridTemplate orig = (GridTemplate) this;
-			GridTemplate tpl = new GridTemplate(orig.getMinWidth(), orig.getMaxWidth(), orig.getMinHeight(), orig.getMaxHeight(), orig.getPadding(), orig.getGridGap());
-			tpl.setRows(orig.getRows());
-			tpl.setColumns(orig.getColumns());
-			List<AbstractGridTemplateElement<?>> darkModeElements = new ArrayList<>();
-			orig.getElements().forEach(element -> {
-				if (element instanceof FloatingElement) {
-					FloatingElement floatingElement = (FloatingElement) element;
-					List<AbstractGridTemplateElement<?>> elements = floatingElement.getElements();
-					List<AbstractGridTemplateElement<?>> newElements = new ArrayList<>();
-					for (AbstractGridTemplateElement<?> fltElement : elements) {
-						newElements.add(convertElementToDarkMode(fltElement));
-					}
-					FloatingElement newFloatingElement = new FloatingElement(floatingElement.getRow(), floatingElement.getColumn()).setElements(newElements);
-					darkModeElements.add(newFloatingElement);
-				} else {
-					darkModeElements.add(convertElementToDarkMode(element));
+		GridTemplate orig = (GridTemplate) this;
+		GridTemplate tpl = new GridTemplate(orig.getMinWidth(), orig.getMaxWidth(), orig.getMinHeight(), orig.getMaxHeight(), orig.getPadding(), orig.getGridGap());
+		tpl.setRows(orig.getRows());
+		tpl.setColumns(orig.getColumns());
+		List<AbstractGridTemplateElement<?>> darkModeElements = new ArrayList<>();
+		orig.getElements().forEach(element -> {
+			if (element instanceof FloatingElement) {
+				FloatingElement floatingElement = (FloatingElement) element;
+				List<AbstractGridTemplateElement<?>> elements = floatingElement.getElements();
+				List<AbstractGridTemplateElement<?>> newElements = new ArrayList<>();
+				for (AbstractGridTemplateElement<?> fltElement : elements) {
+					newElements.add(convertElementToDarkMode(fltElement));
 				}
-			});
-			tpl.setElements(darkModeElements);
-			return tpl;
+				FloatingElement newFloatingElement = new FloatingElement(floatingElement.getRow(), floatingElement.getColumn()).setElements(newElements);
+				darkModeElements.add(newFloatingElement);
+			} else {
+				darkModeElements.add(convertElementToDarkMode(element));
+			}
+		});
+		tpl.setElements(darkModeElements);
+		return tpl;
 	}
 
 	private static AbstractGridTemplateElement<?> convertElementToDarkMode(AbstractGridTemplateElement<?> element) {

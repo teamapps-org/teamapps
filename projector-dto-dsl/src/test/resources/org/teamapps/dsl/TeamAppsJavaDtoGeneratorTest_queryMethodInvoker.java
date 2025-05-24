@@ -35,7 +35,6 @@ import org.teamapps.commons.util.ExceptionUtil;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import org.teamapps.projector.clientobject.ClientObject;
 import java.lang.reflect.Method;
 import org.teamapps.projector.clientobject.AbstractClientObjectQueryMethodInvoker;
 import java.util.function.Function;

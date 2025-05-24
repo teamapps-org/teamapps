@@ -5,18 +5,14 @@
   "exports": "./target/js-dist/index.js",
   "types": "./target/js-dist/lib/index.d.ts",
   "scripts": {
-    "del_dist": "rimraf 'target/js-dist/*'",
-    "clean": "pnpm run del_dist",
-    "tsc": "tsc",
-    "bundle": "node esbuild.mjs",
-    "build": "pnpm run del_dist && pnpm run tsc && pnpm run bundle"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "esbuild": "^0.15.13",
-    "esbuild-plugin-alias": "^0.2.1",
-    "esbuild-plugin-less": "^1.1.11",
-    "rimraf": "^3.0.2",
-    "typescript": "^5.1"
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
   },
   "dependencies": {
     "projector-client-object-api": "workspace:*"

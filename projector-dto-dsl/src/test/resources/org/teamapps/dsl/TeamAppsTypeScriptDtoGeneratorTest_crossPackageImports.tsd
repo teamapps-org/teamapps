@@ -3,9 +3,8 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {ClientObject} from "projector-client-object-api";
-import {Location} from "xxx";
-import {ServerObjectChannel} from "projector-client-object-api";
+import type {Location} from "xxx";
+import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface X {
 	_type?: string;

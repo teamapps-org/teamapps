@@ -19,11 +19,19 @@
  */
 import {createPopper, Instance as Popper} from '@popperjs/core';
 import {
-	DtoAbstractField, DtoAbstractField_BlurEvent, DtoAbstractField_FocusEvent,
+	DtoAbstractField,
+	DtoAbstractField_BlurEvent,
+	DtoAbstractField_FocusEvent,
 	DtoAbstractField_ValueChangedEvent,
 	DtoAbstractFieldCommandHandler,
-	DtoAbstractFieldEventSource, FieldEditingMode,
-	DtoFieldMessage, FieldMessagePosition, FieldMessageSeverity, FieldMessageVisibility
+	DtoAbstractFieldEventSource,
+	FieldEditingMode,
+	DtoFieldMessage,
+	FieldMessagePosition,
+	FieldMessageSeverity,
+	FieldMessageVisibility,
+	FieldMessageVisibilities,
+	FieldMessagePositions, FieldEditingModes, FieldMessageSeverities
 } from "./generated";
 import {AbstractComponent} from "./AbstractComponent";
 import {bind, parseHtml, prependChild, ProjectorEvent} from "./util";
@@ -98,21 +106,21 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 
 	private updateFieldMessageVisibilities() {
 		let highestVisibilityByPosition = this.getHighestVisibilitiesByMessagePosition();
-		let messagesVisible = (position: FieldMessagePosition) => highestVisibilityByPosition[position] === FieldMessageVisibility.ALWAYS_VISIBLE
-			|| highestVisibilityByPosition[position] === FieldMessageVisibility.ON_HOVER_OR_FOCUS && this.hovering
+		let messagesVisible = (position: FieldMessagePosition) => highestVisibilityByPosition[position] === FieldMessageVisibilities.ALWAYS_VISIBLE
+			|| highestVisibilityByPosition[position] === FieldMessageVisibilities.ON_HOVER_OR_FOCUS && this.hovering
 			|| this.hasFocus();
-		if (messagesVisible(FieldMessagePosition.ABOVE)) {
+		if (messagesVisible(FieldMessagePositions.ABOVE)) {
 			this.$messagesContainerAbove.classList.remove("hidden");
 		} else {
 			this.$messagesContainerAbove.classList.add("hidden");
 		}
-		if (messagesVisible(FieldMessagePosition.BELOW)) {
+		if (messagesVisible(FieldMessagePositions.BELOW)) {
 			this.$messagesContainerBelow.classList.remove("hidden");
 		} else {
 			this.$messagesContainerBelow.classList.add("hidden");
 		}
 		if (this._messageTooltip != null) {
-			if (messagesVisible(FieldMessagePosition.POPOVER)) {
+			if (messagesVisible(FieldMessagePositions.POPOVER)) {
 				this._messageTooltip.$popperElement.classList.remove("hidden");
 				this._messageTooltip.popper.update();
 			} else {
@@ -123,12 +131,12 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 
 	private getHighestVisibilitiesByMessagePosition() {
 		let highestVisibilityByPosition: { [position in FieldMessagePosition]: FieldMessageVisibility } = {
-			[FieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.ABOVE)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibility.ON_FOCUS),
-			[FieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.BELOW)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibility.ON_FOCUS),
-			[FieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.POPOVER)
-				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibility.ON_FOCUS)
+			[FieldMessagePositions.ABOVE]: this.fieldMessages.filter(m => m.message.position == FieldMessagePositions.ABOVE)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibilities.ON_FOCUS),
+			[FieldMessagePositions.BELOW]: this.fieldMessages.filter(m => m.message.position == FieldMessagePositions.BELOW)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibilities.ON_FOCUS),
+			[FieldMessagePositions.POPOVER]: this.fieldMessages.filter(m => m.message.position == FieldMessagePositions.POPOVER)
+				.reduce((current, m) => m.message.visibilityMode > current ? m.message.visibilityMode : current, FieldMessageVisibilities.ON_FOCUS)
 		};
 		return highestVisibilityByPosition;
 	}
@@ -214,7 +222,7 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 		return changed;
 	}
 
-	public setEditingMode(editingMode: FieldEditingMode = FieldEditingMode.EDITABLE): void {
+	public setEditingMode(editingMode: FieldEditingMode = FieldEditingModes.EDITABLE): void {
 		const oldEditingMode = this.config.editingMode;
 		this.config.editingMode = editingMode;
 		this.onEditingModeChanged(editingMode, oldEditingMode);
@@ -227,31 +235,31 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 	}
 
 	public isEditable(): boolean {
-		return this.getEditingMode() === FieldEditingMode.EDITABLE || this.getEditingMode() === FieldEditingMode.EDITABLE_IF_FOCUSED;
+		return this.getEditingMode() === FieldEditingModes.EDITABLE || this.getEditingMode() === FieldEditingModes.EDITABLE_IF_FOCUSED;
 	}
 
 	public static defaultOnEditingModeChangedImpl(field: AbstractField<DtoAbstractField, any>, $focusableElementProvider: () => HTMLElement) {
-		field.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		field.getMainElement().classList.remove(...Object.keys(FieldEditingModes));
 		field.getMainElement().classList.add(field.getEditingMode());
 
 		const $focusableElement = $focusableElementProvider();
 		if ($focusableElement) {
 			switch (field.getEditingMode()) {
-				case FieldEditingMode.EDITABLE:
+				case FieldEditingModes.EDITABLE:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "0");
 					break;
-				case FieldEditingMode.EDITABLE_IF_FOCUSED:
+				case FieldEditingModes.EDITABLE_IF_FOCUSED:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "0");
 					break;
-				case FieldEditingMode.DISABLED:
+				case FieldEditingModes.DISABLED:
 					$focusableElement.removeAttribute("readonly");
 					$focusableElement.setAttribute("disabled", "disabled");
 					break;
-				case FieldEditingMode.READONLY:
+				case FieldEditingModes.READONLY:
 					$focusableElement.setAttribute("readonly", "readonly");
 					$focusableElement.removeAttribute("disabled");
 					$focusableElement.setAttribute("tabindex", "-1");
@@ -295,17 +303,17 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 		}
 
 		let fieldMessagesByPosition: { [position in FieldMessagePosition]: FieldMessage[] } = {
-			[FieldMessagePosition.ABOVE]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.ABOVE),
-			[FieldMessagePosition.BELOW]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.BELOW),
-			[FieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == FieldMessagePosition.POPOVER)
+			[FieldMessagePositions.ABOVE]: this.fieldMessages.filter(m => m.message.position == FieldMessagePositions.ABOVE),
+			[FieldMessagePositions.BELOW]: this.fieldMessages.filter(m => m.message.position == FieldMessagePositions.BELOW),
+			[FieldMessagePositions.POPOVER]: this.fieldMessages.filter(m => m.message.position == FieldMessagePositions.POPOVER)
 		};
 
-		fieldMessagesByPosition[FieldMessagePosition.ABOVE].forEach(message => prependChild(this.getMessagesContainer(message.message.position), message.$message));
-		fieldMessagesByPosition[FieldMessagePosition.BELOW].forEach(message => this.getMessagesContainer(message.message.position).appendChild(message.$message));
-		if (fieldMessagesByPosition[FieldMessagePosition.POPOVER].length > 0) {
-			const highestPopoverSeverity = highestSeverity(fieldMessagesByPosition[FieldMessagePosition.POPOVER].map(m => m.message.severity));
+		fieldMessagesByPosition[FieldMessagePositions.ABOVE].forEach(message => prependChild(this.getMessagesContainer(message.message.position), message.$message));
+		fieldMessagesByPosition[FieldMessagePositions.BELOW].forEach(message => this.getMessagesContainer(message.message.position).appendChild(message.$message));
+		if (fieldMessagesByPosition[FieldMessagePositions.POPOVER].length > 0) {
+			const highestPopoverSeverity = highestSeverity(fieldMessagesByPosition[FieldMessagePositions.POPOVER].map(m => m.message.severity));
 			this.messageTooltip.$popperElement.classList.add(`ta-tooltip-${highestPopoverSeverity}`);
-			fieldMessagesByPosition[FieldMessagePosition.POPOVER].forEach(message => {
+			fieldMessagesByPosition[FieldMessagePositions.POPOVER].forEach(message => {
 				this.messageTooltip.$messageContainer.appendChild(message.$message);
 			});
 			this.messageTooltip.$popperElement.classList.remove("empty");
@@ -379,18 +387,18 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 	}
 
 	protected getMessagesContainer(position: FieldMessagePosition) {
-		if (position === FieldMessagePosition.ABOVE) {
+		if (position === FieldMessagePositions.ABOVE) {
 			return this.$messagesContainerAbove;
-		} else if (position === FieldMessagePosition.BELOW) {
+		} else if (position === FieldMessagePositions.BELOW) {
 			return this.$messagesContainerBelow;
-		} else if (position === FieldMessagePosition.POPOVER) {
+		} else if (position === FieldMessagePositions.POPOVER) {
 			return this.messageTooltip.$messageContainer;
 		}
 	}
 
 }
 
-export function getHighestSeverity (messages: DtoFieldMessage[], defaultSeverity: FieldMessageSeverity | null = FieldMessageSeverity.INFO) {
+export function getHighestSeverity (messages: DtoFieldMessage[], defaultSeverity: FieldMessageSeverity | null = FieldMessageSeverities.INFO) {
 	if (messages == null) {
 		return defaultSeverity;
 	}

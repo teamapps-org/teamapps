@@ -30,41 +30,41 @@ import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.template.grid.DtoSizingPolicy;
 
 class DtoGridTemplate extends DtoTemplate {
-    List<DtoGridColumn> columns;
-    List<DtoGridRow> rows;
-    List<DtoAbstractGridTemplateElement> elements;
-    int minWidth;
-    int maxWidth;
-	int minHeight;
-    int maxHeight;
+    required List<DtoGridColumn> columns;
+    required List<DtoGridRow> rows;
+    required List<DtoAbstractGridTemplateElement> elements;
+    required int minWidth;
+    required int maxWidth;
+	required int minHeight;
+    required int maxHeight;
     DtoSpacing padding;
-    int gridGap;
+    required int gridGap;
     String backgroundColor;
     DtoBorder border;
-    String ariaLabelProperty;
-    String titleProperty;
+    required String ariaLabelProperty;
+    required String titleProperty;
 }
 
 class DtoGridColumn {
-	DtoSizingPolicy widthPolicy;
-	int leftPadding;
-	int rightPadding;
+	required DtoSizingPolicy widthPolicy;
+	required int leftPadding;
+	required int rightPadding;
 }
 
 class DtoGridRow {
-	DtoSizingPolicy heightPolicy;
-    int topPadding;
-    int bottomPadding;
+	required DtoSizingPolicy heightPolicy;
+    required int topPadding;
+    required int bottomPadding;
 }
 
 abstract class DtoAbstractGridTemplateElement {
-	String property;
-    int row;
-    int column;
-    int rowSpan;
-    int colSpan;
-    JustifyContent horizontalAlignment;
-    AlignItems verticalAlignment;
+	required String property;
+    required int row;
+    required int column;
+    required int rowSpan;
+    required int colSpan;
+    required JustifyContent horizontalAlignment;
+    required AlignItems verticalAlignment;
     DtoSpacing margin;
     String backgroundColor;
 }
@@ -83,8 +83,8 @@ class DtoBadgeElement extends DtoTextElement {
 }
 
 class DtoFloatingElement extends DtoAbstractGridTemplateElement {
-	List<DtoAbstractGridTemplateElement> elements;
-	boolean wrap;
+	required List<DtoAbstractGridTemplateElement> elements;
+	required boolean wrap;
     AlignItems alignItems;
     JustifyContent justifyContent;
 }

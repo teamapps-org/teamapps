@@ -287,9 +287,7 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 	default Collection<Import> getEffectiveImports(boolean typescript) {
 		Imports imports = new Imports(this.getJsModuleName());
 
-		imports.addImport("ClientObject", "projector-client-object-api", "../ClientObject", "org.teamapps.projector.clientobject");
-
-		List<TypeWrapper<?>> referencedTypesToConsider = typescript ? getAllReferencedTypes(true) : getAllReferencedTypes(false);
+		List<TypeWrapper<?>> referencedTypesToConsider = typescript ? getReferencedTypes(true) : getAllReferencedTypes(false);
 		referencedTypesToConsider.stream()
 				.forEach(t -> {
 					imports.addImport(t.getName(), t.getJsModuleName(), t.getPackageName());

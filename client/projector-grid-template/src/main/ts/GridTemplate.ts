@@ -18,25 +18,29 @@
  * =========================LICENSE_END==================================
  */
 
+import type {Template} from "projector-client-object-api";
 import {
-	createTextAlignmentCssString,
 	createBorderCssString,
 	createFontStyleCssString,
 	createShadowCssString,
 	createSpacingCssString,
-	cssObjectToString, CssPropertyObject,
+	createTextAlignmentCssString,
+	cssObjectToString,
+	type CssPropertyObject,
 } from "projector-client-object-api";
 import {
-	DtoAbstractGridTemplateElement,
-	DtoBadgeElement,
-	DtoFloatingElement,
-	DtoGlyphIconElement,
-	DtoGridTemplate,
-	DtoIconElement,
-	DtoImageElement, ImageSizing, SizeType, DtoSizingPolicy,
-	DtoTextElement
+	type DtoAbstractGridTemplateElement,
+	type DtoBadgeElement,
+	type DtoFloatingElement,
+	type DtoGlyphIconElement,
+	type DtoGridTemplate,
+	type DtoIconElement,
+	type DtoImageElement,
+	type DtoSizingPolicy,
+	type DtoTextElement,
+	type ImageSizing, ImageSizings,
+	SizeTypes,
 } from "./generated";
-import {Template} from "projector-client-object-api";
 
 type RenderingFunction = (data: any) => string;
 
@@ -44,7 +48,10 @@ export class GridTemplate implements Template {
 	private renderers: ((data: any) => string)[];
 	private gridCss: string;
 
-	constructor(private config: DtoGridTemplate) {
+	private config: DtoGridTemplate;
+
+	constructor(config: DtoGridTemplate) {
+		this.config = config;
 		this.renderers = config.elements.map(element => {
 
 			let startColumn = config.columns[element.column];
@@ -56,6 +63,7 @@ export class GridTemplate implements Template {
 			if (startColumn == null || endColumn == null || startRow == null || endRow == null) {
 				console.error(`Element is placed (or spans) out of defined rows: col:${element.column};span:${element.colSpan}, row:${element.row};span:${element.rowSpan}.
 			The resulting template renderer will skip some formattings for this element!`);
+				marginCss = "";
 			} else {
 				let marginTop = (element.margin && element.margin.top || 0) + (startRow.topPadding || 0);
 				let marginRight = (element.margin && element.margin.right || 0) + (endColumn.rightPadding || 0);
@@ -74,18 +82,13 @@ export class GridTemplate implements Template {
 		const paddingCss = createSpacingCssString("padding", config.padding);
 		const gridGapCss = 'grid-gap:' + config.gridGap + 'px;';
 		const maxWidthCss = config.maxWidth >= 0 ? `max-width: ${config.maxWidth}px;` : '';
-		const maxHeightCss = config.maxHeight >= 0? `max-height: ${config.maxHeight}px;` : '';
+		const maxHeightCss = config.maxHeight >= 0 ? `max-height: ${config.maxHeight}px;` : '';
 		const minWidthCss = config.minWidth ? `min-width: ${config.minWidth}px;` : '';
 		const minHeightCss = config.minHeight ? `min-height: ${config.minHeight}px;` : '';
 		const backgroundColorCss = config.backgroundColor ? (`background-color: ${(config.backgroundColor ?? '')};`) : '';
 		const borderCss = createBorderCssString(config.border);
 		this.gridCss = `${gridTemplateColumnsString} ${gridTemplateRowsString} ${paddingCss} ${gridGapCss} ${minWidthCss} ${minHeightCss} ${maxWidthCss} ${maxHeightCss} ${backgroundColorCss} ${borderCss}`;
 	}
-
-	invoke(name: string, params: any[]): Promise<any> {
-		// nothing to do with a GridTemplate at this moment
-        throw new Error("Method not implemented.");
-    }
 
 	render(data: any) {
 		if (data == null) {
@@ -105,7 +108,7 @@ export class GridTemplate implements Template {
 
 }
 
-function createTextElementRenderer(element: DtoTextElement, additionalCssClass?: string, additionalStyles?: string): RenderingFunction {
+function createTextElementRenderer(element: DtoTextElement, additionalCssClass?: string | null, additionalStyles?: string): RenderingFunction {
 	const fontStyleCssString = createFontStyleCssString(element.fontStyle);
 	const elementStyleCssString = (element.lineHeight ? ('line-height:' + element.lineHeight + ';') : '')
 		+ (`white-space:${element.wrapLines ? 'normal' : 'nowrap'};`)
@@ -117,11 +120,11 @@ function createTextElementRenderer(element: DtoTextElement, additionalCssClass?:
 		if (value == null) {
 			return "";
 		} else if (element.fontStyle != null && element.fontStyle.backgroundColor) {
-			return `<div class="grid-template-element TextElement wrapper ${additionalCssClass || ''}" style="${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">
+			return `<div class="grid-template-element TextElement wrapper ${additionalCssClass ?? ''}" style="${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">
 	<span data-key="${element.property}" style="${fontStyleCssString}">${value || ''}</span>
 </div>`;
 		} else {
-			return `<span data-key="${element.property}" class="grid-template-element TextElement ${additionalCssClass || ''}" style="${fontStyleCssString} ${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">${value || ''}</span>`;
+			return `<span data-key="${element.property}" class="grid-template-element TextElement ${additionalCssClass ?? ''}" style="${fontStyleCssString} ${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">${value || ''}</span>`;
 		}
 	};
 }
@@ -217,6 +220,8 @@ function createElementRenderer(element: DtoAbstractGridTemplateElement, addition
 		return createIconElementRenderer(element, totalCss);
 	} else if (isGlyphIconElement(element)) {
 		return createGlyphIconElementRenderer(element, totalCss);
+	} else {
+		throw new Error("Unknown element type: " + element._type);
 	}
 }
 
@@ -244,19 +249,21 @@ export function isGlyphIconElement(element: DtoAbstractGridTemplateElement): ele
 	return element._type === "DtoGlyphIconElement";
 }
 
-export function createImageSizingCssObject(imageSizing: ImageSizing): CssPropertyObject {
-	if (imageSizing == null ) {
+export function createImageSizingCssObject(imageSizing: ImageSizing | null | undefined): CssPropertyObject {
+	if (imageSizing == null) {
 		return {};
 	} else {
 		let backgroundSize: string;
-		if (imageSizing === ImageSizing.ORIGINAL) {
+		if (imageSizing === ImageSizings.ORIGINAL) {
 			backgroundSize = "auto";
-		} else if (imageSizing === ImageSizing.STRETCH) {
+		} else if (imageSizing === ImageSizings.STRETCH) {
 			backgroundSize = "100% 100%";
-		} else if (imageSizing === ImageSizing.CONTAIN) {
+		} else if (imageSizing === ImageSizings.CONTAIN) {
 			backgroundSize = "contain";
-		} else if (imageSizing ===ImageSizing.COVER) {
+		} else if (imageSizing === ImageSizings.COVER) {
 			backgroundSize = "cover";
+		} else {
+			throw new Error("Unknown ImageSizing: " + imageSizing);
 		}
 		return {
 			"background-size": backgroundSize
@@ -266,12 +273,12 @@ export function createImageSizingCssObject(imageSizing: ImageSizing): CssPropert
 
 export function createCssGridRowOrColumnString(sizePolicy: DtoSizingPolicy) {
 	let maxSizeString: string;
-	if (sizePolicy.type === SizeType.AUTO) {
+	if (sizePolicy.type === SizeTypes.AUTO) {
 		maxSizeString = 'auto';
-	} else if (sizePolicy.type === SizeType.RELATIVE) {
+	} else if (sizePolicy.type === SizeTypes.RELATIVE) {
 		maxSizeString = (sizePolicy.value * 100) + sizePolicy.type;
 	} else {
-		maxSizeString = sizePolicy.value + sizePolicy.type;
+		maxSizeString = sizePolicy.value + sizePolicy.type!;
 	}
 	return sizePolicy.minAbsoluteSize ? `minmax(${sizePolicy.minAbsoluteSize}px, ${maxSizeString})` : maxSizeString;
 }

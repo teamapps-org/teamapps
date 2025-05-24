@@ -3,7 +3,7 @@ import {
 	ClosedSessionHandlingType,
 	Component,
 	exitFullScreen,
-	KeyEventType,
+	KeyEventType, KeyEventTypes,
 	releaseWakeLock,
 	requestWakeLock,
 	ServerObjectChannel,
@@ -43,7 +43,7 @@ let keyboardEventListener = (e: KeyboardEvent) => {
 		}
 
 		serverObjectChannel?.sendEvent("globalKeyEventOccurred", {
-			eventType: e.type == "keydown" ? KeyEventType.KEY_DOWN : KeyEventType.KEY_UP,
+			eventType: e.type == "keydown" ? KeyEventTypes.KEY_DOWN : KeyEventTypes.KEY_UP,
 			sourceComponentId: componentId,
 			code: e.code,
 			composing: e.isComposing,

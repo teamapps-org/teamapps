@@ -3,9 +3,8 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import {ClientObject} from "projector-client-object-api";
-import {DtoWeekDay} from "./DtoWeekDay";
-import {ServerObjectChannel} from "projector-client-object-api";
+import type {DtoWeekDay} from "./DtoWeekDay";
+import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface DtoCalendar {
 	_type?: string;

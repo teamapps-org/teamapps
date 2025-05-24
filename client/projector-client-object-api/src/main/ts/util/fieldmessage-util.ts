@@ -1,10 +1,10 @@
-import {FieldMessageSeverity} from "../generated";
+import {FieldMessageSeverities, FieldMessageSeverity} from "../generated";
 
 let severitiesSorted = [
-	FieldMessageSeverity.INFO,
-	FieldMessageSeverity.SUCCESS,
-	FieldMessageSeverity.WARNING,
-	FieldMessageSeverity.ERROR
+	FieldMessageSeverities.INFO,
+	FieldMessageSeverities.SUCCESS,
+	FieldMessageSeverities.WARNING,
+	FieldMessageSeverities.ERROR
 ];
 
 export function compareSeverities(s1: FieldMessageSeverity, s2: FieldMessageSeverity) {

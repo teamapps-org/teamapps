@@ -2,7 +2,12 @@
   "name": "projector-client-object-api",
   "version": "0.1.0-SNAPSHOT",
   "type": "module",
-  "exports": "./target/js-dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./target/js-dist/lib/index.d.ts", 
+      "import": "./target/js-dist/index.js"
+    }
+  },
   "types": "./target/js-dist/lib/index.d.ts",
   "scripts": {
     "del_dist": "rimraf 'target/js-dist/*'",

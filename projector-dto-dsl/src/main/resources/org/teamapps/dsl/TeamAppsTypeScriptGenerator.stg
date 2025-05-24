@@ -27,7 +27,7 @@ typeScriptFilePrelude() ::= <<
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsModuleName>";}; separator="\n">
+<c.effectiveTypeScriptImports:{im|import type {<im.name>\} from "<im.jsModuleName>";}; separator="\n">
 <if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{c|<c.typeScriptIdentifier>};  separator=", "> <endif>{
@@ -73,7 +73,7 @@ parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptTy
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-<c.effectiveTypeScriptImports:{im|import {<im.name>\} from "<im.jsModuleName>";}; separator="\n">
+<c.effectiveTypeScriptImports:{im|import type {<im.name>\} from "<im.jsModuleName>";}; separator="\n">
 <if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{superInterface|<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
@@ -101,19 +101,20 @@ export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.supe
 <c.queries:queryInterface(); separator="\n\n">
 >>
 
-typeScriptPropertyDeclaration(p, forceRequired) ::= <<
-<p.name><if(!p.required && !forceRequired)>?<endif>: <p.type.typeScriptTypeName>
+typeScriptPropertyDeclaration(p, forceNonNullable) ::= <<
+<p.name><if(!forceNonNullable && !p.nonNullable)>?<endif>: <p.type.typeScriptTypeName>
 >>
 
 enum(e) ::= <<
 <typeScriptFilePrelude()>
-export enum <e.name> {
-	<if(e.stringEnum)>
-	<e.enumConstants:{ec|<ec.Identifier> = <ec.StringLiteral>}; separator=", ">
-	<else>
-	<e.enumConstants:{ec|<ec.Identifier>}; separator=", ">
-	<endif>
-}
+export const <e.namePlural> = Object.freeze({
+    <if(e.stringEnum)>
+    <e.enumConstants:{ec|<ec.Identifier>: <ec.StringLiteral>}; separator=",\n">
+    <else>
+    <e.enumConstants:{ec|<ec.Identifier>: <i>}; separator=",\n">
+    <endif>
+} as const);
+export type <e.name> = typeof <e.namePlural>[keyof typeof <e.namePlural>]
 >>
 
 indexTs(classes, interfaces, enums) ::= <<

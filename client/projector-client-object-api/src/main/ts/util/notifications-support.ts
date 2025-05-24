@@ -1,9 +1,9 @@
 import {parseHtml} from "./parseHtml";
 import {ProjectorEvent} from "./ProjectorEvent";
-import {EntranceAnimation, ExitAnimation, NotificationPosition} from "../generated";
+import {EntranceAnimation, ExitAnimation, NotificationPosition, NotificationPositions} from "../generated";
 import {animateCSS} from "./animations";
 
-let notificationPositions: NotificationPosition[] = Object.values(NotificationPosition);
+let notificationPositions: NotificationPosition[] = Object.values(NotificationPositions);
 const containersByPosition = new Map<NotificationPosition, HTMLElement>();
 
 let notificationContainersWrapper = document.body.querySelector(".notification-containers");

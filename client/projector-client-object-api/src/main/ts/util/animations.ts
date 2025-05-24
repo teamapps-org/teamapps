@@ -1,4 +1,4 @@
-import {EntranceAnimation, ExitAnimation, PageTransition} from "../generated";
+import {EntranceAnimation, EntranceAnimations, ExitAnimation, ExitAnimations, PageTransition} from "../generated";
 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
 	if (animationClassNames == null || animationClassNames.length == 0) {
@@ -35,12 +35,12 @@ export function animateCSS(el: HTMLElement, animationCssClasses: string, animati
 }
 
 export function fadeOut(el: HTMLElement) {
-	animateCSS(el, ExitAnimation.FADE_OUT, 300, () => el.classList.add("hidden"));
+	animateCSS(el, ExitAnimations.FADE_OUT, 300, () => el.classList.add("hidden"));
 }
 
 export function fadeIn(el: HTMLElement) {
 	el.classList.remove("hidden");
-	animateCSS(el, EntranceAnimation.FADE_IN);
+	animateCSS(el, EntranceAnimations.FADE_IN);
 }
 
 export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: PageTransition, animationDuration: number = 300, callback?: () => any) {

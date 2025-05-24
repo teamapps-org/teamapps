@@ -26,6 +26,14 @@ public class EnumWrapper implements TypeWrapper<EnumDeclarationContext> {
 		return context.Identifier().getText();
 	}
 
+	public String getNamePlural() {
+		if (getName().endsWith("y")) {
+			return getName().substring(0, getName().length() - 1) + "ies";
+		} else {
+			return getName() + "s";
+		}
+	}
+
 	public boolean isStringEnum() {
 		return context.enumConstant().stream().allMatch(ec -> ec.StringLiteral() != null);
 	}

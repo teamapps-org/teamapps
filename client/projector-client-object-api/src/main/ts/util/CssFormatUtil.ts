@@ -17,23 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {
-	DtoBorder,
-	DtoFontStyle,
-	DtoLine,
-	LineType,
-	DtoBoxShadow,
-	DtoSpacing,
-	TextAlignment,
-} from "../generated";
+import {DtoBorder, DtoBoxShadow, DtoFontStyle, DtoLine, DtoSpacing, TextAlignment,} from "../generated";
 
 export type CssPropertyObject = { [cssProperty: string]: string };
 
-export function createTextAlignmentCssString(alignment: TextAlignment) {
+export function createTextAlignmentCssString(alignment: TextAlignment | null | undefined) {
 	return alignment == null ? '' : 'text-align:' + alignment + ';';
 }
 
-export function createFontStyleCssString(fontStyle: DtoFontStyle) {
+export function createFontStyleCssString(fontStyle: DtoFontStyle | null | undefined) {
 	if (fontStyle == null) {
 		return '';
 	} else {
@@ -46,11 +38,11 @@ export function createFontStyleCssString(fontStyle: DtoFontStyle) {
 	}
 }
 
-export function createLineCssString(lineConfig: DtoLine) {
+export function createLineCssString(lineConfig: DtoLine | null | undefined) {
 	return lineConfig != null ? `${lineConfig.thickness}px ${lineConfig.type} ${(lineConfig.color ?? '')}` : '';
 }
 
-export function createBorderCssObject(borderConfig: DtoBorder): CssPropertyObject {
+export function createBorderCssObject(borderConfig: DtoBorder | null | undefined): CssPropertyObject {
 	if (borderConfig == null) {
 		return {};
 	} else {
@@ -74,7 +66,7 @@ export function createBorderCssObject(borderConfig: DtoBorder): CssPropertyObjec
 	}
 }
 
-export function createBorderCssString(borderConfig: DtoBorder) {
+export function createBorderCssString(borderConfig: DtoBorder | null | undefined) {
 	if (borderConfig == null) {
 		return '';
 	} else {
@@ -83,7 +75,7 @@ export function createBorderCssString(borderConfig: DtoBorder) {
 	}
 }
 
-export function createShadowCssObject(shadowConfig: DtoBoxShadow): CssPropertyObject {
+export function createShadowCssObject(shadowConfig: DtoBoxShadow | null | undefined): CssPropertyObject {
 	if (shadowConfig == null) {
 		return {};
 	} else {
@@ -93,15 +85,15 @@ export function createShadowCssObject(shadowConfig: DtoBoxShadow): CssPropertyOb
 	}
 }
 
-export function createShadowCssString(shadowConfig: DtoBoxShadow): string {
+export function createShadowCssString(shadowConfig: DtoBoxShadow | null | undefined): string {
 	return cssObjectToString(createShadowCssObject(shadowConfig));
 }
 
-export function createSpacingValueCssString(spacingConfig: DtoSpacing) {
+export function createSpacingValueCssString(spacingConfig: DtoSpacing | null | undefined) {
 	return spacingConfig != null ? `${spacingConfig.top}px ${spacingConfig.right}px ${spacingConfig.bottom}px ${spacingConfig.left}px` : null;
 }
 
-export function createSpacingCssObject(cssProperty: string, spacingConfig: DtoSpacing) {
+export function createSpacingCssObject(cssProperty: string, spacingConfig: DtoSpacing | null | undefined) {
 	if (spacingConfig == null) {
 		return {};
 	} else {
@@ -111,7 +103,7 @@ export function createSpacingCssObject(cssProperty: string, spacingConfig: DtoSp
 	}
 }
 
-export function createSpacingCssString(cssProperty: string, spacingConfig: DtoSpacing): string {
+export function createSpacingCssString(cssProperty: string, spacingConfig: DtoSpacing | null | undefined): string {
 	if (spacingConfig == null) {
 		return '';
 	} else {

@@ -23,4 +23,8 @@ public class FormalParameterWrapper {
 		return context.Identifier().getText();
 	}
 
+	public boolean isNonNullable() {
+		return getType().isPrimitiveType();
+	}
+
 }

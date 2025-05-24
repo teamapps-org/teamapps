@@ -31,5 +31,10 @@ public class PropertyWrapper {
 		return context.requiredModifier() != null;
 	}
 
+	public boolean isNonNullable() {
+		return getType().isPrimitiveType()
+				|| isRequired();
+	}
+
 
 }

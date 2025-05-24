@@ -64,6 +64,8 @@ Table:
 
 FullCalendar: Upgrade FullCalendar to version 6 (and get rid of moment.js there)
 
+use "export type" in TypeScript to allow optimizations! Also, use verbatimModuleSyntax. See  https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax
+
 Shouldn't FieldMessage's position and visibility be properties of the Field? Or at least the default ones (if not explicitly set on the message)?
 
 Review the Resource interface. Especially things that affect HTTP headers should be implemented by setting headers.

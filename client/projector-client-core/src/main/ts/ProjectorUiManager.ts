@@ -21,7 +21,7 @@
 
 import {
 	ClientObject,
-	ClosedSessionHandlingType,
+	ClosedSessionHandlingType, ClosedSessionHandlingTypes,
 	ComponentLibrary,
 	generateUUID,
 	Invokable,
@@ -119,7 +119,7 @@ export class ProjectorUiManager implements ConnectionListener {
 	private expiredMessageWindow: Showable;
 	private errorMessageWindow: Showable;
 	private terminatedMessageWindow: Showable;
-	private closedSessionHandling = ClosedSessionHandlingType.MESSAGE_WINDOW;
+	private closedSessionHandling:ClosedSessionHandlingType = ClosedSessionHandlingTypes.MESSAGE_WINDOW;
 
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string } = {}) {
 		this.sessionId = generateUUID();
@@ -164,7 +164,7 @@ export class ProjectorUiManager implements ConnectionListener {
 						<h3>Caching problem!</h3>
 						<p>Your browser uses an old client version to connect to our server. Please <a onclick="location.reload()">refresh this page</a>. If this does not help, please clear your browser's cache.</p>
 					<div>`;
-		} else if (this.closedSessionHandling == ClosedSessionHandlingType.REFRESH_PAGE) {
+		} else if (this.closedSessionHandling == ClosedSessionHandlingTypes.REFRESH_PAGE) {
 			location.reload();
 		} else {
 			if (reason == SessionClosingReason.SESSION_NOT_FOUND || reason == SessionClosingReason.SESSION_TIMEOUT) {
