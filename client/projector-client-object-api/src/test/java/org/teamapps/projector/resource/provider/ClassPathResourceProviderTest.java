@@ -17,11 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.projector.resourceprovider;
+package org.teamapps.projector.resource.provider;
 
 
 import org.junit.jupiter.api.Test;
-import org.teamapps.projector.resource.provider.ClassPathResourceProvider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

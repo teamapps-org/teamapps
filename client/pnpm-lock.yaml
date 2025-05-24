@@ -896,15 +896,6 @@ importers:
         specifier: ^5.1
         version: 5.8.3
 
-  projector-vite-component:
-    devDependencies:
-      typescript:
-        specifier: ~5.8.3
-        version: 5.8.3
-      vite:
-        specifier: ^6.3.5
-        version: 6.3.5(@types/node@22.15.18)(less@4.3.0)
-
   projector-workspace-layout:
     dependencies:
       '@floating-ui/dom':
