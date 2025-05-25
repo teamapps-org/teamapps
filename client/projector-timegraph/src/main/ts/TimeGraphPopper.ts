@@ -18,7 +18,14 @@
  * =========================LICENSE_END==================================
  */
 import {computePosition, detectOverflow, flip, hide, MiddlewareState, shift, size} from "@floating-ui/dom";
-import {animateCSS, EntranceAnimation, ExitAnimation, parseHtml} from "projector-client-object-api";
+import {
+	animateCSS,
+	EntranceAnimation,
+	EntranceAnimations,
+	ExitAnimation,
+	ExitAnimations,
+	parseHtml
+} from "projector-client-object-api";
 
 export class TimeGraphPopper {
 
@@ -58,7 +65,7 @@ export class TimeGraphPopper {
 					this.$popperElement.classList.remove("hidden");
 					this.updatePosition(this.referenceElement)
 					if (wasHidden) {
-						animateCSS(this.$popperElement, EntranceAnimation.FADE_IN, 200)
+						animateCSS(this.$popperElement, EntranceAnimations.FADE_IN, 200)
 					}
 				}, 200);
 			} else {
@@ -67,7 +74,7 @@ export class TimeGraphPopper {
 			}
 		} else {
 			if (animate) {
-				animateCSS(this.$popperElement, ExitAnimation.FADE_OUT, 200, () => {
+				animateCSS(this.$popperElement, ExitAnimations.FADE_OUT, 200, () => {
 					this.$popperElement.classList.add("hidden");
 				});
 			} else {

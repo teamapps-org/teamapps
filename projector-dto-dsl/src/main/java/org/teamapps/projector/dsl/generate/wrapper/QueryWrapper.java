@@ -5,6 +5,7 @@ import org.teamapps.projector.dsl.TeamAppsDtoParser;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ public class QueryWrapper {
 	private final List<FormalParameterWrapper> parameters;
 
 	public QueryWrapper(TeamAppsDtoParser.QueryDeclarationContext context, IntermediateDtoModel model) {
-		this.context = context;
+		this.context = Objects.requireNonNull(context);
 		this.model = model;
 
 		this.parameters = context.formalParameter().stream()

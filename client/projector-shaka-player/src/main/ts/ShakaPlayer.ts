@@ -30,7 +30,7 @@ import {
 	DtoShakaPlayerCommandHandler,
 	DtoShakaPlayerEventSource,
 	PosterImageSize,
-	TrackLabelFormat as DtoTrackLabelFormat
+	TrackLabelFormats,
 } from "./generated";
 import {
 	AbstractComponent,
@@ -110,10 +110,10 @@ export class ShakaPlayer extends AbstractComponent<DtoShakaPlayer> implements Dt
 				overflowMenuButtons: this.getOverflowMenuButtonsConfig(),
 				seekBarColors: undefined,
 				showUnbufferedStart: false,
-				trackLabelFormat: config.trackLabelFormat == DtoTrackLabelFormat.LABEL ? TrackLabelFormat.LABEL
-					: config.trackLabelFormat == DtoTrackLabelFormat.LANGUAGE ? TrackLabelFormat.LANGUAGE
-						: config.trackLabelFormat == DtoTrackLabelFormat.ROLE ? TrackLabelFormat.ROLE
-							: config.trackLabelFormat == DtoTrackLabelFormat.LANGUAGE_ROLE ? TrackLabelFormat.LANGUAGE_ROLE
+				trackLabelFormat: config.trackLabelFormat == TrackLabelFormats.LABEL ? TrackLabelFormat.LABEL
+					: config.trackLabelFormat == TrackLabelFormats.LANGUAGE ? TrackLabelFormat.LANGUAGE
+						: config.trackLabelFormat == TrackLabelFormats.ROLE ? TrackLabelFormat.ROLE
+							: config.trackLabelFormat == TrackLabelFormats.LANGUAGE_ROLE ? TrackLabelFormat.LANGUAGE_ROLE
 								: undefined,
 				volumeBarColors: undefined,
 				addSeekBar: true

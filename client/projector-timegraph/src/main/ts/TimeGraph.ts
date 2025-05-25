@@ -44,7 +44,7 @@ import {
 } from "projector-client-object-api";
 import {
 	DtoGraph,
-	DtoGraphData,
+	DtoGraphData, DtoHoseGraph, DtoLineGraph,
 	DtoLongInterval,
 	DtoTimeChartZoomLevel,
 	DtoTimeGraph,
@@ -52,7 +52,7 @@ import {
 	DtoTimeGraph_ZoomedEvent,
 	DtoTimeGraphCommandHandler,
 	DtoTimeGraphEventSource,
-	LineChartMouseScrollZoomPanMode
+	LineChartMouseScrollZoomPanMode, LineChartMouseScrollZoomPanModes
 } from "./generated";
 
 export const yTickFormat = d3.format("-,.2s");
@@ -262,9 +262,9 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 	public static createDataDisplay(graphConfig: DtoGraph, dropShadowFilterId: string, graphContext: GraphContext) {
 		let display: AbstractGraph;
 		if (graphConfig._type === 'DtoLineGraph') {
-			display = new LineGraph(graphConfig, dropShadowFilterId);
+			display = new LineGraph(graphConfig as DtoLineGraph, dropShadowFilterId);
 		} else if (graphConfig._type === 'DtoHoseGraph') {
-			display = new HoseGraph(graphConfig, dropShadowFilterId);
+			display = new HoseGraph(graphConfig as DtoHoseGraph, dropShadowFilterId);
 		} else if (graphConfig._type === 'DtoIncidentGraph') {
 			display = new IncidentGraph(graphConfig, graphContext);
 		} else if (graphConfig._type === 'DtoGraphGroup') {
@@ -485,9 +485,9 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 		let originalZoomWeelHandler = this.$graphClipContainer.on("wheel.zoom");
 		let me = this;
 		this.$graphClipContainer.on("wheel.zoom", function (event: WheelEvent) {
-			if (me.mouseScrollZoomPanMode === LineChartMouseScrollZoomPanMode.DISABLED) {
+			if (me.mouseScrollZoomPanMode === LineChartMouseScrollZoomPanModes.DISABLED) {
 				return;
-			} else if (me.mouseScrollZoomPanMode === LineChartMouseScrollZoomPanMode.WITH_MODIFIER_KEY && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+			} else if (me.mouseScrollZoomPanMode === LineChartMouseScrollZoomPanModes.WITH_MODIFIER_KEY && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
 				return;
 			}
 			originalZoomWeelHandler.apply(this, arguments);
@@ -547,9 +547,12 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 				this.graphById[lineConfig.id] = this.createGraph(lineConfig);
 			}
 		});
-		let lineConfigsById = graphs.reduce((previousValue, currentValue) => (previousValue[currentValue.id] = previousValue) && previousValue, {} as { [id: string]: DtoGraph });
+		let lineConfigsById = graphs.reduce((previousValue, currentValue) => {
+			previousValue.set(currentValue.id!, currentValue);
+			return previousValue;
+		}, new Map<string, DtoGraph>);
 		Object.keys(this.graphById).forEach(lineId => {
-			if (!lineConfigsById[lineId]) {
+			if (!lineConfigsById.get(lineId)) {
 				this.graphById[lineId].destroy();
 				delete this.graphById[lineId];
 			}

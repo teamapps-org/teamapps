@@ -71,3 +71,5 @@ Shouldn't FieldMessage's position and visibility be properties of the Field? Or 
 Review the Resource interface. Especially things that affect HTTP headers should be implemented by setting headers.
 
 remove any setPropertyExtractor methods. Or maybe even get rid of PropertyExtractor and rename PropertyProvider to it, adding a static util method "oneByOne()"...
+
+Does DtoComponentConfig still need to be an external interface?

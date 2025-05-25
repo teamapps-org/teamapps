@@ -26,7 +26,7 @@ import {
 	parseHtml,
 	ServerObjectChannel
 } from "projector-client-object-api";
-import {BlockAlignment, DtoBlock, DtoBlogView} from "./generated";
+import {BlockAlignments, DtoBlock, DtoBlogView} from "./generated";
 import {MessageBlock} from "./MessageBlock";
 import {CitationBlock} from "./CitationBlock";
 import {AbstractBlockComponent} from "./AbstractBlockComponent";
@@ -79,11 +79,11 @@ export class BlogView extends AbstractComponent<DtoBlogView> {
 			row = this.addRow(false);
 		} else if (before && otherBlockId == null) {
 			row = this.rows[0];
-			if (row.blocks[0].block.getAlignment() == BlockAlignment.FULL) {
+			if (row.blocks[0].block.getAlignment() == BlockAlignments.FULL) {
 				row = this.addRow(true);
 			}
 		} else if (!before && otherBlockId == null) {
-			if (blockConfig.alignment === BlockAlignment.FULL) {
+			if (blockConfig.alignment === BlockAlignments.FULL) {
 				this.addRow(false);
 			}
 			row = this.rows[this.rows.length - 1];
@@ -100,11 +100,11 @@ export class BlogView extends AbstractComponent<DtoBlogView> {
 		row.blocks.push({$blockWrapper, $blockContentContainer, block});
 
 		// TODO prepend vs append vs insert...
-		if (blockConfig.alignment === BlockAlignment.FULL) {
+		if (blockConfig.alignment === BlockAlignments.FULL) {
 			row.$headerContainer.appendChild($blockWrapper);
-		} else if (blockConfig.alignment === BlockAlignment.LEFT) {
+		} else if (blockConfig.alignment === BlockAlignments.LEFT) {
 			row.$leftColumn.appendChild($blockWrapper);
-		} else if (blockConfig.alignment === BlockAlignment.RIGHT) {
+		} else if (blockConfig.alignment === BlockAlignments.RIGHT) {
 			row.$rightColumn.appendChild($blockWrapper);
 		}
 	}

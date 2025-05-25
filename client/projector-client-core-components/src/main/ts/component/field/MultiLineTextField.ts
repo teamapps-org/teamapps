@@ -23,14 +23,14 @@ import {
 	DtoMultiLineTextFieldEventSource,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent,
-	SpecialKey
+	SpecialKeys
 } from "../../generated";
 import {escapeHtml, getScrollbarWidth} from "../../util/Common";
 import {
 	AbstractField,
 	DebounceMode,
 	executeAfterAttached,
-	FieldEditingMode,
+	FieldEditingMode, FieldEditingModes,
 	parseHtml,
 	ProjectorEvent
 } from "projector-client-object-api";
@@ -64,11 +64,11 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 		this.setShowClearButton(config.showClearButton);
 
 		this.$field.addEventListener('focus', () => {
-			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingModes.READONLY) {
 			}
 		});
 		this.$field.addEventListener('blur', () => {
-			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingModes.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
@@ -82,11 +82,11 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
 				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ESCAPE
+					key: SpecialKeys.ESCAPE
 				});
 			} else if (e.key === 'Enter') {
 				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ENTER
+					key: SpecialKeys.ENTER
 				});
 			}
 		});

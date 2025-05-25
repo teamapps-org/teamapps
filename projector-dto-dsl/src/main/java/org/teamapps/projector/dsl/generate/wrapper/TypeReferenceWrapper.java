@@ -58,7 +58,7 @@ public class TypeReferenceWrapper {
 	private final List<TypeReferenceWrapper> typeArguments;
 
 	public TypeReferenceWrapper(TeamAppsDtoParser.TypeContext context, IntermediateDtoModel model) {
-		this.context = context;
+		this.context = Objects.requireNonNull(context);
 		this.model = model;
 
 		this.typeArguments = context.typeReference() != null && context.typeReference().typeArguments() != null

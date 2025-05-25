@@ -8,6 +8,7 @@ import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -25,7 +26,7 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 	private List<QueryWrapper> queries;
 
 	public ClassWrapper(ClassDeclarationContext context, IntermediateDtoModel model) {
-		this.context = context;
+		this.context = Objects.requireNonNull(context);
 		this.model = model;
 
 		this.properties = context.propertyDeclaration().stream().map(p -> new PropertyWrapper(p, model)).toList();

@@ -17,7 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {isEmptyable, Panel, SplitDirection, SplitSizePolicy, Toolbar} from "projector-client-core-components";
+import {
+    isEmptyable,
+    Panel,
+    SplitDirections,
+    SplitSizePolicies,
+    SplitSizePolicy,
+    Toolbar
+} from "projector-client-core-components";
 import {DtoWorkspaceLayoutDndDataTransfer, WorkSpaceLayout} from "./WorkSpaceLayout";
 import {bind, Component, generateUUID, parseHtml} from "projector-client-object-api";
 import {SplitPaneItem} from "./SplitPaneItem";
@@ -35,7 +42,7 @@ import {
     DtoWorkSpaceLayoutItem,
     DtoWorkSpaceLayoutSplitItem,
     DtoWorkSpaceLayoutView,
-    DtoWorkSpaceLayoutViewGroupItem
+    DtoWorkSpaceLayoutViewGroupItem, DtoRelativeWorkSpaceViewPositions, ViewGroupPanelStates
 } from "./generated";
 import {MultiProgressDisplay} from "projector-progress-display";
 
@@ -99,7 +106,7 @@ export class LocalViewContainer implements ViewContainer {
             this.redefineLayout(initialLayout, viewConfigs);
         } else {
             // initialLayout will be null for child windows
-            this.setRootItem(this.createTabPanelItem({id: generateUUID(), viewNames: []}, null));
+            this.setRootItem(this.createTabPanelItem({id: generateUUID(), viewNames: []} as DtoWorkSpaceLayoutViewGroupItem, null));
             return this;
         }
         this.fireViewNeedsRefreshForAllEmptyVisibleLazyTabs();
@@ -219,13 +226,13 @@ export class LocalViewContainer implements ViewContainer {
                                 if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
                                     this.moveViewToTab(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName);
                                 } else {
-                                    let uiRelativeWorkSpaceViewPosition = DtoRelativeWorkSpaceViewPosition[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof DtoRelativeWorkSpaceViewPosition];
-                                    this.moveViewRelativeToOtherView(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName, uiRelativeWorkSpaceViewPosition, SplitSizePolicy.RELATIVE, .5);
+                                    let uiRelativeWorkSpaceViewPosition = DtoRelativeWorkSpaceViewPositions[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof DtoRelativeWorkSpaceViewPositions];
+                                    this.moveViewRelativeToOtherView(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName, uiRelativeWorkSpaceViewPosition, SplitSizePolicies.RELATIVE, .5);
                                 }
                             } else {
-                                let uiRelativeWorkSpaceViewPosition = DtoRelativeWorkSpaceViewPosition[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof DtoRelativeWorkSpaceViewPosition];
+                                let uiRelativeWorkSpaceViewPosition = DtoRelativeWorkSpaceViewPositions[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof DtoRelativeWorkSpaceViewPositions];
                                 let isFirst = dropPosition.relativeDropPosition === RelativeDropPosition.LEFT || dropPosition.relativeDropPosition === RelativeDropPosition.TOP;
-                                this.moveViewToTopLevel(dataTransfer.viewName, this.windowId, uiRelativeWorkSpaceViewPosition, SplitSizePolicy.RELATIVE, isFirst ? .3 : .7);
+                                this.moveViewToTopLevel(dataTransfer.viewName, this.windowId, uiRelativeWorkSpaceViewPosition, SplitSizePolicies.RELATIVE, isFirst ? .3 : .7);
                             }
                         } else {
                             if (this.uuid === dataTransfer.sourceWorkspaceLayoutId) {
@@ -436,7 +443,7 @@ export class LocalViewContainer implements ViewContainer {
         tabPanelItem.onPanelStateChangeTriggered.addListener(panelState => this.setViewGroupPanelState2(tabPanelItem, panelState, true));
         tabPanelItem.onTabClosed.addListener(tabId => {
             if (tabPanelItem.tabs.length === 0) {
-                this.setViewGroupPanelState2(tabPanelItem, ViewGroupPanelState.NORMAL, false);
+                this.setViewGroupPanelState2(tabPanelItem, ViewGroupPanelStates.NORMAL, false);
             }
             this.workSpaceLayout.onViewClosed.fire({
                 viewName: tabId
@@ -498,11 +505,10 @@ export class LocalViewContainer implements ViewContainer {
             let siblingTabPanelItem = siblingView.parent;
             let oldParent = siblingTabPanelItem.parent;
             let existingTabPanelIsPosition: 'ROOT' | 'FIRST' | 'LAST' = oldParent == null ? 'ROOT' : oldParent.firstChild === siblingTabPanelItem ? 'FIRST' : 'LAST';
-            let newItemWillBeFirstChild = [DtoRelativeWorkSpaceViewPosition.LEFT, DtoRelativeWorkSpaceViewPosition.TOP].indexOf(relativePosition) !== -1;
-
-            let isVerticalSplit = [DtoRelativeWorkSpaceViewPosition.LEFT, DtoRelativeWorkSpaceViewPosition.RIGHT].indexOf(relativePosition) !== -1;
-            let newSplitPaneItem = new SplitPaneItem(generateUUID(), oldParent, isVerticalSplit ? SplitDirection.VERTICAL : SplitDirection.HORIZONTAL, sizePolicy, referenceChildSize);
-            let newTabPanelItem = this.createTabPanelItem({id: generateUUID(), viewNames: []}, newSplitPaneItem);
+            let newItemWillBeFirstChild = [DtoRelativeWorkSpaceViewPositions.LEFT, DtoRelativeWorkSpaceViewPositions.TOP].indexOf(relativePosition as any) !== -1;
+            let isVerticalSplit = [DtoRelativeWorkSpaceViewPositions.LEFT, DtoRelativeWorkSpaceViewPositions.RIGHT].indexOf(relativePosition as any) !== -1;
+            let newSplitPaneItem = new SplitPaneItem(generateUUID(), oldParent, isVerticalSplit ? SplitDirections.VERTICAL : SplitDirections.HORIZONTAL, sizePolicy, referenceChildSize);
+            let newTabPanelItem = this.createTabPanelItem({id: generateUUID(), viewNames: []} as DtoWorkSpaceLayoutViewGroupItem, newSplitPaneItem);
             newTabPanelItem.addTab(view, true);
 
             if (existingTabPanelIsPosition === 'FIRST') {
@@ -525,17 +531,17 @@ export class LocalViewContainer implements ViewContainer {
                 let rootTabPanelItem = this.itemTree.rootItem as TabPanelItem;
                 rootTabPanelItem.addTab(view, true);
             } else {
-                let isVerticalSplit = [DtoRelativeWorkSpaceViewPosition.LEFT, DtoRelativeWorkSpaceViewPosition.RIGHT].indexOf(relativePosition) !== -1;
-                let splitPaneItem = new SplitPaneItem(generateUUID(), null, isVerticalSplit ? SplitDirection.VERTICAL : SplitDirection.HORIZONTAL, sizePolicy, referenceChildSize);
+                let isVerticalSplit = [DtoRelativeWorkSpaceViewPositions.LEFT, DtoRelativeWorkSpaceViewPositions.RIGHT].indexOf(relativePosition as any) !== -1;
+                let splitPaneItem = new SplitPaneItem(generateUUID(), null, isVerticalSplit ? SplitDirections.VERTICAL : SplitDirections.HORIZONTAL, sizePolicy, referenceChildSize);
                 let oldRootItem = this.itemTree.rootItem;
                 oldRootItem.component.getMainElement().remove();
                 this.setRootItem(splitPaneItem);
 
-                let newTabPanelItem = this.createTabPanelItem({id: generateUUID(), viewNames: []}, splitPaneItem);
+                let newTabPanelItem = this.createTabPanelItem({id: generateUUID(), viewNames: []} as DtoWorkSpaceLayoutViewGroupItem, splitPaneItem);
                 newTabPanelItem.addTab(view, true);
                 oldRootItem.parent = splitPaneItem;
 
-                let newItemWillBeFirstChild = [DtoRelativeWorkSpaceViewPosition.LEFT, DtoRelativeWorkSpaceViewPosition.TOP].indexOf(relativePosition) !== -1;
+                let newItemWillBeFirstChild = [DtoRelativeWorkSpaceViewPositions.LEFT, DtoRelativeWorkSpaceViewPositions.TOP].indexOf(relativePosition as any) !== -1;
                 splitPaneItem.firstChild = newItemWillBeFirstChild ? newTabPanelItem : oldRootItem;
                 splitPaneItem.lastChild = newItemWillBeFirstChild ? oldRootItem : newTabPanelItem;
             }
@@ -661,9 +667,9 @@ export class LocalViewContainer implements ViewContainer {
     private setViewGroupPanelState2(viewGroup: TabPanelItem, panelState: ViewGroupPanelState, firePanelStateChangeEvent: boolean) {
         const oldPanelState = viewGroup.state;
         if (oldPanelState != panelState) {
-            if (panelState === ViewGroupPanelState.MAXIMIZED) {
+            if (panelState === ViewGroupPanelStates.MAXIMIZED) {
                 this.maximizeTabPanel(viewGroup);
-            } else if (panelState === ViewGroupPanelState.MINIMIZED) {
+            } else if (panelState === ViewGroupPanelStates.MINIMIZED) {
                 this.minimizeTabPanel(viewGroup);
             } else {
                 this.restoreTabPanel(viewGroup);
@@ -678,7 +684,7 @@ export class LocalViewContainer implements ViewContainer {
         if (tabPanelItem.maximized) {
             this.restoreTabPanel(tabPanelItem);
         }
-        tabPanelItem.state = ViewGroupPanelState.MINIMIZED;
+        tabPanelItem.state = ViewGroupPanelStates.MINIMIZED;
         this.$minimizedViewsBar.append(tabPanelItem.$minimizedTrayButton);
     }
 
@@ -688,20 +694,20 @@ export class LocalViewContainer implements ViewContainer {
         this.$maximizationContainerWrapper.classList.add("show");
         this.$maximizationContainer.append($element);
         this.$maximizationContainer.classList.add("animate__animated", "animate__zoomIn");
-        tabPanelItem.state = ViewGroupPanelState.MAXIMIZED;
+        tabPanelItem.state = ViewGroupPanelStates.MAXIMIZED;
     }
 
     private restoreTabPanel(tabPanelItem: TabPanelItem) {
-        if (tabPanelItem.state === ViewGroupPanelState.MAXIMIZED) {
+        if (tabPanelItem.state === ViewGroupPanelStates.MAXIMIZED) {
             const $element = tabPanelItem.component.getMainElement();
             this.$maximizationContainerWrapper.classList.remove("show");
             this.$maximizationContainer.append($element);
             this.$maximizationContainer.classList.remove("animate__animated", "animate__zoomIn");
             this.$normalContainerOfMaximizedTabPanel.appendChild($element);
-            tabPanelItem.state = ViewGroupPanelState.NORMAL;
-        } else if (tabPanelItem.state === ViewGroupPanelState.MINIMIZED) {
+            tabPanelItem.state = ViewGroupPanelStates.NORMAL;
+        } else if (tabPanelItem.state === ViewGroupPanelStates.MINIMIZED) {
             tabPanelItem.$minimizedTrayButton.remove();
-            tabPanelItem.state = ViewGroupPanelState.NORMAL;
+            tabPanelItem.state = ViewGroupPanelStates.NORMAL;
         }
     }
 

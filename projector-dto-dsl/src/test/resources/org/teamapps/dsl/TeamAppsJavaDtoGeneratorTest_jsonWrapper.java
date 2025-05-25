@@ -35,6 +35,7 @@ import org.teamapps.commons.util.ExceptionUtil;
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
+import org.teamapps.projector.clientobject.ClientObject;
 
 public class AWrapper extends JsonWrapper {
 

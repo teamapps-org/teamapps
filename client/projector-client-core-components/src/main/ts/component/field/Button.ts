@@ -25,7 +25,7 @@ import {
 	parseHtml,
 	ProjectorEvent,
 	Template,
-	executeAfterAttached
+	executeAfterAttached, FieldEditingModes
 } from "projector-client-object-api";
 import {DropDown} from "../../micro-components/DropDown";
 import {
@@ -82,7 +82,7 @@ export class Button extends AbstractField<DtoButton, void> implements DtoButtonE
 		// It is necessary to commit only after a full "click", since fields commit on blur. E.g. a DtoTextField should blur-commit first, before the button click-commits. This would not work with "mousedown".
 		["click", "keypress"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
 			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
-				if (this.getEditingMode() === FieldEditingMode.EDITABLE || this.getEditingMode() === FieldEditingMode.EDITABLE_IF_FOCUSED) {
+				if (this.getEditingMode() === FieldEditingModes.EDITABLE || this.getEditingMode() === FieldEditingModes.EDITABLE_IF_FOCUSED) {
 					this.onClick.fire({});
 					this.commit(true);
 				}

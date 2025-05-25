@@ -24,15 +24,20 @@ import {
 	AbstractComponent,
 	executeAfterAttached,
 	parseHtml,
+	ProjectorEvent,
 	ServerObjectChannel,
-	ProjectorEvent, Template
+	Template
 } from "projector-client-object-api";
 import {
+	CornerShapes,
 	DtoTreeGraph,
 	DtoTreeGraph_NodeClickedEvent,
-	DtoTreeGraph_NodeExpandedOrCollapsedEvent, DtoTreeGraph_ParentExpandedOrCollapsedEvent, DtoTreeGraph_SideListExpandedOrCollapsedEvent,
+	DtoTreeGraph_NodeExpandedOrCollapsedEvent,
+	DtoTreeGraph_ParentExpandedOrCollapsedEvent,
+	DtoTreeGraph_SideListExpandedOrCollapsedEvent,
 	DtoTreeGraphCommandHandler,
-	DtoTreeGraphEventSource, DtoTreeGraphNode, CornerShape
+	DtoTreeGraphEventSource,
+	DtoTreeGraphNode
 } from "./generated";
 import {flextree} from "d3-flextree";
 
@@ -609,7 +614,7 @@ class TreeChart {
 						id: r.id,
 						x: attrs.sideListIndent,
 						y: currentY + attrs.sideListVerticalGap
-					};
+					} as TreeNodeLike;
 					currentY += r.height + attrs.sideListVerticalGap;
 					return treeNodeLike;
 				});
@@ -898,8 +903,8 @@ class TreeChart {
 			.attr('height', d => d.data.image.height)
 			.attr('stroke', d => d.data.image.borderColor)
 			.attr('stroke-width', d => d.data.image.borderWidth)
-			.attr('rx', d => d.data.image.cornerShape == CornerShape.CIRCLE ? Math.max(d.data.image.width, d.data.image.height)
-				: d.data.image.cornerShape == CornerShape.ROUNDED ? Math.min(d.data.image.width, d.data.image.height) / 10
+			.attr('rx', d => d.data.image.cornerShape == CornerShapes.CIRCLE ? Math.max(d.data.image.width, d.data.image.height)
+				: d.data.image.cornerShape == CornerShapes.ROUNDED ? Math.min(d.data.image.width, d.data.image.height) / 10
 					: 0)
 			.attr('y', d => d.data.image.centerTopDistance)
 			.attr('x', d => d.data.image.centerLeftDistance)

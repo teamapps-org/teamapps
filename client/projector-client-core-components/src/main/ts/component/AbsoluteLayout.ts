@@ -19,7 +19,8 @@
  */
 import {
 	AbstractComponent,
-	AnimationEasing,
+	type AnimationEasing,
+	AnimationEasings,
 	Component,
 	generateUUID,
 	parseHtml,
@@ -34,7 +35,7 @@ export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> impleme
 		super(config);
 		this.$main = parseHtml(`<div class="AbsoluteLayout">
 </div>`);
-		this.update(config.components, 0, AnimationEasing.EASE);
+		this.update(config.components, 0, AnimationEasings.EASE);
 	}
 
 	doGetMainElement(): HTMLElement {

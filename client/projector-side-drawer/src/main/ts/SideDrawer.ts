@@ -27,7 +27,7 @@ import {
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
-	DrawerPosition,
+	DrawerPosition, DrawerPositions,
 	DtoSideDrawer,
 	DtoSideDrawer_ExpandedOrCollapsedEvent,
 	DtoSideDrawerCommandHandler,
@@ -109,28 +109,28 @@ export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoS
 
 		// position X
 		if (this.config.expanded) {
-			if (this.config.position === DrawerPosition.TOP_LEFT || this.config.position === DrawerPosition.BOTTOM_LEFT) {
+			if (this.config.position === DrawerPositions.TOP_LEFT || this.config.position === DrawerPositions.BOTTOM_LEFT) {
 				this.getMainElement().style.left = this.config.marginX + "px";
 				this.getMainElement().style.right = null;
-			} else if (this.config.position === DrawerPosition.TOP_RIGHT || this.config.position === DrawerPosition.BOTTOM_RIGHT) {
+			} else if (this.config.position === DrawerPositions.TOP_RIGHT || this.config.position === DrawerPositions.BOTTOM_RIGHT) {
 				this.getMainElement().style.left = null;
 				this.getMainElement().style.right = this.config.marginX + "px";
 			}
 		} else {
-			if (this.config.position === DrawerPosition.TOP_LEFT || this.config.position === DrawerPosition.BOTTOM_LEFT) {
+			if (this.config.position === DrawerPositions.TOP_LEFT || this.config.position === DrawerPositions.BOTTOM_LEFT) {
 				this.getMainElement().style.left = `-${contentWidth}px`;
 				this.getMainElement().style.right = null;
-			} else if (this.config.position === DrawerPosition.TOP_RIGHT || this.config.position === DrawerPosition.BOTTOM_RIGHT) {
+			} else if (this.config.position === DrawerPositions.TOP_RIGHT || this.config.position === DrawerPositions.BOTTOM_RIGHT) {
 				this.getMainElement().style.left = null;
 				this.getMainElement().style.right = `-${contentWidth}px`;
 			}
 		}
 
 		// position Y
-		if (this.config.position === DrawerPosition.TOP_LEFT || this.config.position === DrawerPosition.TOP_RIGHT) {
+		if (this.config.position === DrawerPositions.TOP_LEFT || this.config.position === DrawerPositions.TOP_RIGHT) {
 			this.getMainElement().style.top = this.config.marginY + "px";
 			this.getMainElement().style.bottom = null;
-		} else if (this.config.position === DrawerPosition.BOTTOM_LEFT || this.config.position === DrawerPosition.BOTTOM_RIGHT) {
+		} else if (this.config.position === DrawerPositions.BOTTOM_LEFT || this.config.position === DrawerPositions.BOTTOM_RIGHT) {
 			this.getMainElement().style.top = null;
 			this.getMainElement().style.bottom = this.config.marginY + "px";
 		}

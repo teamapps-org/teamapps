@@ -25,7 +25,7 @@ import {
 	ExitAnimation, NotificationHandle,
 	parseHtml, prepareNotificationLike,
 	ServerObjectChannel,
-	ProjectorEvent
+	ProjectorEvent, EntranceAnimations, ExitAnimations
 } from "projector-client-object-api";
 import {
 	DtoMultiProgressDisplay,
@@ -65,7 +65,7 @@ export class MultiProgressDisplay extends AbstractComponent<DtoMultiProgressDisp
 	<div class="progress-list"></div>
 </div>`);
 		this.popupComponentLike = {getMainElement: () => this.$popup};
-		this.notificationHandle = prepareNotificationLike(this.popupComponentLike, this.config.position, EntranceAnimation.SLIDE_IN_LEFT, ExitAnimation.ZOOM_OUT, -1);
+		this.notificationHandle = prepareNotificationLike(this.popupComponentLike, this.config.position, EntranceAnimations.SLIDE_IN_LEFT, ExitAnimations.ZOOM_OUT, -1);
 		this.$progressList = this.$popup.querySelector<HTMLElement>(":scope .progress-list");
 
 		this.$main.addEventListener("click", ev => {

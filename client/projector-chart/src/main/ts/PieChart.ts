@@ -22,7 +22,7 @@ import * as d3 from "d3"
 import {AbstractComponent, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
 	ChartLegendStyle,
-	DataPointWeighting,
+	DataPointWeighting, DataPointWeightings,
 	DtoChartNamedDataPoint,
 	DtoPieChart,
 	DtoPieChart_DataPointClickedEvent,
@@ -314,7 +314,7 @@ class Chart {
 
 
 		// Check the weighting
-		if (attrs.data.dataPointWeighting == DataPointWeighting.ABSOLUTE) {
+		if (attrs.data.dataPointWeighting == DataPointWeightings.ABSOLUTE) {
 
 			// Check if all values are  positive
 			let everyValueIsPositive = convertedData.every(d => d.value >= 0);

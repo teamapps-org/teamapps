@@ -3,6 +3,8 @@ package org.teamapps.projector.dsl.generate.wrapper;
 import org.teamapps.projector.dsl.TeamAppsDtoParser;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
+import java.util.Objects;
+
 public class FormalParameterWrapper {
 
 	private final TeamAppsDtoParser.FormalParameterContext context;
@@ -10,7 +12,7 @@ public class FormalParameterWrapper {
 	private final TypeReferenceWrapper type;
 
 	public FormalParameterWrapper(TeamAppsDtoParser.FormalParameterContext context, IntermediateDtoModel model) {
-		this.context = context;
+		this.context = Objects.requireNonNull(context);
 		this.model = model;
 		this.type = new TypeReferenceWrapper(context.type(), model);
 	}

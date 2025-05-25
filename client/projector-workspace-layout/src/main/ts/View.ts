@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Panel} from "projector-client-core-components";
+import {Panel, WindowButtonTypes} from "projector-client-core-components";
 import {DtoPanel_WindowButtonClickedEvent, WindowButtonType} from "projector-client-core-components";
 import {bind, Component, ProjectorEvent} from "projector-client-object-api";
 import {TabPanelItem} from "./TabPanelItem";
@@ -62,7 +62,7 @@ export class View implements ViewInfo {
 
 	@bind
 	private handlePanelWindowButtonClicked(event: DtoPanel_WindowButtonClickedEvent) {
-		if (event.windowButton === WindowButtonType.MINIMIZE && this._component instanceof Panel) {
+		if (event.windowButton === WindowButtonTypes.MINIMIZE && this._component instanceof Panel) {
 			this._component.restore(); // could be maximized, so first restore!
 		}
 		this.onPanelWindowButtonClicked.fire(event.windowButton);

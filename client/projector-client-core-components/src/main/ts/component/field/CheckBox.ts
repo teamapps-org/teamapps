@@ -28,7 +28,7 @@ import {
 	FieldMessageSeverity,
 	generateUUID,
 	getHighestSeverity,
-	parseHtml, executeAfterAttached
+	parseHtml, executeAfterAttached, FieldEditingModes, FieldMessageSeverities
 } from "projector-client-object-api";
 import {AbstractField} from "projector-client-object-api";
 
@@ -64,7 +64,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 			setTimeout(() => this.focus());
 		});
 		this.$main.addEventListener('click', () => {
-			if (this.getEditingMode() === FieldEditingMode.DISABLED || this.getEditingMode() === FieldEditingMode.READONLY) {
+			if (this.getEditingMode() === FieldEditingModes.DISABLED || this.getEditingMode() === FieldEditingModes.READONLY) {
 				return;
 			}
 			this.toggleCommittedValue();
@@ -126,7 +126,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 
 	private updateStyles() {
 		const highestMessageSeverity = getHighestSeverity(this.getFieldMessages());
-		if (highestMessageSeverity > FieldMessageSeverity.INFO) {
+		if (highestMessageSeverity > FieldMessageSeverities.INFO) {
 			this.setStyle(".checkbox-check", {
 				"background-color": null,
 				"color": null,
@@ -157,7 +157,7 @@ export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements Dto
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$check);
-		if (editingMode === FieldEditingMode.DISABLED || editingMode === FieldEditingMode.READONLY) {
+		if (editingMode === FieldEditingModes.DISABLED || editingMode === FieldEditingModes.READONLY) {
 			this.$main.classList.add("disabled");
 			this.$check.removeAttribute("tabIndex");
 		} else {

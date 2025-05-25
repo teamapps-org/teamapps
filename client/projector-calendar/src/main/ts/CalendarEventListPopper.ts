@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import { createPopper, Instance as Popper } from '@popperjs/core';
-import {animateCSS, EntranceAnimation, parseHtml} from "projector-client-object-api";
+import {animateCSS, EntranceAnimation, EntranceAnimations, parseHtml} from "projector-client-object-api";
 
 export class CalendarEventListPopper {
 
@@ -99,7 +99,7 @@ export class CalendarEventListPopper {
 					this.$popperElement.classList.remove("hidden");
 					this.popper.update();
 					if (wasHidden) {
-						animateCSS(this.$popperElement, EntranceAnimation.FADE_IN, 200)
+						animateCSS(this.$popperElement, EntranceAnimations.FADE_IN, 200)
 					}
 				}, 200);
 			} else {

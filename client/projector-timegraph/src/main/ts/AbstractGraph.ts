@@ -22,7 +22,14 @@ import * as d3 from "d3";
 import {NamespaceLocalObject} from "d3";
 import {Graph} from "./Graph";
 import {maxTickIntegerPartLength, YAxis} from "./YAxis";
-import {DtoGraph, DtoGraphData, LineChartYScaleZoomMode, ScaleType} from "./generated";
+import {
+	DtoGraph,
+	DtoGraphData,
+	LineChartYScaleZoomMode,
+	LineChartYScaleZoomModes,
+	ScaleType,
+	ScaleTypes
+} from "./generated";
 import {generateUUID} from "projector-client-object-api";
 import {ScaleContinuousNumeric, ScaleTime} from "d3";
 import * as ulp from "ulp";
@@ -104,11 +111,11 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 
 		let displayedDataYBounds = this.getYDataBounds(this.getDisplayedIntervalX());
 		displayedDataYBounds = displayedDataYBounds[0] === undefined || displayedDataYBounds[1] === undefined ? [0, 1] : displayedDataYBounds;
-		if (this.config.yScaleZoomMode === LineChartYScaleZoomMode.DYNAMIC) {
+		if (this.config.yScaleZoomMode === LineChartYScaleZoomModes.DYNAMIC) {
 			let margin = (displayedDataYBounds[1] - displayedDataYBounds[0]) * .05;
 			minY = crossesZero(displayedDataYBounds[0], -margin) ? displayedDataYBounds[0] : displayedDataYBounds[0] - margin;
 			maxY = crossesZero(displayedDataYBounds[1], margin) ? displayedDataYBounds[1] : displayedDataYBounds[1] + margin;
-		} else if (this.config.yScaleZoomMode === LineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO) {
+		} else if (this.config.yScaleZoomMode === LineChartYScaleZoomModes.DYNAMIC_INCLUDING_ZERO) {
 			let margin = (displayedDataYBounds[1] - displayedDataYBounds[0]) * .05;
 			minY = displayedDataYBounds[0] >= 0 ? 0 : displayedDataYBounds[0] - margin;
 			maxY = displayedDataYBounds[1] <= 0 ? 0 : displayedDataYBounds[1] + margin;
@@ -118,8 +125,8 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 		}
 
 		// if we use an auto-scaling zoom mode, we want at least two ticks to have a significant value.
-		if (minY != maxY && (this.config.yScaleZoomMode === LineChartYScaleZoomMode.DYNAMIC
-			|| this.config.yScaleZoomMode === LineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO)) {
+		if (minY != maxY && (this.config.yScaleZoomMode === LineChartYScaleZoomModes.DYNAMIC
+			|| this.config.yScaleZoomMode === LineChartYScaleZoomModes.DYNAMIC_INCLUDING_ZERO)) {
 			let numberOfTicks = 3;
 			while (true) {
 				const integerPartLength = maxTickIntegerPartLength(minY, maxY, numberOfTicks);
@@ -147,9 +154,9 @@ export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends Dto
 
 	private updateYScale(): void {
 		const oldScaleY = this.scaleY;
-		if (this.config.yScaleType === ScaleType.SYMLOG) {
+		if (this.config.yScaleType === ScaleTypes.SYMLOG) {
 			this.scaleY = d3.scaleSymlog();
-		} else if (this.config.yScaleType === ScaleType.LOG10) {
+		} else if (this.config.yScaleType === ScaleTypes.LOG10) {
 			this.scaleY = d3.scaleLog();
 		} else {
 			this.scaleY = d3.scaleLinear();

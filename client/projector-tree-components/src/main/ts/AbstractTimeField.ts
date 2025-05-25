@@ -23,7 +23,7 @@ import {
 	AbstractField,
 	DebounceMode,
 	DtoDateTimeFormatDescriptor, executeAfterAttached,
-	FieldEditingMode,
+	FieldEditingMode, FieldEditingModes,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
@@ -37,7 +37,7 @@ import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
 	DtoTextInputHandlingField_TextInputEvent,
-	SpecialKey
+	SpecialKey, SpecialKeys
 } from "projector-client-core-components";
 
 
@@ -56,7 +56,7 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox = new TrivialComboBox<LocalDateTime>({
 			showTrigger: config.showDropDownButton,
 			entryToEditorTextFunction: entry => this.localDateTimeToString(entry),
-			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
 			selectedEntryRenderingFunction: localDateTime => this.timeRenderer(localDateTime),
 		}, new TreeBoxDropdown({
 			queryFunction: (searchString: string) => timeSuggestionEngine.generateSuggestions(searchString),
@@ -72,11 +72,11 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ESCAPE
+					key: SpecialKeys.ESCAPE
 				});
 			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ENTER
+					key: SpecialKeys.ENTER
 				});
 			}
 		});
@@ -105,11 +105,11 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
-		this.getMainInnerDomElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainInnerDomElement().classList.remove(...Object.values(FieldEditingModes));
 		this.getMainInnerDomElement().classList.add(editingMode);
-		if (editingMode === FieldEditingMode.READONLY) {
+		if (editingMode === FieldEditingModes.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
-		} else if (editingMode === FieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingModes.DISABLED) {
 			this.trivialComboBox.setEditingMode("disabled");
 		} else {
 			this.trivialComboBox.setEditingMode("editable");

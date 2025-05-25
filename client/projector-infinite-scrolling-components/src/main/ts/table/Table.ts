@@ -38,8 +38,8 @@ import {
 	DtoTableClientRecord,
 	DtoTableColumn,
 	DtoTableCommandHandler,
-	DtoTableDisplayStyle,
-	DtoTableEventSource, SortDirection
+	DtoTableDisplayStyles,
+	DtoTableEventSource, SortDirection, SortDirections
 } from "../generated";
 import {TableRowSelectionModel} from "./TableRowSelectionModel";
 import {FieldMessagesPopper} from "./FieldMessagesPopper";
@@ -51,7 +51,7 @@ import {
 	FieldMessageSeverity, getHighestSeverity, nonRecursive, parseHtml,
 	ServerObjectChannel,
 	ProjectorEvent,
-	manipulateWithoutTransitions, arraysEqual, closestAncestor, Template
+	manipulateWithoutTransitions, arraysEqual, closestAncestor, Template, FieldMessageSeverities
 } from "projector-client-object-api";
 import {ContextMenu, DropDown, escapeHtml} from "projector-client-core-components";
 
@@ -80,10 +80,10 @@ interface Column extends Slick.Column<any> {
 }
 
 const backgroundColorCssClassesByMessageSeverity = {
-	[FieldMessageSeverity.INFO]: "bg-info",
-	[FieldMessageSeverity.SUCCESS]: "bg-success",
-	[FieldMessageSeverity.WARNING]: "bg-warning",
-	[FieldMessageSeverity.ERROR]: "bg-danger",
+	[FieldMessageSeverities.INFO]: "bg-info",
+	[FieldMessageSeverities.SUCCESS]: "bg-success",
+	[FieldMessageSeverities.WARNING]: "bg-warning",
+	[FieldMessageSeverities.ERROR]: "bg-danger",
 };
 
 type FieldsByName = { [fieldName: string]: AbstractField };
@@ -229,7 +229,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			//this._grid.resizeCanvas();
 		}
 
-		$table.classList.add(config.displayStyle == DtoTableDisplayStyle.LIST ? 'list-mode' : 'table-mode');
+		$table.classList.add(config.displayStyle == DtoTableDisplayStyles.LIST ? 'list-mode' : 'table-mode');
 
 		this._grid.setSelectionModel(new TableRowSelectionModel());
 
@@ -249,15 +249,15 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		if (config.sortField) {
 			this._sortField = config.sortField;
 			this._sortDirection = config.sortDirection;
-			this._grid.setSortColumn(config.sortField, config.sortDirection === SortDirection.ASC);
+			this._grid.setSortColumn(config.sortField, config.sortDirection === SortDirections.ASC);
 		}
 		(this._grid as any).onRendered.subscribe(() => this.setRowCssStyles());
 		this._grid.onSort.subscribe((e, args: Slick.OnSortEventArgs<Slick.SlickData>) => {
 			this._sortField = args.sortCol.id;
-			this._sortDirection = args.sortAsc ? SortDirection.ASC : SortDirection.DESC;
+			this._sortDirection = args.sortAsc ? SortDirections.ASC : SortDirections.DESC;
 			this.onSortingChanged.fire({
 				sortField: this._sortField,
-				sortDirection: args.sortAsc ? SortDirection.ASC : SortDirection.DESC
+				sortDirection: args.sortAsc ? SortDirections.ASC : SortDirections.DESC
 			});
 		});
 		this._grid.getCanvasNode().addEventListener("mousedown", ev => {
@@ -542,7 +542,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 			editor: editorFactory,
 			asyncEditorLoading: false,
 			autoEdit: true,
-			focusable: this.config.displayStyle == DtoTableDisplayStyle.LIST || uiField.isEditable(),
+			focusable: this.config.displayStyle == DtoTableDisplayStyles.LIST || uiField.isEditable(),
 			sortable: columnConfig.sortable,
 			resizable: columnConfig.resizeable,
 			hiddenIfOnlyEmptyCellsVisible: columnConfig.hiddenIfOnlyEmptyCellsVisible,
@@ -687,7 +687,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		this._sortField = sortField;
 		this._sortDirection = sortDirection;
 		if (sortField) {
-			this._grid.setSortColumn(sortField, sortDirection === SortDirection.ASC);
+			this._grid.setSortColumn(sortField, sortDirection === SortDirections.ASC);
 		}
 	}
 

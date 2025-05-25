@@ -24,8 +24,8 @@ import {
 	DtoMediaDeviceInfo,
 	DtoScreenSharingConstraints,
 	DtoVideoTrackConstraints,
-	MediaDeviceKind,
-	WebRtcPublishingFailureReason
+	MediaDeviceKinds,
+	WebRtcPublishingFailureReasons
 } from "./generated";
 import vad, {VoiceActivityDetectionHandle} from "voice-activity-detection";
 
@@ -84,7 +84,7 @@ export async function retrieveUserMedia(audioConstraints: DtoAudioTrackConstrain
 	} catch (e) {
 		throw {
 			exception: e,
-			reason: WebRtcPublishingFailureReason.CAM_MIC_MEDIA_RETRIEVAL_FAILED
+			reason: WebRtcPublishingFailureReasons.CAM_MIC_MEDIA_RETRIEVAL_FAILED
 		};
 	}
 
@@ -97,7 +97,7 @@ export async function retrieveUserMedia(audioConstraints: DtoAudioTrackConstrain
 	} catch (e) {
 		throw {
 			exception: e,
-			reason: WebRtcPublishingFailureReason.DISPLAY_MEDIA_RETRIEVAL_FAILED
+			reason: WebRtcPublishingFailureReasons.DISPLAY_MEDIA_RETRIEVAL_FAILED
 		};
 	}
 
@@ -131,7 +131,7 @@ export async function retrieveUserMedia(audioConstraints: DtoAudioTrackConstrain
 		} catch (e) {
 			throw {
 				exception: e,
-				reason: WebRtcPublishingFailureReason.VIDEO_MIXING_FAILED
+				reason: WebRtcPublishingFailureReasons.VIDEO_MIXING_FAILED
 			};
 		}
 	} else {
@@ -180,9 +180,9 @@ export function canPublishScreen() {
 
 export async function enumerateDevices(): Promise<DtoMediaDeviceInfo[]> {
 	const uiMediaDeviceKindByKindString = {
-		'audioinput': MediaDeviceKind.AUDIO_INPUT,
-		'videoinput': MediaDeviceKind.VIDEO_INPUT,
-		'audiooutput': MediaDeviceKind.AUDIO_OUTPUT
+		'audioinput': MediaDeviceKinds.AUDIO_INPUT,
+		'videoinput': MediaDeviceKinds.VIDEO_INPUT,
+		'audiooutput': MediaDeviceKinds.AUDIO_OUTPUT
 	};
 	try {
 		let stream = await window.navigator.mediaDevices.getUserMedia({audio: true, video: true});

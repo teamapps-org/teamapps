@@ -27,8 +27,7 @@ import {
 	debouncedMethod,
 	DebounceMode,
 	executeAfterAttached,
-	generateUUID,
-	JustifyContent,
+	JustifyContent, JustifyContents,
 	parseHtml,
 	ProjectorEvent,
 	ServerObjectChannel,
@@ -281,7 +280,7 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
                  justify-content: ${this.config.itemContentHorizontalAlignment};
             }
             .grid-${this.cssUuid} .item-wrapper > * {
-                 flex: ${this.config.itemContentHorizontalAlignment == JustifyContent.STRETCH ? "1 1 auto" : "0 1 auto"};
+                 flex: ${this.config.itemContentHorizontalAlignment == JustifyContents.STRETCH ? "1 1 auto" : "0 1 auto"};
             }`;
 	}
 

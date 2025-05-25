@@ -42,7 +42,7 @@ import {
 	DtoSimpleFileField_UploadTooLargeEvent,
 	DtoSimpleFileFieldCommandHandler,
 	DtoSimpleFileFieldEventSource,
-	FileFieldDisplayType
+	FileFieldDisplayType, FileFieldDisplayTypes
 } from "./generated";
 import {FileItem, FileItemState} from "./FileItem";
 
@@ -216,8 +216,8 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 
 	setDisplayMode(displayMode: FileFieldDisplayType): void {
 		this.displayMode = displayMode;
-		this.$main.classList.toggle("float-style-vertical-list", displayMode === FileFieldDisplayType.LIST);
-		this.$main.classList.toggle("float-style-horizontal", displayMode === FileFieldDisplayType.FLOATING);
+		this.$main.classList.toggle("float-style-vertical-list", displayMode === FileFieldDisplayTypes.LIST);
+		this.$main.classList.toggle("float-style-horizontal", displayMode === FileFieldDisplayTypes.FLOATING);
 		Object.values(this.fileItems).forEach(item => item.setDisplayMode(displayMode));
 	}
 
@@ -300,7 +300,7 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	private createUploadFileItem() {
 		let fileItem = new FileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, {
 			uuid: generateUUID()
-		}, FileItemState.INITIATING, this.isEditable());
+		} as DtoFileItem, FileItemState.INITIATING, this.isEditable());
 		fileItem.onClick.addListener(() => {
 			this.onFileItemClicked.fire({
 				fileItemUuid: fileItem.uuid

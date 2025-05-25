@@ -11,9 +11,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.teamapps.commons.util.StreamUtil.distinctByKey;
 import static org.teamapps.projector.dsl.generate.IntermediateDtoModel.findAncestorOfType;
@@ -210,30 +210,54 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 
 
 	default List<TypeWrapper<?>> getReferencedTypes(boolean typescript) {
-		return Stream.<Stream<TypeWrapper<?>>>of(
-						getSuperTypes().stream()
-								.map(Function.identity()), /* for the java compiler... */
-						getProperties().stream()
-								.map(p -> p.getType())
-								.filter(t -> t.isDtoTypeOrDtoTypeCollection())
-								.map(t -> t.findReferencedDtoType()),
-						getCommands().stream()
-								.flatMap(cd -> cd.getParameters().stream())
-								.map(p -> p.getType())
-								.filter(t -> t.isDtoTypeOrDtoTypeCollection())
-								.map(t -> t.findReferencedDtoType()),
-						getEvents().stream()
-								.flatMap(cd -> cd.getParameters().stream())
-								.map(p -> p.getType())
-								.filter(t -> t.isDtoTypeOrDtoTypeCollection())
-								.map(t -> t.findReferencedDtoType()),
-						getQueries().stream()
-								.flatMap(cd -> cd.getParameters().stream())
-								.map(p -> p.getType())
-								.filter(t -> t.isDtoTypeOrDtoTypeCollection())
-								.map(t -> t.findReferencedDtoType())
-				)
-				.flatMap(Function.identity())
+		var referencedSuperTypes =  getSuperTypes().stream()
+				.map(c -> (TypeWrapper<?>) c)
+				.toList();
+		var referencedPropertyParameterTypes = getProperties().stream()
+				.map(p -> p.getType())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.map(t -> t.findReferencedDtoType())
+				.toList();
+		var referencedCommandParameterTypes = (typescript ? getAllCommands() : getCommands()).stream()
+				.flatMap(cd -> cd.getParameters().stream())
+				.map(p -> p.getType())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.map(t -> t.findReferencedDtoType())
+				.toList();
+		var referencedCommandReturnTypes = (typescript ? getAllCommands() : getCommands()).stream()
+				.map(cd -> cd.getReturnType())
+				.filter(Objects::nonNull)
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.map(t -> t.findReferencedDtoType())
+				.toList();
+		var referencedEventParameterTypes = (typescript ? getAllEvents() : getEvents()).stream()
+				.flatMap(cd -> cd.getParameters().stream())
+				.map(p -> p.getType())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.map(t -> t.findReferencedDtoType())
+				.toList();
+		var referencedQueryParamterTypes = (typescript ? getAllQueries() : getQueries()).stream()
+				.flatMap(cd -> cd.getParameters().stream())
+				.map(p -> p.getType())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.map(t -> t.findReferencedDtoType())
+				.toList();
+		var referencedQueryReturnTypes = (typescript ? getAllQueries() : getQueries()).stream()
+				.map(cd -> cd.getReturnType())
+				.filter(Objects::nonNull)
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.map(t -> t.findReferencedDtoType())
+				.toList();
+
+		ArrayList<TypeWrapper<?>> typeWrappers = new ArrayList<>();
+		typeWrappers.addAll(referencedSuperTypes);
+		typeWrappers.addAll(referencedPropertyParameterTypes);
+		typeWrappers.addAll(referencedCommandParameterTypes);
+		typeWrappers.addAll(referencedCommandReturnTypes);
+		typeWrappers.addAll(referencedEventParameterTypes);
+		typeWrappers.addAll(referencedQueryParamterTypes);
+		typeWrappers.addAll(referencedQueryReturnTypes);
+		return typeWrappers.stream()
 				.filter(typeWrapper -> !(typescript && typeWrapper.isExternal()))
 				.filter(c -> c != this)
 				.distinct()
@@ -310,6 +334,8 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 					.flatMap(c -> c.getAllEvents().stream())
 					.filter(distinctByKey(EventWrapper::getName))
 					.forEach(e -> imports.addImport(e.getTypeScriptInterfaceName(), e.getDeclaringClass().getJsModuleName(), "./" + e.getDeclaringClass().getName(), e.getDeclaringClass().getPackageName()));
+		} else {
+			imports.addImport("ClientObject", "projector-client-object-api", "../ClientObject", "org.teamapps.projector.clientobject");
 		}
 
 		return imports.getAll();

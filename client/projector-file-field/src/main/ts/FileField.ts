@@ -35,7 +35,7 @@ import {
 	DtoFileField_UploadFailedEvent,
 	DtoFileField_UploadStartedEvent, DtoFileField_UploadSuccessfulEvent, DtoFileField_UploadTooLargeEvent,
 	DtoFileFieldCommandHandler,
-	DtoFileFieldEventSource, FileFieldDisplayType
+	DtoFileFieldEventSource, FileFieldDisplayType, FileFieldDisplayTypes
 } from "./generated";
 import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
 
@@ -139,8 +139,8 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 
 	setDisplayType(displayType: FileFieldDisplayType): void {
 		this.displayType = displayType;
-		this.$wrapper.classList.toggle("float-style-vertical-list", displayType === FileFieldDisplayType.LIST);
-		this.$wrapper.classList.toggle("float-style-horizontal", displayType === FileFieldDisplayType.FLOATING);
+		this.$wrapper.classList.toggle("float-style-vertical-list", displayType === FileFieldDisplayTypes.LIST);
+		this.$wrapper.classList.toggle("float-style-horizontal", displayType === FileFieldDisplayTypes.FLOATING);
 	}
 
 	setMaxFiles(maxFiles: number): void {
@@ -274,7 +274,7 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	}
 
 	private createFileItem() {
-		let fileItem = new UploadItem(this.displayType === FileFieldDisplayType.FLOATING, this.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.isEditable());
+		let fileItem = new UploadItem(this.displayType === FileFieldDisplayTypes.FLOATING, this.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.isEditable());
 		fileItem.onClick.addListener((eventObject) => {
 			this.onFileItemClicked.fire({
 				clientId: fileItem.data.id

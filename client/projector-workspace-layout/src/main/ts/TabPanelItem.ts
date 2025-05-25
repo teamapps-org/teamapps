@@ -18,11 +18,17 @@
  * =========================LICENSE_END==================================
  */
 import {Component, noOpServerObjectChannel, parseHtml, ProjectorEvent} from "projector-client-object-api";
-import {TabPanelTabStyle, TabPanel, WindowButtonType} from "projector-client-core-components";
+import {
+	TabPanelTabStyle,
+	TabPanel,
+	WindowButtonType,
+	DtoTabPanel,
+	WindowButtonTypes, TabPanelTabStyles
+} from "projector-client-core-components";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
-import {ViewGroupPanelState} from "./generated";
+import {ViewGroupPanelState, ViewGroupPanelStates} from "./generated";
 
 class MinimizableTabPanel extends TabPanel {
 
@@ -60,7 +66,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	public readonly onTabClosed: ProjectorEvent<string> = new ProjectorEvent();
 	public readonly onPanelStateChangeTriggered: ProjectorEvent<ViewGroupPanelState> = new ProjectorEvent();
 
-	private _state: ViewGroupPanelState = ViewGroupPanelState.NORMAL;
+	private _state: ViewGroupPanelState = ViewGroupPanelStates.NORMAL;
 
 	constructor(id: string, persistent: boolean, parent: SplitPaneItem) {
 		this.id = id;
@@ -69,13 +75,13 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		this.component = new MinimizableTabPanel({
 			_type: "DtoTabPanel",
 			hideTabBarIfSingleTab: true,
-			tabStyle: TabPanelTabStyle.EARS
-		}, noOpServerObjectChannel);
+			tabStyle: TabPanelTabStyles.EARS
+		} as DtoTabPanel, noOpServerObjectChannel);
 		this.component.setWindowButtons(this.createWindowButtonList());
 		this.component.onWindowButtonClicked.addListener(eventObject => {
-			if (eventObject.windowButton === WindowButtonType.MINIMIZE) {
+			if (eventObject.windowButton === WindowButtonTypes.MINIMIZE) {
 				this.component.restore(); // could be maximized, so first restore!
-				this.onPanelStateChangeTriggered.fire(ViewGroupPanelState.MINIMIZED);
+				this.onPanelStateChangeTriggered.fire(ViewGroupPanelStates.MINIMIZED);
 			}
 		});
 		this.component.onTabSelected.addListener(eventObject => this.onTabSelected.fire({tabPanelItemId: this.id, tabId: eventObject.tabId}));
@@ -96,9 +102,9 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	}
 
 	private createWindowButtonList(closeButton?: boolean): WindowButtonType[] {
-		let toolButtons: WindowButtonType[] = [WindowButtonType.MINIMIZE, WindowButtonType.MAXIMIZE_RESTORE];
+		let toolButtons: WindowButtonType[] = [WindowButtonTypes.MINIMIZE, WindowButtonTypes.MAXIMIZE_RESTORE];
 		if (closeButton) {
-			toolButtons.push(WindowButtonType.CLOSE);
+			toolButtons.push(WindowButtonTypes.CLOSE);
 		}
 		return toolButtons;
 	}
@@ -117,9 +123,9 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 
 
 		const windowButtonListener = (windowButtonType: WindowButtonType) => {
-			if (windowButtonType === WindowButtonType.MINIMIZE) {
-				this.onPanelStateChangeTriggered.fire(ViewGroupPanelState.MINIMIZED);
-			} else if (windowButtonType === WindowButtonType.CLOSE) {
+			if (windowButtonType === WindowButtonTypes.MINIMIZE) {
+				this.onPanelStateChangeTriggered.fire(ViewGroupPanelStates.MINIMIZED);
+			} else if (windowButtonType === WindowButtonTypes.CLOSE) {
 				this.removeTab(view);
 				this.onTabClosed.fire(view.viewName);
 			}
@@ -132,7 +138,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 
 		view.parent = this;
 
-		if (this.state === ViewGroupPanelState.MINIMIZED) {
+		if (this.state === ViewGroupPanelStates.MINIMIZED) {
 			this.updateMinimizedButton();
 		}
 	}
@@ -148,7 +154,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		this._tabs = this._tabs.filter(tab => tab.view !== view);
 		this.updateWindowToolButtons();
 
-		if (this.state == ViewGroupPanelState.MINIMIZED) {
+		if (this.state == ViewGroupPanelStates.MINIMIZED) {
 			this.updateMinimizedButton();
 		}
 	}
@@ -181,12 +187,12 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 	}
 
 	get maximized() {
-		return this._state === ViewGroupPanelState.MAXIMIZED
+		return this._state === ViewGroupPanelStates.MAXIMIZED
 	}
 
 	set state(state: ViewGroupPanelState) {
 		this._state = state;
-		let minimized = state === ViewGroupPanelState.MINIMIZED;
+		let minimized = state === ViewGroupPanelStates.MINIMIZED;
 		this.component.minimized = minimized;
 		if (minimized) {
 			this.updateMinimizedButton();
@@ -200,7 +206,7 @@ export class TabPanelItem implements ItemTreeItem<TabPanel> {
 		// noinspection CssUnknownTarget
 		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize} ta-icon-window-restore"></div>`));
 		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${tab.view.tabIcon}')"></div>`)));
-		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(ViewGroupPanelState.NORMAL));
+		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(ViewGroupPanelStates.NORMAL));
 	}
 
 	get state(): ViewGroupPanelState {

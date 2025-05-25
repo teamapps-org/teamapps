@@ -32,7 +32,7 @@ import {
 	DtoImageCropperCommandHandler,
 	DtoImageCropperEventSource,
 	ImageCropperSelection,
-	ImageCropperSelectionMode
+	ImageCropperSelectionMode, ImageCropperSelectionModes
 } from "./generated";
 import {draggable, getScrollbarWidth} from "projector-client-core-components";
 
@@ -239,7 +239,7 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 
 	setSelectionMode(selectionMode: ImageCropperSelectionMode): void {
 		this.$selectionFrame.className = this.$selectionFrame.className.replace(/mode-\w+/, '');
-		this.$selectionFrame.classList.add(`mode-${ImageCropperSelectionMode[selectionMode].toLowerCase()}`)
+		this.$selectionFrame.classList.add(`mode-${ImageCropperSelectionModes[selectionMode].toLowerCase()}`)
 	}
 
 	@executeAfterAttached(true)

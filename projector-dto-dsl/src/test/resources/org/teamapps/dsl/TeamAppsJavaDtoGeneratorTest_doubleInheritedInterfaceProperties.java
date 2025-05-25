@@ -41,6 +41,7 @@ import org.teamapps.projector.dto.B;
 import org.teamapps.projector.dto.BWrapper;
 import org.teamapps.projector.dto.C;
 import org.teamapps.projector.dto.CWrapper;
+import org.teamapps.projector.clientobject.ClientObject;
 
 @JsonTypeName("D")
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -49,9 +49,9 @@ import {
 	DtoTabPanel_TabSelectedEvent,
 	DtoTabPanel_WindowButtonClickedEvent,
 	DtoTabPanelCommandHandler,
-	DtoTabPanelEventSource,
-	TabPanelTabStyle,
-	WindowButtonType
+	DtoTabPanelEventSource, DtoToolButton,
+	TabPanelTabStyle, TabPanelTabStyles,
+	WindowButtonType, WindowButtonTypes
 } from "../generated";
 import {maximizeComponent} from "../util/Common";
 import {positionDropdown} from "../util/dropdownPosition";
@@ -82,14 +82,14 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 	public readonly onWindowButtonClicked: ProjectorEvent<DtoTabPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton({icon: ICON_MINIMIZE, title : "Minimize", iconSize: 16}, noOpServerObjectChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton({icon: ICON_MAXIMIZE, title : "Maximize/Restore", iconSize: 16}, noOpServerObjectChannel),
-		[WindowButtonType.CLOSE]: new ToolButton({icon: ICON_CLOSE, title : "Close", iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonTypes.MINIMIZE]: new ToolButton({icon: ICON_MINIMIZE, title : "Minimize", iconSize: 16} as DtoToolButton, noOpServerObjectChannel),
+		[WindowButtonTypes.MAXIMIZE_RESTORE]: new ToolButton({icon: ICON_MAXIMIZE, title : "Maximize/Restore", iconSize: 16} as DtoToolButton, noOpServerObjectChannel),
+		[WindowButtonTypes.CLOSE]: new ToolButton({icon: ICON_CLOSE, title : "Close", iconSize: 16} as DtoToolButton, noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
-		WindowButtonType.MINIMIZE,
-		WindowButtonType.MAXIMIZE_RESTORE,
-		WindowButtonType.CLOSE
+		WindowButtonTypes.MINIMIZE,
+		WindowButtonTypes.MAXIMIZE_RESTORE,
+		WindowButtonTypes.CLOSE
 	];
 
 	private $tabPanel: HTMLElement;
@@ -180,7 +180,7 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 		if (config.toolButtons != null) {
 			this.setToolButtons(config.toolButtons as ToolButton[]);
 		}
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].onClick.addListener(() => {
+		this.defaultToolButtons[WindowButtonTypes.MAXIMIZE_RESTORE].onClick.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
 			} else {
@@ -208,12 +208,12 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 	}
 
 	public maximize(): void {
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(ICON_RESTORE);
+		this.defaultToolButtons[WindowButtonTypes.MAXIMIZE_RESTORE].setIcon(ICON_RESTORE);
 		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(ICON_MAXIMIZE);
+		this.defaultToolButtons[WindowButtonTypes.MAXIMIZE_RESTORE].setIcon(ICON_MAXIMIZE);
 		if (this.restoreFunction != null) {
 			this.restoreFunction();
 		}
@@ -577,8 +577,8 @@ export class TabPanel extends AbstractComponent<DtoTabPanel> implements DtoTabPa
 
 	public setTabStyle(tabStyle: TabPanelTabStyle) {
 		this.$tabPanel.classList.remove('tab-style-ears', 'tab-style-blocks');
-		this.$tabPanel.classList.add(tabStyle === TabPanelTabStyle.EARS ? 'tab-style-ears' : 'tab-style-blocks');
-		this.$tabBar.classList.toggle("teamapps-blurredBackgroundImage", tabStyle === TabPanelTabStyle.BLOCKS);
+		this.$tabPanel.classList.add(tabStyle === TabPanelTabStyles.EARS ? 'tab-style-ears' : 'tab-style-blocks');
+		this.$tabBar.classList.toggle("teamapps-blurredBackgroundImage", tabStyle === TabPanelTabStyles.BLOCKS);
 		this.onResize();
 	}
 

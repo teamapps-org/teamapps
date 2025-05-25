@@ -24,15 +24,21 @@ import {
 	AbstractComponent,
 	executeAfterAttached,
 	parseHtml,
+	ProjectorEvent,
 	ServerObjectChannel,
-	ProjectorEvent, Template
+	Template
 } from "projector-client-object-api";
 import {
+	CornerShapes,
 	DtoNetworkGraph,
 	DtoNetworkGraph_NodeClickedEvent,
-	DtoNetworkGraph_NodeDoubleClickedEvent, DtoNetworkGraph_NodeExpandedOrCollapsedEvent,
+	DtoNetworkGraph_NodeDoubleClickedEvent,
+	DtoNetworkGraph_NodeExpandedOrCollapsedEvent,
 	DtoNetworkGraphCommandHandler,
-	DtoNetworkGraphEventSource, DtoNetworkLink, DtoNetworkNode, ExpandState, CornerShape
+	DtoNetworkGraphEventSource,
+	DtoNetworkLink,
+	DtoNetworkNode,
+	ExpandStates
 } from "./generated";
 import {patternify} from "./TreeGraph";
 
@@ -404,13 +410,13 @@ export class NetworkGraph extends AbstractComponent<DtoNetworkGraph> implements 
 			data: (d: DtoNetworkNode) => [d]
 		})
 			.on('mousedown', (d: DtoNetworkNode) => {
-				if (d.expandState == ExpandState.EXPANDED) {
-					d.expandState = ExpandState.COLLAPSED;
+				if (d.expandState == ExpandStates.EXPANDED) {
+					d.expandState = ExpandStates.COLLAPSED;
 				} else {
-					d.expandState = ExpandState.EXPANDED;
+					d.expandState = ExpandStates.EXPANDED;
 				}
 
-				this.onNodeExpandedOrCollapsed.fire({nodeId: d.id, expanded: d.expandState == ExpandState.EXPANDED});
+				this.onNodeExpandedOrCollapsed.fire({nodeId: d.id, expanded: d.expandState == ExpandStates.EXPANDED});
 				this.updateNodes();
 			});
 
@@ -441,12 +447,12 @@ export class NetworkGraph extends AbstractComponent<DtoNetworkGraph> implements 
 			.attr('stroke', 'none')
 			.attr('fill', 'black')
 			.attr('font-size', 22)
-			.text((d: DtoNetworkNode) => d.expandState === ExpandState.EXPANDED ? '–' : '+');
+			.text((d: DtoNetworkNode) => d.expandState === ExpandStates.EXPANDED ? '–' : '+');
 
 		// Move node button group to the desired position
 		nodeUpdate.select('.node-button-g')
 			.attr('transform', (d: DtoNetworkNode) => `translate(0,${d.height / 2})`)
-			.attr('display', (data: DtoNetworkNode) => data.expandState === ExpandState.NOT_EXPANDABLE ? 'none' : 'inherit');
+			.attr('display', (data: DtoNetworkNode) => data.expandState === ExpandStates.NOT_EXPANDABLE ? 'none' : 'inherit');
 
 		// Move images to desired positions
 		nodeUpdate.selectAll('.node-image-group')
@@ -467,8 +473,8 @@ export class NetworkGraph extends AbstractComponent<DtoNetworkGraph> implements 
 			.attr('height', (d: DtoNetworkNode) => d.image && d.image.height)
 			.attr('stroke', (d: DtoNetworkNode) => d.image && (d.image.borderColor))
 			.attr('stroke-width', (d: DtoNetworkNode) => d.image && d.image.borderWidth)
-			.attr('rx', (d: DtoNetworkNode) => d.image && (d.image.cornerShape == CornerShape.CIRCLE ? Math.max(d.image.width, d.image.height)
-				: d.image.cornerShape == CornerShape.ROUNDED ? Math.min(d.image.width, d.image.height) / 10
+			.attr('rx', (d: DtoNetworkNode) => d.image && (d.image.cornerShape == CornerShapes.CIRCLE ? Math.max(d.image.width, d.image.height)
+				: d.image.cornerShape == CornerShapes.ROUNDED ? Math.min(d.image.width, d.image.height) / 10
 					: 0))
 			.attr('y', (d: DtoNetworkNode) => d.image && d.image.centerTopDistance)
 			.attr('x', (d: DtoNetworkNode) => d.image && d.image.centerLeftDistance);

@@ -6,6 +6,7 @@ import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.teamapps.projector.dsl.generate.IntermediateDtoModel.findImport;
 import static org.teamapps.projector.dsl.generate.IntermediateDtoModel.getQualifiedTypeName;
@@ -21,7 +22,7 @@ public class InterfaceWrapper implements ClassOrInterfaceWrapper<InterfaceDeclar
 	private List<QueryWrapper> queries;
 
 	public InterfaceWrapper(InterfaceDeclarationContext context, IntermediateDtoModel model) {
-		this.context = context;
+		this.context = Objects.requireNonNull(context);
 		this.model = model;
 
 		this.properties = context.propertyDeclaration().stream().map(p -> new PropertyWrapper(p, model)).toList();

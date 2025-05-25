@@ -5,6 +5,7 @@ import org.teamapps.projector.dsl.TeamAppsDtoParser.EnumDeclarationContext;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class EnumWrapper implements TypeWrapper<EnumDeclarationContext> {
 
@@ -12,7 +13,7 @@ public class EnumWrapper implements TypeWrapper<EnumDeclarationContext> {
 	private final IntermediateDtoModel model;
 
 	public EnumWrapper(EnumDeclarationContext context, IntermediateDtoModel model) {
-		this.context = context;
+		this.context = Objects.requireNonNull(context);
 		this.model = model;
 	}
 
@@ -27,7 +28,7 @@ public class EnumWrapper implements TypeWrapper<EnumDeclarationContext> {
 	}
 
 	public String getNamePlural() {
-		if (getName().endsWith("y")) {
+		if (getName().endsWith("y") && !getName().endsWith("ey")) {
 			return getName().substring(0, getName().length() - 1) + "ies";
 		} else {
 			return getName() + "s";

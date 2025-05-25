@@ -27,11 +27,18 @@ import {
 	ProjectorEvent, Template
 } from "projector-client-object-api";
 import {
-	DtoFormLayoutPolicy, DtoFormSection, DtoFormSectionFieldPlacement, DtoFormSectionFloatingFieldsPlacement, DtoFormSectionPlacement,
+	DtoFormLayoutPolicy,
+	DtoFormSection,
+	DtoFormSectionFieldPlacement,
+	DtoFormSectionFloatingFieldsPlacement,
+	DtoFormSectionPlacement,
 	DtoGridForm,
 	DtoGridForm_SectionCollapsedStateChangedEvent,
 	DtoGridFormCommandHandler,
-	DtoGridFormEventSource, DtoSizingPolicy, SizeType
+	DtoGridFormEventSource,
+	DtoSizingPolicy,
+	SizeType,
+	SizeTypes
 } from "./generated";
 
 export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridFormCommandHandler, DtoGridFormEventSource {
@@ -358,9 +365,9 @@ class FormSection {
 
 export function createCssGridRowOrColumnString(sizePolicy: DtoSizingPolicy) {
 	let maxSizeString: string;
-	if (sizePolicy.type === SizeType.AUTO) {
+	if (sizePolicy.type === SizeTypes.AUTO) {
 		maxSizeString = 'auto';
-	} else if (sizePolicy.type === SizeType.RELATIVE) {
+	} else if (sizePolicy.type === SizeTypes.RELATIVE) {
 		maxSizeString = (sizePolicy.value * 100) + sizePolicy.type;
 	} else {
 		maxSizeString = sizePolicy.value + sizePolicy.type;

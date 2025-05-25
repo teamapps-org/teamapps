@@ -37,6 +37,7 @@ import org.teamapps.commons.util.ExceptionUtil;
 
 import org.teamapps.projector.dto.A;
 import org.teamapps.projector.dto.AWrapper;
+import org.teamapps.projector.clientobject.ClientObject;
 
 @JsonTypeName("B")
 @JsonInclude(JsonInclude.Include.NON_NULL)

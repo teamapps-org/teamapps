@@ -17,14 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField, DebounceMode, executeAfterAttached} from "projector-client-object-api";
+import {AbstractField, DebounceMode, executeAfterAttached, FieldEditingModes} from "projector-client-object-api";
 import {
-	SpecialKey,
 	DtoTextField,
 	DtoTextFieldCommandHandler,
 	DtoTextFieldEventSource,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent
+	DtoTextInputHandlingField_TextInputEvent, SpecialKeys
 } from "../../generated";
 import {FieldEditingMode, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {escapeHtml} from "../../util/Common";
@@ -60,12 +59,12 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 		this.setShowClearButton(config.showClearButton);
 
 		this.$field.addEventListener("focus", () => {
-			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingModes.READONLY) {
 				this.$field.select();
 			}
 		});
 		this.$field.addEventListener("change", () => {
-			if (this.getEditingMode() !== FieldEditingMode.READONLY) {
+			if (this.getEditingMode() !== FieldEditingModes.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
@@ -80,15 +79,15 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 				this.fireTextInput();
 				this.$field.select();
 				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ESCAPE
+					key: SpecialKeys.ESCAPE
 				});
 			} else if (e.key === 'Enter') {
-				if (this.getEditingMode() !== FieldEditingMode.READONLY) {
+				if (this.getEditingMode() !== FieldEditingModes.READONLY) {
 					// this needs to be done here, additionally, since otherwise the onSpecialKeyPressed gets fired before the commit...
 					this.commit();
 				}
 				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ENTER
+					key: SpecialKeys.ENTER
 				});
 			}
 		});

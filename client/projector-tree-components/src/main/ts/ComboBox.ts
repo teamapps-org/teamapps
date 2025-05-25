@@ -31,7 +31,7 @@ import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {
 	AbstractField,
 	DebounceMode, executeAfterAttached,
-	FieldEditingMode,
+	FieldEditingMode, FieldEditingModes,
 	ProjectorEvent, Template
 } from "projector-client-object-api";
 import {buildObjectTree, NodeWithChildren} from "./util";
@@ -92,7 +92,7 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 			},
 			autoComplete: !!config.autoCompletionEnabled,
 			showTrigger: config.dropDownButtonVisible,
-			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
 
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
 			showClearButton: config.clearButtonEnabled,
@@ -175,11 +175,11 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.remove(...Object.values(FieldEditingModes));
 		this.getMainElement().classList.add(editingMode);
-		if (editingMode === FieldEditingMode.READONLY) {
+		if (editingMode === FieldEditingModes.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
-		} else if (editingMode === FieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingModes.DISABLED) {
 			this.trivialComboBox.setEditingMode("disabled");
 		} else {
 			this.trivialComboBox.setEditingMode("editable");

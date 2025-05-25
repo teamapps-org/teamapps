@@ -49,8 +49,8 @@ import {
 	DtoMediaSoupV3WebRtcClientEventSource,
 	DtoScreenSharingConstraints,
 	DtoVideoTrackConstraints,
-	MediaRetrievalFailureReason,
-	SourceMediaTrackType
+	MediaRetrievalFailureReason, MediaRetrievalFailureReasons,
+	SourceMediaTrackType, SourceMediaTrackTypes
 } from "./generated";
 import {ContextMenu, getScrollbarWidth, ToolButton} from "projector-client-core-components";
 import {MixSizingInfo, TrackWithMixSizingInfo, VideoTrackMixer} from "./VideoTrackMixer";
@@ -204,7 +204,7 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 
 		this.config = {
 			toolButtons: config.toolButtons
-		}; // make sure everything is regarded as new! _config will get set at the end again...
+		} as any; // make sure everything is regarded as new! _config will get set at the end again...
 
 		this.gainController = new GainController(1);
 
@@ -495,14 +495,14 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 						}
 					firstAudioTrack.addEventListener("ended", () => {
 						if (this.gainController.inputTrack == firstAudioTrack) { // not intended stopping!
-							this.onSourceMediaTrackEnded.fire({trackType: SourceMediaTrackType.MIC});
+							this.onSourceMediaTrackEnded.fire({trackType: SourceMediaTrackTypes.MIC});
 							}
 						});
 					this.gainController.inputTrack = firstAudioTrack;
 					this.vad = addVoiceActivityDetection(firstAudioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 					} catch (e) {
 						console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
-					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReasons.MIC_MEDIA_RETRIEVAL_FAILED});
 					}
 			} else {
 				this.gainController.inputTrack = null;
@@ -526,12 +526,12 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 					}
 					this.webcamTrack.addEventListener("ended", () => {
 						if (this.webcamTrack != null) { // not intended stopping!
-							this.onSourceMediaTrackEnded.fire({trackType: SourceMediaTrackType.CAM});
+							this.onSourceMediaTrackEnded.fire({trackType: SourceMediaTrackTypes.CAM});
 						}
 					})
 				} catch (e) {
 					console.error("Could not get user media: camera!", e);
-					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReason.CAM_MEDIA_RETRIEVAL_FAILED});
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReasons.CAM_MEDIA_RETRIEVAL_FAILED});
 				}
 			}
 		}
@@ -552,12 +552,12 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 					}
 					this.screenTrack.addEventListener("ended", () => {
 						if (this.screenTrack != null) { // not intended stopping!
-							this.onSourceMediaTrackEnded.fire({trackType: SourceMediaTrackType.SCREEN});
+							this.onSourceMediaTrackEnded.fire({trackType: SourceMediaTrackTypes.SCREEN});
 						}
 					});
 				} catch (e) {
 					console.error("Could not get user media: screen!", e);
-					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReason.DISPLAY_MEDIA_RETRIEVAL_FAILED});
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReasons.DISPLAY_MEDIA_RETRIEVAL_FAILED});
 				}
 			}
 		}
@@ -595,7 +595,7 @@ export class MediaSoupV3WebRtcClient extends AbstractComponent<DtoMediaSoupV3Web
 
 					this.videoTrackMixer = await new VideoTrackMixer(streamsWithMixSizingInfo, 15);
 				} catch (e) {
-					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReason.VIDEO_MIXING_FAILED});
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: MediaRetrievalFailureReasons.VIDEO_MIXING_FAILED});
 				}
 			}
 		}

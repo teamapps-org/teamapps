@@ -27,16 +27,15 @@ import {
 	DtoWindow,
 	WindowButtonType,
 	DtoWindowCommandHandler,
-	DtoWindowEventSource, DtoWindow_ClosedEvent
+	DtoWindowEventSource, DtoWindow_ClosedEvent, WindowButtonTypes
 } from "../generated";
 import {
 	AbstractComponent, animateCSS,
 	Component,
-	EntranceAnimation, ExitAnimation,
 	noOpServerObjectChannel,
 	parseHtml,
 	ServerObjectChannel,
-	ProjectorEvent
+	ProjectorEvent, EntranceAnimations, ExitAnimations
 } from "projector-client-object-api";
 
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
@@ -83,9 +82,9 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 		this.$panelWrapper.appendChild(this.panel.getMainElement());
 
 		if (config.closeable) {
-			this.panel.addWindowButton(WindowButtonType.CLOSE);
+			this.panel.addWindowButton(WindowButtonTypes.CLOSE);
 		}
-		this.panel.getWindowButton(WindowButtonType.CLOSE).onClick.addListener(() => this.close(500));
+		this.panel.getWindowButton(WindowButtonTypes.CLOSE).onClick.addListener(() => this.close(500));
 		this.panel.onWindowButtonClicked.addListener(eventObject => {
 			return this.onWindowButtonClicked.fire({
 				windowButton: eventObject.windowButton
@@ -144,7 +143,7 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 
 		this.$main.classList.remove("hidden");
 		this.$main.classList.add("open");
-		animateCSS(this.$panelWrapper, EntranceAnimation.ZOOM_IN, animationDuration);
+		animateCSS(this.$panelWrapper, EntranceAnimations.ZOOM_IN, animationDuration);
 
 		this.escapeKeyListener = (e) => {
 			if (this.config.closeOnEscape && e.key === "Escape") {
@@ -178,7 +177,7 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 	public close(animationDuration: number, fireEvent: boolean = false) {
 		this.setMaximized(false);
 		this.$main.classList.remove("open");
-		animateCSS(this.$panelWrapper, ExitAnimation.ZOOM_OUT, animationDuration, () => {
+		animateCSS(this.$panelWrapper, ExitAnimations.ZOOM_OUT, animationDuration, () => {
 			this.$main.classList.add("hidden");
 			this.getMainElement().remove();
 		});
@@ -251,9 +250,9 @@ export class Window extends AbstractComponent<DtoWindow> implements DtoWindowCom
 	public setCloseable(closeable: boolean): void {
 		this.config.closeable = closeable;
 		if (closeable) {
-			this.panel.addWindowButton(WindowButtonType.CLOSE);
+			this.panel.addWindowButton(WindowButtonTypes.CLOSE);
 		} else {
-			this.panel.removeWindowButton(WindowButtonType.CLOSE);
+			this.panel.removeWindowButton(WindowButtonTypes.CLOSE);
 		}
 	}
 

@@ -31,7 +31,7 @@ import {
 	DebounceMode,
 	DtoDateTimeFormatDescriptor,
 	executeAfterAttached,
-	FieldEditingMode,
+	FieldEditingMode, FieldEditingModes,
 	ProjectorEvent
 } from "projector-client-object-api";
 
@@ -53,7 +53,7 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 			dateFormat: config.dateFormat,
 			timeFormat: config.timeFormat,
 			showTrigger: config.showDropDownButton,
-			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
 			favorPastDates: config.favorPastDates
 		});
 		this.trivialDateTimeField.getMainDomElement().classList.add("DtoAbstractDateTimeField");
@@ -104,11 +104,11 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.remove(...Object.values(FieldEditingModes));
 		this.getMainElement().classList.add(editingMode);
-		if (editingMode === FieldEditingMode.READONLY) {
+		if (editingMode === FieldEditingModes.READONLY) {
 			this.trivialDateTimeField.setEditingMode("readonly");
-		} else if (editingMode === FieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingModes.DISABLED) {
 			this.trivialDateTimeField.setEditingMode("disabled");
 		} else {
 			this.trivialDateTimeField.setEditingMode("editable");

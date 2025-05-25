@@ -19,11 +19,11 @@
  */
 import {SVGSelection} from "./Charting";
 import {TimeGraph} from "./TimeGraph";
+import * as d3 from 'd3';
 import {ScaleTime} from 'd3';
-import * as d3 from "d3";
 import {GraphContext} from "./GraphContext";
 import {AbstractGraph} from "./AbstractGraph";
-import {DtoGraphGroup, DtoGraphGroupData, LineChartYScaleZoomMode} from "./generated";
+import {DtoGraphGroup, DtoGraphGroupData, LineChartYScaleZoomModes} from "./generated";
 import {IntervalManager} from "./IntervalManager";
 
 export class GraphGroup extends AbstractGraph<DtoGraphGroup, DtoGraphGroupData> {
@@ -43,7 +43,7 @@ export class GraphGroup extends AbstractGraph<DtoGraphGroup, DtoGraphGroupData> 
 		this.initDomNodes();
 
 		this.config.graphs.forEach(graphConfig => {
-			graphConfig.yScaleZoomMode = LineChartYScaleZoomMode.FIXED;
+			graphConfig.yScaleZoomMode = LineChartYScaleZoomModes.FIXED;
 			this.graphs.set(graphConfig.id, TimeGraph.createDataDisplay(graphConfig, dropShadowFilterId, graphContext));
 		})
 

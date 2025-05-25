@@ -24,7 +24,7 @@ import {
 	DtoComboBoxTreeRecord,
 	DtoTagComboBox,
 	DtoTagComboBoxCommandHandler,
-	DtoTagComboBoxEventSource, DtoTagComboBoxServerObjectChannel, TagComboBoxWrappingMode,
+	DtoTagComboBoxEventSource, DtoTagComboBoxServerObjectChannel, TagComboBoxWrappingMode, TagComboBoxWrappingModes,
 } from "./generated";
 import {TrivialTagComboBox} from "./trivial-components/TrivialTagComboBox";
 import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
@@ -34,7 +34,7 @@ import {
 	AbstractField,
 	DebounceMode,
 	executeAfterAttached,
-	FieldEditingMode,
+	FieldEditingMode, FieldEditingModes,
 	parseHtml,
 	ProjectorEvent,
 	Template
@@ -98,7 +98,7 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 			showClearButton: config.clearButtonEnabled,
 			autoComplete: !!config.autoCompletionEnabled,
 			showTrigger: config.dropDownButtonVisible,
-			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
 			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
 			entryToEditorTextFunction: e => e.asString,
@@ -167,11 +167,11 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.remove(...Object.values(FieldEditingModes));
 		this.getMainElement().classList.add(editingMode);
-		if (editingMode === FieldEditingMode.READONLY) {
+		if (editingMode === FieldEditingModes.READONLY) {
 			this.trivialTagComboBox.setEditingMode("readonly");
-		} else if (editingMode === FieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingModes.DISABLED) {
 			this.trivialTagComboBox.setEditingMode("disabled");
 		} else {
 			this.trivialTagComboBox.setEditingMode("editable");
@@ -259,8 +259,8 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 
 	setWrappingMode(wrappingMode: TagComboBoxWrappingMode) {
 		this.config.wrappingMode = wrappingMode;
-		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", wrappingMode === TagComboBoxWrappingMode.SINGLE_LINE);
-		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-tag-per-line", wrappingMode === TagComboBoxWrappingMode.SINGLE_TAG_PER_LINE);
+		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", wrappingMode === TagComboBoxWrappingModes.SINGLE_LINE);
+		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-tag-per-line", wrappingMode === TagComboBoxWrappingModes.SINGLE_TAG_PER_LINE);
 	}
 
 	setDistinct(distinct: boolean) {

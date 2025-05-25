@@ -17,8 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {ChildCollapsingPolicy, SplitDirection, SplitSizePolicy} from "projector-client-core-components";
-import {SplitPane} from "projector-client-core-components";
+import {
+	ChildCollapsingPolicies,
+	DtoSplitPane,
+	SplitDirection,
+	SplitPane,
+	SplitSizePolicy
+} from "projector-client-core-components";
 import {Component, noOpServerObjectChannel} from "projector-client-object-api";
 import {ItemTreeItem} from "./ItemTree";
 
@@ -37,8 +42,8 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 			sizePolicy: sizePolicy,
 			referenceChildSize: firstChildRelativeSize,
 			resizable: true,
-			childCollapsingPolicy: ChildCollapsingPolicy.IF_EMPTY
-		}, noOpServerObjectChannel);
+			childCollapsingPolicy: ChildCollapsingPolicies.IF_EMPTY
+		} as DtoSplitPane, noOpServerObjectChannel);
 	}
 
 	public get itemIds() {

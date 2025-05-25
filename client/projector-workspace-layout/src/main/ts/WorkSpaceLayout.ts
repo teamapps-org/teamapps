@@ -23,7 +23,7 @@ import {ViewContainer} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {LocalViewContainer} from "./LocalViewContainer";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {SplitSizePolicy, Toolbar} from "projector-client-core-components";
+import {SplitSizePolicies, SplitSizePolicy, Toolbar} from "projector-client-core-components";
 import {
 	DtoRelativeWorkSpaceViewPosition,
 	ViewGroupPanelState,
@@ -41,7 +41,7 @@ import {
 	DtoWorkSpaceLayoutItem,
 	DtoWorkSpaceLayoutSplitItem,
 	DtoWorkSpaceLayoutView,
-	DtoWorkSpaceLayoutViewGroupItem
+	DtoWorkSpaceLayoutViewGroupItem, DtoRelativeWorkSpaceViewPositions
 } from "./generated";
 import {MultiProgressDisplay, ProgressDisplay} from "projector-progress-display";
 
@@ -150,11 +150,11 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 				if (relativePosition === RelativeDropPosition.TAB) {
 					this.moveViewToNeighbourTab(viewInfo.viewName, existingViewName, true);
 				} else {
-					this.moveViewRelativeToOtherView(viewInfo.viewName, existingViewName, DtoRelativeWorkSpaceViewPosition[RelativeDropPosition[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPosition], SplitSizePolicy.RELATIVE, .5);
+					this.moveViewRelativeToOtherView(viewInfo.viewName, existingViewName, DtoRelativeWorkSpaceViewPositions[RelativeDropPosition[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPositions], SplitSizePolicies.RELATIVE, .5);
 				}
 			} else {
 				let isFirst = relativePosition === RelativeDropPosition.LEFT || relativePosition === RelativeDropPosition.TOP;
-				this.moveViewToTopLevel(viewInfo.viewName, targetWindowId, DtoRelativeWorkSpaceViewPosition[RelativeDropPosition[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPosition], SplitSizePolicy.RELATIVE, isFirst ? .3 : .7);
+				this.moveViewToTopLevel(viewInfo.viewName, targetWindowId, DtoRelativeWorkSpaceViewPositions[RelativeDropPosition[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPositions], SplitSizePolicies.RELATIVE, isFirst ? .3 : .7);
 			}
 		} else {
 			this.rootWindowMessagePort.postMessage({
@@ -370,7 +370,7 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 			tabCaption: viewInfo.tabCaption,
 			tabCloseable: viewInfo.tabCloseable,
 			component: null
-		};
+		} as DtoWorkSpaceLayoutView;
 	}
 
 	public setToolbar(toolbar: Toolbar): void {

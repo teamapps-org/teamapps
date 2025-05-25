@@ -49,7 +49,7 @@ export class TableDataProvider implements DataProvider<DtoTableClientRecord> {
 		}
 	}
 
-	updateData(startIndex: number, recordIds: number[], newRecords: DtoIdentifiableClientRecord[], totalNumberOfRecords: number): number[] | true {
+	updateData(startIndex: number, recordIds: number[], newRecords: DtoTableClientRecord[], totalNumberOfRecords: number): number[] | true {
 		const changedRowNumbers = this.calculateChangingRowNumbers(startIndex, recordIds);
 
 		this.dataStartIndex = startIndex;

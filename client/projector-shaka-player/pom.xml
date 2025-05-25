@@ -64,6 +64,9 @@
                         <goals>
                             <goal>pnpm</goal>
                         </goals>
+                        <configuration>
+                            <arguments>install --filter "."</arguments>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>build</id>
@@ -71,8 +74,7 @@
                             <goal>pnpm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run</arguments>
-                            <arguments>build</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>

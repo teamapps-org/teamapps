@@ -3,6 +3,8 @@ package org.teamapps.projector.dsl.generate.wrapper;
 import org.teamapps.projector.dsl.TeamAppsDtoParser;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
+import java.util.Objects;
+
 public class PropertyWrapper {
 
 	private final TeamAppsDtoParser.PropertyDeclarationContext context;
@@ -10,7 +12,7 @@ public class PropertyWrapper {
 	private final TypeReferenceWrapper type;
 
 	public PropertyWrapper(TeamAppsDtoParser.PropertyDeclarationContext context, IntermediateDtoModel model) {
-		this.context = context;
+		this.context = Objects.requireNonNull(context);
 		this.model = model;
 		this.type = new TypeReferenceWrapper(context.type(), model);
 	}

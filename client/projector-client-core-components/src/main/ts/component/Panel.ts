@@ -35,7 +35,11 @@ import {
 	HeaderComponentMinimizationPolicy,
 	DtoPanelHeaderField,
 	HeaderFieldIconVisibilityPolicy,
-	WindowButtonType
+	WindowButtonType,
+	WindowButtonTypes,
+	DtoToolButton,
+	HeaderFieldIconVisibilityPolicies,
+	HeaderComponentMinimizationPolicies
 } from "../generated";
 import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
@@ -71,14 +75,14 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	public readonly onWindowButtonClicked: ProjectorEvent<DtoPanel_WindowButtonClickedEvent> = new ProjectorEvent();
 
 	private readonly defaultToolButtons = {
-		[WindowButtonType.MINIMIZE]: new ToolButton({icon: ICON_MINIMIZE, title : "Minimize", visible: true, iconSize: 16}, noOpServerObjectChannel),
-		[WindowButtonType.MAXIMIZE_RESTORE]: new ToolButton({icon: ICON_MAXIMIZE, title : "Maximize/Restore", visible: true, iconSize: 16}, noOpServerObjectChannel),
-		[WindowButtonType.CLOSE]: new ToolButton({icon: ICON_CLOSE, title : "Close", visible: true, iconSize: 16}, noOpServerObjectChannel),
+		[WindowButtonTypes.MINIMIZE]: new ToolButton({icon: ICON_MINIMIZE, title : "Minimize", visible: true, iconSize: 16} as DtoToolButton, noOpServerObjectChannel),
+		[WindowButtonTypes.MAXIMIZE_RESTORE]: new ToolButton({icon: ICON_MAXIMIZE, title : "Maximize/Restore", visible: true, iconSize: 16} as DtoToolButton, noOpServerObjectChannel),
+		[WindowButtonTypes.CLOSE]: new ToolButton({icon: ICON_CLOSE, title : "Close", visible: true, iconSize: 16} as DtoToolButton, noOpServerObjectChannel),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
-		WindowButtonType.MINIMIZE,
-		WindowButtonType.MAXIMIZE_RESTORE,
-		WindowButtonType.CLOSE
+		WindowButtonTypes.MINIMIZE,
+		WindowButtonTypes.MAXIMIZE_RESTORE,
+		WindowButtonTypes.CLOSE
 	];
 
 	private $panel: HTMLElement;
@@ -151,7 +155,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 		}
 		this.setHeaderComponentMinimizationPolicy(config.headerComponentMinimizationPolicy);
 
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].onClick.addListener(() => {
+		this.defaultToolButtons[WindowButtonTypes.MAXIMIZE_RESTORE].onClick.addListener(() => {
 			if (this.restoreFunction == null) {
 				this.maximize();
 			} else {
@@ -193,12 +197,12 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	}
 
 	public maximize(): void {
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(ICON_RESTORE);
+		this.defaultToolButtons[WindowButtonTypes.MAXIMIZE_RESTORE].setIcon(ICON_RESTORE);
 		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
-		this.defaultToolButtons[WindowButtonType.MAXIMIZE_RESTORE].setIcon(ICON_MAXIMIZE);
+		this.defaultToolButtons[WindowButtonTypes.MAXIMIZE_RESTORE].setIcon(ICON_MAXIMIZE);
 		if (this.restoreFunction != null) {
 			this.restoreFunction();
 		}
@@ -301,7 +305,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 	private setMinimizedFields(...minimizedHeaderFields: HeaderField[]) {
 		this.headerFields.forEach(headerField => {
 			let shouldBeMinimized = minimizedHeaderFields.indexOf(headerField) != -1;
-			let shouldDisplayIcon = minimizedHeaderFields.length > 0 || this.config.headerFieldIconVisibilityPolicy == HeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED;
+			let shouldDisplayIcon = minimizedHeaderFields.length > 0 || this.config.headerFieldIconVisibilityPolicy == HeaderFieldIconVisibilityPolicies.ALWAYS_DISPLAYED;
 			this.setHeaderFieldDisplayMode(headerField, shouldBeMinimized, shouldDisplayIcon);
 		});
 	}
@@ -449,7 +453,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 			+ buttonContainerWidth
 			+ windowButtonContainerWidth
 			+ this.headerFields
-				.map(headerField => this.config.headerFieldIconVisibilityPolicy == HeaderFieldIconVisibilityPolicy.ALWAYS_DISPLAYED ? headerField.minExpandedWidthWithIcon : headerField.minExpandedWidth)
+				.map(headerField => this.config.headerFieldIconVisibilityPolicy == HeaderFieldIconVisibilityPolicies.ALWAYS_DISPLAYED ? headerField.minExpandedWidthWithIcon : headerField.minExpandedWidth)
 				.reduce((totalWidth, fieldWidth) => (totalWidth + fieldWidth), 0);
 
 		if (this.numberOfVisibleHeaderFields() == 2) {
@@ -566,7 +570,7 @@ export class Panel extends AbstractComponent<DtoPanel> implements DtoPanelComman
 
 	setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy: HeaderComponentMinimizationPolicy) {
 		this.config.headerComponentMinimizationPolicy = headerComponentMinimizationPolicy;
-		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST
+		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == HeaderComponentMinimizationPolicies.LEFT_COMPONENT_FIRST
 		this.relayoutHeader();
 	}
 

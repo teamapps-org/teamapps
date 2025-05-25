@@ -23,7 +23,7 @@ import {createDateRenderer} from "./datetime-rendering";
 import {CalendarBoxDropdown} from "./trivial-components/dropdown/CalendarBoxDropdown";
 import {TrivialCalendarBox} from "./trivial-components/TrivialCalendarBox";
 import {
-	DateFieldDropDownMode,
+	DateFieldDropDownMode, DateFieldDropDownModes,
 	DtoLocalDate,
 	DtoLocalDateField,
 	DtoLocalDateField_TextInputEvent,
@@ -38,10 +38,14 @@ import {
 	DebounceMode,
 	deepEquals,
 	DtoDateTimeFormatDescriptor, executeAfterAttached,
-	FieldEditingMode,
+	FieldEditingMode, FieldEditingModes,
 	ProjectorEvent
 } from "projector-client-object-api";
-import {DtoTextInputHandlingField_SpecialKeyPressedEvent, SpecialKey} from "projector-client-core-components";
+import {
+	DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	SpecialKey,
+	SpecialKeys
+} from "projector-client-core-components";
 
 export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDate> implements DtoLocalDateFieldEventSource, DtoLocalDateFieldCommandHandler {
 
@@ -92,14 +96,14 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 				});
 				return suggestions.length > 0 ? suggestions[0] : null;
 			},
-			editingMode: config.editingMode === FieldEditingMode.READONLY ? 'readonly' : config.editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
 			showClearButton: config.showClearButton,
 			placeholderText: config.placeholderText
-		}, this.config.dropDownMode === DateFieldDropDownMode.CALENDAR ? this.calendarBoxDropdown : treeBoxDropdown);
+		}, this.config.dropDownMode === DateFieldDropDownModes.CALENDAR ? this.calendarBoxDropdown : treeBoxDropdown);
 		
 		[this.trivialComboBox.onBeforeQuery, this.trivialComboBox.onBeforeDropdownOpens].forEach(event => event.addListener(queryString => {
-			if (this.config.dropDownMode == DateFieldDropDownMode.CALENDAR
-				|| this.config.dropDownMode == DateFieldDropDownMode.CALENDAR_SUGGESTION_LIST && !queryString) {
+			if (this.config.dropDownMode == DateFieldDropDownModes.CALENDAR
+				|| this.config.dropDownMode == DateFieldDropDownModes.CALENDAR_SUGGESTION_LIST && !queryString) {
 				this.trivialComboBox.setDropDownComponent(this.calendarBoxDropdown);
 			} else {
 				this.trivialComboBox.setDropDownComponent(treeBoxDropdown);
@@ -110,11 +114,11 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ESCAPE
+					key: SpecialKeys.ESCAPE
 				});
 			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire({
-					key: SpecialKey.ENTER
+					key: SpecialKeys.ENTER
 				});
 			}
 		});
@@ -162,11 +166,11 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.remove(...Object.values(FieldEditingModes));
 		this.getMainElement().classList.add(editingMode);
-		if (editingMode === FieldEditingMode.READONLY) {
+		if (editingMode === FieldEditingModes.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
-		} else if (editingMode === FieldEditingMode.DISABLED) {
+		} else if (editingMode === FieldEditingModes.DISABLED) {
 			this.trivialComboBox.setEditingMode("disabled");
 		} else {
 			this.trivialComboBox.setEditingMode("editable");

@@ -7,11 +7,12 @@ import org.teamapps.projector.dsl.generate.ParserFactory;
 import org.teamapps.projector.dsl.generate.IntermediateDtoModel;
 
 import java.io.StringReader;
+import java.util.Objects;
 
 public class ExternalInterfaceWrapper extends InterfaceWrapper {
 
 	public ExternalInterfaceWrapper(TeamAppsDtoParser.ImportDeclarationContext context, IntermediateDtoModel model) {
-		super(createImplicitInterface(context), model);
+		super(createImplicitInterface(Objects.requireNonNull(context)), model);
 	}
 
 	static TeamAppsDtoParser.InterfaceDeclarationContext createImplicitInterface(TeamAppsDtoParser.ImportDeclarationContext importDecl) {

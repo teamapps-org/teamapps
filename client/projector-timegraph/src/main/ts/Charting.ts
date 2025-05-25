@@ -17,19 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {LineChartCurveType} from "./generated";
+import {LineChartCurveType, LineChartCurveTypes} from "./generated";
 import * as d3 from "d3";
 import {BaseType, Selection} from "d3";
 
 export const CurveTypeToCurveFactory = {
-	[LineChartCurveType.LINEAR]: d3.curveLinear,
-	[LineChartCurveType.STEP]: d3.curveStep,
-	[LineChartCurveType.STEPBEFORE]: d3.curveStepBefore,
-	[LineChartCurveType.STEPAFTER]: d3.curveStepAfter,
-	[LineChartCurveType.BASIS]: d3.curveBasis,
-	[LineChartCurveType.CARDINAL]: d3.curveCardinal,
-	[LineChartCurveType.MONOTONE]: d3.curveMonotoneX,
-	[LineChartCurveType.CATMULLROM]: d3.curveCatmullRom,
+	[LineChartCurveTypes.LINEAR]: d3.curveLinear,
+	[LineChartCurveTypes.STEP]: d3.curveStep,
+	[LineChartCurveTypes.STEPBEFORE]: d3.curveStepBefore,
+	[LineChartCurveTypes.STEPAFTER]: d3.curveStepAfter,
+	[LineChartCurveTypes.BASIS]: d3.curveBasis,
+	[LineChartCurveTypes.CARDINAL]: d3.curveCardinal,
+	[LineChartCurveTypes.MONOTONE]: d3.curveMonotoneX,
+	[LineChartCurveTypes.CATMULLROM]: d3.curveCatmullRom,
 };
 
 export interface DataPoint {

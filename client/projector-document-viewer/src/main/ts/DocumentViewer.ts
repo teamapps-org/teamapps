@@ -27,7 +27,7 @@ import {
 	parseHtml,
 	ServerObjectChannel
 } from "projector-client-object-api";
-import {DtoDocumentViewer, DtoDocumentViewerCommandHandler, PageDisplayMode} from "./generated";
+import {DtoDocumentViewer, DtoDocumentViewerCommandHandler, PageDisplayMode, PageDisplayModes} from "./generated";
 import {enableScrollViaDragAndDrop} from "./scroll-dnd";
 
 interface Page {
@@ -127,17 +127,17 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 			let imageAspectRatio = p.naturalWidth / p.naturalHeight;
 			console.debug("image: " + p.naturalWidth + "/" + p.naturalHeight + " = " + imageAspectRatio);
 			console.debug("viewport: " + viewPortWidth + "/" + viewPortHeight + " = " + viewPortAspectRatio);
-			if (this.displayMode === PageDisplayMode.FIT_WIDTH) {
+			if (this.displayMode === PageDisplayModes.FIT_WIDTH) {
 				applyCss(p.$img, {
 					width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
 					height: "auto"
 				});
-			} else if (this.displayMode === PageDisplayMode.FIT_HEIGHT) {
+			} else if (this.displayMode === PageDisplayModes.FIT_HEIGHT) {
 				applyCss(p.$img, {
 					width: "auto",
 					height: Math.floor(viewPortHeight * this.zoomFactor) + "px"
 				});
-			} else if (this.displayMode === PageDisplayMode.FIT_SIZE) {
+			} else if (this.displayMode === PageDisplayModes.FIT_SIZE) {
 				if (imageAspectRatio > viewPortAspectRatio) {
 					applyCss(p.$img, {
 						width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
@@ -149,7 +149,7 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 						height: Math.floor(viewPortHeight * this.zoomFactor) + "px"
 					});
 				}
-			} else if (this.displayMode === PageDisplayMode.COVER) {
+			} else if (this.displayMode === PageDisplayModes.COVER) {
 				if (imageAspectRatio < viewPortAspectRatio) {
 					applyCss(p.$img, {
 						width: Math.floor(viewPortWidth * this.zoomFactor) + "px",

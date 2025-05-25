@@ -25,7 +25,7 @@ import {
 	DebounceMode,
 	deepEquals,
 	executeAfterAttached,
-	FieldEditingMode,
+	FieldEditingMode, FieldEditingModes,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
@@ -54,7 +54,7 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 			idFunction: entry => entry.code,
 			unitDisplayPosition: config.showCurrencyBeforeAmount ? 'left' : 'right', // right or left
 			entryRenderingFunction: entry => {
-				entry = entry || {};
+				entry = entry ?? {} as DtoCurrencyUnit;
 				return `<div class="tr-template-currency-single-line-long">
 				  <div class="content-wrapper tr-editor-area"> 
 					<div class="symbol-and-code">${entry.code != null ? `<span class="currency-code">${entry.code || ''}</span>` : ''} ${entry.symbol != null ? `<span class="currency-symbol">${entry.symbol || ''}</span>` : ''}</div>
@@ -121,7 +121,7 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 	}
 
 	private convertToTrivialComponentsEditingMode(editingMode: FieldEditingMode) {
-		return editingMode === FieldEditingMode.READONLY ? 'readonly' : editingMode === FieldEditingMode.DISABLED ? 'disabled' : 'editable';
+		return editingMode === FieldEditingModes.READONLY ? 'readonly' : editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable';
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
@@ -159,7 +159,7 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 	}
 
 	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
-		this.getMainElement().classList.remove(...Object.keys(FieldEditingMode));
+		this.getMainElement().classList.remove(...Object.values(FieldEditingModes));
 		this.getMainElement().classList.add(editingMode);
 		this.trivialUnitBox.setEditingMode(this.convertToTrivialComponentsEditingMode(editingMode));
 	}

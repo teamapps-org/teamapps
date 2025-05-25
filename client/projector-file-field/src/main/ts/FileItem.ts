@@ -20,7 +20,7 @@
 
 import {FileUploader, humanReadableFileSize, parseHtml, removeClassesByFunction, ProjectorEvent} from "projector-client-object-api";
 import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
-import {DtoFileItem, FileFieldDisplayType} from "./generated";
+import {DtoFileItem, FileFieldDisplayType, FileFieldDisplayTypes} from "./generated";
 
 export class FileItem {
 	public readonly onClick: ProjectorEvent<void> = new ProjectorEvent<void>();
@@ -117,7 +117,7 @@ export class FileItem {
 	}
 
 	private static createProgressIndicator(displayMode: FileFieldDisplayType) {
-		return displayMode == FileFieldDisplayType.FLOATING ? new ProgressCircle(0, {
+		return displayMode == FileFieldDisplayTypes.FLOATING ? new ProgressCircle(0, {
 			circleRadius: 24, circleStrokeWidth: 3
 		}) : new ProgressBar(0, {});
 	}
@@ -129,9 +129,9 @@ export class FileItem {
 			this.progressIndicator = FileItem.createProgressIndicator(displayMode);
 			this.$progressIndicator.appendChild(this.progressIndicator.getMainDomElement());
 		}
-		this.$fileName.classList.toggle("line-clamp-2", displayMode == FileFieldDisplayType.FLOATING);
-		this.$fileIcon.classList.toggle("img-48", displayMode == FileFieldDisplayType.FLOATING);
-		this.$fileIcon.classList.toggle("img-32", displayMode == FileFieldDisplayType.LIST);
+		this.$fileName.classList.toggle("line-clamp-2", displayMode == FileFieldDisplayTypes.FLOATING);
+		this.$fileIcon.classList.toggle("img-48", displayMode == FileFieldDisplayTypes.FLOATING);
+		this.$fileIcon.classList.toggle("img-32", displayMode == FileFieldDisplayTypes.LIST);
 	}
 
 	private setState(state: FileItemState) {
