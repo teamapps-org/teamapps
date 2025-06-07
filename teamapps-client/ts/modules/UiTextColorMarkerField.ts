@@ -1,20 +1,21 @@
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {UiEvent} from "../generated/UiEvent";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {
+	UiTextColorMarkerField_TextSelectedEvent,
+	UiTextColorMarkerField_TransientChangeEvent,
 	UiTextColorMarkerFieldCommandHandler,
 	UiTextColorMarkerFieldConfig,
-	UiTextColorMarkerFieldEventSource,
-	UiTextColorMarkerField_TextSelectedEvent,
-	UiTextColorMarkerField_TransientChangeEvent
+	UiTextColorMarkerFieldEventSource
 } from "../generated/UiTextColorMarkerFieldConfig";
-import {UiField} from "./formfield/UiField";
-import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {UiTextColorMarkerFieldMarkerConfig} from "../generated/UiTextColorMarkerFieldMarkerConfig";
 import {UiTextColorMarkerFieldMarkerDefinitionConfig} from "../generated/UiTextColorMarkerFieldMarkerDefinitionConfig";
 import {UiTextColorMarkerFieldValueConfig} from "../generated/UiTextColorMarkerFieldValueConfig";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {deepEquals, parseHtml} from "./Common";
-
+import {UiField} from "./formfield/UiField";
+import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
 export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig, UiTextColorMarkerFieldValueConfig> implements UiTextColorMarkerFieldCommandHandler, UiTextColorMarkerFieldEventSource {
 
@@ -23,436 +24,407 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 	private $main: HTMLElement;
 	private $toolbarWrapper: HTMLElement;
-	private $editor: HTMLElement;
+	private $editor: HTMLDivElement;
+
+	private markerDefinitions: UiTextColorMarkerFieldMarkerDefinitionConfig[] = [];
+	private transientValue: UiTextColorMarkerFieldValueConfig = {
+		text: '',
+		markers: []
+	};
 
 	protected initialize(config: UiTextColorMarkerFieldConfig, context: TeamAppsUiContext): void {
-		 this.$main = parseHtml(`<div class="UiTextColorMarkerField">
+		this.$main = parseHtml(`<div class="UiTextColorMarkerField">
 			<div class="toolbar-wrapper"></div>
-			<div class="editor field-border" editable="editable">
-			</div>
+			<div class="editor field-border" contenteditable="true"></div>
 		</div>`);
-		this.$toolbarWrapper =this.$main.querySelector(":scope > .toolbar-wrapper");
-		 this.$editor = this.$main.querySelector(":scope > .editor");
+		this.$toolbarWrapper = this.$main.querySelector(":scope > .toolbar-wrapper");
+		this.$editor = this.$main.querySelector(":scope > .editor");
+		this.setupFunctionalStyles();
+		this.setupTextareaStyles();
+		this.setupEventListeners();
+		this.setMarkerDefinitions(config.markerDefinitions, config.value);
 	}
 
-	getMainInnerDomElement(): HTMLElement {
-		return this.$main;
+	private setupFunctionalStyles(): void {
+		// Styles required for proper functionality
+		this.$editor.contentEditable = 'true';
+		this.$editor.style.position = 'relative';
+		this.$editor.style.whiteSpace = 'pre-wrap';
+		this.$editor.style.display = 'inline-block'; // workaround for newlines in Chrome
+		this.$editor.style.width = '100%'; // workaround for newlines in Chrome
+		this.$editor.style.boxSizing = 'border-box'; // workaround for newlines in Chrome
+
+		// Add marker styles
+		const style = document.createElement('style'); // TODO I probably should use a shadow root here?
+		style.textContent = `
+            .UiTextColorMarkerField .marker {
+                --marker-bg-color: transparent;
+                --marker-border-color: transparent;
+                background-color: color-mix(in srgb, var(--marker-bg-color) 60%, transparent);
+                box-shadow: 0 0 4px 1px color-mix(in srgb, var(--marker-border-color) 60%, transparent);
+                color: color-contrast(var(--marker-bg-color) vs black, white, 4.5);
+                padding: 0 1px;
+                margin: 0 -1px;
+            }
+        `;
+		document.head.appendChild(style);
 	}
 
-	focus(): void {
-		this.$editor.focus();
+	private setupTextareaStyles(): void {
+		// Styles to make it look like a textarea
+		this.$editor.style.minHeight = '25px';
+		this.$editor.style.border = '1px solid #ccc';
+		this.$editor.style.padding = '2px 4px';
+		this.$editor.style.fontFamily = 'monospace';
+		this.$editor.style.fontSize = '14px';
+		this.$editor.style.lineHeight = '1.5';
+		this.$editor.style.resize = 'both';
+		this.$editor.style.overflowY = 'auto';
+		this.$editor.style.backgroundColor = '#fff';
+		this.$editor.style.color = '#333';
+		this.$editor.style.outline = 'none';
+		this.$editor.style.borderRadius = '2px';
+		this.$editor.style.transition = 'border-color 0.15s ease-in-out';
+		this.$editor.style.cursor = 'text';
+		// Add focus styles
+		this.$editor.addEventListener('focus', () => {
+			this.$editor.style.borderColor = '#80bdff';
+			this.$editor.style.boxShadow = '0 0 0 0.2rem rgba(0,123,255,.25)';
+		});
+		this.$editor.addEventListener('blur', () => {
+			this.$editor.style.borderColor = '#ccc';
+			this.$editor.style.boxShadow = 'none';
+		});
 	}
 
-	isValidData(v: any): boolean {
+	public getMarkerDefinitionById(id: number): UiTextColorMarkerFieldMarkerDefinitionConfig | undefined {
+		return this.markerDefinitions.find(definition => definition.id === id);
+	}
+
+	public getMarkers(): UiTextColorMarkerFieldMarkerConfig[] {
+		return [...this.transientValue.markers];
+	}
+
+	public getMarkerById(id: number): UiTextColorMarkerFieldMarkerConfig | undefined {
+		return this.transientValue.markers.find(marker => marker.id === id);
+	}
+
+	public getPlainText(): string {
+		return this.transientValue.text;
+	}
+
+	public getTransientValue(): UiTextColorMarkerFieldValueConfig {
+		this.commitTransientChanges();
+		return {
+			text: this.transientValue.text,
+			markers: [...this.transientValue.markers]
+		};
+	}
+
+	public setTransientValue(value?: UiTextColorMarkerFieldValueConfig): void {
+		const newValue: UiTextColorMarkerFieldValueConfig = {
+			text: value?.text || '',
+			markers: value?.markers || []
+		};
+
+		this.updateTransientValue(newValue);
+	}
+
+	public setMarkerDefinitions(markerDefinitions: UiTextColorMarkerFieldMarkerDefinitionConfig[], newValue: UiTextColorMarkerFieldValueConfig): void {
+		this.markerDefinitions = markerDefinitions;
+		this.setTransientValue(newValue);
+	}
+
+	public setMarker(id: number, start: number, end: number): void {
+		const definition = this.getMarkerDefinitionById(id);
+		if (!definition) {
+			throw new Error(`No marker definition found for id ${id}`);
+		}
+
+		// Check for overlapping markers
+		if (this.transientValue.markers.some(existingMarker => {
+			if (existingMarker.id === id) { return false; } // Skip the same marker
+			const existingStart = existingMarker.start!;
+			const existingEnd = existingMarker.end!;
+			// Two markers overlap if one starts before the other ends and ends after the other starts
+			// But we allow them to be nested
+			const hasOverlap = () => start < existingEnd && end > existingStart;
+			const isNested = () => (start <= existingStart && end >= existingEnd) ||
+				(existingStart <= start && existingEnd >= end);
+			return hasOverlap() && !isNested();
+		})) {
+			throw new Error('Invalid marker positions: marker overlaps with existing marker');
+		}
+
+		const marker: UiTextColorMarkerFieldMarkerConfig = { id, start, end };
+
+		// Create a new value with the marker added
+		const newMarkers = this.transientValue.markers.filter(m => m.id !== marker.id);
+		newMarkers.push(marker);
+		const newValue: UiTextColorMarkerFieldValueConfig = {
+			text: this.transientValue.text,
+			markers: newMarkers
+		};
+
+		this.updateTransientValue(newValue);
+	}
+
+	public removeMarker(id: number): void {
+		const markerIndex = this.transientValue.markers.findIndex(m => m.id === id);
+		if (markerIndex !== -1) {
+			this.transientValue.markers.splice(markerIndex, 1);
+			this.renderTransientValue();
+		} else {
+			this.logger.info(`Cannot remove marker "${id}" since it does not exist`);
+		}
+	}
+
+	private commitTransientChanges(): void {
+		const currentValue = this.getCurrentValue();
+		if (this.hasTransientValueChanged(currentValue)) {
+			this.transientValue = currentValue;
+			this.triggerTransientChangeEvent(this.transientValue);
+		}
+	}
+
+	private hasTransientValueChanged(newValue: UiTextColorMarkerFieldValueConfig): boolean {
+		const hasTextChanged = () => newValue.text !== this.transientValue.text;
+		const hasMarkersChanged = () => JSON.stringify(newValue.markers) !== JSON.stringify(this.transientValue.markers);
+		return hasTextChanged() || hasMarkersChanged();
+	}
+
+	private triggerTransientChangeEvent(currentValue: UiTextColorMarkerFieldValueConfig) {
+		this.onTransientChange.fire({ value: { ...currentValue } });
+	}
+
+	private getCurrentValue(): UiTextColorMarkerFieldValueConfig {
+		const text = this.getCurrentText()?.replace(/\u00A0/g, ' ');
+		const markers = this.getCurrentMarkers();
+
+		return { text, markers };
+	}
+
+	private getCurrentText(node: Node = this.$editor): string {
+		if (!node.childNodes || node.childNodes.length === 0) {
+			if (node.nodeName.toUpperCase() === 'BR') { return '\n'; }
+			return node.textContent || '';
+		}
+		let text = '';
+		for (let i = 0; i < node.childNodes.length; i++) {
+			text += this.getCurrentText(node.childNodes.item(i));
+		}
+		return text;
+	}
+
+	private getCurrentMarkers(): UiTextColorMarkerFieldMarkerConfig[] {
+		const markers: UiTextColorMarkerFieldMarkerConfig[] = [];
+
+		// Find all marker spans and extract their data
+		const markerSpans = this.$editor.querySelectorAll('span[data-marker-id]');
+		markerSpans.forEach(span => {
+			const markerId = span.getAttribute('data-marker-id');
+			if (markerId) {
+				const id = Number(markerId);
+				const start = this.getNodePosition(span.firstChild || span);
+				const end = start + this.getCurrentText(span).length;
+				markers.push({ id, start, end });
+			}
+		});
+		return this.sortMarkers(markers);
+	}
+
+	private updateTransientValue(value: UiTextColorMarkerFieldValueConfig): boolean {
+		// Validate marker positions
+		for (const marker of value.markers) {
+			if (marker.start === undefined || marker.end === undefined || marker.start < 0 || marker.end > value.text.length || marker.start > marker.end) {
+				throw new Error('Invalid marker positions');
+			}
+			if (marker.start === marker.end) {
+				value.markers = value.markers.filter(m => m.id !== marker.id);
+			}
+		}
+
+		// Sort markers
+		value.markers = this.sortMarkers(value.markers);
+
+		// Check if this would actually change anything
+		if (!this.hasTransientValueChanged(value)) {
+			return false;
+		}
+
+		// Update the transient value
+		this.transientValue = value;
+		this.renderTransientValue();
 		return true;
 	}
 
-	getTransientValue() {
-	  return {
-		  markers: [],
-		  text: ""
-	  } as UiTextColorMarkerFieldValueConfig;
+	private sortMarkers(markers: UiTextColorMarkerFieldMarkerConfig[]): UiTextColorMarkerFieldMarkerConfig[] {
+		return [...markers].sort((a, b) => a.id - b.id);
+	}
+
+	// Main render method: escapes text, applies markers, and sets innerHTML
+	private renderTransientValue(): void {
+		const rawText = this.transientValue.text ?? '';
+		this.$editor.innerHTML = this.renderWithMarkers(rawText, this.transientValue.markers);
+		this.triggerTransientChangeEvent(this.transientValue);
+	}
+
+	// Injects marker spans at the correct offsets
+	private renderWithMarkers(text: string, markers: UiTextColorMarkerFieldMarkerConfig[]): string {
+		const operations: Array<{ type: 'open' | 'close', marker: UiTextColorMarkerFieldMarkerConfig }> = [];
+
+		for (const marker of markers) {
+			operations.push({ type: 'open', marker });
+			operations.push({ type: 'close', marker });
+		}
+
+		operations.sort((a, b) => {
+			const posA = a.type === 'open' ? a.marker.start! : a.marker.end!;
+			const posB = b.type === 'open' ? b.marker.start! : b.marker.end!;
+			if (posA !== posB) { return posA - posB; }
+			if (a.type !== b.type) { return a.type === 'open' ? 1 : -1; }
+			if (a.type === 'open') { return a.marker.end! > b.marker.end! ? -1 : 1; }
+			return a.marker.end! > b.marker.end! ? 1 : -1; // else
+		});
+
+		const result: string[] = [];
+		let currentPos = 0;
+
+		for (const op of operations) {
+			const pos = op.type === 'open' ? op.marker.start! : op.marker.end!;
+
+			if (pos > currentPos) {
+				result.push(this.escapeHtml(text.slice(currentPos, pos)));
+			}
+
+			if (op.type === 'open') {
+				const def = this.getMarkerDefinitionById(op.marker.id);
+				const style = [];
+				if (def?.backgroundColor) {
+					style.push(`--marker-bg-color:${def.backgroundColor}`);
+				}
+				if (def?.borderColor) {
+					style.push(`--marker-border-color:${def.borderColor}`);
+				}
+				result.push(`<span data-marker-id="${op.marker.id}" class="marker" style="${style.join(';')}" title="${def?.hint}">`);
+			} else {
+				result.push('</span>');
+			}
+
+			currentPos = pos;
+		}
+
+		if (currentPos < text.length) {
+			result.push(this.escapeHtml(text.slice(currentPos)));
+		}
+
+		return result.join('');
+	}
+
+	private escapeHtml(text: string): string {
+		return text.replace(/[&<>]/g, c => {
+			if (c === '<') { return '&lt;'; }
+			if (c === '>') { return '&gt;'; }
+			if (c === '&') { return '&amp;'; }
+			return c;
+		});
+	}
+
+	private setupEventListeners(): void {
+		const handleSelection = () => {
+			const selection = window.getSelection();
+			if (selection && selection.rangeCount > 0) {
+				const range = selection.getRangeAt(0);
+				if (this.$editor.contains(range.commonAncestorContainer)) {
+					const start = this.getNodePosition(range.startContainer) + range.startOffset;
+					const end = this.getNodePosition(range.endContainer) + range.endOffset;
+
+					if (start !== end) {
+						this.onTextSelected.fire({ start, end });
+					}
+				}
+			}
+		};
+		this.$editor.addEventListener('mouseup', handleSelection);
+		this.$editor.addEventListener('keyup', handleSelection); // only needed for selection via keyboard
+
+		this.$editor.addEventListener('blur', () => {
+			this.commitTransientChanges();
+		});
+	}
+
+	private getNodePosition(node: Node): number {
+		let position = 0;
+		const walker = document.createTreeWalker(
+			this.$editor,
+			NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
+			null
+		);
+
+		let currentNode: Node | null = walker.firstChild();
+		while (currentNode && currentNode !== node) { // stops looping at "node"
+			if (currentNode.nodeType === Node.TEXT_NODE) {
+				position += currentNode.textContent?.length || 0;
+			} else if (currentNode.nodeType === Node.ELEMENT_NODE) {
+				const element = currentNode as HTMLElement;
+				if (element.tagName === 'BR') {
+					position += 1; // Count newlines
+				}
+			}
+			currentNode = walker.nextNode();
+		}
+
+		return position;
+	}
+
+	public getMainInnerDomElement(): HTMLElement {
+		return this.$main;
+	}
+
+	public focus(): void {
+		this.$editor.focus();
+	}
+
+	public isValidData(v: any): boolean {
+		return true; /*TODO*/
 	}
 
 	protected displayCommittedValue(): void {
-		this.$editor.innerText = this.getCommittedValue()?.text ?? '';
+		this.setTransientValue(this.getCommittedValue());
+		//this.$editor.innerText = this.getCommittedValue()?.text ?? ''; // TODO use setTransientValue() instead?!
 	}
 
 	public valuesChanged(v1: UiTextColorMarkerFieldValueConfig, v2: UiTextColorMarkerFieldValueConfig): boolean {
 		return deepEquals(v1, v2);
 	}
 
+	// protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
+	// 	UiField.defaultOnEditingModeChangedImpl(this, () => this.$editor /*TODO*/);
+	// }
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => null /*TODO*/);
+		switch (editingMode) {
+			case UiFieldEditingMode.EDITABLE:
+			case UiFieldEditingMode.EDITABLE_IF_FOCUSED:
+				this.$editor.contentEditable = 'true';
+				this.$editor.setAttribute('tabindex', '0');
+				break;
+			case UiFieldEditingMode.DISABLED:
+				this.$editor.contentEditable = 'false';
+				this.$editor.setAttribute('tabindex', '-1');
+				break;
+			case UiFieldEditingMode.READONLY:
+				this.$editor.contentEditable = 'false';
+				this.$editor.setAttribute('tabindex', '-1');
+				break;
+			default:
+				this.logger.error("unknown editing mode! " + editingMode);
+		}
 	}
 
-
-
-
-	setMarker(id: number, start: number, end: number) {
-		throw new Error("Method not implemented.");
-	}
-
-	setMarkerDefinitions(markerDefinitions: UiTextColorMarkerFieldMarkerDefinitionConfig[], newValue: UiTextColorMarkerFieldValueConfig) {
-		throw new Error("Method not implemented.");
-	}
-
-	setToolbarEnabled(enabled: boolean) {
-		this.$toolbarWrapper.innerText = "" + enabled
+	public setToolbarEnabled(enabled: boolean) {
+		this.$toolbarWrapper.innerText = "" + enabled;  // TODO
 	}
 
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiTextColorMarkerField", UiTextColorMarkerField);
-
-
-
-// const textColorMarkerDefaultConfig = {
-// 	colorSequence: ['purple', 'fuchsia', 'navy', 'blue', 'teal', 'aqua', 'green', 'lime', 'olive', 'yellow', 'maroon', 'red', 'orange'],
-// 	mode: null,
-// 	input: null, // { value: 'test any text', markers: [{start: 0, end: 4, value: 'test'}, ...] }
-// 	output: {},
-// };
-//
-// function initColorMarkerTextField(fieldId) {
-// 	function findSelection() { // cross-browser fix
-// 		let userSelection;
-// 		if (window.getSelection) {
-// 			userSelection = window.getSelection(); // Mozilla Selection object.
-// 		} else if (document.selection) {
-// 			userSelection = document.selection.createRange();
-// 		} // gets Microsoft Text Range, should be second b/c Opera has poor support for it.
-// 		if (userSelection.text) {
-// 			return userSelection.text // for Microsoft Objects.
-// 		} else {
-// 			return userSelection // for Mozilla&Co Objects.
-// 		}
-// 	}
-//
-// 	function extractNodeText(node) {
-// 		let text = '';
-// 		if (!node.childNodes || node.childNodes.length === 0) {
-// 			if (node.nodeName.toUpperCase() === 'BR') {
-// 				text += '\n';
-// 			} else if (node.textContent) {
-// 				text += node.textContent.replaceAll('\n', ''); // for consistency: only <br> is new line
-// 			}
-// 		} else {
-// 			for (let i = 0; i < node.childNodes.length; i++) {
-// 				text += extractNodeText(node.childNodes.item(i));
-// 			}
-// 		}
-// 		return text;
-// 	}
-//
-// 	function extractConfig(root) {
-// 		const config = {...JSON.parse(JSON.stringify(textColorMarkerDefaultConfig)), ...JSON.parse(root.getAttribute('data-config') || '{}')};
-// 		if (root.getAttribute('data-input')) {
-// 			config.input = JSON.parse(root.getAttribute('data-input'));
-// 		}
-// 		if (root.getAttribute('data-output')) {
-// 			config.output = JSON.parse(root.getAttribute('data-output'));
-// 		}
-// 		if (!config.output) {
-// 			config.output = {};
-// 		}
-// 		if (!config.output.markers) {
-// 			config.output.markers = [];
-// 		}
-// 		if (root.innerHTML && !config.output.value) {
-// 			config.output.value = extractNodeText(root); // output text value
-// 		}
-// 		if (!config.mode) {
-// 			config.mode = config.input ? 'assigning' : 'creating';
-// 		}
-// 		return config;
-// 	}
-//
-// 	const component = {
-// 		root: null,
-// 		config: null,
-// 		pickColor: function (markerIdx) {
-// 			if (typeof this.config.colorSequence === 'function') {
-// 				return this.config.colorSequence(markerIdx);
-// 			}
-// 			return this.config.colorSequence[markerIdx] || 'gray';
-// 		},
-// 		pickColorLabel: function (markerIdx, marker) {
-// 			return marker.value || (markerIdx + 1).toString()
-// 		},
-// 		hasMarker: function (markerIdx, data) {
-// 			return data.markers[markerIdx]?.node !== undefined;
-// 		},
-// 		setMarker: function (selection, markerIdx, data, readonly = false) {
-// 			if (this.hasMarker(markerIdx, data)) {
-// 				this.unsetMarker(markerIdx, data);
-// 			}
-// 			const node = document.createElement('span');
-// 			node.style.backgroundColor = this.pickColor(markerIdx);
-// 			node.className = 'marker';
-// 			node.setAttribute('data-index', markerIdx);
-// 			const range = selection.getRangeAt(0);
-// 			node.append(range.extractContents());
-// 			selection.removeAllRanges();
-// 			range.deleteContents(); // Remove selected text
-// 			range.insertNode(node); // Insert colored span
-// 			data.markers[markerIdx] = this.createMarkerData(node);
-// 			if (this.config.input?.markers[markerIdx]?.button) {
-// 				this.config.input.markers[markerIdx].button.style.backgroundColor = null;
-// 			}
-//
-// 			if (!readonly) {
-// 				node.onclick = function () {
-// 					this.unsetMarker(markerIdx, data)
-// 				}.bind(this);
-// 			}
-// 			this.exportOutput();
-// 		},
-// 		unsetMarker: function (markerIdx, data) {
-// 			const node = data.markers[markerIdx]?.node;
-// 			if (node?.parentNode) { // only needed if node still exists
-// 				node.parentNode.replaceChild(document.createTextNode(node.textContent), node);
-// 			}
-// 			if (data.markers[markerIdx]) {
-// 				data.markers[markerIdx] = null;
-// 				if (this.config.input?.markers[markerIdx]?.button) {
-// 					this.config.input.markers[markerIdx].button.style.backgroundColor = this.pickColor(markerIdx);
-// 				}
-// 				this.exportOutput();
-// 			}
-// 		},
-// 		updateMarkers: function (node, data) {
-// 			const elements = Array.from(node.getElementsByClassName('marker'));
-// 			const existingIdx = elements.filter(el => el.hasAttribute('data-index')).map(el => el.getAttribute('data-index'));
-// 			data.markers.forEach(function (marker, idx) {
-// 				if (!marker) {
-// 					return;
-// 				}
-// 				if (!existingIdx.includes(idx.toString())) {
-// 					this.unsetMarker(idx, data);
-// 					return;
-// 				}
-// 				data.markers[idx] = this.createMarkerData(marker.node);
-// 			}.bind(this));
-// 			this.exportOutput(this.config);
-// 		},
-// 		nextMarkerIndex: function (data) {
-// 			let i = 0;
-// 			while (data.markers[i]?.node) {
-// 				i++;
-// 			}
-// 			return i;
-// 		},
-// 		createMarkerData: function (node) {
-// 			const parent = node.parentNode;
-// 			let offset = 0;
-// 			for (let i = 0; i < parent.childNodes.length; i++) {
-// 				const child = parent.childNodes.item(i);
-// 				if (child === node) {
-// 					break;
-// 				}
-// 				offset += extractNodeText(child).length;
-// 			}
-// 			return {
-// 				start: offset,
-// 				end: offset + node.textContent.length,
-// 				value: node.textContent,
-// 				node: node,
-// 			};
-// 		},
-// 		seekNodeWithOffset: function (node, offset) {
-// 			for (let i = 0; i < node.childNodes.length; i++) {
-// 				const child = node.childNodes.item(i);
-// 				offset -= child.textContent.length;
-// 				if (offset <= 0) {
-// 					return {node: child, offset: offset + child.textContent.length};
-// 				}
-// 				if (child.nodeName.toUpperCase() === 'BR') {
-// 					offset--;
-// 				}
-// 			}
-// 			return {node: node.lastChild, offset: offset};
-// 		},
-// 		createSelection: function (node, marker) {
-// 			const range = document.createRange();
-// 			const startPos = this.seekNodeWithOffset(node, marker.start);
-// 			range.setStart(startPos.node, startPos.offset);
-// 			let endPos = this.seekNodeWithOffset(node, marker.end);
-// 			range.setEnd(endPos.node, endPos.offset);
-// 			const selection = findSelection();
-// 			selection.removeAllRanges();
-// 			selection.addRange(range);
-// 			return selection;
-// 		},
-// 		setTextWithMarkers: function (node, data, readonly = false) {
-// 			node.innerHTML = data.value?.replaceAll(' ', '\u00A0')?.replaceAll('\n', '<br>') || '';
-// 			if (data.markers) {
-// 				for (let i = 0; i < data.markers.length; i++) {
-// 					if (data.markers[i]) {
-// 						this.setMarker(this.createSelection(node, data.markers[i]), i, data, readonly);
-// 					}
-// 				}
-// 			}
-// 		},
-// 		applyColorOnSelection: function (markerIdx, data) {
-// 			const selection = findSelection();
-// 			if (selection.rangeCount > 0 && !selection.isCollapsed) {
-// 				if (data.node.contains(selection.getRangeAt(0).startContainer)) { // ensure that selection is within component
-// 					this.setMarker(selection, markerIdx, data);
-// 				}
-// 			} else {
-// 				this.unsetMarker(markerIdx, data);
-// 			}
-// 		},
-// 		setupTextTemplate: function () {
-// 			this.config.input.node = document.createElement('div');
-// 			this.config.input.node.className = 'textTemplate';
-// 			this.root.appendChild(this.config.input.node);
-// 			this.setTextWithMarkers(this.config.input.node, this.config.input, true);
-// 		},
-// 		setupTextEditor: function () {
-// 			this.config.output.node = document.createElement('div');
-// 			this.config.output.node.className = 'textInput';
-// 			this.config.output.node.setAttribute('contenteditable', 'true');
-// 			this.root.appendChild(this.config.output.node);
-// 			this.setTextWithMarkers(this.config.output.node, this.config.output);
-// 			this.config.output.node.addEventListener('keydown', function (e) { // cross-browser fix
-// 				if (e.isComposing || e.keyCode === 13) { // = enter/return
-// 					e.preventDefault(); // this is needed to fix cross-browser behavior of new line within contenteditable elements
-// 					const selection = findSelection();
-// 					const range = selection.getRangeAt(0);
-//
-// 					function keepWhitespace(rangeNode, rangeStartOffset, rangeEndOffset) {
-// 						const range = document.createRange();
-// 						range.setStart(rangeNode, rangeStartOffset);
-// 						range.setEnd(rangeNode, rangeEndOffset);
-// 						if (range.toString() === ' ') {
-// 							range.deleteContents();
-// 							range.insertNode(document.createTextNode('\u00A0'));
-// 						}
-// 					}
-//
-// 					keepWhitespace(range.endContainer, range.endOffset, Math.min(range.endOffset + 1, range.endContainer.length));
-// 					range.deleteContents(); // remove selection if available
-// 					range.insertNode(document.createElement('br'));
-// 					keepWhitespace(range.startContainer, Math.max(0, range.startOffset - 1), range.startOffset);
-// 					range.collapse(false); // cleanup selection
-// 					selection.removeAllRanges();
-// 					selection.addRange(range);
-// 					this.updateMarkers(this.config.output.node, this.config.output);
-// 					return false;
-// 				}
-// 			}.bind(this));
-// 			this.config.output.node.addEventListener('input', function () { // on any input change
-// 				this.updateMarkers(this.config.output.node, this.config.output);
-// 			}.bind(this));
-// 		},
-// 		setupColorAssignmentButtons: function () {
-// 			const colorButtons = document.createElement('div')
-// 			colorButtons.className = 'colorButtons';
-// 			for (let i = 0; i < this.config.input.markers.length; i++) {
-// 				const marker = this.config.input.markers[i];
-// 				marker.button = document.createElement('button');
-// 				marker.button.textContent = this.pickColorLabel(i, marker);
-// 				marker.button.style.backgroundColor = this.pickColor(i);
-// 				marker.button.onclick = function () {
-// 					this.applyColorOnSelection(i, this.config.output)
-// 				}.bind(this);
-// 				colorButtons.appendChild(marker.button);
-// 			}
-// 			this.root.appendChild(colorButtons);
-// 		},
-// 		setupColorCreationButton: function () {
-// 			const colorButtons = document.createElement('div')
-// 			colorButtons.className = 'colorButtons';
-// 			const button = document.createElement('button');
-// 			button.textContent = 'Mark selected Text';
-// 			button.onclick = function () {
-// 				this.applyColorOnSelection(this.nextMarkerIndex(this.config.output), this.config.output)
-// 			}.bind(this);
-// 			colorButtons.appendChild(button);
-// 			this.root.appendChild(colorButtons);
-// 		},
-// 		cleanOutput: function (data) {
-// 			if (typeof data !== 'object' || data === null) {
-// 				return (typeof data === 'string') ? data.replaceAll('\u00A0', ' ') : data;
-// 			}
-// 			const result = Array.isArray(data) ? [] : {};
-// 			Object.keys(data).forEach(function (key) {
-// 				const value = data[key];
-// 				if (value === null || value === undefined || key === 'node') {
-// 					return;
-// 				}
-// 				result[Array.isArray(result) ? result.length : key] = this.cleanOutput(value);
-// 			}.bind(this));
-// 			return result;
-// 		},
-// 		exportOutput: function () {
-// 			if (this.config.output.node) {
-// 				this.config.output.value = extractNodeText(this.config.output.node);
-// 				const newOutput = this.cleanOutput(this.config.output);
-// 				const jsonOutput = JSON.stringify(newOutput);
-// 				const prevOutput = this.root.getAttribute('data-output');
-// 				this.root.setAttribute('data-output', jsonOutput);
-// 				if (jsonOutput !== prevOutput) {
-// 					this.root.dispatchEvent(new CustomEvent('change', {detail: newOutput}));
-// 					//} else { console.log('unchanged', this.root.id, jsonOutput);
-// 				}
-// 			}
-// 		},
-// 		checkOutput: function () {
-// 			const errors = [];
-// 			if (this.config.input.value && !this.config.output.value) {
-// 				errors.push('Missing Text');
-// 			}
-// 			for (const i in (this.config.input.markers || [])) {
-// 				const marker = this.config.input.markers[i];
-// 				if (marker && !this.config.output.markers[i]) {
-// 					errors.push('Missing Marker: ' + marker.value);
-// 				}
-// 			}
-// 			return errors;
-// 		}
-// 	};
-//
-// 	function initComponent(component) {
-// 		component.root.innerHTML = ''; // clear out before rendering
-// 		component.root.textColorMarker.getStatus = () => 0; // Fallback: always status OK
-// 		component.root.textColorMarker.getErrors = () => []; // Fallback: no error messages
-// 		switch (component.config.mode) {
-// 			case 'creating':
-// 				component.setupColorCreationButton();
-// 				component.setupTextEditor();
-// 				break;
-// 			case 'editing':
-// 				if (!component.config.input) {
-// 					throw new Error('Missing input! The attribute "data-input" must be specified.');
-// 				}
-// 				component.config.output = component.cleanOutput(component.config.input);
-// 				component.setupColorAssignmentButtons();
-// 				component.setupTextEditor();
-// 				break;
-// 			case 'assigning':
-// 				if (!component.config.input) {
-// 					throw new Error('Missing input! The attribute "data-input" must be specified.');
-// 				}
-// 				component.setupTextTemplate();
-// 				component.setupColorAssignmentButtons();
-// 				component.setupTextEditor();
-// 				component.root.textColorMarker.getStatus = function () {
-// 					return this.checkOutput().length ? 1 : 0;
-// 				}.bind(component);
-// 				component.root.textColorMarker.getErrors = function () {
-// 					return this.checkOutput();
-// 				}.bind(component);
-// 				break;
-// 		}
-// 		component.exportOutput();
-// 	}
-//
-// 	component.root = document.getElementById(fieldId);
-// 	component.config = extractConfig(component.root);
-// 	component.root.textColorMarker = {};
-// 	component.root.addEventListener('change', e => console.log('changed', e.target.id, JSON.stringify(e.detail)));
-// 	initComponent(component);
-//
-// 	// listen for input changes:
-// 	new MutationObserver(function (mutations) {
-// 		mutations.forEach(function (mutation) {
-// 			if (mutation.type === 'attributes' && mutation.attributeName === 'data-input'
-// 				&& JSON.stringify(component.config.input) !== component.root.getAttribute('data-input')) {
-// 				component.config.input = JSON.parse(component.root.getAttribute('data-input') || 'null');
-// 				initComponent(component);
-// 			}
-// 		}.bind(this));
-// 	}).observe(component.root, {attributes: true});
-//
-// 	return component.root.textColorMarker;
-// }
-//
-// initColorMarkerTextField('color-marker')
-// initColorMarkerTextField('color-marker1')
-// document.getElementById('color-marker').addEventListener('change', function (e) {
-// 	//document.getElementById('color-marker1').setAttribute('data-input', JSON.stringify(e.detail));
-// });
-// initColorMarkerTextField('color-marker2')
