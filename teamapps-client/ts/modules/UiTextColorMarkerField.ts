@@ -26,11 +26,8 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	private $toolbarWrapper: HTMLElement;
 	private $editor: HTMLDivElement;
 
-	private markerDefinitions: UiTextColorMarkerFieldMarkerDefinitionConfig[] = [];
-	private transientValue: UiTextColorMarkerFieldValueConfig = {
-		text: '',
-		markers: []
-	};
+	private markerDefinitions: UiTextColorMarkerFieldMarkerDefinitionConfig[];
+	private transientValue: UiTextColorMarkerFieldValueConfig;
 
 	protected initialize(config: UiTextColorMarkerFieldConfig, context: TeamAppsUiContext): void {
 		this.$main = parseHtml(`<div class="UiTextColorMarkerField">
@@ -42,6 +39,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		this.setupFunctionalStyles();
 		this.setupTextareaStyles();
 		this.setupEventListeners();
+		this.transientValue = this.getDefaultValue();
 		this.setMarkerDefinitions(config.markerDefinitions, config.value);
 	}
 
@@ -194,7 +192,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	}
 
 	private triggerTransientChangeEvent(currentValue: UiTextColorMarkerFieldValueConfig) {
-		this.onTransientChange.fire({ value: { ...currentValue } });
+		this.onTransientChange?.fire({ value: { ...currentValue } });
 	}
 
 	private getCurrentValue(): UiTextColorMarkerFieldValueConfig {
@@ -375,6 +373,13 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		}
 
 		return position;
+	}
+
+	public getDefaultValue(): UiTextColorMarkerFieldValueConfig {
+		return {
+			text: '',
+			markers: []
+		};
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
