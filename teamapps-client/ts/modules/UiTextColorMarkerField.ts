@@ -28,6 +28,8 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 	private markerDefinitions: UiTextColorMarkerFieldMarkerDefinitionConfig[];
 	private transientValue: UiTextColorMarkerFieldValueConfig;
+	private toolbarEnabled: boolean;
+	private currentSelection: UiTextColorMarkerField_TextSelectedEvent | null = null;
 
 	protected initialize(config: UiTextColorMarkerFieldConfig, context: TeamAppsUiContext): void {
 		this.$main = parseHtml(`<div class="UiTextColorMarkerField">
@@ -37,6 +39,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		this.$toolbarWrapper = this.$main.querySelector(":scope > .toolbar-wrapper");
 		this.$editor = this.$main.querySelector(":scope > .editor");
 		//this.$editor.contentEditable = 'true';
+		this.toolbarEnabled = false;
 		this.setupEventListeners();
 		this.transientValue = this.getDefaultValue();
 		this.setMarkerDefinitions(config.markerDefinitions, config.value);
@@ -247,6 +250,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 				const style = [];
 				if (def?.backgroundColor) {
 					style.push(`--marker-bg-color:${def.backgroundColor}`);
+					style.push(`--marker-text-color:${this.getContrastColor(def.backgroundColor)}`);
 				}
 				if (def?.borderColor) {
 					style.push(`--marker-border-color:${def.borderColor}`);
@@ -277,6 +281,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 	private setupEventListeners(): void {
 		const handleSelection = () => {
+			this.currentSelection = null;
 			const selection = window.getSelection();
 			if (selection && selection.rangeCount > 0) {
 				const range = selection.getRangeAt(0);
@@ -285,23 +290,115 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 					const end = this.getNodePosition(range.endContainer) + range.endOffset;
 
 					if (start !== end) {
-						this.onTextSelected.fire({ start, end });
+						this.showToolbar();
+						this.currentSelection = { start, end };
+						this.onTextSelected.fire(this.currentSelection);
 					}
 				}
+			}
+			if (!this.currentSelection) {
+				this.hideToolbar();
 			}
 		};
 		this.$editor.addEventListener('mouseup', handleSelection);
 		this.$editor.addEventListener('keyup', handleSelection); // only needed for selection via keyboard
-
-		this.$editor.addEventListener('blur', () => {
-			this.commitTransientChanges();
+		this.$editor.addEventListener('click', (e) => {
+			const target = e.target as HTMLElement;
+			if (target.classList.contains('marker')) {
+				const markerId = parseInt(target.getAttribute('data-marker-id') || '0', 10);
+				if (markerId) {
+					this.removeMarker(markerId);
+				}
+			}
 		});
+
+		this.$editor.addEventListener('blur', e => {
+			this.commitTransientChanges();
+			// Only hide toolbar if the focus is not moving to the toolbar
+			if (!this.$toolbarWrapper.contains(e.relatedTarget as Node)) {
+				this.hideToolbar();
+			}
+		});
+	}
+	private showToolbar(): void {
+		if (!this.toolbarEnabled || [UiFieldEditingMode.DISABLED, UiFieldEditingMode.READONLY].includes(this.getEditingMode())) {
+			return;
+		}
+		this.updateToolbarContent();
+		this.$toolbarWrapper.classList.remove('hidden');
+	}
+
+	private hideToolbar(): void {
+		if (this.currentSelection) {
+			this.currentSelection = null;
+			this.onTextSelected.fire({ start: 0, end: 0 });
+		}
+		this.$toolbarWrapper.classList.add('hidden');
+	}
+
+	private updateToolbarContent(): void {
+		this.$toolbarWrapper.innerHTML = '';
+
+		this.markerDefinitions.forEach(def => {
+			const button = document.createElement('button');
+			button.className = 'toolbar-button';
+			button.textContent = def.hint || `${def.id}`;
+
+			// Style button with marker colors
+			if (def.backgroundColor) {
+				button.style.backgroundColor = def.backgroundColor;
+				button.style.color = this.getContrastColor(def.backgroundColor);
+			}
+			if (def.borderColor) {
+				button.style.borderColor = def.borderColor;
+			}
+
+			// Check if this marker is already applied
+			if (this.transientValue.markers.some(m => m.id === def.id)) {
+				button.classList.add('applied');
+			}
+
+			// Add click handler
+			button.addEventListener('click', () => {
+				const selection = window.getSelection();
+				if (selection && selection.rangeCount > 0) {
+					const range = selection.getRangeAt(0);
+					const start = this.getNodePosition(range.startContainer) + range.startOffset;
+					const end = this.getNodePosition(range.endContainer) + range.endOffset;
+
+					this.setMarker(def.id, start, end);
+					this.hideToolbar();
+				}
+			});
+
+			this.$toolbarWrapper.appendChild(button);
+		});
+	}
+
+	private getContrastColor(hexColor: string): string {
+		// tslint:disable-next-line:one-variable-per-declaration
+		let r: number, g: number, b: number;
+		if (hexColor.startsWith('rgb(')) {
+			const rgb = hexColor.replace('rgb(', '').replace(')', '').split(',');
+			r = parseInt(rgb[0], 10);
+			g = parseInt(rgb[1], 10);
+			b = parseInt(rgb[2], 10);
+		} else {
+			const hex = hexColor.replace('#', '');
+			r = parseInt(hex.substr(0, 2), 16);
+			g = parseInt(hex.substr(2, 2), 16);
+			b = parseInt(hex.substr(4, 2), 16);
+		}
+		const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+		return luminance > 0.5 ? '#000000' : '#FFFFFF';
 	}
 
 	private getNodePosition(node: Node): number {
 		let position = 0;
 		const walker = document.createTreeWalker(
 			this.$editor,
+			// tslint:disable-next-line:no-bitwise
 			NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
 			null
 		);
@@ -374,7 +471,10 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	}
 
 	public setToolbarEnabled(enabled: boolean) {
-		this.$toolbarWrapper.classList.toggle("hidden", !enabled);
+		this.toolbarEnabled = enabled;
+		if (!enabled) {
+			this.hideToolbar();
+		}
 	}
 
 }

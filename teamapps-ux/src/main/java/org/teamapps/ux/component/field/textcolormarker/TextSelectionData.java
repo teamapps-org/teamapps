@@ -1,4 +1,4 @@
 package org.teamapps.ux.component.field.textcolormarker;
 
-public record TextSelectedEventData(int start, int end) {
+public record TextSelectionData(int start, int end) {
 }
