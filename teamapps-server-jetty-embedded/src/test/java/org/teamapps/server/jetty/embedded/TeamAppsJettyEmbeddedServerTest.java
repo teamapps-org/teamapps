@@ -21,7 +21,6 @@ package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.textcolormarker.*;
@@ -32,11 +31,8 @@ import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 public class TeamAppsJettyEmbeddedServerTest {
-
-	private static TextSelectedEventData currSelection = new TextSelectedEventData(0, 0);
 
 	public static void main(String[] args) throws Exception {
 		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
@@ -44,7 +40,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 					RootPanel rootPanel = sessionContext.addRootPanel();
 
 					Panel panel = new Panel(null, "Hallo");
-					ToolButton toolButton = new ToolButton(MaterialIcon.REFRESH, "Do it!");
+					ToolButton toolButton = new ToolButton(MaterialIcon.SETTINGS, "toolbox");
 					panel.addToolButton(toolButton);
 					ToolButton readonlyButton = new ToolButton(MaterialIcon.FLASH_ON, "readonly");
 					panel.addToolButton(readonlyButton);
@@ -54,41 +50,39 @@ public class TeamAppsJettyEmbeddedServerTest {
 					field.setMarkerDefinitions(List.of(
 							new TextColorMarkerFieldMarkerDefinition(1, Color.RED, Color.BLUE, "ja so wat! \n ach ne!"),
 							new TextColorMarkerFieldMarkerDefinition(9, null, Color.YELLOW, "marker")
-					), new TextColorMarkerFieldValue("Hallooo \n Welt", List.of(new TextMarker(123, 2, 5))));
+					), new TextColorMarkerFieldValue("Hallooo \n Welt", List.of(new TextMarker(9, 2, 5)))); // TODO how to handle if ID of set marker is not available
 
 					//field.addCustomFieldMessage(FieldMessage.Severity.ERROR, "Dingens");
 
 					field.onTextSelected.addListener(event -> {
 						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "text selected: " + event.start() + "-" + event.end());
-						currSelection = event;
 					});
 
 					field.onTransientChange.addListener(event -> {
-						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "transient change: " + event.text() + " " + event.markers().stream().map(m -> m.id() + ":" + m.start() + "-" + m.end()).reduce((m, n) -> m + ", " + n).get());
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "transient change: " + event.text() + " " + renderMarkersToString(event));
 					});
 
 					field.onValueChanged.addListener(event -> {
-						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "value changed: " + event.text() + " " + event.markers().stream().map(m -> m.id() + ":" + m.start() + "-" + m.end()).reduce((m, n) -> m + ", " + n).get());
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "value changed: " + event.text() + " " + renderMarkersToString(event));
 					});
 
 
 					field.getMarkerDefinitions().forEach(def -> {
-						ToolButton markButton = new ToolButton(MaterialIcon.BLOCK, String.valueOf(def.id()));
+						ToolButton markButton = new ToolButton(MaterialIcon.CROP_SQUARE, String.valueOf(def.id()));
 						markButton.onClick.addListener(() -> {
-							if (currSelection.start() == currSelection.end()) return;
-							field.setMarker(def.id(), currSelection.start(), currSelection.end());
-							Optional<TextMarker> opt = field.getValue().markers().stream().filter(m -> m.id() == def.id()).findFirst();
-							String mark = def.id() + ":";
-							if (opt.isPresent()) {
-								TextMarker m = opt.get();
-								mark += m.start() + "-" + m.end();
-							}
-							field.addCustomFieldMessage(FieldMessage.Severity.INFO,  "marker in value after set: " + mark + " (text: " + field.getValue().text() + ")");
+							TextSelectionData selection = field.getLastSelection();
+							if (selection == null) return;
+							field.setMarker(def.id(), selection.start(), selection.end());
+							field.addCustomFieldMessage(FieldMessage.Severity.INFO,  "set marker: " + def.id() + "=" + selection.start() + "-" + selection.end());
+							field.addCustomFieldMessage(FieldMessage.Severity.INFO,  "value after set marker: " + field.getValue().text() + " " + renderMarkersToString(field.getValue()));
 						});
 						panel.addToolButton(markButton);
 					});
 
-					toolButton.onClick.addListener(() -> field.setToolbarEnabled(!field.isToolbarEnabled()));
+					toolButton.onClick.addListener(() -> {
+						field.setToolbarEnabled(!field.isToolbarEnabled());
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "toolbar was " + (field.isToolbarEnabled() ? "enabled" : "disabled"));
+					});
 					readonlyButton.onClick.addListener(() ->
 							field.setEditingMode(field.getEditingMode() == FieldEditingMode.READONLY ? FieldEditingMode.EDITABLE : FieldEditingMode.READONLY));
 
@@ -99,6 +93,13 @@ public class TeamAppsJettyEmbeddedServerTest {
 				.setPort(8082)
 				.build()
 				.start();
+	}
+
+	private static String renderMarkersToString(TextColorMarkerFieldValue value) {
+		return value.markers().isEmpty() ? null :value.markers().stream()
+				.map(m -> new StringBuilder().append(m.id()).append("=").append(m.start()).append("-").append(m.end()))
+				.reduce((m, n) -> m.append(", ").append(n))
+				.get().toString();
 	}
 
 }

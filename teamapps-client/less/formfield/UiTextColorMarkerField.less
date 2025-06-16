@@ -1,6 +1,7 @@
 
 .UiTextColorMarkerField {
 
+  position: relative;
   background-color: white;
   align-items: center;
   min-height: var(--ta-input-height);
@@ -18,19 +19,53 @@
     .marker {
       --marker-bg-color: transparent;
       --marker-border-color: transparent;
-      background-color: color-mix(in srgb, var(--marker-bg-color) 60%, transparent);
-      box-shadow: 0 0 4px 1px color-mix(in srgb, var(--marker-border-color) 60%, transparent);
-      color: color-contrast(var(--marker-bg-color) vs black, white, 4.5);
+      --marker-text-color: #000000;
+      background-color: color-mix(in srgb, var(--marker-bg-color) 75%, transparent);
+      box-shadow: 0 0 4px 1px color-mix(in srgb, var(--marker-border-color) 75%, transparent);
+      color: var(--marker-text-color);
       padding: 0 1px;
       margin: 0 -1px;
+      cursor: pointer;
     }
   }
 
   > .toolbar-wrapper {
-    flex: 0 0 16px;
+    position: absolute;
     margin-right: var(--ta-padding-base-horizontal);
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 4px;
+    gap: 4px;
+    flex-wrap: wrap;
+    z-index: 1000;
     &.hidden {
       display: none;
+    }
+    &:not(.hidden) {
+      display: flex;
+    }
+    .toolbar-button {
+      padding: 4px 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+      transition: all 0.15s ease-in-out;
+      opacity: 0.6;
+
+      &:hover {
+        filter: brightness(1.1);
+        opacity: 1;
+      }
+      &:not(.applied) {
+        opacity: 1;
+      }
     }
   }
 
