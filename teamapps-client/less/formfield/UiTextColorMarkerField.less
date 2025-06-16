@@ -29,9 +29,12 @@
   > .toolbar-wrapper {
     flex: 0 0 16px;
     margin-right: var(--ta-padding-base-horizontal);
+    &.hidden {
+      display: none;
+    }
   }
 
-  &.readonly, &.disabled, &:not(.clearable) {
+  &.readonly, &.disabled {
     .toolbar-wrapper {
       display: none;
     }

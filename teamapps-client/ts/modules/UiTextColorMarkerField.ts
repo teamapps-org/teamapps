@@ -31,8 +31,8 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 	protected initialize(config: UiTextColorMarkerFieldConfig, context: TeamAppsUiContext): void {
 		this.$main = parseHtml(`<div class="UiTextColorMarkerField">
-			<div class="toolbar-wrapper"></div>
-			<div class="editor field-border" contenteditable="true"></div>
+			<div class="toolbar-wrapper hidden"></div>
+			<div class="editor field-border field-background" contenteditable="true"></div>
 		</div>`);
 		this.$toolbarWrapper = this.$main.querySelector(":scope > .toolbar-wrapper");
 		this.$editor = this.$main.querySelector(":scope > .editor");
@@ -350,10 +350,10 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		return deepEquals(v1, v2);
 	}
 
-	// protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
-	// 	UiField.defaultOnEditingModeChangedImpl(this, () => this.$editor /*TODO*/);
-	// }
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
+		this.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainElement().classList.add(UiField.editingModeCssClasses[this.getEditingMode()]);
+
 		switch (editingMode) {
 			case UiFieldEditingMode.EDITABLE:
 			case UiFieldEditingMode.EDITABLE_IF_FOCUSED:
@@ -374,7 +374,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	}
 
 	public setToolbarEnabled(enabled: boolean) {
-		this.$toolbarWrapper.innerText = "" + enabled;  // TODO
+		this.$toolbarWrapper.classList.toggle("hidden", !enabled);
 	}
 
 }
