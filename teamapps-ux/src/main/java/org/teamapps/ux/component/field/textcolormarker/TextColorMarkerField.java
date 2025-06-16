@@ -19,9 +19,8 @@
  */
 package org.teamapps.ux.component.field.textcolormarker;
 
-import org.teamapps.dto.UiTextColorMarkerField;
-import org.teamapps.dto.UiTextColorMarkerFieldMarkerDefinition;
-import org.teamapps.dto.UiTextColorMarkerFieldValue;
+import org.teamapps.dto.*;
+import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.AbstractField;
 
 import java.util.List;
@@ -30,6 +29,9 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 
 	private List<TextColorMarkerFieldMarkerDefinition> markerDefinitions;
 	private boolean toolbarEnabled;
+
+	public final Event<TextSelectedEventData> onTextSelected = new Event<>();
+	public final Event<TextColorMarkerFieldValue> onTransientChange = new Event<>(); // TODO how is this different from onValueChanged? (onValueChanged is not triggered by
 
 	@Override
 	public UiTextColorMarkerField createUiComponent() {
@@ -53,6 +55,13 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 		setValue(value);
 	}
 
+	public void setMarker(int id, int start, int end) {
+		queueCommandIfRendered(() -> new UiTextColorMarkerField.SetMarkerCommand(getId(), id, start, end));
+		// TODO update "value" (it's updated by onTransientChange but delayed!)
+		// TODO make sure it's not overriding text changes from UI which are not synced back yet
+	}
+
+
 	private static List<UiTextColorMarkerFieldMarkerDefinition> createUiMarkerDefinitions(List<TextColorMarkerFieldMarkerDefinition> markerDefinitions) {
 		return markerDefinitions == null ? List.of(): markerDefinitions.stream()
 				.map(TextColorMarkerFieldMarkerDefinition::toUiTextColorMarkerFieldMarkerDefinition)
@@ -66,5 +75,26 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 	public void setToolbarEnabled(boolean toolbarEnabled) {
 		this.toolbarEnabled = toolbarEnabled;
 		queueCommandIfRendered(() -> new UiTextColorMarkerField.SetToolbarEnabledCommand(getId(), toolbarEnabled));
+	}
+
+	@Override
+	public void handleUiEvent(UiEvent event) {
+		switch (event.getUiEventType()) {
+			case UI_TEXT_COLOR_MARKER_FIELD_TEXT_SELECTED:
+				UiTextColorMarkerField.TextSelectedEvent textSelectedEvent = (UiTextColorMarkerField.TextSelectedEvent) event;
+				onTextSelected.fire(new TextSelectedEventData(textSelectedEvent.getStart(), textSelectedEvent.getEnd()));
+				break;
+			case UI_TEXT_COLOR_MARKER_FIELD_TRANSIENT_CHANGE:
+				UiTextColorMarkerFieldValue uiValue = ((UiTextColorMarkerField.TransientChangeEvent) event).getValue();
+				TextColorMarkerFieldValue uxValue = new TextColorMarkerFieldValue(
+						uiValue.getText(),
+						uiValue.getMarkers().stream().map(m -> new TextMarker(m.getId(), m.getStart(), m.getEnd())).toList()
+				);
+				setValue(uxValue); // TODO "value" must be updated on transient change event -> however, it must not re-trigger UI value change
+				onTransientChange.fire(uxValue);
+				break;
+			default:
+				super.handleUiEvent(event);
+		}
 	}
 }

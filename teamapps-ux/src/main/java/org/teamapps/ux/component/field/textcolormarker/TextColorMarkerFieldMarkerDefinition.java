@@ -13,8 +13,8 @@ public record TextColorMarkerFieldMarkerDefinition(
 	public UiTextColorMarkerFieldMarkerDefinition toUiTextColorMarkerFieldMarkerDefinition() {
 		UiTextColorMarkerFieldMarkerDefinition ui = new UiTextColorMarkerFieldMarkerDefinition();
 		ui.setId(id);
-		ui.setBorderColor(borderColor.toHtmlColorString());
-		ui.setBackgroundColor(backgroundColor.toHtmlColorString());
+		ui.setBorderColor(borderColor == null ? null : borderColor.toHtmlColorString());
+		ui.setBackgroundColor(backgroundColor == null ? null : backgroundColor.toHtmlColorString());
 		ui.setHint(hint);
 		return ui;
 	}
