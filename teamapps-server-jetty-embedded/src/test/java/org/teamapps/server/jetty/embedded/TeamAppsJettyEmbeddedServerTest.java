@@ -21,12 +21,10 @@ package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.FieldMessage;
-import org.teamapps.ux.component.field.textcolormarker.TextColorMarkerField;
-import org.teamapps.ux.component.field.textcolormarker.TextColorMarkerFieldMarkerDefinition;
-import org.teamapps.ux.component.field.textcolormarker.TextColorMarkerFieldValue;
-import org.teamapps.ux.component.field.textcolormarker.TextMarker;
+import org.teamapps.ux.component.field.textcolormarker.*;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.toolbutton.ToolButton;
@@ -34,8 +32,11 @@ import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class TeamAppsJettyEmbeddedServerTest {
+
+	private static TextSelectedEventData currSelection = new TextSelectedEventData(0, 0);
 
 	public static void main(String[] args) throws Exception {
 		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
@@ -51,11 +52,41 @@ public class TeamAppsJettyEmbeddedServerTest {
 					TextColorMarkerField field = new TextColorMarkerField();
 
 					field.setMarkerDefinitions(List.of(
-							new TextColorMarkerFieldMarkerDefinition(123, Color.RED, Color.BLUE, "ja so wat! \n ach ne!")
-					), new TextColorMarkerFieldValue("Hallo Welt", List.of(new TextMarker(123, 2, 5))));
+							new TextColorMarkerFieldMarkerDefinition(1, Color.RED, Color.BLUE, "ja so wat! \n ach ne!"),
+							new TextColorMarkerFieldMarkerDefinition(9, null, Color.YELLOW, "marker")
+					), new TextColorMarkerFieldValue("Hallooo \n Welt", List.of(new TextMarker(123, 2, 5))));
 
-					field.addCustomFieldMessage(FieldMessage.Severity.ERROR, "Dingens");
+					//field.addCustomFieldMessage(FieldMessage.Severity.ERROR, "Dingens");
 
+					field.onTextSelected.addListener(event -> {
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "text selected: " + event.start() + "-" + event.end());
+						currSelection = event;
+					});
+
+					field.onTransientChange.addListener(event -> {
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "transient change: " + event.text() + " " + event.markers().stream().map(m -> m.id() + ":" + m.start() + "-" + m.end()).reduce((m, n) -> m + ", " + n).get());
+					});
+
+					field.onValueChanged.addListener(event -> {
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "value changed: " + event.text() + " " + event.markers().stream().map(m -> m.id() + ":" + m.start() + "-" + m.end()).reduce((m, n) -> m + ", " + n).get());
+					});
+
+
+					field.getMarkerDefinitions().forEach(def -> {
+						ToolButton markButton = new ToolButton(MaterialIcon.BLOCK, String.valueOf(def.id()));
+						markButton.onClick.addListener(() -> {
+							if (currSelection.start() == currSelection.end()) return;
+							field.setMarker(def.id(), currSelection.start(), currSelection.end());
+							Optional<TextMarker> opt = field.getValue().markers().stream().filter(m -> m.id() == def.id()).findFirst();
+							String mark = def.id() + ":";
+							if (opt.isPresent()) {
+								TextMarker m = opt.get();
+								mark += m.start() + "-" + m.end();
+							}
+							field.addCustomFieldMessage(FieldMessage.Severity.INFO,  "marker in value after set: " + mark + " (text: " + field.getValue().text() + ")");
+						});
+						panel.addToolButton(markButton);
+					});
 
 					toolButton.onClick.addListener(() -> field.setToolbarEnabled(!field.isToolbarEnabled()));
 					readonlyButton.onClick.addListener(() ->
