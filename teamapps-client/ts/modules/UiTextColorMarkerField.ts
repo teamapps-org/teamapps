@@ -36,63 +36,10 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		</div>`);
 		this.$toolbarWrapper = this.$main.querySelector(":scope > .toolbar-wrapper");
 		this.$editor = this.$main.querySelector(":scope > .editor");
-		this.setupFunctionalStyles();
-		this.setupTextareaStyles();
+		//this.$editor.contentEditable = 'true';
 		this.setupEventListeners();
 		this.transientValue = this.getDefaultValue();
 		this.setMarkerDefinitions(config.markerDefinitions, config.value);
-	}
-
-	private setupFunctionalStyles(): void {
-		// Styles required for proper functionality
-		this.$editor.contentEditable = 'true';
-		this.$editor.style.position = 'relative';
-		this.$editor.style.whiteSpace = 'pre-wrap';
-		this.$editor.style.display = 'inline-block'; // workaround for newlines in Chrome
-		this.$editor.style.width = '100%'; // workaround for newlines in Chrome
-		this.$editor.style.boxSizing = 'border-box'; // workaround for newlines in Chrome
-
-		// Add marker styles
-		const style = document.createElement('style'); // TODO I probably should use a shadow root here?
-		style.textContent = `
-            .UiTextColorMarkerField .marker {
-                --marker-bg-color: transparent;
-                --marker-border-color: transparent;
-                background-color: color-mix(in srgb, var(--marker-bg-color) 60%, transparent);
-                box-shadow: 0 0 4px 1px color-mix(in srgb, var(--marker-border-color) 60%, transparent);
-                color: color-contrast(var(--marker-bg-color) vs black, white, 4.5);
-                padding: 0 1px;
-                margin: 0 -1px;
-            }
-        `;
-		document.head.appendChild(style);
-	}
-
-	private setupTextareaStyles(): void {
-		// Styles to make it look like a textarea
-		this.$editor.style.minHeight = '25px';
-		this.$editor.style.border = '1px solid #ccc';
-		this.$editor.style.padding = '2px 4px';
-		this.$editor.style.fontFamily = 'monospace';
-		this.$editor.style.fontSize = '14px';
-		this.$editor.style.lineHeight = '1.5';
-		this.$editor.style.resize = 'both';
-		this.$editor.style.overflowY = 'auto';
-		this.$editor.style.backgroundColor = '#fff';
-		this.$editor.style.color = '#333';
-		this.$editor.style.outline = 'none';
-		this.$editor.style.borderRadius = '2px';
-		this.$editor.style.transition = 'border-color 0.15s ease-in-out';
-		this.$editor.style.cursor = 'text';
-		// Add focus styles
-		this.$editor.addEventListener('focus', () => {
-			this.$editor.style.borderColor = '#80bdff';
-			this.$editor.style.boxShadow = '0 0 0 0.2rem rgba(0,123,255,.25)';
-		});
-		this.$editor.addEventListener('blur', () => {
-			this.$editor.style.borderColor = '#ccc';
-			this.$editor.style.boxShadow = 'none';
-		});
 	}
 
 	public getMarkerDefinitionById(id: number): UiTextColorMarkerFieldMarkerDefinitionConfig | undefined {
