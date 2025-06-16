@@ -1,8 +1,47 @@
 
 .UiTextColorMarkerField {
 
+  background-color: white;
+  align-items: center;
+  min-height: var(--ta-input-height);
+  padding: 0;
+
   > .editor {
     border: 1px solid var(--ta-input-border-color);
+    background: transparent;
+    padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+    white-space: pre-wrap;
+    width: 100%; // needed for newline workaround
+    display: inline-block; // workaround for newlines in Chrome (does not work with flex)
+    box-sizing: border-box; // workaround for newlines in Chrome (to make sure the width is correct)
+
+    .marker {
+      --marker-bg-color: transparent;
+      --marker-border-color: transparent;
+      background-color: color-mix(in srgb, var(--marker-bg-color) 60%, transparent);
+      box-shadow: 0 0 4px 1px color-mix(in srgb, var(--marker-border-color) 60%, transparent);
+      color: color-contrast(var(--marker-bg-color) vs black, white, 4.5);
+      padding: 0 1px;
+      margin: 0 -1px;
+    }
   }
 
+  > .toolbar-wrapper {
+    flex: 0 0 16px;
+    margin-right: var(--ta-padding-base-horizontal);
+  }
+
+  &.readonly, &.disabled, &:not(.clearable) {
+    .toolbar-wrapper {
+      display: none;
+    }
+  }
+
+  &.readonly > .editor {
+    padding: 0;
+  }
+
+  &.disabled {
+    background-color: var(--ta-input-bg-disabled)
+  }
 }
