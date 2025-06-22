@@ -49,11 +49,17 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
     // internal state
     private uuidClass: string;
+    // UI Elements
     private $main: HTMLDivElement;
     private $canvasTag: HTMLCanvasElement;
     private $styleTag: HTMLElement;
+    private $currentPageNr: HTMLElement;
+    private $maxPageNr: HTMLElement;
+
+    // UI state
     private pdfDocument: PDFDocumentProxy;
     private currentPageNumber: number = 1;
+    private maxPageNumber: number = 0;
 
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
         super(config, context);
@@ -63,11 +69,32 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$main = parseHtml(`
         <div class="${this.uuidClass}">
             <h1>PDF Viewer</h1>
-            <style class="${this.uuidClass}"></style>
+            <div class="dev-toolbar ${this.uuidClass}">
+                <button id="decrease">Decrease Page </button>
+                <span id="currentPageNr"></span>
+                <span>/</span>
+                <span id="maxPageNr"></span>
+                <button id="increase">Increase Page </button>
+            </div>
+            <style class="${this.uuidClass}">
+                canvas.${this.uuidClass} {
+                    border: 1px solid red;
+                }
+            </style>
             <canvas class="${this.uuidClass}"></canvas>
         </div>`);
         this.$canvasTag = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
+        this.$currentPageNr = this.$main.querySelector<HTMLElement>(`#currentPageNr`);
+        this.$maxPageNr = this.$main.querySelector<HTMLElement>(`#maxPageNr`);
+
+        this.$main.querySelector<HTMLButtonElement>(`button#decrease`).addEventListener("click", async (e) => {
+            await this.showPage(this.currentPageNumber - 1);
+        });
+
+        this.$main.querySelector<HTMLButtonElement>(`button#increase`).addEventListener("click", async (e) => {
+            await this.showPage(this.currentPageNumber + 1);
+        });
 
         // Load the pdf by setting it's url
         setTimeout(async () => {
@@ -104,7 +131,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private async renderPdfSinglePageMode() {
         const page = await this.pdfDocument.getPage(this.currentPageNumber);
         // TODO @bjesuiter: figure out what the result is for setting scale to 1.5
-        const pdfViewport = page.getViewport({scale: 1});
+        const pdfViewport = page.getViewport({scale: 1.0});
         const hiDPIScale = window.devicePixelRatio || 1;
 
         const canvas = this.$canvasTag;
@@ -126,6 +153,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         };
 
         page.render(renderContext);
+
+        // update dev output
+        this.$currentPageNr.innerText = String(this.currentPageNumber);
     }
 
     private updateStyles() {
@@ -147,6 +177,13 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
     public async setUrl(url: string) {
         this.pdfDocument = await pdfjsLib.getDocument(url).promise;
+
+        // todo: tell the server the document has loaded
+
+        // Set maxPage Nr (for debugging)
+        this.maxPageNumber = this.pdfDocument.numPages;
+        this.$maxPageNr.innerText = `${this.maxPageNumber}`;
+
         await this.renderPdfDocument();
     }
 
