@@ -88,13 +88,14 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$currentPageNr = this.$main.querySelector<HTMLElement>(`#currentPageNr`);
         this.$maxPageNr = this.$main.querySelector<HTMLElement>(`#maxPageNr`);
 
-        this.$main.querySelector<HTMLButtonElement>(`button#decrease`).addEventListener("click", async (e) => {
-            await this.showPage(this.currentPageNumber - 1);
+        this.$main.querySelector<HTMLButtonElement>(`button#increase`).addEventListener("click", async (e) => {
+                await this.showPage(this.currentPageNumber + 1);
         });
 
-        this.$main.querySelector<HTMLButtonElement>(`button#increase`).addEventListener("click", async (e) => {
-            await this.showPage(this.currentPageNumber + 1);
+        this.$main.querySelector<HTMLButtonElement>(`button#decrease`).addEventListener("click", async (e) => {
+                await this.showPage(this.currentPageNumber - 1);
         });
+
 
         // Load the pdf by setting it's url
         setTimeout(async () => {
@@ -193,8 +194,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     }
 
     public async showPage(page: number) {
-        this.currentPageNumber = page;
-        await this.renderPdfDocument();
+        if (page >= 1 && page <= this.maxPageNumber ) {
+            this.currentPageNumber = page;
+            await this.renderPdfDocument();
+        } else {
+            // todo: throw out of bounds exception to the server
+        }
     }
 
     public async setZoomFactor(zoomFactor: number, zoomByAvailableWidth: boolean) {
