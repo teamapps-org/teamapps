@@ -72,9 +72,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             <h1>PDF Viewer</h1>
             <div class="dev-toolbar ${this.uuidClass}">
                 <button id="decrease">Decrease Page </button>
-                <span id="currentPageNr"></span>
-                <span>/</span>
-                <span id="maxPageNr"></span>
+                <div>
+                  <span id="currentPageNr"></span>
+                  <span>/</span>
+                  <span id="maxPageNr"></span>
+                </div>
                 <button id="increase">Increase Page </button>
             </div>
             <style class="${this.uuidClass}">
@@ -86,7 +88,14 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     border: 1px solid oklch(0.2 0 298);
                     display: flex; 
                     flex-flow: row nowrap;
-                    justify-content: center;
+                    justify-content: start;
+                }
+                div.${this.uuidClass}.dev-toolbar {
+                    display: flex;
+                    flex-flow: row nowrap;
+                    gap: 1rem;
+                    align-items: center;
+                    margin: 0.5rem;
                 }
             </style>
             <div class="canvas-container ${this.uuidClass}">
