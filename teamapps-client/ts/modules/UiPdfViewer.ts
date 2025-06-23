@@ -54,8 +54,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $canvas: HTMLCanvasElement;
     private $canvasContainer: HTMLDivElement;
     private $styleTag: HTMLElement;
+
+    // Dev/Helper elements
     private $currentPageNr: HTMLElement;
     private $maxPageNr: HTMLElement;
+    private $currentZoom: HTMLElement;
 
     // UI state
     private pdfDocument: PDFDocumentProxy;
@@ -78,6 +81,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                   <span id="maxPageNr"></span>
                 </div>
                 <button id="increase">Increase Page </button>
+                <button id="zoomIn">Zoom in</button>
+                <div>
+                    <span id="currentZoom"></span>
+                </div>
+                <button id="zoomOut">Zoom out</button>
             </div>
             <style class="${this.uuidClass}">
                 canvas.${this.uuidClass} {
@@ -89,6 +97,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     display: flex; 
                     flex-flow: row nowrap;
                     justify-content: start;
+                    
+                    height: 50%;
+                    overflow-y: auto;
                 }
                 div.${this.uuidClass}.dev-toolbar {
                     display: flex;
@@ -105,16 +116,28 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$canvas = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
         this.$canvasContainer = this.$main.querySelector<HTMLDivElement>(`div.canvas-container.${this.uuidClass}`);
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
+
+        // Dev Helper UI
         this.$currentPageNr = this.$main.querySelector<HTMLElement>(`#currentPageNr`);
         this.$maxPageNr = this.$main.querySelector<HTMLElement>(`#maxPageNr`);
-
-        this.$main.querySelector<HTMLButtonElement>(`button#increase`).addEventListener("click", async (e) => {
+        this.$currentZoom = this.$main.querySelector<HTMLElement>(`#currentZoom`);
+        this.$main.querySelector<HTMLButtonElement>(`button#increase`)
+            .addEventListener("click", async (e) => {
                 await this.showPage(this.currentPageNumber + 1);
-        });
-
-        this.$main.querySelector<HTMLButtonElement>(`button#decrease`).addEventListener("click", async (e) => {
+            });
+        this.$main.querySelector<HTMLButtonElement>(`button#decrease`)
+            .addEventListener("click", async (e) => {
                 await this.showPage(this.currentPageNumber - 1);
-        });
+            });
+        this.$main.querySelector<HTMLButtonElement>(`button#zoomIn`)
+            .addEventListener("click", async (e) => {
+                await this.setZoomFactor(this.config.zoomFactor + 0.1, false)
+            })
+        this.$main.querySelector<HTMLButtonElement>(`button#zoomOut`)
+            .addEventListener("click", async (e) => {
+                await this.setZoomFactor(this.config.zoomFactor - 0.1, false)
+            })
+
 
 
         // Load the pdf by setting it's url
@@ -154,8 +177,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      */
     private async renderPdfSinglePageMode() {
         const page = await this.pdfDocument.getPage(this.currentPageNumber);
-        // TODO @bjesuiter: figure out what the result is for setting scale to 1.5
-        const pdfViewport = page.getViewport({scale: 1.0});
+        const scale = this.config.zoomFactor ?? 1.0;
+        const scaleToWidth = this.config.zoomByAvailableWidth ?? false;
+        const pdfViewport = page.getViewport({
+            scale
+        });
         const hiDPIScale = window.devicePixelRatio || 1;
 
         const canvas = this.$canvas;
@@ -183,6 +209,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
         // update dev output
         this.$currentPageNr.innerText = String(this.currentPageNumber);
+        this.$currentZoom.innerText = String(scale.toFixed(1));
     }
 
     private updateStyles() {
