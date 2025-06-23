@@ -51,7 +51,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private uuidClass: string;
     // UI Elements
     private $main: HTMLDivElement;
-    private $canvasTag: HTMLCanvasElement;
+    private $canvas: HTMLCanvasElement;
+    private $canvasContainer: HTMLDivElement;
     private $styleTag: HTMLElement;
     private $currentPageNr: HTMLElement;
     private $maxPageNr: HTMLElement;
@@ -80,10 +81,20 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                 canvas.${this.uuidClass} {
                     border: 1px solid red;
                 }
+                div.${this.uuidClass}.canvas-container {
+                    background: oklch(0.3 0 298);
+                    border: 1px solid oklch(0.2 0 298);
+                    display: flex; 
+                    flex-flow: row nowrap;
+                    justify-content: center;
+                }
             </style>
-            <canvas class="${this.uuidClass}"></canvas>
+            <div class="canvas-container ${this.uuidClass}">
+                <canvas class="${this.uuidClass}"></canvas>
+            </div>
         </div>`);
-        this.$canvasTag = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
+        this.$canvas = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
+        this.$canvasContainer = this.$main.querySelector<HTMLDivElement>(`div.canvas-container.${this.uuidClass}`);
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
         this.$currentPageNr = this.$main.querySelector<HTMLElement>(`#currentPageNr`);
         this.$maxPageNr = this.$main.querySelector<HTMLElement>(`#maxPageNr`);
@@ -120,6 +131,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             throw new Error(`UiPdfViewMode.CONTINUOUS is not supported yet`);
         }
 
+        // Step 2: Apply configs outside of canvas
+        this.$canvasContainer.style.padding = `${this.config.padding}px`;
+
         // viewMode is SINGLE_PAGE from here on
         await this.renderPdfSinglePageMode();
     }
@@ -135,13 +149,16 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         const pdfViewport = page.getViewport({scale: 1.0});
         const hiDPIScale = window.devicePixelRatio || 1;
 
-        const canvas = this.$canvasTag;
-        const canvasContext = this.$canvasTag.getContext('2d');
+        const canvas = this.$canvas;
+        const canvasContext = this.$canvas.getContext('2d');
 
         canvas.width = Math.floor(pdfViewport.width * hiDPIScale);
         canvas.height = Math.floor(pdfViewport.height * hiDPIScale);
         canvas.style.width = Math.floor(pdfViewport.width) + "px";
         canvas.style.height = Math.floor(pdfViewport.height) + "px";
+        canvas.style.overflowX = "auto";
+        // canvas.width = Math.floor(pdfViewport.width);
+        // canvas.height = Math.floor(pdfViewport.height);
 
         const transform = hiDPIScale !== 1 ?
             [hiDPIScale, 0, 0, hiDPIScale, 0, 0] :
