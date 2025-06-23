@@ -36,6 +36,7 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {createUiBorderCssString, createUiShadowCssString} from "./util/CssFormatUtil";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
+import {floorToPrecision} from "./util/precise-float-math";
 
 // @ts-ignore
 // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
@@ -225,18 +226,20 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (scaleToWidth) {
             // calc the scale based on available width
             const containerWidth = this.$canvasContainer.clientWidth;
-            while (pdfViewport.width < containerWidth ) {
-                scale += 0.1
-                pdfViewport = page.getViewport({scale})
-            }
-            // the scale has to be -0.1, since the last increase of scale led to the overflow of pfViewport.width,
-            // so the last scale value is actually one step too big
-            scale -= 0.1
+            let newScale = containerWidth / pdfViewport.width;
+            newScale = floorToPrecision(newScale, 2);
+            // subtract save space for scrollbars
+            newScale -= 0.1
+
             // write the right scale factor back to the config
-            this.config.zoomFactor = scale;
+            this.config.zoomFactor = newScale;
+            // use the newScale
+            scale = newScale;
+            pdfViewport = page.getViewport({scale})
             // deactivate zoomByAvailableWidth to
             // stop the calculation from happening again until it is requested again
-            this.config.zoomByAvailableWidth = false; }
+            this.config.zoomByAvailableWidth = false;
+        }
 
         const canvas = this.$canvas;
         const canvasContext = this.$canvas.getContext('2d');
