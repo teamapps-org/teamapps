@@ -86,6 +86,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     <span id="currentZoom"></span>
                 </div>
                 <button id="zoomOut">Zoom out</button>
+                <button id="zoomToWidth">Zoom to width</button>
             </div>
             <style class="${this.uuidClass}">
                 canvas.${this.uuidClass} {
@@ -96,7 +97,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     border: 1px solid oklch(0.2 0 298);
                     display: flex; 
                     flex-flow: row nowrap;
-                    justify-content: start;
+                    justify-content: center;
                     
                     height: 50%;
                     overflow-y: auto;
@@ -137,6 +138,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             .addEventListener("click", async (e) => {
                 await this.setZoomFactor(this.config.zoomFactor - 0.1, false)
             })
+        this.$main.querySelector<HTMLButtonElement>(`button#zoomToWidth`)
+        .addEventListener("click", async (e) => {
+            await this.setZoomFactor(1.0, true)
+        })
 
 
 
@@ -177,12 +182,30 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      */
     private async renderPdfSinglePageMode() {
         const page = await this.pdfDocument.getPage(this.currentPageNumber);
-        const scale = this.config.zoomFactor ?? 1.0;
+        // aka: set the initial scale to 1.0 when zoomByAvailableWidth is on to not screw up the calculation later
+        let scale = this.config.zoomByAvailableWidth ? 1.0 : (this.config.zoomFactor ?? 1.0);
         const scaleToWidth = this.config.zoomByAvailableWidth ?? false;
-        const pdfViewport = page.getViewport({
+
+        let pdfViewport = page.getViewport({
             scale
         });
         const hiDPIScale = window.devicePixelRatio || 1;
+
+        if (scaleToWidth) {
+            // calc the scale based on available width
+            const containerWidth = this.$canvasContainer.clientWidth;
+            while (pdfViewport.width < containerWidth ) {
+                scale += 0.1
+                pdfViewport = page.getViewport({scale})
+            }
+            // the scale has to be -0.1, since the last increase of scale led to the overflow of pfViewport.width,
+            // so the last scale value is actually one step too big
+            scale -= 0.1
+            // write the right scale factor back to the config
+            this.config.zoomFactor = scale;
+            // deactivate zoomByAvailableWidth to
+            // stop the calculation from happening again until it is requested again
+            this.config.zoomByAvailableWidth = false; }
 
         const canvas = this.$canvas;
         const canvasContext = this.$canvas.getContext('2d');
