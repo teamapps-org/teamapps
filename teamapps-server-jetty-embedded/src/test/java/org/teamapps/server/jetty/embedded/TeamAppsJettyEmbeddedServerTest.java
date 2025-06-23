@@ -42,6 +42,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
 			PdfViewer pdfViewer = new PdfViewer(testPdfLink);
+			pdfViewer.setPadding(10);
 
 //			Playground playground = new Playground("Hello Default World");
 //			playground.setTitle("Hello World");

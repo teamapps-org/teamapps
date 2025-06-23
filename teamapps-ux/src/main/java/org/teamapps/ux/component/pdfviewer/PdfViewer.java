@@ -47,7 +47,6 @@ public class PdfViewer extends AbstractComponent {
 
     public void setUrl(String url) {
         this.url = url;
-        // TODO @bjesuiter: update all setters like this
         queueCommandIfRendered(() -> new UiPdfViewer.SetUrlCommand(getId(), url));
     }
 
