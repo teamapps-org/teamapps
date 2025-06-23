@@ -100,16 +100,36 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             <style class="${this.uuidClass}">
                 canvas.${this.uuidClass} {
                     /*border: 1px solid red;*/
+                    display: flex;
+                    flex-flow: row nowrap;
+                    justify-content: center;
+                    
+                    /*overflow-x: auto;*/
                 }
                 div.${this.uuidClass}.canvas-container {
                     background: oklch(0.3 0 298);
                     border: 1px solid oklch(0.2 0 298);
                     display: flex; 
-                    flex-flow: row nowrap;
-                    justify-content: center;
+                    flex-flow: column nowrap;
                     
-                    height: 50%;
+                    /* NOTE: 
+                      safe center is needed, otherwise the pdf is not scrollable in x-axis anymore 
+                      when pdf gets bigger than the width of the canvas-container
+                      support for this is still kinda new (Chrome as of Junie 2023), see
+                      https://caniuse.com/mdn-css_properties_align-items_flex_context_safe_unsafe
+                      
+                      Since this behavior can be fixed by simply zooming out, I (bjesuiter) leave it like this for now.
+                     */
+                    align-items: safe center;
+                    
+                    height: 70%;
                     overflow-y: auto;
+                }
+                div.${this.uuidClass}#pagesContainer {
+                    /*display: flex; */
+                    /*flex-flow: column nowrap;*/
+                    /*gap: 1rem;*/
+                    /*align-items: center;*/
                 }
                 div.${this.uuidClass}.dev-toolbar {
                     display: flex;
@@ -120,7 +140,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                 }
             </style>
             <div class="canvas-container ${this.uuidClass}">
-                <canvas class="${this.uuidClass}"></canvas>
+                <div id="pagesContainer">
+                    <canvas class="${this.uuidClass}"></canvas>
+                </div>
             </div>
         </div>`);
         this.$canvas = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
