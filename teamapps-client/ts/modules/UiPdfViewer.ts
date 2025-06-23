@@ -22,7 +22,11 @@
 import type {PDFDocumentProxy} from "pdfjs-dist";
 import * as pdfjsLib from "pdfjs-dist";
 import {UiBorderConfig} from "../generated/UiBorderConfig";
-import {UiPdfViewerCommandHandler, UiPdfViewerConfig} from "../generated/UiPdfViewerConfig";
+import {
+    UiPdfViewer_PdfInitializedEvent,
+    UiPdfViewerCommandHandler,
+    UiPdfViewerConfig
+} from "../generated/UiPdfViewerConfig";
 import {UiPdfViewMode} from "../generated/UiPdfViewMode";
 import {UiShadowConfig} from "../generated/UiShadowConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
@@ -30,6 +34,8 @@ import {generateUUID, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {createUiBorderCssString, createUiShadowCssString} from "./util/CssFormatUtil";
+import {TeamAppsEvent} from "./util/TeamAppsEvent";
+import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
 
 // @ts-ignore
 // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
@@ -45,10 +51,9 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = "static/pdf.worker.mjs";
  * NPM Package: pdfjs-dist (CAUTION: pdfjs (without -dist) is another package!)
  */
 export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implements UiPdfViewerCommandHandler {
+    // the config will be set in the constructor
     private config: UiPdfViewerConfig;
 
-    // internal state
-    private uuidClass: string;
     // UI Elements
     private $main: HTMLDivElement;
     private $canvas: HTMLCanvasElement;
@@ -60,10 +65,14 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $maxPageNr: HTMLElement;
     private $currentZoom: HTMLElement;
 
-    // UI state
+    // UI / internal state
+    private readonly uuidClass: string;
     private pdfDocument: PDFDocumentProxy;
     private currentPageNumber: number = 1;
     private maxPageNumber: number = 0;
+
+    // Events for the server
+    public readonly pdfInitializedEvent: TeamAppsEvent<UiPdfViewer_PdfInitializedEvent> = new TeamAppsEvent();
 
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
         super(config, context);
@@ -255,13 +264,17 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     public async setUrl(url: string) {
         this.pdfDocument = await pdfjsLib.getDocument(url).promise;
 
-        // todo: tell the server the document has loaded
-
         // Set maxPage Nr (for debugging)
         this.maxPageNumber = this.pdfDocument.numPages;
         this.$maxPageNr.innerText = `${this.maxPageNumber}`;
 
         await this.renderPdfDocument();
+
+        // Tell the server the document has loaded after the first renderPdfDocument
+        // since it is async, I can simply wait for it to finish
+        this.pdfInitializedEvent.fire({
+            numberOfPages: this.maxPageNumber,
+        })
     }
 
     public async setViewMode(viewMode: UiPdfViewMode) {

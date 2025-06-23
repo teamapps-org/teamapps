@@ -44,6 +44,10 @@ public class TeamAppsJettyEmbeddedServerTest {
 			PdfViewer pdfViewer = new PdfViewer(testPdfLink);
 			pdfViewer.setPadding(10);
 
+			pdfViewer.onPdfInitialized.addListener((initEvent) -> {
+				System.out.println("PDF viewer rendered, page number: " + initEvent.getNumberOfPages());
+			});
+
 //			Playground playground = new Playground("Hello Default World");
 //			playground.setTitle("Hello World");
 
