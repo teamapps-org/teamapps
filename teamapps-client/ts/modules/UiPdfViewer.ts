@@ -99,7 +99,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             </div>
             <style class="${this.uuidClass}">
                 canvas.${this.uuidClass} {
-                    border: 1px solid red;
+                    /*border: 1px solid red;*/
                 }
                 div.${this.uuidClass}.canvas-container {
                     background: oklch(0.3 0 298);
@@ -244,20 +244,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$currentZoom.innerText = String(scale.toFixed(1));
     }
 
-    private updateStyles() {
-        const uiBorderCssString = createUiBorderCssString(this.config.pageBorder);
-        const uiShadowCssString = createUiShadowCssString(this.config.pageShadow);
-        this.$styleTag.innerHTML = '';
-        // this.$styleTag.innerText = `
-        // .${this.uuidClass} .page {
-        //     ${createUiBorderCssString(this.pageBorder)}
-        //     ${createUiShadowCssString(this.pageShadow)}
-        // }
-        // .${this.uuidClass} .page:not(:last-child) {
-        //     margin-bottom: ${this.pageSpacing}px !important;
-        // }`;
-    }
-
     // Setters for Server API
     // -----------------------™
 
@@ -312,6 +298,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         await this.renderPdfDocument();
     }
 
+    /**
+     * This is only relevant in CONTINUOUS render mode
+     * @param pageSpacing
+     */
     public async setPageSpacing(pageSpacing: number) {
         this.config.pageSpacing = pageSpacing;
         await this.renderPdfDocument();
