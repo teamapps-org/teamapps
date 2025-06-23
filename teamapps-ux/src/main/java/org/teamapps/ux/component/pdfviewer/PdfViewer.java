@@ -1,11 +1,14 @@
 package org.teamapps.ux.component.pdfviewer;
 
 import org.teamapps.dto.*;
+import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.panel.WindowButtonType;
 
 import java.util.stream.Collectors;
 
 public class PdfViewer extends AbstractComponent {
+    public final Event<UiPdfViewer.PdfInitializedEvent> onPdfInitialized = new Event<>();
 
     protected String url;
     protected UiPdfViewMode viewMode;
@@ -39,6 +42,18 @@ public class PdfViewer extends AbstractComponent {
         uiPdfViewer.setPageShadow(pageShadow);
 
         return uiPdfViewer;
+    }
+
+    @Override
+    public void handleUiEvent(UiEvent event) {
+        // TODO: This ui event does not arrive on the server yet. => Check with yann!
+        switch (event.getUiEventType()) {
+            case UI_PDF_VIEWER_PDF_INITIALIZED: {
+                UiPdfViewer.PdfInitializedEvent initEvent = (UiPdfViewer.PdfInitializedEvent) event;
+                this.onPdfInitialized.fire(initEvent);
+                break;
+            }
+        }
     }
 
     public String getUrl() {
