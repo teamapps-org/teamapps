@@ -1,8 +1,6 @@
-import {UiEvent} from "../generated/UiEvent";
 import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {
 	UiTextColorMarkerField_TextSelectedEvent,
-	UiTextColorMarkerField_TransientChangeEvent,
 	UiTextColorMarkerFieldCommandHandler,
 	UiTextColorMarkerFieldConfig,
 	UiTextColorMarkerFieldEventSource
@@ -10,8 +8,7 @@ import {
 import {UiTextColorMarkerFieldMarkerConfig} from "../generated/UiTextColorMarkerFieldMarkerConfig";
 import {UiTextColorMarkerFieldMarkerDefinitionConfig} from "../generated/UiTextColorMarkerFieldMarkerDefinitionConfig";
 import {UiTextColorMarkerFieldValueConfig} from "../generated/UiTextColorMarkerFieldValueConfig";
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {deepEquals, parseHtml} from "./Common";
+import {parseHtml} from "./Common";
 import {UiField} from "./formfield/UiField";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -20,14 +17,12 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig, UiTextColorMarkerFieldValueConfig> implements UiTextColorMarkerFieldCommandHandler, UiTextColorMarkerFieldEventSource {
 
 	public readonly onTextSelected: TeamAppsEvent<UiTextColorMarkerField_TextSelectedEvent> = new TeamAppsEvent();
-	public readonly onTransientChange: TeamAppsEvent<UiTextColorMarkerField_TransientChangeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $toolbarWrapper: HTMLElement;
 	private $editor: HTMLDivElement;
 
 	private markerDefinitions: UiTextColorMarkerFieldMarkerDefinitionConfig[];
-	private transientValue: UiTextColorMarkerFieldValueConfig;
 	private toolbarEnabled: boolean;
 	private currentSelection: UiTextColorMarkerField_TextSelectedEvent | null = null;
 
@@ -39,132 +34,83 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		this.$toolbarWrapper = this.$main.querySelector(":scope > .toolbar-wrapper");
 		this.$editor = this.$main.querySelector(":scope > .editor");
 		//this.$editor.contentEditable = 'true';
-		this.toolbarEnabled = false;
+		this.toolbarEnabled = config.toolbarEnabled;
 		this.setupEventListeners();
-		this.transientValue = this.getDefaultValue();
 		this.setMarkerDefinitions(config.markerDefinitions, config.value);
 	}
 
-	public getMarkerDefinitionById(id: number): UiTextColorMarkerFieldMarkerDefinitionConfig | undefined {
+	private getMarkerDefinitionById(id: number): UiTextColorMarkerFieldMarkerDefinitionConfig | undefined {
 		return this.markerDefinitions.find(definition => definition.id === id);
-	}
-
-	public getMarkers(): UiTextColorMarkerFieldMarkerConfig[] {
-		return [...this.transientValue.markers];
-	}
-
-	public getMarkerById(id: number): UiTextColorMarkerFieldMarkerConfig | undefined {
-		return this.transientValue.markers.find(marker => marker.id === id);
-	}
-
-	public getPlainText(): string {
-		return this.transientValue.text;
-	}
-
-	public getTransientValue(): UiTextColorMarkerFieldValueConfig {
-		this.commitTransientChanges();
-		return {
-			text: this.transientValue.text,
-			markers: [...this.transientValue.markers]
-		};
-	}
-
-	public setTransientValue(value?: UiTextColorMarkerFieldValueConfig): void {
-		const newValue: UiTextColorMarkerFieldValueConfig = {
-			text: value?.text || '',
-			markers: value?.markers || []
-		};
-
-		this.updateTransientValue(newValue);
 	}
 
 	public setMarkerDefinitions(markerDefinitions: UiTextColorMarkerFieldMarkerDefinitionConfig[], newValue: UiTextColorMarkerFieldValueConfig): void {
 		this.markerDefinitions = markerDefinitions;
-		this.setTransientValue(newValue);
+		this.setValue(this.createFieldValue(
+			newValue?.text,
+			newValue?.markers
+	));
 	}
 
-	public setMarker(id: number, start: number, end: number): void {
-		const definition = this.getMarkerDefinitionById(id);
-		if (!definition) {
-			throw new Error(`No marker definition found for id ${id}`);
-		}
+	public setMarker(markerDefinitionId: number, start: number, end: number): void {
+		const marker = this.createMarker(markerDefinitionId, start, end);
 
-		// Check for overlapping markers
-		if (this.transientValue.markers.some(existingMarker => {
-			if (existingMarker.id === id) { return false; } // Skip the same marker
-			const existingStart = existingMarker.start!;
-			const existingEnd = existingMarker.end!;
-			// Two markers overlap if one starts before the other ends and ends after the other starts
-			// But we allow them to be nested
-			const hasOverlap = () => start < existingEnd && end > existingStart;
-			const isNested = () => (start <= existingStart && end >= existingEnd) ||
-				(existingStart <= start && existingEnd >= end);
-			return hasOverlap() && !isNested();
-		})) {
-			throw new Error('Invalid marker positions: marker overlaps with existing marker');
-		}
-
-		const marker: UiTextColorMarkerFieldMarkerConfig = { id, start, end };
-
-		// Create a new value with the marker added
-		const newMarkers = this.transientValue.markers.filter(m => m.id !== marker.id);
+		const newMarkers = this.getCommittedValue().markers.filter(m => m.markerDefinitionId !== markerDefinitionId);
 		newMarkers.push(marker);
-		const newValue: UiTextColorMarkerFieldValueConfig = {
-			text: this.transientValue.text,
-			markers: newMarkers
-		};
 
-		this.updateTransientValue(newValue);
+		this.setValue(this.createFieldValue(
+			this.getTransientText(), // TODO or should this be the committed value?
+			newMarkers
+		));
+		this.fireValueChangedEvent();
 	}
 
-	public removeMarker(id: number): void {
-		const markerIndex = this.transientValue.markers.findIndex(m => m.id === id);
+	public removeMarker(markerDefinitionId: number): void {
+		const markerIndex = this.getCommittedValue().markers.findIndex(m => m.markerDefinitionId === markerDefinitionId);
 		if (markerIndex !== -1) {
-			this.transientValue.markers.splice(markerIndex, 1);
-			this.renderTransientValue();
+			this.getCommittedValue().markers.splice(markerIndex, 1);
+			this.displayCommittedValue();
+			this.fireValueChangedEvent();
 		} else {
-			this.logger.info(`Cannot remove marker "${id}" since it does not exist`);
+			this.logger.info(`Cannot remove marker "${markerDefinitionId}" since it does not exist`);
 		}
 	}
 
-	private commitTransientChanges(): void {
-		const currentValue = this.getCurrentValue();
-		if (this.hasTransientValueChanged(currentValue)) {
-			this.transientValue = currentValue;
-			this.triggerTransientChangeEvent(this.transientValue);
-		}
+	private fireValueChangedEvent(): void {
+		this.logger.trace("firing value changed event: " + JSON.stringify(this.getCommittedValue()));
+		this.onValueChanged.fire({
+			value: this.convertValueForSendingToServer(this.getCommittedValue())
+		});
 	}
 
-	private hasTransientValueChanged(newValue: UiTextColorMarkerFieldValueConfig): boolean {
-		const hasTextChanged = () => newValue.text !== this.transientValue.text;
-		const hasMarkersChanged = () => JSON.stringify(newValue.markers) !== JSON.stringify(this.transientValue.markers);
+	public valuesChanged(v1: UiTextColorMarkerFieldValueConfig, v2: UiTextColorMarkerFieldValueConfig): boolean {
+		if (!v1 || !v2) {
+			return v1 !== v2;
+		}
+		const hasTextChanged = () => v1.text !== v2.text;
+		const hasMarkersChanged = () => JSON.stringify(v1.markers) !== JSON.stringify(v2.markers);
 		return hasTextChanged() || hasMarkersChanged();
 	}
 
-	private triggerTransientChangeEvent(currentValue: UiTextColorMarkerFieldValueConfig) {
-		this.onTransientChange?.fire({ value: { ...currentValue } });
+	public getTransientValue(): UiTextColorMarkerFieldValueConfig {
+		const text = this.getTransientText()?.replace(/\u00A0/g, ' ');
+		const markers = this.getTransientMarkers();
+
+		return this.createFieldValue(text, markers);
 	}
 
-	private getCurrentValue(): UiTextColorMarkerFieldValueConfig {
-		const text = this.getCurrentText()?.replace(/\u00A0/g, ' ');
-		const markers = this.getCurrentMarkers();
-
-		return { text, markers };
-	}
-
-	private getCurrentText(node: Node = this.$editor): string {
+	private getTransientText(node: Node = this.$editor): string {
 		if (!node.childNodes || node.childNodes.length === 0) {
 			if (node.nodeName.toUpperCase() === 'BR') { return '\n'; }
 			return node.textContent || '';
 		}
 		let text = '';
 		for (let i = 0; i < node.childNodes.length; i++) {
-			text += this.getCurrentText(node.childNodes.item(i));
+			text += this.getTransientText(node.childNodes.item(i));
 		}
 		return text;
 	}
 
-	private getCurrentMarkers(): UiTextColorMarkerFieldMarkerConfig[] {
+	private getTransientMarkers(): UiTextColorMarkerFieldMarkerConfig[] {
 		const markers: UiTextColorMarkerFieldMarkerConfig[] = [];
 
 		// Find all marker spans and extract their data
@@ -172,49 +118,33 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		markerSpans.forEach(span => {
 			const markerId = span.getAttribute('data-marker-id');
 			if (markerId) {
-				const id = Number(markerId);
+				const markerDefinitionId = Number(markerId);
 				const start = this.getNodePosition(span.firstChild || span);
-				const end = start + this.getCurrentText(span).length;
-				markers.push({ id, start, end });
+				const end = start + this.getTransientText(span).length;
+				markers.push(this.createMarker(markerDefinitionId, start, end));
 			}
 		});
 		return this.sortMarkers(markers);
 	}
 
-	private updateTransientValue(value: UiTextColorMarkerFieldValueConfig): boolean {
-		// Validate marker positions
-		for (const marker of value.markers) {
-			if (marker.start === undefined || marker.end === undefined || marker.start < 0 || marker.end > value.text.length || marker.start > marker.end) {
-				throw new Error('Invalid marker positions');
-			}
-			if (marker.start === marker.end) {
-				value.markers = value.markers.filter(m => m.id !== marker.id);
-			}
-		}
-
-		// Sort markers
-		value.markers = this.sortMarkers(value.markers);
+	public setValue(value: UiTextColorMarkerFieldValueConfig): void {
+		// Sort markers by their ID + remove empty markers (start == end)
+		value.markers = this.sortMarkers(value.markers.filter(m => m.start !== m.end));
 
 		// Check if this would actually change anything
-		if (!this.hasTransientValueChanged(value)) {
-			return false;
+		if (this.valuesChanged(this.getCommittedValue(), value)) {
+			this.setCommittedValue(value);
 		}
-
-		// Update the transient value
-		this.transientValue = value;
-		this.renderTransientValue();
-		return true;
 	}
 
 	private sortMarkers(markers: UiTextColorMarkerFieldMarkerConfig[]): UiTextColorMarkerFieldMarkerConfig[] {
-		return [...markers].sort((a, b) => a.id - b.id);
+		return [...markers].sort((a, b) => a.markerDefinitionId - b.markerDefinitionId);
 	}
 
 	// Main render method: escapes text, applies markers, and sets innerHTML
-	private renderTransientValue(): void {
-		const rawText = this.transientValue.text ?? '';
-		this.$editor.innerHTML = this.renderWithMarkers(rawText, this.transientValue.markers);
-		this.triggerTransientChangeEvent(this.transientValue);
+	protected displayCommittedValue(): void {
+		const value = this.getCommittedValue();
+		this.$editor.innerHTML = this.renderWithMarkers(value.text ?? '', value.markers);
 	}
 
 	// Injects marker spans at the correct offsets
@@ -246,7 +176,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 			}
 
 			if (op.type === 'open') {
-				const def = this.getMarkerDefinitionById(op.marker.id);
+				const def = this.getMarkerDefinitionById(op.marker.markerDefinitionId);
 				const style = [];
 				if (def?.backgroundColor) {
 					style.push(`--marker-bg-color:${def.backgroundColor}`);
@@ -255,7 +185,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 				if (def?.borderColor) {
 					style.push(`--marker-border-color:${def.borderColor}`);
 				}
-				result.push(`<span data-marker-id="${op.marker.id}" class="marker" style="${style.join(';')}" title="${def?.hint}">`);
+				result.push(`<span data-marker-id="${op.marker.markerDefinitionId}" class="marker" style="${style.join(';')}" title="${def?.hint}">`);
 			} else {
 				result.push('</span>');
 			}
@@ -290,8 +220,8 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 					const end = this.getNodePosition(range.endContainer) + range.endOffset;
 
 					if (start !== end) {
-						this.showToolbar();
 						this.currentSelection = { start, end };
+						this.showToolbar();
 						this.onTextSelected.fire(this.currentSelection);
 					}
 				}
@@ -313,13 +243,21 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		});
 
 		this.$editor.addEventListener('blur', e => {
-			this.commitTransientChanges();
+			this.commit();
 			// Only hide toolbar if the focus is not moving to the toolbar
 			if (!this.$toolbarWrapper.contains(e.relatedTarget as Node)) {
 				this.hideToolbar();
 			}
 		});
 	}
+
+	public setToolbarEnabled(enabled: boolean) {
+		this.toolbarEnabled = enabled;
+		if (!enabled) {
+			this.hideToolbar();
+		}
+	}
+
 	private showToolbar(): void {
 		if (!this.toolbarEnabled || [UiFieldEditingMode.DISABLED, UiFieldEditingMode.READONLY].includes(this.getEditingMode())) {
 			return;
@@ -331,7 +269,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	private hideToolbar(): void {
 		if (this.currentSelection) {
 			this.currentSelection = null;
-			this.onTextSelected.fire({ start: 0, end: 0 });
+			this.onTextSelected.fire({ start: 0, end: 0 }); // inform about selection removal
 		}
 		this.$toolbarWrapper.classList.add('hidden');
 	}
@@ -341,7 +279,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 		this.markerDefinitions.forEach(def => {
 			const button = document.createElement('button');
-			button.className = 'toolbar-button';
+			button.className = 'toolbar-button'; // TODO fix styles for toolbar buttons
 			button.textContent = def.hint || `${def.id}`;
 
 			// Style button with marker colors
@@ -354,21 +292,16 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 			}
 
 			// Check if this marker is already applied
-			if (this.transientValue.markers.some(m => m.id === def.id)) {
+			if (this.getTransientMarkers().some(m => m.markerDefinitionId === def.id)) {
 				button.classList.add('applied');
 			}
 
 			// Add click handler
 			button.addEventListener('click', () => {
-				const selection = window.getSelection();
-				if (selection && selection.rangeCount > 0) {
-					const range = selection.getRangeAt(0);
-					const start = this.getNodePosition(range.startContainer) + range.startOffset;
-					const end = this.getNodePosition(range.endContainer) + range.endOffset;
-
-					this.setMarker(def.id, start, end);
-					this.hideToolbar();
+				if (this.currentSelection) {
+					this.setMarker(def.id, this.currentSelection.start, this.currentSelection.end);
 				}
+				this.hideToolbar();
 			});
 
 			this.$toolbarWrapper.appendChild(button);
@@ -420,10 +353,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	}
 
 	public getDefaultValue(): UiTextColorMarkerFieldValueConfig {
-		return {
-			text: '',
-			markers: []
-		};
+		return this.createFieldValue('', []);
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
@@ -435,16 +365,49 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	}
 
 	public isValidData(v: any): boolean {
-		return true; /*TODO*/
+		if (v == null || v.markers == null) {
+			return true;
+		}
+		return !v.markers.some((m: any) => m === null
+			|| !this.isMarkerValid(m, v));
 	}
 
-	protected displayCommittedValue(): void {
-		this.setTransientValue(this.getCommittedValue());
-		//this.$editor.innerText = this.getCommittedValue()?.text ?? ''; // TODO use setTransientValue() instead?!
+	private isMarkerValid(marker: UiTextColorMarkerFieldMarkerConfig, value: UiTextColorMarkerFieldValueConfig) {
+		if (!this.getMarkerDefinitionById(marker.markerDefinitionId)) {
+			this.logger.warn("No definition found for this marker. Invalid marker: " + marker.markerDefinitionId);
+			return false;
+		}
+		if (this.isMarkerOutOfRange(marker, value.text.length)) {
+			this.logger.warn("Marker out of range. Invalid marker: " + JSON.stringify(marker));
+			return false;
+		}
+		if (value.markers.some(otherMarker => this.isMarkerOverlappedButNotNested(otherMarker, marker))) {
+			this.logger.warn("Marker overlaps with existing marker. Invalid marker: " + JSON.stringify(marker) + "\n Existing markers: " + JSON.stringify(value.markers));
+			return false;
+		}
+		return true;
 	}
 
-	public valuesChanged(v1: UiTextColorMarkerFieldValueConfig, v2: UiTextColorMarkerFieldValueConfig): boolean {
-		return deepEquals(v1, v2);
+	private isMarkerOutOfRange(marker: UiTextColorMarkerFieldMarkerConfig, textLength: number) {
+		return marker.start === null
+			|| marker.start === undefined
+			|| marker.end === null
+			|| marker.end === undefined
+			|| marker.start < 0
+			|| marker.end > textLength
+			|| marker.start > marker.end;
+	}
+
+	private isMarkerOverlappedButNotNested(otherMarker: UiTextColorMarkerFieldMarkerConfig, marker: UiTextColorMarkerFieldMarkerConfig) {
+		if (otherMarker.markerDefinitionId === marker.markerDefinitionId) { return false; } // Skip the same marker
+		const otherMStart = otherMarker.start!;
+		const otherMEnd = otherMarker.end!;
+		// Two markers overlap if one starts before the other ends and ends after the other starts
+		// But we allow them to be nested
+		const hasOverlap = () => marker.start < otherMEnd && marker.end > otherMStart;
+		const isNested = () => (marker.start <= otherMStart && marker.end >= otherMEnd) ||
+			(otherMStart <= marker.start && otherMEnd >= marker.end);
+		return hasOverlap() && !isNested();
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
@@ -470,13 +433,22 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		}
 	}
 
-	public setToolbarEnabled(enabled: boolean) {
-		this.toolbarEnabled = enabled;
-		if (!enabled) {
-			this.hideToolbar();
-		}
+	private createFieldValue(text: string, markers: UiTextColorMarkerFieldMarkerConfig[]): UiTextColorMarkerFieldValueConfig {
+		return {
+			_type: "UiTextColorMarkerFieldValue",
+			text: text ?? '',
+			markers: [...(markers ?? [])]
+		};
 	}
 
+	private createMarker(markerDefinitionId: number, start: number, end: number): UiTextColorMarkerFieldMarkerConfig {
+		return {
+			_type: "UiTextColorMarkerFieldMarker",
+			markerDefinitionId,
+			start,
+			end
+		};
+	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiTextColorMarkerField", UiTextColorMarkerField);

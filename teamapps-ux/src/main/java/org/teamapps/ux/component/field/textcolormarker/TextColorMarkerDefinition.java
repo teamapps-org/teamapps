@@ -3,7 +3,7 @@ package org.teamapps.ux.component.field.textcolormarker;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiTextColorMarkerFieldMarkerDefinition;
 
-public record TextColorMarkerFieldMarkerDefinition(
+public record TextColorMarkerDefinition(
 		int id,
 		Color borderColor,
 		Color backgroundColor,

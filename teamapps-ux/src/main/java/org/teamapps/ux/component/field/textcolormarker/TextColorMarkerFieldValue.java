@@ -6,11 +6,11 @@ import org.teamapps.dto.UiTextColorMarkerFieldValue;
 import java.util.List;
 
 public record TextColorMarkerFieldValue(String text,
-										List<TextMarker> markers) {
+										List<TextColorMarker> markers) {
 
 	public UiTextColorMarkerFieldValue toUiTextColorMarkerFieldValue() {
 		List<UiTextColorMarkerFieldMarker> markers = this.markers.stream()
-				.map(TextMarker::toUiTextColorMarkerFieldMarker)
+				.map(TextColorMarker::toUiTextColorMarkerFieldMarker)
 				.toList();
 		return new UiTextColorMarkerFieldValue(text, markers);
 	}
