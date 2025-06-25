@@ -1,17 +1,18 @@
 
 .UiTextColorMarkerField {
-
   position: relative;
-  background-color: white;
-  align-items: center;
+  background-color: var(--ta-input-bg);
   min-height: var(--ta-input-height);
   padding: 0;
 
   > .editor {
-    border: 1px solid var(--ta-input-border-color);
+    border: none;
+    resize: none;
+    outline: none;
     background: transparent;
     padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
     white-space: pre-wrap;
+    height: 100%;
     width: 100%; // needed for newline workaround
     display: inline-block; // workaround for newlines in Chrome (does not work with flex)
     box-sizing: border-box; // workaround for newlines in Chrome (to make sure the width is correct)
@@ -31,13 +32,12 @@
 
   > .toolbar-wrapper {
     position: absolute;
-    margin-right: var(--ta-padding-base-horizontal);
     top: 100%;
     left: 0;
     width: 100%;
     background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--ta-input-border-color);
+    border-radius: var(--ta-input-border-radius);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding: 4px;
     gap: 4px;
@@ -50,11 +50,15 @@
       display: flex;
     }
     .toolbar-button {
-      padding: 4px 8px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
+      padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+      border: 1px solid var(--ta-input-border-color);
+      border-radius: var(--ta-input-border-radius);
       cursor: pointer;
-      font-size: 12px;
+      font-family: var(--ta-font-family-base);
+      font-size: var(--ta-font-size-small);
+      line-height: var(--ta-line-height);
+      min-height: calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2);
+      min-width: calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2);
       white-space: nowrap;
       transition: all 0.15s ease-in-out;
       opacity: 0.6;
@@ -80,6 +84,6 @@
   }
 
   &.disabled {
-    background-color: var(--ta-input-bg-disabled)
+    background-color: var(--ta-input-bg-disabled);
   }
 }

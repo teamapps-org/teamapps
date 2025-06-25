@@ -8,7 +8,7 @@ import {
 import {UiTextColorMarkerFieldMarkerConfig} from "../generated/UiTextColorMarkerFieldMarkerConfig";
 import {UiTextColorMarkerFieldMarkerDefinitionConfig} from "../generated/UiTextColorMarkerFieldMarkerDefinitionConfig";
 import {UiTextColorMarkerFieldValueConfig} from "../generated/UiTextColorMarkerFieldValueConfig";
-import {parseHtml} from "./Common";
+import {escapeHtml, parseHtml} from "./Common";
 import {UiField} from "./formfield/UiField";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -27,9 +27,9 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	private currentSelection: UiTextColorMarkerField_TextSelectedEvent | null = null;
 
 	protected initialize(config: UiTextColorMarkerFieldConfig, context: TeamAppsUiContext): void {
-		this.$main = parseHtml(`<div class="UiTextColorMarkerField">
+		this.$main = parseHtml(`<div class="UiTextColorMarkerField default-min-field-width teamapps-input-wrapper field-border field-border-glow field-background">
 			<div class="toolbar-wrapper hidden"></div>
-			<div class="editor field-border field-background" contenteditable="true"></div>
+			<div class="editor" contenteditable="true"></div>
 		</div>`);
 		this.$toolbarWrapper = this.$main.querySelector(":scope > .toolbar-wrapper");
 		this.$editor = this.$main.querySelector(":scope > .editor");
@@ -48,7 +48,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		this.setValue(this.createFieldValue(
 			newValue?.text,
 			newValue?.markers
-	));
+		));
 	}
 
 	public setMarker(markerDefinitionId: number, start: number, end: number): void {
@@ -58,7 +58,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		newMarkers.push(marker);
 
 		this.setValue(this.createFieldValue(
-			this.getTransientText(), // TODO or should this be the committed value?
+			this.getTransientText(),
 			newMarkers
 		));
 		this.fireValueChangedEvent();
@@ -144,7 +144,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	// Main render method: escapes text, applies markers, and sets innerHTML
 	protected displayCommittedValue(): void {
 		const value = this.getCommittedValue();
-		this.$editor.innerHTML = this.renderWithMarkers(value.text ?? '', value.markers);
+		this.$editor.innerHTML = this.renderWithMarkers(value.text ?? '', value.markers ?? []);
 	}
 
 	// Injects marker spans at the correct offsets
@@ -179,13 +179,13 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 				const def = this.getMarkerDefinitionById(op.marker.markerDefinitionId);
 				const style = [];
 				if (def?.backgroundColor) {
-					style.push(`--marker-bg-color:${def.backgroundColor}`);
+					style.push(`--marker-bg-color:${this.escapeHtmlAttr(def.backgroundColor)}`);
 					style.push(`--marker-text-color:${this.getContrastColor(def.backgroundColor)}`);
 				}
 				if (def?.borderColor) {
-					style.push(`--marker-border-color:${def.borderColor}`);
+					style.push(`--marker-border-color:${this.escapeHtmlAttr(def.borderColor)}`);
 				}
-				result.push(`<span data-marker-id="${op.marker.markerDefinitionId}" class="marker" style="${style.join(';')}" title="${def?.hint}">`);
+				result.push(`<span data-marker-id="${op.marker.markerDefinitionId}" class="marker" style="${style.join(';')}" title="${this.escapeHtmlAttr(def?.hint)}">`);
 			} else {
 				result.push('</span>');
 			}
@@ -201,12 +201,20 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	}
 
 	private escapeHtml(text: string): string {
-		return text.replace(/[&<>]/g, c => {
+		return text?.replace(/[&<>]/g, c => {
 			if (c === '<') { return '&lt;'; }
 			if (c === '>') { return '&gt;'; }
 			if (c === '&') { return '&amp;'; }
 			return c;
 		});
+	}
+
+	private escapeHtmlAttr(text: string): string {
+		return escapeHtml(text?.replace(/"'/g, c => {
+			if (c === '"') { return '&quot;'; }
+			if (c === "'") { return '&#39;'; }
+			return c;
+		}));
 	}
 
 	private setupEventListeners(): void {
@@ -279,8 +287,8 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 		this.markerDefinitions.forEach(def => {
 			const button = document.createElement('button');
-			button.className = 'toolbar-button'; // TODO fix styles for toolbar buttons
-			button.textContent = def.hint || `${def.id}`;
+			button.className = 'toolbar-button';
+			button.innerHTML = this.escapeHtml(def.hint || '').replace(/\n/g, '<br>');
 
 			// Style button with marker colors
 			if (def.backgroundColor) {
