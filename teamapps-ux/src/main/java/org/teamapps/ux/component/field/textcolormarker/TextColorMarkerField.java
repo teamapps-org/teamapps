@@ -29,7 +29,7 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 
 	static final TextColorMarkerFieldValue EMPTY_VALUE = new TextColorMarkerFieldValue("", List.of());
 
-	private List<TextColorMarkerDefinition> markerDefinitions;
+	private List<TextColorMarkerDefinition> markerDefinitions = List.of();
 	private boolean toolbarEnabled = true;
 	private TextSelectionData currentSelection;
 	private TextSelectionData lastSelection;
@@ -46,7 +46,7 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 	}
 
 	private static List<UiTextColorMarkerFieldMarkerDefinition> createUiMarkerDefinitions(List<TextColorMarkerDefinition> markerDefinitions) {
-		return markerDefinitions == null ? List.of(): markerDefinitions.stream()
+		return markerDefinitions.stream()
 				.map(TextColorMarkerDefinition::toUiTextColorMarkerFieldMarkerDefinition)
 				.toList();
 	}
@@ -55,29 +55,43 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 		return markerDefinitions;
 	}
 
+	/**
+	 * @param markerDefinitions list of possible markers for this field
+	 * @param value the field text and its markers
+	 */
 	public void setMarkerDefinitions(List<TextColorMarkerDefinition> markerDefinitions,
 									 TextColorMarkerFieldValue value) {
-		// TODO validate definition + value (text + marker id + marker pos)
-		this.markerDefinitions = markerDefinitions;
-		List<UiTextColorMarkerFieldMarkerDefinition> uiMarkerDefinitions = createUiMarkerDefinitions(markerDefinitions);
+		this.markerDefinitions = markerDefinitions == null ? List.of() : markerDefinitions;
+		List<UiTextColorMarkerFieldMarkerDefinition> uiMarkerDefinitions = createUiMarkerDefinitions(this.markerDefinitions);
 		UiTextColorMarkerFieldValue uiValue = value != null ? value.toUiTextColorMarkerFieldValue() : null;
 		queueCommandIfRendered(() -> new UiTextColorMarkerField.SetMarkerDefinitionsCommand(getId(), uiMarkerDefinitions, uiValue));
 		setValue(value);
 	}
 
+	/**
+	 * @param markerDefinitions list of possible markers for this field
+	 */
 	public void setMarkerDefinitions(List<TextColorMarkerDefinition> markerDefinitions) {
 		setMarkerDefinitions(markerDefinitions, EMPTY_VALUE);
 	}
 
+	/**
+	 *
+	 * @param markerDefinitionId reference for the marker definition
+	 * @param start text start position of the marker
+	 * @param end text end position of the marker
+	 * @throws IllegalTextColorMarkerException if no matching definition was found
+	 */
 	public void setMarker(int markerDefinitionId, int start, int end) {
 		if (!getEditingMode().isEditable()) {
 			return;
 		}
-		// TODO validate marker id + start/end
+		TextColorMarker marker = new TextColorMarker(markerDefinitionId, start, end);
+		validateMarker(marker);
 
 		//TextColorMarkerFieldValue val = new TextColorMarkerFieldValue(getValue().text(), new ArrayList<>(getValue().markers()));
 		//val.markers().removeIf(m -> m.markerDefinitionId() == markerDefinitionId);
-		//val.markers().add(new TextColorMarker(markerDefinitionId, start, end));
+		//val.markers().add(marker);
 		//val.markers().sort(Comparator.comparingInt(TextColorMarker::markerDefinitionId)); // sort by ID to match the order of the UI markers
 		//setValueWithoutNotifyingClient(val);
 		// TODO add marker to "value" (it's updated by onValueChanged but delayed!)
@@ -105,6 +119,27 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 	public void setToolbarEnabled(boolean toolbarEnabled) {
 		this.toolbarEnabled = toolbarEnabled;
 		queueCommandIfRendered(() -> new UiTextColorMarkerField.SetToolbarEnabledCommand(getId(), toolbarEnabled));
+	}
+
+	@Override
+	public void setValue(TextColorMarkerFieldValue value) {
+		validateMarkers(value);
+		super.setValue(value);
+	}
+
+	private void validateMarkers(TextColorMarkerFieldValue value) {
+		if (value != null && value.markers() != null) {
+			value.markers().forEach(this::validateMarker);
+		}
+	}
+
+	private void validateMarker(TextColorMarker marker) {
+		if (marker == null) {
+			throw new IllegalTextColorMarkerException("Marker must not be null");
+		}
+		if (markerDefinitions.stream().noneMatch(def -> def.id() == marker.markerDefinitionId())) {
+			throw new IllegalTextColorMarkerException("Marker definition ID must exist: " + marker.markerDefinitionId());
+		}
 	}
 
 	@Override

@@ -50,25 +50,25 @@ public class TeamAppsJettyEmbeddedServerTest {
 					field.setMarkerDefinitions(List.of(
 							new TextColorMarkerDefinition(1, Color.RED, Color.BLUE, "ja so wat! \n ach ne!"),
 							new TextColorMarkerDefinition(9, null, Color.YELLOW, "marker")
-					), new TextColorMarkerFieldValue("Hallooo \n Welt", List.of(new TextColorMarker(9, 2, 5)))); // TODO how to handle if ID of set marker is not available -> check on server site additional to client
+					), new TextColorMarkerFieldValue("Hallooo \n Welt", List.of(new TextColorMarker(9, 2, 5))));
 
 					//field.addCustomFieldMessage(FieldMessage.Severity.ERROR, "Dingens");
 
-					field.onTextSelected.addListener(event -> {
-						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "text selected: " + event.start() + "-" + event.end());
-					});
+					field.onTextSelected.addListener(event ->
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "text selected: " + event.start() + "-" + event.end())
+					);
 
-					field.onValueChanged.addListener(event -> {
-						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "value changed: " + event.text() + " " + renderMarkersToString(event));
-					});
+					field.onValueChanged.addListener(event ->
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "value changed: " + event.text() + " " + renderMarkersToString(event))
+					);
 
-					field.onBlur.addListener(() -> {
-						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "field blur");
-					});
+					field.onBlur.addListener(() ->
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "field blur")
+					);
 
-					field.onFocus.addListener(() -> {
-						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "field focus");
-					});
+					field.onFocus.addListener(() ->
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "field focus")
+					);
 
 
 					field.getMarkerDefinitions().forEach(def -> {
