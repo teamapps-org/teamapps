@@ -28,8 +28,8 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 	protected initialize(config: UiTextColorMarkerFieldConfig, context: TeamAppsUiContext): void {
 		this.$main = parseHtml(`<div class="UiTextColorMarkerField default-min-field-width teamapps-input-wrapper field-border field-border-glow field-background">
-			<div class="toolbar-wrapper hidden"></div>
-			<div class="editor" contenteditable="true"></div>
+			<div class="toolbar-wrapper hidden" tabindex="0"></div>
+			<div class="editor" contenteditable="true" tabindex="0"></div>
 		</div>`);
 		this.$toolbarWrapper = this.$main.querySelector(":scope > .toolbar-wrapper");
 		this.$editor = this.$main.querySelector(":scope > .editor");
@@ -432,14 +432,17 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 			case UiFieldEditingMode.EDITABLE_IF_FOCUSED:
 				this.$editor.contentEditable = 'true';
 				this.$editor.setAttribute('tabindex', '0');
+				this.$toolbarWrapper.setAttribute('tabindex', '0');
 				break;
 			case UiFieldEditingMode.DISABLED:
 				this.$editor.contentEditable = 'false';
 				this.$editor.setAttribute('tabindex', '-1');
+				this.$toolbarWrapper.setAttribute('tabindex', '-1');
 				break;
 			case UiFieldEditingMode.READONLY:
 				this.$editor.contentEditable = 'false';
 				this.$editor.setAttribute('tabindex', '-1');
+				this.$toolbarWrapper.setAttribute('tabindex', '-1');
 				break;
 			default:
 				this.logger.error("unknown editing mode! " + editingMode);
