@@ -10,7 +10,7 @@ class UiTextColorMarkerField extends UiField {
 }
 
 class UiTextColorMarkerFieldMarkerDefinition {
-    int id;
+    required int id;
     String borderColor;
     String backgroundColor;
     String hint;
@@ -22,7 +22,7 @@ class UiTextColorMarkerFieldValue {
 }
 
 class UiTextColorMarkerFieldMarker {
-    int markerDefinitionId;
-    int start;
-    int end;
+    required int markerDefinitionId;
+    required int start;
+    required int end;
 }
