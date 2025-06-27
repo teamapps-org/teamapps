@@ -1,18 +1,18 @@
-import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
+import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {
 	UiTextColorMarkerField_TextSelectedEvent,
 	UiTextColorMarkerFieldCommandHandler,
 	UiTextColorMarkerFieldConfig,
 	UiTextColorMarkerFieldEventSource
-} from "../generated/UiTextColorMarkerFieldConfig";
-import {UiTextColorMarkerFieldMarkerConfig} from "../generated/UiTextColorMarkerFieldMarkerConfig";
-import {UiTextColorMarkerFieldMarkerDefinitionConfig} from "../generated/UiTextColorMarkerFieldMarkerDefinitionConfig";
-import {UiTextColorMarkerFieldValueConfig} from "../generated/UiTextColorMarkerFieldValueConfig";
-import {escapeHtml, parseHtml} from "./Common";
-import {UiField} from "./formfield/UiField";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
+} from "../../generated/UiTextColorMarkerFieldConfig";
+import {UiTextColorMarkerFieldMarkerConfig} from "../../generated/UiTextColorMarkerFieldMarkerConfig";
+import {UiTextColorMarkerFieldMarkerDefinitionConfig} from "../../generated/UiTextColorMarkerFieldMarkerDefinitionConfig";
+import {UiTextColorMarkerFieldValueConfig} from "../../generated/UiTextColorMarkerFieldValueConfig";
+import {escapeHtml, parseHtml} from "../Common";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiField} from "./UiField";
 
 export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig, UiTextColorMarkerFieldValueConfig> implements UiTextColorMarkerFieldCommandHandler, UiTextColorMarkerFieldEventSource {
 

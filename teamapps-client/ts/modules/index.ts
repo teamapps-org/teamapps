@@ -126,10 +126,10 @@ export {UiRichTextEditor} from "./formfield/UiRichTextEditor";
 export {UiColorPicker} from "./formfield/UiColorPicker";
 export {UiFieldGroup} from "./formfield/UiFieldGroup";
 export {UiTemplateField} from "./formfield/UiTemplateField";
+export {UiTextColorMarkerField} from "./formfield/UiTextColorMarkerField";
 export {UiLinkButton} from "./UiLinkButton";
 export {UiDiv} from "./UiDiv";
 export {UiCollapsible} from "./UiCollapsible";
-export {UiTextColorMarkerField} from "./UiTextColorMarkerField";
 
 export {UiToolButton} from "./micro-components/UiToolButton";
 
