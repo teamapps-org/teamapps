@@ -49,6 +49,10 @@ public class MultiWriteLockableValue<VALUE> {
 		}
 	}
 
+	public void writeWithoutLocking(VALUE value) {
+		this.value = value;
+	}
+
 	public boolean isLocked() {
 		return !locks.isEmpty();
 	}

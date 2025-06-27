@@ -51,7 +51,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		));
 	}
 
-	public setMarker(markerDefinitionId: number, start: number, end: number, fireMarkerChangeEvent: boolean = true): void {
+	public setMarker(markerDefinitionId: number, start: number, end: number, fireMarkerChangeEvent: boolean = false): void {
 		const newMarkers = this.getCommittedValue().markers.filter(m => m.markerDefinitionId !== markerDefinitionId);
 		newMarkers.push(this.createMarker(markerDefinitionId, start, end));
 

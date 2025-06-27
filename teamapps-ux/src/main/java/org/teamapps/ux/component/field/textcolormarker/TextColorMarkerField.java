@@ -22,7 +22,10 @@ package org.teamapps.ux.component.field.textcolormarker;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.ux.component.field.FieldEditingMode;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValue> {
@@ -86,13 +89,11 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 		TextColorMarker marker = new TextColorMarker(markerDefinitionId, start, end);
 		validateMarker(marker);
 
-		//TextColorMarkerFieldValue val = new TextColorMarkerFieldValue(getValue().text(), new ArrayList<>(getValue().markers()));
-		//val.markers().removeIf(m -> m.markerDefinitionId() == markerDefinitionId);
-		//val.markers().add(marker);
-		//val.markers().sort(Comparator.comparingInt(TextColorMarker::markerDefinitionId)); // sort by ID to match the order of the UI markers
-		//setValueWithoutNotifyingClient(val);
-		// TODO add marker to "value" (it's updated by onValueChanged but delayed!)
-		// TODO ensure it's not overriding transient text changes from UI
+		TextColorMarkerFieldValue val = new TextColorMarkerFieldValue(getValue().text(), new ArrayList<>(getValue().markers()));
+		val.markers().removeIf(m -> m.markerDefinitionId() == markerDefinitionId);
+		val.markers().add(marker);
+		val.markers().sort(Comparator.comparingInt(TextColorMarker::markerDefinitionId)); // sort by ID to match the order of the UI markers
+		setValueWithoutNotifyingClient(val);
 		queueCommandIfRendered(() -> new UiTextColorMarkerField.SetMarkerCommand(getId(), markerDefinitionId, start, end));
 	}
 
