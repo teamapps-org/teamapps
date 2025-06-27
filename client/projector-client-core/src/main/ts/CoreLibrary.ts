@@ -1,13 +1,13 @@
 import {
-	ClientObject,
-	ClosedSessionHandlingType,
-	Component,
+	type ClosedSessionHandlingType,
+	type Component,
 	exitFullScreen,
-	KeyEventType, KeyEventTypes,
+	KeyEventTypes,
 	releaseWakeLock,
 	requestWakeLock,
-	ServerObjectChannel,
-	Showable, StaticDtoGlobalsServerObjectChannel,
+	type ServerObjectChannel,
+	type Showable,
+	type StaticDtoGlobalsServerObjectChannel,
 } from "projector-client-object-api";
 import {ProjectorUiManager} from "./ProjectorUiManager";
 

@@ -1,4 +1,4 @@
-import {parseHtml, Showable} from "projector-client-object-api";
+import {parseHtml, type Showable} from "projector-client-object-api";
 
 export function	createGenericErrorMessageShowable(title: string, message: string, showErrorIcon: boolean): Showable {
 	let $div = parseHtml(`

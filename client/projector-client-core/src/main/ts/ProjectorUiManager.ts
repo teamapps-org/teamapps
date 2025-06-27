@@ -20,19 +20,19 @@
 "use strict";
 
 import {
-	ClientObject,
-	ClosedSessionHandlingType, ClosedSessionHandlingTypes,
-	ComponentLibrary,
+	type ClientObject,
+	type ClosedSessionHandlingType,
+	ClosedSessionHandlingTypes,
+	type ComponentLibrary,
 	generateUUID,
-	Invokable,
-	ServerObjectChannel,
-	Showable
+	type ServerObjectChannel,
+	type Showable
 } from "projector-client-object-api";
 import {
-	ClientInfo,
-	Connection,
+	type ClientInfo,
+	type Connection,
 	ConnectionImpl,
-	ConnectionListener,
+	type ConnectionListener,
 	SessionClosingReason
 } from "projector-client-communication";
 import {CoreLibrary} from "./CoreLibrary";
@@ -43,9 +43,15 @@ abstract class AbstractClientObjectWrapper<WRAPPED extends ComponentLibrary | Cl
 
 	public objectPromise: Promise<WRAPPED>;
 
-	constructor(protected id: string,
+	private serverObjectChannel: ServerObjectChannelImpl;
+
+	protected id: string;
+
+	constructor(id: string,
 	            promise: Promise<WRAPPED>,
-	            private serverObjectChannel: ServerObjectChannelImpl) {
+	            serverObjectChannel: ServerObjectChannelImpl) {
+		this.id = id;
+		this.serverObjectChannel = serverObjectChannel;
 		this.objectPromise = promise.then(object => {
 			if (typeof object['init'] === "function") {
 				object.init(serverObjectChannel);
@@ -61,7 +67,7 @@ abstract class AbstractClientObjectWrapper<WRAPPED extends ComponentLibrary | Cl
 		} else if (typeof object[name] === "function") {
 			return object[name].apply(object, params);
 		} else {
-			throw new Error(`Cannot invoke command ${name} on ${(<any>object.constructor).name || 'object'} with id ${this.id} !`);
+			throw new Error(`Cannot invoke command ${name} on ${object.constructor.name || 'object'} with id ${this.id} !`);
 		}
 	}
 

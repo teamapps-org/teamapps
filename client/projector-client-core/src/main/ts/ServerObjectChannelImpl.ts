@@ -1,4 +1,4 @@
-import {ServerObjectChannel} from "projector-client-object-api";
+import {type ServerObjectChannel} from "projector-client-object-api";
 
 export interface ServerObjectChannelHandler {
 	handleEvent(name: string, params: any[]): void,
@@ -10,7 +10,10 @@ export class ServerObjectChannelImpl implements ServerObjectChannel {
 	private activeEventNames: Set<string> = new Set<string>();
 	private eventHandlers: { registrationId: string, eventName: string, handler: (any) => any }[];
 
-	constructor(private delegate: ServerObjectChannelHandler) {
+	private delegate: ServerObjectChannelHandler;
+
+	constructor(delegate: ServerObjectChannelHandler) {
+		this.delegate = delegate;
 	}
 
 	sendEvent(eventName: string, params: any[]) {

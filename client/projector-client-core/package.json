@@ -2,24 +2,27 @@
   "name": "projector-client-core",
   "version": "0.1.0-SNAPSHOT",
   "type": "module",
-  "exports": "./target/js-dist/index.js",
-  "types": "./target/js-dist/lib/index.d.ts",
-  "scripts": {
-    "del_dist": "rimraf 'target/js-dist/*'",
-    "clean": "pnpm run del_dist",
-    "tsc": "tsc",
-    "build:insert-version": "cross-var replace-in-file \"__TEAMAPPS_VERSION__\" \"$npm_package_version\" \"target/js-dist/**/*.js\"",
-    "bundle": "node esbuild.mjs",
-    "build": "pnpm run clean && pnpm run tsc && pnpm run build:insert-version && pnpm run bundle"
+  "exports": {
+    ".": {
+      "types": "./target/js-dist/index.d.ts",
+      "import": "./target/js-dist/index.js"
+    }
   },
+  "types": "./target/js-dist/index.d.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "files": [
+    "./target/js-dist",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
-    "cross-var": "^1.1.0",
-    "esbuild": "^0.15.13",
-    "esbuild-plugin-alias": "^0.2.1",
-    "esbuild-plugin-less": "^1.1.11",
-    "replace-in-file": "^7.0.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^5.1"
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
   },
   "dependencies": {
     "projector-client-communication": "workspace:*",

@@ -69,7 +69,7 @@
                             <goal>pnpm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install --filter "."</arguments>
+                            <arguments>install --filter ${project.name}</arguments>
                         </configuration>
                     </execution>
                     <execution>
