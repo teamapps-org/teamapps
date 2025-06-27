@@ -83,9 +83,6 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 	 * @throws IllegalTextColorMarkerException if no matching definition was found
 	 */
 	public void setMarker(int markerDefinitionId, int start, int end) {
-		if (!getEditingMode().isEditable()) {
-			return;
-		}
 		TextColorMarker marker = new TextColorMarker(markerDefinitionId, start, end);
 		validateMarker(marker);
 
@@ -146,11 +143,10 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
 			case UI_TEXT_COLOR_MARKER_FIELD_TEXT_SELECTED:
-				if (!getEditingMode().isEditable()) break;
 				UiTextColorMarkerField.TextSelectedEvent textSelectedEvent = (UiTextColorMarkerField.TextSelectedEvent) event;
 				if (textSelectedEvent.getEnd() == 0) { // start == end == 0
 					setCurrentSelection(null); // selection was removed
-				} else {
+				} else if (getEditingMode() != FieldEditingMode.DISABLED) {
 					onTextSelected.fire(setCurrentSelection(new TextSelectionData(textSelectedEvent.getStart(), textSelectedEvent.getEnd())));
 				}
 				break;

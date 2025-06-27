@@ -44,6 +44,8 @@ public class TeamAppsJettyEmbeddedServerTest {
 					panel.addToolButton(toolButton);
 					ToolButton readonlyButton = new ToolButton(MaterialIcon.FLASH_ON, "readonly");
 					panel.addToolButton(readonlyButton);
+					ToolButton disableButton = new ToolButton(MaterialIcon.BLOCK, "disable");
+					panel.addToolButton(disableButton);
 
 					TextColorMarkerField field = new TextColorMarkerField();
 
@@ -89,6 +91,8 @@ public class TeamAppsJettyEmbeddedServerTest {
 					});
 					readonlyButton.onClick.addListener(() ->
 							field.setEditingMode(field.getEditingMode() == FieldEditingMode.READONLY ? FieldEditingMode.EDITABLE : FieldEditingMode.READONLY));
+					disableButton.onClick.addListener(() ->
+							field.setEditingMode(field.getEditingMode() == FieldEditingMode.DISABLED ? FieldEditingMode.EDITABLE : FieldEditingMode.DISABLED));
 
 					panel.setContent(field);
 
