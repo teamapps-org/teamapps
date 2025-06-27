@@ -21,7 +21,10 @@
 import {NumberParser} from "./NumberParser";
 
 export class BigDecimal {
-	private constructor(public readonly value: string) {
+	public readonly value: string;
+
+	private constructor(value: string) {
+		this.value = value;
 	}
 
 	public static of(value: string): BigDecimal {

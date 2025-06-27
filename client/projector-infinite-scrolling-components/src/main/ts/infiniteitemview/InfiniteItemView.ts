@@ -25,7 +25,7 @@ import {
 	AlignItems,
 	Component,
 	debouncedMethod,
-	DebounceMode,
+	DebounceModes,
 	executeAfterAttached,
 	JustifyContent, JustifyContents,
 	parseHtml,
@@ -123,7 +123,7 @@ export class InfiniteItemView extends AbstractComponent<DtoInfiniteItemView> imp
 		this.$mainDomElement.style.setProperty("--item-position-animation-time", animationMillis + "ms");
 	}
 
-	@debouncedMethod(150, DebounceMode.BOTH)
+	@debouncedMethod(150, DebounceModes.BOTH)
 	private requestDataIfNeededDebounced() {
 		this.requestDataIfNeeded();
 	}

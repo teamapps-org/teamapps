@@ -1,6 +1,6 @@
 import {parseHtml} from "./parseHtml";
 import {ProjectorEvent} from "./ProjectorEvent";
-import {EntranceAnimation, ExitAnimation, NotificationPosition, NotificationPositions} from "../generated";
+import {type EntranceAnimation, type ExitAnimation, type NotificationPosition, NotificationPositions} from "../generated";
 import {animateCSS} from "./animations";
 
 let notificationPositions: NotificationPosition[] = Object.values(NotificationPositions);
@@ -51,7 +51,14 @@ class NotificationWrapper implements NotificationHandle {
 	private position: NotificationPosition;
 	#open: boolean;
 
-	constructor(public content: ComponentLike, private entranceAnimation: EntranceAnimation, private exitAnimation: ExitAnimation) {
+	public content: ComponentLike;
+	private entranceAnimation: EntranceAnimation;
+	private exitAnimation: ExitAnimation;
+
+	constructor(content: ComponentLike, entranceAnimation: EntranceAnimation, exitAnimation: ExitAnimation) {
+		this.content = content;
+		this.entranceAnimation = entranceAnimation;
+		this.exitAnimation = exitAnimation;
 		this.$wrapper = parseHtml(`<div class="notification-wrapper"></div>`);
 		this.$wrapper.appendChild(content.getMainElement());
 	}

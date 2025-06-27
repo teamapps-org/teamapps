@@ -17,18 +17,37 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Component} from "./Component";
-import { ServerObjectChannel } from "./ClientObject";
-import {DtoComponent} from "./generated";
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2022 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+import type {Component} from "./Component";
+import type {ServerObjectChannel} from "./ClientObject";
+import type {DtoComponent} from "./generated";
 import {
-	capitalizeFirstLetter,
 	debounce,
-	DebounceMode,
+	DebounceModes,
 	DeferredExecutor,
 	generateUUID,
 	isProjectorEvent,
+	ProjectorEvent,
 	StyleManager,
-	ProjectorEvent, uncapitalizeFirstLetter
+	uncapitalizeFirstLetter
 } from "./util";
 
 export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> implements Component {
@@ -47,7 +66,10 @@ export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> i
 	protected readonly styleManager: StyleManager;
 	protected readonly cssUuid = generateUUID();
 
-	constructor(protected config: C) {
+	protected config: C;
+
+	constructor(config: C) {
+		this.config = config;
 		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-css-id="${this.cssUuid}"]`, `[data-css-id="${this.cssUuid}"]`);
 		this.displayedDeferredExecutor.invokeOnceWhenReady(() => this.styleManager.apply());
 		this.visible = config.visible ?? false;
@@ -70,16 +92,8 @@ export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> i
 		}
 	}
 
-	async invoke(name: string, params: any[]): Promise<any> {
-		return await (this[name] as Function)(...params);
-	}
-
 	public getCssUuid(): string {
 		return this.cssUuid ?? "";
-	}
-
-	public getTeamAppsType(): string {
-		return this.config._type;
 	}
 
 	protected reLayout(width: number, height: number): void {
@@ -130,20 +144,23 @@ export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> i
 
 			element.classList.toggle("invisible-component", this.visible == null ? false : !this.visible);
 			if (this.config.stylesBySelector != null) {
-				Object.keys(this.config.stylesBySelector).forEach(selector => this.setStyle(selector, this.config.stylesBySelector[selector]));
+				Object.keys(this.config.stylesBySelector).forEach(selector => this.setStyle(selector, this.config.stylesBySelector![selector]));
 			}
 			if (this.config.classNamesBySelector != null) {
-				Object.keys(this.config.classNamesBySelector).forEach(selector => this.setClassNames(selector, this.config.classNamesBySelector[selector]));
+				Object.keys(this.config.classNamesBySelector).forEach(selector => this.setClassNames(selector, this.config.classNamesBySelector![selector]));
 			}
 			if (this.config.attributesBySelector != null) {
-				Object.keys(this.config.attributesBySelector).forEach(selector => this.setAttributes(selector, this.config.attributesBySelector[selector]));
+				Object.keys(this.config.attributesBySelector).forEach(selector => this.setAttributes(selector, this.config.attributesBySelector![selector]));
 			}
 
 			let relayoutCalled = false;
-			let debouncedRelayout: (size?: { width: number, height: number }) => void = debounce((size?: { width: number, height: number }) => {
+			let debouncedRelayout: (size?: { width: number, height: number }) => void = debounce((size?: {
+				width: number,
+				height: number
+			}) => {
 				relayoutCalled = true;
-				this.reLayout(size.width, size.height);
-			}, 100, DebounceMode.BOTH);
+				this.reLayout(size?.width ?? 0, size?.height ?? 0);
+			}, 100, DebounceModes.BOTH);
 			const resizeObserver = new ResizeObserver(entries => {
 				for (let entry of entries) {
 					debouncedRelayout({width: entry.contentRect.width, height: entry.contentRect.height});

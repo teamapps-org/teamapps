@@ -28,17 +28,18 @@ import {
 import {escapeHtml, getScrollbarWidth} from "../../util/Common";
 import {
 	AbstractField,
-	DebounceMode,
+	DebounceModes,
 	executeAfterAttached,
-	FieldEditingMode, FieldEditingModes,
+	FieldEditingMode,
+	FieldEditingModes,
 	parseHtml,
 	ProjectorEvent
 } from "projector-client-object-api";
 
 export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, string> implements DtoMultiLineTextFieldEventSource, DtoMultiLineTextFieldCommandHandler {
 
-	public readonly onTextInput: ProjectorEvent<DtoTextInputHandlingField_TextInputEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_TextInputEvent>(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_SpecialKeyPressedEvent>(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoTextInputHandlingField_TextInputEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_TextInputEvent>(250, DebounceModes.BOTH);
+	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_SpecialKeyPressedEvent>(250, DebounceModes.BOTH);
 
 	private $wrapper: HTMLElement;
 	private $field: HTMLTextAreaElement;

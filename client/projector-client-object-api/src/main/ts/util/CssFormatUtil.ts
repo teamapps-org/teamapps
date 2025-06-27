@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoBorder, DtoBoxShadow, DtoFontStyle, DtoLine, DtoSpacing, TextAlignment,} from "../generated";
+import type {DtoBorder, DtoBoxShadow, DtoFontStyle, DtoLine, DtoSpacing, TextAlignment,} from "../generated";
 
 export type CssPropertyObject = { [cssProperty: string]: string };
 

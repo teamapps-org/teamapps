@@ -35,7 +35,7 @@ import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {
 	AbstractField,
-	DebounceMode,
+	DebounceModes,
 	deepEquals,
 	DtoDateTimeFormatDescriptor, executeAfterAttached,
 	FieldEditingMode, FieldEditingModes,
@@ -49,8 +49,8 @@ import {
 
 export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDate> implements DtoLocalDateFieldEventSource, DtoLocalDateFieldCommandHandler {
 
-	public readonly onTextInput: ProjectorEvent<DtoLocalDateField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoLocalDateField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceModes.BOTH);
+	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced(250, DebounceModes.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected dateSuggestionEngine: DateSuggestionEngine;

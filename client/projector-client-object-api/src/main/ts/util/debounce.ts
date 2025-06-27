@@ -17,16 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-export enum DebounceMode {
+export const DebounceModes = Object.freeze({
 	// trigger the function on the leading edge
-	IMMEDIATE,
+	IMMEDIATE: "IMMEDIATE",
 	// trigger the function on the trailing edge
-	LATER,
+	LATER: "LATER",
 	// trigger the function on the leading edge and the trailing edge, but only if the debounced function has been called again
-	BOTH
-}
+	BOTH: "BOTH"
+});
+export type DebounceMode = typeof DebounceModes[keyof typeof DebounceModes]
 
-export function debouncedMethod(delay: number, mode = DebounceMode.LATER) {
+
+export function debouncedMethod(delay: number, mode: DebounceMode = DebounceModes.LATER) {
 
 	return function<This, Args extends any[], Return>(
 		originalMethod: (this: This, ...args: Args) => Return,
@@ -42,7 +44,7 @@ export function debouncedMethod(delay: number, mode = DebounceMode.LATER) {
  *
  *  @see throttle
  */
-export function debounce<Args extends any[]>(func: (...args: Args) => any, delay: number, mode = DebounceMode.LATER): (...args: Args) => void {
+export function debounce<Args extends any[]>(func: (...args: Args) => any, delay: number, mode:DebounceMode = DebounceModes.LATER): (...args: Args) => void {
 	let timeout: any;
 	let needsToBeCalledLater: boolean;
 	if (delay <= 0) {
@@ -55,8 +57,8 @@ export function debounce<Args extends any[]>(func: (...args: Args) => any, delay
 				if (needsToBeCalledLater) func.apply(context, args);
 				needsToBeCalledLater = false;
 			};
-			const callNow = (mode === DebounceMode.IMMEDIATE || mode === DebounceMode.BOTH) && !timeout;
-			needsToBeCalledLater = mode === DebounceMode.LATER || (mode === DebounceMode.BOTH && !!timeout);
+			const callNow = (mode === DebounceModes.IMMEDIATE || mode === DebounceModes.BOTH) && !timeout;
+			needsToBeCalledLater = mode === DebounceModes.LATER || (mode === DebounceModes.BOTH && !!timeout);
 			clearTimeout(timeout);
 			timeout = setTimeout(later, delay);
 			if (callNow) func.apply(context, args);

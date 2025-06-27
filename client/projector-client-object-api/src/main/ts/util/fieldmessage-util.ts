@@ -1,4 +1,4 @@
-import {FieldMessageSeverities, FieldMessageSeverity} from "../generated";
+import {FieldMessageSeverities, type FieldMessageSeverity} from "../generated";
 
 let severitiesSorted = [
 	FieldMessageSeverities.INFO,

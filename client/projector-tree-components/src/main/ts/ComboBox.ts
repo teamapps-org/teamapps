@@ -30,7 +30,7 @@ import {
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {
 	AbstractField,
-	DebounceMode, executeAfterAttached,
+	DebounceModes, executeAfterAttached,
 	FieldEditingMode, FieldEditingModes,
 	ProjectorEvent, Template
 } from "projector-client-object-api";
@@ -42,7 +42,7 @@ export function isFreeTextEntry(o: DtoComboBoxTreeRecord): boolean {
 }
 
 export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> implements DtoComboBoxEventSource, DtoComboBoxCommandHandler {
-	public readonly onTextInput: ProjectorEvent<DtoAbstractComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoAbstractComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceModes.BOTH);
 
 	private trivialComboBox: TrivialComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
 	private freeTextIdEntryCounter = -1;

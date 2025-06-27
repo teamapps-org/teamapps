@@ -51,7 +51,8 @@ import {
 	FieldMessageSeverity, getHighestSeverity, nonRecursive, parseHtml,
 	ServerObjectChannel,
 	ProjectorEvent,
-	manipulateWithoutTransitions, arraysEqual, closestAncestor, Template, FieldMessageSeverities
+	manipulateWithoutTransitions, arraysEqual, closestAncestor, Template, FieldMessageSeverities,
+    DebounceModes
 } from "projector-client-object-api";
 import {ContextMenu, DropDown, escapeHtml} from "projector-client-core-components";
 
@@ -438,7 +439,7 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	@debouncedMethod(150, DebounceMode.BOTH)
+	@debouncedMethod(150, DebounceModes.BOTH)
 	private throttledFireDisplayedRangeChanged() {
 		this.onDisplayedRangeChanged.fireIfChanged(this.createDisplayRangeChangedEvent());
 	}

@@ -22,7 +22,7 @@ import {
 	AbstractComponent,
 	addDelegatedEventListener,
 	Component,
-	debouncedMethod, DebounceMode, executeAfterAttached, humanReadableFileSize,
+	debouncedMethod, DebounceModes, executeAfterAttached, humanReadableFileSize,
 	parseHtml, prependChild,
 } from "projector-client-object-api";
 import {
@@ -94,7 +94,7 @@ export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements Dt
 		this.config.contextMenuEnabled = contextMenuEnabled;
     }
 
-	@debouncedMethod(500, DebounceMode.LATER)
+	@debouncedMethod(500, DebounceModes.LATER)
 	private requestPreviousMessages() {
 		if (!this.requestingPreviousMessages) {
 			this.requestingPreviousMessages = true;

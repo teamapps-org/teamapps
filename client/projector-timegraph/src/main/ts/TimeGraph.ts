@@ -35,7 +35,7 @@ import {
 	AbstractComponent,
 	bind,
 	debouncedMethod,
-	DebounceMode,
+	DebounceModes,
 	executeAfterAttached,
 	generateUUID,
 	parseHtml,
@@ -496,7 +496,7 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 		});
 	}
 
-	@debouncedMethod(500, DebounceMode.LATER)
+	@debouncedMethod(500, DebounceModes.LATER)
 	private fireUiZoomEvent() {
 		let transformedScaleX = this.getTransformedScaleX();
 		let domain = transformedScaleX.domain();

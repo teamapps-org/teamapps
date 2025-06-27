@@ -1,4 +1,4 @@
-import {EntranceAnimation, EntranceAnimations, ExitAnimation, ExitAnimations, PageTransition} from "../generated";
+import {EntranceAnimations, ExitAnimations, type PageTransition} from "../generated";
 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
 	if (animationClassNames == null || animationClassNames.length == 0) {

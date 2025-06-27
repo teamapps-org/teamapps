@@ -28,7 +28,7 @@ import {
 } from "./generated";
 import {
 	AbstractField,
-	DebounceMode,
+	DebounceModes,
 	DtoDateTimeFormatDescriptor,
 	executeAfterAttached,
 	FieldEditingMode, FieldEditingModes,

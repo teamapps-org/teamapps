@@ -17,21 +17,29 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField, DebounceMode, executeAfterAttached, FieldEditingModes} from "projector-client-object-api";
+import {
+	AbstractField,
+	DebounceModes,
+	executeAfterAttached,
+	FieldEditingMode,
+	FieldEditingModes,
+	parseHtml,
+	ProjectorEvent
+} from "projector-client-object-api";
 import {
 	DtoTextField,
 	DtoTextFieldCommandHandler,
 	DtoTextFieldEventSource,
 	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent, SpecialKeys
+	DtoTextInputHandlingField_TextInputEvent,
+	SpecialKeys
 } from "../../generated";
-import {FieldEditingMode, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {escapeHtml} from "../../util/Common";
 
 export class TextField<C extends DtoTextField = DtoTextField> extends AbstractField<C, string> implements DtoTextFieldEventSource, DtoTextFieldCommandHandler {
 
-	public readonly onTextInput: ProjectorEvent<DtoTextInputHandlingField_TextInputEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_TextInputEvent>(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_SpecialKeyPressedEvent>(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoTextInputHandlingField_TextInputEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_TextInputEvent>(250, DebounceModes.BOTH);
+	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced<DtoTextInputHandlingField_SpecialKeyPressedEvent>(250, DebounceModes.BOTH);
 
 	private $wrapper: HTMLElement;
 	protected $field: HTMLInputElement;

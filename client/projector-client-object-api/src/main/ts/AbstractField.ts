@@ -17,25 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {createPopper, Instance as Popper} from '@popperjs/core';
+import {createPopper, type Instance as Popper} from '@popperjs/core';
 import {
-	DtoAbstractField,
-	DtoAbstractField_BlurEvent,
-	DtoAbstractField_FocusEvent,
-	DtoAbstractField_ValueChangedEvent,
-	DtoAbstractFieldCommandHandler,
-	DtoAbstractFieldEventSource,
-	FieldEditingMode,
-	DtoFieldMessage,
-	FieldMessagePosition,
-	FieldMessageSeverity,
-	FieldMessageVisibility,
+	type DtoAbstractField,
+	type DtoAbstractField_BlurEvent,
+	type DtoAbstractField_FocusEvent,
+	type DtoAbstractField_ValueChangedEvent,
+	type DtoFieldMessage,
+	type FieldEditingMode,
+	FieldEditingModes,
+	type FieldMessagePosition,
+	FieldMessagePositions,
+	FieldMessageSeverities,
+	type FieldMessageSeverity,
 	FieldMessageVisibilities,
-	FieldMessagePositions, FieldEditingModes, FieldMessageSeverities
+	type FieldMessageVisibility
 } from "./generated";
 import {AbstractComponent} from "./AbstractComponent";
 import {bind, parseHtml, prependChild, ProjectorEvent} from "./util";
-import {ServerObjectChannel} from "./ClientObject";
+import {type ServerObjectChannel} from "./ClientObject";
 import {compareSeverities, highestSeverity} from "./util/fieldmessage-util";
 
 interface FieldMessage {
@@ -50,7 +50,7 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 	public readonly onBlur: ProjectorEvent<DtoAbstractField_BlurEvent> = new ProjectorEvent();
 	public readonly onUserManipulation: ProjectorEvent<void> = new ProjectorEvent();
 
-	private committedValue: V;
+	private committedValue: V | null = null;
 
 	private $fieldWrapper: HTMLElement;
 
@@ -58,13 +58,14 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 		popper: Popper,
 		$popperElement: HTMLElement,
 		$messageContainer: HTMLElement
-	};
+	} | null = null;
 	private $messagesContainerAbove: HTMLElement;
 	private $messagesContainerBelow: HTMLElement;
 	private fieldMessages: FieldMessage[] = [];
-	private hovering: boolean;
-	private focused: boolean;
+	private hovering: boolean = false;
+	private focused: boolean = false;
 
+	// @ts-ignore
 	constructor(config: C, serverObjectChannel: ServerObjectChannel) {
 		super(config);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
@@ -142,10 +143,6 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 	}
 
 	protected abstract initialize(config: C): void;
-
-	public getTeamAppsType(): string {
-		return this.config._type;
-	}
 
 	public doGetMainElement(): HTMLElement {
 		return this.$fieldWrapper;
@@ -278,7 +275,7 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 		return this.fieldMessages.map(m => m.message);
 	}
 
-	setFieldMessages(fieldMessageConfigs: DtoFieldMessage[]): void {
+	setFieldMessages(fieldMessageConfigs: DtoFieldMessage[] | null): void {
 		if (fieldMessageConfigs == null) {
 			fieldMessageConfigs = [];
 		}

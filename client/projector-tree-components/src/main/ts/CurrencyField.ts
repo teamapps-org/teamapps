@@ -22,7 +22,7 @@ import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "./trivial-components/Tr
 import {
 	AbstractField,
 	BigDecimal,
-	DebounceMode,
+	DebounceModes,
 	deepEquals,
 	executeAfterAttached,
 	FieldEditingMode, FieldEditingModes,
@@ -40,7 +40,7 @@ import {selectElementContents} from "./util";
 
 export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyValue> implements DtoCurrencyFieldEventSource, DtoCurrencyFieldCommandHandler {
 
-	public readonly onTextInput: ProjectorEvent<DtoCurrencyField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoCurrencyField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceModes.BOTH);
 
 	private trivialUnitBox: TrivialUnitBox<DtoCurrencyUnit>;
 	private queryFunction: QueryFunction<DtoCurrencyUnit>;

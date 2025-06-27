@@ -3,7 +3,14 @@ export class StyleManager {
 	private sheet: CSSStyleSheet;
 	private styleElement: HTMLStyleElement;
 
-	constructor(private parentElementSupplier: ()=>Node&ParentNode, private selectorPrefix, private fallbackSelector: string) {
+	private parentElementSupplier: () => Node & ParentNode;
+	private selectorPrefix;
+	private fallbackSelector: string;
+
+	constructor(parentElementSupplier: ()=>Node&ParentNode, selectorPrefix, fallbackSelector: string) {
+		this.fallbackSelector = fallbackSelector;
+		this.selectorPrefix = selectorPrefix;
+		this.parentElementSupplier = parentElementSupplier;
 		this.styleElement = document.createElement("style");
 		document.head.appendChild(this.styleElement);
 		this.sheet = this.styleElement.sheet;

@@ -21,7 +21,7 @@ import {TimeSuggestionEngine} from "./TimeSuggestionEngine";
 import {LocalDateTime} from "./LocalDateTime";
 import {
 	AbstractField,
-	DebounceMode,
+	DebounceModes,
 	DtoDateTimeFormatDescriptor, executeAfterAttached,
 	FieldEditingMode, FieldEditingModes,
 	ProjectorEvent
@@ -43,8 +43,8 @@ import {
 
 export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> extends AbstractField<C, V> implements DtoAbstractTimeFieldEventSource, DtoAbstractTimeFieldCommandHandler {
 
-	public readonly onTextInput: ProjectorEvent<DtoTextInputHandlingField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
-	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoTextInputHandlingField_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceModes.BOTH);
+	public readonly onSpecialKeyPressed: ProjectorEvent<DtoTextInputHandlingField_SpecialKeyPressedEvent> = ProjectorEvent.createDebounced(250, DebounceModes.BOTH);
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected timeRenderer: (time: LocalDateTime) => string;

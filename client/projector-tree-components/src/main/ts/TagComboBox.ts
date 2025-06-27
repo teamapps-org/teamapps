@@ -32,7 +32,7 @@ import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {
 	AbstractField,
-	DebounceMode,
+	DebounceModes,
 	executeAfterAttached,
 	FieldEditingMode, FieldEditingModes,
 	parseHtml,
@@ -43,7 +43,7 @@ import {buildObjectTree, NodeWithChildren} from "./util";
 
 export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRecord[]> implements DtoTagComboBoxEventSource, DtoTagComboBoxCommandHandler {
 
-	public readonly onTextInput: ProjectorEvent<DtoAbstractComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceMode.BOTH);
+	public readonly onTextInput: ProjectorEvent<DtoAbstractComboBox_TextInputEvent> = ProjectorEvent.createDebounced(250, DebounceModes.BOTH);
 
 	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;

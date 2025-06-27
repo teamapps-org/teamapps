@@ -17,10 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {debounce, DebounceMode} from "./debounce";
+import {debounce, type DebounceMode, DebounceModes} from "./debounce";
 import {throttle} from "./throttle";
 import {deepEquals} from "./equality";
-import {isServerObjectChannel, ServerObjectChannel} from "../ClientObject";
 
 export type ProjectorEventListener<EO> = (eventObject?: EO) => void;
 
