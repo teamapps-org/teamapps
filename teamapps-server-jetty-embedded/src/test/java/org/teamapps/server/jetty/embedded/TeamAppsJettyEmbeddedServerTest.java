@@ -48,8 +48,8 @@ public class TeamAppsJettyEmbeddedServerTest {
 					TextColorMarkerField field = new TextColorMarkerField();
 
 					field.setMarkerDefinitions(List.of(
-							new TextColorMarkerDefinition(1, Color.RED, Color.BLUE, "ja so wat! \n ach ne!"),
-							new TextColorMarkerDefinition(9, null, Color.YELLOW, "marker")
+							new TextColorMarkerDefinition(1, Color.RED, Color.BLUE, "First Marker"),
+							new TextColorMarkerDefinition(9, null, Color.YELLOW, "Marker")
 					), new TextColorMarkerFieldValue("Hallooo \n Welt", List.of(new TextColorMarker(9, 2, 5))));
 
 					//field.addCustomFieldMessage(FieldMessage.Severity.ERROR, "Dingens");
@@ -100,10 +100,10 @@ public class TeamAppsJettyEmbeddedServerTest {
 	}
 
 	private static String renderMarkersToString(TextColorMarkerFieldValue value) {
-		return value.markers().isEmpty() ? null :value.markers().stream()
+		return "[" + (value.markers().isEmpty() ? "" : value.markers().stream()
 				.map(m -> new StringBuilder().append(m.markerDefinitionId()).append("=").append(m.start()).append("-").append(m.end()))
 				.reduce((m, n) -> m.append(", ").append(n))
-				.get().toString();
+				.get().toString()) + "]";
 	}
 
 }

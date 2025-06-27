@@ -11,8 +11,7 @@ public record TextColorMarkerDefinition(
 ) {
 
 	public UiTextColorMarkerFieldMarkerDefinition toUiTextColorMarkerFieldMarkerDefinition() {
-		UiTextColorMarkerFieldMarkerDefinition ui = new UiTextColorMarkerFieldMarkerDefinition();
-		ui.setId(id);
+		UiTextColorMarkerFieldMarkerDefinition ui = new UiTextColorMarkerFieldMarkerDefinition(id);
 		ui.setBorderColor(borderColor == null ? null : borderColor.toHtmlColorString());
 		ui.setBackgroundColor(backgroundColor == null ? null : backgroundColor.toHtmlColorString());
 		ui.setHint(hint);

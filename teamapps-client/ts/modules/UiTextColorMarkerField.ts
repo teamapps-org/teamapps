@@ -51,27 +51,28 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		));
 	}
 
-	public setMarker(markerDefinitionId: number, start: number, end: number): void {
-		const marker = this.createMarker(markerDefinitionId, start, end);
-
+	public setMarker(markerDefinitionId: number, start: number, end: number, fireMarkerChangeEvent: boolean = true): void {
 		const newMarkers = this.getCommittedValue().markers.filter(m => m.markerDefinitionId !== markerDefinitionId);
-		newMarkers.push(marker);
+		newMarkers.push(this.createMarker(markerDefinitionId, start, end));
 
-		this.setValue(this.createFieldValue(
-			this.getTransientText(),
-			newMarkers
-		));
-		this.fireValueChangedEvent();
+		this.commitAndSetMarkers(this.normalizeMarkers(newMarkers), fireMarkerChangeEvent);
 	}
 
 	public removeMarker(markerDefinitionId: number): void {
-		const markerIndex = this.getCommittedValue().markers.findIndex(m => m.markerDefinitionId === markerDefinitionId);
-		if (markerIndex !== -1) {
-			this.getCommittedValue().markers.splice(markerIndex, 1);
-			this.displayCommittedValue();
-			this.fireValueChangedEvent();
-		} else {
-			this.logger.info(`Cannot remove marker "${markerDefinitionId}" since it does not exist`);
+		const transientMarkers = this.getTransientMarkers();
+		const newMarkers = transientMarkers.filter(m => m.markerDefinitionId !== markerDefinitionId);
+		this.commitAndSetMarkers(newMarkers, true);
+	}
+
+	private commitAndSetMarkers(markers: UiTextColorMarkerFieldMarkerConfig[], fireMarkerChangeEvent: boolean): void {
+		const value = this.createFieldValue(this.getTransientText(), markers);
+		const committedValue = this.getCommittedValue();
+		const changed = this.valuesChanged(value, committedValue);
+		if (changed) {
+			this.setCommittedValue(value);
+			if (fireMarkerChangeEvent || this.textChanged(committedValue?.text, value?.text)) {
+				this.fireValueChangedEvent();
+			}
 		}
 	}
 
@@ -86,9 +87,15 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		if (!v1 || !v2) {
 			return v1 !== v2;
 		}
-		const hasTextChanged = () => v1.text !== v2.text;
-		const hasMarkersChanged = () => JSON.stringify(v1.markers) !== JSON.stringify(v2.markers);
-		return hasTextChanged() || hasMarkersChanged();
+		return this.textChanged(v1.text, v2.text) || this.markersChanged(v1.markers, v2.markers);
+	}
+
+	private textChanged(v1: string, v2: string): boolean {
+		return v1 !== v2;
+	}
+
+	private markersChanged(v1: UiTextColorMarkerFieldMarkerConfig[], v2: UiTextColorMarkerFieldMarkerConfig[]): boolean {
+		return JSON.stringify(v1) !== JSON.stringify(v2);
 	}
 
 	public getTransientValue(): UiTextColorMarkerFieldValueConfig {
@@ -124,12 +131,12 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 				markers.push(this.createMarker(markerDefinitionId, start, end));
 			}
 		});
-		return this.sortMarkers(markers);
+		return this.normalizeMarkers(markers);
 	}
 
 	public setValue(value: UiTextColorMarkerFieldValueConfig): void {
 		// Sort markers by their ID + remove empty markers (start == end)
-		value.markers = this.sortMarkers(value.markers.filter(m => m.start !== m.end));
+		value.markers = this.normalizeMarkers(value.markers);
 
 		// Check if this would actually change anything
 		if (this.valuesChanged(this.getCommittedValue(), value)) {
@@ -137,11 +144,11 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		}
 	}
 
-	private sortMarkers(markers: UiTextColorMarkerFieldMarkerConfig[]): UiTextColorMarkerFieldMarkerConfig[] {
-		return [...markers].sort((a, b) => a.markerDefinitionId - b.markerDefinitionId);
+	private normalizeMarkers(markers: UiTextColorMarkerFieldMarkerConfig[]): UiTextColorMarkerFieldMarkerConfig[] {
+		return [...markers.filter(m => m.start !== m.end)]
+			.sort((a, b) => a.markerDefinitionId - b.markerDefinitionId);
 	}
 
-	// Main render method: escapes text, applies markers, and sets innerHTML
 	protected displayCommittedValue(): void {
 		const value = this.getCommittedValue();
 		this.$editor.innerHTML = this.renderWithMarkers(value.text ?? '', value.markers ?? []);
@@ -288,7 +295,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		this.markerDefinitions.forEach(def => {
 			const button = document.createElement('button');
 			button.className = 'toolbar-button';
-			button.innerHTML = this.escapeHtml(def.hint || '').replace(/\n/g, '<br>');
+			button.innerHTML = this.escapeHtml(def.hint ?? '').replace(/\n/g, '<br>');
 
 			// Style button with marker colors
 			if (def.backgroundColor) {
@@ -307,7 +314,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 			// Add click handler
 			button.addEventListener('click', () => {
 				if (this.currentSelection) {
-					this.setMarker(def.id, this.currentSelection.start, this.currentSelection.end);
+					this.setMarker(def.id, this.currentSelection.start, this.currentSelection.end, true);
 				}
 				this.hideToolbar();
 			});
@@ -408,13 +415,11 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 	private isMarkerOverlappedButNotNested(otherMarker: UiTextColorMarkerFieldMarkerConfig, marker: UiTextColorMarkerFieldMarkerConfig) {
 		if (otherMarker.markerDefinitionId === marker.markerDefinitionId) { return false; } // Skip the same marker
-		const otherMStart = otherMarker.start!;
-		const otherMEnd = otherMarker.end!;
 		// Two markers overlap if one starts before the other ends and ends after the other starts
 		// But we allow them to be nested
-		const hasOverlap = () => marker.start < otherMEnd && marker.end > otherMStart;
-		const isNested = () => (marker.start <= otherMStart && marker.end >= otherMEnd) ||
-			(otherMStart <= marker.start && otherMEnd >= marker.end);
+		const hasOverlap = () => marker.start < otherMarker.end && marker.end > otherMarker.start;
+		const isNested = () => (marker.start <= otherMarker.start && marker.end >= otherMarker.end) ||
+			(otherMarker.start <= marker.start && otherMarker.end >= marker.end);
 		return hasOverlap() && !isNested();
 	}
 
