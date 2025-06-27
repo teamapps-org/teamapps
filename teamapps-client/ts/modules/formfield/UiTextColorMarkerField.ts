@@ -226,7 +226,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 	private setupEventListeners(): void {
 		const handleSelection = () => {
-			this.currentSelection = null;
+			let noSelection = true;
 			const selection = window.getSelection();
 			if (selection && selection.rangeCount > 0) {
 				const range = selection.getRangeAt(0);
@@ -235,21 +235,20 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 					const end = this.getNodePosition(range.endContainer) + range.endOffset;
 
 					if (start !== end) {
-						this.currentSelection = { start, end };
-						this.showToolbar();
-						this.onTextSelected.fire(this.currentSelection);
+						noSelection = false;
+						this.triggerSelection({ start, end });
 					}
 				}
 			}
-			if (!this.currentSelection) {
-				this.hideToolbar();
+			if (noSelection) {
+				this.triggerDeselection();
 			}
 		};
 		this.$editor.addEventListener('mouseup', handleSelection);
 		this.$editor.addEventListener('keyup', handleSelection); // only needed for selection via keyboard
 		this.$editor.addEventListener('click', (e) => {
 			const target = e.target as HTMLElement;
-			if (target.classList.contains('marker')) {
+			if (target.classList.contains('marker') && this.isMarkerChangeAllowed()) {
 				const markerId = parseInt(target.getAttribute('data-marker-id') || '0', 10);
 				if (markerId) {
 					this.removeMarker(markerId);
@@ -261,31 +260,41 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 			this.commit();
 			// Only hide toolbar if the focus is not moving to the toolbar
 			if (!this.$toolbarWrapper.contains(e.relatedTarget as Node)) {
-				this.hideToolbar();
+				this.triggerDeselection();
 			}
 		});
 	}
 
-	public setToolbarEnabled(enabled: boolean) {
+	public setToolbarEnabled(enabled: boolean): void {
 		this.toolbarEnabled = enabled;
 		if (!enabled) {
 			this.hideToolbar();
 		}
 	}
 
-	private showToolbar(): void {
-		if (!this.toolbarEnabled || [UiFieldEditingMode.DISABLED, UiFieldEditingMode.READONLY].includes(this.getEditingMode())) {
-			return;
+	private triggerSelection(selection: UiTextColorMarkerField_TextSelectedEvent): void {
+		this.currentSelection = selection;
+		if (this.toolbarEnabled && this.isMarkerChangeAllowed()) {
+			this.showToolbar();
+			this.onTextSelected.fire(this.currentSelection);
 		}
+	}
+
+	private triggerDeselection(): void {
+		if (this.currentSelection) {
+			window.getSelection()?.removeAllRanges(); // for safari
+			this.currentSelection = null;
+			this.onTextSelected.fire({ start: 0, end: 0 }); // inform about selection removal
+		}
+		this.hideToolbar();
+	}
+
+	private showToolbar(): void {
 		this.updateToolbarContent();
 		this.$toolbarWrapper.classList.remove('hidden');
 	}
 
 	private hideToolbar(): void {
-		if (this.currentSelection) {
-			this.currentSelection = null;
-			this.onTextSelected.fire({ start: 0, end: 0 }); // inform about selection removal
-		}
 		this.$toolbarWrapper.classList.add('hidden');
 	}
 
@@ -316,7 +325,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 				if (this.currentSelection) {
 					this.setMarker(def.id, this.currentSelection.start, this.currentSelection.end, true);
 				}
-				this.hideToolbar();
+				this.triggerDeselection();
 			});
 
 			this.$toolbarWrapper.appendChild(button);
@@ -387,7 +396,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 			|| !this.isMarkerValid(m, v));
 	}
 
-	private isMarkerValid(marker: UiTextColorMarkerFieldMarkerConfig, value: UiTextColorMarkerFieldValueConfig) {
+	private isMarkerValid(marker: UiTextColorMarkerFieldMarkerConfig, value: UiTextColorMarkerFieldValueConfig): boolean {
 		if (!this.getMarkerDefinitionById(marker.markerDefinitionId)) {
 			this.logger.warn("No definition found for this marker. Invalid marker: " + marker.markerDefinitionId);
 			return false;
@@ -403,17 +412,13 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		return true;
 	}
 
-	private isMarkerOutOfRange(marker: UiTextColorMarkerFieldMarkerConfig, textLength: number) {
-		return marker.start === null
-			|| marker.start === undefined
-			|| marker.end === null
-			|| marker.end === undefined
-			|| marker.start < 0
+	private isMarkerOutOfRange(marker: UiTextColorMarkerFieldMarkerConfig, textLength: number): boolean {
+		return marker.start < 0
 			|| marker.end > textLength
 			|| marker.start > marker.end;
 	}
 
-	private isMarkerOverlappedButNotNested(otherMarker: UiTextColorMarkerFieldMarkerConfig, marker: UiTextColorMarkerFieldMarkerConfig) {
+	private isMarkerOverlappedButNotNested(otherMarker: UiTextColorMarkerFieldMarkerConfig, marker: UiTextColorMarkerFieldMarkerConfig): boolean {
 		if (otherMarker.markerDefinitionId === marker.markerDefinitionId) { return false; } // Skip the same marker
 		// Two markers overlap if one starts before the other ends and ends after the other starts
 		// But we allow them to be nested
@@ -426,27 +431,34 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
 		this.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
 		this.getMainElement().classList.add(UiField.editingModeCssClasses[this.getEditingMode()]);
+		this.getMainInnerDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainInnerDomElement().classList.add(UiField.editingModeCssClasses[this.getEditingMode()]);
 
+		const toolbarTabIndex = this.isMarkerChangeAllowed() ? '0' : '-1';
 		switch (editingMode) {
 			case UiFieldEditingMode.EDITABLE:
 			case UiFieldEditingMode.EDITABLE_IF_FOCUSED:
 				this.$editor.contentEditable = 'true';
 				this.$editor.setAttribute('tabindex', '0');
-				this.$toolbarWrapper.setAttribute('tabindex', '0');
+				this.$toolbarWrapper.setAttribute('tabindex', toolbarTabIndex);
 				break;
 			case UiFieldEditingMode.DISABLED:
 				this.$editor.contentEditable = 'false';
 				this.$editor.setAttribute('tabindex', '-1');
-				this.$toolbarWrapper.setAttribute('tabindex', '-1');
+				this.$toolbarWrapper.setAttribute('tabindex', toolbarTabIndex);
 				break;
 			case UiFieldEditingMode.READONLY:
 				this.$editor.contentEditable = 'false';
 				this.$editor.setAttribute('tabindex', '-1');
-				this.$toolbarWrapper.setAttribute('tabindex', '-1');
+				this.$toolbarWrapper.setAttribute('tabindex', toolbarTabIndex);
 				break;
 			default:
 				this.logger.error("unknown editing mode! " + editingMode);
 		}
+	}
+
+	private isMarkerChangeAllowed(): boolean {
+		return ![UiFieldEditingMode.DISABLED].includes(this.getEditingMode());
 	}
 
 	private createFieldValue(text: string, markers: UiTextColorMarkerFieldMarkerConfig[]): UiTextColorMarkerFieldValueConfig {

@@ -36,13 +36,12 @@
     left: 0;
     width: 100%;
     background: white;
-    border: 1px solid var(--ta-input-border-color);
-    border-radius: var(--ta-input-border-radius);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
+    border-radius: 0 0 var(--ta-border-radius) var(--ta-border-radius);
     padding: 4px;
     gap: 4px;
     flex-wrap: wrap;
-    z-index: 1000;
+    z-index: var(--ta-zindex-dropdown);
     &.hidden {
       display: none;
     }
@@ -73,7 +72,10 @@
     }
   }
 
-  &.readonly, &.disabled {
+  &.disabled {
+    .marker {
+      cursor: auto;
+    }
     .toolbar-wrapper {
       display: none;
     }
