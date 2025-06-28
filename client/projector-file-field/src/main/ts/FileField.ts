@@ -20,24 +20,41 @@
 
 import {
 	AbstractField,
-	DtoIdentifiableClientRecord,
-	FieldEditingMode, FileUploader,
-	generateUUID, humanReadableFileSize,
-	parseHtml, prependChild, removeClassesByFunction,
+	type DtoIdentifiableClientRecord,
+	executeAfterAttached,
+	FileUploader,
+	generateUUID,
+	humanReadableFileSize,
+	parseHtml,
+	prependChild,
 	ProjectorEvent,
-	Template, executeAfterAttached
+	removeClassesByFunction,
+	type Template
 } from "projector-client-object-api";
 import {
-	DtoFileField,
-	DtoFileField_FileItemClickedEvent,
-	DtoFileField_FileItemRemoveButtonClickedEvent,
-	DtoFileField_UploadCanceledEvent,
-	DtoFileField_UploadFailedEvent,
-	DtoFileField_UploadStartedEvent, DtoFileField_UploadSuccessfulEvent, DtoFileField_UploadTooLargeEvent,
-	DtoFileFieldCommandHandler,
-	DtoFileFieldEventSource, FileFieldDisplayType, FileFieldDisplayTypes
+	type DtoFileField,
+	type DtoFileField_FileItemClickedEvent,
+	type DtoFileField_FileItemRemoveButtonClickedEvent,
+	type DtoFileField_UploadCanceledEvent,
+	type DtoFileField_UploadFailedEvent,
+	type DtoFileField_UploadStartedEvent,
+	type DtoFileField_UploadSuccessfulEvent,
+	type DtoFileField_UploadTooLargeEvent,
+	type DtoFileFieldCommandHandler,
+	type DtoFileFieldEventSource,
+	type DtoFileFieldServerObjectChannel,
+	type FileFieldDisplayType,
+	FileFieldDisplayTypes
 } from "./generated";
-import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
+import {ProgressBar, ProgressCircle, type ProgressIndicator} from "projector-progress-indicator";
+
+const FileItemStates = Object.freeze({
+	UPLOADING: "uploading",
+	ERROR: "error",
+	SUCCESS: "success",
+	DISPLAYING: "displaying"
+});
+type FileItemState = typeof FileItemStates[keyof typeof FileItemStates]
 
 export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClientRecord[]> implements DtoFileFieldEventSource, DtoFileFieldCommandHandler {
 
@@ -53,22 +70,12 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	private $uploadButton: HTMLElement;
 	private $fileInput: HTMLInputElement;
 	private $uploadButtonTemplate: HTMLElement;
-	private fileItems: UploadItem[];
-	private itemRenderer: Template;
-
-	private displayType: FileFieldDisplayType;
-	private maxFiles: number;
-	private maxBytesPerFile: number;
-	private uploadButtonData: any;
-	private uploadButtonTemplate: Template;
-	private uploadUrl: string;
 	private $fileList: HTMLElement;
 
-	private fileTooLargeMessage: string;
-	private uploadErrorMessage: string;
+	private fileItems: UploadItem[] = [];
 
-	protected initialize(config: DtoFileField) {
-		this.fileItems = [];
+	constructor(config: DtoFileField, serverObjectChannel: DtoFileFieldServerObjectChannel) {
+		super(config, serverObjectChannel);
 		let uuid = "ui-file-field" + generateUUID();
 		this.$wrapper = parseHtml(`<div class="FileField drop-zone" id="${uuid}">
         <div class="list"></div>
@@ -95,37 +102,34 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 			e.stopPropagation();
 			e.preventDefault();
 			this.$wrapper.classList.remove("drop-zone-active");
-			const files = e.dataTransfer.files;
+			const files = e.dataTransfer?.files ?? new FileList();
 			this.handleFiles(files);
 		};
 
-		this.$uploadButtonTemplate = this.$wrapper.querySelector<HTMLElement>(':scope .upload-button-template');
-		this.$uploadButton = this.$wrapper.querySelector<HTMLElement>(':scope .upload-button-wrapper');
+		this.$uploadButtonTemplate = this.$wrapper.querySelector<HTMLElement>(':scope .upload-button-template')!;
+		this.$uploadButton = this.$wrapper.querySelector<HTMLElement>(':scope .upload-button-wrapper')!;
 		this.$uploadButton.addEventListener('keydown', e => {
 			if (e.key === "Enter" || e.key === " ") {
 				this.$fileInput.click();
 				return false; // no scrolling when space is pressed!
 			}
 		});
-		this.$fileInput = this.$wrapper.querySelector<HTMLInputElement>(':scope .file-input');
+		this.$fileInput = this.$wrapper.querySelector<HTMLInputElement>(':scope .file-input')!;
 		this.$fileInput.addEventListener('change', () => {
-			const files = (<HTMLInputElement>this.$fileInput).files;
+			const files = (this.$fileInput as HTMLInputElement).files ?? new FileList();
 			this.handleFiles(files);
 		});
 
-		this.$fileList = this.$wrapper.querySelector<HTMLElement>(':scope .list');
+		this.$fileList = this.$wrapper.querySelector<HTMLElement>(':scope .list')!;
 
-		this.setItemTemplate(config.itemTemplate as Template);
-		this.setMaxBytesPerFile(config.maxBytesPerFile);
 		this.setShowEntriesAsButtonsOnHover(config.showEntriesAsButtonsOnHover);
 		this.setUploadButtonTemplate(config.uploadButtonTemplate as Template);
 		this.setUploadButtonData(config.uploadButtonData);
-		this.setUploadUrl(config.uploadUrl);
-		this.setDisplayType(config.displayType);
-		this.setMaxFiles(config.maxFiles);
-		this.setAcceptedFileTypes(config.acceptedFileTypes);
-		this.setFileTooLargeMessage(config.fileTooLargeMessage);
-		this.setUploadErrorMessage(config.uploadErrorMessage);
+		this.setDisplayType(config.displayType ?? null);
+		this.setAcceptedFileTypes(config.acceptedFileTypes ?? []);
+
+		this.displayCommittedValue();
+		this.updateVisibilities();
 	}
 
 	isValidData(v: any[]): boolean {
@@ -133,58 +137,60 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	}
 
 	public setItemTemplate(template: Template): void {
-		this.itemRenderer = template;
+		this.config.itemTemplate = template;
 		this.displayCommittedValue();
 	}
 
 	setDisplayType(displayType: FileFieldDisplayType): void {
-		this.displayType = displayType;
+		this.config.displayType = displayType;
 		this.$wrapper.classList.toggle("float-style-vertical-list", displayType === FileFieldDisplayTypes.LIST);
 		this.$wrapper.classList.toggle("float-style-horizontal", displayType === FileFieldDisplayTypes.FLOATING);
 	}
 
 	setMaxFiles(maxFiles: number): void {
-		this.maxFiles = maxFiles || Number.MAX_SAFE_INTEGER;
+		this.config.maxFiles = maxFiles || Number.MAX_SAFE_INTEGER;
 		this.updateVisibilities();
 	}
 
 	setAcceptedFileTypes(acceptedFileTypes: string[]) {
-		this.$fileInput.accept = acceptedFileTypes != null ? (acceptedFileTypes.join(',')) : null;
+		this.config.acceptedFileTypes = acceptedFileTypes;
+		this.$fileInput.accept = acceptedFileTypes.join(',');
 	}
 
 	public setMaxBytesPerFile(maxBytesPerFile: number): void {
-		this.maxBytesPerFile = maxBytesPerFile;
+		this.config.maxBytesPerFile = maxBytesPerFile;
 	}
 
 	public setShowEntriesAsButtonsOnHover(showEntriesAsButtonsOnHover: boolean): void {
+		this.config.showEntriesAsButtonsOnHover = showEntriesAsButtonsOnHover;
 		this.$wrapper.classList.toggle("show-entries-as-buttons-on-hover", showEntriesAsButtonsOnHover);
 	}
 
 	public setUploadButtonData(uploadButtonData: any): void {
-		this.uploadButtonData = uploadButtonData;
+		this.config.uploadButtonData = uploadButtonData;
 		this.$uploadButtonTemplate.innerHTML = '';
-		if (this.uploadButtonTemplate && this.uploadButtonData) {
-			this.$uploadButtonTemplate.appendChild(parseHtml(this.uploadButtonTemplate.render(this.uploadButtonData)));
+		if (this.config.uploadButtonTemplate && this.config.uploadButtonData) {
+			this.$uploadButtonTemplate.appendChild(parseHtml((this.config.uploadButtonTemplate as Template).render(this.config.uploadButtonData)));
 		}
 	}
 
 	public setUploadButtonTemplate(uploadButtonTemplate: Template): void {
-		this.uploadButtonTemplate = uploadButtonTemplate;
+		this.config.uploadButtonTemplate = uploadButtonTemplate;
 		this.$uploadButtonTemplate.innerHTML = '';
-		if (this.uploadButtonTemplate && this.uploadButtonData) {
-			this.$uploadButtonTemplate.appendChild(parseHtml(this.uploadButtonTemplate.render(this.uploadButtonData)));
+		if (this.config.uploadButtonTemplate && this.config.uploadButtonData) {
+			this.$uploadButtonTemplate.appendChild(parseHtml((this.config.uploadButtonTemplate as Template).render(this.config.uploadButtonData)));
 		}
 	}
 
 	public setUploadUrl(uploadUrl: string): void {
-		this.uploadUrl = uploadUrl;
+		this.config.uploadUrl = uploadUrl;
 	}
 
 
 	private handleFiles(files: FileList) {
 		let numberOfFilesToAdd = files.length;
-		if (this.maxFiles && this.numberOfNonErrorFileItems + files.length > this.maxFiles) {
-			numberOfFilesToAdd = this.maxFiles - this.numberOfNonErrorFileItems;
+		if (this.config.maxFiles && this.numberOfNonErrorFileItems + files.length > this.config.maxFiles) {
+			numberOfFilesToAdd = this.config.maxFiles - this.numberOfNonErrorFileItems;
 		}
 
 		for (let i = 0; i < numberOfFilesToAdd; i++) {
@@ -207,11 +213,11 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	}
 
 	private get numberOfNonErrorFileItems() {
-		return this.fileItems.filter(fileItem => fileItem.state !== FileItemState.ERROR).length;
+		return this.fileItems.filter(fileItem => fileItem.state !== FileItemStates.ERROR).length;
 	}
 
 	private get numberOfUploadingFileItems() {
-		return this.fileItems.filter(fileItem => fileItem.state === FileItemState.UPLOADING).length;
+		return this.fileItems.filter(fileItem => fileItem.state === FileItemStates.UPLOADING).length;
 	}
 
 	private resetFileInput() {
@@ -219,12 +225,13 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	}
 
 	private updateVisibilities() {
-		this.$uploadButton.classList.toggle("hidden", !(this.isEditable() && this.numberOfNonErrorFileItems < this.maxFiles));
+		this.$uploadButton.classList.toggle("hidden", !(this.isEditable() && this.numberOfNonErrorFileItems < this.config.maxFiles));
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
+
 	@executeAfterAttached()
 	focus(): void {
 		this.$uploadButton.focus();
@@ -234,13 +241,13 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 		let uiValue = this.getCommittedValue();
 		if (!uiValue) {
 			this.fileItems
-				.filter(fileItem => fileItem.state === FileItemState.DISPLAYING)
+				.filter(fileItem => fileItem.state === FileItemStates.DISPLAYING)
 				.forEach(fileItem => {
 					this.removeFileItem(fileItem);
 				});
 		} else {
 			this.fileItems
-				.filter(fileItem => fileItem.state === FileItemState.DISPLAYING)
+				.filter(fileItem => fileItem.state === FileItemStates.DISPLAYING)
 				.forEach(unmatchedFileItem => {
 					this.removeFileItem(unmatchedFileItem);
 				});
@@ -274,13 +281,13 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	}
 
 	private createFileItem() {
-		let fileItem = new UploadItem(this.displayType === FileFieldDisplayTypes.FLOATING, this.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.isEditable());
-		fileItem.onClick.addListener((eventObject) => {
+		let fileItem = new UploadItem(this.config.displayType === FileFieldDisplayTypes.FLOATING, this.config.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.config.uploadUrl, this.config.itemTemplate as Template, this.isEditable());
+		fileItem.onClick.addListener(() => {
 			this.onFileItemClicked.fire({
-				clientId: fileItem.data.id
+				clientId: fileItem.data!.id
 			});
 		});
-		fileItem.onDeleteButtonClick.addListener((eventObject) => {
+		fileItem.onDeleteButtonClick.addListener(() => {
 			let data = fileItem.data;
 			if (data) {
 				this.onFileItemRemoveButtonClicked.fire({
@@ -313,18 +320,18 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	private removeItem(fileItem: UploadItem) {
 		this.removeFileItem(fileItem);
 		this.updateVisibilities();
-		if (fileItem.state === FileItemState.DISPLAYING) {
+		if (fileItem.state === FileItemStates.DISPLAYING) {
 			this.commit();
 		}
 	}
 
 	public getTransientValue(): DtoIdentifiableClientRecord[] {
 		return this.fileItems
-			.filter(fileItem => fileItem.state === FileItemState.DISPLAYING)
-			.map(fileItem => fileItem.data);
+			.filter(fileItem => fileItem.state === FileItemStates.DISPLAYING)
+			.map(fileItem => fileItem.data!);
 	}
 
-	protected onEditingModeChanged(editingMode: FieldEditingMode): void {
+	protected onEditingModeChanged(): void {
 		AbstractField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.fileItems.forEach(fi => fi.deletable = this.isEditable());
 		this.updateVisibilities();
@@ -333,7 +340,7 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	public getReadOnlyHtml(value: DtoIdentifiableClientRecord[], availableWidth: number): string {
 		let content: string;
 		if (value != null) {
-			content = value.map((entry) => this.itemRenderer.render(entry.values)).join("");
+			content = value.map((entry) => (this.config.itemTemplate as Template).render(entry.values)).join("");
 		} else {
 			content = "";
 		}
@@ -365,19 +372,12 @@ export class FileField extends AbstractField<DtoFileField, DtoIdentifiableClient
 	}
 
 	setFileTooLargeMessage(fileTooLargeMessage: string): void {
-		this.fileTooLargeMessage = fileTooLargeMessage;
+		this.config.fileTooLargeMessage = fileTooLargeMessage;
 	}
 
 	setUploadErrorMessage(uploadErrorMessage: string): void {
-		this.uploadErrorMessage = uploadErrorMessage;
+		this.config.uploadErrorMessage = uploadErrorMessage;
 	}
-}
-
-enum FileItemState {
-	UPLOADING = "uploading",
-	ERROR = "error",
-	SUCCESS = "success",
-	DISPLAYING = "displaying"
 }
 
 class UploadItem {
@@ -390,29 +390,43 @@ class UploadItem {
 
 	private $main: HTMLElement;
 
-	private _data: DtoIdentifiableClientRecord;
-	private _state: FileItemState | null;
-	private $fileInfo: HTMLElement;
+	private _data: DtoIdentifiableClientRecord | null = null;
+	private _state: FileItemState | null = null;
 	private $progressIndicator: HTMLElement;
 	private $deleteButton: HTMLElement;
 	private $fileSize: HTMLElement;
 	private $fileName: HTMLElement;
 	public readonly uuid: string = generateUUID();
-	private progressIndicator: ProgressIndicator;
+	private progressIndicator: ProgressIndicator | null = null;
 	private $templateWrapper: HTMLElement;
 
-	private uploadingFile: File;
-	private uploader: FileUploader;
+	private uploadingFile: File | null = null;
+	private uploader: FileUploader | null = null;
+
+	private renderAsCircle: boolean;
+	private maxBytes: number;
+	private fileTooLargeMessage: string;
+	private uploadErrorMessage: string;
+	private uploadUrl: string;
+	private renderer: Template;
+	private _deletable: boolean;
 
 	constructor(
-		private renderAsCircle: boolean,
-		private maxBytes: number,
-		private fileTooLargeMessage: string,
-		private uploadErrorMessage: string,
-		private uploadUrl: string,
-		private renderer: Template,
-		private _deletable: boolean
+		renderAsCircle: boolean,
+		maxBytes: number,
+		fileTooLargeMessage: string,
+		uploadErrorMessage: string,
+		uploadUrl: string,
+		renderer: Template,
+		_deletable: boolean
 	) {
+		this.renderAsCircle = renderAsCircle;
+		this.maxBytes = maxBytes;
+		this.fileTooLargeMessage = fileTooLargeMessage;
+		this.uploadErrorMessage = uploadErrorMessage;
+		this.uploadUrl = uploadUrl;
+		this.renderer = renderer;
+		this._deletable = _deletable;
 		this.$main = parseHtml(`<div class="file-item ${this._deletable ? 'deletable' : ''}">
 			<div class="progress-indicator"></div>
 			<div class="file-info">
@@ -422,18 +436,17 @@ class UploadItem {
 			<div class="template-wrapper"></div>
 			<div class="delete-button img img-16 ta-icon-close hoverable-icon" tabindex="0"></d>
 		</div>`);
-		this.$fileInfo = this.$main.querySelector<HTMLElement>(":scope .file-info");
-		this.$fileName = this.$main.querySelector<HTMLElement>(":scope .file-name");
-		this.$fileSize = this.$main.querySelector<HTMLElement>(":scope .file-size");
-		this.$templateWrapper = this.$main.querySelector<HTMLElement>(":scope .template-wrapper");
-		this.$progressIndicator = this.$main.querySelector<HTMLElement>(":scope .progress-indicator");
-		this.$deleteButton = this.$main.querySelector<HTMLElement>(":scope .delete-button");
+		this.$fileName = this.$main.querySelector<HTMLElement>(":scope .file-name")!;
+		this.$fileSize = this.$main.querySelector<HTMLElement>(":scope .file-size")!;
+		this.$templateWrapper = this.$main.querySelector<HTMLElement>(":scope .template-wrapper")!;
+		this.$progressIndicator = this.$main.querySelector<HTMLElement>(":scope .progress-indicator")!;
+		this.$deleteButton = this.$main.querySelector<HTMLElement>(":scope .delete-button")!;
 		this.$main.addEventListener('click', (e) => {
 			if (e.target === this.$deleteButton) {
 				this.cancelUpload(true);
-				this.onDeleteButtonClick.fire(null);
+				this.onDeleteButtonClick.fire();
 			} else {
-				this.onClick.fire(null)
+				this.onClick.fire()
 			}
 		});
 	}
@@ -450,7 +463,7 @@ class UploadItem {
 
 		if (file.size > this.maxBytes) {
 			this.progressIndicator.setErrorMessage(this.fileTooLargeMessage);
-			this.setState(FileItemState.ERROR);
+			this.setState(FileItemStates.ERROR);
 			this.onUploadTooLarge.fire({
 				fileItemUuid: this.uuid,
 				fileName: file.name,
@@ -458,31 +471,31 @@ class UploadItem {
 				sizeInBytes: file.size
 			});
 		} else {
-			this.setState(FileItemState.UPLOADING);
+			this.setState(FileItemStates.UPLOADING);
 
 			this.uploader = new FileUploader();
 			this.uploader.upload(file, this.uploadUrl);
-			this.uploader.onProgress.addListener(progress => this.progressIndicator.setProgress(progress));
+			this.uploader.onProgress.addListener(progress => this.progressIndicator!.setProgress(progress));
 			this.uploader.onSuccess.addListener(fileUuid => {
-				this.setState(FileItemState.SUCCESS);
+				this.setState(FileItemStates.SUCCESS);
 				this.onUploadSuccessful.fire({
 					fileItemUuid: this.uuid,
 					uploadedFileUuid: fileUuid,
 					fileName: file.name,
 					mimeType: file.type,
 					sizeInBytes: file.size,
-					incompleteUploadsCount: null
+					incompleteUploadsCount: 0
 				});
 			});
 			this.uploader.onError.addListener(() => {
-				this.setState(FileItemState.ERROR);
-				this.progressIndicator.setErrorMessage(this.uploadErrorMessage);
+				this.setState(FileItemStates.ERROR);
+				this.progressIndicator!.setErrorMessage(this.uploadErrorMessage);
 				this.onUploadFailed.fire({
 					fileItemUuid: this.uuid,
 					fileName: file.name,
 					mimeType: file.type,
 					sizeInBytes: file.size,
-					incompleteUploadsCount: null
+					incompleteUploadsCount: 0
 				});
 			});
 			this.uploader.onComplete.addListener(() => this.uploader = null)
@@ -494,22 +507,22 @@ class UploadItem {
 			this.uploader.abort();
 			this.onUploadCanceled.fire({
 				fileItemUuid: this.uuid,
-				fileName: this.uploadingFile.name,
-				mimeType: this.uploadingFile.type,
-				sizeInBytes: this.uploadingFile.size,
-				incompleteUploadsCount: null
+				fileName: this.uploadingFile!.name,
+				mimeType: this.uploadingFile!.type,
+				sizeInBytes: this.uploadingFile!.size,
+				incompleteUploadsCount: 0
 			});
-			this._state = FileItemState.ERROR;
+			this._state = FileItemStates.ERROR;
 		}
 	}
 
 	public set data(data: DtoIdentifiableClientRecord) {
 		this._data = data;
 		this.$templateWrapper.innerHTML = this.renderer.render(data.values);
-		this.setState(FileItemState.DISPLAYING);
+		this.setState(FileItemStates.DISPLAYING);
 	}
 
-	public get data() {
+	public get data(): DtoIdentifiableClientRecord | null {
 		return this._data;
 	}
 

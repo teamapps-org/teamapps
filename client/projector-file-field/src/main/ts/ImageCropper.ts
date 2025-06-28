@@ -24,15 +24,15 @@ import {
 	executeAfterAttached,
 	parseHtml,
 	ProjectorEvent,
-	ServerObjectChannel
+	type ServerObjectChannel
 } from "projector-client-object-api";
 import {
-	DtoImageCropper,
-	DtoImageCropper_SelectionChangedEvent,
-	DtoImageCropperCommandHandler,
-	DtoImageCropperEventSource,
-	ImageCropperSelection,
-	ImageCropperSelectionMode, ImageCropperSelectionModes
+	type DtoImageCropper,
+	type DtoImageCropper_SelectionChangedEvent,
+	type DtoImageCropperCommandHandler,
+	type DtoImageCropperEventSource,
+	type ImageCropperSelection,
+	type ImageCropperSelectionMode
 } from "./generated";
 import {draggable, getScrollbarWidth} from "projector-client-core-components";
 
@@ -48,9 +48,9 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 	private $selectionFrame: HTMLElement;
 	private htmlImageElement: HTMLImageElement;
 
-	private selection: Selection;
-	private imageNaturalWidth: number = null;
-	private imageNaturalHeight: number = null;
+	private selection: Selection | null = null;
+	private imageNaturalWidth: number = 0;
+	private imageNaturalHeight: number = 0;
 
 	constructor(config: DtoImageCropper, serverObjectChannel: ServerObjectChannel) {
 		super(config);
@@ -73,7 +73,7 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 			this.updateCroppingFramePosition(this.selection);
 		};
 		// this.$element.style.backgroundImage = `url(${config.imageUrl}`);
-		this.$selectionFrame = this.$element.querySelector<HTMLElement>(":scope .cropping-frame");
+		this.$selectionFrame = this.$element.querySelector<HTMLElement>(":scope .cropping-frame")!;
 
 		let startBox: any;
 		draggable(this.$selectionFrame, {
@@ -150,13 +150,13 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 			}
 		});
 
-		this.setImageUrl(config.imageUrl);
+		this.setImageUrl(config.imageUrl ?? null);
 		this.setSelectionMode(config.selectionMode);
 		this.setAspectRatio(config.aspectRatio);
 	}
 
 	private resetSelectionFrame(aspectRatio: number) {
-		if (this.imageNaturalWidth != null) {
+		if (this.imageNaturalWidth != 0) {
 			this.selection = {
 				left: 0, top: 0, width: 0, height: 0
 			};
@@ -222,8 +222,10 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 		return factor;
 	}
 
-	public setImageUrl(url: string) {
-		this.htmlImageElement.src = url;
+	public setImageUrl(url: string | null) {
+		this.htmlImageElement.src = url ?? "";
+		this.imageNaturalWidth = 0;
+		this.imageNaturalHeight = 0;
 	}
 
 	setAspectRatio(aspectRatio: number): void {
@@ -239,7 +241,7 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 
 	setSelectionMode(selectionMode: ImageCropperSelectionMode): void {
 		this.$selectionFrame.className = this.$selectionFrame.className.replace(/mode-\w+/, '');
-		this.$selectionFrame.classList.add(`mode-${ImageCropperSelectionModes[selectionMode].toLowerCase()}`)
+		this.$selectionFrame.classList.add(`mode-${selectionMode}`)
 	}
 
 	@executeAfterAttached(true)
@@ -254,7 +256,7 @@ export class ImageCropper extends AbstractComponent<DtoImageCropper> implements 
 	}
 
 	@executeAfterAttached(true)
-	private updateCroppingFramePosition(selection: Selection) {
+	private updateCroppingFramePosition(selection: Selection | null) {
 		if (selection != null) {
 			let frameRect = this.selectionToFrameRect(selection);
 			applyCss(this.$selectionFrame, {

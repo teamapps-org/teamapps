@@ -23,8 +23,8 @@ import org.teamapps.projector.component.DtoComponent;
 
 class DtoImageCropper extends DtoComponent {
 	String imageUrl;
-	ImageCropperSelectionMode selectionMode;
-	double aspectRatio; // width/height; 0 = no aspect ratio constraint!
+	required ImageCropperSelectionMode selectionMode;
+	required double aspectRatio; // width/height; 0 = no aspect ratio constraint!
 	ImageCropperSelection selection;
 
 	command setImageUrl(String imageUrl);
@@ -36,7 +36,8 @@ class DtoImageCropper extends DtoComponent {
 }
 
 enum ImageCropperSelectionMode {
-	RECTANGLE, ROUND
+	RECTANGLE = "rectangle",
+	ROUND = "round"
 }
 
 

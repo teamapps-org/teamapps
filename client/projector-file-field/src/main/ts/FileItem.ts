@@ -18,9 +18,16 @@
  * =========================LICENSE_END==================================
  */
 
-import {FileUploader, humanReadableFileSize, parseHtml, removeClassesByFunction, ProjectorEvent} from "projector-client-object-api";
-import {ProgressBar, ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
-import {DtoFileItem, FileFieldDisplayType, FileFieldDisplayTypes} from "./generated";
+import {
+	FileUploader,
+	humanReadableFileSize,
+	parseHtml,
+	ProjectorEvent,
+	removeClassesByFunction
+} from "projector-client-object-api";
+import {ProgressBar, ProgressCircle, type ProgressIndicator} from "projector-progress-indicator";
+import {type DtoFileItem, type FileFieldDisplayType, FileFieldDisplayTypes} from "./generated";
+import {type FileItemState, FileItemStates} from "./FileItemState.ts";
 
 export class FileItem {
 	public readonly onClick: ProjectorEvent<void> = new ProjectorEvent<void>();
@@ -38,19 +45,37 @@ export class FileItem {
 	private $fileDescription: HTMLElement;
 	private $fileSize: HTMLElement;
 
-	private progressIndicator: ProgressIndicator;
-	private uploader: FileUploader;
+	private progressIndicator: ProgressIndicator | null = null;
+	private uploader: FileUploader | null = null;
+
+	private displayMode: FileFieldDisplayType;
+	private maxBytes: number;
+	private fileTooLargeMessage: string;
+	private uploadErrorMessage: string;
+	private uploadUrl: string;
+	private config: DtoFileItem;
+	public state: FileItemState;
+
+	private _deletable: boolean;
 
 	constructor(
-		private displayMode: FileFieldDisplayType,
-		private maxBytes: number,
-		private fileTooLargeMessage: string,
-		private uploadErrorMessage: string,
-		private uploadUrl: string,
-		private config: DtoFileItem,
-		public state: FileItemState,
-		private _deletable: boolean
+		displayMode: FileFieldDisplayType,
+		maxBytes: number,
+		fileTooLargeMessage: string,
+		uploadErrorMessage: string,
+		uploadUrl: string,
+		config: DtoFileItem,
+		state: FileItemState,
+		_deletable: boolean
 	) {
+		this.displayMode = displayMode;
+		this.maxBytes = maxBytes;
+		this.fileTooLargeMessage = fileTooLargeMessage;
+		this.uploadErrorMessage = uploadErrorMessage;
+		this.uploadUrl = uploadUrl;
+		this.config = config;
+		this.state = state;
+		this._deletable = _deletable;
 		this.$main = parseHtml(`<a class="file-item ${this._deletable ? 'deletable' : ''}">
 			<div class="delete-button-wrapper">
 				<div class="delete-button img img-16 ta-icon-close hoverable-icon" tabindex="0"></div>
@@ -61,23 +86,23 @@ export class FileItem {
 			<div class="file-description"></div>
 			<div class="file-size"></div>
 		</a>`);
-		this.$fileIcon = this.$main.querySelector<HTMLElement>(":scope .file-icon");
-		this.$fileName = this.$main.querySelector<HTMLElement>(":scope .file-name");
-		this.$fileDescription = this.$main.querySelector<HTMLElement>(":scope .file-description");
-		this.$fileSize = this.$main.querySelector<HTMLElement>(":scope .file-size");
-		this.$progressIndicator = this.$main.querySelector<HTMLElement>(":scope .progress-indicator");
-		this.$deleteButton = this.$main.querySelector<HTMLElement>(":scope .delete-button");
+		this.$fileIcon = this.$main.querySelector<HTMLElement>(":scope .file-icon")!;
+		this.$fileName = this.$main.querySelector<HTMLElement>(":scope .file-name")!;
+		this.$fileDescription = this.$main.querySelector<HTMLElement>(":scope .file-description")!;
+		this.$fileSize = this.$main.querySelector<HTMLElement>(":scope .file-size")!;
+		this.$progressIndicator = this.$main.querySelector<HTMLElement>(":scope .progress-indicator")!;
+		this.$deleteButton = this.$main.querySelector<HTMLElement>(":scope .delete-button")!;
 		this.$main.addEventListener('click', (e) => {
 			if (e.target === this.$deleteButton) {
 				if (this.uploader) {
 					this.uploader.abort();
-					this.onUploadCanceled.fire(null);
+					this.onUploadCanceled.fire();
 				}
-				this.onDeleteButtonClick.fire(null);
+				this.onDeleteButtonClick.fire();
 				e.preventDefault(); // do not download!
 				e.stopPropagation();
 			} else {
-				this.onClick.fire(null)
+				this.onClick.fire()
 			}
 		});
 		this.setDisplayMode(displayMode);
@@ -95,22 +120,22 @@ export class FileItem {
 
 		if (file.size > this.maxBytes) {
 			this.progressIndicator.setErrorMessage(this.fileTooLargeMessage);
-			this.setState(FileItemState.FAILED);
-			this.onUploadTooLarge.fire(null);
+			this.setState(FileItemStates.FAILED);
+			this.onUploadTooLarge.fire();
 		} else {
-			this.setState(FileItemState.UPLOADING);
+			this.setState(FileItemStates.UPLOADING);
 
 			this.uploader = new FileUploader();
 			this.uploader.upload(file, this.uploadUrl);
-			this.uploader.onProgress.addListener(progress => this.progressIndicator.setProgress(progress));
+			this.uploader.onProgress.addListener(progress => this.progressIndicator!.setProgress(progress));
 			this.uploader.onSuccess.addListener(fileUuid => {
-				this.setState(FileItemState.DONE);
+				this.setState(FileItemStates.DONE);
 				this.onUploadSuccessful.fire(fileUuid);
 			});
 			this.uploader.onError.addListener(() => {
-				this.setState(FileItemState.FAILED);
-				this.progressIndicator.setErrorMessage(this.uploadErrorMessage);
-				this.onUploadFailed.fire(null);
+				this.setState(FileItemStates.FAILED);
+				this.progressIndicator!.setErrorMessage(this.uploadErrorMessage);
+				this.onUploadFailed.fire();
 			});
 			this.uploader.onComplete.addListener(() => this.uploader = null)
 		}
@@ -158,11 +183,11 @@ export class FileItem {
 			this.$fileIcon.style.backgroundImage = `url('${config.icon}')`;
 		}
 		this.$fileName.textContent = config.fileName;
-		this.$fileDescription.textContent = config.description;
+		this.$fileDescription.textContent = config.description ?? "";
 		this.$fileSize.textContent = humanReadableFileSize(config.size);
 		this.$main.classList.toggle("no-link", config.linkUrl == null);
 		this.$main.classList.toggle("no-link", config.linkUrl == null);
-		this.$main.setAttribute("href",  config.linkUrl);
+		this.$main.setAttribute("href", config.linkUrl ?? "");
 	}
 
 	public get uuid() {
@@ -199,10 +224,3 @@ export class FileItem {
 	}
 }
 
-export enum FileItemState {
-	INITIATING = "initiating",
-	TOO_LARGE = "too-large",
-	UPLOADING = "uploading",
-	FAILED = "failed",
-	DONE = "done"
-}

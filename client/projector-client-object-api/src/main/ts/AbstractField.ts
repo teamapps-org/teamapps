@@ -142,7 +142,7 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 		return highestVisibilityByPosition;
 	}
 
-	protected abstract initialize(config: C): void;
+	protected initialize(config: C): void {};
 
 	public doGetMainElement(): HTMLElement {
 		return this.$fieldWrapper;

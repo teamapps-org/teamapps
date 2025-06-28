@@ -210,42 +210,42 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 
 
 	default List<TypeWrapper<?>> getReferencedTypes(boolean typescript) {
-		var referencedSuperTypes =  getSuperTypes().stream()
+		var referencedSuperTypes = getSuperTypes().stream()
 				.map(c -> (TypeWrapper<?>) c)
 				.toList();
 		var referencedPropertyParameterTypes = getProperties().stream()
 				.map(p -> p.getType())
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
 				.map(t -> t.findReferencedDtoType())
 				.toList();
-		var referencedCommandParameterTypes = (typescript ? getAllCommands() : getCommands()).stream()
+		var referencedCommandParameterTypes = (getCommands()).stream()
 				.flatMap(cd -> cd.getParameters().stream())
 				.map(p -> p.getType())
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
 				.map(t -> t.findReferencedDtoType())
 				.toList();
-		var referencedCommandReturnTypes = (typescript ? getAllCommands() : getCommands()).stream()
+		var referencedCommandReturnTypes = (getCommands()).stream()
 				.map(cd -> cd.getReturnType())
 				.filter(Objects::nonNull)
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 		var referencedEventParameterTypes = (typescript ? getAllEvents() : getEvents()).stream()
 				.flatMap(cd -> cd.getParameters().stream())
 				.map(p -> p.getType())
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 		var referencedQueryParamterTypes = (typescript ? getAllQueries() : getQueries()).stream()
 				.flatMap(cd -> cd.getParameters().stream())
 				.map(p -> p.getType())
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 		var referencedQueryReturnTypes = (typescript ? getAllQueries() : getQueries()).stream()
 				.map(cd -> cd.getReturnType())
 				.filter(Objects::nonNull)
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection())
+				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 

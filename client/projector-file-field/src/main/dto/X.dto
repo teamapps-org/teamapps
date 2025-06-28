@@ -1,0 +1,15 @@
+package "projector-file-field":org.teamapps.projector.component.filefield;
+
+import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.template.DtoTemplate;
+
+enum Mode {}
+
+abstract class DtoAbstractX {
+
+	command setEditingMode(Mode mode);
+}
+
+class DtoX extends DtoAbstractX {
+	DtoTemplate* template;
+}

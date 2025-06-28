@@ -24,27 +24,28 @@ import {
 	AbstractField,
 	arraysEqual,
 	executeAfterAttached,
-	FieldEditingMode,
+	type FieldEditingMode,
 	generateUUID,
 	parseHtml,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
-	DtoFileItem,
-	DtoSimpleFileField,
-	DtoSimpleFileField_FileItemClickedEvent,
-	DtoSimpleFileField_FileItemRemovedEvent,
-	DtoSimpleFileField_UploadCanceledEvent,
-	DtoSimpleFileField_UploadFailedEvent,
-	DtoSimpleFileField_UploadInitiatedByUserEvent,
-	DtoSimpleFileField_UploadStartedEvent,
-	DtoSimpleFileField_UploadSuccessfulEvent,
-	DtoSimpleFileField_UploadTooLargeEvent,
-	DtoSimpleFileFieldCommandHandler,
-	DtoSimpleFileFieldEventSource,
-	FileFieldDisplayType, FileFieldDisplayTypes
+	type DtoFileItem,
+	type DtoSimpleFileField,
+	type DtoSimpleFileField_FileItemClickedEvent,
+	type DtoSimpleFileField_FileItemRemovedEvent,
+	type DtoSimpleFileField_UploadCanceledEvent,
+	type DtoSimpleFileField_UploadFailedEvent,
+	type DtoSimpleFileField_UploadInitiatedByUserEvent,
+	type DtoSimpleFileField_UploadStartedEvent,
+	type DtoSimpleFileField_UploadSuccessfulEvent,
+	type DtoSimpleFileField_UploadTooLargeEvent,
+	type DtoSimpleFileFieldCommandHandler,
+	type DtoSimpleFileFieldEventSource, type DtoSimpleFileFieldServerObjectChannel,
+	type FileFieldDisplayType, FileFieldDisplayTypes
 } from "./generated";
-import {FileItem, FileItemState} from "./FileItem";
+import {FileItem} from "./FileItem.ts";
+import {type FileItemState, FileItemStates} from "./FileItemState.ts";
 
 /**
  * @author Yann Massard (yamass@gmail.com)
@@ -65,15 +66,10 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	private $fileInput: HTMLInputElement;
 	private $fileList: HTMLElement;
 
-	private displayMode: any;
-	private maxFiles: number;
 	private fileItems: { [uuid: string]: FileItem };
-	private maxBytesPerFile: number;
-	private fileTooLargeMessage: string;
-	private uploadErrorMessage: string;
-	private uploadUrl: string;
 
-	protected initialize(config: DtoSimpleFileField): void {
+	constructor(config: DtoSimpleFileField, serverObjectChannel: DtoSimpleFileFieldServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.fileItems = {};
 
 		this.$main = parseHtml(`<div class="SimpleFileField drop-zone form-control field-border field-border-glow field-background">
@@ -108,24 +104,24 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 			e.stopPropagation();
 			e.preventDefault();
 			this.$main.classList.remove("drop-zone-active");
-			const files = e.dataTransfer.files;
+			const files = e.dataTransfer?.files ?? new FileList();
 			this.handleFiles(files);
 		};
 
-		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button');
+		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button')!;
 		["click", "keypress"].forEach(eventName => this.$uploadButton.addEventListener(eventName, (e: any) => {
 			if (e.button == 0 || e.key === "Enter" || e.key === " ") {
 				this.$fileInput.click();
 				return false; // no scrolling when space is pressed!
 			}
 		}));
-		this.$fileInput = this.$main.querySelector<HTMLInputElement>(':scope .file-input');
+		this.$fileInput = this.$main.querySelector<HTMLInputElement>(':scope .file-input')!;
 		this.$fileInput.addEventListener('change', () => {
-			const files = (<HTMLInputElement>this.$fileInput).files;
+			const files = (this.$fileInput as HTMLInputElement).files ?? new FileList();
 			this.handleFiles(files);
 		});
 
-		this.$fileList = this.$main.querySelector<HTMLElement>(':scope .file-list');
+		this.$fileList = this.$main.querySelector<HTMLElement>(':scope .file-list')!;
 		this.$fileList.addEventListener('click', e => {
 			if (this.getTransientValue().length == 0) {
 				this.$fileInput.click();
@@ -193,8 +189,8 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 		return !arraysEqual(v1.map(item => item.uuid), v2.map(item => item.uuid));
 	}
 
-	addFileItem(itemConfig: DtoFileItem, state: FileItemState = FileItemState.DONE): void {
-		const fileItem = new FileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, itemConfig, state, this.isEditable());
+	addFileItem(itemConfig: DtoFileItem, state: FileItemState = FileItemStates.DONE): void {
+		const fileItem = new FileItem(this.config.displayMode, this.config.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.config.uploadUrl, itemConfig, state, this.isEditable());
 		this.fileItems[itemConfig.uuid] = fileItem;
 		this.$fileList.appendChild(fileItem.getMainDomElement());
 	}
@@ -205,45 +201,46 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 		delete this.fileItems[itemUuid];
 	}
 
-	setBrowseButtonCaption(browseButtonCaption: string): void {
-		this.$uploadButton.querySelector<HTMLElement>(":scope .caption").textContent = browseButtonCaption;
+	setBrowseButtonCaption(browseButtonCaption: string | null): void {
+		this.$uploadButton.querySelector<HTMLElement>(":scope .caption")!
+			.textContent = browseButtonCaption;
 	}
 
-	setBrowseButtonIcon(browseButtonIcon: string): void {
-		this.$uploadButton.querySelector<HTMLElement>(":scope .icon")
-			.style.backgroundImage = browseButtonIcon;
+	setBrowseButtonIcon(browseButtonIcon: string | null): void {
+		this.$uploadButton.querySelector<HTMLElement>(":scope .icon")!
+			.style.backgroundImage = browseButtonIcon ?? "";
 	}
 
 	setDisplayMode(displayMode: FileFieldDisplayType): void {
-		this.displayMode = displayMode;
+		this.config.displayMode = displayMode;
 		this.$main.classList.toggle("float-style-vertical-list", displayMode === FileFieldDisplayTypes.LIST);
 		this.$main.classList.toggle("float-style-horizontal", displayMode === FileFieldDisplayTypes.FLOATING);
 		Object.values(this.fileItems).forEach(item => item.setDisplayMode(displayMode));
 	}
 
 	setFileTooLargeMessage(fileTooLargeMessage: string): void {
-		this.fileTooLargeMessage = fileTooLargeMessage;
+		this.config.fileTooLargeMessage = fileTooLargeMessage;
 	}
 
 	setMaxBytesPerFile(maxBytesPerFile: number): void {
-		this.maxBytesPerFile = maxBytesPerFile;
+		this.config.maxBytesPerFile = maxBytesPerFile;
 	}
 
 	setMaxFiles(maxFiles: number): void {
-		this.maxFiles = maxFiles || Number.MAX_SAFE_INTEGER;
+		this.config.maxFiles = maxFiles || Number.MAX_SAFE_INTEGER;
 		this.updateVisibilities();
 	}
 
 	setAcceptedFileTypes(acceptedFileTypes: string[]) {
-		this.$fileInput.accept = acceptedFileTypes != null ? (acceptedFileTypes.join(',')) : null;
+		this.$fileInput.accept = acceptedFileTypes?.join(',') ?? "";
 	}
 
 	setUploadErrorMessage(uploadErrorMessage: string): void {
-		this.uploadErrorMessage = uploadErrorMessage;
+		this.config.uploadErrorMessage = uploadErrorMessage;
 	}
 
 	setUploadUrl(uploadUrl: string): void {
-		this.uploadUrl = uploadUrl
+		this.config.uploadUrl = uploadUrl
 	}
 
 	updateFileItem(itemConfig: DtoFileItem): void {
@@ -254,15 +251,11 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	}
 
 	private get numberOfNonErrorFileItems() {
-		return Object.values(this.fileItems).filter(item => item.state !== FileItemState.FAILED && item.state !== FileItemState.TOO_LARGE).length;
-	}
-
-	private get numberOfUploadingFileItems() {
-		return Object.values(this.fileItems).filter(item => item.state === FileItemState.UPLOADING).length;
+		return Object.values(this.fileItems).filter(item => item.state !== FileItemStates.FAILED && item.state !== FileItemStates.TOO_LARGE).length;
 	}
 
 	private updateVisibilities() {
-		this.$uploadButton.classList.toggle("hidden", !this.isEditable() || this.numberOfNonErrorFileItems >= this.maxFiles);
+		this.$uploadButton.classList.toggle("hidden", !this.isEditable() || this.numberOfNonErrorFileItems >= this.config.maxFiles);
 	}
 
 	private resetFileInput() {
@@ -271,8 +264,8 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 
 	private handleFiles(files: FileList) {
 		let numberOfFilesToAdd = files.length;
-		if (this.maxFiles && this.numberOfNonErrorFileItems + files.length > this.maxFiles) {
-			numberOfFilesToAdd = this.maxFiles - this.numberOfNonErrorFileItems;
+		if (this.config.maxFiles && this.numberOfNonErrorFileItems + files.length > this.config.maxFiles) {
+			numberOfFilesToAdd = this.config.maxFiles - this.numberOfNonErrorFileItems;
 		}
 
 		for (let i = 0; i < numberOfFilesToAdd; i++) {
@@ -298,9 +291,9 @@ export class SimpleFileField extends AbstractField<DtoSimpleFileField, DtoFileIt
 	}
 
 	private createUploadFileItem() {
-		let fileItem = new FileItem(this.displayMode, this.maxBytesPerFile, this.fileTooLargeMessage, this.uploadErrorMessage, this.uploadUrl, {
+		let fileItem = new FileItem(this.config.displayMode, this.config.maxBytesPerFile, this.config.fileTooLargeMessage, this.config.uploadErrorMessage, this.config.uploadUrl, {
 			uuid: generateUUID()
-		} as DtoFileItem, FileItemState.INITIATING, this.isEditable());
+		} as DtoFileItem, FileItemStates.INITIATING, this.isEditable());
 		fileItem.onClick.addListener(() => {
 			this.onFileItemClicked.fire({
 				fileItemUuid: fileItem.uuid

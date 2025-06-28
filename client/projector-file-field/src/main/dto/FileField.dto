@@ -25,17 +25,17 @@ import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 class DtoFileField extends DtoAbstractField {
-	mutable DtoTemplate* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
+	required mutable DtoTemplate* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
 	mutable long maxBytesPerFile;
-	mutable String uploadUrl; // May point anywhere.
-	mutable String fileTooLargeMessage;
-	mutable String uploadErrorMessage;
-	mutable FileFieldDisplayType displayType;
+	required mutable String uploadUrl; // May point anywhere.
+	required mutable String fileTooLargeMessage;
+	required mutable String uploadErrorMessage;
+	required mutable FileFieldDisplayType displayType;
 	mutable int maxFiles; // the max number of files to be uploaded in total for this field
-    mutable List<String> acceptedFileTypes;
-	mutable DtoTemplate* uploadButtonTemplate;
-	mutable Object uploadButtonData;
-	mutable boolean showEntriesAsButtonsOnHover;
+    required mutable List<String> acceptedFileTypes;
+	required mutable DtoTemplate* uploadButtonTemplate;
+	required mutable Object uploadButtonData;
+    mutable boolean showEntriesAsButtonsOnHover;
 
     event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
 	event uploadStarted(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
@@ -55,15 +55,15 @@ enum FileFieldDisplayType {
 }
 
 class DtoSimpleFileField extends DtoAbstractField {
-	mutable String browseButtonIcon;
-	mutable String browseButtonCaption;
-	mutable String uploadUrl; // May point anywhere.
-	mutable long maxBytesPerFile;
-	mutable String fileTooLargeMessage;
-	mutable String uploadErrorMessage;
-	mutable int maxFiles; // the max number of files to be uploaded in total for this field
-    mutable List<String> acceptedFileTypes;
-	mutable FileFieldDisplayType displayMode;
+	required mutable String browseButtonIcon;
+	required mutable String browseButtonCaption;
+	required mutable String uploadUrl; // May point anywhere.
+	required mutable long maxBytesPerFile;
+	required mutable String fileTooLargeMessage;
+	required mutable String uploadErrorMessage;
+	required mutable int maxFiles; // the max number of files to be uploaded in total for this field
+    required mutable List<String> acceptedFileTypes;
+	required mutable FileFieldDisplayType displayMode;
 
 	List<DtoFileItem> fileItems;
 
@@ -83,11 +83,11 @@ class DtoSimpleFileField extends DtoAbstractField {
 
 
 class DtoFileItem {
-	String uuid;
+	required String uuid;
 	String icon;
 	String thumbnail;
-	String fileName;
+	required String fileName;
 	String description;
-	long size;
+	required long size;
 	String linkUrl; // If not null, the click triggers a new tab/window to open with the url. If null, nothing happens on click, except the fileItemClicked event being triggered.
 }

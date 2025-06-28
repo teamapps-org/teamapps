@@ -22,27 +22,30 @@
 import {
 	AbstractField,
 	executeAfterAttached,
-	FieldEditingMode,
+	type FieldEditingMode,
 	FileUploader,
 	humanReadableFileSize,
 	parseHtml,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
-	DtoPictureChooser,
-	DtoPictureChooser_UploadCanceledEvent,
-	DtoPictureChooser_UploadFailedEvent,
-	DtoPictureChooser_UploadInitiatedByUserEvent,
-	DtoPictureChooser_UploadStartedEvent, DtoPictureChooser_UploadSuccessfulEvent, DtoPictureChooser_UploadTooLargeEvent,
-	DtoPictureChooserCommandHandler,
-	DtoPictureChooserEventSource
+	type DtoPictureChooser,
+	type DtoPictureChooser_UploadCanceledEvent,
+	type DtoPictureChooser_UploadFailedEvent,
+	type DtoPictureChooser_UploadInitiatedByUserEvent,
+	type DtoPictureChooser_UploadStartedEvent,
+	type DtoPictureChooser_UploadSuccessfulEvent,
+	type DtoPictureChooser_UploadTooLargeEvent,
+	type DtoPictureChooserCommandHandler,
+	type DtoPictureChooserEventSource,
+	type DtoPictureChooserServerObjectChannel
 } from "./generated";
-import {ProgressCircle, ProgressIndicator} from "projector-progress-indicator";
+import {ProgressCircle, type ProgressIndicator} from "projector-progress-indicator";
 
 /**
  * @author Yann Massard (yamass@gmail.com)
  */
-export class PictureChooser extends AbstractField<DtoPictureChooser, string> implements DtoPictureChooserEventSource, DtoPictureChooserCommandHandler {
+export class PictureChooser extends AbstractField<DtoPictureChooser, string | null> implements DtoPictureChooserEventSource, DtoPictureChooserCommandHandler {
 
 	public readonly onUploadCanceled: ProjectorEvent<DtoPictureChooser_UploadCanceledEvent> = new ProjectorEvent();
 	public readonly onUploadFailed: ProjectorEvent<DtoPictureChooser_UploadFailedEvent> = new ProjectorEvent();
@@ -55,19 +58,15 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 	private $picture: HTMLElement;
 	private $uploadButton: HTMLElement;
 	private $fileInput: HTMLInputElement;
-	private $fileItemWrapper: HTMLElement;
 	private $progressWrapper: HTMLElement;
 	private $pictureWrapper: HTMLElement;
 	private $deleteButton: HTMLElement;
 
-	private maxFileSize: number;
-	private fileTooLargeMessage: string;
-	private uploadErrorMessage: string;
-	private uploadUrl: string;
-	private uploader: FileUploader;
 	private progressIndicator: ProgressIndicator;
+	private uploader: FileUploader | null = null;
 
-	protected initialize(config: DtoPictureChooser): void {
+	constructor(config: DtoPictureChooser, serverObjectChannel: DtoPictureChooserServerObjectChannel) {
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="PictureChooser drop-zone form-control field-border field-border-glow field-background">
     <div class="picture-wrapper">
     	<div class="picture hidden"></div>
@@ -98,16 +97,16 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 			e.stopPropagation();
 			e.preventDefault();
 			this.$main.classList.remove("drop-zone-active");
-			const files = e.dataTransfer.files;
+			const files = e.dataTransfer?.files ?? new FileList();
 			this.handleFiles(files);
 		};
 
-		this.$pictureWrapper = this.$main.querySelector(":scope .picture-wrapper");
-		this.$picture = this.$main.querySelector(":scope .picture");
+		this.$pictureWrapper = this.$main.querySelector(":scope .picture-wrapper")!;
+		this.$picture = this.$main.querySelector(":scope .picture")!;
 
-		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button');
-		["click", "keypress"].forEach(eventName => this.$uploadButton.addEventListener(eventName, (e: MouseEvent & KeyboardEvent) => {
-			if (e.button == 0 || e.key === "Enter" || e.key === " ") {
+		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button')!;
+		(["click", "keypress"] as ("click" | "keypress")[]).forEach((eventName) => this.$uploadButton.addEventListener(eventName, (e: MouseEvent | KeyboardEvent) => {
+			if ((e as MouseEvent).button == 0 || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
 				this.$fileInput.click();
 				e.stopPropagation();
 				return false; // no scrolling when space is pressed!
@@ -119,7 +118,7 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 			}
 		});
 
-		this.$deleteButton = this.$main.querySelector(':scope .delete-button');
+		this.$deleteButton = this.$main.querySelector(':scope .delete-button')!;
 		this.$deleteButton.addEventListener('click', e => {
 			e.stopPropagation();
 			if (this.getCommittedValue() != null) {
@@ -127,22 +126,20 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 				this.commit(true);
 			}
 		});
-		this.$fileInput = this.$main.querySelector<HTMLInputElement>(':scope .file-input');
+		this.$fileInput = this.$main.querySelector<HTMLInputElement>(':scope .file-input')!;
 		this.$fileInput.addEventListener('change', () => {
-			const files = (<HTMLInputElement>this.$fileInput).files;
+			const files = (this.$fileInput as HTMLInputElement).files ?? new FileList();
 			this.handleFiles(files);
 		});
 
-		this.$fileItemWrapper = this.$main.querySelector<HTMLElement>(':scope .picture-wrapper');
-		
-		this.$progressWrapper = this.$main.querySelector(':scope .progress-wrapper');
+		this.$progressWrapper = this.$main.querySelector(':scope .progress-wrapper')!;
 		this.progressIndicator = new ProgressCircle(0, {
 			circleRadius: 24, circleStrokeWidth: 3
 		});
-		this.$main.querySelector(":scope .progress-wrapper")
+		this.$main.querySelector(":scope .progress-wrapper")!
 			.appendChild(this.progressIndicator.getMainDomElement());
 
-		this.setBrowseButtonIcon(config.browseButtonIcon);
+		this.setBrowseButtonIcon(config.browseButtonIcon ?? null);
 		this.setMaxFileSize(config.maxFileSize);
 		this.setFileTooLargeMessage(config.fileTooLargeMessage);
 		this.setUploadErrorMessage(config.uploadErrorMessage);
@@ -161,7 +158,7 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 		}
 	}
 
-	getDefaultValue(): string {
+	getDefaultValue() {
 		return null;
 	}
 
@@ -173,7 +170,7 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 		return this.$main;
 	}
 
-	getTransientValue(): string {
+	getTransientValue() {
 		return this.getCommittedValue();
 	}
 
@@ -190,24 +187,24 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 		return v1 === v2;
 	}
 
-	setBrowseButtonIcon(browseButtonIcon: string): void {
-		this.$uploadButton.style.backgroundImage = browseButtonIcon;
+	setBrowseButtonIcon(browseButtonIcon: string | null): void {
+		this.$uploadButton.style.backgroundImage = browseButtonIcon ?? "";
 	}
 
 	setFileTooLargeMessage(fileTooLargeMessage: string): void {
-		this.fileTooLargeMessage = fileTooLargeMessage;
+		this.config.fileTooLargeMessage = fileTooLargeMessage;
 	}
 
 	setMaxFileSize(maxFileSize: number): void {
-		this.maxFileSize = maxFileSize;
+		this.config.maxFileSize = maxFileSize;
 	}
 
 	setUploadErrorMessage(uploadErrorMessage: string): void {
-		this.uploadErrorMessage = uploadErrorMessage;
+		this.config.uploadErrorMessage = uploadErrorMessage;
 	}
 
 	setUploadUrl(uploadUrl: string): void {
-		this.uploadUrl = uploadUrl
+		this.config.uploadUrl = uploadUrl
 	}
 
 	private updateVisibilities() {
@@ -225,13 +222,13 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 
 		this.$progressWrapper.classList.remove("hidden");
 
-		if (file.size > this.maxFileSize) {
+		if (file.size > this.config.maxFileSize) {
 			this.onUploadTooLarge.fire({
 				fileName: file.name,
 				mimeType: file.type,
 				sizeInBytes: file.size
 			});
-			this.progressIndicator.setErrorMessage(formatString(this.fileTooLargeMessage, humanReadableFileSize(this.maxFileSize)));
+			this.progressIndicator.setErrorMessage(formatString(this.config.fileTooLargeMessage, humanReadableFileSize(this.config.maxFileSize)));
 			return;
 		}
 
@@ -242,7 +239,7 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 		});
 
 		this.uploader = new FileUploader();
-		this.uploader.upload(file, this.uploadUrl);
+		this.uploader.upload(file, this.config.uploadUrl);
 		this.uploader.onProgress.addListener(progress => this.progressIndicator.setProgress(progress));
 		this.uploader.onSuccess.addListener(fileUuid => {
 			this.onUploadSuccessful.fire({
@@ -254,7 +251,7 @@ export class PictureChooser extends AbstractField<DtoPictureChooser, string> imp
 			this.$progressWrapper.classList.add("hidden");
 		});
 		this.uploader.onError.addListener(() => {
-			this.progressIndicator.setErrorMessage(this.uploadErrorMessage);
+			this.progressIndicator.setErrorMessage(this.config.uploadErrorMessage);
 			this.onUploadFailed.fire({
 				fileName: file.name,
 				mimeType: file.type,

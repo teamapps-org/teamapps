@@ -23,10 +23,10 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.field.DtoAbstractField;
 
 class DtoPictureChooser extends DtoAbstractField {
-	String uploadUrl; // May point anywhere.
-	long maxFileSize;
-	String fileTooLargeMessage;
-	String uploadErrorMessage;
+	required String uploadUrl; // May point anywhere.
+	required long maxFileSize;
+	required String fileTooLargeMessage;
+	required String uploadErrorMessage;
 
 	String browseButtonIcon;
     String deleteButtonIcon;
