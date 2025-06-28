@@ -19,22 +19,33 @@
  */
 import * as d3 from "d3";
 import {Selection} from "d3-selection";
-import {addDays, createFormatter, createPlugin, DateFormatter, EventApi, EventStore, View} from "@fullcalendar/core";
+import {addDays, createFormatter, createPlugin, type DateFormatter, EventApi, type EventStore, View} from "@fullcalendar/core";
 import {toMoment} from "@fullcalendar/moment";
 import moment from "moment-timezone";
-import {Moment} from "moment-timezone";
+import {type Moment} from "moment-timezone";
 import {CalendarEventListPopper} from "./CalendarEventListPopper";
-import {ComponentContext} from "@fullcalendar/core/component/Component";
+import type {ComponentContext} from "@fullcalendar/core/component/Component";
 import {generateUUID, parseHtml, parseSvg} from "projector-client-object-api";
 
 class Segment {
+	public start: Moment;
+	public end: Moment;
+	public isStart: boolean;
+	public isEnd: boolean;
+	public event: EventApi;
+
 	constructor(
-		public start: Moment,
-		public end: Moment,
-		public isStart: boolean,
-		public isEnd: boolean,
-		public event: EventApi
+		start: Moment,
+		end: Moment,
+		isStart: boolean,
+		isEnd: boolean,
+		event: EventApi
 	) {
+		this.start = start;
+		this.end = end;
+		this.isStart = isStart;
+		this.isEnd = isEnd;
+		this.event = event;
 	}
 
 	public toString(): string {

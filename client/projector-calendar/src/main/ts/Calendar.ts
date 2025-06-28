@@ -19,34 +19,39 @@
  */
 
 import {
-	DtoCalendar_DataNeededEvent,
-	DtoCalendar_DayClickedEvent,
-	DtoCalendar_DayHeaderClickedEvent,
-	DtoCalendar_EventClickedEvent,
-	DtoCalendar_EventMovedEvent,
-	DtoCalendar_IntervalSelectedEvent,
-	DtoCalendar_MonthHeaderClickedEvent,
-	DtoCalendar_ViewChangedEvent,
-	DtoCalendar_WeekHeaderClickedEvent,
-	DtoCalendarCommandHandler,
-	DtoCalendar,
-	DtoCalendarEventSource, DtoCalendarViewMode, DtoCalendarEventClientRecord
+	type DtoCalendar,
+	type DtoCalendar_DataNeededEvent,
+	type DtoCalendar_DayClickedEvent,
+	type DtoCalendar_DayHeaderClickedEvent,
+	type DtoCalendar_EventClickedEvent,
+	type DtoCalendar_EventMovedEvent,
+	type DtoCalendar_IntervalSelectedEvent,
+	type DtoCalendar_MonthHeaderClickedEvent,
+	type DtoCalendar_ViewChangedEvent,
+	type DtoCalendar_WeekHeaderClickedEvent,
+	type DtoCalendarCommandHandler,
+	type DtoCalendarEventClientRecord,
+	type DtoCalendarEventSource,
+	type DtoCalendarViewMode
 } from "./generated";
-import {Interval, intervalsOverlap} from "./intervals";
+import {type Interval, intervalsOverlap} from "./intervals";
 
-import {addDays, Calendar as FullCalendar} from '@fullcalendar/core';
+import {addDays, Calendar as FullCalendar, type EventInput, View, EventApi, type Duration} from '@fullcalendar/core';
 import dayGridPlugin, {DayGridView} from '@fullcalendar/daygrid';
 import timeGridPlugin, {TimeGridView} from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import momentTimeZone from './fullcalendar-moment-timezone';
-import {EventInput, EventRenderingChoice} from "@fullcalendar/core/structs/event";
-import {EventSourceError, ExtendedEventSourceInput} from "@fullcalendar/core/structs/event-source";
-import {View} from "@fullcalendar/core/View";
-import EventApi from "@fullcalendar/core/api/EventApi";
-import {Duration} from "@fullcalendar/core/datelib/duration";
+import type {EventSourceError, ExtendedEventSourceInput} from "@fullcalendar/core/structs/event-source";
 import {monthGridViewPlugin} from "./FullCalendarMonthGrid";
-import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
-import {AbstractComponent, bind, parseHtml, prependChild, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import type {OptionsInputBase} from "@fullcalendar/core/types/input-types";
+import {
+	AbstractComponent,
+	bind,
+	parseHtml,
+	prependChild,
+	ProjectorEvent,
+	type ServerObjectChannel
+} from "projector-client-object-api";
 
 export class Calendar extends AbstractComponent<DtoCalendar> implements DtoCalendarCommandHandler, DtoCalendarEventSource {
 

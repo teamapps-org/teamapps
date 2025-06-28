@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import { createPopper, Instance as Popper } from '@popperjs/core';
-import {animateCSS, EntranceAnimation, EntranceAnimations, parseHtml} from "projector-client-object-api";
+import { createPopper, type Instance as Popper } from '@popperjs/core';
+import {animateCSS, type EntranceAnimation, EntranceAnimations, parseHtml} from "projector-client-object-api";
 
 export class CalendarEventListPopper {
 
