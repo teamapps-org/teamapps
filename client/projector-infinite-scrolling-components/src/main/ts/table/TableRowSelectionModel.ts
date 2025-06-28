@@ -30,18 +30,21 @@ export class TableRowSelectionModel {
 
 	public onSelectedRangesChanged: Slick.Event<any> = new Slick.Event();
 
+	// @ts-ignore
 	private grid: Slick.Grid<any>;
 	private ranges: Slick.Range[] = [];
 
-	constructor(private _options?: { selectActiveRow: boolean; }) {
+	// @ts-ignore
+	private options: { selectActiveRow: boolean; }
 
+	constructor() {
 	}
 
 	/**
 	 * An initializer function that will be called with an instance of the grid whenever a selection model is registered with setSelectionModel. The selection model can use this to initialize its state and subscribe to grid events.
 	 **/
 	init(grid: Slick.Grid<any>): void {
-		this._options = {...TableRowSelectionModel.DEFAULTS, ...this._options};
+		this.options = {...TableRowSelectionModel.DEFAULTS};
 		this.grid = grid;
 		this.grid.onActiveCellChanged.subscribe(this.handleActiveCellChange);
 		this.grid.onKeyDown.subscribe(this.handleKeyDown);
@@ -112,8 +115,8 @@ export class TableRowSelectionModel {
 	}
 
 	@bind
-	private handleActiveCellChange(e: any, data: any) {
-		if (this._options.selectActiveRow && data.row != null && data.grid.getSelectedRows().length === 1) {
+	private handleActiveCellChange(_e: any, data: any) {
+		if (this.options.selectActiveRow && data.row != null && data.grid.getSelectedRows().length === 1) {
 			this.setSelectedRanges([new Slick.Range(data.row, 0, data.row, this.grid.getColumns().length - 1)]);
 		}
 	}
@@ -175,7 +178,7 @@ export class TableRowSelectionModel {
 		} else if (idx !== -1 && (e.ctrlKey || e.metaKey)) {
 			selection = selection.filter(s => s !== cell.row);
 		} else if (selection.length > 0 && e.shiftKey) {
-			const last = selection.pop();
+			const last = selection.pop()!;
 			const from = Math.min(cell.row, last);
 			const to = Math.max(cell.row, last);
 			selection = [];
@@ -188,7 +191,7 @@ export class TableRowSelectionModel {
 		}
 
 		if (this.grid.canCellBeActive(cell.row, cell.cell)) {
-			if (this.grid.getEditorLock().isActive(null)) {
+			if (this.grid.getEditorLock().isActive(null as any)) {
 				this.grid.getEditorLock().commitCurrentEdit()
 			}
 			this.grid.setActiveCell(cell.row, cell.cell)

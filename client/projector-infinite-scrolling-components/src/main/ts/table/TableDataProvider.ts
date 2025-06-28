@@ -17,11 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import DataProvider = Slick.DataProvider;
-import {DtoTableClientRecord} from "../generated";
-import {DtoFieldMessage, DtoIdentifiableClientRecord} from "projector-client-object-api";
+import {type DtoTableClientRecord} from "../generated";
+import {type DtoFieldMessage} from "projector-client-object-api";
 
-export class TableDataProvider implements DataProvider<DtoTableClientRecord> {
+export class TableDataProvider implements Slick.DataProvider<DtoTableClientRecord> {
 	public onDataLoading = new Slick.Event();
 
 	private dataStartIndex: number = 0;
@@ -41,10 +40,10 @@ export class TableDataProvider implements DataProvider<DtoTableClientRecord> {
 	public getItemMetadata(index: number): Slick.RowMetadata<any> {
 		let record = this.data[index - this.dataStartIndex];
 		if (record == null) {
-			return null;
+			return null as any;
 		} else {
 			return {
-				cssClasses: record.bold ? "text-bold" : null
+				cssClasses: record.bold ? "text-bold" : undefined
 			};
 		}
 	}
@@ -54,12 +53,12 @@ export class TableDataProvider implements DataProvider<DtoTableClientRecord> {
 
 		this.dataStartIndex = startIndex;
 		newRecords.forEach(r => this.recordById.set(r.id, r));
-		this.data = recordIds.map(recordId => this.recordById.get(recordId));
+		this.data = recordIds.map(recordId => this.recordById.get(recordId)!);
 
 		// cleanup
 		if (this.recordById.size > recordIds.length * 2) {
 			let recordIdsAsSet = new Set(recordIds);
-			this.recordById.forEach((value, key) => {
+			this.recordById.forEach((_value, key) => {
 				if (!recordIdsAsSet.has(key)) {
 					this.recordById.delete(key);
 				}

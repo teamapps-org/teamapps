@@ -18,19 +18,23 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractTableEditor} from "./AbstractTableEditor";
-import {AbstractField, applyCss, DtoClientRecord} from "projector-client-object-api";
+import {AbstractField, applyCss, type DtoClientRecord} from "projector-client-object-api";
 
 
 export class FixedSizeTableCellEditor extends AbstractTableEditor {
 
 	protected defaultValue: any;
+	protected uiField: AbstractField;
+	private destroyCallback: () => void;
 
 	constructor(
-		protected uiField: AbstractField,
-		private destroyCallback: () => void,
+		uiField: AbstractField,
+		destroyCallback: () => void,
 		editorOptions: Slick.Editors.EditorOptions<any> & { item: any }
 	) {
 		super(editorOptions);
+		this.uiField = uiField;
+		this.destroyCallback = destroyCallback;
 
 		// let availableSpaceRight = editorOptions.gridPosition.right - editorOptions.position.left;
 		// let availableSpaceBottom = editorOptions.gridPosition.bottom - editorOptions.position.top;

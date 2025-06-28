@@ -22,26 +22,26 @@
 import {
 	AbstractComponent,
 	addDelegatedEventListener,
-	AlignItems,
-	Component,
+	type AlignItems,
+	type Component,
 	debouncedMethod,
 	DebounceModes,
 	executeAfterAttached,
-	JustifyContent, JustifyContents,
+	type JustifyContent, JustifyContents,
 	parseHtml,
 	ProjectorEvent,
-	ServerObjectChannel,
-	Template
+	type ServerObjectChannel,
+	type Template
 } from "projector-client-object-api";
 import {ContextMenu} from "projector-client-core-components";
 import {
-	DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent,
-	DtoInfiniteItemView,
-	DtoInfiniteItemView_ContextMenuRequestedEvent,
-	DtoInfiniteItemView_ItemClickedEvent,
-	DtoInfiniteItemViewClientRecord,
-	DtoInfiniteItemViewCommandHandler,
-	DtoInfiniteItemViewEventSource
+	type DtoAbstractInfiniteListComponent_DisplayedRangeChangedEvent,
+	type DtoInfiniteItemView,
+	type DtoInfiniteItemView_ContextMenuRequestedEvent,
+	type DtoInfiniteItemView_ItemClickedEvent,
+	type DtoInfiniteItemViewClientRecord,
+	type DtoInfiniteItemViewCommandHandler,
+	type DtoInfiniteItemViewEventSource
 } from "../generated";
 
 type RenderedItem = {

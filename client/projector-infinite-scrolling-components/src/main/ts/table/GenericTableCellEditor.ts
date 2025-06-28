@@ -18,19 +18,23 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractTableEditor} from "./AbstractTableEditor";
-import {AbstractField, DtoIdentifiableClientRecord} from "projector-client-object-api";
+import {AbstractField, type DtoIdentifiableClientRecord} from "projector-client-object-api";
 
 
 export class GenericTableCellEditor extends AbstractTableEditor {
 
 	protected defaultValue: any;
+	protected uiField: AbstractField;
+	private destroyCallback: () => void;
 
 	constructor(
-		protected uiField: AbstractField,
-		private destroyCallback: () => void,
+		uiField: AbstractField,
+		destroyCallback: () => void,
 		args: Slick.Editors.EditorOptions<any> & { item: any }
 	) {
 		super(args);
+		this.uiField = uiField;
+		this.destroyCallback = destroyCallback;
 		this.container.appendChild(uiField.getMainElement());
 	}
 

@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import { createPopper, Instance as Popper } from '@popperjs/core';
-import {parseHtml, DtoFieldMessage, getHighestSeverity, FieldMessageSeverity, FieldMessagePosition} from "projector-client-object-api";
+import { createPopper, type Instance as Popper } from '@popperjs/core';
+import {parseHtml, type DtoFieldMessage, getHighestSeverity} from "projector-client-object-api";
 
 export class FieldMessagesPopper {
 
