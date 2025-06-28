@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.component.field.textcolormarker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.AbstractField;
@@ -29,6 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValue> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TextColorMarkerField.class);
 
 	static final TextColorMarkerFieldValue EMPTY_VALUE = new TextColorMarkerFieldValue("", List.of());
 
@@ -149,6 +152,14 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 					setCurrentSelection(null); // selection was removed
 				} else if (getEditingMode() != FieldEditingMode.DISABLED) {
 					onTextSelected.fire(setCurrentSelection(new TextSelectionData(textSelectedEvent.getStart(), textSelectedEvent.getEnd())));
+				}
+				break;
+			case UI_FIELD_VALUE_CHANGED:
+				if (getEditingMode() != FieldEditingMode.DISABLED) {
+					applyValueFromUi(((UiField.ValueChangedEvent) event).getValue());
+					validate();
+				} else {
+					LOGGER.warn("Got valueChanged event from disabled field {} {}", this.getClass().getSimpleName(), getDebuggingId());
 				}
 				break;
 			default:
