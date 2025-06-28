@@ -109,11 +109,6 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		}
 	}
 
-	protected void setValueWithoutNotifyingClient(VALUE value) {
-		valueChangedByClient = false;
-		this.value.writeWithoutLocking(value);
-	}
-
 	protected MultiWriteLockableValue.Lock setAndLockValue(VALUE value) {
 		return this.value.writeAndLock(value);
 	}

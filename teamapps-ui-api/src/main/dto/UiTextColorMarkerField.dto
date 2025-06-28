@@ -2,7 +2,6 @@ class UiTextColorMarkerField extends UiField {
     List<UiTextColorMarkerFieldMarkerDefinition> markerDefinitions;
     boolean toolbarEnabled;
 
-    command setMarker(int markerDefinitionId, int start, int end);
     command setMarkerDefinitions(List<UiTextColorMarkerFieldMarkerDefinition> markerDefinitions, UiTextColorMarkerFieldValue newValue);
     command setToolbarEnabled(boolean enabled);
 

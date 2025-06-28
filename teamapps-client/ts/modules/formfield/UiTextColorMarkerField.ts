@@ -233,8 +233,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 				if (this.$editor.contains(range.commonAncestorContainer)) {
 					const start = this.getNodePosition(range.startContainer) + range.startOffset;
 					const end = this.getNodePosition(range.endContainer) + range.endOffset;
-
-					if (start !== end) {
+					if (start < end) {
 						noSelection = false;
 						this.triggerSelection({ start, end });
 					}
