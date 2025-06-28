@@ -21,19 +21,18 @@
 import {
 	AbstractComponent,
 	applyCss, createBorderCssString, createShadowCssString,
-	DtoBorder,
-	DtoBoxShadow,
+	type DtoBorder,
+	type DtoBoxShadow,
 	generateUUID,
-	parseHtml,
-	ServerObjectChannel
+	parseHtml
 } from "projector-client-object-api";
-import {DtoDocumentViewer, DtoDocumentViewerCommandHandler, PageDisplayMode, PageDisplayModes} from "./generated";
+import {type DtoDocumentViewer, type DtoDocumentViewerCommandHandler, type PageDisplayMode, PageDisplayModes} from "./generated";
 import {enableScrollViaDragAndDrop} from "./scroll-dnd";
 
 interface Page {
 	$img: HTMLElement;
-	naturalWidth?: number;
-	naturalHeight?: number;
+	naturalWidth: number;
+	naturalHeight: number;
 }
 
 export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> implements DtoDocumentViewerCommandHandler {
@@ -47,11 +46,8 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 
 	private uuidClass: string;
 	private $styleTag: HTMLElement;
-	private pageBorder: DtoBorder;
-	private pageSpacing: number;
-	private pageShadow: DtoBoxShadow;
 
-	constructor(config: DtoDocumentViewer, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoDocumentViewer) {
 		super(config);
 
 		this.uuidClass = `DocumentViewer-${generateUUID()}`;
@@ -64,22 +60,19 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 		    </div>
 	    </div>`);
 
-		this.$pagesContainerWrapper = this.$componentWrapper.querySelector<HTMLElement>(":scope .pages-container-wrapper");
-		this.$styleTag = this.$componentWrapper.querySelector<HTMLElement>(":scope style");
-		this.$pagesContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .pages-container');
+		this.$pagesContainerWrapper = this.$componentWrapper.querySelector<HTMLElement>(":scope .pages-container-wrapper")!;
+		this.$styleTag = this.$componentWrapper.querySelector<HTMLElement>(":scope style")!;
+		this.$pagesContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .pages-container')!;
 		enableScrollViaDragAndDrop(this.$pagesContainerWrapper);
 
 		this.zoomFactor = config.zoomFactor;
 		this.displayMode = config.displayMode;
 
-		this.setPageBorder(config.pageBorder);
-		this.setPaddding(config.padding);
-		this.setPageSpacing(config.pageSpacing);
-		this.setPageShadow(config.pageShadow);
-
 		if (config.pageUrls) {
 			this.setPageUrls(config.pageUrls);
 		}
+
+		this.updateStyles()
 	}
 
 	public setPageUrls(pageUrls: string[]) {
@@ -179,21 +172,22 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 	}
 
 	setPageBorder(pageBorder: DtoBorder): void {
-		this.pageBorder = pageBorder;
+		this.config.pageBorder = pageBorder;
 		this.updateStyles();
 	}
 
 	setPaddding(padding: number): void {
-		this.$pagesContainer.style.padding = padding + "px";
+		this.config.padding = padding;
+		this.updateStyles();
 	}
 
 	setPageSpacing(pageSpacing: number): void {
-		this.pageSpacing = pageSpacing;
+		this.config.pageSpacing = pageSpacing;
 		this.updateStyles();
 	}
 
 	setPageShadow(pageShadow: DtoBoxShadow): void {
-		this.pageShadow = pageShadow;
+		this.config.pageShadow = pageShadow;
 		this.updateStyles();
 	}
 
@@ -201,12 +195,13 @@ export class DocumentViewer extends AbstractComponent<DtoDocumentViewer> impleme
 		this.$styleTag.innerHTML = '';
 		this.$styleTag.innerText = `
 		.${this.uuidClass} .page {
-            ${createBorderCssString(this.pageBorder)}
-            ${createShadowCssString(this.pageShadow)}
+            ${createBorderCssString(this.config.pageBorder)}
+            ${createShadowCssString(this.config.pageShadow)}
         }
         .${this.uuidClass} .page:not(:last-child) {
-            margin-bottom: ${this.pageSpacing}px !important;
+            margin-bottom: ${this.config.pageSpacing}px !important;
         }`;
+		this.$pagesContainer.style.padding = this.config.padding + "px";
 	}
 }
 

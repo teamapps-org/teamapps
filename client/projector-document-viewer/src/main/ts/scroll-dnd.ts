@@ -10,7 +10,7 @@ export function enableScrollViaDragAndDrop($scrollContainer: HTMLElement) {
 			$scrollContainer.scrollLeft = initialScrollLeft - diffX;
 			$scrollContainer.scrollTop = initialScrollTop - diffY;
 		};
-		let dropHandler = (e: PointerEvent) => {
+		let dropHandler = () => {
 			document.removeEventListener('pointermove', dragHandler);
 			document.removeEventListener('pointerup', dropHandler);
 			$scrollContainer.style.cursor = "";

@@ -24,8 +24,8 @@ import org.teamapps.projector.format.DtoBorder;
 import org.teamapps.projector.format.DtoBoxShadow;
 
 class DtoDocumentViewer extends DtoComponent {
-	List<String> pageUrls;
-	PageDisplayMode displayMode;
+	required List<String> pageUrls;
+	required PageDisplayMode displayMode;
 	double zoomFactor; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
 	DtoBorder pageBorder;
 	DtoBoxShadow pageShadow;
