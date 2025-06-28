@@ -274,8 +274,10 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 
 	private triggerSelection(selection: UiTextColorMarkerField_TextSelectedEvent): void {
 		this.currentSelection = selection;
-		if (this.toolbarEnabled && this.isMarkerChangeAllowed()) {
-			this.showToolbar();
+		if (this.isMarkerChangeAllowed()) {
+			if (this.toolbarEnabled) {
+				this.showToolbar();
+			}
 			this.onTextSelected.fire(this.currentSelection);
 		}
 	}
