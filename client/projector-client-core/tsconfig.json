@@ -22,7 +22,7 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src"
+    "src/main/ts"
   ],
   "references": [
     {

@@ -18,8 +18,8 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
-import {DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
+import {AbstractComponent, parseHtml, type ServerObjectChannel} from "projector-client-object-api";
+import {type DtoAbstractToolContainer} from "../../generated/DtoAbstractToolContainer";
 
 
 const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');

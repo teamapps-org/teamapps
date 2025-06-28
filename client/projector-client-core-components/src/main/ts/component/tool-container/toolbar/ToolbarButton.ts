@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 import {DropDown} from "../../../micro-components/DropDown";
-import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {type DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {
-	Component,
+	type Component,
 	enterFullScreen,
 	exitFullScreen,
 	generateUUID,
@@ -28,15 +28,16 @@ import {
 	parseHtml,
 	prependChild,
 	ProjectorEvent,
-	Template
+	type Template
 } from "projector-client-object-api";
-import {Toolbar} from "./Toolbar";
 import {AbstractToolContainer} from "../AbstractToolContainer";
-import {DropDownButtonClickInfo} from "../../../generated";
+import {type DropDownButtonClickInfo} from "../../../generated";
 
 export class ToolbarButton {
 
 	public readonly onClick: ProjectorEvent<DropDownButtonClickInfo> = new ProjectorEvent();
+
+	public config: DtoToolbarButton;
 
 	private $buttonWrapper: HTMLElement;
 	private $button: HTMLElement;
@@ -51,7 +52,8 @@ export class ToolbarButton {
 	private uuidClass: string = `DtoToolbarButton-${generateUUID()}`;
 	private $styleTag: HTMLStyleElement;
 
-	constructor(public config: DtoToolbarButton) {
+	constructor(config: DtoToolbarButton) {
+		this.config = config;
 		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.id}">
 	<div class="toolbar-button-caret ${config.hasDropDown ? '' : 'hidden'}">
 	  <div class="caret"></div>

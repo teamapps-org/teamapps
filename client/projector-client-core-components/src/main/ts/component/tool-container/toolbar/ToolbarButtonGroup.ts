@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
+import {type DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
 import {ToolbarButton} from "./ToolbarButton";
-import {Component, insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml, ProjectorEvent} from "projector-client-object-api";
+import {type Component, insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml, ProjectorEvent} from "projector-client-object-api";
 
-import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
-import {ButtonVisibilities, Toolbar} from "./Toolbar";
-import {DropDownButtonClickInfo} from "../../../generated";
+import {type DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {type ButtonVisibilities, Toolbar} from "./Toolbar";
+import {type DropDownButtonClickInfo} from "../../../generated";
 
 // #synched
 export class ToolbarButtonGroup {
@@ -38,8 +38,10 @@ export class ToolbarButtonGroup {
 	private buttons: OrderedDictionary<ToolbarButton>;
 	private $separator: HTMLElement;
 	private buttonsShiftedToOverflowDropDown: ToolbarButton[] = [];
+	private toolbar: Toolbar;
 
-	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolbar: Toolbar) {
+	constructor(buttonGroupConfig: DtoToolbarButtonGroup, toolbar: Toolbar) {
+		this.toolbar = toolbar;
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
 		const $buttonGroup = parseHtml(`<div class="toolbar-button-group"></div>`);

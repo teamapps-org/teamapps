@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoRootPanel, DtoRootPanelCommandHandler} from "../generated";
+import {type DtoRootPanel, type DtoRootPanelCommandHandler} from "../generated";
 import {
 	AbstractComponent,
-	Component,
+	type Component,
 	pageTransition,
-	PageTransition,
+	type PageTransition,
 	parseHtml,
-	ServerObjectChannel
+	type ServerObjectChannel
 } from "projector-client-object-api";
 
 // noinspection JSUnusedGlobalSymbols

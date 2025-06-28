@@ -19,27 +19,27 @@
  */
 
 import {
-	Component,
+	type Component,
 	insertAfter,
 	insertBefore,
 	noOpServerObjectChannel, outerWidthIncludingMargins,
 	parseHtml,
-	ServerObjectChannel,
-	ProjectorEvent, EventSubscription
+	type ServerObjectChannel,
+	ProjectorEvent, type EventSubscription
 } from "projector-client-object-api";
 import {
-	DtoAbstractToolContainer_ToolbarButtonClickEvent,
-	DtoToolbar,
-	DtoToolbarButtonGroupPosition,
-	DtoToolbarCommandHandler,
-	DtoToolbarEventSource
+	type DtoAbstractToolContainer_ToolbarButtonClickEvent,
+	type DtoToolbar,
+	type DtoToolbarButtonGroupPosition,
+	type DtoToolbarCommandHandler,
+	type DtoToolbarEventSource
 } from "../../../generated";
-import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
-import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {type DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
+import {type DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {ToolAccordion} from "../tool-accordion/ToolAccordion";
 import {AbstractToolContainer} from "../AbstractToolContainer";
 import {DropDown} from "../../../micro-components/DropDown";
-import {Emptyable} from "../../../util/Emptyable";
+import {type Emptyable} from "../../../util/Emptyable";
 import {ToolbarButton} from "./ToolbarButton";
 import {ToolbarButtonGroup} from "./ToolbarButtonGroup";
 

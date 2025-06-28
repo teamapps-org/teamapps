@@ -29,33 +29,35 @@ import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {
 	AbstractComponent,
 	bind,
-	Component,
+	type Component,
 	executeAfterAttached,
 	insertAtIndex,
 	insertBefore,
 	noOpServerObjectChannel,
 	parseHtml,
 	prependChild,
-	ServerObjectChannel,
-	ProjectorEvent
+	ProjectorEvent,
+	type ServerObjectChannel
 } from "projector-client-object-api";
-import {DtoTab as DtoTab} from "../generated/DtoTab";
-import {Emptyable, isEmptyable} from "../util/Emptyable";
+import {type DtoTab as DtoTab} from "../generated/DtoTab";
+import {type Emptyable, isEmptyable} from "../util/Emptyable";
 import {ToolButton} from "./ToolButton";
 import {
-	DtoTabPanel,
-	DtoTabPanel_TabClosedEvent,
-	DtoTabPanel_TabNeedsRefreshEvent,
-	DtoTabPanel_TabSelectedEvent,
-	DtoTabPanel_WindowButtonClickedEvent,
-	DtoTabPanelCommandHandler,
-	DtoTabPanelEventSource, DtoToolButton,
-	TabPanelTabStyle, TabPanelTabStyles,
-	WindowButtonType, WindowButtonTypes
+	type DtoTabPanel,
+	type DtoTabPanel_TabClosedEvent,
+	type DtoTabPanel_TabNeedsRefreshEvent,
+	type DtoTabPanel_TabSelectedEvent,
+	type DtoTabPanel_WindowButtonClickedEvent,
+	type DtoTabPanelCommandHandler,
+	type DtoTabPanelEventSource,
+	type DtoToolButton,
+	type TabPanelTabStyle,
+	TabPanelTabStyles,
+	type WindowButtonType,
+	WindowButtonTypes
 } from "../generated";
 import {maximizeComponent} from "../util/Common";
 import {positionDropdown} from "../util/dropdownPosition";
-import {contentWidth} from "projector-client-object-api";
 
 
 interface Tab {

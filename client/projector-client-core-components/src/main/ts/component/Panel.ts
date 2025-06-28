@@ -28,16 +28,16 @@ import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
 import ICON_RESTORE from "@material-symbols/svg-400/outlined/select_window.svg";
 
 import {
-	DtoPanel,
-	DtoPanel_WindowButtonClickedEvent,
-	DtoPanelCommandHandler,
-	DtoPanelEventSource,
-	HeaderComponentMinimizationPolicy,
-	DtoPanelHeaderField,
-	HeaderFieldIconVisibilityPolicy,
-	WindowButtonType,
+	type DtoPanel,
+	type DtoPanel_WindowButtonClickedEvent,
+	type DtoPanelCommandHandler,
+	type DtoPanelEventSource,
+	type HeaderComponentMinimizationPolicy,
+	type DtoPanelHeaderField,
+	type HeaderFieldIconVisibilityPolicy,
+	type WindowButtonType,
 	WindowButtonTypes,
-	DtoToolButton,
+	type DtoToolButton,
 	HeaderFieldIconVisibilityPolicies,
 	HeaderComponentMinimizationPolicies
 } from "../generated";
@@ -45,13 +45,13 @@ import {Toolbar} from "./tool-container/toolbar/Toolbar";
 import {ToolButton} from "./ToolButton";
 import {
 	AbstractComponent,
-	Component,
+	type Component,
 	executeAfterAttached,
 	insertBefore,
 	noOpServerObjectChannel, outerWidthIncludingMargins,
 	parseHtml,
 	prependChild,
-	ServerObjectChannel,
+	type ServerObjectChannel,
 	ProjectorEvent
 } from "projector-client-object-api";
 

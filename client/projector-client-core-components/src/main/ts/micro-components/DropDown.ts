@@ -18,7 +18,12 @@
  * =========================LICENSE_END==================================
  */
 
-import {ClickOutsideHandle, Component, doOnceOnClickOutsideElement, parseHtml, ProjectorEvent} from "projector-client-object-api";
+import {
+	type ClickOutsideHandle,
+	doOnceOnClickOutsideElement,
+	parseHtml,
+	ProjectorEvent
+} from "projector-client-object-api";
 import {Spinner} from "./Spinner";
 import {positionDropdownWithAutoUpdate} from "../util/dropdownPosition";
 

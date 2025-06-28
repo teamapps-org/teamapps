@@ -20,21 +20,21 @@
 
 import {Panel} from "./Panel";
 import {
-	DtoPanel_WindowButtonClickedEvent,
-	HeaderComponentMinimizationPolicy,
-	DtoPanelHeaderField,
-	HeaderFieldIconVisibilityPolicy,
-	DtoWindow,
-	WindowButtonType,
-	DtoWindowCommandHandler,
-	DtoWindowEventSource, DtoWindow_ClosedEvent, WindowButtonTypes
+	type DtoPanel_WindowButtonClickedEvent,
+	type HeaderComponentMinimizationPolicy,
+	type DtoPanelHeaderField,
+	type HeaderFieldIconVisibilityPolicy,
+	type DtoWindow,
+	type WindowButtonType,
+	type DtoWindowCommandHandler,
+	type DtoWindowEventSource, type DtoWindow_ClosedEvent, WindowButtonTypes
 } from "../generated";
 import {
 	AbstractComponent, animateCSS,
-	Component,
+	type Component,
 	noOpServerObjectChannel,
 	parseHtml,
-	ServerObjectChannel,
+	type ServerObjectChannel,
 	ProjectorEvent, EntranceAnimations, ExitAnimations
 } from "projector-client-object-api";
 

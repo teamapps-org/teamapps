@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, Component, parseHtml, ServerObjectChannel} from "projector-client-object-api";
-import {DtoHtmlView, DtoHtmlViewCommandHandler} from "../generated";
+import {AbstractComponent, type Component, parseHtml, type ServerObjectChannel} from "projector-client-object-api";
+import {type DtoHtmlView, type DtoHtmlViewCommandHandler} from "../generated";
 
 export class HtmlView extends AbstractComponent<DtoHtmlView> implements DtoHtmlViewCommandHandler {
 

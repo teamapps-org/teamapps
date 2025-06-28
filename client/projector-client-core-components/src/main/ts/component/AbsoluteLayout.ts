@@ -21,12 +21,12 @@ import {
 	AbstractComponent,
 	type AnimationEasing,
 	AnimationEasings,
-	Component,
+	type Component,
 	generateUUID,
 	parseHtml,
-	ServerObjectChannel
+	type ServerObjectChannel
 } from "projector-client-object-api";
-import {DtoAbsoluteLayout, DtoAbsoluteLayoutCommandHandler, DtoAbsolutePositionedComponent} from "../generated";
+import {type DtoAbsoluteLayout, type DtoAbsoluteLayoutCommandHandler, type DtoAbsolutePositionedComponent} from "../generated";
 
 export class AbsoluteLayout extends AbstractComponent<DtoAbsoluteLayout> implements DtoAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;

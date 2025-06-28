@@ -20,14 +20,14 @@
 
 import {
 	AbstractComponent,
-	Component,
-	AlignItems,
-	FlexDirection, JustifyContent,
+	type Component,
+	type AlignItems,
+	type FlexDirection, type JustifyContent,
 	insertAtIndex,
 	parseHtml,
-	ServerObjectChannel
+	type ServerObjectChannel
 } from "projector-client-object-api";
-import {DtoFlexContainer, DtoFlexContainerCommandHandler} from "../generated";
+import {type DtoFlexContainer, type DtoFlexContainerCommandHandler} from "../generated";
 
 export class FlexContainer extends AbstractComponent<DtoFlexContainer> implements DtoFlexContainerCommandHandler {
 

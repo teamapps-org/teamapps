@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoComponentField, DtoComponentFieldCommandHandler, DtoComponentFieldEventSource} from "../../generated";
-import {Component, executeAfterAttached, FieldEditingMode, parseHtml} from "projector-client-object-api";
+import {type DtoComponentField, type DtoComponentFieldCommandHandler, type DtoComponentFieldEventSource} from "../../generated";
+import {type Component, executeAfterAttached, type FieldEditingMode, parseHtml} from "projector-client-object-api";
 import {AbstractField} from "projector-client-object-api";
 
 

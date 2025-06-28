@@ -18,14 +18,13 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, type ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
-	DtoDummyComponent,
-	DtoDummyComponent_ClickEvent,
-	DtoDummyComponentCommandHandler,
-	DtoDummyComponentEventSource
+	type DtoDummyComponent,
+	type DtoDummyComponent_ClickEvent,
+	type DtoDummyComponentCommandHandler,
+	type DtoDummyComponentEventSource
 } from "../generated";
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export class DummyComponent extends AbstractComponent<DtoDummyComponent> implements DtoDummyComponentCommandHandler, DtoDummyComponentEventSource {
 
@@ -81,7 +80,7 @@ clickCount: <span>${this.clickCount}</span><br>
 jsClickCount: <span>${this.jsClickCount}</span><br>
 commandCount: <span>${this.commandCount}</span><br>
 resizeCount: ${this.resizeCount}<br>
-lastResize: ${this.lastResize ? this.lastResize.toLocaleString(undefined, {dateStyle: 'medium', timeStyle: 'medium'} as DateTimeFormatOptions) : '-'}<br>
+lastResize: ${this.lastResize ? this.lastResize.toLocaleString(undefined, {dateStyle: 'medium', timeStyle: 'medium'} as Intl.DateTimeFormatOptions) : '-'}<br>
 size: ${this.getWidth()} x ${this.getHeight()}<br> 
 destroyed: <span class="${this.destroyed ? 'text-danger blink text-bold' : ''}">${this.destroyed}</span><br>
 `;

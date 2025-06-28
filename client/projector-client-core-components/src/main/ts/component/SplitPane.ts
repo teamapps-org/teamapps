@@ -22,20 +22,20 @@ import {
 	AbstractComponent,
 	bind,
 	capitalizeFirstLetter,
-	Component,
+	type Component,
 	parseHtml,
-	ServerObjectChannel,
+	type ServerObjectChannel,
 	ProjectorEvent
 } from "projector-client-object-api";
-import {Emptyable, isEmptyable} from "../util/Emptyable";
+import {type Emptyable, isEmptyable} from "../util/Emptyable";
 import {
-	ChildCollapsingPolicy,
-	SplitDirection,
-	DtoSplitPane,
-	DtoSplitPane_SplitResizedEvent,
-	DtoSplitPaneCommandHandler,
-	DtoSplitPaneEventSource,
-	SplitSizePolicy, SplitDirections, SplitSizePolicies, ChildCollapsingPolicies
+	type ChildCollapsingPolicy,
+	type SplitDirection,
+	type DtoSplitPane,
+	type DtoSplitPane_SplitResizedEvent,
+	type DtoSplitPaneCommandHandler,
+	type DtoSplitPaneEventSource,
+	type SplitSizePolicy, SplitDirections, SplitSizePolicies, ChildCollapsingPolicies
 } from "../generated";
 import {applyCss} from "projector-client-object-api";
 

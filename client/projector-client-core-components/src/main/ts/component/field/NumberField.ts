@@ -21,19 +21,19 @@ import {
 	AbstractField,
 	DebounceModes,
 	executeAfterAttached,
-	FieldEditingMode,
+	type FieldEditingMode,
 	FieldEditingModes,
 	NumberParser,
 	parseHtml,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
-	DtoNumberField,
-	DtoNumberFieldCommandHandler,
-	DtoNumberFieldEventSource,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent,
-	NumberFieldSliderMode,
+	type DtoNumberField,
+	type DtoNumberFieldCommandHandler,
+	type DtoNumberFieldEventSource,
+	type DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	type DtoTextInputHandlingField_TextInputEvent,
+	type NumberFieldSliderMode,
 	NumberFieldSliderModes,
 	SpecialKeys
 } from "../../generated";
@@ -250,7 +250,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 	}
 
 	private ensureDecimalInput() {
-		const cursorPosition = (<HTMLInputElement>this.$field).selectionEnd;
+		const cursorPosition = (this.$field).selectionEnd;
 		const oldValue = this.$field.value;
 
 		let newValue = this.convertInputToDecimalValue(oldValue);
@@ -261,7 +261,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 			const newCursorPosition = Math.min(this.$field.value.length, cursorPosition);
 
 			try {
-				(<HTMLInputElement>this.$field).setSelectionRange(newCursorPosition, newCursorPosition);
+				this.$field.setSelectionRange(newCursorPosition, newCursorPosition);
 			} catch (e) {
 				// IE throws an error when invoking setSelectionRange before the element is rendered...
 			}

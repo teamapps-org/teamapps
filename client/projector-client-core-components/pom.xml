@@ -6,10 +6,9 @@
         <artifactId>projector</artifactId>
         <groupId>org.teamapps</groupId>
         <version>0.1.0-SNAPSHOT</version>
-<relativePath>../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>projector-client-core-components</artifactId>
 
     <dependencies>
@@ -50,7 +49,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jsResourcesTargetClassPath>org/teamapps/projector/component/core/resources/js</jsResourcesTargetClassPath>
+                    <jsResourcesTargetClassPath>org/teamapps/projector/component/core/resources/js
+                    </jsResourcesTargetClassPath>
                     <dtoDependencies>
                         <dependency>org.teamapps:projector-client-object-api:${project.version}</dependency>
                         <dependency>org.teamapps:projector-script:${project.version}</dependency>
@@ -88,7 +88,7 @@
                         </goals>
                         <configuration>
                             <arguments>run</arguments>
-                            <arguments>build</arguments>
+                            <arguments>${package.json.build.script}</arguments>
                         </configuration>
                     </execution>
                 </executions>

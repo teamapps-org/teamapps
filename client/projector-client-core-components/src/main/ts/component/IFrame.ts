@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
-import {DtoIFrame, DtoIFrameCommandHandler} from "../generated";
+import {AbstractComponent, parseHtml, type ServerObjectChannel} from "projector-client-object-api";
+import {type DtoIFrame, type DtoIFrameCommandHandler} from "../generated";
 
 
 export class IFrame extends AbstractComponent<DtoIFrame> implements DtoIFrameCommandHandler {

@@ -19,7 +19,7 @@
  */
 
 
-import {Component, doOnceOnClickOutsideElement, parseHtml} from "projector-client-object-api";
+import {type Component, doOnceOnClickOutsideElement, parseHtml} from "projector-client-object-api";
 
 export class ContextMenu {
 

@@ -99,6 +99,9 @@
         <guava-version>33.2.0-jre</guava-version>
         <apache-commons-io>2.19.0</apache-commons-io>
         <cloning.version>1.9.9</cloning.version>
+
+        <!-- client -->
+        <package.json.build.script>build</package.json.build.script>
     </properties>
 
     <dependencies>
@@ -537,6 +540,12 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>fail-on-typescript-errors</id>
+            <properties>
+                <package.json.build.script>check-and-build</package.json.build.script>
+            </properties>
         </profile>
     </profiles>
 

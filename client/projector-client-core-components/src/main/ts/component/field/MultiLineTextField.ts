@@ -18,11 +18,11 @@
  * =========================LICENSE_END==================================
  */
 import {
-	DtoMultiLineTextField,
-	DtoMultiLineTextFieldCommandHandler,
-	DtoMultiLineTextFieldEventSource,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent,
+	type DtoMultiLineTextField,
+	type DtoMultiLineTextFieldCommandHandler,
+	type DtoMultiLineTextFieldEventSource,
+	type DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	type DtoTextInputHandlingField_TextInputEvent,
 	SpecialKeys
 } from "../../generated";
 import {escapeHtml, getScrollbarWidth} from "../../util/Common";
@@ -30,7 +30,7 @@ import {
 	AbstractField,
 	DebounceModes,
 	executeAfterAttached,
-	FieldEditingMode,
+	type FieldEditingMode,
 	FieldEditingModes,
 	parseHtml,
 	ProjectorEvent

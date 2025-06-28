@@ -18,16 +18,16 @@
  * =========================LICENSE_END==================================
  */
 import {
-	Component,
+	type Component,
 	enterFullScreen,
 	exitFullScreen,
 	generateUUID,
 	isFullScreen,
 	parseHtml,
 	ProjectorEvent,
-	Template
+	type Template
 } from "projector-client-object-api";
-import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {type DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {AbstractToolContainer} from "../AbstractToolContainer";
 import {ToolAccordion} from "./ToolAccordion";
 

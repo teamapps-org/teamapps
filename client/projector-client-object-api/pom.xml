@@ -46,6 +46,12 @@
             <version>3.1.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>1.15.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -87,7 +93,7 @@
                             <goal>pnpm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install --filter "${project.name}"</arguments>
+                            <arguments>install --filter ${project.name}</arguments>
                         </configuration>
                     </execution>
                     <execution>

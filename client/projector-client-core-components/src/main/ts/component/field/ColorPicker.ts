@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractField, executeAfterAttached, FieldEditingMode, parseHtml} from "projector-client-object-api";
-import {DtoColorPicker, DtoColorPickerCommandHandler, DtoColorPickerEventSource} from "../../generated";
+import {AbstractField, executeAfterAttached, type FieldEditingMode, parseHtml} from "projector-client-object-api";
+import {type DtoColorPicker, type DtoColorPickerCommandHandler, type DtoColorPickerEventSource} from "../../generated";
 import {escapeHtml} from "../../util/Common";
 
 export class ColorPicker<C extends DtoColorPicker = DtoColorPicker> extends AbstractField<C, string> implements DtoColorPickerEventSource, DtoColorPickerCommandHandler {

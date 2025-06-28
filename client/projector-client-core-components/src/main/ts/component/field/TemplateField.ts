@@ -19,12 +19,12 @@
  */
 import {AbstractField, executeAfterAttached} from "projector-client-object-api";
 import {
-	DtoTemplateField,
-	DtoTemplateField_ClickEvent,
-	DtoTemplateFieldCommandHandler,
-	DtoTemplateFieldEventSource
+	type DtoTemplateField,
+	type DtoTemplateField_ClickEvent,
+	type DtoTemplateFieldCommandHandler,
+	type DtoTemplateFieldEventSource
 } from "../../generated";
-import {DtoClientRecord, FieldEditingMode, parseHtml, ServerObjectChannel, ProjectorEvent, Template} from "projector-client-object-api";
+import {type DtoClientRecord, type FieldEditingMode, parseHtml, type ServerObjectChannel, ProjectorEvent, type Template} from "projector-client-object-api";
 
 
 export class TemplateField extends AbstractField<DtoTemplateField, DtoClientRecord> implements DtoTemplateFieldCommandHandler, DtoTemplateFieldEventSource {

@@ -17,20 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+import {type DtoCheckBox, type DtoCheckBoxCommandHandler, type DtoCheckBoxEventSource,} from "../../generated";
 import {
-	DtoCheckBox,
-	DtoCheckBoxCommandHandler,
-	DtoCheckBoxEventSource,
-} from "../../generated";
-import {
-	FieldEditingMode,
-	DtoFieldMessage,
-	FieldMessageSeverity,
+	AbstractField,
+	type DtoFieldMessage,
+	executeAfterAttached,
+	type FieldEditingMode,
+	FieldEditingModes,
+	FieldMessageSeverities,
 	generateUUID,
 	getHighestSeverity,
-	parseHtml, executeAfterAttached, FieldEditingModes, FieldMessageSeverities
+	parseHtml
 } from "projector-client-object-api";
-import {AbstractField} from "projector-client-object-api";
 
 
 export class CheckBox extends AbstractField<DtoCheckBox, boolean> implements DtoCheckBoxEventSource, DtoCheckBoxCommandHandler {

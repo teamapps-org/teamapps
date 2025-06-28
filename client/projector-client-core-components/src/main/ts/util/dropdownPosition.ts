@@ -1,4 +1,4 @@
-import {autoUpdate, computePosition, flip, hide, shift, size, Strategy} from "@floating-ui/dom";
+import {autoUpdate, computePosition, flip, hide, shift, size, type Strategy} from "@floating-ui/dom";
 
 type Options = { padding?: number, strategy?: Strategy };
 let DEFAULT_OPTIONS: Options = {

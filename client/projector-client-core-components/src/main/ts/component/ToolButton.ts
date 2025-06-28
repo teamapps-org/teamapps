@@ -18,13 +18,13 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, bind, Component, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, bind, type Component, parseHtml, type ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
-	DtoToolButton,
-	DtoToolButton_ClickEvent,
-	DtoToolButton_DropDownOpenedEvent,
-	DtoToolButtonCommandHandler,
-	DtoToolButtonEventSource
+	type DtoToolButton,
+	type DtoToolButton_ClickEvent,
+	type DtoToolButton_DropDownOpenedEvent,
+	type DtoToolButtonCommandHandler,
+	type DtoToolButtonEventSource
 } from "../generated";
 import {DropDown} from "../micro-components/DropDown";
 import {stopEventPropagations} from "./util";

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoPasswordField, DtoPasswordFieldCommandHandler, DtoPasswordFieldEventSource} from "../../generated";
+import {type DtoPasswordField, type DtoPasswordFieldCommandHandler, type DtoPasswordFieldEventSource} from "../../generated";
 import {TextField} from "./TextField";
 import {insertBefore, parseHtml} from "projector-client-object-api";
 

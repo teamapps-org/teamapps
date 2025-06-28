@@ -18,8 +18,8 @@
  * =========================LICENSE_END==================================
  */
 import {AbstractField, executeAfterAttached} from "projector-client-object-api";
-import {Component, FieldEditingMode, parseHtml, ProjectorEvent} from "projector-client-object-api";
-import {DtoLabel, DtoLabel_ClickEvent, DtoLabelCommandHandler, DtoLabelEventSource} from "../../generated";
+import {type Component, type FieldEditingMode, parseHtml, ProjectorEvent} from "projector-client-object-api";
+import {type DtoLabel, type DtoLabel_ClickEvent, type DtoLabelCommandHandler, type DtoLabelEventSource} from "../../generated";
 
 export class Label extends AbstractField<DtoLabel, string> implements DtoLabelEventSource, DtoLabelCommandHandler {
 	public readonly onClick: ProjectorEvent<DtoLabel_ClickEvent> = new ProjectorEvent<DtoLabel_ClickEvent>();

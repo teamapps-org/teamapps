@@ -19,13 +19,13 @@
  */
 import {
 	applyCss,
-	Component,
-	EntranceAnimation,
-	ExitAnimation,
+	type Component,
+	type EntranceAnimation,
+	type ExitAnimation,
 	extractCssValues,
-	PageTransition,
+	type PageTransition,
 	parseHtml,
-	RepeatableAnimation
+	type RepeatableAnimation
 } from "projector-client-object-api";
 
 let _SCROLLBAR_WIDTH: number;
@@ -138,7 +138,7 @@ export async function createImageThumbnailUrl(file: File): Promise<string> {
 }
 
 function transition(el: HTMLElement, targetValues: { [style: string]: string }, animationDuration: number = 300, callback?: () => any) {
-	const changingCssProperties = Object.keys(targetValues) as (keyof CSSStyleDeclaration)[];
+	const changingCssProperties = Object.keys(targetValues);
 	const originalCssValues = ["transition", ...changingCssProperties].reduce((properties, cssPropertyName) => {
 		properties[cssPropertyName] = (el.style)[cssPropertyName] as string;
 		return properties;

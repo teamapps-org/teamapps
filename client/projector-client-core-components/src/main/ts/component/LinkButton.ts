@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, type ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 
 import {
-	DtoLinkButton,
-	DtoLinkButton_ClickEvent,
-	DtoLinkButtonCommandHandler,
-	DtoLinkButtonEventSource,
-	LinkTarget
+	type DtoLinkButton,
+	type DtoLinkButton_ClickEvent,
+	type DtoLinkButtonCommandHandler,
+	type DtoLinkButtonEventSource,
+	type LinkTarget
 } from "../generated";
 
 export class LinkButton extends AbstractComponent<DtoLinkButton> implements DtoLinkButtonEventSource, DtoLinkButtonCommandHandler {

@@ -11,7 +11,9 @@
   "types": "./target/js-dist/index.d.ts",
   "scripts": {
     "dev": "vite",
+    "check": "tsc --noEmit",
     "build": "vite build",
+    "check-and-build": "pnpm run check && pnpm run build",
     "preview": "vite preview"
   },
   "files": [

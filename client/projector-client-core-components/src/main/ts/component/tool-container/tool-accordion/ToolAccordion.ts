@@ -19,23 +19,25 @@
  */
 
 import {
-	Component,
+	type Component,
+	deepEquals,
 	doOnceOnClickOutsideElement,
+	executeAfterAttached,
 	insertAfter,
 	parseHtml,
-	ServerObjectChannel,
+	ProjectorEvent,
+	type ServerObjectChannel,
 	slideDown,
-	slideUp,
-	ProjectorEvent, executeAfterAttached, deepEquals
+	slideUp
 } from "projector-client-object-api";
-import {DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
-import {DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
+import {type DtoToolbarButtonGroup as DtoToolbarButtonGroup} from "../../../generated/DtoToolbarButtonGroup";
+import {type DtoToolbarButton as DtoToolbarButton} from "../../../generated/DtoToolbarButton";
 import {
-	DropDownButtonClickInfo,
-	DtoAbstractToolContainer_ToolbarButtonClickEvent,
-	DtoToolAccordion,
-	DtoToolAccordionCommandHandler,
-	DtoToolAccordionEventSource
+	type DropDownButtonClickInfo,
+	type DtoAbstractToolContainer_ToolbarButtonClickEvent,
+	type DtoToolAccordion,
+	type DtoToolAccordionCommandHandler,
+	type DtoToolAccordionEventSource
 } from "../../../generated";
 import {OrderedDictionary} from "../../../util/OrderedDictionary";
 import {AbstractToolContainer} from "../AbstractToolContainer";
@@ -185,8 +187,12 @@ class DtoButtonGroup {
 	private $buttonRows: HTMLElement[] = [];
 	private forcedButtonWidth: number = 1;
     private forcedNumberOfColumns: number = 1;
+	private toolAccordion: ToolAccordion;
+	private $sizeTestingContainer: HTMLElement;
 
-	constructor(buttonGroupConfig: DtoToolbarButtonGroup, private toolAccordion: ToolAccordion, private $sizeTestingContainer: HTMLElement) {
+	constructor(buttonGroupConfig: DtoToolbarButtonGroup, toolAccordion: ToolAccordion, $sizeTestingContainer: HTMLElement) {
+		this.toolAccordion = toolAccordion;
+		this.$sizeTestingContainer = $sizeTestingContainer;
 		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
 		const $buttonGroup = parseHtml(`<div class="toolbar-button-group">`);

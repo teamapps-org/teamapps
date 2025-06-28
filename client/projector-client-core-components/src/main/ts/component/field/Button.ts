@@ -19,21 +19,21 @@
  */
 import {
 	bind,
-	Component,
-	FieldEditingMode,
-	DtoFieldMessage,
+	type Component,
+	type FieldEditingMode,
+	type DtoFieldMessage,
 	parseHtml,
 	ProjectorEvent,
-	Template,
+	type Template,
 	executeAfterAttached, FieldEditingModes
 } from "projector-client-object-api";
 import {DropDown} from "../../micro-components/DropDown";
 import {
-	DtoButton,
-	DtoButton_ClickEvent,
-	DtoButton_DropDownOpenedEvent,
-	DtoButtonCommandHandler,
-	DtoButtonEventSource
+	type DtoButton,
+	type DtoButton_ClickEvent,
+	type DtoButton_DropDownOpenedEvent,
+	type DtoButtonCommandHandler,
+	type DtoButtonEventSource
 } from "../../generated";
 import {AbstractField} from "projector-client-object-api";
 

@@ -21,17 +21,17 @@ import {
 	AbstractField,
 	DebounceModes,
 	executeAfterAttached,
-	FieldEditingMode,
+	type FieldEditingMode,
 	FieldEditingModes,
 	parseHtml,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
-	DtoTextField,
-	DtoTextFieldCommandHandler,
-	DtoTextFieldEventSource,
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent,
+	type DtoTextField,
+	type DtoTextFieldCommandHandler,
+	type DtoTextFieldEventSource,
+	type DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	type DtoTextInputHandlingField_TextInputEvent,
 	SpecialKeys
 } from "../../generated";
 import {escapeHtml} from "../../util/Common";
