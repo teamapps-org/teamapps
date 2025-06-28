@@ -1,5 +1,5 @@
-import {DtoComponentBlock} from "./generated";
-import {Component, parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {type DtoComponentBlock} from "./generated";
+import {type Component, parseHtml, type ServerObjectChannel} from "projector-client-object-api";
 import {removeDangerousTags, ToolButton} from "projector-client-core-components";
 import {AbstractBlockComponent} from "./AbstractBlockComponent";
 

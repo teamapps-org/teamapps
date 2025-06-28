@@ -1,5 +1,5 @@
-import {DtoCitationBlock} from "./generated";
-import {parseHtml, ServerObjectChannel} from "projector-client-object-api";
+import {type DtoCitationBlock} from "./generated";
+import {parseHtml, type ServerObjectChannel} from "projector-client-object-api";
 import {removeDangerousTags, ToolButton} from "projector-client-core-components";
 import {AbstractBlockComponent} from "./AbstractBlockComponent";
 

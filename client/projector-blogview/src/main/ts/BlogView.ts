@@ -24,9 +24,9 @@ import {
 	insertAfter,
 	insertBefore,
 	parseHtml,
-	ServerObjectChannel
+	type ServerObjectChannel
 } from "projector-client-object-api";
-import {BlockAlignments, DtoBlock, DtoBlogView} from "./generated";
+import {BlockAlignments, type DtoBlock, type DtoBlogView} from "./generated";
 import {MessageBlock} from "./MessageBlock";
 import {CitationBlock} from "./CitationBlock";
 import {AbstractBlockComponent} from "./AbstractBlockComponent";

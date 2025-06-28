@@ -1,5 +1,5 @@
-import {DtoMessageBlock} from "./generated";
-import {parseHtml, removeClassesByFunction, ServerObjectChannel, Template} from "projector-client-object-api";
+import {type DtoMessageBlock} from "./generated";
+import {parseHtml, removeClassesByFunction, type ServerObjectChannel, type Template} from "projector-client-object-api";
 import {removeDangerousTags, ToolButton} from "projector-client-core-components";
 import {AbstractBlockComponent} from "./AbstractBlockComponent";
 import {fixed_partition} from "image-layout";

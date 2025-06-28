@@ -1,7 +1,10 @@
-import {DtoBlock} from "./generated";
+import {type DtoBlock} from "./generated";
 
 export abstract class AbstractBlockComponent<C extends DtoBlock> {
-	constructor(protected config: C) {
+	protected config: C;
+
+	constructor(config: C) {
+		this.config = config;
 	}
 
 	public getAlignment() {
