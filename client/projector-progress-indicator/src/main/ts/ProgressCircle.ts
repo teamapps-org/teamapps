@@ -18,16 +18,15 @@
  * =========================LICENSE_END==================================
  */
 
-import {ProgressIndicator} from "./ProgressIndicator";
+import {type ProgressIndicator} from "./ProgressIndicator";
 import {generateUUID, parseSvg} from "projector-client-object-api";
 
 export class ProgressCircle implements ProgressIndicator {
 	private $mainDomElement: HTMLElement;
 	private $circle: HTMLElement;
 	private $caption: HTMLElement;
-	private circleRadius: any;
 	private svgCircleRadius: number;
-	private caption: string | undefined;
+	private caption: string = "";
 
 	/**
 	 * @param circleRadius in px
@@ -41,7 +40,6 @@ export class ProgressCircle implements ProgressIndicator {
 		circleStrokeWidth = 4,
 		transitionTime = 700
 	}) {
-		this.circleRadius = circleRadius;
 		let uuid = generateUUID();
 		let size = circleRadius * 2;
 		let svgCircleStrokeWidth = circleStrokeWidth * 100 / size;
@@ -63,8 +61,8 @@ export class ProgressCircle implements ProgressIndicator {
                 </svg>
             `);
 
-		this.$circle = this.$mainDomElement.querySelector<HTMLElement>(":scope .countdown-circle");
-		this.$caption = this.$mainDomElement.querySelector<HTMLElement>(":scope .countdown-circle-text");
+		this.$circle = this.$mainDomElement.querySelector<HTMLElement>(":scope .countdown-circle")!;
+		this.$caption = this.$mainDomElement.querySelector<HTMLElement>(":scope .countdown-circle-text")!;
 
 		this.setProgress(initialProgress)
 	}

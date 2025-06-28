@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {ProgressIndicator} from "./ProgressIndicator";
+import {type ProgressIndicator} from "./ProgressIndicator";
 import {generateUUID, manipulateWithoutTransitions, parseHtml} from "projector-client-object-api";
 
 export class ProgressBar implements ProgressIndicator {
@@ -44,8 +44,8 @@ export class ProgressBar implements ProgressIndicator {
 	  } 
 	</style>
 </div>`);
-		this.$progressBar = this.$mainDomElement.querySelector<HTMLElement>(':scope .progress-bar');
-		this.$errorMessageBar = this.$mainDomElement.querySelector<HTMLElement>(':scope .error-message-bar');
+		this.$progressBar = this.$mainDomElement.querySelector<HTMLElement>(':scope .progress-bar')!;
+		this.$errorMessageBar = this.$mainDomElement.querySelector<HTMLElement>(':scope .error-message-bar')!;
 
 		this.setProgress(initialProgress)
 	}
@@ -66,7 +66,7 @@ export class ProgressBar implements ProgressIndicator {
 	public setErrorMessage(message: string | null): void {
 		this.$progressBar.classList.toggle('hidden', !!message);
 		this.$errorMessageBar.classList.toggle('hidden', !message);
-		this.$errorMessageBar.innerText = message;
+		this.$errorMessageBar.innerText = message ?? "";
 	}
 
 	public getMainDomElement() {

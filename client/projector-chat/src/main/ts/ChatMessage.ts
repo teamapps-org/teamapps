@@ -1,5 +1,5 @@
 import {Autolinker} from "autolinker";
-import {DtoChatMessage} from "./generated";
+import {type DtoChatMessage} from "./generated";
 import {humanReadableFileSize, parseHtml} from "projector-client-object-api";
 import {removeDangerousTags} from "projector-client-core-components";
 
@@ -29,11 +29,14 @@ const AUTOLINKER = new Autolinker({
 export class ChatMessage {
 
 	private $main: HTMLElement;
+	// @ts-ignore
 	private $photos: HTMLElement;
+	// @ts-ignore
 	private $files: HTMLElement;
 	private config: DtoChatMessage;
 
 	constructor(config: DtoChatMessage) {
+		this.config = config;
 		this.$main = parseHtml(`<div class="message ChatMessage" data-id="${config.id}"></div>`);
 		this.update(config);
 	}
@@ -51,8 +54,8 @@ export class ChatMessage {
 		this.$main.appendChild(parseHtml(`<div class="files"></div>`))
 		this.$main.appendChild(parseHtml(`<div class="deleted-icon"></div>`))
 
-		this.$photos = this.$main.querySelector(":scope .photos");
-		this.$files = this.$main.querySelector(":scope .files");
+		this.$photos = this.$main.querySelector(":scope .photos")!;
+		this.$files = this.$main.querySelector(":scope .files")!;
 
 		if (this.config.photos != null) {
 			this.config.photos.forEach(photo => {

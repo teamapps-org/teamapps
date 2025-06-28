@@ -21,33 +21,38 @@
 import {
 	AbstractComponent,
 	addDelegatedEventListener,
-	Component,
-	debouncedMethod, DebounceModes, executeAfterAttached, humanReadableFileSize,
-	parseHtml, prependChild,
+	type Component,
+	debouncedMethod,
+	DebounceModes,
+	executeAfterAttached,
+	parseHtml,
+	prependChild,
 } from "projector-client-object-api";
 import {
-	DtoChatDisplay,
-	DtoChatDisplayCommandHandler,
-	DtoChatDisplayServerObjectChannel,
-	DtoChatMessage,
-	DtoChatMessageBatch
+	type DtoChatDisplay,
+	type DtoChatDisplayCommandHandler,
+	type DtoChatDisplayServerObjectChannel,
+	type DtoChatMessage,
+	type DtoChatMessageBatch
 } from "./generated";
-import {ContextMenu, removeDangerousTags} from "projector-client-core-components";
-import {Autolinker} from "autolinker";
+import {ContextMenu} from "projector-client-core-components";
 import {ChatMessage} from "./ChatMessage";
 
 export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements DtoChatDisplayCommandHandler {
 
 	private $main: HTMLElement;
 	private gotFirstMessage: boolean = false;
-	private requestingPreviousMessages: boolean;
+	private requestingPreviousMessages: boolean = false;
 	private uiChatMessages: ChatMessage[] = [];
 	private $loadingIndicatorWrapper: HTMLElement;
 	private $messages: HTMLElement;
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoChatDisplay, private serverObjectChannel: DtoChatDisplayServerObjectChannel) {
+	private serverObjectChannel: DtoChatDisplayServerObjectChannel;
+
+	constructor(config: DtoChatDisplay, serverObjectChannel: DtoChatDisplayServerObjectChannel) {
 		super(config);
+		this.serverObjectChannel = serverObjectChannel;
 		this.$main = parseHtml(`<div class="ChatDisplay">
 	<div class="loading-indicator-wrapper hidden">
 		<div class="teamapps-spinner"></div>
@@ -55,8 +60,8 @@ export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements Dt
 	<div class="messages"></div>
 </div>`);
 		this.setDeletedMessageIcon(config.deletedMessageIcon);
-		this.$loadingIndicatorWrapper = this.$main.querySelector(":scope .loading-indicator-wrapper");
-		this.$messages = this.$main.querySelector(":scope .messages");
+		this.$loadingIndicatorWrapper = this.$main.querySelector(":scope .loading-indicator-wrapper")!;
+		this.$messages = this.$main.querySelector(":scope .messages")!;
 		this.$main.addEventListener("scroll", () => {
 			if (this.$main.scrollTop == 0 && !this.gotFirstMessage) {
 				this.$loadingIndicatorWrapper.classList.remove('hidden');
@@ -172,7 +177,7 @@ export class ChatDisplay extends AbstractComponent<DtoChatDisplay> implements Dt
 			.map(img => img as HTMLImageElement)
 			.filter(img => !img.complete);
 		if (incompleteImages.length > 0) {
-			Promise.all(incompleteImages.map(img => new Promise((resolve, reject) => {
+			Promise.all(incompleteImages.map(img => new Promise((resolve) => {
 				img.addEventListener("load", resolve, {once:true});
 				img.addEventListener("error", resolve, {once:true}); // since we are only interested in when loading activity is done
 			}))).then(action)

@@ -18,17 +18,19 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, fadeOut, FileUploader, parseHtml, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, fadeOut, FileUploader, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {
-	DtoChatInput,
-	DtoChatInput_FileItemClickedEvent,
-	DtoChatInput_FileItemRemovedEvent,
-	DtoChatInput_MessageSentEvent,
-	DtoChatInput_UploadCanceledEvent,
-	DtoChatInput_UploadFailedEvent,
-	DtoChatInput_UploadStartedEvent, DtoChatInput_UploadSuccessfulEvent, DtoChatInput_UploadTooLargeEvent,
-	DtoChatInputCommandHandler,
-	DtoChatInputEventSource
+	type DtoChatInput,
+	type DtoChatInput_FileItemClickedEvent,
+	type DtoChatInput_FileItemRemovedEvent,
+	type DtoChatInput_MessageSentEvent,
+	type DtoChatInput_UploadCanceledEvent,
+	type DtoChatInput_UploadFailedEvent,
+	type DtoChatInput_UploadStartedEvent,
+	type DtoChatInput_UploadSuccessfulEvent,
+	type DtoChatInput_UploadTooLargeEvent,
+	type DtoChatInputCommandHandler,
+	type DtoChatInputEventSource
 } from "./generated";
 import {createImageThumbnailUrl, insertAtCursorPosition} from "projector-client-core-components";
 import {ProgressBar} from "projector-progress-indicator";
@@ -51,7 +53,7 @@ export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoCha
 	private $sendButton: HTMLElement;
 	private $attachmentButton: Element;
 
-	constructor(config: DtoChatInput, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoChatInput) {
 		super(config);
 		this.$main = parseHtml(`<div class="ChatInput drop-zone">
 	<div class="upload-items"></div>
@@ -60,14 +62,14 @@ export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoCha
 	<div class="button send-button glyphicon glyphicon-send glyphicon-button glyphicon-button-md"></div>
 	<input class="file-input" type="file" multiple tabindex="-1"></input>
 </div>`);
-		this.$uploadItems = this.$main.querySelector(":scope .upload-items");
-		this.$textInput = this.$main.querySelector(":scope .text-input");
-		this.$sendButton = this.$main.querySelector(":scope .send-button");
-		this.$attachmentButton = this.$main.querySelector(":scope .attachment-button");
-		const $fileInput = this.$main.querySelector<HTMLInputElement>(":scope .file-input");
+		this.$uploadItems = this.$main.querySelector(":scope .upload-items")!;
+		this.$textInput = this.$main.querySelector(":scope .text-input")!;
+		this.$sendButton = this.$main.querySelector(":scope .send-button")!;
+		this.$attachmentButton = this.$main.querySelector(":scope .attachment-button")!;
+		const $fileInput = this.$main.querySelector<HTMLInputElement>(":scope .file-input")!;
 
 		this.$textInput.addEventListener("keyup", () => this.updateSendability());
-		this.$textInput.addEventListener("keydown", (e: MouseEvent) => {
+		this.$textInput.addEventListener("keydown", (e) => {
 			if ((e as any).key === 'Enter') {
 				if (e.shiftKey) {
 					insertAtCursorPosition(this.$textInput, "\n");
@@ -79,8 +81,8 @@ export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoCha
 		});
 
 		this.$attachmentButton.addEventListener("click", () => $fileInput.click());
-		$fileInput.addEventListener("change", e => {
-			this.upload($fileInput.files);
+		$fileInput.addEventListener("change", () => {
+			this.upload($fileInput.files ?? new FileList());
 			$fileInput.value = "";
 		});
 
@@ -106,7 +108,8 @@ export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoCha
 			e.stopPropagation();
 			e.preventDefault();
 			this.$main.classList.remove("drop-zone-active");
-			const files = e.dataTransfer.files;
+			const files = e.dataTransfer?.files;
+			if (files == null) return;
 			this.upload(files);
 		});
 
@@ -140,9 +143,9 @@ export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoCha
 			message: {
 				text: this.$textInput.value,
 				uploadedFiles: this.uploadItems
-					.filter(item => item.state === UploadState.SUCCESS)
+					.filter(item => item.uploadedFileUuid != null && item.state === "SUCCESS")
 					.map(item => ({
-						uploadedFileUuid: item.uploadedFileUuid,
+						uploadedFileUuid: item.uploadedFileUuid!,
 						fileName: item.file.name
 					}))
 			}
@@ -172,7 +175,7 @@ export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoCha
 			const $itemWrapper = parseHtml(`<div class="upload-item-wrapper">
 	<div class="delete-button glyphicon glyphicon-remove glyphicon-button"></div>
 </div>`);
-			const $deleteButton = $itemWrapper.querySelector(":scope .delete-button");
+			const $deleteButton = $itemWrapper.querySelector(":scope .delete-button")!;
 			$deleteButton.addEventListener("click", () => {
 				$itemWrapper.remove();
 				this.uploadItems = this.uploadItems.filter(otherItem => otherItem !== uploadItem);
@@ -192,8 +195,8 @@ export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoCha
 	}
 
 	private sendable() {
-		const uploading = this.uploadItems.some(item => item.state === UploadState.IN_PROGRESS);
-		const hasSuccessfulFileUploads = this.uploadItems.filter(item => item.state === UploadState.SUCCESS).length > 0;
+		const uploading = this.uploadItems.some(item => item.state === "IN_PROGRESS");
+		const hasSuccessfulFileUploads = this.uploadItems.filter(item => item.state === "SUCCESS").length > 0;
 		const hasTextInput = this.$textInput.value.length > 0;
 		return !uploading && (hasSuccessfulFileUploads || hasTextInput);
 	}
@@ -204,24 +207,27 @@ export class ChatInput extends AbstractComponent<DtoChatInput> implements DtoCha
 	}
 }
 
-enum UploadState {
-	IN_PROGRESS, SUCCESS, ERROR
-}
+type UploadState = "IN_PROGRESS" | "SUCCESS" | "ERROR";
 
 class FileUploadItem {
 	public readonly onComplete: ProjectorEvent<void> = new ProjectorEvent();
 
 	private $main: HTMLElement;
-	public state: UploadState = UploadState.IN_PROGRESS;
-	public uploadedFileUuid: string;
+	public state: UploadState = "IN_PROGRESS";
+	public uploadedFileUuid: string | null = null;
 	private uploader: FileUploader;
 
-	constructor(public file: File, defaultFileIcon: string, private uploadUrl: string) {
+	public file: File;
+	private uploadUrl: string;
+
+	constructor(file: File, defaultFileIcon: string, uploadUrl: string) {
+		this.file = file;
+		this.uploadUrl = uploadUrl;
 		this.$main = parseHtml(`<div class="upload-item">
 	<div class="icon img img-24" style="background-image: url('${defaultFileIcon}')"></div>
 	<div class="name">${file.name}</div>
 </div>`);
-		const $icon = this.$main.querySelector<HTMLElement>(":scope .icon");
+		const $icon = this.$main.querySelector<HTMLElement>(":scope .icon")!;
 		createImageThumbnailUrl(file)
 			.then(url => $icon.style.backgroundImage = `url('${url}')`)
 			.catch(reason => console.debug(`Could not create thumbnail for file ${file}. Reason: ${reason}.`));
@@ -233,9 +239,9 @@ class FileUploadItem {
 		this.uploader.onProgress.addListener(progress => progressBar.setProgress(progress));
 		this.uploader.onError.addListener(() => this.setError());
 		this.uploader.onSuccess.addListener(uuid => {
-			this.state = UploadState.SUCCESS;
+			this.state = "SUCCESS";
 			this.uploadedFileUuid = uuid;
-			this.onComplete.fire(null);
+			this.onComplete.fire();
 			fadeOut(progressBar.getMainDomElement());
 		});
 	}
@@ -245,9 +251,9 @@ class FileUploadItem {
 	}
 
 	public setError() {
-		this.state = UploadState.ERROR;
+		this.state = "ERROR";
 		this.$main.classList.add("error");
-		this.onComplete.fire(null);
+		this.onComplete.fire();
 	}
 
 	public getMainDomElement() {

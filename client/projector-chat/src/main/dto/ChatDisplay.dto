@@ -24,7 +24,7 @@ import org.teamapps.projector.component.DtoComponent;
 class DtoChatDisplay extends DtoComponent {
 	DtoChatMessageBatch initialMessages;
     mutable boolean contextMenuEnabled;
-    mutable String deletedMessageIcon;
+    required mutable String deletedMessageIcon;
 
 	command addMessages(DtoChatMessageBatch messages);
 	command updateMessage(DtoChatMessage message);
@@ -37,15 +37,15 @@ class DtoChatDisplay extends DtoComponent {
 }
 
 class DtoChatMessageBatch {
-    List<DtoChatMessage> messages;
-    boolean containsFirstMessage;
+    required List<DtoChatMessage> messages;
+    required boolean containsFirstMessage;
 }
 
 class DtoChatMessage {
 	int id;
 	String userImageUrl;
 	String userNickname;
-	String text;
+	required String text;
 	List<DtoChatPhoto> photos;
 	List<DtoChatFile> files;
 	boolean deleted;

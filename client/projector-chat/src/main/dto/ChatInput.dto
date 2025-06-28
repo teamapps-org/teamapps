@@ -23,9 +23,9 @@ import org.teamapps.projector.component.DtoComponent;
 
 
 class DtoChatInput extends DtoComponent {
-	mutable String defaultFileIcon;
+	required mutable String defaultFileIcon;
 	mutable long maxBytesPerUpload;
-	mutable String uploadUrl;
+	required mutable String uploadUrl;
 	mutable int messageLengthLimit;
 	mutable boolean attachmentsEnabled;
 
@@ -41,8 +41,8 @@ class DtoChatInput extends DtoComponent {
 
 
 class DtoNewChatMessage {
-	String text;
-	List<DtoChatNewFile> uploadedFiles;
+	required String text;
+	required List<DtoChatNewFile> uploadedFiles;
 }
 
 

@@ -21,7 +21,8 @@ import {debounce, type DebounceMode, DebounceModes} from "./debounce";
 import {throttle} from "./throttle";
 import {deepEquals} from "./equality";
 
-export type ProjectorEventListener<EO> = (eventObject?: EO) => void;
+export type ProjectorEventListener<EO> = (eventObject: EO) => void;
+export type VoidProjectorEventListener = () => void;
 
 export interface EventSubscription {
 	unsubscribe: () => void
@@ -59,6 +60,8 @@ export class ProjectorEvent<EO> {
 		return new ProjectorEvent<EO>(fire => debounce(fire, delayMillis, mode));
 	}
 
+	addListener(fn: ProjectorEventListener<EO>, allowDuplicates?: boolean): EventSubscription;
+	addListener(fn: VoidProjectorEventListener, allowDuplicates?: boolean): EventSubscription;
 	public addListener(fn: ProjectorEventListener<EO>, allowDuplicates = false): EventSubscription {
 		if (!allowDuplicates) {
 			this.listeners = this.listeners.filter(l => l !== fn);
