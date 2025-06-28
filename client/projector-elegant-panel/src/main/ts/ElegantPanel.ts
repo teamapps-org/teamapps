@@ -18,23 +18,16 @@
  * =========================LICENSE_END==================================
  */
 
-import {
-	AbstractComponent,
-	Component,
-	createSpacingCssString,
-	DtoComponent,
-	parseHtml,
-	ServerObjectChannel
-} from "projector-client-object-api";
-import {DtoElegantPanel, DtoElegantPanelCommandHandler} from "./generated";
+import {AbstractComponent, type Component, createSpacingCssString, parseHtml} from "projector-client-object-api";
+import {type DtoElegantPanel, type DtoElegantPanelCommandHandler} from "./generated";
 
 export class ElegantPanel extends AbstractComponent<DtoElegantPanel> implements DtoElegantPanelCommandHandler {
 
 	private $element: HTMLElement;
 	private $contentContainer: HTMLElement;
-	private contentComponent: Component;
+	private contentComponent: Component | null = null;
 
-	constructor(config: DtoElegantPanel, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoElegantPanel) {
 		super(config);
 		this.$element = parseHtml(`<div class="ElegantPanel">
                 <div class="flex-container">
@@ -46,8 +39,8 @@ export class ElegantPanel extends AbstractComponent<DtoElegantPanel> implements 
                 </div>
             </div>`);
 
-		let $backgroundColorDiv = this.$element.querySelector<HTMLElement>(':scope .background-color-div');
-		this.$contentContainer = this.$element.querySelector<HTMLElement>(':scope .content-container');
+		let $backgroundColorDiv = this.$element.querySelector<HTMLElement>(':scope .background-color-div')!;
+		this.$contentContainer = this.$element.querySelector<HTMLElement>(':scope .content-container')!;
 
 		if (config.bodyBackgroundColor) {
 			$backgroundColorDiv.style.backgroundColor = config.bodyBackgroundColor;
