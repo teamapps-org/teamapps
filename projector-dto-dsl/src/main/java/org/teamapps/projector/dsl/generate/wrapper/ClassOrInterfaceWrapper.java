@@ -322,7 +322,9 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				});
 
 		if (typescript) {
-			imports.addImport("ServerObjectChannel", "projector-client-object-api", "../ClientObject", null);
+			if (this instanceof ClassWrapper self) {
+				imports.addImport("ServerObjectChannel", "projector-client-object-api", "../ClientObject", null);
+			}
 
 			this.getSuperTypes().stream()
 					.filter(c -> !c.getAllCommands().isEmpty())

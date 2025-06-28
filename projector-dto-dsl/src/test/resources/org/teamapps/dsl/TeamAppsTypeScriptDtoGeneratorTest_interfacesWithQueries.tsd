@@ -3,7 +3,6 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface X {
 	_type?: string;

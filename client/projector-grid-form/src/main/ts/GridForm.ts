@@ -20,24 +20,32 @@
 
 
 import {
-	AbstractComponent, bind, Component, createBorderCssString, createShadowCssString, createSpacingCssString, DtoComponent,
-	executeAfterAttached, generateUUID,
+	AbstractComponent,
+	bind,
+	type Component,
+	createBorderCssString,
+	createShadowCssString,
+	createSpacingCssString,
+	executeAfterAttached,
+	generateUUID,
 	parseHtml,
-	ServerObjectChannel, slideDown, slideUp,
-	ProjectorEvent, Template
+	ProjectorEvent,
+	type ServerObjectChannel,
+	slideDown,
+	slideUp,
+	type Template
 } from "projector-client-object-api";
 import {
-	DtoFormLayoutPolicy,
-	DtoFormSection,
-	DtoFormSectionFieldPlacement,
-	DtoFormSectionFloatingFieldsPlacement,
-	DtoFormSectionPlacement,
-	DtoGridForm,
-	DtoGridForm_SectionCollapsedStateChangedEvent,
-	DtoGridFormCommandHandler,
-	DtoGridFormEventSource,
-	DtoSizingPolicy,
-	SizeType,
+	type DtoFormLayoutPolicy,
+	type DtoFormSection,
+	type DtoFormSectionFieldPlacement,
+	type DtoFormSectionFloatingFieldsPlacement,
+	type DtoFormSectionPlacement,
+	type DtoGridForm,
+	type DtoGridForm_SectionCollapsedStateChangedEvent,
+	type DtoGridFormCommandHandler,
+	type DtoGridFormEventSource,
+	type DtoSizingPolicy,
 	SizeTypes
 } from "./generated";
 
@@ -47,13 +55,13 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 
 	private $mainDiv: HTMLElement;
 
-	private sections: FormSection[];
+	private sections: FormSection[] = [];
 
-	private layoutPoliciesFromLargeToSmall: DtoFormLayoutPolicy[];
-	private activeLayoutPolicyIndex: number;
+	private layoutPoliciesFromLargeToSmall: DtoFormLayoutPolicy[] = [];
+	private activeLayoutPolicyIndex: number = 0;
 	private uiFields: Component[] = [];
-	private fillRemainingHeightCheckerInterval: number;
-	private sectionCollapseOverrides: { [sectionId: string]: boolean };
+	private fillRemainingHeightCheckerInterval: number | null = null;
+	private sectionCollapseOverrides: { [sectionId: string]: boolean } = {};
 
 	private fieldWrappers = new Map<Component, HTMLDivElement>();
 
@@ -156,7 +164,9 @@ export class GridForm extends AbstractComponent<DtoGridForm> implements DtoGridF
 
 	public destroy(): void {
 		super.destroy();
-		window.clearInterval(this.fillRemainingHeightCheckerInterval);
+		if (this.fillRemainingHeightCheckerInterval != null) {
+			window.clearInterval(this.fillRemainingHeightCheckerInterval);
+		}
 	}
 
 	addOrReplaceField(field: Component): void {
@@ -190,16 +200,20 @@ class FormSection {
 	private $headerTemplateContainer: HTMLElement;
 	private $body: HTMLElement;
 	private $expander: HTMLElement;
-	private collapsed: boolean;
+	private collapsed: boolean = false;
 
-	constructor(public config: DtoFormSection, collapsedOverride: boolean, private getFieldWrapper : (field: Component) => HTMLDivElement) {
+	public config: DtoFormSection;
+	private getFieldWrapper: (field: Component) => HTMLDivElement;
+
+	constructor(config: DtoFormSection, collapsedOverride: boolean, getFieldWrapper : (field: Component) => HTMLDivElement) {
+		this.config = config;
+		this.getFieldWrapper = getFieldWrapper;
 		this.uuid = generateUUID();
 
 		const headerLineClass = config.drawHeaderLine ? 'draw-header-line' : '';
 		const hasHeaderTemplateClass = config.headerTemplate ? 'has-header-template' : '';
 		const hasHeaderDataClass = config.headerData ? 'has-header-data' : '';
 		const collapsibleClass = config.collapsible ? 'collapsible' : '';
-		const collapsedClass = this.collapsed ? 'collapsed' : '';
 		const hiddenClass = config.visible ? '' : 'hidden'; // TODO discuss how the visible attribute will be handled when layout policies are updated. Does this attribute make sense at all?
 		const fillRemainingHeightClass = config.fillRemainingHeight ? 'fill-remaining-height' : '';
 
@@ -227,21 +241,21 @@ class FormSection {
 
 	</div>
 </div>`);
-		this.$placementStyles = this.$div.querySelector<HTMLElement>(":scope style");
-		this.$header = this.$div.querySelector<HTMLElement>(":scope > .header");
-		this.$headerTemplateContainer = this.$header.querySelector<HTMLElement>(":scope .header-template-container");
+		this.$placementStyles = this.$div.querySelector<HTMLElement>(":scope style")!;
+		this.$header = this.$div.querySelector<HTMLElement>(":scope > .header")!;
+		this.$headerTemplateContainer = this.$header.querySelector<HTMLElement>(":scope .header-template-container")!;
 		if (config.headerTemplate && config.headerData) {
 			this.$headerTemplateContainer.appendChild(parseHtml((config.headerTemplate as Template).render(config.headerData)));
 		}
 
-		this.$expander = this.$div.querySelector<HTMLElement>(":scope .teamapps-expander");
-		this.$div.querySelector<HTMLElement>(':scope .expand-button').addEventListener('click', () => {
+		this.$expander = this.$div.querySelector<HTMLElement>(":scope .teamapps-expander")!;
+		this.$div.querySelector<HTMLElement>(':scope .expand-button')!.addEventListener('click', () => {
 			if (config.collapsible) {
 				this.setCollapsed(!this.collapsed);
 			}
 		});
 
-		this.$body = this.$div.querySelector<HTMLElement>(":scope .body");
+		this.$body = this.$div.querySelector<HTMLElement>(":scope .body")!;
 
 		this.setCollapsed(collapsedOverride != null ? collapsedOverride : (config.collapsible && config.collapsed), false);
 	}

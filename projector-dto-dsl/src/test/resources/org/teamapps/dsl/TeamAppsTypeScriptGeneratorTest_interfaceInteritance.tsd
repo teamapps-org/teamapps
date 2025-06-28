@@ -4,7 +4,6 @@
  */
 
 import type {A} from "./A";
-import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface B extends A {
 	_type?: string;

@@ -28,8 +28,8 @@ import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.JustifyContent;
 
 class DtoGridForm extends DtoComponent {
-	List<DtoComponent*> fields;
-	List<DtoFormLayoutPolicy> layoutPolicies;
+	required List<DtoComponent*> fields;
+	required List<DtoFormLayoutPolicy> layoutPolicies;
 
 	command updateLayoutPolicies(List<DtoFormLayoutPolicy> layoutPolicies);
 	command setSectionCollapsed(String sectionId, boolean collapsed);
@@ -39,29 +39,29 @@ class DtoGridForm extends DtoComponent {
 }
 
 class DtoFormLayoutPolicy {
-	 int minWidth;
-     List<DtoFormSection> sections;
+	 required int minWidth;
+     required List<DtoFormSection> sections;
 }
 
 class DtoFormSection {
-	String id;
-    List<DtoGridColumn> columns;
-    List<DtoGridRow> rows;
-    List<DtoFormSectionPlacement> fieldPlacements;
-    DtoSpacing margin;
-    DtoSpacing padding;
-    DtoBorder border;
-    DtoBoxShadow shadow;
-    String backgroundColor;
-    boolean collapsible;
-    boolean collapsed;
-    boolean visible;
-    DtoTemplate* headerTemplate;
-    Object headerData;
-    boolean drawHeaderLine;
-    int gridGap; // pixels between fields, labels etc.
-    boolean fillRemainingHeight;
-    boolean hideWhenNoVisibleFields;
+	required String id;
+    required List<DtoGridColumn> columns;
+    required List<DtoGridRow> rows;
+    required List<DtoFormSectionPlacement> fieldPlacements;
+    required DtoSpacing margin;
+    required DtoSpacing padding;
+    required DtoBorder border;
+    required DtoBoxShadow shadow;
+    required String backgroundColor;
+    required boolean collapsible;
+    required boolean collapsed;
+    required boolean visible;
+    required DtoTemplate* headerTemplate;
+    required Object headerData;
+    required boolean drawHeaderLine;
+    required int gridGap; // pixels between fields, labels etc.
+    required boolean fillRemainingHeight;
+    required boolean hideWhenNoVisibleFields;
 }
 
 interface DtoFormSectionPlacement extends DtoGridPlacement {
@@ -72,10 +72,10 @@ class DtoFormSectionFieldPlacement implements DtoFormSectionPlacement {
 }
 
 class DtoFormSectionFloatingFieldsPlacement implements DtoFormSectionPlacement {
-	List<DtoFormSectionFloatingField> floatingFields;
-	boolean wrap;
-	int horizontalSpacing;
-	int verticalSpacing;  
+	required List<DtoFormSectionFloatingField> floatingFields;
+	required boolean wrap;
+	required int horizontalSpacing;
+	required int verticalSpacing;
 	// we might also want to be able to align the items differently than "baseline" - maybe add a setting "verticalFieldAlignment"
 }
 
@@ -88,15 +88,15 @@ class DtoFormSectionFloatingField {
 }
 
 class DtoGridColumn {
-	DtoSizingPolicy widthPolicy;
-	int leftPadding;
-	int rightPadding;
+	required DtoSizingPolicy widthPolicy;
+	required int leftPadding;
+	required int rightPadding;
 }
 
 class DtoGridRow {
-	DtoSizingPolicy heightPolicy;
-    int topPadding;
-    int bottomPadding;
+	required DtoSizingPolicy heightPolicy;
+    required int topPadding;
+    required int bottomPadding;
 }
 
 interface DtoGridPlacement {
@@ -133,9 +133,9 @@ class DtoFloatingComponentGridPlacementItem {
 }
 
 class DtoSizingPolicy {
-	SizeType type;
-    double value;
-    int minAbsoluteSize;
+	required SizeType type;
+    required double value;
+    required int minAbsoluteSize;
 }
 
 enum SizeType {

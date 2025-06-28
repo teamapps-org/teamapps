@@ -3,7 +3,6 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 
-import type {ServerObjectChannel} from "projector-client-object-api";
 interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
 export interface A {
