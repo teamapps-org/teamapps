@@ -22,6 +22,6 @@ package "projector-audio-level-indicator":org.teamapps.projector.component.audio
 import org.teamapps.projector.component.DtoComponent;
 
 class DtoAudioLevelIndicator extends DtoComponent {
-    mutable String deviceId;
+    required mutable String deviceId;
     mutable int barWidth;
 }

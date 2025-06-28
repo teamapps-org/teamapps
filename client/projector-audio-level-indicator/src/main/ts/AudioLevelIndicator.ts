@@ -19,37 +19,35 @@
  */
 
 
-import {AbstractComponent, parseHtml, ServerObjectChannel} from "projector-client-object-api";
-import {DtoAudioLevelIndicator, DtoAudioLevelIndicatorCommandHandler} from "./generated";
+import {AbstractComponent, parseHtml} from "projector-client-object-api";
+import {type DtoAudioLevelIndicator, type DtoAudioLevelIndicatorCommandHandler} from "./generated";
 
 export class AudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndicator> implements DtoAudioLevelIndicatorCommandHandler {
 	private $main: HTMLElement;
-	private $activityDisplay: HTMLElement;
 	private $canvas: HTMLCanvasElement;
-	private mediaStreamSource: MediaStreamAudioSourceNode;
-	private audioContext: AudioContext;
-	private mediaStreamToBeClosedWhenUnbinding: MediaStream;
+	private mediaStreamSource: MediaStreamAudioSourceNode | null = null;
+	private audioContext: AudioContext | null = null;
+	private mediaStreamToBeClosedWhenUnbinding: MediaStream | null = null;
 	private canvasContext: CanvasRenderingContext2D;
 
 	private maxLevel = 0;
 	private maxLevel2 = 0;
 	private lastDrawingTimestamp = 0;
 
-	constructor(config: DtoAudioLevelIndicator, serverObjectChannel: ServerObjectChannel) {
+	private analyserNode: AnalyserNode | null = null;
+
+	constructor(config: DtoAudioLevelIndicator) {
 		super(config)
 
 		this.$main = parseHtml(`
 <div class="AudioLevelIndicator">
 	<canvas></canvas>
 </div>`);
-		this.$activityDisplay = this.$main;
 		this.$canvas = this.$main.querySelector<HTMLElement>(':scope canvas') as HTMLCanvasElement;
-		this.canvasContext = this.$canvas.getContext("2d");
+		this.canvasContext = this.$canvas.getContext("2d")!;
 
 		this.setDeviceId(config.deviceId);
 	}
-
-	private analyserNode: AnalyserNode;
 
 	public bindToStream(mediaStream: MediaStream, mediaStreamIsExclusiveToThisComponent: boolean) {
 		this.unbind();
@@ -115,20 +113,6 @@ export class AudioLevelIndicator extends AbstractComponent<DtoAudioLevelIndicato
 		this.canvasContext.fillRect(canvasWidth - this.config.barWidth, canvasHeight - volumeBarSize, this.config.barWidth, volumeBarSize);
 
 		this.lastDrawingTimestamp = Date.now();
-	}
-
-	/**
-	 *  Returns a function, that will limit the invocation of the specified function to once in delay. Invocations that come before the end of delay are ignored!
-	 */
-	private throttle(func: Function, delay: number): (() => void) {
-		let previousCall = 0;
-		return function () {
-			const time = new Date().getTime();
-			if ((time - previousCall) >= delay) {
-				previousCall = time;
-				func.apply(this, arguments);
-			}
-		};
 	}
 
 	public unbind() {
