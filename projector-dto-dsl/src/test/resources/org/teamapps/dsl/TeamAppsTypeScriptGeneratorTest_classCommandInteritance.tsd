@@ -16,7 +16,7 @@ interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest
 
 export interface C extends B, A {
 	_type?: string;
-	c?: string
+	c?: string | null
 }
 
 export interface CCommandHandler extends BCommandHandler, ACommandHandler {

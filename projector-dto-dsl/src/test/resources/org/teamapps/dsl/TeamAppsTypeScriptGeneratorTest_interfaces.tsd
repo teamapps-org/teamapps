@@ -8,8 +8,8 @@ interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest
 
 export interface A {
 	_type?: string;
-	a?: string;
-	b?: string
+	a?: string | null;
+	b?: string | null
 }
 
 export interface ACommandHandler {

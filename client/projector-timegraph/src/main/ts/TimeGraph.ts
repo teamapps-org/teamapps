@@ -44,7 +44,7 @@ import {
 } from "projector-client-object-api";
 import {
 	DtoGraph,
-	DtoGraphData, DtoHoseGraph, DtoLineGraph,
+	DtoGraphData, DtoGraphGroup, DtoHoseGraph, DtoLineGraph,
 	DtoLongInterval,
 	DtoTimeChartZoomLevel,
 	DtoTimeGraph,

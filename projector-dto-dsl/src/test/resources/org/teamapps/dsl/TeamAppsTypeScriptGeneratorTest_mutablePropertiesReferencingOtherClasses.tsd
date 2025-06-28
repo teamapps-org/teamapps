@@ -8,7 +8,7 @@ import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface A {
 	_type?: string;
-	x?: X
+	x?: X | null
 }
 
 export interface ACommandHandler {

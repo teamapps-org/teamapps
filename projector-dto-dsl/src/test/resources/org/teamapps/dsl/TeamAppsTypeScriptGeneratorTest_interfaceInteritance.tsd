@@ -8,7 +8,7 @@ import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface B extends A {
 	_type?: string;
-	b?: string
+	b?: string | null
 }
 
 

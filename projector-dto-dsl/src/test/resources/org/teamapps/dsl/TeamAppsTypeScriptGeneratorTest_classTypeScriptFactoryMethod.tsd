@@ -7,8 +7,8 @@ import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface A {
 	_type?: string;
-	nonReq1?: string;
-	req1?: string;
+	nonReq1?: string | null;
+	req1?: string | null;
 	nonReq2: number;
 	req2: number
 }

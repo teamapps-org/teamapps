@@ -102,7 +102,7 @@ export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.supe
 >>
 
 typeScriptPropertyDeclaration(p, forceNonNullable) ::= <<
-<p.name><if(!forceNonNullable && !p.nonNullable)>?<endif>: <p.type.typeScriptTypeName>
+<p.name><if(!forceNonNullable && !p.nonNullable)>?<endif>: <p.type.typeScriptTypeName><if(!forceNonNullable && !p.nonNullable)> | null<endif>
 >>
 
 enum(e) ::= <<

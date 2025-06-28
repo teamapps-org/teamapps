@@ -20,16 +20,15 @@
 
 import {
     AbstractComponent,
-    Component,
+    type Component,
     parseHtml, ProjectorEvent,
-    ServerObjectChannel,
     toggleElementCollapsed
 } from "projector-client-object-api";
 import {
-    DtoCollapsible,
-    DtoCollapsible_CollapseStateChangedEvent,
-    DtoCollapsibleCommandHandler,
-    DtoCollapsibleEventSource
+    type DtoCollapsible,
+    type DtoCollapsible_CollapseStateChangedEvent,
+    type DtoCollapsibleCommandHandler,
+    type DtoCollapsibleEventSource
 } from "./generated";
 
 export class Collapsible extends AbstractComponent<DtoCollapsible> implements DtoCollapsibleCommandHandler, DtoCollapsibleEventSource {
@@ -42,7 +41,7 @@ export class Collapsible extends AbstractComponent<DtoCollapsible> implements Dt
     private $body: HTMLElement;
     private $expander: Element;
 
-    constructor(config: DtoCollapsible, serverObjectChannel: ServerObjectChannel) {
+    constructor(config: DtoCollapsible) {
         super(config);
         this.$main = parseHtml(`<div class="Collapsible">
 	<div class="collapsible-header">
@@ -52,17 +51,17 @@ export class Collapsible extends AbstractComponent<DtoCollapsible> implements Dt
 	</div>
 	<div class="collapsible-body"></div>
 </div>`);
-        this.$expander = this.$main.querySelector(":scope .expander");
-        this.$icon = this.$main.querySelector(":scope .icon");
-        this.$caption = this.$main.querySelector(":scope .caption");
-        this.$body = this.$main.querySelector(":scope .collapsible-body");
+        this.$expander = this.$main.querySelector(":scope .expander")!;
+        this.$icon = this.$main.querySelector(":scope .icon")!;
+        this.$caption = this.$main.querySelector(":scope .caption")!;
+        this.$body = this.$main.querySelector(":scope .collapsible-body")!;
 
-        this.setIcon(config.icon);
-        this.setCaption(config.caption);
+        this.setIcon(config.icon ?? null);
+        this.setCaption(config.caption ?? null);
         this.setContent(config.content);
         this.setCollapsed(config.collapsed);
 
-        this.$expander.addEventListener("click", evt => {
+        this.$expander.addEventListener("click", () => {
             let collapsed = !this.config.collapsed;
             this.setCollapsed(collapsed);
             this.onCollapseStateChanged.fire({collapsed});
@@ -91,12 +90,12 @@ export class Collapsible extends AbstractComponent<DtoCollapsible> implements Dt
         });
     }
 
-    setCaption(caption: string): any {
+    setCaption(caption: string | null): any {
         this.config.caption = caption;
-        this.$caption.innerText = caption;
+        this.$caption.innerText = caption ?? "";
     }
 
-    setIcon(icon: string): any {
+    setIcon(icon: string | null): any {
         this.config.icon = icon;
         this.$icon.style.backgroundImage = `url('${icon}')`;
     }

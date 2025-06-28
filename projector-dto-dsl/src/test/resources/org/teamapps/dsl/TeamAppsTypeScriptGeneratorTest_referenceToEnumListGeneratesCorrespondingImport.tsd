@@ -8,7 +8,7 @@ import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface DtoCalendar {
 	_type?: string;
-	workingDays?: DtoWeekDay[]
+	workingDays?: DtoWeekDay[] | null
 }
 
 export interface DtoCalendarServerObjectChannel extends ServerObjectChannel {

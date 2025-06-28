@@ -7,9 +7,9 @@ import type {ServerObjectChannel} from "projector-client-object-api";
 
 export interface A {
 	_type?: string;
-	a?: string;
-	b?: string;
-	c?: number[]
+	a?: string | null;
+	b?: string | null;
+	c?: number[] | null
 }
 
 export interface AServerObjectChannel extends ServerObjectChannel {
