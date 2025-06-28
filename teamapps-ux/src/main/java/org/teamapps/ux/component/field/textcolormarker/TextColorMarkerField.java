@@ -82,7 +82,6 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 	}
 
 	/**
-	 *
 	 * @param markerDefinitionId reference for the marker definition
 	 * @param start text start position of the marker
 	 * @param end text end position of the marker
@@ -96,8 +95,7 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 		val.markers().removeIf(m -> m.markerDefinitionId() == markerDefinitionId);
 		val.markers().add(marker);
 		val.markers().sort(Comparator.comparingInt(TextColorMarker::markerDefinitionId)); // sort by ID to match the order of the UI markers
-		setValueWithoutNotifyingClient(val);
-		queueCommandIfRendered(() -> new UiTextColorMarkerField.SetMarkerCommand(getId(), markerDefinitionId, start, end));
+		setValue(val);
 	}
 
 	private TextSelectionData setCurrentSelection(TextSelectionData selection) {
