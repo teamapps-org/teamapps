@@ -19,25 +19,25 @@
  */
 
 import * as d3 from "d3";
-import {BaseType, HierarchyNode, HierarchyPointLink, HierarchyPointNode, Selection, ZoomBehavior} from "d3";
+import {type BaseType, type HierarchyNode, type HierarchyPointLink, type HierarchyPointNode, type Selection, type ZoomBehavior} from "d3";
 import {
 	AbstractComponent,
 	executeAfterAttached,
 	parseHtml,
 	ProjectorEvent,
-	ServerObjectChannel,
-	Template
+	type ServerObjectChannel,
+	type Template
 } from "projector-client-object-api";
 import {
 	CornerShapes,
-	DtoTreeGraph,
-	DtoTreeGraph_NodeClickedEvent,
-	DtoTreeGraph_NodeExpandedOrCollapsedEvent,
-	DtoTreeGraph_ParentExpandedOrCollapsedEvent,
-	DtoTreeGraph_SideListExpandedOrCollapsedEvent,
-	DtoTreeGraphCommandHandler,
-	DtoTreeGraphEventSource,
-	DtoTreeGraphNode
+	type DtoTreeGraph,
+	type DtoTreeGraph_NodeClickedEvent,
+	type DtoTreeGraph_NodeExpandedOrCollapsedEvent,
+	type DtoTreeGraph_ParentExpandedOrCollapsedEvent,
+	type DtoTreeGraph_SideListExpandedOrCollapsedEvent,
+	type DtoTreeGraphCommandHandler,
+	type DtoTreeGraphEventSource,
+	type DtoTreeGraphNode
 } from "./generated";
 import {flextree} from "d3-flextree";
 

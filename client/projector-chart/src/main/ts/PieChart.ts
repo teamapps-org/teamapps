@@ -19,29 +19,26 @@
  */
 
 import * as d3 from "d3"
-import {AbstractComponent, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, type ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
-	ChartLegendStyle,
-	DataPointWeighting, DataPointWeightings,
-	DtoChartNamedDataPoint,
-	DtoPieChart,
-	DtoPieChart_DataPointClickedEvent,
-	DtoPieChartCommandHandler,
-	DtoPieChartEventSource
+	type ChartLegendStyle,
+	type DataPointWeighting, DataPointWeightings,
+	type DtoChartNamedDataPoint,
+	type DtoPieChart,
+	type DtoPieChart_DataPointClickedEvent,
+	type DtoPieChartCommandHandler,
+	type DtoPieChartEventSource
 } from "./generated";
-import {PatternifyParameter} from "./TreeGraph";
+import {type PatternifyParameter} from "./TreeGraph";
 
 export class PieChart extends AbstractComponent<DtoPieChart> implements DtoPieChartCommandHandler, DtoPieChartEventSource {
 
 	readonly onDataPointClicked: ProjectorEvent<DtoPieChart_DataPointClickedEvent> = new ProjectorEvent();
 
 	chart: Chart;
-	config: DtoPieChart;
-
 
 	constructor(config: DtoPieChart, serverObjectChannel: ServerObjectChannel) {
 		super(config);
-		this.config = config;
 		this.createChart();
 	}
 

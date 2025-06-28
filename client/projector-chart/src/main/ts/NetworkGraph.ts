@@ -19,25 +19,25 @@
  */
 
 import * as d3 from "d3";
-import {ForceLink, Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
+import {type ForceLink, type Simulation, type SimulationLinkDatum, type ZoomBehavior} from "d3";
 import {
 	AbstractComponent,
 	executeAfterAttached,
 	parseHtml,
 	ProjectorEvent,
-	ServerObjectChannel,
-	Template
+	type ServerObjectChannel,
+	type Template
 } from "projector-client-object-api";
 import {
 	CornerShapes,
-	DtoNetworkGraph,
-	DtoNetworkGraph_NodeClickedEvent,
-	DtoNetworkGraph_NodeDoubleClickedEvent,
-	DtoNetworkGraph_NodeExpandedOrCollapsedEvent,
-	DtoNetworkGraphCommandHandler,
-	DtoNetworkGraphEventSource,
-	DtoNetworkLink,
-	DtoNetworkNode,
+	type DtoNetworkGraph,
+	type DtoNetworkGraph_NodeClickedEvent,
+	type DtoNetworkGraph_NodeDoubleClickedEvent,
+	type DtoNetworkGraph_NodeExpandedOrCollapsedEvent,
+	type DtoNetworkGraphCommandHandler,
+	type DtoNetworkGraphEventSource,
+	type DtoNetworkLink,
+	type DtoNetworkNode,
 	ExpandStates
 } from "./generated";
 import {patternify} from "./TreeGraph";
