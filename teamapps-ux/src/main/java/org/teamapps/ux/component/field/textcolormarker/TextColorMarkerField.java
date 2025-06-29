@@ -64,6 +64,7 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 	/**
 	 * @param markerDefinitions list of possible markers for this field
 	 * @param value the field text and its markers
+	 * @throws IllegalTextColorMarkerException if no matching definition was found
 	 */
 	public void setMarkerDefinitions(List<TextColorMarkerDefinition> markerDefinitions,
 									 TextColorMarkerFieldValue value) {
@@ -120,18 +121,30 @@ public class TextColorMarkerField extends AbstractField<TextColorMarkerFieldValu
 		queueCommandIfRendered(() -> new UiTextColorMarkerField.SetToolbarEnabledCommand(getId(), toolbarEnabled));
 	}
 
+	/**
+	 * @param value text/markers to be set
+	 * @throws IllegalTextColorMarkerException if markers are not valid
+	 */
 	@Override
 	public void setValue(TextColorMarkerFieldValue value) {
 		validateMarkers(value);
 		super.setValue(value);
 	}
 
+	/**
+	 * @param value to validate its markers
+	 * @throws IllegalTextColorMarkerException if markers are not valid
+	 */
 	private void validateMarkers(TextColorMarkerFieldValue value) {
 		if (value != null && value.markers() != null) {
 			value.markers().forEach(this::validateMarker);
 		}
 	}
 
+	/**
+	 * @param marker to be validated
+	 * @throws IllegalTextColorMarkerException if no matching definition was found for the marker
+	 */
 	private void validateMarker(TextColorMarker marker) {
 		if (marker == null) {
 			throw new IllegalTextColorMarkerException("Marker must not be null");
