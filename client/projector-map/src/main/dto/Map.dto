@@ -24,13 +24,13 @@ import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
 class DtoMapView extends DtoComponent {
-	String baseApiUrl;
-	String accessToken;
-	String styleUrl;
+	required String baseApiUrl;
+	required String accessToken;
+	required String styleUrl;
 	boolean displayAttributionControl;
 
 	double zoomLevel;
-	Location mapPosition;
+	required Location mapPosition;
 	Dictionary<DtoAbstractMapShape> shapes;
 	List<DtoMapMarkerClientRecord> markers;
 	DtoMapMarkerCluster markerCluster;
@@ -125,7 +125,7 @@ enum ShapeType {
 }
 
 abstract class DtoAbstractMapShape {
-	DtoShapeProperties shapeProperties;
+	required DtoShapeProperties shapeProperties;
 }
 
 
@@ -133,31 +133,31 @@ abstract class DtoAbstractMapShapeChange {
 }
 
 class DtoMapCircle extends DtoAbstractMapShape {
-	Location center;
+	required Location center;
 	int radius; // meters
 }
 
 class DtoMapPolygon extends DtoAbstractMapShape {
-	List<Location> path;
+	required List<Location> path;
 }
 
 class DtoMapPolyline extends DtoAbstractMapShape {
-	List<Location> path;
+	required List<Location> path;
 }
 
 
 class DtoPolylineAppend extends DtoAbstractMapShapeChange {
-    List<Location> appendedPath;
+    required List<Location> appendedPath;
 }
 
 class DtoMapRectangle extends DtoAbstractMapShape {
-	Location l1;
-	Location l2;
+	required Location l1;
+	required Location l2;
 }
 
 class DtoShapeProperties {
-  String strokeColor;
+  required String strokeColor;
   double strokeWeight;
   List<Double> strokeDashArray;
-  String fillColor;
+  required String fillColor;
 }

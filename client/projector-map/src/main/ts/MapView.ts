@@ -24,34 +24,34 @@ import {
 	DeferredExecutor,
 	parseHtml,
 	ProjectorEvent,
-	ServerObjectChannel,
-	Template
+	type ServerObjectChannel,
+	type Template
 } from "projector-client-object-api";
 import {
-	DtoAbstractMapShape,
-	DtoAbstractMapShapeChange,
-	DtoHeatMapData,
-	DtoMapCircle,
-	DtoMapMarkerClientRecord,
-	DtoMapMarkerCluster,
-	DtoMapPolygon,
-	DtoMapPolyline,
-	DtoMapRectangle,
-	DtoMapView,
-	DtoMapView_LocationChangedEvent,
-	DtoMapView_MapClickedEvent,
-	DtoMapView_MarkerClickedEvent,
-	DtoMapView_ShapeDrawnEvent,
-	DtoMapView_ZoomLevelChangedEvent,
-	DtoMapViewCommandHandler,
-	DtoMapViewEventSource,
-	DtoPolylineAppend,
-	DtoShapeProperties,
-	Location,
-	ShapeType
+	type DtoAbstractMapShape,
+	type DtoAbstractMapShapeChange,
+	type DtoHeatMapData,
+	type DtoMapCircle,
+	type DtoMapMarkerClientRecord,
+	type DtoMapMarkerCluster,
+	type DtoMapPolygon,
+	type DtoMapPolyline,
+	type DtoMapRectangle,
+	type DtoMapView,
+	type DtoMapView_LocationChangedEvent,
+	type DtoMapView_MapClickedEvent,
+	type DtoMapView_MarkerClickedEvent,
+	type DtoMapView_ShapeDrawnEvent,
+	type DtoMapView_ZoomLevelChangedEvent,
+	type DtoMapViewCommandHandler,
+	type DtoMapViewEventSource,
+	type DtoPolylineAppend,
+	type DtoShapeProperties,
+	type Location,
+	type ShapeType
 } from "./generated";
-import mapboxgl, {GeoJSONSource, LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
-import {Feature, Point, Position} from "geojson";
+import mapboxgl, {type GeoJSONSource, type LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
+import {type Feature, type Point, type Position} from "geojson";
 import * as d3 from "d3";
 
 export function isCircle(shapeConfig: DtoAbstractMapShape): shapeConfig is DtoMapCircle {
@@ -80,14 +80,13 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 
 	private $map: HTMLElement;
 	private map: MapBoxMap;
-	private markerTemplateRenderers: { [templateName: string]: Template } = {};
 	private markersByClientId: { [id: number]: Marker } = {};
 	private shapesById: Map<string, { config: DtoAbstractMapShape }> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
 	constructor(config: DtoMapView, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 		this.$map = parseHtml('<div class="Map">');
 
 		mapboxgl.baseApiUrl = config.baseApiUrl;
@@ -106,10 +105,10 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 			this.deferredExecutor.ready = true;
 		});
 
-		this.map.on("zoom", ev => {
+		this.map.on("zoom", _ev => {
 			this.onZoomLevelChanged.fire({zoomLevel: this.map.getZoom()})
 		});
-		this.map.on("move", ev => {
+		this.map.on("move", _ev => {
 			let center = this.map.getCenter();
 			let bounds = this.map.getBounds();
 			this.onLocationChanged.fire({
@@ -132,8 +131,8 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 			})
 		})
 
-		Object.keys(config.shapes).forEach(shapeId => {
-			this.addShape(shapeId, config.shapes[shapeId]);
+		Object.keys(config.shapes ?? []).forEach((shapeId) => {
+			this.addShape(shapeId, (config.shapes as any)[shapeId]);
 		});
 
 		if (config.markerCluster != null) {
@@ -284,7 +283,12 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 	changeShape(shapeId: string, change: DtoAbstractMapShapeChange): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			if (isPolyLineAppend(change)) {
-				let config = this.shapesById.get(shapeId).config as DtoMapPolyline;
+				let shape = this.shapesById.get(shapeId);
+				if (shape == null) {
+					console.error("Shape not found: " + shapeId);
+					return;
+				}
+				let config = shape.config as DtoMapPolyline;
 				config.path = config.path.concat(change.appendedPath);
 				let source = this.map.getSource(shapeId) as GeoJSONSource;
 				source.setData(this.toGeoJsonFeature(config));
@@ -301,7 +305,7 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 	}
 
 	clearShapes(): void {
-		this.shapesById.forEach((shape, id) => this.removeShape(id))
+		this.shapesById.forEach((_shape, id) => this.removeShape(id))
 	}
 
 	public setMapMarkerCluster(clusterConfig: DtoMapMarkerCluster): void {
@@ -330,8 +334,8 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 
 				const getPointCount = (features: Feature[]) => {
 					features.forEach(f => {
-						if (f.properties.cluster) {
-							point_counts.push(f.properties.point_count)
+						if (f.properties!.cluster) {
+							point_counts.push(f.properties!.point_count)
 						}
 					})
 					return point_counts;
@@ -343,7 +347,7 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 					totals = getPointCount(features);
 					features.forEach((feature) => {
 						const coordinates = (feature.geometry as Point).coordinates;
-						const props = feature.properties;
+						const props = feature.properties!;
 						const id = props.cluster_id != null ? "cluster-" + props.cluster_id : "individual-" + props.id;
 						let marker = markersById[id];
 						if (!marker) {
@@ -370,13 +374,13 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 
 				const createClusterNode = (feature: Feature, totals: number[]) => {
 					const coordinates = (feature.geometry as Point).coordinates;
-					const props = feature.properties;
+					const props = feature.properties!;
 
 					const div = document.createElement('div');
 
 					const scale = d3.scaleLinear()
-						.domain([d3.min(totals), d3.max(totals)])
-						.range([500, d3.max(totals)])
+						.domain([d3.min(totals)!, d3.max(totals)!])
+						.range([500, d3.max(totals)!])
 					const radius = Math.sqrt(scale(props.point_count));
 
 					const svg = d3.select(div)
@@ -389,13 +393,12 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 					const g = svg.append('g')
 						.attr('transform', `translate(${radius}, ${radius})`);
 
-					const circle = g.append('circle')
+					g.append('circle')
 						.attr('r', radius)
 						.attr('fill', '#ff0000aa')
 						.attr('class', 'center-circle')
 
-					const text = g
-						.append("text")
+					g.append("text")
 						.attr("class", "total")
 						.text(props.point_count_abbreviated)
 						.attr('text-anchor', 'middle')
@@ -432,7 +435,7 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 				this.map.on('moveend', updateMarkers);
 			}
 
-			(this.map.getSource("cluster") as GeoJSONSource).setData(this.createMarkersFeatureCollection(clusterConfig.markers));
+			(this.map.getSource("cluster") as GeoJSONSource).setData(this.createMarkersFeatureCollection(clusterConfig.markers!));
 		})
 	}
 
@@ -454,8 +457,8 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 			geometry: {
 				type: "Point",
 				coordinates: [
-					m.location.longitude,
-					m.location.latitude
+					m.location!.longitude,
+					m.location!.latitude
 				]
 			}
 		};
@@ -494,10 +497,10 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 	private createMarker(markerConfig: DtoMapMarkerClientRecord) {
 		let renderer = markerConfig.template as Template;
 		let marker = new Marker(parseHtml(renderer.render(markerConfig.values)), {
-			anchor: markerConfig.anchor,
+			anchor: markerConfig.anchor!,
 			offset: [markerConfig.offsetPixelsX, markerConfig.offsetPixelsY]
 		})
-			.setLngLat([markerConfig.location.longitude, markerConfig.location.latitude]);
+			.setLngLat([markerConfig.location!.longitude, markerConfig.location!.latitude]);
 		marker.getElement().addEventListener('click', e => {
 			this.onMarkerClicked.fire({markerId: markerConfig.id})
 			e.stopPropagation();
@@ -506,11 +509,13 @@ export class MapView extends AbstractComponent<DtoMapView> implements DtoMapView
 	};
 
 	// TODO
+	// @ts-ignore
 	setHeatMap(data: DtoHeatMapData): void {
 		throw new Error("Method not implemented.");
 	}
 
 	// TODO
+	// @ts-ignore
 	startDrawingShape(shapeType: ShapeType, shapeProperties: DtoShapeProperties): void {
 		throw new Error("Method not implemented.");
 	}

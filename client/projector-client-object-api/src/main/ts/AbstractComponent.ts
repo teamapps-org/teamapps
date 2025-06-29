@@ -68,7 +68,7 @@ export abstract class AbstractComponent<C extends DtoComponent = DtoComponent> i
 
 	protected config: C;
 
-	constructor(config: C) {
+	constructor(config: C, serverObjectChannel?: ServerObjectChannel) {
 		this.config = config;
 		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-css-id="${this.cssUuid}"]`, `[data-css-id="${this.cssUuid}"]`);
 		this.displayedDeferredExecutor.invokeOnceWhenReady(() => this.styleManager.apply());
