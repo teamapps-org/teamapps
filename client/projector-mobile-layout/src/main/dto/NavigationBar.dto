@@ -5,11 +5,11 @@ import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.component.progress.DtoMultiProgressDisplay;
 
 class DtoNavigationBar extends DtoComponent {
-	List<DtoNavigationBarButton> buttons;
-	String backgroundColor;
-	String borderColor;
-	List<DtoComponent*> fanOutComponents;
-	DtoMultiProgressDisplay* multiProgressDisplay;
+	required List<DtoNavigationBarButton> buttons;
+	required String backgroundColor;
+	required String borderColor;
+	required List<DtoComponent*> fanOutComponents;
+	required DtoMultiProgressDisplay* multiProgressDisplay;
 
 	command setButtons(List<DtoNavigationBarButton> buttons);
 	command setButtonVisible(String buttonId, boolean visible);
@@ -27,8 +27,8 @@ class DtoNavigationBar extends DtoComponent {
 }
 
 class DtoNavigationBarButton {
-	String id;
+	required String id;
     DtoTemplate* template;
-	Object data;
+	required Object data;
 	boolean visible;
 }

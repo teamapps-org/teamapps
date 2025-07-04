@@ -20,18 +20,18 @@
 
 import {
 	AbstractComponent,
-	ClickOutsideHandle,
-	Component, doOnceOnClickOutsideElement,
+	type ClickOutsideHandle,
+	type Component, doOnceOnClickOutsideElement,
 	parseHtml,
-	ServerObjectChannel, slideDown, slideUp,
+	type ServerObjectChannel, slideDown, slideUp,
 	ProjectorEvent,
-	Template
+	type Template
 } from "projector-client-object-api";
 import {
-	DtoNavigationBar,
-	DtoNavigationBar_ButtonClickedEvent, DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent, DtoNavigationBarButton,
-	DtoNavigationBarCommandHandler,
-	DtoNavigationBarEventSource
+	type DtoNavigationBar,
+	type DtoNavigationBar_ButtonClickedEvent, type DtoNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent, type DtoNavigationBarButton,
+	type DtoNavigationBarCommandHandler,
+	type DtoNavigationBarEventSource
 } from "./generated";
 import {MultiProgressDisplay} from "projector-progress-display";
 import {outerHeightIncludingMargins} from "projector-client-object-api";
@@ -52,13 +52,13 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 	private $fanOutContainerWrapper: HTMLElement;
 	private $fanOutContainer: HTMLElement;
 	private fanOutComponents: Component[] = [];
-	private currentFanOutComponent: Component;
-	private fanoutClickOutsideHandle: ClickOutsideHandle;
-	private multiProgressDisplay: MultiProgressDisplay;
+	private currentFanOutComponent: Component | null = null;
+	private fanoutClickOutsideHandle: ClickOutsideHandle | null = null;
+	private multiProgressDisplay: MultiProgressDisplay | null = null;
 	private $multiProgressDisplayContainer: HTMLElement;
 
 	constructor(config: DtoNavigationBar, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 		this.$bar = parseHtml(`<div class="NavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>
@@ -67,10 +67,10 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
                 	<div class="progress-container"></div>
 				</div>
             </div>`);
-		this.$buttonsContainer = this.$bar.querySelector<HTMLElement>(":scope >.buttons-container");
-		this.$multiProgressDisplayContainer = this.$buttonsContainer.querySelector<HTMLElement>(":scope > .progress-container");
-		this.$fanOutContainerWrapper = this.$bar.querySelector<HTMLElement>(":scope >.fan-out-container-wrapper");
-		this.$fanOutContainer = this.$fanOutContainerWrapper.querySelector<HTMLElement>(":scope >.fan-out-container");
+		this.$buttonsContainer = this.$bar.querySelector<HTMLElement>(":scope >.buttons-container")!;
+		this.$multiProgressDisplayContainer = this.$buttonsContainer.querySelector<HTMLElement>(":scope > .progress-container")!;
+		this.$fanOutContainerWrapper = this.$bar.querySelector<HTMLElement>(":scope >.fan-out-container-wrapper")!;
+		this.$fanOutContainer = this.$fanOutContainerWrapper.querySelector<HTMLElement>(":scope >.fan-out-container")!;
 
 		this.setBackgroundColor(config.backgroundColor);
 		this.setBorderColor(config.borderColor);
@@ -103,7 +103,7 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 
 	private addButton(button: DtoNavigationBarButton) {
 		let $button = parseHtml(`<div class="nav-button-wrapper"><div class="nav-button-inner-wrapper"></div></div>`);
-		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper");
+		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper")!;
 		$innerWrapper.appendChild(parseHtml((button.template as Template).render(button.data)));
 		$button.addEventListener("click", () => {
 			this.onButtonClicked.fire({
@@ -149,7 +149,7 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 			this.$fanOutContainerWrapper.style.bottom = outerHeightIncludingMargins(this.$bar) + "px";
 			slideDown(this.$fanOutContainerWrapper);
 			this.onResize();
-			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement([this.getMainElement(), this.$fanOutContainerWrapper], e => {
+			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement([this.getMainElement(), this.$fanOutContainerWrapper],() => {
 				this.hideFanOutComponent();
 				this.onFanoutClosedDueToClickOutsideFanout.fire({});
 			});
@@ -166,12 +166,12 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 		this.$fanOutContainerWrapper.classList.remove("open");
 		slideUp(this.$fanOutContainerWrapper);
 		this.currentFanOutComponent = null;
-		this.fanoutClickOutsideHandle.cancel();
+		this.fanoutClickOutsideHandle?.cancel();
 	}
 
 	public onResize(): void {
 		if (this.$fanOutContainerWrapper.classList.contains("open")) {
-			let $clippingParent = this.findNearestParentWithHiddenVerticalOverflow(this.$fanOutContainerWrapper);
+			let $clippingParent = this.findNearestParentWithHiddenVerticalOverflow(this.$fanOutContainerWrapper)!;
 			
 			let maxFanOutHeight = this.$bar.offsetTop - $clippingParent.offsetTop;
 			if (maxFanOutHeight <= 0) {
@@ -182,11 +182,11 @@ export class NavigationBar extends AbstractComponent<DtoNavigationBar> implement
 		}
 	}
 
-	private findNearestParentWithHiddenVerticalOverflow(child: HTMLElement): HTMLElement {
-		let el = child;
+	private findNearestParentWithHiddenVerticalOverflow(child: HTMLElement): HTMLElement | null {
+		let el: HTMLElement | null = child;
 		while (el != null) {
 			el = el.parentElement;
-			if (getComputedStyle(el).overflowY !== "visible") {
+			if (el != null && getComputedStyle(el).overflowY !== "visible") {
 				break;
 			}
 		}

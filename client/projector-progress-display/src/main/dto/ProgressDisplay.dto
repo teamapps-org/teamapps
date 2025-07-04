@@ -31,11 +31,11 @@ enum ProgressStatus {
 }
 
 class DtoProgressDisplay extends DtoComponent {
-	String icon;
-	String taskName;
-	String statusMessage;
+	required String icon;
+	required String taskName;
+	required String statusMessage;
 	double progress;
-	ProgressStatus status;
+	required ProgressStatus status;
 	boolean cancelable;
 
     command update(DtoProgressDisplay config);

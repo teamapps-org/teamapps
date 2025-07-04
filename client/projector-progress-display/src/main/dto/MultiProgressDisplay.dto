@@ -23,7 +23,7 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.notification.NotificationPosition;
 
 class DtoMultiProgressDisplay extends DtoComponent {
-    NotificationPosition position;
+    required NotificationPosition position;
 
     command open(long timeout);
     command close();

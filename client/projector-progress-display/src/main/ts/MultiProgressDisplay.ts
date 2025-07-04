@@ -20,19 +20,18 @@
 
 import {
 	AbstractComponent, animateCollapse,
-	ComponentLike,
-	EntranceAnimation,
-	ExitAnimation, NotificationHandle,
+	type ComponentLike,
+	type NotificationHandle,
 	parseHtml, prepareNotificationLike,
-	ServerObjectChannel,
+	type ServerObjectChannel,
 	ProjectorEvent, EntranceAnimations, ExitAnimations
 } from "projector-client-object-api";
 import {
-	DtoMultiProgressDisplay,
-	DtoMultiProgressDisplay_ClosedEvent,
-	DtoMultiProgressDisplay_OpenedEvent,
-	DtoMultiProgressDisplayCommandHandler,
-	DtoMultiProgressDisplayEventSource
+	type DtoMultiProgressDisplay,
+	type DtoMultiProgressDisplay_ClosedEvent,
+	type DtoMultiProgressDisplay_OpenedEvent,
+	type DtoMultiProgressDisplayCommandHandler,
+	type DtoMultiProgressDisplayEventSource
 } from "./generated";
 import {ProgressDisplay} from "./ProgressDisplay";
 
@@ -51,14 +50,14 @@ export class MultiProgressDisplay extends AbstractComponent<DtoMultiProgressDisp
 	private progressDisplays: ProgressDisplay[] = [];
 
 	constructor(config: DtoMultiProgressDisplay, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="MultiProgressDisplay">
 	<div class="spinner teamapps-spinner"></div>					
 	<div class="running-count">0</div>					
 </div>`);
-		this.$spinner = this.$main.querySelector<HTMLElement>(":scope .spinner");
-		this.$runningCount = this.$main.querySelector<HTMLElement>(":scope .running-count");
+		this.$spinner = this.$main.querySelector<HTMLElement>(":scope .spinner")!;
+		this.$runningCount = this.$main.querySelector<HTMLElement>(":scope .running-count")!;
 
 		this.$popup = parseHtml(`<div class="MultiProgressDisplay-popup">
 	<div class="img img-16 ta-icon-close"></div>
@@ -66,9 +65,9 @@ export class MultiProgressDisplay extends AbstractComponent<DtoMultiProgressDisp
 </div>`);
 		this.popupComponentLike = {getMainElement: () => this.$popup};
 		this.notificationHandle = prepareNotificationLike(this.popupComponentLike, this.config.position, EntranceAnimations.SLIDE_IN_LEFT, ExitAnimations.ZOOM_OUT, -1);
-		this.$progressList = this.$popup.querySelector<HTMLElement>(":scope .progress-list");
+		this.$progressList = this.$popup.querySelector<HTMLElement>(":scope .progress-list")!;
 
-		this.$main.addEventListener("click", ev => {
+		this.$main.addEventListener("click", () => {
 			if (this.notificationHandle.isOpen) {
 				this.notificationHandle.close();
 			} else {

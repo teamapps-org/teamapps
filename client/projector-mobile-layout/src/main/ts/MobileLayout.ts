@@ -22,13 +22,13 @@ import {Toolbar} from "projector-client-core-components";
 import {NavigationBar} from "./NavigationBar";
 import {
 	AbstractComponent,
-	Component,
+	type Component,
 	pageTransition,
-	PageTransition,
+	type PageTransition,
 	parseHtml,
-	ServerObjectChannel
+	type ServerObjectChannel
 } from "projector-client-object-api";
-import {DtoMobileLayout, DtoMobileLayoutCommandHandler} from "./generated";
+import {type DtoMobileLayout, type DtoMobileLayoutCommandHandler} from "./generated";
 
 export class MobileLayout extends AbstractComponent<DtoMobileLayout> implements DtoMobileLayoutCommandHandler {
 
@@ -37,38 +37,37 @@ export class MobileLayout extends AbstractComponent<DtoMobileLayout> implements 
 	private $contentContainerWrapper: HTMLElement;
 	private $navBarContainer: HTMLElement;
 
-	private toolbar: Toolbar;
-	private navBar: NavigationBar;
+	private toolbar: Toolbar | null = null;
+	private navBar: NavigationBar | null = null;
 
-	private content: Component;
-	private $contentContainer: HTMLElement;
+	private content: Component | null = null;
+	private $contentContainer: HTMLElement | null = null;
 
 	constructor(config: DtoMobileLayout, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 		this.$mainDiv = parseHtml(`<div class="MobileLayout">
                              <div class="toolbar-container"></div>
                              <div class="content-container-wrapper"></div>
                              <div class="navigation-bar-container"></div>
             </div>`);
 
-		this.$toolbarContainer = this.$mainDiv.querySelector<HTMLElement>(':scope >.toolbar-container');
-		this.$contentContainerWrapper = this.$mainDiv.querySelector<HTMLElement>(':scope >.content-container-wrapper');
-		this.$navBarContainer = this.$mainDiv.querySelector<HTMLElement>(':scope >.navigation-bar-container');
+		this.$toolbarContainer = this.$mainDiv.querySelector<HTMLElement>(':scope >.toolbar-container')!;
+		this.$contentContainerWrapper = this.$mainDiv.querySelector<HTMLElement>(':scope >.content-container-wrapper')!;
+		this.$navBarContainer = this.$mainDiv.querySelector<HTMLElement>(':scope >.navigation-bar-container')!;
 
 		this.setToolbar(config.toolbar as Toolbar);
 		this.setNavigationBar(config.navigationBar as NavigationBar);
 
 		if (config.initialView) {
-			this.showView(config.initialView as Component, null);
+			this.showView(config.initialView as Component);
 		}
 	}
 
-	public showView(view: Component, transition: PageTransition = null, animationDuration = 0) {
+	public showView(view: Component, transition: PageTransition|null = null, animationDuration = 0) {
 		if (view === this.content) {
 			return;
 		}
 
-		let oldContent = this.content;
 		let $oldContentContainer = this.$contentContainer;
 
 		this.content = view;

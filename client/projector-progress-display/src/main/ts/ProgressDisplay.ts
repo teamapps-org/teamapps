@@ -18,12 +18,12 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractComponent, parseHtml, removeClassesByFunction, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
+import {AbstractComponent, parseHtml, removeClassesByFunction, type ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
-	DtoProgressDisplay,
-	DtoProgressDisplay_CancelButtonClickedEvent, DtoProgressDisplay_ClickEvent,
-	DtoProgressDisplayCommandHandler,
-	DtoProgressDisplayEventSource
+	type DtoProgressDisplay,
+	type DtoProgressDisplay_CancelButtonClickedEvent, type DtoProgressDisplay_ClickEvent,
+	type DtoProgressDisplayCommandHandler,
+	type DtoProgressDisplayEventSource
 } from "./generated";
 import {ProgressBar} from "projector-progress-indicator";
 
@@ -41,7 +41,7 @@ export class ProgressDisplay extends AbstractComponent<DtoProgressDisplay> imple
 	private progressBar: ProgressBar;
 
 	constructor(config: DtoProgressDisplay, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="ProgressDisplay">
 			<div class="title">
@@ -55,15 +55,15 @@ export class ProgressDisplay extends AbstractComponent<DtoProgressDisplay> imple
 			</div>
 		</div>`);
 
-		this.$icon = this.$main.querySelector<HTMLElement>(":scope .icon");
-		this.$taskName = this.$main.querySelector<HTMLElement>(":scope .task-name");
-		this.$statusMessage = this.$main.querySelector<HTMLElement>(":scope .status-string");
-		this.$progress = this.$main.querySelector<HTMLElement>(":scope .progress-bar-wrapper");
+		this.$icon = this.$main.querySelector<HTMLElement>(":scope .icon")!;
+		this.$taskName = this.$main.querySelector<HTMLElement>(":scope .task-name")!;
+		this.$statusMessage = this.$main.querySelector<HTMLElement>(":scope .status-string")!;
+		this.$progress = this.$main.querySelector<HTMLElement>(":scope .progress-bar-wrapper")!;
 		this.progressBar = new ProgressBar(0, {height: 4});
 		this.$progress.appendChild(this.progressBar.getMainDomElement());
-		this.$cancelButton = this.$main.querySelector<HTMLElement>(":scope .cancel-button");
+		this.$cancelButton = this.$main.querySelector<HTMLElement>(":scope .cancel-button")!;
 
-		this.$cancelButton.addEventListener("click", ev => this.onCancelButtonClicked.fire({}));
+		this.$cancelButton.addEventListener("click", () => this.onCancelButtonClicked.fire({}));
 
 		this.update(config);
 	}

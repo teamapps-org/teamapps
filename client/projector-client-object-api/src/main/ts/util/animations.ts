@@ -43,7 +43,7 @@ export function fadeIn(el: HTMLElement) {
 	animateCSS(el, EntranceAnimations.FADE_IN);
 }
 
-export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: PageTransition, animationDuration: number = 300, callback?: () => any) {
+export function pageTransition(outEl: HTMLElement | null, inEl: HTMLElement, pageTransition: PageTransition, animationDuration: number = 300, callback?: () => any) {
 	let cssClasses = pageTransition.split("-vs-").map(s => "pt-" + s);
 	let animationCallbackCount = 0;
 

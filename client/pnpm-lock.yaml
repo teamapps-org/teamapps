@@ -183,7 +183,7 @@ importers:
         version: 1.7.0
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.31.9
+        version: 0.32.0
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -278,7 +278,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.31.9
+        version: 0.32.0
       projector-client-core-components:
         specifier: workspace:*
         version: link:../projector-client-core-components
@@ -335,7 +335,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.31.9
+        version: 0.32.0
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -445,21 +445,15 @@ importers:
         specifier: workspace:*
         version: link:../projector-progress-display
     devDependencies:
-      esbuild:
-        specifier: ^0.15.13
-        version: 0.15.18
-      esbuild-plugin-alias:
-        specifier: ^0.2.1
-        version: 0.2.1
-      esbuild-plugin-less:
-        specifier: ^1.1.11
-        version: 1.3.22(esbuild@0.15.18)
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
       typescript:
-        specifier: ^5.1
+        specifier: ~5.8.3
         version: 5.8.3
+      vite:
+        specifier: ^6.3.5
+        version: 6.3.5(@types/node@22.15.18)(less@4.3.0)
+      vite-plugin-dts:
+        specifier: ^4.5.4
+        version: 4.5.4(@types/node@22.15.18)(rollup@4.41.1)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.18)(less@4.3.0))
 
   projector-mustache-template:
     dependencies:
@@ -490,7 +484,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.31.9
+        version: 0.32.0
       projector-client-object-api:
         specifier: workspace:*
         version: link:../projector-client-object-api
@@ -543,7 +537,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.31.9
+        version: 0.32.0
       projector-client-object-api:
         specifier: workspace:*
         version: link:../projector-client-object-api
@@ -551,21 +545,15 @@ importers:
         specifier: workspace:*
         version: link:../projector-progress-indicator
     devDependencies:
-      esbuild:
-        specifier: ^0.15.13
-        version: 0.15.18
-      esbuild-plugin-alias:
-        specifier: ^0.2.1
-        version: 0.2.1
-      esbuild-plugin-less:
-        specifier: ^1.1.11
-        version: 1.3.22(esbuild@0.15.18)
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
       typescript:
-        specifier: ^5.1
+        specifier: ~5.8.3
         version: 5.8.3
+      vite:
+        specifier: ^6.3.5
+        version: 6.3.5(@types/node@22.15.18)(less@4.3.0)
+      vite-plugin-dts:
+        specifier: ^4.5.4
+        version: 4.5.4(@types/node@22.15.18)(rollup@4.41.1)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.18)(less@4.3.0))
 
   projector-progress-indicator:
     dependencies:
@@ -634,7 +622,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.31.9
+        version: 0.32.0
       projector-client-object-api:
         specifier: workspace:*
         version: link:../projector-client-object-api
@@ -730,7 +718,7 @@ importers:
         version: 1.7.0
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.31.9
+        version: 0.32.0
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -1078,8 +1066,8 @@ packages:
     resolution: {integrity: sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==}
     engines: {node: '>=6.0.0'}
 
-  '@material-symbols/svg-400@0.31.9':
-    resolution: {integrity: sha512-LeQrY/qYdRdIlV6ZR+hUQDXjtkDYgP1LGnMQh/Grm6FsXz+6GR2Q+DrotEJjzDnmao/oHygHFGLnkKAR/PM1hQ==}
+  '@material-symbols/svg-400@0.32.0':
+    resolution: {integrity: sha512-FQmMm7kVitNgfEOlq+Ah9/dGc332r88GTL5dCCeVpMy1ryNSfUNy/l5+15OX6tauhKfVbzVPHGPS8/5Gw1lM+g==}
 
   '@microsoft/api-extractor-model@7.30.6':
     resolution: {integrity: sha512-znmFn69wf/AIrwHya3fxX6uB5etSIn6vg4Q4RB/tb5VDDs1rqREc+AvMC/p19MUN13CZ7+V/8pkYPTj7q8tftg==}
@@ -2619,7 +2607,7 @@ snapshots:
 
   '@mapbox/whoots-js@3.1.0': {}
 
-  '@material-symbols/svg-400@0.31.9': {}
+  '@material-symbols/svg-400@0.32.0': {}
 
   '@microsoft/api-extractor-model@7.30.6(@types/node@22.15.18)':
     dependencies:
