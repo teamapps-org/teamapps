@@ -1,10 +1,10 @@
-import {ClientObject, Invokable, ServerObjectChannel} from "projector-client-object-api";
-import {DtoUrlScript, DtoUrlScriptCommandHandler} from "./generated";
+import {type ClientObject, type Invokable} from "projector-client-object-api";
+import {type DtoUrlScript, type DtoUrlScriptCommandHandler} from "./generated";
 
 export class UrlScript implements ClientObject, DtoUrlScriptCommandHandler, Invokable {
 	private modulePromise: Promise<any>;
 
-	constructor(config: DtoUrlScript, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoUrlScript) {
 		this.modulePromise = loadModuleFromUrl(config.url);
 	}
 

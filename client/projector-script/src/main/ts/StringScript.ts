@@ -1,10 +1,10 @@
-import {ClientObject, Invokable, ServerObjectChannel} from "projector-client-object-api";
-import {DtoStringScript, DtoStringScriptCommandHandler} from "./generated";
+import {type ClientObject, type Invokable} from "projector-client-object-api";
+import {type DtoStringScript, type DtoStringScriptCommandHandler} from "./generated";
 
 export class StringScript implements ClientObject, DtoStringScriptCommandHandler, Invokable {
 	private modulePromise: Promise<any>;
 
-	constructor(config: DtoStringScript, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoStringScript) {
 		this.modulePromise = loadModuleFromString(config.script);
 	}
 
