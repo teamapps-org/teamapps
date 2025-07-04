@@ -1,13 +1,13 @@
-import {ClientObject, ServerObjectChannel} from "projector-client-object-api";
-import {DtoInlineStyleSheet, DtoInlineStyleSheetCommandHandler} from "./generated";
+import {type ClientObject} from "projector-client-object-api";
+import {type DtoInlineStyleSheet, type DtoInlineStyleSheetCommandHandler} from "./generated";
 
 export class InlineStyleSheet implements ClientObject, DtoInlineStyleSheetCommandHandler {
 	private stylesheetElement: HTMLStyleElement;
 
-	constructor(config: DtoInlineStyleSheet, serverObjectChannel: ServerObjectChannel) {
+	constructor(config: DtoInlineStyleSheet) {
 		this.stylesheetElement = document.createElement('style');
 		this.stylesheetElement.innerText = config.styleSheet;
-		let head = document.querySelector('head');
+		let head = document.querySelector('head')!;
 		head.appendChild(this.stylesheetElement);
 	}
 
