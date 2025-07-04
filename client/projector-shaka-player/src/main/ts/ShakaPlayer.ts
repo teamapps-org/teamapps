@@ -21,15 +21,15 @@
 import "shaka-player";
 import "shaka-player/dist/shaka-player.ui";
 import {
-	DtoShakaManifest,
-	DtoShakaPlayer,
-	DtoShakaPlayer_EndedEvent,
-	DtoShakaPlayer_ErrorLoadingEvent,
-	DtoShakaPlayer_ManifestLoadedEvent, DtoShakaPlayer_SkipClickedEvent,
-	DtoShakaPlayer_TimeUpdateEvent,
-	DtoShakaPlayerCommandHandler,
-	DtoShakaPlayerEventSource,
-	PosterImageSize,
+	type DtoShakaManifest,
+	type DtoShakaPlayer,
+	type DtoShakaPlayer_EndedEvent,
+	type DtoShakaPlayer_ErrorLoadingEvent,
+	type DtoShakaPlayer_ManifestLoadedEvent, type DtoShakaPlayer_SkipClickedEvent,
+	type DtoShakaPlayer_TimeUpdateEvent,
+	type DtoShakaPlayerCommandHandler,
+	type DtoShakaPlayerEventSource,
+	type PosterImageSize,
 	TrackLabelFormats,
 } from "./generated";
 import {
@@ -37,7 +37,7 @@ import {
 	executeAfterAttached,
 	parseHtml,
 	removeClassesByFunction,
-	ServerObjectChannel,
+	type ServerObjectChannel,
 	ProjectorEvent,
 	throttle, addDelegatedEventListener
 } from "projector-client-object-api";

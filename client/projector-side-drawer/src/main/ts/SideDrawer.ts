@@ -19,19 +19,21 @@
  */
 
 import {
-	AbstractComponent, Component,
+	AbstractComponent,
+	type Component,
 	parseHtml,
 	prependChild,
+	ProjectorEvent,
 	removeClassesByFunction,
-	ServerObjectChannel,
-	ProjectorEvent
+	type ServerObjectChannel
 } from "projector-client-object-api";
 import {
-	DrawerPosition, DrawerPositions,
-	DtoSideDrawer,
-	DtoSideDrawer_ExpandedOrCollapsedEvent,
-	DtoSideDrawerCommandHandler,
-	DtoSideDrawerEventSource
+	type DrawerPosition,
+	DrawerPositions,
+	type DtoSideDrawer,
+	type DtoSideDrawer_ExpandedOrCollapsedEvent,
+	type DtoSideDrawerCommandHandler,
+	type DtoSideDrawerEventSource
 } from "./generated";
 
 export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoSideDrawerCommandHandler, DtoSideDrawerEventSource {
@@ -39,20 +41,20 @@ export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoS
 	public readonly onExpandedOrCollapsed: ProjectorEvent<DtoSideDrawer_ExpandedOrCollapsedEvent> = new ProjectorEvent();
 
 	private containerComponent: Component;
-	private contentComponent: Component;
+	private contentComponent: Component | null = null;
 	private $main: HTMLElement;
 
 	private $expanderHandle: HTMLElement;
 
 	constructor(config: DtoSideDrawer, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 		this.containerComponent = config.containerComponent as Component;
 
 		this.$main = parseHtml(`<div class="SideDrawer"></div>`);
 
 		this.setContentComponent(config.contentComponent);
 		this.$expanderHandle = parseHtml(`<div class="expander-handle"></div>`);
-		this.$expanderHandle.addEventListener("click", evt => {
+		this.$expanderHandle.addEventListener("click", () => {
 			this.setExpanded(!this.config.expanded);
 			this.onExpandedOrCollapsed.fire({expanded: this.config.expanded});
 		});
@@ -60,16 +62,13 @@ export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoS
 
 		prependChild(this.containerComponent.getMainElement(), this.getMainElement());
 
-		this.setBackgroundColor(config.backgroundColor);
-		this.setExpanderHandleColor(config.expanderHandleColor);
+		this.setBackgroundColor(config.backgroundColor ?? null);
+		this.setExpanderHandleColor(config.expanderHandleColor ?? null);
 
-		const resizeObserver = new ResizeObserver(entries => {
-			for (let entry of entries) {
-				this.updateFloatingPosition();
-			}
+		const resizeObserver = new ResizeObserver(_ => {
+			this.updateFloatingPosition();
 		});
 		resizeObserver.observe(this.containerComponent.getMainElement());
-		resizeObserver.observe(this.contentComponent.getMainElement());
 
 		this.$main.addEventListener("click", ev => ev.stopPropagation());
 		this.$main.addEventListener("pointerdown", ev => ev.stopPropagation());
@@ -94,34 +93,34 @@ export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoS
 
 		// width
 		if (this.config.width === -1) {
-			this.getMainElement().style.width = null;
+			this.getMainElement().style.width = '';
 			this.getMainElement().style.maxWidth = (containerWidth - 2 * this.config.marginX) + "px";
 		} else if (this.config.width === 0) {
 			this.getMainElement().style.width = (containerWidth - 2 * this.config.marginX) + "px";
-			this.getMainElement().style.maxWidth = null;
+			this.getMainElement().style.maxWidth = '';
 		} else {
 			this.getMainElement().style.width = this.config.width + "px";
-			this.getMainElement().style.maxWidth = null;
+			this.getMainElement().style.maxWidth = '';
 		}
 
-		let contentWidth = this.contentComponent.getMainElement().offsetWidth;
-		let contentHeight = this.contentComponent.getMainElement().offsetHeight;
+		let contentWidth = this.contentComponent?.getMainElement()?.offsetWidth ?? 0;
+		// let contentHeight = this.contentComponent?.getMainElement()?.offsetHeight ?? 0;
 
 		// position X
 		if (this.config.expanded) {
 			if (this.config.position === DrawerPositions.TOP_LEFT || this.config.position === DrawerPositions.BOTTOM_LEFT) {
 				this.getMainElement().style.left = this.config.marginX + "px";
-				this.getMainElement().style.right = null;
+				this.getMainElement().style.right = '';
 			} else if (this.config.position === DrawerPositions.TOP_RIGHT || this.config.position === DrawerPositions.BOTTOM_RIGHT) {
-				this.getMainElement().style.left = null;
+				this.getMainElement().style.left = '';
 				this.getMainElement().style.right = this.config.marginX + "px";
 			}
 		} else {
 			if (this.config.position === DrawerPositions.TOP_LEFT || this.config.position === DrawerPositions.BOTTOM_LEFT) {
 				this.getMainElement().style.left = `-${contentWidth}px`;
-				this.getMainElement().style.right = null;
+				this.getMainElement().style.right = '';
 			} else if (this.config.position === DrawerPositions.TOP_RIGHT || this.config.position === DrawerPositions.BOTTOM_RIGHT) {
-				this.getMainElement().style.left = null;
+				this.getMainElement().style.left = '';
 				this.getMainElement().style.right = `-${contentWidth}px`;
 			}
 		}
@@ -129,18 +128,18 @@ export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoS
 		// position Y
 		if (this.config.position === DrawerPositions.TOP_LEFT || this.config.position === DrawerPositions.TOP_RIGHT) {
 			this.getMainElement().style.top = this.config.marginY + "px";
-			this.getMainElement().style.bottom = null;
+			this.getMainElement().style.bottom = '';
 		} else if (this.config.position === DrawerPositions.BOTTOM_LEFT || this.config.position === DrawerPositions.BOTTOM_RIGHT) {
-			this.getMainElement().style.top = null;
+			this.getMainElement().style.top = '';
 			this.getMainElement().style.bottom = this.config.marginY + "px";
 		}
 		// height
 		if (this.config.height === -1) {
-			this.getMainElement().style.height = null;
+			this.getMainElement().style.height = '';
 			this.getMainElement().style.maxHeight = (containerHeight - 2 * this.config.marginY) + "px";
 		} else if (this.config.height === 0) {
 			this.getMainElement().style.height = (containerHeight - 2 * this.config.marginY) + "px";
-			this.getMainElement().style.maxHeight = null;
+			this.getMainElement().style.maxHeight = '';
 		} else {
 			this.getMainElement().style.height = this.config.height + "px";
 			this.getMainElement().style.maxHeight = (containerHeight - 2 * this.config.marginY) + "px";
@@ -183,12 +182,12 @@ export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoS
 		this.updateFloatingPosition();
 	}
 
-	setBackgroundColor(backgroundColor: string) {
-		this.getMainElement().style.backgroundColor = backgroundColor;
+	setBackgroundColor(backgroundColor: string | null) {
+		this.getMainElement().style.backgroundColor = backgroundColor ?? '';
 	}
 
-	setExpanderHandleColor(expanderHandleColor: string) {
-		this.$expanderHandle.style.backgroundColor = expanderHandleColor;
+	setExpanderHandleColor(expanderHandleColor: string | null) {
+		this.$expanderHandle.style.backgroundColor = expanderHandleColor ?? '';
 	}
 }
 
