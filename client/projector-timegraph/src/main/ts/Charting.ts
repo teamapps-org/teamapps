@@ -17,9 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {LineChartCurveType, LineChartCurveTypes} from "./generated";
+import {LineChartCurveTypes} from "./generated";
 import * as d3 from "d3";
-import {BaseType, Selection} from "d3";
+import {type BaseType, type Selection} from "d3";
 
 export const CurveTypeToCurveFactory = {
 	[LineChartCurveTypes.LINEAR]: d3.curveLinear,

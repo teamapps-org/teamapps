@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DtoGraphData, DtoIncidentGraphData, DtoIncidentGraphDataPoint, DtoLineGraphData, DtoLineGraphDataPoint} from "./generated";
+import {type DtoGraphData, type DtoIncidentGraphData, type DtoIncidentGraphDataPoint, type DtoLineGraphData, type DtoLineGraphDataPoint} from "./generated";
 import {IntervalManager} from "./IntervalManager";
 
 

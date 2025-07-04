@@ -17,15 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Area, Line} from "d3";
+import type {Area, Line} from "d3";
 import * as d3 from "d3";
-import {ScaleLinear} from "d3";
-import {CurveTypeToCurveFactory, DataPoint, SVGSelection} from "./Charting";
+import {type ScaleLinear} from "d3";
+import {CurveTypeToCurveFactory, type DataPoint, type SVGSelection} from "./Charting";
 import {AbstractGraph} from "./AbstractGraph";
 import {LineGraphDataStore} from "./DataStore";
-import {DtoLineGraph, DtoLineGraphData, DtoLineGraphDataPoint} from "./generated";
+import {type DtoLineGraph, type DtoLineGraphData, type DtoLineGraphDataPoint} from "./generated";
 import {isVisibleColor} from "./util";
-import {generateUUID} from "projector-client-object-api";
 
 export class LineGraph extends AbstractGraph<DtoLineGraph, DtoLineGraphData> {
 
@@ -43,7 +42,7 @@ export class LineGraph extends AbstractGraph<DtoLineGraph, DtoLineGraphData> {
 
 	constructor(
 		config: DtoLineGraph,
-		private dropShadowFilterId: string
+		_dropShadowFilterId: string
 	) {
 		super(config);
 		this.$main.classed("line-graph", true);
@@ -101,14 +100,14 @@ export class LineGraph extends AbstractGraph<DtoLineGraph, DtoLineGraphData> {
 			.data([this.config.lineColorScaleMax, this.config.lineColorScaleMin])
 			.join("stop")
 			.attr("stop-color", d => d)
-			.attr("offset", (datum, index) => index);
+			.attr("offset", (_datum, index) => index);
 		this.$defs.select(".area-gradient")
 			.attr("y2", this.scaleY.range()[0])
 			.selectAll("stop")
 			.data([this.config.areaColorScaleMax, this.config.areaColorScaleMin])
 			.join("stop")
 			.attr("stop-color", d => d)
-			.attr("offset", (datum, index) => index);
+			.attr("offset", (_datum, index) => index);
 
 		let dataPoints = this.dataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints;
 		this.line

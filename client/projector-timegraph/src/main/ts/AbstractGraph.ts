@@ -17,21 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {SVGSelection} from "./Charting";
+import {type SVGSelection} from "./Charting";
 import * as d3 from "d3";
-import {NamespaceLocalObject} from "d3";
-import {Graph} from "./Graph";
+import {type NamespaceLocalObject} from "d3";
+import {type Graph} from "./Graph";
 import {maxTickIntegerPartLength, YAxis} from "./YAxis";
 import {
-	DtoGraph,
-	DtoGraphData,
-	LineChartYScaleZoomMode,
+	type DtoGraph,
+	type DtoGraphData,
 	LineChartYScaleZoomModes,
-	ScaleType,
 	ScaleTypes
 } from "./generated";
 import {generateUUID} from "projector-client-object-api";
-import {ScaleContinuousNumeric, ScaleTime} from "d3";
+import {type ScaleContinuousNumeric, type ScaleTime} from "d3";
 import * as ulp from "ulp";
 
 export abstract class AbstractGraph<C extends DtoGraph = DtoGraph, D extends DtoGraphData = DtoGraphData>

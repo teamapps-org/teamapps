@@ -68,14 +68,14 @@ class DtoTimeChartZoomLevel {
 // ==== GRAPHS
 
 interface DtoGraph {
-	String id;
+	required String id;
 	boolean yAxisVisible;
-	String yAxisColor;
-	String yAxisLabel;
+	required String yAxisColor;
+	required String yAxisLabel;
     int maxTickDigits;
-	ScaleType yScaleType;
-	DtoLongInterval intervalY;
-	LineChartYScaleZoomMode yScaleZoomMode;
+	required ScaleType yScaleType;
+	required DtoLongInterval intervalY;
+	required LineChartYScaleZoomMode yScaleZoomMode;
 	boolean yZeroLineVisible;
 }
 

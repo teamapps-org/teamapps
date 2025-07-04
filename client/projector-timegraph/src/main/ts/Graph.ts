@@ -17,12 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {ScaleTime} from "d3";
-import {SVGSelection} from "./Charting";
+import {type ScaleTime} from "d3";
+import {type SVGSelection} from "./Charting";
 import {YAxis} from "./YAxis";
-import {DtoGraphData} from "./generated/DtoGraphData";
-import {DtoLongInterval} from "./generated/DtoLongInterval";
-import {DtoGraph} from "./generated/DtoGraph";
+import {type DtoGraphData} from "./generated/DtoGraphData";
+import {type DtoGraph} from "./generated/DtoGraph";
 
 export interface Graph<C extends DtoGraph = DtoGraph, D extends DtoGraphData = DtoGraphData> {
 

@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {SVGSelection} from "./Charting";
+import {type SVGSelection} from "./Charting";
 import {TimeGraph} from "./TimeGraph";
 import * as d3 from 'd3';
-import {ScaleTime} from 'd3';
-import {GraphContext} from "./GraphContext";
+import {type ScaleTime} from 'd3';
+import {type GraphContext} from "./GraphContext";
 import {AbstractGraph} from "./AbstractGraph";
-import {DtoGraphGroup, DtoGraphGroupData, LineChartYScaleZoomModes} from "./generated";
+import {type DtoGraphGroup, type DtoGraphGroupData, LineChartYScaleZoomModes} from "./generated";
 import {IntervalManager} from "./IntervalManager";
 
 export class GraphGroup extends AbstractGraph<DtoGraphGroup, DtoGraphGroupData> {
@@ -33,7 +33,7 @@ export class GraphGroup extends AbstractGraph<DtoGraphGroup, DtoGraphGroupData> 
 
 	constructor(
 		config: DtoGraphGroup,
-		private dropShadowFilterId: string,
+		dropShadowFilterId: string,
 		graphContext: GraphContext
 	) {
 		super(config);

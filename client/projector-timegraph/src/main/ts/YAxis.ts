@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Axis, NamespaceLocalObject} from "d3";
-import {SVGSelection} from "./Charting";
+import {type Axis, type NamespaceLocalObject} from "d3";
+import {type SVGSelection} from "./Charting";
 import {ScaleContinuousNumeric, ScaleLogarithmic} from "d3-scale";
 
 import * as d3 from "d3";
@@ -41,7 +41,10 @@ export class YAxis {
 	private axis: Axis<number | { valueOf(): number }>;
 	private scale: ScaleContinuousNumeric<number, number>;
 
-	constructor(private config: YAxisConfig) {
+	private config: YAxisConfig;
+
+	constructor(config: YAxisConfig) {
+		this.config = config;
 		this.$axis = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement)
 			.classed("axis", true)
 			.classed("y-axis", true);

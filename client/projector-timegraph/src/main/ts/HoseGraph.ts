@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Line} from "d3";
+import {type Line} from "d3";
 import * as d3 from "d3";
-import {CurveTypeToCurveFactory, DataPoint, SVGSelection} from "./Charting";
+import {CurveTypeToCurveFactory, type DataPoint, type SVGSelection} from "./Charting";
 import {AbstractGraph} from "./AbstractGraph";
 import {LineGraphDataStore} from "./DataStore";
 import {D3Area2} from "./D3Area2";
-import {DtoHoseGraph, DtoHoseGraphData, DtoLineGraphDataPoint} from "./generated";
+import {type DtoHoseGraph, type DtoHoseGraphData, type DtoLineGraphDataPoint} from "./generated";
 import {isVisibleColor} from "./util";
 import {IntervalManager} from "./IntervalManager";
 
@@ -52,7 +52,7 @@ export class HoseGraph extends AbstractGraph<DtoHoseGraph, DtoHoseGraphData> {
 
 	constructor(
 		config: DtoHoseGraph,
-		private dropShadowFilterId: string
+		_dropShadowFilterId: string
 	) {
 		super(config);
 		this.$main.classed("hose-graph", true);
@@ -180,7 +180,7 @@ export class HoseGraph extends AbstractGraph<DtoHoseGraph, DtoHoseGraphData> {
 			.x(d => {
 				return this.scaleX(d.x)
 			})
-			.y((d, index) => {
+			.y((d) => {
 				return this.scaleY(d.y)
 			});
 		this.$area

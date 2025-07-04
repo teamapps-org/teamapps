@@ -19,18 +19,18 @@
  */
 
 import * as d3 from "d3";
-import {Axis, BrushBehavior, ScaleTime, Selection, ZoomBehavior, ZoomedElementBaseType} from "d3";
+import {type Axis, type BrushBehavior, type ScaleTime, type Selection, type ZoomBehavior, type ZoomedElementBaseType} from "d3";
 import {LineGraph} from "./LineGraph";
 import {HoseGraph} from "./HoseGraph";
 import {GraphGroup} from "./GraphGroup";
 import {DateTime} from 'luxon';
 import {scaleZoned} from "d3-luxon";
-import {SVGGSelection, SVGSelection} from "./Charting";
-import {Graph} from "./Graph";
+import {type SVGGSelection, type SVGSelection} from "./Charting";
+import {type Graph} from "./Graph";
 import {IncidentGraph} from "./IncidentGraph";
 import {TimeGraphPopper} from "./TimeGraphPopper";
 import {AbstractGraph} from "./AbstractGraph";
-import {GraphContext, PopperHandle} from "./GraphContext";
+import {type GraphContext, type PopperHandle} from "./GraphContext";
 import {
 	AbstractComponent,
 	bind,
@@ -40,19 +40,19 @@ import {
 	generateUUID,
 	parseHtml,
 	ProjectorEvent,
-	ServerObjectChannel, throttledMethod
+	type ServerObjectChannel, throttledMethod
 } from "projector-client-object-api";
 import {
-	DtoGraph,
-	DtoGraphData, DtoGraphGroup, DtoHoseGraph, DtoLineGraph,
-	DtoLongInterval,
-	DtoTimeChartZoomLevel,
-	DtoTimeGraph,
-	DtoTimeGraph_IntervalSelectedEvent,
-	DtoTimeGraph_ZoomedEvent,
-	DtoTimeGraphCommandHandler,
-	DtoTimeGraphEventSource,
-	LineChartMouseScrollZoomPanMode, LineChartMouseScrollZoomPanModes
+	type DtoGraph,
+	type DtoGraphData, type DtoHoseGraph, type DtoLineGraph,
+	type DtoLongInterval,
+	type DtoTimeChartZoomLevel,
+	type DtoTimeGraph,
+	type DtoTimeGraph_IntervalSelectedEvent,
+	type DtoTimeGraph_ZoomedEvent,
+	type DtoTimeGraphCommandHandler,
+	type DtoTimeGraphEventSource,
+	type LineChartMouseScrollZoomPanMode, LineChartMouseScrollZoomPanModes
 } from "./generated";
 
 export const yTickFormat = d3.format("-,.2s");
@@ -111,7 +111,7 @@ export class TimeGraph extends AbstractComponent<DtoTimeGraph> implements DtoTim
 	}
 
 	constructor(config: DtoTimeGraph, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 
 		const me = this;
 		this.graphContext = {

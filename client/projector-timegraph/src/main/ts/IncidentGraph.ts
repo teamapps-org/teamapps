@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import * as d3 from "d3";
-import {GraphContext, PopperHandle} from "./GraphContext";
+import {type GraphContext, type PopperHandle} from "./GraphContext";
 import {AbstractGraph} from "./AbstractGraph";
 import {IncidentGraphDataStore} from "./DataStore";
-import {DtoIncidentGraph, DtoIncidentGraphData} from "./generated";
+import {type DtoIncidentGraph, type DtoIncidentGraphData} from "./generated";
 
 export class IncidentGraph extends AbstractGraph<DtoIncidentGraph, DtoIncidentGraphData> {
 
@@ -30,7 +30,7 @@ export class IncidentGraph extends AbstractGraph<DtoIncidentGraph, DtoIncidentGr
 
 	constructor(
 		config: DtoIncidentGraph,
-		private graphContext: GraphContext
+		graphContext: GraphContext
 	) {
 		super(config);
 		this.$main.classed("incident-graph", true);
@@ -60,12 +60,12 @@ export class IncidentGraph extends AbstractGraph<DtoIncidentGraph, DtoIncidentGr
 	doRedraw() {
 		// Three function that change the tooltip when user hover / move / leave a cell
 		let that = this;
-		function mouseenter(this: SVGElement, event: any, d: any) {
+		function mouseenter(this: SVGElement, _event: any, d: any) {
 			d3.select(this)
 				.style("stroke-width", "2");
 			that.popperHandle.update(this, d.tooltipHtml);
 		}
-		function mouseleave (this: SVGElement, event: any, d: any) {
+		function mouseleave (this: SVGElement, _event: any, _d: any) {
 			d3.select(this)
 				.style("stroke-width", "1");
 			that.popperHandle.hide();
@@ -99,7 +99,7 @@ export class IncidentGraph extends AbstractGraph<DtoIncidentGraph, DtoIncidentGr
 			.attr("y", d => this.scaleY(d.y) - (thickness / 2))
 			.attr("rx", (thickness / 2))
 			.attr("ry", (thickness / 2))
-			.attr("height", d => thickness)
+			.attr("height", _ => thickness)
 			.on("mouseenter", mouseenter)
 			.on("mouseleave", mouseleave);
 

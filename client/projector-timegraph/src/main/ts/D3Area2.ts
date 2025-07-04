@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {CurveFactory, CurveGenerator, curveLinear, line} from "d3";
-import {path, Path} from "d3";
+import {type CurveFactory, type CurveGenerator, curveLinear, line} from "d3";
+import {path, type Path} from "d3";
 
 type DatumToValue<D, V> = (d: D, i: number, dArr: D[]) => V;
 

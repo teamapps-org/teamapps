@@ -17,15 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {computePosition, detectOverflow, flip, hide, MiddlewareState, shift, size} from "@floating-ui/dom";
-import {
-	animateCSS,
-	EntranceAnimation,
-	EntranceAnimations,
-	ExitAnimation,
-	ExitAnimations,
-	parseHtml
-} from "projector-client-object-api";
+import {computePosition, flip, hide} from "@floating-ui/dom";
+import {animateCSS, EntranceAnimations, ExitAnimations, parseHtml} from "projector-client-object-api";
 
 export class TimeGraphPopper {
 
@@ -42,7 +35,7 @@ export class TimeGraphPopper {
 		</div>`);
 		document.body.appendChild(this.$popperElement);
 		this.$contentContainer = this.$popperElement.querySelector<HTMLElement>(":scope .ta-tooltip-inner");
-		this.$popperElement.addEventListener("pointerenter", ev => this.setVisible(false, false));
+		this.$popperElement.addEventListener("pointerenter", _ => this.setVisible(false, false));
 	}
 
 	public update(referenceElement: Element, content: Element|string) {
