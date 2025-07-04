@@ -19,14 +19,22 @@
  */
 
 import "mediaelement/full";
-import {AbstractComponent, parseHtml, removeClassesByFunction, ServerObjectChannel, ProjectorEvent} from "projector-client-object-api";
 import {
-	DtoVideoPlayer,
-	DtoVideoPlayer_EndedEvent,
-	DtoVideoPlayer_ErrorLoadingEvent,
-	DtoVideoPlayer_PlayerProgressEvent,
-	DtoVideoPlayerCommandHandler,
-	DtoVideoPlayerEventSource, PreloadMode, PosterImageSize
+	AbstractComponent,
+	parseHtml,
+	ProjectorEvent,
+	removeClassesByFunction,
+	type ServerObjectChannel
+} from "projector-client-object-api";
+import {
+	type DtoVideoPlayer,
+	type DtoVideoPlayer_EndedEvent,
+	type DtoVideoPlayer_ErrorLoadingEvent,
+	type DtoVideoPlayer_PlayerProgressEvent,
+	type DtoVideoPlayerCommandHandler,
+	type DtoVideoPlayerEventSource,
+	type PosterImageSize,
+	type PreloadMode
 } from "./generated";
 
 
@@ -40,27 +48,26 @@ export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements Dt
 	private $video: HTMLVideoElement;
 	private mediaPlayer: any;
 	private playerInitialized: boolean = false;
-	private jumpToPositionWhenReady: number = 0;
 
-	private destroyed: boolean;
-	private autoplay: boolean;
+	private destroyed: boolean = false;
+	private autoplay: boolean = false;
 	private playState: "initial" | "playing" | "paused" = "initial";
 
 	constructor(config: DtoVideoPlayer, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 
 		this.$componentWrapper = parseHtml(
 			`<div class="VideoPlayer ${config.url == null ? "not-playable" : ""}">
                     <video src="${config.url || ""}" width="100%" height="100%" preload="${(config.preloadMode)}" ${config.autoplay ? "autoplay" : ""}></video>
                 </div>`);
-		this.$video = this.$componentWrapper.querySelector(":scope video");
+		this.$video = this.$componentWrapper.querySelector(":scope video")!;
 		this.setControlsVisible(config.controlsVisible)
 		this.setPosterImageUrl(config.posterImageUrl);
 		this.setPosterImageSize(config.posterImageSize);
 
 		// TODO this is the point where the element was inserted to the DOM
 
-		this.mediaPlayer = new mejs.MediaElementPlayer(this.$componentWrapper.querySelector<HTMLElement>(':scope video'), {
+		this.mediaPlayer = new mejs.MediaElementPlayer(this.$componentWrapper.querySelector<HTMLElement>(':scope video')!, {
 			enablePluginDebug: false,
 			plugins: ['fasterslower'],
 			type: '',
@@ -69,13 +76,13 @@ export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements Dt
 			timerRate: 250,
 			success: (mediaElement: HTMLMediaElement) => {
 				this.onPlayerInitialized();
-				mediaElement.addEventListener('play', (e) => {
+				mediaElement.addEventListener('play', () => {
 					this.onPlayerProgress.fire({
 						positionInSeconds: 0
 					});
 				}, false);
 				let lastPlayTime = 0;
-				mediaElement.addEventListener('timeupdate', (e) => {
+				mediaElement.addEventListener('timeupdate', () => {
 					let currentPlayTime = mediaElement.currentTime;
 					if (lastPlayTime < currentPlayTime && lastPlayTime % config.playerProgressIntervalSeconds > currentPlayTime % config.playerProgressIntervalSeconds) {
 						this.onPlayerProgress.fire({
@@ -84,7 +91,7 @@ export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements Dt
 					}
 					lastPlayTime = currentPlayTime;
 				}, false);
-				mediaElement.addEventListener('ended', (e) => {
+				mediaElement.addEventListener('ended', () => {
 					this.onEnded.fire({});
 				});
 			},
@@ -124,7 +131,7 @@ export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements Dt
 	}
     setBackgroundColor(backgroundColor: string) {
 		this.$componentWrapper.style.backgroundColor = backgroundColor;
-		this.$componentWrapper.querySelector<HTMLElement>(':scope .mejs__container').style.backgroundColor = backgroundColor;
+		this.$componentWrapper.querySelector<HTMLElement>(':scope .mejs__container')!.style.backgroundColor = backgroundColor;
     }
 
 	public doGetMainElement(): HTMLElement {
@@ -153,8 +160,6 @@ export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements Dt
 	public jumpTo(seconds: number) {
 		if (this.playerInitialized) {
 			this.mediaPlayer.setCurrentTime(seconds);
-		} else {
-			this.jumpToPositionWhenReady = seconds;
 		}
 	}
 
@@ -172,7 +177,7 @@ export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements Dt
 			this.mediaPlayer.pause();
 			this.mediaPlayer.setSrc("");
 			this.mediaPlayer.load();
-		} catch (e) {
+		} catch (e: any) {
 			console.error("Error while destroying video player: " + e.toString());
 		}
 	}
@@ -196,9 +201,9 @@ export class VideoPlayer extends AbstractComponent<DtoVideoPlayer> implements Dt
 	}
 
 	setUrl(url: string): void {
-		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-error").parentElement.classList.add("hidden");
-		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__poster").classList.remove("hidden");
-		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-play").style.display = "flex";
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-error")!.parentElement!.classList.add("hidden");
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__poster")!.classList.remove("hidden");
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-play")!.style.display = "flex";
 		this.mediaPlayer.pause();
 		if (url == null) {
 			this.pause();

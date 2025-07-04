@@ -6,14 +6,14 @@ import org.teamapps.projector.component.DtoComponent;
  * May also be used as audio player...
  */
 class DtoVideoPlayer extends DtoComponent {
-	mutable String url; //the url of the video
+	required mutable String url; //the url of the video
 	mutable boolean autoplay;
 	mutable boolean controlsVisible;
-	mutable String posterImageUrl;
-	mutable PosterImageSize posterImageSize;
+	required mutable String posterImageUrl;
+	required mutable PosterImageSize posterImageSize;
 	mutable int playerProgressIntervalSeconds; // if 0, then send NO events
-	mutable String backgroundColor;
-	mutable PreloadMode preloadMode;
+	required mutable String backgroundColor;
+	required mutable PreloadMode preloadMode;
 
 	command play();
 	command pause();
