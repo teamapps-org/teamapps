@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import {Panel, WindowButtonTypes} from "projector-client-core-components";
-import {DtoPanel_WindowButtonClickedEvent, WindowButtonType} from "projector-client-core-components";
-import {bind, Component, ProjectorEvent} from "projector-client-object-api";
+import {type DtoPanel_WindowButtonClickedEvent, type WindowButtonType} from "projector-client-core-components";
+import {bind, type Component, ProjectorEvent} from "projector-client-object-api";
 import {TabPanelItem} from "./TabPanelItem";
-import {ViewInfo} from "./ViewInfo";
+import {type ViewInfo} from "./ViewInfo";
 
 export class View implements ViewInfo {
 
@@ -30,13 +30,31 @@ export class View implements ViewInfo {
 	private _parent: TabPanelItem;
 	private _component: Component;
 
-	constructor(public viewName: string,
-	            public tabIcon: string,
-	            public tabCaption: string,
-	            public tabCloseable: boolean,
-	            public lazyLoading: boolean,
-	            public visible: boolean,
+	public viewName: string;
+
+	public tabIcon: string | null;
+
+	public tabCaption: string | null;
+
+	public tabCloseable: boolean;
+
+	public lazyLoading: boolean;
+
+	public visible: boolean;
+
+	constructor(viewName: string,
+	            tabIcon: string | null,
+	            tabCaption: string | null,
+	            tabCloseable: boolean,
+	            lazyLoading: boolean,
+	            visible: boolean,
 	            component: Component) {
+		this.viewName = viewName;
+		this.tabIcon = tabIcon;
+		this.tabCaption = tabCaption;
+		this.tabCloseable = tabCloseable;
+		this.lazyLoading = lazyLoading;
+		this.visible = visible;
 		this.component = component;
 	}
 

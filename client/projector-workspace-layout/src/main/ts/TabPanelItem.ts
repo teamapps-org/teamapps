@@ -17,18 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Component, noOpServerObjectChannel, parseHtml, ProjectorEvent} from "projector-client-object-api";
+import {type Component, noOpServerObjectChannel, parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {
-	TabPanelTabStyle,
+	type DtoTabPanel,
 	TabPanel,
-	WindowButtonType,
-	DtoTabPanel,
-	WindowButtonTypes, TabPanelTabStyles
+	TabPanelTabStyles,
+	type WindowButtonType,
+	WindowButtonTypes
 } from "projector-client-core-components";
-import {ItemTreeItem} from "./ItemTree";
+import {type ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
-import {ViewGroupPanelState, ViewGroupPanelStates} from "./generated";
+import {type ViewGroupPanelState, ViewGroupPanelStates} from "./generated";
 
 class MinimizableTabPanel extends TabPanel {
 

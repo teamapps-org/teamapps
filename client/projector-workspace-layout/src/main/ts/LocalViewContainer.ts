@@ -22,27 +22,29 @@ import {
     Panel,
     SplitDirections,
     SplitSizePolicies,
-    SplitSizePolicy,
+    type SplitSizePolicy,
     Toolbar
 } from "projector-client-core-components";
-import {DtoWorkspaceLayoutDndDataTransfer, WorkSpaceLayout} from "./WorkSpaceLayout";
-import {bind, Component, generateUUID, parseHtml} from "projector-client-object-api";
+import {type DtoWorkspaceLayoutDndDataTransfer, WorkSpaceLayout} from "./WorkSpaceLayout";
+import {bind, type Component, generateUUID, parseHtml} from "projector-client-object-api";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
-import {ItemTree, ItemTreeItem} from "./ItemTree";
+import {ItemTree, type ItemTreeItem} from "./ItemTree";
 import {TabPanelItem} from "./TabPanelItem";
-import {ViewContainer, ViewContainerListener} from "./ViewContainer";
-import {RelativeDropPosition} from "./RelativeDropPosition";
-import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
+import {type ViewContainer, type ViewContainerListener} from "./ViewContainer";
+import {type RelativeDropPosition, RelativeDropPositions} from "./RelativeDropPosition";
+import {type WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {computePosition, size} from "@floating-ui/dom";
 import {
-    DtoRelativeWorkSpaceViewPosition,
-    ViewGroupPanelState,
-    DtoWorkSpaceLayoutItem,
-    DtoWorkSpaceLayoutSplitItem,
-    DtoWorkSpaceLayoutView,
-    DtoWorkSpaceLayoutViewGroupItem, DtoRelativeWorkSpaceViewPositions, ViewGroupPanelStates
+    type DtoRelativeWorkSpaceViewPosition,
+    DtoRelativeWorkSpaceViewPositions,
+    type DtoWorkSpaceLayoutItem,
+    type DtoWorkSpaceLayoutSplitItem,
+    type DtoWorkSpaceLayoutView,
+    type DtoWorkSpaceLayoutViewGroupItem,
+    type ViewGroupPanelState,
+    ViewGroupPanelStates
 } from "./generated";
 import {MultiProgressDisplay} from "projector-progress-display";
 
@@ -70,12 +72,21 @@ export class LocalViewContainer implements ViewContainer {
 
     public readonly uuid = generateUUID();
 
-    constructor(private workSpaceLayout: WorkSpaceLayout,
-                public readonly windowId: string,
+    private workSpaceLayout: WorkSpaceLayout;
+
+    public readonly windowId: string;
+
+    private listener: ViewContainerListener;
+
+    constructor(workSpaceLayout: WorkSpaceLayout,
+                windowId: string,
                 viewConfigs: DtoWorkSpaceLayoutView[],
                 initialLayout: DtoWorkSpaceLayoutItem,
-                private listener: ViewContainerListener,
+                listener: ViewContainerListener,
                 multiProgressDisplay: MultiProgressDisplay) {
+        this.workSpaceLayout = workSpaceLayout;
+        this.windowId = windowId;
+        this.listener = listener;
         this.$mainDiv = parseHtml(`<div class="WorkSpaceLayout">
     <div class="toolbar-container"></div>
     <div class="content-container-wrapper">
@@ -111,8 +122,6 @@ export class LocalViewContainer implements ViewContainer {
         }
         this.fireViewNeedsRefreshForAllEmptyVisibleLazyTabs();
 
-        let srcTabPanel = null;
-
         this.$mainDiv.addEventListener('dragstart', (e) => {
             this.lastDndEventType = 'dragstart';
 
@@ -124,7 +133,6 @@ export class LocalViewContainer implements ViewContainer {
                 let viewName = this.getViewNameForDragTarget(target);
                 if (viewName) {
                     let view = this.itemTree.getViewByName(viewName);
-                    srcTabPanel = matchingTabPanel;
                     try {
                         let $tabButton = matchingTabPanel.component.getMainElement().querySelector<HTMLElement>(`:scope .tab-button[data-tab-name=${viewName}]`);
                         if ($tabButton) {
@@ -151,7 +159,7 @@ export class LocalViewContainer implements ViewContainer {
                 }
             }
         });
-        this.$mainDiv.addEventListener('dragenter', (e) => {
+        this.$mainDiv.addEventListener('dragenter', (_e) => {
             this.lastDndEventType = 'dragenter';
         });
         this.$mainDiv.addEventListener('dragover', (e) => {
@@ -169,30 +177,28 @@ export class LocalViewContainer implements ViewContainer {
 
                 if (dropPosition.tabPanel) {
                     let $tabPanelContentWrapper = dropPosition.tabPanel.component.getMainElement().querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
-                    let tabPanelContentRect = $tabPanelContentWrapper.getBoundingClientRect();
 
-                    if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
+                    if (dropPosition.relativeDropPosition === RelativeDropPositions.TAB) {
                         this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "top", 1);
-                    } else if (dropPosition.relativeDropPosition === RelativeDropPosition.LEFT) {
+                    } else if (dropPosition.relativeDropPosition === RelativeDropPositions.LEFT) {
                         this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "left", .5);
-                    } else if (dropPosition.relativeDropPosition === RelativeDropPosition.RIGHT) {
+                    } else if (dropPosition.relativeDropPosition === RelativeDropPositions.RIGHT) {
                         this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "right", .5);
-                    } else if (dropPosition.relativeDropPosition === RelativeDropPosition.TOP) {
+                    } else if (dropPosition.relativeDropPosition === RelativeDropPositions.TOP) {
                         this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "top", .5);
-                    } else if (dropPosition.relativeDropPosition === RelativeDropPosition.BOTTOM) {
+                    } else if (dropPosition.relativeDropPosition === RelativeDropPositions.BOTTOM) {
                         this.cover($tabPanelContentWrapper, this.$dndActiveRectangle, "bottom", .5);
                     }
                 } else {
                     let $workSpaceLayout = this.$contentContainer;
-                    let workSpaceLayoutRect = $workSpaceLayout.getBoundingClientRect();
 
-                    if (dropPosition.relativeDropPosition === RelativeDropPosition.LEFT) {
+                    if (dropPosition.relativeDropPosition === RelativeDropPositions.LEFT) {
                         this.cover($workSpaceLayout, this.$dndActiveRectangle, "left", .33);
-                    } else if (dropPosition.relativeDropPosition === RelativeDropPosition.RIGHT) {
+                    } else if (dropPosition.relativeDropPosition === RelativeDropPositions.RIGHT) {
                         this.cover($workSpaceLayout, this.$dndActiveRectangle, "right", .33);
-                    } else if (dropPosition.relativeDropPosition === RelativeDropPosition.TOP) {
+                    } else if (dropPosition.relativeDropPosition === RelativeDropPositions.TOP) {
                         this.cover($workSpaceLayout, this.$dndActiveRectangle, "top", .33);
-                    } else if (dropPosition.relativeDropPosition === RelativeDropPosition.BOTTOM) {
+                    } else if (dropPosition.relativeDropPosition === RelativeDropPositions.BOTTOM) {
                         this.cover($workSpaceLayout, this.$dndActiveRectangle, "bottom", .33);
                     }
                 }
@@ -207,7 +213,7 @@ export class LocalViewContainer implements ViewContainer {
             }
             return false;
         });
-        this.$mainDiv.addEventListener('dragleave', (e) => {
+        this.$mainDiv.addEventListener('dragleave', (_e) => {
             this.lastDndEventType = 'dragleave';
             this.$dndActiveRectangle.classList.add("hidden");
         });
@@ -223,15 +229,15 @@ export class LocalViewContainer implements ViewContainer {
                     try {
                         if (dataTransfer.sourceWindowId === this.windowId) {
                             if (dropPosition.tabPanel) {
-                                if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
+                                if (dropPosition.relativeDropPosition === RelativeDropPositions.TAB) {
                                     this.moveViewToTab(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName);
                                 } else {
-                                    let uiRelativeWorkSpaceViewPosition = DtoRelativeWorkSpaceViewPositions[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof DtoRelativeWorkSpaceViewPositions];
+                                    let uiRelativeWorkSpaceViewPosition = DtoRelativeWorkSpaceViewPositions[RelativeDropPositions[dropPosition.relativeDropPosition] as keyof typeof DtoRelativeWorkSpaceViewPositions];
                                     this.moveViewRelativeToOtherView(dataTransfer.viewName, dropPosition.tabPanel.tabs[0].viewName, uiRelativeWorkSpaceViewPosition, SplitSizePolicies.RELATIVE, .5);
                                 }
                             } else {
-                                let uiRelativeWorkSpaceViewPosition = DtoRelativeWorkSpaceViewPositions[RelativeDropPosition[dropPosition.relativeDropPosition] as keyof typeof DtoRelativeWorkSpaceViewPositions];
-                                let isFirst = dropPosition.relativeDropPosition === RelativeDropPosition.LEFT || dropPosition.relativeDropPosition === RelativeDropPosition.TOP;
+                                let uiRelativeWorkSpaceViewPosition = DtoRelativeWorkSpaceViewPositions[RelativeDropPositions[dropPosition.relativeDropPosition] as keyof typeof DtoRelativeWorkSpaceViewPositions];
+                                let isFirst = dropPosition.relativeDropPosition === RelativeDropPositions.LEFT || dropPosition.relativeDropPosition === RelativeDropPositions.TOP;
                                 this.moveViewToTopLevel(dataTransfer.viewName, this.windowId, uiRelativeWorkSpaceViewPosition, SplitSizePolicies.RELATIVE, isFirst ? .3 : .7);
                             }
                         } else {
@@ -260,8 +266,6 @@ export class LocalViewContainer implements ViewContainer {
         this.$mainDiv.addEventListener('dragend', (e: DragEvent) => {
             this.$dndActiveRectangle.classList.add("hidden");
             const dropEffect = e.dataTransfer.dropEffect;
-            const target = e.target as HTMLElement;
-            const viewName = this.getViewNameForDragTarget(target);
             const dropSuccessful = dropEffect === 'move';
             let droppedOutsideWorkSpaceLayout = this.lastDndEventType === 'dragleave';
             if (droppedOutsideWorkSpaceLayout && !dropSuccessful) {
@@ -286,6 +290,7 @@ export class LocalViewContainer implements ViewContainer {
             strategy: 'absolute',
             middleware: [
                 size({
+                    // @ts-ignore
                     apply: ({rects, availableHeight, placement}) => {
                         Object.assign($floating.style, {
                             width: `${topOrBottom ? rects.reference.width : rects.reference.width * coverSize}px`,
@@ -326,6 +331,7 @@ export class LocalViewContainer implements ViewContainer {
         return this.itemTree.viewNames;
     }
 
+    // @ts-ignore
     private createSubWindow(viewName: string | null) {
         let childWindowId = generateUUID();
         let childWindow = window.open("index.html" + (location.search ? location.search + "&" : "?") + "teamAppsContext=DtoWorkSpaceLayoutChildWindowTeamAppsUiContext", childWindowId, "height=600,width=800,location=0");
@@ -368,36 +374,35 @@ export class LocalViewContainer implements ViewContainer {
         let workSpaceLayoutRect = this.$contentContainer.getBoundingClientRect();
 
         if (e.pageY - workSpaceLayoutRect.top < 12) {
-            return {relativeDropPosition: RelativeDropPosition.TOP};
+            return {relativeDropPosition: RelativeDropPositions.TOP};
         } else if ((workSpaceLayoutRect.left + workSpaceLayoutRect.width) - e.pageX < 12) {
-            return {relativeDropPosition: RelativeDropPosition.RIGHT};
+            return {relativeDropPosition: RelativeDropPositions.RIGHT};
         } else if ((workSpaceLayoutRect.top + workSpaceLayoutRect.height) - e.pageY < 12) {
-            return {relativeDropPosition: RelativeDropPosition.BOTTOM};
+            return {relativeDropPosition: RelativeDropPositions.BOTTOM};
         } else if (e.pageX - workSpaceLayoutRect.left < 12) {
-            return {relativeDropPosition: RelativeDropPosition.LEFT};
+            return {relativeDropPosition: RelativeDropPositions.LEFT};
         }
 
         const matchingTabPanel = this.findParentTabPanel(e.target as HTMLElement);
 
         if (matchingTabPanel != null) {
-            let view = matchingTabPanel.tabs[0];
             let tabPanelContentWrapper = matchingTabPanel.component.getMainElement().querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
             let tabPanelContentRect = tabPanelContentWrapper.getBoundingClientRect();
             const relativeEventX = (e.pageX - tabPanelContentRect.left) / tabPanelContentRect.width;
             const relativeEventY = (e.pageY - tabPanelContentRect.top) / tabPanelContentRect.height;
 
             if (relativeEventY < 0 || e.pageY - tabPanelContentRect.top < 30) {
-                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPosition.TAB};
+                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPositions.TAB};
             } else if (relativeEventX > 0.2 && relativeEventX < 0.8 && relativeEventY > 0.2 && relativeEventY < 0.8) {
-                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPosition.TAB};
+                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPositions.TAB};
             } else if (relativeEventX < 0.5 && relativeEventY > relativeEventX && (1 - relativeEventY) > relativeEventX) {
-                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPosition.LEFT};
+                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPositions.LEFT};
             } else if (relativeEventX > 0.5 && relativeEventY < relativeEventX && (1 - relativeEventY) < relativeEventX) {
-                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPosition.RIGHT};
+                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPositions.RIGHT};
             } else if (relativeEventY < 0.5 && relativeEventY < relativeEventX && relativeEventY < (1 - relativeEventX)) {
-                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPosition.TOP}
+                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPositions.TOP}
             } else { //if (relativeEventY > 0.5 && relativeEventY > relativeEventX && relativeEventY > (1 - relativeEventX)) {
-                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPosition.BOTTOM}
+                return {tabPanel: matchingTabPanel, relativeDropPosition: RelativeDropPositions.BOTTOM}
             }
         } else {
             return null;
@@ -476,7 +481,7 @@ export class LocalViewContainer implements ViewContainer {
         return new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component as Component);
     }
 
-    addViewToTopLevel(newViewConfig: DtoWorkSpaceLayoutView, windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: SplitSizePolicy, referenceChildSize: number): void {
+    addViewToTopLevel(newViewConfig: DtoWorkSpaceLayoutView, _windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: SplitSizePolicy, referenceChildSize: number): void {
         // windowId can be ignored here, since this method is only invoked if this is the target window!
         let view = this.createView(newViewConfig);
         this.addViewItemToNewPosition(view, null, relativePosition, sizePolicy, referenceChildSize);
@@ -600,7 +605,7 @@ export class LocalViewContainer implements ViewContainer {
         }
     }
 
-    moveViewToTopLevel(viewName: string, windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: SplitSizePolicy, referenceChildSize: number): void {
+    moveViewToTopLevel(viewName: string, _windowId: string, relativePosition: DtoRelativeWorkSpaceViewPosition, sizePolicy: SplitSizePolicy, referenceChildSize: number): void {
         this.moveViewRelativeToOtherView(viewName, null, relativePosition, sizePolicy, referenceChildSize);
     }
 

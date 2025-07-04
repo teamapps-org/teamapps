@@ -19,20 +19,20 @@
  */
 import {
 	ChildCollapsingPolicies,
-	DtoSplitPane,
-	SplitDirection,
+	type DtoSplitPane,
+	type SplitDirection,
 	SplitPane,
-	SplitSizePolicy
+	type SplitSizePolicy
 } from "projector-client-core-components";
-import {Component, noOpServerObjectChannel} from "projector-client-object-api";
-import {ItemTreeItem} from "./ItemTree";
+import {type Component, noOpServerObjectChannel} from "projector-client-object-api";
+import {type ItemTreeItem} from "./ItemTree";
 
 export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 	id: string;
 	parent: SplitPaneItem;
 	component: SplitPane;
-	private _firstChild: ItemTreeItem<Component>;
-	private _lastChild: ItemTreeItem<Component>;
+	private _firstChild: ItemTreeItem<Component> | null = null;
+	private _lastChild: ItemTreeItem<Component> | null = null;
 
 	constructor(id: string, parent: SplitPaneItem, splitDirection: SplitDirection, sizePolicy: SplitSizePolicy, firstChildRelativeSize: number) {
 		this.id = id;
@@ -58,23 +58,23 @@ export class SplitPaneItem implements ItemTreeItem<SplitPane> {
 		return [...firstChildViewNames, ...lastChildViewNames];
 	}
 
-	public set firstChild(firstChild: ItemTreeItem<Component>) {
+	public set firstChild(firstChild: ItemTreeItem<Component> | null) {
 		this._firstChild = firstChild;
 		this._firstChild && (this._firstChild.parent = this);
-		this.component.setFirstChild(firstChild ? firstChild.component : null);
+		this.component.setFirstChild(firstChild?.component ?? null);
 	}
 
-	public set lastChild(lastChild: ItemTreeItem<Component>) {
+	public set lastChild(lastChild: ItemTreeItem<Component> | null) {
 		this._lastChild = lastChild;
 		this._lastChild && (this._lastChild.parent = this);
-		this.component.setLastChild(lastChild ? lastChild.component : null);
+		this.component.setLastChild(lastChild?.component ?? null);
 	}
 
-	public get firstChild(): ItemTreeItem<Component> {
+	public get firstChild() {
 		return this._firstChild;
 	}
 
-	public get lastChild(): ItemTreeItem<Component> {
+	public get lastChild() {
 		return this._lastChild;
 	}
 

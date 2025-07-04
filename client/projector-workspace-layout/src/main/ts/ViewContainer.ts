@@ -17,12 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {ViewInfo} from "./ViewInfo";
-import {RelativeDropPosition} from "./RelativeDropPosition";
-import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {Component} from "projector-client-object-api";
-import {DtoRelativeWorkSpaceViewPosition, ViewGroupPanelState, DtoWorkSpaceLayoutItem, DtoWorkSpaceLayoutView} from "./generated";
-import {SplitSizePolicy} from "projector-client-core-components";
+import {type ViewInfo} from "./ViewInfo";
+import {type RelativeDropPosition} from "./RelativeDropPosition";
+import {type WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
+import {type Component} from "projector-client-object-api";
+import {type DtoRelativeWorkSpaceViewPosition, type ViewGroupPanelState, type DtoWorkSpaceLayoutItem, type DtoWorkSpaceLayoutView} from "./generated";
+import {type SplitSizePolicy} from "projector-client-core-components";
 
 export interface ViewContainer {
 	windowId: string;

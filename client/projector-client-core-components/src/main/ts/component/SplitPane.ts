@@ -167,11 +167,11 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 		return event.pageY ?? (event as any).touches[0].pageY;
 	}
 
-	public setFirstChild(firstChild: Component) {
+	public setFirstChild(firstChild: Component | null) {
 		this._$firstChildContainer.innerHTML = '';
 
 		this._firstChildComponent = firstChild;
-		if (firstChild) {
+		if (firstChild != null) {
 			this._$firstChildContainer.appendChild(firstChild.getMainElement());
 			if (this._firstChildComponent && isEmptyable(this._firstChildComponent)) {
 				this._firstChildComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged);
@@ -183,11 +183,11 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 		this.updateEmptyState();
 	}
 
-	public setLastChild(lastChild: Component) {
+	public setLastChild(lastChild: Component | null) {
 		this._$lastChildContainer.innerHTML = '';
 
 		this._lastChildComponent = lastChild;
-		if (lastChild) {
+		if (lastChild != null) {
 			this._$lastChildContainer.appendChild(lastChild.getMainElement());
 			if (this._lastChildComponent && isEmptyable(this._lastChildComponent)) {
 				this._lastChildComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged);

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {DtoWorkSpaceLayoutItem} from "./generated";
+import {type DtoWorkSpaceLayoutItem} from "./generated";
 
 export const typescriptDeclarationFixConstant = 1;
 

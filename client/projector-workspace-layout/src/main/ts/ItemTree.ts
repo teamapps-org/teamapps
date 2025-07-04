@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Component} from "projector-client-object-api";
+import {type Component} from "projector-client-object-api";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
 import {TabPanelItem} from "./TabPanelItem";
@@ -32,6 +32,7 @@ export interface ItemTreeItem<C extends Component = Component> {
 }
 
 export class ItemTree {
+	// @ts-ignore
 	private _rootItem: ItemTreeItem<Component>;
 	private _viewsByName: { [viewName: string]: View } = {};
 
@@ -73,7 +74,7 @@ export class ItemTree {
 		return view;
 	}
 
-	private doForEachItemAndView(item: ItemTreeItem, itemFun: (item: ItemTreeItem) => void, viewFun: (view: View) => void) {
+	private doForEachItemAndView(item: ItemTreeItem, itemFun: ((item: ItemTreeItem) => void) | null, viewFun: ((view: View) => void) | null) {
 		itemFun && itemFun(item);
 		if (item instanceof SplitPaneItem) {
 			item.firstChild && this.doForEachItemAndView(item.firstChild, itemFun, viewFun);

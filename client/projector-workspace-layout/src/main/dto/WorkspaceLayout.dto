@@ -69,7 +69,7 @@ enum ViewGroupPanelState {
 }
 
 class DtoWorkSpaceLayoutView {
-	String viewName;
+	required String viewName;
 	String tabIcon;
     String tabCaption;
 	DtoComponent* component;
@@ -83,13 +83,13 @@ enum DtoRelativeWorkSpaceViewPosition {
 }
 
 abstract class DtoWorkSpaceLayoutItem {
-	String id;
+	required String id;
 }
 
 
 class DtoWorkSpaceLayoutSplitItem extends DtoWorkSpaceLayoutItem {
-    SplitDirection splitDirection;
-    SplitSizePolicy sizePolicy;
+    required SplitDirection splitDirection;
+    required SplitSizePolicy sizePolicy;
     double referenceChildSize;
     DtoWorkSpaceLayoutItem firstChild;
     DtoWorkSpaceLayoutItem lastChild;
@@ -97,8 +97,8 @@ class DtoWorkSpaceLayoutSplitItem extends DtoWorkSpaceLayoutItem {
 
 
 class DtoWorkSpaceLayoutViewGroupItem extends DtoWorkSpaceLayoutItem {
-    List<String> viewNames;
+    required List<String> viewNames;
     String selectedViewName;
     boolean persistent; // if true, this viewGroup will never be removed from the tree of items on the client side, even if there are no more views left inside it.
-    ViewGroupPanelState panelState;
+    required ViewGroupPanelState panelState;
 }

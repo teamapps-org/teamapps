@@ -17,18 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {ItemTreeItem} from "./ItemTree";
+import {type ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {TabPanelItem} from "./TabPanelItem";
-import {Component} from "projector-client-object-api";
+import {type Component} from "projector-client-object-api";
 import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./WorkSpaceLayout";
 import {
-	ViewGroupPanelState,
-	DtoWorkSpaceLayoutItem,
-	DtoWorkSpaceLayoutSplitItem,
-	DtoWorkSpaceLayoutView,
-	DtoWorkSpaceLayoutViewGroupItem
+	type ViewGroupPanelState,
+	type DtoWorkSpaceLayoutItem,
+	type DtoWorkSpaceLayoutSplitItem,
+	type DtoWorkSpaceLayoutView,
+	type DtoWorkSpaceLayoutViewGroupItem
 } from "./generated";
 
 export class LayoutDescriptorApplyer {
@@ -41,11 +41,20 @@ export class LayoutDescriptorApplyer {
 
 	private clientItemStash: { [itemId: string]: ItemTreeItem } = {};
 
+	private $rootItemContainer: HTMLElement;
+
+	private viewGroupFactory: (config: DtoWorkSpaceLayoutViewGroupItem, parent: SplitPaneItem) => TabPanelItem;
+
+	private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: ViewGroupPanelState) => void;
+
 	constructor(
-		private $rootItemContainer: HTMLElement,
-		private viewGroupFactory: (config: DtoWorkSpaceLayoutViewGroupItem, parent: SplitPaneItem) => TabPanelItem,
-		private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: ViewGroupPanelState) => void
+		$rootItemContainer: HTMLElement,
+		viewGroupFactory: (config: DtoWorkSpaceLayoutViewGroupItem, parent: SplitPaneItem) => TabPanelItem,
+		setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: ViewGroupPanelState) => void
 	) {
+		this.$rootItemContainer = $rootItemContainer;
+		this.viewGroupFactory = viewGroupFactory;
+		this.setViewGroupPanelStateFunction = setViewGroupPanelStateFunction;
 	}
 
 	public apply(
@@ -64,7 +73,7 @@ export class LayoutDescriptorApplyer {
 			this.buildClientItemDictionaries(currentRootItem);
 			this.cleanupUnknownClientItems(currentRootItem, newLayoutDescriptor, null);
 		}
-		return this.addNewStructure(newLayoutDescriptor, null, false, newViewConfigs);
+		return this.addNewStructure(newLayoutDescriptor, null, false, newViewConfigs)!;
 	}
 
 	private buildDescriptorDictionaries(descriptorItem: DtoWorkSpaceLayoutItem) {
@@ -81,7 +90,10 @@ export class LayoutDescriptorApplyer {
 		}
 	}
 
-	private buildClientItemDictionaries(item: ItemTreeItem) {
+	private buildClientItemDictionaries(item: ItemTreeItem | null) {
+		if (item == null) {
+			return;
+		}
 		this.clientItemsById[item.id] = item;
 		if (item instanceof TabPanelItem) {
 			item.tabs.forEach(tab => this.clientViewsByName[tab.viewName] = tab);
@@ -91,12 +103,12 @@ export class LayoutDescriptorApplyer {
 		}
 	}
 
-	public cleanupUnknownClientItems(clientSideItem: ItemTreeItem, descriptorItem: DtoWorkSpaceLayoutItem, parent: SplitPaneItem | null) {
+	public cleanupUnknownClientItems(clientSideItem: ItemTreeItem | null, descriptorItem: DtoWorkSpaceLayoutItem | null, parent: SplitPaneItem | null) {
 		// descriptorItem may be null for recursive executions of this method!
 		if (descriptorItem != null && descriptorItem.id === clientSideItem.id) {
 			if (clientSideItem instanceof SplitPaneItem) {
-				this.cleanupUnknownClientItems(clientSideItem.firstChild, (descriptorItem as DtoWorkSpaceLayoutSplitItem).firstChild, clientSideItem);
-				this.cleanupUnknownClientItems(clientSideItem.lastChild, (descriptorItem as DtoWorkSpaceLayoutSplitItem).lastChild, clientSideItem);
+				this.cleanupUnknownClientItems(clientSideItem.firstChild, (descriptorItem as DtoWorkSpaceLayoutSplitItem).firstChild ?? null, clientSideItem);
+				this.cleanupUnknownClientItems(clientSideItem.lastChild, (descriptorItem as DtoWorkSpaceLayoutSplitItem).lastChild ?? null, clientSideItem);
 			} else if (clientSideItem instanceof TabPanelItem) {
 				this.stashUnknownViews(clientSideItem, (descriptorItem as DtoWorkSpaceLayoutViewGroupItem).viewNames);
 			}
@@ -145,7 +157,7 @@ export class LayoutDescriptorApplyer {
 		});
 	}
 
-	private addNewStructure(descriptor: DtoWorkSpaceLayoutItem, parent: SplitPaneItem | null, firstChild: boolean, newViewConfigs: DtoWorkSpaceLayoutView[]) {
+	private addNewStructure(descriptor: DtoWorkSpaceLayoutItem | null, parent: SplitPaneItem | null, firstChild: boolean, newViewConfigs: DtoWorkSpaceLayoutView[]) {
 		if (descriptor == null) {
 			return null;
 		}
@@ -155,8 +167,8 @@ export class LayoutDescriptorApplyer {
 		if (clientSideItem != null) {
 			item = clientSideItem;
 			if (isSplitPanelDescriptor(descriptor)) {
-				this.addNewStructure(descriptor.firstChild, clientSideItem as SplitPaneItem, true, newViewConfigs);
-				this.addNewStructure(descriptor.lastChild, clientSideItem as SplitPaneItem, false, newViewConfigs);
+				this.addNewStructure(descriptor.firstChild ?? null, clientSideItem as SplitPaneItem, true, newViewConfigs);
+				this.addNewStructure(descriptor.lastChild ?? null, clientSideItem as SplitPaneItem, false, newViewConfigs);
 			} else if (isTabPanelDescriptor(descriptor)) {
 				this.addViews(clientSideItem as TabPanelItem, descriptor, newViewConfigs);
 			}
@@ -193,9 +205,11 @@ export class LayoutDescriptorApplyer {
 			return tabPanelItem;
 		} else if (isSplitPanelDescriptor(descriptor)) {
 			let splitPaneItem = new SplitPaneItem(descriptor.id, parent, descriptor.splitDirection, descriptor.sizePolicy, descriptor.referenceChildSize);
-			splitPaneItem.firstChild = this.addNewStructure(descriptor.firstChild, splitPaneItem, true, newViewConfigs);
-			splitPaneItem.lastChild = this.addNewStructure(descriptor.lastChild, splitPaneItem, false, newViewConfigs);
+			splitPaneItem.firstChild = this.addNewStructure(descriptor.firstChild ?? null, splitPaneItem, true, newViewConfigs);
+			splitPaneItem.lastChild = this.addNewStructure(descriptor.lastChild ?? null, splitPaneItem, false, newViewConfigs);
 			return splitPaneItem;
+		} else {
+			throw new Error("Unknown tree item type: " + descriptor._type);
 		}
 	}
 
@@ -214,7 +228,7 @@ export class LayoutDescriptorApplyer {
 			} else {
 				let newViewConfig = newViewConfigs.filter(view => view.viewName === viewName)[0];
 				if (newViewConfig != null) {
-					let view = new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component as Component);
+					let view = new View(newViewConfig.viewName, newViewConfig.tabIcon ?? null, newViewConfig.tabCaption ?? null, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component as Component);
 					tabPanelItem.addTab(view, selected);
 				} else {
 					console.error("View item references non-existing view: " + viewName);

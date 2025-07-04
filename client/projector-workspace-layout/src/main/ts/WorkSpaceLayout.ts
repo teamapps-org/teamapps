@@ -17,33 +17,33 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractComponent, Component, ServerObjectChannel, ProjectorEvent,} from "projector-client-object-api";
-import {ViewInfo} from "./ViewInfo";
-import {ViewContainer} from "./ViewContainer";
-import {RelativeDropPosition} from "./RelativeDropPosition";
+import {AbstractComponent, type Component, type ServerObjectChannel, ProjectorEvent,} from "projector-client-object-api";
+import {type ViewInfo} from "./ViewInfo";
+import {type ViewContainer} from "./ViewContainer";
+import {type RelativeDropPosition, RelativeDropPositions} from "./RelativeDropPosition";
 import {LocalViewContainer} from "./LocalViewContainer";
-import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {SplitSizePolicies, SplitSizePolicy, Toolbar} from "projector-client-core-components";
+import {type WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
+import {SplitSizePolicies, type SplitSizePolicy, Toolbar} from "projector-client-core-components";
 import {
-	DtoRelativeWorkSpaceViewPosition,
-	ViewGroupPanelState,
-	DtoWorkSpaceLayout,
-	DtoWorkSpaceLayout_ChildWindowClosedEvent,
-	DtoWorkSpaceLayout_ChildWindowCreationFailedEvent,
-	DtoWorkSpaceLayout_LayoutChangedEvent,
-	DtoWorkSpaceLayout_ViewClosedEvent,
-	DtoWorkSpaceLayout_ViewDraggedToNewWindowEvent,
-	DtoWorkSpaceLayout_ViewGroupPanelStateChangedEvent,
-	DtoWorkSpaceLayout_ViewNeedsRefreshEvent,
-	DtoWorkSpaceLayout_ViewSelectedEvent,
-	DtoWorkSpaceLayoutCommandHandler,
-	DtoWorkSpaceLayoutEventSource,
-	DtoWorkSpaceLayoutItem,
-	DtoWorkSpaceLayoutSplitItem,
-	DtoWorkSpaceLayoutView,
-	DtoWorkSpaceLayoutViewGroupItem, DtoRelativeWorkSpaceViewPositions
+	type DtoRelativeWorkSpaceViewPosition,
+	type ViewGroupPanelState,
+	type DtoWorkSpaceLayout,
+	type DtoWorkSpaceLayout_ChildWindowClosedEvent,
+	type DtoWorkSpaceLayout_ChildWindowCreationFailedEvent,
+	type DtoWorkSpaceLayout_LayoutChangedEvent,
+	type DtoWorkSpaceLayout_ViewClosedEvent,
+	type DtoWorkSpaceLayout_ViewDraggedToNewWindowEvent,
+	type DtoWorkSpaceLayout_ViewGroupPanelStateChangedEvent,
+	type DtoWorkSpaceLayout_ViewNeedsRefreshEvent,
+	type DtoWorkSpaceLayout_ViewSelectedEvent,
+	type DtoWorkSpaceLayoutCommandHandler,
+	type DtoWorkSpaceLayoutEventSource,
+	type DtoWorkSpaceLayoutItem,
+	type DtoWorkSpaceLayoutSplitItem,
+	type DtoWorkSpaceLayoutView,
+	type DtoWorkSpaceLayoutViewGroupItem, DtoRelativeWorkSpaceViewPositions
 } from "./generated";
-import {MultiProgressDisplay, ProgressDisplay} from "projector-progress-display";
+import {MultiProgressDisplay} from "projector-progress-display";
 
 export type DtoWorkspaceLayoutDndDataTransfer = {
 	// sourceUiSessionId: string,   // sourceUiSessionId: this.context.sessionId, // TODO replace with workspace layout uuid to uniquely identify the workspace layout, even inside a session!
@@ -78,7 +78,7 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 	private viewContainersByWindowId: { [windowId: string]: ViewContainer } = {};
 
 	constructor(config: DtoWorkSpaceLayout, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 		this.localViewContainer = new LocalViewContainer(this, this.windowId, config.views, config.initialLayout, {
 			handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),
 			handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
@@ -91,7 +91,7 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 		this.viewContainersByWindowId[this.windowId] = this.localViewContainer;
 	}
 
-	private handleChildWindowCreated(childWindowId: string, messagePort: MessagePort, initialViewInfo: ViewInfo) {
+	private handleChildWindowCreated(_childWindowId: string, _messagePort: MessagePort, _initialViewInfo: ViewInfo) {
 		// if (this.isRootWindow) {
 		// 	let childWindow = window.open("", childWindowId);
 		// 	let childWindowViewContainer = new ChildWindowViewContainer(childWindow, childWindowId, messagePort, initialViewInfo, this,
@@ -147,14 +147,14 @@ export class WorkSpaceLayout extends AbstractComponent<DtoWorkSpaceLayout> imple
 	private handleViewDroppedFromOtherWindow(sourceWindowId: string, targetWindowId: string, viewInfo: ViewInfo, existingViewName: string, relativePosition: RelativeDropPosition) {
 		if (this.isRootWindow) {
 			if (existingViewName != null) {
-				if (relativePosition === RelativeDropPosition.TAB) {
+				if (relativePosition === RelativeDropPositions.TAB) {
 					this.moveViewToNeighbourTab(viewInfo.viewName, existingViewName, true);
 				} else {
-					this.moveViewRelativeToOtherView(viewInfo.viewName, existingViewName, DtoRelativeWorkSpaceViewPositions[RelativeDropPosition[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPositions], SplitSizePolicies.RELATIVE, .5);
+					this.moveViewRelativeToOtherView(viewInfo.viewName, existingViewName, DtoRelativeWorkSpaceViewPositions[RelativeDropPositions[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPositions], SplitSizePolicies.RELATIVE, .5);
 				}
 			} else {
-				let isFirst = relativePosition === RelativeDropPosition.LEFT || relativePosition === RelativeDropPosition.TOP;
-				this.moveViewToTopLevel(viewInfo.viewName, targetWindowId, DtoRelativeWorkSpaceViewPositions[RelativeDropPosition[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPositions], SplitSizePolicies.RELATIVE, isFirst ? .3 : .7);
+				let isFirst = relativePosition === RelativeDropPositions.LEFT || relativePosition === RelativeDropPositions.TOP;
+				this.moveViewToTopLevel(viewInfo.viewName, targetWindowId, DtoRelativeWorkSpaceViewPositions[RelativeDropPositions[relativePosition] as keyof typeof DtoRelativeWorkSpaceViewPositions], SplitSizePolicies.RELATIVE, isFirst ? .3 : .7);
 			}
 		} else {
 			this.rootWindowMessagePort.postMessage({
