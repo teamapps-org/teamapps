@@ -7,7 +7,7 @@ import org.teamapps.projector.animation.EntranceAnimation;
 import org.teamapps.projector.animation.ExitAnimation;
 
 class DtoNotificationBar extends DtoComponent {
-	List<DtoNotificationBarItem> initialItems;
+	required List<DtoNotificationBarItem> initialItems;
 
 	command addItem(DtoNotificationBarItem item);
 	command updateItem(DtoNotificationBarItem item);
@@ -19,7 +19,7 @@ class DtoNotificationBar extends DtoComponent {
 }
 
 class DtoNotificationBarItem {
-	String id;
+	required String id;
 
 	String icon;
 	RepeatableAnimation iconAnimation;

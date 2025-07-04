@@ -20,23 +20,27 @@
 // @ts-ignore
 import ICON_CLOSE from "@material-symbols/svg-400/outlined/close.svg";
 import {
-	DtoNotification,
-	DtoNotification_ClosedEvent,
-	DtoNotification_OpenedEvent,
-	DtoNotificationCommandHandler,
-	DtoNotificationEventSource
+	type DtoNotification,
+	type DtoNotification_ClosedEvent,
+	type DtoNotification_OpenedEvent,
+	type DtoNotificationCommandHandler,
+	type DtoNotificationEventSource
 } from "./generated";
 import {
 	AbstractComponent,
-	Component, EntranceAnimation, ExitAnimation,
+	type Component,
+	createSpacingValueCssString,
+	type EntranceAnimation,
 	executeAfterAttached,
+	type ExitAnimation,
+	type NotificationHandle,
+	type NotificationPosition,
 	parseHtml,
-	ServerObjectChannel,
-	ProjectorEvent, animateCSS, NotificationPosition
+	ProjectorEvent,
+	type ServerObjectChannel,
+	showNotificationLike
 } from "projector-client-object-api";
-import {createSpacingValueCssString} from "projector-client-object-api";
 import {ProgressBar} from "projector-progress-indicator";
-import {NotificationHandle, showNotificationLike} from "projector-client-object-api";
 
 
 export class Notification extends AbstractComponent<DtoNotification> implements DtoNotificationCommandHandler, DtoNotificationEventSource {
@@ -47,22 +51,22 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 	private $main: HTMLElement;
 	private $contentContainer: HTMLElement;
 	private $progressBarContainer: HTMLElement;
-	private progressBar: ProgressBar;
+	private progressBar: ProgressBar | null = null;
 
-	private timeoutMillis: number;
-	private notificationHandle: NotificationHandle;
+	private timeoutMillis: number = 0;
+	private notificationHandle: NotificationHandle | null = null;
 
 	constructor(config: DtoNotification, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 
 		this.$main = parseHtml(`<div class="Notification">
 	<div class="close-button"><img class="hoverable-icon" src="${ICON_CLOSE}"></div>
 	<div class="content-container"></div>
 	<div class="progress-container"></div>
 </div>`);
-		this.$contentContainer = this.$main.querySelector(":scope > .content-container");
-		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container");
-		this.$main.querySelector(":scope > .close-button").addEventListener("mousedown", () => {
+		this.$contentContainer = this.$main.querySelector(":scope > .content-container")!;
+		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container")!;
+		this.$main.querySelector(":scope > .close-button")!.addEventListener("mousedown", () => {
 			this.notificationHandle?.close();
 			this.onClosed.fire({byUser: true});
 		});
@@ -71,7 +75,7 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 
 	public update(config: DtoNotification) {
 		this.config = config;
-		this.$main.style.backgroundColor = config.backgroundColor;
+		this.$main.style.backgroundColor = config.backgroundColor ?? "none";
 		// this.$main.style.borderColor = createColorCssString(config.borderColor, "#00000022");
 		this.$contentContainer.style.padding = createSpacingValueCssString(config.padding);
 		this.$main.classList.toggle("dismissible", config.dismissible);
@@ -101,7 +105,7 @@ export class Notification extends AbstractComponent<DtoNotification> implements 
 	}
 
 	close() {
-		this.notificationHandle.close();
+		this.notificationHandle?.close();
 	}
 
 	@executeAfterAttached(true)

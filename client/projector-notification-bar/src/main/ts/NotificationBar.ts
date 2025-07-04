@@ -20,17 +20,21 @@
 import {
 	AbstractComponent,
 	animateCSS,
-	ExitAnimation,
-	parseHtml, removeClassesByFunction,
-	ServerObjectChannel,
-	ProjectorEvent
+	createSpacingValueCssString,
+	type ExitAnimation,
+	parseHtml,
+	ProjectorEvent,
+	removeClassesByFunction,
+	type ServerObjectChannel
 } from "projector-client-object-api";
-import {createSpacingValueCssString} from "projector-client-object-api";
 import {
-	DtoNotificationBar, DtoNotificationBar_ItemActionLinkClickedEvent,
-	DtoNotificationBar_ItemClickedEvent, DtoNotificationBar_ItemClosedEvent,
-	DtoNotificationBarCommandHandler,
-	DtoNotificationBarEventSource, DtoNotificationBarItem
+	type DtoNotificationBar,
+	type DtoNotificationBar_ItemActionLinkClickedEvent,
+	type DtoNotificationBar_ItemClickedEvent,
+	type DtoNotificationBar_ItemClosedEvent,
+	type DtoNotificationBarCommandHandler,
+	type DtoNotificationBarEventSource,
+	type DtoNotificationBarItem
 } from "./generated";
 import {ProgressBar} from "projector-progress-indicator";
 
@@ -45,7 +49,7 @@ export class NotificationBar extends AbstractComponent<DtoNotificationBar> imple
 	private itemsById: { [id: string]: NotificationBarItem } = {};
 
 	constructor(config: DtoNotificationBar, serverObjectChannel: ServerObjectChannel) {
-		super(config);
+		super(config, serverObjectChannel);
 		this.$main = parseHtml(`<div class="NotificationBar"></div>`);
 		config.initialItems.forEach(item => this.addItem(item))
 	}
@@ -55,7 +59,7 @@ export class NotificationBar extends AbstractComponent<DtoNotificationBar> imple
 	}
 
 	addItem(itemConfig: DtoNotificationBarItem): void {
-		this.removeItem(itemConfig.id, null);
+		this.removeItem(itemConfig.id);
 		let item = new NotificationBarItem(itemConfig);
 		this.itemsById[itemConfig.id] = item;
 		this.$main.appendChild(item.getMainElement());
@@ -81,8 +85,9 @@ export class NotificationBar extends AbstractComponent<DtoNotificationBar> imple
 	removeItem(id: string, exitAnimation?: ExitAnimation): void {
 		let item = this.itemsById[id];
 		if (item != null) {
-			if (exitAnimation != null || item.config.exitAnimation != null) {
-				animateCSS(item.getMainElement(), exitAnimation || item.config.exitAnimation, 300, () => {
+			const animation = exitAnimation ?? item.config.exitAnimation;
+			if (animation != null) {
+				animateCSS(item.getMainElement(), animation, 300, () => {
 					item.getMainElement().remove();
 				});
 			} else {
@@ -112,6 +117,7 @@ class NotificationBarItem {
 	private $actionLink: HTMLElement;
 
 	constructor(config: DtoNotificationBarItem) {
+		this.config = config;
 		this.$main = parseHtml(`<div class="NotificationBarItem">
 	<div class="content-container">
 		<div class="icon img img-20"></div>
@@ -123,18 +129,18 @@ class NotificationBarItem {
 	</div>
 	<div class="progress-container"></div>
 </div>`);
-		this.$closeButton = this.$main.querySelector(":scope .close-button");
-		this.$contentContainer = this.$main.querySelector(":scope > .content-container");
-		this.$icon = this.$main.querySelector(":scope .icon");
-		this.$text = this.$main.querySelector(":scope .text");
-		this.$actionLink = this.$main.querySelector(":scope .action-link");
-		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container");
+		this.$closeButton = this.$main.querySelector(":scope .close-button")!;
+		this.$contentContainer = this.$main.querySelector(":scope > .content-container")!;
+		this.$icon = this.$main.querySelector(":scope .icon")!;
+		this.$text = this.$main.querySelector(":scope .text")!;
+		this.$actionLink = this.$main.querySelector(":scope .action-link")!;
+		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container")!;
 		this.progressBar = new ProgressBar(0, {height: 3});
 		this.$progressBarContainer.appendChild(this.progressBar.getMainDomElement());
 
 		this.$main.addEventListener("click", () => this.onClick.fire())
-		this.$actionLink.addEventListener("click", (e) => this.onActionLinkClicked.fire())
-		this.$closeButton.addEventListener("click", ev => this.onClosed.fire(false));
+		this.$actionLink.addEventListener("click", () => this.onActionLinkClicked.fire())
+		this.$closeButton.addEventListener("click", () => this.onClosed.fire(false));
 
 		this.update(config);
 	}
@@ -144,16 +150,16 @@ class NotificationBarItem {
 		this.config = config;
 
 		this.$closeButton.classList.toggle("hidden", !config.dismissible);
-		this.$main.style.backgroundColor = config.backgroundColor;
-		this.$main.style.borderColor = config.borderColor;
+		this.$main.style.backgroundColor = config.backgroundColor ?? '';
+		this.$main.style.borderColor = config.borderColor ?? '';
 		this.$contentContainer.style.padding = createSpacingValueCssString(config.padding);
 
-		this.$text.textContent = config.text;
-		this.$text.style.color = config.textColor;
+		this.$text.textContent = config.text ?? '';
+		this.$text.style.color = config.textColor ?? '';
 
-		this.$actionLink.textContent = config.actionLinkText;
+		this.$actionLink.textContent = config.actionLinkText ?? '';
 		this.$actionLink.classList.toggle("hidden", config.actionLinkText == null);
-		this.$actionLink.style.color = config.actionLinkColor;
+		this.$actionLink.style.color = config.actionLinkColor ?? '';
 
 		this.$main.classList.toggle("with-progress", config.displayTimeInMillis > 0 && config.progressBarVisible)
 
@@ -180,7 +186,7 @@ class NotificationBarItem {
 					let duration = +(new Date()) - startTime + 500; // make sure the bar reaches the end!
 					let progress = Math.min(1, duration / this.config.displayTimeInMillis);
 					this.progressBar.setProgress(progress);
-					(this.progressBar.getMainDomElement().querySelector(":scope .progress-bar") as HTMLElement).style.backgroundColor = this.config.borderColor;
+					(this.progressBar.getMainDomElement().querySelector(":scope .progress-bar") as HTMLElement).style.backgroundColor = this.config.borderColor ?? '';
 					if (progress >= 1) {
 						window.clearInterval(interval);
 					}
