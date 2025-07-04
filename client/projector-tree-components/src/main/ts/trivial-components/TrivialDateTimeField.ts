@@ -18,11 +18,10 @@
  * =========================LICENSE_END==================================
  */
 
-import {EditingMode, HighlightDirection, isModifierKey, TrivialComponent} from "./TrivialCore";
+import {type EditingMode, type HighlightDirection, isModifierKey, type TrivialComponent} from "./TrivialCore";
 import {TrivialCalendarBox} from "./TrivialCalendarBox";
 import {DateSuggestionEngine, getYearMonthDayOrderForLocale} from "../DateSuggestionEngine";
 import {TimeSuggestionEngine} from "../TimeSuggestionEngine";
-import {createPopper, Instance as Popper} from '@popperjs/core';
 import {TrivialTreeBox} from "./TrivialTreeBox";
 import {DateTime} from "luxon";
 import {
@@ -32,22 +31,22 @@ import {
 	createTimeRenderer
 } from "../datetime-rendering";
 import {LocalDateTime} from "../LocalDateTime";
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
-import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
+import {type Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
 import {parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {selectElementContents} from "../util";
 
-enum Mode {
-	MODE_CALENDAR,
-	MODE_DATE_LIST,
-	MODE_TIME_LIST
-}
+const Modes = {
+	MODE_CALENDAR: 0,
+	MODE_DATE_LIST: 1,
+	MODE_TIME_LIST: 2
+};
+type Mode = typeof Modes[keyof typeof Modes];
 
 export interface TrivialDateTimeFieldConfig {
 	locale?: string,
 	timeZone?: string,
-	dateFormat?: DateTimeFormatOptions,
-	timeFormat?: DateTimeFormatOptions,
+	dateFormat?: Intl.DateTimeFormatOptions,
+	timeFormat?: Intl.DateTimeFormatOptions,
 	autoComplete?: boolean,
 	autoCompleteDelay?: number,
 	showTrigger?: boolean,
@@ -88,11 +87,10 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private calendarBoxInitialized = false;
 	private editingMode: string;
 
-	private dropDownMode = Mode.MODE_CALENDAR;
+	private dropDownMode = Modes.MODE_CALENDAR;
 
 	private $dateTimeField: HTMLElement;
 	private $dropDown: HTMLElement;
-	private popper: Popper;
 
 	private $dateIconWrapper: HTMLElement;
 	private $dateEditor: HTMLDivElement;
@@ -151,13 +149,13 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 		this.$dateIconWrapper.addEventListener("click", () => {
 			this.$activeEditor = this.$dateEditor;
-			this.setDropDownMode(Mode.MODE_CALENDAR);
+			this.setDropDownMode(Modes.MODE_CALENDAR);
 			selectElementContents(this.$dateEditor, 0, this.$dateEditor.innerText.length);
 			this.openDropDown();
 		});
 		this.$timeIconWrapper.addEventListener("click", () => {
 			this.$activeEditor = this.$timeEditor;
-			this.setDropDownMode(Mode.MODE_TIME_LIST);
+			this.setDropDownMode(Modes.MODE_TIME_LIST);
 			selectElementContents(this.$timeEditor, 0, this.$timeEditor.innerText.length);
 			this.queryTime(1);
 			this.openDropDown();
@@ -165,20 +163,20 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 		this.$dateEditor.addEventListener("focus", () => {
 			this.$activeEditor = this.$dateEditor;
-			this.setDropDownMode(Mode.MODE_CALENDAR);
+			this.setDropDownMode(Modes.MODE_CALENDAR);
 			// if (!this.blurCausedByClickInsideComponent) {
-				selectElementContents(this.$dateEditor, 0, this.$dateEditor.innerText.length);
-				this.queryDate(0);
-				this.openDropDown();
+			selectElementContents(this.$dateEditor, 0, this.$dateEditor.innerText.length);
+			this.queryDate(0);
+			this.openDropDown();
 			// }
 		});
 		this.$timeEditor.addEventListener("focus", () => {
 			this.$activeEditor = this.$timeEditor;
-			this.setDropDownMode(Mode.MODE_TIME_LIST);
+			this.setDropDownMode(Modes.MODE_TIME_LIST);
 			// if (!this.blurCausedByClickInsideComponent) {
-				selectElementContents(this.$timeEditor, 0, this.$timeEditor.innerText.length);
-				this.queryTime(0);
-				this.openDropDown();
+			selectElementContents(this.$timeEditor, 0, this.$timeEditor.innerText.length);
+			this.queryTime(0);
+			this.openDropDown();
 			// }
 		});
 
@@ -189,7 +187,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 			if (this._isDropDownOpen) {
 				this.closeDropDown();
 			} else {
-				this.setDropDownMode(Mode.MODE_CALENDAR);
+				this.setDropDownMode(Modes.MODE_CALENDAR);
 				this.calendarBox.setSelectedDate(new LocalDateTime(this.value ?? DateTime.local()));
 				this.$activeEditor = this.$dateEditor;
 				selectElementContents(this.$dateEditor, 0, this.$dateEditor.innerText.length);
@@ -238,82 +236,82 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 		[this.$dateEditor, this.$timeEditor].forEach(el => {
 			el.addEventListener("focus", () => this.setFocused(true));
-			el.addEventListener("blur", 
-					() => {
-						if (this.blurCausedByClickInsideComponent) {
-							this.blurCausedByClickInsideComponent = false;
-						} else {
-							this.updateDisplay();
-							this.closeDropDown();
-							this.setFocused(false);
-						}
+			el.addEventListener("blur",
+				() => {
+					if (this.blurCausedByClickInsideComponent) {
+						this.blurCausedByClickInsideComponent = false;
+					} else {
+						this.updateDisplay();
+						this.closeDropDown();
+						this.setFocused(false);
 					}
-				)
+				}
+			)
 			el.addEventListener("keydown",
-					(e: KeyboardEvent) => {
-						if (isModifierKey(e)) {
-							return;
-						} else if (e.key == "Tab") {
-							if (!e.shiftKey && document.activeElement == this.$dateEditor
-								|| e.shiftKey && document.activeElement == this.$timeEditor) {
-								this.blurCausedByClickInsideComponent = true;
+				(e: KeyboardEvent) => {
+					if (isModifierKey(e)) {
+						return;
+					} else if (e.key == "Tab") {
+						if (!e.shiftKey && document.activeElement == this.$dateEditor
+							|| e.shiftKey && document.activeElement == this.$timeEditor) {
+							this.blurCausedByClickInsideComponent = true;
+						}
+						this.selectHighlightedListBoxEntry();
+						return;
+					} else if (e.key == "ArrowLeft" || e.key == "ArrowRight") {
+						if (this.getActiveEditor() === this.$timeEditor && e.key == "ArrowLeft" && window.getSelection().focusOffset === 0) {
+							e.preventDefault();
+							selectElementContents(this.$dateEditor, 0, this.$dateEditor.innerText.length);
+						} else if (this.getActiveEditor() === this.$dateEditor && e.key == "ArrowRight" && window.getSelection().anchorOffset === window.getSelection().focusOffset && window.getSelection().focusOffset === this.$dateEditor.innerText.length) {
+							e.preventDefault();
+							selectElementContents(this.$timeEditor, 0, this.$timeEditor.innerText.length);
+						}
+						return; // let the user navigate freely left and right...
+					}
+
+					if (e.key == "Backspace" || e.key == "Delete") {
+						this.doNoAutoCompleteBecauseBackspaceWasPressed = true; // we want query results, but no autocomplete
+					}
+
+					if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+						selectElementContents(this.getActiveEditor(), 0, this.$dateEditor.innerText.length);
+						const direction = e.key == "ArrowUp" ? -1 : 1;
+						if (this._isDropDownOpen) {
+							if (this.dropDownMode !== Modes.MODE_CALENDAR) {
+								(this.getActiveBox() as TrivialTreeBox<any>).selectNextEntry(direction);
+								this.autoCompleteIfPossible(this.config.autoCompleteDelay);
+							} else if (this.calendarBox != null) {
+								this.getActiveBox().navigate(direction === 1 ? 'down' : 'up');
+								this.autoCompleteIfPossible(this.config.autoCompleteDelay);
 							}
+						} else {
+							this.setDropDownMode(e.currentTarget === this.$dateEditor ? Modes.MODE_DATE_LIST : Modes.MODE_TIME_LIST);
+							this.query(direction);
+							this.openDropDown();
+						}
+						return false; // some browsers move the caret to the beginning on up key
+					} else if (e.key == "Enter") {
+						if (this._isDropDownOpen) {
+							e.preventDefault(); // do not submit form
 							this.selectHighlightedListBoxEntry();
-							return;
-						} else if (e.key == "ArrowLeft" || e.key == "ArrowRight") {
-							if (this.getActiveEditor() === this.$timeEditor && e.key == "ArrowLeft" && window.getSelection().focusOffset === 0) {
-								e.preventDefault();
-								selectElementContents(this.$dateEditor, 0, this.$dateEditor.innerText.length);
-							} else if (this.getActiveEditor() === this.$dateEditor && e.key == "ArrowRight" && window.getSelection().anchorOffset === window.getSelection().focusOffset && window.getSelection().focusOffset === this.$dateEditor.innerText.length) {
-								e.preventDefault();
-								selectElementContents(this.$timeEditor, 0, this.$timeEditor.innerText.length);
-							}
-							return; // let the user navigate freely left and right...
-						}
-
-						if (e.key == "Backspace" || e.key == "Delete") {
-							this.doNoAutoCompleteBecauseBackspaceWasPressed = true; // we want query results, but no autocomplete
-						}
-
-						if (e.key == "ArrowUp" || e.key == "ArrowDown") {
-							selectElementContents(this.getActiveEditor(), 0, this.$dateEditor.innerText.length);
-							const direction = e.key == "ArrowUp" ? -1 : 1;
-							if (this._isDropDownOpen) {
-								if (this.dropDownMode !== Mode.MODE_CALENDAR) {
-									(this.getActiveBox() as TrivialTreeBox<any>).selectNextEntry(direction);
-									this.autoCompleteIfPossible(this.config.autoCompleteDelay);
-								} else if (this.calendarBox != null) {
-									this.getActiveBox().navigate(direction === 1 ? 'down' : 'up');
-									this.autoCompleteIfPossible(this.config.autoCompleteDelay);
-								}
-							} else {
-								this.setDropDownMode(e.currentTarget === this.$dateEditor ? Mode.MODE_DATE_LIST : Mode.MODE_TIME_LIST);
-								this.query(direction);
-								this.openDropDown();
-							}
-							return false; // some browsers move the caret to the beginning on up key
-						} else if (e.key == "Enter") {
-							if (this._isDropDownOpen) {
-								e.preventDefault(); // do not submit form
-								this.selectHighlightedListBoxEntry();
-								selectElementContents(this.getActiveEditor(), 0, this.getActiveEditor().innerText.length);
-								this.closeDropDown();
-							}
-						} else if (e.key == "Escape") {
-							e.preventDefault(); // prevent ie from doing its text field magic...
-							if (this._isDropDownOpen) {
-								this.updateDisplay();
-								selectElementContents(this.getActiveEditor(), 0, this.getActiveEditor().innerText.length);
-							}
+							selectElementContents(this.getActiveEditor(), 0, this.getActiveEditor().innerText.length);
 							this.closeDropDown();
 						}
+					} else if (e.key == "Escape") {
+						e.preventDefault(); // prevent ie from doing its text field magic...
+						if (this._isDropDownOpen) {
+							this.updateDisplay();
+							selectElementContents(this.getActiveEditor(), 0, this.getActiveEditor().innerText.length);
+						}
+						this.closeDropDown();
 					}
+				}
 			);
 		});
 
 		[this.$dateEditor, this.$timeEditor].forEach(editor => {
 			editor.addEventListener("input", e => {
-				this.setDropDownMode(e.currentTarget === this.$dateEditor[0] ? Mode.MODE_DATE_LIST : Mode.MODE_TIME_LIST);
+				this.setDropDownMode(e.currentTarget === this.$dateEditor[0] ? Modes.MODE_DATE_LIST : Modes.MODE_TIME_LIST);
 				this.openDropDown();
 				this.query(1);
 			})
@@ -322,10 +320,10 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.setValue(null);
 
 		[this.$dateTimeField, this.$dropDown].forEach(el => {
-			  el.addEventListener("mousedown", (e) => {
-				  this.blurCausedByClickInsideComponent = true;
-				  setTimeout(() => this.blurCausedByClickInsideComponent = false);
-			  });
+			el.addEventListener("mousedown", (e) => {
+				this.blurCausedByClickInsideComponent = true;
+				setTimeout(() => this.blurCausedByClickInsideComponent = false);
+			});
 		})
 		this.$activeEditor = this.$dateEditor;
 
@@ -335,31 +333,6 @@ export class TrivialDateTimeField implements TrivialComponent {
 			favorPastDates: this.config.favorPastDates
 		});
 		this.timeSuggestionEngine = new TimeSuggestionEngine();
-
-
-		this.popper = createPopper(this.$dateTimeField, this.$dropDown, {
-			placement: 'bottom',
-			modifiers: [
-				{
-					name: "flip",
-					options: {
-						fallbackPlacements: ['top']
-					}
-				},
-				{
-					name: "preventOverflow"
-				},
-				{
-					name: 'dropDownCornerSmoother',
-					enabled: true,
-					phase: 'write',
-					fn: ({state}) => {
-						this.$dateTimeField.classList.toggle("dropdown-flipped", state.placement === 'top');
-						this.$dateTimeField.classList.toggle("flipped", state.placement === 'top');
-					}
-				}
-			]
-		})
 	}
 
 	private setFocused(focused: boolean) {
@@ -387,7 +360,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 	private setDropDownMode(mode: Mode) {
 		this.dropDownMode = mode;
-		if (!this.calendarBoxInitialized && mode === Mode.MODE_CALENDAR) {
+		if (!this.calendarBoxInitialized && mode === Modes.MODE_CALENDAR) {
 			this.calendarBox = new TrivialCalendarBox({
 				firstDayOfWeek: 1
 			});
@@ -404,15 +377,15 @@ export class TrivialDateTimeField implements TrivialComponent {
 			});
 			this.calendarBoxInitialized = true;
 		}
-		this.$calendarBoxWrapper.classList.toggle(".hidden", mode !== Mode.MODE_CALENDAR);
-		this.$dateListBoxWrapper.classList.toggle(".hidden", mode !== Mode.MODE_DATE_LIST);
-		this.$timeListBoxWrapper.classList.toggle(".hidden", mode !== Mode.MODE_TIME_LIST);
+		this.$calendarBoxWrapper.classList.toggle(".hidden", mode !== Modes.MODE_CALENDAR);
+		this.$dateListBoxWrapper.classList.toggle(".hidden", mode !== Modes.MODE_DATE_LIST);
+		this.$timeListBoxWrapper.classList.toggle(".hidden", mode !== Modes.MODE_TIME_LIST);
 	}
 
 	private getActiveBox(): any /*TODO Navigateable*/ {
-		if (this.dropDownMode === Mode.MODE_CALENDAR) {
+		if (this.dropDownMode === Modes.MODE_CALENDAR) {
 			return this.calendarBox;
-		} else if (this.dropDownMode === Mode.MODE_DATE_LIST) {
+		} else if (this.dropDownMode === Modes.MODE_DATE_LIST) {
 			return this.dateListBox;
 		} else {
 			return this.timeListBox;
@@ -425,7 +398,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 
 	private selectHighlightedListBoxEntry() {
-		if (this.dropDownMode === Mode.MODE_DATE_LIST || this.dropDownMode === Mode.MODE_TIME_LIST) {
+		if (this.dropDownMode === Modes.MODE_DATE_LIST || this.dropDownMode === Modes.MODE_TIME_LIST) {
 			const highlightedEntry = (this.getActiveBox() as TrivialTreeBox<any>).getSelectedEntry();
 			if (this._isDropDownOpen && highlightedEntry) {
 				if (this.getActiveEditor() === this.$dateEditor) {
@@ -437,7 +410,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		}
 	}
 
-	private query(direction: number) {
+	private query(direction: HighlightDirection) {
 		if (this.$activeEditor == this.$dateEditor) {
 			this.queryDate(direction);
 		} else {
@@ -564,7 +537,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 	}
 
 	private autoCompleteIfPossible(delay: number) {
-		if (this.config.autoComplete && (this.dropDownMode === Mode.MODE_DATE_LIST || this.dropDownMode === Mode.MODE_TIME_LIST)) {
+		if (this.config.autoComplete && (this.dropDownMode === Modes.MODE_DATE_LIST || this.dropDownMode === Modes.MODE_TIME_LIST)) {
 			clearTimeout(this.autoCompleteTimeoutId);
 
 			const listBox = this.getActiveBox() as TrivialTreeBox<any>;
@@ -594,7 +567,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 	public setEditingMode(newEditingMode: EditingMode) {
 		this.editingMode = newEditingMode;
-		this.$dateTimeField.classList.remove("editable", "readonly",  "disabled");
+		this.$dateTimeField.classList.remove("editable", "readonly", "disabled");
 		this.$dateTimeField.classList.add(this.editingMode);
 
 		if (newEditingMode == "editable") {
@@ -615,17 +588,17 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.updateDisplay();
 	}
 
-	public setDateFormat(dateFormat: DateTimeFormatOptions) {
+	public setDateFormat(dateFormat: Intl.DateTimeFormatOptions) {
 		this.config.dateFormat = dateFormat;
 		this.updateDisplay();
 	}
 
-	public setTimeFormat(timeFormat: DateTimeFormatOptions) {
+	public setTimeFormat(timeFormat: Intl.DateTimeFormatOptions) {
 		this.config.timeFormat = timeFormat;
 		this.updateDisplay();
 	}
 
-	setLocaleAndFormats(locale: string, dateFormat: DateTimeFormatOptions, timeFormat: DateTimeFormatOptions) {
+	setLocaleAndFormats(locale: string, dateFormat: Intl.DateTimeFormatOptions, timeFormat: Intl.DateTimeFormatOptions) {
 		this.config.locale = locale;
 		this.config.dateFormat = dateFormat;
 		this.config.timeFormat = timeFormat;

@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 
-import {ContextMenuEvent, TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
+import {type ContextMenuEvent, TrivialTreeBox, type TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import {
 	DEFAULT_TEMPLATES,
-	TrivialComponent,
+	type TrivialComponent,
 	unProxyEntry
 } from "./TrivialCore";
 import {parseHtml, ProjectorEvent} from "projector-client-object-api";

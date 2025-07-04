@@ -19,7 +19,7 @@
  */
 import {LocalDateTime} from "./LocalDateTime";
 import {createTimeRenderer} from "./datetime-rendering";
-import {DtoLocalTimeField, DtoLocalTimeFieldCommandHandler, DtoLocalTimeFieldEventSource} from "./generated";
+import {type DtoLocalTimeField, type DtoLocalTimeFieldCommandHandler, type DtoLocalTimeFieldEventSource} from "./generated";
 import {AbstractTimeField} from "./AbstractTimeField";
 import {arraysEqual} from "projector-client-object-api";
 

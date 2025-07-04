@@ -40,7 +40,7 @@ export type Match = {
 	distance?: number
 };
 
-export type HighlightDirection = number | null | undefined;
+export type HighlightDirection = -1 | 0 | 1 | null | undefined;
 export type NavigationDirection = "up" | "left" | "down" | "right";
 export type QueryFunction<E> = (queryString: string) => E[] | Promise<E[]>;
 
@@ -59,7 +59,7 @@ export function isModifierKey(e: KeyboardEvent) {
 	return modifierKeys.indexOf(e.key) != -1;
 }
 
-export function isSpecialKey(e : KeyboardEvent) {
+export function isSpecialKey(e: KeyboardEvent) {
 	return specialKeys.indexOf(e.key) != -1;
 }
 

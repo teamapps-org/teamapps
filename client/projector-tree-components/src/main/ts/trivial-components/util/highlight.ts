@@ -34,7 +34,7 @@
  *  limitations under the License.
  *
  */
-import {MatchingOptions, trivialMatch} from "../TrivialCore";
+import {type MatchingOptions, trivialMatch} from "../TrivialCore";
 
 export type HighlightOptions = MatchingOptions & {
 	highlightClassName?: string

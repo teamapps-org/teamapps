@@ -21,20 +21,20 @@ import {TrivialComboBox} from "./trivial-components/TrivialComboBox";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 
 import {
-	DtoAbstractComboBox_TextInputEvent,
-	DtoComboBox,
-	DtoComboBoxCommandHandler,
-	DtoComboBoxEventSource, DtoComboBoxServerObjectChannel,
-	DtoComboBoxTreeRecord
+	type DtoAbstractComboBox_TextInputEvent,
+	type DtoComboBox,
+	type DtoComboBoxCommandHandler,
+	type DtoComboBoxEventSource, type DtoComboBoxServerObjectChannel,
+	type DtoComboBoxTreeRecord
 } from "./generated";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {
 	AbstractField,
 	DebounceModes, executeAfterAttached,
-	FieldEditingMode, FieldEditingModes,
-	ProjectorEvent, Template
+	type FieldEditingMode, FieldEditingModes,
+	ProjectorEvent, type Template
 } from "projector-client-object-api";
-import {buildObjectTree, NodeWithChildren} from "./util";
+import {buildObjectTree, type NodeWithChildren} from "./util";
 import {ToolButton} from "projector-client-core-components";
 
 export function isFreeTextEntry(o: DtoComboBoxTreeRecord): boolean {
@@ -51,8 +51,11 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 
 	private treeBoxDropdown: TreeBoxDropdown<DtoComboBoxTreeRecord & { __children?: NodeWithChildren<DtoComboBoxTreeRecord>[] }>;
 
-	constructor(config: DtoComboBox, private soc: DtoComboBoxServerObjectChannel) {
+	private soc: DtoComboBoxServerObjectChannel;
+
+	constructor(config: DtoComboBox, soc: DtoComboBoxServerObjectChannel) {
 		super(config, soc);
+		this.soc = soc;
 	}
 
 	protected initialize(config: DtoComboBox) {

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TrivialComponent} from "../TrivialCore";
+import {type TrivialComponent} from "../TrivialCore";
 import {ProjectorEvent} from "projector-client-object-api";
 
 export interface DropDownComponent<E> extends TrivialComponent {
@@ -46,8 +46,7 @@ export interface DropDownComponent<E> extends TrivialComponent {
 
 }
 
-export enum SelectionDirection {
-	SELECT_FIRST = 1,
-	NO_SELECTION = 0,
-	SELECT_LAST = -1
-}
+export type SelectionDirection =
+	-1     // SELECT_FIRST
+	| 0    // NO_SELECTION
+	| 1;   // SELECT_LAST

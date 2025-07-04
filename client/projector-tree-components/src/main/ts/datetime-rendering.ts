@@ -18,7 +18,6 @@
  * =========================LICENSE_END==================================
  */
 import {DateTime} from "luxon";
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export function createDateIconRenderer(locale: string): (time: DateTime) => string {
 	const weekDayString = (dateTime: DateTime) => {
@@ -47,7 +46,7 @@ export function createDateIconRenderer(locale: string): (time: DateTime) => stri
 	}
 }
 
-export function createDateRenderer(locale: string, dateFormat: DateTimeFormatOptions, withIcon: boolean, additionalClass?: string): (time: DateTime) => string {
+export function createDateRenderer(locale: string, dateFormat: Intl.DateTimeFormatOptions, withIcon: boolean, additionalClass?: string): (time: DateTime) => string {
 	let dateIconRenderer = createDateIconRenderer(locale);
 	return (dateTime: DateTime) => {
 		if (dateTime == null) {
@@ -76,7 +75,7 @@ export function createClockIconRenderer(): (time: DateTime) => string {
 	}
 }
 
-export function createTimeRenderer(locale: string, timeFormat: DateTimeFormatOptions, withIcon: boolean, additionalClass?: string): (time: DateTime) => string {
+export function createTimeRenderer(locale: string, timeFormat: Intl.DateTimeFormatOptions, withIcon: boolean, additionalClass?: string): (time: DateTime) => string {
 	let clockIconRenderer = createClockIconRenderer();
 	return (dateTime: DateTime) => {
 		if (dateTime == null) {
@@ -125,7 +124,7 @@ export var timeTemplate = '<div class="tr-template-icon-single-line">' +
 	'</div>';
 
 
-export function createTimseComboBoxEntry(h: number, m: number, locale: string, timeFormat: DateTimeFormatOptions) {
+export function createTimseComboBoxEntry(h: number, m: number, locale: string, timeFormat: Intl.DateTimeFormatOptions) {
 	return {
 		hour: h,
 		minute: m,

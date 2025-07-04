@@ -19,18 +19,18 @@
  */
 import {
 	DEFAULT_TEMPLATES,
-	EditingMode,
+	type EditingMode,
 	escapeSpecialRegexCharacter,
 	generateUUID,
 	isModifierKey,
-	RenderingFunction,
+	type RenderingFunction,
 	setTimeoutOrDoImmediately,
-	TrivialComponent,
+	type TrivialComponent,
 	unProxyEntry
 } from "./TrivialCore";
-import {Instance as Popper} from '@popperjs/core';
-import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
-import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
+import {type Instance as Popper} from '@popperjs/core';
+import {type DropDownComponent, type SelectionDirection} from "./dropdown/DropDownComponent";
+import {type Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
 import {
 	elementIndex,
 	insertAfter,

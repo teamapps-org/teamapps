@@ -21,17 +21,17 @@ import {
 	DEFAULT_RENDERING_FUNCTIONS,
 	DEFAULT_TEMPLATES,
 	defaultListQueryFunctionFactory,
-	EditingMode,
-	HighlightDirection, isModifierKey, isSpecialKey,
-	QueryFunction,
-	TrivialComponent,
+	type EditingMode,
+	type HighlightDirection, isModifierKey, isSpecialKey,
+	type QueryFunction,
+	type TrivialComponent,
 	unProxyEntry
 } from "./TrivialCore";
-import {Instance as Popper} from '@popperjs/core';
-import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
-import {DropDownComponent} from "./dropdown/DropDownComponent";
+import {type Instance as Popper} from '@popperjs/core';
+import {TrivialTreeBox, type TrivialTreeBoxConfig} from "./TrivialTreeBox";
+import {type DropDownComponent} from "./dropdown/DropDownComponent";
 import {TreeBoxDropdown} from "./dropdown/TreeBoxDropdown";
-import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
+import {type Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
 import {BigDecimal, NumberParser, parseHtml, ProjectorEvent} from "projector-client-object-api";
 
 export interface TrivialUnitBoxConfig<U> extends TrivialTreeBoxConfig<U> {
@@ -72,7 +72,6 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	private $trigger: HTMLElement;
 	private usingDefaultQueryFunction: boolean;
 
-	private numberParser: NumberParser;
 	private popper: Popper;
 
 	private dropDownComponent: DropDownComponent<U>;
@@ -166,7 +165,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 			}
 		});
 		this.$editor.addEventListener("keydown", (e: KeyboardEvent) => {
-			const usedByDropdownComponent = this.dropDownComponent.handleKeyboardInput(e)
+			this.dropDownComponent.handleKeyboardInput(e)
 			if (isModifierKey(e)) {
 				return;
 			} else if (e.key === "Tab" || e.key === "Enter") {
@@ -339,7 +338,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	}
 
 	private async query(highlightDirection?: HighlightDirection) {
-		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getQueryString(), highlightDirection, this.getSelectedEntry());
+		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getQueryString(), highlightDirection ?? 0, this.getSelectedEntry());
 		if (gotResultsForQuery && document.activeElement == this.$editor) {
 			this.openDropDown();
 		}

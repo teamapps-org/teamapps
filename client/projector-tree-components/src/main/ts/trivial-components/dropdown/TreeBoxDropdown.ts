@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
-import {QueryFunction} from "../TrivialCore";
+import {type DropDownComponent, type SelectionDirection} from "./DropDownComponent";
+import {type QueryFunction} from "../TrivialCore";
 import {TrivialTreeBox} from "../TrivialTreeBox";
 import {ProjectorEvent} from "projector-client-object-api";
 import { scrollIntoView } from "seamless-scroll-polyfill";
@@ -90,7 +90,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 		return results.length > 0;
 	}
 
-	setValue(value: E): void {
+	setValue(_value: E): void {
 		// do nothing
 	}
 

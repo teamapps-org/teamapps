@@ -20,11 +20,11 @@
 
 import {isFreeTextEntry} from "./ComboBox";
 import {
-	DtoAbstractComboBox_TextInputEvent,
-	DtoComboBoxTreeRecord,
-	DtoTagComboBox,
-	DtoTagComboBoxCommandHandler,
-	DtoTagComboBoxEventSource, DtoTagComboBoxServerObjectChannel, TagComboBoxWrappingMode, TagComboBoxWrappingModes,
+	type DtoAbstractComboBox_TextInputEvent,
+	type DtoComboBoxTreeRecord,
+	type DtoTagComboBox,
+	type DtoTagComboBoxCommandHandler,
+	type DtoTagComboBoxEventSource, type DtoTagComboBoxServerObjectChannel, type TagComboBoxWrappingMode, TagComboBoxWrappingModes,
 } from "./generated";
 import {TrivialTagComboBox} from "./trivial-components/TrivialTagComboBox";
 import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
@@ -34,12 +34,12 @@ import {
 	AbstractField,
 	DebounceModes,
 	executeAfterAttached,
-	FieldEditingMode, FieldEditingModes,
+	type FieldEditingMode, FieldEditingModes,
 	parseHtml,
 	ProjectorEvent,
-	Template
+	type Template
 } from "projector-client-object-api";
-import {buildObjectTree, NodeWithChildren} from "./util";
+import {buildObjectTree, type NodeWithChildren} from "./util";
 
 export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRecord[]> implements DtoTagComboBoxEventSource, DtoTagComboBoxCommandHandler {
 
@@ -47,7 +47,6 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 
 	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<DtoComboBoxTreeRecord>>;
-	private resultCallbacksQueue: ((result: NodeWithChildren<DtoComboBoxTreeRecord>[]) => void)[] = [];
 
 	private freeTextIdEntryCounter = -1;
 
@@ -55,8 +54,11 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 
 	private treeBoxDropdown: TreeBoxDropdown<DtoComboBoxTreeRecord & { __children?: NodeWithChildren<DtoComboBoxTreeRecord>[] }>;
 
-	constructor(config: DtoTagComboBox, private soc: DtoTagComboBoxServerObjectChannel) {
+	private soc: DtoTagComboBoxServerObjectChannel;
+
+	constructor(config: DtoTagComboBox, soc: DtoTagComboBoxServerObjectChannel) {
 		super(config, soc);
+		this.soc = soc;
 	}
 
 	protected initialize(config: DtoTagComboBox) {

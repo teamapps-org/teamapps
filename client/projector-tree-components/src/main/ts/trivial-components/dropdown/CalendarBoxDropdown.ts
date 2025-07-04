@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 import {TrivialCalendarBox} from "../TrivialCalendarBox";
-import {NavigationDirection} from "../TrivialCore";
+import {type NavigationDirection} from "../TrivialCore";
 import {LocalDateTime} from "../../LocalDateTime";
-import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
+import {type DropDownComponent, type SelectionDirection} from "./DropDownComponent";
 import {ProjectorEvent} from "projector-client-object-api";
 
 export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
@@ -28,11 +28,18 @@ export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 	public readonly onValueChanged: ProjectorEvent<{ value: LocalDateTime; finalSelection: boolean }> = new ProjectorEvent();
 
 
+	private calendarBox: TrivialCalendarBox;
+	private queryFunction: (query: string) => Promise<LocalDateTime | null> | LocalDateTime | null;
+	public defaultDate: LocalDateTime;
+
 	constructor(
-		private calendarBox: TrivialCalendarBox,
-		private queryFunction: (query: string) => Promise<LocalDateTime | null> | LocalDateTime | null,
-		public defaultDate: LocalDateTime
+		calendarBox: TrivialCalendarBox,
+		queryFunction: (query: string) => Promise<LocalDateTime | null> | LocalDateTime | null,
+		defaultDate: LocalDateTime
 	) {
+		this.calendarBox = calendarBox;
+		this.queryFunction = queryFunction;
+		this.defaultDate = defaultDate;
 		this.calendarBox.onChange.addListener(event => {
 			this.onValueChanged.fire({value: event.value, finalSelection: event.timeUnitEdited == "day"});
 		});

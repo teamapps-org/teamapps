@@ -19,21 +19,25 @@
  */
 
 import {
-	DtoTree, DtoTree_ContextMenuRequestedEvent, DtoTree_NodeExpansionChangedEvent,
-	DtoTree_NodeSelectedEvent,
-	DtoTreeCommandHandler,
-	DtoTreeEventSource, DtoTreeRecord, DtoTreeServerObjectChannel
+	type DtoTree,
+	type DtoTree_ContextMenuRequestedEvent,
+	type DtoTree_NodeExpansionChangedEvent,
+	type DtoTree_NodeSelectedEvent,
+	type DtoTreeCommandHandler,
+	type DtoTreeEventSource,
+	type DtoTreeRecord,
+	type DtoTreeServerObjectChannel
 } from "./generated";
 import {TrivialTree} from "./trivial-components/TrivialTree";
 import {
 	AbstractComponent,
-	Component,
+	type Component,
 	loadSensitiveThrottling,
 	parseHtml,
 	ProjectorEvent,
-	Template
+	type Template
 } from "projector-client-object-api";
-import {buildObjectTree, NodeWithChildren} from "./util";
+import {buildObjectTree, type NodeWithChildren} from "./util";
 import {ContextMenu} from "projector-client-core-components";
 
 export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHandler, DtoTreeEventSource {
@@ -47,8 +51,11 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 	private nodes: DtoTreeRecord[];
 	private contextMenu: ContextMenu;
 
-	constructor(config: DtoTree, private soc: DtoTreeServerObjectChannel) {
+	private soc: DtoTreeServerObjectChannel;
+
+	constructor(config: DtoTree, soc: DtoTreeServerObjectChannel) {
 		super(config);
+		this.soc = soc;
 		this.$panel = parseHtml('<div class="Tree">');
 
 		this.nodes = config.initialData;

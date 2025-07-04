@@ -19,7 +19,7 @@
  */
 import {DateTime} from "luxon";
 import {AbstractDateTimeField} from "./AbstractDateTimeField";
-import {DtoLocalDateTimeField, DtoLocalDateTimeFieldCommandHandler, DtoLocalDateTimeFieldEventSource} from "./generated";
+import {type DtoLocalDateTimeField, type DtoLocalDateTimeFieldCommandHandler, type DtoLocalDateTimeFieldEventSource} from "./generated";
 import {arraysEqual} from "projector-client-object-api";
 
 type LocalDateTimeArray = [number, number, number, number, number, number, number];

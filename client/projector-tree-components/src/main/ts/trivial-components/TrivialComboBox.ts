@@ -18,16 +18,16 @@
  * =========================LICENSE_END==================================
  */
 import {
-	EditingMode,
+	type EditingMode,
 	isModifierKey,
 	objectEquals,
-	RenderingFunction,
+	type RenderingFunction,
 	setTimeoutOrDoImmediately,
-	TrivialComponent,
+	type TrivialComponent,
 	unProxyEntry
 } from "./TrivialCore";
-import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
-import {Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
+import {type DropDownComponent, type SelectionDirection} from "./dropdown/DropDownComponent";
+import {type Disposable, positionDropdownWithAutoUpdate} from "./ComboBoxPopper";
 import {parseHtml, ProjectorEvent} from "projector-client-object-api";
 import {ToolButton} from "projector-client-core-components";
 

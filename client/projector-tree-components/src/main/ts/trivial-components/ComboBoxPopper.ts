@@ -17,7 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {autoUpdate, computePosition, detectOverflow, flip, hide, MiddlewareState, shift, size, Strategy} from "@floating-ui/dom";
+import {
+	autoUpdate,
+	computePosition,
+	detectOverflow,
+	flip,
+	hide,
+	type MiddlewareState,
+	shift,
+	size,
+	type Strategy
+} from "@floating-ui/dom";
 
 type Options = {
 	padding?: number,

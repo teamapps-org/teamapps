@@ -17,24 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {defaultListQueryFunctionFactory, isModifierKey, QueryFunction} from "./trivial-components/TrivialCore";
-import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "./trivial-components/TrivialUnitBox";
+import {defaultListQueryFunctionFactory, isModifierKey, type QueryFunction} from "./trivial-components/TrivialCore";
+import {TrivialUnitBox, type TrivialUnitBoxChangeEvent} from "./trivial-components/TrivialUnitBox";
 import {
 	AbstractField,
 	BigDecimal,
 	DebounceModes,
 	deepEquals,
 	executeAfterAttached,
-	FieldEditingMode, FieldEditingModes,
+	type FieldEditingMode, FieldEditingModes,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
-	DtoCurrencyField,
-	DtoCurrencyField_TextInputEvent,
-	DtoCurrencyFieldCommandHandler,
-	DtoCurrencyFieldEventSource,
-	DtoCurrencyUnit,
-	DtoCurrencyValue
+	type DtoCurrencyField,
+	type DtoCurrencyField_TextInputEvent,
+	type DtoCurrencyFieldCommandHandler,
+	type DtoCurrencyFieldEventSource,
+	type DtoCurrencyUnit,
+	type DtoCurrencyValue
 } from "./generated";
 import {selectElementContents} from "./util";
 
@@ -44,10 +44,8 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 
 	private trivialUnitBox: TrivialUnitBox<DtoCurrencyUnit>;
 	private queryFunction: QueryFunction<DtoCurrencyUnit>;
-	private numberFormat: Intl.NumberFormat;
 
 	protected initialize(config: DtoCurrencyField) {
-		let initialPrecision = config.fixedPrecision >= 0 ? config.fixedPrecision : 2;
 
 		this.trivialUnitBox = new TrivialUnitBox<DtoCurrencyUnit>({
 			numberFormatFunction: entry => this.getNumberFormat(entry),
@@ -151,7 +149,6 @@ export class CurrencyField extends AbstractField<DtoCurrencyField, DtoCurrencyVa
 	}
 
 	getTransientValue(): DtoCurrencyValue {
-		let amount = this.trivialUnitBox.getAmount();
 		return {
 			currencyUnit: this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(),
 			amount: this.trivialUnitBox.getAmount()?.value

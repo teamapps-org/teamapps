@@ -318,7 +318,7 @@ export function getYearMonthDayOrderFromDateFormat(dateFormat: string): YearMont
 		M: dateFormat.toUpperCase().indexOf("M"),
 		D: dateFormat.toUpperCase().indexOf("D")
 	};
-	return <YearMonthDayOrder>(["D", "M", "Y"].sort((a, b) => ymdIndexes[a] - ymdIndexes[b]).join(""));
+	return (["D", "M", "Y"].sort((a, b) => ymdIndexes[a] - ymdIndexes[b]).join("")) as YearMonthDayOrder;
 }
 
 export function getYearMonthDayOrderForLocale(locale: string): YearMonthDayOrder {

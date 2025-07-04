@@ -22,22 +22,24 @@ import {LocalDateTime} from "./LocalDateTime";
 import {
 	AbstractField,
 	DebounceModes,
-	DtoDateTimeFormatDescriptor, executeAfterAttached,
-	FieldEditingMode, FieldEditingModes,
+	type DtoDateTimeFormatDescriptor,
+	executeAfterAttached,
+	type FieldEditingMode,
+	FieldEditingModes,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {
-	DtoAbstractTimeField,
-	DtoAbstractTimeFieldCommandHandler,
-	DtoAbstractTimeFieldEventSource
+	type DtoAbstractTimeField,
+	type DtoAbstractTimeFieldCommandHandler,
+	type DtoAbstractTimeFieldEventSource
 } from "./generated";
 import {TrivialComboBox} from "./trivial-components/TrivialComboBox";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	DtoTextInputHandlingField_TextInputEvent,
-	SpecialKey, SpecialKeys
+	type DtoTextInputHandlingField_SpecialKeyPressedEvent,
+	type DtoTextInputHandlingField_TextInputEvent,
+	SpecialKeys
 } from "projector-client-core-components";
 
 

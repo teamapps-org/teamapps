@@ -19,23 +19,23 @@
  */
 
 import {
-	DtoItemView,
-	DtoItemView_ItemClickedEvent,
-	DtoItemViewCommandHandler,
-	DtoItemViewEventSource,
-	DtoItemViewItemGroup,
-	DtoItemViewServerObjectChannel,
-	ItemBackgroundMode
+	type DtoItemView,
+	type DtoItemView_ItemClickedEvent,
+	type DtoItemViewCommandHandler,
+	type DtoItemViewEventSource,
+	type DtoItemViewItemGroup,
+	type DtoItemViewServerObjectChannel,
+	type ItemBackgroundMode
 } from "./generated";
 import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {DEFAULT_TEMPLATES} from "./trivial-components/TrivialCore";
 import {
 	AbstractComponent,
-	DtoIdentifiableClientRecord,
+	type DtoIdentifiableClientRecord,
 	generateUUID,
 	parseHtml,
 	ProjectorEvent,
-	Template
+	type Template
 } from "projector-client-object-api";
 
 export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemViewCommandHandler, DtoItemViewEventSource {
@@ -46,8 +46,8 @@ export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemV
 	private groupsByGroupId: { [index: string]: ItemGroup } = {};
 	private filterString: string = "";
 
-	constructor(config: DtoItemView, private soc: DtoItemViewServerObjectChannel) {
-		super(config);
+	constructor(config: DtoItemView, soc: DtoItemViewServerObjectChannel) {
+		super(config, soc);
 
 		this.$itemView = parseHtml('<div class="ItemView"></div>');
 		this.$itemView.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";
@@ -75,7 +75,7 @@ export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemV
 	}
 
 	private createItemGroup(itemGroupConfig: DtoItemViewItemGroup) {
-		const itemGroup = new ItemGroup(this, itemGroupConfig, this.config.groupHeaderTemplate as Template);
+		const itemGroup = new ItemGroup(itemGroupConfig, this.config.groupHeaderTemplate as Template);
 		itemGroup.onItemClicked.addListener(item => this.onItemClicked.fire({
 			groupId: itemGroupConfig.id,
 			itemId: item.id
@@ -171,7 +171,7 @@ class ItemGroup {
 
 	public readonly onItemClicked: ProjectorEvent<DtoIdentifiableClientRecord> = new ProjectorEvent<DtoIdentifiableClientRecord>();
 
-	constructor(private itemView: ItemView, private config: DtoItemViewItemGroup, groupHeaderTemplateRenderer: Template) {
+	constructor(config: DtoItemViewItemGroup, groupHeaderTemplateRenderer: Template) {
 		this.items = config.items;
 
 		const groupHtmlId = `item-group-${generateUUID()}`;

@@ -23,12 +23,12 @@ import {createDateRenderer} from "./datetime-rendering";
 import {CalendarBoxDropdown} from "./trivial-components/dropdown/CalendarBoxDropdown";
 import {TrivialCalendarBox} from "./trivial-components/TrivialCalendarBox";
 import {
-	DateFieldDropDownMode, DateFieldDropDownModes,
-	DtoLocalDate,
-	DtoLocalDateField,
-	DtoLocalDateField_TextInputEvent,
-	DtoLocalDateFieldCommandHandler,
-	DtoLocalDateFieldEventSource
+	DateFieldDropDownModes,
+	type DtoLocalDate,
+	type DtoLocalDateField,
+	type DtoLocalDateField_TextInputEvent,
+	type DtoLocalDateFieldCommandHandler,
+	type DtoLocalDateFieldEventSource
 } from "./generated";
 import {TrivialComboBox} from "./trivial-components/TrivialComboBox";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
@@ -37,15 +37,13 @@ import {
 	AbstractField,
 	DebounceModes,
 	deepEquals,
-	DtoDateTimeFormatDescriptor, executeAfterAttached,
-	FieldEditingMode, FieldEditingModes,
+	type DtoDateTimeFormatDescriptor,
+	executeAfterAttached,
+	type FieldEditingMode,
+	FieldEditingModes,
 	ProjectorEvent
 } from "projector-client-object-api";
-import {
-	DtoTextInputHandlingField_SpecialKeyPressedEvent,
-	SpecialKey,
-	SpecialKeys
-} from "projector-client-core-components";
+import {type DtoTextInputHandlingField_SpecialKeyPressedEvent, SpecialKeys} from "projector-client-core-components";
 
 export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDate> implements DtoLocalDateFieldEventSource, DtoLocalDateFieldCommandHandler {
 

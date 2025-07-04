@@ -18,10 +18,17 @@
  * =========================LICENSE_END==================================
  */
 
-import {DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, TrivialComponent} from "./TrivialCore";
+import {
+	DEFAULT_TEMPLATES,
+	generateUUID,
+	type HighlightDirection,
+	type MatchingOptions,
+	type TrivialComponent
+} from "./TrivialCore";
 import {highlightMatches} from "./util/highlight";
 import {
-	addDelegatedEventListener, closestAncestor,
+	addDelegatedEventListener,
+	closestAncestor,
 	insertAfter,
 	insertBefore,
 	parseHtml,
@@ -161,9 +168,17 @@ class EntryWrapper<E> {
 	public readonly depth: number;
 	private _id: string | number;
 
-	constructor(entry: E, public readonly parent: EntryWrapper<E>, private config: TrivialTreeBoxConfig<E> & {
+	public readonly parent: EntryWrapper<E>;
+
+	private config: TrivialTreeBoxConfig<E> & {
+		elementFactory?: (entry: EntryWrapper<E>) => HTMLElement
+	};
+
+	constructor(entry: E, parent: EntryWrapper<E>, config: TrivialTreeBoxConfig<E> & {
 		elementFactory?: (entry: EntryWrapper<E>) => HTMLElement
 	}) {
+		this.parent = parent;
+		this.config = config;
 		this.entry = entry;
 		this.depth = parent != null ? parent.depth + 1 : 0;
 		let children: E[] = (this.entry as any)[config.childrenProperty];
