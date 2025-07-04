@@ -18,20 +18,18 @@
  * =========================LICENSE_END==================================
  */
 
-import {DtoMustacheTemplate} from "./generated";
+import {type DtoMustacheTemplate} from "./generated";
 import {default as mustache} from "mustache";
-import {Template} from "projector-client-object-api";
+import {type Template} from "projector-client-object-api";
 
 export class MustacheTemplate implements Template {
 
-	constructor(private config: DtoMustacheTemplate) {
+	private config: DtoMustacheTemplate;
+
+	constructor(config: DtoMustacheTemplate) {
+		this.config = config;
 		mustache.parse(config.templateString);
 	}
-
-	invoke(name: string, params: any[]): Promise<any> {
-		// no commands at the moment
-        throw new Error("Method not implemented.");
-    }
 
 	render(data: any): string {
 		if (data == null) {
