@@ -212,6 +212,10 @@ public class TypeReferenceWrapper {
 		return type.isDtoType();
 	}
 
+	public boolean isImportable() {
+		return isDtoTypeOrDtoTypeCollection() && !isClientObjectPointerOrClientObjectPointerCollection();
+	}
+
 	public boolean isObject() {
 		return context.typeReference() != null && Set.of("Object", "java.lang.Object").contains(context.typeReference().typeName().getText());
 	}
@@ -226,6 +230,15 @@ public class TypeReferenceWrapper {
 
 	public boolean isClientObjectPointer() {
 		return context.typeReference() != null && context.typeReference().pointerModifier() != null;
+	}
+
+	public boolean isClientObjectPointerOrClientObjectPointerCollection() {
+		TypeReferenceWrapper type = this;
+		if (isCollection()) {
+			type = getCollectionTypeOrThrow();
+		}
+		return type.isClientObjectPointer();
+
 	}
 
 	public String getTypeScriptTypeName() {

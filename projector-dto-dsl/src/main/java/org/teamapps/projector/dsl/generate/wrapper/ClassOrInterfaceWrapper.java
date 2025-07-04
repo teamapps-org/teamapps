@@ -215,37 +215,37 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.toList();
 		var referencedPropertyParameterTypes = getProperties().stream()
 				.map(p -> p.getType())
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
+				.filter(TypeReferenceWrapper::isImportable)
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 		var referencedCommandParameterTypes = (getCommands()).stream()
 				.flatMap(cd -> cd.getParameters().stream())
 				.map(p -> p.getType())
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
+				.filter(TypeReferenceWrapper::isImportable)
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 		var referencedCommandReturnTypes = (getCommands()).stream()
 				.map(cd -> cd.getReturnType())
 				.filter(Objects::nonNull)
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
+				.filter(TypeReferenceWrapper::isImportable)
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 		var referencedEventParameterTypes = (typescript ? getAllEvents() : getEvents()).stream()
 				.flatMap(cd -> cd.getParameters().stream())
 				.map(p -> p.getType())
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
+				.filter(TypeReferenceWrapper::isImportable)
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 		var referencedQueryParamterTypes = (typescript ? getAllQueries() : getQueries()).stream()
 				.flatMap(cd -> cd.getParameters().stream())
 				.map(p -> p.getType())
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
+				.filter(TypeReferenceWrapper::isImportable)
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 		var referencedQueryReturnTypes = (typescript ? getAllQueries() : getQueries()).stream()
 				.map(cd -> cd.getReturnType())
 				.filter(Objects::nonNull)
-				.filter(t -> t.isDtoTypeOrDtoTypeCollection() && !t.isClientObjectPointer())
+				.filter(TypeReferenceWrapper::isImportable)
 				.map(t -> t.findReferencedDtoType())
 				.toList();
 
@@ -263,7 +263,6 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				.distinct()
 				.toList();
 	}
-
 
 	default List<TypeWrapper<?>> getAllReferencedTypes(boolean typescript) {
 		return getAllSuperTypes(true).stream()

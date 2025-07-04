@@ -12,7 +12,6 @@ import type {AEventSource} from "./A";
 import type {IEventSource} from "./I";
 import type {A_BEvent} from "./A";
 import type {I_JEvent} from "./I";
-interface EventEmitter<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }
 
 export interface B extends A, I {
 	_type?: string;

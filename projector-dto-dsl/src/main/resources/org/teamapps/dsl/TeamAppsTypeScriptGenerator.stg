@@ -28,7 +28,7 @@ classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
 <c.effectiveTypeScriptImports:{im|import type {<im.name>\} from "<im.jsModuleName>";}; separator="\n">
-<if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
+<if(c.events)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{c|<c.typeScriptIdentifier>};  separator=", "> <endif>{
 	_type?: string;
@@ -74,7 +74,7 @@ interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
 <c.effectiveTypeScriptImports:{im|import type {<im.name>\} from "<im.jsModuleName>";}; separator="\n">
-<if(c.allEvents)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
+<if(c.events)>interface EventEmitter\<EO> { addListener(fn: (eventObject?: EO) => void, ...rest: any): {unsubscribe: () => void}; }<endif>
 
 export interface <c.typeScriptIdentifier> <if(c.nonExternalSuperTypes)>extends <c.nonExternalSuperTypes:{superInterface|<superInterface.typeScriptIdentifier>}; separator=", "> <endif>{
 	_type?: string;
