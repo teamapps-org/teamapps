@@ -9,6 +9,8 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+replace.sh
+
 ### Java template
 *.class
 

@@ -6,37 +6,48 @@ import dts from 'vite-plugin-dts';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default defineConfig({
-	build: {
-		lib: { // library mode
-			entry: path.resolve(__dirname, 'src/main/ts/index.ts'),
-			formats: ['es'],
-			fileName: (format) => {
-				if (format === 'es') {
-					return 'index.js';
-				} else {
-					throw new Error(`Unexpected format: ${format}`);
-				}
+export default defineConfig(({command}) => {
+
+	const isDevServer = command === 'serve';
+	let root = isDevServer ? 'src/test/ts' : process.cwd();
+
+	return {
+		root: root,
+		esbuild: {
+			// support javascript decorators!
+			target: 'es2022'
+		},
+		build: {
+			lib: { // library mode
+				entry: path.resolve(__dirname, 'src/main/ts/index.ts'),
+				formats: ['es'],
+				fileName: (format) => {
+					if (format === 'es') {
+						return 'index.js';
+					} else {
+						throw new Error(`Unexpected format: ${format}`);
+					}
+				},
+			},
+			outDir: 'target/js-dist',
+			sourcemap: true,
+			minify: process.env.NODE_ENV === 'production',
+			cssCodeSplit: true,
+		},
+		plugins: [
+			dts(), // emit TS declaration files
+		],
+		css: {
+			preprocessorOptions: {
+				less: {
+					paths: [path.resolve(__dirname, 'src/main/less')],
+				},
 			},
 		},
-		outDir: 'target/js-dist',
-		sourcemap: true,
-		minify: process.env.NODE_ENV === 'production',
-		cssCodeSplit: true,
-	},
-	plugins: [
-		dts(), // emit TS declaration files
-	],
-	css: {
-		preprocessorOptions: {
-			less: {
-				paths: [path.resolve(__dirname, 'src/main/less')],
+		resolve: {
+			alias: {
+				'@less/index.less': path.resolve(__dirname, 'src/main/less/index.less'),
 			},
 		},
-	},
-	resolve: {
-		alias: {
-			'@less/index.less': path.resolve(__dirname, 'src/main/less/index.less'),
-		},
-	},
+	};
 });
