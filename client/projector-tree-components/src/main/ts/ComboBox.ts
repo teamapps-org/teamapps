@@ -24,15 +24,18 @@ import {
 	type DtoAbstractComboBox_TextInputEvent,
 	type DtoComboBox,
 	type DtoComboBoxCommandHandler,
-	type DtoComboBoxEventSource, type DtoComboBoxServerObjectChannel,
+	type DtoComboBoxEventSource,
+	type DtoComboBoxServerObjectChannel,
 	type DtoComboBoxTreeRecord
 } from "./generated";
 import {TreeBoxDropdown} from "./trivial-components/dropdown/TreeBoxDropdown";
 import {
 	AbstractField,
 	DebounceModes, executeAfterAttached,
-	type FieldEditingMode, FieldEditingModes,
-	ProjectorEvent, type Template
+	type FieldEditingMode,
+	FieldEditingModes,
+	ProjectorEvent,
+	type Template
 } from "projector-client-object-api";
 import {buildObjectTree, type NodeWithChildren} from "./util";
 import {ToolButton} from "projector-client-core-components";

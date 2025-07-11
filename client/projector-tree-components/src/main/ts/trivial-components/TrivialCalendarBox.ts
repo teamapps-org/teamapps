@@ -105,8 +105,12 @@ export class TrivialCalendarBox implements TrivialComponent {
 		return daysOfMonth;
 	}
 
-	private firstDayOfWeek(firstDayOfMonth: LocalDateTime): LocalDateTime {
-		return firstDayOfMonth.set({weekday: this.config.firstDayOfWeek <= firstDayOfMonth.weekday ? this.config.firstDayOfWeek : this.config.firstDayOfWeek - 7});
+	private firstDayOfWeek(date: LocalDateTime): LocalDateTime {
+		if (this.config.firstDayOfWeek <= date.weekday) {
+			return date.minus({day: date.weekday - this.config.firstDayOfWeek})
+		} else {
+			return date.minus({day: date.weekday - this.config.firstDayOfWeek + 7})
+		}
 	}
 
 	private updateDisplay() {

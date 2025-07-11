@@ -2,7 +2,12 @@
   "name": "projector-client-communication",
   "version": "0.1.0-SNAPSHOT",
   "type": "module",
-  "exports": "./target/js-dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./target/js-dist/index.d.ts",
+      "import": "./target/js-dist/index.js"
+    }
+  },
   "types": "./target/js-dist/index.d.ts",
   "scripts": {
     "del_dist": "rm -rf target/dist/*",
@@ -12,9 +17,6 @@
     "watch": "pnpm run del_dist && tsc --watch"
   },
   "devDependencies": {
-    "esbuild": "^0.15.13",
-    "esbuild-plugin-alias": "^0.2.1",
-    "esbuild-plugin-less": "^1.1.11",
     "typescript": "^5.1"
   }
 }

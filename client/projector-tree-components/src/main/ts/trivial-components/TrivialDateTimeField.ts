@@ -421,7 +421,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private queryDate(highlightDirection: HighlightDirection = 1) {
 		const queryString = this.getNonSelectedEditorValue();
 		let entries: DateTime[] = this.dateSuggestionEngine
-			.generateSuggestions(queryString, LocalDateTime.fromDateTime(DateTime.fromObject({zone: this.config.timeZone})))
+			.generateSuggestions(queryString, LocalDateTime.fromDateTime(DateTime.fromObject({}, {zone: this.config.timeZone})))
 			.map(s => s.toZoned(this.config.timeZone));
 		if (!entries || entries.length === 0) {
 			this.closeDropDown();

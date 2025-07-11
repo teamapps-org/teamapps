@@ -19,11 +19,7 @@
  */
 
 import {type ContextMenuEvent, TrivialTreeBox, type TrivialTreeBoxConfig} from "./TrivialTreeBox";
-import {
-	DEFAULT_TEMPLATES,
-	type TrivialComponent,
-	unProxyEntry
-} from "./TrivialCore";
+import {DEFAULT_TEMPLATES, type TrivialComponent, unProxyEntry} from "./TrivialCore";
 import {parseHtml, ProjectorEvent} from "projector-client-object-api";
 
 export interface TrivialTreeConfig<E> extends TrivialTreeBoxConfig<E> {

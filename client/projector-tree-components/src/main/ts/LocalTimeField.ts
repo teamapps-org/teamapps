@@ -19,9 +19,14 @@
  */
 import {LocalDateTime} from "./LocalDateTime";
 import {createTimeRenderer} from "./datetime-rendering";
-import {type DtoLocalTimeField, type DtoLocalTimeFieldCommandHandler, type DtoLocalTimeFieldEventSource} from "./generated";
+import {
+	type DtoLocalTimeField,
+	type DtoLocalTimeFieldCommandHandler,
+	type DtoLocalTimeFieldEventSource
+} from "./generated";
 import {AbstractTimeField} from "./AbstractTimeField";
 import {arraysEqual} from "projector-client-object-api";
+import type {DateTimeFormatOptions} from "luxon";
 
 type LocalTime = [number, number, number, number];
 
@@ -71,11 +76,11 @@ export class LocalTimeField extends AbstractTimeField<DtoLocalTimeField, LocalTi
 	}
 
 	protected localDateTimeToString(entry: LocalDateTime): string {
-		return entry.setLocale(this.config.locale).toLocaleString(this.config.timeFormat);
+		return entry.setLocale(this.config.locale).toLocaleString(this.config.timeFormat as DateTimeFormatOptions);
 	}
 
 	protected createTimeRenderer(): (time: LocalDateTime) => string {
-		let timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat, this.config.clockIconEnabled, "static-readonly-TimeField");
+		let timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat as Intl.DateTimeFormatOptions, this.config.clockIconEnabled, "static-readonly-TimeField");
 		return entry => timeRenderer(entry?.toUTC());
 	}
 }

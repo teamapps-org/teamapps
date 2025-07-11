@@ -23,7 +23,6 @@ import {
 	AbstractField,
 	DebounceModes,
 	type DtoDateTimeFormatDescriptor,
-	executeAfterAttached,
 	type FieldEditingMode,
 	FieldEditingModes,
 	ProjectorEvent
@@ -41,6 +40,7 @@ import {
 	type DtoTextInputHandlingField_TextInputEvent,
 	SpecialKeys
 } from "projector-client-core-components";
+import {executeAfterAttached} from "projector-client-object-api";
 
 
 export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> extends AbstractField<C, V> implements DtoAbstractTimeFieldEventSource, DtoAbstractTimeFieldCommandHandler {

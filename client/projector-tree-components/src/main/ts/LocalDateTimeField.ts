@@ -19,7 +19,11 @@
  */
 import {DateTime} from "luxon";
 import {AbstractDateTimeField} from "./AbstractDateTimeField";
-import {type DtoLocalDateTimeField, type DtoLocalDateTimeFieldCommandHandler, type DtoLocalDateTimeFieldEventSource} from "./generated";
+import {
+	type DtoLocalDateTimeField,
+	type DtoLocalDateTimeFieldCommandHandler,
+	type DtoLocalDateTimeFieldEventSource
+} from "./generated";
 import {arraysEqual} from "projector-client-object-api";
 
 type LocalDateTimeArray = [number, number, number, number, number, number, number];
@@ -56,7 +60,8 @@ export class LocalDateTimeField extends AbstractDateTimeField<DtoLocalDateTimeFi
 			hour: uiValue[3],
 			minute: uiValue[4],
 			second: uiValue[5] || 0,
-			millisecond: uiValue[6] || 0,
+			millisecond: uiValue[6] || 0
+		}, {
 			zone: "UTC"
 		});
 	}

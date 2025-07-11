@@ -19,7 +19,11 @@
  */
 import {DateTime} from "luxon";
 import {AbstractDateTimeField} from "./AbstractDateTimeField";
-import {type DtoInstantDateTimeField, type DtoInstantDateTimeFieldCommandHandler, type DtoInstantDateTimeFieldEventSource} from "./generated";
+import {
+	type DtoInstantDateTimeField,
+	type DtoInstantDateTimeFieldCommandHandler,
+	type DtoInstantDateTimeFieldEventSource
+} from "./generated";
 
 export class InstantDateTimeField extends AbstractDateTimeField<DtoInstantDateTimeField, number> implements DtoInstantDateTimeFieldEventSource, DtoInstantDateTimeFieldCommandHandler {
 

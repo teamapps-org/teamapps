@@ -22,6 +22,7 @@
     "LICENSE"
   ],
   "devDependencies": {
+    "@types/luxon": "^3.6.2",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4"
@@ -31,7 +32,7 @@
     "@material-symbols/svg-400": "latest",
     "@popperjs/core": "^2.11.8",
     "fastest-levenshtein": "^1.0.16",
-    "luxon": "^3.6.1",
+    "luxon": "^3.7.1",
     "projector-client-core-components": "workspace:*",
     "projector-client-object-api": "workspace:*",
     "seamless-scroll-polyfill": "^2.3.4"

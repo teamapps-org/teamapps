@@ -24,7 +24,10 @@ import {
 	type DtoComboBoxTreeRecord,
 	type DtoTagComboBox,
 	type DtoTagComboBoxCommandHandler,
-	type DtoTagComboBoxEventSource, type DtoTagComboBoxServerObjectChannel, type TagComboBoxWrappingMode, TagComboBoxWrappingModes,
+	type DtoTagComboBoxEventSource,
+	type DtoTagComboBoxServerObjectChannel,
+	type TagComboBoxWrappingMode,
+	TagComboBoxWrappingModes,
 } from "./generated";
 import {TrivialTagComboBox} from "./trivial-components/TrivialTagComboBox";
 import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
@@ -34,7 +37,8 @@ import {
 	AbstractField,
 	DebounceModes,
 	executeAfterAttached,
-	type FieldEditingMode, FieldEditingModes,
+	type FieldEditingMode,
+	FieldEditingModes,
 	parseHtml,
 	ProjectorEvent,
 	type Template

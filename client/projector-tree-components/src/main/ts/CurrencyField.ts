@@ -25,7 +25,8 @@ import {
 	DebounceModes,
 	deepEquals,
 	executeAfterAttached,
-	type FieldEditingMode, FieldEditingModes,
+	type FieldEditingMode,
+	FieldEditingModes,
 	ProjectorEvent
 } from "projector-client-object-api";
 import {

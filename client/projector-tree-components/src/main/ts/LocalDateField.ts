@@ -134,11 +134,11 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 	}
 
 	protected localDateTimeToString(entry: LocalDateTime): string {
-		return entry.setLocale(this.config.locale).toLocaleString(this.config.dateFormat);
+		return entry.setLocale(this.config.locale).toLocaleString(this.config.dateFormat as Intl.DateTimeFormatOptions);
 	}
 
 	protected createDateRenderer(): (time: LocalDateTime) => string {
-		let dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat, this.config.calendarIconEnabled, "static-readonly-DateField");
+		let dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat as Intl.DateTimeFormatOptions, this.config.calendarIconEnabled, "static-readonly-DateField");
 		return entry => dateRenderer(entry?.toUTC());
 	}
 

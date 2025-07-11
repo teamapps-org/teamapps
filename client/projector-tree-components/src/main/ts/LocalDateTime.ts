@@ -18,27 +18,30 @@
  * =========================LICENSE_END==================================
  */
 import {
-	DateObjectUnits,
+	type DateObjectUnits,
 	DateTime,
-	DateTimeFormatOptions,
-	DiffOptions,
+	type DateTimeFormatOptions,
+	type DateTimeUnit,
+	type DiffOptions,
 	Duration,
-	DurationObject,
-	DurationUnit,
+	type DurationLike,
+	type DurationUnit,
+	type EndOfOptions,
+	type HasSameOptions,
 	Interval,
-	LocaleOptions,
-	ToISODateOptions,
-	ToISOTimeOptions,
-	ToSQLOptions,
+	type LocaleOptions,
+	type PossibleDaysInMonth,
+	type ToISODateOptions,
+	type ToISOTimeOptions,
 	Zone,
-	ZoneOptions
+	type ZoneOptions
 } from "luxon";
 
 export type LocalDateObject = DateObjectUnits & LocaleOptions;
 
 var LOCAL_ZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isInDST" | "isOffsetFixed" | "offsetNameShort" | "offsetNameLong" | "offset" | "setZone" | "diff" | "diffNow" | "endOf" | "equals" | "hasSame" | "minus" | "plus" | "reconfigure" | "set" | "setLocale" | "startOf" | "toJSDate" | "toMillis" | "toRelative" | "toRelativeCalendar" | "toRFC2822" | "toSeconds"> {
+export class LocalDateTime {
 
 	private dateTime: DateTime; // guaranteed to be "UTC"
 
@@ -66,208 +69,104 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 		return this.dateTime.day;
 	}
 
-	set day(value: number) {
-		this.dateTime.day = value;
-	}
-
-	get daysInMonth(): number {
+	get daysInMonth(): PossibleDaysInMonth {
 		return this.dateTime.daysInMonth;
-	}
-
-	set daysInMonth(value: number) {
-		this.dateTime.daysInMonth = value;
 	}
 
 	get daysInYear(): number {
 		return this.dateTime.daysInYear;
 	}
 
-	set daysInYear(value: number) {
-		this.dateTime.daysInYear = value;
-	}
-
 	get hour(): number {
 		return this.dateTime.hour;
-	}
-
-	set hour(value: number) {
-		this.dateTime.hour = value;
 	}
 
 	get invalidReason(): string | null {
 		return this.dateTime.invalidReason;
 	}
 
-	set invalidReason(value: string | null) {
-		this.dateTime.invalidReason = value;
-	}
-
 	get invalidExplanation(): string | null {
 		return this.dateTime.invalidExplanation;
-	}
-
-	set invalidExplanation(value: string | null) {
-		this.dateTime.invalidExplanation = value;
 	}
 
 	get isInLeapYear(): boolean {
 		return this.dateTime.isInLeapYear;
 	}
 
-	set isInLeapYear(value: boolean) {
-		this.dateTime.isInLeapYear = value;
-	}
-
 	get isValid(): boolean {
 		return this.dateTime.isValid;
-	}
-
-	set isValid(value: boolean) {
-		this.dateTime.isValid = value;
 	}
 
 	get locale(): string {
 		return this.dateTime.locale;
 	}
 
-	set locale(value: string) {
-		this.dateTime.locale = value;
-	}
-
 	get millisecond(): number {
 		return this.dateTime.millisecond;
-	}
-
-	set millisecond(value: number) {
-		this.dateTime.millisecond = value;
 	}
 
 	get minute(): number {
 		return this.dateTime.minute;
 	}
 
-	set minute(value: number) {
-		this.dateTime.minute = value;
-	}
-
 	get month(): number {
 		return this.dateTime.month;
-	}
-
-	set month(value: number) {
-		this.dateTime.month = value;
 	}
 
 	get monthLong(): string {
 		return this.dateTime.monthLong;
 	}
 
-	set monthLong(value: string) {
-		this.dateTime.monthLong = value;
-	}
-
 	get monthShort(): string {
 		return this.dateTime.monthShort;
-	}
-
-	set monthShort(value: string) {
-		this.dateTime.monthShort = value;
 	}
 
 	get numberingSystem(): string {
 		return this.dateTime.numberingSystem;
 	}
 
-	set numberingSystem(value: string) {
-		this.dateTime.numberingSystem = value;
-	}
-
 	get ordinal(): number {
 		return this.dateTime.ordinal;
-	}
-
-	set ordinal(value: number) {
-		this.dateTime.ordinal = value;
 	}
 
 	get outputCalendar(): string {
 		return this.dateTime.outputCalendar;
 	}
 
-	set outputCalendar(value: string) {
-		this.dateTime.outputCalendar = value;
-	}
-
 	get quarter(): number {
 		return this.dateTime.quarter;
-	}
-
-	set quarter(value: number) {
-		this.dateTime.quarter = value;
 	}
 
 	get second(): number {
 		return this.dateTime.second;
 	}
 
-	set second(value: number) {
-		this.dateTime.second = value;
-	}
-
 	get weekNumber(): number {
 		return this.dateTime.weekNumber;
-	}
-
-	set weekNumber(value: number) {
-		this.dateTime.weekNumber = value;
 	}
 
 	get weekYear(): number {
 		return this.dateTime.weekYear;
 	}
 
-	set weekYear(value: number) {
-		this.dateTime.weekYear = value;
-	}
-
 	get weekday(): number {
 		return this.dateTime.weekday;
-	}
-
-	set weekday(value: number) {
-		this.dateTime.weekday = value;
 	}
 
 	get weekdayLong(): string {
 		return this.dateTime.weekdayLong;
 	}
 
-	set weekdayLong(value: string) {
-		this.dateTime.weekdayLong = value;
-	}
-
 	get weekdayShort(): string {
 		return this.dateTime.weekdayShort;
-	}
-
-	set weekdayShort(value: string) {
-		this.dateTime.weekdayShort = value;
 	}
 
 	get weeksInWeekYear(): number {
 		return this.dateTime.weeksInWeekYear;
 	}
 
-	set weeksInWeekYear(value: number) {
-		this.dateTime.weeksInWeekYear = value;
-	}
-
 	get year(): number {
 		return this.dateTime.year;
-	}
-
-	set year(value: number) {
-		this.dateTime.year = value;
 	}
 
 	diff(other: LocalDateTime, unit?: DurationUnit | DurationUnit[], options?: DiffOptions): Duration {
@@ -278,8 +177,8 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 		return this.diff(LocalDateTime.local(), unit, options);
 	}
 
-	endOf(unit: DurationUnit): LocalDateTime {
-		return new LocalDateTime(this.dateTime.endOf(unit));
+	endOf(unit: DateTimeUnit, opts?: EndOfOptions): LocalDateTime {
+		return new LocalDateTime(this.dateTime.endOf(unit, opts));
 	}
 
 	equals(other: LocalDateTime): boolean {
@@ -290,25 +189,20 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 		return this.dateTime.get(unit);
 	}
 
-	hasSame(other: LocalDateTime, unit: DurationUnit): boolean {
-		return this.dateTime.hasSame(other.dateTime, unit);
+	hasSame(other: LocalDateTime, unit: DateTimeUnit, opts?: HasSameOptions): boolean {
+		return this.dateTime.hasSame(other.dateTime, unit, opts);
 	}
 
-	minus(duration: Duration | number | DurationObject): LocalDateTime {
+	minus(duration: DurationLike): LocalDateTime {
 		return new LocalDateTime(this.dateTime.minus(duration));
 	}
 
-	plus(duration: Duration | number | DurationObject): LocalDateTime {
+	plus(duration: DurationLike): LocalDateTime {
 		return new LocalDateTime(this.dateTime.plus(duration));
 	}
 
 	reconfigure(properties: LocaleOptions): LocalDateTime {
 		return new LocalDateTime(this.dateTime.reconfigure(properties));
-	}
-
-	resolvedLocaleOpts(options?: DateTimeFormatOptions): Intl.ResolvedDateTimeFormatOptions {
-		options = this.normalizeDateTimeFormatOptionsForChrome(options);
-		return this.dateTime.resolvedLocaleOpts(options);
 	}
 
 	set(values: DateObjectUnits): LocalDateTime {
@@ -319,8 +213,8 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 		return new LocalDateTime(this.dateTime.setLocale(locale));
 	}
 
-	startOf(unit: DurationUnit): LocalDateTime {
-		return new LocalDateTime(this.dateTime.startOf(unit));
+	startOf(unit: DateTimeUnit, opts?: { useLocaleWeeks?: boolean }): LocalDateTime {
+		return new LocalDateTime(this.dateTime.startOf(unit, opts));
 	}
 
 	toBSON(): Date {
@@ -378,31 +272,12 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isIn
 		return this.dateTime.toLocaleString(options);
 	}
 
-	toObject(options?: { includeConfig?: boolean }): LocalDateObject {
-		let dateObject = this.dateTime.toObject(options);
-		dateObject = {...dateObject};
-		delete dateObject.zone;
-		return dateObject;
-	}
-
-	toSQL(options?: ToSQLOptions): string {
-		return this.dateTime.toSQL({...options, includeOffset: false, includeZone: false});
-	}
-
-	toSQLDate(): string {
-		return this.dateTime.toSQLDate();
-	}
-
-	toSQLTime(options?: ToSQLOptions): string {
-		return this.dateTime.toSQLTime({...options, includeOffset: false, includeZone: false});
-	}
-
 	toString(): string {
 		return this.dateTime.year + "-" + this.dateTime.month + "-" + this.dateTime.day;
 	}
 
 	until(other: DateTime): Interval {
-		return this.dateTime.until(other);
+		return this.dateTime.until(other) as Interval;
 	}
 
 	valueOf() {

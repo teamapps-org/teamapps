@@ -49,8 +49,8 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 		this.trivialDateTimeField = new TrivialDateTimeField({
 			timeZone: this.getTimeZone(),
 			locale: config.locale,
-			dateFormat: config.dateFormat,
-			timeFormat: config.timeFormat,
+			dateFormat: config.dateFormat as Intl.DateTimeFormatOptions,
+			timeFormat: config.timeFormat as Intl.DateTimeFormatOptions,
 			showTrigger: config.showDropDownButton,
 			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
 			favorPastDates: config.favorPastDates
@@ -66,19 +66,19 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 	protected abstract getTimeZone(): string;
 
 	protected createDateRenderer(): (time: DateTime) => string {
-		return createDateRenderer(this.config.locale, this.config.dateFormat, true);
+		return createDateRenderer(this.config.locale, this.config.dateFormat as Intl.DateTimeFormatOptions, true);
 	}
 
 	protected createTimeRenderer(): (time: DateTime) => string {
-		return createTimeRenderer(this.config.locale, this.config.timeFormat, true);
+		return createTimeRenderer(this.config.locale, this.config.timeFormat as Intl.DateTimeFormatOptions, true);
 	}
 
 	protected dateTimeToDateString(dateTime: DateTime): string {
-		return dateTime.setLocale(this.config.locale).toLocaleString(this.config.dateFormat);
+		return dateTime.setLocale(this.config.locale).toLocaleString(this.config.dateFormat as Intl.DateTimeFormatOptions);
 	}
 
 	protected dateTimeToTimeString(dateTime: DateTime): string {
-		return dateTime.setLocale(this.config.locale).toLocaleString(this.config.timeFormat);
+		return dateTime.setLocale(this.config.locale).toLocaleString(this.config.timeFormat as Intl.DateTimeFormatOptions);
 	}
 
 	private updateDateSuggestionEngine() {
@@ -129,7 +129,7 @@ export abstract class AbstractDateTimeField<C extends DtoAbstractDateTimeField, 
 		this.config.timeFormat = timeFormat;
 		this.updateDateSuggestionEngine();
 		this.dateRenderer = this.createDateRenderer();
-		this.trivialDateTimeField.setLocaleAndFormats(locale, dateFormat, timeFormat);
+		this.trivialDateTimeField.setLocaleAndFormats(locale, dateFormat as Intl.DateTimeFormatOptions, timeFormat as Intl.DateTimeFormatOptions);
 	}
 
 	setFavorPastDates(favorPastDates: boolean): void {

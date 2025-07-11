@@ -22,7 +22,9 @@ import {
 	DEFAULT_TEMPLATES,
 	defaultListQueryFunctionFactory,
 	type EditingMode,
-	type HighlightDirection, isModifierKey, isSpecialKey,
+	type HighlightDirection,
+	isModifierKey,
+	isSpecialKey,
 	type QueryFunction,
 	type TrivialComponent,
 	unProxyEntry

@@ -21,7 +21,7 @@ import {type DropDownComponent, type SelectionDirection} from "./DropDownCompone
 import {type QueryFunction} from "../TrivialCore";
 import {TrivialTreeBox} from "../TrivialTreeBox";
 import {ProjectorEvent} from "projector-client-object-api";
-import { scrollIntoView } from "seamless-scroll-polyfill";
+import {scrollIntoView} from "seamless-scroll-polyfill";
 
 type TreeBoxDropdownConfig<E> = {
 	queryFunction: QueryFunction<E>;

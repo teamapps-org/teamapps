@@ -144,15 +144,6 @@ importers:
 
   projector-client-communication:
     devDependencies:
-      esbuild:
-        specifier: ^0.15.13
-        version: 0.15.18
-      esbuild-plugin-alias:
-        specifier: ^0.2.1
-        version: 0.2.1
-      esbuild-plugin-less:
-        specifier: ^1.1.11
-        version: 1.3.22(esbuild@0.15.18)
       typescript:
         specifier: ^5.1
         version: 5.8.3
@@ -687,8 +678,8 @@ importers:
         specifier: ^1.0.16
         version: 1.0.16
       luxon:
-        specifier: ^3.6.1
-        version: 3.6.1
+        specifier: ^3.7.1
+        version: 3.7.1
       projector-client-core-components:
         specifier: workspace:*
         version: link:../projector-client-core-components
@@ -699,6 +690,9 @@ importers:
         specifier: ^2.3.4
         version: 2.3.4
     devDependencies:
+      '@types/luxon':
+        specifier: ^3.6.2
+        version: 3.6.2
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -1275,6 +1269,9 @@ packages:
 
   '@types/less@3.0.8':
     resolution: {integrity: sha512-Gjm4+H9noDJgu5EdT3rUw5MhPBag46fiOy27BefvWkNL8mlZnKnCaVVVTLKj6RYXed9b62CPKnPav9govyQDzA==}
+
+  '@types/luxon@3.6.2':
+    resolution: {integrity: sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw==}
 
   '@types/maplibre-gl@1.14.0':
     resolution: {integrity: sha512-I6ibscT7UdL1oOqqCz9s1gjcolLaUPkHIIfMLusczTvlsMhjORyS6sE1g4V/NESAOL5KhNQX3/31LJH+OCGjkg==}
@@ -1986,6 +1983,10 @@ packages:
 
   luxon@3.6.1:
     resolution: {integrity: sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==}
+    engines: {node: '>=12'}
+
+  luxon@3.7.1:
+    resolution: {integrity: sha512-RkRWjA926cTvz5rAb1BqyWkKbbjzCGchDUIKMCUvNi17j6f6j8uHGDV82Aqcqtzd+icoYpELmG3ksgGiFNNcNg==}
     engines: {node: '>=12'}
 
   magic-string@0.30.17:
@@ -2831,6 +2832,8 @@ snapshots:
 
   '@types/less@3.0.8': {}
 
+  '@types/luxon@3.6.2': {}
+
   '@types/maplibre-gl@1.14.0(mapbox-gl@1.13.3)':
     dependencies:
       maplibre-gl: 1.15.3(mapbox-gl@1.13.3)
@@ -3545,6 +3548,8 @@ snapshots:
       yallist: 4.0.0
 
   luxon@3.6.1: {}
+
+  luxon@3.7.1: {}
 
   magic-string@0.30.17:
     dependencies:
