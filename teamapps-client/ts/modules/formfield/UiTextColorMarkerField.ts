@@ -300,9 +300,11 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 		}
 	}
 
-	private triggerDeselection(): void {
+	private triggerDeselection(forceCursorReset: boolean = false): void {
 		if (this.currentSelection) {
-			window.getSelection()?.removeAllRanges(); // for safari
+			if (forceCursorReset) {
+				window.getSelection()?.removeAllRanges(); //  preventing missplaced cursor after setting marker via toolbar for Safari
+			}
 			this.currentSelection = null;
 			this.onTextSelected.fire({ start: 0, end: 0 }); // inform about selection removal
 		}
@@ -345,7 +347,7 @@ export class UiTextColorMarkerField extends UiField<UiTextColorMarkerFieldConfig
 				if (this.currentSelection) {
 					this.setMarker(def.id, this.currentSelection.start, this.currentSelection.end, true);
 				}
-				this.triggerDeselection();
+				this.triggerDeselection(true);
 			});
 
 			this.$toolbarWrapper.appendChild(button);

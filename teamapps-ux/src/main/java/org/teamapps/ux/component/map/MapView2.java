@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@ package org.teamapps.ux.component.map;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
@@ -43,14 +44,17 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public final Event<AbstractMapShape> onShapeDrawn = new Event<>();
 
 
-	private final String baseApiUrl;
-	private final String accessToken;
 	private String styleUrl;
-	private boolean displayAttributionControl = true;
+	private boolean displayAttributionControl = false;
+	private boolean displayNavigationControl = false;
+	private boolean displayVoronoiCells = false;
 	private float zoomLevel = 10f;
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
 	private List<Marker<RECORD>> clusterMarkers = new ArrayList<>();
+	private int clusterRadius = 100;
+	private UiHeatMapData heatMapData = null;
+	private boolean drawingShapeStarted = false;
 
 	private int clientIdCounter = 0;
 	private final BidiMap<Integer, Marker<RECORD>> markersByClientId = new DualHashBidiMap<>();
@@ -78,9 +82,14 @@ public class MapView2<RECORD> extends AbstractComponent {
 		}
 	};
 
+	/**
+	 * @deprecated parameters baseApiUrl and accessToken are obsolete.
+	 */
 	public MapView2(String baseApiUrl, String accessToken, String styleUrl) {
-		this.baseApiUrl = baseApiUrl;
-		this.accessToken = accessToken;
+		this(styleUrl);
+	}
+
+	public MapView2(String styleUrl) {
 		this.styleUrl = styleUrl;
 	}
 
@@ -90,10 +99,9 @@ public class MapView2<RECORD> extends AbstractComponent {
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 		mapAbstractUiComponentProperties(uiMap);
 
-		uiMap.setBaseApiUrl(baseApiUrl);
-		uiMap.setAccessToken(accessToken);
 		uiMap.setStyleUrl(styleUrl);
 		uiMap.setDisplayAttributionControl(displayAttributionControl);
+		uiMap.setDisplayNavigationControl(displayNavigationControl);
 
 		uiMap.setZoomLevel(zoomLevel);
 		Map<String, AbstractUiMapShape> uiShapes = new HashMap<>();
@@ -105,11 +113,16 @@ public class MapView2<RECORD> extends AbstractComponent {
 		if (clusterMarkers != null && !clusterMarkers.isEmpty()) {
 			uiMap.setMarkerCluster(new UiMapMarkerCluster(clusterMarkers.stream()
 					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
-					.collect(Collectors.toList())));
+					.collect(Collectors.toList()))
+					.setClusterRadius(clusterRadius));
 		}
 		uiMap.setMarkers(markersByClientId.entrySet().stream()
 				.map(e -> createUiMarkerRecord(e.getValue(), e.getKey()))
 				.collect(Collectors.toList()));
+		uiMap.setDisplayVoronoiCells(displayVoronoiCells);
+		if (heatMapData != null) {
+			uiMap.setHeatMap(heatMapData);
+		}
 		return uiMap;
 	}
 
@@ -160,26 +173,27 @@ public class MapView2<RECORD> extends AbstractComponent {
 			}
 			case UI_MAP2_SHAPE_DRAWN: {
 				UiMap2.ShapeDrawnEvent drawnEvent = (UiMap2.ShapeDrawnEvent) event;
+				ShapeProperties props = drawnEvent.getShape().getShapeProperties() != null ? new ShapeProperties(drawnEvent.getShape().getShapeProperties()) : null;
 				AbstractMapShape shape;
 				switch (drawnEvent.getShape().getUiObjectType()) {
 					case UI_MAP_CIRCLE: {
 						UiMapCircle uiCircle = (UiMapCircle) drawnEvent.getShape();
-						shape = new MapCircle(Location.fromUiMapLocation(uiCircle.getCenter()), uiCircle.getRadius());
+						shape = new MapCircle(Location.fromUiMapLocation(uiCircle.getCenter()), uiCircle.getRadius(), props);
 						break;
 					}
 					case UI_MAP_POLYGON: {
 						UiMapPolygon uiPolygon = (UiMapPolygon) drawnEvent.getShape();
-						shape = new MapPolygon(uiPolygon.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
+						shape = new MapPolygon(uiPolygon.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), props);
 						break;
 					}
 					case UI_MAP_POLYLINE: {
 						UiMapPolyline uiPolyLine = (UiMapPolyline) drawnEvent.getShape();
-						shape = new MapPolyline(uiPolyLine.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
+						shape = new MapPolyline(uiPolyLine.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), props);
 						break;
 					}
 					case UI_MAP_RECTANGLE: {
 						UiMapRectangle uiRect = (UiMapRectangle) drawnEvent.getShape();
-						shape = new MapRectangle(Location.fromUiMapLocation(uiRect.getL1()), Location.fromUiMapLocation(uiRect.getL2()), null);
+						shape = new MapRectangle(Location.fromUiMapLocation(uiRect.getL1()), Location.fromUiMapLocation(uiRect.getL2()), props);
 						break;
 					}
 					default:
@@ -213,15 +227,27 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
-		clusterMarkers = markers;
+		setMarkerCluster(markers, 100);
+	}
+
+	public void setMarkerCluster(List<Marker<RECORD>> markers, int clusterRadiusInPixel) {
+		clusterMarkers = new ArrayList<>(markers);
+		clusterRadius = clusterRadiusInPixel;
 		markers.forEach(m -> this.markersByClientId.put(clientIdCounter++, m));
 		queueCommandIfRendered(() -> {
 			UiMapMarkerCluster markerCluster = new UiMapMarkerCluster(clusterMarkers.stream()
 					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
-					.collect(Collectors.toList()));
-			return new UiMap2.SetMapMarkerClusterCommand(getId(),
-					markerCluster);
+					.collect(Collectors.toList()))
+					.setClusterRadius(clusterRadius);
+			return new UiMap2.SetMapMarkerClusterCommand(getId(), markerCluster);
 		});
+	}
+
+	public void addMarkerToCluster(Marker<RECORD> marker) {
+		clusterMarkers.add(marker);
+		int clientId = clientIdCounter++;
+		this.markersByClientId.put(clientId, marker);
+		queueCommandIfRendered(() -> new UiMap2.AddMarkerToClusterCommand(getId(), createUiMarkerRecord(marker, clientId)));
 	}
 
 	public void clearMarkerCluster() {
@@ -230,12 +256,27 @@ public class MapView2<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiMap2.SetMapMarkerClusterCommand(getId(), new UiMapMarkerCluster(Collections.emptyList())));
 	}
 
-//	TODO
-//	public void setHeatMap(List<Location> locations) {
-//		List<UiHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new UiHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
-//		UiHeatMapData heatMap = new UiHeatMapData(heatMapElements);
-//		queueCommandIfRendered(() -> new UiMap2.SetHeatMapCommand(getId(), heatMap));
-//	}
+	public void setHeatMap(List<Location> locations) {
+		this.setHeatMap(locations, 10, 30, 20);
+	}
+
+	public void setHeatMap(List<Location> locations, int maxCount) {
+		this.setHeatMap(locations, maxCount, 30, 20);
+	}
+
+	public void setHeatMap(List<Location> locations, int maxCount, int radius, int blurZoomLevel) {
+		List<UiHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new UiHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
+		this.setHeatMap(new UiHeatMapData(heatMapElements).setMaxCount(maxCount).setRadius(radius).setBlur(blurZoomLevel));
+	}
+
+	public void setHeatMap(UiHeatMapData heatMap) {
+		heatMapData = heatMap;
+		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMapData));
+	}
+
+	public void clearHeatMap() {
+		queueCommandIfRendered(() -> new UiMap2.SetHeatMapCommand(getId(), new UiHeatMapData(Collections.emptyList())));
+	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
 		Template template = templateDecider.getTemplate(record);
@@ -245,14 +286,6 @@ public class MapView2<RECORD> extends AbstractComponent {
 			queueCommandIfRendered(() -> new UiMap2.RegisterTemplateCommand(getId(), uuid, template.createUiTemplate()));
 		}
 		return template;
-	}
-
-	public String getBaseApiUrl() {
-		return baseApiUrl;
-	}
-
-	public String getAccessToken() {
-		return accessToken;
 	}
 
 	public String getStyleUrl() {
@@ -270,7 +303,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	public void setLocation(Location location) {
-		setLocation(location, 2000, 3);
+		setLocation(location, 2000, (int) getZoomLevel());
 	}
 
 	public void setLocation(double latitude, double longitude) {
@@ -299,6 +332,16 @@ public class MapView2<RECORD> extends AbstractComponent {
 		return location;
 	}
 
+	public void addMarkers(List<Marker<RECORD>> markers) {
+		markers.forEach(m -> this.markersByClientId.put(clientIdCounter++, m));
+		queueCommandIfRendered(() -> {
+			UiMapMarkers uiMarkers = new UiMapMarkers(markers.stream()
+					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
+					.collect(Collectors.toList()));
+			return new UiMap2.AddMarkersCommand(getId(), uiMarkers);
+		});
+	}
+
 	public void addMarker(Marker<RECORD> marker) {
 		int clientId = clientIdCounter++;
 		this.markersByClientId.put(clientId, marker);
@@ -313,8 +356,19 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	public void clearMarkers() {
+		var newMarkersByClientId = clusterMarkers.stream().collect(Collectors.toMap(markersByClientId::getKey, m -> m));
 		markersByClientId.clear();
+		markersByClientId.putAll(newMarkersByClientId);
 		queueCommandIfRendered(() -> new UiMap2.ClearMarkersCommand(getId()));
+	}
+
+	public boolean isDisplayVoronoiCells() {
+		return displayVoronoiCells;
+	}
+
+	public void setDisplayVoronoiCells(boolean enable) {
+		displayVoronoiCells = enable;
+		queueCommandIfRendered(() -> new UiMap2.SetDisplayVoronoiCellsCommand(getId(), enable));
 	}
 
 	public void fitBounds(Location southWest, Location northEast) {
@@ -358,13 +412,27 @@ public class MapView2<RECORD> extends AbstractComponent {
 		this.displayAttributionControl = displayAttributionControl;
 	}
 
-	//  TODO
-//	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
-//		queueCommandIfRendered(() -> new UiMap2.StartDrawingShapeCommand(getId(), shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
-//	}
-//
-//	public void stopDrawingShape() {
-//		queueCommandIfRendered(() -> new UiMap2.StopDrawingShapeCommand(getId()));
-//	}
+	public boolean isDisplayNavigationControl() {
+		return displayNavigationControl;
+	}
+
+	public void setDisplayNavigationControl(boolean displayNavigationControl) {
+		this.displayNavigationControl = displayNavigationControl;
+	}
+
+	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
+		ShapeProperties shapeProps = shapeProperties == null ? new ShapeProperties(Color.MATERIAL_BLUE_400) : shapeProperties;
+		queueCommandIfRendered(() -> new UiMap2.StartDrawingShapeCommand(getId(), shapeType.toUiMapShapeType(), shapeProps.createUiShapeProperties()));
+		drawingShapeStarted = true;
+	}
+
+	public void stopDrawingShape() {
+		queueCommandIfRendered(() -> new UiMap2.StopDrawingShapeCommand(getId()));
+		drawingShapeStarted = false;
+	}
+
+	public boolean isDrawingShapeStarted() {
+		return drawingShapeStarted;
+	}
 
 }

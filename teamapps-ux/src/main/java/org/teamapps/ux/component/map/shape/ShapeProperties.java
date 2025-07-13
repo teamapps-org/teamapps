@@ -51,6 +51,17 @@ public class ShapeProperties {
 		this.strokeWeight = strokeWeight;
 		this.fillColor = fillColor;
 	}
+
+	public ShapeProperties(UiShapeProperties uiProperties) {
+		if (uiProperties.getStrokeColor() != null) {
+			this.strokeColor = Color.fromHtmlString(uiProperties.getStrokeColor());
+		}
+		if (uiProperties.getFillColor() != null) {
+			this.fillColor = Color.fromHtmlString(uiProperties.getFillColor());
+		}
+		this.strokeWeight = uiProperties.getStrokeWeight();
+		this.strokeDashArray = uiProperties.getStrokeDashArray();
+	}
 	                                                                                                                      					
 	public Color getStrokeColor() {
 		return strokeColor;
