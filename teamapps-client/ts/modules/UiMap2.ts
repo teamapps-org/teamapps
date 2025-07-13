@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,11 @@
  * =========================LICENSE_END==================================
  */
 
-
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {parseHtml, Renderer} from "./Common";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import * as d3 from "d3";
+import {Feature, Point, Position} from "geojson";
+import mapboxgl, {GeoJSONSource, LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
+import {AbstractUiMapShapeChangeConfig} from "../generated/AbstractUiMapShapeChangeConfig";
+import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
 import {
 	UiMap2_LocationChangedEvent,
 	UiMap2_MapClickedEvent,
@@ -32,22 +33,20 @@ import {
 	UiMap2Config,
 	UiMap2EventSource
 } from "../generated/UiMap2Config";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import mapboxgl, {GeoJSONSource, LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
-import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
 import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
+import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
 import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
-import {UiTemplateConfig} from "../generated/UiTemplateConfig";
-import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
-import {isUiMapCircle, isUiMapPolygon, isUiMapPolyline, isUiMapRectangle} from "./UiMap";
-import {Feature, Point, Position} from "geojson";
 import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
-import * as d3 from "d3";
-import {DeferredExecutor} from "./util/DeferredExecutor";
-import {AbstractUiMapShapeChangeConfig} from "../generated/AbstractUiMapShapeChangeConfig";
-import {UiPolylineAppendConfig} from "../generated/UiPolylineAppendConfig";
 import {UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
+import {UiPolylineAppendConfig} from "../generated/UiPolylineAppendConfig";
+import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {AbstractUiComponent} from "./AbstractUiComponent";
+import {parseHtml, Renderer} from "./Common";
+import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {isUiMapCircle, isUiMapPolygon, isUiMapPolyline, isUiMapRectangle} from "./UiMap";
+import {DeferredExecutor} from "./util/DeferredExecutor";
+import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
 export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2EventSource, UiMap2CommandHandler {
 
@@ -86,19 +85,19 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 
 		this.map.on("zoom", ev => {
-			this.onZoomLevelChanged.fire({zoomLevel: this.map.getZoom()})
+			this.onZoomLevelChanged.fire({zoomLevel: this.map.getZoom()});
 		});
 		this.map.on("move", ev => {
-			let center = this.map.getCenter();
-			let bounds = this.map.getBounds();
+			const center = this.map.getCenter();
+			const bounds = this.map.getBounds();
 			this.onLocationChanged.fire({
 				center: createUiMapLocationConfig(center.lat, center.lng),
 				displayedArea: createUiMapAreaConfig(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
 			});
-		})
+		});
 		this.map.on("click", ev => {
-			this.onMapClicked.fire({location: createUiMapLocationConfig(ev.lngLat.lat, ev.lngLat.lng)})
-		})
+			this.onMapClicked.fire({location: createUiMapLocationConfig(ev.lngLat.lat, ev.lngLat.lng)});
+		});
 
 		Object.keys(config.markerTemplates).forEach(templateName => this.registerTemplate(templateName, config.markerTemplates[templateName]));
 
@@ -112,7 +111,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	}
 
-	setStyleUrl(styleUrl: string): void {
+	public setStyleUrl(styleUrl: string): void {
 		this.map.setStyle(styleUrl);
 	}
 
@@ -136,10 +135,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 						}]
 					}
 				});
-				let paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) paintProperties['circle-color'] = shapeConfig.shapeProperties.fillColor;
-				if (shapeConfig.shapeProperties.strokeColor != null) paintProperties['circle-stroke-color'] = shapeConfig.shapeProperties.strokeColor;
-				if (shapeConfig.shapeProperties.strokeWeight != null) paintProperties['circle-stroke-width'] = shapeConfig.shapeProperties.strokeWeight;
+				const paintProperties = {} as any;
+				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['circle-color'] = shapeConfig.shapeProperties.fillColor; }
+				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['circle-stroke-color'] = shapeConfig.shapeProperties.strokeColor; }
+				if (shapeConfig.shapeProperties.strokeWeight != null) { paintProperties['circle-stroke-width'] = shapeConfig.shapeProperties.strokeWeight; }
 				this.map.addLayer({
 					id: shapeId,
 					source: shapeId,
@@ -150,64 +149,60 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					},
 				});
 			} else if (isUiMapPolyline(shapeConfig)) {
-				shapeConfig.shapeProperties.strokeColor;
-				shapeConfig.shapeProperties.strokeWeight;
-				shapeConfig.shapeProperties.strokeDashArray;
-				shapeConfig.shapeProperties.fillColor;
 				this.map.addSource(shapeId, {
-					'type': 'geojson',
-					'data': this.toGeoJsonFeature(shapeConfig)
+					type: 'geojson',
+					data: this.toGeoJsonFeature(shapeConfig)
 				});
-				let paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.strokeColor != null) paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor;
-				if (shapeConfig.shapeProperties.strokeWeight != null) paintProperties['line-width'] = shapeConfig.shapeProperties.strokeWeight;
-				if (shapeConfig.shapeProperties.strokeDashArray != null) paintProperties["line-dasharray"] = shapeConfig.shapeProperties.strokeDashArray;
+				const paintProperties = {} as any;
+				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor; }
+				if (shapeConfig.shapeProperties.strokeWeight != null) { paintProperties['line-width'] = shapeConfig.shapeProperties.strokeWeight; }
+				if (shapeConfig.shapeProperties.strokeDashArray != null) { paintProperties["line-dasharray"] = shapeConfig.shapeProperties.strokeDashArray; }
 				this.map.addLayer({
-					'id': shapeId,
-					'type': 'line',
-					'source': shapeId,
-					'layout': {
+					id: shapeId,
+					type: 'line',
+					source: shapeId,
+					layout: {
 						'line-join': 'round',
 						'line-cap': 'round'
 					},
-					'paint': paintProperties
+					paint: paintProperties
 				});
 			} else if (isUiMapPolygon(shapeConfig)) {
-				let path = shapeConfig.path.map(loc => this.convertToPosition(loc));
-				if (path[0] != path[path.length - 1]) {
+				const path = shapeConfig.path.map(loc => this.convertToPosition(loc));
+				if (path[0] !== path[path.length - 1]) {
 					path.push(path[0]); // geojson spec demands that polygons be closed!
 				}
 				this.map.addSource(shapeId, {
-					'type': 'geojson',
-					'data': {
-						'type': 'Feature',
-						'geometry': {
-							'type': 'Polygon',
-							'coordinates': [
+					type: 'geojson',
+					data: {
+						type: 'Feature',
+						geometry: {
+							type: 'Polygon',
+							coordinates: [
 								path
 							]
 						},
-						"properties": {}
+						properties: {}
 					}
 				});
-				let paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor;
-				if (shapeConfig.shapeProperties.strokeColor != null) paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor;
+				const paintProperties = {} as any;
+				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; }
+				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor; }
 				this.map.addLayer({
-					'id': shapeId,
-					'type': 'fill',
-					'source': shapeId,
-					'layout': {},
-					'paint': paintProperties
+					id: shapeId,
+					type: 'fill',
+					source: shapeId,
+					layout: {},
+					paint: paintProperties
 				});
 			} else if (isUiMapRectangle(shapeConfig)) {
 				this.map.addSource(shapeId, {
-					'type': 'geojson',
-					'data': {
-						'type': 'Feature',
-						'geometry': {
-							'type': 'Polygon',
-							'coordinates': [[
+					type: 'geojson',
+					data: {
+						type: 'Feature',
+						geometry: {
+							type: 'Polygon',
+							coordinates: [[
 								this.convertToPosition(shapeConfig.l1),
 								[shapeConfig.l1.longitude, shapeConfig.l2.latitude],
 								this.convertToPosition(shapeConfig.l2),
@@ -215,54 +210,54 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 								this.convertToPosition(shapeConfig.l1) // geojson spec demands that polygons be closed!
 							]]
 						},
-						"properties": {}
+						properties: {}
 					}
 				});
-				let paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor;
-				if (shapeConfig.shapeProperties.strokeColor != null) paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor;
+				const paintProperties = {} as any;
+				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; }
+				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor; }
 				this.map.addLayer({
-					'id': shapeId,
-					'type': 'fill',
-					'source': shapeId,
-					'layout': {},
-					'paint': paintProperties
+					id: shapeId,
+					type: 'fill',
+					source: shapeId,
+					layout: {},
+					paint: paintProperties
 				});
 			}
 		});
 	}
 
 	private toGeoJsonFeature(shapeConfig: UiMapPolylineConfig) {
-		let data: GeoJSON.Feature<GeoJSON.Geometry> = {
-			'type': 'Feature',
-			'properties': {},
-			'geometry': {
-				'type': 'LineString',
-				'coordinates': shapeConfig.path.map(loc => this.convertToPosition(loc))
+		const data: GeoJSON.Feature<GeoJSON.Geometry> = {
+			type: 'Feature',
+			properties: {},
+			geometry: {
+				type: 'LineString',
+				coordinates: shapeConfig.path.map(loc => this.convertToPosition(loc))
 			}
 		};
 		return data;
 	}
 
-	updateShape(shapeId: string, shape: AbstractUiMapShapeConfig): void {
+	public updateShape(shapeId: string, shape: AbstractUiMapShapeConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.removeShape(shapeId);
 			this.addShape(shapeId, shape);
 		});
 	}
 
-	changeShape(shapeId: string, change: AbstractUiMapShapeChangeConfig): void {
+	public changeShape(shapeId: string, change: AbstractUiMapShapeChangeConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			if (isPolyLineAppend(change)) {
-				let config = this.shapesById.get(shapeId).config as UiMapPolylineConfig;
+				const config = this.shapesById.get(shapeId).config as UiMapPolylineConfig;
 				config.path = config.path.concat(change.appendedPath);
-				let source = this.map.getSource(shapeId) as GeoJSONSource;
+				const source = this.map.getSource(shapeId) as GeoJSONSource;
 				source.setData(this.toGeoJsonFeature(config));
 			}
 		});
 	}
 
-	removeShape(shapeId: string): void {
+	public removeShape(shapeId: string): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.removeLayer(shapeId);
 			this.map.removeSource(shapeId);
@@ -270,8 +265,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	clearShapes(): void {
-		this.shapesById.forEach((shape, id) => this.removeShape(id))
+	public clearShapes(): void {
+		this.shapesById.forEach((shape, id) => this.removeShape(id));
 	}
 
 	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
@@ -284,31 +279,31 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					clusterRadius: 100
 				});
 				this.map.addLayer({
-					'id': 'powerplant_query_layer',
-					'type': 'circle',
-					'source': 'cluster',
-					'filter': ['==', ['get', 'cluster'], true],
-					'paint': {
+					id: 'powerplant_query_layer',
+					type: 'circle',
+					source: 'cluster',
+					filter: ['==', ['get', 'cluster'], true],
+					paint: {
 						'circle-radius': 0
 					}
 				});
 
-				let markersById: { [id: string]: Marker } = {};
+				const markersById: { [id: string]: Marker } = {};
 				let markersOnScreen: { [id: string]: Marker } = {};
-				let point_counts: number[] = [];
+				const pointCounts: number[] = [];
 				let totals: number[];
 
 				const getPointCount = (features: Feature[]) => {
 					features.forEach(f => {
 						if (f.properties.cluster) {
-							point_counts.push(f.properties.point_count)
+							pointCounts.push(f.properties.point_count);
 						}
-					})
-					return point_counts;
+					});
+					return pointCounts;
 				};
 
 				const updateMarkers = () => {
-					let newMarkers: { [id: string]: Marker } = {};
+					const newMarkers: { [id: string]: Marker } = {};
 					const features = this.map.querySourceFeatures('cluster');
 					totals = getPointCount(features);
 					features.forEach((feature) => {
@@ -319,7 +314,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 						if (!marker) {
 							if (props.cluster) {
 								marker = new mapboxgl.Marker({element: createClusterNode(feature, totals)})
-									.setLngLat(coordinates as LngLatLike)
+									.setLngLat(coordinates as LngLatLike);
 							} else if (props.id != null) {
 								marker = this.createMarker(JSON.parse(props.marker));
 							}
@@ -330,7 +325,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 							marker.addTo(this.map);
 						}
 					});
-					for (let id in markersOnScreen) {
+					for (const id in markersOnScreen) {
 						if (!newMarkers[id]) {
 							markersOnScreen[id].remove();
 						}
@@ -346,7 +341,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 					const scale = d3.scaleLinear()
 						.domain([d3.min(totals), d3.max(totals)])
-						.range([500, d3.max(totals)])
+						.range([500, d3.max(totals)]);
 					const radius = Math.sqrt(scale(props.point_count));
 
 					const svg = d3.select(div)
@@ -362,7 +357,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					const circle = g.append('circle')
 						.attr('r', radius)
 						.attr('fill', '#ff0000aa')
-						.attr('class', 'center-circle')
+						.attr('class', 'center-circle');
 
 					const text = g
 						.append("text")
@@ -370,28 +365,27 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 						.text(props.point_count_abbreviated)
 						.attr('text-anchor', 'middle')
 						.attr('dy', 5)
-						.attr('fill', 'white')
+						.attr('fill', 'white');
 
 					svg.on('click', (e: any) => {
 						d3.event.stopPropagation();
-						var clusterId = props.cluster_id;
+						const clusterId = props.cluster_id;
 						(this.map.getSource('cluster') as GeoJSONSource).getClusterExpansionZoom(
 							clusterId,
 							(err, zoom) => {
-								if (err) return;
+								if (err) { return; }
 
-								this.map.once('moveend', () => setTimeout(updateMarkers, 100)) // make sure this happens after everything else, so we can actually update the map
+								this.map.once('moveend', () => setTimeout(updateMarkers, 100)); // make sure this happens after everything else, so we can actually update the map
 								this.map.easeTo({
 									center: coordinates as LngLatLike,
-									zoom: zoom
+									zoom
 								});
 							}
 						);
-					})
-
+					});
 
 					return div;
-				}
+				};
 
 				this.map.on('data', (e) => {
 					if (e.sourceId === 'cluster' && e.isSourceLoaded) {
@@ -403,9 +397,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			}
 
 			(this.map.getSource("cluster") as GeoJSONSource).setData(this.createMarkersFeatureCollection(clusterConfig.markers));
-		})
+		});
 	}
-
 
 	private createMarkersFeatureCollection(markers: UiMapMarkerClientRecordConfig[]): GeoJSON.FeatureCollection {
 		return {
@@ -441,20 +434,20 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	public addMarker(markerConfig: UiMapMarkerClientRecordConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
-			let marker = this.createMarker(markerConfig);
+			const marker = this.createMarker(markerConfig);
 			this.markersByClientId[markerConfig.id] = marker;
 			marker.addTo(this.map);
 		});
 	}
 
-	removeMarker(id: number): void {
+	public removeMarker(id: number): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.markersByClientId[id]?.remove();
 			delete this.markersByClientId[id];
 		});
 	}
 
-	clearMarkers(): void {
+	public clearMarkers(): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			Object.values(this.markersByClientId).forEach(m => m.remove());
 			this.markersByClientId = {};
@@ -462,39 +455,39 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	}
 
 	private createMarker(markerConfig: UiMapMarkerClientRecordConfig) {
-		let renderer = this.markerTemplateRenderers[markerConfig.templateId] || this._context.templateRegistry.getTemplateRendererByName(markerConfig.templateId);
-		let marker = new Marker(parseHtml(renderer.render(markerConfig.values)), {
+		const renderer = this.markerTemplateRenderers[markerConfig.templateId] || this._context.templateRegistry.getTemplateRendererByName(markerConfig.templateId);
+		const marker = new Marker(parseHtml(renderer.render(markerConfig.values)), {
 			anchor: markerConfig.anchor,
 			offset: [markerConfig.offsetPixelsX, markerConfig.offsetPixelsY]
 		})
 			.setLngLat([markerConfig.location.longitude, markerConfig.location.latitude]);
 		marker.getElement().addEventListener('click', e => {
-			this.onMarkerClicked.fire({markerId: markerConfig.id})
+			this.onMarkerClicked.fire({markerId: markerConfig.id});
 			e.stopPropagation();
 		});
 		return marker;
-	};
+	}
 
 	// TODO
-	setHeatMap(data: import("../generated/UiHeatMapDataConfig").UiHeatMapDataConfig): void {
+	public setHeatMap(data: import("../generated/UiHeatMapDataConfig").UiHeatMapDataConfig): void {
 		throw new Error("Method not implemented.");
 	}
 
 	// TODO
-	startDrawingShape(shapeType: import("../generated/UiMapShapeType").UiMapShapeType, shapeProperties: import("../generated/UiShapePropertiesConfig").UiShapePropertiesConfig): void {
+	public startDrawingShape(shapeType: import("../generated/UiMapShapeType").UiMapShapeType, shapeProperties: import("../generated/UiShapePropertiesConfig").UiShapePropertiesConfig): void {
 		throw new Error("Method not implemented.");
 	}
 
 	// TODO
-	stopDrawingShape(): void {
+	public stopDrawingShape(): void {
 		throw new Error("Method not implemented.");
 	}
 
-	setZoomLevel(zoom: number): void {
-		this.map.zoomTo(zoom)
+	public setZoomLevel(zoom: number): void {
+		this.map.zoomTo(zoom);
 	}
 
-	setLocation(location: UiMapLocationConfig, animationDurationMillis: number, targetZoomLevel: number): void {
+	public setLocation(location: UiMapLocationConfig, animationDurationMillis: number, targetZoomLevel: number): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.easeTo({
 				center: [location.longitude, location.latitude],
@@ -504,7 +497,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	fitBounds(southWest: UiMapLocationConfig, northEast: UiMapLocationConfig): void {
+	public fitBounds(southWest: UiMapLocationConfig, northEast: UiMapLocationConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.fitBounds([
 				[southWest.longitude, southWest.latitude],
@@ -513,7 +506,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	registerTemplate(id: string, template: UiTemplateConfig): void {
+	public registerTemplate(id: string, template: UiTemplateConfig): void {
 		this.markerTemplateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
@@ -521,7 +514,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		return this.$map;
 	}
 
-	onResize() {
+	public onResize() {
 		this.map.resize();
 	}
 }
