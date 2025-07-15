@@ -20,7 +20,11 @@
 
 import * as d3 from "d3";
 import {Feature, Point, Position} from "geojson";
-import mapboxgl, {GeoJSONSource, LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
+import maplibregl, {
+	GeoJSONSource,
+	LngLatLike,
+	Marker
+} from "maplibre-gl";
 import {AbstractUiMapShapeChangeConfig} from "../generated/AbstractUiMapShapeChangeConfig";
 import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
 import {
@@ -57,7 +61,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	public readonly onShapeDrawn: TeamAppsEvent<UiMap2_ShapeDrawnEvent> = new TeamAppsEvent();
 
 	private $map: HTMLElement;
-	private map: MapBoxMap;
+	private map: maplibregl.Map;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 	private markersByClientId: { [id: number]: Marker } = {};
 	private shapesById: Map<string, { config: AbstractUiMapShapeConfig }> = new Map();
@@ -68,17 +72,21 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		super(config, context);
 		this.$map = parseHtml('<div class="UiMap2">');
 
-		mapboxgl.baseApiUrl = config.baseApiUrl;
-		mapboxgl.accessToken = config.accessToken;
-
-		this.map = new MapBoxMap({
+		this.map = new maplibregl.Map({
 			container: this.$map,
 			style: config.styleUrl,
 			center: this.convertToLngLatLike(config.mapPosition),
 			hash: false, // don't change the URL!
-			zoom: 9, // starting zoom
-			attributionControl: config.displayAttributionControl,
+			zoom: config.zoomLevel, // starting zoom
+			attributionControl: false,
 		});
+
+		if (config.displayAttributionControl) {
+			this.map.addControl(new maplibregl.AttributionControl());
+		}
+		if (config.displayNavigationControl) {
+			this.map.addControl(new maplibregl.NavigationControl());
+		}
 		this.map.on('load', () => {
 			this.onResize();
 			this.deferredExecutor.ready = true;
@@ -107,8 +115,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 		if (config.markerCluster != null) {
 			this.setMapMarkerCluster(config.markerCluster);
+		} else {
+			config.markers.forEach(marker => this.addMarker(marker));
 		}
-
 	}
 
 	public setStyleUrl(styleUrl: string): void {
@@ -313,7 +322,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 						let marker = markersById[id];
 						if (!marker) {
 							if (props.cluster) {
-								marker = new mapboxgl.Marker({element: createClusterNode(feature, totals)})
+								marker = new maplibregl.Marker({element: createClusterNode(feature, totals)})
 									.setLngLat(coordinates as LngLatLike);
 							} else if (props.id != null) {
 								marker = this.createMarker(JSON.parse(props.marker));
@@ -370,24 +379,20 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					svg.on('click', (e: any) => {
 						d3.event.stopPropagation();
 						const clusterId = props.cluster_id;
-						(this.map.getSource('cluster') as GeoJSONSource).getClusterExpansionZoom(
-							clusterId,
-							(err, zoom) => {
-								if (err) { return; }
+						(this.map.getSource('cluster') as GeoJSONSource).getClusterExpansionZoom(clusterId).then(zoom => {
 
-								this.map.once('moveend', () => setTimeout(updateMarkers, 100)); // make sure this happens after everything else, so we can actually update the map
-								this.map.easeTo({
-									center: coordinates as LngLatLike,
-									zoom
-								});
-							}
-						);
+							this.map.once('moveend', () => setTimeout(updateMarkers, 100)); // make sure this happens after everything else, so we can actually update the map
+							this.map.easeTo({
+								center: coordinates as LngLatLike,
+								zoom
+							});
+						});
 					});
 
 					return div;
 				};
 
-				this.map.on('data', (e) => {
+				this.map.on('sourcedata', (e) => {
 					if (e.sourceId === 'cluster' && e.isSourceLoaded) {
 						updateMarkers();
 					}
@@ -456,7 +461,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	private createMarker(markerConfig: UiMapMarkerClientRecordConfig) {
 		const renderer = this.markerTemplateRenderers[markerConfig.templateId] || this._context.templateRegistry.getTemplateRendererByName(markerConfig.templateId);
-		const marker = new Marker(parseHtml(renderer.render(markerConfig.values)), {
+		const marker = new Marker({
+			element: parseHtml(renderer.render(markerConfig.values)),
 			anchor: markerConfig.anchor,
 			offset: [markerConfig.offsetPixelsX, markerConfig.offsetPixelsY]
 		})
