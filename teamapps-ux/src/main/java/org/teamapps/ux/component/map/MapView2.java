@@ -43,10 +43,9 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public final Event<AbstractMapShape> onShapeDrawn = new Event<>();
 
 
-	private final String baseApiUrl;
-	private final String accessToken;
 	private String styleUrl;
-	private boolean displayAttributionControl = true;
+	private boolean displayAttributionControl = false;
+	private boolean displayNavigationControl = false;
 	private float zoomLevel = 10f;
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
@@ -78,9 +77,14 @@ public class MapView2<RECORD> extends AbstractComponent {
 		}
 	};
 
+	/**
+	 * @deprecated parameters baseApiUrl and accessToken are obsolete.
+	 */
 	public MapView2(String baseApiUrl, String accessToken, String styleUrl) {
-		this.baseApiUrl = baseApiUrl;
-		this.accessToken = accessToken;
+		this(styleUrl);
+	}
+
+	public MapView2(String styleUrl) {
 		this.styleUrl = styleUrl;
 	}
 
@@ -90,10 +94,9 @@ public class MapView2<RECORD> extends AbstractComponent {
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 		mapAbstractUiComponentProperties(uiMap);
 
-		uiMap.setBaseApiUrl(baseApiUrl);
-		uiMap.setAccessToken(accessToken);
 		uiMap.setStyleUrl(styleUrl);
 		uiMap.setDisplayAttributionControl(displayAttributionControl);
+		uiMap.setDisplayNavigationControl(displayNavigationControl);
 
 		uiMap.setZoomLevel(zoomLevel);
 		Map<String, AbstractUiMapShape> uiShapes = new HashMap<>();
@@ -247,14 +250,6 @@ public class MapView2<RECORD> extends AbstractComponent {
 		return template;
 	}
 
-	public String getBaseApiUrl() {
-		return baseApiUrl;
-	}
-
-	public String getAccessToken() {
-		return accessToken;
-	}
-
 	public String getStyleUrl() {
 		return styleUrl;
 	}
@@ -270,7 +265,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	public void setLocation(Location location) {
-		setLocation(location, 2000, 3);
+		setLocation(location, 2000, (int) getZoomLevel());
 	}
 
 	public void setLocation(double latitude, double longitude) {
@@ -356,6 +351,14 @@ public class MapView2<RECORD> extends AbstractComponent {
 
 	public void setDisplayAttributionControl(boolean displayAttributionControl) {
 		this.displayAttributionControl = displayAttributionControl;
+	}
+
+	public boolean isDisplayNavigationControl() {
+		return displayNavigationControl;
+	}
+
+	public void setDisplayNavigationControl(boolean displayNavigationControl) {
+		this.displayNavigationControl = displayNavigationControl;
 	}
 
 	//  TODO

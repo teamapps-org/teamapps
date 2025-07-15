@@ -19,10 +19,9 @@
  */
 class UiMap2 extends UiComponent {
 	required Dictionary<UiTemplate> markerTemplates;
-	String baseApiUrl;
-	String accessToken;
 	String styleUrl;
 	boolean displayAttributionControl;
+	boolean displayNavigationControl;
 
 	float zoomLevel = 5;
 	UiMapLocation mapPosition;
