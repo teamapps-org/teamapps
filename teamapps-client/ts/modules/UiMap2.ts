@@ -39,6 +39,7 @@ import {
 } from "../generated/UiMap2Config";
 import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
 import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
+import {UiMapMarkerAnchor} from "../generated/UiMapMarkerAnchor";
 import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
 import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
 import {UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
@@ -115,6 +116,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 		if (config.markerCluster != null) {
 			this.setMapMarkerCluster(config.markerCluster);
+			// initiate markers that are not part of the cluster
+			const markerIds = config.markerCluster.markers.map(m => m.id);
+			config.markers.filter(m => !markerIds.includes(m.id)).forEach(marker => this.addMarker(marker));
 		} else {
 			config.markers.forEach(marker => this.addMarker(marker));
 		}
@@ -278,130 +282,130 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.shapesById.forEach((shape, id) => this.removeShape(id));
 	}
 
-	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
-		this.deferredExecutor.invokeWhenReady(() => {
-			if (this.map.getSource('cluster') == null) {
-				this.map.addSource('cluster', {
-					type: 'geojson',
-					data: this.createMarkersFeatureCollection([]),
-					cluster: true,
-					clusterRadius: 100
-				});
-				this.map.addLayer({
-					id: 'powerplant_query_layer',
-					type: 'circle',
-					source: 'cluster',
-					filter: ['==', ['get', 'cluster'], true],
-					paint: {
-						'circle-radius': 0
+	private initializeMarkerCluster(sourceName: string, clusterConfig: UiMapMarkerClusterConfig): void {
+		this.map.addSource(sourceName, {
+			type: 'geojson',
+			data: this.createMarkersFeatureCollection([]),
+			cluster: true,
+			clusterRadius: 100
+		});
+		this.map.addLayer({
+			id: sourceName + '_cluster_layer',
+			type: 'circle',
+			source: sourceName,
+			filter: ['==', ['get', sourceName], true],
+			paint: {
+				'circle-radius': 0
+			}
+		});
+
+		const markersById: { [id: string]: Marker } = {};
+		let markersOnScreen: { [id: string]: Marker } = {};
+
+		const updateMarkers = () => {
+			const newMarkers: { [id: string]: Marker } = {};
+			const features = this.map.querySourceFeatures(sourceName);
+			features.forEach((feature) => {
+				const coordinates = (feature.geometry as Point).coordinates;
+				const props = feature.properties;
+				const id = props.cluster_id != null ? "cluster-" + props.cluster_id : "individual-" + props.id;
+				let marker = markersById[id];
+				if (!marker) {
+					if (props.cluster) {
+						marker = new maplibregl.Marker({element: createClusterNode(feature), anchor: UiMapMarkerAnchor.CENTER})
+							.setLngLat(coordinates as LngLatLike);
+					} else if (props.id != null) {
+						marker = this.createMarker(JSON.parse(props.marker));
 					}
-				});
+				}
+				markersById[id] = newMarkers[id] = marker;
 
-				const markersById: { [id: string]: Marker } = {};
-				let markersOnScreen: { [id: string]: Marker } = {};
-				const pointCounts: number[] = [];
-				let totals: number[];
+				if (!markersOnScreen[id]) {
+					marker.addTo(this.map);
+				}
+			});
+			for (const id in markersOnScreen) {
+				if (!newMarkers[id]) {
+					markersOnScreen[id].remove();
+				}
+			}
+			markersOnScreen = newMarkers;
+		};
 
-				const getPointCount = (features: Feature[]) => {
-					features.forEach(f => {
-						if (f.properties.cluster) {
-							pointCounts.push(f.properties.point_count);
-						}
-					});
-					return pointCounts;
-				};
+		const createClusterNode = (feature: Feature) => {
+			const coordinates = (feature.geometry as Point).coordinates;
+			const props = feature.properties;
 
-				const updateMarkers = () => {
-					const newMarkers: { [id: string]: Marker } = {};
-					const features = this.map.querySourceFeatures('cluster');
-					totals = getPointCount(features);
-					features.forEach((feature) => {
-						const coordinates = (feature.geometry as Point).coordinates;
-						const props = feature.properties;
-						const id = props.cluster_id != null ? "cluster-" + props.cluster_id : "individual-" + props.id;
-						let marker = markersById[id];
-						if (!marker) {
-							if (props.cluster) {
-								marker = new maplibregl.Marker({element: createClusterNode(feature, totals)})
-									.setLngLat(coordinates as LngLatLike);
-							} else if (props.id != null) {
-								marker = this.createMarker(JSON.parse(props.marker));
-							}
-						}
-						markersById[id] = newMarkers[id] = marker;
+			const div = document.createElement('div');
+			const radius = 20;
 
-						if (!markersOnScreen[id]) {
-							marker.addTo(this.map);
-						}
-					});
-					for (const id in markersOnScreen) {
-						if (!newMarkers[id]) {
-							markersOnScreen[id].remove();
-						}
-					}
-					markersOnScreen = newMarkers;
-				};
+			const svg = d3.select(div)
+				.append('svg')
+				.attr('class', 'pie')
+				.attr('width', radius * 2)
+				.attr('height', radius * 2);
 
-				const createClusterNode = (feature: Feature, totals: number[]) => {
-					const coordinates = (feature.geometry as Point).coordinates;
-					const props = feature.properties;
+			//center
+			const g = svg.append('g')
+				.attr('transform', `translate(${radius}, ${radius})`);
 
-					const div = document.createElement('div');
-
-					const scale = d3.scaleLinear()
-						.domain([d3.min(totals), d3.max(totals)])
-						.range([500, d3.max(totals)]);
-					const radius = Math.sqrt(scale(props.point_count));
-
-					const svg = d3.select(div)
-						.append('svg')
-						.attr('class', 'pie')
-						.attr('width', radius * 2)
-						.attr('height', radius * 2);
-
-					//center
-					const g = svg.append('g')
-						.attr('transform', `translate(${radius}, ${radius})`);
-
-					const circle = g.append('circle')
-						.attr('r', radius)
-						.attr('fill', '#ff0000aa')
-						.attr('class', 'center-circle');
-
-					const text = g
-						.append("text")
-						.attr("class", "total")
-						.text(props.point_count_abbreviated)
-						.attr('text-anchor', 'middle')
-						.attr('dy', 5)
-						.attr('fill', 'white');
-
-					svg.on('click', (e: any) => {
-						d3.event.stopPropagation();
-						const clusterId = props.cluster_id;
-						(this.map.getSource('cluster') as GeoJSONSource).getClusterExpansionZoom(clusterId).then(zoom => {
-
-							this.map.once('moveend', () => setTimeout(updateMarkers, 100)); // make sure this happens after everything else, so we can actually update the map
-							this.map.easeTo({
-								center: coordinates as LngLatLike,
-								zoom
-							});
-						});
-					});
-
-					return div;
-				};
-
-				this.map.on('sourcedata', (e) => {
-					if (e.sourceId === 'cluster' && e.isSourceLoaded) {
-						updateMarkers();
-					}
-				});
-
-				this.map.on('moveend', updateMarkers);
+			const circle = g.append('circle')
+				.attr('r', radius)
+				.attr('class', 'center-circle');
+			const innerCircle = g.append('circle')
+				.attr('r', radius / 3 * 2)
+				.attr('class', 'inner-circle');
+			if (props.point_count < 10) {
+				circle.attr('fill', 'rgba(181, 226, 140, 0.6)');
+				innerCircle.attr('fill', 'rgba(110, 204, 57, 0.6)');
+			} else if (props.point_count < 100) {
+				circle.attr('fill', 'rgba(241, 211, 87, 0.6)');
+				innerCircle.attr('fill', 'rgba(240, 194, 12, 0.6)');
+			} else {
+				circle.attr('fill', 'rgba(253, 156, 115, 0.6)');
+				innerCircle.attr('fill', 'rgba(241, 128, 23, 0.6)');
 			}
 
-			(this.map.getSource("cluster") as GeoJSONSource).setData(this.createMarkersFeatureCollection(clusterConfig.markers));
+			const text = g
+				.append("text")
+				.attr("class", "total")
+				.text(props.point_count_abbreviated)
+				.attr('text-anchor', 'middle')
+				.attr('dy', 5)
+				.attr('fill', 'black');
+
+			svg.on('click', (e: any) => {
+				d3.event.stopPropagation();
+				const clusterId = props.cluster_id;
+				(this.map.getSource(sourceName) as GeoJSONSource).getClusterExpansionZoom(clusterId).then(zoom => {
+
+					this.map.once('moveend', () => setTimeout(updateMarkers, 100)); // make sure this happens after everything else, so we can actually update the map
+					this.map.easeTo({
+						center: coordinates as LngLatLike,
+						zoom
+					});
+				});
+			});
+
+			return div;
+		};
+
+		this.map.on('sourcedata', (e) => {
+			if (e.sourceId === sourceName && e.isSourceLoaded) {
+				updateMarkers();
+			}
+		});
+
+		this.map.on('moveend', updateMarkers);
+	}
+
+	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
+		this.deferredExecutor.invokeWhenReady(() => {
+			if (this.map.getSource('markers') == null) {
+				this.initializeMarkerCluster('markers', clusterConfig);
+			}
+
+			(this.map.getSource("markers") as GeoJSONSource).setData(this.createMarkersFeatureCollection(clusterConfig.markers));
 		});
 	}
 
