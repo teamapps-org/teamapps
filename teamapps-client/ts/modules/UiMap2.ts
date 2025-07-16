@@ -18,6 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
+import TurfCircle from "@turf/circle";
 import * as d3 from "d3";
 import {Feature, Point, Position} from "geojson";
 import maplibregl, {
@@ -132,32 +133,36 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.shapesById.set(shapeId, {config: shapeConfig});
 			if (isUiMapCircle(shapeConfig)) {
+				const circleData = TurfCircle([shapeConfig.center.longitude, shapeConfig.center.latitude], shapeConfig.radius, {
+					units: 'meters',
+					steps: 128
+				});
 				this.map.addSource(shapeId, {
 					type: "geojson",
-					data: {
-						type: "FeatureCollection",
-						features: [{
-							type: "Feature",
-							geometry: {
-								type: "Point",
-								coordinates: [shapeConfig.center.longitude, shapeConfig.center.latitude]
-							},
-							properties: {
-								radius: shapeConfig.radius,
-							},
-						}]
-					}
+					data: circleData
 				});
+				if (shapeConfig.shapeProperties.fillColor != null) {
+					this.map.addLayer({
+						id: shapeId + "-fill",
+						source: shapeId,
+						type: "fill",
+						paint: {
+							"fill-color": shapeConfig.shapeProperties.fillColor,
+						},
+					});
+				}
 				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['circle-color'] = shapeConfig.shapeProperties.fillColor; }
-				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['circle-stroke-color'] = shapeConfig.shapeProperties.strokeColor; }
-				if (shapeConfig.shapeProperties.strokeWeight != null) { paintProperties['circle-stroke-width'] = shapeConfig.shapeProperties.strokeWeight; }
+				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor; }
+				if (shapeConfig.shapeProperties.strokeWeight != null) { paintProperties['line-width'] = shapeConfig.shapeProperties.strokeWeight; }
 				this.map.addLayer({
-					id: shapeId,
+					id: shapeId + "-outline",
 					source: shapeId,
-					type: "circle",
+					type: 'line',
+					layout: {
+						'line-join': 'round',
+						'line-cap': 'round'
+					},
 					paint: {
-						"circle-radius": ["get", "radius"],
 						...paintProperties,
 					},
 				});
@@ -205,9 +210,24 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					id: shapeId,
 					type: 'fill',
 					source: shapeId,
-					layout: {},
 					paint: paintProperties
 				});
+				if (shapeConfig.shapeProperties.strokeWeight != null) {
+					const paintProps = {
+						"line-width": shapeConfig.shapeProperties.strokeWeight
+					} as any;
+					if (shapeConfig.shapeProperties.strokeColor != null) { paintProps['line-color'] = shapeConfig.shapeProperties.strokeColor; }
+					this.map.addLayer({
+						id: shapeId + "-outline",
+						type: 'line',
+						source: shapeId,
+						layout: {
+							'line-join': 'round',
+							'line-cap': 'round'
+						},
+						paint: paintProps
+					});
+				}
 			} else if (isUiMapRectangle(shapeConfig)) {
 				this.map.addSource(shapeId, {
 					type: 'geojson',
@@ -233,9 +253,24 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					id: shapeId,
 					type: 'fill',
 					source: shapeId,
-					layout: {},
 					paint: paintProperties
 				});
+				if (shapeConfig.shapeProperties.strokeWeight != null) {
+					const paintProps = {
+						"line-width": shapeConfig.shapeProperties.strokeWeight
+					} as any;
+					if (shapeConfig.shapeProperties.strokeColor != null) { paintProps['line-color'] = shapeConfig.shapeProperties.strokeColor; }
+					this.map.addLayer({
+						id: shapeId + "-outline",
+						type: 'line',
+						layout: {
+							'line-join': 'round',
+							'line-cap': 'round'
+						},
+						source: shapeId,
+						paint: paintProps
+					});
+				}
 			}
 		});
 	}
