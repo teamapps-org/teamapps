@@ -135,7 +135,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			if (isUiMapCircle(shapeConfig)) {
 				const circleData = TurfCircle([shapeConfig.center.longitude, shapeConfig.center.latitude], shapeConfig.radius, {
 					units: 'meters',
-					steps: 128
+					steps: 90
 				});
 				this.map.addSource(shapeId, {
 					type: "geojson",
@@ -148,6 +148,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 						type: "fill",
 						paint: {
 							"fill-color": shapeConfig.shapeProperties.fillColor,
+							"fill-opacity": 0.8
 						},
 					});
 				}
@@ -204,7 +205,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					}
 				});
 				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; }
+				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; paintProperties['fill-opacity'] = 0.8; }
 				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor; }
 				this.map.addLayer({
 					id: shapeId,
@@ -247,7 +248,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					}
 				});
 				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; }
+				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; paintProperties['fill-opacity'] = 0.8; }
 				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor; }
 				this.map.addLayer({
 					id: shapeId,
@@ -339,24 +340,43 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 		const updateMarkers = () => {
 			const newMarkers: { [id: string]: Marker } = {};
-			const features = this.map.querySourceFeatures(sourceName);
-			features.forEach((feature) => {
-				const coordinates = (feature.geometry as Point).coordinates;
-				const props = feature.properties;
-				const id = props.cluster_id != null ? "cluster-" + props.cluster_id : "individual-" + props.id;
-				let marker = markersById[id];
-				if (!marker) {
-					if (props.cluster) {
-						marker = new maplibregl.Marker({element: createClusterNode(feature), anchor: UiMapMarkerAnchor.CENTER})
-							.setLngLat(coordinates as LngLatLike);
-					} else if (props.id != null) {
-						marker = this.createMarker(JSON.parse(props.marker));
-					}
+			const srcFeatures = this.map.querySourceFeatures(sourceName);
+			const coordinatesMap = srcFeatures.reduce((map, f) => {
+				const key = (f.geometry as Point).coordinates.join('x');
+				if (!map[key]) {
+					map[key] = {};
 				}
-				markersById[id] = newMarkers[id] = marker;
-
-				if (!markersOnScreen[id]) {
-					marker.addTo(this.map);
+				f.properties.cache_id = f.properties.cluster_id != null ? "cluster-" + f.properties.cluster_id : "individual-" + f.properties.id;
+				map[key][f.properties.cache_id] = f;
+				return map;
+			}, {} as { [key: string]: { [id: string]: Feature } });
+			Object.values(coordinatesMap).forEach(features => {
+				if (Object.keys(features).length > 1) {
+					const markers = spiderfyOverlappingMarkers(features);
+					Object.entries(markers).forEach(([id, m]) => {
+						const marker = markersById[id] ?? m;
+						markersById[id] = newMarkers[id] = marker;
+						if (!markersOnScreen[id]) {
+							marker.addTo(this.map);
+						}
+					});
+				} else {
+					const [id, feature] = Object.entries(features)[0];
+					const coordinates = (feature.geometry as Point).coordinates;
+					const props = feature.properties;
+					let marker = markersById[id];
+					if (!marker) {
+						if (props.cluster) {
+							marker = new maplibregl.Marker({element: createClusterNode(feature), anchor: UiMapMarkerAnchor.CENTER})
+								.setLngLat(coordinates as LngLatLike);
+						} else if (props.id != null) {
+							marker = this.createMarker(JSON.parse(props.marker));
+						}
+					}
+					markersById[id] = newMarkers[id] = marker;
+					if (!markersOnScreen[id]) {
+						marker.addTo(this.map);
+					}
 				}
 			});
 			for (const id in markersOnScreen) {
@@ -423,6 +443,37 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			});
 
 			return div;
+		};
+
+		const spiderfyOverlappingMarkers = (features: { [id: string]: Feature }) => {
+			const leaves = Object.values(features);
+			const centerPx = this.map.project((leaves[0].geometry as Point).coordinates as LngLatLike);
+			const isSpiral = leaves.length > 9;
+			const angleStep = (2 * Math.PI) / Math.min(leaves.length, 10.5);
+			let legLength = isSpiral ? 15 : 60;
+			const legLengthFactor = 3.5;
+
+			return Object.entries(features).reduce((markers, feature, i) => {
+				const [id, leaf] = feature;
+				if (leaf.properties.cluster) {
+					return markers;
+				}
+				const angle = (i + 1) * angleStep;
+				const offsetPx = {
+					x: legLength * Math.cos(angle),
+					y: legLength * Math.sin(angle)
+				};
+				const lngLat = this.map.unproject([
+					centerPx.x + offsetPx.x,
+					centerPx.y + offsetPx.y
+				]);
+				if (isSpiral) {
+					legLength += ((Math.PI * 2) * legLengthFactor) / angle;
+				}
+
+				markers[id] = this.createMarker(JSON.parse(leaf.properties.marker), lngLat);
+				return markers;
+			}, {} as { [id: string]: Marker });
 		};
 
 		this.map.on('sourcedata', (e) => {
@@ -498,14 +549,14 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	private createMarker(markerConfig: UiMapMarkerClientRecordConfig) {
+	private createMarker(markerConfig: UiMapMarkerClientRecordConfig, lngLat?: LngLatLike) {
 		const renderer = this.markerTemplateRenderers[markerConfig.templateId] || this._context.templateRegistry.getTemplateRendererByName(markerConfig.templateId);
 		const marker = new Marker({
 			element: parseHtml(renderer.render(markerConfig.values)),
 			anchor: markerConfig.anchor,
 			offset: [markerConfig.offsetPixelsX, markerConfig.offsetPixelsY]
-		})
-			.setLngLat([markerConfig.location.longitude, markerConfig.location.latitude]);
+		});
+		marker.setLngLat(lngLat ?? [markerConfig.location.longitude, markerConfig.location.latitude]);
 		marker.getElement().addEventListener('click', e => {
 			this.onMarkerClicked.fire({markerId: markerConfig.id});
 			e.stopPropagation();
