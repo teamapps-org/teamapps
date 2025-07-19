@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,6 +50,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
 	private List<Marker<RECORD>> clusterMarkers = new ArrayList<>();
+	private UiHeatMapData heatMapData = null;
 
 	private int clientIdCounter = 0;
 	private final BidiMap<Integer, Marker<RECORD>> markersByClientId = new DualHashBidiMap<>();
@@ -113,6 +114,9 @@ public class MapView2<RECORD> extends AbstractComponent {
 		uiMap.setMarkers(markersByClientId.entrySet().stream()
 				.map(e -> createUiMarkerRecord(e.getValue(), e.getKey()))
 				.collect(Collectors.toList()));
+		if (heatMapData != null) {
+			uiMap.setHeatMap(heatMapData);
+		}
 		return uiMap;
 	}
 
@@ -233,12 +237,27 @@ public class MapView2<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiMap2.SetMapMarkerClusterCommand(getId(), new UiMapMarkerCluster(Collections.emptyList())));
 	}
 
-//	TODO
-//	public void setHeatMap(List<Location> locations) {
-//		List<UiHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new UiHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
-//		UiHeatMapData heatMap = new UiHeatMapData(heatMapElements);
-//		queueCommandIfRendered(() -> new UiMap2.SetHeatMapCommand(getId(), heatMap));
-//	}
+	public void setHeatMap(List<Location> locations) {
+		this.setHeatMap(locations, 10, 30, 20);
+	}
+
+	public void setHeatMap(List<Location> locations, int maxCount) {
+		this.setHeatMap(locations, maxCount, 30, 20);
+	}
+
+	public void setHeatMap(List<Location> locations, int maxCount, int radius, int blurZoomLevel) {
+		List<UiHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new UiHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
+		this.setHeatMap(new UiHeatMapData(heatMapElements).setMaxCount(maxCount).setRadius(radius).setBlur(blurZoomLevel));
+	}
+
+	public void setHeatMap(UiHeatMapData heatMap) {
+		heatMapData = heatMap;
+		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMapData));
+	}
+
+	public void clearHeatMap() {
+		queueCommandIfRendered(() -> new UiMap2.SetHeatMapCommand(getId(), new UiHeatMapData(Collections.emptyList())));
+	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
 		Template template = templateDecider.getTemplate(record);
