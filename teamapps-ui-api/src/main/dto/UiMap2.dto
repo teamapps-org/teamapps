@@ -28,6 +28,7 @@ class UiMap2 extends UiComponent {
 	Dictionary<AbstractUiMapShape> shapes;
 	List<UiMapMarkerClientRecord> markers;
 	UiMapMarkerCluster markerCluster;
+	UiHeatMapData heatMap;
 
 	command registerTemplate(String id, UiTemplate template);
 	command addMarker(UiMapMarkerClientRecord marker);

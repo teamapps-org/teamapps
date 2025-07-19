@@ -24,6 +24,8 @@ import {Feature, Point, Position} from "geojson";
 import maplibregl, {GeoJSONSource, LngLatLike, Marker} from "maplibre-gl";
 import {AbstractUiMapShapeChangeConfig} from "../generated/AbstractUiMapShapeChangeConfig";
 import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
+import {UiHeatMapDataConfig} from "../generated/UiHeatMapDataConfig";
+import {UiHeatMapDataElementConfig} from "../generated/UiHeatMapDataElementConfig";
 import {
 	UiMap2_LocationChangedEvent,
 	UiMap2_MapClickedEvent,
@@ -118,6 +120,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			config.markers.filter(m => !markerIds.includes(m.id)).forEach(marker => this.addMarker(marker));
 		} else {
 			config.markers.forEach(marker => this.addMarker(marker));
+		}
+
+		if (config.heatMap != null) {
+			this.setHeatMap(config.heatMap);
 		}
 	}
 
@@ -524,6 +530,22 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		};
 	}
 
+	private createHeatMapDataElementFeature(c: UiHeatMapDataElementConfig): Feature {
+		return {
+			type: "Feature",
+			properties: {
+				count: c.count
+			},
+			geometry: {
+				type: "Point",
+				coordinates: [
+					c.longitude,
+					c.latitude
+				]
+			}
+		};
+	}
+
 	private createLineStringFeature(shapeConfig: UiMapPolylineConfig): Feature {
 		return {
 			type: "Feature",
@@ -580,9 +602,67 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		return marker;
 	}
 
-	// TODO
-	public setHeatMap(data: import("../generated/UiHeatMapDataConfig").UiHeatMapDataConfig): void {
-		throw new Error("Method not implemented.");
+	private initializeHeatMap(sourceName: string, data: UiHeatMapDataConfig): void {
+		this.map.addSource(sourceName, {
+			type: 'geojson',
+			data: this.createFeatureCollection([]),
+		});
+		const paint: any = {};
+		if (data.blur == null || data.blur < 1 || data.blur > 23) {
+			data.blur = 23;
+		}
+		const maxzoom = data.blur;
+		paint['heatmap-opacity'] = [
+			'interpolate',
+			['linear'],
+			['zoom'],
+			data.blur - 1,
+			0.8,
+			data.blur, // fade out at zoom level defined by parameter "blur"
+			0
+		];
+		if (data.radius == null) {
+			data.radius = 30;
+		}
+		paint['heatmap-radius'] = [
+			'interpolate',
+			['linear'],
+			['zoom'],
+			0,
+			data.radius / 5,
+			10,
+			data.radius
+		];
+		if (data.maxCount == null || data.maxCount < 1) {
+			data.maxCount = 1;
+		}
+		paint['heatmap-intensity'] = [
+			'interpolate',
+			['linear'],
+			['zoom'],
+			0,
+			0.01 / data.maxCount,
+			data.blur,
+			1 / data.maxCount
+		];
+		paint['heatmap-weight'] = ['get', 'count'];
+		this.map.addLayer({
+			id: sourceName,
+			type: 'heatmap',
+			source: sourceName,
+			maxzoom,
+			paint,
+		});
+	}
+
+	public setHeatMap(data: UiHeatMapDataConfig): void {
+		this.deferredExecutor.invokeWhenReady(() => {
+			if (this.map.getSource('heatmap') == null) {
+				this.initializeHeatMap('heatmap', data);
+			}
+			const elements = data.elements.map(el => this.createHeatMapDataElementFeature(el));
+			(this.map.getSource('heatmap') as GeoJSONSource).setData(this.createFeatureCollection(elements));
+		});
 	}
 
 	// TODO
