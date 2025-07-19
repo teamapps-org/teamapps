@@ -21,11 +21,7 @@
 import TurfCircle from "@turf/circle";
 import * as d3 from "d3";
 import {Feature, Point, Position} from "geojson";
-import maplibregl, {
-	GeoJSONSource,
-	LngLatLike,
-	Marker
-} from "maplibre-gl";
+import maplibregl, {GeoJSONSource, LngLatLike, Marker} from "maplibre-gl";
 import {AbstractUiMapShapeChangeConfig} from "../generated/AbstractUiMapShapeChangeConfig";
 import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
 import {
@@ -170,7 +166,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			} else if (isUiMapPolyline(shapeConfig)) {
 				this.map.addSource(shapeId, {
 					type: 'geojson',
-					data: this.toGeoJsonFeature(shapeConfig)
+					data: this.createLineStringFeature(shapeConfig)
 				});
 				const paintProperties = {} as any;
 				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor; }
@@ -276,18 +272,6 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	private toGeoJsonFeature(shapeConfig: UiMapPolylineConfig) {
-		const data: GeoJSON.Feature<GeoJSON.Geometry> = {
-			type: 'Feature',
-			properties: {},
-			geometry: {
-				type: 'LineString',
-				coordinates: shapeConfig.path.map(loc => this.convertToPosition(loc))
-			}
-		};
-		return data;
-	}
-
 	public updateShape(shapeId: string, shape: AbstractUiMapShapeConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.removeShape(shapeId);
@@ -301,7 +285,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				const config = this.shapesById.get(shapeId).config as UiMapPolylineConfig;
 				config.path = config.path.concat(change.appendedPath);
 				const source = this.map.getSource(shapeId) as GeoJSONSource;
-				source.setData(this.toGeoJsonFeature(config));
+				source.setData(this.createLineStringFeature(config));
 			}
 		});
 	}
@@ -321,7 +305,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	private initializeMarkerCluster(sourceName: string, clusterConfig: UiMapMarkerClusterConfig): void {
 		this.map.addSource(sourceName, {
 			type: 'geojson',
-			data: this.createMarkersFeatureCollection([]),
+			data: this.createFeatureCollection([]),
 			cluster: true,
 			clusterRadius: 100
 		});
@@ -332,6 +316,20 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			filter: ['==', ['get', sourceName], true],
 			paint: {
 				'circle-radius': 0
+			}
+		});
+		this.map.addSource(sourceName + '_spiderLegs', {
+			type: 'geojson',
+			data: this.createFeatureCollection([]),
+		});
+		this.map.addLayer({
+			id: sourceName + '_spiderLegs',
+			type: 'line',
+			source: sourceName + '_spiderLegs',
+			paint: {
+				'line-color': '#ffffff',
+				'line-width': 2,
+				'line-opacity': 0.8,
 			}
 		});
 
@@ -350,8 +348,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				map[key][f.properties.cache_id] = f;
 				return map;
 			}, {} as { [key: string]: { [id: string]: Feature } });
+			const spiderLegFeatures: Feature[] = [];
 			Object.values(coordinatesMap).forEach(features => {
 				if (Object.keys(features).length > 1) {
+					const center = (Object.values(features)[0].geometry as Point).coordinates as Position;
 					const markers = spiderfyOverlappingMarkers(features);
 					Object.entries(markers).forEach(([id, m]) => {
 						const marker = markersById[id] ?? m;
@@ -359,6 +359,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 						if (!markersOnScreen[id]) {
 							marker.addTo(this.map);
 						}
+						spiderLegFeatures.push(this.createLineStringFeature({path: [
+							{longitude: marker.getLngLat().lng, latitude: marker.getLngLat().lat},
+							{longitude: center[0], latitude: center[1]}
+						]}));
 					});
 				} else {
 					const [id, feature] = Object.entries(features)[0];
@@ -385,6 +389,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				}
 			}
 			markersOnScreen = newMarkers;
+			(this.map.getSource(sourceName + '_spiderLegs') as GeoJSONSource).setData(this.createFeatureCollection(spiderLegFeatures));
 		};
 
 		const createClusterNode = (feature: Feature) => {
@@ -447,11 +452,11 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 		const spiderfyOverlappingMarkers = (features: { [id: string]: Feature }) => {
 			const leaves = Object.values(features);
-			const centerPx = this.map.project((leaves[0].geometry as Point).coordinates as LngLatLike);
+			const centerPx = (leaves[0].geometry as Point).coordinates as Position;
 			const isSpiral = leaves.length > 9;
-			const angleStep = (2 * Math.PI) / Math.min(leaves.length, 10.5);
-			let legLength = isSpiral ? 15 : 60;
-			const legLengthFactor = 3.5;
+			const angleStep = (2 * Math.PI) / Math.min(leaves.length, 10.7);
+			let legLength = isSpiral ? 0.0001 : 0.0002;
+			const legLengthFactor = 0.000005;
 
 			return Object.entries(features).reduce((markers, feature, i) => {
 				const [id, leaf] = feature;
@@ -459,14 +464,14 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					return markers;
 				}
 				const angle = (i + 1) * angleStep;
-				const offsetPx = {
-					x: legLength * Math.cos(angle),
-					y: legLength * Math.sin(angle)
-				};
-				const lngLat = this.map.unproject([
-					centerPx.x + offsetPx.x,
-					centerPx.y + offsetPx.y
-				]);
+				const offsetPx = [
+					legLength * Math.sin(angle),
+					legLength * Math.cos(angle) / Math.PI * 2,
+				];
+				const lngLat = [
+					centerPx[0] + offsetPx[0],
+					centerPx[1] + offsetPx[1],
+				] as LngLatLike;
 				if (isSpiral) {
 					legLength += ((Math.PI * 2) * legLengthFactor) / angle;
 				}
@@ -491,14 +496,14 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				this.initializeMarkerCluster('markers', clusterConfig);
 			}
 
-			(this.map.getSource("markers") as GeoJSONSource).setData(this.createMarkersFeatureCollection(clusterConfig.markers));
+			(this.map.getSource('markers') as GeoJSONSource).setData(this.createFeatureCollection(clusterConfig.markers.map(this.createMarkerFeature)));
 		});
 	}
 
-	private createMarkersFeatureCollection(markers: UiMapMarkerClientRecordConfig[]): GeoJSON.FeatureCollection {
+	private createFeatureCollection(features: Feature[]): GeoJSON.FeatureCollection {
 		return {
 			type: "FeatureCollection",
-			features: markers.map(this.createMarkerFeature)
+			features
 		};
 	}
 
@@ -515,6 +520,17 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					m.location.longitude,
 					m.location.latitude
 				]
+			}
+		};
+	}
+
+	private createLineStringFeature(shapeConfig: UiMapPolylineConfig): Feature {
+		return {
+			type: "Feature",
+			properties: {},
+			geometry: {
+				type: "LineString",
+				coordinates: shapeConfig.path.map(loc => this.convertToPosition(loc))
 			}
 		};
 	}
