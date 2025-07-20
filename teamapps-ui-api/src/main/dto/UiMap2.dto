@@ -36,6 +36,7 @@ class UiMap2 extends UiComponent {
 	command clearMarkers();
 
 	command setMapMarkerCluster(UiMapMarkerCluster cluster);
+	command addMarkerToCluster(UiMapMarkerClientRecord marker);
 
 	command setHeatMap(UiHeatMapData data);
 

@@ -63,7 +63,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	private $map: HTMLElement;
 	private map: maplibregl.Map;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
-	private markersByClientId: { [id: number]: Marker } = {};
+	private markersByClientId: { [id: string]: Marker } = {};
 	private shapesById: Map<string, { config: AbstractUiMapShapeConfig }> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
@@ -308,7 +308,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.shapesById.forEach((shape, id) => this.removeShape(id));
 	}
 
-	private initializeMarkerCluster(sourceName: string, clusterConfig: UiMapMarkerClusterConfig): void {
+	private initializeMarkerCluster(sourceName: string): void {
 		this.map.addSource(sourceName, {
 			type: 'geojson',
 			data: this.createFeatureCollection([]),
@@ -339,19 +339,16 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			}
 		});
 
-		const markersById: { [id: string]: Marker } = {};
-		let markersOnScreen: { [id: string]: Marker } = {};
-
 		const updateMarkers = () => {
-			const newMarkers: { [id: string]: Marker } = {};
+			const newMarkersOnScreen: { [id: string]: Marker } = {};
 			const srcFeatures = this.map.querySourceFeatures(sourceName);
 			const coordinatesMap = srcFeatures.reduce((map, f) => {
 				const key = (f.geometry as Point).coordinates.join('x');
 				if (!map[key]) {
 					map[key] = {};
 				}
-				f.properties.cache_id = f.properties.cluster_id != null ? "cluster-" + f.properties.cluster_id : "individual-" + f.properties.id;
-				map[key][f.properties.cache_id] = f;
+				f.properties.id = f.properties.cluster_id != null ? "cluster-" + f.properties.cluster_id : f.properties.id;
+				map[key][String(f.properties.id)] = f;
 				return map;
 			}, {} as { [key: string]: { [id: string]: Feature } });
 			const spiderLegFeatures: Feature[] = [];
@@ -360,10 +357,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					const center = (Object.values(features)[0].geometry as Point).coordinates as Position;
 					const markers = spiderfyOverlappingMarkers(features);
 					Object.entries(markers).forEach(([id, m]) => {
-						const marker = markersById[id] ?? m;
-						markersById[id] = newMarkers[id] = marker;
-						if (!markersOnScreen[id]) {
-							marker.addTo(this.map);
+						const marker = this.markersByClientId[id] ?? m;
+						newMarkersOnScreen[id] = marker;
+						if (!this.markersByClientId[id]) {
+							this.addMarkerToMap(id, marker);
 						}
 						spiderLegFeatures.push(this.createLineStringFeature({path: [
 							{longitude: marker.getLngLat().lng, latitude: marker.getLngLat().lat},
@@ -374,7 +371,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					const [id, feature] = Object.entries(features)[0];
 					const coordinates = (feature.geometry as Point).coordinates;
 					const props = feature.properties;
-					let marker = markersById[id];
+					let marker = this.markersByClientId[id];
 					if (!marker) {
 						if (props.cluster) {
 							marker = new maplibregl.Marker({element: createClusterNode(feature), anchor: UiMapMarkerAnchor.CENTER})
@@ -383,18 +380,17 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 							marker = this.createMarker(JSON.parse(props.marker));
 						}
 					}
-					markersById[id] = newMarkers[id] = marker;
-					if (!markersOnScreen[id]) {
-						marker.addTo(this.map);
+					newMarkersOnScreen[id] = marker;
+					if (!this.markersByClientId[id]) {
+						this.addMarkerToMap(id, marker);
 					}
 				}
 			});
-			for (const id in markersOnScreen) {
-				if (!newMarkers[id]) {
-					markersOnScreen[id].remove();
+			for (const id in this.markersByClientId) {
+				if (!newMarkersOnScreen[id]) {
+					this.removeMarker(id, true);
 				}
 			}
-			markersOnScreen = newMarkers;
 			(this.map.getSource(sourceName + '_spiderLegs') as GeoJSONSource).setData(this.createFeatureCollection(spiderLegFeatures));
 		};
 
@@ -403,6 +399,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			const props = feature.properties;
 
 			const div = document.createElement('div');
+			div.setAttribute('data-point-count', String(props.point_count));
 			const radius = 20;
 
 			const svg = d3.select(div)
@@ -460,13 +457,13 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			const leaves = Object.values(features);
 			const centerPx = (leaves[0].geometry as Point).coordinates as Position;
 			const isSpiral = leaves.length > 9;
-			const angleStep = (2 * Math.PI) / Math.min(leaves.length, 10.7);
+			const angleStep = (2 * Math.PI) / Math.min(Math.max(3, leaves.length), 10.7);
 			let legLength = isSpiral ? 0.0001 : 0.0002;
 			const legLengthFactor = 0.000005;
 
 			return Object.entries(features).reduce((markers, feature, i) => {
 				const [id, leaf] = feature;
-				if (leaf.properties.cluster) {
+				if (leaf.properties.cluster || leaf.properties.marker == null) {
 					return markers;
 				}
 				const angle = (i + 1) * angleStep;
@@ -499,11 +496,41 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			if (this.map.getSource('markers') == null) {
-				this.initializeMarkerCluster('markers', clusterConfig);
+				this.initializeMarkerCluster('markers');
 			}
 
-			(this.map.getSource('markers') as GeoJSONSource).setData(this.createFeatureCollection(clusterConfig.markers.map(this.createMarkerFeature)));
+			const markerFeatures = clusterConfig.markers.map(this.createMarkerFeature);
+			(this.map.getSource('markers') as GeoJSONSource).setData(this.createFeatureCollection(markerFeatures));
 		});
+	}
+
+	public addMarkerToCluster(marker: UiMapMarkerClientRecordConfig): void {
+		this.deferredExecutor.invokeWhenReady(() => {
+			if (this.map.getSource('markers') == null) {
+				this.initializeMarkerCluster('markers');
+			}
+			const source = this.map.getSource('markers') as GeoJSONSource;
+			source.getData().then((data: GeoJSON.FeatureCollection) => {
+				const features = data.features ?? [];
+				features.push(this.createMarkerFeature(marker));
+				source.setData(this.createFeatureCollection(features));
+			});
+		});
+	}
+
+	private removeMarkerFromCluster(id?: string): void {
+		const source = this.map.getSource('markers') as GeoJSONSource;
+		if (source != null) {
+			source.getData().then((data: GeoJSON.FeatureCollection) => {
+				if (data.features && data.features.length > 0) {
+					if (id == null) {
+						source.setData(this.createFeatureCollection([]));
+					} else {
+						source.setData(this.createFeatureCollection(data.features.filter(f => String(f.properties?.id) !== id)));
+					}
+				}
+			});
+		}
 	}
 
 	private createFeatureCollection(features: Feature[]): GeoJSON.FeatureCollection {
@@ -568,15 +595,26 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	public addMarker(markerConfig: UiMapMarkerClientRecordConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			const marker = this.createMarker(markerConfig);
-			this.markersByClientId[markerConfig.id] = marker;
-			marker.addTo(this.map);
+			this.addMarkerToMap(String(markerConfig.id), marker);
 		});
 	}
 
-	public removeMarker(id: number): void {
+	private addMarkerToMap(id: string, marker: Marker): void {
+		if (this.markersByClientId[id]) {
+			this.markersByClientId[id].remove(); // just in case...
+		}
+		this.markersByClientId[id] = marker;
+		marker.addTo(this.map);
+	}
+
+	public removeMarker(id: number | string, temporaryRemoval = false): void {
 		this.deferredExecutor.invokeWhenReady(() => {
+			id = String(id);
 			this.markersByClientId[id]?.remove();
 			delete this.markersByClientId[id];
+			if (!temporaryRemoval) {
+				this.removeMarkerFromCluster(id);
+			}
 		});
 	}
 
@@ -584,6 +622,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.deferredExecutor.invokeWhenReady(() => {
 			Object.values(this.markersByClientId).forEach(m => m.remove());
 			this.markersByClientId = {};
+			this.removeMarkerFromCluster();
 		});
 	}
 
