@@ -313,6 +313,13 @@ public class MapView2<RECORD> extends AbstractComponent {
 		return location;
 	}
 
+	public void addMarkerToCluster(Marker<RECORD> marker) {
+		clusterMarkers.add(marker);
+		int clientId = clientIdCounter++;
+		this.markersByClientId.put(clientId, marker);
+		queueCommandIfRendered(() -> new UiMap2.AddMarkerToClusterCommand(getId(), createUiMarkerRecord(marker, clientId)));
+	}
+
 	public void addMarker(Marker<RECORD> marker) {
 		int clientId = clientIdCounter++;
 		this.markersByClientId.put(clientId, marker);
