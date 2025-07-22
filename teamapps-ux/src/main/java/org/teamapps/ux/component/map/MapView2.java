@@ -21,6 +21,7 @@ package org.teamapps.ux.component.map;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
@@ -51,6 +52,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
 	private List<Marker<RECORD>> clusterMarkers = new ArrayList<>();
 	private UiHeatMapData heatMapData = null;
+	private boolean drawingShapeStarted = false;
 
 	private int clientIdCounter = 0;
 	private final BidiMap<Integer, Marker<RECORD>> markersByClientId = new DualHashBidiMap<>();
@@ -167,26 +169,27 @@ public class MapView2<RECORD> extends AbstractComponent {
 			}
 			case UI_MAP2_SHAPE_DRAWN: {
 				UiMap2.ShapeDrawnEvent drawnEvent = (UiMap2.ShapeDrawnEvent) event;
+				ShapeProperties props = drawnEvent.getShape().getShapeProperties() != null ? new ShapeProperties(drawnEvent.getShape().getShapeProperties()) : null;
 				AbstractMapShape shape;
 				switch (drawnEvent.getShape().getUiObjectType()) {
 					case UI_MAP_CIRCLE: {
 						UiMapCircle uiCircle = (UiMapCircle) drawnEvent.getShape();
-						shape = new MapCircle(Location.fromUiMapLocation(uiCircle.getCenter()), uiCircle.getRadius());
+						shape = new MapCircle(Location.fromUiMapLocation(uiCircle.getCenter()), uiCircle.getRadius(), props);
 						break;
 					}
 					case UI_MAP_POLYGON: {
 						UiMapPolygon uiPolygon = (UiMapPolygon) drawnEvent.getShape();
-						shape = new MapPolygon(uiPolygon.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
+						shape = new MapPolygon(uiPolygon.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), props);
 						break;
 					}
 					case UI_MAP_POLYLINE: {
 						UiMapPolyline uiPolyLine = (UiMapPolyline) drawnEvent.getShape();
-						shape = new MapPolyline(uiPolyLine.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
+						shape = new MapPolyline(uiPolyLine.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), props);
 						break;
 					}
 					case UI_MAP_RECTANGLE: {
 						UiMapRectangle uiRect = (UiMapRectangle) drawnEvent.getShape();
-						shape = new MapRectangle(Location.fromUiMapLocation(uiRect.getL1()), Location.fromUiMapLocation(uiRect.getL2()), null);
+						shape = new MapRectangle(Location.fromUiMapLocation(uiRect.getL1()), Location.fromUiMapLocation(uiRect.getL2()), props);
 						break;
 					}
 					default:
@@ -387,13 +390,19 @@ public class MapView2<RECORD> extends AbstractComponent {
 		this.displayNavigationControl = displayNavigationControl;
 	}
 
-	//  TODO
-//	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
-//		queueCommandIfRendered(() -> new UiMap2.StartDrawingShapeCommand(getId(), shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
-//	}
-//
-//	public void stopDrawingShape() {
-//		queueCommandIfRendered(() -> new UiMap2.StopDrawingShapeCommand(getId()));
-//	}
+	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
+		ShapeProperties shapeProps = shapeProperties == null ? new ShapeProperties(Color.MATERIAL_BLUE_400) : shapeProperties;
+		queueCommandIfRendered(() -> new UiMap2.StartDrawingShapeCommand(getId(), shapeType.toUiMapShapeType(), shapeProps.createUiShapeProperties()));
+		drawingShapeStarted = true;
+	}
+
+	public void stopDrawingShape() {
+		queueCommandIfRendered(() -> new UiMap2.StopDrawingShapeCommand(getId()));
+		drawingShapeStarted = false;
+	}
+
+	public boolean isDrawingShapeStarted() {
+		return drawingShapeStarted;
+	}
 
 }
