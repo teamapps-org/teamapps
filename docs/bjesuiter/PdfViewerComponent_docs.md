@@ -1,3 +1,19 @@
+# PdfViewerComponent Implementation
+
+## Parts 
+
+DTO: `/teamapps-ui-api/src/main/dto/UiPdfViewer.dto`
+
+Java Impl: `teamapps-ux/src/main/java/org/teamapps/ux/component/pdfviewer`
+
+Typescript Impl: `teamapps-client/ts/modules`
+
+Testfile (for anybody working in this repo): 
+`teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`
+
+## Testfile Content for testing PdfViewer
+
+```java
 /*-
  * ========================LICENSE_START=================================
  * TeamApps
@@ -22,7 +38,6 @@ package org.teamapps.server.jetty.embedded;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.pdfviewer.PdfViewer;
-import org.teamapps.ux.component.playground.Playground;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.table.AbstractTableModel;
 import org.teamapps.ux.component.table.Table;
@@ -41,17 +56,8 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.addRootPanel(null, rootPanel);
 
 			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
-			PdfViewer pdfViewer = new PdfViewer(testPdfLink);
-			pdfViewer.setPadding(10);
-
-			pdfViewer.onPdfInitialized.addListener((initEvent) -> {
-				System.out.println("PDF viewer rendered, page number: " + initEvent.getNumberOfPages());
-			});
-
-//			Playground playground = new Playground("Hello Default World");
-//			playground.setTitle("Hello World");
-
-			rootPanel.setContent(pdfViewer);
+			PdfViewer component = new PdfViewer(testPdfLink);
+			rootPanel.setContent(component);
 		};
 
 		TeamAppsJettyEmbeddedServer.builder(controller)
@@ -62,3 +68,21 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 
 }
+
+```
+
+## Run the Test environment 
+
+Preparation: 
+- mvn clean install (aka TeamApps - clean + install)
+  - installs/compiles everything in project 
+
+1. Run the Testfile (`teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`) via IntelliJ (Green Arrow in UI)
+2. Goto teamapps-client in a shell
+3. Run yarn install 
+4. Run `./start-dev-server.sh 8082` (because the Jetty starts at that port)
+5. Goto http://localhost:9000 to see/debug the component
+
+## Todos
+
+- In PdfViewer.java: update all setters to update ts client
