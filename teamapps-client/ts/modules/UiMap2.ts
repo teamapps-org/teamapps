@@ -22,6 +22,15 @@ import TurfCircle from "@turf/circle";
 import * as d3 from "d3";
 import {Feature, Point, Position} from "geojson";
 import maplibregl, {GeoJSONSource, LngLatLike, Marker} from "maplibre-gl";
+import {
+	HexColor,
+	TerraDraw,
+	TerraDrawCircleMode,
+	TerraDrawLineStringMode,
+	TerraDrawPolygonMode,
+	TerraDrawRectangleMode
+} from "terra-draw";
+import {TerraDrawMapLibreGLAdapter} from "terra-draw-maplibre-gl-adapter";
 import {AbstractUiMapShapeChangeConfig} from "../generated/AbstractUiMapShapeChangeConfig";
 import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
 import {UiHeatMapDataConfig} from "../generated/UiHeatMapDataConfig";
@@ -37,12 +46,17 @@ import {
 	UiMap2EventSource
 } from "../generated/UiMap2Config";
 import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
+import {createUiMapCircleConfig} from "../generated/UiMapCircleConfig";
 import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
 import {UiMapMarkerAnchor} from "../generated/UiMapMarkerAnchor";
 import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
 import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
-import {UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
+import {createUiMapPolygonConfig} from "../generated/UiMapPolygonConfig";
+import {createUiMapPolylineConfig, UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
+import {createUiMapRectangleConfig} from "../generated/UiMapRectangleConfig";
+import {UiMapShapeType} from "../generated/UiMapShapeType";
 import {UiPolylineAppendConfig} from "../generated/UiPolylineAppendConfig";
+import {UiShapePropertiesConfig} from "../generated/UiShapePropertiesConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {parseHtml, Renderer} from "./Common";
@@ -62,11 +76,15 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	private $map: HTMLElement;
 	private map: maplibregl.Map;
+	private draw: TerraDraw;
+	private drawingProperties: UiShapePropertiesConfig;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 	private markersByClientId: { [id: string]: Marker } = {};
 	private shapesById: Map<string, { config: AbstractUiMapShapeConfig }> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
+
+	private readonly fillOpacity = 0.75;
 
 	constructor(config: UiMap2Config, context: TeamAppsUiContext) {
 		super(config, context);
@@ -125,6 +143,54 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		if (config.heatMap != null) {
 			this.setHeatMap(config.heatMap);
 		}
+		const styles = {
+			fillOpacity: this.fillOpacity,
+		};
+		this.draw = new TerraDraw({
+			adapter: new TerraDrawMapLibreGLAdapter({ map: this.map }),
+			modes: [
+				new TerraDrawCircleMode({styles}),
+				new TerraDrawRectangleMode({styles}),
+				new TerraDrawPolygonMode({styles}),
+				new TerraDrawLineStringMode(),
+			],
+		});
+
+		this.draw.on('finish', (shapeId: string, ctx: { action: string, mode: string }) => {
+			if (ctx.action === 'draw') {
+				let shape: AbstractUiMapShapeConfig;
+				const drawFeature = this.draw.getSnapshotFeature(shapeId);
+				if (drawFeature) {
+					const positions = this.flattenPositionArray(drawFeature.geometry.coordinates);
+					switch (ctx.mode) {
+						case 'circle':
+							//const src = this.map.getSource('td-polygon') as GeoJSONSource;
+							shape = createUiMapCircleConfig({center: this.calcCenterUiLocation(positions), radius: Number(drawFeature.properties?.radiusKilometers) * 1000});
+							break;
+						case 'rectangle':
+							//const src = this.map.getSource('td-polygon') as GeoJSONSource;
+							shape = createUiMapRectangleConfig({
+								l1: this.toUiLocation(positions[0]),
+								l2: this.toUiLocation(positions[2]),
+							});
+							break;
+						case 'polygon':
+							//const src = this.map.getSource('td-polygon') as GeoJSONSource;
+							shape = createUiMapPolygonConfig({path: positions.map(this.toUiLocation)});
+							break;
+						case 'linestring':
+							//const src = this.map.getSource('td-linestring') as GeoJSONSource;
+							shape = createUiMapPolylineConfig({path: positions.map(this.toUiLocation)});
+							break;
+						default:
+							throw new Error(`Unknown draw mode: ${ctx.mode}`);
+					}
+				}
+				shape.shapeProperties = this.drawingProperties;
+				this.shapesById.set(shapeId, {config: shape});
+				this.onShapeDrawn.fire({shapeId, shape});
+			}
+		});
 	}
 
 	public setStyleUrl(styleUrl: string): void {
@@ -150,7 +216,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 						type: "fill",
 						paint: {
 							"fill-color": shapeConfig.shapeProperties.fillColor,
-							"fill-opacity": 0.8
+							"fill-opacity": this.fillOpacity
 						},
 					});
 				}
@@ -190,7 +256,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				});
 			} else if (isUiMapPolygon(shapeConfig)) {
 				const path = shapeConfig.path.map(loc => this.convertToPosition(loc));
-				if (path[0] !== path[path.length - 1]) {
+				if (String(path[0]) !== String(path[path.length - 1])) {
 					path.push(path[0]); // geojson spec demands that polygons be closed!
 				}
 				this.map.addSource(shapeId, {
@@ -207,7 +273,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					}
 				});
 				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; paintProperties['fill-opacity'] = 0.8; }
+				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; paintProperties['fill-opacity'] = this.fillOpacity; }
 				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor; }
 				this.map.addLayer({
 					id: shapeId,
@@ -250,7 +316,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					}
 				});
 				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; paintProperties['fill-opacity'] = 0.8; }
+				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; paintProperties['fill-opacity'] = this.fillOpacity; }
 				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor; }
 				this.map.addLayer({
 					id: shapeId,
@@ -656,7 +722,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			['linear'],
 			['zoom'],
 			data.blur - 1,
-			0.8,
+			this.fillOpacity,
 			data.blur, // fade out at zoom level defined by parameter "blur"
 			0
 		];
@@ -704,14 +770,89 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	// TODO
-	public startDrawingShape(shapeType: import("../generated/UiMapShapeType").UiMapShapeType, shapeProperties: import("../generated/UiShapePropertiesConfig").UiShapePropertiesConfig): void {
-		throw new Error("Method not implemented.");
+	private toUiLocation(pos: Position): UiMapLocationConfig {
+		return createUiMapLocationConfig(pos[1], pos[0]);
+	}
+	private flattenPositionArray(arr: Position | Position[] | Position[][] | Position[][][]): Position[] {
+		if (!Array.isArray(arr) || arr.length === 0) {
+			return [];
+		}
+		if (arr.length === 2 && (typeof arr[0] === 'number' || typeof arr[1] === 'number')) {
+			return [arr] as Position[];
+		}
+		return (arr as any[]).reduce((acc, cur) => acc.concat(this.flattenPositionArray(cur)), []);
 	}
 
-	// TODO
+	private calcCenterUiLocation(positions: Position[]): UiMapLocationConfig {
+		const lngs = positions.map(m => m[0]);
+		const lats = positions.map(m => m[1]);
+		return createUiMapLocationConfig(
+			(Math.min(...lats) + Math.max(...lats)) / 2,
+			(Math.min(...lngs) + Math.max(...lngs)) / 2,
+		);
+	}
+
+	private createDrawShapeStyles(drawMode: string, shapeProperties: UiShapePropertiesConfig): Record<string, number | HexColor> {
+		let styles: any = {
+			fillColor: shapeProperties.fillColor as HexColor,
+			outlineColor: shapeProperties.strokeColor as HexColor,
+			outlineWidth: shapeProperties.strokeWeight,
+		};
+		if (drawMode === 'linestring') {
+			styles = {
+				lineStringColor: shapeProperties.strokeColor as HexColor,
+				lineStringWidth: shapeProperties.strokeWeight,
+			};
+		}
+		if (shapeProperties.strokeColor == null) {
+			delete styles.outlineColor;
+			delete styles.lineStringColor;
+		}
+		if (shapeProperties.strokeWeight == null || shapeProperties.strokeWeight === 0) {
+			delete styles.outlineWidth;
+			delete styles.lineStringWidth;
+		}
+		if (shapeProperties.fillColor == null) {
+			delete styles.fillColor;
+		}
+		return styles;
+	}
+
+	private mapShapeTypeToTerraDrawMode(shapeType: UiMapShapeType): string {
+		switch (shapeType) {
+			case UiMapShapeType.CIRCLE:
+				return 'circle';
+			case UiMapShapeType.RECTANGLE:
+				return 'rectangle';
+			case UiMapShapeType.POLYGON:
+				return 'polygon';
+			case UiMapShapeType.POLYLINE:
+				return 'linestring';
+			default:
+				return 'static'; // just to be sure
+		}
+	}
+
+	public startDrawingShape(shapeType: UiMapShapeType, shapeProperties: UiShapePropertiesConfig): void {
+		this.deferredExecutor.invokeWhenReady(() => {
+			if (this.draw.getMode() !== 'static') {
+				this.stopDrawingShape();
+			}
+			const mode = this.mapShapeTypeToTerraDrawMode(shapeType);
+			const styles = this.createDrawShapeStyles(mode, shapeProperties);
+			this.drawingProperties = shapeProperties;
+			this.draw.start();
+			this.draw.setMode(mode);
+			this.draw.updateModeOptions(mode, {styles});
+		});
+	}
+
 	public stopDrawingShape(): void {
-		throw new Error("Method not implemented.");
+		this.deferredExecutor.invokeWhenReady(() => {
+			this.draw.setMode('static');
+			this.draw.stop();
+			this.drawingProperties = null;
+		});
 	}
 
 	public setZoomLevel(zoom: number): void {

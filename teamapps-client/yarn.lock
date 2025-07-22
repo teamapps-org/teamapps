@@ -9079,6 +9079,16 @@ terminal-link@^2.0.0:
     ansi-escapes "^4.2.1"
     supports-hyperlinks "^2.0.0"
 
+terra-draw-maplibre-gl-adapter@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/terra-draw-maplibre-gl-adapter/-/terra-draw-maplibre-gl-adapter-1.1.1.tgz#eb42cdb62a362fb207c71e2d2e6f697a1a441576"
+  integrity sha512-PkrhUO2sVuc8dviOzzfKyEAuToEKcy1UWOQ/EtdNXx+dPAw8WuCXOhXJpf+M1yi02z+v6mRMq/7h8sRs2fBeng==
+
+terra-draw@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/terra-draw/-/terra-draw-1.10.0.tgz#5c6abc6fd21a2d998f94d1e9736100e46188d742"
+  integrity sha512-7lM6AmNxKWsrls/SZ+qoVTqD74NBrwq0a4fMBvKcvHmteJ72FUluujn72s4nkASbeS4X199Hn+7KI9uiBiKlVQ==
+
 terser-webpack-plugin@^1.3.0, terser-webpack-plugin@^1.4.3:
   version "1.4.3"
   resolved "https://registry.npmjs.org/terser-webpack-plugin/-/terser-webpack-plugin-1.4.3.tgz"
@@ -9396,10 +9406,10 @@ typeface-roboto@^0.0.54:
   resolved "https://registry.npmjs.org/typeface-roboto/-/typeface-roboto-0.0.54.tgz"
   integrity sha512-sOFA1FXgP0gOgBYlS6irwq6hHYA370KE3dPlgYEJHL3PJd5X8gQE0RmL79ONif6fL5JZuGDj+rtOrFeOqz5IZQ==
 
-typescript@^4.3.5:
-  version "4.3.5"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.3.5.tgz"
-  integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
+typescript@~4.5.0:
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
+  integrity sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==
 
 uglify-js@3.4.x:
   version "3.4.10"
