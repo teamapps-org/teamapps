@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,30 +29,22 @@ import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.session.CurrentSessionContext;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
-	
+
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
 			this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
+					CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
 	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
 			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmptyValue(value)) ?
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
+							CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
 	public final Event<VALUE> onFocus = new Event<>();
 	public final Event<VALUE> onBlur = new Event<>();
@@ -62,7 +54,8 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
 
 	private final Set<FieldValidator<VALUE>> validators = new HashSet<>();
-	private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>(); // null key for custom field messages (not bound to a validator)
+	private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>();
+	private final List<FieldMessage> customFieldMessages = new ArrayList<>();
 	private FieldMessage.Position defaultMessagePosition = FieldMessage.Position.BELOW;
 	private FieldMessage.Visibility defaultMessageVisibility = FieldMessage.Visibility.ALWAYS_VISIBLE;
 
@@ -217,6 +210,12 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		updateFieldMessages();
 	}
 
+	public void clearAllMessages() {
+		fieldMessagesByValidator.clear();
+		customFieldMessages.clear();
+		updateFieldMessages();
+	}
+
 	/**
 	 * field may not be null (empty)
 	 */
@@ -241,18 +240,22 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public List<FieldMessage> getFieldMessages() {
-		return fieldMessagesByValidator.values().stream()
-				.filter(Objects::nonNull)
-				.flatMap(Collection::stream)
+		return Stream.concat(
+						fieldMessagesByValidator.values().stream()
+								.filter(Objects::nonNull)
+								.flatMap(Collection::stream),
+						customFieldMessages.stream()
+				)
 				.collect(Collectors.toList());
 	}
 
 	public List<FieldMessage> getCustomFieldMessages() {
-		return fieldMessagesByValidator.computeIfAbsent(null, v -> new ArrayList<>());
+		return List.copyOf(customFieldMessages);
 	}
 
 	public void setCustomFieldMessages(List<FieldMessage> fieldMessages) {
-		fieldMessagesByValidator.put(null, new ArrayList<>(fieldMessages));
+		customFieldMessages.clear();
+		customFieldMessages.addAll(fieldMessages);
 		updateFieldMessages();
 	}
 
@@ -261,17 +264,17 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void addCustomFieldMessage(FieldMessage fieldMessage) {
-		getCustomFieldMessages().add(fieldMessage);
+		customFieldMessages.add(fieldMessage);
 		updateFieldMessages();
 	}
 
 	public void removeCustomFieldMessage(FieldMessage fieldMessage) {
-		getCustomFieldMessages().remove(fieldMessage);
+		customFieldMessages.remove(fieldMessage);
 		updateFieldMessages();
 	}
 
 	public void clearCustomFieldMessages() {
-		getCustomFieldMessages().clear();
+		customFieldMessages.clear();
 		updateFieldMessages();
 	}
 
