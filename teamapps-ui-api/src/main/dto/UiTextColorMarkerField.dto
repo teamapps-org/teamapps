@@ -1,0 +1,27 @@
+class UiTextColorMarkerField extends UiField {
+    List<UiTextColorMarkerFieldMarkerDefinition> markerDefinitions;
+    boolean toolbarEnabled;
+
+    command setMarkerDefinitions(List<UiTextColorMarkerFieldMarkerDefinition> markerDefinitions, UiTextColorMarkerFieldValue newValue);
+    command setToolbarEnabled(boolean enabled);
+
+    event textSelected(int start, int end);
+}
+
+class UiTextColorMarkerFieldMarkerDefinition {
+    required int id;
+    String borderColor;
+    String backgroundColor;
+    String hint;
+}
+
+class UiTextColorMarkerFieldValue {
+    required String text;
+    required List<UiTextColorMarkerFieldMarker> markers;
+}
+
+class UiTextColorMarkerFieldMarker {
+    required int markerDefinitionId;
+    required int start;
+    required int end;
+}

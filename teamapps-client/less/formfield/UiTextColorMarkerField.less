@@ -1,0 +1,95 @@
+
+.UiTextColorMarkerField {
+  position: relative;
+  background-color: var(--ta-input-bg);
+  min-height: var(--ta-input-height);
+  padding: 0;
+
+  > .editor {
+    border: none;
+    resize: none;
+    outline: none;
+    background: transparent;
+    padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+    white-space: pre-wrap;
+    height: 100%;
+    width: 100%; // needed for newline workaround
+    display: inline-block; // workaround for newlines in Chrome (does not work with flex)
+    box-sizing: border-box; // workaround for newlines in Chrome (to make sure the width is correct)
+
+    .marker {
+      --marker-bg-color: transparent;
+      --marker-border-color: transparent;
+      --marker-text-color: #000000;
+      background-color: color-mix(in srgb, var(--marker-bg-color) 75%, transparent);
+      box-shadow: 0 0 4px 1px color-mix(in srgb, var(--marker-border-color) 85%, transparent);
+      color: var(--marker-text-color);
+      padding: 0 1px;
+      margin: 0 -1px;
+      cursor: pointer;
+    }
+  }
+
+  > .toolbar-wrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--ta-bg-color);
+    box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
+    border-radius: 0 0 var(--ta-border-radius) var(--ta-border-radius);
+    padding: 4px;
+    gap: 4px;
+    flex-wrap: wrap;
+    z-index: var(--ta-zindex-dropdown);
+    &.hidden {
+      display: none;
+    }
+    &:not(.hidden) {
+      display: flex;
+    }
+    .toolbar-button {
+      padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+      border: 1px solid var(--ta-input-border-color);
+      border-radius: var(--ta-input-border-radius);
+      cursor: pointer;
+      font-family: var(--ta-font-family-base);
+      font-size: var(--ta-font-size-small);
+      line-height: var(--ta-line-height);
+      min-height: calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2);
+      min-width: calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2);
+      white-space: nowrap;
+      transition: all 0.15s ease-in-out;
+      opacity: 0.6;
+
+      &:hover {
+        filter: brightness(1.1);
+        opacity: 1;
+      }
+      &:not(.applied) {
+        opacity: 1;
+      }
+    }
+  }
+
+  &:has(.toolbar-wrapper:not(.hidden)) {
+    border-radius: var(--ta-input-border-radius) var(--ta-input-border-radius) 0 0;
+  }
+
+  &.disabled {
+    .marker {
+      cursor: auto;
+    }
+    .toolbar-wrapper {
+      display: none;
+    }
+  }
+
+  &.readonly > .editor {
+    padding: 0;
+  }
+
+  &.disabled {
+    background-color: var(--ta-input-bg-disabled);
+  }
+}
