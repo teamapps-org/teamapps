@@ -170,17 +170,17 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 						case 'rectangle':
 							//const src = this.map.getSource('td-polygon') as GeoJSONSource;
 							shape = createUiMapRectangleConfig({
-								l1: this.toUiLocation(positions[0]),
-								l2: this.toUiLocation(positions[2]),
+								l1: this.convertToUiLocation(positions[0]),
+								l2: this.convertToUiLocation(positions[2]),
 							});
 							break;
 						case 'polygon':
 							//const src = this.map.getSource('td-polygon') as GeoJSONSource;
-							shape = createUiMapPolygonConfig({path: positions.map(this.toUiLocation)});
+							shape = createUiMapPolygonConfig({path: positions.map(this.convertToUiLocation)});
 							break;
 						case 'linestring':
 							//const src = this.map.getSource('td-linestring') as GeoJSONSource;
-							shape = createUiMapPolylineConfig({path: positions.map(this.toUiLocation)});
+							shape = createUiMapPolylineConfig({path: positions.map(this.convertToUiLocation)});
 							break;
 						default:
 							throw new Error(`Unknown draw mode: ${ctx.mode}`);
@@ -197,162 +197,96 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.map.setStyle(styleUrl);
 	}
 
-	public addShape(shapeId: string, shapeConfig: AbstractUiMapShapeConfig): void {
-		this.deferredExecutor.invokeWhenReady(() => {
+	private createShapeFeatureByConfig(shapeId: string, shapeConfig: AbstractUiMapShapeConfig) {
+		if (isUiMapCircle(shapeConfig)) {
+			return TurfCircle(this.createPointFeature(shapeConfig.center, shapeId), shapeConfig.radius, {
+				units: 'meters',
+				steps: 90
+			});
+		} else if (isUiMapPolyline(shapeConfig)) {
+			return this.createLineStringFeature(shapeConfig, shapeId);
+		} else if (isUiMapPolygon(shapeConfig)) {
+			const path = shapeConfig.path.map(loc => this.convertToPosition(loc));
+			if (String(path[0]) !== String(path[path.length - 1])) {
+				path.push(path[0]); // geojson spec demands that polygons be closed!
+			}
+			return this.createPolygonFeature(path, shapeId, shapeConfig);
+		} else if (isUiMapRectangle(shapeConfig)) {
+			const path = [
+				this.convertToPosition(shapeConfig.l1),
+				[shapeConfig.l1.longitude, shapeConfig.l2.latitude],
+				this.convertToPosition(shapeConfig.l2),
+				[shapeConfig.l2.longitude, shapeConfig.l1.latitude],
+				this.convertToPosition(shapeConfig.l1) // geojson spec demands that polygons be closed!
+			];
+			return this.createPolygonFeature(path, shapeId, shapeConfig);
+		}
+	}
+
+	@Queued()
+	public async addShape(shapeId: string, shapeConfig: AbstractUiMapShapeConfig) {
+		return this.deferredExecutor.invokeWhenReady(async () => {
 			this.shapesById.set(shapeId, {config: shapeConfig});
-			if (isUiMapCircle(shapeConfig)) {
-				const circleData = TurfCircle([shapeConfig.center.longitude, shapeConfig.center.latitude], shapeConfig.radius, {
-					units: 'meters',
-					steps: 90
+			if (this.map.getSource('shapes') == null) {
+				this.map.addSource('shapes', {
+					type: 'geojson',
+					data: this.createFeatureCollection([]),
 				});
-				this.map.addSource(shapeId, {
-					type: "geojson",
-					data: circleData
-				});
+			}
+			const shapeSrc = this.map.getSource('shapes') as GeoJSONSource;
+			const srcFeatures = await shapeSrc.getData() as GeoJSON.FeatureCollection;
+			srcFeatures.features = srcFeatures.features.filter(f => f.id !== shapeId);
+			srcFeatures.features.push(this.createShapeFeatureByConfig(shapeId, shapeConfig));
+			shapeSrc.setData(srcFeatures);
+			const paintProperties = {} as any;
+			if (shapeConfig.shapeProperties.strokeColor != null) {
+				paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor;
+			}
+			if (shapeConfig.shapeProperties.strokeWeight != null && shapeConfig.shapeProperties.strokeWeight !== 0) {
+				paintProperties['line-width'] = shapeConfig.shapeProperties.strokeWeight;
+			}
+			if (shapeConfig.shapeProperties.strokeDashArray != null) {
+				paintProperties["line-dasharray"] = shapeConfig.shapeProperties.strokeDashArray;
+			}
+			this.map.addLayer({
+				id: shapeId + '-outline',
+				type: 'line',
+				source: 'shapes',
+				filter: ['==', 'id', shapeId],
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round'
+				},
+				paint: paintProperties
+			});
+			if (isUiMapCircle(shapeConfig) || isUiMapPolygon(shapeConfig) || isUiMapRectangle(shapeConfig)) {
 				if (shapeConfig.shapeProperties.fillColor != null) {
 					this.map.addLayer({
-						id: shapeId + "-fill",
-						source: shapeId,
-						type: "fill",
+						id: shapeId,
+						source: 'shapes',
+						filter: ['==', 'id', shapeId],
+						type: 'fill',
 						paint: {
-							"fill-color": shapeConfig.shapeProperties.fillColor,
-							"fill-opacity": this.fillOpacity
+							'fill-color': shapeConfig.shapeProperties.fillColor,
+							'fill-opacity': this.fillOpacity
 						},
-					});
-				}
-				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor; }
-				if (shapeConfig.shapeProperties.strokeWeight != null) { paintProperties['line-width'] = shapeConfig.shapeProperties.strokeWeight; }
-				this.map.addLayer({
-					id: shapeId + "-outline",
-					source: shapeId,
-					type: 'line',
-					layout: {
-						'line-join': 'round',
-						'line-cap': 'round'
-					},
-					paint: {
-						...paintProperties,
-					},
-				});
-			} else if (isUiMapPolyline(shapeConfig)) {
-				this.map.addSource(shapeId, {
-					type: 'geojson',
-					data: this.createLineStringFeature(shapeConfig)
-				});
-				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor; }
-				if (shapeConfig.shapeProperties.strokeWeight != null) { paintProperties['line-width'] = shapeConfig.shapeProperties.strokeWeight; }
-				if (shapeConfig.shapeProperties.strokeDashArray != null) { paintProperties["line-dasharray"] = shapeConfig.shapeProperties.strokeDashArray; }
-				this.map.addLayer({
-					id: shapeId,
-					type: 'line',
-					source: shapeId,
-					layout: {
-						'line-join': 'round',
-						'line-cap': 'round'
-					},
-					paint: paintProperties
-				});
-			} else if (isUiMapPolygon(shapeConfig)) {
-				const path = shapeConfig.path.map(loc => this.convertToPosition(loc));
-				if (String(path[0]) !== String(path[path.length - 1])) {
-					path.push(path[0]); // geojson spec demands that polygons be closed!
-				}
-				this.map.addSource(shapeId, {
-					type: 'geojson',
-					data: {
-						type: 'Feature',
-						geometry: {
-							type: 'Polygon',
-							coordinates: [
-								path
-							]
-						},
-						properties: {}
-					}
-				});
-				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; paintProperties['fill-opacity'] = this.fillOpacity; }
-				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor; }
-				this.map.addLayer({
-					id: shapeId,
-					type: 'fill',
-					source: shapeId,
-					paint: paintProperties
-				});
-				if (shapeConfig.shapeProperties.strokeWeight != null) {
-					const paintProps = {
-						"line-width": shapeConfig.shapeProperties.strokeWeight
-					} as any;
-					if (shapeConfig.shapeProperties.strokeColor != null) { paintProps['line-color'] = shapeConfig.shapeProperties.strokeColor; }
-					this.map.addLayer({
-						id: shapeId + "-outline",
-						type: 'line',
-						source: shapeId,
-						layout: {
-							'line-join': 'round',
-							'line-cap': 'round'
-						},
-						paint: paintProps
-					});
-				}
-			} else if (isUiMapRectangle(shapeConfig)) {
-				this.map.addSource(shapeId, {
-					type: 'geojson',
-					data: {
-						type: 'Feature',
-						geometry: {
-							type: 'Polygon',
-							coordinates: [[
-								this.convertToPosition(shapeConfig.l1),
-								[shapeConfig.l1.longitude, shapeConfig.l2.latitude],
-								this.convertToPosition(shapeConfig.l2),
-								[shapeConfig.l2.longitude, shapeConfig.l1.latitude],
-								this.convertToPosition(shapeConfig.l1) // geojson spec demands that polygons be closed!
-							]]
-						},
-						properties: {}
-					}
-				});
-				const paintProperties = {} as any;
-				if (shapeConfig.shapeProperties.fillColor != null) { paintProperties['fill-color'] = shapeConfig.shapeProperties.fillColor; paintProperties['fill-opacity'] = this.fillOpacity; }
-				if (shapeConfig.shapeProperties.strokeColor != null) { paintProperties['fill-outline-color'] = shapeConfig.shapeProperties.strokeColor; }
-				this.map.addLayer({
-					id: shapeId,
-					type: 'fill',
-					source: shapeId,
-					paint: paintProperties
-				});
-				if (shapeConfig.shapeProperties.strokeWeight != null) {
-					const paintProps = {
-						"line-width": shapeConfig.shapeProperties.strokeWeight
-					} as any;
-					if (shapeConfig.shapeProperties.strokeColor != null) { paintProps['line-color'] = shapeConfig.shapeProperties.strokeColor; }
-					this.map.addLayer({
-						id: shapeId + "-outline",
-						type: 'line',
-						layout: {
-							'line-join': 'round',
-							'line-cap': 'round'
-						},
-						source: shapeId,
-						paint: paintProps
 					});
 				}
 			}
 		});
 	}
 
-	public updateShape(shapeId: string, shape: AbstractUiMapShapeConfig): void {
-		this.deferredExecutor.invokeWhenReady(() => {
-			this.removeShape(shapeId);
-			this.addShape(shapeId, shape);
+	@Queued()
+	public updateShape(shapeId: string, shape: AbstractUiMapShapeConfig) {
+		return this.deferredExecutor.invokeWhenReady(async () => {
+			await this.removeShape(shapeId);
+			await this.addShape(shapeId, shape);
 		});
 	}
 
-	public changeShape(shapeId: string, change: AbstractUiMapShapeChangeConfig): void {
-		this.deferredExecutor.invokeWhenReady(() => {
+	@Queued()
+	public async changeShape(shapeId: string, change: AbstractUiMapShapeChangeConfig) {
+		return this.deferredExecutor.invokeWhenReady(() => {
 			if (isPolyLineAppend(change)) {
 				const config = this.shapesById.get(shapeId).config as UiMapPolylineConfig;
 				config.path = config.path.concat(change.appendedPath);
@@ -362,16 +296,42 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	public removeShape(shapeId: string): void {
-		this.deferredExecutor.invokeWhenReady(() => {
-			this.map.removeLayer(shapeId);
-			this.map.removeSource(shapeId);
+	@Queued()
+	public async removeShape(shapeId: string) {
+		return this.deferredExecutor.invokeWhenReady(async () => {
+			if (this.map.getLayer(shapeId)) {
+				this.map.removeLayer(shapeId);
+			}
+			if (this.map.getLayer(shapeId + '-outline')) {
+				this.map.removeLayer(shapeId + '-outline');
+			}
+			await this.removeIdFromSource('shapes', shapeId);
+			await this.removeShapeFromTerraDraw(shapeId);
 			this.shapesById.delete(shapeId);
 		});
 	}
 
-	public clearShapes(): void {
-		this.shapesById.forEach((shape, id) => this.removeShape(id));
+	@Queued()
+	private async removeShapeFromTerraDraw(shapeId: string) {
+		if (this.draw.hasFeature(shapeId)) {
+			await this.removeIdFromSource('td-polygon', shapeId);
+			await this.removeIdFromSource('td-linestring', shapeId);
+			this.draw.removeFeatures([shapeId]);
+		}
+	}
+
+	@Queued()
+	private async removeIdFromSource(sourceName: string, id: string) {
+		const source = this.map.getSource(sourceName) as GeoJSONSource;
+		if (source != null) {
+			const features = (await source.getData() as GeoJSON.FeatureCollection).features ?? [];
+			source.setData(this.createFeatureCollection(features.filter(f => f.id !== id)));
+		}
+	}
+
+	public async clearShapes() {
+		const shapeIds = Array.from(this.shapesById.keys());
+		await Promise.all(shapeIds.map(id => this.removeShape(id)));
 	}
 
 	private initializeMarkerCluster(sourceName: string): void {
@@ -405,7 +365,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			}
 		});
 
-		const updateMarkers = () => {
+		const updateMarkers = makeQueue(async () => {
 			const newMarkersOnScreen: { [id: string]: Marker } = {};
 			const srcFeatures = this.map.querySourceFeatures(sourceName);
 			const coordinatesMap = srcFeatures.reduce((map, f) => {
@@ -454,11 +414,11 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			});
 			for (const id in this.markersByClientId) {
 				if (!newMarkersOnScreen[id]) {
-					this.removeMarker(id, true);
+					await this.removeMarker(id, true);
 				}
 			}
 			(this.map.getSource(sourceName + '_spiderLegs') as GeoJSONSource).setData(this.createFeatureCollection(spiderLegFeatures));
-		};
+		}, true);
 
 		const createClusterNode = (feature: Feature) => {
 			const coordinates = (feature.geometry as Point).coordinates;
@@ -570,32 +530,31 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	public addMarkerToCluster(marker: UiMapMarkerClientRecordConfig): void {
-		this.deferredExecutor.invokeWhenReady(() => {
+	@Queued()
+	public async addMarkerToCluster(marker: UiMapMarkerClientRecordConfig) {
+		return this.deferredExecutor.invokeWhenReady(async () => {
 			if (this.map.getSource('markers') == null) {
 				this.initializeMarkerCluster('markers');
 			}
 			const source = this.map.getSource('markers') as GeoJSONSource;
-			source.getData().then((data: GeoJSON.FeatureCollection) => {
-				const features = data.features ?? [];
-				features.push(this.createMarkerFeature(marker));
-				source.setData(this.createFeatureCollection(features));
-			});
+			const features = (await source.getData() as GeoJSON.FeatureCollection).features ?? [];
+			features.push(this.createMarkerFeature(marker));
+			source.setData(this.createFeatureCollection(features));
 		});
 	}
 
-	private removeMarkerFromCluster(id?: string): void {
+	@Queued()
+	private async removeMarkerFromCluster(id?: string) {
 		const source = this.map.getSource('markers') as GeoJSONSource;
 		if (source != null) {
-			source.getData().then((data: GeoJSON.FeatureCollection) => {
-				if (data.features && data.features.length > 0) {
-					if (id == null) {
-						source.setData(this.createFeatureCollection([]));
-					} else {
-						source.setData(this.createFeatureCollection(data.features.filter(f => String(f.properties?.id) !== id)));
-					}
+			const data = await source.getData() as GeoJSON.FeatureCollection;
+			if (data.features && data.features.length > 0) {
+				if (id == null) {
+					source.setData(this.createFeatureCollection([]));
+				} else {
+					source.setData(this.createFeatureCollection(data.features.filter(f => String(f.properties?.id) !== id)));
 				}
-			});
+			}
 		}
 	}
 
@@ -606,7 +565,36 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		};
 	}
 
-	private createMarkerFeature(m: UiMapMarkerClientRecordConfig): Feature {
+	private createPolygonFeature(path: Position[], id?: string, config?: AbstractUiMapShapeConfig): Feature<GeoJSON.Polygon> {
+		return {
+			type: 'Feature',
+			geometry: {
+				type: 'Polygon',
+				coordinates: [
+					path
+				]
+			},
+			id,
+			properties: {id, config}
+		};
+	}
+
+	private createPointFeature(config: UiMapLocationConfig, id?: string): Feature<GeoJSON.Point> {
+		return {
+			type: "Feature",
+			id,
+			properties: {id, config},
+			geometry: {
+				type: "Point",
+				coordinates: [
+					config.longitude,
+					config.latitude
+				]
+			}
+		};
+	}
+
+	private createMarkerFeature(m: UiMapMarkerClientRecordConfig): Feature<GeoJSON.Point> {
 		return {
 			type: "Feature",
 			properties: {
@@ -623,7 +611,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		};
 	}
 
-	private createHeatMapDataElementFeature(c: UiHeatMapDataElementConfig): Feature {
+	private createHeatMapDataElementFeature(c: UiHeatMapDataElementConfig): Feature<GeoJSON.Point> {
 		return {
 			type: "Feature",
 			properties: {
@@ -639,13 +627,14 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		};
 	}
 
-	private createLineStringFeature(shapeConfig: UiMapPolylineConfig): Feature {
+	private createLineStringFeature(config: UiMapPolylineConfig, id?: string): Feature<GeoJSON.LineString> {
 		return {
 			type: "Feature",
-			properties: {},
+			id,
+			properties: {id, config},
 			geometry: {
 				type: "LineString",
-				coordinates: shapeConfig.path.map(loc => this.convertToPosition(loc))
+				coordinates: config.path.map(loc => this.convertToPosition(loc))
 			}
 		};
 	}
@@ -673,22 +662,24 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		marker.addTo(this.map);
 	}
 
-	public removeMarker(id: number | string, temporaryRemoval = false): void {
-		this.deferredExecutor.invokeWhenReady(() => {
+	@Queued()
+	public async removeMarker(id: number | string, temporaryRemoval = false) {
+		return this.deferredExecutor.invokeWhenReady(async () => {
 			id = String(id);
 			this.markersByClientId[id]?.remove();
 			delete this.markersByClientId[id];
 			if (!temporaryRemoval) {
-				this.removeMarkerFromCluster(id);
+				await this.removeMarkerFromCluster(id);
 			}
 		});
 	}
 
-	public clearMarkers(): void {
-		this.deferredExecutor.invokeWhenReady(() => {
+	@Queued()
+	public async clearMarkers() {
+		return this.deferredExecutor.invokeWhenReady(async () => {
 			Object.values(this.markersByClientId).forEach(m => m.remove());
 			this.markersByClientId = {};
-			this.removeMarkerFromCluster();
+			await this.removeMarkerFromCluster();
 		});
 	}
 
@@ -770,7 +761,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	private toUiLocation(pos: Position): UiMapLocationConfig {
+	private convertToUiLocation(pos: Position): UiMapLocationConfig {
 		return createUiMapLocationConfig(pos[1], pos[0]);
 	}
 	private flattenPositionArray(arr: Position | Position[] | Position[][] | Position[][][]): Position[] {
@@ -850,7 +841,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	public stopDrawingShape(): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.draw.setMode('static');
-			this.draw.stop();
+			//this.draw.stop();
 			this.drawingProperties = null;
 		});
 	}
@@ -893,6 +884,80 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 function isPolyLineAppend(change: AbstractUiMapShapeChangeConfig): change is UiPolylineAppendConfig {
 	return change._type === "UiPolylineAppend";
+}
+
+/**
+ * Wraps an async function so that:
+ * - queueOnlyLast=false: every call is queued (FIFO) until fn finishes
+ * - queueOnlyLast=true: queues only the last call (FILO) and previous calls are solved by it as well
+ *
+ * @param fn your async function
+ * @param queueOnlyLast true | false
+ * @returns a scheduler with the same parameters, returning the original promise
+ */
+function makeQueue<T extends any[], R>(
+	fn: (...args: T) => Promise<R>,
+	queueOnlyLast: boolean = false
+): (...args: T) => Promise<R> {
+	interface IJob {
+		args: T;
+		resolvers: Array<{ resolve: (v: R) => void; reject: (e: any) => void; }>;
+	}
+	let running = false;
+	const queue: IJob[] = [];
+	const run = (job: IJob) => {
+		running = true;
+		fn(...job.args)
+			.then(res => job.resolvers.forEach(r => r.resolve(res)), err => job.resolvers.forEach(r => r.reject(err)))
+			.finally(() => {
+				const next = queue.shift();
+				running = false;
+				if (next) {
+					run(next);
+				}
+			});
+	};
+
+	return (...args: T): Promise<R> => {
+		return new Promise<R>((resolve, reject) => {
+			if (running) {
+				if (queueOnlyLast && queue.length > 0) {
+					// single: keep one queued job, append resolvers & replace args
+					const job = queue[0];
+					job.args = args;
+					job.resolvers.push({resolve, reject});
+				} else {
+					queue.push({args, resolvers: [{resolve, reject}]});
+				}
+			} else {
+				// idle → run immediately
+				run({args, resolvers: [{resolve, reject}]});
+			}
+		});
+	};
+}
+
+/**
+ * Decorator to queue a method call if it is called while the method is already running.
+ */
+function Queued() {
+	return (
+		target: any,
+		propertyKey: string,
+		descriptor: PropertyDescriptor
+	) => {
+		const original = descriptor.value;
+		const wrapperKey = Symbol(`__queue_${propertyKey}`);
+
+		descriptor.value = function(...args: any[]) {
+			// on first call, create & store the queued wrapper bound to this instance
+			if (!this[wrapperKey]) {
+				this[wrapperKey] = makeQueue(original.bind(this), false);
+			}
+			// delegate to the queued wrapper
+			return this[wrapperKey](...args);
+		};
+	};
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMap2", UiMap2);
