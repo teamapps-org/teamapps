@@ -558,95 +558,6 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		}
 	}
 
-	private createFeatureCollection(features: Feature[]): GeoJSON.FeatureCollection {
-		return {
-			type: "FeatureCollection",
-			features
-		};
-	}
-
-	private createPolygonFeature(path: Position[], id?: string, config?: AbstractUiMapShapeConfig): Feature<GeoJSON.Polygon> {
-		return {
-			type: 'Feature',
-			geometry: {
-				type: 'Polygon',
-				coordinates: [
-					path
-				]
-			},
-			id,
-			properties: {id, config}
-		};
-	}
-
-	private createPointFeature(config: UiMapLocationConfig, id?: string): Feature<GeoJSON.Point> {
-		return {
-			type: "Feature",
-			id,
-			properties: {id, config},
-			geometry: {
-				type: "Point",
-				coordinates: [
-					config.longitude,
-					config.latitude
-				]
-			}
-		};
-	}
-
-	private createMarkerFeature(m: UiMapMarkerClientRecordConfig): Feature<GeoJSON.Point> {
-		return {
-			type: "Feature",
-			properties: {
-				id: m.id,
-				marker: m
-			},
-			geometry: {
-				type: "Point",
-				coordinates: [
-					m.location.longitude,
-					m.location.latitude
-				]
-			}
-		};
-	}
-
-	private createHeatMapDataElementFeature(c: UiHeatMapDataElementConfig): Feature<GeoJSON.Point> {
-		return {
-			type: "Feature",
-			properties: {
-				count: c.count
-			},
-			geometry: {
-				type: "Point",
-				coordinates: [
-					c.longitude,
-					c.latitude
-				]
-			}
-		};
-	}
-
-	private createLineStringFeature(config: UiMapPolylineConfig, id?: string): Feature<GeoJSON.LineString> {
-		return {
-			type: "Feature",
-			id,
-			properties: {id, config},
-			geometry: {
-				type: "LineString",
-				coordinates: config.path.map(loc => this.convertToPosition(loc))
-			}
-		};
-	}
-
-	private convertToPosition(loc: UiMapLocationConfig): Position {
-		return [loc.longitude, loc.latitude];
-	}
-
-	private convertToLngLatLike(loc: UiMapLocationConfig): LngLatLike {
-		return this.convertToPosition(loc) as LngLatLike;
-	}
-
 	public addMarker(markerConfig: UiMapMarkerClientRecordConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			const marker = this.createMarker(markerConfig);
@@ -761,28 +672,6 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	private convertToUiLocation(pos: Position): UiMapLocationConfig {
-		return createUiMapLocationConfig(pos[1], pos[0]);
-	}
-	private flattenPositionArray(arr: Position | Position[] | Position[][] | Position[][][]): Position[] {
-		if (!Array.isArray(arr) || arr.length === 0) {
-			return [];
-		}
-		if (arr.length === 2 && (typeof arr[0] === 'number' || typeof arr[1] === 'number')) {
-			return [arr] as Position[];
-		}
-		return (arr as any[]).reduce((acc, cur) => acc.concat(this.flattenPositionArray(cur)), []);
-	}
-
-	private calcCenterUiLocation(positions: Position[]): UiMapLocationConfig {
-		const lngs = positions.map(m => m[0]);
-		const lats = positions.map(m => m[1]);
-		return createUiMapLocationConfig(
-			(Math.min(...lats) + Math.max(...lats)) / 2,
-			(Math.min(...lngs) + Math.max(...lngs)) / 2,
-		);
-	}
-
 	private createDrawShapeStyles(drawMode: string, shapeProperties: UiShapePropertiesConfig): Record<string, number | HexColor> {
 		let styles: any = {
 			fillColor: shapeProperties.fillColor as HexColor,
@@ -871,6 +760,117 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	public registerTemplate(id: string, template: UiTemplateConfig): void {
 		this.markerTemplateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
+	}
+
+	private createFeatureCollection(features: Feature[]): GeoJSON.FeatureCollection {
+		return {
+			type: "FeatureCollection",
+			features
+		};
+	}
+
+	private createPolygonFeature(path: Position[], id?: string, config?: AbstractUiMapShapeConfig): Feature<GeoJSON.Polygon> {
+		return {
+			type: 'Feature',
+			geometry: {
+				type: 'Polygon',
+				coordinates: [
+					path
+				]
+			},
+			id,
+			properties: {id, config}
+		};
+	}
+
+	private createPointFeature(config: UiMapLocationConfig, id?: string): Feature<GeoJSON.Point> {
+		return {
+			type: "Feature",
+			id,
+			properties: {id, config},
+			geometry: {
+				type: "Point",
+				coordinates: [
+					config.longitude,
+					config.latitude
+				]
+			}
+		};
+	}
+
+	private createMarkerFeature(m: UiMapMarkerClientRecordConfig): Feature<GeoJSON.Point> {
+		return {
+			type: "Feature",
+			properties: {
+				id: m.id,
+				marker: m
+			},
+			geometry: {
+				type: "Point",
+				coordinates: [
+					m.location.longitude,
+					m.location.latitude
+				]
+			}
+		};
+	}
+
+	private createHeatMapDataElementFeature(c: UiHeatMapDataElementConfig): Feature<GeoJSON.Point> {
+		return {
+			type: "Feature",
+			properties: {
+				count: c.count
+			},
+			geometry: {
+				type: "Point",
+				coordinates: [
+					c.longitude,
+					c.latitude
+				]
+			}
+		};
+	}
+
+	private createLineStringFeature(config: UiMapPolylineConfig, id?: string): Feature<GeoJSON.LineString> {
+		return {
+			type: "Feature",
+			id,
+			properties: {id, config},
+			geometry: {
+				type: "LineString",
+				coordinates: config.path.map(loc => this.convertToPosition(loc))
+			}
+		};
+	}
+
+	private convertToPosition(loc: UiMapLocationConfig): Position {
+		return [loc.longitude, loc.latitude];
+	}
+
+	private convertToLngLatLike(loc: UiMapLocationConfig): LngLatLike {
+		return this.convertToPosition(loc) as LngLatLike;
+	}
+
+	private convertToUiLocation(pos: Position): UiMapLocationConfig {
+		return createUiMapLocationConfig(pos[1], pos[0]);
+	}
+	private flattenPositionArray(arr: Position | Position[] | Position[][] | Position[][][]): Position[] {
+		if (!Array.isArray(arr) || arr.length === 0) {
+			return [];
+		}
+		if (arr.length === 2 && (typeof arr[0] === 'number' || typeof arr[1] === 'number')) {
+			return [arr] as Position[];
+		}
+		return (arr as any[]).reduce((acc, cur) => acc.concat(this.flattenPositionArray(cur)), []);
+	}
+
+	private calcCenterUiLocation(positions: Position[]): UiMapLocationConfig {
+		const lngs = positions.map(m => m[0]);
+		const lats = positions.map(m => m[1]);
+		return createUiMapLocationConfig(
+			(Math.min(...lats) + Math.max(...lats)) / 2,
+			(Math.min(...lngs) + Math.max(...lngs)) / 2,
+		);
 	}
 
 	public doGetMainElement(): HTMLElement {
