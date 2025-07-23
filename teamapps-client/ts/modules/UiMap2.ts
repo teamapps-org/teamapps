@@ -19,7 +19,6 @@
  */
 
 import TurfCircle from "@turf/circle";
-import * as d3 from "d3";
 import {Feature, Point, Position} from "geojson";
 import maplibregl, {GeoJSONSource, LngLatLike, Marker} from "maplibre-gl";
 import {
@@ -48,7 +47,6 @@ import {
 import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
 import {createUiMapCircleConfig} from "../generated/UiMapCircleConfig";
 import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
-import {UiMapMarkerAnchor} from "../generated/UiMapMarkerAnchor";
 import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
 import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
 import {createUiMapPolygonConfig} from "../generated/UiMapPolygonConfig";
@@ -248,17 +246,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			if (shapeConfig.shapeProperties.strokeDashArray != null) {
 				paintProperties["line-dasharray"] = shapeConfig.shapeProperties.strokeDashArray;
 			}
-			this.map.addLayer({
-				id: shapeId + '-outline',
-				type: 'line',
-				source: 'shapes',
-				filter: ['==', 'id', shapeId],
-				layout: {
-					'line-join': 'round',
-					'line-cap': 'round'
-				},
-				paint: paintProperties
-			});
+			const beforeLayer = this.map.getLayer('markers_cluster') ? 'markers_cluster' : null;
 			if (isUiMapCircle(shapeConfig) || isUiMapPolygon(shapeConfig) || isUiMapRectangle(shapeConfig)) {
 				if (shapeConfig.shapeProperties.fillColor != null) {
 					this.map.addLayer({
@@ -270,9 +258,20 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 							'fill-color': shapeConfig.shapeProperties.fillColor,
 							'fill-opacity': this.fillOpacity
 						},
-					});
+					}, beforeLayer);
 				}
 			}
+			this.map.addLayer({
+				id: shapeId + '-outline',
+				type: 'line',
+				source: 'shapes',
+				filter: ['==', 'id', shapeId],
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round'
+				},
+				paint: paintProperties
+			}, beforeLayer);
 		});
 	}
 
@@ -342,30 +341,91 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			clusterRadius: 100
 		});
 		this.map.addLayer({
-			id: sourceName + '_cluster_layer',
+			id: sourceName + '_cluster',
 			type: 'circle',
 			source: sourceName,
-			filter: ['==', ['get', sourceName], true],
+			filter: ['has', 'point_count'],
 			paint: {
-				'circle-radius': 0
+				'circle-color': [
+					'step',
+					['get', 'point_count'],
+					'rgb(181, 226, 140)',
+					10,
+					'rgb(241, 211, 87)',
+					100,
+					'rgb(253, 156, 115)',
+				],
+				'circle-stroke-width': 1,
+				'circle-stroke-color': '#fff',
+				'circle-stroke-opacity': 0.2,
+				'circle-radius': 21,
+				'circle-opacity': 0.6,
 			}
 		});
-		this.map.addSource(sourceName + '_spiderLegs', {
+		this.map.addLayer({
+			id: sourceName + '_cluster_inner',
+			type: 'circle',
+			source: sourceName,
+			filter: ['has', 'point_count'],
+			paint: {
+				'circle-color': [
+					'step',
+					['get', 'point_count'],
+					'rgb(110, 204, 57)',
+					10,
+					'rgb(240, 194, 12)',
+					100,
+					'rgb(241, 128, 23)',
+				],
+				'circle-radius': 14,
+				'circle-opacity': 0.6,
+			}
+		});
+		this.map.addLayer({
+			id: sourceName + '_cluster_count',
+			type: 'symbol',
+			source: sourceName,
+			filter: ['has', 'point_count'],
+			layout: {
+				'text-field': '{point_count_abbreviated}',
+				'text-size': 12,
+			},
+			paint: {
+				'text-halo-color': 'rgba(255,255,255,0.4)',
+				'text-halo-width': 1,
+				'text-halo-blur': 2,
+			}
+		});
+		this.map.on('click', sourceName + '_cluster', async (e) => {
+			const features = this.map.queryRenderedFeatures(e.point, {
+				layers: [sourceName + '_cluster']
+			});
+			const coordinates = (features[0].geometry as Point).coordinates;
+			const props = features[0].properties;
+			const clusterId = props.cluster_id;
+			const zoom = await (this.map.getSource(sourceName) as GeoJSONSource).getClusterExpansionZoom(clusterId);
+			this.map.once('moveend', () => setTimeout(updateMarkers, 100)); // make sure this happens after everything else, so we can actually update the map
+			this.map.easeTo({
+				center: coordinates as LngLatLike,
+				zoom
+			});
+		});
+		this.map.addSource(sourceName + '_spider_legs', {
 			type: 'geojson',
 			data: this.createFeatureCollection([]),
 		});
 		this.map.addLayer({
-			id: sourceName + '_spiderLegs',
+			id: sourceName + '_spider_legs',
 			type: 'line',
-			source: sourceName + '_spiderLegs',
+			source: sourceName + '_spider_legs',
 			paint: {
-				'line-color': '#ffffff',
+				'line-color': '#fff',
 				'line-width': 2,
 				'line-opacity': 0.8,
 			}
 		});
 
-		const updateMarkers = makeQueue(async () => {
+		const updateMarkers = async () => {
 			const newMarkersOnScreen: { [id: string]: Marker } = {};
 			const srcFeatures = this.map.querySourceFeatures(sourceName);
 			const coordinatesMap = srcFeatures.reduce((map, f) => {
@@ -379,8 +439,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			}, {} as { [key: string]: { [id: string]: Feature } });
 			const spiderLegFeatures: Feature[] = [];
 			Object.values(coordinatesMap).forEach(features => {
+				const firstFeature = Object.values(features)[0];
 				if (Object.keys(features).length > 1) {
-					const center = (Object.values(features)[0].geometry as Point).coordinates as Position;
+					const center = (firstFeature.geometry as Point).coordinates as Position;
 					const markers = spiderfyOverlappingMarkers(features);
 					Object.entries(markers).forEach(([id, m]) => {
 						const marker = this.markersByClientId[id] ?? m;
@@ -393,19 +454,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 							{longitude: center[0], latitude: center[1]}
 						]}));
 					});
-				} else {
-					const [id, feature] = Object.entries(features)[0];
-					const coordinates = (feature.geometry as Point).coordinates;
-					const props = feature.properties;
-					let marker = this.markersByClientId[id];
-					if (!marker) {
-						if (props.cluster) {
-							marker = new maplibregl.Marker({element: createClusterNode(feature), anchor: UiMapMarkerAnchor.CENTER})
-								.setLngLat(coordinates as LngLatLike);
-						} else if (props.id != null) {
-							marker = this.createMarker(JSON.parse(props.marker));
-						}
-					}
+				} else if (!firstFeature.properties.cluster && firstFeature.properties.id != null) {
+					const id = firstFeature.properties.id;
+					const marker = this.markersByClientId[id] ?? this.createMarker(JSON.parse(firstFeature.properties.marker));
 					newMarkersOnScreen[id] = marker;
 					if (!this.markersByClientId[id]) {
 						this.addMarkerToMap(id, marker);
@@ -417,66 +468,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					await this.removeMarker(id, true);
 				}
 			}
-			(this.map.getSource(sourceName + '_spiderLegs') as GeoJSONSource).setData(this.createFeatureCollection(spiderLegFeatures));
-		}, true);
-
-		const createClusterNode = (feature: Feature) => {
-			const coordinates = (feature.geometry as Point).coordinates;
-			const props = feature.properties;
-
-			const div = document.createElement('div');
-			div.setAttribute('data-point-count', String(props.point_count));
-			const radius = 20;
-
-			const svg = d3.select(div)
-				.append('svg')
-				.attr('class', 'pie')
-				.attr('width', radius * 2)
-				.attr('height', radius * 2);
-
-			//center
-			const g = svg.append('g')
-				.attr('transform', `translate(${radius}, ${radius})`);
-
-			const circle = g.append('circle')
-				.attr('r', radius)
-				.attr('class', 'center-circle');
-			const innerCircle = g.append('circle')
-				.attr('r', radius / 3 * 2)
-				.attr('class', 'inner-circle');
-			if (props.point_count < 10) {
-				circle.attr('fill', 'rgba(181, 226, 140, 0.6)');
-				innerCircle.attr('fill', 'rgba(110, 204, 57, 0.6)');
-			} else if (props.point_count < 100) {
-				circle.attr('fill', 'rgba(241, 211, 87, 0.6)');
-				innerCircle.attr('fill', 'rgba(240, 194, 12, 0.6)');
-			} else {
-				circle.attr('fill', 'rgba(253, 156, 115, 0.6)');
-				innerCircle.attr('fill', 'rgba(241, 128, 23, 0.6)');
-			}
-
-			const text = g
-				.append("text")
-				.attr("class", "total")
-				.text(props.point_count_abbreviated)
-				.attr('text-anchor', 'middle')
-				.attr('dy', 5)
-				.attr('fill', 'black');
-
-			svg.on('click', (e: any) => {
-				d3.event.stopPropagation();
-				const clusterId = props.cluster_id;
-				(this.map.getSource(sourceName) as GeoJSONSource).getClusterExpansionZoom(clusterId).then(zoom => {
-
-					this.map.once('moveend', () => setTimeout(updateMarkers, 100)); // make sure this happens after everything else, so we can actually update the map
-					this.map.easeTo({
-						center: coordinates as LngLatLike,
-						zoom
-					});
-				});
-			});
-
-			return div;
+			(this.map.getSource(sourceName + '_spider_legs') as GeoJSONSource).setData(this.createFeatureCollection(spiderLegFeatures));
 		};
 
 		const spiderfyOverlappingMarkers = (features: { [id: string]: Feature }) => {
@@ -659,7 +651,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			source: sourceName,
 			maxzoom,
 			paint,
-		});
+		}, this.map.getLayer('markers_cluster') ? 'markers_cluster' : null);
 	}
 
 	public setHeatMap(data: UiHeatMapDataConfig): void {
@@ -887,17 +879,13 @@ function isPolyLineAppend(change: AbstractUiMapShapeChangeConfig): change is UiP
 }
 
 /**
- * Wraps an async function so that:
- * - queueOnlyLast=false: every call is queued (FIFO) until fn finishes
- * - queueOnlyLast=true: queues only the last call (FILO) and previous calls are solved by it as well
+ * Wraps an async function so that every call is queued (FIFO) until fn finishes
  *
  * @param fn your async function
- * @param queueOnlyLast true | false
  * @returns a scheduler with the same parameters, returning the original promise
  */
 function makeQueue<T extends any[], R>(
 	fn: (...args: T) => Promise<R>,
-	queueOnlyLast: boolean = false
 ): (...args: T) => Promise<R> {
 	interface IJob {
 		args: T;
@@ -921,14 +909,7 @@ function makeQueue<T extends any[], R>(
 	return (...args: T): Promise<R> => {
 		return new Promise<R>((resolve, reject) => {
 			if (running) {
-				if (queueOnlyLast && queue.length > 0) {
-					// single: keep one queued job, append resolvers & replace args
-					const job = queue[0];
-					job.args = args;
-					job.resolvers.push({resolve, reject});
-				} else {
-					queue.push({args, resolvers: [{resolve, reject}]});
-				}
+				queue.push({args, resolvers: [{resolve, reject}]});
 			} else {
 				// idle → run immediately
 				run({args, resolvers: [{resolve, reject}]});
@@ -952,7 +933,7 @@ function Queued() {
 		descriptor.value = function(...args: any[]) {
 			// on first call, create & store the queued wrapper bound to this instance
 			if (!this[wrapperKey]) {
-				this[wrapperKey] = makeQueue(original.bind(this), false);
+				this[wrapperKey] = makeQueue(original.bind(this));
 			}
 			// delegate to the queued wrapper
 			return this[wrapperKey](...args);
