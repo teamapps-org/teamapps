@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2025 TeamApps.org
+ * Copyright (C) 2014 - 2024 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,73 +21,93 @@ package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.dummy.DummyComponent;
+import org.teamapps.ux.component.field.FieldEditingMode;
+import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.field.textcolormarker.*;
+import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.tree.Tree;
-import org.teamapps.ux.component.tree.TreeNodeInfo;
-import org.teamapps.ux.component.tree.TreeNodeInfoImpl;
-import org.teamapps.ux.model.AbstractTreeModel;
-import org.teamapps.ux.model.ComboBoxModel;
-import org.teamapps.webcontroller.WebController;
+import org.teamapps.ux.component.toolbutton.ToolButton;
+import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
+import java.util.Locale;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
-    private static final User ALICE = new User(MaterialIcon.VERIFIED_USER, "Alice", Color.ALICE_BLUE);
-    private static final User BOB = new User(MaterialIcon.VERIFIED_USER, "Bob", Color.ALICE_BLUE);
-    private static final User CARL = new User(MaterialIcon.VERIFIED_USER, "Carl", Color.ALICE_BLUE);
-    private static final User DAN = new User(MaterialIcon.VERIFIED_USER, "Dan", Color.ALICE_BLUE);
-    private static final User EDUARD = new User(MaterialIcon.VERIFIED_USER, "Eduard", Color.ALICE_BLUE);
+	public static void main(String[] args) throws Exception {
+		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
+					sessionContext.setLocale(Locale.US);
+					RootPanel rootPanel = sessionContext.addRootPanel();
 
-    public static void main(String[] args) throws Exception {
-        WebController controller = sessionContext -> {
-            RootPanel rootPanel = new RootPanel();
-            sessionContext.addRootPanel(null, rootPanel);
+					Panel panel = new Panel(null, "Hallo");
+					ToolButton toolButton = new ToolButton(MaterialIcon.SETTINGS, "toolbox");
+					panel.addToolButton(toolButton);
+					ToolButton readonlyButton = new ToolButton(MaterialIcon.FLASH_ON, "readonly");
+					panel.addToolButton(readonlyButton);
+					ToolButton disableButton = new ToolButton(MaterialIcon.BLOCK, "disable");
+					panel.addToolButton(disableButton);
 
-            Tree<User> tree = new Tree<>(new AbstractTreeModel<User>() {
-                @Override
-                public List<User> getRecords() {
-                    return List.of(
-                            new User(MaterialIcon.VERIFIED_USER, "John", Color.RED),
-                            new User(MaterialIcon.VERIFIED_USER, "Jack", Color.BLUE),
-                            new User(MaterialIcon.VERIFIED_USER, "Jane", Color.GREEN)
-                    );
-                }
-            });
+					TextColorMarkerField field = new TextColorMarkerField();
 
-            tree.setContextMenuProvider(user -> new DummyComponent(user.firstName()));
+					field.setMarkerDefinitions(List.of(
+							new TextColorMarkerDefinition(1, Color.RED, Color.BLUE, "First Marker"),
+							new TextColorMarkerDefinition(9, null, Color.YELLOW, "Marker")
+					), new TextColorMarkerFieldValue("Hallooo \n Welt", List.of(new TextColorMarker(9, 2, 5))));
 
-            rootPanel.setContent(tree);
-        };
+					//field.addCustomFieldMessage(FieldMessage.Severity.ERROR, "Dingens");
 
-        TeamAppsJettyEmbeddedServer.builder(controller)
-                .setPort(8082)
-                .build()
-                .start();
-    }
+					field.onTextSelected.addListener(event ->
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "text selected: " + event.start() + "-" + event.end())
+					);
+
+					field.onValueChanged.addListener(event ->
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "value changed: " + event.text() + " " + renderMarkersToString(event))
+					);
+
+					field.onBlur.addListener(() ->
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "field blur")
+					);
+
+					field.onFocus.addListener(() ->
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "field focus")
+					);
 
 
-    private static class UserAbstractTreeModel extends AbstractTreeModel<User> implements ComboBoxModel<User> {
-        @Override
-        public List<User> getRecords() {
-            return List.of(ALICE, BOB, CARL, DAN, EDUARD);
-        }
+					field.getMarkerDefinitions().forEach(def -> {
+						ToolButton markButton = new ToolButton(MaterialIcon.CROP_SQUARE, String.valueOf(def.id()));
+						markButton.onClick.addListener(() -> {
+							TextSelectionData selection = field.getLastSelection();
+							if (selection == null) return;
+							field.setMarker(def.id(), selection.start(), selection.end());
+							field.addCustomFieldMessage(FieldMessage.Severity.INFO,  "set marker: " + def.id() + "=" + selection.start() + "-" + selection.end());
+							field.addCustomFieldMessage(FieldMessage.Severity.INFO,  "value after set marker: " + field.getValue().text() + " " + renderMarkersToString(field.getValue()));
+						});
+						panel.addToolButton(markButton);
+					});
 
-        @Override
-        public TreeNodeInfo getTreeNodeInfo(User user) {
-            if (user == ALICE || user == BOB) {
-                return new TreeNodeInfoImpl<User>(null, false, false);
-            } else if (user == CARL) {
-                return new TreeNodeInfoImpl<>(ALICE, false);
-            } else {
-                return new TreeNodeInfoImpl<>(BOB, false);
-            }
-        }
+					toolButton.onClick.addListener(() -> {
+						field.setToolbarEnabled(!field.isToolbarEnabled());
+						field.addCustomFieldMessage(FieldMessage.Severity.INFO, "toolbar was " + (field.isToolbarEnabled() ? "enabled" : "disabled"));
+					});
+					readonlyButton.onClick.addListener(() ->
+							field.setEditingMode(field.getEditingMode() == FieldEditingMode.READONLY ? FieldEditingMode.EDITABLE : FieldEditingMode.READONLY));
+					disableButton.onClick.addListener(() ->
+							field.setEditingMode(field.getEditingMode() == FieldEditingMode.DISABLED ? FieldEditingMode.EDITABLE : FieldEditingMode.DISABLED));
 
-        @Override
-        public List<User> getRecords(String query) {
-            return getRecords();
-        }
-    }
+					panel.setContent(field);
+
+					rootPanel.setContent(panel);
+				})
+				.setPort(8082)
+				.build()
+				.start();
+	}
+
+	private static String renderMarkersToString(TextColorMarkerFieldValue value) {
+		return "[" + (value.markers().isEmpty() ? "" : value.markers().stream()
+				.map(m -> new StringBuilder().append(m.markerDefinitionId()).append("=").append(m.start()).append("-").append(m.end()))
+				.reduce((m, n) -> m.append(", ").append(n))
+				.get().toString()) + "]";
+	}
+
 }
