@@ -86,7 +86,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	constructor(config: UiMap2Config, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$map = parseHtml('<div class="UiMap2">');
+		this.$map = parseHtml('<div class="UiMap2"/>');
+
+		//this.addDebugView();
 
 		this.map = new maplibregl.Map({
 			container: this.$map,
@@ -871,6 +873,33 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	public onResize() {
 		this.map.resize();
+	}
+
+	private addDebugView() {
+		this.deferredExecutor.invokeWhenReady(() => {
+			this.$map.appendChild(parseHtml('<pre style="position: absolute; overflow: auto; background: rgba(255, 255, 255, 0.8); z-index:1000;" />'));
+			this.map.on('mousemove', (e) => {
+				const features = this.map.queryRenderedFeatures(e.point);
+				const displayProperties = [
+					'type',
+					'properties',
+					'id',
+					'layer',
+					'source',
+					'sourceLayer',
+					'state'
+				];
+				const displayFeatures = features.map((feat) => {
+					const displayFeat = {};
+					displayProperties.forEach((prop) => {
+						// @ts-ignore
+						displayFeat[prop] = feat[prop];
+					});
+					return displayFeat;
+				});
+				this.$map.querySelector('pre').innerHTML = JSON.stringify(displayFeatures, null, 2);
+			});
+		});
 	}
 }
 
