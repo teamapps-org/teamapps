@@ -73,84 +73,104 @@ public class CalendarBuilder<CEVENT extends CalendarEvent> {
 		return calendar;
 	}
 
-	public void withModel(CalendarModel<CEVENT> model) {
+	public CalendarBuilder<CEVENT> withModel(CalendarModel<CEVENT> model) {
 		this.model = model;
+		return this;
 	}
 
-	public void withPropertyProvider(PropertyProvider<CEVENT> propertyProvider) {
+	public CalendarBuilder<CEVENT> withPropertyProvider(PropertyProvider<CEVENT> propertyProvider) {
 		this.propertyProvider = propertyProvider;
+		return this;
 	}
 
-	public void withTemplateDecider(CalendarEventTemplateDecider<CEVENT> templateDecider) {
+	public CalendarBuilder<CEVENT> withTemplateDecider(CalendarEventTemplateDecider<CEVENT> templateDecider) {
 		this.templateDecider = templateDecider;
+		return this;
 	}
 
-	public void withActiveViewMode(CalendarViewMode activeViewMode) {
+	public CalendarBuilder<CEVENT> withActiveViewMode(CalendarViewMode activeViewMode) {
 		this.activeViewMode = activeViewMode;
+		return this;
 	}
 
-	public void withDisplayedDate(LocalDate displayedDate) {
+	public CalendarBuilder<CEVENT> withDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
+		return this;
 	}
 
-	public void withShowHeader(boolean showHeader) {
+	public CalendarBuilder<CEVENT> withShowHeader(boolean showHeader) {
 		this.showHeader = showHeader;
+		return this;
 	}
 
-	public void withTableBorder(boolean tableBorder) {
+	public CalendarBuilder<CEVENT> withTableBorder(boolean tableBorder) {
 		this.tableBorder = tableBorder;
+		return this;
 	}
 
-	public void withShowWeekNumbers(boolean showWeekNumbers) {
+	public CalendarBuilder<CEVENT> withShowWeekNumbers(boolean showWeekNumbers) {
 		this.showWeekNumbers = showWeekNumbers;
+		return this;
 	}
 
-	public void withBusinessHoursStart(int businessHoursStart) {
+	public CalendarBuilder<CEVENT> withBusinessHoursStart(int businessHoursStart) {
 		this.businessHoursStart = businessHoursStart;
+		return this;
 	}
 
-	public void withBusinessHoursEnd(int businessHoursEnd) {
+	public CalendarBuilder<CEVENT> withBusinessHoursEnd(int businessHoursEnd) {
 		this.businessHoursEnd = businessHoursEnd;
+		return this;
 	}
 
-	public void withFirstDayOfWeek(DayOfWeek firstDayOfWeek) {
+	public CalendarBuilder<CEVENT> withFirstDayOfWeek(DayOfWeek firstDayOfWeek) {
 		this.firstDayOfWeek = firstDayOfWeek;
+		return this;
 	}
 
-	public void withWorkingDays(List<DayOfWeek> workingDays) {
+	public CalendarBuilder<CEVENT> withWorkingDays(List<DayOfWeek> workingDays) {
 		this.workingDays = workingDays;
+		return this;
 	}
 
-	public void withTableHeaderBackgroundColor(Color tableHeaderBackgroundColor) {
+	public CalendarBuilder<CEVENT> withTableHeaderBackgroundColor(Color tableHeaderBackgroundColor) {
 		this.tableHeaderBackgroundColor = tableHeaderBackgroundColor;
+		return this;
 	}
 
-	public void withDefaultBackgroundColor(Color defaultBackgroundColor) {
+	public CalendarBuilder<CEVENT> withDefaultBackgroundColor(Color defaultBackgroundColor) {
 		this.defaultBackgroundColor = defaultBackgroundColor;
+		return this;
 	}
 
-	public void withDefaultBorderColor(Color defaultBorderColor) {
+	public CalendarBuilder<CEVENT> withDefaultBorderColor(Color defaultBorderColor) {
 		this.defaultBorderColor = defaultBorderColor;
+		return this;
 	}
 
-	public void withMinYearViewMonthTileWidth(int minYearViewMonthTileWidth) {
+	public CalendarBuilder<CEVENT> withMinYearViewMonthTileWidth(int minYearViewMonthTileWidth) {
 		this.minYearViewMonthTileWidth = minYearViewMonthTileWidth;
+		return this;
 	}
 
-	public void withMaxYearViewMonthTileWidth(int maxYearViewMonthTileWidth) {
+	public CalendarBuilder<CEVENT> withMaxYearViewMonthTileWidth(int maxYearViewMonthTileWidth) {
 		this.maxYearViewMonthTileWidth = maxYearViewMonthTileWidth;
+		return this;
 	}
 
-	public void withLocale(Locale locale) {
+	public CalendarBuilder<CEVENT> withLocale(Locale locale) {
 		this.locale = locale;
+		return this;
 	}
 
-	public void withTimeZone(ZoneId timeZone) {
+	public CalendarBuilder<CEVENT> withTimeZone(ZoneId timeZone) {
 		this.timeZone = timeZone;
+		return this;
 	}
 
-	public void withNavigateOnHeaderClicks(boolean navigateOnHeaderClicks) {
+	public CalendarBuilder<CEVENT> withNavigateOnHeaderClicks(boolean navigateOnHeaderClicks) {
 		this.navigateOnHeaderClicks = navigateOnHeaderClicks;
+		return this;
 	}
 
 }

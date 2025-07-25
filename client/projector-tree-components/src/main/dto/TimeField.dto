@@ -25,14 +25,14 @@ import org.teamapps.projector.session.config.DtoDateTimeFormatDescriptor;
 
 abstract class DtoAbstractTimeField extends DtoAbstractField {
     boolean showDropDownButton;
-    boolean showClearButton;
+    boolean clearButtonEnabled;
     String locale;
     DtoDateTimeFormatDescriptor timeFormat; // if null, Configuration.timeFormat applies
     mutable boolean clockIconEnabled;
 
 
     command setShowDropDownButton(boolean showDropDownButton);
-    command setShowClearButton(boolean showClearButton);
+    command setClearButtonEnabled(boolean clearButtonEnabled);
     command setLocaleAndTimeFormat(String locale, DtoDateTimeFormatDescriptor timeFormat);
 
     event textInput(String enteredString);

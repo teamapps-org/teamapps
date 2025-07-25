@@ -138,8 +138,8 @@ export abstract class AbstractTimeField<C extends DtoAbstractTimeField, V> exten
 		this.trivialComboBox.setShowTrigger(showDropDownButton);
 	}
 
-	setShowClearButton(showClearButton: boolean): void {
-		this.trivialComboBox.setShowClearButton(showClearButton);
+	setClearButtonEnabled(clearButtonEnabled: boolean): void {
+		this.trivialComboBox.setClearButtonEnabled(clearButtonEnabled);
 	}
 
 	setClockIconEnabled(clockIconEnabled: boolean) {

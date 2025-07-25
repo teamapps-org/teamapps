@@ -107,10 +107,6 @@ public class TableBuilder<RECORD> {
 		return this;
 	}
 
-	public void addColumn(TableColumn<RECORD, ?> column) {
-		this.columns.add(column);
-	}
-
 	public TableBuilder<RECORD> withCustomEqualsAndHashCode(EqualsAndHashCode<RECORD> customEqualsAndHashCode) {
 		this.customEqualsAndHashCode = customEqualsAndHashCode;
 		return this;

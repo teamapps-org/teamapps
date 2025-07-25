@@ -46,7 +46,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 	private $wrapper: HTMLElement;
 	private $clearableFieldWrapper: HTMLElement;
 	private $field: HTMLInputElement;
-	private showClearButton: boolean;
+	private clearButtonEnabled: boolean;
 	private $slider: HTMLElement;
 	private $sliderHandle: HTMLElement;
 
@@ -92,7 +92,7 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 
 		this.setPlaceholderText(config.placeholderText);
 		this.setPrecision(config.precision);
-		this.setShowClearButton(config.showClearButton);
+		this.setClearButtonEnabled(config.clearButtonEnabled);
 		this.setCommitOnSliderChange(config.commitOnSliderChange);
 
 		this.$field.addEventListener("keyup", () => {
@@ -355,13 +355,13 @@ export class NumberField extends AbstractField<DtoNumberField, number> implement
 		this.$field.placeholder = placeholderText || '';
 	}
 
-	setShowClearButton(showClearButton: boolean): void {
-		this.showClearButton = showClearButton;
+	setClearButtonEnabled(clearButtonEnabled: boolean): void {
+		this.clearButtonEnabled = clearButtonEnabled;
 		this.updateClearButton();
 	}
 
 	private updateClearButton() {
-		this.$clearableFieldWrapper.classList.toggle("clearable", !!(this.showClearButton && this.getTransientValue() != null));
+		this.$clearableFieldWrapper.classList.toggle("clearable", !!(this.clearButtonEnabled && this.getTransientValue() != null));
 	}
 
 	public valuesChanged(v1: number, v2: number): boolean {

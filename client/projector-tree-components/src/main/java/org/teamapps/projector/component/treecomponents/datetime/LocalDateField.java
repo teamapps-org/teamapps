@@ -39,7 +39,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
 
 	private boolean showDropDownButton = true;
-	private boolean showClearButton = false;
+	private boolean clearButtonEnabled = false;
 	private boolean favorPastDates = false; // TODO: fix in trivial-components!!!
 	private Locale locale;
 	private DateTimeFormatDescriptor dateFormat;
@@ -61,7 +61,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 		dateField.setFavorPastDates(favorPastDates);
 		dateField.setLocale(locale.toLanguageTag());
 		dateField.setDateFormat(dateFormat.toDateTimeFormatDescriptor());
-		dateField.setShowClearButton(showClearButton);
+		dateField.setClearButtonEnabled(clearButtonEnabled);
 		dateField.setDefaultSuggestionDate(this.convertServerValueToClientValue(defaultSuggestionDate));
 		dateField.setShuffledFormatSuggestionsEnabled(shuffledFormatSuggestionsEnabled);
 		dateField.setDropDownMode(dropDownMode);
@@ -132,12 +132,12 @@ public class LocalDateField extends AbstractField<LocalDate> implements DtoLocal
 		clientObjectChannel.update(this.createDto());
 	}
 
-	public boolean isShowClearButton() {
-		return showClearButton;
+	public boolean isClearButtonEnabled() {
+		return clearButtonEnabled;
 	}
 
-	public void setShowClearButton(boolean showClearButton) {
-		this.showClearButton = showClearButton;
+	public void setClearButtonEnabled(boolean clearButtonEnabled) {
+		this.clearButtonEnabled = clearButtonEnabled;
 		clientObjectChannel.update(this.createDto());
 	}
 

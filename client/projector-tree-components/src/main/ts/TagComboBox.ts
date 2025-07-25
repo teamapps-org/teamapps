@@ -101,7 +101,7 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 					return wrapWithDefaultTagWrapper(this.renderRecord(entry, false), config.deleteButtonsEnabled);
 				}
 			},
-			showClearButton: config.clearButtonEnabled,
+			clearButtonEnabled: config.clearButtonEnabled,
 			autoComplete: !!config.autoCompletionEnabled,
 			showTrigger: config.dropDownButtonVisible,
 			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
@@ -230,7 +230,7 @@ export class TagComboBox extends AbstractField<DtoTagComboBox, DtoComboBoxTreeRe
 
 	setClearButtonEnabled(clearButtonEnabled: boolean) {
 		this.config.clearButtonEnabled = clearButtonEnabled;
-		this.trivialTagComboBox.setShowClearButton(clearButtonEnabled);
+		this.trivialTagComboBox.setClearButtonEnabled(clearButtonEnabled);
 	}
 
 	setExpandersVisible(expandersVisible: boolean) {

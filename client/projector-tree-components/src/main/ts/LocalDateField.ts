@@ -95,7 +95,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 				return suggestions.length > 0 ? suggestions[0] : null;
 			},
 			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
-			showClearButton: config.showClearButton,
+			clearButtonEnabled: config.clearButtonEnabled,
 			placeholderText: config.placeholderText
 		}, this.config.dropDownMode === DateFieldDropDownModes.CALENDAR ? this.calendarBoxDropdown : treeBoxDropdown);
 		
@@ -222,7 +222,7 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 
 	update(config: DtoLocalDateField): any {
 		this.setShowDropDownButton(config.showDropDownButton);
-		this.setShowClearButton(config.showClearButton);
+		this.setClearButtonEnabled(config.clearButtonEnabled);
 		this.setFavorPastDates(config.favorPastDates);
 		this.setLocaleAndDateFormat(config.locale, config.dateFormat);
 		this.trivialComboBox.setPlaceholderText(config.placeholderText);
@@ -249,9 +249,9 @@ export class LocalDateField extends AbstractField<DtoLocalDateField, DtoLocalDat
 		this.trivialComboBox.setShowTrigger(showDropDownButton);
 	}
 
-	setShowClearButton(showClearButton: boolean): void {
-		this.config.showClearButton;
-		this.trivialComboBox.setShowClearButton(showClearButton);
+	setClearButtonEnabled(clearButtonEnabled: boolean): void {
+		this.config.clearButtonEnabled;
+		this.trivialComboBox.setClearButtonEnabled(clearButtonEnabled);
 	}
 
 	setCalendarIconEnabled(calendarIconEnabled: boolean) {

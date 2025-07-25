@@ -39,7 +39,7 @@ public class TextField extends AbstractField<String> implements DtoTextFieldEven
 	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private int maxCharacters;
-	private boolean showClearButton;
+	private boolean clearButtonEnabled;
 	private String placeholderText;
 	private boolean autofill = false;
 
@@ -57,13 +57,13 @@ public class TextField extends AbstractField<String> implements DtoTextFieldEven
 		return this;
 	}
 
-	public boolean isShowClearButton() {
-		return showClearButton;
+	public boolean isClearButtonEnabled() {
+		return clearButtonEnabled;
 	}
 
-	public TextField setShowClearButton(boolean showClearButton) {
-		this.showClearButton = showClearButton;
-		clientObjectChannel.setShowClearButton(showClearButton);
+	public TextField setClearButtonEnabled(boolean clearButtonEnabled) {
+		this.clearButtonEnabled = clearButtonEnabled;
+		clientObjectChannel.setClearButtonEnabled(clearButtonEnabled);
 		return this;
 	}
 
@@ -90,7 +90,7 @@ public class TextField extends AbstractField<String> implements DtoTextFieldEven
 		DtoTextField uiField = new DtoTextField();
 		mapAbstractFieldAttributes(uiField);
 		uiField.setMaxCharacters(maxCharacters);
-		uiField.setShowClearButton(showClearButton);
+		uiField.setClearButtonEnabled(clearButtonEnabled);
 		uiField.setPlaceholderText(placeholderText);
 		uiField.setAutofill(autofill);
 		return uiField;

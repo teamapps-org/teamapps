@@ -44,7 +44,7 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 	private $wrapper: HTMLElement;
 	private $field: HTMLTextAreaElement;
 	private $clearButton: HTMLElement;
-	private showClearButton: boolean;
+	private clearButtonEnabled: boolean;
 
 	protected initialize(config: DtoMultiLineTextField) {
 		this.$wrapper = parseHtml(`<div class="MultiLineTextField default-min-field-width teamapps-input-wrapper field-border field-border-glow field-background">
@@ -62,7 +62,7 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 
 		this.setPlaceholderText(config.placeholderText);
 		this.setMaxCharacters(config.maxCharacters);
-		this.setShowClearButton(config.showClearButton);
+		this.setClearButtonEnabled(config.clearButtonEnabled);
 
 		this.$field.addEventListener('focus', () => {
 			if (this.getEditingMode() !== FieldEditingModes.READONLY) {
@@ -124,14 +124,14 @@ export class MultiLineTextField extends AbstractField<DtoMultiLineTextField, str
 		}
 	}
 
-	public setShowClearButton(showClearButton: boolean): void {
-		this.showClearButton = showClearButton;
+	public setClearButtonEnabled(clearButtonEnabled: boolean): void {
+		this.clearButtonEnabled = clearButtonEnabled;
 		this.updateClearButton();
 	}
 
 	@executeAfterAttached()
 	private updateClearButton() {
-		this.$wrapper.classList.toggle("clearable", !!(this.showClearButton && this.$field.value));
+		this.$wrapper.classList.toggle("clearable", !!(this.clearButtonEnabled && this.$field.value));
 		this.$clearButton.style.right = hasVerticalScrollBar(this.$field) ? getScrollbarWidth() + "px" : "0";
 	}
 

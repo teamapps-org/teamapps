@@ -100,6 +100,9 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent im
 
 	private Disposable onCalendarDataChangedListener;
 
+	/**
+	 * @see #builder() 
+	 */
 	Calendar(
 			boolean showHeader,
 			boolean tableBorder,

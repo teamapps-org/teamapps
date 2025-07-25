@@ -86,6 +86,7 @@
         <module>projector-server-undertow-embedded</module>
 
         <module>projector-session-stats-app</module>
+        <module>projector-component-test-harness</module>
     </modules>
 
     <properties>

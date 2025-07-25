@@ -77,7 +77,7 @@ export interface TrivialComboBoxConfig<E> {
 	/**
 	 * The clear button is a the small 'x' at the right of the entry display that can be clicked to clear the selection.
 	 */
-	showClearButton?: boolean,
+	clearButtonEnabled?: boolean,
 
 	/**
 	 * The trigger is the button on the right side of the component that can be clicket to open the dropdown.
@@ -147,7 +147,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			autoComplete: true,
 			autoCompleteDelay: 0,
 			textToEntryFunction: (freeText: string) => null,
-			showClearButton: false,
+			clearButtonEnabled: false,
 			showTrigger: true,
 			editingMode: "editable", // one of 'editable', 'disabled' and 'readonly'
 			showDropDownOnResultsOnly: false,
@@ -163,7 +163,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				<div class="tr-combobox-selected-entry-wrapper"></div>			
 			</div>
             <div class="tr-tool-buttons">
-			  <div class="tr-tool-button tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
+			  <div class="tr-tool-button tr-remove-button ${this.config.clearButtonEnabled ? '' : 'hidden'}"></div>
 			</div>
             <div class="tr-trigger ${this.config.showTrigger ? '' : 'hidden'}"><span class="tr-trigger-icon"></span></div>
         </div>`);
@@ -522,9 +522,9 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		return this.$editor;
 	}
 
-	public setShowClearButton(showClearButton: boolean) {
-		this.config.showClearButton = showClearButton;
-		this.$clearButton.classList.toggle('hidden', !this.config.showClearButton);
+	public setClearButtonEnabled(clearButtonEnabled: boolean) {
+		this.config.clearButtonEnabled = clearButtonEnabled;
+		this.$clearButton.classList.toggle('hidden', !this.config.clearButtonEnabled);
 	}
 
 	public setShowTrigger(showTrigger: boolean) {

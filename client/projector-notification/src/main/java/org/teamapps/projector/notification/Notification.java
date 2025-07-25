@@ -19,11 +19,10 @@
  */
 package org.teamapps.projector.notification;
 
-import org.teamapps.projector.common.format.Color;
-import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.animation.EntranceAnimation;
 import org.teamapps.projector.animation.ExitAnimation;
 import org.teamapps.projector.annotation.ClientObjectLibrary;
+import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.Component;
 import org.teamapps.projector.component.core.field.TemplateField;
@@ -32,6 +31,7 @@ import org.teamapps.projector.component.notification.DtoNotificationClientObject
 import org.teamapps.projector.component.notification.DtoNotificationEventHandler;
 import org.teamapps.projector.event.ProjectorEvent;
 import org.teamapps.projector.format.Spacing;
+import org.teamapps.projector.icon.Icon;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 

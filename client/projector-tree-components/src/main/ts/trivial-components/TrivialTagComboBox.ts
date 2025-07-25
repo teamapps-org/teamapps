@@ -139,7 +139,7 @@ export interface TrivialTagComboBoxConfig<E> {
 	 * This can serve many purposes, including
 	 *  * implementing duplicate prevention
 	 *  * limiting the number of selectable tags
-	 *  * allowing or disallowing free text entries (this was previously possible using the now removed `allowFreeText` option)
+	 *  * allowing or disallowing free text entries (this was previously possible using the now removed `freeTextEnabled` option)
 	 *  * allowing only free text entries of a certain form
 	 *  * ...
 	 *
@@ -175,7 +175,7 @@ export interface TrivialTagComboBoxConfig<E> {
 	/**
 	 * The clear button is a the small 'x' at the right of the entry display that can be clicked to clear the selection.
 	 */
-	showClearButton?: boolean
+	clearButtonEnabled?: boolean
 }
 
 export class TrivialTagComboBox<E> implements TrivialComponent {
@@ -246,7 +246,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 				<div class="placeholder-text"></div>
 				<div class="tr-tagcombobox-tagarea"></div>
 			</div>
-			 <div class="tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
+			 <div class="tr-remove-button ${this.config.clearButtonEnabled ? '' : 'hidden'}"></div>
             <div class="tr-trigger ${this.config.showTrigger ? '' : 'hidden'}"><span class="tr-trigger-icon"></span></div>
         </div>`);
 		this.$tagArea = this.$tagComboBox.querySelector(':scope .tr-tagcombobox-tagarea');
@@ -727,7 +727,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			}
 		}
 		if (this.$clearButton) {
-			this.$clearButton.classList.toggle("hidden", !this.config.showClearButton || this.selectedEntries.length > 0);
+			this.$clearButton.classList.toggle("hidden", !this.config.clearButtonEnabled || this.selectedEntries.length > 0);
 		}
 	}
 
@@ -756,9 +756,9 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		return this.$dropDown;
 	};
 
-	public setShowClearButton(showClearButton: boolean) {
-		this.config.showClearButton = showClearButton;
-		this.$clearButton.classList.toggle('hidden', !this.config.showClearButton || this.selectedEntries.length > 0);
+	public setClearButtonEnabled(clearButtonEnabled: boolean) {
+		this.config.clearButtonEnabled = clearButtonEnabled;
+		this.$clearButton.classList.toggle('hidden', !this.config.clearButtonEnabled || this.selectedEntries.length > 0);
 	}
 
 	public setShowTrigger(showTrigger: boolean) {

@@ -25,33 +25,41 @@ import org.teamapps.projector.template.Template;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplateRecord;
 import org.teamapps.projector.template.grid.basetemplates.BaseTemplates;
 
-public class NavigationBarButton {
+public class NavigationBarButton<RECORD> {
 
 	public ProjectorEvent<Void> onClick = new ProjectorEvent<>();
 
 	private String clientId;
 	private final Template template;
-	private final Object data;
+	private final RECORD record;
 	private boolean visible = true;
 
 	private NavigationBar container;
 
-	public NavigationBarButton(Template template, Object data) {
+	public NavigationBarButton(Template template, RECORD record) {
 		this.template = template;
-		this.data = data;
+		this.record = record;
 	}
 
-	public static NavigationBarButton create(Icon icon) {
-		return new NavigationBarButton(BaseTemplates.NAVIGATION_BAR_ICON_ONLY, new BaseTemplateRecord<Void>(icon, null));
+	public static NavigationBarButton<BaseTemplateRecord<Void>> create(Icon icon) {
+		return new NavigationBarButton<>(BaseTemplates.NAVIGATION_BAR_ICON_ONLY, new BaseTemplateRecord<Void>(icon, null));
+	}
+
+	public static <PAYLOAD> NavigationBarButton<BaseTemplateRecord<PAYLOAD>> create(Icon icon, PAYLOAD payload) {
+		return new NavigationBarButton<>(BaseTemplates.NAVIGATION_BAR_ICON_ONLY, new BaseTemplateRecord<PAYLOAD>(icon, null, payload));
 	}
 
 	public DtoNavigationBarButton createDtoNavigationBarButton() {
 		DtoNavigationBarButton uiNavigationBarButton = new DtoNavigationBarButton();
 		uiNavigationBarButton.setId(clientId);
 		uiNavigationBarButton.setTemplate(template);
-		uiNavigationBarButton.setData(data);
+		uiNavigationBarButton.setData(record);
 		uiNavigationBarButton.setVisible(visible);
 		return uiNavigationBarButton;
+	}
+
+	public RECORD getRecord() {
+		return record;
 	}
 
 	String getClientId() {

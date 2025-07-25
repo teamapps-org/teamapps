@@ -162,4 +162,7 @@ public class SideDrawer extends AbstractComponent implements DtoSideDrawerEventH
 		clientObjectChannel.setContentComponent(contentComponent);
 	}
 
+	public void render() {
+		clientObjectChannel.forceRender();
+	}
 }

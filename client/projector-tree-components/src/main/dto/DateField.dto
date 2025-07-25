@@ -32,7 +32,7 @@ class DtoLocalDate {
 
 class DtoLocalDateField extends DtoAbstractField {
     boolean showDropDownButton;
-	boolean showClearButton;
+	boolean clearButtonEnabled;
 	boolean favorPastDates;
 	String locale;
 	DtoDateTimeFormatDescriptor dateFormat; // if null, Configuration.dateFormat applies

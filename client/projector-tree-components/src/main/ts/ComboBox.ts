@@ -101,7 +101,7 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 			editingMode: config.editingMode === FieldEditingModes.READONLY ? 'readonly' : config.editingMode === FieldEditingModes.DISABLED ? 'disabled' : 'editable',
 
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
-			showClearButton: config.clearButtonEnabled,
+			clearButtonEnabled: config.clearButtonEnabled,
 			entryToEditorTextFunction: e => e.asString,
 			textToEntryFunction: this.createTextToEntryFunction(config.freeTextEnabled),
 			preselectFirstQueryResult: config.firstEntryAutoHighlight,
@@ -251,7 +251,7 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 	}
 	setClearButtonEnabled(clearButtonEnabled: boolean) {
 		this.config.clearButtonEnabled = clearButtonEnabled;
-		this.trivialComboBox.setShowClearButton(clearButtonEnabled);
+		this.trivialComboBox.setClearButtonEnabled(clearButtonEnabled);
 	}
 	setExpandersVisible(expandersVisible: boolean) {
 		this.config.expandersVisible = expandersVisible;

@@ -41,7 +41,7 @@ public class PasswordField extends TextField {
 		DtoPasswordField uiField = new DtoPasswordField();
 		mapAbstractFieldAttributes(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
-		uiField.setShowClearButton(isShowClearButton());
+		uiField.setClearButtonEnabled(isClearButtonEnabled());
 		uiField.setPlaceholderText(getPlaceholderText());
 		uiField.setAutofill(isAutofill());
 		uiField.setPasswordVisibilityToggleEnabled(passwordVisibilityToggleEnabled);

@@ -33,12 +33,12 @@ enum SpecialKey {
 
 class DtoTextField extends DtoAbstractField implements DtoTextInputHandlingField {
 	int maxCharacters; //if > 0, do not allow to enter more than this number of characters
-	boolean showClearButton;
+	boolean clearButtonEnabled;
 	String placeholderText;
 	boolean autofill; // browser feature
 
 	command setMaxCharacters(int maxCharacters);
-	command setShowClearButton(boolean showClearButton);
+	command setClearButtonEnabled(boolean clearButtonEnabled);
 	command setPlaceholderText(String placeholderText);
 }
 

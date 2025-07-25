@@ -43,7 +43,7 @@ public class MultiLineTextField extends TextField implements DtoTextFieldEventHa
 		DtoMultiLineTextField uiField = new DtoMultiLineTextField();
 		mapAbstractFieldAttributes(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
-		uiField.setShowClearButton(isShowClearButton());
+		uiField.setClearButtonEnabled(isClearButtonEnabled());
 		uiField.setPlaceholderText(getPlaceholderText());
 		uiField.setAdjustHeightToContent(adjustHeightToContent);
 		return uiField;

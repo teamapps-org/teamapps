@@ -32,7 +32,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 	public final ProjectorEvent<String> onTextInput = new ProjectorEvent<>(clientObjectChannel::toggleTextInputEvent);
 
 	private boolean showDropDownButton = true;
-	private boolean showClearButton = false;
+	private boolean clearButtonEnabled = false;
 	private Locale locale;
 	private DateTimeFormatDescriptor timeFormat;
 
@@ -52,7 +52,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 		uiTimeField.setShowDropDownButton(isShowDropDownButton());
 		uiTimeField.setLocale(locale.toLanguageTag());
 		uiTimeField.setTimeFormat(timeFormat.toDateTimeFormatDescriptor());
-		uiTimeField.setShowClearButton(isShowClearButton());
+		uiTimeField.setClearButtonEnabled(isClearButtonEnabled());
 	}
 
 	public boolean isShowDropDownButton() {
@@ -83,13 +83,13 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 		clientObjectChannel.setLocaleAndTimeFormat(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor());
 	}
 
-	public boolean isShowClearButton() {
-		return showClearButton;
+	public boolean isClearButtonEnabled() {
+		return clearButtonEnabled;
 	}
 
-	public void setShowClearButton(boolean showClearButton) {
-		this.showClearButton = showClearButton;
-		clientObjectChannel.setShowClearButton(showClearButton);
+	public void setClearButtonEnabled(boolean clearButtonEnabled) {
+		this.clearButtonEnabled = clearButtonEnabled;
+		clientObjectChannel.setClearButtonEnabled(clearButtonEnabled);
 	}
 
 }

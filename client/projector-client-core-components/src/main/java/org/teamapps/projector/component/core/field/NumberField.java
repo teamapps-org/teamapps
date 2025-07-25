@@ -38,8 +38,8 @@ public class NumberField extends AbstractField<Number> implements DtoNumberField
 	public final ProjectorEvent<SpecialKey> onSpecialKeyPressed = new ProjectorEvent<>(clientObjectChannel::toggleSpecialKeyPressedEvent);
 
 	private int precision; // if == 0: integer, if < 0: maximum available precision
-	private String emptyText;
-	private boolean showClearButton;
+	private String placeholderText;
+	private boolean clearButtonEnabled;
 
 	private double minValue = Integer.MIN_VALUE;
 	private double maxValue = Integer.MAX_VALUE;
@@ -59,8 +59,8 @@ public class NumberField extends AbstractField<Number> implements DtoNumberField
 		DtoNumberField field = new DtoNumberField();
 		mapAbstractFieldAttributes(field);
 		field.setPrecision(precision);
-		field.setPlaceholderText(emptyText);
-		field.setShowClearButton(showClearButton);
+		field.setPlaceholderText(placeholderText);
+		field.setClearButtonEnabled(clearButtonEnabled);
 		field.setMinValue(minValue);
 		field.setMaxValue(maxValue);
 		field.setSliderMode(sliderMode);
@@ -90,23 +90,23 @@ public class NumberField extends AbstractField<Number> implements DtoNumberField
 		return this;
 	}
 
-	public String getEmptyText() {
-		return emptyText;
+	public String getPlaceholderText() {
+		return placeholderText;
 	}
 
-	public NumberField setEmptyText(String emptyText) {
-		this.emptyText = emptyText;
-		clientObjectChannel.setPlaceholderText(emptyText);
+	public NumberField setPlaceholderText(String placeholderText) {
+		this.placeholderText = placeholderText;
+		clientObjectChannel.setPlaceholderText(placeholderText);
 		return this;
 	}
 
-	public boolean isShowClearButton() {
-		return showClearButton;
+	public boolean isClearButtonEnabled() {
+		return clearButtonEnabled;
 	}
 
-	public NumberField setShowClearButton(boolean showClearButton) {
-		this.showClearButton = showClearButton;
-		clientObjectChannel.setShowClearButton(showClearButton);
+	public NumberField setClearButtonEnabled(boolean clearButtonEnabled) {
+		this.clearButtonEnabled = clearButtonEnabled;
+		clientObjectChannel.setClearButtonEnabled(clearButtonEnabled);
 		return this;
 	}
 

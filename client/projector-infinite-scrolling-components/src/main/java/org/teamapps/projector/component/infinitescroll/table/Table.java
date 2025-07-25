@@ -125,6 +125,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private int lastSeenContextMenuRequestId;
 	private int rowBorderWidth;
 
+	/**
+	 * @see #builder() 
+	 */
 	Table(
 			TableModel<RECORD> model,
 			TableDisplayStyle displayStyle,

@@ -43,7 +43,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 
 	private $wrapper: HTMLElement;
 	protected $field: HTMLInputElement;
-	private showClearButton: boolean;
+	private clearButtonEnabled: boolean;
 
 	protected initialize(config: C) {
 		this.$wrapper = parseHtml(`<div class="TextField default-min-field-width field-border field-border-glow field-background clearable-field-wrapper form-control">
@@ -64,7 +64,7 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 
 		this.setPlaceholderText(config.placeholderText);
 		this.setMaxCharacters(config.maxCharacters);
-		this.setShowClearButton(config.showClearButton);
+		this.setClearButtonEnabled(config.clearButtonEnabled);
 
 		this.$field.addEventListener("focus", () => {
 			if (this.getEditingMode() !== FieldEditingModes.READONLY) {
@@ -125,13 +125,13 @@ export class TextField<C extends DtoTextField = DtoTextField> extends AbstractFi
 		}
 	}
 
-	setShowClearButton(showClearButton: boolean): void {
-		this.showClearButton = showClearButton;
+	setClearButtonEnabled(clearButtonEnabled: boolean): void {
+		this.clearButtonEnabled = clearButtonEnabled;
 		this.updateClearButton();
 	}
 
 	private updateClearButton() {
-		this.$wrapper.classList.toggle("clearable", !!(this.showClearButton && this.$field.value));
+		this.$wrapper.classList.toggle("clearable", !!(this.clearButtonEnabled && this.$field.value));
 	}
 
 	setPlaceholderText(placeholderText: string): void {

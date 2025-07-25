@@ -33,6 +33,10 @@ public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> implements 
 	private BiPredicate<RECORD, String> searchPredicate = (record, queryString) -> record.toString() != null && record.toString().toLowerCase().contains(queryString.toLowerCase());
 	private Function<RECORD, TreeNodeInfo<RECORD>> treeNodeInfoFunction;
 
+	public ListTreeModel() {
+		this(List.of(), null);
+	}
+	
 	public ListTreeModel(List<RECORD> records) {
 		this(records, null);
 	}
