@@ -78,6 +78,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	private drawingProperties: UiShapePropertiesConfig;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 	private markersByClientId: { [id: string]: Marker } = {};
+	private clusterMarkersById: Map<string, Feature> = new Map();
 	private shapesById: Map<string, Feature> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
@@ -500,42 +501,37 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.map.on('moveend', updateMarkers);
 	}
 
-	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
+	public setMapMarkerCluster(config: UiMapMarkerClusterConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			if (this.map.getSource('markers') == null) {
 				this.initializeMarkerCluster('markers');
 			}
-
-			const markerFeatures = clusterConfig.markers.map(this.createMarkerFeature);
+			this.clusterMarkersById = config.markers.reduce((map, m) => map.set(m.id, this.createMarkerFeature(m)), new Map());
+			const markerFeatures = Array.from(this.clusterMarkersById.values());
 			(this.map.getSource('markers') as GeoJSONSource).setData(this.createFeatureCollection(markerFeatures));
 		});
 	}
 
-	@Queued()
 	public async addMarkerToCluster(marker: UiMapMarkerClientRecordConfig) {
 		return this.deferredExecutor.invokeWhenReady(async () => {
 			if (this.map.getSource('markers') == null) {
 				this.initializeMarkerCluster('markers');
 			}
 			const source = this.map.getSource('markers') as GeoJSONSource;
-			const features = (await source.getData() as GeoJSON.FeatureCollection).features ?? [];
-			features.push(this.createMarkerFeature(marker));
-			source.setData(this.createFeatureCollection(features));
+			this.clusterMarkersById.set(String(marker.id), this.createMarkerFeature(marker));
+			source.setData(this.createFeatureCollection(Array.from(this.clusterMarkersById.values())));
 		});
 	}
 
-	@Queued()
-	private async removeMarkerFromCluster(id?: string) {
+	private removeMarkerFromCluster(id?: string) {
 		const source = this.map.getSource('markers') as GeoJSONSource;
 		if (source != null) {
-			const data = await source.getData() as GeoJSON.FeatureCollection;
-			if (data.features && data.features.length > 0) {
-				if (id == null) {
-					source.setData(this.createFeatureCollection([]));
-				} else {
-					source.setData(this.createFeatureCollection(data.features.filter(f => String(f.properties?.id) !== id)));
-				}
+			if (id == null) {
+				this.clusterMarkersById.clear();
+			} else {
+				this.clusterMarkersById.delete(id);
 			}
+			source.setData(this.createFeatureCollection(Array.from(this.clusterMarkersById.values())));
 		}
 	}
 
@@ -554,24 +550,22 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		marker.addTo(this.map);
 	}
 
-	@Queued()
 	public async removeMarker(id: number | string, temporaryRemoval = false) {
-		return this.deferredExecutor.invokeWhenReady(async () => {
+		return this.deferredExecutor.invokeWhenReady(() => {
 			id = String(id);
 			this.markersByClientId[id]?.remove();
 			delete this.markersByClientId[id];
 			if (!temporaryRemoval) {
-				await this.removeMarkerFromCluster(id);
+				this.removeMarkerFromCluster(id);
 			}
 		});
 	}
 
-	@Queued()
 	public async clearMarkers() {
-		return this.deferredExecutor.invokeWhenReady(async () => {
+		return this.deferredExecutor.invokeWhenReady(() => {
 			Object.values(this.markersByClientId).forEach(m => m.remove());
 			this.markersByClientId = {};
-			await this.removeMarkerFromCluster();
+			this.removeMarkerFromCluster();
 		});
 	}
 
