@@ -72,13 +72,13 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	public readonly onMarkerClicked: TeamAppsEvent<UiMap2_MarkerClickedEvent> = new TeamAppsEvent();
 	public readonly onShapeDrawn: TeamAppsEvent<UiMap2_ShapeDrawnEvent> = new TeamAppsEvent();
 
-	private $map: HTMLElement;
-	private map: maplibregl.Map;
-	private draw: TerraDraw;
+	private readonly $map: HTMLElement;
+	private readonly map: maplibregl.Map;
+	private readonly draw: TerraDraw;
 	private drawingProperties: UiShapePropertiesConfig;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 	private markersByClientId: { [id: string]: Marker } = {};
-	private shapesById: Map<string, { config: AbstractUiMapShapeConfig }> = new Map();
+	private shapesById: Map<string, Feature> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
@@ -187,7 +187,6 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					}
 				}
 				shape.shapeProperties = this.drawingProperties;
-				this.shapesById.set(shapeId, {config: shape});
 				this.onShapeDrawn.fire({shapeId, shape});
 			}
 		});
@@ -223,10 +222,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		}
 	}
 
-	@Queued()
 	public async addShape(shapeId: string, shapeConfig: AbstractUiMapShapeConfig) {
-		return this.deferredExecutor.invokeWhenReady(async () => {
-			this.shapesById.set(shapeId, {config: shapeConfig});
+		return this.deferredExecutor.invokeWhenReady(() => {
 			if (this.map.getSource('shapes') == null) {
 				this.map.addSource('shapes', {
 					type: 'geojson',
@@ -234,10 +231,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				});
 			}
 			const shapeSrc = this.map.getSource('shapes') as GeoJSONSource;
-			const srcFeatures = await shapeSrc.getData() as GeoJSON.FeatureCollection;
-			srcFeatures.features = srcFeatures.features.filter(f => f.id !== shapeId);
-			srcFeatures.features.push(this.createShapeFeatureByConfig(shapeId, shapeConfig));
-			shapeSrc.setData(srcFeatures);
+			this.shapesById.set(shapeId, this.createShapeFeatureByConfig(shapeId, shapeConfig));
+			shapeSrc.setData(this.createFeatureCollection(Array.from(this.shapesById.values())));
 			const paintProperties = {} as any;
 			if (shapeConfig.shapeProperties.strokeColor != null) {
 				paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor;
@@ -277,62 +272,54 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
-	@Queued()
-	public updateShape(shapeId: string, shape: AbstractUiMapShapeConfig) {
+	public async updateShape(shapeId: string, shape: AbstractUiMapShapeConfig) {
 		return this.deferredExecutor.invokeWhenReady(async () => {
 			await this.removeShape(shapeId);
 			await this.addShape(shapeId, shape);
 		});
 	}
 
-	@Queued()
 	public async changeShape(shapeId: string, change: AbstractUiMapShapeChangeConfig) {
 		return this.deferredExecutor.invokeWhenReady(() => {
 			if (isPolyLineAppend(change)) {
-				const config = this.shapesById.get(shapeId).config as UiMapPolylineConfig;
-				config.path = config.path.concat(change.appendedPath);
-				const source = this.map.getSource(shapeId) as GeoJSONSource;
-				source.setData(this.createLineStringFeature(config));
+				const source = this.map.getSource('shapes') as GeoJSONSource;
+				const feature = this.shapesById.get(shapeId);
+				if (feature == null || source == null) {
+					return;
+				}
+				const newPositions = change.appendedPath.map(this.convertToPosition);
+				(feature.geometry as GeoJSON.LineString).coordinates = (feature.geometry as GeoJSON.LineString).coordinates.concat(newPositions);
+				this.shapesById.set(shapeId, feature);
+				source.setData(this.createFeatureCollection(Array.from(this.shapesById.values())));
 			}
 		});
 	}
 
-	@Queued()
 	public async removeShape(shapeId: string) {
-		return this.deferredExecutor.invokeWhenReady(async () => {
+		return this.deferredExecutor.invokeWhenReady(() => {
 			if (this.map.getLayer(shapeId)) {
 				this.map.removeLayer(shapeId);
 			}
 			if (this.map.getLayer(shapeId + '-outline')) {
 				this.map.removeLayer(shapeId + '-outline');
 			}
-			await this.removeIdFromSource('shapes', shapeId);
-			await this.removeShapeFromTerraDraw(shapeId);
+			const shapeSrc = this.map.getSource('shapes') as GeoJSONSource;
 			this.shapesById.delete(shapeId);
+			shapeSrc.setData(this.createFeatureCollection(Array.from(this.shapesById.values())));
+			this.removeShapeFromTerraDraw(shapeId);
 		});
 	}
 
-	@Queued()
-	private async removeShapeFromTerraDraw(shapeId: string) {
+	private removeShapeFromTerraDraw(shapeId: string) {
 		if (this.draw.hasFeature(shapeId)) {
-			await this.removeIdFromSource('td-polygon', shapeId);
-			await this.removeIdFromSource('td-linestring', shapeId);
 			this.draw.removeFeatures([shapeId]);
-		}
-	}
-
-	@Queued()
-	private async removeIdFromSource(sourceName: string, id: string) {
-		const source = this.map.getSource(sourceName) as GeoJSONSource;
-		if (source != null) {
-			const features = (await source.getData() as GeoJSON.FeatureCollection).features ?? [];
-			source.setData(this.createFeatureCollection(features.filter(f => f.id !== id)));
 		}
 	}
 
 	public async clearShapes() {
 		const shapeIds = Array.from(this.shapesById.keys());
 		await Promise.all(shapeIds.map(id => this.removeShape(id)));
+		this.draw.clear();
 	}
 
 	private initializeMarkerCluster(sourceName: string): void {
