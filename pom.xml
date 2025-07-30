@@ -253,14 +253,13 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.7.0</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version> <!-- Check for the latest version if needed -->
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                    <deploymentName>TeamApps ${project.version}</deploymentName>
+                    <publishingServerId>ossrh</publishingServerId> <!-- This ID must match your settings.xml server ID -->
                 </configuration>
             </plugin>
         </plugins>
