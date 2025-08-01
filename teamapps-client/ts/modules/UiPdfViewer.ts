@@ -97,6 +97,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                 </div>
                 <button id="zoomOut">Zoom out</button>
                 <button id="zoomToWidth">Zoom to width</button>
+                <button id="zoomToHeight">Zoom to height</button>
             </div>
              <div class="canvas-container ${this.uuidClass}">
                 <div id="pagesContainer">
@@ -154,30 +155,33 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
         // Dev Helper UI
         this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar')
-        this.$currentPageNr = this.$main.querySelector<HTMLElement>(`#currentPageNr`);
-        this.$maxPageNr = this.$main.querySelector<HTMLElement>(`#maxPageNr`);
-        this.$currentZoom = this.$main.querySelector<HTMLElement>(`#currentZoom`);
-        this.$main.querySelector<HTMLButtonElement>(`button#increase`)
+        this.$currentPageNr = this.$devToolbar.querySelector<HTMLElement>(`#currentPageNr`);
+        this.$maxPageNr = this.$devToolbar.querySelector<HTMLElement>(`#maxPageNr`);
+        this.$currentZoom = this.$devToolbar.querySelector<HTMLElement>(`#currentZoom`);
+        this.$devToolbar.querySelector<HTMLButtonElement>(`button#increase`)
             .addEventListener("click", async (e) => {
                 await this.showPage(this.currentPageNumber + 1);
             });
-        this.$main.querySelector<HTMLButtonElement>(`button#decrease`)
+        this.$devToolbar.querySelector<HTMLButtonElement>(`button#decrease`)
             .addEventListener("click", async (e) => {
                 await this.showPage(this.currentPageNumber - 1);
             });
-        this.$main.querySelector<HTMLButtonElement>(`button#zoomIn`)
+        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomIn`)
             .addEventListener("click", async (e) => {
-                await this.setZoomFactor(this.config.zoomFactor + 0.1)
-            })
-        this.$main.querySelector<HTMLButtonElement>(`button#zoomOut`)
+                await this.setZoomFactor(this.config.zoomFactor + 0.1);
+            });
+        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomOut`)
             .addEventListener("click", async (e) => {
-                await this.setZoomFactor(this.config.zoomFactor - 0.1)
-            })
-        this.$main.querySelector<HTMLButtonElement>(`button#zoomToWidth`)
+                await this.setZoomFactor(this.config.zoomFactor - 0.1);
+            });
+        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomToWidth`)
         .addEventListener("click", async (e) => {
-            await this.setZoomFactor(1.0)
-        //     TODO: use new method for zoom to Width
-        })
+            await this.setZoomMode(UiPdfZoomMode.TO_WIDTH);
+        });
+        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomToHeight`)
+        .addEventListener("click", async (e) => {
+            await this.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
+        });
 
         // Load the pdf by setting it's url
         setTimeout(async () => {
