@@ -298,17 +298,23 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
 
         if (this.config.zoomMode === UiPdfZoomMode.TO_HEIGHT) {
-            //  TODO: implement
+            // calc the scale based on available heigth
+            const containerHeight = this.$canvasContainer.clientHeight;
+            // remove padding from container height to make sure that pdf page fits into container with padding
+            let newScale = (containerHeight - this.config.padding * 2) / pdfViewport.height;
+            newScale = floorToPrecision(newScale, 2);
+
+            // write the right scale factor back to the config
+            this.config.zoomFactor = newScale;
+            // use the newScale
+            scale = newScale;
+            pdfViewport = page.getViewport({scale});
             // stop the calculation from happening again until it is requested again
             this.config.zoomMode = UiPdfZoomMode.MANUAL;
-
-
-            // TODO: send the event of the new zoom factor to the server
-            // this.onZoomFactorAutoChanged.fire({
-            //     zoomFactor: newScale
-            // })
-
-            throw new Error(`Not implemented`);
+            // send the event of the new zoom factor to the server
+            this.onZoomFactorAutoChanged.fire({
+                zoomFactor: newScale
+            });
         }
 
         const canvas = this.$canvas;
