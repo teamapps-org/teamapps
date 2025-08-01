@@ -20,6 +20,7 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.common.format.RgbaColor;
+import org.teamapps.dto.UiPdfZoomMode;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.panel.Panel;
@@ -49,6 +50,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 			PdfViewer pdfViewer = new PdfViewer();
 			pdfViewer.setPadding(10);
 			pdfViewer.setShowDevTools(true);
+			pdfViewer.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
 
 			button.onClicked.addListener((clickEvent) -> {
 				pdfViewer.setUrl(testPdfLink);
