@@ -10,15 +10,19 @@ class UiPdfViewer extends UiComponent {
 	UiBorder pageBorder;
 	UiShadow pageShadow;
     command setUrl(String url);
-    command setViewMode(UiPdfViewMode viewMode);
     command showPage(int page);
-	command setZoomFactor(float zoomFactor, boolean zoomByAvailableWidth);
+    command zoomToWidth(); // pdf page width should be as close as possible to width of container
+    command zoomToHeight(); // height of one pdf page should fit into the container
+    command setViewMode(UiPdfViewMode viewMode);
+	command setZoomFactor(float zoomFactor);
 	command setPageBorder(UiBorder pageBorder);
 	command setPageShadow(UiShadow pageShadow);
 	command setPadding(int padding);
 	command setPageSpacing(int pageSpacing);
+	command setBackgroundColor(Color color); // changes the bg color
 
     event pdfInitialized(int numberOfPages);
+    event zoomFactorChanged(float zoomFactor);
 }
 
 enum UiPdfViewMode {
