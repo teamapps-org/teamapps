@@ -172,10 +172,14 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             .addEventListener("click", async (e) => {
                 await this.showPage(this.currentPageNumber - 1);
             });
+        // @bjesuiter: this zoomIn button does not trigger this.onZoomFactorAutoChanged,
+        // since it simulates zooming in via server command, so the server already knows the new zoom factor
         this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomIn`)
             .addEventListener("click", async (e) => {
                 await this.setZoomFactor(this.config.zoomFactor + 0.1);
             });
+        // @bjesuiter: this zoomOut button does not trigger this.onZoomFactorAutoChanged,
+        // since it simulates zooming in via server command, so the server already knows the new zoom factor
         this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomOut`)
             .addEventListener("click", async (e) => {
                 await this.setZoomFactor(this.config.zoomFactor - 0.1);
