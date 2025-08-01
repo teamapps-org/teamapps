@@ -178,8 +178,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         //     TODO: use new method for zoom to Width
         })
 
-
-
         // Load the pdf by setting it's url
         setTimeout(async () => {
             await this.setUrl(config.url);
@@ -244,14 +242,15 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             this.config.zoomFactor = newScale;
             // use the newScale
             scale = newScale;
-            pdfViewport = page.getViewport({scale})
-            // deactivate zoomByAvailableWidth to
+            pdfViewport = page.getViewport({scale});
             // stop the calculation from happening again until it is requested again
             this.currentZoomMode = UiPdfZoomMode.MANUAL;
         }
 
         if (this.currentZoomMode === UiPdfZoomMode.TO_HEIGHT) {
             //  TODO: implement
+            // stop the calculation from happening again until it is requested again
+            this.currentZoomMode = UiPdfZoomMode.MANUAL;
             throw new Error(`Not implemented`);
         }
 
@@ -324,11 +323,13 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         await this.renderPdfDocument();
     }
 
-    zoomToWidth() {
-        throw new Error("Method not implemented.");
+    async zoomToWidth() {
+        this.currentZoomMode = UiPdfZoomMode.TO_WIDTH;
+        await this.renderPdfDocument();
     }
-    zoomToHeight() {
-        throw new Error("Method not implemented.");
+    async zoomToHeight() {
+        this.currentZoomMode = UiPdfZoomMode.TO_HEIGHT;
+        await this.renderPdfDocument();
     }
 
     public async setPageBorder(pageBorder: UiBorderConfig) {
