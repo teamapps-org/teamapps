@@ -51,6 +51,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 			pdfViewer.setPadding(10);
 			pdfViewer.setShowDevTools(true);
 			pdfViewer.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
+			pdfViewer.setBackgroundColor("oklch(0.74 0.1 218.65)");
 
 			button.onClicked.addListener((clickEvent) -> {
 				pdfViewer.setUrl(testPdfLink);

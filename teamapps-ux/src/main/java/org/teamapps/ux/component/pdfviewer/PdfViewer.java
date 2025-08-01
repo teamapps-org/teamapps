@@ -17,6 +17,7 @@ public class PdfViewer extends AbstractComponent {
     protected float zoomFactor = 1f;
     protected UiBorder pageBorder;
     protected UiShadow pageShadow;
+    protected String backgroundColor;
 
     public PdfViewer() {
         this(null);
@@ -40,6 +41,7 @@ public class PdfViewer extends AbstractComponent {
         uiPdfViewer.setPageBorder(pageBorder);
         uiPdfViewer.setPageShadow(pageShadow);
         uiPdfViewer.setZoomMode(zoomMode);
+        uiPdfViewer.setBackgroundColor(backgroundColor);
 
         return uiPdfViewer;
     }
@@ -146,5 +148,14 @@ public class PdfViewer extends AbstractComponent {
     public void setPageShadow(UiShadow pageShadow) {
         this.pageShadow = pageShadow;
         queueCommandIfRendered(() -> new UiPdfViewer.SetPageShadowCommand(getId(), pageShadow));
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(String cssColor) {
+        this.backgroundColor = cssColor;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetBackgroundColorCommand(getId(), cssColor));
     }
 }

@@ -167,6 +167,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar');
         this.renderDevToolsIfEnabled();
 
+        this.renderCanvasContainerBackground();
+
         // Load the pdf by setting it's url
         setTimeout(async () => {
             await this.setUrl(config.url);
@@ -233,6 +235,14 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         } else {
             this.$devToolbar.style.display = "none";
             this.$main.querySelector<HTMLElement>(`h1.${this.uuidClass}`).style.display = "none";
+        }
+    }
+
+    public renderCanvasContainerBackground() {
+        const cssColor = this.config.backgroundColor;
+            console.debug(`changing background color to `, cssColor);
+        if (typeof cssColor === "string" && cssColor.length > 0) {
+            this.$canvasContainer.style.backgroundColor = cssColor
         }
     }
 
@@ -416,6 +426,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     public async setPageSpacing(pageSpacing: number) {
         this.config.pageSpacing = pageSpacing;
         await this.renderPdfDocument();
+    }
+
+    public async setBackgroundColor(cssColor: string) {
+        this.config.backgroundColor = cssColor;
+        this.renderCanvasContainerBackground();
     }
 
 }

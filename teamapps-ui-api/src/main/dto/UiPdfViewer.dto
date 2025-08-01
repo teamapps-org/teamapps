@@ -9,6 +9,7 @@ class UiPdfViewer extends UiComponent {
     int padding = 0;
     int pageSpacing = 5;
     float zoomFactor = 1f;
+    String backgroundColor;
 	UiBorder pageBorder;
 	UiShadow pageShadow;
 
@@ -22,7 +23,12 @@ class UiPdfViewer extends UiComponent {
 	command setPageShadow(UiShadow pageShadow);
 	command setPadding(int padding);
 	command setPageSpacing(int pageSpacing);
-	// command setBackgroundColor(Color color); // changes the bg color
+
+	// changes the bg color of the canvasContainer
+	// @bjesuiter note: all setBackgroundColor functions of this repo use a string for passing the color
+	// It's probably a string one could directly plug into css.
+	// I tried using a "Color" class, but this seems to not exist, so for simplicity I also went with a string.
+	command setBackgroundColor(String cssColor);
 
     event pdfInitialized(int numberOfPages);
     event zoomFactorAutoChanged(float zoomFactor);
