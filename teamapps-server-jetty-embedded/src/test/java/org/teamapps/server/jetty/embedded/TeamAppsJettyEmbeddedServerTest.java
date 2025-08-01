@@ -20,7 +20,9 @@
 package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.common.format.RgbaColor;
+import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.TextField;
+import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.pdfviewer.PdfViewer;
 import org.teamapps.ux.component.playground.Playground;
 import org.teamapps.ux.component.rootpanel.RootPanel;
@@ -40,9 +42,16 @@ public class TeamAppsJettyEmbeddedServerTest {
 			RootPanel rootPanel = new RootPanel();
 			sessionContext.addRootPanel(null, rootPanel);
 
+			Panel panel = new Panel(null, "PDF Viewer");
+			Button<?> button = Button.create("Show PDF");
+
 			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
-			PdfViewer pdfViewer = new PdfViewer(testPdfLink);
+			PdfViewer pdfViewer = new PdfViewer();
 			pdfViewer.setPadding(10);
+
+			button.onClicked.addListener((clickEvent) -> {
+				pdfViewer.setUrl(testPdfLink);
+			});
 
 			pdfViewer.onPdfInitialized.addListener((initEvent) -> {
 				System.out.println("PDF viewer rendered, page number: " + initEvent.getNumberOfPages());
@@ -51,7 +60,9 @@ public class TeamAppsJettyEmbeddedServerTest {
 //			Playground playground = new Playground("Hello Default World");
 //			playground.setTitle("Hello World");
 
-			rootPanel.setContent(pdfViewer);
+			panel.setRightHeaderField(button);
+			panel.setContent(pdfViewer);
+			rootPanel.setContent(panel);
 		};
 
 		TeamAppsJettyEmbeddedServer.builder(controller)
