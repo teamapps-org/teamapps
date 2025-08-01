@@ -61,6 +61,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $styleTag: HTMLElement;
 
     // Dev/Helper elements
+    private $devToolbar: HTMLElement;
     private $currentPageNr: HTMLElement;
     private $maxPageNr: HTMLElement;
     private $currentZoom: HTMLElement;
@@ -82,7 +83,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$main = parseHtml(`
         <div class="${this.uuidClass}">
             <h1>PDF Viewer</h1>
-            <div class="dev-toolbar ${this.uuidClass}">
+            <div id="dev-toolbar" class="${this.uuidClass}">
                 <button id="decrease">Decrease Page </button>
                 <div>
                   <span id="currentPageNr"></span>
@@ -138,7 +139,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     /*gap: 1rem;*/
                     /*align-items: center;*/
                 }
-                div.${this.uuidClass}.dev-toolbar {
+                div.${this.uuidClass}#dev-toolbar {
                     display: flex;
                     flex-flow: row nowrap;
                     gap: 1rem;
@@ -152,6 +153,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
 
         // Dev Helper UI
+        this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar')
         this.$currentPageNr = this.$main.querySelector<HTMLElement>(`#currentPageNr`);
         this.$maxPageNr = this.$main.querySelector<HTMLElement>(`#maxPageNr`);
         this.$currentZoom = this.$main.querySelector<HTMLElement>(`#currentZoom`);
