@@ -13,6 +13,7 @@ class UiPdfViewer extends UiComponent {
 	UiShadow pageShadow;
 
     command setUrl(String url);
+    command setShowDevTools(boolean showDevTools);
     command showPage(int page);
     command setViewMode(UiPdfViewMode viewMode);
 	command setZoomFactor(float zoomFactor);

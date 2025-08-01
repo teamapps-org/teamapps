@@ -26,11 +26,6 @@ public class PdfViewer extends AbstractComponent {
         this.url = url;
     }
 
-    public PdfViewer(String url, boolean showDevTools) {
-        this.url = url;
-        this.showDevTools = showDevTools;
-    }
-
     @Override
     public UiComponent createUiComponent() {
         UiPdfViewer uiPdfViewer = new UiPdfViewer();
@@ -73,6 +68,15 @@ public class PdfViewer extends AbstractComponent {
     public void setUrl(String url) {
         this.url = url;
         queueCommandIfRendered(() -> new UiPdfViewer.SetUrlCommand(getId(), url));
+    }
+
+    public boolean getShowDevTools() {
+        return showDevTools;
+    }
+
+    public void setShowDevTools(boolean showDevTools) {
+        this.showDevTools = showDevTools;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetShowDevToolsCommand(getId(), showDevTools));
     }
 
     public UiPdfViewMode getViewMode() {

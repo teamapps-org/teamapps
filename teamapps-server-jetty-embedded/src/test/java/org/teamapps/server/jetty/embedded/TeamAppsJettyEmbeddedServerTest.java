@@ -48,6 +48,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
 			PdfViewer pdfViewer = new PdfViewer();
 			pdfViewer.setPadding(10);
+			pdfViewer.setShowDevTools(true);
 
 			button.onClicked.addListener((clickEvent) -> {
 				pdfViewer.setUrl(testPdfLink);
