@@ -57,6 +57,10 @@ public class TeamAppsJettyEmbeddedServerTest {
 				System.out.println("PDF viewer rendered, page number: " + initEvent.getNumberOfPages());
 			});
 
+			pdfViewer.onZoomFactorAutoChanged.addListener((zoomFactorChangeEvent) -> {
+				System.out.println("Zoom factor changed: " + zoomFactorChangeEvent.getZoomFactor());
+			});
+
 //			Playground playground = new Playground("Hello Default World");
 //			playground.setTitle("Hello World");
 

@@ -23,7 +23,7 @@ class UiPdfViewer extends UiComponent {
 	// command setBackgroundColor(Color color); // changes the bg color
 
     event pdfInitialized(int numberOfPages);
-    event zoomFactorChanged(float zoomFactor);
+    event zoomFactorAutoChanged(float zoomFactor);
 }
 
 enum UiPdfViewMode {

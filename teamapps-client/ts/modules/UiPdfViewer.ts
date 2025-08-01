@@ -23,7 +23,7 @@ import type {PDFDocumentProxy} from "pdfjs-dist";
 import * as pdfjsLib from "pdfjs-dist";
 import {UiBorderConfig} from "../generated/UiBorderConfig";
 import {
-    UiPdfViewer_PdfInitializedEvent,
+    UiPdfViewer_PdfInitializedEvent, UiPdfViewer_ZoomFactorAutoChangedEvent,
     UiPdfViewerCommandHandler,
     UiPdfViewerConfig
 } from "../generated/UiPdfViewerConfig";
@@ -74,6 +74,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
     // Events for the server
     public readonly onPdfInitialized: TeamAppsEvent<UiPdfViewer_PdfInitializedEvent> = new TeamAppsEvent();
+
+    /**
+     * onZoomFactorAutoChanged will only fire when the factor was changed automatically by
+     * UiPdfZoomMode.TO_WIDTH or UiPdfZoomMode.TO_HEIGHT
+     */
+    public readonly onZoomFactorAutoChanged: TeamAppsEvent<UiPdfViewer_ZoomFactorAutoChangedEvent> = new TeamAppsEvent();
 
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
         super(config, context);
@@ -245,12 +251,23 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             pdfViewport = page.getViewport({scale});
             // stop the calculation from happening again until it is requested again
             this.config.zoomMode = UiPdfZoomMode.MANUAL;
+            // send the event of the new zoom factor to the server
+            this.onZoomFactorAutoChanged.fire({
+                zoomFactor: newScale
+            })
         }
 
         if (this.config.zoomMode === UiPdfZoomMode.TO_HEIGHT) {
             //  TODO: implement
             // stop the calculation from happening again until it is requested again
             this.config.zoomMode = UiPdfZoomMode.MANUAL;
+
+
+            // TODO: send the event of the new zoom factor to the server
+            // this.onZoomFactorAutoChanged.fire({
+            //     zoomFactor: newScale
+            // })
+
             throw new Error(`Not implemented`);
         }
 

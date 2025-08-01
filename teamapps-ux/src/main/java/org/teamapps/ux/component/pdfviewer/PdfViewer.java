@@ -6,7 +6,7 @@ import org.teamapps.ux.component.AbstractComponent;
 
 public class PdfViewer extends AbstractComponent {
     public final Event<UiPdfViewer.PdfInitializedEvent> onPdfInitialized = new Event<>();
-    public final Event<UiPdfViewer.ZoomFactorChangedEvent> onZoomFactorChanged = new Event<>();
+    public final Event<UiPdfViewer.ZoomFactorAutoChangedEvent> onZoomFactorAutoChanged = new Event<>();
 
     protected String url;
     protected UiPdfViewMode viewMode;
@@ -49,6 +49,11 @@ public class PdfViewer extends AbstractComponent {
             case UI_PDF_VIEWER_PDF_INITIALIZED: {
                 UiPdfViewer.PdfInitializedEvent initEvent = (UiPdfViewer.PdfInitializedEvent) event;
                 this.onPdfInitialized.fire(initEvent);
+                break;
+            }
+            case UI_PDF_VIEWER_ZOOM_FACTOR_AUTO_CHANGED: {
+                UiPdfViewer.ZoomFactorAutoChangedEvent zoomChangedEvent = (UiPdfViewer.ZoomFactorAutoChangedEvent) event;
+                this.onZoomFactorAutoChanged.fire(zoomChangedEvent);
                 break;
             }
         }
