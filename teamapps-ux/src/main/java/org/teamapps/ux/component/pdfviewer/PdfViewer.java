@@ -9,13 +9,14 @@ import java.util.stream.Collectors;
 
 public class PdfViewer extends AbstractComponent {
     public final Event<UiPdfViewer.PdfInitializedEvent> onPdfInitialized = new Event<>();
+    public final Event<UiPdfViewer.ZoomFactorChangedEvent> onZoomFactorChanged = new Event<>();
 
     protected String url;
     protected UiPdfViewMode viewMode;
     protected int padding = 0;
     protected int pageSpacing = 5;
     protected float zoomFactor = 1f;
-    protected boolean zoomByAvailableWidth = true;
+    protected UiPdfZoomMode initialZoom = UiPdfZoomMode.TO_WIDTH;
     protected UiBorder pageBorder;
     protected UiShadow pageShadow;
 
@@ -37,9 +38,9 @@ public class PdfViewer extends AbstractComponent {
         uiPdfViewer.setPadding(padding);
         uiPdfViewer.setPageSpacing(pageSpacing);
         uiPdfViewer.setZoomFactor(zoomFactor);
-        uiPdfViewer.setZoomByAvailableWidth(zoomByAvailableWidth);
         uiPdfViewer.setPageBorder(pageBorder);
         uiPdfViewer.setPageShadow(pageShadow);
+        uiPdfViewer.setInitialZoom(initialZoom);
 
         return uiPdfViewer;
     }
@@ -98,16 +99,16 @@ public class PdfViewer extends AbstractComponent {
 
     public void setZoomFactor(float zoomFactor) {
         this.zoomFactor = zoomFactor;
-        queueCommandIfRendered(() -> new UiPdfViewer.SetZoomFactorCommand(getId(), zoomFactor, this.isZoomByAvailableWidth()));
+        queueCommandIfRendered(() -> new UiPdfViewer.SetZoomFactorCommand(getId(), zoomFactor));
     }
 
-    public boolean isZoomByAvailableWidth() {
-        return zoomByAvailableWidth;
+    public UiPdfZoomMode getInitialZoom() {
+        return initialZoom;
     }
 
-    public void setZoomByAvailableWidth(boolean zoomByAvailableWidth) {
-        this.zoomByAvailableWidth = zoomByAvailableWidth;
-        queueCommandIfRendered(() -> new UiPdfViewer.SetZoomFactorCommand(getId(), this.getPadding(), zoomByAvailableWidth ));
+    public void setInitialZoom(UiPdfZoomMode initialZoom) {
+        this.initialZoom = initialZoom;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetInitialZoomCommand(getId(), this.getInitialZoom() ));
     }
 
     public UiBorder getPageBorder() {
