@@ -62,9 +62,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
     // Dev/Helper elements
     private $devToolbar: HTMLElement;
-    private $currentPageNr: HTMLElement;
-    private $maxPageNr: HTMLElement;
-    private $currentZoom: HTMLElement;
+    private $devCurrentPageNr: HTMLElement;
+    private $devMaxPageNr: HTMLElement;
+    private $devCurrentZoom: HTMLElement;
 
     // UI / internal state
     private readonly uuidClass: string;
@@ -73,6 +73,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private maxPageNumber: number = 0;
 
     // Events for the server
+    // ---------------------
     public readonly onPdfInitialized: TeamAppsEvent<UiPdfViewer_PdfInitializedEvent> = new TeamAppsEvent();
 
     /**
@@ -81,6 +82,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      */
     public readonly onZoomFactorAutoChanged: TeamAppsEvent<UiPdfViewer_ZoomFactorAutoChangedEvent> = new TeamAppsEvent();
 
+    // Constructor
+    // -----------
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
         super(config, context);
 
@@ -88,7 +91,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.config = config;
         this.$main = parseHtml(`
         <div class="${this.uuidClass}">
-            <h1>PDF Viewer</h1>
+            <h1 class="${this.uuidClass}">PDF Viewer</h1>
             <div id="dev-toolbar" class="${this.uuidClass}">
                 <button id="decrease">Decrease Page </button>
                 <div>
@@ -160,38 +163,44 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
 
         // Dev Helper UI
-        this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar')
-        this.$currentPageNr = this.$devToolbar.querySelector<HTMLElement>(`#currentPageNr`);
-        this.$maxPageNr = this.$devToolbar.querySelector<HTMLElement>(`#maxPageNr`);
-        this.$currentZoom = this.$devToolbar.querySelector<HTMLElement>(`#currentZoom`);
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#increase`)
-            .addEventListener("click", async (e) => {
-                await this.showPage(this.currentPageNumber + 1);
-            });
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#decrease`)
-            .addEventListener("click", async (e) => {
-                await this.showPage(this.currentPageNumber - 1);
-            });
-        // @bjesuiter: this zoomIn button does not trigger this.onZoomFactorAutoChanged,
-        // since it simulates zooming in via server command, so the server already knows the new zoom factor
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomIn`)
-            .addEventListener("click", async (e) => {
-                await this.setZoomFactor(this.config.zoomFactor + 0.1);
-            });
-        // @bjesuiter: this zoomOut button does not trigger this.onZoomFactorAutoChanged,
-        // since it simulates zooming in via server command, so the server already knows the new zoom factor
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomOut`)
-            .addEventListener("click", async (e) => {
-                await this.setZoomFactor(this.config.zoomFactor - 0.1);
-            });
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomToWidth`)
-        .addEventListener("click", async (e) => {
-            await this.setZoomMode(UiPdfZoomMode.TO_WIDTH);
-        });
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomToHeight`)
-        .addEventListener("click", async (e) => {
-            await this.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
-        });
+        this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar');
+        if (!this.isDev()) {
+            this.$main.querySelector<HTMLElement>(`h1.${this.uuidClass}`).style.display = "none";
+            this.$devToolbar.style.display = "none";
+        } else {
+            // only initialize the dev tool code when running with dev mode to not waste resources
+            this.$devCurrentPageNr = this.$devToolbar.querySelector<HTMLElement>(`#currentPageNr`);
+            this.$devMaxPageNr = this.$devToolbar.querySelector<HTMLElement>(`#maxPageNr`);
+            this.$devCurrentZoom = this.$devToolbar.querySelector<HTMLElement>(`#currentZoom`);
+            this.$devToolbar.querySelector<HTMLButtonElement>(`button#increase`)
+                .addEventListener("click", async (e) => {
+                    await this.showPage(this.currentPageNumber + 1);
+                });
+            this.$devToolbar.querySelector<HTMLButtonElement>(`button#decrease`)
+                .addEventListener("click", async (e) => {
+                    await this.showPage(this.currentPageNumber - 1);
+                });
+            // @bjesuiter: this zoomIn button does not trigger this.onZoomFactorAutoChanged,
+            // since it simulates zooming in via server command, so the server already knows the new zoom factor
+            this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomIn`)
+                .addEventListener("click", async (e) => {
+                    await this.setZoomFactor(this.config.zoomFactor + 0.1);
+                });
+            // @bjesuiter: this zoomOut button does not trigger this.onZoomFactorAutoChanged,
+            // since it simulates zooming in via server command, so the server already knows the new zoom factor
+            this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomOut`)
+                .addEventListener("click", async (e) => {
+                    await this.setZoomFactor(this.config.zoomFactor - 0.1);
+                });
+            this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomToWidth`)
+                .addEventListener("click", async (e) => {
+                    await this.setZoomMode(UiPdfZoomMode.TO_WIDTH);
+                });
+            this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomToHeight`)
+                .addEventListener("click", async (e) => {
+                    await this.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
+                });
+        }
 
         // Load the pdf by setting it's url
         setTimeout(async () => {
@@ -202,6 +211,17 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     public doGetMainElement(): HTMLElement {
         return this.$main;
     }
+
+    // Helper Functions
+    // ----------------
+
+    public isDev() {
+        return this.config.showDevTools === true;
+    }
+
+
+    // Core Class Logic
+    // -----------------
 
     /**
      * bjesuiter  2025-03-28: only supports page-based rendering for now, sicne it's easier to implement.
@@ -299,8 +319,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         page.render(renderContext);
 
         // update dev output
-        this.$currentPageNr.innerText = String(this.currentPageNumber);
-        this.$currentZoom.innerText = String(scale.toFixed(1));
+        if (this.isDev()) {
+            this.$devCurrentPageNr.innerText = String(this.currentPageNumber);
+            this.$devCurrentZoom.innerText = String(scale.toFixed(1));
+        }
     }
 
     // Setters for Server API
@@ -309,9 +331,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     public async setUrl(url: string) {
         this.pdfDocument = await pdfjsLib.getDocument(url).promise;
 
-        // Set maxPage Nr (for debugging)
         this.maxPageNumber = this.pdfDocument.numPages;
-        this.$maxPageNr.innerText = `${this.maxPageNumber}`;
+        if (this.isDev()) {
+            this.$devMaxPageNr.innerText = `${this.maxPageNumber}`;
+        }
 
         await this.renderPdfDocument();
 

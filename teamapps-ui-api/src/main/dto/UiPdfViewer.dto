@@ -2,19 +2,20 @@
 
 class UiPdfViewer extends UiComponent {
     String url;
+    boolean showDevTools;
+
+    UiPdfZoomMode zoomMode;
     UiPdfViewMode viewMode;
     int padding = 0;
     int pageSpacing = 5;
     float zoomFactor = 1f;
-    UiPdfZoomMode zoomMode;
 	UiBorder pageBorder;
 	UiShadow pageShadow;
+
     command setUrl(String url);
     command showPage(int page);
     command setViewMode(UiPdfViewMode viewMode);
 	command setZoomFactor(float zoomFactor);
-	// UiPdfZoomMode.TO_WIDTH === pdf page width should be as close as possible to width of container
-	// UiPdfZoomMode.TO_HEIGHT === height of one pdf page should fit into the container
 	command setZoomMode(UiPdfZoomMode zoomMode);
 	command setPageBorder(UiBorder pageBorder);
 	command setPageShadow(UiShadow pageShadow);
@@ -32,7 +33,9 @@ enum UiPdfViewMode {
 }
 
 enum UiPdfZoomMode {
+	// UiPdfZoomMode.TO_HEIGHT === height of one pdf page should fit into the container
     TO_HEIGHT,
+	// UiPdfZoomMode.TO_WIDTH === pdf page width should be as close as possible to width of container
     TO_WIDTH,
     MANUAL
 }

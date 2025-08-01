@@ -11,6 +11,7 @@ public class PdfViewer extends AbstractComponent {
     protected String url;
     protected UiPdfViewMode viewMode;
     protected UiPdfZoomMode zoomMode = UiPdfZoomMode.TO_WIDTH;
+    protected boolean showDevTools = false;
     protected int padding = 0;
     protected int pageSpacing = 5;
     protected float zoomFactor = 1f;
@@ -25,12 +26,18 @@ public class PdfViewer extends AbstractComponent {
         this.url = url;
     }
 
+    public PdfViewer(String url, boolean showDevTools) {
+        this.url = url;
+        this.showDevTools = showDevTools;
+    }
+
     @Override
     public UiComponent createUiComponent() {
         UiPdfViewer uiPdfViewer = new UiPdfViewer();
         mapAbstractUiComponentProperties(uiPdfViewer);
 
         uiPdfViewer.setUrl(url);
+        uiPdfViewer.setShowDevTools(showDevTools);
         uiPdfViewer.setViewMode(viewMode);
         uiPdfViewer.setPadding(padding);
         uiPdfViewer.setPageSpacing(pageSpacing);
