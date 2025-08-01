@@ -3,9 +3,6 @@ package org.teamapps.ux.component.pdfviewer;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.panel.WindowButtonType;
-
-import java.util.stream.Collectors;
 
 public class PdfViewer extends AbstractComponent {
     public final Event<UiPdfViewer.PdfInitializedEvent> onPdfInitialized = new Event<>();
@@ -13,10 +10,10 @@ public class PdfViewer extends AbstractComponent {
 
     protected String url;
     protected UiPdfViewMode viewMode;
+    protected UiPdfZoomMode zoomMode = UiPdfZoomMode.TO_WIDTH;
     protected int padding = 0;
     protected int pageSpacing = 5;
     protected float zoomFactor = 1f;
-    protected UiPdfZoomMode initialZoom = UiPdfZoomMode.TO_WIDTH;
     protected UiBorder pageBorder;
     protected UiShadow pageShadow;
 
@@ -40,7 +37,7 @@ public class PdfViewer extends AbstractComponent {
         uiPdfViewer.setZoomFactor(zoomFactor);
         uiPdfViewer.setPageBorder(pageBorder);
         uiPdfViewer.setPageShadow(pageShadow);
-        uiPdfViewer.setInitialZoom(initialZoom);
+        uiPdfViewer.setZoomMode(zoomMode);
 
         return uiPdfViewer;
     }
@@ -97,18 +94,24 @@ public class PdfViewer extends AbstractComponent {
         return zoomFactor;
     }
 
+    /**
+     * CAUTION: This does only work in UiPdfZoomMode.MANUAL!
+     * The modes UiPdfZoomMode.TO_WIDTH and UiPdfZoomMode.TO_HEIGHT
+     * will calculate the ZoomFactor for themselves and set the mode to MANUAL afterwards.
+     * @param zoomFactor the zoom factor to set
+     */
     public void setZoomFactor(float zoomFactor) {
         this.zoomFactor = zoomFactor;
         queueCommandIfRendered(() -> new UiPdfViewer.SetZoomFactorCommand(getId(), zoomFactor));
     }
 
-    public UiPdfZoomMode getInitialZoom() {
-        return initialZoom;
+    public UiPdfZoomMode getZoomMode() {
+        return this.zoomMode;
     }
 
-    public void setInitialZoom(UiPdfZoomMode initialZoom) {
-        this.initialZoom = initialZoom;
-        queueCommandIfRendered(() -> new UiPdfViewer.SetInitialZoomCommand(getId(), this.getInitialZoom() ));
+    public void setZoomMode(UiPdfZoomMode zoomMode) {
+        this.zoomMode = zoomMode;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetZoomModeCommand(getId(), this.getZoomMode() ));
     }
 
     public UiBorder getPageBorder() {

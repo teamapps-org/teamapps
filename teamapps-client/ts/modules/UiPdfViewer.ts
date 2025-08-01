@@ -70,7 +70,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private pdfDocument: PDFDocumentProxy;
     private currentPageNumber: number = 1;
     private maxPageNumber: number = 0;
-    private currentZoomMode: UiPdfZoomMode
 
     // Events for the server
     public readonly onPdfInitialized: TeamAppsEvent<UiPdfViewer_PdfInitializedEvent> = new TeamAppsEvent();
@@ -204,11 +203,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         // Step 2: Apply configs outside of canvas
         this.$canvasContainer.style.padding = `${this.config.padding}px`;
 
-        // Figure out the right value for currentZoomMode
-        if (!this.currentZoomMode) {
-            this.currentZoomMode = this.config.initialZoom;
-        }
-
         // viewMode is SINGLE_PAGE from here on
         await this.renderPdfSinglePageMode();
     }
@@ -222,7 +216,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         const page = await this.pdfDocument.getPage(this.currentPageNumber);
         // aka: set the initial scale to 1.0 when currentZoomMode is TO_WIDTH or TO_HEIGHT
         // to not screw up the calculation later
-        let scale = [UiPdfZoomMode.TO_HEIGHT, UiPdfZoomMode.TO_WIDTH].includes(this.currentZoomMode)
+        let scale = [UiPdfZoomMode.TO_HEIGHT, UiPdfZoomMode.TO_WIDTH].includes(this.config.zoomMode)
             ? 1.0 : (this.config.zoomFactor ?? 1.0);
 
         let pdfViewport = page.getViewport({
@@ -230,7 +224,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         });
         const hiDPIScale = window.devicePixelRatio || 1;
 
-        if (this.currentZoomMode === UiPdfZoomMode.TO_WIDTH) {
+        if (this.config.zoomMode === UiPdfZoomMode.TO_WIDTH) {
             // calc the scale based on available width
             const containerWidth = this.$canvasContainer.clientWidth;
             let newScale = containerWidth / pdfViewport.width;
@@ -244,13 +238,13 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             scale = newScale;
             pdfViewport = page.getViewport({scale});
             // stop the calculation from happening again until it is requested again
-            this.currentZoomMode = UiPdfZoomMode.MANUAL;
+            this.config.zoomMode = UiPdfZoomMode.MANUAL;
         }
 
-        if (this.currentZoomMode === UiPdfZoomMode.TO_HEIGHT) {
+        if (this.config.zoomMode === UiPdfZoomMode.TO_HEIGHT) {
             //  TODO: implement
             // stop the calculation from happening again until it is requested again
-            this.currentZoomMode = UiPdfZoomMode.MANUAL;
+            this.config.zoomMode = UiPdfZoomMode.MANUAL;
             throw new Error(`Not implemented`);
         }
 
@@ -318,17 +312,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         await this.renderPdfDocument();
     }
 
-    public async setInitialZoom(initialZoom:UiPdfZoomMode) {
-        this.config.initialZoom = initialZoom;
-        await this.renderPdfDocument();
-    }
-
-    async zoomToWidth() {
-        this.currentZoomMode = UiPdfZoomMode.TO_WIDTH;
-        await this.renderPdfDocument();
-    }
-    async zoomToHeight() {
-        this.currentZoomMode = UiPdfZoomMode.TO_HEIGHT;
+    public async setZoomMode(zoomMode:UiPdfZoomMode) {
+        this.config.zoomMode = zoomMode;
         await this.renderPdfDocument();
     }
 
