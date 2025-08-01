@@ -73,7 +73,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private maxPageNumber: number = 0;
 
     // Events for the server
-    public readonly pdfInitializedEvent: TeamAppsEvent<UiPdfViewer_PdfInitializedEvent> = new TeamAppsEvent();
+    public readonly onPdfInitialized: TeamAppsEvent<UiPdfViewer_PdfInitializedEvent> = new TeamAppsEvent();
 
     constructor(config: UiPdfViewerConfig, context: TeamAppsUiContext) {
         super(config, context);
@@ -98,6 +98,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                 <button id="zoomOut">Zoom out</button>
                 <button id="zoomToWidth">Zoom to width</button>
             </div>
+             <div class="canvas-container ${this.uuidClass}">
+                <div id="pagesContainer">
+                    <canvas class="${this.uuidClass}"></canvas>
+                </div>
+            </div>
             <style class="${this.uuidClass}">
                 canvas.${this.uuidClass} {
                     /*border: 1px solid red;*/
@@ -112,11 +117,13 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     border: 1px solid oklch(0.2 0 298);
                     display: flex; 
                     flex-flow: column nowrap;
+                    gap: 1rem;
                     
                     /* NOTE: 
-                      safe center is needed, otherwise the pdf is not scrollable in x-axis anymore 
+                      "safe center" (instead of only "center") is needed, 
+                      otherwise the pdf is not scrollable in x-axis anymore 
                       when pdf gets bigger than the width of the canvas-container
-                      support for this is still kinda new (Chrome as of Junie 2023), see
+                      support for this is still kinda new (Chrome as of June 2023), see
                       https://caniuse.com/mdn-css_properties_align-items_flex_context_safe_unsafe
                       
                       Since this behavior can be fixed by simply zooming out, I (bjesuiter) leave it like this for now.
@@ -140,11 +147,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     margin: 0.5rem;
                 }
             </style>
-            <div class="canvas-container ${this.uuidClass}">
-                <div id="pagesContainer">
-                    <canvas class="${this.uuidClass}"></canvas>
-                </div>
-            </div>
         </div>`);
         this.$canvas = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
         this.$canvasContainer = this.$main.querySelector<HTMLDivElement>(`div.canvas-container.${this.uuidClass}`);
@@ -283,7 +285,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
         // Tell the server the document has loaded after the first renderPdfDocument
         // since it is async, I can simply wait for it to finish
-        this.pdfInitializedEvent.fire({
+        this.onPdfInitialized.fire({
             numberOfPages: this.maxPageNumber,
         })
     }
@@ -297,8 +299,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (page >= 1 && page <= this.maxPageNumber ) {
             this.currentPageNumber = page;
             await this.renderPdfDocument();
-        } else {
-            // todo: throw out of bounds exception to the server
         }
     }
 
