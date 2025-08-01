@@ -167,7 +167,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar');
         this.renderDevToolsIfEnabled();
 
-        this.renderCanvasContainerBackground();
+        this.renderCanvasContainer();
 
         // Load the pdf by setting it's url
         setTimeout(async () => {
@@ -238,11 +238,15 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
     }
 
-    public renderCanvasContainerBackground() {
-        const cssColor = this.config.backgroundColor;
-            console.debug(`changing background color to `, cssColor);
-        if (typeof cssColor === "string" && cssColor.length > 0) {
-            this.$canvasContainer.style.backgroundColor = cssColor
+    public renderCanvasContainer() {
+        const bgColor = this.config.backgroundColor;
+        if (typeof bgColor === "string" && bgColor.length > 0) {
+            this.$canvasContainer.style.backgroundColor = bgColor
+        }
+
+        const borderColor = this.config.borderColor;
+        if (typeof borderColor === "string" && borderColor.length > 0) {
+            this.$canvasContainer.style.borderColor = borderColor;
         }
     }
 
@@ -409,10 +413,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         await this.renderPdfDocument();
     }
 
-    public async setPageShadow(pageShadow: UiShadowConfig) {
-        this.config.pageShadow = pageShadow;
-        await this.renderPdfDocument();
-    }
 
     public async setPadding(padding: number) {
         this.config.padding = padding;
@@ -430,7 +430,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
     public async setBackgroundColor(cssColor: string) {
         this.config.backgroundColor = cssColor;
-        this.renderCanvasContainerBackground();
+        this.renderCanvasContainer();
+    }
+
+    public async setBorderColor(cssColor: string) {
+        this.config.borderColor = cssColor;
+        this.renderCanvasContainer();
     }
 
 }

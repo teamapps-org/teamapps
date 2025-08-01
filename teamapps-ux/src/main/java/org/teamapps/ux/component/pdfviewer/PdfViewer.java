@@ -18,6 +18,7 @@ public class PdfViewer extends AbstractComponent {
     protected UiBorder pageBorder;
     protected UiShadow pageShadow;
     protected String backgroundColor;
+    protected String borderColor;
 
     public PdfViewer() {
         this(null);
@@ -32,6 +33,7 @@ public class PdfViewer extends AbstractComponent {
         UiPdfViewer uiPdfViewer = new UiPdfViewer();
         mapAbstractUiComponentProperties(uiPdfViewer);
 
+        // IMPORTANT: each new property in the dto has to be registered here!!!
         uiPdfViewer.setUrl(url);
         uiPdfViewer.setShowDevTools(showDevTools);
         uiPdfViewer.setViewMode(viewMode);
@@ -39,9 +41,9 @@ public class PdfViewer extends AbstractComponent {
         uiPdfViewer.setPageSpacing(pageSpacing);
         uiPdfViewer.setZoomFactor(zoomFactor);
         uiPdfViewer.setPageBorder(pageBorder);
-        uiPdfViewer.setPageShadow(pageShadow);
         uiPdfViewer.setZoomMode(zoomMode);
         uiPdfViewer.setBackgroundColor(backgroundColor);
+        uiPdfViewer.setBorderColor(borderColor);
 
         return uiPdfViewer;
     }
@@ -141,21 +143,25 @@ public class PdfViewer extends AbstractComponent {
         queueCommandIfRendered(() -> new UiPdfViewer.SetPageBorderCommand(getId(), pageBorder));
     }
 
-    public UiShadow getPageShadow() {
-        return pageShadow;
-    }
-
-    public void setPageShadow(UiShadow pageShadow) {
-        this.pageShadow = pageShadow;
-        queueCommandIfRendered(() -> new UiPdfViewer.SetPageShadowCommand(getId(), pageShadow));
-    }
-
     public String getBackgroundColor() {
         return backgroundColor;
     }
 
+    /**
+     * Sets the Background color of the container for the pdf canvas
+     * @param cssColor
+     */
     public void setBackgroundColor(String cssColor) {
         this.backgroundColor = cssColor;
         queueCommandIfRendered(() -> new UiPdfViewer.SetBackgroundColorCommand(getId(), cssColor));
+    }
+
+    public String getBorderColor() {
+        return this.borderColor;
+    }
+
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetBorderColorCommand(getId(), borderColor));
     }
 }

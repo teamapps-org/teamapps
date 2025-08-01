@@ -10,8 +10,8 @@ class UiPdfViewer extends UiComponent {
     int pageSpacing = 5;
     float zoomFactor = 1f;
     String backgroundColor;
+    String borderColor;
 	UiBorder pageBorder;
-	UiShadow pageShadow;
 
     command setUrl(String url);
     command setShowDevTools(boolean showDevTools);
@@ -20,7 +20,6 @@ class UiPdfViewer extends UiComponent {
 	command setZoomFactor(float zoomFactor);
 	command setZoomMode(UiPdfZoomMode zoomMode);
 	command setPageBorder(UiBorder pageBorder);
-	command setPageShadow(UiShadow pageShadow);
 	command setPadding(int padding);
 	command setPageSpacing(int pageSpacing);
 
@@ -29,6 +28,7 @@ class UiPdfViewer extends UiComponent {
 	// It's probably a string one could directly plug into css.
 	// I tried using a "Color" class, but this seems to not exist, so for simplicity I also went with a string.
 	command setBackgroundColor(String cssColor);
+	command setBorderColor(String cssColor);
 
     event pdfInitialized(int numberOfPages);
     event zoomFactorAutoChanged(float zoomFactor);
