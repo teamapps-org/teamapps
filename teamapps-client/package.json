@@ -99,6 +99,7 @@
     "d3": "^5.9.7",
     "d3-flextree": "^2.1.1",
     "d3-luxon": "^1.0.2",
+    "d3-voronoi": "^1.1.4",
     "d3v3": "npm:d3@3.x",
     "exports-loader": "^0.7.0",
     "image-layout": "^0.4.1",

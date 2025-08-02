@@ -22,6 +22,7 @@ class UiMap2 extends UiComponent {
 	String styleUrl;
 	boolean displayAttributionControl;
 	boolean displayNavigationControl;
+	boolean displayVoronoiCells;
 
 	float zoomLevel = 5;
 	UiMapLocation mapPosition;
@@ -34,6 +35,7 @@ class UiMap2 extends UiComponent {
 	command addMarker(UiMapMarkerClientRecord marker);
 	command removeMarker(int id);
 	command clearMarkers();
+	command setDisplayVoronoiCells(boolean enable);
 
 	command setMapMarkerCluster(UiMapMarkerCluster cluster);
 	command addMarkerToCluster(UiMapMarkerClientRecord marker);

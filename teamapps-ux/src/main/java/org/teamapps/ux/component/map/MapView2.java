@@ -47,6 +47,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private String styleUrl;
 	private boolean displayAttributionControl = false;
 	private boolean displayNavigationControl = false;
+	private boolean displayVoronoiCells = false;
 	private float zoomLevel = 10f;
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
@@ -116,6 +117,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 		uiMap.setMarkers(markersByClientId.entrySet().stream()
 				.map(e -> createUiMarkerRecord(e.getValue(), e.getKey()))
 				.collect(Collectors.toList()));
+		uiMap.setDisplayVoronoiCells(displayVoronoiCells);
 		if (heatMapData != null) {
 			uiMap.setHeatMap(heatMapData);
 		}
@@ -339,6 +341,15 @@ public class MapView2<RECORD> extends AbstractComponent {
 	public void clearMarkers() {
 		markersByClientId.clear();
 		queueCommandIfRendered(() -> new UiMap2.ClearMarkersCommand(getId()));
+	}
+
+	public boolean isDisplayVoronoiCells() {
+		return displayVoronoiCells;
+	}
+
+	public void setDisplayVoronoiCells(boolean enable) {
+		displayVoronoiCells = enable;
+		queueCommandIfRendered(() -> new UiMap2.SetDisplayVoronoiCellsCommand(getId(), enable));
 	}
 
 	public void fitBounds(Location southWest, Location northEast) {

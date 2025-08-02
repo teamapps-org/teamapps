@@ -19,6 +19,7 @@
  */
 
 import TurfCircle from "@turf/circle";
+import * as d3voronoi from "d3-voronoi";
 import {Feature, Point, Position} from "geojson";
 import maplibregl, {GeoJSONSource, LngLatLike, Marker} from "maplibre-gl";
 import {
@@ -80,6 +81,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	private markersByClientId: { [id: string]: Marker } = {};
 	private clusterMarkersById: Map<string, Feature> = new Map();
 	private shapesById: Map<string, Feature> = new Map();
+	private displayVoronoiCellsEnabled: boolean = false;
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
@@ -121,6 +123,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				center: createUiMapLocationConfig(center.lat, center.lng),
 				displayedArea: createUiMapAreaConfig(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
 			});
+			this.updateVoronoiCells();
 		});
 		this.map.on("click", ev => {
 			this.onMapClicked.fire({location: createUiMapLocationConfig(ev.lngLat.lat, ev.lngLat.lng)});
@@ -140,6 +143,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		} else {
 			config.markers.forEach(marker => this.addMarker(marker));
 		}
+
+		this.setDisplayVoronoiCells(config.displayVoronoiCells ?? false);
 
 		if (config.heatMap != null) {
 			this.setHeatMap(config.heatMap);
@@ -207,9 +212,6 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			return this.createLineStringFeature(shapeConfig, shapeId);
 		} else if (isUiMapPolygon(shapeConfig)) {
 			const path = shapeConfig.path.map(loc => this.convertToPosition(loc));
-			if (String(path[0]) !== String(path[path.length - 1])) {
-				path.push(path[0]); // geojson spec demands that polygons be closed!
-			}
 			return this.createPolygonFeature(path, shapeId, shapeConfig);
 		} else if (isUiMapRectangle(shapeConfig)) {
 			const path = [
@@ -564,7 +566,6 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	public async clearMarkers() {
 		return this.deferredExecutor.invokeWhenReady(() => {
 			Object.values(this.markersByClientId).forEach(m => m.remove());
-			this.markersByClientId = {};
 			this.removeMarkerFromCluster();
 		});
 	}
@@ -582,6 +583,55 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			e.stopPropagation();
 		});
 		return marker;
+	}
+
+	private async updateVoronoiCells() {
+		return this.deferredExecutor.invokeWhenReady(() => {
+			if (!this.displayVoronoiCellsEnabled) {
+				return;
+			}
+			if (this.map.getSource('voronoi') == null) {
+				this.map.addSource('voronoi', {
+					type: 'geojson',
+					data: this.createFeatureCollection([]),
+				});
+				this.map.addLayer({
+					id: 'voronoi',
+					type: 'line',
+					source: 'voronoi',
+					paint: {
+						'line-color': '#fff',
+						'line-width': 2,
+						'line-opacity': 0.8,
+					}
+				});
+			}
+			const source = this.map.getSource('voronoi') as GeoJSONSource;
+			const bounds = this.map.getBounds();
+			const points = Object.values(this.markersByClientId).map(m => this.createPointFeature(this.convertToUiLocation(m.getLngLat().toArray())));
+			const polygons = Object.values(d3voronoi
+				.voronoi<Feature<Point>>()
+				.x((feature) => feature.geometry.coordinates[0])
+				.y((feature) => feature.geometry.coordinates[1])
+				.extent([
+					[bounds.getWest(), bounds.getSouth()],
+					[bounds.getEast(), bounds.getNorth()],
+				])
+				.polygons(points));
+			source.setData(this.createFeatureCollection(polygons.map((coords) => this.createPolygonFeature(coords))));
+		});
+	}
+
+	public setDisplayVoronoiCells(enable: boolean) {
+		this.displayVoronoiCellsEnabled = enable;
+		if (enable) {
+			this.updateVoronoiCells();
+		} else {
+			const source = this.map.getSource('voronoi') as GeoJSONSource;
+			if (source != null) {
+				source.setData(this.createFeatureCollection([]));
+			}
+		}
 	}
 
 	private initializeHeatMap(sourceName: string, data: UiHeatMapDataConfig): void {
@@ -745,6 +795,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	}
 
 	private createPolygonFeature(path: Position[], id?: string, config?: AbstractUiMapShapeConfig): Feature<GeoJSON.Polygon> {
+		if (String(path[0]) !== String(path[path.length - 1])) {
+			path.push(path[0]); // geojson spec demands that polygons be closed!
+		}
 		return {
 			type: 'Feature',
 			geometry: {
