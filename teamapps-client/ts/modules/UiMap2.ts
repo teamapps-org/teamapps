@@ -50,6 +50,7 @@ import {createUiMapCircleConfig} from "../generated/UiMapCircleConfig";
 import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
 import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
 import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
+import {UiMapMarkersConfig} from "../generated/UiMapMarkersConfig";
 import {createUiMapPolygonConfig} from "../generated/UiMapPolygonConfig";
 import {createUiMapPolylineConfig, UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
 import {createUiMapRectangleConfig} from "../generated/UiMapRectangleConfig";
@@ -153,7 +154,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			fillOpacity: this.fillOpacity,
 		};
 		this.draw = new TerraDraw({
-			adapter: new TerraDrawMapLibreGLAdapter({ map: this.map }),
+			adapter: new TerraDrawMapLibreGLAdapter({map: this.map}),
 			modes: [
 				new TerraDrawCircleMode({styles}),
 				new TerraDrawRectangleMode({styles}),
@@ -171,7 +172,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					switch (ctx.mode) {
 						case 'circle':
 							//const src = this.map.getSource('td-polygon') as GeoJSONSource;
-							shape = createUiMapCircleConfig({center: this.calcCenterUiLocation(positions), radius: Number(drawFeature.properties?.radiusKilometers) * 1000});
+							shape = createUiMapCircleConfig({
+								center: this.calcCenterUiLocation(positions),
+								radius: Number(drawFeature.properties?.radiusKilometers) * 1000
+							});
 							break;
 						case 'rectangle':
 							//const src = this.map.getSource('td-polygon') as GeoJSONSource;
@@ -325,12 +329,12 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.draw.clear();
 	}
 
-	private initializeMarkerCluster(sourceName: string): void {
+	private initializeMarkerCluster(sourceName: string, clusterRadius?: number): void {
 		this.map.addSource(sourceName, {
 			type: 'geojson',
 			data: this.createFeatureCollection([]),
 			cluster: true,
-			clusterRadius: 100
+			clusterRadius: clusterRadius ?? 100
 		});
 		this.map.addLayer({
 			id: sourceName + '_cluster',
@@ -506,7 +510,12 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	public setMapMarkerCluster(config: UiMapMarkerClusterConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			if (this.map.getSource('markers') == null) {
-				this.initializeMarkerCluster('markers');
+				this.initializeMarkerCluster('markers', config.clusterRadius);
+			} else {
+				(this.map.getSource('markers') as GeoJSONSource).setClusterOptions({
+					cluster: true,
+					clusterRadius: config.clusterRadius ?? 100
+				});
 			}
 			this.clusterMarkersById = config.markers.reduce((map, m) => map.set(m.id, this.createMarkerFeature(m)), new Map());
 			const markerFeatures = Array.from(this.clusterMarkersById.values());
@@ -537,8 +546,12 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		}
 	}
 
-	public addMarker(markerConfig: UiMapMarkerClientRecordConfig): void {
-		this.deferredExecutor.invokeWhenReady(() => {
+	public async addMarkers(markers: UiMapMarkersConfig) {
+		return Promise.all(markers.markers.map(m => this.addMarker(m)));
+	}
+
+	public async addMarker(markerConfig: UiMapMarkerClientRecordConfig) {
+		return this.deferredExecutor.invokeWhenReady(() => {
 			const marker = this.createMarker(markerConfig);
 			this.addMarkerToMap(String(markerConfig.id), marker);
 		});

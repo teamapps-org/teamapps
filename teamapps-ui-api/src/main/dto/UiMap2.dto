@@ -35,6 +35,7 @@ class UiMap2 extends UiComponent {
 	command addMarker(UiMapMarkerClientRecord marker);
 	command removeMarker(int id);
 	command clearMarkers();
+	command addMarkers(UiMapMarkers markers);
 	command setDisplayVoronoiCells(boolean enable);
 
 	command setMapMarkerCluster(UiMapMarkerCluster cluster);

@@ -52,6 +52,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
 	private List<Marker<RECORD>> clusterMarkers = new ArrayList<>();
+	private int clusterRadius = 100;
 	private UiHeatMapData heatMapData = null;
 	private boolean drawingShapeStarted = false;
 
@@ -112,7 +113,8 @@ public class MapView2<RECORD> extends AbstractComponent {
 		if (clusterMarkers != null && !clusterMarkers.isEmpty()) {
 			uiMap.setMarkerCluster(new UiMapMarkerCluster(clusterMarkers.stream()
 					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
-					.collect(Collectors.toList())));
+					.collect(Collectors.toList()))
+					.setClusterRadius(clusterRadius));
 		}
 		uiMap.setMarkers(markersByClientId.entrySet().stream()
 				.map(e -> createUiMarkerRecord(e.getValue(), e.getKey()))
@@ -225,15 +227,27 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
+		setMarkerCluster(markers, 100);
+	}
+
+	public void setMarkerCluster(List<Marker<RECORD>> markers, int clusterRadiusInPixel) {
 		clusterMarkers = markers;
+		clusterRadius = clusterRadiusInPixel;
 		markers.forEach(m -> this.markersByClientId.put(clientIdCounter++, m));
 		queueCommandIfRendered(() -> {
 			UiMapMarkerCluster markerCluster = new UiMapMarkerCluster(clusterMarkers.stream()
 					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
-					.collect(Collectors.toList()));
-			return new UiMap2.SetMapMarkerClusterCommand(getId(),
-					markerCluster);
+					.collect(Collectors.toList()))
+					.setClusterRadius(clusterRadius);
+			return new UiMap2.SetMapMarkerClusterCommand(getId(), markerCluster);
 		});
+	}
+
+	public void addMarkerToCluster(Marker<RECORD> marker) {
+		clusterMarkers.add(marker);
+		int clientId = clientIdCounter++;
+		this.markersByClientId.put(clientId, marker);
+		queueCommandIfRendered(() -> new UiMap2.AddMarkerToClusterCommand(getId(), createUiMarkerRecord(marker, clientId)));
 	}
 
 	public void clearMarkerCluster() {
@@ -318,11 +332,14 @@ public class MapView2<RECORD> extends AbstractComponent {
 		return location;
 	}
 
-	public void addMarkerToCluster(Marker<RECORD> marker) {
-		clusterMarkers.add(marker);
-		int clientId = clientIdCounter++;
-		this.markersByClientId.put(clientId, marker);
-		queueCommandIfRendered(() -> new UiMap2.AddMarkerToClusterCommand(getId(), createUiMarkerRecord(marker, clientId)));
+	public void addMarkers(List<Marker<RECORD>> markers) {
+		markers.forEach(m -> this.markersByClientId.put(clientIdCounter++, m));
+		queueCommandIfRendered(() -> {
+			UiMapMarkers uiMarkers = new UiMapMarkers(markers.stream()
+					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
+					.collect(Collectors.toList()));
+			return new UiMap2.AddMarkersCommand(getId(), uiMarkers);
+		});
 	}
 
 	public void addMarker(Marker<RECORD> marker) {

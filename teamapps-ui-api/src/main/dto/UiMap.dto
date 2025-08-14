@@ -121,8 +121,12 @@ enum UiMapMarkerAnchor {
 	BOTTOM_RIGHT = "bottom-right";
 }
 
-class UiMapMarkerCluster {
+class UiMapMarkers {
 	required List<UiMapMarkerClientRecord> markers;
+}
+
+class UiMapMarkerCluster extends UiMapMarkers {
+	int clusterRadius = 100;
 }
 
 class UiHeatMapData {
