@@ -80,8 +80,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	private drawingProperties: UiShapePropertiesConfig;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 	private markersByClientId: { [id: string]: Marker } = {};
-	private clusterMarkersById: Map<string, Feature> = new Map();
-	private shapesById: Map<string, Feature> = new Map();
+	private clusterMarkerCache: { [id: string]: Marker } = {};
+	private clusterSourceById: Map<string, Feature> = new Map();
+	private shapesSourceById: Map<string, Feature> = new Map();
 	private displayVoronoiCellsEnabled: boolean = false;
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
@@ -238,8 +239,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				});
 			}
 			const shapeSrc = this.map.getSource('shapes') as GeoJSONSource;
-			this.shapesById.set(shapeId, this.createShapeFeatureByConfig(shapeId, shapeConfig));
-			shapeSrc.setData(this.createFeatureCollection(Array.from(this.shapesById.values())));
+			this.shapesSourceById.set(shapeId, this.createShapeFeatureByConfig(shapeId, shapeConfig));
+			shapeSrc.setData(this.createFeatureCollection(Array.from(this.shapesSourceById.values())));
 			const paintProperties = {} as any;
 			if (shapeConfig.shapeProperties.strokeColor != null) {
 				paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor;
@@ -290,14 +291,14 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		return this.deferredExecutor.invokeWhenReady(() => {
 			if (isPolyLineAppend(change)) {
 				const source = this.map.getSource('shapes') as GeoJSONSource;
-				const feature = this.shapesById.get(shapeId);
+				const feature = this.shapesSourceById.get(shapeId);
 				if (feature == null || source == null) {
 					return;
 				}
 				const newPositions = change.appendedPath.map(this.convertToPosition);
 				(feature.geometry as GeoJSON.LineString).coordinates = (feature.geometry as GeoJSON.LineString).coordinates.concat(newPositions);
-				this.shapesById.set(shapeId, feature);
-				source.setData(this.createFeatureCollection(Array.from(this.shapesById.values())));
+				this.shapesSourceById.set(shapeId, feature);
+				source.setData(this.createFeatureCollection(Array.from(this.shapesSourceById.values())));
 			}
 		});
 	}
@@ -311,8 +312,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				this.map.removeLayer(shapeId + '-outline');
 			}
 			const shapeSrc = this.map.getSource('shapes') as GeoJSONSource;
-			this.shapesById.delete(shapeId);
-			shapeSrc.setData(this.createFeatureCollection(Array.from(this.shapesById.values())));
+			this.shapesSourceById.delete(shapeId);
+			shapeSrc.setData(this.createFeatureCollection(Array.from(this.shapesSourceById.values())));
 			this.removeShapeFromTerraDraw(shapeId);
 		});
 	}
@@ -324,7 +325,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	}
 
 	public async clearShapes() {
-		const shapeIds = Array.from(this.shapesById.keys());
+		const shapeIds = Array.from(this.shapesSourceById.keys());
 		await Promise.all(shapeIds.map(id => this.removeShape(id)));
 		this.draw.clear();
 	}
@@ -421,6 +422,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			}
 		});
 
+		this.clearClusterMarkerCache();
+		let markersOnScreen: { [id: string]: Marker } = {};
+
 		const updateMarkers = async () => {
 			const newMarkersOnScreen: { [id: string]: Marker } = {};
 			const srcFeatures = this.map.querySourceFeatures(sourceName);
@@ -440,10 +444,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					const center = (firstFeature.geometry as Point).coordinates as Position;
 					const markers = spiderfyOverlappingMarkers(features);
 					Object.entries(markers).forEach(([id, m]) => {
-						const marker = this.markersByClientId[id] ?? m;
-						newMarkersOnScreen[id] = marker;
-						if (!this.markersByClientId[id]) {
-							this.addMarkerToMap(id, marker);
+						const marker = this.clusterMarkerCache[id] ?? m;
+						this.clusterMarkerCache[id] = newMarkersOnScreen[id] = marker;
+						if (!markersOnScreen[id]) {
+							marker.addTo(this.map);
 						}
 						spiderLegFeatures.push(this.createLineStringFeature({path: [
 							{longitude: marker.getLngLat().lng, latitude: marker.getLngLat().lat},
@@ -452,18 +456,19 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					});
 				} else if (!firstFeature.properties.cluster && firstFeature.properties.id != null) {
 					const id = firstFeature.properties.id;
-					const marker = this.markersByClientId[id] ?? this.createMarker(JSON.parse(firstFeature.properties.marker));
-					newMarkersOnScreen[id] = marker;
-					if (!this.markersByClientId[id]) {
-						this.addMarkerToMap(id, marker);
+					const marker = this.clusterMarkerCache[id] ?? this.createMarker(JSON.parse(firstFeature.properties.marker));
+					this.clusterMarkerCache[id] = newMarkersOnScreen[id] = marker;
+					if (!markersOnScreen[id]) {
+						marker.addTo(this.map);
 					}
 				}
 			});
-			for (const id in this.markersByClientId) {
+			for (const id in markersOnScreen) {
 				if (!newMarkersOnScreen[id]) {
-					await this.removeMarker(id, true);
+					markersOnScreen[id].remove();
 				}
 			}
+			markersOnScreen = newMarkersOnScreen;
 			(this.map.getSource(sourceName + '_spider_legs') as GeoJSONSource).setData(this.createFeatureCollection(spiderLegFeatures));
 		};
 
@@ -517,8 +522,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 					clusterRadius: config.clusterRadius ?? 100
 				});
 			}
-			this.clusterMarkersById = config.markers.reduce((map, m) => map.set(m.id, this.createMarkerFeature(m)), new Map());
-			const markerFeatures = Array.from(this.clusterMarkersById.values());
+			this.clearClusterMarkerCache();
+			this.clusterSourceById = config.markers.reduce((map, m) => map.set(String(m.id), this.createMarkerFeature(m)), new Map());
+			const markerFeatures = Array.from(this.clusterSourceById.values());
 			(this.map.getSource('markers') as GeoJSONSource).setData(this.createFeatureCollection(markerFeatures));
 		});
 	}
@@ -529,8 +535,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				this.initializeMarkerCluster('markers');
 			}
 			const source = this.map.getSource('markers') as GeoJSONSource;
-			this.clusterMarkersById.set(String(marker.id), this.createMarkerFeature(marker));
-			source.setData(this.createFeatureCollection(Array.from(this.clusterMarkersById.values())));
+			this.clusterSourceById.set(String(marker.id), this.createMarkerFeature(marker));
+			source.setData(this.createFeatureCollection(Array.from(this.clusterSourceById.values())));
 		});
 	}
 
@@ -538,11 +544,23 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		const source = this.map.getSource('markers') as GeoJSONSource;
 		if (source != null) {
 			if (id == null) {
-				this.clusterMarkersById.clear();
-			} else {
-				this.clusterMarkersById.delete(id);
+				this.clusterSourceById.clear();
+				this.clearClusterMarkerCache();
+				source.setData(this.createFeatureCollection([]));
+			} else if (this.clusterSourceById.delete(id)) {
+				this.clearClusterMarkerCache(id);
+				source.setData(this.createFeatureCollection(Array.from(this.clusterSourceById.values())));
 			}
-			source.setData(this.createFeatureCollection(Array.from(this.clusterMarkersById.values())));
+		}
+	}
+
+	private clearClusterMarkerCache(id?: string) {
+		if (id != null) {
+			this.clusterMarkerCache[id].remove();
+			delete this.clusterMarkerCache[id];
+		} else {
+			Object.values(this.clusterMarkerCache).forEach(m => m.remove());
+			this.clusterMarkerCache = {};
 		}
 	}
 
@@ -565,22 +583,17 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		marker.addTo(this.map);
 	}
 
-	public async removeMarker(id: number | string, temporaryRemoval = false) {
+	public async removeMarker(id: number | string) {
 		return this.deferredExecutor.invokeWhenReady(() => {
 			id = String(id);
 			this.markersByClientId[id]?.remove();
 			delete this.markersByClientId[id];
-			if (!temporaryRemoval) {
-				this.removeMarkerFromCluster(id);
-			}
+			this.removeMarkerFromCluster(id);
 		});
 	}
 
 	public async clearMarkers() {
-		return this.deferredExecutor.invokeWhenReady(() => {
-			Object.values(this.markersByClientId).forEach(m => m.remove());
-			this.removeMarkerFromCluster();
-		});
+		return Promise.all(Object.keys(this.markersByClientId).map(id => this.removeMarker(id)));
 	}
 
 	private createMarker(markerConfig: UiMapMarkerClientRecordConfig, lngLat?: LngLatLike) {

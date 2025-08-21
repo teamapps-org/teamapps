@@ -231,7 +231,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers, int clusterRadiusInPixel) {
-		clusterMarkers = markers;
+		clusterMarkers = new ArrayList<>(markers);
 		clusterRadius = clusterRadiusInPixel;
 		markers.forEach(m -> this.markersByClientId.put(clientIdCounter++, m));
 		queueCommandIfRendered(() -> {
@@ -356,7 +356,9 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	public void clearMarkers() {
+		var newMarkersByClientId = clusterMarkers.stream().collect(Collectors.toMap(markersByClientId::getKey, m -> m));
 		markersByClientId.clear();
+		markersByClientId.putAll(newMarkersByClientId);
 		queueCommandIfRendered(() -> new UiMap2.ClearMarkersCommand(getId()));
 	}
 
