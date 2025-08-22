@@ -19,23 +19,27 @@
  */
 class UiMap2 extends UiComponent {
 	required Dictionary<UiTemplate> markerTemplates;
-	String baseApiUrl;
-	String accessToken;
 	String styleUrl;
 	boolean displayAttributionControl;
+	boolean displayNavigationControl;
+	boolean displayVoronoiCells;
 
 	float zoomLevel = 5;
 	UiMapLocation mapPosition;
 	Dictionary<AbstractUiMapShape> shapes;
 	List<UiMapMarkerClientRecord> markers;
 	UiMapMarkerCluster markerCluster;
+	UiHeatMapData heatMap;
 
 	command registerTemplate(String id, UiTemplate template);
 	command addMarker(UiMapMarkerClientRecord marker);
 	command removeMarker(int id);
 	command clearMarkers();
+	command addMarkers(UiMapMarkers markers);
+	command setDisplayVoronoiCells(boolean enable);
 
 	command setMapMarkerCluster(UiMapMarkerCluster cluster);
+	command addMarkerToCluster(UiMapMarkerClientRecord marker);
 
 	command setHeatMap(UiHeatMapData data);
 

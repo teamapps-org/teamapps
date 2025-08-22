@@ -31,6 +31,11 @@ public class Marker<RECORD> {
 		this(location, data, 0, 0);
 	}
 
+	public Marker(Location location, RECORD data, MarkerAnchor markerAnchor) {
+		this(location, data, 0, 0);
+		this.markerAnchor = markerAnchor;
+	}
+
 	public Marker(Location location, RECORD data, int offsetPixelsX, int offsetPixelsY) {
 		this.location = location;
 		this.data = data;
@@ -50,23 +55,26 @@ public class Marker<RECORD> {
 		return markerAnchor;
 	}
 
-	public void setMarkerAnchor(MarkerAnchor markerAnchor) {
+	public Marker<RECORD> setMarkerAnchor(MarkerAnchor markerAnchor) {
 		this.markerAnchor = markerAnchor;
+		return this;
 	}
 
 	public int getOffsetPixelsX() {
 		return offsetPixelsX;
 	}
 
-	public void setOffsetPixelsX(int offsetPixelsX) {
+	public Marker<RECORD> setOffsetPixelsX(int offsetPixelsX) {
 		this.offsetPixelsX = offsetPixelsX;
+		return this;
 	}
 
 	public int getOffsetPixelsY() {
 		return offsetPixelsY;
 	}
 
-	public void setOffsetPixelsY(int offsetPixelsY) {
+	public Marker<RECORD> setOffsetPixelsY(int offsetPixelsY) {
 		this.offsetPixelsY = offsetPixelsY;
+		return this;
 	}
 }
