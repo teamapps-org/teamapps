@@ -113,6 +113,7 @@ public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientReco
 
 		return new CacheManipulationHandle<>(new ArrayList<>(uiRecordsByRecord.values()),
 				() -> {
+					this.recordsByClientId.clear();
 					this.recordsByClientId.putAll(newRecordsByClientId);
 					this.unacknowledgedRecordsByClientId.keySet().removeAll(newRecordsByClientId.keySet());
 				});
