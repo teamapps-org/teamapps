@@ -43,6 +43,11 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 
+# Eclipse / JDT
+.settings/
+.classpath
+.project
+
 ### Windows template
 # Windows image file caches
 Thumbs.db
