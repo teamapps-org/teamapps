@@ -12,7 +12,7 @@ requirements for the maven plugin:
 * make sure the teamapps plugin checks that teamapps dependencies are marked as provided!
 * make projector-client-object-api an implicit DTO dependency
 
-
+Get rid of the popperjs dependency in projector-client-object-api
 
 use external imports for references to concrete ClientObject instances instead of the generic ClientObject in DTOs. Example DtoTemplateField.template
 Also use this for DateTimeFormatDescriptor...

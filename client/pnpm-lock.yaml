@@ -174,7 +174,7 @@ importers:
         version: 1.7.0
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.32.0
+        version: 0.40.2
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -203,6 +203,9 @@ importers:
 
   projector-client-object-api:
     dependencies:
+      '@popperjs/core':
+        specifier: ^2.11.8
+        version: 2.11.8
       nosleep.js:
         specifier: ^0.12.0
         version: 0.12.0
@@ -269,7 +272,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.32.0
+        version: 0.40.2
       projector-client-core-components:
         specifier: workspace:*
         version: link:../projector-client-core-components
@@ -326,7 +329,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.32.0
+        version: 0.40.2
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -472,7 +475,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.32.0
+        version: 0.40.2
       projector-client-object-api:
         specifier: workspace:*
         version: link:../projector-client-object-api
@@ -513,7 +516,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.32.0
+        version: 0.40.2
       projector-client-object-api:
         specifier: workspace:*
         version: link:../projector-client-object-api
@@ -592,7 +595,7 @@ importers:
     dependencies:
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.32.0
+        version: 0.40.2
       projector-client-object-api:
         specifier: workspace:*
         version: link:../projector-client-object-api
@@ -636,13 +639,13 @@ importers:
         version: 7.9.0
       d3-luxon:
         specifier: ^2.0.0
-        version: 2.0.0(d3-array@3.2.4)(d3-scale@4.0.2)(luxon@3.6.1)
+        version: 2.0.0(d3-array@3.2.4)(d3-scale@4.0.2)(luxon@3.7.1)
       d3-scale:
         specifier: ^4.0.2
         version: 4.0.2
       luxon:
         specifier: ^3.6.1
-        version: 3.6.1
+        version: 3.7.1
       projector-client-object-api:
         specifier: workspace:*
         version: link:../projector-client-object-api
@@ -670,7 +673,7 @@ importers:
         version: 1.7.0
       '@material-symbols/svg-400':
         specifier: latest
-        version: 0.32.0
+        version: 0.40.2
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -1003,8 +1006,8 @@ packages:
     resolution: {integrity: sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==}
     engines: {node: '>=6.0.0'}
 
-  '@material-symbols/svg-400@0.32.0':
-    resolution: {integrity: sha512-FQmMm7kVitNgfEOlq+Ah9/dGc332r88GTL5dCCeVpMy1ryNSfUNy/l5+15OX6tauhKfVbzVPHGPS8/5Gw1lM+g==}
+  '@material-symbols/svg-400@0.40.2':
+    resolution: {integrity: sha512-e2yEgZW/OveVT1sGaZW1kkRWTPVghjsJYWy+vIea3q08Fv2o7FCYv23PESMyr5D4AaAXdM5dKWkF1e6yIm4swA==}
 
   '@microsoft/api-extractor-model@7.30.6':
     resolution: {integrity: sha512-znmFn69wf/AIrwHya3fxX6uB5etSIn6vg4Q4RB/tb5VDDs1rqREc+AvMC/p19MUN13CZ7+V/8pkYPTj7q8tftg==}
@@ -1981,10 +1984,6 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  luxon@3.6.1:
-    resolution: {integrity: sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==}
-    engines: {node: '>=12'}
-
   luxon@3.7.1:
     resolution: {integrity: sha512-RkRWjA926cTvz5rAb1BqyWkKbbjzCGchDUIKMCUvNi17j6f6j8uHGDV82Aqcqtzd+icoYpELmG3ksgGiFNNcNg==}
     engines: {node: '>=12'}
@@ -2554,7 +2553,7 @@ snapshots:
 
   '@mapbox/whoots-js@3.1.0': {}
 
-  '@material-symbols/svg-400@0.32.0': {}
+  '@material-symbols/svg-400@0.40.2': {}
 
   '@microsoft/api-extractor-model@7.30.6(@types/node@22.15.18)':
     dependencies:
@@ -3087,13 +3086,13 @@ snapshots:
     dependencies:
       d3-color: 3.1.0
 
-  d3-luxon@2.0.0(d3-array@3.2.4)(d3-scale@4.0.2)(luxon@3.6.1):
+  d3-luxon@2.0.0(d3-array@3.2.4)(d3-scale@4.0.2)(luxon@3.7.1):
     dependencies:
       '@types/d3-scale': 4.0.9
       d3-array: 3.2.4
       d3-scale: 4.0.2
       d3-time: 3.1.0
-      luxon: 3.6.1
+      luxon: 3.7.1
 
   d3-path@3.1.0: {}
 
@@ -3546,8 +3545,6 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
-
-  luxon@3.6.1: {}
 
   luxon@3.7.1: {}
 
