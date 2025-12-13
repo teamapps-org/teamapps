@@ -47,6 +47,7 @@ crashlytics-build.properties
 .settings/
 .classpath
 .project
+.factorypath
 
 ### Windows template
 # Windows image file caches
