@@ -8,7 +8,7 @@ export interface ServerObjectChannelHandler {
 
 export class ServerObjectChannelImpl implements ServerObjectChannel {
 	private activeEventNames: Set<string> = new Set<string>();
-	private eventHandlers: { registrationId: string, eventName: string, handler: (any) => any }[];
+	private eventHandlers: { registrationId: string, eventName: string, handler: (any) => any }[] = [];
 
 	private delegate: ServerObjectChannelHandler;
 

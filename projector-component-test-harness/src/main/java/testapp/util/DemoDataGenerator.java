@@ -16,9 +16,9 @@ public class DemoDataGenerator {
 
 	public static final Random random = new Random();
 
-	private static final List<String> FIRST_NAMES = readLines(DemoDataGenerator.class.getResourceAsStream("/org/teamapps/ux/testapp/demodata/firstNames.txt"));
-	private static final List<String> LAST_NAMES = readLines(DemoDataGenerator.class.getResourceAsStream("/org/teamapps/ux/testapp/demodata/lastNames.txt"));
-	private static final List<String> WORDS = readLines(DemoDataGenerator.class.getResourceAsStream("/org/teamapps/ux/testapp/demodata/test-text.txt"));
+	private static final List<String> FIRST_NAMES = readLines(DemoDataGenerator.class.getResourceAsStream("/demodata/firstNames.txt"));
+	private static final List<String> LAST_NAMES = readLines(DemoDataGenerator.class.getResourceAsStream("/demodata/lastNames.txt"));
+	private static final List<String> WORDS = readLines(DemoDataGenerator.class.getResourceAsStream("/demodata/test-text.txt"));
 	public static final List<RgbaColor> FOREGROUND_COLORS = Arrays.asList(
 			RgbaColor.MATERIAL_GREEN_500,
 			RgbaColor.MATERIAL_RED_700,

@@ -25,37 +25,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 public class ChatTest extends AbstractComponentTest {
 
 	private static final InMemoryChatDisplayModel model = createModel();
-
-	private final Set<String> imageMimeTypes = new HashSet<>(Arrays.asList(
-			"image/bmp",
-			"image/gif",
-			"image/heic",
-			"image/heic-sequence",
-			"image/heif",
-			"image/heif-sequence",
-			"image/ief",
-			"image/jls",
-			"image/jp2",
-			"image/jpeg",
-			"image/jpm",
-			"image/jpx",
-			"image/ktx",
-			"image/png",
-			"image/sgi",
-			"image/svg+xml",
-			"image/tiff",
-			"image/webp",
-			"image/wmf"
-	));
 
 	private final String userNickName = "TestUser";
 	private final Resource ownUserImage = createUserImageResource();

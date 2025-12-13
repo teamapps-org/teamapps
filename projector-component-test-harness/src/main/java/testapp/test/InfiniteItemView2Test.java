@@ -35,7 +35,7 @@ public class InfiniteItemView2Test extends AbstractComponentTest<InfiniteItemVie
 			BaseTemplates.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
 			BaseTemplates.LIST_ITEM_LARGE_ICON_TWO_LINES,
 			BaseTemplates.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES,
-			new MustacheTemplate(Util.readResourceToString("org/teamapps/ux/testapp/templates/conference-participant.html"))};
+			new MustacheTemplate(Util.readResourceToString("/templates/user.html"))};
 
 	private Template itemTemplate = BaseTemplates.ITEM_VIEW_ITEM;
 	private ListInfiniteItemViewModel<BaseTemplateRecord<?>> model;

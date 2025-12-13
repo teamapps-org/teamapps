@@ -34,11 +34,10 @@ public interface ResourceProvider {
     /**
      * Retrieves a resource based on the provided paths and session information.
      *
-     * @param servletPath The path of the servlet handling the request
      * @param relativeResourcePath The path of the requested resource relative to the servlet path
-     * @param httpSessionId The ID of the HTTP session making the request
+     * @param httpSessionId        The ID of the HTTP session making the request
      * @return The requested resource, or null if the resource cannot be found
      */
-    Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId);
+    Resource getResource(String relativeResourcePath, String httpSessionId);
 
 }

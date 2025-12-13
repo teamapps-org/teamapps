@@ -3,7 +3,7 @@
  * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
  */
 export const Es = Object.freeze({
-    A: 1,
-    B: 2
+    A: 0,
+    B: 1
 } as const);
 export type E = typeof Es[keyof typeof Es]

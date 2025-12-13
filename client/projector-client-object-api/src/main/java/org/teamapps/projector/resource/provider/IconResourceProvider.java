@@ -42,7 +42,7 @@ public class IconResourceProvider implements ResourceProvider {
 	}
 
 	@Override
-	public Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId) {
+	public Resource getResource(String relativeResourcePath, String httpSessionId) {
 		if (relativeResourcePath == null) {
 			return null;
 		}

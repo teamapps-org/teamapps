@@ -36,7 +36,7 @@ public class SessionResourceProvider implements ResourceProvider {
 	}
 
 	@Override
-	public Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId) {
+	public Resource getResource(String relativeResourcePath, String httpSessionId) {
 		try {
 			if (relativeResourcePath == null) {
 				return null;

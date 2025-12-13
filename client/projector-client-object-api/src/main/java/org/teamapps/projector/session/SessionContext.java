@@ -162,7 +162,9 @@ public class SessionContext {
 		this.navigationPathPrefix = navigationPathPrefix;
 		this.navigationParamConverterProvider = navigationParamConverterProvider;
 		this.objectMapper = objectMapper;
-		this.locale = clientInfo.getAcceptedLanguages().stream().findFirst().orElse(Locale.US);
+		this.locale = clientInfo.getAcceptedLanguages().stream().findFirst()
+				
+				.orElse(Locale.ENGLISH);
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.projector.ux.i18n.DefaultCaptions", this.locale);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 		this.componentLibraryRegistry = componentLibraryRegistry;

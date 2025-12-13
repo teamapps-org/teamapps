@@ -51,7 +51,7 @@ public class ClassPathResourceProvider implements ResourceProvider {
 	}
 
 	@Override
-	public Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId) {
+	public Resource getResource(String relativeResourcePath, String httpSessionId) {
 		boolean isDirectory = relativeResourcePath.endsWith("/");
 		if (isDirectory) {
 			return directoryResolutionStrategy.resolveDirectory(relativeResourcePath).stream()

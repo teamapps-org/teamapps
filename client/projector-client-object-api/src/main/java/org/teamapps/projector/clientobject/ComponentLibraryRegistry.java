@@ -41,7 +41,7 @@ public class ComponentLibraryRegistry {
 				throw new IllegalArgumentException("ClientObject class " + clientObjectClass + " is not annotated with @" + ClientObjectLibrary.class.getSimpleName());
 			}
 			Class<? extends org.teamapps.projector.clientobject.ClientObjectLibrary> componentLibraryClass = annotation.value();
-			return getComponentLibraryInternal(componentLibraryClass, () -> {
+			return getComponentLibraryInfo(componentLibraryClass, () -> {
 				org.teamapps.projector.clientobject.ClientObjectLibrary clientObjectLibrary1;
 				Constructor<? extends org.teamapps.projector.clientobject.ClientObjectLibrary> constructor;
 				try {
@@ -59,12 +59,15 @@ public class ComponentLibraryRegistry {
 		});
 	}
 
-	private ClientObjectLibraryInfo getComponentLibraryInternal(Class<? extends org.teamapps.projector.clientobject.ClientObjectLibrary> componentLibraryClass, Supplier<org.teamapps.projector.clientobject.ClientObjectLibrary> componentLibrarySupplier) {
+	private ClientObjectLibraryInfo getComponentLibraryInfo(
+			Class<? extends org.teamapps.projector.clientobject.ClientObjectLibrary> componentLibraryClass,
+			Supplier<org.teamapps.projector.clientobject.ClientObjectLibrary> componentLibrarySupplier
+	) {
 		if (!registeredComponentLibraries.containsKey(componentLibraryClass)) {
 			org.teamapps.projector.clientobject.ClientObjectLibrary clientObjectLibrary = componentLibrarySupplier.get();
 			String uuid = componentLibraryClass.getSimpleName() + "-" + UUID.randomUUID();
 			String mainJsUrl = getMainJsUrl(uuid);
-			String mainCss = getMainCssUrl(uuid);
+			String mainCss = clientObjectLibrary.getMainCssResource() != null ? getMainCssUrl(uuid) : null;
 			ClientObjectLibraryInfo clientObjectLibraryInfo = new ClientObjectLibraryInfo(clientObjectLibrary, uuid, mainJsUrl, mainCss);
 			registeredComponentLibraries.put(componentLibraryClass, clientObjectLibraryInfo);
 			librariesByUuid.put(uuid, clientObjectLibraryInfo);
@@ -74,7 +77,7 @@ public class ComponentLibraryRegistry {
 	}
 
 	public String registerComponentLibrary(org.teamapps.projector.clientobject.ClientObjectLibrary clientObjectLibrary) {
-		return getComponentLibraryInternal(clientObjectLibrary.getClass(), () -> clientObjectLibrary).uuid;
+		return getComponentLibraryInfo(clientObjectLibrary.getClass(), () -> clientObjectLibrary).uuid;
 	}
 
 	public org.teamapps.projector.clientobject.ClientObjectLibrary getComponentLibraryById(String uuid) {

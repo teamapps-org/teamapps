@@ -32,7 +32,7 @@ public class CompositeIconLibrary implements IconLibrary<CompositeIcon> {
 
 	@Override
 	public IconStyle<CompositeIcon> getDefaultStyle() {
-		return null;
+		return i -> i;
 	}
 
 	@Override

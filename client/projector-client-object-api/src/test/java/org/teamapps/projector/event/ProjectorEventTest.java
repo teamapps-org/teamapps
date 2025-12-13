@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.teamapps.projector.common.ProjectorVersion.TEAMAPPS_VERSION;
+import static org.teamapps.projector.common.ProjectorVersion.PROJECTOR_VERSION;
 
 public class ProjectorEventTest {
 
@@ -326,7 +326,7 @@ public class ProjectorEventTest {
 
 	public static SessionContext createDummySessionContext() {
 		URL url = ExceptionUtil.runWithSoftenedExceptions(() -> URI.create("https://abc").toURL());
-		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, List.of(Locale.US), false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", url, Collections.emptyMap(), TEAMAPPS_VERSION);
+		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, List.of(Locale.US), false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", url, Collections.emptyMap(), PROJECTOR_VERSION);
 		ComponentLibraryRegistry componentLibraryRegistryMock = Mockito.mock(ComponentLibraryRegistry.class);
 		Mockito.when(componentLibraryRegistryMock.getComponentLibraryForClientObject(Mockito.any())).thenReturn(new ComponentLibraryRegistry.ClientObjectLibraryInfo(null, null, null, null));
 		return new SessionContext(

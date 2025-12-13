@@ -65,8 +65,7 @@ export abstract class /* @__NO_SIDE_EFFECTS__ */ /* @PURE */ AbstractField<C ext
 	private hovering: boolean = false;
 	private focused: boolean = false;
 
-	// @ts-ignore
-	constructor(config: C, serverObjectChannel: ServerObjectChannel) {
+	protected constructor(config: C, _serverObjectChannel: ServerObjectChannel) {
 		super(config);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);

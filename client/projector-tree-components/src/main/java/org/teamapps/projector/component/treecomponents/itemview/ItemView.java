@@ -18,8 +18,10 @@ package org.teamapps.projector.component.treecomponents.itemview;/*-
  * =========================LICENSE_END==================================
  */
 
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponent;
+import org.teamapps.projector.component.treecomponents.TreeComponentsLibrary;
 import org.teamapps.projector.dataextraction.BeanPropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyExtractor;
 import org.teamapps.projector.dataextraction.PropertyProvider;
@@ -34,6 +36,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+@ClientObjectLibrary(TreeComponentsLibrary.class)
 public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent implements DtoItemViewEventHandler {
 
 	private final DtoItemViewClientObjectChannel clientObjectChannel = new DtoItemViewClientObjectChannel(getClientObjectChannel());

@@ -111,7 +111,7 @@ export const <e.namePlural> = Object.freeze({
     <if(e.stringEnum)>
     <e.enumConstants:{ec|<ec.Identifier>: <ec.StringLiteral>}; separator=",\n">
     <else>
-    <e.enumConstants:{ec|<ec.Identifier>: <i>}; separator=",\n">
+    <e.enumConstants:{ec|<ec.Identifier>: <i0>}; separator=",\n">
     <endif>
 } as const);
 export type <e.name> = typeof <e.namePlural>[keyof typeof <e.namePlural>]

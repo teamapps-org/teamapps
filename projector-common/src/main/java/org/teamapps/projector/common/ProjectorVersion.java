@@ -23,7 +23,7 @@ import org.teamapps.commons.util.ClassPathResourceUtil;
 
 public class ProjectorVersion {
 
-	public static final String TEAMAPPS_VERSION = ClassPathResourceUtil.readResourceToString("teamAppsVersion.txt");
-	public static final String TEAMAPPS_DEV_SERVER_VERSION = "DEV";
+	public static final String PROJECTOR_VERSION = ClassPathResourceUtil.readResourceToString("teamAppsVersion.txt");
+	public static final String PROJECTOR_DEV_SERVER_VERSION = "DEV";
 
 }

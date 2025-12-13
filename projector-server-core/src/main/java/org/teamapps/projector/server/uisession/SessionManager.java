@@ -60,8 +60,8 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static org.teamapps.projector.common.ProjectorVersion.TEAMAPPS_DEV_SERVER_VERSION;
-import static org.teamapps.projector.common.ProjectorVersion.TEAMAPPS_VERSION;
+import static org.teamapps.projector.common.ProjectorVersion.PROJECTOR_DEV_SERVER_VERSION;
+import static org.teamapps.projector.common.ProjectorVersion.PROJECTOR_VERSION;
 import static org.teamapps.projector.session.uisession.UiSessionState.*;
 
 /**
@@ -79,7 +79,7 @@ import static org.teamapps.projector.session.uisession.UiSessionState.*;
 public class SessionManager implements HttpSessionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	public static final String TEAMAPPS_VERSION_REFRESH_PARAMETER = "teamappsRefresh"; // keep in-sync with JavaScript!!!
+	public static final String PROJECTOR_VERSION_REFRESH_PARAMETER = "teamappsRefresh"; // keep in-sync with JavaScript!!!
 
 	public final Event<SessionStatsUpdatedEventData> onStatsUpdated = new Event<>();
 
@@ -245,17 +245,17 @@ public class SessionManager implements HttpSessionListener {
 		uiSession.handleCommandRequest(maxRequestedCommandId, null);
 
 		boolean wrongTeamappsVersion = clientInfo.getTeamAppsVersion() == null
-									   || (!Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_VERSION) && !Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_DEV_SERVER_VERSION));
-		boolean hasTeamAppsRefreshParameter = clientInfo.getClientParameters().containsKey(TEAMAPPS_VERSION_REFRESH_PARAMETER);
+									   || (!Objects.equals(clientInfo.getTeamAppsVersion(), PROJECTOR_VERSION) && !Objects.equals(clientInfo.getTeamAppsVersion(), PROJECTOR_DEV_SERVER_VERSION));
+		boolean hasTeamAppsRefreshParameter = clientInfo.getClientParameters().containsKey(PROJECTOR_VERSION_REFRESH_PARAMETER);
 		if (wrongTeamappsVersion) {
-			LOGGER.info("Wrong TeamApps client version {} in session {}! Expected: {}!", clientInfo.getTeamAppsVersion(), sessionId, TEAMAPPS_VERSION);
+			LOGGER.info("Wrong TeamApps client version {} in session {}! Expected: {}!", clientInfo.getTeamAppsVersion(), sessionId, PROJECTOR_VERSION);
 			if (!hasTeamAppsRefreshParameter) {
-				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
+				LOGGER.info("Sending redirect with {} parameter.", PROJECTOR_VERSION_REFRESH_PARAMETER);
 				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getQuery()) ? "&" : "?";
-				String url = clientInfo.getLocation().toString() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis();
+				String url = clientInfo.getLocation().toString() + separator + PROJECTOR_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis();
 				uiSession.sendCommand(new CommandWithResultCallback(null, null, "goToUrl", url, false));
 			}
-			uiSession.close(SessionClosingReason.WRONG_TEAMAPPS_VERSION);
+			uiSession.close(SessionClosingReason.WRONG_PROJECTOR_VERSION);
 			return uiSession;
 		}
 

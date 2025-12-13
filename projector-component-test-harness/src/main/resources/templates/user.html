@@ -1,0 +1,26 @@
+<div class="participant">
+    <style>
+        .participant > .img {
+            width: 100px;
+            height: 100px;
+            background-size: cover;
+            background-position: center center;
+            margin-bottom: 4px;
+            border-radius: 7%;
+            border: 1px solid #ccc;
+
+            border-bottom: 2px solid var(--my-color);
+            box-shadow: 0 10px 5px -10px var(--my-color);
+            --my-color: #355ca4;
+        }
+
+        .participant > .name1,
+        .participant > .name2 {
+            text-align: center;
+            font-size: 90%
+        }
+    </style>
+    <div class="img" style="background-image: url({{#image}}{{image}}{{/image}}{{^image}}{{icon}}{{/image}})"></div>
+    <div class="name1">{{caption}}</div>
+    <div class="name2">{{description}}</div>
+</div>

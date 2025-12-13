@@ -25,7 +25,7 @@ public class FileFieldLibrary implements ClientObjectLibrary {
 
 	@Override
 	public Resource getResource(String pathInfo) {
-		return resourceProvider.getResource(null, pathInfo, null);
+		return resourceProvider.getResource(pathInfo, null);
 	}
 
 }

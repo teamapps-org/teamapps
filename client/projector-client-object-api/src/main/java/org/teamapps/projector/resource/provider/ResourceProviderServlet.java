@@ -74,7 +74,7 @@ public class ResourceProviderServlet extends HttpServlet {
 
 		Resource resource;
 		try {
-			resource = resourceProvider.getResource(request.getServletPath(), request.getPathInfo(), request.getSession().getId());
+			resource = resourceProvider.getResource(request.getPathInfo(), request.getSession().getId());
 		} catch (IllegalArgumentException e) {
 			LOGGER.info("Got an IllegalArgumentException from ResourceProvider. Interpreting it as 400 Bad Request. "
 					+ request.getServletPath() + request.getPathInfo() + " for HTTP session " + request.getSession().getId(), e);

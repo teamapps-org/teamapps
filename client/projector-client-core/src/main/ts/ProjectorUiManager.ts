@@ -19,6 +19,7 @@
  */
 "use strict";
 
+import data from "../../../package.json";
 import {
 	type ClientObject,
 	type ClosedSessionHandlingType,
@@ -38,6 +39,8 @@ import {
 import {CoreLibrary} from "./CoreLibrary";
 import {createGenericErrorMessageShowable} from "./genericErrorMessages";
 import {ServerObjectChannelImpl} from "./ServerObjectChannelImpl";
+
+const PROJECTOR_VERSION = data.version;
 
 abstract class AbstractClientObjectWrapper<WRAPPED extends ComponentLibrary | ClientObject> {
 
@@ -141,7 +144,7 @@ export class ProjectorUiManager implements ConnectionListener {
 			clientTokens: CoreLibrary.getClientTokens(),
 			location: location.href,
 			clientParameters: clientParameters,
-			teamAppsVersion: '__TEAMAPPS_VERSION__'
+			teamAppsVersion: PROJECTOR_VERSION
 		};
 
 		this.connection = new ConnectionImpl(webSocketUrl, this.sessionId, clientInfo, this);
@@ -163,7 +166,7 @@ export class ProjectorUiManager implements ConnectionListener {
 	public onConnectionErrorOrBroken(reason, message) {
 		console.error(`Connection broken. ${message != null ? 'Message: ' + message : ""}`);
 		sessionStorage.clear();
-		if (reason == SessionClosingReason.WRONG_TEAMAPPS_VERSION) {
+		if (reason == SessionClosingReason.WRONG_PROJECTOR_VERSION) {
 			// NOTE that there is a special handling for wrong teamapps client versions on the server side, which sends the client a goToUrl() command for a page with a cache-prevention GET parameter.
 			// This is only in case the server-side logic does not work.
 			document.body.innerHTML = `<div class="centered-body-text">

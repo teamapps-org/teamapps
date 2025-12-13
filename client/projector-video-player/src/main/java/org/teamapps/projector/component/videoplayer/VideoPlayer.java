@@ -19,12 +19,14 @@
  */
 package org.teamapps.projector.component.videoplayer;
 
+import org.teamapps.projector.annotation.ClientObjectLibrary;
 import org.teamapps.projector.common.format.Color;
 import org.teamapps.projector.common.format.RgbaColor;
 import org.teamapps.projector.component.AbstractComponent;
 import org.teamapps.projector.component.DtoComponentConfig;
 import org.teamapps.projector.event.ProjectorEvent;
 
+@ClientObjectLibrary(VideoPlayerLibrary.class)
 public class VideoPlayer extends AbstractComponent implements DtoVideoPlayerEventHandler {
 
 	private final DtoVideoPlayerClientObjectChannel clientObjectChannel = new DtoVideoPlayerClientObjectChannel(getClientObjectChannel());

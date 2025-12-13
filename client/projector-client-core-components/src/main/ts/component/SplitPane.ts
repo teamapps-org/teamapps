@@ -277,7 +277,7 @@ export class SplitPane extends AbstractComponent<DtoSplitPane> implements Emptya
 			case ChildCollapsingPolicies.IF_NULL:
 				return childComponent == null;
 			case ChildCollapsingPolicies.IF_EMPTY:
-				return isEmptyable(childComponent) && childComponent.empty;
+				return childComponent == null || isEmptyable(childComponent) && childComponent.empty;
 		}
 	}
 

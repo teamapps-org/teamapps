@@ -54,7 +54,7 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 			acceptLanguageHeader = "en";
 		}
 		List<Locale> acceptedLanguages = Locale.LanguageRange.parse(acceptLanguageHeader).stream()
-				.map(range -> Locale.of(range.getRange()))
+				.map(range -> Locale.forLanguageTag(range.getRange()))
 				.toList();
 
 		String proxiedIp = getFirstHeaderOrNull(request, "X-Forwarded-For");

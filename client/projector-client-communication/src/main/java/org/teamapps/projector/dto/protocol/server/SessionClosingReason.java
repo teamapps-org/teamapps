@@ -8,7 +8,7 @@ public enum SessionClosingReason {
 		COMMANDS_OVERFLOW,
 		REINIT_COMMAND_ID_NOT_FOUND,
 		CMD_REQUEST_TOO_LARGE,
-		WRONG_TEAMAPPS_VERSION,
+		WRONG_PROJECTOR_VERSION,
 		TERMINATED_BY_APPLICATION;
 
     @com.fasterxml.jackson.annotation.JsonValue
