@@ -104,7 +104,7 @@
     "exports-loader": "^0.7.0",
     "image-layout": "^0.4.1",
     "jquery": "^3.5.1",
-    "jquery-ui": "^1.12.1",
+    "jquery-ui": "^1.13.2",
     "json-stable-stringify": "^1.0.1",
     "jsqr-es6": "^1.2.0-3",
     "jstz": "^2.0.0",
