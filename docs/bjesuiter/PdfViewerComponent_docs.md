@@ -199,3 +199,54 @@ panel.setContent(pdfViewer);
 - **Add `showPage(int page)` method to PdfViewer.java** - command exists in DTO and TypeScript but missing in Java
 - **Add `pageShadow` to DTO** - property exists in Java but not exposed
 - **Implement CONTINUOUS viewMode in TypeScript** - currently throws error
+
+## Implementation Plan: Continuous Rendering Mode
+
+### Step 1: Refactor - Extract Zoom Calculation
+
+**New method:** `calculateZoomScale(referencePage: PDFPageProxy)`
+
+Extract zoom logic (lines 285-332) into reusable function:
+- Input: PDF page (always first page for now)
+- Returns: `{ scale: number, viewport: PageViewport }`
+- Handles TO_WIDTH, TO_HEIGHT, MANUAL modes
+- Fires `onZoomFactorAutoChanged` when auto-calculating
+- Sets `zoomMode` to MANUAL after auto-calc
+
+### Step 2: Implement `renderPdfContinuousMode()`
+
+- **Console warning** if `maxPageNumber > 5`
+- Get first page, call `calculateZoomScale(firstPage)`
+- Clear `#pagesContainer` (remove old canvases)
+- Loop through all pages (1 to maxPageNumber):
+  - Create canvas element per page
+  - Apply `pageBorder` styling to each canvas
+  - Render page with calculated scale
+- Apply `pageSpacing` as CSS gap on `#pagesContainer`
+
+### Step 3: Update `renderPdfDocument()`
+
+- Remove `throw Error` for CONTINUOUS
+- Route: `CONTINUOUS` → `renderPdfContinuousMode()`
+- Route: `SINGLE_PAGE` → `renderPdfSinglePageMode()`
+
+### Step 4: CSS Changes
+
+Update `#pagesContainer` styles:
+```css
+display: flex;
+flex-flow: column nowrap;
+align-items: center;
+gap: ${pageSpacing}px;
+```
+
+### Step 5: Update `renderPdfSinglePageMode()`
+
+- Call `calculateZoomScale()` instead of inline logic
+- Keep single canvas rendering as-is
+
+### Design Decisions
+
+- **Zoom reference:** Always uses first page dimensions
+- **TO_HEIGHT in continuous mode:** Fits first page to container height, other pages scroll
+- **No virtual scrolling:** All pages rendered immediately (warn if >5 pages)
