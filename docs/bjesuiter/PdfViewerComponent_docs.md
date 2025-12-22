@@ -87,6 +87,115 @@ Preparation:
 
 - run clean + install for the Teamapps UX Subpackage
 
+## Specification
+
+### Public Interface (Java API)
+
+#### Constructors
+| Constructor | Description |
+|-------------|-------------|
+| `PdfViewer()` | Creates an empty PDF viewer |
+| `PdfViewer(String url)` | Creates a PDF viewer with the given PDF URL |
+
+#### Properties (Getters/Setters)
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `url` | `String` | `null` | URL of the PDF document to display |
+| `showDevTools` | `boolean` | `false` | Shows a development toolbar with page navigation and zoom controls |
+| `viewMode` | `UiPdfViewMode` | `null` | How pages are displayed (SINGLE_PAGE or CONTINUOUS) |
+| `zoomMode` | `UiPdfZoomMode` | `TO_WIDTH` | How zoom is calculated (TO_HEIGHT, TO_WIDTH, MANUAL) |
+| `zoomFactor` | `float` | `1.0` | Manual zoom factor (only works when zoomMode is MANUAL) |
+| `padding` | `int` | `0` | Padding around the PDF canvas in pixels |
+| `pageSpacing` | `int` | `5` | Spacing between pages in CONTINUOUS mode (not yet implemented) |
+| `backgroundColor` | `String` | `null` | CSS color for the canvas container background |
+| `borderColor` | `String` | `null` | CSS color for the canvas container border |
+| `pageBorder` | `UiBorder` | `null` | Border configuration for PDF pages |
+
+#### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `onPdfInitialized` | `PdfInitializedEvent` (contains `numberOfPages`) | Fired when PDF document is loaded and first page is rendered |
+| `onZoomFactorAutoChanged` | `ZoomFactorAutoChangedEvent` (contains `zoomFactor`) | Fired when zoom factor is auto-calculated by TO_WIDTH or TO_HEIGHT modes |
+
+#### Enums
+
+**UiPdfViewMode:**
+| Value | Description |
+|-------|-------------|
+| `SINGLE_PAGE` | Display one page at a time |
+| `CONTINUOUS` | Display all pages in a scrollable view (⚠️ NOT YET IMPLEMENTED) |
+
+**UiPdfZoomMode:**
+| Value | Description |
+|-------|-------------|
+| `TO_HEIGHT` | Auto-scale PDF page to fit container height |
+| `TO_WIDTH` | Auto-scale PDF page to fit container width |
+| `MANUAL` | Use the `zoomFactor` property for scaling |
+
+### Implementation Status
+
+#### ✅ Fully Implemented Features
+
+| Feature | DTO | Java | TypeScript | Notes |
+|---------|-----|------|------------|-------|
+| `setUrl` | ✅ | ✅ | ✅ | Load PDF from URL |
+| `setShowDevTools` | ✅ | ✅ | ✅ | Toggle dev toolbar |
+| `setViewMode` | ✅ | ✅ | ✅ | Only SINGLE_PAGE works |
+| `setZoomFactor` | ✅ | ✅ | ✅ | Manual zoom control |
+| `setZoomMode` | ✅ | ✅ | ✅ | Auto-zoom modes |
+| `setPadding` | ✅ | ✅ | ✅ | Canvas container padding |
+| `setPageSpacing` | ✅ | ✅ | ✅ | For CONTINUOUS mode |
+| `setBackgroundColor` | ✅ | ✅ | ✅ | Container background |
+| `setBorderColor` | ✅ | ✅ | ✅ | Container border |
+| `setPageBorder` | ✅ | ✅ | ✅ | Page border config |
+| `pdfInitialized` event | ✅ | ✅ | ✅ | PDF load notification |
+| `zoomFactorAutoChanged` event | ✅ | ✅ | ✅ | Auto-zoom notification |
+
+#### ⚠️ Partially Implemented / Missing Features
+
+| Feature | DTO | Java | TypeScript | Issue |
+|---------|-----|------|------------|-------|
+| `showPage(int page)` | ✅ | ❌ | ✅ | **Missing Java method** - command defined in DTO but no Java setter to call it |
+| `CONTINUOUS` viewMode | ✅ | ✅ | ❌ | TypeScript throws error: "not supported yet" |
+| `pageShadow` | ❌ | ✅ | ❌ | Property exists in Java but not in DTO or TypeScript |
+
+### Usage Example
+
+```java
+// Create PDF viewer
+String testPdfLink = sessionContext.createResourceLink(
+    new ClassPathResource("test.pdf", "application/pdf")
+);
+PdfViewer pdfViewer = new PdfViewer();
+
+// Configure appearance
+pdfViewer.setPadding(10);
+pdfViewer.setShowDevTools(true);
+pdfViewer.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
+pdfViewer.setBackgroundColor("oklch(0.74 0.1 218.65)");
+pdfViewer.setBorderColor("#ff0000");
+
+// Load PDF (can be done later, e.g., on button click)
+pdfViewer.setUrl(testPdfLink);
+
+// Listen for events
+pdfViewer.onPdfInitialized.addListener((initEvent) -> {
+    System.out.println("PDF loaded, pages: " + initEvent.getNumberOfPages());
+});
+
+pdfViewer.onZoomFactorAutoChanged.addListener((zoomEvent) -> {
+    System.out.println("Zoom factor changed: " + zoomEvent.getZoomFactor());
+});
+
+// Add to panel
+panel.setContent(pdfViewer);
+```
+
 ## Todos
 
 - In PdfViewer.java: update all setters to update ts client
+- **Add `showPage(int page)` method to PdfViewer.java** - command exists in DTO and TypeScript but missing in Java
+- **Add `pageShadow` to DTO** - property exists in Java but not exposed
+- **Implement CONTINUOUS viewMode in TypeScript** - currently throws error
