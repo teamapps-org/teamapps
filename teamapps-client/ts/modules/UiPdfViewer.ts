@@ -19,7 +19,7 @@
  * =========================LICENSE_END==================================
  */
 
-import type {PDFDocumentProxy} from "pdfjs-dist";
+import type {PDFDocumentProxy, PDFPageProxy, PageViewport} from "pdfjs-dist";
 import * as pdfjsLib from "pdfjs-dist";
 import {UiBorderConfig} from "../generated/UiBorderConfig";
 import {
@@ -253,42 +253,13 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // Core Class Logic
     // -----------------
 
-    /**
-     * bjesuiter  2025-03-28: only supports page-based rendering for now, sicne it's easier to implement.
-     * Continuous pdf page rendering is on the roadmap, but delayed indefinitely for now.
-     *
-     * @private
-     */
-    private async renderPdfDocument() {
-        // Step 1: Validate configs
-        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
-            // TODO @bjesuiter: how to do logging in these components idiomatically?
-            throw new Error(`UiPdfViewMode.CONTINUOUS is not supported yet`);
-        }
-
-        // Step 2: Apply configs outside of canvas
-        this.$canvasContainer.style.padding = `${this.config.padding}px`;
-
-        // viewMode is SINGLE_PAGE from here on
-        await this.renderPdfSinglePageMode();
-    }
-
-    /**
-     * Based on Example:
-     * https://mozilla.github.io/pdf.js/examples/#:~:text=page*%20here%0A%7D)%3B-,Rendering%20the%20Page,-Each%20PDF%20page
-     * @private
-     */
-    private async renderPdfSinglePageMode() {
-        const page = await this.pdfDocument.getPage(this.currentPageNumber);
-        // aka: set the initial scale to 1.0 when currentZoomMode is TO_WIDTH or TO_HEIGHT
-        // to not screw up the calculation later
+    private calculateZoomScale(page: PDFPageProxy): { scale: number, viewport: PageViewport } {
         let scale = [UiPdfZoomMode.TO_HEIGHT, UiPdfZoomMode.TO_WIDTH].includes(this.config.zoomMode)
             ? 1.0 : (this.config.zoomFactor ?? 1.0);
 
         let pdfViewport = page.getViewport({
             scale
         });
-        const hiDPIScale = window.devicePixelRatio || 1;
 
         if (this.config.zoomMode === UiPdfZoomMode.TO_WIDTH) {
             // calc the scale based on available width
@@ -330,6 +301,39 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                 zoomFactor: newScale
             });
         }
+
+        return {scale, viewport: pdfViewport};
+    }
+
+    /**
+     * bjesuiter  2025-03-28: only supports page-based rendering for now, sicne it's easier to implement.
+     * Continuous pdf page rendering is on the roadmap, but delayed indefinitely for now.
+     *
+     * @private
+     */
+    private async renderPdfDocument() {
+        // Step 1: Validate configs
+        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
+            // TODO @bjesuiter: how to do logging in these components idiomatically?
+            throw new Error(`UiPdfViewMode.CONTINUOUS is not supported yet`);
+        }
+
+        // Step 2: Apply configs outside of canvas
+        this.$canvasContainer.style.padding = `${this.config.padding}px`;
+
+        // viewMode is SINGLE_PAGE from here on
+        await this.renderPdfSinglePageMode();
+    }
+
+    /**
+     * Based on Example:
+     * https://mozilla.github.io/pdf.js/examples/#:~:text=page*%20here%0A%7D)%3B-,Rendering%20the%20Page,-Each%20PDF%20page
+     * @private
+     */
+    private async renderPdfSinglePageMode() {
+        const page = await this.pdfDocument.getPage(this.currentPageNumber);
+        const {scale, viewport: pdfViewport} = this.calculateZoomScale(page);
+        const hiDPIScale = window.devicePixelRatio || 1;
 
         const canvas = this.$canvas;
         const canvasContext = this.$canvas.getContext('2d');
