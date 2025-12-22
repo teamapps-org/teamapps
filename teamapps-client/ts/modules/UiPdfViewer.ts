@@ -145,10 +145,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     overflow-y: auto;
                 }
                 div.${this.uuidClass}#pagesContainer {
-                    /*display: flex; */
-                    /*flex-flow: column nowrap;*/
-                    /*gap: 1rem;*/
-                    /*align-items: center;*/
+                    display: flex;
+                    flex-flow: column nowrap;
+                    align-items: center;
+                    gap: ${this.config.pageSpacing}px;
                 }
                 div.${this.uuidClass}#dev-toolbar {
                     display: flex;
@@ -312,17 +312,13 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      * @private
      */
     private async renderPdfDocument() {
-        // Step 1: Validate configs
-        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
-            // TODO @bjesuiter: how to do logging in these components idiomatically?
-            throw new Error(`UiPdfViewMode.CONTINUOUS is not supported yet`);
-        }
-
-        // Step 2: Apply configs outside of canvas
         this.$canvasContainer.style.padding = `${this.config.padding}px`;
 
-        // viewMode is SINGLE_PAGE from here on
-        await this.renderPdfSinglePageMode();
+        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
+            await this.renderPdfContinuousMode();
+        } else {
+            await this.renderPdfSinglePageMode();
+        }
     }
 
     /**
@@ -362,6 +358,71 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (this.isDev()) {
             this.$devCurrentPageNr.innerText = String(this.currentPageNumber);
             this.$devCurrentZoom.innerText = String(scale.toFixed(1));
+        }
+    }
+
+    private async renderPdfContinuousMode() {
+        if (this.maxPageNumber > 5) {
+            console.warn(`PdfViewer: CONTINUOUS mode with ${this.maxPageNumber} pages may impact performance. Consider using SINGLE_PAGE mode.`);
+        }
+
+        const firstPage = await this.pdfDocument.getPage(1);
+        const {scale} = this.calculateZoomScale(firstPage);
+
+        const $pagesContainer = this.$main.querySelector<HTMLElement>('#pagesContainer');
+        $pagesContainer.innerHTML = '';
+
+        for (let pageNum = 1; pageNum <= this.maxPageNumber; pageNum++) {
+            const page = await this.pdfDocument.getPage(pageNum);
+            const viewport = page.getViewport({scale});
+            const hiDPIScale = window.devicePixelRatio || 1;
+
+            const canvas = document.createElement('canvas');
+            canvas.className = this.uuidClass;
+            const canvasContext = canvas.getContext('2d');
+
+            canvas.width = Math.floor(viewport.width * hiDPIScale);
+            canvas.height = Math.floor(viewport.height * hiDPIScale);
+            canvas.style.width = Math.floor(viewport.width) + "px";
+            canvas.style.height = Math.floor(viewport.height) + "px";
+
+            if (this.config.pageBorder) {
+                this.applyPageBorderToCanvas(canvas);
+            }
+
+            const transform = hiDPIScale !== 1 ?
+                [hiDPIScale, 0, 0, hiDPIScale, 0, 0] :
+                null;
+
+            const renderContext = {
+                canvasContext,
+                transform,
+                viewport
+            };
+
+            $pagesContainer.appendChild(canvas);
+            page.render(renderContext);
+        }
+    }
+
+    private applyPageBorderToCanvas(canvas: HTMLCanvasElement) {
+        const border = this.config.pageBorder;
+        if (border) {
+            if (border.top) {
+                canvas.style.borderTop = `${border.top.thickness}px solid ${border.top.color}`;
+            }
+            if (border.right) {
+                canvas.style.borderRight = `${border.right.thickness}px solid ${border.right.color}`;
+            }
+            if (border.bottom) {
+                canvas.style.borderBottom = `${border.bottom.thickness}px solid ${border.bottom.color}`;
+            }
+            if (border.left) {
+                canvas.style.borderLeft = `${border.left.thickness}px solid ${border.left.color}`;
+            }
+            if (border.borderRadius) {
+                canvas.style.borderRadius = `${border.borderRadius}px`;
+            }
         }
     }
 
