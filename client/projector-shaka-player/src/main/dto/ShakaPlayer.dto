@@ -21,7 +21,7 @@ package "projector-shaka-player":org.teamapps.projector.component.shakaplayer;
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoShakaPlayer extends DtoComponent {
+class DtoShakaPlayer extends DtoComponent implementation "../ShakaPlayer":ShakaPlayer {
     String hlsUrl;
     String dashUrl;
     mutable String posterImageUrl;

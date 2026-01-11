@@ -22,7 +22,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 
-abstract class DtoAbstractToolContainer extends DtoComponent {
+abstract class DtoAbstractToolContainer extends DtoComponent implementation "../component/tool-container/AbstractToolContainer":AbstractToolContainer {
 	List<DtoToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
 	List<DtoToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
 	String backgroundColor;
@@ -46,17 +46,17 @@ enum DtoToolbarButtonGroupPosition {
 	FIRST, RATHER_FIRST, CENTER, RATHER_LAST, LAST
 }
 
-class DtoToolbar extends DtoAbstractToolContainer {
+class DtoToolbar extends DtoAbstractToolContainer implementation "../component/tool-container/toolbar/Toolbar":Toolbar {
 	String logoImage;
 
 	command setLogoImage(String logoImage);
 }
 
-class DtoToolAccordion extends DtoAbstractToolContainer {
+class DtoToolAccordion extends DtoAbstractToolContainer implementation "../component/tool-container/tool-accordion/ToolAccordion":ToolAccordion {
 	// no added funcionality...
 }
 
-class DtoToolbarButtonGroup {
+class DtoToolbarButtonGroup implementation "../component/tool-container/toolbar/ToolbarButtonGroup":ToolbarButtonGroup  {
 	String id;
 	List<DtoToolbarButton> buttons;
 	DtoToolbarButtonGroupPosition position;
@@ -65,7 +65,7 @@ class DtoToolbarButtonGroup {
 	DtoToolbarButton collapsedButton;  //displayed if group is inside a drop down list or toolbar is too small an group is condensed to a single button
 }
 
-class DtoToolbarButton {
+class DtoToolbarButton implementation "../component/tool-container/toolbar/ToolbarButton":ToolbarButton  {
 	String id;
 	String debuggingId;
 	DtoTemplate* template;

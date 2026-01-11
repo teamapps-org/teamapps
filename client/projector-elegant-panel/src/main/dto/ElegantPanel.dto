@@ -24,7 +24,7 @@ import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.format.DtoSpacing;
 
 // TODO move to another component library!
-class DtoElegantPanel extends DtoComponent {
+class DtoElegantPanel extends DtoComponent implementation "../ElegantPanel":ElegantPanel {
 	String bodyBackgroundColor;
 	DtoComponent* content;
 	DtoSpacing padding;

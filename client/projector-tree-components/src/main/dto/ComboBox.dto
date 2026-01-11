@@ -29,7 +29,7 @@ abstract class DtoAbstractComboBox extends DtoAbstractField {
 	query retrieveDropdownEntries(String queryString) returns List<DtoComboBoxTreeRecord>;
 }
 
-class DtoComboBox extends DtoAbstractComboBox {
+class DtoComboBox extends DtoAbstractComboBox implementation "../ComboBox":ComboBox  {
 	List<DtoToolButton*> toolButtons;
 
     command setToolButtons(List<DtoToolButton*> toolButtons);

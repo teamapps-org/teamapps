@@ -30,7 +30,7 @@ enum ProgressStatus {
 	FAILED = "failed"
 }
 
-class DtoProgressDisplay extends DtoComponent {
+class DtoProgressDisplay extends DtoComponent implementation "../ProgressDisplay":ProgressDisplay {
 	required String icon;
 	required String taskName;
 	required String statusMessage;

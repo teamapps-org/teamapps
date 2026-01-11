@@ -21,7 +21,7 @@ package "projector-chart":org.teamapps.projector.component.chart.pie;
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoPieChart extends DtoComponent {
+class DtoPieChart extends DtoComponent implementation "../PieChart":PieChart {
     long initialAnimationDuration;
     ChartLegendStyle legendStyle;
 	DataPointWeighting dataPointWeighting;

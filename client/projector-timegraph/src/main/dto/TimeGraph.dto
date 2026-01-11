@@ -21,7 +21,7 @@ package "projector-timegraph":org.teamapps.projector.component.timegraph;
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoTimeGraph extends DtoComponent {
+class DtoTimeGraph extends DtoComponent implementation "../TimeGraph":TimeGraph {
 	LineChartYScaleZoomMode yScaleZoomMode;
 	DtoLongInterval intervalX;
 	List<DtoTimeChartZoomLevel> zoomLevels;
@@ -79,7 +79,7 @@ interface DtoGraph {
 	boolean yZeroLineVisible;
 }
 
-class DtoLineGraph implements DtoGraph {
+class DtoLineGraph implements DtoGraph implementation "../LineGraph":LineGraph  {
 	String dataSeriesId;
 	LineChartCurveType graphType;
     double dataDotRadius;
@@ -89,7 +89,7 @@ class DtoLineGraph implements DtoGraph {
     String areaColorScaleMax;
 }
 
-class DtoHoseGraph implements DtoGraph {
+class DtoHoseGraph implements DtoGraph implementation "../HoseGraph":HoseGraph  {
 	String upperBoundDataSeriesId;
 	String middleLineDataSeriesId;
 	String lowerBoundDataSeriesId;
@@ -102,11 +102,11 @@ class DtoHoseGraph implements DtoGraph {
 	String upperLineColor;
 }
 
-class DtoIncidentGraph implements DtoGraph {
+class DtoIncidentGraph implements DtoGraph implementation "../IncidentGraph":IncidentGraph  {
     // no config at the moment...
 }
 
-class DtoGraphGroup implements DtoGraph {
+class DtoGraphGroup implements DtoGraph implementation "../GraphGroup":GraphGroup  {
 	List<DtoGraph> graphs;
 }
 

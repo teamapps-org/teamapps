@@ -22,7 +22,7 @@ package "projector-file-field":org.teamapps.projector.component.filefield;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.field.DtoAbstractField;
 
-class DtoPictureChooser extends DtoAbstractField {
+class DtoPictureChooser extends DtoAbstractField implementation "../PictureChooser":PictureChooser {
 	required String uploadUrl; // May point anywhere.
 	required long maxFileSize;
 	required String fileTooLargeMessage;

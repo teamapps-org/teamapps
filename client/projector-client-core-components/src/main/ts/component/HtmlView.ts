@@ -42,20 +42,22 @@ export class HtmlView extends AbstractComponent<DtoHtmlView> implements DtoHtmlV
 		return this.$main;
 	}
 
-	addComponent(containerElementSelector: string, component: unknown, clearContainer: boolean): void {
+	addComponent(containerElementSelector: string, component: Component | null, clearContainer: boolean): void {
 		let containerElement = this.$main.querySelector(`:scope ${containerElementSelector}`);
 		if (containerElement != null) {
 			if (clearContainer) {
 				containerElement.innerHTML = '';
 			}
-			containerElement.appendChild((component as Component).getMainElement());
+			if (component != null) {
+				containerElement.appendChild(component.getMainElement());
+			}
 		} else {
 			console.error(`Could not add child component since selector does not match any element: ${containerElementSelector}`);
 		}
 	}
 
-	removeComponent(component: unknown): void {
-		(component as Component).getMainElement().remove();
+	removeComponent(component: Component | null): void {
+		component?.getMainElement().remove();
 	}
 
 	setContentHtml(containerElementSelector: string, html: string): void {

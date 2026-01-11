@@ -321,6 +321,25 @@ public interface ClassOrInterfaceWrapper<T extends ParserRuleContext> extends Ty
 				});
 
 		if (typescript) {
+			List<TypeReferenceWrapper> allTypeReferences = new ArrayList<>();
+			allTypeReferences.addAll(getProperties().stream().map(PropertyWrapper::getType).toList());
+			allTypeReferences.addAll(getCommands().stream().flatMap(c -> c.getParameters().stream()).map(FormalParameterWrapper::getType).toList());
+			allTypeReferences.addAll(getCommands().stream().map(CommandWrapper::getReturnType).filter(Objects::nonNull).toList());
+			allTypeReferences.addAll(getAllEvents().stream().flatMap(e -> e.getParameters().stream()).map(FormalParameterWrapper::getType).toList());
+			allTypeReferences.addAll(getAllQueries().stream().flatMap(q -> q.getParameters().stream()).map(FormalParameterWrapper::getType).toList());
+			allTypeReferences.addAll(getAllQueries().stream().map(QueryWrapper::getReturnType).filter(Objects::nonNull).toList());
+
+			allTypeReferences.stream()
+					.filter(TypeReferenceWrapper::isClientObjectPointerOrClientObjectPointerCollection)
+					.forEach(t -> {
+						TypeWrapper<?> referencedType = t.findReferencedDtoType();
+						String implClass = referencedType.getImplementationClassName();
+						if (implClass != null) {
+							String implLocalPath = referencedType.getImplementationModuleName();
+							imports.addImport(implClass, referencedType.getJsModuleName(), implLocalPath, null);
+						}
+					});
+
 			if (this instanceof ClassWrapper || hasEventsOrQueries()) {
 				imports.addImport("ServerObjectChannel", "projector-client-object-api", "../ClientObject", null);
 			}

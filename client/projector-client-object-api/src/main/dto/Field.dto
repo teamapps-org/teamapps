@@ -28,7 +28,7 @@ enum FieldEditingMode {
 	READONLY = "readonly"
 }
 
-abstract class DtoAbstractField extends DtoComponent {
+abstract class DtoAbstractField extends DtoComponent implementation "../AbstractField":AbstractField {
 	FieldEditingMode editingMode;
 	Object value;
 	List<DtoFieldMessage> fieldMessages;

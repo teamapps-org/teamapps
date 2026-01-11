@@ -24,7 +24,7 @@ import org.teamapps.projector.component.core.DtoToolButton;
 import org.teamapps.projector.component.core.panel.WindowButtonType;
 import org.teamapps.projector.component.core.toolbar.DtoToolbar;
 
-class DtoTabPanel extends DtoComponent {
+class DtoTabPanel extends DtoComponent implementation "../component/TabPanel":TabPanel {
 	List<DtoTab> tabs;
 	String selectedTabId;
 	mutable String tabBarHeight;

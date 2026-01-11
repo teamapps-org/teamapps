@@ -26,7 +26,7 @@ import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.component.infinitescroll.DtoAbstractInfiniteListComponent;
 
-class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent {
+class DtoInfiniteItemView extends DtoAbstractInfiniteListComponent implementation "../infiniteitemview/InfiniteItemView":InfiniteItemView {
 	DtoTemplate* itemTemplate;
 
 	double itemWidth; // 0: full width, 0<x<1: relative width, >=1: fixed width

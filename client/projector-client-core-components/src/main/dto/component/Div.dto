@@ -21,7 +21,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoDiv extends DtoComponent {
+class DtoDiv extends DtoComponent implementation "../component/Div":Div {
     DtoComponent* content;
     String innerHtml;
 

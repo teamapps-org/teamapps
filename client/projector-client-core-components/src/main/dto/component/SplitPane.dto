@@ -32,7 +32,7 @@ enum SplitDirection {
 	VERTICAL = "vertical"
 }
 
-class DtoSplitPane extends DtoComponent {
+class DtoSplitPane extends DtoComponent implementation "../component/SplitPane":SplitPane {
 	mutable SplitDirection splitDirection;
 	mutable SplitSizePolicy sizePolicy;
 	mutable double referenceChildSize; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1

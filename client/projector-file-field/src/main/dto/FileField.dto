@@ -24,7 +24,7 @@ import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
-class DtoFileField extends DtoAbstractField {
+class DtoFileField extends DtoAbstractField implementation "../FileField":FileField {
 	required mutable DtoTemplate* itemTemplate; // template for rendering the uploaded files section. All data for this section comes from the server (field value)
 	mutable long maxBytesPerFile;
 	required mutable String uploadUrl; // May point anywhere.
@@ -54,7 +54,7 @@ enum FileFieldDisplayType {
 	LIST, FLOATING
 }
 
-class DtoSimpleFileField extends DtoAbstractField {
+class DtoSimpleFileField extends DtoAbstractField implementation "../SimpleFileField":SimpleFileField  {
 	required mutable String browseButtonIcon;
 	required mutable String browseButtonCaption;
 	required mutable String uploadUrl; // May point anywhere.
@@ -82,7 +82,7 @@ class DtoSimpleFileField extends DtoAbstractField {
 }
 
 
-class DtoFileItem {
+class DtoFileItem implementation "../FileItem":FileItem  {
 	required String uuid;
 	String icon;
 	String thumbnail;

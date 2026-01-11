@@ -23,7 +23,7 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
-class DtoItemView extends DtoComponent {
+class DtoItemView extends DtoComponent implementation "../ItemView":ItemView {
 	List<DtoItemViewItemGroup> itemGroups;
 	
 	mutable DtoTemplate* groupHeaderTemplate;

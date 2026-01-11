@@ -29,7 +29,7 @@ import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.JustifyContent;
 import org.teamapps.projector.template.grid.DtoSizingPolicy;
 
-class DtoGridTemplate extends DtoTemplate {
+class DtoGridTemplate extends DtoTemplate implementation "../GridTemplate":GridTemplate {
     required List<DtoGridColumn> columns;
     required List<DtoGridRow> rows;
     required List<DtoAbstractGridTemplateElement> elements;

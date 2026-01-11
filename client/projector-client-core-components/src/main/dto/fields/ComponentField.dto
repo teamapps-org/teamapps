@@ -22,7 +22,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoComponentField extends DtoAbstractField {
+class DtoComponentField extends DtoAbstractField implementation "../component/field/ComponentField":ComponentField {
 	DtoComponent* component;
 	int height; // 0 = the height will be determined by the component's content and context
 	boolean bordered;

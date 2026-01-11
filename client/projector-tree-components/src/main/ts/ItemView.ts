@@ -133,7 +133,7 @@ export class ItemView extends AbstractComponent<DtoItemView> implements DtoItemV
 		});
 	}
 
-	setGroupHeaderTemplate(groupHeaderTemplate: unknown) {
+	setGroupHeaderTemplate(groupHeaderTemplate: Template | null) {
 		this.config.groupHeaderTemplate = groupHeaderTemplate;
 	}
 

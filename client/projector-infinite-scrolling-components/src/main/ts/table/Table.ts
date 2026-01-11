@@ -983,11 +983,11 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		this.contextMenu.close(requestId);
 	}
 
-	setHeaderRowField(columnName: string, field: unknown): any {
+	setHeaderRowField(columnName: string, field: AbstractField | null): any {
 		if (field == null) {
 			delete this.headerRowFields[columnName];
 		} else {
-			this.headerRowFields[columnName] = field as AbstractField;
+			this.headerRowFields[columnName] = field;
 		}
 		this.configureOuterFields(this.headerRowFields as FieldsByName, true);
 		if (this.grid != null) {
@@ -995,11 +995,11 @@ export class Table extends AbstractComponent<DtoTable> implements DtoTableComman
 		}
 	}
 
-	setFooterRowField(columnName: string, field: unknown): any {
+	setFooterRowField(columnName: string, field: AbstractField | null): any {
 		if (field == null) {
 			delete this.footerRowFields[columnName];
 		} else {
-			this.footerRowFields[columnName] = field as AbstractField;
+			this.footerRowFields[columnName] = field;
 		}
 		this.configureOuterFields(this.footerRowFields as FieldsByName, false);
 		if (this.grid != null) {

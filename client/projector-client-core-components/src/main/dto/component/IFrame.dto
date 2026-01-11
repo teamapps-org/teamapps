@@ -21,7 +21,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoIFrame extends DtoComponent {
+class DtoIFrame extends DtoComponent implementation "../component/IFrame":IFrame {
 	String url;
 	command setUrl(String url);
 	// event urlChanged(String url); // this would only works for pages with same origin

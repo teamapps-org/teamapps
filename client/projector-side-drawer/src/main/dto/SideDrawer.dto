@@ -21,7 +21,7 @@ package "projector-side-drawer":org.teamapps.projector.component.sidedrawer;
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoSideDrawer extends DtoComponent {
+class DtoSideDrawer extends DtoComponent implementation "../SideDrawer":SideDrawer {
 
 	DtoComponent* containerComponent;
 	DtoComponent* contentComponent;

@@ -23,7 +23,7 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.record.DtoClientRecord;
 
-class DtoTreeGraph extends DtoComponent {
+class DtoTreeGraph extends DtoComponent implementation "../TreeGraph":TreeGraph {
     List<DtoTreeGraphNode> nodes;
 
 	String backgroundColor;

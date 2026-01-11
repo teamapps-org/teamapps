@@ -22,7 +22,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoDisplayField extends DtoAbstractField {
+class DtoDisplayField extends DtoAbstractField implementation "../component/field/DisplayField":DisplayField {
 	boolean showBorder; //if true, show a border like for text fields
 	boolean showHtml; //if true, treat the value as valid HTML
 	boolean removeStyleTags;

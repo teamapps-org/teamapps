@@ -21,6 +21,6 @@ package "projector-client-object-api":org.teamapps.projector.template;
 
 import org.teamapps.projector.clientobject.DtoClientObject;
 
-abstract class DtoTemplate extends DtoClientObject {
+abstract class DtoTemplate extends DtoClientObject implementation "../Template":Template {
 
 }

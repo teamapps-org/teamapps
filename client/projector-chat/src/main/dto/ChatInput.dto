@@ -22,7 +22,7 @@ package "projector-chat":org.teamapps.projector.component.chat;
 import org.teamapps.projector.component.DtoComponent;
 
 
-class DtoChatInput extends DtoComponent {
+class DtoChatInput extends DtoComponent implementation "../ChatInput":ChatInput {
 	required mutable String defaultFileIcon;
 	mutable long maxBytesPerUpload;
 	required mutable String uploadUrl;

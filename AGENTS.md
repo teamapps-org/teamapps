@@ -99,3 +99,7 @@ Every component has a Java (server-side) and TypeScript (client-side) implementa
 - **Generated TypeScript**: Interfaces for DTOs, command handlers, event sources, `ServerObjectChannel` types
 - **Import Dependencies**: Configure `<dtoDependencies>` in pom.xml to import DTOs from other modules
 - **Key Classes**: `JavaDtoGenerator`, `TypeScriptDtoGenerator`, `TypeReferenceWrapper`, `ClassOrInterfaceWrapper`, template files in `projector-dto-dsl/src/main/resources/`
+
+## Debugging
+- **Build Logs**: If a build fails or you need to see details, use `tail` to read the end of the log file, or read specific offsets. Do not read the entire huge log file.
+- **Strict TypeScript Checks**: Use the build profile `-Pfail-on-typescript-errors` to ensure TypeScript errors fail the build. Example: `mvn clean package -DskipTests -Pfail-on-typescript-errors`.

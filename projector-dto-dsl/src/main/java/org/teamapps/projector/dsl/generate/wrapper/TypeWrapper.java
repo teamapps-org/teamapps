@@ -28,6 +28,14 @@ public interface TypeWrapper<T extends ParserRuleContext> {
 	}
 
 
+	default String getImplementationClassName() {
+		return null;
+	}
+
+	default String getImplementationModuleName() {
+		return null;
+	}
+
 	default boolean isExternal() {
 		return false;
 	}

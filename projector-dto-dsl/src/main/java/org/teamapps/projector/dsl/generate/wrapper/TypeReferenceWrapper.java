@@ -251,6 +251,9 @@ public class TypeReferenceWrapper {
 		} else if (isDictionary()) {
 			return "{[name: string]: " + getCollectionTypeOrThrow().getTypeScriptTypeName() + "}";
 		} else if (isClientObjectPointer()) {
+			if (findReferencedDtoType().getImplementationClassName() != null) {
+				return findReferencedDtoType().getImplementationClassName();
+			}
 			return "unknown";
 		} else if (isDtoType()) {
 			return getText();

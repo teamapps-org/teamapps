@@ -24,7 +24,7 @@ import org.teamapps.projector.component.field.DtoAbstractField;
 
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
 //the value is always a long in cents for accuracy
-class DtoCurrencyField extends DtoAbstractField {
+class DtoCurrencyField extends DtoAbstractField implementation "../CurrencyField":CurrencyField {
 	mutable String locale;
 	mutable List<DtoCurrencyUnit> currencyUnits; //list of ISO 4217 currencies - e.g. "USD", "EUR", etc. to be displayed as dropdown selection if available
 	mutable int fixedPrecision; // if >= 0, this overwrites the corresponding currency unit precision

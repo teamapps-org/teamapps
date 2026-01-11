@@ -52,7 +52,7 @@ export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoS
 
 		this.$main = parseHtml(`<div class="SideDrawer"></div>`);
 
-		this.setContentComponent(config.contentComponent);
+		this.setContentComponent(config.contentComponent ?? null);
 		this.$expanderHandle = parseHtml(`<div class="expander-handle"></div>`);
 		this.$expanderHandle.addEventListener("click", () => {
 			this.setExpanded(!this.config.expanded);
@@ -151,11 +151,11 @@ export class SideDrawer extends AbstractComponent<DtoSideDrawer> implements DtoS
 		return this.$main;
 	}
 
-	public setContentComponent(contentComponent: unknown) {
+	public setContentComponent(contentComponent: Component | null) {
 		this.$main.innerHTML = '';
-		this.contentComponent = contentComponent as Component;
+		this.contentComponent = contentComponent;
 		if (contentComponent != null) {
-			this.$main.appendChild(this.contentComponent.getMainElement());
+			this.$main.appendChild(contentComponent.getMainElement());
 		}
 	}
 

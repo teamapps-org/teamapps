@@ -5,7 +5,7 @@ import org.teamapps.projector.component.DtoComponent;
 /**
  * May also be used as audio player...
  */
-class DtoVideoPlayer extends DtoComponent {
+class DtoVideoPlayer extends DtoComponent implementation "../VideoPlayer":VideoPlayer {
 	required mutable String url; //the url of the video
 	mutable boolean autoplay;
 	mutable boolean controlsVisible;

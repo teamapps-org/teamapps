@@ -68,7 +68,7 @@ export interface <evt.typeScriptInterfaceName> {
 }
 >>
 
-parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptTypeName>"
+parameter(p, optional) ::= "<p.name><if(optional)>?<endif>: <p.type.typeScriptTypeName><if(p.type.clientObjectPointerOrClientObjectPointerCollection)> | null<endif>"
 
 interfaceConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
@@ -102,7 +102,7 @@ export interface <c.name>EventSource <if(c.superTypesWithEvents)>extends <c.supe
 >>
 
 typeScriptPropertyDeclaration(p, forceNonNullable) ::= <<
-<p.name><if(!forceNonNullable && !p.nonNullable)>?<endif>: <p.type.typeScriptTypeName><if(!forceNonNullable && !p.nonNullable)> | null<endif>
+<p.name><if(!forceNonNullable && !p.nonNullable)>?<endif>: <p.type.typeScriptTypeName><if((!forceNonNullable || p.type.clientObjectPointerOrClientObjectPointerCollection) && !p.nonNullable)> | null<endif>
 >>
 
 enum(e) ::= <<

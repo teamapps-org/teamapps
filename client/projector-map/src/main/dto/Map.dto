@@ -23,7 +23,7 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
-class DtoMapView extends DtoComponent {
+class DtoMapView extends DtoComponent implementation "../MapView":MapView {
 	required String baseApiUrl;
 	required String accessToken;
 	required String styleUrl;

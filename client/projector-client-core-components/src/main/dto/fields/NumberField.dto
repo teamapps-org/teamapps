@@ -21,7 +21,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 
 import org.teamapps.projector.component.field.DtoAbstractField;
 
-class DtoNumberField extends DtoAbstractField implements DtoTextInputHandlingField {
+class DtoNumberField extends DtoAbstractField implements DtoTextInputHandlingField implementation "../component/field/NumberField":NumberField {
   	String locale;
 	int precision; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
 	String placeholderText;

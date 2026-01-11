@@ -4,7 +4,7 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.component.progress.DtoMultiProgressDisplay;
 
-class DtoNavigationBar extends DtoComponent {
+class DtoNavigationBar extends DtoComponent implementation "../NavigationBar":NavigationBar {
 	required List<DtoNavigationBarButton> buttons;
 	required String backgroundColor;
 	required String borderColor;

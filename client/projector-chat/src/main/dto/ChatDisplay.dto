@@ -21,7 +21,7 @@ package "projector-chat":org.teamapps.projector.component.chat;
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoChatDisplay extends DtoComponent {
+class DtoChatDisplay extends DtoComponent implementation "../ChatDisplay":ChatDisplay {
 	DtoChatMessageBatch initialMessages;
     mutable boolean contextMenuEnabled;
     required mutable String deletedMessageIcon;
@@ -41,7 +41,7 @@ class DtoChatMessageBatch {
     required boolean containsFirstMessage;
 }
 
-class DtoChatMessage {
+class DtoChatMessage implementation "../ChatMessage":ChatMessage  {
 	int id;
 	String userImageUrl;
 	String userNickname;

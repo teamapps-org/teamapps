@@ -22,7 +22,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.animation.PageTransition;
 
-class DtoRootPanel extends DtoComponent {
+class DtoRootPanel extends DtoComponent implementation "../component/RootPanel":RootPanel {
     String backgroundImageUrl;
     String blurredBackgroundImageUrl;
     String backgroundColor;

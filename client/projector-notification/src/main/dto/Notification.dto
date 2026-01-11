@@ -25,7 +25,7 @@ import org.teamapps.projector.animation.EntranceAnimation;
 import org.teamapps.projector.animation.ExitAnimation;
 import org.teamapps.projector.notification.NotificationPosition;
 
-class DtoNotification extends DtoComponent {
+class DtoNotification extends DtoComponent implementation "../Notification":Notification {
 	String backgroundColor;
 	DtoSpacing padding;
 

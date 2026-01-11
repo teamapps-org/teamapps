@@ -22,7 +22,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.animation.AnimationEasing;
 
-class DtoAbsoluteLayout extends DtoComponent {
+class DtoAbsoluteLayout extends DtoComponent implementation "../component/AbsoluteLayout":AbsoluteLayout {
 	List<DtoAbsolutePositionedComponent> components;
 
 	command update(List<DtoAbsolutePositionedComponent> components, int animationDuration, AnimationEasing easing);

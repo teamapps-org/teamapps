@@ -58,7 +58,7 @@ export class Collapsible extends AbstractComponent<DtoCollapsible> implements Dt
 
         this.setIcon(config.icon ?? null);
         this.setCaption(config.caption ?? null);
-        this.setContent(config.content);
+        this.setContent(config.content ?? null);
         this.setCollapsed(config.collapsed);
 
         this.$expander.addEventListener("click", () => {
@@ -72,10 +72,10 @@ export class Collapsible extends AbstractComponent<DtoCollapsible> implements Dt
         return this.$main;
     }
 
-    setContent(content: unknown): void {
+    setContent(content: Component | null): void {
         this.$body.innerHTML = "";
         if (content != null) {
-            this.$body.append((content as Component).getMainElement());
+            this.$body.append(content.getMainElement());
         }
     }
 

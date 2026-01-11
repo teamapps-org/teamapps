@@ -10,6 +10,7 @@ EXTERNAL: 'external';
 INTERFACE: 'interface';
 EXTENDS: 'extends';
 IMPLEMENTS: 'implements';
+IMPLEMENTATION: 'implementation';
 COMMAND: 'command';
 EVENT: 'event';
 QUERY: 'query';
@@ -30,15 +31,16 @@ typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 enumDeclaration : notGeneratedAnnotation? 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? SEMICOLON* '}' ;
 enumConstant : Identifier ('=' StringLiteral)?;
 
-classDeclaration : notGeneratedAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
+classDeclaration : notGeneratedAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? implementationDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
-interfaceDeclaration : notGeneratedAnnotation? 'interface' Identifier superInterfaceDecl? '{'
+interfaceDeclaration : notGeneratedAnnotation? 'interface' Identifier superInterfaceDecl? implementationDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
 superClassDecl: 'extends' typeName;
 superInterfaceDecl: 'extends' classList;
 implementsDecl: 'implements' classList;
+implementationDecl: IMPLEMENTATION StringLiteral ':' Identifier;
 classList: ((typeName ',')* typeName)?;
 propertyDeclaration : requiredModifier? mutableModifier? type Identifier SEMICOLON+;
 

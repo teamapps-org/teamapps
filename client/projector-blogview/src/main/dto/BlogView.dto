@@ -24,7 +24,7 @@ import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.component.core.DtoToolButton;
 import org.teamapps.projector.record.DtoClientRecord;
 
-class DtoBlogView extends DtoComponent {
+class DtoBlogView extends DtoComponent implementation "../BlogView":BlogView {
 	List<DtoBlock> blocks;
 
 	command addBlock(DtoBlock block, boolean before, String otherBlockId);
@@ -48,7 +48,7 @@ enum TopRecordElementAlignment {
 	STRETCH = "stretch"
 }
 
-class DtoMessageBlock extends DtoBlock {
+class DtoMessageBlock extends DtoBlock implementation "../MessageBlock":MessageBlock  {
 	DtoTemplate* topTemplate;
 	DtoClientRecord topRecord;
 	TopRecordElementAlignment topRecordAlignment;
@@ -56,7 +56,7 @@ class DtoMessageBlock extends DtoBlock {
 	List<String> imageUrls;
 }
 
-class DtoCitationBlock extends DtoBlock {
+class DtoCitationBlock extends DtoBlock implementation "../CitationBlock":CitationBlock  {
 	String creatorImageUrl;
 	CreatorImageAlignment creatorImageAlignment;
 	String citation; // rich text!
@@ -68,7 +68,7 @@ enum CreatorImageAlignment {
 	RIGHT = "right"
 }
 
-class DtoComponentBlock extends DtoBlock {
+class DtoComponentBlock extends DtoBlock implementation "../ComponentBlock":ComponentBlock  {
 	DtoComponent* component;
 	int height;
 	String title;

@@ -143,6 +143,23 @@ public class ClassWrapper implements ClassOrInterfaceWrapper<ClassDeclarationCon
 	}
 
 	@Override
+	public String getImplementationClassName() {
+		if (context.implementationDecl() != null) {
+			return context.implementationDecl().Identifier().getText();
+		}
+		return null;
+	}
+
+	@Override
+	public String getImplementationModuleName() {
+		if (context.implementationDecl() != null) {
+			String text = context.implementationDecl().StringLiteral().getText();
+			return text.substring(1, text.length() - 1);
+		}
+		return null;
+	}
+
+	@Override
 	public String toString() {
 		return "ClassWrapper: " + getName();
 	}

@@ -21,7 +21,7 @@ package "projector-file-field":org.teamapps.projector.component.filefield.imagec
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoImageCropper extends DtoComponent {
+class DtoImageCropper extends DtoComponent implementation "../ImageCropper":ImageCropper {
 	String imageUrl;
 	required ImageCropperSelectionMode selectionMode;
 	required double aspectRatio; // width/height; 0 = no aspect ratio constraint!

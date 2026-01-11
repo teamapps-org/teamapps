@@ -21,7 +21,7 @@ package "projector-collapsible":org.teamapps.projector.component.collapsible;
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoCollapsible extends DtoComponent {
+class DtoCollapsible extends DtoComponent implementation "../Collapsible":Collapsible {
     mutable String icon;
     mutable String caption;
     mutable DtoComponent* content;

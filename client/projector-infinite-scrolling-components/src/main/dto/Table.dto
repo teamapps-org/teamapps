@@ -55,7 +55,7 @@ enum DtoTableDisplayStyle {
 	TABLE, LIST;
 }
 
-class DtoTable extends DtoAbstractInfiniteListComponent {
+class DtoTable extends DtoAbstractInfiniteListComponent implementation "../table/Table":Table  {
 	List<DtoTableColumn> columns;
 
 	DtoTableDisplayStyle displayStyle;

@@ -2,7 +2,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 
 import org.teamapps.projector.component.DtoShowable;
 
-class DtoWindow extends DtoPanel implements DtoShowable {
+class DtoWindow extends DtoPanel implements DtoShowable implementation "../component/Window":Window {
 	mutable boolean modal;
 	mutable int width; // 0 = full width
 	mutable int height; // 0 = full height, -1 = auto

@@ -6,7 +6,7 @@ import org.teamapps.projector.format.DtoSpacing;
 import org.teamapps.projector.animation.EntranceAnimation;
 import org.teamapps.projector.animation.ExitAnimation;
 
-class DtoNotificationBar extends DtoComponent {
+class DtoNotificationBar extends DtoComponent implementation "../NotificationBar":NotificationBar {
 	required List<DtoNotificationBarItem> initialItems;
 
 	command addItem(DtoNotificationBarItem item);

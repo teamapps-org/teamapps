@@ -23,7 +23,7 @@ import org.teamapps.projector.clientobject.DtoClientObject;
 
 import external org.teamapps.projector.component.DtoComponentConfig;
 
-abstract class DtoComponent extends DtoClientObject implements DtoComponentConfig! {
+abstract class DtoComponent extends DtoClientObject implements DtoComponentConfig implementation "../component/Component":Component {
 	boolean visible;
 	Dictionary<Dictionary<String>> stylesBySelector;
 	Dictionary<Dictionary<Boolean>> classNamesBySelector;

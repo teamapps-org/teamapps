@@ -31,7 +31,7 @@ enum SpecialKey {
 	ENTER = "Enter", ESCAPE = "Escape"
 }
 
-class DtoTextField extends DtoAbstractField implements DtoTextInputHandlingField {
+class DtoTextField extends DtoAbstractField implements DtoTextInputHandlingField implementation "../component/field/TextField":TextField {
 	int maxCharacters; //if > 0, do not allow to enter more than this number of characters
 	boolean clearButtonEnabled;
 	String placeholderText;
@@ -42,12 +42,12 @@ class DtoTextField extends DtoAbstractField implements DtoTextInputHandlingField
 	command setPlaceholderText(String placeholderText);
 }
 
-class DtoPasswordField extends DtoTextField {
+class DtoPasswordField extends DtoTextField implementation "../component/field/PasswordField":PasswordField  {
 	boolean passwordVisibilityToggleEnabled;
 	command setPasswordVisibilityToggleEnabled(boolean enabled);
 }
 
-class DtoMultiLineTextField extends DtoTextField {
+class DtoMultiLineTextField extends DtoTextField implementation "../component/field/MultiLineTextField":MultiLineTextField  {
 	boolean adjustHeightToContent;
 
 	command append(String s, boolean scrollToBottom);

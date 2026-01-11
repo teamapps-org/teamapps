@@ -30,7 +30,7 @@ class DtoLocalDate {
     int day;
 }
 
-class DtoLocalDateField extends DtoAbstractField {
+class DtoLocalDateField extends DtoAbstractField implementation "../LocalDateField":LocalDateField  {
     boolean showDropDownButton;
 	boolean clearButtonEnabled;
 	boolean favorPastDates;

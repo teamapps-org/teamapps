@@ -21,6 +21,6 @@ package "projector-stylesheet":org.teamapps.projector.stylesheet;
 
 import org.teamapps.projector.clientobject.DtoClientObject;
 
-class DtoLinkStyleSheet extends DtoClientObject {
+class DtoLinkStyleSheet extends DtoClientObject implementation "../LinkStyleSheet":LinkStyleSheet {
     required mutable String href;
 }

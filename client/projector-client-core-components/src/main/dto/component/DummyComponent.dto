@@ -21,7 +21,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoDummyComponent extends DtoComponent {
+class DtoDummyComponent extends DtoComponent implementation "../component/DummyComponent":DummyComponent {
 	String text;
 	event click(int clickCount);
 	command setText(String text);

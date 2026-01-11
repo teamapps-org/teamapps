@@ -21,7 +21,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoLinkButton extends DtoComponent {
+class DtoLinkButton extends DtoComponent implementation "../component/LinkButton":LinkButton {
 	String text;
 	String url; // null = still render as link but do not open a page
 	LinkTarget target;

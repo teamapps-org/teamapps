@@ -21,6 +21,6 @@ package "projector-stylesheet":org.teamapps.projector.stylesheet;
 
 import org.teamapps.projector.clientobject.DtoClientObject;
 
-class DtoInlineStyleSheet extends DtoClientObject {
+class DtoInlineStyleSheet extends DtoClientObject implementation "../InlineStyleSheet":InlineStyleSheet {
     required mutable String styleSheet;
 }

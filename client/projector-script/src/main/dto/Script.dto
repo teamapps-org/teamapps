@@ -21,13 +21,13 @@ package "projector-script":org.teamapps.projector.script;
 
 import org.teamapps.projector.clientobject.DtoClientObject;
 
-class DtoStringScript extends DtoClientObject {
+class DtoStringScript extends DtoClientObject implementation "../StringScript":StringScript {
     required String script;
 
     command invoke(String name, List<Object> parameters);
 }
 
-class DtoUrlScript extends DtoClientObject {
+class DtoUrlScript extends DtoClientObject implementation "../UrlScript":UrlScript  {
     required String url;
 
     command invoke(String name, List<Object> parameters);

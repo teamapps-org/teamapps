@@ -22,7 +22,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoCheckBox extends DtoAbstractField {
+class DtoCheckBox extends DtoAbstractField implementation "../component/field/CheckBox":CheckBox {
 	String caption; // displayed on the right side of the checkbox
 	String backgroundColor;
 	String checkColor;

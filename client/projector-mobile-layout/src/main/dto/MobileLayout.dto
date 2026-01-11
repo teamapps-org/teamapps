@@ -4,7 +4,7 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.animation.PageTransition;
 import org.teamapps.projector.component.core.toolbar.DtoToolbar;
 
-class DtoMobileLayout extends DtoComponent {
+class DtoMobileLayout extends DtoComponent implementation "../MobileLayout":MobileLayout {
 	DtoToolbar* toolbar;
 	DtoComponent* initialView;
 	DtoNavigationBar* navigationBar;

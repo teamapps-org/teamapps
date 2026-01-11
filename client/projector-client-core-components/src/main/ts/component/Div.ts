@@ -36,11 +36,11 @@ export class Div extends AbstractComponent<DtoDiv> implements DtoDivCommandHandl
 		}
 	}
 
-	setContent(content: unknown): any {
+	setContent(content: Component | null): any {
 		if (content == null) {
 			this.$div.innerHTML = '';
 		} else {
-			this.$div.appendChild((content as Component).getMainElement())
+			this.$div.appendChild(content.getMainElement())
 		}
 	}
 

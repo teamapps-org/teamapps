@@ -22,7 +22,7 @@ package "projector-progress-display":org.teamapps.projector.component.progress;
 import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.notification.NotificationPosition;
 
-class DtoMultiProgressDisplay extends DtoComponent {
+class DtoMultiProgressDisplay extends DtoComponent implementation "../MultiProgressDisplay":MultiProgressDisplay {
     required NotificationPosition position;
 
     command open(long timeout);

@@ -4,7 +4,7 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.template.DtoTemplate;
 import org.teamapps.projector.record.DtoIdentifiableClientRecord;
 
-class DtoTree extends DtoComponent {
+class DtoTree extends DtoComponent implementation "../Tree":Tree {
 	List<DtoTreeRecord> initialData; //if available, use this as data source
 
 	mutable boolean expandersVisible;

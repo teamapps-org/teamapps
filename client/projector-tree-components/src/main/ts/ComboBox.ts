@@ -121,8 +121,8 @@ export class ComboBox extends AbstractField<DtoComboBox, DtoComboBoxTreeRecord> 
 		}
 	}
 
-	setToolButtons(toolButtons: unknown[]): any {
-		this.trivialComboBox.setToolButtons((toolButtons as ToolButton[]) ?? []);
+	setToolButtons(toolButtons: ToolButton[] | null): any {
+		this.trivialComboBox.setToolButtons(toolButtons ?? []);
 	}
 
 	private createTextToEntryFunction(freeTextEnabled: boolean) {

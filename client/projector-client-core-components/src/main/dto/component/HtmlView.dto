@@ -21,7 +21,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 
 import org.teamapps.projector.component.DtoComponent;
 
-class DtoHtmlView extends DtoComponent {
+class DtoHtmlView extends DtoComponent implementation "../component/HtmlView":HtmlView {
 	String html;
 
 	Dictionary<List<DtoComponent*>> componentsByContainerElementSelector;

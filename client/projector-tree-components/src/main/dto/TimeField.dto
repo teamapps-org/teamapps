@@ -23,7 +23,7 @@ import org.teamapps.projector.component.DtoComponent;
 import org.teamapps.projector.component.field.DtoAbstractField;
 import org.teamapps.projector.session.config.DtoDateTimeFormatDescriptor;
 
-abstract class DtoAbstractTimeField extends DtoAbstractField {
+abstract class DtoAbstractTimeField extends DtoAbstractField implementation "../AbstractTimeField":AbstractTimeField {
     boolean showDropDownButton;
     boolean clearButtonEnabled;
     String locale;
@@ -38,5 +38,5 @@ abstract class DtoAbstractTimeField extends DtoAbstractField {
     event textInput(String enteredString);
 }
                             
-class DtoLocalTimeField extends DtoAbstractTimeField {
+class DtoLocalTimeField extends DtoAbstractTimeField implementation "../LocalTimeField":LocalTimeField  {
 }

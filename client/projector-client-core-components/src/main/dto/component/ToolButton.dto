@@ -22,7 +22,7 @@ package "projector-client-core-components":org.teamapps.projector.component.core
 import org.teamapps.projector.component.DtoComponent;
 
 
-class DtoToolButton extends DtoComponent {
+class DtoToolButton extends DtoComponent implementation "../component/ToolButton":ToolButton {
 	mutable String icon;
 	mutable Integer iconSize; // if null, default (defined by css)
     mutable String caption;

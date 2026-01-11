@@ -27,7 +27,7 @@ import org.teamapps.projector.format.DtoSpacing;
 import org.teamapps.projector.format.AlignItems;
 import org.teamapps.projector.format.JustifyContent;
 
-class DtoGridForm extends DtoComponent {
+class DtoGridForm extends DtoComponent implementation "../GridForm":GridForm {
 	required List<DtoComponent*> fields;
 	required List<DtoFormLayoutPolicy> layoutPolicies;
 

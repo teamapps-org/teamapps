@@ -143,8 +143,8 @@ export class Tree extends AbstractComponent<DtoTree> implements DtoTreeCommandHa
 		nodesToBeAdded.forEach(node => this.trivialTree.addOrUpdateNode(node.parentId, node, false));
 	}
 
-	setContextMenuContent(requestId: number, component: unknown): void {
-		this.contextMenu.setContent(component as Component, requestId);
+	setContextMenuContent(requestId: number, component: Component | null): void {
+		this.contextMenu.setContent(component, requestId);
 	}
 
 	closeContextMenu(requestId: number): void {
