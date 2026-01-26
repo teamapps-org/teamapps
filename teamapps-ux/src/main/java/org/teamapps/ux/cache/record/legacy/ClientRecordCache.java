@@ -113,7 +113,10 @@ public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientReco
 
 		return new CacheManipulationHandle<>(new ArrayList<>(uiRecordsByRecord.values()),
 				() -> {
-					removeEldestEntries(this.recordsByClientId, Integer.MAX_VALUE, (id, record) -> purgeDecider.test(record, id));
+					removeEldestEntries(this.recordsByClientId, Integer.MAX_VALUE, (id, record) -> {
+						return !newRecords.contains(record) // don't purge the new records!
+								&& purgeDecider.test(record, id);
+					});
 					this.recordsByClientId.putAll(newRecordsByClientId);
 					this.unacknowledgedRecordsByClientId.keySet().removeAll(newRecordsByClientId.keySet());
 				});
