@@ -120,12 +120,12 @@
                             </descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
                             <finalName>teamapps-client</finalName>
+                            <attach>false</attach>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.1.0</version>
                 <executions>
@@ -141,16 +141,33 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>copy-zip-to-resources</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.build.outputDirectory}">
+                                    <fileset dir="${project.build.directory}">
+                                        <include name="teamapps-client.zip*" />
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
             </plugin>
         </plugins>
 
         <resources>
             <resource>
-                <directory>target</directory>
-                <includes>
-                    <include>teamapps-client*.zip*</include>
-                </includes>
+                <directory>src/main/resources</directory>
             </resource>
         </resources>
     </build>
