@@ -60,6 +60,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
 			PdfViewer pdfViewer = new PdfViewer();
 			pdfViewer.setPadding(10);
+			pdfViewer.setPageSpacing(8); // ~0.5rem gap between pages
 			pdfViewer.setShowDevTools(true);
 			pdfViewer.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
 			pdfViewer.setBackgroundColor("oklch(0.74 0.1 218.65)");
