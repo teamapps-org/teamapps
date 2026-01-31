@@ -60,6 +60,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $canvasContainer: HTMLDivElement;
     private $pagesContainer: HTMLDivElement;
     private $styleTag: HTMLElement;
+    // Monotonic render token to ignore stale async renders when view mode changes.
+    private renderRequestId = 0;
 
     // Dev/Helper elements
     private $devToolbar: HTMLElement;
@@ -319,11 +321,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      */
     private async renderPdfDocument() {
         this.$canvasContainer.style.padding = `${this.config.padding}px`;
+        const requestId = ++this.renderRequestId;
 
         if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
-            await this.renderPdfContinuousMode();
+            await this.renderPdfContinuousMode(requestId);
         } else {
-            await this.renderPdfSinglePageMode();
+            await this.renderPdfSinglePageMode(requestId);
         }
     }
 
@@ -332,8 +335,19 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      * https://mozilla.github.io/pdf.js/examples/#:~:text=page*%20here%0A%7D)%3B-,Rendering%20the%20Page,-Each%20PDF%20page
      * @private
      */
-    private async renderPdfSinglePageMode() {
+    private async renderPdfSinglePageMode(requestId: number) {
+        if (requestId !== this.renderRequestId) {
+            return;
+        }
+
+        // Ensure the single-page canvas is in the DOM (continuous mode replaces it)
+        this.$pagesContainer.innerHTML = '';
+        this.$pagesContainer.appendChild(this.$canvas);
+
         const page = await this.pdfDocument.getPage(this.currentPageNumber);
+        if (requestId !== this.renderRequestId) {
+            return;
+        }
         const {scale, viewport: pdfViewport} = this.calculateZoomScale(page);
         const hiDPIScale = window.devicePixelRatio || 1;
 
@@ -367,7 +381,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
     }
 
-    private async renderPdfContinuousMode() {
+    private async renderPdfContinuousMode(requestId: number) {
+        if (requestId !== this.renderRequestId) {
+            return;
+        }
+
         if (this.maxPageNumber > 5) {
             console.warn(`PdfViewer: CONTINUOUS mode with ${this.maxPageNumber} pages may impact performance. Consider using SINGLE_PAGE mode.`);
         }
@@ -379,6 +397,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         $pagesContainer.innerHTML = '';
 
         for (let pageNum = 1; pageNum <= this.maxPageNumber; pageNum++) {
+            if (requestId !== this.renderRequestId) {
+                return;
+            }
             const page = await this.pdfDocument.getPage(pageNum);
             const viewport = page.getViewport({scale});
             const hiDPIScale = window.devicePixelRatio || 1;

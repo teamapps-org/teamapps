@@ -90,6 +90,7 @@ Preparation:
 - The buttons in class `toolbar-button-group` are controlled by the server, written in `teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`.
 - The buttons in class `dev-toolbar` are inside the component in `teamapps-client/ts/modules/UiPdfViewer.ts`.
 - Do not touch untracked files. Never commit them without approval. Only commit already tracked files without approval.
+- When committing, use prefix: UiPdfViewer:
 
 ## Compile the DTO again 
 
