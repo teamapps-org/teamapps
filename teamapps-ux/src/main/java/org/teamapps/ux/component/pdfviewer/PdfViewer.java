@@ -15,6 +15,8 @@ public class PdfViewer extends AbstractComponent {
     protected int padding = 0;
     protected int pageSpacing = 5;
     protected float zoomFactor = 1f;
+    protected int currentPage = 1;
+    protected int maxPageNumber = 0;
     protected UiBorder pageBorder;
     protected UiShadow pageShadow;
     protected String backgroundColor;
@@ -54,11 +56,13 @@ public class PdfViewer extends AbstractComponent {
         switch (event.getUiEventType()) {
             case UI_PDF_VIEWER_PDF_INITIALIZED: {
                 UiPdfViewer.PdfInitializedEvent initEvent = (UiPdfViewer.PdfInitializedEvent) event;
+                this.maxPageNumber = initEvent.getNumberOfPages();
                 this.onPdfInitialized.fire(initEvent);
                 break;
             }
             case UI_PDF_VIEWER_ZOOM_FACTOR_AUTO_CHANGED: {
                 UiPdfViewer.ZoomFactorAutoChangedEvent zoomChangedEvent = (UiPdfViewer.ZoomFactorAutoChangedEvent) event;
+                this.zoomFactor = zoomChangedEvent.getZoomFactor();
                 this.onZoomFactorAutoChanged.fire(zoomChangedEvent);
                 break;
             }
@@ -71,6 +75,7 @@ public class PdfViewer extends AbstractComponent {
 
     public void setUrl(String url) {
         this.url = url;
+        this.currentPage = 1;
         queueCommandIfRendered(() -> new UiPdfViewer.SetUrlCommand(getId(), url));
     }
 
@@ -87,14 +92,49 @@ public class PdfViewer extends AbstractComponent {
         return viewMode;
     }
 
-    public void setViewMode(UiPdfViewMode viewMode) {
-        this.viewMode = viewMode;
-        queueCommandIfRendered(() -> new UiPdfViewer.SetViewModeCommand(getId(), viewMode));
-    }
+	public void setViewMode(UiPdfViewMode viewMode) {
+		this.viewMode = viewMode;
+		queueCommandIfRendered(() -> new UiPdfViewer.SetViewModeCommand(getId(), viewMode));
+	}
 
-    public int getPadding() {
-        return padding;
-    }
+	public void showPage(int page) {
+		this.currentPage = page;
+		queueCommandIfRendered(() -> new UiPdfViewer.ShowPageCommand(getId(), page));
+	}
+
+	public void nextPage() {
+		if (maxPageNumber > 0 && currentPage >= maxPageNumber) {
+			return;
+		}
+		showPage(currentPage + 1);
+	}
+
+	public void previousPage() {
+		if (currentPage <= 1) {
+			return;
+		}
+		showPage(currentPage - 1);
+	}
+
+	public void zoomIn() {
+		setZoomFactor(zoomFactor + 0.1f);
+	}
+
+	public void zoomOut() {
+		setZoomFactor(Math.max(0.1f, zoomFactor - 0.1f));
+	}
+
+	public void zoomToWidth() {
+		setZoomMode(UiPdfZoomMode.TO_WIDTH);
+	}
+
+	public void zoomToHeight() {
+		setZoomMode(UiPdfZoomMode.TO_HEIGHT);
+	}
+
+	public int getPadding() {
+		return padding;
+	 }
 
     public void setPadding(int padding) {
         this.padding = padding;
