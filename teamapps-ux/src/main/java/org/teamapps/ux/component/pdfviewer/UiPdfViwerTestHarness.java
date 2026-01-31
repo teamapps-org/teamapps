@@ -35,7 +35,7 @@ public class UiPdfViwerTestHarness extends Panel {
 		PdfViewer pdfViewer = new PdfViewer();
 		pdfViewer.setPadding(10);
 		pdfViewer.setPageSpacing(8);
-		pdfViewer.setShowDevTools(true);
+		pdfViewer.setShowDevTools(false);
 		pdfViewer.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
 		pdfViewer.setBackgroundColor("oklch(0.74 0.1 218.65)");
 		pdfViewer.setBorderColor("#ff0000");
@@ -46,6 +46,12 @@ public class UiPdfViwerTestHarness extends Panel {
 		ToolbarButton showPdfButton = buttonGroup.addButton(ToolbarButton.create(null, "Show PDF", "Show the PDF document"));
 		ToolbarButton continuousModeButton = buttonGroup.addButton(ToolbarButton.create(null, "Continuous Mode", "Switch to continuous scrolling mode"));
 		ToolbarButton singlePageModeButton = buttonGroup.addButton(ToolbarButton.create(null, "Single Page Mode", "Switch to single page mode"));
+		ToolbarButton decreasePageButton = buttonGroup.addButton(ToolbarButton.create(null, "Decrease Page", "Show previous page"));
+		ToolbarButton increasePageButton = buttonGroup.addButton(ToolbarButton.create(null, "Increase Page", "Show next page"));
+		ToolbarButton zoomInButton = buttonGroup.addButton(ToolbarButton.create(null, "Zoom in", "Increase zoom factor"));
+		ToolbarButton zoomOutButton = buttonGroup.addButton(ToolbarButton.create(null, "Zoom out", "Decrease zoom factor"));
+		ToolbarButton zoomToWidthButton = buttonGroup.addButton(ToolbarButton.create(null, "Zoom to width", "Auto-zoom to container width"));
+		ToolbarButton zoomToHeightButton = buttonGroup.addButton(ToolbarButton.create(null, "Zoom to height", "Auto-zoom to container height"));
 
 		String testPdfLink = getSessionContext().createResourceLink(new ClassPathResource("test.pdf", "application/pdf"));
 
@@ -61,6 +67,30 @@ public class UiPdfViwerTestHarness extends Panel {
 		singlePageModeButton.onClick.addListener(() -> {
 			pdfViewer.setViewMode(UiPdfViewMode.SINGLE_PAGE);
 			System.out.println("Switched to SINGLE_PAGE mode");
+		});
+
+		decreasePageButton.onClick.addListener(() -> {
+			pdfViewer.previousPage();
+		});
+
+		increasePageButton.onClick.addListener(() -> {
+			pdfViewer.nextPage();
+		});
+
+		zoomInButton.onClick.addListener(() -> {
+			pdfViewer.zoomIn();
+		});
+
+		zoomOutButton.onClick.addListener(() -> {
+			pdfViewer.zoomOut();
+		});
+
+		zoomToWidthButton.onClick.addListener(() -> {
+			pdfViewer.zoomToWidth();
+		});
+
+		zoomToHeightButton.onClick.addListener(() -> {
+			pdfViewer.zoomToHeight();
 		});
 
 		pdfViewer.onPdfInitialized.addListener((initEvent) -> {
