@@ -83,6 +83,14 @@ Preparation:
 4. Run `./start-dev-server.sh 8082` (because the Jetty starts at that port)
 5. Goto http://localhost:9000 to see/debug the component
 
+## Instructions for agents
+
+- Use http://localhost:9000/ to access the dev server.
+- Restore a "blank slate" for testing by reloading the page.
+- The buttons in class `toolbar-button-group` are controlled by the server, written in `teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`.
+- The buttons in class `dev-toolbar` are inside the component in `teamapps-client/ts/modules/UiPdfViewer.ts`.
+- Do not touch untracked files. Never commit them without approval. Only commit already tracked files without approval.
+
 ## Compile the DTO again 
 
 - run clean + install for the Teamapps UX Subpackage
