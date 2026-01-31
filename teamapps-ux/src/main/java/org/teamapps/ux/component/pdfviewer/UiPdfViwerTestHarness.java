@@ -21,6 +21,7 @@ package org.teamapps.ux.component.pdfviewer;
 
 import org.teamapps.dto.UiPdfViewMode;
 import org.teamapps.dto.UiPdfZoomMode;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
@@ -43,15 +44,15 @@ public class UiPdfViwerTestHarness extends Panel {
 		Toolbar toolbar = new Toolbar();
 		ToolbarButtonGroup buttonGroup = toolbar.addButtonGroup(new ToolbarButtonGroup());
 
-		ToolbarButton showPdfButton = buttonGroup.addButton(ToolbarButton.create(null, "Show PDF", "Show the PDF document"));
-		ToolbarButton continuousModeButton = buttonGroup.addButton(ToolbarButton.create(null, "Continuous Mode", "Switch to continuous scrolling mode"));
-		ToolbarButton singlePageModeButton = buttonGroup.addButton(ToolbarButton.create(null, "Single Page Mode", "Switch to single page mode"));
-		ToolbarButton decreasePageButton = buttonGroup.addButton(ToolbarButton.create(null, "Decrease Page", "Show previous page"));
-		ToolbarButton increasePageButton = buttonGroup.addButton(ToolbarButton.create(null, "Increase Page", "Show next page"));
-		ToolbarButton zoomInButton = buttonGroup.addButton(ToolbarButton.create(null, "Zoom in", "Increase zoom factor"));
-		ToolbarButton zoomOutButton = buttonGroup.addButton(ToolbarButton.create(null, "Zoom out", "Decrease zoom factor"));
-		ToolbarButton zoomToWidthButton = buttonGroup.addButton(ToolbarButton.create(null, "Zoom to width", "Auto-zoom to container width"));
-		ToolbarButton zoomToHeightButton = buttonGroup.addButton(ToolbarButton.create(null, "Zoom to height", "Auto-zoom to container height"));
+		ToolbarButton showPdfButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.PICTURE_AS_PDF, "Show PDF", "Show the PDF document"));
+		ToolbarButton continuousModeButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.VIEW_STREAM, "Continuous Mode", "Switch to continuous scrolling mode"));
+		ToolbarButton singlePageModeButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.VIEW_DAY, "Single Page Mode", "Switch to single page mode"));
+		ToolbarButton decreasePageButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.NAVIGATE_BEFORE, "Decrease Page", "Show previous page"));
+		ToolbarButton increasePageButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.NAVIGATE_NEXT, "Increase Page", "Show next page"));
+		ToolbarButton zoomInButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.ZOOM_IN, "Zoom in", "Increase zoom factor"));
+		ToolbarButton zoomOutButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.ZOOM_OUT, "Zoom out", "Decrease zoom factor"));
+		ToolbarButton zoomToWidthButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.BORDER_HORIZONTAL, "Zoom to width", "Auto-zoom to container width"));
+		ToolbarButton zoomToHeightButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.BORDER_VERTICAL, "Zoom to height", "Auto-zoom to container height"));
 
 		String testPdfLink = getSessionContext().createResourceLink(new ClassPathResource("test.pdf", "application/pdf"));
 
