@@ -58,6 +58,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $main: HTMLDivElement;
     private $canvas: HTMLCanvasElement;
     private $canvasContainer: HTMLDivElement;
+    private $pagesContainer: HTMLDivElement;
     private $styleTag: HTMLElement;
 
     // Dev/Helper elements
@@ -110,7 +111,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                 <button id="zoomToHeight">Zoom to height</button>
             </div>
              <div class="canvas-container ${this.uuidClass}">
-                <div id="pagesContainer">
+                <div id="pagesContainer" class="${this.uuidClass}">
                     <canvas class="${this.uuidClass}"></canvas>
                 </div>
             </div>
@@ -148,7 +149,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     display: flex;
                     flex-flow: column nowrap;
                     align-items: center;
-                    gap: ${this.config.pageSpacing}px;
                 }
                 div.${this.uuidClass}#dev-toolbar {
                     display: flex;
@@ -161,6 +161,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         </div>`);
         this.$canvas = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
         this.$canvasContainer = this.$main.querySelector<HTMLDivElement>(`div.canvas-container.${this.uuidClass}`);
+        this.$pagesContainer = this.$main.querySelector<HTMLDivElement>(`#pagesContainer`);
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
 
         // Dev Helper UI
@@ -168,6 +169,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.renderDevToolsIfEnabled();
 
         this.renderCanvasContainer();
+        this.updatePageSpacing();
 
         // Load the pdf by setting it's url
         setTimeout(async () => {
@@ -248,6 +250,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (typeof borderColor === "string" && borderColor.length > 0) {
             this.$canvasContainer.style.borderColor = borderColor;
         }
+    }
+
+    public updatePageSpacing() {
+        this.$pagesContainer.style.gap = `${this.config.pageSpacing}px`;
     }
 
     // Core Class Logic
@@ -490,6 +496,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      */
     public async setPageSpacing(pageSpacing: number) {
         this.config.pageSpacing = pageSpacing;
+        this.updatePageSpacing();
         await this.renderPdfDocument();
     }
 
