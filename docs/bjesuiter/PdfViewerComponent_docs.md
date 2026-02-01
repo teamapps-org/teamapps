@@ -89,6 +89,8 @@ Preparation:
 - Restore a "blank slate" for testing by reloading the page.
 - The buttons in class `toolbar-button-group` are controlled by the server, written in `teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`.
 - The buttons in class `dev-toolbar` are inside the component in `teamapps-client/ts/modules/UiPdfViewer.ts`.
+- Do not control the Jetty server. Leave it to the human and IntelliJ IDEA.
+- If you change something in the PDF test harness, notify the human to restart Jetty.
 - Do not touch untracked files. Never commit them without approval. Only commit already tracked files without approval.
 - When committing, use prefix: UiPdfViewer:
 
@@ -99,6 +101,8 @@ This mirrors the IntelliJ run config:
 - **Module classpath:** `teamapps-server-jetty-embedded`
 - **JDK:** 21
 - **Working dir:** repo root
+
+**Agent note:** Do not start/stop/restart Jetty from CLI. Leave Jetty control to the human in IntelliJ IDEA. If you change anything in the PDF test harness, notify the human to restart Jetty.
 
 **Start (background, via script):**
 ```bash
