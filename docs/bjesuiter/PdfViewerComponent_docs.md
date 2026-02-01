@@ -80,7 +80,7 @@ Preparation:
 1. Run the Testfile (`teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`) via IntelliJ (Green Arrow in UI)
 2. Goto teamapps-client in a shell
 3. Run yarn install 
-4. Run `./start-dev-server.sh 8082` (because the Jetty starts at that port)
+4. Start the frontend dev server with bgproc (because the Jetty starts at that port)
 5. Goto http://localhost:9000 to see/debug the component
 
 ## Instructions for agents
@@ -126,6 +126,35 @@ rm -f /tmp/teamapps-jetty.pid
 **Tail logs:**
 ```bash
 tail -f /tmp/teamapps-jetty.log
+```
+
+### Start Frontend Dev Server (CLI, bgproc)
+
+Script details:
+- **Script path:** `/Users/bjesuiter/Develop/teamapps-org/teamapps/teamapps-client/start-dev-server.sh`
+- **Script options:** `8082`
+- **Working dir:** `/Users/bjesuiter/Develop/teamapps-org/teamapps/teamapps-client`
+- **Execute with:** `/usr/bin/env fish`
+- **Note:** Frontend dev server runs on port `9000` and connects to port `8082` internally (the script option above).
+
+**Start (background):**
+```bash
+bgproc start -n teamapps-frontend -- /usr/bin/env fish /Users/bjesuiter/Develop/teamapps-org/teamapps/teamapps-client/start-dev-server.sh 8082
+```
+
+**Status:**
+```bash
+bgproc status -n teamapps-frontend
+```
+
+**Logs:**
+```bash
+bgproc logs -n teamapps-frontend
+```
+
+**Stop:**
+```bash
+bgproc stop -n teamapps-frontend
 ```
 
 ## Compile the DTO again 
