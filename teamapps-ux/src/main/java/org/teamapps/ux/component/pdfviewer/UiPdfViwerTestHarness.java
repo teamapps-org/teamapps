@@ -22,11 +22,18 @@ package org.teamapps.ux.component.pdfviewer;
 import org.teamapps.dto.UiPdfViewMode;
 import org.teamapps.dto.UiPdfZoomMode;
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.ux.component.field.SpecialKey;
+import org.teamapps.ux.component.field.TextField;
+import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.resource.ClassPathResource;
+import org.teamapps.ux.resource.InputStreamResource;
+import org.teamapps.ux.resource.Resource;
+
+import java.net.URL;
 
 public class UiPdfViwerTestHarness extends Panel {
 
@@ -54,10 +61,23 @@ public class UiPdfViwerTestHarness extends Panel {
 		ToolbarButton zoomToWidthButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.BORDER_HORIZONTAL, "Zoom to width", "Auto-zoom to container width"));
 		ToolbarButton zoomToHeightButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.BORDER_VERTICAL, "Zoom to height", "Auto-zoom to container height"));
 
+		String defaultPdfUrl = "https://www.princexml.com/samples/wind-in-willows/b-format.pdf";
+		TextField pdfUrlField = new TextField();
+		pdfUrlField.setShowClearButton(true);
+		pdfUrlField.setEmptyText("PDF URL");
+		pdfUrlField.setValue(defaultPdfUrl);
+
 		String testPdfLink = getSessionContext().createResourceLink(new ClassPathResource("test.pdf", "application/pdf"));
 
 		showPdfButton.onClick.addListener(() -> {
-			pdfViewer.setUrl(testPdfLink);
+			String url = pdfUrlField.getValue();
+			pdfViewer.setUrl(resolvePdfUrl(url, testPdfLink));
+		});
+		pdfUrlField.onSpecialKeyPressed.addListener((key) -> {
+			if (key == SpecialKey.ENTER) {
+				String url = pdfUrlField.getValue();
+				pdfViewer.setUrl(resolvePdfUrl(url, testPdfLink));
+			}
 		});
 
 		continuousModeButton.onClick.addListener(() -> {
@@ -102,7 +122,32 @@ public class UiPdfViwerTestHarness extends Panel {
 			System.out.println("Zoom factor changed: " + zoomFactorChangeEvent.getZoomFactor());
 		});
 
+		pdfViewer.setUrl(defaultPdfUrl);
+
 		setToolbar(toolbar);
-		setContent(pdfViewer);
+		VerticalLayout layout = new VerticalLayout();
+		layout.addComponentAutoSize(pdfUrlField);
+		layout.addComponentFillRemaining(pdfViewer);
+		setContent(layout);
+	}
+
+	private String resolvePdfUrl(String url, String fallbackUrl) {
+		if (url == null || url.isBlank()) {
+			return fallbackUrl;
+		}
+		if (url.startsWith("http://") || url.startsWith("https://")) {
+			return getSessionContext().createResourceLink(createPdfProxyResource(url));
+		}
+		return url;
+	}
+
+	private Resource createPdfProxyResource(String url) {
+		return new InputStreamResource(() -> {
+			try {
+				return new URL(url).openStream();
+			} catch (Exception e) {
+				throw new RuntimeException("Failed to open PDF URL: " + url, e);
+			}
+		}, "proxied.pdf").withMimeType("application/pdf");
 	}
 }
