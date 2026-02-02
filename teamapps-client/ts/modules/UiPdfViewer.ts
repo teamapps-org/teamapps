@@ -68,9 +68,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
     // Dev/Helper elements
     private $devToolbar: HTMLElement;
-    private $devCurrentPageNr: HTMLElement;
-    private $devMaxPageNr: HTMLElement;
-    private $devCurrentZoom: HTMLElement;
+    private $devVirtualDelayCheckbox: HTMLInputElement;
     private devToolsInitialized: boolean = false;
 
     // UI / internal state
@@ -81,6 +79,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private virtualizer: Virtualizer<HTMLDivElement, HTMLCanvasElement> = null;
     private $virtualInner: HTMLDivElement = null;
     private virtualizerCleanup: (() => void) = null;
+    private virtualDelayEnabled = false;
+    private readonly virtualDelayMs = 2000;
+    private virtualPageRenderTimeouts = new Map<number, number>();
+    private readonly virtualPlaceholderText = "Loading page...";
     private readonly virtualOverscan = 2;
     private virtualizerScale: number = null;
     private virtualizerHiDpiScale: number = 1;
@@ -110,22 +112,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.config = config;
         this.$main = parseHtml(`
         <div class="${this.uuidClass}">
-            <h1 class="${this.uuidClass}">PDF Viewer</h1>
             <div id="dev-toolbar" class="${this.uuidClass}">
-                <button id="decrease">Decrease Page </button>
-                <div>
-                  <span id="currentPageNr"></span>
-                  <span>/</span>
-                  <span id="maxPageNr"></span>
-                </div>
-                <button id="increase">Increase Page </button>
-                <button id="zoomIn">Zoom in</button>
-                <div>
-                    <span id="currentZoom"></span>
-                </div>
-                <button id="zoomOut">Zoom out</button>
-                <button id="zoomToWidth">Zoom to width</button>
-                <button id="zoomToHeight">Zoom to height</button>
+                <label>
+                    <input type="checkbox" id="virtualDelay" />
+                    Virtual scroll delay (2000ms)
+                </label>
             </div>
              <div class="canvas-container ${this.uuidClass}">
                 <div id="pagesContainer" class="${this.uuidClass}">
@@ -218,37 +209,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
 
       // else: init dev tools!
-        this.$devCurrentPageNr = this.$devToolbar.querySelector<HTMLElement>(`#currentPageNr`);
-        this.$devMaxPageNr = this.$devToolbar.querySelector<HTMLElement>(`#maxPageNr`);
-        this.$devCurrentZoom = this.$devToolbar.querySelector<HTMLElement>(`#currentZoom`);
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#increase`)
-            .addEventListener("click", async (e) => {
-                await this.showPage(this.currentPageNumber + 1);
-            });
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#decrease`)
-            .addEventListener("click", async (e) => {
-                await this.showPage(this.currentPageNumber - 1);
-            });
-        // @bjesuiter: this zoomIn button does not trigger this.onZoomFactorAutoChanged,
-        // since it simulates zooming in via server command, so the server already knows the new zoom factor
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomIn`)
-            .addEventListener("click", async (e) => {
-                await this.setZoomFactor(this.config.zoomFactor + 0.1);
-            });
-        // @bjesuiter: this zoomOut button does not trigger this.onZoomFactorAutoChanged,
-        // since it simulates zooming in via server command, so the server already knows the new zoom factor
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomOut`)
-            .addEventListener("click", async (e) => {
-                await this.setZoomFactor(this.config.zoomFactor - 0.1);
-            });
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomToWidth`)
-            .addEventListener("click", async (e) => {
-                await this.setZoomMode(UiPdfZoomMode.TO_WIDTH);
-            });
-        this.$devToolbar.querySelector<HTMLButtonElement>(`button#zoomToHeight`)
-            .addEventListener("click", async (e) => {
-                await this.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
-            });
+        this.$devVirtualDelayCheckbox = this.$devToolbar.querySelector<HTMLInputElement>(`#virtualDelay`);
+        this.$devVirtualDelayCheckbox.addEventListener("change", () => {
+            this.virtualDelayEnabled = this.$devVirtualDelayCheckbox.checked;
+        });
 
         this.devToolsInitialized = true;
     }
@@ -257,10 +221,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (this.isDev()) {
             this.initDevToolsIfUninitialized();
             this.$devToolbar.style.display = "flex";
-            this.$main.querySelector<HTMLElement>(`h1.${this.uuidClass}`).style.display = "block";
         } else {
             this.$devToolbar.style.display = "none";
-            this.$main.querySelector<HTMLElement>(`h1.${this.uuidClass}`).style.display = "none";
         }
     }
 
@@ -405,11 +367,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
         page.render(renderContext);
 
-        // update dev output
-        if (this.isDev()) {
-            this.$devCurrentPageNr.innerText = String(this.currentPageNumber);
-            this.$devCurrentZoom.innerText = String(scale.toFixed(1));
-        }
     }
 
     private async renderPdfContinuousMode(requestId: number) {
@@ -565,6 +522,33 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             wrapper.style.display = "flex";
             wrapper.style.justifyContent = "center";
             wrapper.style.transform = `translateY(${virtualItem.start}px)`;
+            wrapper.style.height = `${Math.max(1, Math.floor(virtualItem.size))}px`;
+
+            const needsPlaceholder = this.virtualDelayEnabled
+                && this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL
+                && this.virtualPageRenderScales.get(pageNumber) !== this.virtualizerScale;
+
+            if (needsPlaceholder) {
+                const placeholder = document.createElement('div');
+                placeholder.className = `${this.uuidClass} virtual-placeholder`;
+                placeholder.style.width = "100%";
+                placeholder.style.maxWidth = "900px";
+                placeholder.style.height = `${Math.max(1, Math.floor(virtualItem.size))}px`;
+                placeholder.style.background = "rgba(255, 255, 255, 0.6)";
+                placeholder.style.border = "1px dashed rgba(0, 0, 0, 0.25)";
+                placeholder.style.boxSizing = "border-box";
+                placeholder.style.display = "flex";
+                placeholder.style.alignItems = "center";
+                placeholder.style.justifyContent = "center";
+                placeholder.style.color = "rgba(0, 0, 0, 0.45)";
+                placeholder.style.fontSize = "0.9rem";
+                placeholder.innerText = this.virtualPlaceholderText;
+                wrapper.appendChild(placeholder);
+                canvas.style.visibility = "hidden";
+            } else {
+                canvas.style.visibility = "visible";
+            }
+
             wrapper.appendChild(canvas);
             this.$virtualInner.appendChild(wrapper);
         }
@@ -605,7 +589,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             if (inFlight && inFlight.scale === this.virtualizerScale) {
                 continue;
             }
-            void this.renderVirtualPage(pageNumber, canvas, requestId);
+            this.scheduleVirtualPageRender(pageNumber, canvas, requestId);
         }
     }
 
@@ -651,12 +635,33 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             }
             this.virtualPageRenderTasks.delete(pageNumber);
             this.virtualPageRenderScales.set(pageNumber, this.virtualizerScale);
+            canvas.style.visibility = "visible";
+            const placeholder = canvas.parentElement?.querySelector(`.${this.uuidClass}.virtual-placeholder`);
+            if (placeholder) {
+                placeholder.remove();
+            }
             if (this.virtualizer) {
                 this.virtualizer.measureElement(canvas);
             }
         } catch (error) {
             this.virtualPageRenderTasks.delete(pageNumber);
         }
+    }
+
+    private scheduleVirtualPageRender(pageNumber: number, canvas: HTMLCanvasElement, requestId: number) {
+        if (this.virtualDelayEnabled && this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+            const existingTimeout = this.virtualPageRenderTimeouts.get(pageNumber);
+            if (existingTimeout != null) {
+                window.clearTimeout(existingTimeout);
+            }
+            const timeoutId = window.setTimeout(() => {
+                this.virtualPageRenderTimeouts.delete(pageNumber);
+                void this.renderVirtualPage(pageNumber, canvas, requestId);
+            }, this.virtualDelayMs);
+            this.virtualPageRenderTimeouts.set(pageNumber, timeoutId);
+            return;
+        }
+        void this.renderVirtualPage(pageNumber, canvas, requestId);
     }
 
     private applyPagesContainerLayoutForMode(viewMode: UiPdfViewMode) {
@@ -695,6 +700,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             }
         });
         this.virtualPageRenderTasks.clear();
+        this.clearVirtualRenderTimeouts();
         this.virtualizerScale = null;
         this.virtualizerPageCount = null;
         this.virtualizerPageSpacing = null;
@@ -707,6 +713,14 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             }
         });
         this.virtualPageRenderTasks.clear();
+        this.clearVirtualRenderTimeouts();
+    }
+
+    private clearVirtualRenderTimeouts() {
+        this.virtualPageRenderTimeouts.forEach((timeoutId) => {
+            window.clearTimeout(timeoutId);
+        });
+        this.virtualPageRenderTimeouts.clear();
     }
 
     private applyPageBorderToCanvas(canvas: HTMLCanvasElement) {
@@ -737,9 +751,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.pdfDocument = await pdfjsLib.getDocument(url).promise;
 
         this.maxPageNumber = this.pdfDocument.numPages;
-        if (this.isDev()) {
-            this.$devMaxPageNr.innerText = `${this.maxPageNumber}`;
-        }
 
         await this.renderPdfDocument();
 
