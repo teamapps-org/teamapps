@@ -36,6 +36,8 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {floorToPrecision} from "./util/precise-float-math";
 import {UiPdfZoomMode} from "../generated/UiPdfZoomMode";
+import {Virtualizer, elementScroll, observeElementOffset, observeElementRect} from "@tanstack/virtual-core";
+import type {VirtualItem} from "@tanstack/virtual-core";
 
 // @ts-ignore
 // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
@@ -62,6 +64,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $styleTag: HTMLElement;
     // Monotonic render token to ignore stale async renders when view mode changes.
     private renderRequestId = 0;
+    private lastViewMode: UiPdfViewMode = null;
 
     // Dev/Helper elements
     private $devToolbar: HTMLElement;
@@ -75,6 +78,18 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private pdfDocument: PDFDocumentProxy;
     private currentPageNumber: number = 1;
     private maxPageNumber: number = 0;
+    private virtualizer: Virtualizer<HTMLDivElement, HTMLCanvasElement> = null;
+    private $virtualInner: HTMLDivElement = null;
+    private virtualizerCleanup: (() => void) = null;
+    private readonly virtualOverscan = 2;
+    private virtualizerScale: number = null;
+    private virtualizerHiDpiScale: number = 1;
+    private virtualEstimatePageHeight: number = 0;
+    private virtualizerPageCount: number = null;
+    private virtualizerPageSpacing: number = null;
+    private virtualPageCanvases = new Map<number, HTMLCanvasElement>();
+    private virtualPageRenderTasks = new Map<number, { scale: number, task: any }>();
+    private virtualPageRenderScales = new Map<number, number>();
 
     // Events for the server
     // ---------------------
@@ -330,7 +345,14 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$canvasContainer.style.padding = `${this.config.padding}px`;
         const requestId = ++this.renderRequestId;
 
-        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
+        if (this.lastViewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL && this.config.viewMode !== UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+            this.teardownContinuousVirtualMode();
+        }
+        this.lastViewMode = this.config.viewMode;
+
+        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+            await this.renderPdfContinuousVirtualMode(requestId);
+        } else if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
             await this.renderPdfContinuousMode(requestId);
         } else {
             await this.renderPdfSinglePageMode(requestId);
@@ -346,6 +368,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (requestId !== this.renderRequestId) {
             return;
         }
+
+        this.applyPagesContainerLayoutForMode(UiPdfViewMode.SINGLE_PAGE);
 
         // Ensure the single-page canvas is in the DOM (continuous mode replaces it)
         this.$pagesContainer.innerHTML = '';
@@ -393,6 +417,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             return;
         }
 
+        this.applyPagesContainerLayoutForMode(UiPdfViewMode.CONTINUOUS);
+
         if (this.maxPageNumber > 5) {
             console.warn(`PdfViewer: CONTINUOUS mode with ${this.maxPageNumber} pages may impact performance. Consider using SINGLE_PAGE mode.`);
         }
@@ -437,6 +463,250 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             $pagesContainer.appendChild(canvas);
             page.render(renderContext);
         }
+    }
+
+    private async renderPdfContinuousVirtualMode(requestId: number) {
+        if (requestId !== this.renderRequestId) {
+            return;
+        }
+
+        this.applyPagesContainerLayoutForMode(UiPdfViewMode.CONTINUOUS_VIRTUAL);
+
+        const firstPage = await this.pdfDocument.getPage(1);
+        if (requestId !== this.renderRequestId) {
+            return;
+        }
+        const {scale} = this.calculateZoomScale(firstPage);
+        const viewport = firstPage.getViewport({scale});
+        this.virtualEstimatePageHeight = Math.floor(viewport.height);
+        this.virtualizerHiDpiScale = window.devicePixelRatio || 1;
+
+        this.cancelVirtualRenderTasks();
+        this.ensureVirtualInnerContainer();
+        this.ensureVirtualizer(scale);
+        this.virtualizer._willUpdate();
+        this.renderVirtualItems(requestId);
+    }
+
+    private ensureVirtualInnerContainer() {
+        if (!this.$virtualInner) {
+            this.$virtualInner = document.createElement('div');
+            this.$virtualInner.className = `${this.uuidClass} virtual-inner`;
+            this.$virtualInner.style.position = "relative";
+            this.$virtualInner.style.width = "100%";
+        }
+
+        if (this.$virtualInner.parentElement !== this.$pagesContainer) {
+            this.$pagesContainer.innerHTML = '';
+            this.$pagesContainer.appendChild(this.$virtualInner);
+        }
+    }
+
+    private ensureVirtualizer(scale: number) {
+        const previousScale = this.virtualizerScale;
+        const needsNewVirtualizer = !this.virtualizer
+            || previousScale !== scale
+            || this.virtualizerPageCount !== this.maxPageNumber
+            || this.virtualizerPageSpacing !== this.config.pageSpacing;
+
+        this.virtualizerScale = scale;
+        if (needsNewVirtualizer) {
+            if (this.virtualizerCleanup) {
+                this.virtualizerCleanup();
+                this.virtualizerCleanup = null;
+            }
+            this.virtualizer = new Virtualizer({
+                count: this.maxPageNumber,
+                getScrollElement: () => this.$canvasContainer,
+                estimateSize: () => this.getVirtualEstimateSize(),
+                gap: this.config.pageSpacing,
+                overscan: this.virtualOverscan,
+                getItemKey: (index) => index + 1,
+                observeElementRect,
+                observeElementOffset,
+                scrollToFn: elementScroll,
+                onChange: () => this.renderVirtualItems(this.renderRequestId)
+            });
+            this.virtualizerCleanup = this.virtualizer._didMount();
+            this.virtualizerPageCount = this.maxPageNumber;
+            this.virtualizerPageSpacing = this.config.pageSpacing;
+        } else {
+            this.virtualizer.setOptions({
+                ...this.virtualizer.options,
+                count: this.maxPageNumber,
+                gap: this.config.pageSpacing,
+                estimateSize: () => this.getVirtualEstimateSize()
+            });
+        }
+    }
+
+    private getVirtualEstimateSize(): number {
+        return Math.max(1, this.virtualEstimatePageHeight || 1);
+    }
+
+    private renderVirtualItems(requestId: number) {
+        if (requestId !== this.renderRequestId || !this.virtualizer || !this.$virtualInner) {
+            return;
+        }
+
+        const virtualItems = this.virtualizer.getVirtualItems();
+        this.$virtualInner.style.height = `${this.virtualizer.getTotalSize()}px`;
+        this.$virtualInner.innerHTML = '';
+
+        for (const virtualItem of virtualItems) {
+            const pageNumber = virtualItem.index + 1;
+            const canvas = this.getOrCreateVirtualCanvas(pageNumber);
+            const wrapper = document.createElement('div');
+            wrapper.dataset.index = String(virtualItem.index);
+            wrapper.style.position = "absolute";
+            wrapper.style.top = "0";
+            wrapper.style.left = "0";
+            wrapper.style.width = "100%";
+            wrapper.style.display = "flex";
+            wrapper.style.justifyContent = "center";
+            wrapper.style.transform = `translateY(${virtualItem.start}px)`;
+            wrapper.appendChild(canvas);
+            this.$virtualInner.appendChild(wrapper);
+        }
+
+        this.renderVisibleVirtualPages(virtualItems, requestId);
+    }
+
+    private getOrCreateVirtualCanvas(pageNumber: number): HTMLCanvasElement {
+        let canvas = this.virtualPageCanvases.get(pageNumber);
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.className = this.uuidClass;
+            canvas.dataset.index = String(pageNumber - 1);
+            if (this.config.pageBorder) {
+                this.applyPageBorderToCanvas(canvas);
+            }
+            this.virtualPageCanvases.set(pageNumber, canvas);
+        }
+        return canvas;
+    }
+
+    private renderVisibleVirtualPages(virtualItems: VirtualItem[], requestId: number) {
+        if (requestId !== this.renderRequestId) {
+            return;
+        }
+
+        for (const virtualItem of virtualItems) {
+            const pageNumber = virtualItem.index + 1;
+            const canvas = this.virtualPageCanvases.get(pageNumber);
+            if (!canvas) {
+                continue;
+            }
+            const lastScale = this.virtualPageRenderScales.get(pageNumber);
+            if (lastScale === this.virtualizerScale) {
+                continue;
+            }
+            const inFlight = this.virtualPageRenderTasks.get(pageNumber);
+            if (inFlight && inFlight.scale === this.virtualizerScale) {
+                continue;
+            }
+            void this.renderVirtualPage(pageNumber, canvas, requestId);
+        }
+    }
+
+    private async renderVirtualPage(pageNumber: number, canvas: HTMLCanvasElement, requestId: number) {
+        if (requestId !== this.renderRequestId) {
+            return;
+        }
+
+        const page = await this.pdfDocument.getPage(pageNumber);
+        if (requestId !== this.renderRequestId) {
+            return;
+        }
+        const viewport = page.getViewport({scale: this.virtualizerScale});
+        const hiDPIScale = this.virtualizerHiDpiScale;
+        const canvasContext = canvas.getContext('2d');
+
+        canvas.width = Math.floor(viewport.width * hiDPIScale);
+        canvas.height = Math.floor(viewport.height * hiDPIScale);
+        canvas.style.width = Math.floor(viewport.width) + "px";
+        canvas.style.height = Math.floor(viewport.height) + "px";
+
+        const transform = hiDPIScale !== 1 ?
+            [hiDPIScale, 0, 0, hiDPIScale, 0, 0] :
+            null;
+
+        const renderContext = {
+            canvasContext,
+            transform,
+            viewport
+        };
+
+        const existingTask = this.virtualPageRenderTasks.get(pageNumber);
+        if (existingTask && existingTask.task && typeof existingTask.task.cancel === "function") {
+            existingTask.task.cancel();
+        }
+
+        const renderTask = page.render(renderContext);
+        this.virtualPageRenderTasks.set(pageNumber, {scale: this.virtualizerScale, task: renderTask});
+        try {
+            await renderTask.promise;
+            if (requestId !== this.renderRequestId) {
+                return;
+            }
+            this.virtualPageRenderTasks.delete(pageNumber);
+            this.virtualPageRenderScales.set(pageNumber, this.virtualizerScale);
+            if (this.virtualizer) {
+                this.virtualizer.measureElement(canvas);
+            }
+        } catch (error) {
+            this.virtualPageRenderTasks.delete(pageNumber);
+        }
+    }
+
+    private applyPagesContainerLayoutForMode(viewMode: UiPdfViewMode) {
+        if (viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+            this.$pagesContainer.style.display = "block";
+            this.$pagesContainer.style.flexFlow = "";
+            this.$pagesContainer.style.alignItems = "";
+            this.$pagesContainer.style.position = "relative";
+            this.$pagesContainer.style.gap = "";
+        } else {
+            this.$pagesContainer.style.display = "flex";
+            this.$pagesContainer.style.flexFlow = "column nowrap";
+            this.$pagesContainer.style.alignItems = "center";
+            this.$pagesContainer.style.position = "";
+            this.$pagesContainer.style.gap = `${this.config.pageSpacing}px`;
+        }
+    }
+
+    private teardownContinuousVirtualMode() {
+        if (this.virtualizerCleanup) {
+            this.virtualizerCleanup();
+            this.virtualizerCleanup = null;
+        }
+        if (this.virtualizer) {
+            this.virtualizer = null;
+        }
+        if (this.$virtualInner && this.$virtualInner.parentElement) {
+            this.$virtualInner.remove();
+        }
+        this.$virtualInner = null;
+        this.virtualPageCanvases.clear();
+        this.virtualPageRenderScales.clear();
+        this.virtualPageRenderTasks.forEach((task) => {
+            if (task?.task && typeof task.task.cancel === "function") {
+                task.task.cancel();
+            }
+        });
+        this.virtualPageRenderTasks.clear();
+        this.virtualizerScale = null;
+        this.virtualizerPageCount = null;
+        this.virtualizerPageSpacing = null;
+    }
+
+    private cancelVirtualRenderTasks() {
+        this.virtualPageRenderTasks.forEach((task) => {
+            if (task?.task && typeof task.task.cancel === "function") {
+                task.task.cancel();
+            }
+        });
+        this.virtualPageRenderTasks.clear();
     }
 
     private applyPageBorderToCanvas(canvas: HTMLCanvasElement) {
@@ -493,6 +763,15 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     public async showPage(page: number) {
         if (page >= 1 && page <= this.maxPageNumber ) {
             this.currentPageNumber = page;
+            if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+                if (!this.virtualizer) {
+                    await this.renderPdfDocument();
+                }
+                if (this.virtualizer && (this.virtualizer as any).scrollToIndex) {
+                    (this.virtualizer as any).scrollToIndex(page - 1);
+                }
+                return;
+            }
             await this.renderPdfDocument();
         }
     }

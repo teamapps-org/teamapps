@@ -36,7 +36,8 @@ class UiPdfViewer extends UiComponent {
 
 enum UiPdfViewMode {
     SINGLE_PAGE,
-    CONTINUOUS
+    CONTINUOUS,
+	CONTINUOUS_VIRTUAL
 }
 
 enum UiPdfZoomMode {
@@ -46,4 +47,3 @@ enum UiPdfZoomMode {
     TO_WIDTH,
     MANUAL
 }
-
