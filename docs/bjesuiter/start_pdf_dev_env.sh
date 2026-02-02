@@ -2,6 +2,9 @@
 set -euo pipefail
 
 PORT=9000
+XDG_DATA_HOME=/tmp/bgproc-data
+export XDG_DATA_HOME
+mkdir -p "${XDG_DATA_HOME}/bgproc/logs"
 
 bgproc stop -n teamapps-frontend >/dev/null 2>&1 || true
 

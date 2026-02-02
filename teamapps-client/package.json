@@ -89,6 +89,7 @@
     "@fullcalendar/moment-timezone": "4.4.2",
     "@fullcalendar/timegrid": "4.4.2",
     "@popperjs/core": "^2.6.0",
+    "@tanstack/virtual-core": "^3.13.11",
     "@types/jest": "^26.0.22",
     "@types/luxon": "^1.25.0",
     "@types/maplibre-gl": "^1.13.0",

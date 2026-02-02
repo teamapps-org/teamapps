@@ -109,8 +109,19 @@ module.exports = function (stageConfig) {
                 },
                 {
                     test: /\.js$/,
+                    include: /node_modules\/@tanstack\/virtual-core/,
+                    use: {
+                        loader: 'esbuild-loader',
+                        options: {
+                            target: 'es2015'
+                        }
+                    }
+                },
+                {
+                    test: /\.js$/,
                     use: ["source-map-loader"],
-                    enforce: "pre"
+                    enforce: "pre",
+                    exclude: /node_modules/
                 },
 
                 {
