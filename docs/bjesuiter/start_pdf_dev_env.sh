@@ -9,8 +9,8 @@ mkdir -p "${XDG_DATA_HOME}/bgproc/logs"
 bgproc stop -n teamapps-frontend >/dev/null 2>&1 || true
 
 if lsof -iTCP:${PORT} -sTCP:LISTEN >/dev/null 2>&1; then
-	echo "Port ${PORT} is already in use. Stop the existing dev server before starting a new one."
-	exit 1
+	echo "Port ${PORT} is already in use. Stopping existing listener."
+	lsof -tiTCP:${PORT} -sTCP:LISTEN | xargs -r kill
 fi
 
 bgproc start -f -n teamapps-frontend -- /bin/zsh -lc "cd /Users/bjesuiter/Develop/teamapps-org/teamapps/teamapps-client && ./start-dev-server.sh 8082 ${PORT}"
