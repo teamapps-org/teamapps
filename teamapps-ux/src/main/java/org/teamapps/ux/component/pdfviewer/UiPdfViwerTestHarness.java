@@ -29,6 +29,8 @@ import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.resource.ClassPathResource;
 import org.teamapps.ux.resource.InputStreamResource;
 import org.teamapps.ux.resource.Resource;
@@ -44,6 +46,7 @@ public class UiPdfViwerTestHarness extends Panel {
 		pdfViewer.setPadding(10);
 		pdfViewer.setPageSpacing(8);
 		pdfViewer.setShowDevTools(false);
+		pdfViewer.setViewMode(UiPdfViewMode.SINGLE_PAGE);
 		pdfViewer.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
 		pdfViewer.setBackgroundColor("oklch(0.74 0.1 218.65)");
 		pdfViewer.setBorderColor("#ff0000");
@@ -54,12 +57,34 @@ public class UiPdfViwerTestHarness extends Panel {
 		ToolbarButton showPdfButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.PICTURE_AS_PDF, "Show PDF", "Show the PDF document"));
 		ToolbarButton continuousModeButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.VIEW_STREAM, "Continuous Mode", "Switch to continuous scrolling mode"));
 		ToolbarButton singlePageModeButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.VIEW_DAY, "Single Page Mode", "Switch to single page mode"));
-		ToolbarButton decreasePageButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.NAVIGATE_BEFORE, "Decrease Page", "Show previous page"));
-		ToolbarButton increasePageButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.NAVIGATE_NEXT, "Increase Page", "Show next page"));
+		ToolbarButton decreasePageButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.NAVIGATE_BEFORE, "Previous Page", "Show previous page"));
+		ToolbarButton increasePageButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.NAVIGATE_NEXT, "Next Page", "Show next page"));
+		ToolbarButton[] pageIndicatorButton = new ToolbarButton[1];
 		ToolbarButton zoomInButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.ZOOM_IN, "Zoom in", "Increase zoom factor"));
 		ToolbarButton zoomOutButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.ZOOM_OUT, "Zoom out", "Decrease zoom factor"));
 		ToolbarButton zoomToWidthButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.BORDER_HORIZONTAL, "Zoom to width", "Auto-zoom to container width"));
 		ToolbarButton zoomToHeightButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.BORDER_VERTICAL, "Zoom to height", "Auto-zoom to container height"));
+
+		int[] currentPage = {1};
+		int[] maxPageNumber = {0};
+		boolean[] singlePageControlsVisible = {true};
+		Runnable updatePageIndicator = () -> {
+			String caption = maxPageNumber[0] > 0 ? currentPage[0] + " / " + maxPageNumber[0] : String.valueOf(currentPage[0]);
+			ToolbarButton indicator = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_SMALL, new BaseTemplateRecord<>((org.teamapps.icons.Icon) null, (String) null, caption, "Current page", null));
+			indicator.setVisible(singlePageControlsVisible[0]);
+			if (pageIndicatorButton[0] != null) {
+				buttonGroup.removeButton(pageIndicatorButton[0]);
+			}
+			pageIndicatorButton[0] = indicator;
+			buttonGroup.addButton(indicator, increasePageButton, true);
+		};
+		Runnable updateSinglePageControlsVisibility = () -> {
+			decreasePageButton.setVisible(singlePageControlsVisible[0]);
+			increasePageButton.setVisible(singlePageControlsVisible[0]);
+			if (pageIndicatorButton[0] != null) {
+				pageIndicatorButton[0].setVisible(singlePageControlsVisible[0]);
+			}
+		};
 
 		String defaultPdfUrl = "https://www.princexml.com/samples/wind-in-willows/b-format.pdf";
 		TextField pdfUrlField = new TextField();
@@ -82,20 +107,32 @@ public class UiPdfViwerTestHarness extends Panel {
 
 		continuousModeButton.onClick.addListener(() -> {
 			pdfViewer.setViewMode(UiPdfViewMode.CONTINUOUS);
+			singlePageControlsVisible[0] = false;
+			updateSinglePageControlsVisibility.run();
 			System.out.println("Switched to CONTINUOUS mode");
 		});
 
 		singlePageModeButton.onClick.addListener(() -> {
 			pdfViewer.setViewMode(UiPdfViewMode.SINGLE_PAGE);
+			singlePageControlsVisible[0] = true;
+			updateSinglePageControlsVisibility.run();
 			System.out.println("Switched to SINGLE_PAGE mode");
 		});
 
 		decreasePageButton.onClick.addListener(() -> {
 			pdfViewer.previousPage();
+			if (currentPage[0] > 1) {
+				currentPage[0]--;
+				updatePageIndicator.run();
+			}
 		});
 
 		increasePageButton.onClick.addListener(() -> {
 			pdfViewer.nextPage();
+			if (maxPageNumber[0] == 0 || currentPage[0] < maxPageNumber[0]) {
+				currentPage[0]++;
+				updatePageIndicator.run();
+			}
 		});
 
 		zoomInButton.onClick.addListener(() -> {
@@ -116,6 +153,9 @@ public class UiPdfViwerTestHarness extends Panel {
 
 		pdfViewer.onPdfInitialized.addListener((initEvent) -> {
 			System.out.println("PDF viewer rendered, page number: " + initEvent.getNumberOfPages());
+			maxPageNumber[0] = initEvent.getNumberOfPages();
+			currentPage[0] = 1;
+			updatePageIndicator.run();
 		});
 
 		pdfViewer.onZoomFactorAutoChanged.addListener((zoomFactorChangeEvent) -> {
@@ -123,6 +163,7 @@ public class UiPdfViwerTestHarness extends Panel {
 		});
 
 		pdfViewer.setUrl(defaultPdfUrl);
+		updatePageIndicator.run();
 
 		setToolbar(toolbar);
 		VerticalLayout layout = new VerticalLayout();
