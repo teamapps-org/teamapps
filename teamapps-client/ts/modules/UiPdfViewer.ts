@@ -144,7 +144,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                      */
                     align-items: safe center;
                     
-                    height: 70%;
+                    flex: 1 1 auto;
+                    min-height: 0;
                     overflow-y: auto;
                 }
                 div.${this.uuidClass}#pagesContainer {
@@ -165,6 +166,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$canvasContainer = this.$main.querySelector<HTMLDivElement>(`div.canvas-container.${this.uuidClass}`);
         this.$pagesContainer = this.$main.querySelector<HTMLDivElement>(`#pagesContainer`);
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
+
+        // Ensure the component itself defines a height context for percentage/flex sizing.
+        this.$main.style.display = "flex";
+        this.$main.style.flexDirection = "column";
+        this.$main.style.height = "100%";
+        this.$main.style.minHeight = "0";
 
         // Dev Helper UI
         this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar');
