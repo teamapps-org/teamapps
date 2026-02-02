@@ -45,7 +45,7 @@ public class UiPdfViwerTestHarness extends Panel {
 		PdfViewer pdfViewer = new PdfViewer();
 		pdfViewer.setPadding(10);
 		pdfViewer.setPageSpacing(8);
-		pdfViewer.setShowDevTools(false);
+		pdfViewer.setShowDevTools(true);
 		pdfViewer.setViewMode(UiPdfViewMode.SINGLE_PAGE);
 		pdfViewer.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
 		pdfViewer.setBackgroundColor("oklch(0.74 0.1 218.65)");
