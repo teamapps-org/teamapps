@@ -23,8 +23,10 @@ import org.teamapps.dto.UiPdfViewMode;
 import org.teamapps.dto.UiPdfZoomMode;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.field.Button;
+import org.teamapps.ux.component.field.Label;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextField;
+import org.teamapps.ux.component.flexcontainer.HorizontalLayout;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.toolbar.Toolbar;
@@ -32,6 +34,8 @@ import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.ux.component.absolutelayout.Length;
+import org.teamapps.ux.css.CssAlignItems;
 import org.teamapps.ux.resource.ClassPathResource;
 import org.teamapps.ux.resource.InputStreamResource;
 import org.teamapps.ux.resource.Resource;
@@ -90,6 +94,14 @@ public class UiPdfViwerTestHarness extends Panel {
 		pdfUrlField.setShowClearButton(true);
 		pdfUrlField.setEmptyText("PDF URL");
 		pdfUrlField.setValue(defaultPdfUrl);
+		Label pdfUrlLabel = new Label("PDF URL");
+		pdfUrlLabel.setTargetComponent(pdfUrlField);
+
+		HorizontalLayout pdfUrlRow = new HorizontalLayout();
+		pdfUrlRow.setAlignItems(CssAlignItems.CENTER);
+		pdfUrlRow.setGap(Length.ofPixels(8));
+		pdfUrlRow.addComponentAutoSize(pdfUrlLabel);
+		pdfUrlRow.addComponentFillRemaining(pdfUrlField);
 
 		String testPdfLink = getSessionContext().createResourceLink(new ClassPathResource("test.pdf", "application/pdf"));
 
@@ -190,7 +202,7 @@ public class UiPdfViwerTestHarness extends Panel {
 
 		setToolbar(toolbar);
 		VerticalLayout layout = new VerticalLayout();
-		layout.addComponentAutoSize(pdfUrlField);
+		layout.addComponentAutoSize(pdfUrlRow);
 		layout.addComponentFillRemaining(pdfViewer);
 		setContent(layout);
 	}
