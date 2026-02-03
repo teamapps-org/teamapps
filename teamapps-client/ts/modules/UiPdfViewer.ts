@@ -81,12 +81,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private virtualizerCleanup: (() => void) = null;
     private virtualDelayEnabled = false;
     private readonly virtualDelayMs = 2000;
-    private virtualPageRenderTimeouts = new Map<number, number>();
-    private readonly virtualPlaceholderText = "Loading page...";
+    private virtualPagePending = new Set<number>();
     private readonly virtualOverscan = 2;
     private virtualizerScale: number = null;
     private virtualizerHiDpiScale: number = 1;
     private virtualEstimatePageHeight: number = 0;
+    private virtualEstimatePageWidth: number = 0;
     private virtualizerPageCount: number = null;
     private virtualizerPageSpacing: number = null;
     private virtualPageCanvases = new Map<number, HTMLCanvasElement>();
@@ -165,6 +165,26 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     gap: 1rem;
                     align-items: center;
                     margin: 0.5rem;
+                }
+                .${this.uuidClass}-loader {
+                    width: 48px;
+                    height: 48px;
+                    min-width: 48px;
+                    min-height: 48px;
+                    max-width: 48px;
+                    max-height: 48px;
+                    aspect-ratio: 1 / 1;
+                    flex: 0 0 48px;
+                    border: 5px solid rgba(255, 255, 255, 0.9);
+                    border-bottom-color: transparent;
+                    border-radius: 50%;
+                    display: inline-block;
+                    box-sizing: border-box;
+                    animation: rotation 1s linear infinite;
+                }
+                @keyframes rotation {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
                 }
             </style>
         </div>`);
@@ -256,10 +276,13 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (this.config.zoomMode === UiPdfZoomMode.TO_WIDTH) {
             // calc the scale based on available width
             const containerWidth = this.$canvasContainer.clientWidth;
+            if (containerWidth <= 0) {
+                return {scale, viewport: pdfViewport};
+            }
             let newScale = containerWidth / pdfViewport.width;
             newScale = floorToPrecision(newScale, 2);
             // subtract save space for scrollbars
-            newScale -= 0.1
+            newScale = Math.max(0.1, newScale - 0.1);
 
             // write the right scale factor back to the config
             this.config.zoomFactor = newScale;
@@ -278,7 +301,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             // calc the scale based on available heigth
             const containerHeight = this.$canvasContainer.clientHeight;
             // remove padding from container height to make sure that pdf page fits into container with padding
-            let newScale = (containerHeight - this.config.padding * 2) / pdfViewport.height;
+            const availableHeight = containerHeight - this.config.padding * 2;
+            if (availableHeight <= 0) {
+                return {scale, viewport: pdfViewport};
+            }
+            let newScale = availableHeight / pdfViewport.height;
             newScale = floorToPrecision(newScale, 2);
 
             // write the right scale factor back to the config
@@ -436,6 +463,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         const {scale} = this.calculateZoomScale(firstPage);
         const viewport = firstPage.getViewport({scale});
         this.virtualEstimatePageHeight = Math.floor(viewport.height);
+        this.virtualEstimatePageWidth = Math.floor(viewport.width);
         this.virtualizerHiDpiScale = window.devicePixelRatio || 1;
 
         this.cancelVirtualRenderTasks();
@@ -521,33 +549,23 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             wrapper.style.width = "100%";
             wrapper.style.display = "flex";
             wrapper.style.justifyContent = "center";
+            wrapper.style.alignItems = "center";
             wrapper.style.transform = `translateY(${virtualItem.start}px)`;
             wrapper.style.height = `${Math.max(1, Math.floor(virtualItem.size))}px`;
 
-            const needsPlaceholder = this.virtualDelayEnabled
-                && this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL
-                && this.virtualPageRenderScales.get(pageNumber) !== this.virtualizerScale;
+            const needsPlaceholder = this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL
+                && this.virtualPagePending.has(pageNumber);
 
             if (needsPlaceholder) {
-                const placeholder = document.createElement('div');
-                placeholder.className = `${this.uuidClass} virtual-placeholder`;
-                placeholder.style.width = "100%";
-                placeholder.style.maxWidth = "900px";
-                placeholder.style.height = `${Math.max(1, Math.floor(virtualItem.size))}px`;
-                placeholder.style.background = "rgba(255, 255, 255, 0.6)";
-                placeholder.style.border = "1px dashed rgba(0, 0, 0, 0.25)";
-                placeholder.style.boxSizing = "border-box";
-                placeholder.style.display = "flex";
-                placeholder.style.alignItems = "center";
-                placeholder.style.justifyContent = "center";
-                placeholder.style.color = "rgba(0, 0, 0, 0.45)";
-                placeholder.style.fontSize = "0.9rem";
-                placeholder.innerText = this.virtualPlaceholderText;
-                wrapper.appendChild(placeholder);
+                const loader = document.createElement('div');
+                loader.className = `${this.uuidClass}-loader`;
+                wrapper.appendChild(loader);
                 canvas.style.visibility = "hidden";
             } else {
                 canvas.style.visibility = "visible";
             }
+            canvas.style.display = "block";
+            canvas.style.margin = "0 auto";
 
             wrapper.appendChild(canvas);
             this.$virtualInner.appendChild(wrapper);
@@ -589,7 +607,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             if (inFlight && inFlight.scale === this.virtualizerScale) {
                 continue;
             }
-            this.scheduleVirtualPageRender(pageNumber, canvas, requestId);
+            if (!this.virtualPagePending.has(pageNumber)) {
+                this.virtualPagePending.add(pageNumber);
+                this.renderVirtualItems(this.renderRequestId);
+            }
+            void this.renderVirtualPage(pageNumber, canvas, requestId);
         }
     }
 
@@ -598,7 +620,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             return;
         }
 
-        const page = await this.pdfDocument.getPage(pageNumber);
+        const page = await this.loadPageForRender(pageNumber, requestId);
+        if (!page) {
+            return;
+        }
         if (requestId !== this.renderRequestId) {
             return;
         }
@@ -610,6 +635,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         canvas.height = Math.floor(viewport.height * hiDPIScale);
         canvas.style.width = Math.floor(viewport.width) + "px";
         canvas.style.height = Math.floor(viewport.height) + "px";
+        if (canvasContext) {
+            canvasContext.setTransform(1, 0, 0, 1, 0, 0);
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        }
 
         const transform = hiDPIScale !== 1 ?
             [hiDPIScale, 0, 0, hiDPIScale, 0, 0] :
@@ -635,10 +664,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             }
             this.virtualPageRenderTasks.delete(pageNumber);
             this.virtualPageRenderScales.set(pageNumber, this.virtualizerScale);
+            this.virtualPagePending.delete(pageNumber);
+            this.renderVirtualItems(this.renderRequestId);
             canvas.style.visibility = "visible";
-            const placeholder = canvas.parentElement?.querySelector(`.${this.uuidClass}.virtual-placeholder`);
-            if (placeholder) {
-                placeholder.remove();
+            const loader = canvas.parentElement?.querySelector(`.${this.uuidClass}-loader`);
+            if (loader) {
+                loader.remove();
             }
             if (this.virtualizer) {
                 this.virtualizer.measureElement(canvas);
@@ -648,20 +679,14 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
     }
 
-    private scheduleVirtualPageRender(pageNumber: number, canvas: HTMLCanvasElement, requestId: number) {
+    private async loadPageForRender(pageNumber: number, requestId: number): Promise<PDFPageProxy | null> {
         if (this.virtualDelayEnabled && this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
-            const existingTimeout = this.virtualPageRenderTimeouts.get(pageNumber);
-            if (existingTimeout != null) {
-                window.clearTimeout(existingTimeout);
-            }
-            const timeoutId = window.setTimeout(() => {
-                this.virtualPageRenderTimeouts.delete(pageNumber);
-                void this.renderVirtualPage(pageNumber, canvas, requestId);
-            }, this.virtualDelayMs);
-            this.virtualPageRenderTimeouts.set(pageNumber, timeoutId);
-            return;
+            await new Promise<void>((resolve) => window.setTimeout(resolve, this.virtualDelayMs));
         }
-        void this.renderVirtualPage(pageNumber, canvas, requestId);
+        if (requestId !== this.renderRequestId) {
+            return null;
+        }
+        return this.pdfDocument.getPage(pageNumber);
     }
 
     private applyPagesContainerLayoutForMode(viewMode: UiPdfViewMode) {
@@ -700,7 +725,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             }
         });
         this.virtualPageRenderTasks.clear();
-        this.clearVirtualRenderTimeouts();
+        this.virtualPagePending.clear();
         this.virtualizerScale = null;
         this.virtualizerPageCount = null;
         this.virtualizerPageSpacing = null;
@@ -713,14 +738,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             }
         });
         this.virtualPageRenderTasks.clear();
-        this.clearVirtualRenderTimeouts();
-    }
-
-    private clearVirtualRenderTimeouts() {
-        this.virtualPageRenderTimeouts.forEach((timeoutId) => {
-            window.clearTimeout(timeoutId);
-        });
-        this.virtualPageRenderTimeouts.clear();
+        this.virtualPagePending.clear();
     }
 
     private applyPageBorderToCanvas(canvas: HTMLCanvasElement) {
