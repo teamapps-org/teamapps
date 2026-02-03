@@ -50,7 +50,7 @@ public class UiPdfViwerTestHarness extends Panel {
 		pdfViewer.setPadding(10);
 		pdfViewer.setPageSpacing(8);
 		pdfViewer.setShowDevTools(true);
-		pdfViewer.setViewMode(UiPdfViewMode.SINGLE_PAGE);
+		pdfViewer.setViewMode(UiPdfViewMode.CONTINUOUS_VIRTUAL);
 		pdfViewer.setZoomMode(UiPdfZoomMode.TO_HEIGHT);
 		pdfViewer.setBackgroundColor("oklch(0.74 0.1 218.65)");
 		pdfViewer.setBorderColor("#ff0000");
@@ -125,7 +125,7 @@ public class UiPdfViwerTestHarness extends Panel {
 		viewModeMenu.addComponentAutoSize(continuousVirtualModeEntry);
 		viewModeButton.setDropDownComponent(viewModeMenu).setDroDownPanelWidth(260);
 
-		setTitle("PDF Viewer - Single Page Mode");
+		setTitle("PDF Viewer - Continuous Virtual");
 
 		singlePageModeEntry.onClicked.addListener(() -> {
 			pdfViewer.setViewMode(UiPdfViewMode.SINGLE_PAGE);
