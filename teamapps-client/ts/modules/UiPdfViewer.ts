@@ -87,8 +87,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 	private readonly singlePageRenderer: SinglePageRenderer;
 	private readonly continuousRenderer: ContinuousRenderer;
 	private readonly continuousVirtualRenderer: ContinuousVirtualRenderer;
-	// Monotonic token for setUrl() calls: only the most recent async load may apply state/events.
-	private documentLoadRequestId: number = 0;
+		// Monotonic token for setUrl() calls: latest URL wins and only the latest load may mutate state or fire init events.
+		private documentLoadRequestId: number = 0;
 
     // Events for the server
     // ---------------------
@@ -359,6 +359,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
 	private async renderPdfDocumentCore() {
 		this.$canvasContainer.style.padding = `${this.config.padding}px`;
+		// Incrementing this invalidates all older async rendering work.
 		const requestId = ++this.renderRequestId;
 		this.updateDevRenderStats();
 
@@ -378,6 +379,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      * @private
      */
 	private async renderPdfSinglePageMode(requestId: number) {
+		// Bail out if a newer render was requested while we were queued.
 		if (requestId !== this.renderRequestId) {
 			return;
 		}
@@ -387,6 +389,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 	}
 
 	private async renderPdfContinuousMode(requestId: number) {
+		// Bail out if a newer render was requested while we were queued.
 		if (requestId !== this.renderRequestId) {
 			return;
 		}
@@ -396,6 +399,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 	}
 
 	private async renderPdfContinuousVirtualMode(requestId: number) {
+		// Bail out if a newer render was requested while we were queued.
 		if (requestId !== this.renderRequestId) {
 			return;
 		}
@@ -531,6 +535,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 				return;
 			}
 
+			// Guard event emission as well: stale URL loads must not emit onPdfInitialized.
 			// Tell the server the document has loaded after the first renderPdfDocument
 			// since it is async, I can simply wait for it to finish
 			this.onPdfInitialized.fire({
