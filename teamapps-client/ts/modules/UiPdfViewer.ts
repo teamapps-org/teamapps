@@ -68,6 +68,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
     // Dev/Helper elements
     private $devToolbar: HTMLElement;
+    private $devRenderStats: HTMLDivElement;
     private devToolsInitialized: boolean = false;
 
     // UI / internal state
@@ -157,18 +158,36 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
                     align-items: center;
                     margin: 0.5rem;
                 }
+                div.${this.uuidClass}#dev-render-stats {
+                    position: absolute;
+                    top: 2.25rem;
+                    right: 2.5rem;
+                    z-index: 2;
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 0.35rem;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    color: #ffffff;
+                    background: rgba(0, 0, 0, 0.5);
+                    pointer-events: none;
+                }
             </style>
         </div>`);
         this.$canvas = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
         this.$canvasContainer = this.$main.querySelector<HTMLDivElement>(`div.canvas-container.${this.uuidClass}`);
         this.$pagesContainer = this.$main.querySelector<HTMLDivElement>(`#pagesContainer`);
         this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
+        this.$devRenderStats = document.createElement("div");
+        this.$devRenderStats.className = this.uuidClass;
+        this.$devRenderStats.id = "dev-render-stats";
+        this.$main.appendChild(this.$devRenderStats);
 
         // Ensure the component itself defines a height context for percentage/flex sizing.
         this.$main.style.display = "flex";
         this.$main.style.flexDirection = "column";
         this.$main.style.height = "100%";
         this.$main.style.minHeight = "0";
+        this.$main.style.position = "relative";
 
         // Dev Helper UI
         this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar');
@@ -176,6 +195,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
         this.renderCanvasContainer();
         this.updatePageSpacing();
+        this.updateDevRenderStats();
 
         // Load the pdf by setting it's url
         setTimeout(async () => {
@@ -205,8 +225,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (this.isDev()) {
             this.initDevToolsIfUninitialized();
             this.$devToolbar.style.display = "flex";
+            this.$devRenderStats.style.display = "block";
+            this.updateDevRenderStats();
         } else {
             this.$devToolbar.style.display = "none";
+            this.$devRenderStats.style.display = "none";
         }
     }
 
@@ -297,6 +320,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private async renderPdfDocument() {
         this.$canvasContainer.style.padding = `${this.config.padding}px`;
         const requestId = ++this.renderRequestId;
+        this.updateDevRenderStats();
 
         if (this.lastViewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL && this.config.viewMode !== UiPdfViewMode.CONTINUOUS_VIRTUAL) {
             this.teardownContinuousVirtualMode();
@@ -310,6 +334,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         } else {
             await this.renderPdfSinglePageMode(requestId);
         }
+        this.updateDevRenderStats();
     }
 
     /**
@@ -357,6 +382,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         };
 
         page.render(renderContext);
+        this.updateDevRenderStats();
 
     }
 
@@ -410,6 +436,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
             $pagesContainer.appendChild(canvas);
             page.render(renderContext);
+            this.updateDevRenderStats();
         }
     }
 
@@ -526,6 +553,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
 
         this.renderVisibleVirtualPages(virtualItems, requestId);
+        this.updateDevRenderStats();
     }
 
     private getOrCreateVirtualCanvas(pageNumber: number): HTMLCanvasElement {
@@ -618,6 +646,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             if (this.virtualizer) {
                 this.virtualizer.measureElement(canvas);
             }
+            this.updateDevRenderStats();
         } catch (error) {
             this.virtualPageRenderTasks.delete(pageNumber);
         }
@@ -701,6 +730,15 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
     }
 
+    private updateDevRenderStats() {
+        if (!this.$devRenderStats) {
+            return;
+        }
+        const canvasCount = this.$pagesContainer ? this.$pagesContainer.querySelectorAll("canvas").length : 0;
+        const pageCount = this.pdfDocument?.numPages || this.maxPageNumber || 0;
+        this.$devRenderStats.textContent = `${canvasCount} / ${pageCount}`;
+    }
+
     // Setters for Server API
     // -----------------------™
 
@@ -708,6 +746,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.pdfDocument = await pdfjsLib.getDocument(url).promise;
 
         this.maxPageNumber = this.pdfDocument.numPages;
+        this.updateDevRenderStats();
 
         await this.renderPdfDocument();
 
@@ -731,6 +770,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     public async showPage(page: number) {
         if (page >= 1 && page <= this.maxPageNumber ) {
             this.currentPageNumber = page;
+            this.updateDevRenderStats();
             if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
                 if (!this.virtualizer) {
                     await this.renderPdfDocument();
