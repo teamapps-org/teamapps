@@ -89,6 +89,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private virtualPageCanvases = new Map<number, HTMLCanvasElement>();
     private virtualPageRenderTasks = new Map<number, { scale: number, task: any }>();
     private virtualPageRenderScales = new Map<number, number>();
+    private forceVirtualizerRecreate = false;
 
     // Events for the server
     // ---------------------
@@ -318,6 +319,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      * @private
      */
     private async renderPdfDocument() {
+        if (!this.pdfDocument) {
+            return;
+        }
         this.$canvasContainer.style.padding = `${this.config.padding}px`;
         const requestId = ++this.renderRequestId;
         this.updateDevRenderStats();
@@ -458,6 +462,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.virtualizerHiDpiScale = window.devicePixelRatio || 1;
 
         this.cancelVirtualRenderTasks();
+        if (this.forceVirtualizerRecreate) {
+            this.virtualPageRenderScales.clear();
+        }
         this.ensureVirtualInnerContainer();
         this.ensureVirtualizer(scale);
         this.virtualizer._willUpdate();
@@ -481,6 +488,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private ensureVirtualizer(scale: number) {
         const previousScale = this.virtualizerScale;
         const needsNewVirtualizer = !this.virtualizer
+            || this.forceVirtualizerRecreate
             || previousScale !== scale
             || this.virtualizerPageCount !== this.maxPageNumber
             || this.virtualizerPageSpacing !== this.config.pageSpacing;
@@ -506,6 +514,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
             this.virtualizerCleanup = this.virtualizer._didMount();
             this.virtualizerPageCount = this.maxPageNumber;
             this.virtualizerPageSpacing = this.config.pageSpacing;
+            this.forceVirtualizerRecreate = false;
         } else {
             this.virtualizer.setOptions({
                 ...this.virtualizer.options,
@@ -709,6 +718,27 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.virtualPageRenderTasks.clear();
     }
 
+    private resetVirtualScrollPosition() {
+        if (this.$canvasContainer) {
+            this.$canvasContainer.scrollTop = 0;
+            this.$canvasContainer.scrollLeft = 0;
+        }
+    }
+
+    private async runVirtualAutoZoomStabilizationPass(zoomMode: UiPdfZoomMode) {
+        if (this.config.viewMode !== UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+            return;
+        }
+        if (zoomMode !== UiPdfZoomMode.TO_WIDTH && zoomMode !== UiPdfZoomMode.TO_HEIGHT) {
+            return;
+        }
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        this.config.zoomMode = zoomMode;
+        this.resetVirtualScrollPosition();
+        this.teardownContinuousVirtualMode();
+        await this.renderPdfDocument();
+    }
+
     private applyPageBorderToCanvas(canvas: HTMLCanvasElement) {
         const border = this.config.pageBorder;
         if (border) {
@@ -786,12 +816,25 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 
     public async setZoomFactor(zoomFactor: number) {
         this.config.zoomFactor = zoomFactor;
+        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+            this.resetVirtualScrollPosition();
+            this.teardownContinuousVirtualMode();
+        } else {
+            this.forceVirtualizerRecreate = true;
+        }
         await this.renderPdfDocument();
     }
 
     public async setZoomMode(zoomMode:UiPdfZoomMode) {
         this.config.zoomMode = zoomMode;
+        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+            this.resetVirtualScrollPosition();
+            this.teardownContinuousVirtualMode();
+        } else {
+            this.forceVirtualizerRecreate = true;
+        }
         await this.renderPdfDocument();
+        await this.runVirtualAutoZoomStabilizationPass(zoomMode);
     }
 
     public async setPageBorder(pageBorder: UiBorderConfig) {
