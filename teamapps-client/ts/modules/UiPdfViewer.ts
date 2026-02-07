@@ -718,13 +718,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.virtualPageRenderTasks.clear();
     }
 
-    private resetVirtualScrollPosition() {
-        if (this.$canvasContainer) {
-            this.$canvasContainer.scrollTop = 0;
-            this.$canvasContainer.scrollLeft = 0;
-        }
-    }
-
     private async runVirtualAutoZoomStabilizationPass(zoomMode: UiPdfZoomMode) {
         if (this.config.viewMode !== UiPdfViewMode.CONTINUOUS_VIRTUAL) {
             return;
@@ -734,7 +727,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         this.config.zoomMode = zoomMode;
-        this.resetVirtualScrollPosition();
         this.teardownContinuousVirtualMode();
         await this.renderPdfDocument();
     }
@@ -817,7 +809,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     public async setZoomFactor(zoomFactor: number) {
         this.config.zoomFactor = zoomFactor;
         if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
-            this.resetVirtualScrollPosition();
             this.teardownContinuousVirtualMode();
         } else {
             this.forceVirtualizerRecreate = true;
@@ -828,7 +819,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     public async setZoomMode(zoomMode:UiPdfZoomMode) {
         this.config.zoomMode = zoomMode;
         if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
-            this.resetVirtualScrollPosition();
             this.teardownContinuousVirtualMode();
         } else {
             this.forceVirtualizerRecreate = true;
