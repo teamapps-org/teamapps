@@ -42,6 +42,12 @@ import type {SinglePageRenderContext} from "./pdf-viewer/SinglePageRenderer";
 import {ContinuousRenderer} from "./pdf-viewer/ContinuousRenderer";
 import type {ContinuousRenderContext} from "./pdf-viewer/ContinuousRenderer";
 
+type RenderPdfDocumentOptions = {
+	zoomConfigurationChanged?: boolean;
+	stabilizationZoomMode?: UiPdfZoomMode;
+	forceVirtualTeardownBeforeRender?: boolean;
+};
+
 // @ts-ignore
 // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
 // pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
@@ -259,8 +265,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$pagesContainer.style.gap = `${this.config.pageSpacing}px`;
     }
 
-    // Core Class Logic
-    // -----------------
+	// Core Class Logic
+	// -----------------
 
 	private calculateZoomScale(page: PDFPageProxy): { scale: number, viewport: PageViewport } {
 		const zoomModeAtInvocation = this.config.zoomMode;
@@ -328,28 +334,52 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      *
      * @private
      */
-    private async renderPdfDocument() {
+    private async renderPdfDocument(options: RenderPdfDocumentOptions = {}) {
         if (!this.pdfDocument) {
             return;
         }
-        this.$canvasContainer.style.padding = `${this.config.padding}px`;
-        const requestId = ++this.renderRequestId;
-        this.updateDevRenderStats();
 
-        if (this.lastViewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL && this.config.viewMode !== UiPdfViewMode.CONTINUOUS_VIRTUAL) {
-            this.teardownContinuousVirtualMode();
-        }
-        this.lastViewMode = this.config.viewMode;
+		this.applyVirtualLifecyclePolicyBeforeRender(options);
+		await this.renderPdfDocumentCore();
 
-        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
-            await this.renderPdfContinuousVirtualMode(requestId);
-        } else if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
-            await this.renderPdfContinuousMode(requestId);
-        } else {
-            await this.renderPdfSinglePageMode(requestId);
-        }
-        this.updateDevRenderStats();
+		if (options.stabilizationZoomMode != null) {
+			await this.runVirtualAutoZoomStabilizationPass(options.stabilizationZoomMode);
+		}
     }
+
+	private applyVirtualLifecyclePolicyBeforeRender(options: RenderPdfDocumentOptions) {
+		if (options.zoomConfigurationChanged === true) {
+			if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+				this.teardownContinuousVirtualMode();
+			} else {
+				this.continuousVirtualRenderer.markForRecreate();
+			}
+		}
+
+		if (options.forceVirtualTeardownBeforeRender === true) {
+			this.teardownContinuousVirtualMode();
+		}
+
+		if (this.lastViewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL && this.config.viewMode !== UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+			this.teardownContinuousVirtualMode();
+		}
+		this.lastViewMode = this.config.viewMode;
+	}
+
+	private async renderPdfDocumentCore() {
+		this.$canvasContainer.style.padding = `${this.config.padding}px`;
+		const requestId = ++this.renderRequestId;
+		this.updateDevRenderStats();
+
+		if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+			await this.renderPdfContinuousVirtualMode(requestId);
+		} else if (this.config.viewMode === UiPdfViewMode.CONTINUOUS) {
+			await this.renderPdfContinuousMode(requestId);
+		} else {
+			await this.renderPdfSinglePageMode(requestId);
+		}
+		this.updateDevRenderStats();
+	}
 
     /**
      * Based on Example:
@@ -439,33 +469,22 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.continuousVirtualRenderer.teardown();
     }
 
-    private async runVirtualAutoZoomStabilizationPass(zoomMode: UiPdfZoomMode) {
-        if (this.config.viewMode !== UiPdfViewMode.CONTINUOUS_VIRTUAL) {
-            return;
-        }
-        if (zoomMode !== UiPdfZoomMode.TO_WIDTH && zoomMode !== UiPdfZoomMode.TO_HEIGHT) {
-            return;
-        }
-        // IMPORTANT:
-        // Do not restore/preserve scroll position around virtual auto-zoom transitions.
-        // Attempts to keep scroll anchors here caused unstable/broken virtual rendering.
-        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-        this.config.zoomMode = zoomMode;
-        this.teardownContinuousVirtualMode();
-        await this.renderPdfDocument();
-    }
-
-    private async rerenderAfterZoomConfigurationChange(zoomModeForOptionalStabilization?: UiPdfZoomMode) {
-        if (this.config.viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {
-            this.teardownContinuousVirtualMode();
-        } else {
-            this.continuousVirtualRenderer.markForRecreate();
-        }
-        await this.renderPdfDocument();
-        if (zoomModeForOptionalStabilization != null) {
-            await this.runVirtualAutoZoomStabilizationPass(zoomModeForOptionalStabilization);
-        }
-    }
+	private async runVirtualAutoZoomStabilizationPass(zoomMode: UiPdfZoomMode) {
+		if (this.config.viewMode !== UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+			return;
+		}
+		if (zoomMode !== UiPdfZoomMode.TO_WIDTH && zoomMode !== UiPdfZoomMode.TO_HEIGHT) {
+			return;
+		}
+		// IMPORTANT:
+		// Do not restore/preserve scroll position around virtual auto-zoom transitions.
+		// Attempts to keep scroll anchors here caused unstable/broken virtual rendering.
+		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+		this.config.zoomMode = zoomMode;
+		await this.renderPdfDocument({
+			forceVirtualTeardownBeforeRender: true
+		});
+	}
 
     private applyPageBorderToCanvas(canvas: HTMLCanvasElement) {
         const border = this.config.pageBorder;
@@ -560,15 +579,20 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
     }
 
-    public async setZoomFactor(zoomFactor: number) {
-        this.config.zoomFactor = zoomFactor;
-        await this.rerenderAfterZoomConfigurationChange();
-    }
+	public async setZoomFactor(zoomFactor: number) {
+		this.config.zoomFactor = zoomFactor;
+		await this.renderPdfDocument({
+			zoomConfigurationChanged: true
+		});
+	}
 
-    public async setZoomMode(zoomMode:UiPdfZoomMode) {
-        this.config.zoomMode = zoomMode;
-        await this.rerenderAfterZoomConfigurationChange(zoomMode);
-    }
+	public async setZoomMode(zoomMode: UiPdfZoomMode) {
+		this.config.zoomMode = zoomMode;
+		await this.renderPdfDocument({
+			zoomConfigurationChanged: true,
+			stabilizationZoomMode: zoomMode
+		});
+	}
 
     public async setPageBorder(pageBorder: UiBorderConfig) {
         this.config.pageBorder = pageBorder;
