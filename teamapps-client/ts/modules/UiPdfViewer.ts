@@ -36,6 +36,8 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {floorToPrecision} from "./util/precise-float-math";
 import {UiPdfZoomMode} from "../generated/UiPdfZoomMode";
 import {ContinuousVirtualRenderer} from "./pdf-viewer/ContinuousVirtualRenderer";
+import {SinglePageRenderer} from "./pdf-viewer/SinglePageRenderer";
+import {ContinuousRenderer} from "./pdf-viewer/ContinuousRenderer";
 
 // @ts-ignore
 // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
@@ -73,6 +75,8 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private pdfDocument: PDFDocumentProxy;
     private currentPageNumber: number = 1;
     private maxPageNumber: number = 0;
+    private readonly singlePageRenderer: SinglePageRenderer;
+    private readonly continuousRenderer: ContinuousRenderer;
     private readonly continuousVirtualRenderer: ContinuousVirtualRenderer;
 
     // Events for the server
@@ -176,6 +180,28 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         // Dev Helper UI
         this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar');
         this.renderDevToolsIfEnabled();
+
+        this.singlePageRenderer = new SinglePageRenderer({
+            getRenderRequestId: () => this.renderRequestId,
+            getPdfDocument: () => this.pdfDocument,
+            getCurrentPageNumber: () => this.currentPageNumber,
+            getPagesContainer: () => this.$pagesContainer,
+            getCanvas: () => this.$canvas,
+            calculateZoomScale: (page) => this.calculateZoomScale(page),
+            updateDevRenderStats: () => this.updateDevRenderStats()
+        });
+
+        this.continuousRenderer = new ContinuousRenderer({
+            getRenderRequestId: () => this.renderRequestId,
+            getPdfDocument: () => this.pdfDocument,
+            getMaxPageNumber: () => this.maxPageNumber,
+            getPagesContainer: () => this.$pagesContainer,
+            getUuidClass: () => this.uuidClass,
+            getConfig: () => this.config,
+            calculateZoomScale: (page) => this.calculateZoomScale(page),
+            applyPageBorderToCanvas: (canvas) => this.applyPageBorderToCanvas(canvas),
+            updateDevRenderStats: () => this.updateDevRenderStats()
+        });
 
         this.continuousVirtualRenderer = new ContinuousVirtualRenderer({
             getRenderRequestId: () => this.renderRequestId,
@@ -348,42 +374,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
 
         this.applyPagesContainerLayoutForMode(UiPdfViewMode.SINGLE_PAGE);
-
-        // Ensure the single-page canvas is in the DOM (continuous mode replaces it)
-        this.$pagesContainer.innerHTML = '';
-        this.$pagesContainer.appendChild(this.$canvas);
-
-        const page = await this.pdfDocument.getPage(this.currentPageNumber);
-        if (requestId !== this.renderRequestId) {
-            return;
-        }
-        const {scale, viewport: pdfViewport} = this.calculateZoomScale(page);
-        const hiDPIScale = window.devicePixelRatio || 1;
-
-        const canvas = this.$canvas;
-        const canvasContext = this.$canvas.getContext('2d');
-
-        canvas.width = Math.floor(pdfViewport.width * hiDPIScale);
-        canvas.height = Math.floor(pdfViewport.height * hiDPIScale);
-        canvas.style.width = Math.floor(pdfViewport.width) + "px";
-        canvas.style.height = Math.floor(pdfViewport.height) + "px";
-        canvas.style.overflowX = "auto";
-        // canvas.width = Math.floor(pdfViewport.width);
-        // canvas.height = Math.floor(pdfViewport.height);
-
-        const transform = hiDPIScale !== 1 ?
-            [hiDPIScale, 0, 0, hiDPIScale, 0, 0] :
-            null;
-
-        const renderContext = {
-            canvasContext,
-            transform,
-            viewport: pdfViewport
-        };
-
-        page.render(renderContext);
-        this.updateDevRenderStats();
-
+        await this.singlePageRenderer.render(requestId);
     }
 
     private async renderPdfContinuousMode(requestId: number) {
@@ -392,52 +383,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         }
 
         this.applyPagesContainerLayoutForMode(UiPdfViewMode.CONTINUOUS);
-
-        if (this.maxPageNumber > 5) {
-            console.warn(`PdfViewer: CONTINUOUS mode with ${this.maxPageNumber} pages may impact performance. Consider using SINGLE_PAGE mode.`);
-        }
-
-        const firstPage = await this.pdfDocument.getPage(1);
-        const {scale} = this.calculateZoomScale(firstPage);
-
-        const $pagesContainer = this.$main.querySelector<HTMLElement>('#pagesContainer');
-        $pagesContainer.innerHTML = '';
-
-        for (let pageNum = 1; pageNum <= this.maxPageNumber; pageNum++) {
-            if (requestId !== this.renderRequestId) {
-                return;
-            }
-            const page = await this.pdfDocument.getPage(pageNum);
-            const viewport = page.getViewport({scale});
-            const hiDPIScale = window.devicePixelRatio || 1;
-
-            const canvas = document.createElement('canvas');
-            canvas.className = this.uuidClass;
-            const canvasContext = canvas.getContext('2d');
-
-            canvas.width = Math.floor(viewport.width * hiDPIScale);
-            canvas.height = Math.floor(viewport.height * hiDPIScale);
-            canvas.style.width = Math.floor(viewport.width) + "px";
-            canvas.style.height = Math.floor(viewport.height) + "px";
-
-            if (this.config.pageBorder) {
-                this.applyPageBorderToCanvas(canvas);
-            }
-
-            const transform = hiDPIScale !== 1 ?
-                [hiDPIScale, 0, 0, hiDPIScale, 0, 0] :
-                null;
-
-            const renderContext = {
-                canvasContext,
-                transform,
-                viewport
-            };
-
-            $pagesContainer.appendChild(canvas);
-            page.render(renderContext);
-            this.updateDevRenderStats();
-        }
+        await this.continuousRenderer.render(requestId);
     }
 
     private async renderPdfContinuousVirtualMode(requestId: number) {
