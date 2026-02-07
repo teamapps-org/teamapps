@@ -28,7 +28,6 @@ import {
     UiPdfViewerConfig
 } from "../generated/UiPdfViewerConfig";
 import {UiPdfViewMode} from "../generated/UiPdfViewMode";
-import {UiShadowConfig} from "../generated/UiShadowConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {generateUUID, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -61,7 +60,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private $canvas: HTMLCanvasElement;
     private $canvasContainer: HTMLDivElement;
     private $pagesContainer: HTMLDivElement;
-    private $styleTag: HTMLElement;
     // Monotonic render token to ignore stale async renders when view mode changes.
     private renderRequestId = 0;
     private lastViewMode: UiPdfViewMode = null;
@@ -177,7 +175,6 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$canvas = this.$main.querySelector<HTMLCanvasElement>(`canvas.${this.uuidClass}`);
         this.$canvasContainer = this.$main.querySelector<HTMLDivElement>(`div.canvas-container.${this.uuidClass}`);
         this.$pagesContainer = this.$main.querySelector<HTMLDivElement>(`#pagesContainer`);
-        this.$styleTag = this.$main.querySelector<HTMLElement>(`style.${this.uuidClass}`);
         this.$devRenderStats = document.createElement("div");
         this.$devRenderStats.className = this.uuidClass;
         this.$devRenderStats.id = "dev-render-stats";

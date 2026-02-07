@@ -197,7 +197,7 @@ public class UiPdfViwerTestHarness extends Panel {
 			System.out.println("Zoom factor changed: " + zoomFactorChangeEvent.getZoomFactor());
 		});
 
-			pdfViewer.setUrl(defaultPdfUrl);
+			pdfViewer.setUrl(resolvePdfUrl(defaultPdfUrl, testPdfLink));
 			updatePageIndicator.run();
 			updateSinglePageControlsVisibility.run();
 
