@@ -1,28 +1,26 @@
-import type {PDFDocumentProxy, PDFPageProxy, PageViewport} from "pdfjs-dist";
+import type {PDFPageProxy, PageViewport} from "pdfjs-dist";
 import {Virtualizer, elementScroll, observeElementOffset, observeElementRect} from "@tanstack/virtual-core";
 import type {VirtualItem} from "@tanstack/virtual-core";
 import {UiPdfViewerConfig} from "../../generated/UiPdfViewerConfig";
+import type {BaseRenderContext} from "./BaseRenderContext";
 
-export interface IContinuousVirtualRenderContext {
-	requestId: number;
-	getCurrentRenderRequestId: () => number;
-	pdfDocument: PDFDocumentProxy;
+export type ContinuousVirtualRenderContext = BaseRenderContext & {
 	maxPageNumber: number;
 	config: UiPdfViewerConfig;
 	pagesContainer: HTMLDivElement;
 	canvasContainer: HTMLDivElement;
 	uuidClass: string;
-}
+};
 
-export interface IContinuousVirtualRendererCallbacks {
+export type ContinuousVirtualRendererCallbacks = {
 	calculateZoomScale: (page: PDFPageProxy) => { scale: number, viewport: PageViewport };
 	applyPageBorderToCanvas: (canvas: HTMLCanvasElement) => void;
 	updateDevRenderStats: () => void;
-}
+};
 
 export class ContinuousVirtualRenderer {
-	private readonly callbacks: IContinuousVirtualRendererCallbacks;
-	private activeContext: IContinuousVirtualRenderContext = null;
+	private readonly callbacks: ContinuousVirtualRendererCallbacks;
+	private activeContext: ContinuousVirtualRenderContext = null;
 	private virtualizer: Virtualizer<HTMLDivElement, HTMLCanvasElement> = null;
 	private $virtualInner: HTMLDivElement = null;
 	private readonly virtualOverscan = 2;
@@ -38,11 +36,11 @@ export class ContinuousVirtualRenderer {
 	private scrollResizeObserver: ResizeObserver = null;
 	private scheduledRenderAnimationFrameId: number = null;
 
-	constructor(callbacks: IContinuousVirtualRendererCallbacks) {
+	constructor(callbacks: ContinuousVirtualRendererCallbacks) {
 		this.callbacks = callbacks;
 	}
 
-	public async render(context: IContinuousVirtualRenderContext) {
+	public async render(context: ContinuousVirtualRenderContext) {
 		this.activeContext = context;
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;

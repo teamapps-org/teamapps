@@ -1,27 +1,25 @@
-import type {PDFDocumentProxy, PDFPageProxy, PageViewport} from "pdfjs-dist";
+import type {PDFPageProxy, PageViewport} from "pdfjs-dist";
+import type {BaseRenderContext} from "./BaseRenderContext";
 
-export interface ISinglePageRenderContext {
-	requestId: number;
-	getCurrentRenderRequestId: () => number;
-	pdfDocument: PDFDocumentProxy;
+export type SinglePageRenderContext = BaseRenderContext & {
 	currentPageNumber: number;
 	pagesContainer: HTMLDivElement;
 	canvas: HTMLCanvasElement;
-}
+};
 
-export interface ISinglePageRendererCallbacks {
+export type SinglePageRendererCallbacks = {
 	calculateZoomScale: (page: PDFPageProxy) => { scale: number, viewport: PageViewport };
 	updateDevRenderStats: () => void;
-}
+};
 
 export class SinglePageRenderer {
-	private readonly callbacks: ISinglePageRendererCallbacks;
+	private readonly callbacks: SinglePageRendererCallbacks;
 
-	constructor(callbacks: ISinglePageRendererCallbacks) {
+	constructor(callbacks: SinglePageRendererCallbacks) {
 		this.callbacks = callbacks;
 	}
 
-	public async render(context: ISinglePageRenderContext) {
+	public async render(context: SinglePageRenderContext) {
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
