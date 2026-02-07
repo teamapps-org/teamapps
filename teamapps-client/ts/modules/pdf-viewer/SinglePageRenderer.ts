@@ -20,6 +20,7 @@ export class SinglePageRenderer {
 	}
 
 	public async render(context: SinglePageRenderContext) {
+		// Ignore stale render generations after async re-render triggers.
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
@@ -30,6 +31,7 @@ export class SinglePageRenderer {
 		$pagesContainer.appendChild(canvas);
 
 		const page = await context.pdfDocument.getPage(context.currentPageNumber);
+		// Rendering request became stale while awaiting page data.
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}

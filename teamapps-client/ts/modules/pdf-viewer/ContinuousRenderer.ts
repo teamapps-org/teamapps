@@ -23,6 +23,7 @@ export class ContinuousRenderer {
 	}
 
 	public async render(context: ContinuousRenderContext) {
+		// Ignore stale render generations after async re-render triggers.
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
@@ -33,6 +34,7 @@ export class ContinuousRenderer {
 		}
 
 		const firstPage = await context.pdfDocument.getPage(1);
+		// Rendering request became stale while awaiting page data.
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}

@@ -42,11 +42,13 @@ export class ContinuousVirtualRenderer {
 
 	public async render(context: ContinuousVirtualRenderContext) {
 		this.activeContext = context;
+		// Ignore stale render generations after async re-render triggers.
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
 
 		const firstPage = await context.pdfDocument.getPage(1);
+		// Rendering request became stale while awaiting page data.
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
