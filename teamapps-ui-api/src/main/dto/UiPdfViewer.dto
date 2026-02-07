@@ -32,6 +32,7 @@ class UiPdfViewer extends UiComponent {
 
     event pdfInitialized(int numberOfPages);
     event zoomFactorAutoChanged(float zoomFactor);
+    event pdfLoadFailed(String url, String errorMessage);
 }
 
 enum UiPdfViewMode {

@@ -23,9 +23,9 @@ import type {PDFDocumentProxy, PDFPageProxy, PageViewport} from "pdfjs-dist";
 import * as pdfjsLib from "pdfjs-dist";
 import {UiBorderConfig} from "../generated/UiBorderConfig";
 import {
-    UiPdfViewer_PdfInitializedEvent, UiPdfViewer_ZoomFactorAutoChangedEvent,
-    UiPdfViewerCommandHandler,
-    UiPdfViewerConfig
+	UiPdfViewer_PdfInitializedEvent, UiPdfViewer_PdfLoadFailedEvent, UiPdfViewer_ZoomFactorAutoChangedEvent,
+	UiPdfViewerCommandHandler,
+	UiPdfViewerConfig
 } from "../generated/UiPdfViewerConfig";
 import {UiPdfViewMode} from "../generated/UiPdfViewMode";
 import {AbstractUiComponent} from "./AbstractUiComponent";
@@ -94,11 +94,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // ---------------------
     public readonly onPdfInitialized: TeamAppsEvent<UiPdfViewer_PdfInitializedEvent> = new TeamAppsEvent();
 
-    /**
-     * onZoomFactorAutoChanged will only fire when the factor was changed automatically by
-     * UiPdfZoomMode.TO_WIDTH or UiPdfZoomMode.TO_HEIGHT
-     */
-    public readonly onZoomFactorAutoChanged: TeamAppsEvent<UiPdfViewer_ZoomFactorAutoChangedEvent> = new TeamAppsEvent();
+	/**
+	 * onZoomFactorAutoChanged will only fire when the factor was changed automatically by
+	 * UiPdfZoomMode.TO_WIDTH or UiPdfZoomMode.TO_HEIGHT
+	 */
+	public readonly onZoomFactorAutoChanged: TeamAppsEvent<UiPdfViewer_ZoomFactorAutoChangedEvent> = new TeamAppsEvent();
+	public readonly onPdfLoadFailed: TeamAppsEvent<UiPdfViewer_PdfLoadFailedEvent> = new TeamAppsEvent();
 
     // Constructor
     // -----------
@@ -546,7 +547,12 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 			if (loadRequestId !== this.documentLoadRequestId) {
 				return;
 			}
+			const errorMessage = error instanceof Error ? error.message : String(error);
 			console.error("UiPdfViewer: failed to load PDF URL", {url, error});
+			this.onPdfLoadFailed.fire({
+				url,
+				errorMessage
+			});
 		}
 	}
 
