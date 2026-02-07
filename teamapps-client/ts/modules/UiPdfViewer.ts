@@ -36,8 +36,11 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {floorToPrecision} from "./util/precise-float-math";
 import {UiPdfZoomMode} from "../generated/UiPdfZoomMode";
 import {ContinuousVirtualRenderer} from "./pdf-viewer/ContinuousVirtualRenderer";
+import type {IContinuousVirtualRenderContext} from "./pdf-viewer/ContinuousVirtualRenderer";
 import {SinglePageRenderer} from "./pdf-viewer/SinglePageRenderer";
+import type {ISinglePageRenderContext} from "./pdf-viewer/SinglePageRenderer";
 import {ContinuousRenderer} from "./pdf-viewer/ContinuousRenderer";
+import type {IContinuousRenderContext} from "./pdf-viewer/ContinuousRenderer";
 
 // @ts-ignore
 // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
@@ -183,39 +186,21 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         this.$devToolbar = this.$main.querySelector<HTMLElement>('#dev-toolbar');
         this.renderDevToolsIfEnabled();
 
-        this.singlePageRenderer = new SinglePageRenderer({
-            getRenderRequestId: () => this.renderRequestId,
-            getPdfDocument: () => this.pdfDocument,
-            getCurrentPageNumber: () => this.currentPageNumber,
-            getPagesContainer: () => this.$pagesContainer,
-            getCanvas: () => this.$canvas,
-            calculateZoomScale: (page) => this.calculateZoomScale(page),
-            updateDevRenderStats: () => this.updateDevRenderStats()
-        });
+		this.singlePageRenderer = new SinglePageRenderer({
+			calculateZoomScale: (page) => this.calculateZoomScale(page),
+			updateDevRenderStats: () => this.updateDevRenderStats()
+		});
 
-        this.continuousRenderer = new ContinuousRenderer({
-            getRenderRequestId: () => this.renderRequestId,
-            getPdfDocument: () => this.pdfDocument,
-            getMaxPageNumber: () => this.maxPageNumber,
-            getPagesContainer: () => this.$pagesContainer,
-            getUuidClass: () => this.uuidClass,
-            getConfig: () => this.config,
-            calculateZoomScale: (page) => this.calculateZoomScale(page),
-            applyPageBorderToCanvas: (canvas) => this.applyPageBorderToCanvas(canvas),
-            updateDevRenderStats: () => this.updateDevRenderStats()
-        });
+		this.continuousRenderer = new ContinuousRenderer({
+			calculateZoomScale: (page) => this.calculateZoomScale(page),
+			applyPageBorderToCanvas: (canvas) => this.applyPageBorderToCanvas(canvas),
+			updateDevRenderStats: () => this.updateDevRenderStats()
+		});
 
-        this.continuousVirtualRenderer = new ContinuousVirtualRenderer({
-            getRenderRequestId: () => this.renderRequestId,
-            getPdfDocument: () => this.pdfDocument,
-            getMaxPageNumber: () => this.maxPageNumber,
-            getConfig: () => this.config,
-            getPagesContainer: () => this.$pagesContainer,
-            getCanvasContainer: () => this.$canvasContainer,
-            getUuidClass: () => this.uuidClass,
-            calculateZoomScale: (page) => this.calculateZoomScale(page),
-            applyPageBorderToCanvas: (canvas) => this.applyPageBorderToCanvas(canvas),
-            updateDevRenderStats: () => this.updateDevRenderStats()
+		this.continuousVirtualRenderer = new ContinuousVirtualRenderer({
+			calculateZoomScale: (page) => this.calculateZoomScale(page),
+			applyPageBorderToCanvas: (canvas) => this.applyPageBorderToCanvas(canvas),
+			updateDevRenderStats: () => this.updateDevRenderStats()
         });
 
         this.renderCanvasContainer();
@@ -371,32 +356,68 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
      * https://mozilla.github.io/pdf.js/examples/#:~:text=page*%20here%0A%7D)%3B-,Rendering%20the%20Page,-Each%20PDF%20page
      * @private
      */
-    private async renderPdfSinglePageMode(requestId: number) {
-        if (requestId !== this.renderRequestId) {
-            return;
-        }
+	private async renderPdfSinglePageMode(requestId: number) {
+		if (requestId !== this.renderRequestId) {
+			return;
+		}
 
-        this.applyPagesContainerLayoutForMode(UiPdfViewMode.SINGLE_PAGE);
-        await this.singlePageRenderer.render(requestId);
-    }
+		this.applyPagesContainerLayoutForMode(UiPdfViewMode.SINGLE_PAGE);
+		await this.singlePageRenderer.render(this.createSinglePageRenderContext(requestId));
+	}
 
-    private async renderPdfContinuousMode(requestId: number) {
-        if (requestId !== this.renderRequestId) {
-            return;
-        }
+	private async renderPdfContinuousMode(requestId: number) {
+		if (requestId !== this.renderRequestId) {
+			return;
+		}
 
-        this.applyPagesContainerLayoutForMode(UiPdfViewMode.CONTINUOUS);
-        await this.continuousRenderer.render(requestId);
-    }
+		this.applyPagesContainerLayoutForMode(UiPdfViewMode.CONTINUOUS);
+		await this.continuousRenderer.render(this.createContinuousRenderContext(requestId));
+	}
 
-    private async renderPdfContinuousVirtualMode(requestId: number) {
-        if (requestId !== this.renderRequestId) {
-            return;
-        }
+	private async renderPdfContinuousVirtualMode(requestId: number) {
+		if (requestId !== this.renderRequestId) {
+			return;
+		}
 
-        this.applyPagesContainerLayoutForMode(UiPdfViewMode.CONTINUOUS_VIRTUAL);
-        await this.continuousVirtualRenderer.render(requestId);
-    }
+		this.applyPagesContainerLayoutForMode(UiPdfViewMode.CONTINUOUS_VIRTUAL);
+		await this.continuousVirtualRenderer.render(this.createContinuousVirtualRenderContext(requestId));
+	}
+
+	private createSinglePageRenderContext(requestId: number): ISinglePageRenderContext {
+		return {
+			requestId,
+			getCurrentRenderRequestId: () => this.renderRequestId,
+			pdfDocument: this.pdfDocument,
+			currentPageNumber: this.currentPageNumber,
+			pagesContainer: this.$pagesContainer,
+			canvas: this.$canvas
+		};
+	}
+
+	private createContinuousRenderContext(requestId: number): IContinuousRenderContext {
+		return {
+			requestId,
+			getCurrentRenderRequestId: () => this.renderRequestId,
+			pdfDocument: this.pdfDocument,
+			maxPageNumber: this.maxPageNumber,
+			pagesContainer: this.$pagesContainer,
+			uuidClass: this.uuidClass,
+			pageBorder: this.config.pageBorder
+		};
+	}
+
+	private createContinuousVirtualRenderContext(requestId: number): IContinuousVirtualRenderContext {
+		return {
+			requestId,
+			getCurrentRenderRequestId: () => this.renderRequestId,
+			pdfDocument: this.pdfDocument,
+			maxPageNumber: this.maxPageNumber,
+			config: this.config,
+			pagesContainer: this.$pagesContainer,
+			canvasContainer: this.$canvasContainer,
+			uuidClass: this.uuidClass
+		};
+	}
 
     private applyPagesContainerLayoutForMode(viewMode: UiPdfViewMode) {
         if (viewMode === UiPdfViewMode.CONTINUOUS_VIRTUAL) {

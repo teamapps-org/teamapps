@@ -1,56 +1,60 @@
 import type {PDFDocumentProxy, PDFPageProxy, PageViewport} from "pdfjs-dist";
-import {UiPdfViewerConfig} from "../../generated/UiPdfViewerConfig";
+import {UiBorderConfig} from "../../generated/UiBorderConfig";
 
-export interface IContinuousRendererHost {
-	getRenderRequestId: () => number;
-	getPdfDocument: () => PDFDocumentProxy;
-	getMaxPageNumber: () => number;
-	getPagesContainer: () => HTMLDivElement;
-	getUuidClass: () => string;
-	getConfig: () => UiPdfViewerConfig;
+export interface IContinuousRenderContext {
+	requestId: number;
+	getCurrentRenderRequestId: () => number;
+	pdfDocument: PDFDocumentProxy;
+	maxPageNumber: number;
+	pagesContainer: HTMLDivElement;
+	uuidClass: string;
+	pageBorder?: UiBorderConfig;
+}
+
+export interface IContinuousRendererCallbacks {
 	calculateZoomScale: (page: PDFPageProxy) => { scale: number, viewport: PageViewport };
 	applyPageBorderToCanvas: (canvas: HTMLCanvasElement) => void;
 	updateDevRenderStats: () => void;
 }
 
 export class ContinuousRenderer {
-	private readonly host: IContinuousRendererHost;
+	private readonly callbacks: IContinuousRendererCallbacks;
 
-	constructor(host: IContinuousRendererHost) {
-		this.host = host;
+	constructor(callbacks: IContinuousRendererCallbacks) {
+		this.callbacks = callbacks;
 	}
 
-	public async render(requestId: number) {
-		if (requestId !== this.host.getRenderRequestId()) {
+	public async render(context: IContinuousRenderContext) {
+		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
 
-		const maxPageNumber = this.host.getMaxPageNumber();
+		const maxPageNumber = context.maxPageNumber;
 		if (maxPageNumber > 5) {
 			console.warn(`PdfViewer: CONTINUOUS mode with ${maxPageNumber} pages may impact performance. Consider using SINGLE_PAGE mode.`);
 		}
 
-		const firstPage = await this.host.getPdfDocument().getPage(1);
-		if (requestId !== this.host.getRenderRequestId()) {
+		const firstPage = await context.pdfDocument.getPage(1);
+		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
-		const {scale} = this.host.calculateZoomScale(firstPage);
-		const $pagesContainer = this.host.getPagesContainer();
+		const {scale} = this.callbacks.calculateZoomScale(firstPage);
+		const $pagesContainer = context.pagesContainer;
 		$pagesContainer.innerHTML = '';
 
 		for (let pageNum = 1; pageNum <= maxPageNumber; pageNum++) {
-			if (requestId !== this.host.getRenderRequestId()) {
+			if (context.requestId !== context.getCurrentRenderRequestId()) {
 				return;
 			}
-			const page = await this.host.getPdfDocument().getPage(pageNum);
-			if (requestId !== this.host.getRenderRequestId()) {
+			const page = await context.pdfDocument.getPage(pageNum);
+			if (context.requestId !== context.getCurrentRenderRequestId()) {
 				return;
 			}
 			const viewport = page.getViewport({scale});
 			const hiDPIScale = window.devicePixelRatio || 1;
 
 			const canvas = document.createElement('canvas');
-			canvas.className = this.host.getUuidClass();
+			canvas.className = context.uuidClass;
 			const canvasContext = canvas.getContext('2d');
 
 			canvas.width = Math.floor(viewport.width * hiDPIScale);
@@ -58,8 +62,8 @@ export class ContinuousRenderer {
 			canvas.style.width = Math.floor(viewport.width) + "px";
 			canvas.style.height = Math.floor(viewport.height) + "px";
 
-			if (this.host.getConfig().pageBorder) {
-				this.host.applyPageBorderToCanvas(canvas);
+			if (context.pageBorder) {
+				this.callbacks.applyPageBorderToCanvas(canvas);
 			}
 
 			const transform = hiDPIScale !== 1 ?
@@ -74,7 +78,7 @@ export class ContinuousRenderer {
 
 			$pagesContainer.appendChild(canvas);
 			page.render(renderContext);
-			this.host.updateDevRenderStats();
+			this.callbacks.updateDevRenderStats();
 		}
 	}
 }

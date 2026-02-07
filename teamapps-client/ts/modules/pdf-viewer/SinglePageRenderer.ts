@@ -1,37 +1,41 @@
 import type {PDFDocumentProxy, PDFPageProxy, PageViewport} from "pdfjs-dist";
 
-export interface ISinglePageRendererHost {
-	getRenderRequestId: () => number;
-	getPdfDocument: () => PDFDocumentProxy;
-	getCurrentPageNumber: () => number;
-	getPagesContainer: () => HTMLDivElement;
-	getCanvas: () => HTMLCanvasElement;
+export interface ISinglePageRenderContext {
+	requestId: number;
+	getCurrentRenderRequestId: () => number;
+	pdfDocument: PDFDocumentProxy;
+	currentPageNumber: number;
+	pagesContainer: HTMLDivElement;
+	canvas: HTMLCanvasElement;
+}
+
+export interface ISinglePageRendererCallbacks {
 	calculateZoomScale: (page: PDFPageProxy) => { scale: number, viewport: PageViewport };
 	updateDevRenderStats: () => void;
 }
 
 export class SinglePageRenderer {
-	private readonly host: ISinglePageRendererHost;
+	private readonly callbacks: ISinglePageRendererCallbacks;
 
-	constructor(host: ISinglePageRendererHost) {
-		this.host = host;
+	constructor(callbacks: ISinglePageRendererCallbacks) {
+		this.callbacks = callbacks;
 	}
 
-	public async render(requestId: number) {
-		if (requestId !== this.host.getRenderRequestId()) {
+	public async render(context: ISinglePageRenderContext) {
+		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
 
-		const $pagesContainer = this.host.getPagesContainer();
-		const canvas = this.host.getCanvas();
+		const $pagesContainer = context.pagesContainer;
+		const canvas = context.canvas;
 		$pagesContainer.innerHTML = '';
 		$pagesContainer.appendChild(canvas);
 
-		const page = await this.host.getPdfDocument().getPage(this.host.getCurrentPageNumber());
-		if (requestId !== this.host.getRenderRequestId()) {
+		const page = await context.pdfDocument.getPage(context.currentPageNumber);
+		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
-		const {viewport: pdfViewport} = this.host.calculateZoomScale(page);
+		const {viewport: pdfViewport} = this.callbacks.calculateZoomScale(page);
 		const hiDPIScale = window.devicePixelRatio || 1;
 		const canvasContext = canvas.getContext('2d');
 
@@ -52,6 +56,6 @@ export class SinglePageRenderer {
 		};
 
 		page.render(renderContext);
-		this.host.updateDevRenderStats();
+		this.callbacks.updateDevRenderStats();
 	}
 }
