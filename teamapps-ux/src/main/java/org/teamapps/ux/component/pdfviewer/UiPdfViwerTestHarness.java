@@ -41,6 +41,7 @@ import org.teamapps.ux.resource.InputStreamResource;
 import org.teamapps.ux.resource.Resource;
 
 import java.net.URL;
+import java.util.function.Consumer;
 public class UiPdfViwerTestHarness extends Panel {
 
 	public UiPdfViwerTestHarness() {
@@ -68,8 +69,8 @@ public class UiPdfViwerTestHarness extends Panel {
 		ToolbarButton zoomToWidthButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.BORDER_HORIZONTAL, "Zoom to width", "Auto-zoom to container width"));
 		ToolbarButton zoomToHeightButton = buttonGroup.addButton(ToolbarButton.createSmall(MaterialIcon.BORDER_VERTICAL, "Zoom to height", "Auto-zoom to container height"));
 
-		int[] currentPage = {1};
-		int[] maxPageNumber = {0};
+			int[] currentPage = {1};
+			int[] maxPageNumber = {0};
 			boolean[] singlePageControlsVisible = {false};
 		Runnable updatePageIndicator = () -> {
 			String caption = maxPageNumber[0] > 0 ? currentPage[0] + " / " + maxPageNumber[0] : String.valueOf(currentPage[0]);
@@ -103,56 +104,58 @@ public class UiPdfViwerTestHarness extends Panel {
 		pdfUrlRow.addComponentAutoSize(pdfUrlLabel);
 		pdfUrlRow.addComponentFillRemaining(pdfUrlField);
 
-		String testPdfLink = getSessionContext().createResourceLink(new ClassPathResource("test.pdf", "application/pdf"));
+			String testPdfLink = getSessionContext().createResourceLink(new ClassPathResource("test.pdf", "application/pdf"));
 
-		showPdfButton.onClick.addListener(() -> {
-			String url = pdfUrlField.getValue();
-			pdfViewer.setUrl(resolvePdfUrl(url, testPdfLink));
-		});
-		pdfUrlField.onSpecialKeyPressed.addListener((key) -> {
-			if (key == SpecialKey.ENTER) {
+			Runnable loadPdf = () -> {
 				String url = pdfUrlField.getValue();
 				pdfViewer.setUrl(resolvePdfUrl(url, testPdfLink));
-			}
-		});
+			};
 
-		VerticalLayout viewModeMenu = new VerticalLayout();
-		Button<BaseTemplateRecord> singlePageModeEntry = Button.create(MaterialIcon.VIEW_DAY, "Single Page Mode");
-		Button<BaseTemplateRecord> continuousModeEntry = Button.create(MaterialIcon.VIEW_STREAM, "Continuous Mode");
-		Button<BaseTemplateRecord> continuousVirtualModeEntry = Button.create(MaterialIcon.VIEW_STREAM, "Continuous Virtual");
-		viewModeMenu.addComponentAutoSize(singlePageModeEntry);
-		viewModeMenu.addComponentAutoSize(continuousModeEntry);
-		viewModeMenu.addComponentAutoSize(continuousVirtualModeEntry);
-		viewModeButton.setDropDownComponent(viewModeMenu).setDroDownPanelWidth(260);
+			showPdfButton.onClick.addListener(loadPdf::run);
+			pdfUrlField.onSpecialKeyPressed.addListener((key) -> {
+				if (key == SpecialKey.ENTER) {
+					loadPdf.run();
+				}
+			});
 
-		setTitle("PDF Viewer - Continuous Virtual");
+			VerticalLayout viewModeMenu = new VerticalLayout();
+			Button<BaseTemplateRecord> singlePageModeEntry = Button.create(MaterialIcon.VIEW_DAY, "Single Page Mode");
+			Button<BaseTemplateRecord> continuousModeEntry = Button.create(MaterialIcon.VIEW_STREAM, "Continuous Mode");
+			Button<BaseTemplateRecord> continuousVirtualModeEntry = Button.create(MaterialIcon.VIEW_STREAM, "Continuous Virtual");
+			viewModeMenu.addComponentAutoSize(singlePageModeEntry);
+			viewModeMenu.addComponentAutoSize(continuousModeEntry);
+			viewModeMenu.addComponentAutoSize(continuousVirtualModeEntry);
+			viewModeButton.setDropDownComponent(viewModeMenu).setDroDownPanelWidth(260);
 
-		singlePageModeEntry.onClicked.addListener(() -> {
-			pdfViewer.setViewMode(UiPdfViewMode.SINGLE_PAGE);
-			singlePageControlsVisible[0] = true;
-			updateSinglePageControlsVisibility.run();
-			setTitle("PDF Viewer - Single Page Mode");
-			viewModeButton.closeDropDown();
-			System.out.println("Switched to SINGLE_PAGE mode");
-		});
-
-		continuousModeEntry.onClicked.addListener(() -> {
-			pdfViewer.setViewMode(UiPdfViewMode.CONTINUOUS);
-			singlePageControlsVisible[0] = false;
-			updateSinglePageControlsVisibility.run();
-			setTitle("PDF Viewer - Continuous Mode");
-			viewModeButton.closeDropDown();
-			System.out.println("Switched to CONTINUOUS mode");
-		});
-
-		continuousVirtualModeEntry.onClicked.addListener(() -> {
-			pdfViewer.setViewMode(UiPdfViewMode.CONTINUOUS_VIRTUAL);
-			singlePageControlsVisible[0] = false;
-			updateSinglePageControlsVisibility.run();
 			setTitle("PDF Viewer - Continuous Virtual");
-			viewModeButton.closeDropDown();
-			System.out.println("Switched to CONTINUOUS_VIRTUAL mode");
-		});
+			Consumer<UiPdfViewMode> applyViewMode = (mode) -> {
+				pdfViewer.setViewMode(mode);
+				singlePageControlsVisible[0] = mode == UiPdfViewMode.SINGLE_PAGE;
+				updateSinglePageControlsVisibility.run();
+				if (mode == UiPdfViewMode.SINGLE_PAGE) {
+					setTitle("PDF Viewer - Single Page Mode");
+				} else if (mode == UiPdfViewMode.CONTINUOUS) {
+					setTitle("PDF Viewer - Continuous Mode");
+				} else if (mode == UiPdfViewMode.CONTINUOUS_VIRTUAL) {
+					setTitle("PDF Viewer - Continuous Virtual");
+				}
+				System.out.println("Switched to " + mode + " mode");
+			};
+
+			singlePageModeEntry.onClicked.addListener(() -> {
+				applyViewMode.accept(UiPdfViewMode.SINGLE_PAGE);
+				viewModeButton.closeDropDown();
+			});
+
+			continuousModeEntry.onClicked.addListener(() -> {
+				applyViewMode.accept(UiPdfViewMode.CONTINUOUS);
+				viewModeButton.closeDropDown();
+			});
+
+			continuousVirtualModeEntry.onClicked.addListener(() -> {
+				applyViewMode.accept(UiPdfViewMode.CONTINUOUS_VIRTUAL);
+				viewModeButton.closeDropDown();
+			});
 
 		decreasePageButton.onClick.addListener(() -> {
 			pdfViewer.previousPage();
