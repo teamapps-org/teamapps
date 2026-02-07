@@ -20,17 +20,18 @@ export class ContinuousVirtualRenderer {
 	private readonly host: IContinuousVirtualRendererHost;
 	private virtualizer: Virtualizer<HTMLDivElement, HTMLCanvasElement> = null;
 	private $virtualInner: HTMLDivElement = null;
-	private virtualizerCleanup: (() => void) = null;
 	private readonly virtualOverscan = 2;
 	private virtualizerScale: number = null;
 	private virtualizerHiDpiScale: number = 1;
 	private virtualEstimatePageHeight: number = 0;
-	private virtualizerPageCount: number = null;
-	private virtualizerPageSpacing: number = null;
 	private virtualPageCanvases = new Map<number, HTMLCanvasElement>();
 	private virtualPageRenderTasks = new Map<number, { scale: number, task: any }>();
 	private virtualPageRenderScales = new Map<number, number>();
+	private virtualMeasuredPageHeights = new Map<number, number>();
 	private forceVirtualizerRecreate = false;
+	private observedScrollElement: HTMLDivElement = null;
+	private scrollResizeObserver: ResizeObserver = null;
+	private scheduledRenderAnimationFrameId: number = null;
 
 	constructor(host: IContinuousVirtualRendererHost) {
 		this.host = host;
@@ -51,20 +52,21 @@ export class ContinuousVirtualRenderer {
 		this.virtualizerHiDpiScale = window.devicePixelRatio || 1;
 
 		this.cancelRenderTasks();
-		if (this.forceVirtualizerRecreate) {
+		if (this.forceVirtualizerRecreate || (this.virtualizerScale != null && this.virtualizerScale !== scale)) {
 			this.virtualPageRenderScales.clear();
+			this.virtualMeasuredPageHeights.clear();
 		}
+		this.virtualizerScale = scale;
+		this.forceVirtualizerRecreate = false;
+
 		this.ensureVirtualInnerContainer();
-		this.ensureVirtualizer(scale);
-		this.virtualizer._willUpdate();
+		this.ensureScrollObservers();
 		this.renderVirtualItems(requestId);
 	}
 
 	public teardown() {
-		if (this.virtualizerCleanup) {
-			this.virtualizerCleanup();
-			this.virtualizerCleanup = null;
-		}
+		this.detachScrollObservers();
+		this.cancelScheduledVirtualRender();
 		if (this.virtualizer) {
 			this.virtualizer = null;
 		}
@@ -74,6 +76,7 @@ export class ContinuousVirtualRenderer {
 		this.$virtualInner = null;
 		this.virtualPageCanvases.clear();
 		this.virtualPageRenderScales.clear();
+		this.virtualMeasuredPageHeights.clear();
 		this.virtualPageRenderTasks.forEach((task) => {
 			if (task?.task && typeof task.task.cancel === "function") {
 				task.task.cancel();
@@ -81,8 +84,6 @@ export class ContinuousVirtualRenderer {
 		});
 		this.virtualPageRenderTasks.clear();
 		this.virtualizerScale = null;
-		this.virtualizerPageCount = null;
-		this.virtualizerPageSpacing = null;
 	}
 
 	public cancelRenderTasks() {
@@ -103,9 +104,31 @@ export class ContinuousVirtualRenderer {
 	}
 
 	public scrollToIndex(index: number) {
-		if (this.virtualizer && (this.virtualizer as any).scrollToIndex) {
-			(this.virtualizer as any).scrollToIndex(index);
+		if (index < 0) {
+			return;
 		}
+		const scrollElement = this.host.getCanvasContainer();
+		if (!scrollElement) {
+			return;
+		}
+		scrollElement.scrollTop = this.getEstimatedOffsetForIndex(index);
+		this.scheduleVirtualRender();
+	}
+
+	private getEstimatedOffsetForIndex(index: number): number {
+		const maxPageNumber = this.host.getMaxPageNumber();
+		const clampedIndex = Math.max(0, Math.min(index, Math.max(0, maxPageNumber - 1)));
+		const gap = Math.max(0, this.host.getConfig().pageSpacing || 0);
+		let offset = 0;
+
+		for (let i = 0; i < clampedIndex; i++) {
+			offset += this.getVirtualEstimateSize(i + 1);
+			if (i < maxPageNumber - 1) {
+				offset += gap;
+			}
+		}
+
+		return Math.max(0, offset);
 	}
 
 	private ensureVirtualInnerContainer() {
@@ -123,56 +146,107 @@ export class ContinuousVirtualRenderer {
 		}
 	}
 
-	private ensureVirtualizer(scale: number) {
-		const config = this.host.getConfig();
-		const maxPageNumber = this.host.getMaxPageNumber();
-		const previousScale = this.virtualizerScale;
-		const needsNewVirtualizer = !this.virtualizer
-			|| this.forceVirtualizerRecreate
-			|| previousScale !== scale
-			|| this.virtualizerPageCount !== maxPageNumber
-			|| this.virtualizerPageSpacing !== config.pageSpacing;
+	private ensureScrollObservers() {
+		const scrollElement = this.host.getCanvasContainer();
+		if (!scrollElement || this.observedScrollElement === scrollElement) {
+			return;
+		}
 
-		this.virtualizerScale = scale;
-		if (needsNewVirtualizer) {
-			if (this.virtualizerCleanup) {
-				this.virtualizerCleanup();
-				this.virtualizerCleanup = null;
-			}
-			this.virtualizer = new Virtualizer({
-				count: maxPageNumber,
-				getScrollElement: () => this.host.getCanvasContainer(),
-				estimateSize: () => this.getVirtualEstimateSize(),
-				gap: config.pageSpacing,
-				overscan: this.virtualOverscan,
-				getItemKey: (index) => index + 1,
-				observeElementRect,
-				observeElementOffset,
-				scrollToFn: elementScroll,
-				onChange: () => this.renderVirtualItems(this.host.getRenderRequestId())
+		this.detachScrollObservers();
+		this.observedScrollElement = scrollElement;
+		this.observedScrollElement.addEventListener("scroll", this.onScroll, {passive: true});
+		window.addEventListener("resize", this.onWindowResize);
+
+		if (typeof ResizeObserver !== "undefined") {
+			this.scrollResizeObserver = new ResizeObserver(() => {
+				this.scheduleVirtualRender();
 			});
-			this.virtualizerCleanup = this.virtualizer._didMount();
-			this.virtualizerPageCount = maxPageNumber;
-			this.virtualizerPageSpacing = config.pageSpacing;
-			this.forceVirtualizerRecreate = false;
-		} else {
-			this.virtualizer.setOptions({
-				...this.virtualizer.options,
-				count: maxPageNumber,
-				gap: config.pageSpacing,
-				estimateSize: () => this.getVirtualEstimateSize()
-			});
+			this.scrollResizeObserver.observe(this.observedScrollElement);
 		}
 	}
 
-	private getVirtualEstimateSize(): number {
+	private detachScrollObservers() {
+		if (this.observedScrollElement) {
+			this.observedScrollElement.removeEventListener("scroll", this.onScroll);
+			this.observedScrollElement = null;
+		}
+		window.removeEventListener("resize", this.onWindowResize);
+		if (this.scrollResizeObserver) {
+			this.scrollResizeObserver.disconnect();
+			this.scrollResizeObserver = null;
+		}
+	}
+
+	private readonly onScroll = () => {
+		this.scheduleVirtualRender();
+	};
+
+	private readonly onWindowResize = () => {
+		this.scheduleVirtualRender();
+	};
+
+	private scheduleVirtualRender() {
+		if (this.scheduledRenderAnimationFrameId != null) {
+			return;
+		}
+		this.scheduledRenderAnimationFrameId = window.requestAnimationFrame(() => {
+			this.scheduledRenderAnimationFrameId = null;
+			this.renderVirtualItems(this.host.getRenderRequestId());
+		});
+	}
+
+	private cancelScheduledVirtualRender() {
+		if (this.scheduledRenderAnimationFrameId == null) {
+			return;
+		}
+		window.cancelAnimationFrame(this.scheduledRenderAnimationFrameId);
+		this.scheduledRenderAnimationFrameId = null;
+	}
+
+	private createVirtualizerSnapshot(): Virtualizer<HTMLDivElement, HTMLCanvasElement> | null {
+		const scrollElement = this.host.getCanvasContainer();
+		const maxPageNumber = this.host.getMaxPageNumber();
+		if (!scrollElement || maxPageNumber <= 0) {
+			return null;
+		}
+
+		const rect = scrollElement.getBoundingClientRect();
+		return new Virtualizer({
+			count: maxPageNumber,
+			getScrollElement: () => scrollElement,
+			estimateSize: (index) => this.getVirtualEstimateSize(index + 1),
+			gap: this.host.getConfig().pageSpacing,
+			overscan: this.virtualOverscan,
+			getItemKey: (index) => index + 1,
+			observeElementRect,
+			observeElementOffset,
+			scrollToFn: elementScroll,
+			initialRect: {
+				width: Math.max(0, rect.width),
+				height: Math.max(0, rect.height)
+			},
+			initialOffset: scrollElement.scrollTop
+		});
+	}
+
+	private getVirtualEstimateSize(pageNumber: number): number {
+		const measuredHeight = this.virtualMeasuredPageHeights.get(pageNumber);
+		if (measuredHeight != null) {
+			return Math.max(1, measuredHeight);
+		}
 		return Math.max(1, this.virtualEstimatePageHeight || 1);
 	}
 
 	private renderVirtualItems(requestId: number) {
-		if (requestId !== this.host.getRenderRequestId() || !this.virtualizer || !this.$virtualInner) {
+		if (requestId !== this.host.getRenderRequestId() || !this.$virtualInner) {
 			return;
 		}
+
+		const virtualizer = this.createVirtualizerSnapshot();
+		if (!virtualizer) {
+			return;
+		}
+		this.virtualizer = virtualizer;
 
 		const virtualItems = this.virtualizer.getVirtualItems();
 		this.$virtualInner.style.height = `${this.virtualizer.getTotalSize()}px`;
@@ -291,9 +365,12 @@ export class ContinuousVirtualRenderer {
 			}
 			this.virtualPageRenderTasks.delete(pageNumber);
 			this.virtualPageRenderScales.set(pageNumber, this.virtualizerScale);
+			const measuredHeight = Math.max(1, Math.floor(viewport.height));
+			const previousHeight = this.virtualMeasuredPageHeights.get(pageNumber);
+			this.virtualMeasuredPageHeights.set(pageNumber, measuredHeight);
 			canvas.style.visibility = "visible";
-			if (this.virtualizer) {
-				this.virtualizer.measureElement(canvas);
+			if (previousHeight !== measuredHeight) {
+				this.scheduleVirtualRender();
 			}
 			this.host.updateDevRenderStats();
 		} catch (error) {
