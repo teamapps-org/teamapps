@@ -223,26 +223,17 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         return this.$main;
     }
 
-    // Helper Functions
-    // ----------------
+	// Helper Functions
+	// ----------------
 
-    public isDev() {
-        return this.config.showDevTools === true;
-    }
-
-    public initDevToolsIfUninitialized() {
-        if (this.devToolsInitialized) {
-            return;
-        }
-        this.devToolsInitialized = true;
-    }
-
-    public renderDevToolsIfEnabled() {
-        if (this.isDev()) {
-            this.initDevToolsIfUninitialized();
-            this.$devToolbar.style.display = "flex";
-            this.$devRenderStats.style.display = "block";
-            this.updateDevRenderStats();
+	public renderDevToolsIfEnabled() {
+		if (this.config.showDevTools === true) {
+			if (!this.devToolsInitialized) {
+				this.devToolsInitialized = true;
+			}
+			this.$devToolbar.style.display = "flex";
+			this.$devRenderStats.style.display = "block";
+			this.updateDevRenderStats();
         } else {
             this.$devToolbar.style.display = "none";
             this.$devRenderStats.style.display = "none";
