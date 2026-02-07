@@ -275,64 +275,65 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // Core Class Logic
     // -----------------
 
-    private calculateZoomScale(page: PDFPageProxy): { scale: number, viewport: PageViewport } {
-        let scale = [UiPdfZoomMode.TO_HEIGHT, UiPdfZoomMode.TO_WIDTH].includes(this.config.zoomMode)
-            ? 1.0 : (this.config.zoomFactor ?? 1.0);
+	private calculateZoomScale(page: PDFPageProxy): { scale: number, viewport: PageViewport } {
+		const zoomModeAtInvocation = this.config.zoomMode;
+		const zoomResult = this.computeZoomScale(page, zoomModeAtInvocation, this.config.zoomFactor ?? 1.0);
+		this.applyAutoZoomResult(zoomResult, zoomModeAtInvocation);
+		return {scale: zoomResult.scale, viewport: zoomResult.viewport};
+	}
 
-        let pdfViewport = page.getViewport({
-            scale
-        });
+	private computeZoomScale(page: PDFPageProxy, zoomMode: UiPdfZoomMode, zoomFactor: number): {
+		scale: number,
+		viewport: PageViewport,
+		autoZoomFactor?: number
+	} {
+		let scale = [UiPdfZoomMode.TO_HEIGHT, UiPdfZoomMode.TO_WIDTH].includes(zoomMode)
+			? 1.0 : zoomFactor;
+		let viewport = page.getViewport({scale});
 
-        if (this.config.zoomMode === UiPdfZoomMode.TO_WIDTH) {
-            // calc the scale based on available width
-            const containerWidth = this.$canvasContainer.clientWidth;
-            if (containerWidth <= 0) {
-                return {scale, viewport: pdfViewport};
-            }
-            let newScale = containerWidth / pdfViewport.width;
-            newScale = floorToPrecision(newScale, 2);
-            // subtract save space for scrollbars
-            newScale = Math.max(0.1, newScale - 0.1);
+		if (zoomMode === UiPdfZoomMode.TO_WIDTH) {
+			const containerWidth = this.$canvasContainer.clientWidth;
+			if (containerWidth <= 0) {
+				return {scale, viewport};
+			}
+			let autoZoomFactor = containerWidth / viewport.width;
+			autoZoomFactor = floorToPrecision(autoZoomFactor, 2);
+			autoZoomFactor = Math.max(0.1, autoZoomFactor - 0.1);
+			scale = autoZoomFactor;
+			viewport = page.getViewport({scale});
+			return {scale, viewport, autoZoomFactor};
+		}
 
-            // write the right scale factor back to the config
-            this.config.zoomFactor = newScale;
-            // use the newScale
-            scale = newScale;
-            pdfViewport = page.getViewport({scale});
-            // stop the calculation from happening again until it is requested again
-            this.config.zoomMode = UiPdfZoomMode.MANUAL;
-            // send the event of the new zoom factor to the server
-            this.onZoomFactorAutoChanged.fire({
-                zoomFactor: newScale
-            })
-        }
+		if (zoomMode === UiPdfZoomMode.TO_HEIGHT) {
+			const containerHeight = this.$canvasContainer.clientHeight;
+			const availableHeight = containerHeight - this.config.padding * 2;
+			if (availableHeight <= 0) {
+				return {scale, viewport};
+			}
+			let autoZoomFactor = availableHeight / viewport.height;
+			autoZoomFactor = floorToPrecision(autoZoomFactor, 2);
+			scale = autoZoomFactor;
+			viewport = page.getViewport({scale});
+			return {scale, viewport, autoZoomFactor};
+		}
 
-        if (this.config.zoomMode === UiPdfZoomMode.TO_HEIGHT) {
-            // calc the scale based on available heigth
-            const containerHeight = this.$canvasContainer.clientHeight;
-            // remove padding from container height to make sure that pdf page fits into container with padding
-            const availableHeight = containerHeight - this.config.padding * 2;
-            if (availableHeight <= 0) {
-                return {scale, viewport: pdfViewport};
-            }
-            let newScale = availableHeight / pdfViewport.height;
-            newScale = floorToPrecision(newScale, 2);
+		return {scale, viewport};
+	}
 
-            // write the right scale factor back to the config
-            this.config.zoomFactor = newScale;
-            // use the newScale
-            scale = newScale;
-            pdfViewport = page.getViewport({scale});
-            // stop the calculation from happening again until it is requested again
-            this.config.zoomMode = UiPdfZoomMode.MANUAL;
-            // send the event of the new zoom factor to the server
-            this.onZoomFactorAutoChanged.fire({
-                zoomFactor: newScale
-            });
-        }
-
-        return {scale, viewport: pdfViewport};
-    }
+	private applyAutoZoomResult(zoomResult: { autoZoomFactor?: number }, zoomModeAtInvocation: UiPdfZoomMode) {
+		if (zoomResult.autoZoomFactor == null) {
+			return;
+		}
+		// Ignore stale updates when zoom mode changed concurrently.
+		if (this.config.zoomMode !== zoomModeAtInvocation) {
+			return;
+		}
+		this.config.zoomFactor = zoomResult.autoZoomFactor;
+		this.config.zoomMode = UiPdfZoomMode.MANUAL;
+		this.onZoomFactorAutoChanged.fire({
+			zoomFactor: zoomResult.autoZoomFactor
+		});
+	}
 
     /**
      * bjesuiter  2025-03-28: only supports page-based rendering for now, sicne it's easier to implement.
