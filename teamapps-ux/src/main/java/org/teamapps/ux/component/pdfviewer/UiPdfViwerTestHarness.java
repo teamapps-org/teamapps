@@ -70,7 +70,7 @@ public class UiPdfViwerTestHarness extends Panel {
 
 		int[] currentPage = {1};
 		int[] maxPageNumber = {0};
-		boolean[] singlePageControlsVisible = {true};
+			boolean[] singlePageControlsVisible = {false};
 		Runnable updatePageIndicator = () -> {
 			String caption = maxPageNumber[0] > 0 ? currentPage[0] + " / " + maxPageNumber[0] : String.valueOf(currentPage[0]);
 			ToolbarButton indicator = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_SMALL, new BaseTemplateRecord<>((org.teamapps.icons.Icon) null, (String) null, caption, "Current page", null));
@@ -197,8 +197,9 @@ public class UiPdfViwerTestHarness extends Panel {
 			System.out.println("Zoom factor changed: " + zoomFactorChangeEvent.getZoomFactor());
 		});
 
-		pdfViewer.setUrl(defaultPdfUrl);
-		updatePageIndicator.run();
+			pdfViewer.setUrl(defaultPdfUrl);
+			updatePageIndicator.run();
+			updateSinglePageControlsVisibility.run();
 
 		setToolbar(toolbar);
 		VerticalLayout layout = new VerticalLayout();
