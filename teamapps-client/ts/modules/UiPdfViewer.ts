@@ -36,11 +36,11 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {floorToPrecision} from "./util/precise-float-math";
 import {UiPdfZoomMode} from "../generated/UiPdfZoomMode";
 import {ContinuousVirtualRenderer} from "./pdf-viewer/ContinuousVirtualRenderer";
-import type {IContinuousVirtualRenderContext} from "./pdf-viewer/ContinuousVirtualRenderer";
+import type {ContinuousVirtualRenderContext} from "./pdf-viewer/ContinuousVirtualRenderer";
 import {SinglePageRenderer} from "./pdf-viewer/SinglePageRenderer";
-import type {ISinglePageRenderContext} from "./pdf-viewer/SinglePageRenderer";
+import type {SinglePageRenderContext} from "./pdf-viewer/SinglePageRenderer";
 import {ContinuousRenderer} from "./pdf-viewer/ContinuousRenderer";
-import type {IContinuousRenderContext} from "./pdf-viewer/ContinuousRenderer";
+import type {ContinuousRenderContext} from "./pdf-viewer/ContinuousRenderer";
 
 // @ts-ignore
 // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs';
@@ -383,7 +383,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 		await this.continuousVirtualRenderer.render(this.createContinuousVirtualRenderContext(requestId));
 	}
 
-	private createSinglePageRenderContext(requestId: number): ISinglePageRenderContext {
+	private createSinglePageRenderContext(requestId: number): SinglePageRenderContext {
 		return {
 			requestId,
 			getCurrentRenderRequestId: () => this.renderRequestId,
@@ -394,7 +394,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 		};
 	}
 
-	private createContinuousRenderContext(requestId: number): IContinuousRenderContext {
+	private createContinuousRenderContext(requestId: number): ContinuousRenderContext {
 		return {
 			requestId,
 			getCurrentRenderRequestId: () => this.renderRequestId,
@@ -406,7 +406,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 		};
 	}
 
-	private createContinuousVirtualRenderContext(requestId: number): IContinuousVirtualRenderContext {
+	private createContinuousVirtualRenderContext(requestId: number): ContinuousVirtualRenderContext {
 		return {
 			requestId,
 			getCurrentRenderRequestId: () => this.renderRequestId,

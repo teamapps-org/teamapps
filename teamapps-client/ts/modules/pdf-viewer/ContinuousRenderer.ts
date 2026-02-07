@@ -1,30 +1,28 @@
-import type {PDFDocumentProxy, PDFPageProxy, PageViewport} from "pdfjs-dist";
+import type {PDFPageProxy, PageViewport} from "pdfjs-dist";
 import {UiBorderConfig} from "../../generated/UiBorderConfig";
+import type {BaseRenderContext} from "./BaseRenderContext";
 
-export interface IContinuousRenderContext {
-	requestId: number;
-	getCurrentRenderRequestId: () => number;
-	pdfDocument: PDFDocumentProxy;
+export type ContinuousRenderContext = BaseRenderContext & {
 	maxPageNumber: number;
 	pagesContainer: HTMLDivElement;
 	uuidClass: string;
 	pageBorder?: UiBorderConfig;
-}
+};
 
-export interface IContinuousRendererCallbacks {
+export type ContinuousRendererCallbacks = {
 	calculateZoomScale: (page: PDFPageProxy) => { scale: number, viewport: PageViewport };
 	applyPageBorderToCanvas: (canvas: HTMLCanvasElement) => void;
 	updateDevRenderStats: () => void;
-}
+};
 
 export class ContinuousRenderer {
-	private readonly callbacks: IContinuousRendererCallbacks;
+	private readonly callbacks: ContinuousRendererCallbacks;
 
-	constructor(callbacks: IContinuousRendererCallbacks) {
+	constructor(callbacks: ContinuousRendererCallbacks) {
 		this.callbacks = callbacks;
 	}
 
-	public async render(context: IContinuousRenderContext) {
+	public async render(context: ContinuousRenderContext) {
 		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
