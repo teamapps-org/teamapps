@@ -202,6 +202,12 @@ bgproc stop -n teamapps-frontend
 | `onPdfInitialized` | `PdfInitializedEvent` (contains `numberOfPages`) | Fired when PDF document is loaded and first page is rendered |
 | `onZoomFactorAutoChanged` | `ZoomFactorAutoChangedEvent` (contains `zoomFactor`) | Fired when zoom factor is auto-calculated by TO_WIDTH or TO_HEIGHT modes |
 
+### Runtime Behavior Notes
+
+- `setUrl(String url)` is **not** a one-time initializer. It may be called multiple times during a component lifetime.
+- Each `setUrl(...)` call replaces the currently displayed document and starts a new async load/render cycle.
+- `onPdfInitialized` is fired after each successful `setUrl(...)` load/render cycle, with the page count of the newly loaded document.
+
 #### Enums
 
 **UiPdfViewMode:**
