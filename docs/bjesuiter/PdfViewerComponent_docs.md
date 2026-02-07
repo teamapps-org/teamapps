@@ -94,6 +94,16 @@ Preparation:
 - Do not touch untracked files. Never commit them without approval. Only commit already tracked files without approval.
 - When committing, use prefix: UiPdfViewer:
 
+### Workflow: Adding a new event
+
+When adding a new `UiPdfViewer` event, follow this exact order:
+
+1. Update the `.dto` file.
+2. Run `mvn clean install` in the repo root.
+3. Update the corresponding `.java` file.
+4. Update the corresponding `.ts` file.
+5. Restart the dev server via `docs/bjesuiter/start_pdf_dev_env.sh`.
+
 ### Start/Restart Jetty Test Server (CLI, background)
 
 This mirrors the IntelliJ run config:
