@@ -75,9 +75,11 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private pdfDocument: PDFDocumentProxy;
     private currentPageNumber: number = 1;
     private maxPageNumber: number = 0;
-    private readonly singlePageRenderer: SinglePageRenderer;
-    private readonly continuousRenderer: ContinuousRenderer;
-    private readonly continuousVirtualRenderer: ContinuousVirtualRenderer;
+	private readonly singlePageRenderer: SinglePageRenderer;
+	private readonly continuousRenderer: ContinuousRenderer;
+	private readonly continuousVirtualRenderer: ContinuousVirtualRenderer;
+	// Monotonic token for setUrl() calls: only the most recent async load may apply state/events.
+	private documentLoadRequestId: number = 0;
 
     // Events for the server
     // ---------------------
@@ -477,20 +479,40 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     // Setters for Server API
     // -----------------------™
 
-    public async setUrl(url: string) {
-        this.pdfDocument = await pdfjsLib.getDocument(url).promise;
+	public async setUrl(url: string) {
+		// Every setUrl() starts a new load generation and invalidates all previous in-flight loads.
+		const loadRequestId = ++this.documentLoadRequestId;
+		try {
+			const pdfDocument = await pdfjsLib.getDocument(url).promise;
+			// Ignore stale completion from an older setUrl() call.
+			if (loadRequestId !== this.documentLoadRequestId) {
+				return;
+			}
 
-        this.maxPageNumber = this.pdfDocument.numPages;
-        this.updateDevRenderStats();
+			this.pdfDocument = pdfDocument;
+			this.maxPageNumber = this.pdfDocument.numPages;
+			this.currentPageNumber = Math.max(1, Math.min(this.currentPageNumber, this.maxPageNumber));
+			this.updateDevRenderStats();
 
-        await this.renderPdfDocument();
+			await this.renderPdfDocument();
+			// Rendering may finish after a newer setUrl() call has started.
+			if (loadRequestId !== this.documentLoadRequestId) {
+				return;
+			}
 
-        // Tell the server the document has loaded after the first renderPdfDocument
-        // since it is async, I can simply wait for it to finish
-        this.onPdfInitialized.fire({
-            numberOfPages: this.maxPageNumber,
-        })
-    }
+			// Tell the server the document has loaded after the first renderPdfDocument
+			// since it is async, I can simply wait for it to finish
+			this.onPdfInitialized.fire({
+				numberOfPages: this.maxPageNumber,
+			});
+		} catch (error) {
+			// Report only if this is still the active load request.
+			if (loadRequestId !== this.documentLoadRequestId) {
+				return;
+			}
+			console.error("UiPdfViewer: failed to load PDF URL", {url, error});
+		}
+	}
 
     public async setShowDevTools(showDevTools:boolean) {
         this.config.showDevTools = showDevTools;
