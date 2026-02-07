@@ -3,21 +3,26 @@ import {Virtualizer, elementScroll, observeElementOffset, observeElementRect} fr
 import type {VirtualItem} from "@tanstack/virtual-core";
 import {UiPdfViewerConfig} from "../../generated/UiPdfViewerConfig";
 
-export interface IContinuousVirtualRendererHost {
-	getRenderRequestId: () => number;
-	getPdfDocument: () => PDFDocumentProxy;
-	getMaxPageNumber: () => number;
-	getConfig: () => UiPdfViewerConfig;
-	getPagesContainer: () => HTMLDivElement;
-	getCanvasContainer: () => HTMLDivElement;
-	getUuidClass: () => string;
+export interface IContinuousVirtualRenderContext {
+	requestId: number;
+	getCurrentRenderRequestId: () => number;
+	pdfDocument: PDFDocumentProxy;
+	maxPageNumber: number;
+	config: UiPdfViewerConfig;
+	pagesContainer: HTMLDivElement;
+	canvasContainer: HTMLDivElement;
+	uuidClass: string;
+}
+
+export interface IContinuousVirtualRendererCallbacks {
 	calculateZoomScale: (page: PDFPageProxy) => { scale: number, viewport: PageViewport };
 	applyPageBorderToCanvas: (canvas: HTMLCanvasElement) => void;
 	updateDevRenderStats: () => void;
 }
 
 export class ContinuousVirtualRenderer {
-	private readonly host: IContinuousVirtualRendererHost;
+	private readonly callbacks: IContinuousVirtualRendererCallbacks;
+	private activeContext: IContinuousVirtualRenderContext = null;
 	private virtualizer: Virtualizer<HTMLDivElement, HTMLCanvasElement> = null;
 	private $virtualInner: HTMLDivElement = null;
 	private readonly virtualOverscan = 2;
@@ -33,20 +38,21 @@ export class ContinuousVirtualRenderer {
 	private scrollResizeObserver: ResizeObserver = null;
 	private scheduledRenderAnimationFrameId: number = null;
 
-	constructor(host: IContinuousVirtualRendererHost) {
-		this.host = host;
+	constructor(callbacks: IContinuousVirtualRendererCallbacks) {
+		this.callbacks = callbacks;
 	}
 
-	public async render(requestId: number) {
-		if (requestId !== this.host.getRenderRequestId()) {
+	public async render(context: IContinuousVirtualRenderContext) {
+		this.activeContext = context;
+		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
 
-		const firstPage = await this.host.getPdfDocument().getPage(1);
-		if (requestId !== this.host.getRenderRequestId()) {
+		const firstPage = await context.pdfDocument.getPage(1);
+		if (context.requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
-		const {scale} = this.host.calculateZoomScale(firstPage);
+		const {scale} = this.callbacks.calculateZoomScale(firstPage);
 		const viewport = firstPage.getViewport({scale});
 		this.virtualEstimatePageHeight = Math.floor(viewport.height);
 		this.virtualizerHiDpiScale = window.devicePixelRatio || 1;
@@ -61,10 +67,11 @@ export class ContinuousVirtualRenderer {
 
 		this.ensureVirtualInnerContainer();
 		this.ensureScrollObservers();
-		this.renderVirtualItems(requestId);
+		this.renderVirtualItems(context.requestId);
 	}
 
 	public teardown() {
+		this.activeContext = null;
 		this.detachScrollObservers();
 		this.cancelScheduledVirtualRender();
 		if (this.virtualizer) {
@@ -107,7 +114,11 @@ export class ContinuousVirtualRenderer {
 		if (index < 0) {
 			return;
 		}
-		const scrollElement = this.host.getCanvasContainer();
+		const context = this.activeContext;
+		if (!context) {
+			return;
+		}
+		const scrollElement = context.canvasContainer;
 		if (!scrollElement) {
 			return;
 		}
@@ -116,9 +127,13 @@ export class ContinuousVirtualRenderer {
 	}
 
 	private getEstimatedOffsetForIndex(index: number): number {
-		const maxPageNumber = this.host.getMaxPageNumber();
+		const context = this.activeContext;
+		if (!context) {
+			return 0;
+		}
+		const maxPageNumber = context.maxPageNumber;
 		const clampedIndex = Math.max(0, Math.min(index, Math.max(0, maxPageNumber - 1)));
-		const gap = Math.max(0, this.host.getConfig().pageSpacing || 0);
+		const gap = Math.max(0, context.config.pageSpacing || 0);
 		let offset = 0;
 
 		for (let i = 0; i < clampedIndex; i++) {
@@ -134,12 +149,16 @@ export class ContinuousVirtualRenderer {
 	private ensureVirtualInnerContainer() {
 		if (!this.$virtualInner) {
 			this.$virtualInner = document.createElement('div');
-			this.$virtualInner.className = `${this.host.getUuidClass()} virtual-inner`;
+			this.$virtualInner.className = `${this.activeContext?.uuidClass ?? ""} virtual-inner`;
 			this.$virtualInner.style.position = "relative";
 			this.$virtualInner.style.width = "100%";
 		}
 
-		const $pagesContainer = this.host.getPagesContainer();
+		const context = this.activeContext;
+		if (!context) {
+			return;
+		}
+		const $pagesContainer = context.pagesContainer;
 		if (this.$virtualInner.parentElement !== $pagesContainer) {
 			$pagesContainer.innerHTML = '';
 			$pagesContainer.appendChild(this.$virtualInner);
@@ -147,7 +166,11 @@ export class ContinuousVirtualRenderer {
 	}
 
 	private ensureScrollObservers() {
-		const scrollElement = this.host.getCanvasContainer();
+		const context = this.activeContext;
+		if (!context) {
+			return;
+		}
+		const scrollElement = context.canvasContainer;
 		if (!scrollElement || this.observedScrollElement === scrollElement) {
 			return;
 		}
@@ -191,7 +214,11 @@ export class ContinuousVirtualRenderer {
 		}
 		this.scheduledRenderAnimationFrameId = window.requestAnimationFrame(() => {
 			this.scheduledRenderAnimationFrameId = null;
-			this.renderVirtualItems(this.host.getRenderRequestId());
+			const context = this.activeContext;
+			if (!context) {
+				return;
+			}
+			this.renderVirtualItems(context.getCurrentRenderRequestId());
 		});
 	}
 
@@ -204,8 +231,12 @@ export class ContinuousVirtualRenderer {
 	}
 
 	private createVirtualizerSnapshot(): Virtualizer<HTMLDivElement, HTMLCanvasElement> | null {
-		const scrollElement = this.host.getCanvasContainer();
-		const maxPageNumber = this.host.getMaxPageNumber();
+		const context = this.activeContext;
+		if (!context) {
+			return null;
+		}
+		const scrollElement = context.canvasContainer;
+		const maxPageNumber = context.maxPageNumber;
 		if (!scrollElement || maxPageNumber <= 0) {
 			return null;
 		}
@@ -215,7 +246,7 @@ export class ContinuousVirtualRenderer {
 			count: maxPageNumber,
 			getScrollElement: () => scrollElement,
 			estimateSize: (index) => this.getVirtualEstimateSize(index + 1),
-			gap: this.host.getConfig().pageSpacing,
+			gap: context.config.pageSpacing,
 			overscan: this.virtualOverscan,
 			getItemKey: (index) => index + 1,
 			observeElementRect,
@@ -238,7 +269,8 @@ export class ContinuousVirtualRenderer {
 	}
 
 	private renderVirtualItems(requestId: number) {
-		if (requestId !== this.host.getRenderRequestId() || !this.$virtualInner) {
+		const context = this.activeContext;
+		if (!context || requestId !== context.getCurrentRenderRequestId() || !this.$virtualInner) {
 			return;
 		}
 
@@ -276,17 +308,17 @@ export class ContinuousVirtualRenderer {
 		}
 
 		this.renderVisibleVirtualPages(virtualItems, requestId);
-		this.host.updateDevRenderStats();
+		this.callbacks.updateDevRenderStats();
 	}
 
 	private getOrCreateVirtualCanvas(pageNumber: number): HTMLCanvasElement {
 		let canvas = this.virtualPageCanvases.get(pageNumber);
 		if (!canvas) {
 			canvas = document.createElement('canvas');
-			canvas.className = this.host.getUuidClass();
+			canvas.className = this.activeContext?.uuidClass ?? "";
 			canvas.dataset.index = String(pageNumber - 1);
-			if (this.host.getConfig().pageBorder) {
-				this.host.applyPageBorderToCanvas(canvas);
+			if (this.activeContext?.config.pageBorder) {
+				this.callbacks.applyPageBorderToCanvas(canvas);
 			}
 			this.virtualPageCanvases.set(pageNumber, canvas);
 		}
@@ -294,7 +326,8 @@ export class ContinuousVirtualRenderer {
 	}
 
 	private renderVisibleVirtualPages(virtualItems: VirtualItem[], requestId: number) {
-		if (requestId !== this.host.getRenderRequestId()) {
+		const context = this.activeContext;
+		if (!context || requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
 
@@ -317,7 +350,8 @@ export class ContinuousVirtualRenderer {
 	}
 
 	private async renderVirtualPage(pageNumber: number, canvas: HTMLCanvasElement, requestId: number) {
-		if (requestId !== this.host.getRenderRequestId()) {
+		const context = this.activeContext;
+		if (!context || requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
 
@@ -325,7 +359,7 @@ export class ContinuousVirtualRenderer {
 		if (!page) {
 			return;
 		}
-		if (requestId !== this.host.getRenderRequestId()) {
+		if (requestId !== context.getCurrentRenderRequestId()) {
 			return;
 		}
 		const viewport = page.getViewport({scale: this.virtualizerScale});
@@ -360,7 +394,7 @@ export class ContinuousVirtualRenderer {
 		this.virtualPageRenderTasks.set(pageNumber, {scale: this.virtualizerScale, task: renderTask});
 		try {
 			await renderTask.promise;
-			if (requestId !== this.host.getRenderRequestId()) {
+			if (requestId !== context.getCurrentRenderRequestId()) {
 				return;
 			}
 			this.virtualPageRenderTasks.delete(pageNumber);
@@ -372,16 +406,17 @@ export class ContinuousVirtualRenderer {
 			if (previousHeight !== measuredHeight) {
 				this.scheduleVirtualRender();
 			}
-			this.host.updateDevRenderStats();
+			this.callbacks.updateDevRenderStats();
 		} catch (error) {
 			this.virtualPageRenderTasks.delete(pageNumber);
 		}
 	}
 
 	private async loadPageForRender(pageNumber: number, requestId: number): Promise<PDFPageProxy | null> {
-		if (requestId !== this.host.getRenderRequestId()) {
+		const context = this.activeContext;
+		if (!context || requestId !== context.getCurrentRenderRequestId()) {
 			return null;
 		}
-		return this.host.getPdfDocument().getPage(pageNumber);
+		return context.pdfDocument.getPage(pageNumber);
 	}
 }
