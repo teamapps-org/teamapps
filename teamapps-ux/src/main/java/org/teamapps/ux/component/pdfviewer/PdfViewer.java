@@ -7,6 +7,10 @@ import org.teamapps.ux.component.AbstractComponent;
 public class PdfViewer extends AbstractComponent {
     public final Event<UiPdfViewer.PdfInitializedEvent> onPdfInitialized = new Event<>();
     public final Event<UiPdfViewer.ZoomFactorAutoChangedEvent> onZoomFactorAutoChanged = new Event<>();
+    /**
+     * Fired when loading a PDF URL fails in the client.
+     * Payload contains the requested URL and an error message from the client-side load failure.
+     */
     public final Event<UiPdfViewer.PdfLoadFailedEvent> onPdfLoadFailed = new Event<>();
 
     protected String url;
