@@ -725,6 +725,9 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
         if (zoomMode !== UiPdfZoomMode.TO_WIDTH && zoomMode !== UiPdfZoomMode.TO_HEIGHT) {
             return;
         }
+        // IMPORTANT:
+        // Do not restore/preserve scroll position around virtual auto-zoom transitions.
+        // Attempts to keep scroll anchors here caused unstable/broken virtual rendering.
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         this.config.zoomMode = zoomMode;
         this.teardownContinuousVirtualMode();
