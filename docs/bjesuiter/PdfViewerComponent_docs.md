@@ -176,9 +176,42 @@ bgproc logs -n teamapps-frontend
 bgproc stop -n teamapps-frontend
 ```
 
-## Compile the DTO again 
+## Post-Merge Regeneration Flow (Complete)
 
-- run clean + install for the Teamapps UX Subpackage
+Use this exact flow after merging `master` into a feature branch, especially when merge conflicts touched `teamapps-client/package.json`, `teamapps-client/yarn.lock`, or anything under `teamapps-ui-api/src/main/dto`.
+
+1. Confirm merge conflicts are resolved and staged.
+2. Regenerate DTO outputs first (this is critical):
+```bash
+mvn clean install -pl teamapps-ui-api -am
+```
+This builds required upstream modules (`teamapps-ui-dsl`) and regenerates:
+- Java DTOs in `teamapps-ui-api/target/generated-sources/dto`
+- TypeScript DTO configs in `teamapps-client/ts/generated` (gitignored, local build artifacts)
+
+3. Rebuild the client module:
+```bash
+cd teamapps-client
+yarn install
+mvn clean install
+```
+
+4. Verify merge/build state:
+- No `UU` files in `git status --short`
+- No `.git/MERGE_HEAD` file (merge concluded)
+- `teamapps-client` Maven build ends with `BUILD SUCCESS`
+
+### Troubleshooting
+
+- If you see errors like:
+  - `TS2307: Cannot find module '../generated/...`
+  - `Property '...' does not exist on type 'UiMap2Config'` or `UiTreeConfig`
+  this means `teamapps-client/ts/generated` is stale. Re-run step 2.
+
+- `mvn clean install` inside `teamapps-client` runs `yarn sync-pom-version` and may update `teamapps-client/package.json` version. If this change is not intended for the commit, restore it:
+```bash
+git restore teamapps-client/package.json
+```
 
 ## Specification
 
