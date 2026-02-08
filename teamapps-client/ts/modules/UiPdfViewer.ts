@@ -84,6 +84,7 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     private pdfDocument: PDFDocumentProxy;
     private currentPageNumber: number = 1;
     private maxPageNumber: number = 0;
+	private pendingShowPageNumber: number = null;
 	private readonly singlePageRenderer: SinglePageRenderer;
 	private readonly continuousRenderer: ContinuousRenderer;
 	private readonly continuousVirtualRenderer: ContinuousVirtualRenderer;
@@ -535,6 +536,10 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 			if (loadRequestId !== this.documentLoadRequestId) {
 				return;
 			}
+			await this.applyPendingShowPageRequest();
+			if (loadRequestId !== this.documentLoadRequestId) {
+				return;
+			}
 
 			// Guard event emission as well: stale URL loads must not emit onPdfInitialized.
 			// Tell the server the document has loaded after the first renderPdfDocument
@@ -556,6 +561,15 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
 		}
 	}
 
+	private async applyPendingShowPageRequest() {
+		const pendingPage = this.pendingShowPageNumber;
+		if (pendingPage == null) {
+			return;
+		}
+		this.pendingShowPageNumber = null;
+		await this.showPage(pendingPage);
+	}
+
     public async setShowDevTools(showDevTools:boolean) {
         this.config.showDevTools = showDevTools;
         this.renderDevToolsIfEnabled();
@@ -567,6 +581,13 @@ export class UiPdfViewer extends AbstractUiComponent<UiPdfViewerConfig> implemen
     }
 
     public async showPage(page: number) {
+		if (this.maxPageNumber <= 0) {
+			if (page >= 1) {
+				this.pendingShowPageNumber = page;
+			}
+			return;
+		}
+
         if (page >= 1 && page <= this.maxPageNumber ) {
             this.currentPageNumber = page;
             this.updateDevRenderStats();
