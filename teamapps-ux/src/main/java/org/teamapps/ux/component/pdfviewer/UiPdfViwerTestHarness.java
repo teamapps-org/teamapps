@@ -190,7 +190,7 @@ public class UiPdfViwerTestHarness extends Panel {
 		});
 
 		pdfViewer.onPdfInitialized.addListener((initEvent) -> {
-			System.out.println("PDF viewer rendered, page number: " + initEvent.getNumberOfPages());
+			System.out.println("PDF viewer rendered, max page number: " + initEvent.getNumberOfPages());
 			maxPageNumber[0] = initEvent.getNumberOfPages();
 			currentPage[0] = 1;
 			updatePageIndicator.run();
