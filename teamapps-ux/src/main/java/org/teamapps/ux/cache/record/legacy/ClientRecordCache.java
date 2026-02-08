@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2025 TeamApps.org
+ * Copyright (C) 2014 - 2026 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,6 +113,10 @@ public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientReco
 
 		return new CacheManipulationHandle<>(new ArrayList<>(uiRecordsByRecord.values()),
 				() -> {
+					removeEldestEntries(this.recordsByClientId, Integer.MAX_VALUE, (id, record) -> {
+						return !newRecords.contains(record) // don't purge the new records!
+								&& purgeDecider.test(record, id);
+					});
 					this.recordsByClientId.putAll(newRecordsByClientId);
 					this.unacknowledgedRecordsByClientId.keySet().removeAll(newRecordsByClientId.keySet());
 				});

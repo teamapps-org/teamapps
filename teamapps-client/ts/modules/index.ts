@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2025 TeamApps.org
+ * Copyright (C) 2014 - 2026 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,6 +128,7 @@ export {UiRichTextEditor} from "./formfield/UiRichTextEditor";
 export {UiColorPicker} from "./formfield/UiColorPicker";
 export {UiFieldGroup} from "./formfield/UiFieldGroup";
 export {UiTemplateField} from "./formfield/UiTemplateField";
+export {UiTextColorMarkerField} from "./formfield/UiTextColorMarkerField";
 export {UiLinkButton} from "./UiLinkButton";
 export {UiDiv} from "./UiDiv";
 export {UiCollapsible} from "./UiCollapsible";

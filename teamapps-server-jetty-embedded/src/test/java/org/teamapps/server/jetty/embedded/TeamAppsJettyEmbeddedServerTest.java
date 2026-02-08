@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2025 TeamApps.org
+ * Copyright (C) 2014 - 2026 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,24 +21,23 @@ package org.teamapps.server.jetty.embedded;
 
 import org.teamapps.ux.component.pdfviewer.UiPdfViwerTestHarness;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.webcontroller.WebController;
+import org.teamapps.ux.session.SessionContext;
+
+import java.util.Locale;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
-		WebController controller = sessionContext -> {
-			RootPanel rootPanel = new RootPanel();
-			sessionContext.addRootPanel(null, rootPanel);
+		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
+					sessionContext.setLocale(Locale.US);
+					RootPanel rootPanel = sessionContext.addRootPanel();
 
-			UiPdfViwerTestHarness pdfViewerHarness = new UiPdfViwerTestHarness();
-			rootPanel.setContent(pdfViewerHarness);
-		};
-
-		TeamAppsJettyEmbeddedServer.builder(controller)
+					UiPdfViwerTestHarness pdfViewerHarness = new UiPdfViwerTestHarness();
+					rootPanel.setContent(pdfViewerHarness);
+				})
 				.setPort(8082)
 				.build()
 				.start();
 	}
-
 
 }
