@@ -125,6 +125,42 @@ mvn clean install
 git restore teamapps-client/package.json
 ```
 
+## Continuous Virtual Mode (Evergreen)
+
+### Implementation anchors
+
+- DTO enum: `teamapps-ui-api/src/main/dto/UiPdfViewer.dto` (`UiPdfViewMode.CONTINUOUS_VIRTUAL`).
+- Main component: `teamapps-client/ts/modules/UiPdfViewer.ts`.
+- Virtual renderer: `teamapps-client/ts/modules/pdf-viewer/ContinuousVirtualRenderer.ts`.
+- Dependency: `@tanstack/virtual-core`.
+
+### Runtime behavior
+
+- `CONTINUOUS_VIRTUAL` renders only visible/nearby pages instead of rendering every page canvas at once.
+- Scroll container is `this.$canvasContainer`; virtual content is rendered into an inner positioned container (`$virtualInner`) with total height `virtualizer.getTotalSize()`.
+- Virtual items are positioned via `translateY(virtualItem.start)`.
+- `pageSpacing` is applied in continuous layouts and in virtual gap calculation.
+- Overscan is currently fixed in code (`virtualOverscan = 2`), not DTO-configurable.
+
+### Sizing and rendering model
+
+- Initial page height estimate is derived from page 1 at current zoom.
+- After page render, measured heights are cached (`virtualMeasuredPageHeights`) to improve placement for mixed-size documents.
+- HiDPI rendering is handled by scaling canvas dimensions with `window.devicePixelRatio`.
+- In-flight page render tasks are tracked per page and canceled when stale.
+
+### Concurrency and stale-work guards
+
+- `renderRequestId` is used to ignore stale async render results after mode/zoom/view changes.
+- `documentLoadRequestId` is used to ensure only the latest `setUrl()` request can mutate state and emit load events.
+- Virtual lifecycle is reset on relevant transitions (`teardown` / `markForRecreate`).
+
+### showPage behavior in virtual mode
+
+- In `CONTINUOUS_VIRTUAL`, `showPage(page)` scrolls to the target page index through the virtual renderer.
+- If virtual mode is not initialized yet, `renderPdfDocument()` runs first.
+- If called before a document is loaded, page requests are buffered in `pendingShowPageNumber`.
+
 ## Specification
 
 ### Public Interface (Java API)
@@ -141,7 +177,7 @@ git restore teamapps-client/package.json
 |----------|------|---------|-------------|
 | `url` | `String` | `null` | URL of the PDF document to display |
 | `showDevTools` | `boolean` | `false` | Shows a development toolbar with page navigation and zoom controls |
-| `viewMode` | `UiPdfViewMode` | `null` | How pages are displayed (SINGLE_PAGE or CONTINUOUS) |
+| `viewMode` | `UiPdfViewMode` | `null` | How pages are displayed (SINGLE_PAGE, CONTINUOUS, CONTINUOUS_VIRTUAL) |
 | `zoomMode` | `UiPdfZoomMode` | `TO_WIDTH` | How zoom is calculated (TO_HEIGHT, TO_WIDTH, MANUAL) |
 | `zoomFactor` | `float` | `1.0` | Manual zoom factor (only works when zoomMode is MANUAL) |
 | `padding` | `int` | `0` | Padding around the PDF canvas in pixels |
@@ -156,6 +192,7 @@ git restore teamapps-client/package.json
 |-------|---------|-------------|
 | `onPdfInitialized` | `PdfInitializedEvent` (contains `numberOfPages`) | Fired when PDF document is loaded and first page is rendered |
 | `onZoomFactorAutoChanged` | `ZoomFactorAutoChangedEvent` (contains `zoomFactor`) | Fired when zoom factor is auto-calculated by TO_WIDTH or TO_HEIGHT modes |
+| `onPdfLoadFailed` | `PdfLoadFailedEvent` (contains `url`, `errorMessage`) | Fired when loading a PDF URL fails in the client |
 
 ### Runtime Behavior Notes
 
