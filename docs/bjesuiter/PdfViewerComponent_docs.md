@@ -11,77 +11,24 @@ Typescript Impl: `teamapps-client/ts/modules`
 Testfile (for anybody working in this repo): 
 `teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`
 
-## Testfile Content for testing PdfViewer
+## Current Test Harness
 
-```java
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
- * Copyright (C) 2014 - 2025 TeamApps.org
- * ---
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =========================LICENSE_END==================================
- */
-package org.teamapps.server.jetty.embedded;
+Do not copy a static code block from this document. Use the current source of truth:
+`teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`.
 
-import org.teamapps.common.format.RgbaColor;
-import org.teamapps.ux.component.field.TextField;
-import org.teamapps.ux.component.pdfviewer.PdfViewer;
-import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.table.AbstractTableModel;
-import org.teamapps.ux.component.table.Table;
-import org.teamapps.ux.resource.ClassPathResource;
-import org.teamapps.webcontroller.WebController;
-
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.IntStream;
-
-public class TeamAppsJettyEmbeddedServerTest {
-
-	public static void main(String[] args) throws Exception {
-		WebController controller = sessionContext -> {
-			RootPanel rootPanel = new RootPanel();
-			sessionContext.addRootPanel(null, rootPanel);
-
-			String testPdfLink = sessionContext.createResourceLink(new ClassPathResource("test.pdf", "application/pdf" ));
-			PdfViewer component = new PdfViewer(testPdfLink);
-			rootPanel.setContent(component);
-		};
-
-		TeamAppsJettyEmbeddedServer.builder(controller)
-				.setPort(8082)
-				.build()
-				.start();
-	}
-
-
-}
-
-```
+Current setup uses `UiPdfViwerTestHarness` mounted in the root panel.
 
 ## Run the Test environment 
 
 Preparation: 
-- mvn clean install (aka TeamApps - clean + install)
-  - installs/compiles everything in project 
+- Regenerate DTO artifacts first:
+  - `mvn clean install -pl teamapps-ui-api -am`
+- Build/install the frontend module:
+  - `cd teamapps-client && mvn clean install`
 
 1. Run the Testfile (`teamapps-server-jetty-embedded/src/test/java/org/teamapps/server/jetty/embedded/TeamAppsJettyEmbeddedServerTest.java`) via IntelliJ (Green Arrow in UI)
-2. Goto teamapps-client in a shell
-3. Run yarn install 
-4. Start the dev environment script (Jetty + frontend dev server)
-5. Goto http://localhost:9000 to see/debug the component
+2. Start the dev environment script (frontend dev server): `docs/bjesuiter/start_pdf_dev_env.sh`
+3. Goto http://localhost:9000 to see/debug the component
 
 ## Instructions for agents
 
@@ -104,57 +51,22 @@ When adding a new `UiPdfViewer` event, follow this exact order:
 4. Update the corresponding `.ts` file.
 5. Restart the dev server via `docs/bjesuiter/start_pdf_dev_env.sh`.
 
-### Start/Restart Jetty Test Server (CLI, background)
+### Start/Restart Jetty Test Server (Human-only CLI reference)
 
-This mirrors the IntelliJ run config:
+Jetty is intended to be started and restarted by the human via IntelliJ run config:
 - **Main class:** `org.teamapps.server.jetty.embedded.TeamAppsJettyEmbeddedServerTest`
 - **Module classpath:** `teamapps-server-jetty-embedded`
 - **JDK:** 21
 - **Working dir:** repo root
 
-**Agent note:** Do not start/stop/restart Jetty from CLI. Leave Jetty control to the human in IntelliJ IDEA. If you change anything in the PDF test harness, notify the human to restart Jetty.
-
-**Start (background, via script):**
-```bash
-docs/bjesuiter/start_pdf_dev_env.sh
-```
-
-**Note:** If startup fails with `NoClassDefFoundError: com/fasterxml/jackson/datatype/jsr310/JavaTimeModule`,
-the classpath entry should be the actual jar:
-`.../jackson-datatype-jsr310/2.18.2/jackson-datatype-jsr310-2.18.2.jar`
-(the pasted IntelliJ command had `jackson-databind-2.18.2.jar` in that slot).
-
-**Status:**
-```bash
-bgproc status -n teamapps-jetty
-```
-
-**Logs:**
-```bash
-bgproc logs -n teamapps-jetty
-```
-
-**Restart:**
-```bash
-bgproc stop -n teamapps-jetty
-# then run the Start block again
-```
-
-**Restart (both Jetty + frontend):**
-```bash
-bgproc stop -n teamapps-jetty
-bgproc stop -n teamapps-frontend
-docs/bjesuiter/start_pdf_dev_env.sh
-```
+If you change the PDF test harness, restart Jetty in IntelliJ.
 
 ### Start Frontend Dev Server (CLI, bgproc)
 
 Script details:
-- **Script path:** `/Users/bjesuiter/Develop/teamapps-org/teamapps/teamapps-client/start-dev-server.sh`
-- **Script options:** `8082`
-- **Working dir:** `/Users/bjesuiter/Develop/teamapps-org/teamapps/teamapps-client`
-- **Execute with:** `/usr/bin/env fish`
-- **Note:** Frontend dev server runs on port `9000` and connects to port `8082` internally (the script option above).
+- **Wrapper script path:** `docs/bjesuiter/start_pdf_dev_env.sh`
+- **Underlying dev script path:** `teamapps-client/start-dev-server.sh`
+- **Note:** Frontend dev server runs on port `9000` and connects to app server port `8082`.
 
 **Start (background, via script):**
 ```bash
@@ -233,7 +145,7 @@ git restore teamapps-client/package.json
 | `zoomMode` | `UiPdfZoomMode` | `TO_WIDTH` | How zoom is calculated (TO_HEIGHT, TO_WIDTH, MANUAL) |
 | `zoomFactor` | `float` | `1.0` | Manual zoom factor (only works when zoomMode is MANUAL) |
 | `padding` | `int` | `0` | Padding around the PDF canvas in pixels |
-| `pageSpacing` | `int` | `5` | Spacing between pages in CONTINUOUS mode (not yet implemented) |
+| `pageSpacing` | `int` | `5` | Spacing between pages in continuous modes |
 | `backgroundColor` | `String` | `null` | CSS color for the canvas container background |
 | `borderColor` | `String` | `null` | CSS color for the canvas container border |
 | `pageBorder` | `UiBorder` | `null` | Border configuration for PDF pages |
@@ -257,7 +169,8 @@ git restore teamapps-client/package.json
 | Value | Description |
 |-------|-------------|
 | `SINGLE_PAGE` | Display one page at a time |
-| `CONTINUOUS` | Display all pages in a scrollable view (⚠️ NOT YET IMPLEMENTED) |
+| `CONTINUOUS` | Display all pages in a scrollable view |
+| `CONTINUOUS_VIRTUAL` | Virtualized continuous rendering mode for large documents |
 
 **UiPdfZoomMode:**
 | Value | Description |
@@ -274,7 +187,7 @@ git restore teamapps-client/package.json
 |---------|-----|------|------------|-------|
 | `setUrl` | ✅ | ✅ | ✅ | Load PDF from URL |
 | `setShowDevTools` | ✅ | ✅ | ✅ | Toggle dev toolbar |
-| `setViewMode` | ✅ | ✅ | ✅ | Only SINGLE_PAGE works |
+| `setViewMode` | ✅ | ✅ | ✅ | Supports SINGLE_PAGE, CONTINUOUS, CONTINUOUS_VIRTUAL |
 | `setZoomFactor` | ✅ | ✅ | ✅ | Manual zoom control |
 | `setZoomMode` | ✅ | ✅ | ✅ | Auto-zoom modes |
 | `setPadding` | ✅ | ✅ | ✅ | Canvas container padding |
@@ -289,8 +202,6 @@ git restore teamapps-client/package.json
 
 | Feature | DTO | Java | TypeScript | Issue |
 |---------|-----|------|------------|-------|
-| `showPage(int page)` | ✅ | ❌ | ✅ | **Missing Java method** - command defined in DTO but no Java setter to call it |
-| `CONTINUOUS` viewMode | ✅ | ✅ | ❌ | TypeScript throws error: "not supported yet" |
 | `pageShadow` | ❌ | ✅ | ❌ | Property exists in Java but not in DTO or TypeScript |
 
 ### Usage Example
@@ -327,58 +238,4 @@ panel.setContent(pdfViewer);
 
 ## Todos
 
-- In PdfViewer.java: update all setters to update ts client
-- **Add `showPage(int page)` method to PdfViewer.java** - command exists in DTO and TypeScript but missing in Java
 - **Add `pageShadow` to DTO** - property exists in Java but not exposed
-- **Implement CONTINUOUS viewMode in TypeScript** - currently throws error
-
-## Implementation Plan: Continuous Rendering Mode
-
-### Step 1: Refactor - Extract Zoom Calculation
-
-**New method:** `calculateZoomScale(referencePage: PDFPageProxy)`
-
-Extract zoom logic (lines 285-332) into reusable function:
-- Input: PDF page (always first page for now)
-- Returns: `{ scale: number, viewport: PageViewport }`
-- Handles TO_WIDTH, TO_HEIGHT, MANUAL modes
-- Fires `onZoomFactorAutoChanged` when auto-calculating
-- Sets `zoomMode` to MANUAL after auto-calc
-
-### Step 2: Implement `renderPdfContinuousMode()`
-
-- **Console warning** if `maxPageNumber > 5`
-- Get first page, call `calculateZoomScale(firstPage)`
-- Clear `#pagesContainer` (remove old canvases)
-- Loop through all pages (1 to maxPageNumber):
-  - Create canvas element per page
-  - Apply `pageBorder` styling to each canvas
-  - Render page with calculated scale
-- Apply `pageSpacing` as CSS gap on `#pagesContainer`
-
-### Step 3: Update `renderPdfDocument()`
-
-- Remove `throw Error` for CONTINUOUS
-- Route: `CONTINUOUS` → `renderPdfContinuousMode()`
-- Route: `SINGLE_PAGE` → `renderPdfSinglePageMode()`
-
-### Step 4: CSS Changes
-
-Update `#pagesContainer` styles:
-```css
-display: flex;
-flex-flow: column nowrap;
-align-items: center;
-gap: ${pageSpacing}px;
-```
-
-### Step 5: Update `renderPdfSinglePageMode()`
-
-- Call `calculateZoomScale()` instead of inline logic
-- Keep single canvas rendering as-is
-
-### Design Decisions
-
-- **Zoom reference:** Always uses first page dimensions
-- **TO_HEIGHT in continuous mode:** Fits first page to container height, other pages scroll
-- **No virtual scrolling:** All pages rendered immediately (warn if >5 pages)
