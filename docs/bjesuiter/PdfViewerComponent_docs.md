@@ -59,7 +59,7 @@ Jetty is intended to be started and restarted by the human via IntelliJ run conf
 - **JDK:** 21
 - **Working dir:** repo root
 
-If you change the PDF test harness, restart Jetty in IntelliJ.
+If you change the PDF test harness, tell the human to restart Jetty in IntelliJ.
 
 ### Start Frontend Dev Server (CLI, bgproc)
 
