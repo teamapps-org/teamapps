@@ -42,9 +42,9 @@ import org.teamapps.ux.resource.ClassPathResource;
 import org.teamapps.ux.resource.InputStreamResource;
 import org.teamapps.ux.resource.Resource;
 
-public class UiPdfViwerTestHarness extends Panel {
+public class PdfViewerTestHarness extends Panel {
 
-    public UiPdfViwerTestHarness() {
+    public PdfViewerTestHarness() {
         super(null, "PDF Viewer");
         PdfViewer pdfViewer = new PdfViewer();
         pdfViewer.setPadding(10);

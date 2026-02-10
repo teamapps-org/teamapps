@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,25 +19,23 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import org.teamapps.ux.component.pdfviewer.UiPdfViwerTestHarness;
+import java.util.Locale;
+import org.teamapps.ux.component.pdfviewer.PdfViewerTestHarness;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
 
-import java.util.Locale;
-
 public class TeamAppsJettyEmbeddedServerTest {
 
-	public static void main(String[] args) throws Exception {
-		TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
-					sessionContext.setLocale(Locale.US);
-					RootPanel rootPanel = sessionContext.addRootPanel();
+    public static void main(String[] args) throws Exception {
+        TeamAppsJettyEmbeddedServer.builder((SessionContext sessionContext) -> {
+            sessionContext.setLocale(Locale.US);
+            RootPanel rootPanel = sessionContext.addRootPanel();
 
-					UiPdfViwerTestHarness pdfViewerHarness = new UiPdfViwerTestHarness();
-					rootPanel.setContent(pdfViewerHarness);
-				})
-				.setPort(8082)
-				.build()
-				.start();
-	}
-
+            PdfViewerTestHarness pdfViewerHarness = new PdfViewerTestHarness();
+            rootPanel.setContent(pdfViewerHarness);
+        })
+            .setPort(8082)
+            .build()
+            .start();
+    }
 }
